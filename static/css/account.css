@@ -1,0 +1,178 @@
+/* スクロールバー */
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(255, 255, 255);
+}
+
+::-webkit-scrollbar-track:hover {
+    background: rgb(225, 225, 225);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(180, 180, 180);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(120, 120, 120);
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0 0 5em 0;
+}
+
+header {
+    position: sticky;
+    z-index: 100;
+    top: 0;
+    width: 100%;
+    height: 5em;
+    background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+    color: rgb(255, 255, 255);
+    margin: 0 0 16px 0;
+}
+
+header h1 {
+    font-family: 'Libre Caslon Display', serif;
+    text-align: end;
+    align-items: center;
+    width: 25%;
+    margin: 0;
+    padding: 20px 0;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 5em;
+    text-align: center;
+    background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+    color: rgb(255, 255, 255);
+}
+
+footer small {
+    vertical-align: -10px;
+}
+
+#myus_h1 {
+    padding: 0 0 16px 0;
+}
+
+.password_reset {
+    margin: 0 0 40px 0;
+}
+
+.password_reset a {
+    font-size: 14px;
+    text-decoration: none;
+}
+
+#last_name, #first_name {
+    width: 160px;
+    margin: auto;
+}
+
+#year, #month, #day {
+    width: 103px;
+    margin: auto;
+}
+
+.email_reset {
+    margin: 0px 0 50px 0;
+}
+
+.messages_password_form {
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+    margin: -26px 0 5px 0;
+}
+
+.messages_password_done {
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+    margin: 0 0 8px 0;
+}
+
+ul, .messages_password_reset {
+    list-style: none;
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+    padding: 0;
+    margin: 29px 0 -25px 0;
+}
+
+.messages_password_mukou {
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+}
+
+.pass_confirm1 {
+    margin: 35px 0 0 0;
+}
+
+.pass_confirm2 {
+    margin: 0 0 50px 0;
+}
+
+#gender {
+    margin: 0 0 40px 0;
+}
+
+#login {
+    margin: 0 0 24px 0;
+}
+
+#submit {
+    margin: 0 0 24px 0;
+}
+
+.messages {
+    list-style: none;
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+    padding: 0;
+}
+
+.messages_login {
+    list-style: none;
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+    padding: 0;
+    margin: -26px 0 5px 0;
+}
+
+.messages_signup {
+    list-style: none;
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+    padding: 0;
+    margin: -17px 0 -4px 0;
+}
+
+.form-signup {
+    width: 100%;
+    max-width: 360px;
+    padding: 15px;
+    margin: auto;
+}
+
+.form-signup .checkbox {
+    font-weight: 400;
+}
+
+.form-signup .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 6px;
+    font-size: 16px;
+}

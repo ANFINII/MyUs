@@ -1,0 +1,33 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsビデオ</title>{% endblock title %}
+
+{% block content %}
+<main class="main_contents">
+    <h1>Video</h1>
+    {% if user.is_authenticated %}
+    <form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
+        <p><label for="title">タイトル</label></p>
+        <p><input type="text" name="title" id="title" class="form-control" required></p>
+        <p><label for="content">内容</label></p>
+        <p><textarea name="content" cols="100" rows="1" id="content" class="form-control textarea" required></textarea></p>
+        <p><label for="customFile_1">サムネイル</label></p>
+        <p>
+            <div class="custom-file">
+                <input type="file" name="images" accept="image/*" id="customFile_1" class="custom-file-input" required>
+                <label class="custom-file-label" for="customFile_1" data-browse="選択">ファイルを選択する</label>
+            </div>
+        </p>
+        <p><label for="customFile_2">動画</label></p>
+        <p>
+            <div class="custom-file">
+                <input type="file" name="videos" accept="video/*" id="customFile_2" class="custom-file-input" required>
+                <label for="customFile_2" class="custom-file-label" data-browse="選択">ファイルを選択する</label>
+            </div>
+        </p><br>
+        <p><input type="submit" class="btn btn-success btn-sm" value="作成する"></p>
+    </form>
+    {% else %}
+    <h2 class="login_required">ログインしてください</h2>
+    {% endif %}
+</main>
+{% endblock content %}

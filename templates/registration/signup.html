@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}<title>MyUsアカウント登録</title>{% endblock title %}
+
+{% load static %}
+
+{% block customcss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/account.css' %}">
+{% endblock customcss %}
+
+{% block content %}
+<main>
+    <form method="POST" action="" class="form-signup">{% csrf_token %}
+        <h1 class="h4 mb-3 font-weight-normal">アカウント登録</h1>
+        
+        {% if messages %}
+        <ul class="messages_signup">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <label for="last_name">名前</label>
+        <div class="form-row form-group">
+            <input type="text" name="last_name" id="last_name" class="form-control" maxlength="30" placeholder="姓">
+            <input type="text" name="first_name" id="first_name" class="form-control" maxlength="30" placeholder="名">
+        </div>
+        
+        <p><input type="text" name="username" class="form-control" maxlength="30" placeholder="ユーザー名" required></p>
+        
+        <p><input type="text" name="nickname" class="form-control" maxlength="60" placeholder="投稿者名" required></p>
+
+        <p><input type="email" name="email" class="form-control" maxlength="120" placeholder="メールアドレス" required></p>
+
+        <p><input type="password" name="password1" class="form-control" minlength="8" maxlength="16" placeholder="パスワード" required></p>
+
+        <p><input type="password" name="password2" class="form-control" minlength="8" maxlength="16" placeholder="パスワード(確認用)" required></p>
+        
+        <label for="year">生年月日</label>
+        <div id="birthday" class="form-row">
+            <div class="col-auto">
+                <select name="year" id="year" class="form-control">
+                    <option style="display:none;">年</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <select name="month" id="month" class="form-control">
+                    <option style="display:none;">月</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <select name="day" id="day" class="form-control">
+                    <option style="display:none;">日</option>
+                </select>
+            </div>
+        </div><br>
+
+        <label for="secret">性別</label><br>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" name="gender" value="0" id="male" class="custom-control-input">
+            <label for="male" class="custom-control-label">男性</label>
+        </div>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" name="gender" value="1" id="female" class="custom-control-input">
+            <label for="female" class="custom-control-label">女性</label>
+        </div>
+        <div id="gender" class="custom-control custom-radio custom-control-inline">
+            <input type="radio" name="gender" value="2" id="secret" class="custom-control-input" checked>
+            <label for="secret" class="custom-control-label">秘密</label>
+        </div>
+
+        <p><input type="submit" id="submit" class="btn btn-lg btn-success btn-block" value="アカウント登録"></p>
+
+        <p><a href="{% url 'myus:login' %}" class="btn btn-lg btn-primary btn-block" role="button">戻る</a></p>
+    </form>
+</main>
+{% endblock content %}
+
+{% block customjs %}
+<script type="text/javascript" src="{% static 'js/date.js' %}"></script>
+{% endblock customjs %}

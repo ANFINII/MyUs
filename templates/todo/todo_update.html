@@ -1,0 +1,34 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsToDo</title>{% endblock title %}
+
+{% load static %}
+
+{% block customcss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+{% endblock customcss %}
+
+{% block content %}
+<main class="main_contents">
+    <h1>ToDo編集</h1>
+    {% if user.is_authenticated %}
+    <br>
+    
+    <form method="POST" action="">{% csrf_token %}
+        <p><label for="title">タイトル</label></p>
+        <p><input type="text" name="title" id="title" class="form-control" value="{{ todomodel.title }}" required></p>
+        <p><label for="content">内容</label></p>
+        <p><textarea name="content" cols="100" rows="1" id="content" class="form-control textarea" required>{{ todomodel.content }}</textarea></p>
+        <p><label for="id_priority">優先度</label></p>
+        <p><div class="field">{{ form.priority }}</div></p>
+        <p><label for="id_duedate">期日</label></p>
+        <p><input type="text" name="duedate" id="id_duedate" class="form-control" placeholder="2020-01-01" value="{{ todomodel.duedate|date:'Y-m-j' }}" required></p>
+        <br>
+        <p><input type="submit" class="btn btn-success btn-sm" value="完了"></p>
+    </form>
+
+    {% else %}
+    <h2 class="login_required_todo">ログインしてください</h2>
+    {% endif %}
+</main>
+{% endblock content %}

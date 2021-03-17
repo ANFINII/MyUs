@@ -1,0 +1,69 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsミュージック</title>{% endblock title %} 
+
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<main class="main_contents">
+    <article class="article_detail">
+        {% if object.publish %}
+        <div class="main-image-color">
+            <div class="main-image">
+                <audio controls muted preload="auto" controlslist="nodownload">
+                    <source src="{{ object.musics.url }}">
+                    <p>audioに対応していない場合のメッセージ</p>
+                </audio>
+            </div>
+        </div>
+        <div class="article_detail_section">
+            <div class="article_detail_section_1">
+                <div class="article_detail_aria">
+                    <h1 title="{{ object.title }}">{{ object.title }}</h1>
+                
+                    <time class="article_detail_aria_1">{{ object.created|date:'Y/m/d H:i' }}</time>
+                
+                    <div class="article_detail_aria_2">
+                        <div class="read">
+                            <i class="bi bi-caret-right-square icon-font" title="閲覧数"></i>
+                            {{ object.read|intcomma }}
+                        </div>
+                    
+                        {% if user.is_authenticated %}
+                        <form action="{% url 'myus:music_like' object.id %}" method="POST">{% csrf_token %}
+                            {% if liked %}
+                            <button type="submit" name="music_id" value="{{ object.id }}" class="like_fill">
+                                <i class="bi bi-hand-thumbs-up-fill icon-font" title="いいね数"></i>
+                            </button>
+                            {% else %}
+                            <button type="submit" name="music_id" value="{{ object.id }}" class="like">
+                                <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
+                            </button>
+                            {% endif %}
+                            {{ total_like|intcomma }}
+                        </form>
+                        {% else %}
+                        <a href="{% url 'myus:login' %}" role="button" aria-disabled="true" class="like_link">
+                            <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
+                        </a>
+                        {{ total_like|intcomma }}
+                        {% endif %}
+                    </div>
+                
+                    <div class="article_detail_aria_3">
+                        {% include 'parts/tag.html' %}
+                    </div>
+                </div>
+                <hr>
+                {% include 'parts/detail_common.html' %}
+            </div>
+            <div class="article_detail_section_2">
+                {% include 'parts/article_music.html' %}
+            </div>
+        </div>
+        {% else %}
+        <h2 class="unpublished">非公開に設定されてます！</h2>
+        {% endif %}
+    </article>
+</main>
+{% endblock content %}

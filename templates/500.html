@@ -1,0 +1,21 @@
+{% extends "base2.html" %}
+
+{% load static %}
+
+{% block customcss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock customcss %}
+
+{% block title %}<title>MyUs 500エラー</title>{% endblock title %}
+
+{% block content %}
+<main class="main_contents">
+    <article class="main_pass">
+        <h1>MyUs500</h1>
+
+        <h2 class="login_required">想定外のエラーが発生しました。</h2>
+
+        {% include 'parts/footer-myus.html' %}
+    </article>
+</main>
+{% endblock content %}
