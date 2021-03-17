@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}<title>MyUsログイン</title>{% endblock title %}
+
+{% load static %}
+
+{% block customcss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/account.css' %}">
+{% endblock customcss %}
+
+{% block content %}
+<main>
+    <form method="POST" action="" class="form-signup">{% csrf_token %}
+        <h1 id="myus_h1" class="h3 mb-3 font-weight-normal">MyUsへようこそ</h1>
+
+        {% if messages %}
+        <ul class="messages_login">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        <p><input type="username" name="username" id="username" class="form-control" placeholder="ユーザー名 or メールアドレス" required autofocus></p>
+
+        <p><input type="password" name="password" id="password" class="form-control" minlength="8" maxlength="16" placeholder="パスワード" required></p>
+
+        <div class="password_reset">
+            <a href="{% url 'password_reset' %}">パスワードをリセット</a>
+        </div>
+        
+        <p><input type="submit" id="login" class="btn btn-lg btn-primary btn-block" value="ログイン"></p>
+
+        <a href="{% url 'myus:signup' %}" class="btn btn-lg btn-success btn-block" role="button">アカウント登録</a>
+    </form>
+</main>
+{% endblock content %}

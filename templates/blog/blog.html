@@ -1,0 +1,20 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsブログ</title>{% endblock title %}
+
+{% block content %}
+<main class="main_contents">
+    <h1>Blog
+        {% if messages %}
+        <ul class="messages_search">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </h1>
+
+    <article class="main_article">
+        {% include 'parts/article_blog.html' %}
+    </article>
+</main>
+{% endblock content %}

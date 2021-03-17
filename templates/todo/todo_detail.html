@@ -1,0 +1,119 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsToDo</title>{% endblock title %}
+
+{% load static %}
+{% load humanize %}
+
+{% block customcss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock customcss %}
+
+{% block content %}
+<main class="main_contents">
+    <h1>ToDo詳細</h1>
+
+    <div class="article_detail_section">
+        <div class="article_detail_section_1">
+            <div class="article_detail_aria">
+                <h1 title="{{ object.title }}">{{ object.title }}</h1>
+            
+                <time class="article_detail_aria_1">{{ object.created|date:'Y/m/d H:i' }}</time>
+            
+                <div class="article_detail_aria_2">
+                    <object class="todo_link_detail">
+                        <a href="{% url 'myus:todo_update' object.pk %}" class="btn btn-success btn-sm" role="button">編集</a>
+                        <a href="{% url 'myus:todo_delete' object.pk %}" class="btn btn-danger btn-sm" role="button">削除</a>
+                    </object>
+                </div>
+            </div>
+            <hr>
+            
+            <input type="checkbox" id="content_detail_check_id" class="content_detail_check">
+
+            <div class="content_detail_aria">
+                <div class="content_detail">
+                    <a href="{% url 'myus:userpage_other' %}">
+                        <img src="{{ object.author.user_image.url }}" title="{{ object.author.nickname }}" class="profile_image_detail">
+                    </a>
+                    <div class="username_space">{{ object.author.nickname }}</div>
+                    <div class="registered_person">登録者数
+                        {% if object.followers.all %}
+                            {{ object.followers.all.count }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </div>
+                    <p class="content_detail_p3">
+                        優先度：{{ object.get_priority_display }}<br>
+                        期日：{{ object.duedate }}
+                    </p>
+                    <p class="content_detail_p4">{{ object.content|linebreaksbr|urlize }}</p>
+                </div>
+            </div>
+
+            <label for="content_detail_check_id" class="content_detail_check_label1">拡大表示</label>
+            <label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
+            <hr>
+
+            <form method="POST" action="">{% csrf_token %}
+                <div class="comment_input">
+                    <p>コメント総数
+                        {% if object.comments.all %}
+                            {{ object.comments.all.count|intcomma }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </p>
+                    {% if user.username %}
+                    <a href="{% url 'myus:userpage_other' %}">
+                        <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
+                    </a>
+                    {% else %}
+                    <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_comment">
+                    {% endif %}
+                    {% if user.username %}
+                    <textarea name="text" rows="1" class="textarea_br" placeholder="コメント入力" required></textarea>
+                    {% else %}
+                    <textarea name="text" rows="1" class="textarea_br" placeholder="コメントするにはログインが必要です！" disabled></textarea>
+                    {% endif %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                            <path d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+            <input type="checkbox" id="comment_aria_check_id" class="comment_aria_check">
+            <label for="comment_aria_check_id" class="comment_aria_check_label1">拡大表示</label>
+            <label for="comment_aria_check_id" class="comment_aria_check_label2">縮小表示</label>
+
+            <div class="comment_aria">
+                {% for comment in object.comments.all reversed %}
+                <div class="comment_aria_list">
+                    <a href="{% url 'myus:userpage_other' %}">
+                        <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+                    </a>
+                    <div class="comment_aria_list_1">
+                        <p>{{ comment.author.nickname }}</p>
+                        <time>{{ comment.created|naturaltime }}</time>
+                    </div>
+                    <div class="comment_aria_list_2">{{ comment.text|linebreaks|urlize }}</div>
+                    <div class="comment_aria_list_3">返信</div>
+                </div>
+                {% endfor %}
+            </div>
+            <hr>
+
+            <div>
+                広告表示枠
+            </div>
+            <hr>
+        </div>
+
+        <div class="article_detail_section_2">
+            {% include 'parts/article_todo.html' %}
+        </div>
+    </div>
+</main>
+{% endblock content %}

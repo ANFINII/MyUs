@@ -1,0 +1,41 @@
+.tag_nav {
+    display: none;
+}
+
+hr {
+    margin: 12px 0;
+}
+
+.main_profile {
+    display: block;
+    max-height: 100vh;
+}
+
+.main_profile h1 {
+    display: block;
+    font-size: 24px;
+    max-height: 2em;
+    margin: -6px 0 16px 0;
+}
+
+.main_profile h2 {
+    font-size: 16px;
+    margin: 0 0 14px 0;
+}
+
+.main_profile p {
+    font-size: 14px;
+    color: rgb(80, 80, 80);
+    margin: 0 0 12px 0;
+}
+
+.footer-myus {
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 102px);
+    height: 26px;
+    margin: 12px 0 0 0;
+    text-align: center;
+    background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+    color: rgb(255, 255, 255);
+}

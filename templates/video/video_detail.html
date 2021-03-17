@@ -1,0 +1,105 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsビデオ</title>{% endblock title %} 
+
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<main class="main_contents">
+    <article class="article_detail">
+    {% if object.publish %}
+        <div class="main-image-color">
+            <div class="main-image">
+                <video-js id="my-video" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls preload="none" poster="{{ object.images.url }}" data-setup='{"playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]}'>
+                    <!-- <source src="{{ object.videos.url }}" type="video/mp4" label="240">
+                    <source src="{{ object.videos.url }}" type="video/mp4" label="360" selected="true">
+                    <source src="{{ object.videos.url }}" type="video/mp4" label="480">
+                    <source src="{{ object.videos.url }}" type="video/mp4" label="720">
+                    <source src="{{ object.videos.url }}" type="video/mp4" label="1080"> -->
+                    <source src="{{ object.videos.url }}" type="video/mp4">
+                    <source src="{{ object.videos.url }}" type="video/webm">
+                    <source src="{{ object.videos.url }}" type="video/ogg">
+                    <source src="{{ object.videos.url }}" type="application/dash+xml">
+                    <!-- Tracks need an ending tag thanks to IE9 -->
+                    <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
+                    <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
+                    <p class="vjs-no-js">この動画を見るには、JavaScriptを有効にしてください!
+                        <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                    </p>
+                </video-js>
+
+                <!-- <video id="my-video" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls preload="none" poster="{{ object.images.url }}" data-setup='{"playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]}'>   
+                </video> -->
+            </div>
+        </div>
+
+        <div class="article_detail_section">
+            <div class="article_detail_section_1">
+                <div class="article_detail_aria">
+                    <h1 title="{{ object.title }}">{{ object.title }}</h1>
+
+                    <time class="article_detail_aria_1">{{ object.created|date:'Y/m/d H:i' }}</time>
+                
+                    <div class="article_detail_aria_2">
+                        <div class="read">
+                            <i class="bi bi-caret-right-square icon-font" title="閲覧数"></i>
+                            {{ object.read|intcomma }}
+                        </div>
+                    
+                        {% if user.is_authenticated %}
+                        <form action="{% url 'myus:video_like' object.id %}" method="POST">{% csrf_token %}
+                            {% if liked %}
+                            <button type="submit" name="video_id" value="{{ object.id }}" class="like_fill">
+                                <i class="bi bi-hand-thumbs-up-fill icon-font" title="いいね数"></i>
+                            </button>
+                            {% else %}
+                            <button type="submit" name="video_id" value="{{ object.id }}" class="like">
+                                <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
+                            </button>
+                            {% endif %}
+                            {{ total_like|intcomma }}
+                        </form>
+                        {% else %}
+                        <a href="{% url 'myus:login' %}" role="button" aria-disabled="true" class="like_link">
+                            <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
+                        </a>
+                        {{ total_like|intcomma }}
+                        {% endif %}
+                    </div>
+
+                    <div class="article_detail_aria_3">
+                        {% include 'parts/tag.html' %}
+                    </div>
+                </div>
+                <hr>
+                {% include 'parts/detail_common.html' %}
+            </div>
+            <div class="article_detail_section_2">
+                {% include 'parts/article_video.html' %}
+            </div>
+        </div>
+    {% else %}
+    <h2 class="unpublished">非公開に設定されてます！</h2>
+    {% endif %}
+    </article>
+</main>
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+    $("form").submit(function(event) {
+        event.preventDefault();
+        let form = $(this);
+        $.ajax({
+            url: form.prop("action"),
+            method: form.prop("method"),
+            data: form.serialize(),
+            timeout: 100,
+            dataType: "text",
+        })
+        .done(function(data) {
+            $(".comment_aria_2").append("<p>" + data + "</p>");
+        })
+    });
+</script>
+{% endblock extrajs %}

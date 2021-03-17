@@ -1,0 +1,233 @@
+/* プロフィール */
+.main_profile {
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 2.6em auto auto 2.4em;
+}
+
+.tag_nav {
+    display: none;
+}
+
+.main_contents h1 {
+    display: flex;
+    font-size: 24px;
+    max-height: 2em;
+    margin: -6px 0 -8px 0;
+}
+
+.main_profile .login_required {
+    grid-column: 1/-1;
+    grid-row: 2/3;
+    font-size: 16px;
+    color: rgb(255, 0, 0);
+}
+
+.messages_profile {
+    grid-column: 1/-1;
+    grid-row: 2/3;
+    list-style: none;
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+    height: 0.8em;
+    padding: 0;
+    margin: -20px 0 0 0;
+}
+
+.btn-column {
+    grid-column: 2/3;
+    justify-self: end;
+    margin: -4px 0 -8px 0;
+}
+
+.btn-column1 {
+    display: inline;
+}
+
+.btn-column2 {
+    display: inline;
+}
+
+table {
+    grid-column: 1/-1;
+    grid-row: 3/4;
+    overflow-y: auto;
+}
+
+table th, table td {
+    height: 2.5em;
+    min-width: 125px;
+    font-weight: normal;
+}
+
+.td-indent {
+    padding: 0 0 0 8px;
+    white-space: nowrap;
+}
+
+.form-control {
+    height: 2em;
+}
+
+th.td-color, td.td-color {
+    background-color: rgb(190, 250, 210);
+    width: 125px;
+    padding: 0 8px 0 4px;
+}
+
+.account_image {
+    width: 56px;
+    margin: 0;
+    background-color: rgb(230, 230, 230);
+    border-radius: 15px;
+}
+
+.account_image img {
+    border-radius: 15%;
+    border: 4px solid rgb(200, 200, 200);
+}
+
+.account_image img:hover {
+    border: 4px solid rgb(100, 220, 150);
+}
+
+.update_account_image {
+    width: 56px;
+    margin: 0;
+    color: rgb(200, 200, 200);
+}
+
+.update_account_image:hover {
+    color: rgb(100, 220, 150);
+    cursor: pointer;
+}
+
+.update_account_image input {
+    display: none;
+}
+
+.td-name {
+    display: grid;
+    grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
+    border: 0;
+    padding: 4px 3px 0px 1px;
+}
+
+#last_name {
+    grid-column: 1/2;
+}
+
+#first_name {
+    grid-column: 2/3;
+    margin: 0 0 0 2px;
+}
+
+.td-birthday {
+    display: grid;
+    grid-template-columns: minmax(74px, 1fr) minmax(74px, 1fr) minmax(74px, 1fr);
+    border: 0;
+    border-top: 1px solid green;
+    padding: 4px 5px 0 1px;
+}
+
+#year {
+    grid-column: 1/2;
+}
+
+#month {
+    grid-column: 2/3;
+    margin: 0 0 0 2px;
+}
+
+#day {
+    grid-column: 3/4;
+    margin: 0 0 0 4px;
+}
+
+.td-gender {
+    padding: 0 0 0 8px;
+}
+
+.footer-profile {
+    grid-column: 1/-1;
+    grid-row: 4/-1;
+    align-self: end;
+    text-align: center;
+    height: 26px;
+    background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+    color: rgb(255, 255, 255);
+}
+
+.footer-myus {
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 102px);
+    height: 26px;
+    margin: 12px 0 0 0;
+    text-align: center;
+    background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+    color: rgb(255, 255, 255);
+}
+
+/* パスワード変更 */
+.main_pass {
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2.5em auto auto 1fr;
+    margin: 6px 0;
+    height: 100%;
+}
+
+.main_pass h1 {
+    grid-column: 1/2;
+    grid-row: 1/2;
+    font-size: 1.5em;
+    margin: -12px 0 0 0;
+}
+
+ul, .messages_password_change {
+    grid-column: 1/2;
+    grid-row: 2/3;
+    list-style: none;
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+    height: 0.8em;
+    padding: 0;
+    margin: -40px 0 40px 0;
+}
+
+.messages_password_done {
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+    margin: 0px 0 5px 0;
+}
+
+.form-signup {
+    grid-row: 3/4;
+    width: 100%;
+    max-width: 380px;
+    padding: 50px 15px;
+    margin: auto;
+}
+
+.form-signup .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 6px;
+    font-size: 16px;
+}
+
+.submit {
+    margin: 40px 0 24px 0;
+}
+
+.withdrawal {
+    margin: 0 0 24px 0;
+}
+
+.main_pass .btn-primary {
+    margin: 0;
+}

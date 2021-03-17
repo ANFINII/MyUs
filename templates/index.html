@@ -1,0 +1,54 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsホームページ</title>{% endblock title %}
+
+{% load static %}
+
+{% block content %}
+<main class="main_contents">
+    <h1>Home
+        {% if messages %}
+        <ul class="messages_search">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </h1>
+    <hr>
+
+    <article class="main_article_index">
+        <h2>Video</h2>
+        {% include "parts/article_video.html" %}
+    </article>
+    <hr>
+
+    <article class="main_article_index">
+        <h2>Live</h2>
+        {% include "parts/article_live.html" %}
+    </article>
+    <hr>
+
+    <article class="main_article_index">
+        <h2>Music</h2>
+        {% include "parts/article_music.html" %}
+    </article>
+    <hr>
+
+    <article class="main_article_index">
+        <h2>Picture</h2>
+        {% include "parts/article_picture.html" %}
+    </article>
+    <hr>
+
+    <article class="main_article_index">
+        <h2>Blog</h2>
+        {% include "parts/article_blog.html" %}
+    </article>
+    <hr>
+
+    <article class="main_article_index">
+        <h2>Chat</h2>
+        {% include "parts/article_chat.html" %}
+    </article>
+</main>
+{% endblock content %}

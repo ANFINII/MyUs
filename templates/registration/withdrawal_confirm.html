@@ -1,0 +1,34 @@
+{% extends "base2.html" %}
+{% block title %}<title>MyUs退会処理</title>{% endblock title %}
+
+{% load static %}
+
+{% block customcss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+{% endblock customcss %}
+
+{% block content %}
+<main class="main_contents">
+    <article class="main_pass">
+        <h1>MyUs退会</h1>
+        {% if user.is_authenticated %}
+
+        <form method="POST" action="{% url 'myus:withdrawal' %}" class="form-signup">{% csrf_token %}
+            <p style="color: red;">本当に退会しますか？</p>
+
+            <p><input type="password" name="password2" class="form-control" minlength="8" maxlength="16" placeholder="パスワード" required></p>
+
+            <p><input type="submit" id="submit" class="btn btn-lg btn-danger btn-block submit" value="退会する"></p>
+            
+            <p><a href="{% url 'myus:withdrawal' %}" class="btn btn-lg btn-primary btn-block" role="button" aria-disabled="true">戻る</a></p>
+        </form>
+
+        {% include 'parts/footer-myus.html' %}
+
+        {% else %}
+        <h2 class="login_required">ログインしてください</h2>
+        {% endif %}
+    </article>
+</main>
+{% endblock content %}

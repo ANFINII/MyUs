@@ -1,0 +1,22 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsライブ</title>{% endblock title %}
+
+{% load static %}
+
+{% block content %}
+<main class="main_contents">
+    <h1>Live
+        {% if messages %}
+        <ul class="messages_search">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </h1>
+
+    <article class="main_article">
+        {% include 'parts/article_live.html' %}
+    </article>
+</main>
+{% endblock content %}

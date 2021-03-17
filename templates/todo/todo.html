@@ -1,0 +1,38 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsToDo</title>{% endblock title %}
+
+{% load static %}
+{% load humanize %}
+
+{% block customcss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+{% endblock customcss %}
+
+{% block content %}
+<main class="main_contents">
+    <h1>ToDo
+        {% if messages %}
+        <ul class="messages_search">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </h1>
+
+    {% if user.is_authenticated %}
+
+    <div class="todo_create">
+        <a href="{% url 'myus:todo_create' %}" class="btn btn-sm btn-primary" role="button">ToDo作成</a>
+    </div>
+    
+    <article class="main_article">
+        {% include 'parts/article_todo.html' %}
+        {% else %}
+        <h2 class="login_required_todo">ログインしてください</h2>
+        {% endif %}
+    </article>
+</main>
+{% endblock content %}
+    
