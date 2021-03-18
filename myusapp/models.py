@@ -8,7 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from django.core.mail import send_mail
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
+# from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -243,7 +244,7 @@ class BlogModel(models.Model):
     title    = models.CharField(max_length=100)
     content  = models.TextField()
     images   = models.ImageField(upload_to='images/')
-    richtext = RichTextField()
+    richtext = RichTextUploadingField(blank=True, null=True)
     comments = GenericRelation('Comment')
     publish  = BooleanField(default=True)
     tags     = models.ManyToManyField(Tag, blank=True)
