@@ -10,6 +10,7 @@ from django.urls import reverse, reverse_lazy
 from django.db.models import Q, Max, Min, Avg, Count, F, Value
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, FormView
 from datetime import date, datetime, timedelta
+from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from itertools import islice, chain
 from functools import reduce
@@ -378,22 +379,18 @@ class Recommend(ListView):
         return redirect('myus:recommend')
 
     def get_context_data(self, **kwargs):
-        context = super(Recommend, self).get_context_data(**kwargs)
-        # today = datetime.date.today()
-        # first_of_thismonth = today + relativedelta(day=1)
-        # today = date.today()
-        # today_start_str = str(today) + ' 00:00:00'
-        # today_start = datetime.strptime(today_start_str, '%Y-%m-%d %H:%M:%S')
-        # today_end_str = str(today) + ' 23:59:59'
-        # today_end = datetime.strptime(today_end_str, '%Y-%m-%d %H:%M:%S')
+        context = super(Recommend, self).get_context_data(**kwargs)    
+        # 急上昇はcreatedが10日以内かつscoreが100以上の上位8レコード
+        # socreはread + like*10
+        aggregation_date = datetime.today() - timedelta(days=10)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'video_list': VideoModel.objects.filter(publish=True).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist')[:8],
-            'live_list': LiveModel.objects.filter(publish=True).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist')[:8],
-            'music_list': MusicModel.objects.filter(publish=True).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist')[:8],
-            'picture_list': PictureModel.objects.filter(publish=True).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist')[:8],
-            'blog_list': BlogModel.objects.filter(publish=True).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist')[:8],
-            'chat_list': ChatModel.objects.filter(publish=True).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist')[:8],
+            'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
+            'live_list': LiveModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
+            'music_list': MusicModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
+            'picture_list': PictureModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
+            'blog_list': BlogModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
+            'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
         })
         return context
 
@@ -600,7 +597,7 @@ class VideoList(ListView):
                         Q(author__nickname__icontains=q) |
                         Q(content__icontains=q) for q in q_list]
                     )
-            result = result.filter(query).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist').distinct()
+            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             if not result:
                 messages.success(self.request, '「{}」の検索結果なし'.format(search))
             else:
@@ -753,7 +750,7 @@ class LiveList(ListView):
                         Q(author__nickname__icontains=q) |
                         Q(content__icontains=q) for q in q_list]
                     )
-            result = result.filter(query).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist').distinct()
+            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             if not result:
                 messages.success(self.request, '「{}」の検索結果なし'.format(search))
             else:
@@ -840,7 +837,7 @@ class MusicList(ListView):
                         Q(content__icontains=q) |
                         Q(lyrics__icontains=q) for q in q_list]
                     )
-            result = result.filter(query).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist').distinct()
+            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             if not result:
                 messages.success(self.request, '「{}」の検索結果なし'.format(search))
             else:
@@ -926,7 +923,7 @@ class PictureList(ListView):
                         Q(author__nickname__icontains=q) |
                         Q(content__icontains=q) for q in q_list]
                     )
-            result = result.filter(query).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist').distinct()
+            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             if not result:
                 messages.success(self.request, '「{}」の検索結果なし'.format(search))
             else:
@@ -1013,7 +1010,7 @@ class BlogList(ListView):
                         Q(content__icontains=q) |
                         Q(richtext__icontains=q) for q in q_list]
                     )
-            result = result.filter(query).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist').distinct()
+            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             if not result:
                 messages.success(self.request, '「{}」の検索結果なし'.format(search))
             else:
@@ -1099,7 +1096,7 @@ class ChatList(ListView):
                         Q(author__nickname__icontains=q) |
                         Q(content__icontains=q) for q in q_list]
                     )
-            result = result.filter(query).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist').distinct()
+            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             if not result:
                 messages.success(self.request, '「{}」の検索結果なし'.format(search))
             else:
@@ -1216,7 +1213,7 @@ class CollaboList(ListView):
                         Q(author__nickname__icontains=q) |
                         Q(content__icontains=q) for q in q_list]
                     )
-            result = result.filter(query).annotate(sortlist=F('read') + Count('like')*10).order_by('-sortlist').distinct()
+            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             if not result:
                 messages.success(self.request, '「{}」の検索結果なし'.format(search))
             else:
