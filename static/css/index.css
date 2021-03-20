@@ -1175,9 +1175,10 @@ header {
 .comment_aria_list {
     display: grid;
     grid-template-columns: 40px auto;
-    grid-template-rows: 20px minmax(20px, auto) 25px auto;
+    grid-template-rows: 20px minmax(20px, auto) auto auto;
     position: relative;
     grid-gap: 0 10px;
+    margin: 0 0 12px 0;
 }
 
 .comment_aria_list .profile_image {
@@ -1216,6 +1217,7 @@ header {
     grid-column: 2/3;
     grid-row: 3/4;
     font-size: 12px;
+    min-height: auto;
     border-color: rgb(100, 100, 100);
 }
 

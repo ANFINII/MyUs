@@ -380,9 +380,10 @@ class Recommend(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(Recommend, self).get_context_data(**kwargs)    
-        # 急上昇はcreatedが10日以内かつscoreが100以上の上位8レコード
+        # 急上昇はcreatedが1日以内かつscoreが10000以上の上位8レコード
+        # テストはcreatedが50日以内かつscoreが50以上の上位8レコード
         # socreはread + like*10
-        aggregation_date = datetime.today() - timedelta(days=10)
+        aggregation_date = datetime.today() - timedelta(days=50)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
@@ -618,53 +619,53 @@ class VideoDetail(DetailView, FormView):
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
-    # def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.request.POST)
+        video_pk = self.kwargs['pk']
+        target = get_object_or_404(VideoModel, pk=video_pk)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.content_object = target
+            form.author_id = self.request.user.id
+            form.save()
+            return redirect('myus:video_detail', pk=video_pk)
+        return FormView.post(self, request, *args, **kwargs)
+    
+    # def post(self, request, comment_pk, *args, **kwargs):
     #     form = self.form_class(self.request.POST)
+    #     comment = self.request.POST.get('text')
+    #     reply = self.request.POST.get('text2')
     #     video_pk = self.kwargs['pk']
     #     video = get_object_or_404(VideoModel, pk=video_pk)
-    #     if form.is_valid():
-    #         form = form.save(commit=False)
-    #         form.author_id = self.request.user.id
-    #         form.video = video
-    #         form.save()
-    #         return redirect('myus:video_detail', pk=video_pk)
-    #     return FormView.post(self, request, *args, **kwargs)
+    #     comments = get_object_or_404(VideoModel, pk=video_pk, parent=comment_pk)
+    #     if comment:
+    #         if form.is_valid():
+    #             if request.is_ajax():
+    #                 # Ajax 処理を別メソッドに切り離す
+    #                 form = form.save(commit=False)
+    #                 form.author_id = self.request.user.id
+    #                 form.content_object = video
+    #                 form.save()
+    #                 return self.ajax_response(form)
+    #             return super().form_valid(form)
+    #     elif reply:
+    #         if form.is_valid():
+    #             if request.is_ajax():
+    #                 # Ajax 処理を別メソッドに切り離す
+    #                 form = form.save(commit=False)
+    #                 form.author_id = self.request.user.id
+    #                 form.content_object = comments
+    #                 # form.parent = self.object.comments.parent_id
+    #                 form.save()
+    #                 return self.ajax_response(form)
+    #                 # return HttpResponse(form)
+    #             return super().form_valid(form)
+    #     return super().form_invalid(form)
     
-    def post(self, request, comment_pk, *args, **kwargs):
-        form = self.form_class(self.request.POST)
-        comment = self.request.POST.get('text')
-        reply = self.request.POST.get('text2')
-        video_pk = self.kwargs['pk']
-        video = get_object_or_404(VideoModel, pk=video_pk)
-        comments = get_object_or_404(VideoModel, pk=video_pk, parent=comment_pk)
-        if comment:
-            if form.is_valid():
-                if request.is_ajax():
-                    # Ajax 処理を別メソッドに切り離す
-                    form = form.save(commit=False)
-                    form.author_id = self.request.user.id
-                    form.content_object = video
-                    form.save()
-                    return self.ajax_response(form)
-                return super().form_valid(form)
-        elif reply:
-            if form.is_valid():
-                if request.is_ajax():
-                    # Ajax 処理を別メソッドに切り離す
-                    form = form.save(commit=False)
-                    form.author_id = self.request.user.id
-                    form.content_object = comments
-                    # form.parent = self.object.comments.parent_id
-                    form.save()
-                    return self.ajax_response(form)
-                    # return HttpResponse(form)
-                return super().form_valid(form)
-        return super().form_invalid(form)
-    
-    def ajax_response(self, form):
-        # jQueryに対してレスポンスを返すメソッド
-        text = form.cleaned_data.get('text')
-        return HttpResponse(text)
+    # def ajax_response(self, form):
+    #     # jQueryに対してレスポンスを返すメソッド
+    #     text = form.cleaned_data.get('text')
+    #     return HttpResponse(text)
 
     def get_context_data(self, **kwargs):
         context = super(VideoDetail, self).get_context_data(**kwargs)
@@ -1109,54 +1110,35 @@ class ChatDetail(DetailView):
     ordering = ['-created']
     form_class = CommentForm
     success_url = 'chat_detail'
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.request.POST)
+        chat_pk = self.kwargs['pk']
+        target = get_object_or_404(ChatModel, pk=chat_pk)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.content_object = target
+            form.author_id = self.request.user.id
+            form.save()
+            return redirect('myus:chat_detail', pk=chat_pk)
+        return FormView.post(self, request, *args, **kwargs)
     
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.read += 1
-        self.object.save() 
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
-
     def get_context_data(self, **kwargs):
         context = super(ChatDetail, self).get_context_data(**kwargs)
+        chat = get_object_or_404(ChatModel, id=self.kwargs['pk'])
+        total_like = chat.total_like()
+        liked = False
+        if chat.like.filter(id=self.request.user.id).exists():
+            liked = True
+        context['total_like'] = total_like
+        context['liked'] = liked
+        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True)[:50],
         })
         return context
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-    # def post(self, request, *args, **kwargs):
-    #     form = self.form_class(self.request.POST)
-    #     chat_pk = self.kwargs['pk']
-    #     chat = get_object_or_404(ChatModel, pk=chat_pk)
-    #     if form.is_valid():
-    #         form = form.save(commit=False)
-    #         form.author_id = self.request.user.id
-    #         form.chat = chat
-    #         form.save()
-    #         return redirect('myus:chat_detail', pk=chat_pk)
-    #     return FormView.post(self, request, *args, **kwargs)
-    
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(self.request.POST)
-        chat_pk = self.kwargs['pk']
-        chat = get_object_or_404(ChatModel, pk=chat_pk)
-        if form.is_valid():
-            if request.is_ajax():
-                # Ajax 処理を別メソッドに切り離す
-                form = form.save(commit=False)
-                form.author_id = self.request.user.id
-                form.content_object = chat
-                form.save()
-                return self.ajax_response(form)
-                # return HttpResponse(form)
-            return super().form_valid(form)
-        return super().form_invalid(form)
-    
-    def ajax_response(self, form):
-        # jQueryに対してレスポンスを返すメソッド
-        text = form.cleaned_data.get('text')
-        return HttpResponse(text)
 
 def ChatLike(request, pk):
     """ここにメソッドの説明を記述する"""
