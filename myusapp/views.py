@@ -397,41 +397,23 @@ class Recommend(ListView):
 
 class UserPage(ListView):
     """UserPageを表示"""
-    model = SearchTag
+    model = User
     template_name = 'registration/userpage.html'
-    context_object_name = 'SearchTag_list'
+    context_object_name = 'user_list'
     form_class = SearchTagForm
 
     def get_context_data(self, **kwargs):
         context = super(UserPage, self).get_context_data(**kwargs)
+        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+        context['author_name'] = author
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'video_list': VideoModel.objects.filter(author_id=self.request.user.id, publish=True),
-            'live_list': LiveModel.objects.filter(author_id=self.request.user.id, publish=True),
-            'music_list': MusicModel.objects.filter(author_id=self.request.user.id, publish=True),
-            'picture_list': PictureModel.objects.filter(author_id=self.request.user.id, publish=True),
-            'blog_list': BlogModel.objects.filter(author_id=self.request.user.id, publish=True),
-            'chat_list': ChatModel.objects.filter(author_id=self.request.user.id, publish=True),
-        })
-        return context
-
-class UserPage_Other(ListView):
-    """他人のUserPageを表示"""
-    model = SearchTag
-    template_name = 'registration/userpage_other.html'
-    context_object_name = 'SearchTag_list'
-    form_class = SearchTagForm
-
-    def get_context_data(self, **kwargs):
-        context = super(UserPage_Other, self).get_context_data(**kwargs)
-        context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'video_list': VideoModel.objects.filter(author_id=self.request.author_id, publish=True),
-            'live_list': LiveModel.objects.filter(author_id=self.request.author_id, publish=True),
-            'music_list': MusicModel.objects.filter(author_id=self.request.author_id, publish=True),
-            'picture_list': PictureModel.objects.filter(author_id=self.request.author_id, publish=True),
-            'blog_list': BlogModel.objects.filter(author_id=self.request.author_id, publish=True),
-            'chat_list': ChatModel.objects.filter(author_id=self.request.author_id, publish=True),
+            'video_list': VideoModel.objects.filter(author_id=author, publish=True),
+            'live_list': LiveModel.objects.filter(author_id=author, publish=True),
+            'music_list': MusicModel.objects.filter(author_id=author, publish=True),
+            'picture_list': PictureModel.objects.filter(author_id=author, publish=True),
+            'blog_list': BlogModel.objects.filter(author_id=author, publish=True),
+            'chat_list': ChatModel.objects.filter(author_id=author, publish=True),
         })
         return context
 

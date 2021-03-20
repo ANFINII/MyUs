@@ -5,8 +5,7 @@
 
 {% block content %}
 <main class="main_contents">
-    <h1>UserPage</h1>
-    {% if user.is_authenticated %}
+    <h1>UserPage<span>{{ author_name }}</span></h1>
     <hr>
 
     <article class="main_article_index">
@@ -43,9 +42,5 @@
         <h2>Chat</h2>
         {% include "parts/article_chat.html" %}
     </article>
-
-    {% else %}
-    <h2 class="login_required">ログインしてください</h2>
-    {% endif %}
 </main>
 {% endblock content %}

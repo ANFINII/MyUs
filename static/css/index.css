@@ -564,6 +564,11 @@ header {
     text-overflow: ellipsis;
 }
 
+.main_contents h1 span {
+    font-size: 18px;
+    margin: 6px 0 0 10px;
+}
+
 .messages_search {
     list-style: none;
     font-size: 14px;
