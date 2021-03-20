@@ -21,10 +21,3 @@ class CommentForm(forms.ModelForm):
         fields = [
             'text', 'parent',
         ]
-
-# class ReplyForm(forms.ModelForm):
-#     class Meta:
-#         model = Reply
-#         fields = [
-#             'text',
-#         ]

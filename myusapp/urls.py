@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import Index, Recommend, Signup, Login, Logout, Withdrawal
 from .views import Profile, Profile_update, UserPolicy, Knowledge
-from .views import FollowList, FollowerList, FollowCreate, UserPage, UserPage_Other
+from .views import FollowList, FollowerList, FollowCreate, UserPage
 from .views import VideoList, VideoCreate, VideoDetail, VideoLike
 from .views import LiveList, LiveCreate, LiveDetail, LiveLike
 from .views import MusicList, MusicCreate, MusicDetail, MusicLike
@@ -30,8 +30,7 @@ urlpatterns = [
     path('follow/', FollowList.as_view(), name='follow_list'),
     path('follower/', FollowerList.as_view(), name='follower_list'),
     path('follow_create/', FollowCreate.as_view(), name='follow_create'),
-    path('userpage/', UserPage.as_view(), name='userpage'),
-    path('userpage_test/', UserPage_Other.as_view(), name='userpage_other'),
+    path('userpage/<str:nickname>', UserPage.as_view(), name='userpage'),
 
     path('video/', VideoList.as_view(), name='video_list'),
     path('video_create/', VideoCreate.as_view(), name='video_create'),
