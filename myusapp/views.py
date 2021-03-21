@@ -321,22 +321,27 @@ class MyPage_update(UpdateView):
         """バリデーションに成功した時"""
         try:
             userpage = form.save(commit=False)
-            userpage.mypage_image = self.request.user.mypage_image
-            userpage.content = self.request.user.content
+            userpage.user = self.request.user
             
-            userpage.mypage_email = self.request.user.mypage_email
             if has_email(self.request.user.mypage_email):
                 messages.error(self.request, 'メールアドレスの形式が違います!')
                 return super().form_invalid(form)
+            
             userpage.save()
             return super(MyPage_update, self).form_valid(form)
         except ValueError:
+            messages.error(self.request, '更新できませんでした!')
+            return super().form_invalid(form)
+        except TypeError:
             messages.error(self.request, '更新できませんでした!')
             return super().form_invalid(form)
 
     def form_invalid(self, form):
         """バリデーションに失敗した時"""
         if has_email(self.request.user.mypage_email):
+            messages.error(self.request, 'メールアドレスの形式が違います!')
+            return super().form_invalid(form)
+        else:
             messages.error(self.request, 'メールアドレスの形式が違います!')
             return super().form_invalid(form)
         

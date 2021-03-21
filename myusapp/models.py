@@ -67,15 +67,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     # Myページ用フィールド
     mypage_image   = models.ImageField(upload_to='users/', default='../static/img/MyUs_banner.png', blank=True, null=True)
-    mypage_email   = models.EmailField(max_length=120, blank=True, null=True, unique=True)
+    mypage_email   = models.EmailField(max_length=120, blank=True, null=True, default='abc@gmail.com')
     content        = models.TextField(blank=True)
 
     objects = UserManager()
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'nickname'
-    REQUIRED_FIELDS = ['email',]
-
+    REQUIRED_FIELDS = ['username', 'email']
+    
     class Meta:
         verbose_name_plural = '00 User'
     
