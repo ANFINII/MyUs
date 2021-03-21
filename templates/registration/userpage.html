@@ -1,10 +1,16 @@
 {% extends 'base2.html' %}
-{% block title %}<title>MyUs UserPage</title>{% endblock title %}
+{% block title %}<title>MyUs UserPage{{ author_name }}</title>{% endblock title %}
 
 {% load static %}
 
 {% block content %}
 <main class="main_contents">
+    <div class="mypage_banner">
+        <div class="mypage_banner_image">
+            <img src="{{ author_name.mypage_image.url }}" title="{{ author_name }}">
+        </div>
+    </div>
+
     <h1>UserPage<span>{{ author_name }}</span></h1>
     <hr>
 

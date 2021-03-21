@@ -104,6 +104,21 @@ def image_url(self):
     if self.user_image and hasattr(self.user_image, 'url'):
         return self.user_image.url
     
+class MyPage(models.Model):
+    """ユーザーに紐づくMyPageモデル"""
+    author        = models.OneToOneField(User, on_delete=models.CASCADE)
+    mypage_image  = models.ImageField(upload_to='users/', default='../static/img/user_icon.png', blank=True, null=True)
+    mypage_email  = models.EmailField(max_length=120, unique=True)
+    content       = models.TextField(blank=True)
+    read          = models.IntegerField(blank=True, null=True, default=0)
+    updated       = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+       return self.user
+   
+    class Meta:
+        verbose_name_plural = '00 MyPage'
+    
 class FollowModel(models.Model):
     """ここにメソッドの説明を記述する"""
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')

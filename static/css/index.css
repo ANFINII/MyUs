@@ -243,7 +243,7 @@ header {
 }
 
 .dropdown_menu_profile {
-    height: 241px;
+    height: 289px;
 }
 
 /* 閉じる用のカバー */
@@ -915,6 +915,18 @@ header {
 
 .follow_content_4 a:hover {
     color: rgb(0, 85, 215);
+}
+
+.mypage_banner_image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.mypage_banner img {
+    width: 100vw;
+    height: auto;
 }
 
 /* コンテンツ説明 */
