@@ -5,11 +5,13 @@
 
 {% block content %}
 <main class="main_contents">
+    {% for item in user_list %}
     <div class="mypage_banner">
         <div class="mypage_banner_image">
-            <img src="{{ author_name.mypage_image.url }}" title="{{ author_name }}">
+            <img src="{{ item.mypage_image.url }}" title="{{ author_name }}">
         </div>
     </div>
+    {% endfor %}
 
     <h1>UserPage<span>{{ author_name }}</span></h1>
     <hr>

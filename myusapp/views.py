@@ -15,7 +15,7 @@ from dateutil.relativedelta import relativedelta
 from itertools import islice, chain
 from functools import reduce
 from operator import and_
-from .models import MyPage, Tag, SearchTag, Comment, FollowModel, TodoModel
+from .models import Tag, SearchTag, Comment, FollowModel, TodoModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm, CommentForm
 import re, string, random
@@ -236,7 +236,7 @@ class Withdrawal(View):
                 return redirect('myus:withdrawal')
 
 def Profile(request):
-    """ここにメソッドの説明を記述する"""
+    """アカウント設定"""
     object_profile = User.objects.all()
     return render(request, 'registration/profile.html', {'object_profile':object_profile})
 
@@ -304,6 +304,66 @@ class Profile_update(UpdateView):
         
     def get_object(self):
         return self.request.user
+    
+def MyPage(request):
+    """Myページ遷移"""
+    object_profile = User.objects.all()
+    return render(request, 'registration/mypage.html', {'object_profile':object_profile})
+    
+class MyPage_update(UpdateView):
+    """Myページ更新"""
+    model = User
+    fields = ('mypage_image', 'mypage_email', 'content')
+    template_name = 'registration/mypage_update.html'
+    success_url = reverse_lazy('myus:mypage')
+    
+    def form_valid(self, form):
+        """バリデーションに成功した時"""
+        try:
+            userpage = form.save(commit=False)
+            userpage.mypage_image = self.request.user.mypage_image
+            userpage.content = self.request.user.content
+            
+            userpage.mypage_email = self.request.user.mypage_email
+            if has_email(self.request.user.mypage_email):
+                messages.error(self.request, 'メールアドレスの形式が違います!')
+                return super().form_invalid(form)
+            userpage.save()
+            return super(MyPage_update, self).form_valid(form)
+        except ValueError:
+            messages.error(self.request, '更新できませんでした!')
+            return super().form_invalid(form)
+
+    def form_invalid(self, form):
+        """バリデーションに失敗した時"""
+        if has_email(self.request.user.mypage_email):
+            messages.error(self.request, 'メールアドレスの形式が違います!')
+            return super().form_invalid(form)
+        
+    def get_object(self):
+        return self.request.user
+    
+class UserPage(ListView):
+    """UserPageを表示"""
+    model = User
+    template_name = 'registration/userpage.html'
+    form_class = SearchTagForm
+
+    def get_context_data(self, **kwargs):
+        context = super(UserPage, self).get_context_data(**kwargs)
+        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+        context['author_name'] = author
+        context.update({
+            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'user_list': User.objects.filter(nickname=author),
+            'video_list': VideoModel.objects.filter(author_id=author, publish=True),
+            'live_list': LiveModel.objects.filter(author_id=author, publish=True),
+            'music_list': MusicModel.objects.filter(author_id=author, publish=True),
+            'picture_list': PictureModel.objects.filter(author_id=author, publish=True),
+            'blog_list': BlogModel.objects.filter(author_id=author, publish=True),
+            'chat_list': ChatModel.objects.filter(author_id=author, publish=True),
+        })
+        return context
 
 # SearchTag追加
 class TagCreate(CreateView):
@@ -394,64 +454,7 @@ class Recommend(ListView):
             'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
         })
         return context
-
-class UserPage(ListView):
-    """UserPageを表示"""
-    model = User
-    template_name = 'registration/userpage.html'
-    context_object_name = 'user_list'
-    form_class = SearchTagForm
-
-    def get_context_data(self, **kwargs):
-        context = super(UserPage, self).get_context_data(**kwargs)
-        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
-        context['author_name'] = author
-        
-        context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            # 'user_list': UserPage.objects.filter(author_id=author),
-            'video_list': VideoModel.objects.filter(author_id=author, publish=True),
-            'live_list': LiveModel.objects.filter(author_id=author, publish=True),
-            'music_list': MusicModel.objects.filter(author_id=author, publish=True),
-            'picture_list': PictureModel.objects.filter(author_id=author, publish=True),
-            'blog_list': BlogModel.objects.filter(author_id=author, publish=True),
-            'chat_list': ChatModel.objects.filter(author_id=author, publish=True),
-        })
-        return context
     
-def MyPage(request):
-    """ここにメソッドの説明を記述する"""
-    object_profile = User.objects.all()
-    return render(request, 'registration/mypage.html', {'object_profile':object_profile})
-    
-class MyPage_update(UpdateView):
-    """アカウント更新"""
-    model = User
-    fields = ('mypage_image', 'mypage_email', 'content')
-    template_name = 'registration/mypage_update.html'
-    success_url = reverse_lazy('myus:mypage')
-    
-    def form_valid(self, form):
-        """バリデーションに成功した時"""
-        userpage = form.save(commit=False)
-        if has_email(self.request.user.userpage.userpage_email):
-            messages.error(self.request, 'メールアドレスの形式が違います!')
-            return super().form_invalid(form)
-        userpage.save()
-        return super(MyPage_update, self).form_valid(form)
-
-    def form_invalid(self, form):
-        """バリデーションに失敗した時"""
-        if has_email(self.request.user.userpage.userpage_email):
-            messages.error(self.request, 'メールアドレスの形式が違います!')
-            return super().form_invalid(form)
-        else:
-            messages.error(self.request, 'メールアドレスは既に登録済みです!')
-            return super().form_invalid(form)
-        
-    def get_object(self):
-        return self.request.user
-
 # Follow
 class FollowCreate(CreateView):
     """ここにメソッドの説明を記述する"""

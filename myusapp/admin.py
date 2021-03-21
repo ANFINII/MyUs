@@ -2,16 +2,10 @@ from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
-from .models import User, MyPage, SearchTag, Tag, FollowModel, Comment
+from .models import User, SearchTag, Tag, FollowModel, Comment
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, TodoModel
 
-# Admin用の管理画面
-class MyPageInline(admin.TabularInline):
-    model = MyPage
-    extra = 0
-    readonly_fields = ('author', 'read', 'updated')
-    verbose_name_plural = 'Myページ情報'
-    
+# Admin用の管理画面    
 class SearchTagInline(admin.TabularInline):
     model = SearchTag
     extra = 1
@@ -36,13 +30,14 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email', 'nickname', 'full_name', 'phone')
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
-    inlines = [MyPageInline, SearchTagInline]
+    inlines = [SearchTagInline]
     
     # 詳細画面
     readonly_fields = ('full_name', 'birthday', 'age', 'date_joined', 'last_login')
     fieldsets = [
         ('アカウント情報', {'fields': ('user_image', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone', 'location', 'profession', 'introduction', 'groups', 'user_permissions')}),
-        ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')})
+        ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
+        ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content')})
     ]
     
 @admin.register(FollowModel)
