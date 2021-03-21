@@ -306,8 +306,8 @@ class MyUsAdminSite(AdminSite):
     def has_permission(self, request):
         return request.user.is_active
 
-mypage_site = MyUsAdminSite(name='mypage')
-mypage_site.disable_action('delete_selected')
+mymanage_site = MyUsAdminSite(name='mymanage')
+mymanage_site.disable_action('delete_selected')
 
 class FollowModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'following', 'created')
@@ -341,7 +341,7 @@ class FollowModelAdminSite(admin.ModelAdmin):
     def following_introduction(self, obj):
         return obj.following.introduction
     following_introduction.short_description = 'Introduction'
-mypage_site.register(FollowModel, FollowModelAdminSite)
+mymanage_site.register(FollowModel, FollowModelAdminSite)
 
 class SearchTagAdminSite(admin.ModelAdmin):
     list_display = ('id', 'sequence', 'searchtag')
@@ -362,7 +362,7 @@ class SearchTagAdminSite(admin.ModelAdmin):
     def get_queryset(self, request): 
         qs = super(SearchTagAdminSite, self).get_queryset(request) 
         return qs.filter(author=request.user)
-mypage_site.register(SearchTag, SearchTagAdminSite)
+mymanage_site.register(SearchTag, SearchTagAdminSite)
 
 class TagAdminSite(admin.ModelAdmin):
     list_display = ('id', 'tag',)
@@ -381,7 +381,7 @@ class TagAdminSite(admin.ModelAdmin):
     def get_queryset(self, request): 
         qs = super(TagAdminSite, self).get_queryset(request) 
         return qs.filter(author=request.user)
-mypage_site.register(Tag, TagAdminSite)
+mymanage_site.register(Tag, TagAdminSite)
 
 class CommentInline(GenericTabularInline):
     model = Comment
@@ -430,7 +430,7 @@ class VideoModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
-mypage_site.register(VideoModel, VideoModelAdminSite)
+mymanage_site.register(VideoModel, VideoModelAdminSite)
 
 class LiveModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
@@ -467,7 +467,7 @@ class LiveModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
-mypage_site.register(LiveModel, LiveModelAdminSite)
+mymanage_site.register(LiveModel, LiveModelAdminSite)
 
 class MusicModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
@@ -504,7 +504,7 @@ class MusicModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
-mypage_site.register(MusicModel, MusicModelAdminSite)
+mymanage_site.register(MusicModel, MusicModelAdminSite)
 
 class PictureModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
@@ -541,7 +541,7 @@ class PictureModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
-mypage_site.register(PictureModel, PictureModelAdminSite)
+mymanage_site.register(PictureModel, PictureModelAdminSite)
 
 class BlogModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
@@ -578,7 +578,7 @@ class BlogModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
-mypage_site.register(BlogModel, BlogModelAdminSite)
+mymanage_site.register(BlogModel, BlogModelAdminSite)
 
 class ChatModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
@@ -615,7 +615,7 @@ class ChatModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
-mypage_site.register(ChatModel, ChatModelAdminSite)
+mymanage_site.register(ChatModel, ChatModelAdminSite)
 
 class CollaboModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
@@ -652,7 +652,7 @@ class CollaboModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
-mypage_site.register(CollaboModel, CollaboModelAdminSite)
+mymanage_site.register(CollaboModel, CollaboModelAdminSite)
 
 class TodoModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'priority', 'duedate', 'created', 'updated')
@@ -676,4 +676,4 @@ class TodoModelAdminSite(admin.ModelAdmin):
     def get_queryset(self, request): 
         qs = super(TodoModelAdminSite, self).get_queryset(request) 
         return qs.filter(author=request.user)
-mypage_site.register(TodoModel, TodoModelAdminSite)
+mymanage_site.register(TodoModel, TodoModelAdminSite)
