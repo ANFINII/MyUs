@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <!-- <table border="1" bordercolor="green">
+            <table border="1" bordercolor="green">
                 <thead>
                     <tr><th class="td-color">バナー画像</th>
                         <th valign="baseline">
@@ -46,14 +46,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td class="td-color">投稿者名</td><td><td class="td-indent">{{ user.nickname }}</td></tr>
-                    <tr><td class="td-color">メールアドレス</td><td><input type="text" name="mypage_email" class="form-control" maxlength="120" value="{{ user.mypage.mypage_email }}"></td></tr>
-                    <tr><td class="td-color">閲覧数</td><td class="td-indent">{{ user.mypage.read }}回</td></tr>
+                    <tr><td class="td-color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
+                    <tr><td class="td-color">メールアドレス</td><td><input type="text" name="mypage_email" class="form-control" maxlength="120" value="{{ user.mypage_email }}"></td></tr>
                 </tbody>
                 <tfoot>
-                    <tr><td class="td-color">内容</td><td><textarea name="content" rows="1" class="form-control textarea">{{ user.mypage.content }}</textarea></td></tr>
+                    <tr><td class="td-color">内容</td><td><textarea name="content" rows="1" class="form-control textarea">{{ user.content }}</textarea></td></tr>
                 </tfoot>
-            </table> -->
+            </table>
             
             {% include 'parts/footer-profile.html' %}
         </article>

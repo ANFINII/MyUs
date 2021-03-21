@@ -64,6 +64,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin       = models.BooleanField(default=False)
     last_login     = models.DateTimeField(_('last login'), auto_now_add=True)
     date_joined    = models.DateTimeField(_('date joined'), default=timezone.now)
+    
+    # Myページ用フィールド
+    mypage_image   = models.ImageField(upload_to='users/', default='../static/img/MyUs_banner.png', blank=True, null=True)
+    mypage_email   = models.EmailField(max_length=120, blank=True, null=True, unique=True)
+    content        = models.TextField(blank=True)
 
     objects = UserManager()
 
@@ -81,6 +86,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         "ユーザーにパーミッションのリストを表示させますか?"
         return True
+    
+    def get_usernaem(self):
+        """nickname"""
+        return self.nickname
 
     def get_full_name(self):
         """Return the first_name plus the last_name, with a space in between."""
@@ -104,20 +113,10 @@ def image_url(self):
     if self.user_image and hasattr(self.user_image, 'url'):
         return self.user_image.url
     
-class MyPage(models.Model):
-    """ユーザーに紐づくMyPageモデル"""
-    author        = models.OneToOneField(User, on_delete=models.CASCADE)
-    mypage_image  = models.ImageField(upload_to='users/', default='../static/img/user_icon.png', blank=True, null=True)
-    mypage_email  = models.EmailField(max_length=120, unique=True)
-    content       = models.TextField(blank=True)
-    read          = models.IntegerField(blank=True, null=True, default=0)
-    updated       = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-       return self.user
-   
-    class Meta:
-        verbose_name_plural = '00 MyPage'
+@property
+def mypage_image(self):
+    if self.mypage_image and hasattr(self.mypage_image, 'url'):
+        return self.mypage_image.url
     
 class FollowModel(models.Model):
     """ここにメソッドの説明を記述する"""
