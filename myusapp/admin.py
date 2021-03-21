@@ -2,11 +2,17 @@ from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
-from .models import User, SearchTag, Tag, FollowModel, Comment
+from .models import User, MyPage, SearchTag, Tag, FollowModel, Comment
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, TodoModel
 
 # Admin用の管理画面
-class SearchTagInline(admin.StackedInline):
+class MyPageInline(admin.TabularInline):
+    model = MyPage
+    extra = 0
+    readonly_fields = ('author', 'read', 'updated')
+    verbose_name_plural = 'Myページ情報'
+    
+class SearchTagInline(admin.TabularInline):
     model = SearchTag
     extra = 1
     max_num = 10
@@ -22,7 +28,7 @@ class CommentInlineAdmin(GenericTabularInline):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'いいね数'
-
+    
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('id', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone')
@@ -30,7 +36,7 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email', 'nickname', 'full_name', 'phone')
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
-    inlines = [SearchTagInline]
+    inlines = [MyPageInline, SearchTagInline]
     
     # 詳細画面
     readonly_fields = ('full_name', 'birthday', 'age', 'date_joined', 'last_login')
@@ -289,8 +295,8 @@ class TodoModelAdmin(admin.ModelAdmin):
 
 # MyPgage用の管理画面
 class MyUsAdminSite(AdminSite):
-    site_title = 'MyUsマイページ'
-    site_header = 'MyUsマイページ'
+    site_title = 'MyUs投稿管理'
+    site_header = 'MyUs投稿管理'
     index_title = 'メニュー'
     index_template = ''
     site_url = '/'

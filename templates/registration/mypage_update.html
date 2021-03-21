@@ -1,0 +1,62 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsマイページ設定</title>{% endblock title %}
+
+{% load static %}
+
+{% block customcss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+{% endblock customcss %}
+
+{% block content %}
+<main class="main_contents">
+    <form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
+        <article class="main_profile">
+            <h1>Myページ設定</h1>
+            
+            {% if messages %}
+            <ul class="messages_profile">
+                {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li><br>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <div class="btn-column">
+                <div class="btn-column1">
+                    <input type="submit" id="submit" class="btn btn-sm btn-success" value="登録">
+                </div>
+                <div class="btn-column2">
+                    <a href="{% url 'myus:mypage' %}" class="btn btn-sm btn-primary" role="button">戻る</a>
+                </div>
+            </div>
+
+            <!-- <table border="1" bordercolor="green">
+                <thead>
+                    <tr><th class="td-color">バナー画像</th>
+                        <th valign="baseline">
+                            <label for="account_image_input" class="update_account_image">
+                                <svg class="bi bi-person-square" width="3.5em" height="3.5em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                    <path fill-rule="evenodd" d="M2 15v-1c0-1 1-4 6-4s6 3 6 4v1H2zm6-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                </svg>
+                                <input type="file" name="mypage_image" accept="image/*" id="account_image_input" class="custom-file-input">
+                            </label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="td-color">投稿者名</td><td><td class="td-indent">{{ user.nickname }}</td></tr>
+                    <tr><td class="td-color">メールアドレス</td><td><input type="text" name="mypage_email" class="form-control" maxlength="120" value="{{ user.mypage.mypage_email }}"></td></tr>
+                    <tr><td class="td-color">閲覧数</td><td class="td-indent">{{ user.mypage.read }}回</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr><td class="td-color">内容</td><td><textarea name="content" rows="1" class="form-control textarea">{{ user.mypage.content }}</textarea></td></tr>
+                </tfoot>
+            </table> -->
+            
+            {% include 'parts/footer-profile.html' %}
+        </article>
+    </form>
+</main>
+{% endblock content %}
