@@ -67,7 +67,7 @@
 
                     <div class="chat_content">
                         <label for="comment_aria_check_id" class="comment_aria_list">
-                            <a href="{% url 'myus:userpage_other' %}">
+                            <a href="{% url 'myus:userpage' object.author.nickname %}">
                                 <img src="{{ object.author.user_image.url }}" title="{{ object.author.nickname }}" class="profile_image_comment">
                             </a>
                             <div class="comment_aria_list_1">
@@ -95,7 +95,7 @@
                 </label>
                 {% for item in chat_list %}
                 <div class="chat_section_nav_list">
-                    <a href="{% url 'myus:userpage_other' %}">
+                    <a href="{% url 'myus:userpage' item.author.nickname %}">
                         <img src="{{ item.author.user_image.url }}" title="{{ item.author.nickname }}" class="profile_image_comment">
                     </a>
                     <a  href="{% url 'myus:chat_detail' item.pk %}">
@@ -108,7 +108,7 @@
             <div class="chat_section_main">
                 {% for comment in comment_list %}
                 <label for="comment_aria_check_id" class="comment_aria_list">
-                    <a href="{% url 'myus:userpage_other' %}">
+                    <a href="{% url 'myus:userpage' comment.author.nickname %}">
                         <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
                     </a>
                     <div class="comment_aria_list_1">
@@ -123,7 +123,7 @@
             <div class="chat_section_method">
                 {% for reply in reply_list %}
                 <div class="comment_aria_list">
-                    <a href="{% url 'myus:userpage_other' %}">
+                    <a href="{% url 'myus:userpage' reply.author.nickname %}">
                         <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
                     </a>
                     <div class="comment_aria_list_1">
