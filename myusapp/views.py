@@ -481,12 +481,13 @@ class FollowList(ListView):
     
     def get_context_data(self, **kwargs):
         context = super(FollowList, self).get_context_data(**kwargs)
+        # author = get_object_or_404(User, id=self.kwargs['id'])
         # follower__username = user.username フォロー数
         # following__username = user.username フォロワー数
         context['follower_count'] = FollowModel.objects.filter(following_id=self.request.user.id).count()
         context['following_count'] = FollowModel.objects.filter(follower_id=self.request.user.id).count()
-        context['follower_counts'] = FollowModel.objects.filter(follower__isnull=False, follower__username__exact=self.kwargs.get('username'))
-        context['following_counts'] = FollowModel.objects.filter(following__isnull=False, following__username__exact=self.kwargs.get('username'))
+        context['follower_counts'] = FollowModel.objects.filter(following_id=2).count()
+        context['following_counts'] = FollowModel.objects.filter(follower_id=1).count()
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -531,8 +532,8 @@ class FollowerList(ListView):
         # user = get_object_or_404(User, username=self.kwargs.get('username'))
         context['follower_count'] = FollowModel.objects.filter(following_id=self.request.user.id).count()
         context['following_count'] = FollowModel.objects.filter(follower_id=self.request.user.id).count()
-        context['follower_counts'] = FollowModel.objects.filter(follower__isnull=False, follower__username__exact=self.kwargs.get('username'))
-        context['following_counts'] = FollowModel.objects.filter(following__isnull=False, following__username__exact=self.kwargs.get('username'))
+        context['follower_counts'] = FollowModel.objects.filter(follower=self.kwargs.get('nickname')).count()
+        context['following_counts'] = FollowModel.objects.filter(following=self.kwargs.get('nickname')).count()
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -604,7 +605,7 @@ class VideoList(ListView):
         return context
     
     def get_queryset(self, **kwargs):
-        result = VideoModel.objects.filter(publish=True)
+        result = VideoModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
 
         if search:
@@ -705,7 +706,7 @@ class VideoDetail(DetailView, FormView):
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'video_list': VideoModel.objects.filter(publish=True)[:50],
+            'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:50],
         })
         return context
 
@@ -757,7 +758,7 @@ class LiveList(ListView):
         return context
     
     def get_queryset(self, **kwargs):
-        result = LiveModel.objects.filter(publish=True)
+        result = LiveModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
         
         if search:
@@ -791,7 +792,7 @@ class LiveDetail(DetailView):
         context = super(LiveDetail, self).get_context_data(**kwargs)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'live_list': LiveModel.objects.filter(publish=True)[:50],
+            'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:50],
         })
         return context
 
@@ -843,7 +844,7 @@ class MusicList(ListView):
         return context
     
     def get_queryset(self, **kwargs):
-        result = MusicModel.objects.filter(publish=True)
+        result = MusicModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
         
         if search:
@@ -878,7 +879,7 @@ class MusicDetail(DetailView):
         context = super(MusicDetail, self).get_context_data(**kwargs)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'music_list': MusicModel.objects.filter(publish=True)[:50],
+            'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:50],
         })
         return context
 
@@ -930,7 +931,7 @@ class PictureList(ListView):
         return context
     
     def get_queryset(self, **kwargs):
-        result = PictureModel.objects.filter(publish=True)
+        result = PictureModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
         
         if search:
@@ -964,7 +965,7 @@ class PictureDetail(DetailView):
         context = super(PictureDetail, self).get_context_data(**kwargs)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'picture_list': PictureModel.objects.filter(publish=True)[:50],
+            'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:50],
         })
         return context
 
@@ -1016,7 +1017,7 @@ class BlogList(ListView):
         return context
     
     def get_queryset(self, **kwargs):
-        result = BlogModel.objects.filter(publish=True)
+        result = BlogModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
         
         if search:
@@ -1051,7 +1052,7 @@ class BlogDetail(DetailView):
         context = super(BlogDetail, self).get_context_data(**kwargs)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'blog_list': BlogModel.objects.filter(publish=True)[:50],
+            'blog_list': BlogModel.objects.filter(publish=True).order_by('-created')[:50],
         })
         return context
 
@@ -1103,7 +1104,7 @@ class ChatList(ListView):
         return context
     
     def get_queryset(self, **kwargs):
-        result = ChatModel.objects.filter(publish=True)
+        result = ChatModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
         
         if search:
@@ -1161,7 +1162,7 @@ class ChatDetail(DetailView):
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'chat_list': ChatModel.objects.filter(publish=True)[:50],
+            'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:50],
         })
         return context
 
@@ -1201,7 +1202,7 @@ class CollaboList(ListView):
         return context
     
     def get_queryset(self, **kwargs):
-        result = CollaboModel.objects.filter(publish=True)
+        result = CollaboModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
         
         if search:
@@ -1235,7 +1236,7 @@ class CollaboDetail(DetailView):
         context = super(CollaboDetail, self).get_context_data(**kwargs)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'collabo_list': CollaboModel.objects.filter(publish=True)[:50],
+            'collabo_list': CollaboModel.objects.filter(publish=True).order_by('-created')[:50],
         })
         return context
 
@@ -1276,6 +1277,13 @@ class TodoList(ListView):
     template_name = 'todo/todo.html'
     context_object_name = 'todo_list'
     ordering = ['-duedate']
+    
+    def get_context_data(self, **kwargs):
+        context = super(TodoList, self).get_context_data(**kwargs)
+        context.update({
+            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+        })
+        return context
 
     def get_queryset(self, **kwargs):
         result = TodoModel.objects.filter(author_id=self.request.user.id)
@@ -1317,6 +1325,7 @@ class TodoDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(TodoDetail, self).get_context_data(**kwargs)
         context.update({
+            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'todo_list': TodoModel.objects.filter(author_id=self.request.user.id),
         })
         return context
