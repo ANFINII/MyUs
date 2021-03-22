@@ -1280,11 +1280,8 @@ audio:active {
 }
 
 /* ToDoデザイン */
-.todo_create {
-    margin: 25px 0 15px 0;
-}
-
-.follow_button{
+.todo_create,
+.follow_button {
     margin: 0 0 10px 0;
 }
 
