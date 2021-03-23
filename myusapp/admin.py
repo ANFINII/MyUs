@@ -65,10 +65,6 @@ class SearchTagAdmin(admin.ModelAdmin):
     fieldsets = [
         ('編集項目', {'fields': ('sequence', 'searchtag')}),
     ]
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(TagAdmin, self).save_model(request, obj, form, change)
     
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
@@ -80,10 +76,6 @@ class TagAdmin(admin.ModelAdmin):
     fieldsets = [
         ('編集項目', {'fields': ('tag',)}),
     ]
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(TagAdmin, self).save_model(request, obj, form, change)
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
@@ -112,13 +104,9 @@ class VideoModelAdmin(admin.ModelAdmin):
     
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'images', 'videos', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'videos', 'publish', 'tags', 'like', 'read')}),
         ('確認項目', {'fields': ('total_like', 'created', 'updated')})
     ]
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(VideoModelAdmin, self).save_model(request, obj, form, change)
 
     def total_like(self, obj):
         return obj.like.count()
@@ -136,13 +124,9 @@ class LiveModelAdmin(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'images', 'lives', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'lives', 'publish', 'tags', 'like', 'read')}),
         ('確認項目', {'fields': ('total_like', 'created', 'updated')})
     ]
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(LiveModelAdmin, self).save_model(request, obj, form, change)
     
     def total_like(self, obj):
         return obj.like.count()
@@ -160,13 +144,9 @@ class MusicModelAdmin(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'lyrics', 'musics', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'lyrics', 'musics', 'publish', 'tags', 'like', 'read')}),
         ('確認項目', {'fields': ('total_like', 'created', 'updated')})
     ]
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(MusicModelAdmin, self).save_model(request, obj, form, change)
     
     def total_like(self, obj):
         return obj.like.count()
@@ -184,13 +164,9 @@ class PictureModelAdmin(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'images', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'publish', 'tags', 'like', 'read')}),
         ('確認項目', {'fields': ('total_like', 'created', 'updated')})
     ]
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(PictureModelAdmin, self).save_model(request, obj, form, change)
 
     def total_like(self, obj):
         return obj.like.count()
@@ -208,13 +184,9 @@ class BlogModelAdmin(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'images', 'richtext', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'richtext', 'publish', 'tags', 'like', 'read')}),
         ('確認項目', {'fields': ('total_like', 'created', 'updated')})
     ]
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(BlogModelAdmin, self).save_model(request, obj, form, change)
 
     def total_like(self, obj):
         return obj.like.count()
@@ -232,13 +204,9 @@ class ChatModelAdmin(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'publish', 'tags', 'like', 'read')}),
         ('確認項目', {'fields': ('total_like', 'created', 'updated')})
     ]
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(ChatModelAdmin, self).save_model(request, obj, form, change)
     
     def total_like(self, obj):
         return obj.like.count()
@@ -256,13 +224,9 @@ class CollaboModelAdmin(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'publish', 'tags', 'like', 'read')}),
         ('確認項目', {'fields': ('total_like', 'created', 'updated')})
     ]
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(CollaboModelAdmin, self).save_model(request, obj, form, change)
     
     def total_like(self, obj):
         return obj.like.count()
@@ -280,13 +244,9 @@ class TodoModelAdmin(admin.ModelAdmin):
     
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'priority', 'duedate')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'priority', 'duedate')}),
         ('確認項目', {'fields': ('created', 'updated')})
     ]
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(TodoModelAdmin, self).save_model(request, obj, form, change)
 
 # MyPgage用の管理画面
 class MyUsAdminSite(AdminSite):
