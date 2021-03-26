@@ -87,7 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         "ユーザーにパーミッションのリストを表示させますか?"
         return True
     
-    def get_usernaem(self):
+    def get_username(self):
         """nickname"""
         return self.nickname
 
