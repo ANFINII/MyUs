@@ -74,18 +74,12 @@
                     <tr>
                         <td class="td-color">性別</td>
                         <td class="td-gender">
+                            {% for count, gender in usergender.gender.items %}
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" name="gender" value="0" id="male" class="custom-control-input" required>
-                                <label for="male" class="custom-control-label">男性</label>
+                                <input type="radio" name="gender" value="{{ count }}" id="gender_{{ count }}" class="custom-control-input" {% if user.gender == count %} checked {% endif %}>
+                                <label for="gender_{{ count }}" class="custom-control-label">{{ gender }}</label>
                             </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" name="gender" value="1" id="female" class="custom-control-input">
-                                <label for="female" class="custom-control-label">女性</label>
-                            </div>
-                            <div id="gender" class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" name="gender" value="2" id="secret" class="custom-control-input">
-                                <label for="secret" class="custom-control-label">秘密</label>
-                            </div>
+                            {% endfor %}
                         </td>
                     </tr>
                     <tr><td class="td-color">電話</td><td><input type="tel" name="phone" class="form-control" maxlength="15" value="{{ user.phone }}" required></td></tr>

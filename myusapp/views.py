@@ -247,6 +247,11 @@ class Profile_update(UpdateView):
     template_name = 'registration/profile_update.html'
     success_url = reverse_lazy('myus:profile')
     
+    def get_context_data(self, **kwargs):
+        context = super(Profile_update, self).get_context_data(**kwargs)
+        context['usergender'] = {'gender':{'0':'男性', '1':'女性', '2':'秘密'}}
+        return context
+    
     def form_valid(self, form):
         """バリデーションに成功した時"""
         try:
@@ -273,6 +278,8 @@ class Profile_update(UpdateView):
                 messages.error(self.request, '電話番号の形式が違います!')
                 return super().form_invalid(form)
             
+            # gender = User.object.get(pk=self.request.POST['gender'])
+            # profile.gender = gender
             profile.year = self.request.user.year
             profile.month = self.request.user.month
             profile.day = self.request.user.day
