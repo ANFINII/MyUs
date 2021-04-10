@@ -84,8 +84,8 @@ th.td-color, td.td-color {
 }
 
 .account_image img {
-    border-radius: 15%;
     border: 4px solid rgb(200, 200, 200);
+    border-radius: 15%;
 }
 
 .account_image img:hover {
@@ -105,6 +105,15 @@ th.td-color, td.td-color {
 
 .update_account_image input {
     display: none;
+}
+
+.mypage_image img {
+    border: 4px solid rgb(200, 200, 200);
+    border-radius: 5px;
+}
+
+.mypage_image img:hover {
+    border: 4px solid rgb(100, 220, 150);
 }
 
 .td-name {

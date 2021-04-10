@@ -6,15 +6,26 @@
 {% block content %}
 <main class="main_contents">
     {% for item in user_list %}
-    <div class="mypage_banner">
-        <div class="mypage_banner_image">
+    <div class="userpage_banner">
+        <div class="userpage_banner_image">
             <img src="{{ item.mypage_image.url }}" title="{{ author_name }}">
         </div>
     </div>
-    {% endfor %}
 
-    <h1>UserPage<span>{{ author_name }}</span></h1>
-    <hr>
+    <object class="userpage_author">
+        <object class="author_space">
+            <object>
+                <img src="{{ item.user_image.url }}" title="{{ item.nickname }}" class="userpage_image">
+            </object>
+        </object>
+        <span class="userpage_content_1" title="{{ item.nickname }}">{{ item.nickname }}</span>
+        <span class="userpage_content_2">フォロワー数：{{ follower_count }}</span>
+        <span class="userpage_content_3">フォロー数　：{{ following_count }}</span>
+    </object>
+    <a href="{% url 'myus:userpage' item.nickname %}" class="">投稿</a>
+    <a href="{% url 'myus:userpage_about' item.nickname %}" class="">情報</a>
+    {% endfor %}
+    <hr class="userpage_hr">
 
     <article class="main_article_index">
         <h2>Video</h2>

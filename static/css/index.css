@@ -917,16 +917,65 @@ header {
     color: rgb(0, 85, 215);
 }
 
-.mypage_banner_image {
+/* UserPage */
+.userpage_banner {
+    margin: 0 0 16px 0;
+}
+
+.userpage_banner_image {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
 }
 
-.mypage_banner img {
+.userpage_banner img {
     width: 100%;
     height: auto;
+}
+
+.userpage_author {
+    display: grid;
+    grid-template-columns: 80px;
+    grid-template-rows: 36px 22px 22px;
+    margin: 0 0 16px 0;
+}
+
+.userpage_image {
+    width: 80px;
+    height: 80px;
+    background-color: rgb(200, 200, 200);
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+
+.userpage_content_1 {
+    grid-column: 2/3;
+    grid-row: 1/2;
+    font-size: 26px;
+    vertical-align: bottom;
+    padding: 0 0 0 15px;
+}
+
+.userpage_content_2 {
+    grid-column: 2/3;
+    grid-row: 2/3;
+    font-size: 14px;
+    padding: 0 0 0 15px;
+}
+
+.userpage_content_3 {
+    grid-column: 2/3;
+    grid-row: 3/4;
+    font-size: 14px;
+    padding: 0 0 0 15px;
+}
+
+.userpage_hr {
+    margin: 0 0 16px 0;
 }
 
 /* コンテンツ説明 */
