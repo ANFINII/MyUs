@@ -703,10 +703,10 @@ class VideoDetail(DetailView, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(VideoDetail, self).get_context_data(**kwargs)
-        video = get_object_or_404(VideoModel, id=self.kwargs['pk'])
-        total_like = video.total_like()
+        obj = get_object_or_404(VideoModel, id=self.kwargs['pk'])
+        total_like = obj.total_like()
         liked = False
-        if video.like.filter(id=self.request.user.id).exists():
+        if obj.like.filter(id=self.request.user.id).exists():
             liked = True
         context['total_like'] = total_like
         context['liked'] = liked
@@ -714,7 +714,7 @@ class VideoDetail(DetailView, FormView):
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:50],
+            'video_list': VideoModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
 
@@ -798,9 +798,18 @@ class LiveDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(LiveDetail, self).get_context_data(**kwargs)
+        obj = get_object_or_404(LiveModel, id=self.kwargs['pk'])
+        total_like = obj.total_like()
+        liked = False
+        if obj.like.filter(id=self.request.user.id).exists():
+            liked = True
+        context['total_like'] = total_like
+        context['liked'] = liked
+        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:50],
+            'live_list': LiveModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
 
@@ -885,9 +894,18 @@ class MusicDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MusicDetail, self).get_context_data(**kwargs)
+        obj = get_object_or_404(MusicModel, id=self.kwargs['pk'])
+        total_like = obj.total_like()
+        liked = False
+        if obj.like.filter(id=self.request.user.id).exists():
+            liked = True
+        context['total_like'] = total_like
+        context['liked'] = liked
+        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:50],
+            'music_list': MusicModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
 
@@ -971,9 +989,18 @@ class PictureDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PictureDetail, self).get_context_data(**kwargs)
+        obj = get_object_or_404(PictureModel, id=self.kwargs['pk'])
+        total_like = obj.total_like()
+        liked = False
+        if obj.like.filter(id=self.request.user.id).exists():
+            liked = True
+        context['total_like'] = total_like
+        context['liked'] = liked
+        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:50],
+            'picture_list': PictureModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
 
@@ -1058,9 +1085,18 @@ class BlogDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(BlogDetail, self).get_context_data(**kwargs)
+        obj = get_object_or_404(BlogModel, id=self.kwargs['pk'])
+        total_like = obj.total_like()
+        liked = False
+        if obj.like.filter(id=self.request.user.id).exists():
+            liked = True
+        context['total_like'] = total_like
+        context['liked'] = liked
+        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'blog_list': BlogModel.objects.filter(publish=True).order_by('-created')[:50],
+            'blog_list': BlogModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
 
@@ -1159,10 +1195,10 @@ class ChatDetail(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super(ChatDetail, self).get_context_data(**kwargs)
-        chat = get_object_or_404(ChatModel, id=self.kwargs['pk'])
-        total_like = chat.total_like()
+        obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
+        total_like = obj.total_like()
         liked = False
-        if chat.like.filter(id=self.request.user.id).exists():
+        if obj.like.filter(id=self.request.user.id).exists():
             liked = True
         context['total_like'] = total_like
         context['liked'] = liked
@@ -1170,7 +1206,7 @@ class ChatDetail(DetailView):
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:50],
+            'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
 
@@ -1242,9 +1278,18 @@ class CollaboDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CollaboDetail, self).get_context_data(**kwargs)
+        obj = get_object_or_404(CollaboModel, id=self.kwargs['pk'])
+        total_like = obj.total_like()
+        liked = False
+        if obj.like.filter(id=self.request.user.id).exists():
+            liked = True
+        context['total_like'] = total_like
+        context['liked'] = liked
+        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'collabo_list': CollaboModel.objects.filter(publish=True).order_by('-created')[:50],
+            'collabo_list': CollaboModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
 
@@ -1332,9 +1377,10 @@ class TodoDetail(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super(TodoDetail, self).get_context_data(**kwargs)
+        obj = get_object_or_404(TodoModel, id=self.kwargs['pk'])
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'todo_list': TodoModel.objects.filter(author_id=self.request.user.id),
+            'todo_list': TodoModel.objects.filter(author_id=self.request.user.id).exclude(title=obj),
         })
         return context
 

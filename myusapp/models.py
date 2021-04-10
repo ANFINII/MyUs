@@ -171,12 +171,6 @@ class VideoModel(models.Model):
     
     def total_like(self):
         return self.like.count()
-    
-    def sort(self):
-        read = self.read.count()/4
-        like = self.like.count()
-        sort = read+like
-        return self.sort
 
     class Meta:
         verbose_name_plural = '01 Video'
