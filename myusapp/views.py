@@ -9,8 +9,8 @@ from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q, Max, Min, Avg, Count, F, Value
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, FormView
-from datetime import date, datetime, timedelta
 from django.utils import timezone
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from itertools import islice, chain
 from functools import reduce
@@ -19,6 +19,7 @@ from .models import Tag, SearchTag, Comment, FollowModel, TodoModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm, CommentForm
 import re, string, random
+# from .helpers import get_current_user
 
 # Create your views here.
 
@@ -278,8 +279,6 @@ class Profile_update(UpdateView):
                 messages.error(self.request, '電話番号の形式が違います!')
                 return super().form_invalid(form)
             
-            # gender = User.object.get(pk=self.request.POST['gender'])
-            # profile.gender = gender
             profile.year = self.request.user.year
             profile.month = self.request.user.month
             profile.day = self.request.user.day
@@ -365,6 +364,8 @@ class UserPage(ListView):
         context = super(UserPage, self).get_context_data(**kwargs)
         author = get_object_or_404(User, nickname=self.kwargs['nickname'])
         context['author_name'] = author
+        context['follower_count'] = FollowModel.objects.filter(follower_id=author).count()
+        context['following_count'] = FollowModel.objects.filter(following_id=author).count()
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'user_list': User.objects.filter(nickname=author),
@@ -485,16 +486,19 @@ class FollowList(ListView):
     template_name = 'follow/follow.html'
     context_object_name = 'follow_list'
     form_class = SearchTagForm
+    queryset = FollowModel.objects.prefetch_related().all().annotate(total_following=Count('following', distinct=True))
     
     def get_context_data(self, **kwargs):
         context = super(FollowList, self).get_context_data(**kwargs)
-        # author = get_object_or_404(User, id=self.kwargs['id'])
-        # follower__username = user.username フォロー数
-        # following__username = user.username フォロワー数
-        context['follower_count'] = FollowModel.objects.filter(following_id=self.request.user.id).count()
+        context['following_counts'] = User.objects.all().only('id')
+        # for author in authors:
+        #     context['following_counts'] = FollowModel.objects.filter(following_id=2).count()
+        #     context['follower_counts'] = FollowModel.objects.filter(follower_id=2).count()
+
+        # following__username = user.username フォロー数
+        # follower__username = user.username フォロワー数
         context['following_count'] = FollowModel.objects.filter(follower_id=self.request.user.id).count()
-        context['follower_counts'] = FollowModel.objects.filter(following_id=2).count()
-        context['following_counts'] = FollowModel.objects.filter(follower_id=1).count()
+        context['follower_count'] = FollowModel.objects.filter(following_id=self.request.user.id).count()
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -534,13 +538,10 @@ class FollowerList(ListView):
     
     def get_context_data(self, **kwargs):
         context = super(FollowerList, self).get_context_data(**kwargs)
-        # follower__username = user.username フォロー数
-        # following__username = user.username フォロワー数
-        # user = get_object_or_404(User, username=self.kwargs.get('username'))
         context['follower_count'] = FollowModel.objects.filter(following_id=self.request.user.id).count()
         context['following_count'] = FollowModel.objects.filter(follower_id=self.request.user.id).count()
-        context['follower_counts'] = FollowModel.objects.filter(follower=self.kwargs.get('nickname')).count()
-        context['following_counts'] = FollowModel.objects.filter(following=self.kwargs.get('nickname')).count()
+        context['follower_counts'] = FollowModel.objects.filter(follower_id=self.kwargs.get('id')).count()
+        context['following_counts'] = FollowModel.objects.filter(following_id=self.kwargs.get('id')).count()
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })

@@ -33,6 +33,7 @@ urlpatterns = [
     path('mypage/', MyPage, name='mypage'),
     path('mypage_update/', MyPage_update.as_view(), name='mypage_update'),
     path('userpage/<str:nickname>', UserPage.as_view(), name='userpage'),
+    path('userpage/<str:nickname>/about', UserPage.as_view(), name='userpage_about'),
     
     path('video/', VideoList.as_view(), name='video_list'),
     path('video_create/', VideoCreate.as_view(), name='video_create'),
@@ -71,7 +72,7 @@ urlpatterns = [
     
     path('todo/', TodoList.as_view(), name='todo_list'),
     path('todo_create/', TodoCreate.as_view(), name='todo_create'),
-    path('todo_detail/<int:pk>', TodoDetail.as_view(), name='todo_detail'),
+    path('todo_detail/<int:pk><slug:slug>', TodoDetail.as_view(), name='todo_detail'),
     path('todo_update/<int:pk>', TodoUpdate.as_view(), name='todo_update'),
     path('todo_delete/<int:pk>', TodoDelete.as_view(), name='todo_delete'),
 ]
