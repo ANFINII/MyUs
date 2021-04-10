@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
 from .models import User, SearchTag, Tag, FollowModel, Comment
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, TodoModel
+from import_export.admin import ImportExportModelAdmin
 
 # Admin用の管理画面    
 class SearchTagInline(admin.TabularInline):
@@ -24,7 +25,7 @@ class CommentInlineAdmin(GenericTabularInline):
     total_like.short_description = 'いいね数'
     
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(ImportExportModelAdmin):
     list_display = ('id', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone')
     list_filter = ('birthday', 'gender')
     search_fields = ('username', 'email', 'nickname', 'full_name', 'phone')
@@ -41,7 +42,7 @@ class UserAdmin(admin.ModelAdmin):
     ]
     
 @admin.register(FollowModel)
-class FollowModelAdmin(admin.ModelAdmin):
+class FollowModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'follower', 'following', 'created')
     list_select_related = ('follower', 'following')
     search_fields = ('follower__nickname', 'following__nickname', 'created')
@@ -55,7 +56,7 @@ class FollowModelAdmin(admin.ModelAdmin):
     ]
 
 @admin.register(SearchTag)
-class SearchTagAdmin(admin.ModelAdmin):
+class SearchTagAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'sequence', 'searchtag')
     list_select_related = ('author',)
     search_fields = ('author__nickname', 'searchtag')
@@ -67,7 +68,7 @@ class SearchTagAdmin(admin.ModelAdmin):
     ]
     
 @admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'tag',)
     search_fields = ('author__nickname', 'tag',)
     ordering = ('author', 'tag',)
@@ -78,7 +79,7 @@ class TagAdmin(admin.ModelAdmin):
     ]
 
 @admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
+class CommentAdmin(ImportExportModelAdmin):
     list_display = ('id', 'content_type', 'object_id', 'content_object', 'author', 'text', 'parent_id', 'total_like', 'created', 'updated')
     list_select_related = ('author', 'parent')
     search_fields = ('text', 'author__nickname', 'created', 'updated')
@@ -93,7 +94,7 @@ class CommentAdmin(admin.ModelAdmin):
     ]
 
 @admin.register(VideoModel)
-class VideoModelAdmin(admin.ModelAdmin):
+class VideoModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -113,7 +114,7 @@ class VideoModelAdmin(admin.ModelAdmin):
     total_like.short_description = 'like'
 
 @admin.register(LiveModel)
-class LiveModelAdmin(admin.ModelAdmin):
+class LiveModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -133,7 +134,7 @@ class LiveModelAdmin(admin.ModelAdmin):
     total_like.short_description = 'like'
     
 @admin.register(MusicModel)
-class MusicModelAdmin(admin.ModelAdmin):
+class MusicModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -153,7 +154,7 @@ class MusicModelAdmin(admin.ModelAdmin):
     total_like.short_description = 'like'
     
 @admin.register(PictureModel)
-class PictureModelAdmin(admin.ModelAdmin):
+class PictureModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -173,7 +174,7 @@ class PictureModelAdmin(admin.ModelAdmin):
     total_like.short_description = 'like'
     
 @admin.register(BlogModel)
-class BlogModelAdmin(admin.ModelAdmin):
+class BlogModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -193,7 +194,7 @@ class BlogModelAdmin(admin.ModelAdmin):
     total_like.short_description = 'like'
     
 @admin.register(ChatModel)
-class ChatModelAdmin(admin.ModelAdmin):
+class ChatModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -213,7 +214,7 @@ class ChatModelAdmin(admin.ModelAdmin):
     total_like.short_description = 'like'
     
 @admin.register(CollaboModel)
-class CollaboModelAdmin(admin.ModelAdmin):
+class CollaboModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -233,7 +234,7 @@ class CollaboModelAdmin(admin.ModelAdmin):
     total_like.short_description = 'like'
 
 @admin.register(TodoModel)
-class TodoModelAdmin(admin.ModelAdmin):
+class TodoModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'priority', 'duedate')
     list_select_related = ('author',)
     list_filter = ('priority', 'duedate')
