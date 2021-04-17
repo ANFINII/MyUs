@@ -10,26 +10,19 @@
     {% if object.publish %}
         <div class="main-image-color">
             <div class="main-image">
-                <video-js id="my-video" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls preload="none" poster="{{ object.images.url }}" data-setup='{"playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]}'>
-                    <!-- <source src="{{ object.videos.url }}" type="video/mp4" label="240">
-                    <source src="{{ object.videos.url }}" type="video/mp4" label="360" selected="true">
-                    <source src="{{ object.videos.url }}" type="video/mp4" label="480">
-                    <source src="{{ object.videos.url }}" type="video/mp4" label="720">
-                    <source src="{{ object.videos.url }}" type="video/mp4" label="1080"> -->
-                    <source src="{{ object.videos.url }}" type="video/mp4">
-                    <source src="{{ object.videos.url }}" type="video/webm">
-                    <source src="{{ object.videos.url }}" type="video/ogg">
-                    <source src="{{ object.videos.url }}" type="application/dash+xml">
+                <video id="video" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls preload="none" poster="{{ object.images.url }}" data-setup='{"playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]}'>
+                    <source src="{{ object.videos.url }}" type='video/mp4' label='2160p' res='2160'>
+                    <source src="{{ object.videos.url }}" type='video/mp4' label='1080p' res='1080'>
+                    <source src="{{ object.videos.url }}" type='video/mp4' label='720p' res='720'>
+                    <source src="{{ object.videos.url }}" type='video/mp4' label='480p' res='480'>
+                    <source src="{{ object.videos.url }}" type='video/mp4' label='240p' res='240'>
                     <!-- Tracks need an ending tag thanks to IE9 -->
                     <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
                     <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
                     <p class="vjs-no-js">この動画を見るには、JavaScriptを有効にしてください!
                         <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
                     </p>
-                </video-js>
-
-                <!-- <video id="my-video" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls preload="none" poster="{{ object.images.url }}" data-setup='{"playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]}'>   
-                </video> -->
+                </video>
             </div>
         </div>
 
@@ -84,22 +77,3 @@
     </article>
 </main>
 {% endblock content %}
-
-{% block extrajs %}
-<script>
-    $("form").submit(function(event) {
-        event.preventDefault();
-        let form = $(this);
-        $.ajax({
-            url: form.prop("action"),
-            method: form.prop("method"),
-            data: form.serialize(),
-            timeout: 100,
-            dataType: "text",
-        })
-        .done(function(data) {
-            $(".comment_aria_2").append("<p>" + data + "</p>");
-        })
-    });
-</script>
-{% endblock extrajs %}

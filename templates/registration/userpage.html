@@ -24,7 +24,16 @@
     </object>
     <a href="{% url 'myus:userpage' item.nickname %}" class="">投稿</a>
     <a href="{% url 'myus:userpage_about' item.nickname %}" class="">情報</a>
+
     {% endfor %}
+
+    {% if user.is_authenticated and user != user.nickname %}
+        {% if follow_status == True %}
+        <a href="{% url 'myus:userpage' user.nickname 0 %}" class="btn btn-sm btn-danger registered">フォロー解除</a>
+        {% else %}
+        <a href="{% url 'myus:userpage' user.nickname 1 %}" class="btn btn-sm btn-success registered">フォローする</a>
+        {% endif %}
+    {% endif %}
     <hr class="userpage_hr">
 
     <article class="main_article_index">
