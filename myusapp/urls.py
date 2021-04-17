@@ -72,7 +72,7 @@ urlpatterns = [
     
     path('todo/', TodoList.as_view(), name='todo_list'),
     path('todo_create/', TodoCreate.as_view(), name='todo_create'),
-    path('todo_detail/<int:pk><slug:slug>', TodoDetail.as_view(), name='todo_detail'),
+    path('todo_detail/<int:pk>', TodoDetail.as_view(), name='todo_detail'),
     path('todo_update/<int:pk>', TodoUpdate.as_view(), name='todo_update'),
     path('todo_delete/<int:pk>', TodoDelete.as_view(), name='todo_delete'),
 ]

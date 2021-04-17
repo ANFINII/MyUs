@@ -6,6 +6,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/video-js.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/video-js-myus.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/videojs-resolution-switcher.css' %}">
 {% endblock customcss %}
 
 {% block header %}
@@ -390,22 +391,23 @@
 <script src="{% static 'js/textarea.js' %}"></script>
 <script src="{% static 'js/video.js' %}"></script>
 <script>videojs.options.flash.swf = "{% static 'vtt/video-js.swf' %}";</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-resolution-switcher/0.4.2/videojs-resolution-switcher.min.js"></script>
 
-<script src="videojs-http-streaming.min.js"></script>
 <script>
     $(document).ready(function () {
         hsize = $(window).height();
         $(".chat_section_1").css("max-height", hsize + "px");
-      });
-      $(window).resize(function () {
+    });
+    $(window).resize(function () {
         hsize = $(window).height();
         $(".chat_section_1").css("max-height", hsize + "px");
-      });
+    });
 </script>
 {% endblock customjs %}
 
 {% block extrajs %}
-<!-- <script src="{% static 'js/ajax.js' %}"></script> -->
+<script src="{% static 'js/ajax_comment.js' %}"></script> 
+<script>videojs('video').videoJsResolutionSwitcher()</script>
 
 <!-- <script src="{% static 'js/audioplayer.js' %}"></script>
 <script>
