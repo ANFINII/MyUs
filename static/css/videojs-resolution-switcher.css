@@ -1,38 +1,46 @@
 .vjs-resolution-button .vjs-menu-icon:before {
-  content: '\f110';
-  font-family: VideoJS;
-  font-weight: normal;
-  font-style: normal;
-  font-size: 1.8em;
-  line-height: 1.67em;
+    content: '\f110';
+	font-family: VideoJS;
+	font-weight: normal;
+	font-style: normal;
+	font-size: 1.8em;
+	line-height: 1.67em;
 }
 
 .vjs-resolution-button .vjs-resolution-button-label {
-  font-size: 1em;
-  line-height: 3em;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  box-sizing: inherit;
+	font-size: 1em;
+	line-height: 3em;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	box-sizing: inherit;
 }
 
 .vjs-resolution-button .vjs-menu .vjs-menu-content {
-  width: 4em;
-  left: 50%; /* Center the menu, in it's parent */
-  margin-left: -2em; /* half of width, to center */
+	width: 4em;
+	left: 50%; /* Center the menu, in it's parent */
+	margin-left: -2em; /* half of width, to center */
 }
 
 .vjs-resolution-button .vjs-menu li {
-  text-transform: none;
-  font-size: 1em;
+	text-transform: none;
+	font-size: 1em;
 }
 
 .vjs-resolution-button .vjs-menu-button .vjs-icon-placeholder::before {
-  font-family: VideoJS;
-  content: '\f110';
-  font-size: 1.8em;
-  line-height: 1.67;
+	font-family: VideoJS;
+	content: '\f110';
+	font-size: 1.8em;
+	line-height: 1.67;
+}
+
+.vjs-resolution-button .vjs-menu-button .vjs-icon-placeholder:focus:before,
+.vjs-resolution-button .vjs-menu-button .vjs-icon-placeholder:hover,
+.vjs-resolution-button .vjs-menu-button .vjs-icon-placeholder:focus {
+	text-shadow: 0 0 1em rgba(0, 149, 255, 0.8),
+	 0 0 2em rgba(0, 150, 255, 0.5),
+	 0 0 3em rgba(0, 150, 255, 0.2);
 }
