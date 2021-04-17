@@ -1,0 +1,26 @@
+{% load static %}
+
+{% for item in video_list %}
+<section class="main_content">
+    <div class="main_decolation">
+        <video id="video" class="video-js vjs-big-play-centered vjs-16-9" controls preload="none" width="272" height="153" pictureinpicture="falese" poster="{{ item.images.url }}" data-setup='{}'>
+            <source src="{{ item.videos.url }}" type='video/mp4' label='2160p' res='2160'>
+            <source src="{{ item.videos.url }}" type='video/mp4' label='1080p' res='1080'>
+            <source src="{{ item.videos.url }}" type='video/mp4' label='720p' res='720'>
+            <source src="{{ item.videos.url }}" type='video/mp4' label='480p' res='480'>
+            <source src="{{ item.videos.url }}" type='video/mp4' label='240p' res='240'>
+            <p>動画を再生するには、videoタグをサポートしたブラウザが必要です。</p>
+            <!-- Tracks need an ending tag thanks to IE9 -->
+            <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
+            <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
+            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that
+                <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+            </p>
+        </video>
+        <a href="{% url 'myus:video_detail' item.pk %}" class="author_title_space">
+            {% include 'parts/author_space.html' %}
+            {% include 'parts/content_title.html' %}
+        </a>
+    </div>
+</section>
+{% endfor %}

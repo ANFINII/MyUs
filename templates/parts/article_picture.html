@@ -1,0 +1,15 @@
+{% load static %}
+
+{% for item in picture_list %}
+<section class="main_content">
+    <div class="main_decolation">
+        <a href="{% url 'myus:picture_detail' item.pk %}">
+            <img src="{{ item.images.url }}" width="272" height="153">
+        </a>
+        <a href="{% url 'myus:picture_detail' item.pk %}" class="author_title_space">
+            {% include 'parts/author_space.html' %}
+            {% include 'parts/content_title.html' %}
+        </a>
+    </div>
+</section>
+{% endfor %}
