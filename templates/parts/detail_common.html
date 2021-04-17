@@ -1,0 +1,121 @@
+{% load static %}
+{% load humanize %}
+
+<input type="checkbox" id="content_detail_check_id" class="content_detail_check">
+
+<div class="content_detail_aria">
+    <div class="content_detail">
+        <a href="{% url 'myus:userpage' object.author.nickname %}">
+            <img src="{{ object.author.user_image.url }}" title="{{ object.author.nickname }}" class="profile_image_detail">
+        </a>
+        <div class="username_space">{{ object.author.nickname }}</div>
+        <div class="registered_person">登録者数
+            {% if object.FollowModels_set.all %}
+                {{ object.FollowModels_set.count }}
+            {% else %}
+                0
+            {% endif %}
+        </div>
+        <p class="content_detail_p1">{{ object.content|linebreaksbr|urlize }}</p>
+        <p class="content_detail_p2">{{ object.lyrics|linebreaksbr }}</p>
+        <button class="btn btn-sm btn-success registered">フォローする</button>
+    </div>
+</div>
+
+<label for="content_detail_check_id" class="content_detail_check_label1">拡大表示</label>
+<label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
+<hr>
+
+<form method="POST" action="">{% csrf_token %}
+    <div class="comment_input">
+        <p>コメント総数
+            {% if object.comments.all %}
+                {{ object.comments.all.count|intcomma }}
+            {% else %}
+                0
+            {% endif %}
+        </p>
+        {% if user.username %}
+        <a href="{% url 'myus:userpage' user.nickname %}">
+            <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
+        </a>
+        {% else %}
+        <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_comment">
+        {% endif %}
+        {% if user.username %}
+        <textarea name="text" rows="1" class="textarea_br" placeholder="コメント入力" required></textarea>
+        {% else %}
+        <textarea name="text" rows="1" class="textarea_br" placeholder="コメントするにはログインが必要です！" disabled></textarea>
+        {% endif %}
+        <button type="submit" class="btn btn-sm btn-primary">
+            <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+        </button>
+    </div>
+</form>
+
+<input type="checkbox" id="comment_aria_check_id" class="comment_aria_check">
+<label for="comment_aria_check_id" class="comment_aria_check_label1">拡大表示</label>
+<label for="comment_aria_check_id" class="comment_aria_check_label2">縮小表示</label>
+
+<div class="comment_aria">
+    {% for comment in comment_list reversed %}
+    <input type="checkbox" id="reply_aria_check_id" class="reply_aria_check">
+
+    <div class="comment_aria_list">
+        <a href="{% url 'myus:userpage' comment.author.nickname %}">
+            <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+        </a>
+        <div class="comment_aria_list_1">
+            <p>{{ comment.author.nickname }}</p>
+            <time>{{ comment.created|naturaltime }}</time>
+        </div>
+        <div class="comment_aria_list_2">{{ comment.text|linebreaks|urlize }}</div>
+        <div class="comment_aria_list_3">
+            <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
+            <label for="reply_aria_check_id" class="reply_aria_check_id">返信</label>
+        </div>
+    </div>
+
+    <form method="POST" action="" class="comment_aria_list_4">{% csrf_token %}
+        <div class="reply_input">
+            {% if user.username %}
+            <a href="{% url 'myus:userpage' user.nickname %}">
+                <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_reply">
+            </a>
+            {% else %}
+            <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
+            {% endif %}
+            {% if user.username %}
+            <textarea name="text2" rows="1" class="textarea_br" placeholder="返信コメント入力" required></textarea>
+            {% else %}
+            <textarea name="text2" rows="1" class="textarea_br" placeholder="返信コメントするにはログインが必要です！" disabled></textarea>
+            {% endif %}
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+            </button>
+        </div>
+    </form>
+
+    <div class="reply_aria_list">
+        {% for reply in reply_list %}
+        <a href="{% url 'myus:userpage' reply.author.nickname %}">
+            <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+        </a>
+        <div class="reply_aria_list1">
+            <p>{{ reply.author.nickname }}</p>
+            <time>{{ reply.created|naturaltime }}</time>
+        </div>
+        <div class="reply_aria_list2">{{ reply.text|linebreaks|urlize }}</div>
+        <div class="reply_aria_list3">
+            <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+<hr>
+
+<div>
+    広告表示枠
+</div>
+<hr>

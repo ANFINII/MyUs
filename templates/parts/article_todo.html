@@ -1,0 +1,17 @@
+{% load static %}
+
+{% for item in todo_list %}
+<section class="main_content_todo">
+    <div class="main_decolation_todo alert-{{ item.priority }}" role="alert">
+        <a href="{% url 'myus:todo_detail' item.pk %}" class="author_title_space_todo">
+            <div class="content_title">{{ item.title }}</div>
+            <p class="priority">優先度 {{ item.get_priority_display }}</p>
+            <time class="todo_time">期日 {{ item.duedate }}</time>
+            <object class="todo_link">
+                <a href="{% url 'myus:todo_update' item.pk %}" class="btn btn-success btn-sm" role="button">編集</a>
+                <a href="{% url 'myus:todo_delete' item.pk %}" class="btn btn-danger btn-sm" role="button">削除</a>
+            </object>
+        </a>
+    </div>
+</section>
+{% endfor %}

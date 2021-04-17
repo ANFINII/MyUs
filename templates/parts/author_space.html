@@ -1,0 +1,5 @@
+<object class="author_space">
+    <a href="{% url 'myus:userpage' item.author.nickname %}">
+        <img src="{{ item.author.user_image.url }}" title="{{ item.author.nickname }}" class="profile_image">
+    </a>
+</object>

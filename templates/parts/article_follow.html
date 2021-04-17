@@ -1,0 +1,19 @@
+{% load static %}
+
+{% for item in follow_list %}
+<section class="main_content">
+    <div class="main_decolation">
+        <a href="{% url 'myus:userpage' item.following.nickname %}" class="author_follows">
+            <object class="author_space">
+                <a href="{% url 'myus:userpage' item.following.nickname %}">
+                    <img src="{{ item.following.user_image.url }}" title="{{ item.following.nickname }}" class="follow_image">
+                </a>
+            </object>
+            <span class="follow_content_1" title="{{ item.following.nickname }}">{{ item.following.nickname }}</span>
+            <span class="follow_content_2">フォロワー数：{{ follower_count }}</span>
+            <span class="follow_content_3">フォロー数　：{{ following_count }}</span>
+            <object class="follow_content_4" title="{{ item.following.introduction }}">{{ item.following.introduction|linebreaksbr|urlize }}</object>
+        </a>
+    </div>
+</section>
+{% endfor %}
