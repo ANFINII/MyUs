@@ -389,26 +389,15 @@
 {% block customjs %}
 <script src="{% static 'js/date.js' %}"></script>
 <script src="{% static 'js/textarea.js' %}"></script>
+<script src="{% static 'js/ajax_comment.js' %}"></script>
+<!-- videojs -->
 <script src="{% static 'js/video.js' %}"></script>
 <script>videojs.options.flash.swf = "{% static 'vtt/video-js.swf' %}";</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-resolution-switcher/0.4.2/videojs-resolution-switcher.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-        hsize = $(window).height();
-        $(".chat_section_1").css("max-height", hsize + "px");
-    });
-    $(window).resize(function () {
-        hsize = $(window).height();
-        $(".chat_section_1").css("max-height", hsize + "px");
-    });
-</script>
+<script>videojs('video').videoJsResolutionSwitcher()</script>
 {% endblock customjs %}
 
 {% block extrajs %}
-<script src="{% static 'js/ajax_comment.js' %}"></script> 
-<script>videojs('video').videoJsResolutionSwitcher()</script>
-
 <!-- <script src="{% static 'js/audioplayer.js' %}"></script>
 <script>
     $( function()
