@@ -3,7 +3,7 @@
 {% for item in live_list %}
 <section class="main_content">
     <div class="main_decolation">
-        <video class="video-js vjs-big-play-centered vjs-16-9" controls preload="none" width="272" height="153" pictureinpicture="falese" poster="{{ item.images.url }}">
+        <video class="video-js vjs-big-play-centered vjs-16-9" controls preload="none" width="272" height="153" pictureinpicture="falese" poster="{{ item.images.url }}" data-setup="">
             <source src="{{ item.lives.url }}" type="video/mp4" label="2160p" res="2160">
             <source src="{{ item.lives.url }}" type="video/mp4" label="1080p" res="1080">
             <source src="{{ item.lives.url }}" type="video/mp4" label="720p" res="720">
