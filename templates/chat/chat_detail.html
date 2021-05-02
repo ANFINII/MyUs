@@ -18,45 +18,44 @@
             <div class="chat_section_header">
                 <h1 title="{{ object.title }}">{{ object.title }}</h1>
                 
-
                 <div class="article_detail_aria_2">
                     <div class="view_good_inline">
                         <i class="bi bi-caret-right-square" title="閲覧数"></i>
                         {{ object.read|intcomma }}
                     </div>
-    
+
                     <div class="view_good_inline">
                         <i class="bi bi-person" title="参加数"></i>
                         0
                     </div>
-    
+
                     <div class="view_good_inline">
                         <i class="bi bi-chat-dots" title="投稿数"></i>
                         {{ object.comments.all.count|intcomma }}
                     </div>
 
                     {% if user.is_authenticated %}
-                    <form method="POST" action="{% url 'myus:chat_like' %}">{% csrf_token %}
-                        {% if liked %}
-                        <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_fill">
-                            <i class="bi bi-hand-thumbs-up-fill icon-font like_color" title="いいね"></i>
-                        </button>
-                        {% else %}
-                        <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_no">
-                            <i class="bi bi-hand-thumbs-up icon-font like_color" title="いいね"></i>
-                        </button>
-                        {% endif %}
-                        <span class="like_count">{{ total_like|intcomma }}</span>
-                    </form>
+                        <form method="POST" action="{% url 'myus:chat_like' %}" class="view_good_inline char_like">{% csrf_token %}
+                            {% if liked %}
+                            <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_fill">
+                                <i class="bi bi-hand-thumbs-up-fill like_color" title="いいね"></i>
+                            </button>
+                            {% else %}
+                            <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_no">
+                                <i class="bi bi-hand-thumbs-up like_color" title="いいね"></i>
+                            </button>
+                            {% endif %}
+                            <span class="like_count">{{ total_like|intcomma }}</span>
+                        </form>
                     {% else %}
                         <a href="{% url 'myus:login' %}" role="button" aria-disabled="true" class="like_link">
-                            <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
+                            <i class="bi bi-hand-thumbs-up" title="いいね"></i>
                         </a>
                         <span>{{ total_like|intcomma }}</span>
                     {% endif %}
                     <time>{{ object.created|date:'Y/m/d H:i' }}</time>
                 </div>
-
+                
                 <div class="chat_section_content">
                     <input type="checkbox" id="chat_content_check_id" class="chat_content_check">
 
@@ -118,7 +117,7 @@
                 </label>
                 {% endfor %}
             </div>
-            
+
             <div class="chat_section_method">
                 {% for reply in reply_list %}
                 <div class="comment_aria_list">
