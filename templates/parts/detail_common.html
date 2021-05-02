@@ -26,7 +26,7 @@
 <label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
 <hr>
 
-<form method="POST" action="">{% csrf_token %}
+<form method="POST" action="{% url 'myus:video_detail' object.id %}">{% csrf_token %}
     <div class="comment_input">
         <p>コメント総数
             {% if object.comments.all %}
@@ -53,6 +53,10 @@
     </div>
 </form>
 
+<span class="span_comment">
+    response
+</span>
+
 <input type="checkbox" id="comment_aria_check_id" class="comment_aria_check">
 <label for="comment_aria_check_id" class="comment_aria_check_label1">拡大表示</label>
 <label for="comment_aria_check_id" class="comment_aria_check_label2">縮小表示</label>
@@ -76,7 +80,7 @@
         </div>
     </div>
 
-    <form method="POST" action="" class="comment_aria_list_4">{% csrf_token %}
+    <form method="POST" action="{% url 'myus:video_detail' object.id %}" class="comment_aria_list_4">{% csrf_token %}
         <div class="reply_input">
             {% if user.username %}
             <a href="{% url 'myus:userpage' user.nickname %}">

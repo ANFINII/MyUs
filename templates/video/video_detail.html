@@ -39,7 +39,7 @@
                             {{ object.read|intcomma }}
                         </div>
                         {% if user.is_authenticated %}
-                            <form action="{% url 'myus:video_like' %}" method="POST">{% csrf_token %}
+                            <form method="POST" action="{% url 'myus:video_like' %}">{% csrf_token %}
                                 {% if liked %}
                                 <button type="submit" name="videomodel_id" value="{{ object.id }}" class="like_form like_fill">
                                     <i class="bi bi-hand-thumbs-up-fill icon-font like_color" title="いいね"></i>
@@ -55,10 +55,10 @@
                             <a href="{% url 'myus:login' %}" role="button" aria-disabled="true" class="like_link">
                                 <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
                             </a>
-                            <span class="like_count">{{ total_like|intcomma }}</span>
+                            <span>{{ total_like|intcomma }}</span>
                         {% endif %}
                     </div>
-                    
+
                     <div class="article_detail_aria_3">
                         {% include 'parts/tag.html' %}
                     </div>

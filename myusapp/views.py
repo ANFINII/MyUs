@@ -3,11 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponseGone, JsonResponse
+from django.http import HttpResponse, JsonResponse, QueryDict, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q, Max, Min, Avg, Count, F, Value
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, FormView
 from django.utils import timezone
 from datetime import date, datetime, timedelta
@@ -18,8 +19,7 @@ from operator import and_
 from .models import Tag, SearchTag, Comment, FollowModel, TodoModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm, CommentForm
-import re, string, random
-# from .helpers import get_current_user
+import re, string, random, json
 
 # Create your views here.
 
@@ -377,6 +377,13 @@ class UserPage(ListView):
             'chat_list': ChatModel.objects.filter(author_id=author, publish=True),
         })
         return context
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.request.POST)
+        if form.is_valid():
+            form.instance.author_id = self.request.user.id
+            form.save()
+        return redirect('myus:userpage')
 
 # SearchTag追加
 class TagCreate(CreateView):
@@ -490,15 +497,10 @@ class FollowList(ListView):
     
     def get_context_data(self, **kwargs):
         context = super(FollowList, self).get_context_data(**kwargs)
-        context['following_counts'] = User.objects.all().only('id')
-        # for author in authors:
-        #     context['following_counts'] = FollowModel.objects.filter(following_id=2).count()
-        #     context['follower_counts'] = FollowModel.objects.filter(follower_id=2).count()
-
-        # following__username = user.username フォロー数
         # follower__username = user.username フォロワー数
-        context['following_count'] = FollowModel.objects.filter(follower_id=self.request.user.id).count()
-        context['follower_count'] = FollowModel.objects.filter(following_id=self.request.user.id).count()
+        # following__username = user.username フォロー数
+        context['follower_count'] = FollowModel.objects.filter(follower_id=self.request.user.id).count()
+        context['following_count'] = FollowModel.objects.filter(following_id=self.request.user.id).count()
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -540,8 +542,6 @@ class FollowerList(ListView):
         context = super(FollowerList, self).get_context_data(**kwargs)
         context['follower_count'] = FollowModel.objects.filter(following_id=self.request.user.id).count()
         context['following_count'] = FollowModel.objects.filter(follower_id=self.request.user.id).count()
-        context['follower_counts'] = FollowModel.objects.filter(follower_id=self.kwargs.get('id')).count()
-        context['following_counts'] = FollowModel.objects.filter(following_id=self.kwargs.get('id')).count()
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -653,54 +653,50 @@ class VideoDetail(DetailView, FormView):
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
+    # def post(self, request, *args, **kwargs):
+    #     form = self.form_class(self.request.POST)
+    #     video_pk = self.kwargs['pk']
+    #     target = get_object_or_404(VideoModel, pk=video_pk)
+    #     if form.is_valid():
+    #         form = form.save(commit=False)
+    #         form.content_object = target
+    #         form.author_id = self.request.user.id
+    #         form.save()
+    #         return redirect('myus:video_detail', pk=video_pk)
+    #     return FormView.post(self, request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         form = self.form_class(self.request.POST)
         video_pk = self.kwargs['pk']
-        target = get_object_or_404(VideoModel, pk=video_pk)
+        video = get_object_or_404(VideoModel, pk=video_pk)
         if form.is_valid():
-            form = form.save(commit=False)
-            form.content_object = target
-            form.author_id = self.request.user.id
-            form.save()
-            return redirect('myus:video_detail', pk=video_pk)
-        return FormView.post(self, request, *args, **kwargs)
+            if request.is_ajax():
+                # Ajax 処理を別メソッドに切り離す
+                form = form.save(commit=False)
+                form.author_id = self.request.user.id
+                form.content_object = video
+                form.save()
+                return self.ajax_response(form)
+            return super().form_valid(form)
+        # elif reply:
+        #     if form.is_valid():
+        #         if request.is_ajax():
+        #             # Ajax 処理を別メソッドに切り離す
+        #             form = form.save(commit=False)
+        #             form.author_id = self.request.user.id
+        #             form.content_object = comments
+        #             # form.parent = self.object.comments.parent_id
+        #             form.save()
+        #             return self.ajax_response(form)
+        #             # return HttpResponse(form)
+        #         return super().form_valid(form)
+        return super().form_invalid(form)
     
-    # def post(self, request, comment_pk, *args, **kwargs):
-    #     form = self.form_class(self.request.POST)
-    #     comment = self.request.POST.get('text')
-    #     reply = self.request.POST.get('text2')
-    #     video_pk = self.kwargs['pk']
-    #     video = get_object_or_404(VideoModel, pk=video_pk)
-    #     comments = get_object_or_404(VideoModel, pk=video_pk, parent=comment_pk)
-    #     if comment:
-    #         if form.is_valid():
-    #             if request.is_ajax():
-    #                 # Ajax 処理を別メソッドに切り離す
-    #                 form = form.save(commit=False)
-    #                 form.author_id = self.request.user.id
-    #                 form.content_object = video
-    #                 form.save()
-    #                 return self.ajax_response(form)
-    #             return super().form_valid(form)
-    #     elif reply:
-    #         if form.is_valid():
-    #             if request.is_ajax():
-    #                 # Ajax 処理を別メソッドに切り離す
-    #                 form = form.save(commit=False)
-    #                 form.author_id = self.request.user.id
-    #                 form.content_object = comments
-    #                 # form.parent = self.object.comments.parent_id
-    #                 form.save()
-    #                 return self.ajax_response(form)
-    #                 # return HttpResponse(form)
-    #             return super().form_valid(form)
-    #     return super().form_invalid(form)
+    def ajax_response(self, form):
+        # jQueryに対してレスポンスを返すメソッド
+        text = form.cleaned_data.get('text')
+        return HttpResponse(text)
     
-    # def ajax_response(self, form):
-    #     # jQueryに対してレスポンスを返すメソッド
-    #     text = form.cleaned_data.get('text')
-    #     return HttpResponse(text)
-
     def get_context_data(self, **kwargs):
         context = super(VideoDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(VideoModel, id=self.kwargs['pk'])
@@ -708,8 +704,9 @@ class VideoDetail(DetailView, FormView):
         liked = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
-        context['total_like'] = total_like
+        context['obj'] = obj
         context['liked'] = liked
+        context['total_like'] = total_like
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
@@ -717,25 +714,52 @@ class VideoDetail(DetailView, FormView):
             'video_list': VideoModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-
-def VideoLike(request, content_type, pk):
-    video = get_object_or_404(VideoModel, id=request.POST.get('video_id'))
-    liked = False
-    if video.like.filter(id=request.user.id).exists():
-        video.like.remove(request.user)
+    
+def VideoLike(request):
+    if request.method == 'POST':
+        user = request.user
+        obj_id = request.POST.get('id')
+        obj = get_object_or_404(VideoModel, id=obj_id)
         liked = False
-    else:
-        video.like.add(request.user)
-        liked = True
-
-    context={
-       'video': video,
-       'liked': liked,
-    }    
-    if request.is_ajax():
-        html = render_to_string('video/video_detail.html', context, request=request)
-        return JsonResponse({'form': html})
-    # return HttpResponseRedirect(reverse('myus:video_detail', args=[str(pk)]))
+        if obj.like.filter(id=user.id).exists():
+            liked = False
+            obj.like.remove(user)
+        else:
+            liked = True
+            obj.like.add(user)
+        context = {
+            'liked': liked,
+            'total_like': obj.total_like(),
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+        
+def VideoComment(request):
+    pass
+    # if request.method == 'POST':
+    #     video = get_object_or_404(VideoModel, pk=video_pk)
+    #     if request.is_ajax():
+    #         # Ajax 処理を別メソッドに切り離す
+    #         form = form.save(commit=False)
+    #         form.author_id = self.request.user.id
+    #         form.content_object = video
+    #         form.save()
+    #         return self.ajax_response(form)
+    #     user = request.user
+    #     comment = Comment.objects.all()
+    #     text = comment.get('text')
+    #     # comment = dic.get('comment')
+    #     video = get_object_or_404(VideoModel, pk=pk)
+    #     # form = video.save(commit=False)
+    #     video.text = text
+    #     video.author_id = user.id
+    #     video.content_object = video
+    #     context = {
+    #         'text': text,
+    #         'video': video,
+    #     }
+    #     print(context)
+    # return JsonResponse(context)
 
 # Live
 class LiveCreate(CreateView):
@@ -795,7 +819,14 @@ class LiveList(ListView):
 class LiveDetail(DetailView):
     model = LiveModel
     template_name = 'live/live_detail.html'
-
+    
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.read += 1
+        self.object.save() 
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+    
     def get_context_data(self, **kwargs):
         context = super(LiveDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(LiveModel, id=self.kwargs['pk'])
@@ -812,14 +843,26 @@ class LiveDetail(DetailView):
             'live_list': LiveModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-
-def LiveLike(request, pk):
-    """ここにメソッドの説明を記述する"""
-    post = LiveModel.objects.get(pk=pk)
-    post.like = post.like + 1
-    post.save()
-    return redirect('myus:live_detail', pk=post.pk)
     
+def LiveLike(request):
+    if request.method == 'POST':
+        user = request.user
+        obj_id = request.POST.get('id')
+        obj = get_object_or_404(LiveModel, id=obj_id)
+        liked = False
+        if obj.like.filter(id=user.id).exists():
+            liked = False
+            obj.like.remove(user)
+        else:
+            liked = True
+            obj.like.add(user)
+        context = {
+            'liked': liked,
+            'total_like': obj.total_like(),
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+        
 def LiveRead(request, pk):
     """ここにメソッドの説明を記述する"""
     post = LiveModel.objects.get(pk=pk)
@@ -891,7 +934,14 @@ class MusicList(ListView):
 class MusicDetail(DetailView):
     model = MusicModel
     template_name = 'music/music_detail.html'
-
+    
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.read += 1
+        self.object.save() 
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+    
     def get_context_data(self, **kwargs):
         context = super(MusicDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(MusicModel, id=self.kwargs['pk'])
@@ -908,13 +958,25 @@ class MusicDetail(DetailView):
             'music_list': MusicModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-
-def MusicLike(request, pk):
-    """ここにメソッドの説明を記述する"""
-    post = MusicModel.objects.get(pk=pk)
-    post.like = post.like + 1
-    post.save()
-    return redirect('myus:music_detail', pk=post.pk)
+    
+def MusicLike(request):
+    if request.method == 'POST':
+        user = request.user
+        obj_id = request.POST.get('id')
+        obj = get_object_or_404(MusicModel, id=obj_id)
+        liked = False
+        if obj.like.filter(id=user.id).exists():
+            liked = False
+            obj.like.remove(user)
+        else:
+            liked = True
+            obj.like.add(user)
+        context = {
+            'liked': liked,
+            'total_like': obj.total_like(),
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
     
 def MusicRead(request, pk):
     """ここにメソッドの説明を記述する"""
@@ -986,7 +1048,14 @@ class PictureList(ListView):
 class PictureDetail(DetailView):
     model = PictureModel
     template_name = 'picture/picture_detail.html'
-
+    
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.read += 1
+        self.object.save() 
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+    
     def get_context_data(self, **kwargs):
         context = super(PictureDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(PictureModel, id=self.kwargs['pk'])
@@ -1003,14 +1072,26 @@ class PictureDetail(DetailView):
             'picture_list': PictureModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-
-def PictureLike(request, pk):
-    """ここにメソッドの説明を記述する"""
-    post = PictureModel.objects.get(pk=pk)
-    post.like = post.like + 1
-    post.save()
-    return redirect('myus:picture_detail', pk=post.pk)
     
+def PictureLike(request):
+    if request.method == 'POST':
+        user = request.user
+        obj_id = request.POST.get('id')
+        obj = get_object_or_404(PictureModel, id=obj_id)
+        liked = False
+        if obj.like.filter(id=user.id).exists():
+            liked = False
+            obj.like.remove(user)
+        else:
+            liked = True
+            obj.like.add(user)
+        context = {
+            'liked': liked,
+            'total_like': obj.total_like(),
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+        
 def PictureRead(request, pk):
     """ここにメソッドの説明を記述する"""
     post = PictureModel.objects.get(pk=pk)
@@ -1082,7 +1163,14 @@ class BlogList(ListView):
 class BlogDetail(DetailView):
     model = BlogModel
     template_name = 'blog/blog_detail.html'
-
+    
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.read += 1
+        self.object.save() 
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+    
     def get_context_data(self, **kwargs):
         context = super(BlogDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(BlogModel, id=self.kwargs['pk'])
@@ -1099,14 +1187,26 @@ class BlogDetail(DetailView):
             'blog_list': BlogModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-
-def BlogLike(request, pk):
-    """ここにメソッドの説明を記述する"""
-    post = BlogModel.objects.get(pk=pk)
-    post.like = post.like + 1
-    post.save()
-    return redirect('myus:blog_detail', pk=post.pk)
     
+def BlogLike(request):
+    if request.method == 'POST':
+        user = request.user
+        obj_id = request.POST.get('id')
+        obj = get_object_or_404(BlogModel, id=obj_id)
+        liked = False
+        if obj.like.filter(id=user.id).exists():
+            liked = False
+            obj.like.remove(user)
+        else:
+            liked = True
+            obj.like.add(user)
+        context = {
+            'liked': liked,
+            'total_like': obj.total_like(),
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+        
 def BlogRead(request, pk):
     """ここにメソッドの説明を記述する"""
     post = BlogModel.objects.get(pk=pk)
@@ -1180,18 +1280,45 @@ class ChatDetail(DetailView):
     ordering = ['-created']
     form_class = CommentForm
     success_url = 'chat_detail'
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+    
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.read += 1
+        self.object.save() 
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+    # def post(self, request, *args, **kwargs):
+    #     form = self.form_class(self.request.POST)
+    #     chat_pk = self.kwargs['pk']
+    #     target = get_object_or_404(ChatModel, pk=chat_pk)
+    #     if form.is_valid():
+    #         form = form.save(commit=False)
+    #         form.content_object = target
+    #         form.author_id = self.request.user.id
+    #         form.save()
+    #         return redirect('myus:chat_detail', pk=chat_pk)
+    #     return FormView.post(self, request, *args, **kwargs)
+    
     def post(self, request, *args, **kwargs):
         form = self.form_class(self.request.POST)
         chat_pk = self.kwargs['pk']
-        target = get_object_or_404(ChatModel, pk=chat_pk)
+        chat = get_object_or_404(ChatModel, pk=chat_pk)
         if form.is_valid():
-            form = form.save(commit=False)
-            form.content_object = target
-            form.author_id = self.request.user.id
-            form.save()
-            return redirect('myus:chat_detail', pk=chat_pk)
-        return FormView.post(self, request, *args, **kwargs)
+            if request.is_ajax():
+                # Ajax 処理を別メソッドに切り離す
+                form = form.save(commit=False)
+                form.author_id = self.request.user.id
+                form.content_object = chat
+                form.save()
+                return self.ajax_response(form)
+            return super().form_valid(form)
+        return super().form_invalid(form)
+    
+    def ajax_response(self, form):
+        # jQueryに対してレスポンスを返すメソッド
+        text = form.cleaned_data.get('chat')
+        return JsonResponse(text)
     
     def get_context_data(self, **kwargs):
         context = super(ChatDetail, self).get_context_data(**kwargs)
@@ -1202,21 +1329,33 @@ class ChatDetail(DetailView):
             liked = True
         context['total_like'] = total_like
         context['liked'] = liked
-        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        # context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-
-def ChatLike(request, pk):
-    """ここにメソッドの説明を記述する"""
-    post = ChatModel.objects.get(pk=pk)
-    post.like = post.like + 1
-    post.save()
-    return redirect('myus:chat_detail', pk=post.pk)
-
+    
+def ChatLike(request):
+    if request.method == 'POST':
+        user = request.user
+        obj_id = request.POST.get('id')
+        obj = get_object_or_404(ChatModel, id=obj_id)
+        liked = False
+        if obj.like.filter(id=user.id).exists():
+            liked = False
+            obj.like.remove(user)
+        else:
+            liked = True
+            obj.like.add(user)
+        context = {
+            'liked': liked,
+            'total_like': obj.total_like(),
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+        
 # Collabo
 class CollaboCreate(CreateView):
     """ここにメソッドの説明を記述する"""
@@ -1275,7 +1414,14 @@ class CollaboList(ListView):
 class CollaboDetail(DetailView):
     model = CollaboModel
     template_name = 'collabo/collabo_detail.html'
-
+    
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.read += 1
+        self.object.save() 
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+    
     def get_context_data(self, **kwargs):
         context = super(CollaboDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(CollaboModel, id=self.kwargs['pk'])
@@ -1293,12 +1439,24 @@ class CollaboDetail(DetailView):
         })
         return context
 
-def CollaboLike(request, pk):
-    """ここにメソッドの説明を記述する"""
-    post = CollaboModel.objects.get(pk=pk)
-    post.like = post.like + 1
-    post.save()
-    return redirect('myus:collabo_detail', pk=post.pk)
+def CollaboLike(request):
+    if request.method == 'POST':
+        user = request.user
+        obj_id = request.POST.get('id')
+        obj = get_object_or_404(CollaboModel, id=obj_id)
+        liked = False
+        if obj.like.filter(id=user.id).exists():
+            liked = False
+            obj.like.remove(user)
+        else:
+            liked = True
+            obj.like.add(user)
+        context = {
+            'liked': liked,
+            'total_like': obj.total_like(),
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
     
 def CollaboRead(request, pk):
     """ここにメソッドの説明を記述する"""
@@ -1311,7 +1469,7 @@ def CollaboRead(request, pk):
         post.readtext = post.readtext + ' ' + post2
         post.save()
         return redirect('myus:collabo_detail', pk=post.pk)
-
+    
 # Todo
 class TodoCreate(CreateView):
     model = TodoModel
@@ -1324,7 +1482,7 @@ class TodoCreate(CreateView):
 
     def get_success_url(self):
         return reverse('myus:todo_detail', kwargs={'pk': self.object.pk})
-
+    
 class TodoList(ListView):
     model = TodoModel
     template_name = 'todo/todo.html'
@@ -1374,7 +1532,7 @@ class TodoDetail(DetailView):
             return TodoModel.objects.all()
         else: # 一般ユーザは自分のレコードのみ表示する。
             return TodoModel.objects.filter(author=current_user.id)
-    
+        
     def get_context_data(self, **kwargs):
         context = super(TodoDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(TodoModel, id=self.kwargs['pk'])
@@ -1383,7 +1541,7 @@ class TodoDetail(DetailView):
             'todo_list': TodoModel.objects.filter(author_id=self.request.user.id).exclude(title=obj),
         })
         return context
-
+    
 class TodoUpdate(UpdateView):
     model = TodoModel
     fields = ('title', 'content', 'priority', 'duedate')

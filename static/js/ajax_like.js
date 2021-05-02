@@ -2,12 +2,12 @@
 $(document).ready(function() {
     $(document).on('click', '.like_form', function(event) {
         event.preventDefault();
-        let pk = $(this).attr('value');
-        let url = $(this).parent().attr('action');
+        const pk = $(this).attr('value');
+        const url = $(this).parent().attr('action');
         $.ajax({
             url: url,
             type: 'POST',
-            data: {'videomodel_id': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            data: {'id': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
             dataType: 'json',
         })
         .done(function(response) {
