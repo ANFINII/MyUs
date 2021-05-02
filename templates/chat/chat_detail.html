@@ -36,25 +36,24 @@
                     </div>
 
                     {% if user.is_authenticated %}
-                    <form action="{% url 'myus:chat_like' object.id %}" method="POST" class="view_good_inline">{% csrf_token %}
+                    <form method="POST" action="{% url 'myus:chat_like' %}">{% csrf_token %}
                         {% if liked %}
-                        <button type="submit" name="chat_id" value="{{ object.id }}" class="like_fill">
-                            <i class="bi bi-hand-thumbs-up-fill" title="いいね数"></i>
+                        <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_fill">
+                            <i class="bi bi-hand-thumbs-up-fill icon-font like_color" title="いいね"></i>
                         </button>
                         {% else %}
-                        <button type="submit" name="chat_id" value="{{ object.id }}" class="like">
-                            <i class="bi bi-hand-thumbs-up" title="いいね数"></i>
+                        <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_no">
+                            <i class="bi bi-hand-thumbs-up icon-font like_color" title="いいね"></i>
                         </button>
                         {% endif %}
-                        {{ total_like|intcomma }}0
+                        <span class="like_count">{{ total_like|intcomma }}</span>
                     </form>
                     {% else %}
-                    <a href="{% url 'myus:login' %}" role="button" aria-disabled="true" class="like_link view_good_inline">
-                        <i class="bi bi-hand-thumbs-up" title="いいね数"></i>
-                    </a>
-                    {{ total_like|intcomma }}
+                        <a href="{% url 'myus:login' %}" role="button" aria-disabled="true" class="like_link">
+                            <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
+                        </a>
+                        <span>{{ total_like|intcomma }}</span>
                     {% endif %}
-                
                     <time>{{ object.created|date:'Y/m/d H:i' }}</time>
                 </div>
 

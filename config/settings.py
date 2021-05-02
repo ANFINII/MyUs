@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django_cleanup',
     'debug_toolbar',
+    'import_export',
+    # 'channels',
     'markdownx',
     'ckeditor',
     'ckeditor_uploader',
@@ -132,6 +134,13 @@ LOGOUT_REDIRECT_URL = '/login/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "asgiref.inmemory.ChannelLayer",
+#         "ROUTING": "myproject.routing.channel_routing",
+#     },
+# }
+
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
 CKEDITOR_RESTRICT_BY_USER = True
@@ -155,8 +164,7 @@ CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
 
 CKEDITOR_CONFIGS = {
     'default': {
-        'skin': 'moono',
-        # 'skin': 'office2013',
+        # 'skin': 'moono',
         'toolbar_Basic': [
             ['Source', '-', 'Bold', 'Italic']
         ],

@@ -24,25 +24,24 @@
                             <i class="bi bi-caret-right-square icon-font" title="閲覧数"></i>
                             {{ object.read|intcomma }}
                         </div>
-                    
                         {% if user.is_authenticated %}
-                        <form action="{% url 'myus:picture_like' object.id %}" method="POST">{% csrf_token %}
-                            {% if liked %}
-                            <button type="submit" name="picture_id" value="{{ object.id }}" class="like_fill">
-                                <i class="bi bi-hand-thumbs-up-fill icon-font" title="いいね数"></i>
-                            </button>
-                            {% else %}
-                            <button type="submit" name="picture_id" value="{{ object.id }}" class="like">
-                                <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
-                            </button>
-                            {% endif %}
-                            {{ total_like|intcomma }}
-                        </form>
+                            <form method="POST" action="{% url 'myus:collabo_like' %}">{% csrf_token %}
+                                {% if liked %}
+                                <button type="submit" name="collabomodel_id" value="{{ object.id }}" class="like_form like_fill">
+                                    <i class="bi bi-hand-thumbs-up-fill icon-font like_color" title="いいね"></i>
+                                </button>
+                                {% else %}
+                                <button type="submit" name="collabomodel_id" value="{{ object.id }}" class="like_form like_no">
+                                    <i class="bi bi-hand-thumbs-up icon-font like_color" title="いいね"></i>
+                                </button>
+                                {% endif %}
+                                <span class="like_count">{{ total_like|intcomma }}</span>
+                            </form>
                         {% else %}
-                        <a href="{% url 'myus:login' %}" role="button" aria-disabled="true" class="like_link">
-                            <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
-                        </a>
-                        {{ total_like|intcomma }}
+                            <a href="{% url 'myus:login' %}" role="button" aria-disabled="true" class="like_link">
+                                <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
+                            </a>
+                            <span>{{ total_like|intcomma }}</span>
                         {% endif %}
                     </div>
                 

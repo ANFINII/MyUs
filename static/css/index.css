@@ -749,7 +749,7 @@ header {
     color: rgb(120, 120, 120);
 }
 
-.like,
+.like_no,
 .like_fill {
     background-color: transparent;
     border: none;
@@ -758,17 +758,17 @@ header {
     appearance: none;
 }
 
-.like {
+.like_no {
     color: rgb(120, 120, 120);
 }
 
 .like_fill,
-.like:hover,
+.like_no:hover,
 .like_link:hover {
     color: rgb(255, 220, 0);
 }
 
-.like:focus,
+.like_no:focus,
 .like_fill:focus {
     outline: none;
     color: rgb(255, 220, 0);
