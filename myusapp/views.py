@@ -704,7 +704,6 @@ class VideoDetail(DetailView, FormView):
         liked = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
-        context['obj'] = obj
         context['liked'] = liked
         context['total_like'] = total_like
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
@@ -834,8 +833,8 @@ class LiveDetail(DetailView):
         liked = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
-        context['total_like'] = total_like
         context['liked'] = liked
+        context['total_like'] = total_like
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
@@ -949,8 +948,8 @@ class MusicDetail(DetailView):
         liked = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
-        context['total_like'] = total_like
         context['liked'] = liked
+        context['total_like'] = total_like
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
@@ -1063,8 +1062,8 @@ class PictureDetail(DetailView):
         liked = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
-        context['total_like'] = total_like
         context['liked'] = liked
+        context['total_like'] = total_like
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
@@ -1178,8 +1177,8 @@ class BlogDetail(DetailView):
         liked = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
-        context['total_like'] = total_like
         context['liked'] = liked
+        context['total_like'] = total_like
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
@@ -1327,9 +1326,9 @@ class ChatDetail(DetailView):
         liked = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
-        context['total_like'] = total_like
         context['liked'] = liked
-        # context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['total_like'] = total_like
+        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -1429,8 +1428,8 @@ class CollaboDetail(DetailView):
         liked = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
-        context['total_like'] = total_like
         context['liked'] = liked
+        context['total_like'] = total_like
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
