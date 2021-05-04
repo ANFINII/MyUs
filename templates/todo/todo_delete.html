@@ -1,13 +1,6 @@
 {% extends 'base2.html' %}
 {% block title %}<title>MyUsToDo</title>{% endblock title %}
 
-{% load static %}
-
-{% block customcss %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
-{% endblock customcss %}
-
 {% block content %}
 <main class="main_contents">
     <h1>ToDo削除</h1>
@@ -16,9 +9,9 @@
 
     <p>{{ object.title }}</p>
     <form action="" method="POST">{% csrf_token %}
-        <p><input type="submit" class="btn btn-danger btn-sm" value="削除します"></p>
+        <p><input type="submit" class="btn btn-danger btn-sm" value="削除する"></p>
     </form>
-
+    
     {% else %}
     <h2 class="login_required_todo">ログインしてください</h2>
     {% endif %}
