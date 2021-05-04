@@ -17,7 +17,7 @@
             <input type="checkbox" id="comment_aria_check_id" class="comment_aria_check">
             <div class="chat_section_header">
                 <h1 title="{{ object.title }}">{{ object.title }}</h1>
-                
+
                 <div class="article_detail_aria_2">
                     <div class="view_good_inline">
                         <i class="bi bi-caret-right-square" title="閲覧数"></i>
@@ -48,10 +48,10 @@
                             <span class="like_count">{{ total_like|intcomma }}</span>
                         </form>
                     {% else %}
-                        <a href="{% url 'myus:login' %}" role="button" aria-disabled="true" class="like_link">
-                            <i class="bi bi-hand-thumbs-up" title="いいね"></i>
-                        </a>
+                    <div class="view_good_inline">
+                        <i class="bi bi-hand-thumbs-up" title="いいね"></i>
                         <span>{{ total_like|intcomma }}</span>
+                    </div>
                     {% endif %}
                     <time>{{ object.created|date:'Y/m/d H:i' }}</time>
                 </div>
@@ -132,20 +132,26 @@
                 </div>
                 {% endfor %}
             </div>
-
+            
             <footer class="chat_footer">
                 <form method="POST" action="">{% csrf_token %}
-                    {% if user.username %}
+                    {% if user.is_authenticated %}
                     <textarea name="text" rows="1" class="textarea_br" placeholder="メッセージ入力" required></textarea>
-                    {% else %}
-                    <textarea name="text" rows="1" class="textarea_br" placeholder="チャットするにはログインが必要です！" disabled="disabled"></textarea>
-                    {% endif %}
                     <div class="chat_frame"></div>
                     <div class="comment_input_chat">
-                        <button type="submit" class="btn btn-sm btn-primary">
+                        <button type="submit" class="btn btn-primary btn-sm">
                             <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
                         </button>
                     </div>
+                    {% else %}
+                    <textarea name="text" rows="1" class="textarea_br" placeholder="チャットするにはログインが必要です！" disabled="disabled"></textarea>
+                    <div class="chat_frame"></div>
+                    <div class="comment_input_chat">
+                        <button type="submit" class="btn btn-secondary btn-sm" disabled>
+                            <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+                        </button>
+                    </div>
+                    {% endif %}
                 </form>
             </footer>
         </div>    

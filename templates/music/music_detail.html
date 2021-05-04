@@ -42,9 +42,7 @@
                                 <span class="like_count">{{ total_like|intcomma }}</span>
                             </form>
                         {% else %}
-                            <a href="{% url 'myus:login' %}" role="button" aria-disabled="true" class="like_link">
-                                <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
-                            </a>
+                            <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
                             <span>{{ total_like|intcomma }}</span>
                         {% endif %}
                     </div>
