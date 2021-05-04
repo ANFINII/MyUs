@@ -269,7 +269,7 @@ hr {
     width: calc(100% - 1fr);
 }
 
-.chat_footer .btn-primary {
+.chat_footer .btn-sm {
     grid-column: 1/-1;
     grid-row: 1/2;
     justify-self: end;
