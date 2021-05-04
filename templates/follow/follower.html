@@ -18,7 +18,7 @@
     {% if user.is_authenticated %}
 
     <div class="follow_button">
-        <a href="{% url 'myus:follow_list' %}" class="btn btn-sm btn-primary" role="button">フォロー</a>
+        <a href="{% url 'myus:follow_list' %}" class="btn btn-primary btn-sm" role="button">フォロー</a>
         <span>フォロワー数：{{ follower_count }}</span>
         <span>フォロー数：{{ following_count }}</span>
     </div>
