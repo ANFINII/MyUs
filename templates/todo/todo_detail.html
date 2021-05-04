@@ -4,10 +4,6 @@
 {% load static %}
 {% load humanize %}
 
-{% block customcss %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
-{% endblock customcss %}
-
 {% block content %}
 <main class="main_contents">
     <h1>ToDo詳細</h1>
@@ -43,11 +39,11 @@
                             0
                         {% endif %}
                     </div>
-                    <p class="content_detail_p3">
+                    <p class="content_detail_p4">
                         優先度：{{ object.get_priority_display }}<br>
                         期日：{{ object.duedate }}
                     </p>
-                    <p class="content_detail_p4">{{ object.content|linebreaksbr|urlize }}</p>
+                    <p class="content_detail_p5">{{ object.content|linebreaksbr|urlize }}</p>
                 </div>
             </div>
 
@@ -110,7 +106,7 @@
             </div>
             <hr>
         </div>
-
+        
         <div class="article_detail_section_2">
             {% include 'parts/article_todo.html' %}
         </div>

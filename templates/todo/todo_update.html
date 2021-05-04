@@ -1,13 +1,6 @@
 {% extends 'base2.html' %}
 {% block title %}<title>MyUsToDo</title>{% endblock title %}
 
-{% load static %}
-
-{% block customcss %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
-{% endblock customcss %}
-
 {% block content %}
 <main class="main_contents">
     <h1>ToDo編集</h1>
@@ -24,9 +17,9 @@
         <p><label for="id_duedate">期日</label></p>
         <p><input type="text" name="duedate" id="id_duedate" class="form-control" placeholder="2020-01-01" value="{{ todomodel.duedate|date:'Y-m-j' }}" required></p>
         <br>
-        <p><input type="submit" class="btn btn-success btn-sm" value="完了"></p>
+        <p><input type="submit" class="btn btn-success btn-sm" value="完了する"></p>
     </form>
-
+    
     {% else %}
     <h2 class="login_required_todo">ログインしてください</h2>
     {% endif %}
