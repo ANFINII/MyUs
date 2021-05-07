@@ -10,8 +10,8 @@
                 </a>
             </object>
             <span class="follow_content_1" title="{{ item.follower.nickname }}">{{ item.follower.nickname }}</span>
-            <span class="follow_content_2">フォロワー数：{{ follower_counts }}</span>
-            <span class="follow_content_3">フォロー数　：{{ following_counts }}</span>
+            <span class="follow_content_2">フォロワー数：{{ item.follower.follower_count }}</span>
+            <span class="follow_content_3">フォロー数　：{{ item.follower.following_count }}</span>
             <object class="follow_content_4" title="{{ item.follower.introduction }}">{{ item.follower.introduction|linebreaksbr|urlize }}</object>
         </a>
     </div>

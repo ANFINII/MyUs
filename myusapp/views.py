@@ -5,10 +5,10 @@ from django.contrib import messages
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.http import HttpResponse, JsonResponse, QueryDict, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q, Max, Min, Avg, Count, F, Value
 from django.views.decorators.csrf import csrf_exempt
+from django.template.loader import render_to_string
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, FormView
 from django.utils import timezone
 from datetime import date, datetime, timedelta
@@ -363,9 +363,14 @@ class UserPage(ListView):
     def get_context_data(self, **kwargs):
         context = super(UserPage, self).get_context_data(**kwargs)
         author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=author)
+        followed = False
+        if follow.exists():
+            followed = True
+        context['followed'] = followed
         context['author_name'] = author
-        context['follower_count'] = FollowModel.objects.filter(follower_id=author).count()
-        context['following_count'] = FollowModel.objects.filter(following_id=author).count()
+        context['follower_count'] = FollowModel.objects.filter(following=author).count()
+        context['following_count'] = FollowModel.objects.filter(follower_id=author).count()
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'user_list': User.objects.filter(nickname=author),
@@ -476,17 +481,47 @@ class Recommend(ListView):
         return context
     
 # Follow
-class FollowCreate(CreateView):
-    """ここにメソッドの説明を記述する"""
-    model = FollowModel
-    fields = ('follower', 'following')
-    template_name = 'follow/follow_create.html'
-    success_url = reverse_lazy('myus:follow_list')
-    
-    def form_valid(self, form):
-        form.instance.author_id = self.request.user.id
-        return super(FollowCreate, self).form_valid(form)
-
+@csrf_exempt
+def FollowCreate(request, nickname):
+    if request.method == 'POST':
+        follower = User.objects.get(nickname=request.user.nickname)
+        following = User.objects.get(nickname=nickname)
+        # followed = False
+        if follower == following:
+            pass
+            # '自分はフォローできません'
+        elif FollowModel.objects.filter(follower=follower, following=following).exists():
+            unfollow = FollowModel.objects.get(follower=follower, following=following)
+            unfollow.delete()
+            followed = False
+            #ログインユーザーのフォロー数
+            following_count = FollowModel.objects.filter(follower=follower).count()
+            follower.following_count = following_count
+            follower.save()
+            #フォローユーザーのフォロワー数
+            follower_count = FollowModel.objects.filter(following=following).count()
+            following.follower_count = follower_count
+            following.save()
+            # 'フォローを外しました'
+        else:
+            FollowModel.objects.get_or_create(follower=follower, following=following)
+            followed = True
+            #ログインユーザーのフォロー数
+            following_count = FollowModel.objects.filter(follower=follower).count()
+            follower.following_count = following_count
+            follower.save()
+            #フォローユーザーのフォロワー数
+            follower_count = FollowModel.objects.filter(following=following).count()
+            following.follower_count = follower_count
+            following.save()
+            # 'フォローしました'
+        context = {
+            'followed': followed,
+            'follower_count': follower_count,
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+        
 class FollowList(ListView):
     """FollowListを表示"""
     model = FollowModel
@@ -497,10 +532,7 @@ class FollowList(ListView):
     
     def get_context_data(self, **kwargs):
         context = super(FollowList, self).get_context_data(**kwargs)
-        # follower__username = user.username フォロワー数
-        # following__username = user.username フォロー数
-        context['follower_count'] = FollowModel.objects.filter(follower_id=self.request.user.id).count()
-        context['following_count'] = FollowModel.objects.filter(following_id=self.request.user.id).count()
+        context['following_count'] = FollowModel.objects.filter(follower_id=self.request.user.id).count()
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -541,7 +573,6 @@ class FollowerList(ListView):
     def get_context_data(self, **kwargs):
         context = super(FollowerList, self).get_context_data(**kwargs)
         context['follower_count'] = FollowModel.objects.filter(following_id=self.request.user.id).count()
-        context['following_count'] = FollowModel.objects.filter(follower_id=self.request.user.id).count()
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -665,48 +696,56 @@ class VideoDetail(DetailView, FormView):
     #         return redirect('myus:video_detail', pk=video_pk)
     #     return FormView.post(self, request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(self.request.POST)
-        video_pk = self.kwargs['pk']
-        video = get_object_or_404(VideoModel, pk=video_pk)
-        if form.is_valid():
-            if request.is_ajax():
-                # Ajax 処理を別メソッドに切り離す
-                form = form.save(commit=False)
-                form.author_id = self.request.user.id
-                form.content_object = video
-                form.save()
-                return self.ajax_response(form)
-            return super().form_valid(form)
-        # elif reply:
-        #     if form.is_valid():
-        #         if request.is_ajax():
-        #             # Ajax 処理を別メソッドに切り離す
-        #             form = form.save(commit=False)
-        #             form.author_id = self.request.user.id
-        #             form.content_object = comments
-        #             # form.parent = self.object.comments.parent_id
-        #             form.save()
-        #             return self.ajax_response(form)
-        #             # return HttpResponse(form)
-        #         return super().form_valid(form)
-        return super().form_invalid(form)
+    # def post(self, request, *args, **kwargs):
+    #     form = self.form_class(self.request.POST)
+    #     video_pk = self.kwargs['pk']
+    #     video = get_object_or_404(VideoModel, pk=video_pk)
+    #     if form.is_valid():
+    #         if request.is_ajax():
+    #             # Ajax 処理を別メソッドに切り離す
+    #             form = form.save(commit=False)
+    #             form.author_id = self.request.user.id
+    #             form.content_object = video
+    #             form.save()
+    #             return self.ajax_response(form)
+    #         return super().form_valid(form)
+    #     elif reply:
+    #         if form.is_valid():
+    #             if request.is_ajax():
+    #                 # Ajax 処理を別メソッドに切り離す
+    #                 form = form.save(commit=False)
+    #                 form.author_id = self.request.user.id
+    #                 form.content_object = comments
+    #                 # form.parent = self.object.comments.parent_id
+    #                 form.save()
+    #                 return self.ajax_response(form)
+    #                 # return HttpResponse(form)
+    #             return super().form_valid(form)
+    #     return super().form_invalid(form)
     
-    def ajax_response(self, form):
-        # jQueryに対してレスポンスを返すメソッド
-        text = form.cleaned_data.get('text')
-        return HttpResponse(text)
+    # def ajax_response(self, form):
+    #     # jQueryに対してレスポンスを返すメソッド
+    #     text = form.cleaned_data.get('text')
+    #     return HttpResponse(text)
     
     def get_context_data(self, **kwargs):
         context = super(VideoDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(VideoModel, id=self.kwargs['pk'])
+        obj_user = obj.author.id
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
         total_like = obj.total_like()
         liked = False
+        followed = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
+        if follow.exists():
+            followed = True
         context['liked'] = liked
         context['total_like'] = total_like
+        context['followed'] = followed
+        context['follower_count'] = FollowModel.objects.filter(following=obj_user).count()
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['comment_count'] = self.object.comments.all().count()
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -714,6 +753,7 @@ class VideoDetail(DetailView, FormView):
         })
         return context
     
+@csrf_exempt
 def VideoLike(request):
     if request.method == 'POST':
         user = request.user
@@ -733,33 +773,30 @@ def VideoLike(request):
         if request.is_ajax():
             return JsonResponse(context)
         
+@csrf_exempt
 def VideoComment(request):
-    pass
-    # if request.method == 'POST':
-    #     video = get_object_or_404(VideoModel, pk=video_pk)
-    #     if request.is_ajax():
-    #         # Ajax 処理を別メソッドに切り離す
-    #         form = form.save(commit=False)
-    #         form.author_id = self.request.user.id
-    #         form.content_object = video
-    #         form.save()
-    #         return self.ajax_response(form)
-    #     user = request.user
-    #     comment = Comment.objects.all()
-    #     text = comment.get('text')
-    #     # comment = dic.get('comment')
-    #     video = get_object_or_404(VideoModel, pk=pk)
-    #     # form = video.save(commit=False)
-    #     video.text = text
-    #     video.author_id = user.id
-    #     video.content_object = video
-    #     context = {
-    #         'text': text,
-    #         'video': video,
-    #     }
-    #     print(context)
-    # return JsonResponse(context)
-
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        obj_id = request.POST.get('id')
+        obj = get_object_or_404(VideoModel, id=obj_id)
+        obj.text = text
+        obj.author_id = request.user.id
+        # obj.object_id = obj_id
+        # obj.content_type = obj
+        # obj.content_object = Comment(content_object=VideoModel, object_id=obj_id)
+        obj.content_object = obj
+        
+        obj.save()
+        context = {
+            'text': obj.text,
+            'nickname': obj.author.nickname,
+            'user_image': obj.author.user_image.url,
+            'created': obj.created,
+            'comment_count': obj.comments.all().count()
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+        
 # Live
 class LiveCreate(CreateView):
     """ここにメソッドの説明を記述する"""
@@ -830,12 +867,21 @@ class LiveDetail(DetailView):
         context = super(LiveDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(LiveModel, id=self.kwargs['pk'])
         total_like = obj.total_like()
+        obj_user = obj.author.id
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        total_like = obj.total_like()
         liked = False
+        followed = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
+        if follow.exists():
+            followed = True
         context['liked'] = liked
         context['total_like'] = total_like
+        context['followed'] = followed
+        context['follower_count'] = FollowModel.objects.filter(following=obj_user).count()
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['comment_count'] = self.object.comments.all().count()
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -843,6 +889,7 @@ class LiveDetail(DetailView):
         })
         return context
     
+@csrf_exempt
 def LiveLike(request):
     if request.method == 'POST':
         user = request.user
@@ -945,12 +992,21 @@ class MusicDetail(DetailView):
         context = super(MusicDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(MusicModel, id=self.kwargs['pk'])
         total_like = obj.total_like()
+        obj_user = obj.author.id
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        total_like = obj.total_like()
         liked = False
+        followed = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
+        if follow.exists():
+            followed = True
         context['liked'] = liked
         context['total_like'] = total_like
+        context['followed'] = followed
+        context['follower_count'] = FollowModel.objects.filter(following=obj_user).count()
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['comment_count'] = self.object.comments.all().count()
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -958,6 +1014,7 @@ class MusicDetail(DetailView):
         })
         return context
     
+@csrf_exempt
 def MusicLike(request):
     if request.method == 'POST':
         user = request.user
@@ -1059,12 +1116,21 @@ class PictureDetail(DetailView):
         context = super(PictureDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(PictureModel, id=self.kwargs['pk'])
         total_like = obj.total_like()
+        obj_user = obj.author.id
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        total_like = obj.total_like()
         liked = False
+        followed = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
+        if follow.exists():
+            followed = True
         context['liked'] = liked
         context['total_like'] = total_like
+        context['followed'] = followed
+        context['follower_count'] = FollowModel.objects.filter(following=obj_user).count()
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['comment_count'] = self.object.comments.all().count()
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -1072,6 +1138,7 @@ class PictureDetail(DetailView):
         })
         return context
     
+@csrf_exempt
 def PictureLike(request):
     if request.method == 'POST':
         user = request.user
@@ -1174,12 +1241,21 @@ class BlogDetail(DetailView):
         context = super(BlogDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(BlogModel, id=self.kwargs['pk'])
         total_like = obj.total_like()
+        obj_user = obj.author.id
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        total_like = obj.total_like()
         liked = False
+        followed = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
+        if follow.exists():
+            followed = True
         context['liked'] = liked
         context['total_like'] = total_like
+        context['followed'] = followed
+        context['follower_count'] = FollowModel.objects.filter(following=obj_user).count()
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['comment_count'] = self.object.comments.all().count()
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -1187,6 +1263,7 @@ class BlogDetail(DetailView):
         })
         return context
     
+@csrf_exempt
 def BlogLike(request):
     if request.method == 'POST':
         user = request.user
@@ -1323,12 +1400,21 @@ class ChatDetail(DetailView):
         context = super(ChatDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
         total_like = obj.total_like()
+        obj_user = obj.author.id
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        total_like = obj.total_like()
         liked = False
+        followed = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
+        if follow.exists():
+            followed = True
         context['liked'] = liked
         context['total_like'] = total_like
+        context['followed'] = followed
+        context['follower_count'] = FollowModel.objects.filter(following=obj_user).count()
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['comment_count'] = self.object.comments.all().count()
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -1336,6 +1422,7 @@ class ChatDetail(DetailView):
         })
         return context
     
+@csrf_exempt
 def ChatLike(request):
     if request.method == 'POST':
         user = request.user
@@ -1425,19 +1512,29 @@ class CollaboDetail(DetailView):
         context = super(CollaboDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(CollaboModel, id=self.kwargs['pk'])
         total_like = obj.total_like()
+        obj_user = obj.author.id
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        total_like = obj.total_like()
         liked = False
+        followed = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
+        if follow.exists():
+            followed = True
         context['liked'] = liked
         context['total_like'] = total_like
+        context['followed'] = followed
+        context['follower_count'] = FollowModel.objects.filter(following=obj_user).count()
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['comment_count'] = self.object.comments.all().count()
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'collabo_list': CollaboModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-
+    
+@csrf_exempt
 def CollaboLike(request):
     if request.method == 'POST':
         user = request.user

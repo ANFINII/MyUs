@@ -10,15 +10,30 @@
         </a>
         <div class="username_space">{{ object.author.nickname }}</div>
         <div class="registered_person">登録者数
-            {% if object.FollowModels_set.all %}
-                {{ object.FollowModels_set.count }}
+            {% if follower_count %}
+                <span id="follower_count">{{ follower_count }}</span>
             {% else %}
                 0
             {% endif %}
         </div>
         <p class="content_detail_p1">{{ object.content|linebreaksbr|urlize }}</p>
         <p class="content_detail_p2">{{ object.lyrics|linebreaksbr }}</p>
-        <button class="btn btn-sm btn-success registered">フォローする</button>
+        
+        <div class="content_detail_p3">
+            {% if user.nickname == object.author.nickname %}
+            <button class="btn btn-secondary" disabled>フォローする</button>
+            {% elif user.is_authenticated %}
+            <form method="POST" action="{% url 'myus:follow_create' object.author.nickname %}" class="follow_form">{% csrf_token %}
+                {% if followed %}
+                <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-danger followchange">解除する</button>
+                {% else %}
+                <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-success followchange">フォローする</button>
+                {% endif %}
+            </form>
+            {% else %}
+            <button class="btn btn-secondary" disabled>フォローする</button>
+            {% endif %}
+        </div>
     </div>
 </div>
 
@@ -26,42 +41,38 @@
 <label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
 <hr>
 
-<form method="POST" action="{% url 'myus:video_detail' object.id %}">{% csrf_token %}
+<form method="POST" action="{% url 'myus:video_Comment' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
     <div class="comment_input">
         <p>コメント総数
-            {% if object.comments.all %}
-                {{ object.comments.all.count|intcomma }}
+            {% if comment_count %}
+                <span id="comment_count">{{ comment_count|intcomma }}</span>
             {% else %}
                 0
             {% endif %}
         </p>
-        {% if user.username %}
+        {% if user.is_authenticated %}
         <a href="{% url 'myus:userpage' user.nickname %}">
             <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
         </a>
-        {% else %}
-        <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_comment">
-        {% endif %}
-        {% if user.username %}
         <textarea name="text" rows="1" class="textarea_br" placeholder="コメント入力" required></textarea>
-        {% else %}
-        <textarea name="text" rows="1" class="textarea_br" placeholder="コメントするにはログインが必要です！" disabled></textarea>
-        {% endif %}
-        <button type="submit" class="btn btn-sm btn-primary">
+        <button type="submit" class="btn btn-primary btn-sm">
             <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
         </button>
+        {% else %}
+        <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_comment">
+        <textarea name="text" rows="1" class="textarea_br" placeholder="コメントするにはログインが必要です！" disabled></textarea>
+        <button type="submit" class="btn btn-secondary btn-sm" disabled>
+            <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+        </button>
+        {% endif %}
     </div>
 </form>
-
-<span class="span_comment">
-    response
-</span>
 
 <input type="checkbox" id="comment_aria_check_id" class="comment_aria_check">
 <label for="comment_aria_check_id" class="comment_aria_check_label1">拡大表示</label>
 <label for="comment_aria_check_id" class="comment_aria_check_label2">縮小表示</label>
 
-<div class="comment_aria">
+<div class="comment_aria">コメント
     {% for comment in comment_list reversed %}
     <input type="checkbox" id="reply_aria_check_id" class="reply_aria_check">
 
@@ -79,24 +90,38 @@
             <label for="reply_aria_check_id" class="reply_aria_check_id">返信</label>
         </div>
     </div>
+    
+    <div id="comment_aria_add">
+        <div class="comment_aria_list">
+            <a>
+            </a>
+            <div class="comment_aria_list_1">
+                <p></p>
+                <time></time>
+            </div>
+            <div class="comment_aria_list_2"></div>
+            <div class="comment_aria_list_3">
+            </div>
+        </div>
+    </div>
 
     <form method="POST" action="{% url 'myus:video_detail' object.id %}" class="comment_aria_list_4">{% csrf_token %}
         <div class="reply_input">
-            {% if user.username %}
+            {% if user.is_authenticated %}
             <a href="{% url 'myus:userpage' user.nickname %}">
                 <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_reply">
             </a>
-            {% else %}
-            <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
-            {% endif %}
-            {% if user.username %}
             <textarea name="text2" rows="1" class="textarea_br" placeholder="返信コメント入力" required></textarea>
-            {% else %}
-            <textarea name="text2" rows="1" class="textarea_br" placeholder="返信コメントするにはログインが必要です！" disabled></textarea>
-            {% endif %}
-            <button type="submit" class="btn btn-sm btn-primary">
+            <button type="submit" class="btn btn-primary btn-sm">
                 <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
             </button>
+            {% else %}
+            <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
+            <textarea name="text2" rows="1" class="textarea_br" placeholder="返信コメントするにはログインが必要です！" disabled></textarea>
+            <button type="submit" class="btn btn-secondary btn-sm" disabled>
+                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+            </button>
+            {% endif %}
         </div>
     </form>
 

@@ -930,7 +930,7 @@ header {
 
 .userpage_author {
     display: grid;
-    grid-template-columns: 80px;
+    grid-template-columns: 80px auto auto;
     grid-template-rows: 36px 22px 22px;
     margin: 0 0 16px 0;
 }
@@ -966,6 +966,14 @@ header {
     grid-row: 3/4;
     font-size: 14px;
     padding: 0 0 0 15px;
+}
+
+.userpage_content_4 {
+    grid-column: 3/-1;
+    grid-row: 1/-1;
+    font-size: 14px;
+    padding: 0 0 0 15px;
+    justify-self: end;
 }
 
 .userpage_hr {
