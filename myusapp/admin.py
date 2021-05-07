@@ -34,11 +34,11 @@ class UserAdmin(ImportExportModelAdmin):
     inlines = [SearchTagInline]
     
     # 詳細画面
-    readonly_fields = ('full_name', 'birthday', 'age', 'date_joined', 'last_login')
+    readonly_fields = ('full_name', 'birthday', 'age', 'date_joined', 'last_login', 'following_count', 'follower_count')
     fieldsets = [
         ('アカウント情報', {'fields': ('user_image', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone', 'location', 'profession', 'introduction', 'groups', 'user_permissions')}),
         ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
-        ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content')})
+        ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content', 'following_count', 'follower_count')})
     ]
     
 @admin.register(FollowModel)

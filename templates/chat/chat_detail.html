@@ -74,6 +74,29 @@
                             </div>
                             <div class="comment_aria_list_2">{{ object.content|linebreaksbr }}</div>
                         </label>
+
+                        <div class="registered_person">登録者数
+                            {% if follower_count %}
+                                <span id="follower_count">{{ follower_count }}</span>
+                            {% else %}
+                                0
+                            {% endif %}
+                        </div>
+                        <div class="content_detail_p3">
+                            {% if user.nickname == object.author.nickname %}
+                            <button class="btn btn-secondary" disabled>フォローする</button>
+                            {% elif user.is_authenticated %}
+                            <form method="POST" action="{% url 'myus:follow_create' object.author.nickname %}" class="follow_form">{% csrf_token %}
+                                {% if followed %}
+                                <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-danger followchange">解除する</button>
+                                {% else %}
+                                <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-success followchange">フォローする</button>
+                                {% endif %}
+                            </form>
+                            {% else %}
+                            <button class="btn btn-secondary" disabled>フォローする</button>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 {% include 'parts/tag.html' %}
@@ -161,3 +184,7 @@
     </article>
 </main>
 {% endblock content %}
+
+{% block extrajs %}
+<script src="{% static 'js/ajax.js' %}"></script>
+{% endblock extrajs %}

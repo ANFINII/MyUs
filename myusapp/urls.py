@@ -29,7 +29,7 @@ urlpatterns = [
     
     path('follow/', FollowList.as_view(), name='follow_list'),
     path('follower/', FollowerList.as_view(), name='follower_list'),
-    path('follow_create/', FollowCreate.as_view(), name='follow_create'),
+    path('follow_create/<str:nickname>', FollowCreate, name='follow_create'),
     path('mypage/', MyPage, name='mypage'),
     path('mypage_update/', MyPage_update.as_view(), name='mypage_update'),
     path('userpage/<str:nickname>', UserPage.as_view(), name='userpage'),

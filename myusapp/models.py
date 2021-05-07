@@ -35,43 +35,45 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """カスタムユーザーモデル"""
-    user_image     = models.ImageField(upload_to='users/', default='../static/img/user_icon.png', blank=True, null=True)
-    username       = models.CharField(max_length=30, unique=True)
-    email          = models.EmailField(max_length=120, unique=True)
-    nickname       = models.CharField(max_length=60, unique=True)
-    full_name      = models.CharField(max_length=60, blank=True)
-    last_name      = models.CharField(max_length=30, blank=True)
-    first_name     = models.CharField(max_length=30, blank=True)
+    user_image      = models.ImageField(upload_to='users/', default='../static/img/user_icon.png', blank=True, null=True)
+    username        = models.CharField(max_length=30, unique=True)
+    email           = models.EmailField(max_length=120, unique=True)
+    nickname        = models.CharField(max_length=60, unique=True)
+    full_name       = models.CharField(max_length=60, blank=True)
+    last_name       = models.CharField(max_length=30, blank=True)
+    first_name      = models.CharField(max_length=30, blank=True)
     
-    birthday       = models.DateField(blank=True, null=True)
-    year           = models.IntegerField(blank=True, null=True)
-    month          = models.IntegerField(blank=True, null=True)
-    day            = models.IntegerField(blank=True, null=True)
-    age            = models.IntegerField(blank=True, null=True)
+    birthday        = models.DateField(blank=True, null=True)
+    year            = models.IntegerField(blank=True, null=True)
+    month           = models.IntegerField(blank=True, null=True)
+    day             = models.IntegerField(blank=True, null=True)
+    age             = models.IntegerField(blank=True, null=True)
     
-    GENDER_CHOICES = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
-    gender         = models.CharField(choices=GENDER_CHOICES, max_length=1, blank=True)
-
-    phone_no       = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message = ('電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます。'))
-    phone          = models.CharField(validators=[phone_no], max_length=15, blank=True, default='000-0000-0000')
-
-    location       = models.CharField(max_length=255, blank=True)
-    profession     = models.CharField(max_length=120, blank=True)
-    introduction   = models.TextField(blank=True)
-
-    is_active      = models.BooleanField(default=True)
-    is_staff       = models.BooleanField(default=False)
-    is_admin       = models.BooleanField(default=False)
-    last_login     = models.DateTimeField(_('last login'), auto_now_add=True)
-    date_joined    = models.DateTimeField(_('date joined'), default=timezone.now)
+    GENDER_CHOICES  = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
+    gender          = models.CharField(choices=GENDER_CHOICES, max_length=1, blank=True)
+    
+    phone_no        = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message = ('電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます。'))
+    phone           = models.CharField(validators=[phone_no], max_length=15, blank=True, default='000-0000-0000')
+    
+    location        = models.CharField(max_length=255, blank=True)
+    profession      = models.CharField(max_length=120, blank=True)
+    introduction    = models.TextField(blank=True)
+    
+    is_active       = models.BooleanField(default=True)
+    is_staff        = models.BooleanField(default=False)
+    is_admin        = models.BooleanField(default=False)
+    last_login      = models.DateTimeField(_('last login'), auto_now_add=True)
+    date_joined     = models.DateTimeField(_('date joined'), default=timezone.now)
     
     # Myページ用フィールド
-    mypage_image   = models.ImageField(upload_to='users/', default='../static/img/MyUs_banner.png', blank=True, null=True)
-    mypage_email   = models.EmailField(max_length=120, blank=True, null=True, default='abc@gmail.com')
-    content        = models.TextField(blank=True)
-
+    mypage_image    = models.ImageField(upload_to='users/', default='../static/img/MyUs_banner.png', blank=True, null=True)
+    mypage_email    = models.EmailField(max_length=120, blank=True, null=True, default='abc@gmail.com')
+    content         = models.TextField(blank=True)
+    follower_count  = models.IntegerField(default=0)
+    following_count = models.IntegerField(default=0)
+    
     objects = UserManager()
-
+    
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'nickname'
     REQUIRED_FIELDS = ['username', 'email']
@@ -82,7 +84,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_perm(self, perm, obj=None):
         "ユーザーにパーミッション権限を持ちますか？"
         return True
-
+    
     def has_module_perms(self, app_label):
         "ユーザーにパーミッションのリストを表示させますか?"
         return True
@@ -90,7 +92,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_username(self):
         """nickname"""
         return self.nickname
-
+    
     def get_full_name(self):
         """Return the first_name plus the last_name, with a space in between."""
         full_name = '%s %s' % (self.first_name, self.last_name)
@@ -107,7 +109,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_followers(self):
         relations = FollowModel.objects.filter(follow=self)
         return [relation.follower for relation in relations]
-
+    
 @property
 def image_url(self):
     if self.user_image and hasattr(self.user_image, 'url'):

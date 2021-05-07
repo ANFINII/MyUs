@@ -6,34 +6,48 @@
 {% block content %}
 <main class="main_contents">
     {% for item in user_list %}
-    <div class="userpage_banner">
-        <div class="userpage_banner_image">
-            <img src="{{ item.mypage_image.url }}" title="{{ author_name }}">
+        <div class="userpage_banner">
+            <div class="userpage_banner_image">
+                <img src="{{ item.mypage_image.url }}" title="{{ author_name }}">
+            </div>
         </div>
-    </div>
 
-    <object class="userpage_author">
-        <object class="author_space">
-            <object>
-                <img src="{{ item.user_image.url }}" title="{{ item.nickname }}" class="userpage_image">
+        <object class="userpage_author">
+            <object class="author_space">
+                <object>
+                    <img src="{{ item.user_image.url }}" title="{{ item.nickname }}" class="userpage_image">
+                </object>
             </object>
+            <span class="userpage_content_1" title="{{ item.nickname }}">{{ item.nickname }}</span>
+            <span class="userpage_content_2">フォロワー数
+                {% if follower_count %}
+                <span id="follower_count">{{ follower_count }}</span>
+                {% else %}
+                    0
+                {% endif %}
+            </span>
+            <span class="userpage_content_3">フォロー数 {{ following_count }}</span>
         </object>
-        <span class="userpage_content_1" title="{{ item.nickname }}">{{ item.nickname }}</span>
-        <span class="userpage_content_2">フォロワー数：{{ follower_count }}</span>
-        <span class="userpage_content_3">フォロー数　：{{ following_count }}</span>
-    </object>
-    <a href="{% url 'myus:userpage' item.nickname %}" class="">投稿</a>
-    <a href="{% url 'myus:userpage_about' item.nickname %}" class="">情報</a>
-
+        
+        <span>
+            {% if user.nickname == item.nickname %}
+            <button class="btn btn-secondary btn-sm" disabled>フォローする</button>
+            {% elif user.is_authenticated %}
+            <form method="POST" action="{% url 'myus:follow_create' item.nickname %}" class="follow_form">{% csrf_token %}
+                {% if followed %}
+                <button type="submit" name="following_id" value="{{ item.nickname }}" class="btn btn-danger btn-sm followchange">解除する</button>
+                {% else %}
+                <button type="submit" name="following_id" value="{{ item.nickname }}" class="btn btn-success btn-sm followchange">フォローする</button>
+                {% endif %}
+            </form>
+            {% else %}
+            <button class="btn btn-secondary btn-sm" disabled>フォローする</button>
+            {% endif %}
+        </span>
+        <a href="{% url 'myus:userpage' item.nickname %}" class="">投稿</a>
+        <a href="{% url 'myus:userpage_about' item.nickname %}" class="">情報</a>
     {% endfor %}
 
-    {% if user.is_authenticated and user != user.nickname %}
-        {% if follow_status == True %}
-        <a href="{% url 'myus:userpage' user.nickname 0 %}" class="btn btn-sm btn-danger registered">フォロー解除</a>
-        {% else %}
-        <a href="{% url 'myus:userpage' user.nickname 1 %}" class="btn btn-sm btn-success registered">フォローする</a>
-        {% endif %}
-    {% endif %}
     <hr class="userpage_hr">
 
     <article class="main_article_index">
