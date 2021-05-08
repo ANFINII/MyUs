@@ -73,7 +73,7 @@
                                 <time>{{ object.created|date:'Y/m/d H:i' }}</time>
                             </div>
                             <div class="chat_content_list_2">登録者数
-                                <span id="follower_count">{{ object.author.follower_count }}</span>
+                                <span class="follower_count">{{ object.author.follower_count }}</span>
                             </div>
                             <div class="chat_content_list_3">
                                 {% if user.nickname == object.author.nickname %}

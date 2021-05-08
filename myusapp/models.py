@@ -140,13 +140,13 @@ class SearchTag(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     sequence = models.IntegerField(validators=[MaxValueValidator(10)], default=1)
     searchtag = models.CharField(max_length=12, null=True)
-
+    
     def __str__(self):
         return self.searchtag
     
     class Meta:
         verbose_name_plural = '10 検索タグ'
-
+        
 class Tag(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     tag = models.CharField(max_length=12, null=True)
