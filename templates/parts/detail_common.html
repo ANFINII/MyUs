@@ -10,7 +10,7 @@
         </a>
         <div class="username_space">{{ object.author.nickname }}</div>
         <div class="registered_person">登録者数
-            <span id="follower_count">{{ object.author.follower_count|intcomma }}</span>
+            <span class="follower_count">{{ object.author.follower_count|intcomma }}</span>
         </div>
         <p class="content_detail_p1">{{ object.content|linebreaksbr|urlize }}</p>
         <p class="content_detail_p2">{{ object.lyrics|linebreaksbr }}</p>

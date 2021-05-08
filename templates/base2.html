@@ -362,7 +362,7 @@
 {% endblock nav %}
 
 {% block tagnav %}
-<form method="POST" action="">{% csrf_token %}
+<form method="POST" action="{% url 'myus:tag_create' %}" id="tag_form">{% csrf_token %}
     <nav class="tag_nav">
         <input type="checkbox" id="tag_add" class="tag_menu">
 
@@ -372,10 +372,12 @@
 
         <input type="text" name="searchtag" class="main_tag3" maxlength="12" placeholder="タグ名" required>
 
+        <input name="next" type="hidden" value="{{ request.path }}">
+
         <div class="main_tag_n">
-        {% for item in searchtag_list %}
+            {% for item in searchtag_list %}
             <div class="tag_n_list"><a href="?search={{ item.searchtag }}">{{ item.searchtag }}</a></div>
-        {% endfor %}
+            {% endfor %}
         </div>
 
         <label for="tag_add" class="main_tag4">完了</label>

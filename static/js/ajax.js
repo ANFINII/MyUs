@@ -47,12 +47,12 @@ $(document).ready(function() {
                 $('.followchange').removeClass('btn-success');
                 $('.followchange').addClass('btn-danger');
                 $('.btn-danger').html('解除する');
-                $('#follower_count').html(response['follower_count']);
+                $('.follower_count').html(response['follower_count']);
             } else {
                 $('.followchange').removeClass('btn-danger');
                 $('.followchange').addClass('btn-success');
                 $('.btn-success').html('フォローする');
-                $('#follower_count').html(response['follower_count']);
+                $('.follower_count').html(response['follower_count']);
             }
             console.log(response);
         })
@@ -65,11 +65,11 @@ $(document).ready(function() {
     $('form').submit(function(event) {
         event.preventDefault();
         const form = $(this);
-        const url = form.attr('action');
+        // const url = form.attr('action');
         const id = form.attr('obj-id');
         const text = $('form [name=text]').val();
         $.ajax({
-            url: url,
+            // url: url,
             type: 'POST',
             data: {'id':id, 'text':text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
             dataType: 'json',

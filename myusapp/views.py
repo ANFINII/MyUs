@@ -247,7 +247,7 @@ class Withdrawal(View):
             else:
                 messages.error(self.request, 'パスワードが違います!')
                 return redirect('myus:withdrawal')
-
+                
 def Profile(request):
     """アカウント設定"""
     object_profile = User.objects.all()
@@ -400,32 +400,29 @@ class UserPage(ListView):
             form.save()
         return redirect('myus:userpage')
 
-# SearchTag追加
+# SearchTag
 @csrf_exempt
 def TagCreate(request):
     """TagCreate"""
-    # model = SearchTag
-    # fields = ('searchtag',)
-    # template_name = 'base2.html'
-    # # success_url = reverse_lazy('myus:index')
-    # form_class = SearchTagForm
-
     if request.method == 'POST':
         form = SearchTagForm(request.POST)
+        # url = request.path
         if form.is_valid():
-            if request.is_ajax():
-                form = form.save(commit=False)
-                form.author_id = request.user.id
-                form.save()
-                obj = SearchTag.objects.filter(author_id=request.user.id).order_by('sequence')[:10],
-                context = {
-                    'searchtag': form.searchtag,
-                    'searchtag_list': obj,
-                }
-                html = render_to_string('parts/searchtag.html', context, request=request)
-                return JsonResponse({'form': html})
+            form = form.save(commit=False)
+            form.author_id = request.user.id
+            form.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             form = SearchTagForm()
+            # ajax用
+            # obj = SearchTag.objects.filter(author_id=request.user.id).order_by('sequence')[:10],
+            # context = {
+            #     'searchtag': form.searchtag,
+            #     'searchtag_list': obj,
+            # }
+            # html = render_to_string('parts/searchtag.html', context, request=request)
+            # if request.is_ajax():
+            #     return JsonResponse(context)
             
 class TagList(ListView):
     """TagList"""
@@ -436,15 +433,7 @@ class Index(ListView):
     """Index処理、すべてのメディアmodelを表示"""
     model = SearchTag
     template_name = 'index.html'
-    form_class = SearchTagForm
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(self.request.POST)
-        if form.is_valid():
-            form.instance.author_id = self.request.user.id
-            form.save()
-        return redirect('myus:index')
-
+    
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
         context.update({
@@ -497,17 +486,17 @@ class Recommend(ListView):
     def get_context_data(self, **kwargs):
         context = super(Recommend, self).get_context_data(**kwargs)    
         # 急上昇はcreatedが1日以内かつscoreが10000以上の上位8レコード
-        # テストはcreatedが50日以内かつscoreが50以上の上位8レコード
+        # テストはcreatedが10日以内かつscoreが100以上の上位8レコード
         # socreはread + like*10
-        aggregation_date = datetime.today() - timedelta(days=50)
+        aggregation_date = datetime.today() - timedelta(days=10)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
-            'live_list': LiveModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
-            'music_list': MusicModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
-            'picture_list': PictureModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
-            'blog_list': BlogModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
-            'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=50).order_by('-score')[:8],
+            'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
+            'live_list': LiveModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
+            'music_list': MusicModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
+            'picture_list': PictureModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
+            'blog_list': BlogModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
+            'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
         })
         return context
     
