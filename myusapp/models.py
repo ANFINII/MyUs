@@ -69,8 +69,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     mypage_image    = models.ImageField(upload_to='users/', default='../static/img/MyUs_banner.png', blank=True, null=True)
     mypage_email    = models.EmailField(max_length=120, blank=True, null=True, default='abc@gmail.com')
     content         = models.TextField(blank=True)
-    follower_count  = models.IntegerField(blank=True, null=True, default=0)
-    following_count = models.IntegerField(blank=True, null=True, default=0)
+    follower_count  = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
+    following_count = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
     
     objects = UserManager()
     
@@ -127,12 +127,12 @@ def mypage_image(self):
 class FollowModel(models.Model):
     """ここにメソッドの説明を記述する"""
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
-    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following', verbose_name='follow')
     created = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return "{} : {}".format(self.follower.username, self.following.username)
-    
+        
     class Meta:
         verbose_name_plural = '09 フォロー'
         
@@ -183,7 +183,7 @@ class VideoModel(models.Model):
 
     class Meta:
         verbose_name_plural = '01 Video'
-        
+
 class LiveModel(models.Model):
     """ここにメソッドの説明を記述する"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
