@@ -19,7 +19,7 @@
 
     <div class="follow_button">
         <a href="{% url 'myus:follow_list' %}" class="btn btn-primary btn-sm" role="button">フォロー</a>
-        <span>フォロワー数：{{ follower_count }}</span>
+        <span>フォロワー数：{{ user.follower_count }}</span>
     </div>
 
     <article class="main_article">

@@ -49,11 +49,11 @@
                                     <i class="bi bi-hand-thumbs-up icon-font like_color" title="いいね"></i>
                                 </button>
                                 {% endif %}
-                                <span class="like_count">{{ total_like|intcomma }}</span>
+                                <span class="like_count">{{ object.total_like|intcomma }}</span>
                             </form>
                         {% else %}
                             <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
-                            <span>{{ total_like|intcomma }}</span>
+                            <span>{{ object.total_like|intcomma }}</span>
                         {% endif %}
                     </div>
 

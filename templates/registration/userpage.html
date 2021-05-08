@@ -1,5 +1,5 @@
 {% extends 'base2.html' %}
-{% block title %}<title>MyUs UserPage{{ author_name }}</title>{% endblock title %}
+{% block title %}<title>MyUs UserPage {{ author_name }}</title>{% endblock title %}
 
 {% load static %}
 
@@ -8,7 +8,7 @@
     {% for item in user_list %}
         <div class="userpage_banner">
             <div class="userpage_banner_image">
-                <img src="{{ item.mypage_image.url }}" title="{{ author_name }}">
+                <img src="{{ item.mypage_image.url }}" title="{{ item.nickname }}">
             </div>
         </div>
 
@@ -20,13 +20,9 @@
             </object>
             <span class="userpage_content_1" title="{{ item.nickname }}">{{ item.nickname }}</span>
             <span class="userpage_content_2">フォロワー数
-                {% if follower_count %}
-                <span id="follower_count">{{ follower_count }}</span>
-                {% else %}
-                    0
-                {% endif %}
+                <span id="follower_count">{{ item.follower_count }}</span>
             </span>
-            <span class="userpage_content_3">フォロー数 {{ following_count }}</span>
+            <span class="userpage_content_3">フォロー数 {{ item.following_count }}</span>
         </object>
         
         <span>
@@ -86,3 +82,7 @@
     </article>
 </main>
 {% endblock content %}
+
+{% block extrajs %}
+<script src="{% static 'js/ajax.js' %}"></script>
+{% endblock extrajs %}

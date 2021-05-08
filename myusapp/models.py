@@ -36,8 +36,8 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """カスタムユーザーモデル"""
     user_image      = models.ImageField(upload_to='users/', default='../static/img/user_icon.png', blank=True, null=True)
-    username        = models.CharField(max_length=30, unique=True)
     email           = models.EmailField(max_length=120, unique=True)
+    username        = models.CharField(max_length=30, unique=True)
     nickname        = models.CharField(max_length=60, unique=True)
     full_name       = models.CharField(max_length=60, blank=True)
     last_name       = models.CharField(max_length=30, blank=True)
@@ -69,8 +69,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     mypage_image    = models.ImageField(upload_to='users/', default='../static/img/MyUs_banner.png', blank=True, null=True)
     mypage_email    = models.EmailField(max_length=120, blank=True, null=True, default='abc@gmail.com')
     content         = models.TextField(blank=True)
-    follower_count  = models.IntegerField(default=0)
-    following_count = models.IntegerField(default=0)
+    follower_count  = models.IntegerField(blank=True, null=True, default=0)
+    following_count = models.IntegerField(blank=True, null=True, default=0)
     
     objects = UserManager()
     
@@ -106,10 +106,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
         
-    def get_followers(self):
-        relations = FollowModel.objects.filter(follow=self)
-        return [relation.follower for relation in relations]
+    def get_following_count(self):
+        self.following_count = FollowModel.objects.filter(follower=User.id).count()
+        return self.following_count
     
+    def get_follower_count(self):
+        self.follower_count = FollowModel.objects.filter(following=User.id).count()
+        return self.follower_count
+
 @property
 def image_url(self):
     if self.user_image and hasattr(self.user_image, 'url'):
@@ -174,9 +178,12 @@ class VideoModel(models.Model):
     def total_like(self):
         return self.like.count()
 
+    def comment_count(self):
+        return self.comments.all().count()
+
     class Meta:
         verbose_name_plural = '01 Video'
-
+        
 class LiveModel(models.Model):
     """ここにメソッドの説明を記述する"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -197,7 +204,10 @@ class LiveModel(models.Model):
     
     def total_like(self):
         return self.like.count()
-    
+
+    def comment_count(self):
+        return self.comments.all().count()
+
     class Meta:
         verbose_name_plural = '02 Live'
 
@@ -218,10 +228,13 @@ class MusicModel(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def total_like(self):
         return self.like.count()
-    
+
+    def comment_count(self):
+        return self.comments.all().count()
+
     class Meta:
         verbose_name_plural = '03 Music'
 
@@ -241,10 +254,13 @@ class PictureModel(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def total_like(self):
         return self.like.count()
-    
+
+    def comment_count(self):
+        return self.comments.all().count()
+
     class Meta:
         verbose_name_plural = '04 Picture'
 
@@ -268,22 +284,26 @@ class BlogModel(models.Model):
     
     def total_like(self):
         return self.like.count()
+
+    def comment_count(self):
+        return self.comments.all().count()
     
     class Meta:
         verbose_name_plural = '05 Blog'
     
 class ChatModel(models.Model):
     """ここにメソッドの説明を記述する"""
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    comments = GenericRelation('Comment')
-    publish  = BooleanField(default=True)
-    tags     = models.ManyToManyField(Tag, blank=True)
-    like     = models.ManyToManyField(User, related_name='chat_like', blank=True)
-    read     = models.IntegerField(blank=True, null=True, default=0)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    author    = models.ForeignKey(User, on_delete=models.CASCADE)
+    title     = models.CharField(max_length=100)
+    content   = models.TextField()
+    comments  = GenericRelation('Comment')
+    publish   = BooleanField(default=True)
+    tags      = models.ManyToManyField(Tag, blank=True)
+    like      = models.ManyToManyField(User, related_name='chat_like', blank=True)
+    read      = models.IntegerField(blank=True, null=True, default=0)
+    usercount = models.IntegerField(blank=True, null=True, default=0)
+    created   = models.DateTimeField(auto_now_add=True)
+    updated   = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
@@ -291,6 +311,13 @@ class ChatModel(models.Model):
     def total_like(self):
         return self.like.count()
 
+    def comment_count(self):
+        return self.comments.all().count()
+
+    def user_count(self):
+        self.usercount = self.comments.order_by('author').distinct().values_list('author').count()
+        return self.usercount
+        
     class Meta:
         verbose_name_plural = '06 Chat'  
 
@@ -312,7 +339,10 @@ class CollaboModel(models.Model):
     
     def total_like(self):
         return self.like.count()
-    
+
+    def comment_count(self):
+        return self.comments.all().count()
+
     class Meta:
         verbose_name_plural = '07 Collabo'
 
@@ -332,10 +362,13 @@ class TodoModel(models.Model):
     
     def get_absolute_url(self):
         return reverse('todo_detail', kwargs={'pk':self.pk})
-    
+
+    def comment_count(self):
+        return self.comments.all().count()
+
     class Meta:
         verbose_name_plural = '08 ToDo'
-    
+
 class Comment(models.Model):
     author         = models.ForeignKey(User, on_delete=models.CASCADE)
     parent         = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)

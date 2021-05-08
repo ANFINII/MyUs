@@ -10,11 +10,7 @@
         </a>
         <div class="username_space">{{ object.author.nickname }}</div>
         <div class="registered_person">登録者数
-            {% if follower_count %}
-                <span id="follower_count">{{ follower_count }}</span>
-            {% else %}
-                0
-            {% endif %}
+            <span id="follower_count">{{ object.author.follower_count|intcomma }}</span>
         </div>
         <p class="content_detail_p1">{{ object.content|linebreaksbr|urlize }}</p>
         <p class="content_detail_p2">{{ object.lyrics|linebreaksbr }}</p>
@@ -41,14 +37,11 @@
 <label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
 <hr>
 
-<form method="POST" action="{% url 'myus:video_Comment' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
+<form method="POST" action="" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
+<!-- <form method="POST" action="{% url 'myus:video_comment' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %} -->
     <div class="comment_input">
         <p>コメント総数
-            {% if comment_count %}
-                <span id="comment_count">{{ comment_count|intcomma }}</span>
-            {% else %}
-                0
-            {% endif %}
+            <span id="comment_count">{{ object.comment_count|intcomma }}</span>
         </p>
         {% if user.is_authenticated %}
         <a href="{% url 'myus:userpage' user.nickname %}">
@@ -72,7 +65,7 @@
 <label for="comment_aria_check_id" class="comment_aria_check_label1">拡大表示</label>
 <label for="comment_aria_check_id" class="comment_aria_check_label2">縮小表示</label>
 
-<div class="comment_aria">コメント
+<div class="comment_aria">
     {% for comment in comment_list reversed %}
     <input type="checkbox" id="reply_aria_check_id" class="reply_aria_check">
 
