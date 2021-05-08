@@ -95,7 +95,7 @@ class CommentAdmin(ImportExportModelAdmin):
 
 @admin.register(VideoModel)
 class VideoModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -113,9 +113,13 @@ class VideoModelAdmin(ImportExportModelAdmin):
         return obj.like.count()
     total_like.short_description = 'like'
 
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
+
 @admin.register(LiveModel)
 class LiveModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -132,10 +136,14 @@ class LiveModelAdmin(ImportExportModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
     
 @admin.register(MusicModel)
 class MusicModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -152,10 +160,14 @@ class MusicModelAdmin(ImportExportModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
     
 @admin.register(PictureModel)
 class PictureModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -172,10 +184,14 @@ class PictureModelAdmin(ImportExportModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
     
 @admin.register(BlogModel)
 class BlogModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -192,10 +208,14 @@ class BlogModelAdmin(ImportExportModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
-    
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
+
 @admin.register(ChatModel)
 class ChatModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -212,10 +232,14 @@ class ChatModelAdmin(ImportExportModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
     
 @admin.register(CollaboModel)
 class CollaboModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -233,9 +257,13 @@ class CollaboModelAdmin(ImportExportModelAdmin):
         return obj.like.count()
     total_like.short_description = 'like'
 
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
+
 @admin.register(TodoModel)
 class TodoModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'priority', 'duedate')
+    list_display = ('id', 'author', 'title', 'comment_count', 'priority', 'duedate')
     list_select_related = ('author',)
     list_filter = ('priority', 'duedate')
     search_fields = ('title', 'author__nickname', 'priority', 'duedate')
@@ -248,6 +276,10 @@ class TodoModelAdmin(ImportExportModelAdmin):
         ('編集項目', {'fields': ('author', 'title', 'content', 'priority', 'duedate')}),
         ('確認項目', {'fields': ('created', 'updated')})
     ]
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
 
 # MyPgage用の管理画面
 class MyUsAdminSite(AdminSite):
@@ -352,7 +384,7 @@ class CommentInline(GenericTabularInline):
     total_like.short_description = 'いいね数'
 
 class VideoModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -386,10 +418,14 @@ class VideoModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
 mymanage_site.register(VideoModel, VideoModelAdminSite)
 
 class LiveModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -423,10 +459,14 @@ class LiveModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
 mymanage_site.register(LiveModel, LiveModelAdminSite)
 
 class MusicModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -460,10 +500,14 @@ class MusicModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
 mymanage_site.register(MusicModel, MusicModelAdminSite)
 
 class PictureModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -497,10 +541,14 @@ class PictureModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
 mymanage_site.register(PictureModel, PictureModelAdminSite)
 
 class BlogModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -534,10 +582,14 @@ class BlogModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
 mymanage_site.register(BlogModel, BlogModelAdminSite)
 
 class ChatModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -571,10 +623,14 @@ class ChatModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
 mymanage_site.register(ChatModel, ChatModelAdminSite)
 
 class CollaboModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'created', 'updated')
+    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -608,14 +664,18 @@ class CollaboModelAdminSite(admin.ModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
 mymanage_site.register(CollaboModel, CollaboModelAdminSite)
 
 class TodoModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'priority', 'duedate', 'created', 'updated')
+    list_display = ('id', 'title', 'comment_count', 'priority', 'duedate')
     list_editable = ('title', 'priority', 'duedate')
     list_filter = ('priority', 'duedate')
     search_fields = ('title', 'duedate')
-    ordering = ('priority', 'duedate')
+    ordering = ('priority', '-duedate')
     readonly_fields = ('created', 'updated')
     inlines = [CommentInline]
 
@@ -632,4 +692,8 @@ class TodoModelAdminSite(admin.ModelAdmin):
     def get_queryset(self, request): 
         qs = super(TodoModelAdminSite, self).get_queryset(request) 
         return qs.filter(author=request.user)
+
+    def comment_count(self, obj):
+        return obj.comments.all().count()
+    comment_count.short_description = 'comment'
 mymanage_site.register(TodoModel, TodoModelAdminSite)
