@@ -26,7 +26,7 @@
 
                     <div class="view_good_inline">
                         <i class="bi bi-person" title="参加数"></i>
-                        0
+                        {{ object.user_count|intcomma }}
                     </div>
 
                     <div class="view_good_inline">
@@ -45,12 +45,12 @@
                                 <i class="bi bi-hand-thumbs-up like_color" title="いいね"></i>
                             </button>
                             {% endif %}
-                            <span class="like_count">{{ total_like|intcomma }}</span>
+                            <span class="like_count">{{ object.total_like|intcomma }}</span>
                         </form>
                     {% else %}
                     <div class="view_good_inline">
                         <i class="bi bi-hand-thumbs-up" title="いいね"></i>
-                        <span>{{ total_like|intcomma }}</span>
+                        <span>{{ object.total_like|intcomma }}</span>
                     </div>
                     {% endif %}
                     <!-- <time>{{ object.created|date:'Y/m/d H:i' }}</time> -->

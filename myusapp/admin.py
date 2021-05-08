@@ -26,7 +26,7 @@ class CommentInlineAdmin(GenericTabularInline):
     
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone')
+    list_display = ('id', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone', 'following_count', 'follower_count')
     list_filter = ('birthday', 'gender')
     search_fields = ('username', 'email', 'nickname', 'full_name', 'phone')
     ordering = ('id',)

@@ -844,6 +844,7 @@ header {
     margin: 0 8px 0 0;
 }
 
+/* follow関連画面 */
 .author_follows {
     display: grid;
     grid-template-columns: 64px 208px;
@@ -978,6 +979,11 @@ header {
 
 .userpage_hr {
     margin: 0 0 16px 0;
+}
+
+.follow_form {
+    display: inline;
+    width: 102px;
 }
 
 /* コンテンツ説明 */
