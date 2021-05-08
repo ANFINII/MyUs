@@ -138,8 +138,9 @@ class FollowModel(models.Model):
         
 class SearchTag(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    sequence = models.IntegerField(validators=[MaxValueValidator(10)], default=1)
+    sequence = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=20)
     searchtag = models.CharField(max_length=12, null=True)
+    created = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.searchtag
@@ -293,17 +294,17 @@ class BlogModel(models.Model):
     
 class ChatModel(models.Model):
     """ここにメソッドの説明を記述する"""
-    author    = models.ForeignKey(User, on_delete=models.CASCADE)
-    title     = models.CharField(max_length=100)
-    content   = models.TextField()
-    comments  = GenericRelation('Comment')
-    publish   = BooleanField(default=True)
-    tags      = models.ManyToManyField(Tag, blank=True)
-    like      = models.ManyToManyField(User, related_name='chat_like', blank=True)
-    read      = models.IntegerField(blank=True, null=True, default=0)
-    usercount = models.IntegerField(blank=True, null=True, default=0)
-    created   = models.DateTimeField(auto_now_add=True)
-    updated   = models.DateTimeField(auto_now=True)
+    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    title    = models.CharField(max_length=100)
+    content  = models.TextField()
+    comments = GenericRelation('Comment')
+    publish  = BooleanField(default=True)
+    tags     = models.ManyToManyField(Tag, blank=True)
+    like     = models.ManyToManyField(User, related_name='chat_like', blank=True)
+    read     = models.IntegerField(blank=True, null=True, default=0)
+    Joined   = models.IntegerField(blank=True, null=True, default=0)
+    created  = models.DateTimeField(auto_now_add=True)
+    updated  = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
@@ -315,8 +316,8 @@ class ChatModel(models.Model):
         return self.comments.all().count()
 
     def user_count(self):
-        self.usercount = self.comments.order_by('author').distinct().values_list('author').count()
-        return self.usercount
+        self.Joined = self.comments.order_by('author').distinct().values_list('author').count()
+        return self.Joined
         
     class Meta:
         verbose_name_plural = '06 Chat'  

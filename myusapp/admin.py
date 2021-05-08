@@ -32,9 +32,9 @@ class UserAdmin(ImportExportModelAdmin):
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
     inlines = [SearchTagInline]
+    readonly_fields = ('full_name', 'birthday', 'age', 'date_joined', 'last_login', 'following_count', 'follower_count')
     
     # 詳細画面
-    readonly_fields = ('full_name', 'birthday', 'age', 'date_joined', 'last_login', 'following_count', 'follower_count')
     fieldsets = [
         ('アカウント情報', {'fields': ('user_image', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone', 'location', 'profession', 'introduction', 'groups', 'user_permissions')}),
         ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
@@ -57,14 +57,17 @@ class FollowModelAdmin(ImportExportModelAdmin):
 
 @admin.register(SearchTag)
 class SearchTagAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'sequence', 'searchtag')
+    list_display = ('id', 'author', 'sequence', 'searchtag', 'created')
     list_select_related = ('author',)
-    search_fields = ('author__nickname', 'searchtag')
-    ordering = ('author', 'sequence')
+    list_per_page = 10
+    search_fields = ('author__nickname', 'searchtag', 'created')
+    ordering = ('author', 'sequence', 'created')
+    readonly_fields = ('author', 'created')
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('sequence', 'searchtag')}),
+        ('確認項目', {'fields': ('author', 'created')})
     ]
     
 @admin.register(Tag)
@@ -92,7 +95,11 @@ class CommentAdmin(ImportExportModelAdmin):
         ('編集項目', {'fields': ('author', 'parent', 'text', 'like', 'content_type', 'object_id')}),
         ('確認項目', {'fields': ('total_like', 'created', 'updated')})
     ]
-
+    
+    def total_like(self, obj):
+        return obj.like.count()
+    total_like.short_description = 'like'
+    
 @admin.register(VideoModel)
 class VideoModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
@@ -100,13 +107,13 @@ class VideoModelAdmin(ImportExportModelAdmin):
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
     filter_horizontal = ('tags', 'like')
-    readonly_fields = ('total_like', 'created', 'updated')
+    readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
     
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'videos', 'publish', 'tags', 'like', 'read')}),
-        ('確認項目', {'fields': ('total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def total_like(self, obj):
@@ -124,13 +131,13 @@ class LiveModelAdmin(ImportExportModelAdmin):
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
     filter_horizontal = ('tags', 'like')
-    readonly_fields = ('total_like', 'created', 'updated')
+    readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'lives', 'publish', 'tags', 'like', 'read')}),
-        ('確認項目', {'fields': ('total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
     
     def total_like(self, obj):
@@ -148,13 +155,13 @@ class MusicModelAdmin(ImportExportModelAdmin):
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
     filter_horizontal = ('tags', 'like')
-    readonly_fields = ('total_like', 'created', 'updated')
+    readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'lyrics', 'musics', 'publish', 'tags', 'like', 'read')}),
-        ('確認項目', {'fields': ('total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
     
     def total_like(self, obj):
@@ -172,13 +179,13 @@ class PictureModelAdmin(ImportExportModelAdmin):
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
     filter_horizontal = ('tags', 'like')
-    readonly_fields = ('total_like', 'created', 'updated')
+    readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'publish', 'tags', 'like', 'read')}),
-        ('確認項目', {'fields': ('total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def total_like(self, obj):
@@ -196,13 +203,13 @@ class BlogModelAdmin(ImportExportModelAdmin):
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
     filter_horizontal = ('tags', 'like')
-    readonly_fields = ('total_like', 'created', 'updated')
+    readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'richtext', 'publish', 'tags', 'like', 'read')}),
-        ('確認項目', {'fields': ('total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def total_like(self, obj):
@@ -215,27 +222,31 @@ class BlogModelAdmin(ImportExportModelAdmin):
 
 @admin.register(ChatModel)
 class ChatModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
     filter_horizontal = ('tags', 'like')
-    readonly_fields = ('total_like', 'created', 'updated')
+    readonly_fields = ('total_like', 'comment_count', 'user_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'publish', 'tags', 'like', 'read')}),
-        ('確認項目', {'fields': ('total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('total_like', 'comment_count', 'user_count', 'created', 'updated')})
     ]
     
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
-
+    
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
+    
+    def user_count(self, obj):
+        return obj.comments.order_by('author').distinct().values_list('author').count()
+    user_count.short_description = 'joined'
     
 @admin.register(CollaboModel)
 class CollaboModelAdmin(ImportExportModelAdmin):
@@ -244,13 +255,13 @@ class CollaboModelAdmin(ImportExportModelAdmin):
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
     filter_horizontal = ('tags', 'like')
-    readonly_fields = ('total_like', 'created', 'updated')
+    readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'publish', 'tags', 'like', 'read')}),
-        ('確認項目', {'fields': ('total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
     
     def total_like(self, obj):
@@ -268,13 +279,13 @@ class TodoModelAdmin(ImportExportModelAdmin):
     list_filter = ('priority', 'duedate')
     search_fields = ('title', 'author__nickname', 'priority', 'duedate')
     ordering = ('author', 'priority', '-duedate')
-    readonly_fields = ('created', 'updated')
+    readonly_fields = ('comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
     
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'priority', 'duedate')}),
-        ('確認項目', {'fields': ('created', 'updated')})
+        ('確認項目', {'fields': ('comment_count', 'created', 'updated')})
     ]
 
     def comment_count(self, obj):
@@ -332,15 +343,17 @@ class FollowModelAdminSite(admin.ModelAdmin):
 mymanage_site.register(FollowModel, FollowModelAdminSite)
 
 class SearchTagAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'sequence', 'searchtag')
+    list_display = ('id', 'sequence', 'searchtag', 'created')
     list_editable = ('sequence', 'searchtag',)
     list_per_page = 10
-    search_fields = ('searchtag',)
-    ordering = ('sequence',)
+    search_fields = ('searchtag', 'created')
+    ordering = ('sequence', 'created')
+    readonly_fields = ('created',)
     
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('sequence', 'searchtag')}),
+        ('確認項目', {'fields': ('created',)})
     ]
     
     def save_model(self, request, obj, form, change):
@@ -390,13 +403,13 @@ class VideoModelAdminSite(admin.ModelAdmin):
     ordering = ('-created',)
     actions = ('published', 'unpublished')
     filter_horizontal = ('tags',)
-    readonly_fields = ('read', 'total_like', 'created', 'updated')
+    readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
     
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('title', 'content', 'images', 'videos', 'publish', 'tags')}),
-        ('確認項目', {'fields': ('read', 'total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
     
     def save_model(self, request, obj, form, change):
@@ -431,13 +444,13 @@ class LiveModelAdminSite(admin.ModelAdmin):
     ordering = ('-created',)
     actions = ('published', 'unpublished')
     filter_horizontal = ('tags',)
-    readonly_fields = ('read', 'total_like', 'created', 'updated')
+    readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
     
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('title', 'content', 'images', 'lives', 'publish', 'tags')}),
-        ('確認項目', {'fields': ('read', 'total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
     
     def save_model(self, request, obj, form, change):
@@ -472,13 +485,13 @@ class MusicModelAdminSite(admin.ModelAdmin):
     ordering = ('-created',)
     actions = ('published', 'unpublished')
     filter_horizontal = ('tags',)
-    readonly_fields = ('read', 'total_like', 'created', 'updated')
+    readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('title', 'content', 'lyrics', 'musics', 'publish', 'tags')}),
-        ('確認項目', {'fields': ('read', 'total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
     
     def save_model(self, request, obj, form, change):
@@ -513,13 +526,13 @@ class PictureModelAdminSite(admin.ModelAdmin):
     ordering = ('-created',)
     actions = ('published', 'unpublished')
     filter_horizontal = ('tags',)
-    readonly_fields = ('read', 'total_like', 'created', 'updated')
+    readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('title', 'content', 'images', 'publish', 'tags')}),
-        ('確認項目', {'fields': ('read', 'total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
     
     def save_model(self, request, obj, form, change):
@@ -554,13 +567,13 @@ class BlogModelAdminSite(admin.ModelAdmin):
     ordering = ('-created',)
     actions = ('published', 'unpublished')
     filter_horizontal = ('tags',)
-    readonly_fields = ('read', 'total_like', 'created', 'updated')
+    readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('title', 'content', 'images', 'richtext', 'publish', 'tags')}),
-        ('確認項目', {'fields': ('read', 'total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
     
     def save_model(self, request, obj, form, change):
@@ -589,19 +602,19 @@ class BlogModelAdminSite(admin.ModelAdmin):
 mymanage_site.register(BlogModel, BlogModelAdminSite)
 
 class ChatModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
     actions = ('published', 'unpublished')
     filter_horizontal = ('tags',)
-    readonly_fields = ('read', 'total_like', 'created', 'updated')
+    readonly_fields = ('read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('title', 'content', 'publish', 'tags')}),
-        ('確認項目', {'fields': ('read', 'total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')})
     ]
     
     def save_model(self, request, obj, form, change):
@@ -627,6 +640,10 @@ class ChatModelAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
+    
+    def user_count(self, obj):
+        return obj.comments.order_by('author').distinct().values_list('author').count()
+    user_count.short_description = 'joined'
 mymanage_site.register(ChatModel, ChatModelAdminSite)
 
 class CollaboModelAdminSite(admin.ModelAdmin):
@@ -636,13 +653,13 @@ class CollaboModelAdminSite(admin.ModelAdmin):
     ordering = ('-created',)
     actions = ('published', 'unpublished')
     filter_horizontal = ('tags',)
-    readonly_fields = ('read', 'total_like', 'created', 'updated')
+    readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('title', 'content', 'publish', 'tags')}),
-        ('確認項目', {'fields': ('read', 'total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def save_model(self, request, obj, form, change):
@@ -676,13 +693,13 @@ class TodoModelAdminSite(admin.ModelAdmin):
     list_filter = ('priority', 'duedate')
     search_fields = ('title', 'duedate')
     ordering = ('priority', '-duedate')
-    readonly_fields = ('created', 'updated')
+    readonly_fields = ('comment_count', 'created', 'updated')
     inlines = [CommentInline]
-
+    
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('title', 'content', 'priority', 'duedate')}),
-        ('確認項目', {'fields': ('created', 'updated')})
+        ('確認項目', {'fields': ('comment_count', 'created', 'updated')})
     ]
     
     def save_model(self, request, obj, form, change):
