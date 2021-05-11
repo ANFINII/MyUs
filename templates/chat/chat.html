@@ -4,15 +4,11 @@
 {% block content %}
 <main class="main_contents">
     <h1>Chat
-        {% if messages %}
-        <ul class="messages_search">
-            {% for message in messages %}
-            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}    
+        {% if query %}
+        <section class="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>
+        {% endif %}
     </h1>
-
+    
     <article class="main_article">
         {% include 'parts/article_chat.html' %}
     </article>

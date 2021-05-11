@@ -211,7 +211,7 @@ class Withdrawal(View):
     
     def get_random_chars(self, char_num=30):
         return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(char_num)])
-
+    
     def get(self, request, token=None, *args, **kwargs):
         context = {}
         context['expired_seconds'] = EXPIRED_SECONDS
@@ -353,7 +353,7 @@ class MyPage_update(UpdateView):
         except TypeError:
             messages.error(self.request, '更新できませんでした!')
             return super().form_invalid(form)
-
+        
     def form_invalid(self, form):
         """バリデーションに失敗した時"""
         if has_email(self.request.user.mypage_email):
@@ -366,12 +366,31 @@ class MyPage_update(UpdateView):
     def get_object(self):
         return self.request.user
     
+# SearchTag
+@csrf_exempt
+def TagCreate(request):
+    """TagCreate"""
+    if request.method == 'POST':
+        form = SearchTagForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.author_id = request.user.id
+            form.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            form = SearchTagForm()
+            
+class TagList(ListView):
+    """TagList"""
+    model = SearchTag
+    template_name = 'base2.html'
+    
 class UserPage(ListView):
     """UserPage"""
     model = User
     template_name = 'registration/userpage.html'
-    form_class = SearchTagForm
-
+    count = 0
+    
     def get_context_data(self, **kwargs):
         context = super(UserPage, self).get_context_data(**kwargs)
         author = get_object_or_404(User, nickname=self.kwargs['nickname'])
@@ -381,6 +400,8 @@ class UserPage(ListView):
             followed = True
         context['followed'] = followed
         context['author_name'] = author
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'user_list': User.objects.filter(nickname=author),
@@ -392,50 +413,33 @@ class UserPage(ListView):
             'chat_list': ChatModel.objects.filter(author_id=author, publish=True),
         })
         return context
+
+    def get_queryset(self):
+        query = self.request.GET.get('search', None)
+        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+        if query is not None:
+            result1 = VideoModel.objects.filter(author_id=author, publish=True).search(query)
+            result2 = LiveModel.objects.filter(author_id=author, publish=True).search(query)
+            result3 = MusicModel.objects.filter(author_id=author, publish=True).search(query)
+            result4 = PictureModel.objects.filter(author_id=author, publish=True).search(query)
+            result5 = BlogModel.objects.filter(author_id=author, publish=True).search(query)
+            result6 = ChatModel.objects.filter(author_id=author, publish=True).search(query)
+            queryset_chain = chain(result1, result2, result3, result4, result5, result6)        
+            result = sorted(queryset_chain, key=lambda instance: instance.read, reverse=True)
+            self.count = len(result)
+            return result
+        return VideoModel.objects.none()
     
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(self.request.POST)
-        if form.is_valid():
-            form.instance.author_id = self.request.user.id
-            form.save()
-        return redirect('myus:userpage')
-
-# SearchTag
-@csrf_exempt
-def TagCreate(request):
-    """TagCreate"""
-    if request.method == 'POST':
-        form = SearchTagForm(request.POST)
-        # url = request.path
-        if form.is_valid():
-            form = form.save(commit=False)
-            form.author_id = request.user.id
-            form.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        else:
-            form = SearchTagForm()
-            # ajax用
-            # obj = SearchTag.objects.filter(author_id=request.user.id).order_by('sequence')[:10],
-            # context = {
-            #     'searchtag': form.searchtag,
-            #     'searchtag_list': obj,
-            # }
-            # html = render_to_string('parts/searchtag.html', context, request=request)
-            # if request.is_ajax():
-            #     return JsonResponse(context)
-            
-class TagList(ListView):
-    """TagList"""
-    model = SearchTag
-    template_name = 'base2.html'
-
 class Index(ListView):
     """Index処理、すべてのメディアmodelを表示"""
-    model = SearchTag
+    model = VideoModel
     template_name = 'index.html'
+    count = 0
     
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:8],
@@ -446,49 +450,33 @@ class Index(ListView):
             'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:8],
         })
         return context
-
-    def get_queryset(self, **kwargs):
-        search = self.request.GET.get('search')
-    #     # result_list = []
-    #     video_list = VideoModel.objects.filter(
-    #                 Q(title__icontains=search) |
-    #                 Q(content__icontains=search) |
-    #                 Q(author__nickname__icontains=search) |
-    #                 Q(tags__tag__icontains=search)
-    #             )
-    #     live_list = LiveModel.objects.filter(
-    #                 Q(title__icontains=search) |
-    #                 Q(content__icontains=search) |
-    #                 Q(author__nickname__icontains=search) |
-    #                 Q(tags__tag__icontains=search)
-    #             )
-    #     music_list = MusicModel.objects.filter(publish=True)
-    #     picture_list = PictureModel.objects.filter(publish=True)
-    #     blog_list = BlogModel.objects.filter(publish=True)
-    #     chat_list = ChatModel.objects.filter(publish=True)
-    #     # result_list.append(video_list)
-    #     result_list = list(chain(video_list, live_list, music_list, picture_list, blog_list, chat_list))
-    #     return result_list
-
+    
+    def get_queryset(self):
+        query = self.request.GET.get('search', None)
+        if query is not None:
+            result1 = VideoModel.objects.search(query)
+            result2 = LiveModel.objects.search(query)
+            result3 = MusicModel.objects.search(query)
+            result4 = PictureModel.objects.search(query)
+            result5 = BlogModel.objects.search(query)
+            result6 = ChatModel.objects.search(query)
+            queryset_chain = chain(result1, result2, result3, result4, result5, result6)
+            result = sorted(queryset_chain, key=lambda instance: instance.read, reverse=True)
+            self.count = len(result)
+            return result
+        return VideoModel.objects.none()
+    
 class Recommend(ListView):
     """急上昇機能、すべてのメディアmodelを表示"""
     model = SearchTag
     template_name = 'index.html'
-    form_class = SearchTagForm
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(self.request.POST)
-        if form.is_valid():
-            form.instance.author_id = self.request.user.id
-            form.save()
-        return redirect('myus:recommend')
 
     def get_context_data(self, **kwargs):
         context = super(Recommend, self).get_context_data(**kwargs)    
         # 急上昇はcreatedが1日以内かつscoreが10000以上の上位8レコード
-        # テストはcreatedが10日以内かつscoreが100以上の上位8レコード
+        # テストはcreatedが100日以内かつscoreが100以上の上位8レコード
         # socreはread + like*10
-        aggregation_date = datetime.today() - timedelta(days=10)
+        aggregation_date = datetime.today() - timedelta(days=100)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
@@ -546,11 +534,13 @@ class FollowList(ListView):
     model = FollowModel
     template_name = 'follow/follow.html'
     context_object_name = 'follow_list'
-    form_class = SearchTagForm
     queryset = FollowModel.objects.prefetch_related().all().annotate(total_following=Count('following', distinct=True))
+    count = 0
     
     def get_context_data(self, **kwargs):
         context = super(FollowList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -573,23 +563,22 @@ class FollowList(ListView):
             query = reduce(and_, [
                         Q(following__nickname__icontains=q) |
                         Q(following__introduction__icontains=q) for q in q_list]
-                    )
+                    )            
             result = result.filter(query).distinct()
-            if not result:
-                messages.success(self.request, '「{}」の検索結果なし'.format(search))
-            else:
-                messages.success(self.request, '「{}」の検索結果'.format(search))
+            self.count = len(result)
         return result
-
+    
 class FollowerList(ListView):   
     """FollowerList"""
     model = FollowModel
     template_name = 'follow/follower.html'
     context_object_name = 'follower_list'
-    form_class = SearchTagForm
+    count = 0
     
     def get_context_data(self, **kwargs):
         context = super(FollowerList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -614,10 +603,7 @@ class FollowerList(ListView):
                         Q(follower__introduction__icontains=q) for q in q_list]
                     )
             result = result.filter(query).distinct()
-            if not result:
-                messages.success(self.request, '「{}」の検索結果なし'.format(search))
-            else:
-                messages.success(self.request, '「{}」の検索結果'.format(search))
+            self.count = len(result)
         return result
     
 # Video
@@ -640,9 +626,12 @@ class VideoList(ListView):
     template_name = 'video/video.html'
     context_object_name = 'video_list'
     ordering = ['-created']
-
+    count = 0
+    
     def get_context_data(self, **kwargs):
         context = super(VideoList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -669,12 +658,9 @@ class VideoList(ListView):
                         Q(content__icontains=q) for q in q_list]
                     )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            if not result:
-                messages.success(self.request, '「{}」の検索結果なし'.format(search))
-            else:
-                messages.success(self.request, '「{}」の検索結果'.format(search))
+            self.count = len(result)
         return result
-
+    
 class VideoDetail(DetailView, FormView):
     """VideoDetail"""
     model = VideoModel
@@ -842,9 +828,12 @@ class LiveList(ListView):
     template_name = 'live/live.html'
     context_object_name = 'live_list'
     ordering = ['-created']
-
+    count = 0
+    
     def get_context_data(self, **kwargs):
         context = super(LiveList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -871,12 +860,9 @@ class LiveList(ListView):
                         Q(content__icontains=q) for q in q_list]
                     )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            if not result:
-                messages.success(self.request, '「{}」の検索結果なし'.format(search))
-            else:
-                messages.success(self.request, '「{}」の検索結果'.format(search))
+            self.count = len(result)
         return result
-
+        
 class LiveDetail(DetailView):
     """LiveDetail"""
     model = LiveModel
@@ -954,9 +940,12 @@ class MusicList(ListView):
     template_name = 'music/music.html'
     context_object_name = 'music_list'
     ordering = ['-created']
-
+    count = 0
+    
     def get_context_data(self, **kwargs):
         context = super(MusicList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -984,12 +973,9 @@ class MusicList(ListView):
                         Q(lyrics__icontains=q) for q in q_list]
                     )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            if not result:
-                messages.success(self.request, '「{}」の検索結果なし'.format(search))
-            else:
-                messages.success(self.request, '「{}」の検索結果'.format(search))
+            self.count = len(result)
         return result
-
+        
 class MusicDetail(DetailView):
     """MusicDetail"""
     model = MusicModel
@@ -1067,9 +1053,12 @@ class PictureList(ListView):
     template_name = 'picture/picture.html'
     context_object_name = 'picture_list'
     ordering = ['-created']
-
+    count = 0
+    
     def get_context_data(self, **kwargs):
         context = super(PictureList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -1096,12 +1085,9 @@ class PictureList(ListView):
                         Q(content__icontains=q) for q in q_list]
                     )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            if not result:
-                messages.success(self.request, '「{}」の検索結果なし'.format(search))
-            else:
-                messages.success(self.request, '「{}」の検索結果'.format(search))
+            self.count = len(result)
         return result
-
+        
 class PictureDetail(DetailView):
     """PictureDetail"""
     model = PictureModel
@@ -1179,9 +1165,12 @@ class BlogList(ListView):
     template_name = 'blog/blog.html'
     context_object_name = 'blog_list'
     ordering = ['-created']
-
+    count = 0
+    
     def get_context_data(self, **kwargs):
         context = super(BlogList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -1209,12 +1198,9 @@ class BlogList(ListView):
                         Q(richtext__icontains=q) for q in q_list]
                     )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            if not result:
-                messages.success(self.request, '「{}」の検索結果なし'.format(search))
-            else:
-                messages.success(self.request, '「{}」の検索結果'.format(search))
+            self.count = len(result)
         return result
-
+        
 class BlogDetail(DetailView):
     """BlogDetail"""
     model = BlogModel
@@ -1292,9 +1278,12 @@ class ChatList(ListView):
     template_name = 'chat/chat.html'
     context_object_name = 'chat_list'
     ordering = ['-created']
+    count = 0
     
     def get_context_data(self, **kwargs):
         context = super(ChatList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -1321,12 +1310,9 @@ class ChatList(ListView):
                         Q(content__icontains=q) for q in q_list]
                     )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            if not result:
-                messages.success(self.request, '「{}」の検索結果なし'.format(search))
-            else:
-                messages.success(self.request, '「{}」の検索結果'.format(search))
+            self.count = len(result)
         return result
-
+        
 class ChatDetail(DetailView):
     """ChatDetail"""
     model = ChatModel
@@ -1434,9 +1420,12 @@ class CollaboList(ListView):
     template_name = 'collabo/collabo.html'
     context_object_name = 'collabo_list'
     ordering = ['-created']
+    count = 0
     
     def get_context_data(self, **kwargs):
         context = super(CollaboList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -1463,12 +1452,9 @@ class CollaboList(ListView):
                         Q(content__icontains=q) for q in q_list]
                     )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            if not result:
-                messages.success(self.request, '「{}」の検索結果なし'.format(search))
-            else:
-                messages.success(self.request, '「{}」の検索結果'.format(search))
+            self.count = len(result)
         return result
-
+        
 class CollaboDetail(DetailView):
     """CollaboDetail"""
     model = CollaboModel
@@ -1546,9 +1532,12 @@ class TodoList(ListView):
     template_name = 'todo/todo.html'
     context_object_name = 'todo_list'
     ordering = ['-duedate']
+    count = 0
     
     def get_context_data(self, **kwargs):
         context = super(TodoList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
@@ -1574,10 +1563,7 @@ class TodoList(ListView):
                         Q(duedate__icontains=q) for q in q_list]
                     )
             result = result.filter(query).order_by('-duedate').distinct()
-            if not result:
-                messages.success(self.request, '「{}」の検索結果なし'.format(search))
-            else:
-                messages.success(self.request, '「{}」の検索結果'.format(search))
+            self.count = len(result)
         return result
 
 class TodoDetail(DetailView):
@@ -1587,9 +1573,11 @@ class TodoDetail(DetailView):
     
     def get_queryset(self):
         current_user = self.request.user
-        if current_user.is_superuser: # スーパーユーザの場合、リストにすべてを表示する。
+        # スーパーユーザの場合、リストにすべてを表示する。
+        if current_user.is_superuser:
             return TodoModel.objects.all()
-        else: # 一般ユーザは自分のレコードのみ表示する。
+        else:
+            # 一般ユーザは自分のレコードのみ表示する。
             return TodoModel.objects.filter(author=current_user.id)
         
     def get_context_data(self, **kwargs):

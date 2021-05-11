@@ -7,16 +7,16 @@
 <main class="main_contents">
     {% for item in user_list %}
         <div class="userpage_banner">
-            <div class="userpage_banner_image">
+            <figure class="userpage_banner_image">
                 <img src="{{ item.mypage_image.url }}" title="{{ item.nickname }}">
-            </div>
+            </figure>
         </div>
 
         <object class="userpage_author">
             <object class="author_space">
-                <object>
+                <figure>
                     <img src="{{ item.user_image.url }}" title="{{ item.nickname }}" class="userpage_image">
-                </object>
+                </figure>
             </object>
             <span class="userpage_content_1" title="{{ item.nickname }}">{{ item.nickname }}</span>
             <span class="userpage_content_2">フォロワー数
@@ -47,38 +47,66 @@
     <hr class="userpage_hr">
 
     <article class="main_article_index">
-        <h2>Video</h2>
-        {% include "parts/article_video.html" %}
+        <h2>Video
+            {% if query %}
+            <section class="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>
+            {% endif %}
+        </h2>
+        {% if query %}
+            {% include "search/search_video.html" %}
+        {% else %}
+            {% include "parts/article_video.html" %}
+        {% endif %}
     </article>
     <hr>
 
     <article class="main_article_index">
         <h2>Live</h2>
-        {% include "parts/article_live.html" %}
+        {% if query %}
+            {% include "search/search_live.html" %}
+        {% else %}
+            {% include "parts/article_live.html" %}
+        {% endif %}
     </article>
     <hr>
 
     <article class="main_article_index">
         <h2>Music</h2>
-        {% include "parts/article_music.html" %}
+        {% if query %}
+            {% include "search/search_music.html" %}
+        {% else %}
+            {% include "parts/article_music.html" %}
+        {% endif %}
     </article>
     <hr>
 
     <article class="main_article_index">
         <h2>Picture</h2>
-        {% include "parts/article_picture.html" %}
+        {% if query %}
+            {% include "search/search_picture.html" %}
+        {% else %}
+            {% include "parts/article_picture.html" %}
+        {% endif %}
     </article>
     <hr>
 
     <article class="main_article_index">
         <h2>Blog</h2>
-        {% include "parts/article_blog.html" %}
+        {% if query %}
+            {% include "search/search_blog.html" %}
+        {% else %}
+            {% include "parts/article_blog.html" %}
+        {% endif %}
     </article>
     <hr>
 
     <article class="main_article_index">
         <h2>Chat</h2>
-        {% include "parts/article_chat.html" %}
+        {% if query %}
+            {% include "search/search_chat.html" %}
+        {% else %}
+            {% include "parts/article_chat.html" %}
+        {% endif %}
     </article>
 </main>
 {% endblock content %}
