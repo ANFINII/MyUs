@@ -1,0 +1,22 @@
+{% load static %}
+{% load humanize %}
+{% load class_name %}
+
+{% for item in object_list %}
+    {% with item|class_name as klass %}
+        {% if klass == 'MusicModel' %}
+            <section class="main_content_music">
+                <div class="main_decolation">
+                    <audio controls muted preload="none" controlslist="nodownload">
+                        <source src="{{ item.musics.url }}">
+                        <p>audioに対応していない場合のメッセージ</p>
+                    </audio>
+                    <a href="{% url 'myus:music_detail' item.pk %}" class="author_title_space">
+                        {% include 'parts/author_space.html' %}
+                        {% include 'parts/content_title.html' %}
+                    </a>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+{% endfor %}
