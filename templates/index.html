@@ -6,49 +6,69 @@
 {% block content %}
 <main class="main_contents">
     <h1>Home
-        {% if messages %}
-        <ul class="messages_search">
-            {% for message in messages %}
-            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
+        {% if query %}
+        <section class="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>
         {% endif %}
     </h1>
     <hr>
 
     <article class="main_article_index">
         <h2>Video</h2>
-        {% include "parts/article_video.html" %}
+        {% if query %}
+            {% include "search/search_video.html" %}
+        {% else %}
+            {% include "parts/article_video.html" %}
+        {% endif %}
     </article>
     <hr>
 
     <article class="main_article_index">
         <h2>Live</h2>
-        {% include "parts/article_live.html" %}
+        {% if query %}
+            {% include "search/search_live.html" %}
+        {% else %}
+            {% include "parts/article_live.html" %}
+        {% endif %}
     </article>
     <hr>
 
     <article class="main_article_index">
         <h2>Music</h2>
-        {% include "parts/article_music.html" %}
+        {% if query %}
+            {% include "search/search_music.html" %}
+        {% else %}
+            {% include "parts/article_music.html" %}
+        {% endif %}
     </article>
     <hr>
 
     <article class="main_article_index">
         <h2>Picture</h2>
-        {% include "parts/article_picture.html" %}
+        {% if query %}
+            {% include "search/search_picture.html" %}
+        {% else %}
+            {% include "parts/article_picture.html" %}
+        {% endif %}
     </article>
     <hr>
 
     <article class="main_article_index">
         <h2>Blog</h2>
-        {% include "parts/article_blog.html" %}
+        {% if query %}
+            {% include "search/search_blog.html" %}
+        {% else %}
+            {% include "parts/article_blog.html" %}
+        {% endif %}
     </article>
     <hr>
 
     <article class="main_article_index">
         <h2>Chat</h2>
-        {% include "parts/article_chat.html" %}
+        {% if query %}
+            {% include "search/search_chat.html" %}
+        {% else %}
+            {% include "parts/article_chat.html" %}
+        {% endif %}
     </article>
 </main>
 {% endblock content %}

@@ -1,0 +1,21 @@
+{% load static %}
+{% load humanize %}
+{% load class_name %}
+
+{% for item in object_list %}
+    {% with item|class_name as klass %}
+        {% if klass == 'BlogModel' %}
+            <section class="main_content">
+                <figure class="main_decolation">
+                    <a href="{% url 'myus:blog_detail' item.pk %}">
+                        <img src="{{ item.images.url }}" width="272" height="153">
+                    </a>
+                    <a href="{% url 'myus:blog_detail' item.pk %}" class="author_title_space">
+                        {% include 'parts/author_space.html' %}
+                        {% include 'parts/content_title.html' %}
+                    </a>
+                </figure>
+            </section>
+        {% endif %}
+    {% endwith %}
+{% endfor %}
