@@ -7,16 +7,15 @@
 {% block content %}
 <main class="main_contents">
     <article class="article_detail">
-        {% if object.publish %}
+    {% if object.publish %}
         <div class="main-image-color">
             <div class="main-image">
                 <video id="video" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls preload="none" poster="{{ object.images.url }}" data-setup='{"playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]}'>
-                    <source src="{{ object.videos.url }}" type="video/mp4" label="2160p" res="2160">
-                    <source src="{{ object.videos.url }}" type="video/mp4" label="1080p" res="1080">
-                    <source src="{{ object.videos.url }}" type="video/mp4" label="720p" res="720">
-                    <source src="{{ object.videos.url }}" type="video/mp4" label="480p" res="480">
-                    <source src="{{ object.videos.url }}" type="video/mp4" label="240p" res="240">
-                    <!-- Tracks need an ending tag thanks to IE9 -->
+                    <source src="{{ object.lives.url }}" type="video/mp4" label="2160p" res="2160">
+                    <source src="{{ object.lives.url }}" type="video/mp4" label="1080p" res="1080">
+                    <source src="{{ object.lives.url }}" type="video/mp4" label="720p" res="720">
+                    <source src="{{ object.lives.url }}" type="video/mp4" label="480p" res="480">
+                    <source src="{{ object.lives.url }}" type="video/mp4" label="240p" res="240">
                     <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
                     <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
                     <p class="vjs-no-js">この動画を見るには、JavaScriptを有効にしてください!
@@ -70,7 +69,7 @@
         </div>
         {% else %}
         <h2 class="unpublished">非公開に設定されてます！</h2>
-        {% endif %}
+    {% endif %}
     </article>
 </main>
 {% endblock content %}
