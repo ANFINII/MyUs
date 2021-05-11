@@ -12,9 +12,9 @@
         <div class="article_detail_section_1">
             <div class="article_detail_aria">
                 <h1 title="{{ object.title }}">{{ object.title }}</h1>
-            
+
                 <time class="article_detail_aria_1">{{ object.created|date:'Y/m/d H:i' }}</time>
-            
+
                 <div class="article_detail_aria_2">
                     <object class="todo_link_detail">
                         <a href="{% url 'myus:todo_update' object.pk %}" class="btn btn-success btn-sm" role="button">編集</a>
@@ -33,11 +33,7 @@
                     </a>
                     <div class="username_space">{{ object.author.nickname }}</div>
                     <div class="registered_person">登録者数
-                        {% if object.followers.all %}
-                            {{ object.followers.all.count }}
-                        {% else %}
-                            0
-                        {% endif %}
+                        <span class="follower_count">{{ object.author.follower_count|intcomma }}</span>
                     </div>
                     <p class="content_detail_p4">
                         優先度：{{ object.get_priority_display }}<br>
@@ -54,29 +50,23 @@
             <form method="POST" action="">{% csrf_token %}
                 <div class="comment_input">
                     <p>コメント総数
-                        {% if object.comments.all %}
-                            {{ object.comments.all.count|intcomma }}
-                        {% else %}
-                            0
-                        {% endif %}
+                        <span id="comment_count">{{ object.comment_count|intcomma }}</span>
                     </p>
-                    {% if user.username %}
+                    {% if user.is_authenticated %}
                     <a href="{% url 'myus:userpage' user.nickname %}">
                         <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
                     </a>
+                    <textarea name="text" rows="1" class="textarea_br" placeholder="コメント入力" required></textarea>
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+                    </button>
                     {% else %}
                     <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_comment">
-                    {% endif %}
-                    {% if user.username %}
-                    <textarea name="text" rows="1" class="textarea_br" placeholder="コメント入力" required></textarea>
-                    {% else %}
                     <textarea name="text" rows="1" class="textarea_br" placeholder="コメントするにはログインが必要です！" disabled></textarea>
-                    {% endif %}
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-                            <path d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                        </svg>
+                    <button type="submit" class="btn btn-secondary btn-sm" disabled>
+                        <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
                     </button>
+                    {% endif %}
                 </div>
             </form>
 

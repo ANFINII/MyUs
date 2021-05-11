@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.db.models.fields import BooleanField
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
@@ -9,7 +10,6 @@ from django.urls import reverse
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from django.core.mail import send_mail
 from ckeditor_uploader.fields import RichTextUploadingField
-# from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -24,7 +24,7 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
-
+    
     def create_superuser(self, username, email, password, **extra_fields):
         user = self.create_user(username, email=self.normalize_email(email), password=password)
         user.is_staff = True
@@ -32,7 +32,7 @@ class UserManager(BaseUserManager):
         user.is_superuser = True
         user.save(using=self._db)
         return user
-
+    
 class User(AbstractBaseUser, PermissionsMixin):
     """カスタムユーザーモデル"""
     user_image      = models.ImageField(upload_to='users/', default='../static/img/user_icon.png', blank=True, null=True)
@@ -113,7 +113,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_follower_count(self):
         self.follower_count = FollowModel.objects.filter(following=User.id).count()
         return self.follower_count
-
+    
 @property
 def image_url(self):
     if self.user_image and hasattr(self.user_image, 'url'):
@@ -151,13 +151,33 @@ class SearchTag(models.Model):
 class Tag(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     tag = models.CharField(max_length=12, null=True)
-
+    
     def __str__(self):
         return self.tag
     
     class Meta:
         verbose_name_plural = '11 ハッシュタグ'
-
+        
+class VideoQuerySet(models.QuerySet):
+    def search(self, query=None):
+        qs = self
+        if query is not None:
+            or_lookup = (
+                        Q(title__icontains=query) |
+                        Q(tags__tag__icontains=query) |
+                        Q(author__nickname__icontains=query) |
+                        Q(content__icontains=query)
+                        )
+            qs = qs.filter(or_lookup).distinct()
+        return qs
+    
+class VideoManager(models.Manager):
+    def get_queryset(self):
+        return VideoQuerySet(self.model, using=self._db)
+    
+    def search(self, query=None):
+        return self.get_queryset().search(query=query)
+    
 class VideoModel(models.Model):
     """ここにメソッドの説明を記述する"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -173,18 +193,40 @@ class VideoModel(models.Model):
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
     
+    objects  = VideoManager()
+    
     def __str__(self):
         return self.title
     
     def total_like(self):
         return self.like.count()
-
+    
     def comment_count(self):
         return self.comments.all().count()
-
+    
     class Meta:
         verbose_name_plural = '01 Video'
-
+        
+class LiveQuerySet(models.QuerySet):
+    def search(self, query=None):
+        qs = self
+        if query is not None:
+            or_lookup = (
+                        Q(title__icontains=query) |
+                        Q(tags__tag__icontains=query) |
+                        Q(author__nickname__icontains=query) |
+                        Q(content__icontains=query)
+                        )
+            qs = qs.filter(or_lookup).distinct()
+        return qs
+    
+class LiveManager(models.Manager):
+    def get_queryset(self):
+        return LiveQuerySet(self.model, using=self._db)
+    
+    def search(self, query=None):
+        return self.get_queryset().search(query=query)
+    
 class LiveModel(models.Model):
     """ここにメソッドの説明を記述する"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -199,19 +241,42 @@ class LiveModel(models.Model):
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
+    
+    objects  = LiveManager()
+    
     def __str__(self):
         return self.title
     
     def total_like(self):
         return self.like.count()
-
+    
     def comment_count(self):
         return self.comments.all().count()
-
+    
     class Meta:
         verbose_name_plural = '02 Live'
-
+        
+class MusicQuerySet(models.QuerySet):
+    def search(self, query=None):
+        qs = self
+        if query is not None:
+            or_lookup = (
+                        Q(title__icontains=query) |
+                        Q(tags__tag__icontains=query) |
+                        Q(author__nickname__icontains=query) |
+                        Q(content__icontains=query) |
+                        Q(lyrics__icontains=query)
+                        )
+            qs = qs.filter(or_lookup).distinct()
+        return qs
+    
+class MusicManager(models.Manager):
+    def get_queryset(self):
+        return MusicQuerySet(self.model, using=self._db)
+    
+    def search(self, query=None):
+        return self.get_queryset().search(query=query)
+    
 class MusicModel(models.Model):
     """ここにメソッドの説明を記述する"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -226,19 +291,41 @@ class MusicModel(models.Model):
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
+    
+    objects  = MusicManager()
+    
     def __str__(self):
         return self.title
-
+    
     def total_like(self):
         return self.like.count()
-
+    
     def comment_count(self):
         return self.comments.all().count()
-
+    
     class Meta:
         verbose_name_plural = '03 Music'
-
+        
+class PictureQuerySet(models.QuerySet):
+    def search(self, query=None):
+        qs = self
+        if query is not None:
+            or_lookup = (
+                        Q(title__icontains=query) |
+                        Q(tags__tag__icontains=query) |
+                        Q(author__nickname__icontains=query) |
+                        Q(content__icontains=query)
+                        )
+            qs = qs.filter(or_lookup).distinct()
+        return qs
+    
+class PictureManager(models.Manager):
+    def get_queryset(self):
+        return PictureQuerySet(self.model, using=self._db)
+    
+    def search(self, query=None):
+        return self.get_queryset().search(query=query)
+    
 class PictureModel(models.Model):
     """ここにメソッドの説明を記述する"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -252,19 +339,42 @@ class PictureModel(models.Model):
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
+    
+    objects  = PictureManager()
+    
     def __str__(self):
         return self.title
-
+    
     def total_like(self):
         return self.like.count()
-
+    
     def comment_count(self):
         return self.comments.all().count()
-
+    
     class Meta:
         verbose_name_plural = '04 Picture'
-
+        
+class BlogQuerySet(models.QuerySet):
+    def search(self, query=None):
+        qs = self
+        if query is not None:
+            or_lookup = (
+                        Q(title__icontains=query) |
+                        Q(tags__tag__icontains=query) |
+                        Q(author__nickname__icontains=query) |
+                        Q(content__icontains=query) |
+                        Q(richtext__icontains=query)
+                        )
+            qs = qs.filter(or_lookup).distinct()
+        return qs
+    
+class BlogManager(models.Manager):
+    def get_queryset(self):
+        return BlogQuerySet(self.model, using=self._db)
+    
+    def search(self, query=None):
+        return self.get_queryset().search(query=query)
+    
 class BlogModel(models.Model):
     """ここにメソッドの説明を記述する"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -279,18 +389,40 @@ class BlogModel(models.Model):
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
+    
+    objects  = BlogManager()
+    
     def __str__(self):
         return self.title
     
     def total_like(self):
         return self.like.count()
-
+    
     def comment_count(self):
         return self.comments.all().count()
     
     class Meta:
         verbose_name_plural = '05 Blog'
+        
+class ChatQuerySet(models.QuerySet):
+    def search(self, query=None):
+        qs = self
+        if query is not None:
+            or_lookup = (
+                        Q(title__icontains=query) |
+                        Q(tags__tag__icontains=query) |
+                        Q(author__nickname__icontains=query) |
+                        Q(content__icontains=query)
+                        )
+            qs = qs.filter(or_lookup).distinct()
+        return qs
+    
+class ChatManager(models.Manager):
+    def get_queryset(self):
+        return ChatQuerySet(self.model, using=self._db)
+    
+    def search(self, query=None):
+        return self.get_queryset().search(query=query)
     
 class ChatModel(models.Model):
     """ここにメソッドの説明を記述する"""
@@ -305,23 +437,25 @@ class ChatModel(models.Model):
     Joined   = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
+    
+    objects  = ChatManager()
 
     def __str__(self):
         return self.title
     
     def total_like(self):
         return self.like.count()
-
+    
     def comment_count(self):
         return self.comments.all().count()
-
+    
     def user_count(self):
         self.Joined = self.comments.order_by('author').distinct().values_list('author').count()
         return self.Joined
-        
+    
     class Meta:
-        verbose_name_plural = '06 Chat'  
-
+        verbose_name_plural = '06 Chat'
+        
 class CollaboModel(models.Model):
     """ここにメソッドの説明を記述する"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -334,19 +468,19 @@ class CollaboModel(models.Model):
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
+    
     def __str__(self):
         return self.title
     
     def total_like(self):
         return self.like.count()
-
+    
     def comment_count(self):
         return self.comments.all().count()
-
+    
     class Meta:
         verbose_name_plural = '07 Collabo'
-
+        
 PRIORITY = (('danger','高'),('success','普通'),('info','低'))
 class TodoModel(models.Model):
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -363,13 +497,13 @@ class TodoModel(models.Model):
     
     def get_absolute_url(self):
         return reverse('todo_detail', kwargs={'pk':self.pk})
-
+    
     def comment_count(self):
         return self.comments.all().count()
-
+    
     class Meta:
         verbose_name_plural = '08 ToDo'
-
+        
 class Comment(models.Model):
     author         = models.ForeignKey(User, on_delete=models.CASCADE)
     parent         = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)
@@ -380,7 +514,7 @@ class Comment(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     created        = models.DateTimeField(auto_now_add=True)
     updated        = models.DateTimeField(auto_now=True)
-
+    
     def __str__(self):
         return self.text
     
