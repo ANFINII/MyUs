@@ -570,11 +570,12 @@ header {
 }
 
 .messages_search {
+    display: inline;
     list-style: none;
-    font-size: 14px;
-    color: rgb(33, 37, 41);
     padding: 0;
     margin: 8px 0 0 8px;
+    font-size: 14px;
+    color: rgb(33, 37, 41);
 }
 
 .main_contents label {
@@ -609,10 +610,11 @@ header {
 }
 
 .main_article_index h2 {
-    display: block;
+    display: inline;
     grid-column: 1/-1;
     grid-row: 1/2;
     font-size: 20px;
+    /* width: 100px; */
     max-height: 25px;
     margin: 0;
     overflow-y: auto;

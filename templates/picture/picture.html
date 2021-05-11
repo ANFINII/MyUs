@@ -4,12 +4,10 @@
 {% block content %}
 <main class="main_contents">
     <h1>Picture
-        {% if messages %}
-        <ul class="messages_search">
-            {% for message in messages %}
-            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
+        {% if query %}
+        <section class="messages_search">
+            <p>「{{ query }}」の検索結果「{{ count }}」件</p>
+        </section>
         {% endif %}
     </h1>
 
