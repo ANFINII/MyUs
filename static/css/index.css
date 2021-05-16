@@ -1231,6 +1231,7 @@ header {
 .comment_aria {
     height: 168px;
     overflow-y: auto;
+    word-break: break-all;
 }
 
 .comment_aria_check:checked ~ .comment_aria {
