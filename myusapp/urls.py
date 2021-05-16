@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import Index, Recommend, Signup, Login, Logout, Withdrawal
-from .views import Profile, Profile_update, UserPolicy, Knowledge, TagCreate
-from .views import FollowList, FollowerList, FollowCreate, MyPage, MyPage_update, UserPage
+from .views import Index, Recommend, UserPage, TagCreate
+from .views import Signup, Login, Logout, Withdrawal
+from .views import Profile, Profile_update, MyPage, MyPage_update
+from .views import UserPolicy, Knowledge, FollowCreate, FollowList, FollowerList
 from .views import VideoList, VideoCreate, VideoDetail, VideoLike, VideoComment
 from .views import LiveList, LiveCreate, LiveDetail, LiveLike, LiveComment
 from .views import MusicList, MusicCreate, MusicDetail, MusicLike, MusicComment
@@ -16,26 +17,26 @@ app_name = 'myus'
 urlpatterns = [
     path('', Index.as_view(), name='index'),
     path('recommend/', Recommend.as_view(), name='recommend'),
+    path('userpage/<str:nickname>', UserPage.as_view(), name='userpage'),
+    path('tag_create/', TagCreate, name='tag_create'),
+
     path('signup/', Signup, name='signup'),
     path('login/', Login, name='login'),
     path('logout/', Logout, name='logout'),
     path('withdrawal/', Withdrawal.as_view(), name='withdrawal'),
     path('withdrawal/<str:token>', Withdrawal.as_view(), name='withdrawal'),
     
-    path('profile/', Profile, name='profile'),
-    path('profile_update/', Profile_update.as_view(), name='profile_update'),
     path('userpolicy/', UserPolicy, name='userpolicy'),
     path('knowledge/', Knowledge, name='knowledge'),
-    path('tag_create/', TagCreate, name='tag_create'),
-    
     path('follow/', FollowList.as_view(), name='follow_list'),
     path('follower/', FollowerList.as_view(), name='follower_list'),
     path('follow_create/<str:nickname>', FollowCreate, name='follow_create'),
+
+    path('profile/', Profile, name='profile'),
+    path('profile_update/', Profile_update.as_view(), name='profile_update'),
     path('mypage/', MyPage, name='mypage'),
     path('mypage_update/', MyPage_update.as_view(), name='mypage_update'),
-    path('userpage/<str:nickname>', UserPage.as_view(), name='userpage'),
-    path('userpage/<str:nickname>/about', UserPage.as_view(), name='userpage_about'),
-    
+
     path('video/', VideoList.as_view(), name='video_list'),
     path('video_create/', VideoCreate.as_view(), name='video_create'),
     path('video_detail/<int:pk>', VideoDetail.as_view(), name='video_detail'),

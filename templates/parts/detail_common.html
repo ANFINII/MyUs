@@ -37,8 +37,7 @@
 <label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
 <hr>
 
-<form method="POST" action="" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
-<!-- <form method="POST" action="{% url 'myus:video_comment' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %} -->
+<form method="POST" action="{% url 'myus:video_comment' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
     <div class="comment_input">
         <p>コメント総数
             <span id="comment_count">{{ object.comment_count|intcomma }}</span>
@@ -66,6 +65,9 @@
 <label for="comment_aria_check_id" class="comment_aria_check_label2">縮小表示</label>
 
 <div class="comment_aria">
+    <div id="comment_aria_add">
+    </div>
+
     {% for comment in comment_list reversed %}
     <input type="checkbox" id="reply_aria_check_id" class="reply_aria_check">
 
@@ -84,20 +86,6 @@
         </div>
     </div>
     
-    <div id="comment_aria_add">
-        <div class="comment_aria_list">
-            <a>
-            </a>
-            <div class="comment_aria_list_1">
-                <p></p>
-                <time></time>
-            </div>
-            <div class="comment_aria_list_2"></div>
-            <div class="comment_aria_list_3">
-            </div>
-        </div>
-    </div>
-
     <form method="POST" action="{% url 'myus:video_detail' object.id %}" class="comment_aria_list_4">{% csrf_token %}
         <div class="reply_input">
             {% if user.is_authenticated %}
@@ -117,7 +105,7 @@
             {% endif %}
         </div>
     </form>
-
+    
     <div class="reply_aria_list">
         {% for reply in reply_list %}
         <a href="{% url 'myus:userpage' reply.author.nickname %}">
