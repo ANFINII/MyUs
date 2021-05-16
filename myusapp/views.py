@@ -2,15 +2,18 @@ from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.http import HttpResponse, JsonResponse, QueryDict, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
+from django.utils.html import urlize as urlize_impl
 from django.db.models import Q, Max, Min, Avg, Count, F, Value
 from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
+from django.template.defaultfilters import linebreaks, linebreaksbr
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, FormView
-from django.utils import timezone
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from itertools import islice, chain
@@ -425,7 +428,7 @@ class UserPage(ListView):
             result5 = BlogModel.objects.filter(author_id=author, publish=True).search(query)
             result6 = ChatModel.objects.filter(author_id=author, publish=True).search(query)
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)        
-            result = sorted(queryset_chain, key=lambda instance: instance.read, reverse=True)
+            result = sorted(queryset_chain, key=lambda instance: instance.like, reverse=True)
             self.count = len(result)
             return result
         return VideoModel.objects.none()
@@ -461,7 +464,7 @@ class Index(ListView):
             result5 = BlogModel.objects.search(query)
             result6 = ChatModel.objects.search(query)
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
-            result = sorted(queryset_chain, key=lambda instance: instance.read, reverse=True)
+            result = sorted(queryset_chain, key=lambda instance: instance.like, reverse=True)
             self.count = len(result)
             return result
         return VideoModel.objects.none()
@@ -472,7 +475,8 @@ class Recommend(ListView):
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
-        context = super(Recommend, self).get_context_data(**kwargs)    
+        context = super(Recommend, self).get_context_data(**kwargs)
+        context['Recommend'] = 'Recommend'
         # 急上昇はcreatedが1日以内かつscoreが10000以上の上位8レコード
         # テストはcreatedが100日以内かつscoreが100以上の上位8レコード
         # socreはread + like*10
@@ -568,7 +572,7 @@ class FollowList(ListView):
             self.count = len(result)
         return result
     
-class FollowerList(ListView):   
+class FollowerList(ListView):
     """FollowerList"""
     model = FollowModel
     template_name = 'follow/follower.html'
@@ -676,72 +680,6 @@ class VideoDetail(DetailView, FormView):
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
-    # def post(self, request, *args, **kwargs):
-    #     form = self.form_class(self.request.POST)
-    #     video_pk = self.kwargs['pk']
-    #     target = get_object_or_404(VideoModel, pk=video_pk)
-    #     if form.is_valid():
-    #         form = form.save(commit=False)
-    #         form.content_object = target
-    #         form.author_id = self.request.user.id
-    #         form.save()
-    #         return redirect('myus:video_detail', pk=video_pk)
-    #     return FormView.post(self, request, *args, **kwargs)
-
-    # def post(self, request, *args, **kwargs):
-    #     form = self.form_class(self.request.POST)
-    #     video_pk = self.kwargs['pk']
-    #     video = get_object_or_404(VideoModel, pk=video_pk)
-    #     if form.is_valid():
-    #         if request.is_ajax():
-    #             # Ajax 処理を別メソッドに切り離す
-    #             form = form.save(commit=False)
-    #             form.author_id = self.request.user.id
-    #             form.content_object = video
-    #             form.save()
-    #             return self.ajax_response(form)
-    #         return super().form_valid(form)
-    #     elif reply:
-    #         if form.is_valid():
-    #             if request.is_ajax():
-    #                 # Ajax 処理を別メソッドに切り離す
-    #                 form = form.save(commit=False)
-    #                 form.author_id = self.request.user.id
-    #                 form.content_object = comments
-    #                 # form.parent = self.object.comments.parent_id
-    #                 form.save()
-    #                 return self.ajax_response(form)
-    #                 # return HttpResponse(form)
-    #             return super().form_valid(form)
-    #     return super().form_invalid(form)
-    
-    # def ajax_response(self, form):
-    #     # jQueryに対してレスポンスを返すメソッド
-    #     text = form.cleaned_data.get('text')
-    #     return HttpResponse(text)
-    
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(self.request.POST)
-        chat_pk = self.kwargs['pk']
-        chat = get_object_or_404(ChatModel, pk=chat_pk)
-        if form.is_valid():
-            if request.is_ajax():
-                # Ajax 処理を別メソッドに切り離す
-                form = form.save(commit=False)
-                form.author_id = self.request.user.id
-                form.content_object = chat
-                form.save()
-                context = {
-                    'text': form.text,
-                    'nickname': form.author.nickname,
-                    'user_image': form.author.user_image.url,
-                    'created': form.created,
-                    'comment_count': form.comments.all().count()
-                }
-                return JsonResponse(context)
-            return super().form_valid(form)
-        return super().form_invalid(form)
-    
     def get_context_data(self, **kwargs):
         context = super(VideoDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(VideoModel, id=self.kwargs['pk'])
@@ -762,7 +700,7 @@ class VideoDetail(DetailView, FormView):
             'video_list': VideoModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-    
+
 @csrf_exempt
 def VideoLike(request):
     if request.method == 'POST':
@@ -782,32 +720,27 @@ def VideoLike(request):
         }
         if request.is_ajax():
             return JsonResponse(context)
-        
+
 @csrf_exempt
 def VideoComment(request):
-    pass
-#     if request.method == 'POST':
-#         text = request.POST.get('text')
-#         obj_id = request.POST.get('id')
-#         obj = get_object_or_404(VideoModel, id=obj_id)
-#         obj.text = text
-#         obj.author_id = request.user.id
-#         # obj.object_id = obj_id
-#         # obj.content_type = obj
-#         # obj.content_object = Comment(content_object=VideoModel, object_id=obj_id)
-#         obj.content_object = obj
-        
-#         obj.save()
-#         context = {
-#             'text': obj.text,
-#             'nickname': obj.author.nickname,
-#             'user_image': obj.author.user_image.url,
-#             'created': obj.created,
-#             'comment_count': obj.comments.all().count()
-#         }
-#         if request.is_ajax():
-#             return JsonResponse(context)
-        
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        obj_id = request.POST.get('id')
+        obj = VideoModel.objects.get(id=obj_id)
+        comment_obj = Comment(content_object=obj, text=text)
+        comment_obj.text = text
+        comment_obj.author_id = request.user.id
+        comment_obj.save()
+        context = {
+            'text': urlize_impl(linebreaks(comment_obj.text)),
+            'nickname': comment_obj.author.nickname,
+            'user_image': comment_obj.author.user_image.url,
+            'created': naturaltime(comment_obj.created),
+            'comment_count': obj.comments.all().count()
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+
 # Live
 class LiveCreate(CreateView):
     """LiveCreate"""

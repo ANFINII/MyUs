@@ -41,7 +41,7 @@
             {% endif %}
         </span>
         <a href="{% url 'myus:userpage' item.nickname %}" class="">投稿</a>
-        <a href="{% url 'myus:userpage_about' item.nickname %}" class="">情報</a>
+        <a href="{% url 'myus:userpage' item.nickname %}" class="">情報</a>
     {% endfor %}
 
     <hr class="userpage_hr">

@@ -65,44 +65,35 @@ $(document).ready(function() {
     $('form').submit(function(event) {
         event.preventDefault();
         const form = $(this);
-        // const url = form.attr('action');
+        const url = form.attr('action');
         const id = form.attr('obj-id');
         const text = $('form [name=text]').val();
         $.ajax({
-            // url: url,
+            url: url,
             type: 'POST',
             data: {'id':id, 'text':text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
             dataType: 'json',
             timeout: 10000,
         })
         .done(function(response) {
-            // const uerimage = $('img').attr({'src': response.user_image});
-            const d1 = document.getElementById('comment_aria_add');
-            
-            d1.insertAdjacentHTML('beforebegin', `
-                <div class="comment_aria_list">
-                    <a href="{% url 'myus:userpage' ${response.nickname} %}">
-                        <img src="${response.user_image}" title="${response.nickname}" class="profile_image_comment">
-                    </a>
-                    <div class="comment_aria_list_1">
-                        <p>${response.nickname}</p>
-                        <time>${response.created}+'{{|naturaltime}}'</time>
-                    </div>
-                    <div class="comment_aria_list_2">${response.text}</div>
-                    <div class="comment_aria_list_3">
-                        <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
-                        <label for="reply_aria_check_id" class="reply_aria_check_id">返信</label>
-                    </div>
-                </div>
-            `);
+            let comment_aria_list_add =
+                '<div class="comment_aria_list">' + 
+                    '<a href="/userpage/' + response.nickname +'">' + 
+                        '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
+                    '</a>' +
+                    '<div class="comment_aria_list_1">' +
+                        '<p>' + response.nickname + '</p>' +
+                        '<time>' + response.created + '</time>' +
+                    '</div>' +
+                    '<div class="comment_aria_list_2">' + response.text + '</div>' +
+                    '<div class="comment_aria_list_3">' +
+                        '<i class="bi bi-hand-thumbs-up icon-font" title="いいね数">' + '</i>' +
+                        '<label for="reply_aria_check_id" class="reply_aria_check_id">' + '返信' + '</label>' +
+                    '</div>' +
+                '</div>';
             $("#comment_form")[0].reset();
             $('#comment_count').html(response.comment_count);
-            // $('.comment_aria_add').children('div').addClass('comment_aria_list')
-            // $('.comment_aria_list').append(uerimage);
-            // $('.comment_aria_list').append('<p>' + response.nickname + '</p>')
-            // $('.comment_aria_list').append('<time>' + response.created + '</time>')
-            // $('.comment_aria_list').append(response.text);
-            // $('.comment_aria_add').append(response['html']);
+            $('#comment_aria_add').append(comment_aria_list_add);
             console.log(response)
         })
         .fail(function(response) {
