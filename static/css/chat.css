@@ -229,7 +229,6 @@ hr {
     grid-column: 2/-1;
     grid-row: 2/-1;
     overflow-y: hidden;
-    white-space: nowrap;
 }
 
 .chat_section_main:hover {
@@ -249,7 +248,6 @@ hr {
     height: fit-content;
     padding: 5px 0 5px 6px;
     overflow: hidden;
-    white-space: nowrap
 }
 
 .comment_aria_list:hover {
@@ -258,10 +256,6 @@ hr {
 
 .chat_content .comment_aria_list:hover {
     background-color: rgb(250, 250, 250);
-}
-
-.comment_aria_list_2 {
-    color: rgb(33,37,41);
 }
 
 /* chat_section_method */

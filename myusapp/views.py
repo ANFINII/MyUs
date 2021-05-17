@@ -1260,34 +1260,7 @@ class ChatDetail(DetailView):
         self.object.save()
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
-    
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(self.request.POST)
-        chat_pk = self.kwargs['pk']
-        chat = get_object_or_404(ChatModel, pk=chat_pk)
-        if form.is_valid():
-            if request.is_ajax():
-                # Ajax 処理を別メソッドに切り離す
-                form = form.save(commit=False)
-                form.author_id = self.request.user.id
-                form.content_object = chat
-                form.save()
-                context = {
-                    'text': form.text,
-                    'nickname': form.author.nickname,
-                    'user_image': form.author.user_image.url,
-                    'created': form.created,
-                    'comment_count': form.comments.all().count()
-                }
-                return JsonResponse(context)
-            return super().form_valid(form)
-        return super().form_invalid(form)
-        
-    # def ajax_response(self, form):
-    #     # jQueryに対してレスポンスを返すメソッド
-    #     text = form.cleaned_data.get('chat')
-    #     return JsonResponse(text)
-    
+
     def get_context_data(self, **kwargs):
         context = super(ChatDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
@@ -1331,8 +1304,25 @@ def ChatLike(request):
         
 @csrf_exempt
 def ChatComment(request):
-    pass
-        
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        obj_id = request.POST.get('id')
+        obj = ChatModel.objects.get(id=obj_id)
+        comment_obj = Comment(content_object=obj, text=text)
+        comment_obj.text = text
+        comment_obj.author_id = request.user.id
+        comment_obj.save()
+        context = {
+            'text': urlize_impl(linebreaks(comment_obj.text)),
+            'nickname': comment_obj.author.nickname,
+            'user_image': comment_obj.author.user_image.url,
+            'created': naturaltime(comment_obj.created),
+            'user_count': obj.user_count(),
+            'comment_count': obj.comments.all().count()
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+            
 # Collabo
 class CollaboCreate(CreateView):
     """CollaboCreate"""
