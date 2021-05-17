@@ -77,21 +77,18 @@ $(document).ready(function() {
         })
         .done(function(response) {
             let comment_aria_list_add =
-                '<div class="comment_aria_list">' + 
+                '<label for="comment_aria_check_id" class="comment_aria_list">' + 
                     '<a href="/userpage/' + response.nickname +'">' + 
                         '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
                     '</a>' +
                     '<div class="comment_aria_list_1">' +
                         '<p>' + response.nickname + '</p>' +
-                        '<time>' + ' ' + response.created + '</time>' +
+                        '<time>' + response.created + '</time>' +
                     '</div>' +
                     '<div class="comment_aria_list_2">' + response.text + '</div>' +
-                    '<div class="comment_aria_list_3">' +
-                        '<i class="bi bi-hand-thumbs-up icon-font" title="いいね数">' + '</i>' +
-                        '<label for="reply_aria_check_id" class="reply_aria_check_id">' + '返信' + '</label>' +
-                    '</div>' +
-                '</div>';
+                '</label>';
             $("#comment_form")[0].reset();
+            $('#user_count').html(response.user_count);
             $('#comment_count').html(response.comment_count);
             $('#comment_aria_add').append(comment_aria_list_add);
             console.log(response)

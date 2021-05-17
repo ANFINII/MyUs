@@ -71,7 +71,7 @@ urlpatterns = [
     path('chat_create/', ChatCreate.as_view(), name='chat_create'),
     path('chat_detail/<int:pk>', ChatDetail.as_view(), name='chat_detail'),
     path('chat_detail/like', ChatLike, name='chat_like'),
-    # path('chat_detail/comment', ChatComment, name='chat_comment'),
+    path('chat_detail/comment', ChatComment, name='chat_comment'),
     
     path('collabo/', CollaboList.as_view(), name='collabo_list'),
     path('collabo_create/', CollaboCreate.as_view(), name='collabo_create'),

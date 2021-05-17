@@ -21,17 +21,17 @@
                 <div class="article_detail_aria_2">
                     <div class="view_good_inline">
                         <i class="bi bi-caret-right-square" title="閲覧数"></i>
-                        {{ object.read|intcomma }}
+                        <span>{{ object.read|intcomma }}</span>
                     </div>
 
                     <div class="view_good_inline">
                         <i class="bi bi-person" title="参加数"></i>
-                        {{ object.user_count|intcomma }}
+                        <span id="user_count">{{ object.user_count|intcomma }}</span>
                     </div>
 
                     <div class="view_good_inline">
                         <i class="bi bi-chat-dots" title="投稿数"></i>
-                        {{ object.comments.all.count|intcomma }}
+                        <span id="comment_count">{{ object.comment_count|intcomma }}</span>
                     </div>
 
                     {% if user.is_authenticated %}
@@ -133,6 +133,8 @@
                     <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
                 </label>
                 {% endfor %}
+
+                <div id="comment_aria_add"></div>
             </div>
 
             <div class="chat_section_method">
@@ -151,7 +153,7 @@
             </div>
             
             <footer class="chat_footer">
-                <form method="POST" action="">{% csrf_token %}
+                <form method="POST" action="{% url 'myus:chat_comment' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
                     {% if user.is_authenticated %}
                     <textarea name="text" rows="1" class="textarea_br" placeholder="メッセージ入力" required></textarea>
                     <div class="chat_frame"></div>
@@ -180,5 +182,5 @@
 {% endblock content %}
 
 {% block extrajs %}
-<script src="{% static 'js/ajax.js' %}"></script>
+<script src="{% static 'js/ajax_chat.js' %}"></script>
 {% endblock extrajs %}
