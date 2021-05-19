@@ -37,7 +37,7 @@
 <label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
 <hr>
 
-<form method="POST" action="{% url 'myus:video_comment' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
+<form method="POST" action="{% url 'myus:comment_form' %}" id="comment_form" obj-id="{{ object.id }}" path="{{ request.path }}">{% csrf_token %}
     <div class="comment_input">
         <p>コメント総数
             <span id="comment_count">{{ object.comment_count|intcomma }}</span>
