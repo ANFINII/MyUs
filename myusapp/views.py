@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.contrib.humanize.templatetags.humanize import naturaltime
+from django.contrib.contenttypes.models import ContentType
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.http import HttpResponse, JsonResponse, QueryDict, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -722,11 +723,25 @@ def VideoLike(request):
             return JsonResponse(context)
 
 @csrf_exempt
-def VideoComment(request):
+def CommentForm(request):
     if request.method == 'POST':
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
-        obj = VideoModel.objects.get(id=obj_id)
+        obj_path = request.POST.get('path')
+        if 'video_detail' in obj_path:
+            obj = VideoModel.objects.get(id=obj_id)
+        elif 'live_detail' in obj_path:
+            obj = LiveModel.objects.get(id=obj_id)
+        elif 'music_detail' in obj_path:
+            obj = MusicModel.objects.get(id=obj_id)
+        elif 'picture_detail' in obj_path:
+            obj = PictureModel.objects.get(id=obj_id)
+        elif 'blog_detail' in obj_path:
+            obj = BlogModel.objects.get(id=obj_id)
+        elif 'collabo_detail' in obj_path:
+            obj = CollaboModel.objects.get(id=obj_id)
+        elif 'todo_detail' in obj_path:
+            obj = TodoModel.objects.get(id=obj_id)
         comment_obj = Comment(content_object=obj, text=text)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
@@ -848,11 +863,7 @@ def LiveLike(request):
         }
         if request.is_ajax():
             return JsonResponse(context)
-        
-@csrf_exempt
-def LiveComment(request):
-    pass
-    
+
 # Music
 class MusicCreate(CreateView):
     """MusicCreate"""
@@ -961,10 +972,6 @@ def MusicLike(request):
         }
         if request.is_ajax():
             return JsonResponse(context)
-    
-@csrf_exempt
-def MusicComment(request):
-    pass
 
 # Picture
 class PictureCreate(CreateView):
@@ -1073,10 +1080,6 @@ def PictureLike(request):
         }
         if request.is_ajax():
             return JsonResponse(context)
-        
-@csrf_exempt
-def PictureComment(request):
-    pass
 
 # Blog
 class BlogCreate(CreateView):
@@ -1186,10 +1189,6 @@ def BlogLike(request):
         }
         if request.is_ajax():
             return JsonResponse(context)
-        
-@csrf_exempt
-def BlogComment(request):
-    pass
 
 # Chat
 class ChatCreate(CreateView):
@@ -1303,7 +1302,7 @@ def ChatLike(request):
             return JsonResponse(context)
         
 @csrf_exempt
-def ChatComment(request):
+def ChatMessage(request):
     if request.method == 'POST':
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
@@ -1430,11 +1429,7 @@ def CollaboLike(request):
         }
         if request.is_ajax():
             return JsonResponse(context)
-    
-@csrf_exempt
-def CollaboComment(request):
-    pass
-    
+
 # Todo
 class TodoCreate(CreateView):
     """TodoCreate"""
@@ -1511,11 +1506,7 @@ class TodoDetail(DetailView):
             'todo_list': TodoModel.objects.filter(author_id=self.request.user.id).exclude(title=obj),
         })
         return context
-    
-@csrf_exempt
-def TodoComment(request):
-    pass
-    
+
 class TodoUpdate(UpdateView):
     """TodoUpdate"""
     model = TodoModel

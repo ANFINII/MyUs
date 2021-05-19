@@ -67,11 +67,12 @@ $(document).ready(function() {
         const form = $(this);
         const url = form.attr('action');
         const id = form.attr('obj-id');
+        const path = form.attr('path');
         const text = $('form [name=text]').val();
         $.ajax({
             url: url,
             type: 'POST',
-            data: {'id':id, 'text':text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            data: {'id':id, 'path': path, 'text':text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
             dataType: 'json',
             timeout: 10000,
         })
@@ -87,7 +88,7 @@ $(document).ready(function() {
                     '</div>' +
                     '<div class="comment_aria_list_2">' + response.text + '</div>' +
                     '<div class="comment_aria_list_3">' +
-                        '<i class="bi bi-hand-thumbs-up icon-font" title="いいね数">' + '</i>' +
+                        '<i class="bi bi-hand-thumbs-up icon-font" title="いいね数">' + ' ' + '</i>' +
                         '<label for="reply_aria_check_id" class="reply_aria_check_id">' + '返信' + '</label>' +
                     '</div>' +
                 '</div>';
