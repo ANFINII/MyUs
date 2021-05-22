@@ -2,12 +2,13 @@ $(document).ready(function() {
     // いいねボタンクリック時の処理を定義
     $('.like_form').on('click', function(event) {
         event.preventDefault();
-        const pk = $(this).attr('value');
+        const id = $(this).attr('value');
         const url = $(this).parent().attr('action');
+        const path = $(this).parent().attr('path');
         $.ajax({
             url: url,
             type: 'POST',
-            data: {'id': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            data: {'id': id, 'path': path, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
             dataType: 'json',
         })
         .done(function(response) {

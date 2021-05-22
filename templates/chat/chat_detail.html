@@ -35,7 +35,7 @@
                     </div>
 
                     {% if user.is_authenticated %}
-                        <form method="POST" action="{% url 'myus:chat_like' %}" class="view_good_inline char_like">{% csrf_token %}
+                        <form method="POST" action="{% url 'myus:like_form' %}" class="view_good_inline char_like" path="{{ request.path }}">{% csrf_token %}
                             {% if liked %}
                             <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_fill">
                                 <i class="bi bi-hand-thumbs-up-fill like_color" title="いいね"></i>
@@ -153,7 +153,7 @@
             </div>
             
             <footer class="chat_footer">
-                <form method="POST" action="{% url 'myus:chat_comment' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
+                <form method="POST" action="{% url 'myus:chat_message' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
                     {% if user.is_authenticated %}
                     <textarea name="text" rows="1" class="textarea_br" placeholder="メッセージ入力" required></textarea>
                     <div class="chat_frame"></div>
