@@ -22,7 +22,7 @@ from functools import reduce
 from operator import and_
 from .models import Tag, SearchTag, Comment, FollowModel, TodoModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
-from .forms import SearchTagForm, CommentForm
+from .forms import SearchTagForm
 import re, string, random, json
 
 # Create your views here.
@@ -371,7 +371,6 @@ class MyPage_update(UpdateView):
         return self.request.user
     
 # SearchTag
-@csrf_exempt
 def TagCreate(request):
     """TagCreate"""
     if request.method == 'POST':
@@ -389,54 +388,79 @@ class TagList(ListView):
     model = SearchTag
     template_name = 'base2.html'
     
-class UserPage(ListView):
-    """UserPage"""
-    model = User
-    template_name = 'registration/userpage.html'
-    count = 0
-    
-    def get_context_data(self, **kwargs):
-        context = super(UserPage, self).get_context_data(**kwargs)
-        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
-        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=author)
-        followed = False
-        if follow.exists():
-            followed = True
-        context['followed'] = followed
-        context['author_name'] = author
-        context['count'] = self.count or 0
-        context['query'] = self.request.GET.get('search')
-        context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'user_list': User.objects.filter(nickname=author),
-            'video_list': VideoModel.objects.filter(author_id=author, publish=True),
-            'live_list': LiveModel.objects.filter(author_id=author, publish=True),
-            'music_list': MusicModel.objects.filter(author_id=author, publish=True),
-            'picture_list': PictureModel.objects.filter(author_id=author, publish=True),
-            'blog_list': BlogModel.objects.filter(author_id=author, publish=True),
-            'chat_list': ChatModel.objects.filter(author_id=author, publish=True),
-        })
-        return context
-
-    def get_queryset(self):
-        query = self.request.GET.get('search', None)
-        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
-        if query is not None:
-            result1 = VideoModel.objects.filter(author_id=author, publish=True).search(query)
-            result2 = LiveModel.objects.filter(author_id=author, publish=True).search(query)
-            result3 = MusicModel.objects.filter(author_id=author, publish=True).search(query)
-            result4 = PictureModel.objects.filter(author_id=author, publish=True).search(query)
-            result5 = BlogModel.objects.filter(author_id=author, publish=True).search(query)
-            result6 = ChatModel.objects.filter(author_id=author, publish=True).search(query)
-            queryset_chain = chain(result1, result2, result3, result4, result5, result6)        
-            result = sorted(queryset_chain, key=lambda instance: instance.like, reverse=True)
-            self.count = len(result)
-            return result
-        return VideoModel.objects.none()
-    
+@csrf_exempt
+def CommentForm(request):
+    """CommentForm"""
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        obj_id = request.POST.get('id')
+        obj_path = request.POST.get('path')
+        if 'video_detail' in obj_path:
+            obj = VideoModel.objects.get(id=obj_id)
+        elif 'live_detail' in obj_path:
+            obj = LiveModel.objects.get(id=obj_id)
+        elif 'music_detail' in obj_path:
+            obj = MusicModel.objects.get(id=obj_id)
+        elif 'picture_detail' in obj_path:
+            obj = PictureModel.objects.get(id=obj_id)
+        elif 'blog_detail' in obj_path:
+            obj = BlogModel.objects.get(id=obj_id)
+        elif 'collabo_detail' in obj_path:
+            obj = CollaboModel.objects.get(id=obj_id)
+        elif 'todo_detail' in obj_path:
+            obj = TodoModel.objects.get(id=obj_id)
+        comment_obj = Comment(content_object=obj, text=text)
+        comment_obj.text = text
+        comment_obj.author_id = request.user.id
+        comment_obj.save()
+        context = {
+            'text': urlize_impl(linebreaks(comment_obj.text)),
+            'nickname': comment_obj.author.nickname,
+            'user_image': comment_obj.author.user_image.url,
+            'created': naturaltime(comment_obj.created),
+            'comment_count': obj.comments.all().count()
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+        
+@csrf_exempt
+def LikeForm(request):
+    """LikeForm"""
+    if request.method == 'POST':
+        user = request.user
+        obj_id = request.POST.get('id')
+        obj_path = request.POST.get('path')
+        if 'video_detail' in obj_path:
+            obj = get_object_or_404(VideoModel, id=obj_id)
+        elif 'live_detail' in obj_path:
+            obj = get_object_or_404(LiveModel, id=obj_id)
+        elif 'music_detail' in obj_path:
+            obj = get_object_or_404(MusicModel, id=obj_id)
+        elif 'picture_detail' in obj_path:
+            obj = get_object_or_404(PictureModel, id=obj_id)
+        elif 'blog_detail' in obj_path:
+            obj = get_object_or_404(BlogModel, id=obj_id)
+        elif 'chat_detail' in obj_path:
+            obj = get_object_or_404(ChatModel, id=obj_id)
+        elif 'collabo_detail' in obj_path:
+            obj = get_object_or_404(CollaboModel, id=obj_id)
+        liked = False
+        if obj.like.filter(id=user.id).exists():
+            liked = False
+            obj.like.remove(user)
+        else:
+            liked = True
+            obj.like.add(user)
+        context = {
+            'liked': liked,
+            'total_like': obj.total_like(),
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+        
 class Index(ListView):
     """Index処理、すべてのメディアmodelを表示"""
-    model = VideoModel
+    model = SearchTag
     template_name = 'index.html'
     count = 0
     
@@ -493,9 +517,55 @@ class Recommend(ListView):
         })
         return context
     
+class UserPage(ListView):
+    """UserPage"""
+    model = User
+    template_name = 'registration/userpage.html'
+    count = 0
+    
+    def get_context_data(self, **kwargs):
+        context = super(UserPage, self).get_context_data(**kwargs)
+        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=author)
+        followed = False
+        if follow.exists():
+            followed = True
+        context['followed'] = followed
+        context['author_name'] = author
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
+        context.update({
+            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'user_list': User.objects.filter(nickname=author),
+            'video_list': VideoModel.objects.filter(author_id=author, publish=True),
+            'live_list': LiveModel.objects.filter(author_id=author, publish=True),
+            'music_list': MusicModel.objects.filter(author_id=author, publish=True),
+            'picture_list': PictureModel.objects.filter(author_id=author, publish=True),
+            'blog_list': BlogModel.objects.filter(author_id=author, publish=True),
+            'chat_list': ChatModel.objects.filter(author_id=author, publish=True),
+        })
+        return context
+
+    def get_queryset(self):
+        query = self.request.GET.get('search', None)
+        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+        if query is not None:
+            result1 = VideoModel.objects.filter(author_id=author, publish=True).search(query)
+            result2 = LiveModel.objects.filter(author_id=author, publish=True).search(query)
+            result3 = MusicModel.objects.filter(author_id=author, publish=True).search(query)
+            result4 = PictureModel.objects.filter(author_id=author, publish=True).search(query)
+            result5 = BlogModel.objects.filter(author_id=author, publish=True).search(query)
+            result6 = ChatModel.objects.filter(author_id=author, publish=True).search(query)
+            queryset_chain = chain(result1, result2, result3, result4, result5, result6)        
+            result = sorted(queryset_chain, key=lambda instance: instance.like, reverse=True)
+            self.count = len(result)
+            return result
+        return VideoModel.objects.none()
+    
 # Follow
 @csrf_exempt
 def FollowCreate(request, nickname):
+    """FollowCreate"""
     if request.method == 'POST':
         follower = User.objects.get(nickname=request.user.nickname)
         following = User.objects.get(nickname=nickname)
@@ -666,14 +736,11 @@ class VideoList(ListView):
             self.count = len(result)
         return result
     
-class VideoDetail(DetailView, FormView):
+class VideoDetail(DetailView):
     """VideoDetail"""
     model = VideoModel
     template_name = 'video/video_detail.html'
-    ordering = ['-created']
-    form_class = CommentForm
-    success_url = 'video_detail'
-
+    
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.read += 1
@@ -701,61 +768,7 @@ class VideoDetail(DetailView, FormView):
             'video_list': VideoModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-
-@csrf_exempt
-def VideoLike(request):
-    if request.method == 'POST':
-        user = request.user
-        obj_id = request.POST.get('id')
-        obj = get_object_or_404(VideoModel, id=obj_id)
-        liked = False
-        if obj.like.filter(id=user.id).exists():
-            liked = False
-            obj.like.remove(user)
-        else:
-            liked = True
-            obj.like.add(user)
-        context = {
-            'liked': liked,
-            'total_like': obj.total_like(),
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
-
-@csrf_exempt
-def CommentForm(request):
-    if request.method == 'POST':
-        text = request.POST.get('text')
-        obj_id = request.POST.get('id')
-        obj_path = request.POST.get('path')
-        if 'video_detail' in obj_path:
-            obj = VideoModel.objects.get(id=obj_id)
-        elif 'live_detail' in obj_path:
-            obj = LiveModel.objects.get(id=obj_id)
-        elif 'music_detail' in obj_path:
-            obj = MusicModel.objects.get(id=obj_id)
-        elif 'picture_detail' in obj_path:
-            obj = PictureModel.objects.get(id=obj_id)
-        elif 'blog_detail' in obj_path:
-            obj = BlogModel.objects.get(id=obj_id)
-        elif 'collabo_detail' in obj_path:
-            obj = CollaboModel.objects.get(id=obj_id)
-        elif 'todo_detail' in obj_path:
-            obj = TodoModel.objects.get(id=obj_id)
-        comment_obj = Comment(content_object=obj, text=text)
-        comment_obj.text = text
-        comment_obj.author_id = request.user.id
-        comment_obj.save()
-        context = {
-            'text': urlize_impl(linebreaks(comment_obj.text)),
-            'nickname': comment_obj.author.nickname,
-            'user_image': comment_obj.author.user_image.url,
-            'created': naturaltime(comment_obj.created),
-            'comment_count': obj.comments.all().count()
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
-
+    
 # Live
 class LiveCreate(CreateView):
     """LiveCreate"""
@@ -844,26 +857,6 @@ class LiveDetail(DetailView):
         })
         return context
     
-@csrf_exempt
-def LiveLike(request):
-    if request.method == 'POST':
-        user = request.user
-        obj_id = request.POST.get('id')
-        obj = get_object_or_404(LiveModel, id=obj_id)
-        liked = False
-        if obj.like.filter(id=user.id).exists():
-            liked = False
-            obj.like.remove(user)
-        else:
-            liked = True
-            obj.like.add(user)
-        context = {
-            'liked': liked,
-            'total_like': obj.total_like(),
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
-
 # Music
 class MusicCreate(CreateView):
     """MusicCreate"""
@@ -953,26 +946,6 @@ class MusicDetail(DetailView):
         })
         return context
     
-@csrf_exempt
-def MusicLike(request):
-    if request.method == 'POST':
-        user = request.user
-        obj_id = request.POST.get('id')
-        obj = get_object_or_404(MusicModel, id=obj_id)
-        liked = False
-        if obj.like.filter(id=user.id).exists():
-            liked = False
-            obj.like.remove(user)
-        else:
-            liked = True
-            obj.like.add(user)
-        context = {
-            'liked': liked,
-            'total_like': obj.total_like(),
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
-
 # Picture
 class PictureCreate(CreateView):
     """PictureCreate"""
@@ -1061,26 +1034,6 @@ class PictureDetail(DetailView):
         })
         return context
     
-@csrf_exempt
-def PictureLike(request):
-    if request.method == 'POST':
-        user = request.user
-        obj_id = request.POST.get('id')
-        obj = get_object_or_404(PictureModel, id=obj_id)
-        liked = False
-        if obj.like.filter(id=user.id).exists():
-            liked = False
-            obj.like.remove(user)
-        else:
-            liked = True
-            obj.like.add(user)
-        context = {
-            'liked': liked,
-            'total_like': obj.total_like(),
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
-
 # Blog
 class BlogCreate(CreateView):
     """BlogCreate"""
@@ -1170,26 +1123,6 @@ class BlogDetail(DetailView):
         })
         return context
     
-@csrf_exempt
-def BlogLike(request):
-    if request.method == 'POST':
-        user = request.user
-        obj_id = request.POST.get('id')
-        obj = get_object_or_404(BlogModel, id=obj_id)
-        liked = False
-        if obj.like.filter(id=user.id).exists():
-            liked = False
-            obj.like.remove(user)
-        else:
-            liked = True
-            obj.like.add(user)
-        context = {
-            'liked': liked,
-            'total_like': obj.total_like(),
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
-
 # Chat
 class ChatCreate(CreateView):
     """ChatCreate"""
@@ -1249,9 +1182,6 @@ class ChatDetail(DetailView):
     """ChatDetail"""
     model = ChatModel
     template_name = 'chat/chat_detail.html'
-    ordering = ['-created']
-    # form_class = CommentForm
-    success_url = 'chat_detail'
     
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -1281,26 +1211,6 @@ class ChatDetail(DetailView):
         })
         return context
     
-@csrf_exempt
-def ChatLike(request):
-    if request.method == 'POST':
-        user = request.user
-        obj_id = request.POST.get('id')
-        obj = get_object_or_404(ChatModel, id=obj_id)
-        liked = False
-        if obj.like.filter(id=user.id).exists():
-            liked = False
-            obj.like.remove(user)
-        else:
-            liked = True
-            obj.like.add(user)
-        context = {
-            'liked': liked,
-            'total_like': obj.total_like(),
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
-        
 @csrf_exempt
 def ChatMessage(request):
     if request.method == 'POST':
@@ -1410,37 +1320,17 @@ class CollaboDetail(DetailView):
         })
         return context
     
-@csrf_exempt
-def CollaboLike(request):
-    if request.method == 'POST':
-        user = request.user
-        obj_id = request.POST.get('id')
-        obj = get_object_or_404(CollaboModel, id=obj_id)
-        liked = False
-        if obj.like.filter(id=user.id).exists():
-            liked = False
-            obj.like.remove(user)
-        else:
-            liked = True
-            obj.like.add(user)
-        context = {
-            'liked': liked,
-            'total_like': obj.total_like(),
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
-
 # Todo
 class TodoCreate(CreateView):
     """TodoCreate"""
     model = TodoModel
     fields = ('title', 'content', 'priority', 'duedate')    
     template_name = 'todo/todo_create.html'
-
+    
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super(TodoCreate, self).form_valid(form)
-
+    
     def get_success_url(self):
         return reverse('myus:todo_detail', kwargs={'pk': self.object.pk})
     
@@ -1460,7 +1350,7 @@ class TodoList(ListView):
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
-
+    
     def get_queryset(self, **kwargs):
         result = TodoModel.objects.filter(author_id=self.request.user.id)
         search = self.request.GET.get('search')
@@ -1483,7 +1373,7 @@ class TodoList(ListView):
             result = result.filter(query).order_by('-duedate').distinct()
             self.count = len(result)
         return result
-
+    
 class TodoDetail(DetailView):
     """TodoDetail"""
     model = TodoModel
@@ -1501,18 +1391,19 @@ class TodoDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(TodoDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(TodoModel, id=self.kwargs['pk'])
+        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'todo_list': TodoModel.objects.filter(author_id=self.request.user.id).exclude(title=obj),
         })
         return context
-
+    
 class TodoUpdate(UpdateView):
     """TodoUpdate"""
     model = TodoModel
     fields = ('title', 'content', 'priority', 'duedate')
     template_name = 'todo/todo_update.html'
-
+    
     def get_success_url(self):
         return reverse('myus:todo_detail', kwargs={'pk': self.object.pk})
     

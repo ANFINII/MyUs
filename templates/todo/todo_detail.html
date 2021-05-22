@@ -47,7 +47,7 @@
             <label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
             <hr>
 
-            <form method="POST" action="">{% csrf_token %}
+            <form method="POST" action="{% url 'myus:comment_form' %}" id="comment_form" obj-id="{{ object.id }}" path="{{ request.path }}">{% csrf_token %}
                 <div class="comment_input">
                     <p>コメント総数
                         <span id="comment_count">{{ object.comment_count|intcomma }}</span>
@@ -75,7 +75,9 @@
             <label for="comment_aria_check_id" class="comment_aria_check_label2">縮小表示</label>
 
             <div class="comment_aria">
-                {% for comment in object.comments.all reversed %}
+                <div id="comment_aria_add"></div>
+
+                {% for comment in comment_list reversed %}
                 <div class="comment_aria_list">
                     <a href="{% url 'myus:userpage' comment.author.nickname %}">
                         <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
@@ -85,7 +87,6 @@
                         <time>{{ comment.created|naturaltime }}</time>
                     </div>
                     <div class="comment_aria_list_2">{{ comment.text|linebreaks|urlize }}</div>
-                    <div class="comment_aria_list_3">返信</div>
                 </div>
                 {% endfor %}
             </div>

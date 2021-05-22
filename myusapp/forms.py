@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.admin import widgets
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-from .models import SearchTag, Comment
+from .models import SearchTag
 import re
 
 User = get_user_model()
@@ -13,11 +13,4 @@ class SearchTagForm(forms.ModelForm):
         model = SearchTag
         fields = [
             'searchtag',
-        ]
-
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = [
-            'text', 'parent',
         ]
