@@ -128,12 +128,11 @@
                     </a>
                     <div class="comment_aria_list_1">
                         <p>{{ comment.author.nickname }}</p>
-                        <time>{{ comment.created|naturaltime }}</time>
+                        <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
                     </div>
                     <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
                 </label>
                 {% endfor %}
-
                 <div id="comment_aria_add"></div>
             </div>
 
@@ -145,7 +144,7 @@
                     </a>
                     <div class="comment_aria_list_1">
                         <p>{{ reply.author.nickname }}</p>
-                        <time>{{ reply.created|naturaltime }}</time>
+                        <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
                     </div>
                     <div class="comment_aria_list_2">{{ reply.text|urlize|linebreaks }}</div>
                 </div>

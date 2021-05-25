@@ -1,4 +1,8 @@
 /* プロフィール */
+.tag_nav {
+    display: none;
+}
+
 .main_profile {
     display: grid;
     grid-gap: 3px;
@@ -6,11 +10,7 @@
     grid-template-rows: 2.6em auto auto 2.4em;
 }
 
-.tag_nav {
-    display: none;
-}
-
-.main_contents h1 {
+.main_profile h1 {
     display: flex;
     font-size: 24px;
     max-height: 2em;

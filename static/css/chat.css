@@ -1,11 +1,50 @@
+/* スクロールバー */
 body {
-    overflow-y: hidden;
+    overflow: hidden;
+}
+
+.chat_section_nav::-webkit-scrollbar,
+.chat_section_main::-webkit-scrollbar,
+.chat_section_method::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+.chat_section_nav::-webkit-scrollbar-track,
+.chat_section_main::-webkit-scrollbar-track,
+.chat_section_method::-webkit-scrollbar-track {
+    background: rgb(255, 255, 255);
+}
+
+.chat_section_nav::-webkit-scrollbar-thumb,
+.chat_section_main::-webkit-scrollbar-thumb,
+.chat_section_method::-webkit-scrollbar-thumb {
+    background: rgb(255, 255, 255);
+    border-radius: 10px;
+}
+
+.chat_section_nav:hover::-webkit-scrollbar-thumb,
+.chat_section_main:hover::-webkit-scrollbar-thumb,
+.chat_section_method:hover::-webkit-scrollbar-thumb {
+    background: rgb(180, 180, 180);
+}
+
+.chat_section_nav::-webkit-scrollbar-thumb:hover,
+.chat_section_main::-webkit-scrollbar-thumb:hover,
+.chat_section_method::-webkit-scrollbar-thumb:hover {
+    background: rgb(150, 150, 150);
+}
+
+.chat_section_nav::-webkit-scrollbar-thumb:active,
+.chat_section_main::-webkit-scrollbar-thumb:active,
+.chat_section_method::-webkit-scrollbar-thumb:active {
+    background: rgb(120, 120, 120);
 }
 
 .main_contents {
     grid-column: 2/-1;
     grid-row: 3/-1;
-    height: 100%;
+    height: 100vh;
     margin: -12px 0 2px 0;
 }
 
@@ -228,10 +267,6 @@ hr {
 .chat_section_main {
     grid-column: 2/-1;
     grid-row: 2/-1;
-    overflow-y: hidden;
-}
-
-.chat_section_main:hover {
     overflow-y: auto;
 }
 
@@ -246,7 +281,8 @@ hr {
 
 .comment_aria_list {
     height: fit-content;
-    padding: 5px 0 5px 6px;
+    padding: 8px 6px;
+    margin: 0;
     overflow: hidden;
 }
 
@@ -261,13 +297,8 @@ hr {
 /* chat_section_method */
 .chat_section_method {
     display: none;
-    overflow-y: hidden;
-    border-left: solid 1px rgba(0, 0, 0, 0.1);
-    white-space: nowrap;
-}
-
-.chat_section_method:hover {
     overflow-y: auto;
+    border-left: solid 1px rgba(0, 0, 0, 0.1);
 }
 
 .comment_aria_check:checked ~ .chat_section_method {
