@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import Index, Recommend, UserPage, TagCreate, LikeForm, CommentForm
+from .views import Index, Recommend, TagCreate, LikeForm, CommentForm
 from .views import Signup, Login, Logout, Withdrawal
-from .views import Profile, Profile_update, MyPage, MyPage_update
+from .views import Profile, Profile_update, MyPage, MyPage_update, UserPage
 from .views import UserPolicy, Knowledge, FollowCreate, FollowList, FollowerList
 from .views import VideoList, VideoCreate, VideoDetail
 from .views import LiveList, LiveCreate, LiveDetail
@@ -17,7 +17,6 @@ app_name = 'myus'
 urlpatterns = [
     path('', Index.as_view(), name='index'),
     path('recommend/', Recommend.as_view(), name='recommend'),
-    path('userpage/<str:nickname>', UserPage.as_view(), name='userpage'),
     path('tag_create/', TagCreate, name='tag_create'),
     path('like_form/', LikeForm, name='like_form'),
     path('comment_form/', CommentForm, name='comment_form'),
@@ -38,6 +37,7 @@ urlpatterns = [
     path('profile_update/', Profile_update.as_view(), name='profile_update'),
     path('mypage/', MyPage, name='mypage'),
     path('mypage_update/', MyPage_update.as_view(), name='mypage_update'),
+    path('userpage/<str:nickname>', UserPage.as_view(), name='userpage'),
 
     path('video/', VideoList.as_view(), name='video_list'),
     path('video_create/', VideoCreate.as_view(), name='video_create'),
