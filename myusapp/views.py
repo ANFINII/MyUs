@@ -1225,7 +1225,7 @@ def ChatMessage(request):
             'text': urlize_impl(linebreaks(comment_obj.text)),
             'nickname': comment_obj.author.nickname,
             'user_image': comment_obj.author.user_image.url,
-            'created': naturaltime(comment_obj.created),
+            'created': comment_obj.created.strftime("%Y/%m/%d %H:%M"),
             'user_count': obj.user_count(),
             'comment_count': obj.comments.all().count()
         }
