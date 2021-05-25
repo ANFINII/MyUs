@@ -84,7 +84,7 @@ $(document).ready(function() {
                     '</a>' +
                     '<div class="comment_aria_list_1">' +
                         '<p>' + response.nickname + '</p>' +
-                        '<time>' + response.created + '</time>' +
+                        '<time>' + ' ' + response.created + '</time>' +
                     '</div>' +
                     '<div class="comment_aria_list_2">' + response.text + '</div>' +
                 '</label>';
