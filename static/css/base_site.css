@@ -1,6 +1,7 @@
 /* スクロールバー */
 ::-webkit-scrollbar {
     width: 9px;
+    height: 9px;
 }
 
 ::-webkit-scrollbar-track {
@@ -8,7 +9,7 @@
 }
 
 ::-webkit-scrollbar-track:hover {
-    background: rgb(225, 225, 225);
+    background: rgb(245, 245, 245);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -17,6 +18,10 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
+    background: rgb(150, 150, 150);
+}
+
+::-webkit-scrollbar-thumb:active {
     background: rgb(120, 120, 120);
 }
 

@@ -1,27 +1,33 @@
 /* z-indexは10~100の10段階とします。 */
 
 /* スクロールバー */
-::-webkit-scrollbar {
+body::-webkit-scrollbar {
     width: 9px;
+    height: 9px;
 }
 
-::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track {
     background: rgb(255, 255, 255);
 }
 
-::-webkit-scrollbar-track:hover {
+body::-webkit-scrollbar-track:hover {
     background: rgb(225, 225, 225);
 }
 
-::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb {
     background: rgb(180, 180, 180);
     border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+body::-webkit-scrollbar-thumb:hover {
+    background: rgb(150, 150, 150);
+}
+
+body::-webkit-scrollbar-thumb:active {
     background: rgb(120, 120, 120);
 }
 
+/* 全体のデザイン */
 body {
     display: grid;
     grid-template-columns: 4.5em 7.5em minmax(9.5em, 1fr) 3em 3em 3em 3em;
@@ -548,7 +554,6 @@ header {
 .main_contents {
     grid-column: 2/-1;
     grid-row: 3/-1;
-    height: 100%;
     margin: 0 15px 5px 15px;
 }
 
@@ -614,7 +619,6 @@ header {
     grid-column: 1/-1;
     grid-row: 1/2;
     font-size: 20px;
-    /* width: 100px; */
     max-height: 25px;
     margin: 0;
     overflow-y: auto;
