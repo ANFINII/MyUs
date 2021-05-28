@@ -134,6 +134,28 @@
                 </label>
                 {% endfor %}
                 <div id="comment_aria_add"></div>
+
+                <footer class="chat_footer_main" id="footer">
+                    <form method="POST" action="{% url 'myus:chat_message' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
+                        {% if user.is_authenticated %}
+                        <textarea name="text" rows="1" class="textarea_br" placeholder="メッセージ入力" required></textarea>
+                        <div class="chat_frame"></div>
+                        <div class="comment_input_chat">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+                            </button>
+                        </div>
+                        {% else %}
+                        <textarea name="text" rows="1" class="textarea_br" placeholder="チャットするにはログインが必要です！" disabled="disabled"></textarea>
+                        <div class="chat_frame"></div>
+                        <div class="comment_input_chat">
+                            <button type="submit" class="btn btn-secondary btn-sm" disabled>
+                                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+                            </button>
+                        </div>
+                        {% endif %}
+                    </form>
+                </footer>
             </div>
 
             <div class="chat_section_method">
@@ -149,29 +171,29 @@
                     <div class="comment_aria_list_2">{{ reply.text|urlize|linebreaks }}</div>
                 </div>
                 {% endfor %}
+
+                <footer class="chat_footer_method">
+                    <form method="POST" action="{% url 'myus:chat_message' %}" id="reply_form" obj-id="{{ object.id }}">{% csrf_token %}
+                        {% if user.is_authenticated %}
+                        <textarea name="text2" rows="1" class="textarea_br" placeholder="メッセージ入力" required></textarea>
+                        <div class="chat_frame"></div>
+                        <div class="comment_input_chat">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+                            </button>
+                        </div>
+                        {% else %}
+                        <textarea name="text" rows="1" class="textarea_br" placeholder="チャットするにはログインが必要です！" disabled="disabled"></textarea>
+                        <div class="chat_frame"></div>
+                        <div class="comment_input_chat">
+                            <button type="submit" class="btn btn-secondary btn-sm" disabled>
+                                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+                            </button>
+                        </div>
+                        {% endif %}
+                    </form>
+                </footer>
             </div>
-            
-            <footer class="chat_footer">
-                <form method="POST" action="{% url 'myus:chat_message' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
-                    {% if user.is_authenticated %}
-                    <textarea name="text" rows="1" class="textarea_br" placeholder="メッセージ入力" required></textarea>
-                    <div class="chat_frame"></div>
-                    <div class="comment_input_chat">
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
-                        </button>
-                    </div>
-                    {% else %}
-                    <textarea name="text" rows="1" class="textarea_br" placeholder="チャットするにはログインが必要です！" disabled="disabled"></textarea>
-                    <div class="chat_frame"></div>
-                    <div class="comment_input_chat">
-                        <button type="submit" class="btn btn-secondary btn-sm" disabled>
-                            <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
-                        </button>
-                    </div>
-                    {% endif %}
-                </form>
-            </footer>
         </div>    
     {% else %}
     <h2 class="unpublished">非公開に設定されてます！</h2>
