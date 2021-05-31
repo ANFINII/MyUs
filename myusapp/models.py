@@ -435,6 +435,7 @@ class ChatModel(models.Model):
     like     = models.ManyToManyField(User, related_name='chat_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     Joined   = models.IntegerField(blank=True, null=True, default=0)
+    period   = models.DateField()
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
     
@@ -466,6 +467,7 @@ class CollaboModel(models.Model):
     tags     = models.ManyToManyField(Tag, blank=True)
     like     = models.ManyToManyField(User, related_name='collabo_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
+    period   = models.DateField()
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
     
@@ -523,3 +525,19 @@ class Comment(models.Model):
     
     class Meta:
         verbose_name_plural = '12 コメント'
+        
+class AdvertiseModel(models.Model):
+    author  = models.ForeignKey(User, on_delete=models.CASCADE)
+    url     = models.URLField()
+    title   = models.CharField(max_length=100)
+    content = models.TextField()
+    images  = models.ImageField(upload_to='images/', blank=True, null=True)
+    videos  = models.FileField(upload_to='videos/', blank=True, null=True)
+    publish = BooleanField(default=True)
+    read    = models.IntegerField(blank=True, null=True, default=0)
+    period  = models.DateField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name_plural = '13 広告'

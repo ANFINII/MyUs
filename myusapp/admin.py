@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
-from .models import User, SearchTag, Tag, FollowModel, Comment
-from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, TodoModel
+from .models import User, SearchTag, Tag, Comment, FollowModel, TodoModel, AdvertiseModel
+from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from import_export.admin import ImportExportModelAdmin
 
 # Admin用の管理画面    
@@ -222,7 +222,7 @@ class BlogModelAdmin(ImportExportModelAdmin):
 
 @admin.register(ChatModel)
 class ChatModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -232,7 +232,7 @@ class ChatModelAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'publish', 'tags', 'like', 'read', 'period')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'user_count', 'created', 'updated')})
     ]
     
@@ -250,7 +250,7 @@ class ChatModelAdmin(ImportExportModelAdmin):
     
 @admin.register(CollaboModel)
 class CollaboModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'period', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -260,7 +260,7 @@ class CollaboModelAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'publish', 'tags', 'like', 'read', 'period')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
     
@@ -291,6 +291,20 @@ class TodoModelAdmin(ImportExportModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
+
+@admin.register(AdvertiseModel)
+class AdvertiseModelAdmin(ImportExportModelAdmin):
+    list_display = ('id', 'author', 'url', 'title', 'content', 'publish', 'read', 'period', 'created', 'updated')
+    list_select_related = ('author',)
+    search_fields = ('title', 'author__nickname', 'created')
+    ordering = ('author', '-created')
+    readonly_fields = ('read', 'created', 'updated')
+    
+    # 詳細画面
+    fieldsets = [
+        ('編集項目', {'fields': ('author', 'url', 'title', 'content', 'images', 'videos', 'publish', 'period')}),
+        ('確認項目', {'fields': ('read', 'created', 'updated')})
+    ]
 
 # MyPgage用の管理画面
 class MyUsAdminSite(AdminSite):
@@ -602,7 +616,7 @@ class BlogModelAdminSite(admin.ModelAdmin):
 mymanage_site.register(BlogModel, BlogModelAdminSite)
 
 class ChatModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')
+    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -613,7 +627,7 @@ class ChatModelAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'publish', 'tags')}),
+        ('編集項目', {'fields': ('title', 'content', 'publish', 'tags', 'period')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')})
     ]
     
@@ -647,7 +661,7 @@ class ChatModelAdminSite(admin.ModelAdmin):
 mymanage_site.register(ChatModel, ChatModelAdminSite)
 
 class CollaboModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'period', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -658,7 +672,7 @@ class CollaboModelAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'publish', 'tags')}),
+        ('編集項目', {'fields': ('title', 'content', 'publish', 'tags', 'period')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 

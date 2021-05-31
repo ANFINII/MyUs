@@ -1,29 +1,29 @@
 /* z-indexは10~100の10段階とします。 */
 
 /* スクロールバー */
-body::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 9px;
     height: 9px;
 }
 
-body::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background: rgb(255, 255, 255);
 }
 
-body::-webkit-scrollbar-track:hover {
+::-webkit-scrollbar-track:hover {
     background: rgb(225, 225, 225);
 }
 
-body::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background: rgb(180, 180, 180);
     border-radius: 10px;
 }
 
-body::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
     background: rgb(150, 150, 150);
 }
 
-body::-webkit-scrollbar-thumb:active {
+::-webkit-scrollbar-thumb:active {
     background: rgb(120, 120, 120);
 }
 
@@ -1320,6 +1320,11 @@ header {
 
 .reply_aria_check:checked ~ .comment_aria_list_4 {
     display: block;
+}
+
+.advertise_aria h2 {
+    font-size: 16px;
+    margin: 0 0 12px 0;
 }
 
 /* ログイン必須 */
