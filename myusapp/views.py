@@ -20,7 +20,7 @@ from dateutil.relativedelta import relativedelta
 from itertools import islice, chain
 from functools import reduce
 from operator import and_
-from .models import Tag, SearchTag, Comment, FollowModel, TodoModel
+from .models import SearchTag, Tag, Comment, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm
 import re, string, random, json
@@ -387,42 +387,7 @@ class TagList(ListView):
     """TagList"""
     model = SearchTag
     template_name = 'base2.html'
-    
-@csrf_exempt
-def CommentForm(request):
-    """CommentForm"""
-    if request.method == 'POST':
-        text = request.POST.get('text')
-        obj_id = request.POST.get('id')
-        obj_path = request.POST.get('path')
-        if 'video_detail' in obj_path:
-            obj = VideoModel.objects.get(id=obj_id)
-        elif 'live_detail' in obj_path:
-            obj = LiveModel.objects.get(id=obj_id)
-        elif 'music_detail' in obj_path:
-            obj = MusicModel.objects.get(id=obj_id)
-        elif 'picture_detail' in obj_path:
-            obj = PictureModel.objects.get(id=obj_id)
-        elif 'blog_detail' in obj_path:
-            obj = BlogModel.objects.get(id=obj_id)
-        elif 'collabo_detail' in obj_path:
-            obj = CollaboModel.objects.get(id=obj_id)
-        elif 'todo_detail' in obj_path:
-            obj = TodoModel.objects.get(id=obj_id)
-        comment_obj = Comment(content_object=obj, text=text)
-        comment_obj.text = text
-        comment_obj.author_id = request.user.id
-        comment_obj.save()
-        context = {
-            'text': urlize_impl(linebreaks(comment_obj.text)),
-            'nickname': comment_obj.author.nickname,
-            'user_image': comment_obj.author.user_image.url,
-            'created': naturaltime(comment_obj.created),
-            'comment_count': obj.comments.all().count()
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
-        
+
 @csrf_exempt
 def LikeForm(request):
     """LikeForm"""
@@ -457,7 +422,77 @@ def LikeForm(request):
         }
         if request.is_ajax():
             return JsonResponse(context)
-        
+
+@csrf_exempt
+def CommentForm(request):
+    """CommentForm"""
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        obj_id = request.POST.get('id')
+        obj_path = request.POST.get('path')
+        if 'video_detail' in obj_path:
+            obj = VideoModel.objects.get(id=obj_id)
+        elif 'live_detail' in obj_path:
+            obj = LiveModel.objects.get(id=obj_id)
+        elif 'music_detail' in obj_path:
+            obj = MusicModel.objects.get(id=obj_id)
+        elif 'picture_detail' in obj_path:
+            obj = PictureModel.objects.get(id=obj_id)
+        elif 'blog_detail' in obj_path:
+            obj = BlogModel.objects.get(id=obj_id)
+        elif 'collabo_detail' in obj_path:
+            obj = CollaboModel.objects.get(id=obj_id)
+        elif 'todo_detail' in obj_path:
+            obj = TodoModel.objects.get(id=obj_id)
+        comment_obj = Comment(content_object=obj, text=text)
+        comment_obj.text = text
+        comment_obj.author_id = request.user.id
+        comment_obj.save()
+        context = {
+            'text': urlize_impl(linebreaks(comment_obj.text)),
+            'nickname': comment_obj.author.nickname,
+            'user_image': comment_obj.author.user_image.url,
+            'created': naturaltime(comment_obj.created),
+            'comment_count': obj.comments.all().count()
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+
+@csrf_exempt
+def ReplyForm(request):
+    """ReplyForm"""
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        obj_id = request.POST.get('id')
+        obj_path = request.POST.get('path')
+        if 'video_detail' in obj_path:
+            obj = VideoModel.objects.get(id=obj_id)
+        elif 'live_detail' in obj_path:
+            obj = LiveModel.objects.get(id=obj_id)
+        elif 'music_detail' in obj_path:
+            obj = MusicModel.objects.get(id=obj_id)
+        elif 'picture_detail' in obj_path:
+            obj = PictureModel.objects.get(id=obj_id)
+        elif 'blog_detail' in obj_path:
+            obj = BlogModel.objects.get(id=obj_id)
+        elif 'collabo_detail' in obj_path:
+            obj = CollaboModel.objects.get(id=obj_id)
+        elif 'todo_detail' in obj_path:
+            obj = TodoModel.objects.get(id=obj_id)
+        comment_obj = Comment(content_object=obj, text=text)
+        comment_obj.text = text
+        comment_obj.author_id = request.user.id
+        comment_obj.save()
+        context = {
+            'text': urlize_impl(linebreaks(comment_obj.text)),
+            'nickname': comment_obj.author.nickname,
+            'user_image': comment_obj.author.user_image.url,
+            'created': naturaltime(comment_obj.created),
+            'comment_count': obj.comments.all().count()
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+
 class Index(ListView):
     """Index処理、すべてのメディアmodelを表示"""
     model = SearchTag
@@ -766,6 +801,7 @@ class VideoDetail(DetailView):
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'video_list': VideoModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
+            'Advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
         })
         return context
     
@@ -1127,7 +1163,7 @@ class BlogDetail(DetailView):
 class ChatCreate(CreateView):
     """ChatCreate"""
     model = ChatModel
-    fields = ('title', 'content')
+    fields = ('title', 'content', 'period')
     template_name = 'chat/chat_create.html'
     
     def form_valid(self, form):
@@ -1213,6 +1249,29 @@ class ChatDetail(DetailView):
     
 @csrf_exempt
 def ChatMessage(request):
+    """ChatMessage"""
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        obj_id = request.POST.get('id')
+        obj = ChatModel.objects.get(id=obj_id)
+        comment_obj = Comment(content_object=obj, text=text)
+        comment_obj.text = text
+        comment_obj.author_id = request.user.id
+        comment_obj.save()
+        context = {
+            'text': urlize_impl(linebreaks(comment_obj.text)),
+            'nickname': comment_obj.author.nickname,
+            'user_image': comment_obj.author.user_image.url,
+            'created': comment_obj.created.strftime("%Y/%m/%d %H:%M"),
+            'user_count': obj.user_count(),
+            'comment_count': obj.comments.all().count()
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+
+@csrf_exempt
+def ChatReply(request):
+    """ChatReply"""
     if request.method == 'POST':
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
@@ -1236,7 +1295,7 @@ def ChatMessage(request):
 class CollaboCreate(CreateView):
     """CollaboCreate"""
     model = CollaboModel
-    fields = ('title', 'content')
+    fields = ('title', 'content', 'period')
     template_name = 'collabo/collabo_create.html'
     
     def form_valid(self, form):

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Index, Recommend, TagCreate, LikeForm, CommentForm
+from .views import Index, Recommend, TagCreate, LikeForm, CommentForm, ReplyForm
 from .views import Signup, Login, Logout, Withdrawal
 from .views import Profile, Profile_update, MyPage, MyPage_update, UserPage
 from .views import UserPolicy, Knowledge, FollowCreate, FollowList, FollowerList
@@ -8,7 +8,7 @@ from .views import LiveList, LiveCreate, LiveDetail
 from .views import MusicList, MusicCreate, MusicDetail
 from .views import PictureList, PictureCreate, PictureDetail
 from .views import BlogList, BlogCreate, BlogDetail
-from .views import ChatList, ChatCreate, ChatDetail, ChatMessage
+from .views import ChatList, ChatCreate, ChatDetail, ChatMessage, ChatReply
 from .views import CollaboList, CollaboCreate, CollaboDetail
 from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 
@@ -20,6 +20,7 @@ urlpatterns = [
     path('tag_create/', TagCreate, name='tag_create'),
     path('like_form/', LikeForm, name='like_form'),
     path('comment_form/', CommentForm, name='comment_form'),
+    path('reply_form/', ReplyForm, name='reply_form'),
 
     path('signup/', Signup, name='signup'),
     path('login/', Login, name='login'),
@@ -63,6 +64,7 @@ urlpatterns = [
     path('chat_create/', ChatCreate.as_view(), name='chat_create'),
     path('chat_detail/<int:pk>', ChatDetail.as_view(), name='chat_detail'),
     path('chat_detail/message', ChatMessage, name='chat_message'),
+    path('chat_detail/reply', ChatReply, name='chat_reply'),
     
     path('collabo/', CollaboList.as_view(), name='collabo_list'),
     path('collabo_create/', CollaboCreate.as_view(), name='collabo_create'),
