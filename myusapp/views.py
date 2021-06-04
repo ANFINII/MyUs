@@ -15,7 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaks, linebreaksbr
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, FormView
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from itertools import islice, chain
 from functools import reduce
@@ -23,7 +23,7 @@ from operator import and_
 from .models import SearchTag, Tag, Comment, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm
-import re, string, random, json
+import re, string, random, json, datetime
 
 # Create your views here.
 
@@ -1231,8 +1231,13 @@ class ChatDetail(DetailView):
             liked = True
         if follow.exists():
             followed = True
+        if self.object.period < datetime.date.today():
+            is_period = True
+        else:
+            is_period = False
         context['liked'] = liked
         context['followed'] = followed
+        context['is_period'] = is_period
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({

@@ -53,6 +53,7 @@
                         <span>{{ object.total_like|intcomma }}</span>
                     </div>
                     {% endif %}
+                    <time>期間 {{ object.period|date:'Y/m/d' }}</time>
                 </div>
                 
                 <div class="chat_section_content">
@@ -141,7 +142,15 @@
 
                 <footer class="chat_footer_main" id="footer">
                     <form method="POST" action="{% url 'myus:chat_message' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
-                        {% if user.is_authenticated %}
+                        {% if is_period %}
+                        <textarea name="text" rows="1" class="textarea_br" placeholder="チャット期間が過ぎています！" disabled="disabled"></textarea>
+                        <div class="chat_frame chat_frame_color"></div>
+                        <div class="comment_input_chat">
+                            <button type="submit" class="btn btn-secondary btn-sm" disabled>
+                                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+                            </button>
+                        </div>
+                        {% elif user.is_authenticated %}
                         <textarea name="text" rows="1" class="textarea_br" placeholder="メッセージ入力" required></textarea>
                         <div class="chat_frame"></div>
                         <div class="comment_input_chat">
@@ -151,7 +160,7 @@
                         </div>
                         {% else %}
                         <textarea name="text" rows="1" class="textarea_br" placeholder="チャットするにはログインが必要です！" disabled="disabled"></textarea>
-                        <div class="chat_frame"></div>
+                        <div class="chat_frame chat_frame_color"></div>
                         <div class="comment_input_chat">
                             <button type="submit" class="btn btn-secondary btn-sm" disabled>
                                 <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
@@ -163,6 +172,7 @@
             </div>
 
             <div class="chat_section_method">
+            {% if comment.id == comment.parent.id %}
                 {% for reply in reply_list %}
                 <div class="comment_aria_list">
                     <a href="{% url 'myus:userpage' reply.author.nickname %}">
@@ -178,8 +188,16 @@
 
                 <footer class="chat_footer_method">
                     <form method="POST" action="{% url 'myus:chat_message' %}" id="reply_form" obj-id="{{ object.id }}">{% csrf_token %}
-                        {% if user.is_authenticated %}
-                        <textarea name="text2" rows="1" class="textarea_br" placeholder="メッセージ入力" required></textarea>
+                        {% if is_period %}
+                        <textarea name="text" rows="1" class="textarea_br" placeholder="チャット期間が過ぎています！" disabled="disabled"></textarea>
+                        <div class="chat_frame chat_frame_color"></div>
+                        <div class="comment_input_chat">
+                            <button type="submit" class="btn btn-secondary btn-sm" disabled>
+                                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+                            </button>
+                        </div>
+                        {% elif user.is_authenticated %}
+                        <textarea name="text2" rows="1" class="textarea_br" placeholder="スレッド返信" required></textarea>
                         <div class="chat_frame"></div>
                         <div class="comment_input_chat">
                             <button type="submit" class="btn btn-primary btn-sm">
@@ -188,7 +206,7 @@
                         </div>
                         {% else %}
                         <textarea name="text" rows="1" class="textarea_br" placeholder="チャットするにはログインが必要です！" disabled="disabled"></textarea>
-                        <div class="chat_frame"></div>
+                        <div class="chat_frame chat_frame_color"></div>
                         <div class="comment_input_chat">
                             <button type="submit" class="btn btn-secondary btn-sm" disabled>
                                 <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
@@ -197,6 +215,7 @@
                         {% endif %}
                     </form>
                 </footer>
+            {% endif %}
             </div>
         </div>    
     {% else %}

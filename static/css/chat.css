@@ -401,6 +401,10 @@ hr {
     border-bottom: none;
 }
 
+.chat_frame_color {
+    background: rgba(239, 239, 239, 0.4)
+}
+
 .comment_input_chat {
     display: grid;
     grid-template-columns: auto;
