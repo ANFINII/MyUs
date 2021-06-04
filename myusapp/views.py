@@ -388,6 +388,18 @@ class TagList(ListView):
     model = SearchTag
     template_name = 'base2.html'
 
+# LikeForm
+models_like_dict = {
+    'video_detail': VideoModel,
+    'live_detail': LiveModel,
+    'music_detail': MusicModel,
+    'picture_detail': PictureModel,
+    'blog_detail': BlogModel,
+    'collabo_detail': CollaboModel,
+    'chat_detail': ChatModel,
+    'collabo_detail': CollaboModel,
+}
+
 @csrf_exempt
 def LikeForm(request):
     """LikeForm"""
@@ -395,20 +407,9 @@ def LikeForm(request):
         user = request.user
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        if 'video_detail' in obj_path:
-            obj = get_object_or_404(VideoModel, id=obj_id)
-        elif 'live_detail' in obj_path:
-            obj = get_object_or_404(LiveModel, id=obj_id)
-        elif 'music_detail' in obj_path:
-            obj = get_object_or_404(MusicModel, id=obj_id)
-        elif 'picture_detail' in obj_path:
-            obj = get_object_or_404(PictureModel, id=obj_id)
-        elif 'blog_detail' in obj_path:
-            obj = get_object_or_404(BlogModel, id=obj_id)
-        elif 'chat_detail' in obj_path:
-            obj = get_object_or_404(ChatModel, id=obj_id)
-        elif 'collabo_detail' in obj_path:
-            obj = get_object_or_404(CollaboModel, id=obj_id)
+        for key, value in models_like_dict.items():
+            if key in obj_path:
+                obj = get_object_or_404(value, id=obj_id)
         liked = False
         if obj.like.filter(id=user.id).exists():
             liked = False
@@ -423,6 +424,17 @@ def LikeForm(request):
         if request.is_ajax():
             return JsonResponse(context)
 
+# CommentForm & ReplyForm
+models_comment_dict = {
+    'video_detail': VideoModel,
+    'live_detail': LiveModel,
+    'music_detail': MusicModel,
+    'picture_detail': PictureModel,
+    'blog_detail': BlogModel,
+    'collabo_detail': CollaboModel,
+    'todo_detail': TodoModel,
+}
+
 @csrf_exempt
 def CommentForm(request):
     """CommentForm"""
@@ -430,20 +442,9 @@ def CommentForm(request):
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        if 'video_detail' in obj_path:
-            obj = VideoModel.objects.get(id=obj_id)
-        elif 'live_detail' in obj_path:
-            obj = LiveModel.objects.get(id=obj_id)
-        elif 'music_detail' in obj_path:
-            obj = MusicModel.objects.get(id=obj_id)
-        elif 'picture_detail' in obj_path:
-            obj = PictureModel.objects.get(id=obj_id)
-        elif 'blog_detail' in obj_path:
-            obj = BlogModel.objects.get(id=obj_id)
-        elif 'collabo_detail' in obj_path:
-            obj = CollaboModel.objects.get(id=obj_id)
-        elif 'todo_detail' in obj_path:
-            obj = TodoModel.objects.get(id=obj_id)
+        for key, value in models_comment_dict.items():
+            if key in obj_path:
+                obj = value.objects.get(id=obj_id)
         comment_obj = Comment(content_object=obj, text=text)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
@@ -465,20 +466,9 @@ def ReplyForm(request):
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        if 'video_detail' in obj_path:
-            obj = VideoModel.objects.get(id=obj_id)
-        elif 'live_detail' in obj_path:
-            obj = LiveModel.objects.get(id=obj_id)
-        elif 'music_detail' in obj_path:
-            obj = MusicModel.objects.get(id=obj_id)
-        elif 'picture_detail' in obj_path:
-            obj = PictureModel.objects.get(id=obj_id)
-        elif 'blog_detail' in obj_path:
-            obj = BlogModel.objects.get(id=obj_id)
-        elif 'collabo_detail' in obj_path:
-            obj = CollaboModel.objects.get(id=obj_id)
-        elif 'todo_detail' in obj_path:
-            obj = TodoModel.objects.get(id=obj_id)
+        for key, value in models_comment_dict.items():
+            if key in obj_path:
+                obj = value.objects.get(id=obj_id)
         comment_obj = Comment(content_object=obj, text=text)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
@@ -800,8 +790,8 @@ class VideoDetail(DetailView):
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'video_list': VideoModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
-            'Advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
         })
         return context
     
@@ -889,6 +879,7 @@ class LiveDetail(DetailView):
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'live_list': LiveModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
@@ -978,6 +969,7 @@ class MusicDetail(DetailView):
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'music_list': MusicModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
@@ -1066,6 +1058,7 @@ class PictureDetail(DetailView):
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'picture_list': PictureModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
@@ -1155,6 +1148,7 @@ class BlogDetail(DetailView):
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'blog_list': BlogModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
@@ -1375,6 +1369,7 @@ class CollaboDetail(DetailView):
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'collabo_list': CollaboModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
@@ -1453,6 +1448,7 @@ class TodoDetail(DetailView):
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'todo_list': TodoModel.objects.filter(author_id=self.request.user.id).exclude(title=obj),
         })
         return context
