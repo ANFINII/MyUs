@@ -1165,8 +1165,15 @@ header {
     justify-self: end;
 }
 
-.bi-caret-right-fill {
-    margin: 0 0 2px 0;
+.comment_button {
+    padding: .15rem 2rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+}
+
+.bi-caret-right-fill::before {
+    line-height: 1.2;
 }
 
 /* リプライinput */
