@@ -61,6 +61,16 @@ $(document).ready(function() {
             console.log(response);
         })
     });
+
+    // Commentクリック時の処理を定義
+    $('.click_id').on('click', function(event) {
+        const id = $(this).attr('for');
+        const num_id = $(this).attr('form-id');
+        const comment_aria_check_id_1 = document.getElementsByClassName('get-id-1')[0];
+        const comment_aria_check_id_2 = document.getElementsByClassName('get-id-2')[0];
+        comment_aria_check_id_1.setAttribute('id', id);
+        comment_aria_check_id_2.setAttribute('for', id);
+    });
     
     // 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
     $('form').submit(function(event) {
@@ -88,7 +98,9 @@ $(document).ready(function() {
                     '</div>' +
                     '<div class="comment_aria_list_2">' + response.text + '</div>' +
                 '</label>';
-            $("#comment_form")[0].reset();
+            let obj = document.getElementById('comment_aria_add');
+            obj.scrollTop = obj.scrollHeight;
+            $('#comment_form')[0].reset();
             $('#user_count').html(response.user_count);
             $('#comment_count').html(response.comment_count);
             $('#comment_aria_add').append(comment_aria_list_add);

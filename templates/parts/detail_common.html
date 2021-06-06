@@ -81,14 +81,14 @@
             <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
         </a>
         <textarea name="text" rows="1" class="textarea_br" placeholder="コメント入力" required></textarea>
-        <button type="submit" class="btn btn-primary btn-sm">
-            <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+        <button type="submit" class="btn btn-primary btn-sm comment_button" title="送信">
+            <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
         </button>
         {% else %}
         <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_comment">
         <textarea name="text" rows="1" class="textarea_br" placeholder="コメントするにはログインが必要です！" disabled></textarea>
-        <button type="submit" class="btn btn-secondary btn-sm" disabled>
-            <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+        <button type="submit" class="btn btn-secondary btn-sm" title="送信" disabled>
+            <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
         </button>
         {% endif %}
     </div>
@@ -126,14 +126,14 @@
                 <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_reply">
             </a>
             <textarea name="text2" rows="1" class="textarea_br" placeholder="返信コメント入力" required></textarea>
-            <button type="submit" class="btn btn-primary btn-sm">
-                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+            <button type="submit" class="btn btn-primary btn-sm comment_button" title="送信">
+                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
             </button>
             {% else %}
             <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
             <textarea name="text2" rows="1" class="textarea_br" placeholder="返信コメントするにはログインが必要です！" disabled></textarea>
-            <button type="submit" class="btn btn-secondary btn-sm" disabled>
-                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
+            <button type="submit" class="btn btn-secondary btn-sm" title="送信" disabled>
+                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
             </button>
             {% endif %}
         </div>
