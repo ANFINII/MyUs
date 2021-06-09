@@ -163,11 +163,11 @@ class VideoQuerySet(models.QuerySet):
         qs = self
         if query is not None:
             or_lookup = (
-                        Q(title__icontains=query) |
-                        Q(tags__tag__icontains=query) |
-                        Q(author__nickname__icontains=query) |
-                        Q(content__icontains=query)
-                        )
+                Q(title__icontains=query) |
+                Q(tags__tag__icontains=query) |
+                Q(author__nickname__icontains=query) |
+                Q(content__icontains=query)
+            )
             qs = qs.filter(or_lookup).distinct()
         return qs
     
@@ -212,11 +212,11 @@ class LiveQuerySet(models.QuerySet):
         qs = self
         if query is not None:
             or_lookup = (
-                        Q(title__icontains=query) |
-                        Q(tags__tag__icontains=query) |
-                        Q(author__nickname__icontains=query) |
-                        Q(content__icontains=query)
-                        )
+                Q(title__icontains=query) |
+                Q(tags__tag__icontains=query) |
+                Q(author__nickname__icontains=query) |
+                Q(content__icontains=query)
+            )
             qs = qs.filter(or_lookup).distinct()
         return qs
     
@@ -261,12 +261,12 @@ class MusicQuerySet(models.QuerySet):
         qs = self
         if query is not None:
             or_lookup = (
-                        Q(title__icontains=query) |
-                        Q(tags__tag__icontains=query) |
-                        Q(author__nickname__icontains=query) |
-                        Q(content__icontains=query) |
-                        Q(lyrics__icontains=query)
-                        )
+                Q(title__icontains=query) |
+                Q(tags__tag__icontains=query) |
+                Q(author__nickname__icontains=query) |
+                Q(content__icontains=query) |
+                Q(lyrics__icontains=query)
+            )
             qs = qs.filter(or_lookup).distinct()
         return qs
     
@@ -311,11 +311,11 @@ class PictureQuerySet(models.QuerySet):
         qs = self
         if query is not None:
             or_lookup = (
-                        Q(title__icontains=query) |
-                        Q(tags__tag__icontains=query) |
-                        Q(author__nickname__icontains=query) |
-                        Q(content__icontains=query)
-                        )
+                Q(title__icontains=query) |
+                Q(tags__tag__icontains=query) |
+                Q(author__nickname__icontains=query) |
+                Q(content__icontains=query)
+            )
             qs = qs.filter(or_lookup).distinct()
         return qs
     
@@ -359,12 +359,12 @@ class BlogQuerySet(models.QuerySet):
         qs = self
         if query is not None:
             or_lookup = (
-                        Q(title__icontains=query) |
-                        Q(tags__tag__icontains=query) |
-                        Q(author__nickname__icontains=query) |
-                        Q(content__icontains=query) |
-                        Q(richtext__icontains=query)
-                        )
+                Q(title__icontains=query) |
+                Q(tags__tag__icontains=query) |
+                Q(author__nickname__icontains=query) |
+                Q(content__icontains=query) |
+                Q(richtext__icontains=query)
+            )
             qs = qs.filter(or_lookup).distinct()
         return qs
     
@@ -409,11 +409,11 @@ class ChatQuerySet(models.QuerySet):
         qs = self
         if query is not None:
             or_lookup = (
-                        Q(title__icontains=query) |
-                        Q(tags__tag__icontains=query) |
-                        Q(author__nickname__icontains=query) |
-                        Q(content__icontains=query)
-                        )
+                Q(title__icontains=query) |
+                Q(tags__tag__icontains=query) |
+                Q(author__nickname__icontains=query) |
+                Q(content__icontains=query)
+            )
             qs = qs.filter(or_lookup).distinct()
         return qs
     
