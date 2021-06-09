@@ -166,10 +166,7 @@ def Login(request):
         try:
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect('myus:index')
-                if user.is_admin:
+                if user.is_active or user.is_admin:
                     login(request, user)
                     return redirect('myus:index')
                 else:
@@ -195,14 +192,12 @@ def Logout(request):
 # 利用規約
 def UserPolicy(request):
     """利用規約"""
-    object_UserPolicy = User.objects.all()
-    return render(request, 'common/userpolicy.html', {'object_UserPolicy':object_UserPolicy})
+    return render(request, 'common/userpolicy.html')
 
 # Knowledge Base
 def Knowledge(request):
     """Knowledge Base"""
-    object_knowledge = User.objects.all()
-    return render(request, 'common/knowledge.html', {'object_knowledge':object_knowledge})
+    return render(request, 'common/knowledge.html')
 
 # Withdrawal
 EXPIRED_SECONDS = 60
@@ -254,7 +249,7 @@ class Withdrawal(View):
                 
 def Profile(request):
     """アカウント設定"""
-    object_profile = User.objects.all()
+    object_profile = User.objects.get(id=request.user.id)
     return render(request, 'registration/profile.html', {'object_profile':object_profile})
 
 class Profile_update(UpdateView):
@@ -329,7 +324,7 @@ class Profile_update(UpdateView):
     
 def MyPage(request):
     """Myページ遷移"""
-    object_profile = User.objects.all()
+    object_profile = User.objects.get(id=request.user.id)
     return render(request, 'registration/mypage.html', {'object_profile':object_profile})
     
 class MyPage_update(UpdateView):
@@ -1290,6 +1285,18 @@ def ChatReply(request):
         if request.is_ajax():
             return JsonResponse(context)
             
+@csrf_exempt
+def ChatThread(request):
+    """ChatThread"""
+    if request.method == 'POST':
+        form_id = request.POST.get('form_id')
+        context = {
+            'form_id': form_id,
+        }
+        if request.is_ajax():
+            # return JsonResponse(context)
+            return HttpResponse(context)
+
 # Collabo
 class CollaboCreate(CreateView):
     """CollaboCreate"""
@@ -1368,8 +1375,13 @@ class CollaboDetail(DetailView):
             liked = True
         if follow.exists():
             followed = True
+        if self.object.period < datetime.date.today():
+            is_period = True
+        else:
+            is_period = False
         context['liked'] = liked
         context['followed'] = followed
+        context['is_period'] = is_period
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
