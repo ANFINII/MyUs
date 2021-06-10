@@ -14,7 +14,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 # Create your models here.
 
 class UserManager(BaseUserManager):
-    """ユーザーマネージャー"""
+    """User Manager"""
     def create_user(self, username, email, password=None, **extra_fields):
         if not username:
             raise ValueError('Users must have an username')
@@ -34,11 +34,11 @@ class UserManager(BaseUserManager):
         return user
     
 class User(AbstractBaseUser, PermissionsMixin):
-    """カスタムユーザーモデル"""
-    user_image      = models.ImageField(upload_to='users/', default='../static/img/user_icon.png', blank=True, null=True)
-    email           = models.EmailField(max_length=120, unique=True)
-    username        = models.CharField(max_length=30, unique=True)
-    nickname        = models.CharField(max_length=60, unique=True)
+    """Custom UserModel"""
+    user_image      = models.ImageField(upload_to='users/user_images', default='../static/img/user_icon.png', blank=True, null=True)
+    email           = models.EmailField(max_length=120, unique=True, db_index=True)
+    username        = models.CharField(max_length=30, unique=True, db_index=True)
+    nickname        = models.CharField(max_length=60, unique=True, db_index=True)
     full_name       = models.CharField(max_length=60, blank=True)
     last_name       = models.CharField(max_length=30, blank=True)
     first_name      = models.CharField(max_length=30, blank=True)
@@ -66,7 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined     = models.DateTimeField(_('date joined'), default=timezone.now)
     
     # Myページ用フィールド
-    mypage_image    = models.ImageField(upload_to='users/', default='../static/img/MyUs_banner.png', blank=True, null=True)
+    mypage_image    = models.ImageField(upload_to='users/mypage_images', default='../static/img/MyUs_banner.png', blank=True, null=True)
     mypage_email    = models.EmailField(max_length=120, blank=True, null=True, default='abc@gmail.com')
     content         = models.TextField(blank=True)
     follower_count  = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
@@ -125,7 +125,7 @@ def mypage_image(self):
         return self.mypage_image.url
     
 class FollowModel(models.Model):
-    """ここにメソッドの説明を記述する"""
+    """FollowModel"""
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following', verbose_name='follow')
     created = models.DateTimeField(auto_now_add=True)
@@ -137,6 +137,7 @@ class FollowModel(models.Model):
         verbose_name_plural = '09 フォロー'
         
 class SearchTag(models.Model):
+    """SearchTag"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     sequence = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=20)
     searchtag = models.CharField(max_length=12, null=True)
@@ -149,6 +150,7 @@ class SearchTag(models.Model):
         verbose_name_plural = '10 検索タグ'
         
 class Tag(models.Model):
+    """Tag"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     tag = models.CharField(max_length=12, null=True)
     
@@ -179,12 +181,12 @@ class VideoManager(models.Manager):
         return self.get_queryset().search(query=query)
     
 class VideoModel(models.Model):
-    """ここにメソッドの説明を記述する"""
+    """VideoModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    images   = models.ImageField(upload_to='images/')
-    videos   = models.FileField(upload_to='videos/')
+    images   = models.ImageField(upload_to='images/video_images')
+    videos   = models.FileField(upload_to='videos/video_videos')
     comments = GenericRelation('Comment')
     publish  = BooleanField(default=True)
     tags     = models.ManyToManyField(Tag, blank=True)
@@ -228,12 +230,12 @@ class LiveManager(models.Manager):
         return self.get_queryset().search(query=query)
     
 class LiveModel(models.Model):
-    """ここにメソッドの説明を記述する"""
+    """LiveModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    images   = models.ImageField(upload_to='images/')
-    lives    = models.FileField(upload_to='lives/')
+    images   = models.ImageField(upload_to='images/live_images')
+    lives    = models.FileField(upload_to='videos/live_videos')
     comments = GenericRelation('Comment')
     publish  = BooleanField(default=True)
     tags     = models.ManyToManyField(Tag, blank=True)
@@ -278,7 +280,7 @@ class MusicManager(models.Manager):
         return self.get_queryset().search(query=query)
     
 class MusicModel(models.Model):
-    """ここにメソッドの説明を記述する"""
+    """MusicModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -327,11 +329,11 @@ class PictureManager(models.Manager):
         return self.get_queryset().search(query=query)
     
 class PictureModel(models.Model):
-    """ここにメソッドの説明を記述する"""
+    """PictureModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    images   = models.ImageField(upload_to='images/')
+    images   = models.ImageField(upload_to='images/picture_images')
     comments = GenericRelation('Comment')
     publish  = BooleanField(default=True)
     tags     = models.ManyToManyField(Tag, blank=True)
@@ -376,11 +378,11 @@ class BlogManager(models.Manager):
         return self.get_queryset().search(query=query)
     
 class BlogModel(models.Model):
-    """ここにメソッドの説明を記述する"""
+    """BlogModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    images   = models.ImageField(upload_to='images/')
+    images   = models.ImageField(upload_to='images/blog_images')
     richtext = RichTextUploadingField(blank=True, null=True)
     comments = GenericRelation('Comment')
     publish  = BooleanField(default=True)
@@ -425,7 +427,7 @@ class ChatManager(models.Manager):
         return self.get_queryset().search(query=query)
     
 class ChatModel(models.Model):
-    """ここにメソッドの説明を記述する"""
+    """ChatModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -458,7 +460,7 @@ class ChatModel(models.Model):
         verbose_name_plural = '06 Chat'
         
 class CollaboModel(models.Model):
-    """ここにメソッドの説明を記述する"""
+    """CollaboModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -485,6 +487,7 @@ class CollaboModel(models.Model):
         
 PRIORITY = (('danger','高'),('success','普通'),('info','低'))
 class TodoModel(models.Model):
+    """TodoModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -507,6 +510,7 @@ class TodoModel(models.Model):
         verbose_name_plural = '08 ToDo'
         
 class Comment(models.Model):
+    """Comment"""
     author         = models.ForeignKey(User, on_delete=models.CASCADE)
     parent         = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)
     text           = models.TextField()
@@ -527,12 +531,13 @@ class Comment(models.Model):
         verbose_name_plural = '12 コメント'
         
 class AdvertiseModel(models.Model):
+    """AdvertiseModel"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     url     = models.URLField()
     title   = models.CharField(max_length=100)
     content = models.TextField()
-    images  = models.ImageField(upload_to='images/', blank=True, null=True)
-    videos  = models.FileField(upload_to='videos/', blank=True, null=True)
+    images  = models.ImageField(upload_to='images/advertise_images', blank=True, null=True)
+    videos  = models.FileField(upload_to='videos/advertise_videos', blank=True, null=True)
     publish = BooleanField(default=True)
     read    = models.IntegerField(blank=True, null=True, default=0)
     period  = models.DateField()
