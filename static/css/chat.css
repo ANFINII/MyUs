@@ -416,5 +416,5 @@ hr {
 }
 
 .textarea_br:focus ~ .comment_input_chat {
-    background-color: rgb(235, 235, 235);
+    background-color: rgb(235, 240, 255);
 }
