@@ -358,7 +358,7 @@ hr {
     grid-template-columns: auto;
     grid-template-rows: auto auto;
     margin: 0;
-    padding: 0 7px 0 16px;
+    padding: 16px 7px 0 16px;
     min-height: 80px;
     background-color: rgb(255, 255, 255);
 }
