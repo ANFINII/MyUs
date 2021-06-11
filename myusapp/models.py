@@ -2,13 +2,13 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.fields import BooleanField
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.core.mail import send_mail
+from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.urls import reverse
-from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
-from django.core.mail import send_mail
 from ckeditor_uploader.fields import RichTextUploadingField
 
 # Create your models here.

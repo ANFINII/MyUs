@@ -5,25 +5,24 @@ from django.contrib import messages
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.contrib.contenttypes.models import ContentType
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
-from django.http import HttpResponse, JsonResponse, QueryDict, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, QueryDict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.html import urlize as urlize_impl
 from django.db.models import Q, Max, Min, Avg, Count, F, Value
-from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaks, linebreaksbr
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, FormView
-from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
-from itertools import islice, chain
+from itertools import chain, islice 
 from functools import reduce
 from operator import and_
 from .models import SearchTag, Tag, Comment, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm
-import re, string, random, json, datetime
+import re, datetime, string, random, json
 
 # Create your views here.
 
@@ -525,7 +524,7 @@ class Recommend(ListView):
         # 急上昇はcreatedが1日以内かつscoreが10000以上の上位8レコード
         # テストはcreatedが100日以内かつscoreが100以上の上位8レコード
         # socreはread + like*10
-        aggregation_date = datetime.today() - timedelta(days=100)
+        aggregation_date = datetime.datetime.today() - datetime.timedelta(days=100)
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],

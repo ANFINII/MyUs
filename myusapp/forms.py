@@ -4,7 +4,6 @@ from django.contrib.admin import widgets
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from .models import SearchTag
-import re
 
 User = get_user_model()
 
