@@ -124,7 +124,7 @@ def Signup(request):
 
         if year and month and day:
             try:
-                birthday = date(year=int(year), month=int(month), day=int(day)).isoformat()
+                birthday = datetime.date(year=int(year), month=int(month), day=int(day)).isoformat()
             except ValueError:
                 messages.error(request, str(year)+'年'+str(month)+'月'+str(day)+'日'+'は存在しない日付です!')
                 return render(request, 'registration/signup.html')
@@ -145,9 +145,9 @@ def Signup(request):
                     user.month = month
                     user.day = day
                     days_in_year = 365.2425
-                    birthday = date(year=int(year), month=int(month), day=int(day))
+                    birthday = datetime.date(year=int(year), month=int(month), day=int(day))
                     user.birthday = birthday.isoformat()
-                    user.age = int((date.today() - birthday).days / days_in_year)
+                    user.age = int((datetime.date.today() - birthday).days / days_in_year)
                     
                     user.save()
                     messages.success(request, '登録が完了しました!')
@@ -248,7 +248,7 @@ class Withdrawal(View):
                 
 def Profile(request):
     """アカウント設定"""
-    object_profile = User.objects.get(id=request.user.id)
+    object_profile = User.objects.filter(id=request.user.id)
     return render(request, 'registration/profile.html', {'object_profile':object_profile})
 
 class Profile_update(UpdateView):
@@ -292,10 +292,10 @@ class Profile_update(UpdateView):
             profile.year = self.request.user.year
             profile.month = self.request.user.month
             profile.day = self.request.user.day
-            birthday = date(year=int(profile.year), month=int(profile.month), day=int(profile.day))
+            birthday = datetime.date(year=int(profile.year), month=int(profile.month), day=int(profile.day))
             profile.birthday = birthday.isoformat()
             days_in_year = 365.2425
-            profile.age = int((date.today() - birthday).days / days_in_year)
+            profile.age = int((datetime.date.today() - birthday).days / days_in_year)
 
             profile.save()
             return super(Profile_update, self).form_valid(form)
@@ -323,7 +323,7 @@ class Profile_update(UpdateView):
     
 def MyPage(request):
     """Myページ遷移"""
-    object_profile = User.objects.get(id=request.user.id)
+    object_profile = User.objects.filter(id=request.user.id)
     return render(request, 'registration/mypage.html', {'object_profile':object_profile})
     
 class MyPage_update(UpdateView):
@@ -580,7 +580,7 @@ class UserPage(ListView):
             self.count = len(result)
             return result
         return VideoModel.objects.none()
-    
+        
 # Follow
 @csrf_exempt
 def FollowCreate(request, nickname):
@@ -1229,11 +1229,13 @@ class ChatDetail(DetailView):
             is_period = True
         else:
             is_period = False
+        form_id = self.request.POST.get('form_id')
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
+        context['form_id'] = form_id
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
@@ -1293,8 +1295,8 @@ def ChatThread(request):
             'form_id': form_id,
         }
         if request.is_ajax():
-            # return JsonResponse(context)
-            return HttpResponse(context)
+            return JsonResponse(context)
+            # return HttpResponse(context)
 
 # Collabo
 class CollaboCreate(CreateView):
