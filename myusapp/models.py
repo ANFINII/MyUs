@@ -436,7 +436,7 @@ class ChatModel(models.Model):
     tags     = models.ManyToManyField(Tag, blank=True)
     like     = models.ManyToManyField(User, related_name='chat_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
-    Joined   = models.IntegerField(blank=True, null=True, default=0)
+    joined   = models.IntegerField(blank=True, null=True, default=0)
     period   = models.DateField()
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
@@ -453,8 +453,8 @@ class ChatModel(models.Model):
         return self.comments.all().count()
     
     def user_count(self):
-        self.Joined = self.comments.order_by('author').distinct().values_list('author').count()
-        return self.Joined
+        self.joined = self.comments.order_by('author').distinct().values_list('author').count()
+        return self.joined
     
     class Meta:
         verbose_name_plural = '06 Chat'
