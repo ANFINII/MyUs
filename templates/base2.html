@@ -362,7 +362,7 @@
 {% endblock nav %}
 
 {% block tagnav %}
-<form method="POST" action="{% url 'myus:tag_create' %}" id="tag_form">{% csrf_token %}
+<form method="POST" action="{% url 'myus:searchtag_create' %}" id="tag_form">{% csrf_token %}
     <nav class="tag_nav">
         <input type="checkbox" id="tag_add" class="tag_menu">
 

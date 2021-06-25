@@ -19,7 +19,7 @@ from dateutil.relativedelta import relativedelta
 from itertools import chain, islice 
 from functools import reduce
 from operator import and_
-from .models import SearchTag, Tag, Comment, FollowModel, TodoModel, AdvertiseModel
+from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm
 import re, datetime, string, random, json
@@ -59,7 +59,7 @@ def has_tag(text):
         return True
     return False
 
-def Signup(request):
+def signup_form(request):
     """サインアップ処理"""
     if request.method == 'POST':
         username_form = request.POST['username']
@@ -157,7 +157,7 @@ def Signup(request):
                     return render(request, 'registration/signup.html')
     return render(request, 'registration/signup.html')
 
-def Login(request):
+def login_form(request):
     """ログイン処理"""
     if request.method == 'POST':
         username = request.POST['username']
@@ -183,18 +183,18 @@ def Login(request):
     return render(request, 'registration/login.html')
 
 @login_required
-def Logout(request):
+def logout_form(request):
     """ログアウト処理"""
     logout(request)
     return redirect('myus:login')
 
 # 利用規約
-def UserPolicy(request):
+def userpolicy(request):
     """利用規約"""
     return render(request, 'common/userpolicy.html')
 
 # Knowledge Base
-def Knowledge(request):
+def knowledge(request):
     """Knowledge Base"""
     return render(request, 'common/knowledge.html')
 
@@ -215,7 +215,7 @@ class Withdrawal(View):
         context['expired_seconds'] = EXPIRED_SECONDS
         if token:
             try:
-                unsigned_token = self.timestamp_signer.unsign(token, max_age=timedelta(seconds=EXPIRED_SECONDS))
+                unsigned_token = self.timestamp_signer.unsign(token, max_age=datetime.timedelta(seconds=EXPIRED_SECONDS))
                 context['message'] = '有効なURLです'
                 return render(request, 'registration/withdrawal_confirm.html', context)
             except SignatureExpired:
@@ -246,12 +246,12 @@ class Withdrawal(View):
                 messages.error(self.request, 'パスワードが違います!')
                 return redirect('myus:withdrawal')
                 
-def Profile(request):
+def profile(request):
     """アカウント設定"""
     object_profile = User.objects.filter(id=request.user.id)
     return render(request, 'registration/profile.html', {'object_profile':object_profile})
 
-class Profile_update(UpdateView):
+class ProfileUpdate(UpdateView):
     """アカウント更新"""
     model = User
     fields = ('user_image', 'username', 'email', 'nickname', 'last_name', 'first_name', 'gender', 'phone', 'year', 'month', 'day', 'location', 'profession', 'introduction')
@@ -259,7 +259,7 @@ class Profile_update(UpdateView):
     success_url = reverse_lazy('myus:profile')
     
     def get_context_data(self, **kwargs):
-        context = super(Profile_update, self).get_context_data(**kwargs)
+        context = super(ProfileUpdate, self).get_context_data(**kwargs)
         context['usergender'] = {'gender':{'0':'男性', '1':'女性', '2':'秘密'}}
         return context
     
@@ -298,7 +298,7 @@ class Profile_update(UpdateView):
             profile.age = int((datetime.date.today() - birthday).days / days_in_year)
 
             profile.save()
-            return super(Profile_update, self).form_valid(form)
+            return super(ProfileUpdate, self).form_valid(form)
         except ValueError:
             messages.error(self.request, str(self.request.user.year)+'年'+str(self.request.user.month)+'月'+str(self.request.user.day)+'日'+'は存在しない日付です!')
             return super().form_invalid(form)
@@ -321,12 +321,12 @@ class Profile_update(UpdateView):
     def get_object(self):
         return self.request.user
     
-def MyPage(request):
+def mypage(request):
     """Myページ遷移"""
     object_profile = User.objects.filter(id=request.user.id)
     return render(request, 'registration/mypage.html', {'object_profile':object_profile})
     
-class MyPage_update(UpdateView):
+class MyPageUpdate(UpdateView):
     """Myページ更新"""
     model = User
     fields = ('mypage_image', 'mypage_email', 'content')
@@ -344,7 +344,7 @@ class MyPage_update(UpdateView):
                 return super().form_invalid(form)
             
             userpage.save()
-            return super(MyPage_update, self).form_valid(form)
+            return super(MyPageUpdate, self).form_valid(form)
         except ValueError:
             messages.error(self.request, '更新できませんでした!')
             return super().form_invalid(form)
@@ -365,8 +365,13 @@ class MyPage_update(UpdateView):
         return self.request.user
     
 # SearchTag
-def TagCreate(request):
-    """TagCreate"""
+class SearchTagList(ListView):
+    """SearchTagList"""
+    model = SearchTagModel
+    template_name = 'base2.html'
+
+def searchtag_create(request):
+    """searchtag_create"""
     if request.method == 'POST':
         form = SearchTagForm(request.POST)
         if form.is_valid():
@@ -376,11 +381,6 @@ def TagCreate(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             form = SearchTagForm()
-            
-class TagList(ListView):
-    """TagList"""
-    model = SearchTag
-    template_name = 'base2.html'
 
 # LikeForm
 models_like_dict = {
@@ -395,15 +395,15 @@ models_like_dict = {
 }
 
 @csrf_exempt
-def LikeForm(request):
-    """LikeForm"""
+def like_form(request):
+    """like_form"""
     if request.method == 'POST':
         user = request.user
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        for key, value in models_like_dict.items():
-            if key in obj_path:
-                obj = get_object_or_404(value, id=obj_id)
+        for models_detail, models in models_like_dict.items():
+            if models_detail in obj_path:
+                obj = get_object_or_404(models, id=obj_id)
         liked = False
         if obj.like.filter(id=user.id).exists():
             liked = False
@@ -430,16 +430,16 @@ models_comment_dict = {
 }
 
 @csrf_exempt
-def CommentForm(request):
-    """CommentForm"""
+def comment_form(request):
+    """comment_form"""
     if request.method == 'POST':
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        for key, value in models_comment_dict.items():
-            if key in obj_path:
-                obj = value.objects.get(id=obj_id)
-        comment_obj = Comment(content_object=obj, text=text)
+        for models_detail, models in models_comment_dict.items():
+            if models_detail in obj_path:
+                obj = models.objects.get(id=obj_id)
+        comment_obj = CommentModel(content_object=obj, text=text)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
         comment_obj.save()
@@ -454,8 +454,8 @@ def CommentForm(request):
             return JsonResponse(context)
 
 @csrf_exempt
-def ReplyForm(request):
-    """ReplyForm"""
+def reply_form(request):
+    """reply_form"""
     if request.method == 'POST':
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
@@ -463,7 +463,7 @@ def ReplyForm(request):
         for key, value in models_comment_dict.items():
             if key in obj_path:
                 obj = value.objects.get(id=obj_id)
-        comment_obj = Comment(content_object=obj, text=text)
+        comment_obj = CommentModel(content_object=obj, text=text)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
         comment_obj.save()
@@ -479,7 +479,7 @@ def ReplyForm(request):
 
 class Index(ListView):
     """Index処理、すべてのメディアmodelを表示"""
-    model = SearchTag
+    model = SearchTagModel
     template_name = 'index.html'
     count = 0
     
@@ -488,7 +488,7 @@ class Index(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:8],
             'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:8],
             'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:8],
@@ -515,7 +515,7 @@ class Index(ListView):
     
 class Recommend(ListView):
     """急上昇機能、すべてのメディアmodelを表示"""
-    model = SearchTag
+    model = SearchTagModel
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
@@ -526,7 +526,7 @@ class Recommend(ListView):
         # socreはread + like*10
         aggregation_date = datetime.datetime.today() - datetime.timedelta(days=100)
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
             'live_list': LiveModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
             'music_list': MusicModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
@@ -554,7 +554,7 @@ class UserPage(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'user_list': User.objects.filter(nickname=author),
             'video_list': VideoModel.objects.filter(author_id=author, publish=True),
             'live_list': LiveModel.objects.filter(author_id=author, publish=True),
@@ -582,9 +582,86 @@ class UserPage(ListView):
         return VideoModel.objects.none()
         
 # Follow
+class FollowList(ListView):
+    """FollowList"""
+    model = FollowModel
+    template_name = 'follow/follow.html'
+    context_object_name = 'follow_list'
+    queryset = FollowModel.objects.prefetch_related().all().annotate(total_following=Count('following', distinct=True))
+    count = 0
+    
+    def get_context_data(self, **kwargs):
+        context = super(FollowList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+        })
+        return context
+
+    def get_queryset(self, **kwargs):
+        result = FollowModel.objects.filter(follower_id=self.request.user.id)
+        search = self.request.GET.get('search')
+
+        if search:
+            """除外リストを作成"""
+            exclusion_list = set([' ', '　'])
+            q_list = ''
+            for i in search:
+                """全角半角の空文字が含まれたら無視"""
+                if i in exclusion_list:
+                    pass
+                else:
+                    q_list += i
+            query = reduce(and_, [
+                        Q(following__nickname__icontains=q) |
+                        Q(following__introduction__icontains=q) for q in q_list]
+                    )            
+            result = result.filter(query).distinct()
+            self.count = len(result)
+        return result
+    
+class FollowerList(ListView):
+    """FollowerList"""
+    model = FollowModel
+    template_name = 'follow/follower.html'
+    context_object_name = 'follower_list'
+    count = 0
+    
+    def get_context_data(self, **kwargs):
+        context = super(FollowerList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+        })
+        return context
+
+    def get_queryset(self, **kwargs):
+        result = FollowModel.objects.filter(following_id=self.request.user.id)
+        search = self.request.GET.get('search')
+
+        if search:
+            """除外リストを作成"""
+            exclusion_list = set([' ', '　'])
+            q_list = ''
+            for i in search:
+                """全角半角の空文字が含まれたら無視"""
+                if i in exclusion_list:
+                    pass
+                else:
+                    q_list += i
+            query = reduce(and_, [
+                        Q(follower__nickname__icontains=q) |
+                        Q(follower__introduction__icontains=q) for q in q_list]
+                    )
+            result = result.filter(query).distinct()
+            self.count = len(result)
+        return result
+    
 @csrf_exempt
-def FollowCreate(request, nickname):
-    """FollowCreate"""
+def follow_create(request, nickname):
+    """follow_create"""
     if request.method == 'POST':
         follower = User.objects.get(nickname=request.user.nickname)
         following = User.objects.get(nickname=nickname)
@@ -623,83 +700,6 @@ def FollowCreate(request, nickname):
         if request.is_ajax():
             return JsonResponse(context)
         
-class FollowList(ListView):
-    """FollowList"""
-    model = FollowModel
-    template_name = 'follow/follow.html'
-    context_object_name = 'follow_list'
-    queryset = FollowModel.objects.prefetch_related().all().annotate(total_following=Count('following', distinct=True))
-    count = 0
-    
-    def get_context_data(self, **kwargs):
-        context = super(FollowList, self).get_context_data(**kwargs)
-        context['count'] = self.count or 0
-        context['query'] = self.request.GET.get('search')
-        context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-        })
-        return context
-
-    def get_queryset(self, **kwargs):
-        result = FollowModel.objects.filter(follower_id=self.request.user.id)
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(following__nickname__icontains=q) |
-                        Q(following__introduction__icontains=q) for q in q_list]
-                    )            
-            result = result.filter(query).distinct()
-            self.count = len(result)
-        return result
-    
-class FollowerList(ListView):
-    """FollowerList"""
-    model = FollowModel
-    template_name = 'follow/follower.html'
-    context_object_name = 'follower_list'
-    count = 0
-    
-    def get_context_data(self, **kwargs):
-        context = super(FollowerList, self).get_context_data(**kwargs)
-        context['count'] = self.count or 0
-        context['query'] = self.request.GET.get('search')
-        context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-        })
-        return context
-
-    def get_queryset(self, **kwargs):
-        result = FollowModel.objects.filter(following_id=self.request.user.id)
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(follower__nickname__icontains=q) |
-                        Q(follower__introduction__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).distinct()
-            self.count = len(result)
-        return result
-    
 # Video
 class VideoCreate(CreateView):
     """VideoCreate"""
@@ -727,7 +727,7 @@ class VideoList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
     
@@ -783,7 +783,7 @@ class VideoDetail(DetailView):
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'video_list': VideoModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
@@ -816,7 +816,7 @@ class LiveList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
     
@@ -872,7 +872,7 @@ class LiveDetail(DetailView):
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'live_list': LiveModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
@@ -905,7 +905,7 @@ class MusicList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
     
@@ -962,7 +962,7 @@ class MusicDetail(DetailView):
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'music_list': MusicModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
@@ -995,7 +995,7 @@ class PictureList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
     
@@ -1051,7 +1051,7 @@ class PictureDetail(DetailView):
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'picture_list': PictureModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
@@ -1084,7 +1084,7 @@ class BlogList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
     
@@ -1141,7 +1141,7 @@ class BlogDetail(DetailView):
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'blog_list': BlogModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
@@ -1174,7 +1174,7 @@ class ChatList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
     
@@ -1213,6 +1213,14 @@ class ChatDetail(DetailView):
         self.object.save()
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
+    
+    # def post(self, request, *args, **kwargs):
+    #     context = self.get_context_data(object=self.object)
+    #     form_id = request.POST.get('id')
+    #     context = {
+    #         'form_id': form_id,
+    #     }
+    #     return HttpResponse(context)
 
     def get_context_data(self, **kwargs):
         context = super(ChatDetail, self).get_context_data(**kwargs)
@@ -1229,27 +1237,25 @@ class ChatDetail(DetailView):
             is_period = True
         else:
             is_period = False
-        form_id = self.request.POST.get('form_id')
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
-        context['form_id'] = form_id
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
     
 @csrf_exempt
-def ChatMessage(request):
-    """ChatMessage"""
+def chat_message(request):
+    """chat_message"""
     if request.method == 'POST':
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj = ChatModel.objects.get(id=obj_id)
-        comment_obj = Comment(content_object=obj, text=text)
+        comment_obj = CommentModel(content_object=obj, text=text)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
         comment_obj.save()
@@ -1265,13 +1271,13 @@ def ChatMessage(request):
             return JsonResponse(context)
 
 @csrf_exempt
-def ChatReply(request):
-    """ChatReply"""
+def chat_reply(request):
+    """chat_reply"""
     if request.method == 'POST':
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj = ChatModel.objects.get(id=obj_id)
-        comment_obj = Comment(content_object=obj, text=text)
+        comment_obj = CommentModel(content_object=obj, text=text)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
         comment_obj.save()
@@ -1287,16 +1293,19 @@ def ChatReply(request):
             return JsonResponse(context)
             
 @csrf_exempt
-def ChatThread(request):
-    """ChatThread"""
+def chat_thread(request):
+    """chat_thread"""
     if request.method == 'POST':
-        form_id = request.POST.get('form_id')
+        form_id = request.POST.get('id')
         context = {
             'form_id': form_id,
         }
-        if request.is_ajax():
-            return JsonResponse(context)
-            # return HttpResponse(context)
+        print(form_id)
+        print(form_id)
+        # if request.is_ajax():
+        return render(request, 'chat/chat_detail.html', context=context)
+        # return JsonResponse(context)
+        # return HttpResponse(context)
 
 # Collabo
 class CollaboCreate(CreateView):
@@ -1325,7 +1334,7 @@ class CollaboList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
     
@@ -1386,7 +1395,7 @@ class CollaboDetail(DetailView):
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'collabo_list': CollaboModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
@@ -1419,7 +1428,7 @@ class TodoList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
     
@@ -1465,7 +1474,7 @@ class TodoDetail(DetailView):
         obj = get_object_or_404(TodoModel, id=self.kwargs['pk'])
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
             'todo_list': TodoModel.objects.filter(author_id=self.request.user.id).exclude(title=obj),
         })

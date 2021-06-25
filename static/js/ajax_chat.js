@@ -64,12 +64,26 @@ $(document).ready(function() {
 
     // Commentクリック時の処理を定義
     $('.click_id').on('click', function(event) {
-        const id = $(this).attr('for');
-        const num_id = $(this).attr('form-id');
+        event.preventDefault();
+        const url = $(this).attr('action');
+        const form_id = $(this).attr('form-id');
+        const check_id = $(this).children('label').attr('for');
         const comment_aria_check_id_1 = document.getElementsByClassName('get-id-1')[0];
         const comment_aria_check_id_2 = document.getElementsByClassName('get-id-2')[0];
-        comment_aria_check_id_1.setAttribute('id', id);
-        comment_aria_check_id_2.setAttribute('for', id);
+        comment_aria_check_id_1.setAttribute('id', check_id);
+        comment_aria_check_id_2.setAttribute('for', check_id);
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {'form_id': form_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            dataType: 'json',
+        })
+        .done(function(response) {
+            console.log(response)
+        })
+        .fail(function(response) {
+            console.log(response);
+        })
     });
     
     // 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
