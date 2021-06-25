@@ -14,7 +14,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 # Create your models here.
 
 class UserManager(BaseUserManager):
-    """User Manager"""
+    """UserManager"""
     def create_user(self, username, email, password=None, **extra_fields):
         if not username:
             raise ValueError('Users must have an username')
@@ -27,6 +27,7 @@ class UserManager(BaseUserManager):
     
     def create_superuser(self, username, email, password, **extra_fields):
         user = self.create_user(username, email=self.normalize_email(email), password=password)
+        user.is_premium = True
         user.is_staff = True
         user.is_admin = True
         user.is_superuser = True
@@ -34,7 +35,7 @@ class UserManager(BaseUserManager):
         return user
     
 class User(AbstractBaseUser, PermissionsMixin):
-    """Custom UserModel"""
+    """CustomUserModel"""
     user_image      = models.ImageField(upload_to='users/user_images', default='../static/img/user_icon.png', blank=True, null=True)
     email           = models.EmailField(max_length=120, unique=True, db_index=True)
     username        = models.CharField(max_length=30, unique=True, db_index=True)
@@ -60,8 +61,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     introduction    = models.TextField(blank=True)
     
     is_active       = models.BooleanField(default=True)
+    is_premium      = models.BooleanField(default=False)
     is_staff        = models.BooleanField(default=False)
     is_admin        = models.BooleanField(default=False)
+    
     last_login      = models.DateTimeField(_('last login'), auto_now_add=True)
     date_joined     = models.DateTimeField(_('date joined'), default=timezone.now)
     
@@ -82,28 +85,22 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = '00 User'
     
     def has_perm(self, perm, obj=None):
-        "ユーザーにパーミッション権限を持ちますか？"
         return True
     
     def has_module_perms(self, app_label):
-        "ユーザーにパーミッションのリストを表示させますか?"
         return True
     
     def get_username(self):
-        """nickname"""
         return self.nickname
     
     def get_full_name(self):
-        """Return the first_name plus the last_name, with a space in between."""
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
     
     def get_short_name(self):
-        """Return the short name for the user."""
         return self.first_name
     
     def email_user(self, subject, message, from_email=None, **kwargs):
-        """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
         
     def get_following_count(self):
@@ -136,8 +133,8 @@ class FollowModel(models.Model):
     class Meta:
         verbose_name_plural = '09 フォロー'
         
-class SearchTag(models.Model):
-    """SearchTag"""
+class SearchTagModel(models.Model):
+    """SearchTagModel"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     sequence = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=20)
     searchtag = models.CharField(max_length=12, null=True)
@@ -149,8 +146,8 @@ class SearchTag(models.Model):
     class Meta:
         verbose_name_plural = '10 検索タグ'
         
-class Tag(models.Model):
-    """Tag"""
+class TagModel(models.Model):
+    """TagModel"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     tag = models.CharField(max_length=12, null=True)
     
@@ -187,9 +184,9 @@ class VideoModel(models.Model):
     content  = models.TextField()
     images   = models.ImageField(upload_to='images/video_images')
     videos   = models.FileField(upload_to='videos/video_videos')
-    comments = GenericRelation('Comment')
+    comments = GenericRelation('CommentModel')
     publish  = BooleanField(default=True)
-    tags     = models.ManyToManyField(Tag, blank=True)
+    tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='video_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
@@ -236,9 +233,9 @@ class LiveModel(models.Model):
     content  = models.TextField()
     images   = models.ImageField(upload_to='images/live_images')
     lives    = models.FileField(upload_to='videos/live_videos')
-    comments = GenericRelation('Comment')
+    comments = GenericRelation('CommentModel')
     publish  = BooleanField(default=True)
-    tags     = models.ManyToManyField(Tag, blank=True)
+    tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='live_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
@@ -286,9 +283,9 @@ class MusicModel(models.Model):
     content  = models.TextField()
     lyrics   = models.TextField(blank=True, null=True)
     musics   = models.FileField(upload_to='musics/')
-    comments = GenericRelation('Comment')
+    comments = GenericRelation('CommentModel')
     publish  = BooleanField(default=True)
-    tags     = models.ManyToManyField(Tag, blank=True)
+    tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='music_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
@@ -334,9 +331,9 @@ class PictureModel(models.Model):
     title    = models.CharField(max_length=100)
     content  = models.TextField()
     images   = models.ImageField(upload_to='images/picture_images')
-    comments = GenericRelation('Comment')
+    comments = GenericRelation('CommentModel')
     publish  = BooleanField(default=True)
-    tags     = models.ManyToManyField(Tag, blank=True)
+    tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='picture_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
@@ -384,9 +381,9 @@ class BlogModel(models.Model):
     content  = models.TextField()
     images   = models.ImageField(upload_to='images/blog_images')
     richtext = RichTextUploadingField(blank=True, null=True)
-    comments = GenericRelation('Comment')
+    comments = GenericRelation('CommentModel')
     publish  = BooleanField(default=True)
-    tags     = models.ManyToManyField(Tag, blank=True)
+    tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='blog_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
@@ -431,9 +428,9 @@ class ChatModel(models.Model):
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    comments = GenericRelation('Comment')
+    comments = GenericRelation('CommentModel')
     publish  = BooleanField(default=True)
-    tags     = models.ManyToManyField(Tag, blank=True)
+    tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='chat_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     joined   = models.IntegerField(blank=True, null=True, default=0)
@@ -464,9 +461,9 @@ class CollaboModel(models.Model):
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    comments = GenericRelation('Comment')
+    comments = GenericRelation('CommentModel')
     publish  = BooleanField(default=True)
-    tags     = models.ManyToManyField(Tag, blank=True)
+    tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='collabo_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     period   = models.DateField()
@@ -493,7 +490,7 @@ class TodoModel(models.Model):
     content  = models.TextField()
     priority = models.CharField(max_length=10, choices=PRIORITY)
     duedate  = models.DateField()
-    comments = GenericRelation('Comment')
+    comments = GenericRelation('CommentModel')
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
     
@@ -509,8 +506,8 @@ class TodoModel(models.Model):
     class Meta:
         verbose_name_plural = '08 ToDo'
         
-class Comment(models.Model):
-    """Comment"""
+class CommentModel(models.Model):
+    """CommentModel"""
     author         = models.ForeignKey(User, on_delete=models.CASCADE)
     parent         = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)
     text           = models.TextField()

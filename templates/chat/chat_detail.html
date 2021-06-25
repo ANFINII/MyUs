@@ -119,16 +119,19 @@
             <div class="chat_section_main">
                 <div class="chat_section_main_area">
                     {% for comment in comment_list %}
-                    <label for="comment_aria_check_id_{{ comment.id }}" class="comment_aria_list click_id" form-id="{{ comment.id }}">
-                        <a href="{% url 'myus:userpage' comment.author.nickname %}">
-                            <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
-                        </a>
-                        <div class="comment_aria_list_1">
-                            <p>{{ comment.author.nickname }}</p>
-                            <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
-                        </div>
-                        <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
-                    </label>
+                    <form method="POST" action="{% url 'myus:chat_thread' %}" form-id="{{ comment.id }}" class="click_id">{% csrf_token %}
+                        <label for="comment_aria_check_id_{{ comment.id }}" class="comment_aria_list">
+                            <!-- <input type="hidden" name="from" value="1"> -->
+                            <a href="{% url 'myus:userpage' comment.author.nickname %}">
+                                <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+                            </a>
+                            <div class="comment_aria_list_1">
+                                <p>{{ comment.author.nickname }}</p>
+                                <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
+                            </div>
+                            <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
+                        </label>
+                    </form>
                     {% endfor %}
                     <div id="comment_aria_add"></div>
                 </div>
@@ -165,18 +168,16 @@
             </div>
 
             <div class="chat_section_header_cross">
-                <h3>スレッド</h3>
+                <h3>スレッド{{ form_id }}</h3>
                 <label for="" class="chat_section_header_cross_check get-id-2">
                     <i class="bi bi-x" style="font-size: 1.7em;" title="閉じる"></i>
                 </label>
             </div>
-
+            
             <div class="chat_section_thread">
-
-            {% if comment.id == comment.parent.id %}
                 {% for comment in comment_list %}
                     {% if comment.id == form_id %}
-                    <label for="comment_aria_check_id_{{ comment.id }}" class="comment_aria_list click_id" form-id="{{ comment.id }}">
+                    <label class="comment_aria_list">
                         <a href="{% url 'myus:userpage' comment.author.nickname %}">
                             <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
                         </a>
@@ -188,17 +189,20 @@
                     </label>
                     {% endif %}
                 {% endfor %}
+
                 {% for reply in reply_list %}
-                <div class="comment_aria_list">
-                    <a href="{% url 'myus:userpage' reply.author.nickname %}">
-                        <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
-                    </a>
-                    <div class="comment_aria_list_1">
-                        <p>{{ reply.author.nickname }}</p>
-                        <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
+                    {% if reply.parent.id == form_id %}
+                    <div class="comment_aria_list">
+                        <a href="{% url 'myus:userpage' reply.author.nickname %}">
+                            <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+                        </a>
+                        <div class="comment_aria_list_1">
+                            <p>{{ reply.author.nickname }}</p>
+                            <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
+                        </div>
+                        <div class="comment_aria_list_2">{{ reply.text|urlize|linebreaks }}</div>
                     </div>
-                    <div class="comment_aria_list_2">{{ reply.text|urlize|linebreaks }}</div>
-                </div>
+                    {% endif %}
                 {% endfor %}
 
                 <footer class="chat_footer_thread">
@@ -230,7 +234,6 @@
                         {% endif %}
                     </form>
                 </footer>
-            {% endif %}
             </div>
         </div>    
     {% else %}

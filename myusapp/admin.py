@@ -3,18 +3,18 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
 from import_export.admin import ImportExportModelAdmin
-from .models import User, SearchTag, Tag, Comment, FollowModel, TodoModel, AdvertiseModel
+from .models import User, SearchTagModel, TagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 
 # Admin用の管理画面    
 class SearchTagInline(admin.TabularInline):
-    model = SearchTag
+    model = SearchTagModel
     extra = 1
     max_num = 10
     verbose_name_plural = '検索タグ'
     
 class CommentInlineAdmin(GenericTabularInline):
-    model = Comment
+    model = CommentModel
     extra = 0
     max_num = 100
     readonly_fields = ('total_like',)
@@ -37,7 +37,7 @@ class UserAdmin(ImportExportModelAdmin):
     # 詳細画面
     fieldsets = [
         ('アカウント情報', {'fields': ('user_image', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone', 'location', 'profession', 'introduction', 'groups', 'user_permissions')}),
-        ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
+        ('権限情報', {'fields': ('is_active', 'is_premium', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
         ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content', 'following_count', 'follower_count')})
     ]
     
@@ -55,7 +55,7 @@ class FollowModelAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('created',)})
     ]
 
-@admin.register(SearchTag)
+@admin.register(SearchTagModel)
 class SearchTagAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'sequence', 'searchtag', 'created')
     list_select_related = ('author',)
@@ -70,7 +70,7 @@ class SearchTagAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('author', 'created')})
     ]
     
-@admin.register(Tag)
+@admin.register(TagModel)
 class TagAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'tag',)
     search_fields = ('author__nickname', 'tag',)
@@ -81,7 +81,7 @@ class TagAdmin(ImportExportModelAdmin):
         ('編集項目', {'fields': ('tag',)}),
     ]
 
-@admin.register(Comment)
+@admin.register(CommentModel)
 class CommentAdmin(ImportExportModelAdmin):
     list_display = ('id', 'content_type', 'object_id', 'content_object', 'author', 'text', 'parent_id', 'total_like', 'created', 'updated')
     list_select_related = ('author', 'parent')
@@ -377,7 +377,7 @@ class SearchTagAdminSite(admin.ModelAdmin):
     def get_queryset(self, request): 
         qs = super(SearchTagAdminSite, self).get_queryset(request) 
         return qs.filter(author=request.user)
-mymanage_site.register(SearchTag, SearchTagAdminSite)
+mymanage_site.register(SearchTagModel, SearchTagAdminSite)
 
 class TagAdminSite(admin.ModelAdmin):
     list_display = ('id', 'tag',)
@@ -396,10 +396,10 @@ class TagAdminSite(admin.ModelAdmin):
     def get_queryset(self, request): 
         qs = super(TagAdminSite, self).get_queryset(request) 
         return qs.filter(author=request.user)
-mymanage_site.register(Tag, TagAdminSite)
+mymanage_site.register(TagModel, TagAdminSite)
 
 class CommentInline(GenericTabularInline):
-    model = Comment
+    model = CommentModel
     extra = 0
     max_num = 100
     exclude = ('like',)

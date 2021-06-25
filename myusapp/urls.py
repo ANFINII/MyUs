@@ -1,14 +1,14 @@
 from django.urls import path
-from .views import Index, Recommend, TagCreate, LikeForm, CommentForm, ReplyForm
-from .views import Signup, Login, Logout, Withdrawal
-from .views import Profile, Profile_update, MyPage, MyPage_update, UserPage
-from .views import UserPolicy, Knowledge, FollowCreate, FollowList, FollowerList
+from .views import Index, Recommend, searchtag_create, like_form, comment_form, reply_form
+from .views import signup_form, login_form, logout_form, userpolicy, knowledge, Withdrawal
+from .views import profile, ProfileUpdate, mypage, MyPageUpdate, UserPage
+from .views import FollowList, FollowerList, follow_create
 from .views import VideoList, VideoCreate, VideoDetail
 from .views import LiveList, LiveCreate, LiveDetail
 from .views import MusicList, MusicCreate, MusicDetail
 from .views import PictureList, PictureCreate, PictureDetail
 from .views import BlogList, BlogCreate, BlogDetail
-from .views import ChatList, ChatCreate, ChatDetail, ChatMessage, ChatReply
+from .views import ChatList, ChatCreate, ChatDetail, chat_message, chat_reply, chat_thread
 from .views import CollaboList, CollaboCreate, CollaboDetail
 from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 
@@ -17,27 +17,27 @@ app_name = 'myus'
 urlpatterns = [
     path('', Index.as_view(), name='index'),
     path('recommend/', Recommend.as_view(), name='recommend'),
-    path('tag_create/', TagCreate, name='tag_create'),
-    path('like_form/', LikeForm, name='like_form'),
-    path('comment_form/', CommentForm, name='comment_form'),
-    path('reply_form/', ReplyForm, name='reply_form'),
+    path('searchtag_create/', searchtag_create, name='searchtag_create'),
+    path('like_form/', like_form, name='like_form'),
+    path('comment_form/', comment_form, name='comment_form'),
+    path('reply_form/', reply_form, name='reply_form'),
 
-    path('signup/', Signup, name='signup'),
-    path('login/', Login, name='login'),
-    path('logout/', Logout, name='logout'),
+    path('signup/', signup_form, name='signup'),
+    path('login/', login_form, name='login'),
+    path('logout/', logout_form, name='logout'),
     path('withdrawal/', Withdrawal.as_view(), name='withdrawal'),
     path('withdrawal/<str:token>', Withdrawal.as_view(), name='withdrawal'),
     
-    path('userpolicy/', UserPolicy, name='userpolicy'),
-    path('knowledge/', Knowledge, name='knowledge'),
     path('follow/', FollowList.as_view(), name='follow_list'),
     path('follower/', FollowerList.as_view(), name='follower_list'),
-    path('follow_create/<str:nickname>', FollowCreate, name='follow_create'),
-
-    path('profile/', Profile, name='profile'),
-    path('profile_update/', Profile_update.as_view(), name='profile_update'),
-    path('mypage/', MyPage, name='mypage'),
-    path('mypage_update/', MyPage_update.as_view(), name='mypage_update'),
+    path('follow_create/<str:nickname>', follow_create, name='follow_create'),
+    path('userpolicy/', userpolicy, name='userpolicy'),
+    path('knowledge/', knowledge, name='knowledge'),
+    
+    path('profile/', profile, name='profile'),
+    path('profile_update/', ProfileUpdate.as_view(), name='profile_update'),
+    path('mypage/', mypage, name='mypage'),
+    path('mypage_update/', MyPageUpdate.as_view(), name='mypage_update'),
     path('userpage/<str:nickname>', UserPage.as_view(), name='userpage'),
 
     path('video/', VideoList.as_view(), name='video_list'),
@@ -63,8 +63,9 @@ urlpatterns = [
     path('chat/', ChatList.as_view(), name='chat_list'),
     path('chat_create/', ChatCreate.as_view(), name='chat_create'),
     path('chat_detail/<int:pk>', ChatDetail.as_view(), name='chat_detail'),
-    path('chat_detail/message', ChatMessage, name='chat_message'),
-    path('chat_detail/reply', ChatReply, name='chat_reply'),
+    path('chat_detail/message', chat_message, name='chat_message'),
+    path('chat_detail/reply', chat_reply, name='chat_reply'),
+    path('chat_detail/thread', chat_thread, name='chat_thread'),
     
     path('collabo/', CollaboList.as_view(), name='collabo_list'),
     path('collabo_create/', CollaboCreate.as_view(), name='collabo_create'),
