@@ -59,6 +59,7 @@ def has_tag(text):
         return True
     return False
 
+# Signup
 def signup_form(request):
     """サインアップ処理"""
     if request.method == 'POST':
@@ -157,6 +158,7 @@ def signup_form(request):
                     return render(request, 'registration/signup.html')
     return render(request, 'registration/signup.html')
 
+# Login
 def login_form(request):
     """ログイン処理"""
     if request.method == 'POST':
@@ -182,21 +184,12 @@ def login_form(request):
             return redirect('myus:login')
     return render(request, 'registration/login.html')
 
+# Logout
 @login_required
 def logout_form(request):
     """ログアウト処理"""
     logout(request)
     return redirect('myus:login')
-
-# 利用規約
-def userpolicy(request):
-    """利用規約"""
-    return render(request, 'common/userpolicy.html')
-
-# Knowledge Base
-def knowledge(request):
-    """Knowledge Base"""
-    return render(request, 'common/knowledge.html')
 
 # Withdrawal
 EXPIRED_SECONDS = 60
@@ -321,6 +314,7 @@ class ProfileUpdate(UpdateView):
     def get_object(self):
         return self.request.user
     
+# MyPage
 def mypage(request):
     """Myページ遷移"""
     object_profile = User.objects.filter(id=request.user.id)
@@ -699,6 +693,16 @@ def follow_create(request, nickname):
         }
         if request.is_ajax():
             return JsonResponse(context)
+        
+# UserPolicy
+def userpolicy(request):
+    """userpolicy"""
+    return render(request, 'common/userpolicy.html')
+
+# KnowledgeBase
+def knowledge(request):
+    """knowledge"""
+    return render(request, 'common/knowledge.html')
         
 # Video
 class VideoCreate(CreateView):
@@ -1296,11 +1300,10 @@ def chat_reply(request):
 def chat_thread(request):
     """chat_thread"""
     if request.method == 'POST':
-        form_id = request.POST.get('id')
+        form_id = request.POST.get('form_id')
         context = {
             'form_id': form_id,
         }
-        print(form_id)
         print(form_id)
         # if request.is_ajax():
         return render(request, 'chat/chat_detail.html', context=context)
