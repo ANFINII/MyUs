@@ -543,3 +543,4 @@ class AdvertiseModel(models.Model):
     
     class Meta:
         verbose_name_plural = '13 広告'
+        

@@ -64,7 +64,7 @@ $(document).ready(function() {
 
     // Commentクリック時の処理を定義
     $('.click_id').on('click', function(event) {
-        event.preventDefault();
+    //     event.preventDefault();
         const url = $(this).attr('action');
         const form_id = $(this).attr('form-id');
         const check_id = $(this).children('label').attr('for');

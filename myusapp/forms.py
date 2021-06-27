@@ -13,3 +13,4 @@ class SearchTagForm(forms.ModelForm):
         fields = [
             'searchtag',
         ]
+        
