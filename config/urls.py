@@ -1,8 +1,7 @@
 """config URL Configuration"""
 from django.urls import path, include
-from django.conf.urls import url
-from django.conf.urls.static import static
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
@@ -16,8 +15,8 @@ urlpatterns = [
     path('', include('myusapp.urls')),
     path('', include("django.contrib.auth.urls")),
     path('markdownx/', include('markdownx.urls')),
-    url(r'^upload/', login_required(views.upload), name='ckeditor_upload'),
-    url(r'^browse/', never_cache(login_required(views.browse)), name='ckeditor_browse'),
+    path('upload/', login_required(views.upload), name='ckeditor_upload'),
+    path('browse/', never_cache(login_required(views.browse)), name='ckeditor_browse'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
