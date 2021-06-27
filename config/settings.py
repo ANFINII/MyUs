@@ -138,7 +138,7 @@ LOGOUT_REDIRECT_URL = '/login/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # CKEDITOR
-CKEDITOR_UPLOAD_PATH = 'images/blog_images/uploads'
+CKEDITOR_UPLOAD_PATH = 'images/upload_images'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
 CKEDITOR_RESTRICT_BY_USER = True
 CKEDITOR_RESTRICT_BY_DATE = False
