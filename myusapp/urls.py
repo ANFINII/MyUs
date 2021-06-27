@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.csrf import csrf_exempt
 from .views import Index, Recommend, UserPage
 from .views import profile, ProfileUpdate, mypage, MyPageUpdate
 from .views import FollowList, FollowerList, follow_create, userpolicy, knowledge
@@ -7,10 +8,10 @@ from .views import LiveList, LiveCreate, LiveDetail
 from .views import MusicList, MusicCreate, MusicDetail
 from .views import PictureList, PictureCreate, PictureDetail
 from .views import BlogList, BlogCreate, BlogDetail
-from .views import ChatList, ChatCreate, ChatDetail, chat_message, chat_reply, chat_thread
+from .views import ChatList, ChatCreate, ChatDetail, chat_message, chat_reply
 from .views import CollaboList, CollaboCreate, CollaboDetail
 from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
-from .views import searchtag_create, like_form, comment_form, reply_form
+from .views import searchtag_create, like_form, comment_form, reply_form, CommentView
 from .views import signup_form, login_form, logout_form, Withdrawal
 
 app_name = 'myus'
@@ -54,9 +55,11 @@ urlpatterns = [
     path('chat/', ChatList.as_view(), name='chat_list'),
     path('chat_create/', ChatCreate.as_view(), name='chat_create'),
     path('chat_detail/<int:pk>', ChatDetail.as_view(), name='chat_detail'),
+    path('chat_detail/<int:pk>/<int:form_id>', csrf_exempt(ChatDetail.as_view()), name='chat_detail'),
     path('chat_detail/message', chat_message, name='chat_message'),
     path('chat_detail/reply', chat_reply, name='chat_reply'),
-    path('chat_detail/thread', chat_thread, name='chat_thread'),
+    # path('chat_detail/thread/<int:id>', chat_thread, name='chat_thread'),
+    path('comment_view/<int:form_id>', csrf_exempt(CommentView.as_view()), name='comment_view'),
     
     path('collabo/', CollaboList.as_view(), name='collabo_list'),
     path('collabo_create/', CollaboCreate.as_view(), name='collabo_create'),

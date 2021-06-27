@@ -119,9 +119,9 @@
             <div class="chat_section_main">
                 <div class="chat_section_main_area">
                     {% for comment in comment_list %}
-                    <form method="POST" action="{% url 'myus:chat_thread' %}" form-id="{{ comment.id }}" class="click_id">{% csrf_token %}
+                    <form method="POST" action="{% url 'myus:chat_detail' object.pk comment.id %}" form-id="{{ comment.id }}" class="click_id">{% csrf_token %}
                         <label for="comment_aria_check_id_{{ comment.id }}" class="comment_aria_list">
-                            <!-- <input type="hidden" name="from" value="1"> -->
+                            <input type="hidden" name="from_id" value="{{ comment.id }}">
                             <a href="{% url 'myus:userpage' comment.author.nickname %}">
                                 <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
                             </a>

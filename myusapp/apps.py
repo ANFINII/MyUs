@@ -4,6 +4,4 @@ from django.contrib.admin.apps import AdminConfig
 class MyusappConfig(AppConfig):
     name = 'myusapp'
     verbose_name = 'MyUs'
-
-# class MyAdminConfig(AdminConfig):
-#     default_site = 'myusapp.admin.MyUsAdminSite'
+    

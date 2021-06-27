@@ -22,7 +22,8 @@ from operator import and_
 from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm
-import re, datetime, string, random, json
+import re, datetime, string, random, json, asyncio
+from time import sleep
 
 # Create your views here.
 
@@ -1206,6 +1207,28 @@ class ChatList(ListView):
             self.count = len(result)
         return result
         
+
+class CommentView(FormView):
+    """CommentView"""
+    model = CommentModel
+    template_name = 'chat/chat_detail.html'
+
+    # def post(self, request, form_id, *args, **kwargs):
+    #     # context = self.get_context_data(object=self.object)
+    #     form_id = request.POST.get('id')
+    #     print(form_id)
+    #     context = {
+    #         'form_id': form_id,
+    #     }
+    #     return self.get_context_data(context)
+    
+    def get_context_data(self, **kwargs):
+        context = super(CommentView, self).get_context_data(**kwargs)
+        # obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
+        # obj_user = obj.author.id
+        context['form_id'] = self.kwargs.get('form_id')
+        return context
+
 class ChatDetail(DetailView):
     """ChatDetail"""
     model = ChatModel
@@ -1219,17 +1242,21 @@ class ChatDetail(DetailView):
         return self.render_to_response(context)
     
     # def post(self, request, *args, **kwargs):
-    #     context = self.get_context_data(object=self.object)
-    #     form_id = request.POST.get('id')
+    #     pk = request.POST.get('pk')
+    #     form_id = request.POST.get('form_id')
     #     context = {
-    #         'form_id': form_id,
+    #         'pk': pk,
+    #         'form_id': form_id
     #     }
-    #     return HttpResponse(context)
-
+    #     # context = self.get_context_data(object=self.object)
+    #     return render(request, 'chat/chat_detail.html', context)
+    
     def get_context_data(self, **kwargs):
         context = super(ChatDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
+        commnet_id = self.kwargs.get('form_id')
         obj_user = obj.author.id
+        print(obj_user)
         follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
         liked = False
         followed = False
@@ -1246,6 +1273,7 @@ class ChatDetail(DetailView):
         context['is_period'] = is_period
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
+        context['form_id'] = commnet_id
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
@@ -1294,10 +1322,10 @@ def chat_reply(request):
             'comment_count': obj.comments.all().count()
         }
         if request.is_ajax():
-            return JsonResponse(context)
-            
+            return JsonResponse(context)    
+        
 @csrf_exempt
-def chat_thread(request):
+def chat_thread(request, id):
     """chat_thread"""
     if request.method == 'POST':
         form_id = request.POST.get('form_id')
@@ -1307,7 +1335,7 @@ def chat_thread(request):
         print(form_id)
         # if request.is_ajax():
         return render(request, 'chat/chat_detail.html', context=context)
-        # return JsonResponse(context)
+            # return JsonResponse(context)
         # return HttpResponse(context)
 
 # Collabo
@@ -1497,3 +1525,4 @@ class TodoDelete(DeleteView):
     model = TodoModel
     template_name = 'todo/todo_delete.html'
     success_url = reverse_lazy('myus:todo_list')
+    
