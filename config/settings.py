@@ -152,9 +152,9 @@ CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
 CKEDITOR_CONFIGS = {
    'default': {
        'toolbar_Full': [
-            ['Styles', 'Format'],
+            ['Font', 'FontSize'],
             ['TextColor', 'BGColor'],
-            ['Bold', 'Italic', 'Underline', 'Strike', 'SpellChecker'],
+            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
             ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
             ['Link', 'Unlink'],
             ['Image', 'Table', 'SpecialChar', 'HorizontalRule'],
