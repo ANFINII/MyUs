@@ -3,8 +3,8 @@
 {% load class_name %}
 
 {% for item in object_list %}
-    {% with item|class_name as klass %}
-        {% if klass == 'LiveModel' %}
+    {% with item|class_name as model_name %}
+        {% if model_name == 'LiveModel' %}
             <section class="main_content">
                 <div class="main_decolation">
                     <video class="video-js vjs-big-play-centered vjs-16-9" controls preload="none" width="272" height="153" pictureinpicture="falese" poster="{{ item.images.url }}" data-setup="">
