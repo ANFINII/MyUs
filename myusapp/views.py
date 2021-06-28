@@ -16,7 +16,7 @@ from django.template.defaultfilters import linebreaks, linebreaksbr
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, FormView
 from dateutil.relativedelta import relativedelta
-from itertools import chain, islice 
+from itertools import chain, islice
 from functools import reduce
 from operator import and_
 from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
@@ -92,7 +92,7 @@ def signup_form(request):
         if not has_alphabet(password1):
             messages.error(request, 'パスワードは8文字以上で数字とアルファベットが含まれる必要があります!')
             return render(request, 'registration/signup.html')
-        
+
         elif not has_number(password1):
             messages.error(request, 'パスワードは8文字以上で数字とアルファベットが含まれる必要があります!')
             return render(request, 'registration/signup.html')
@@ -118,7 +118,7 @@ def signup_form(request):
         if not has_number(month):
             messages.error(request, '生年月日の月を入力してください!')
             return render(request, 'registration/signup.html')
-            
+
         day = request.POST['day']
         if not has_number(day):
             messages.error(request, '生年月日の日を入力してください!')
@@ -142,7 +142,7 @@ def signup_form(request):
                     user.last_name = last_name
                     user.first_name = first_name
                     user.gender = gender
-                    
+
                     user.year = year
                     user.month = month
                     user.day = day
@@ -150,7 +150,7 @@ def signup_form(request):
                     birthday = datetime.date(year=int(year), month=int(month), day=int(day))
                     user.birthday = birthday.isoformat()
                     user.age = int((datetime.date.today() - birthday).days / days_in_year)
-                    
+
                     user.save()
                     messages.success(request, '登録が完了しました!')
                     return redirect('myus:login')
@@ -200,10 +200,10 @@ class Withdrawal(View):
     model = User
     template_name = 'registration/withdrawal.html'
     timestamp_signer = TimestampSigner()
-    
+
     def get_random_chars(self, char_num=30):
         return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(char_num)])
-    
+
     def get(self, request, token=None, *args, **kwargs):
         context = {}
         context['expired_seconds'] = EXPIRED_SECONDS
@@ -239,7 +239,7 @@ class Withdrawal(View):
             else:
                 messages.error(self.request, 'パスワードが違います!')
                 return redirect('myus:withdrawal')
-                
+
 def profile(request):
     """アカウント設定"""
     object_profile = User.objects.filter(id=request.user.id)
@@ -251,12 +251,12 @@ class ProfileUpdate(UpdateView):
     fields = ('user_image', 'username', 'email', 'nickname', 'last_name', 'first_name', 'gender', 'phone', 'year', 'month', 'day', 'location', 'profession', 'introduction')
     template_name = 'registration/profile_update.html'
     success_url = reverse_lazy('myus:profile')
-    
+
     def get_context_data(self, **kwargs):
         context = super(ProfileUpdate, self).get_context_data(**kwargs)
         context['usergender'] = {'gender':{'0':'男性', '1':'女性', '2':'秘密'}}
         return context
-    
+
     def form_valid(self, form):
         """バリデーションに成功した時"""
         try:
@@ -278,11 +278,11 @@ class ProfileUpdate(UpdateView):
             if has_number(self.request.user.first_name):
                 messages.error(self.request, '名に数字が含まれております!')
                 return super().form_invalid(form)
-            
+
             if has_phone(self.request.user.phone):
                 messages.error(self.request, '電話番号の形式が違います!')
                 return super().form_invalid(form)
-            
+
             profile.year = self.request.user.year
             profile.month = self.request.user.month
             profile.day = self.request.user.day
@@ -311,33 +311,33 @@ class ProfileUpdate(UpdateView):
         else:
             messages.error(self.request, 'ユーザー名またはメールアドレス、投稿者名は既に登録済みです!')
             return super().form_invalid(form)
-        
+
     def get_object(self):
         return self.request.user
-    
+
 # MyPage
 def mypage(request):
     """Myページ遷移"""
     object_profile = User.objects.filter(id=request.user.id)
     return render(request, 'registration/mypage.html', {'object_profile':object_profile})
-    
+
 class MyPageUpdate(UpdateView):
     """Myページ更新"""
     model = User
     fields = ('mypage_image', 'mypage_email', 'content')
     template_name = 'registration/mypage_update.html'
     success_url = reverse_lazy('myus:mypage')
-    
+
     def form_valid(self, form):
         """バリデーションに成功した時"""
         try:
             userpage = form.save(commit=False)
             userpage.user = self.request.user
-            
+
             if has_email(self.request.user.mypage_email):
                 messages.error(self.request, 'メールアドレスの形式が違います!')
                 return super().form_invalid(form)
-            
+
             userpage.save()
             return super(MyPageUpdate, self).form_valid(form)
         except ValueError:
@@ -346,7 +346,7 @@ class MyPageUpdate(UpdateView):
         except TypeError:
             messages.error(self.request, '更新できませんでした!')
             return super().form_invalid(form)
-        
+
     def form_invalid(self, form):
         """バリデーションに失敗した時"""
         if has_email(self.request.user.mypage_email):
@@ -355,10 +355,10 @@ class MyPageUpdate(UpdateView):
         else:
             messages.error(self.request, 'メールアドレスの形式が違います!')
             return super().form_invalid(form)
-        
+
     def get_object(self):
         return self.request.user
-    
+
 # SearchTag
 class SearchTagList(ListView):
     """SearchTagList"""
@@ -477,7 +477,7 @@ class Index(ListView):
     model = SearchTagModel
     template_name = 'index.html'
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
         context['count'] = self.count or 0
@@ -492,7 +492,7 @@ class Index(ListView):
             'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:8],
         })
         return context
-    
+
     def get_queryset(self):
         query = self.request.GET.get('search', None)
         if query is not None:
@@ -507,7 +507,7 @@ class Index(ListView):
             self.count = len(result)
             return result
         return VideoModel.objects.none()
-    
+
 class Recommend(ListView):
     """急上昇機能、すべてのメディアmodelを表示"""
     model = SearchTagModel
@@ -530,13 +530,13 @@ class Recommend(ListView):
             'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
         })
         return context
-    
+
 class UserPage(ListView):
     """UserPage"""
     model = User
     template_name = 'registration/userpage.html'
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(UserPage, self).get_context_data(**kwargs)
         author = get_object_or_404(User, nickname=self.kwargs['nickname'])
@@ -570,12 +570,12 @@ class UserPage(ListView):
             result4 = PictureModel.objects.filter(author_id=author, publish=True).search(query)
             result5 = BlogModel.objects.filter(author_id=author, publish=True).search(query)
             result6 = ChatModel.objects.filter(author_id=author, publish=True).search(query)
-            queryset_chain = chain(result1, result2, result3, result4, result5, result6)        
+            queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.like, reverse=True)
             self.count = len(result)
             return result
         return VideoModel.objects.none()
-        
+
 # Follow
 class FollowList(ListView):
     """FollowList"""
@@ -584,7 +584,7 @@ class FollowList(ListView):
     context_object_name = 'follow_list'
     queryset = FollowModel.objects.prefetch_related().all().annotate(total_following=Count('following', distinct=True))
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(FollowList, self).get_context_data(**kwargs)
         context['count'] = self.count or 0
@@ -611,18 +611,18 @@ class FollowList(ListView):
             query = reduce(and_, [
                         Q(following__nickname__icontains=q) |
                         Q(following__introduction__icontains=q) for q in q_list]
-                    )            
+                    )
             result = result.filter(query).distinct()
             self.count = len(result)
         return result
-    
+
 class FollowerList(ListView):
     """FollowerList"""
     model = FollowModel
     template_name = 'follow/follower.html'
     context_object_name = 'follower_list'
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(FollowerList, self).get_context_data(**kwargs)
         context['count'] = self.count or 0
@@ -653,7 +653,7 @@ class FollowerList(ListView):
             result = result.filter(query).distinct()
             self.count = len(result)
         return result
-    
+
 @csrf_exempt
 def follow_create(request, nickname):
     """follow_create"""
@@ -694,7 +694,7 @@ def follow_create(request, nickname):
         }
         if request.is_ajax():
             return JsonResponse(context)
-        
+
 # UserPolicy
 def userpolicy(request):
     """userpolicy"""
@@ -704,18 +704,18 @@ def userpolicy(request):
 def knowledge(request):
     """knowledge"""
     return render(request, 'common/knowledge.html')
-        
+
 # Video
 class VideoCreate(CreateView):
     """VideoCreate"""
     model = VideoModel
     fields = ('title', 'content', 'images', 'videos')
     template_name = 'video/video_create.html'
-    
+
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super(VideoCreate, self).form_valid(form)
-    
+
     def get_success_url(self):
         return reverse('myus:video_detail', kwargs={'pk': self.object.pk})
 
@@ -726,7 +726,7 @@ class VideoList(ListView):
     context_object_name = 'video_list'
     ordering = ['-created']
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(VideoList, self).get_context_data(**kwargs)
         context['count'] = self.count or 0
@@ -735,7 +735,7 @@ class VideoList(ListView):
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
-    
+
     def get_queryset(self, **kwargs):
         result = VideoModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
@@ -759,16 +759,16 @@ class VideoList(ListView):
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             self.count = len(result)
         return result
-    
+
 class VideoDetail(DetailView):
     """VideoDetail"""
     model = VideoModel
     template_name = 'video/video_detail.html'
-    
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.read += 1
-        self.object.save() 
+        self.object.save()
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
@@ -793,18 +793,18 @@ class VideoDetail(DetailView):
             'video_list': VideoModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-    
+
 # Live
 class LiveCreate(CreateView):
     """LiveCreate"""
     model = LiveModel
     fields = ('title', 'content', 'images', 'lives')
     template_name = 'live/live_create.html'
-    
+
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super(LiveCreate, self).form_valid(form)
-    
+
     def get_success_url(self):
         return reverse('myus:live_detail', kwargs={'pk': self.object.pk})
 
@@ -815,7 +815,7 @@ class LiveList(ListView):
     context_object_name = 'live_list'
     ordering = ['-created']
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(LiveList, self).get_context_data(**kwargs)
         context['count'] = self.count or 0
@@ -824,11 +824,11 @@ class LiveList(ListView):
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
-    
+
     def get_queryset(self, **kwargs):
         result = LiveModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
-        
+
         if search:
             """除外リストを作成"""
             exclusion_list = set([' ', '　'])
@@ -848,19 +848,19 @@ class LiveList(ListView):
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             self.count = len(result)
         return result
-        
+
 class LiveDetail(DetailView):
     """LiveDetail"""
     model = LiveModel
     template_name = 'live/live_detail.html'
-    
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.read += 1
-        self.object.save() 
+        self.object.save()
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
-    
+
     def get_context_data(self, **kwargs):
         context = super(LiveDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(LiveModel, id=self.kwargs['pk'])
@@ -882,14 +882,14 @@ class LiveDetail(DetailView):
             'live_list': LiveModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-    
+
 # Music
 class MusicCreate(CreateView):
     """MusicCreate"""
     model = MusicModel
     fields = ('title', 'content', 'musics', 'lyrics')
     template_name = 'music/music_create.html'
-    
+
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super(MusicCreate, self).form_valid(form)
@@ -904,7 +904,7 @@ class MusicList(ListView):
     context_object_name = 'music_list'
     ordering = ['-created']
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(MusicList, self).get_context_data(**kwargs)
         context['count'] = self.count or 0
@@ -913,11 +913,11 @@ class MusicList(ListView):
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
-    
+
     def get_queryset(self, **kwargs):
         result = MusicModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
-        
+
         if search:
             """除外リストを作成"""
             exclusion_list = set([' ', '　'])
@@ -938,19 +938,19 @@ class MusicList(ListView):
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             self.count = len(result)
         return result
-        
+
 class MusicDetail(DetailView):
     """MusicDetail"""
     model = MusicModel
     template_name = 'music/music_detail.html'
-    
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.read += 1
-        self.object.save() 
+        self.object.save()
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
-    
+
     def get_context_data(self, **kwargs):
         context = super(MusicDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(MusicModel, id=self.kwargs['pk'])
@@ -972,14 +972,14 @@ class MusicDetail(DetailView):
             'music_list': MusicModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-    
+
 # Picture
 class PictureCreate(CreateView):
     """PictureCreate"""
     model = PictureModel
     fields = ('title', 'content', 'images')
     template_name = 'picture/picture_create.html'
-    
+
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super(PictureCreate, self).form_valid(form)
@@ -994,7 +994,7 @@ class PictureList(ListView):
     context_object_name = 'picture_list'
     ordering = ['-created']
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(PictureList, self).get_context_data(**kwargs)
         context['count'] = self.count or 0
@@ -1003,11 +1003,11 @@ class PictureList(ListView):
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
-    
+
     def get_queryset(self, **kwargs):
         result = PictureModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
-        
+
         if search:
             """除外リストを作成"""
             exclusion_list = set([' ', '　'])
@@ -1027,19 +1027,19 @@ class PictureList(ListView):
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             self.count = len(result)
         return result
-        
+
 class PictureDetail(DetailView):
     """PictureDetail"""
     model = PictureModel
     template_name = 'picture/picture_detail.html'
-    
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.read += 1
-        self.object.save() 
+        self.object.save()
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
-    
+
     def get_context_data(self, **kwargs):
         context = super(PictureDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(PictureModel, id=self.kwargs['pk'])
@@ -1061,14 +1061,14 @@ class PictureDetail(DetailView):
             'picture_list': PictureModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-    
+
 # Blog
 class BlogCreate(CreateView):
     """BlogCreate"""
     model = BlogModel
     fields = ('title', 'content', 'images', 'richtext')
     template_name = 'blog/blog_create.html'
-    
+
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super(BlogCreate, self).form_valid(form)
@@ -1083,7 +1083,7 @@ class BlogList(ListView):
     context_object_name = 'blog_list'
     ordering = ['-created']
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(BlogList, self).get_context_data(**kwargs)
         context['count'] = self.count or 0
@@ -1092,11 +1092,11 @@ class BlogList(ListView):
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
-    
+
     def get_queryset(self, **kwargs):
         result = BlogModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
-        
+
         if search:
             """除外リストを作成"""
             exclusion_list = set([' ', '　'])
@@ -1117,19 +1117,19 @@ class BlogList(ListView):
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             self.count = len(result)
         return result
-        
+
 class BlogDetail(DetailView):
     """BlogDetail"""
     model = BlogModel
     template_name = 'blog/blog_detail.html'
-    
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.read += 1
-        self.object.save() 
+        self.object.save()
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
-    
+
     def get_context_data(self, **kwargs):
         context = super(BlogDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(BlogModel, id=self.kwargs['pk'])
@@ -1151,14 +1151,14 @@ class BlogDetail(DetailView):
             'blog_list': BlogModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-    
+
 # Chat
 class ChatCreate(CreateView):
     """ChatCreate"""
     model = ChatModel
     fields = ('title', 'content', 'period')
     template_name = 'chat/chat_create.html'
-    
+
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super(ChatCreate, self).form_valid(form)
@@ -1173,7 +1173,7 @@ class ChatList(ListView):
     context_object_name = 'chat_list'
     ordering = ['-created']
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(ChatList, self).get_context_data(**kwargs)
         context['count'] = self.count or 0
@@ -1182,11 +1182,11 @@ class ChatList(ListView):
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
-    
+
     def get_queryset(self, **kwargs):
         result = ChatModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
-        
+
         if search:
             """除外リストを作成"""
             exclusion_list = set([' ', '　'])
@@ -1206,7 +1206,7 @@ class ChatList(ListView):
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             self.count = len(result)
         return result
-        
+
 
 class CommentView(FormView):
     """CommentView"""
@@ -1221,7 +1221,7 @@ class CommentView(FormView):
     #         'form_id': form_id,
     #     }
     #     return self.get_context_data(context)
-    
+
     def get_context_data(self, **kwargs):
         context = super(CommentView, self).get_context_data(**kwargs)
         # obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
@@ -1233,14 +1233,14 @@ class ChatDetail(DetailView):
     """ChatDetail"""
     model = ChatModel
     template_name = 'chat/chat_detail.html'
-    
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.read += 1
         self.object.save()
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
-    
+
     # def post(self, request, *args, **kwargs):
     #     pk = request.POST.get('pk')
     #     form_id = request.POST.get('form_id')
@@ -1250,7 +1250,7 @@ class ChatDetail(DetailView):
     #     }
     #     # context = self.get_context_data(object=self.object)
     #     return render(request, 'chat/chat_detail.html', context)
-    
+
     def get_context_data(self, **kwargs):
         context = super(ChatDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
@@ -1279,7 +1279,7 @@ class ChatDetail(DetailView):
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-    
+
 @csrf_exempt
 def chat_message(request):
     """chat_message"""
@@ -1322,8 +1322,8 @@ def chat_reply(request):
             'comment_count': obj.comments.all().count()
         }
         if request.is_ajax():
-            return JsonResponse(context)    
-        
+            return JsonResponse(context)
+
 @csrf_exempt
 def chat_thread(request, id):
     """chat_thread"""
@@ -1344,11 +1344,11 @@ class CollaboCreate(CreateView):
     model = CollaboModel
     fields = ('title', 'content', 'period')
     template_name = 'collabo/collabo_create.html'
-    
+
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super(CollaboCreate, self).form_valid(form)
-    
+
     def get_success_url(self):
         return reverse('myus:collabo_detail', kwargs={'pk': self.object.pk})
 
@@ -1359,7 +1359,7 @@ class CollaboList(ListView):
     context_object_name = 'collabo_list'
     ordering = ['-created']
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(CollaboList, self).get_context_data(**kwargs)
         context['count'] = self.count or 0
@@ -1368,11 +1368,11 @@ class CollaboList(ListView):
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
-    
+
     def get_queryset(self, **kwargs):
         result = CollaboModel.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
-        
+
         if search:
             """除外リストを作成"""
             exclusion_list = set([' ', '　'])
@@ -1392,19 +1392,19 @@ class CollaboList(ListView):
             result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
             self.count = len(result)
         return result
-        
+
 class CollaboDetail(DetailView):
     """CollaboDetail"""
     model = CollaboModel
     template_name = 'collabo/collabo_detail.html'
-    
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.read += 1
-        self.object.save() 
+        self.object.save()
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
-    
+
     def get_context_data(self, **kwargs):
         context = super(CollaboDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(CollaboModel, id=self.kwargs['pk'])
@@ -1431,21 +1431,21 @@ class CollaboDetail(DetailView):
             'collabo_list': CollaboModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
-    
+
 # Todo
 class TodoCreate(CreateView):
     """TodoCreate"""
     model = TodoModel
-    fields = ('title', 'content', 'priority', 'duedate')    
+    fields = ('title', 'content', 'priority', 'duedate')
     template_name = 'todo/todo_create.html'
-    
+
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super(TodoCreate, self).form_valid(form)
-    
+
     def get_success_url(self):
         return reverse('myus:todo_detail', kwargs={'pk': self.object.pk})
-    
+
 class TodoList(ListView):
     """TodoList"""
     model = TodoModel
@@ -1453,7 +1453,7 @@ class TodoList(ListView):
     context_object_name = 'todo_list'
     ordering = ['-duedate']
     count = 0
-    
+
     def get_context_data(self, **kwargs):
         context = super(TodoList, self).get_context_data(**kwargs)
         context['count'] = self.count or 0
@@ -1462,11 +1462,11 @@ class TodoList(ListView):
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
         })
         return context
-    
+
     def get_queryset(self, **kwargs):
         result = TodoModel.objects.filter(author_id=self.request.user.id)
         search = self.request.GET.get('search')
-        
+
         if search:
             """除外リストを作成"""
             exclusion_list = set([' ', '　'])
@@ -1485,12 +1485,12 @@ class TodoList(ListView):
             result = result.filter(query).order_by('-duedate').distinct()
             self.count = len(result)
         return result
-    
+
 class TodoDetail(DetailView):
     """TodoDetail"""
     model = TodoModel
     template_name = 'todo/todo_detail.html'
-    
+
     def get_queryset(self):
         current_user = self.request.user
         # スーパーユーザの場合、リストにすべてを表示する。
@@ -1499,7 +1499,7 @@ class TodoDetail(DetailView):
         else:
             # 一般ユーザは自分のレコードのみ表示する。
             return TodoModel.objects.filter(author=current_user.id)
-        
+
     def get_context_data(self, **kwargs):
         context = super(TodoDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(TodoModel, id=self.kwargs['pk'])
@@ -1510,19 +1510,18 @@ class TodoDetail(DetailView):
             'todo_list': TodoModel.objects.filter(author_id=self.request.user.id).exclude(title=obj),
         })
         return context
-    
+
 class TodoUpdate(UpdateView):
     """TodoUpdate"""
     model = TodoModel
     fields = ('title', 'content', 'priority', 'duedate')
     template_name = 'todo/todo_update.html'
-    
+
     def get_success_url(self):
         return reverse('myus:todo_detail', kwargs={'pk': self.object.pk})
-    
+
 class TodoDelete(DeleteView):
     """TodoUpdate"""
     model = TodoModel
     template_name = 'todo/todo_delete.html'
     success_url = reverse_lazy('myus:todo_list')
-    

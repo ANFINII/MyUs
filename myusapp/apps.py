@@ -4,4 +4,3 @@ from django.contrib.admin.apps import AdminConfig
 class MyusappConfig(AppConfig):
     name = 'myusapp'
     verbose_name = 'MyUs'
-    

@@ -17,7 +17,7 @@ class MyBackend(object):
                 return user
         except User.DoesNotExist:
             return None
-        
+
         if getattr(user, 'is_active') and user.check_password(password):
             return user
         return None
@@ -27,4 +27,3 @@ class MyBackend(object):
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
-            
