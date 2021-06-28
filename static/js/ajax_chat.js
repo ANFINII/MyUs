@@ -31,7 +31,7 @@ $(document).ready(function() {
             console.log(response);
         })
     });
-    
+
     // フォローボタンクリック時の処理を定義
     $('.follow_form').on('click', function(event) {
         event.preventDefault();
@@ -85,7 +85,7 @@ $(document).ready(function() {
             console.log(response);
         })
     });
-    
+
     // 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
     $('form').submit(function(event) {
         event.preventDefault();
@@ -102,8 +102,8 @@ $(document).ready(function() {
         })
         .done(function(response) {
             let comment_aria_list_add =
-                '<label for="comment_aria_check_id" class="comment_aria_list">' + 
-                    '<a href="/userpage/' + response.nickname +'">' + 
+                '<label for="comment_aria_check_id" class="comment_aria_list">' +
+                    '<a href="/userpage/' + response.nickname +'">' +
                         '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
                     '</a>' +
                     '<div class="comment_aria_list_1">' +
