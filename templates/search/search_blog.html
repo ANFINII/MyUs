@@ -3,8 +3,8 @@
 {% load class_name %}
 
 {% for item in object_list %}
-    {% with item|class_name as klass %}
-        {% if klass == 'BlogModel' %}
+    {% with item|class_name as model_name %}
+        {% if model_name == 'BlogModel' %}
             <section class="main_content">
                 <figure class="main_decolation">
                     <a href="{% url 'myus:blog_detail' item.pk %}">
