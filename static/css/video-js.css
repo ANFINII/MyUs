@@ -120,7 +120,7 @@
 .video-js.video-js:lang(en-GB) .vjs-subs-caps-button .vjs-icon-placeholder,
 .video-js.video-js:lang(en-IE) .vjs-subs-caps-button .vjs-icon-placeholder,
 .video-js.video-js:lang(en-AU) .vjs-subs-caps-button .vjs-icon-placeholder,
-.video-js.video-js:lang(en-NZ) .vjs-subs-caps-button .vjs-icon-placeholder, 
+.video-js.video-js:lang(en-NZ) .vjs-subs-caps-button .vjs-icon-placeholder,
 .video-js .vjs-subtitles-button .vjs-icon-placeholder {
 	font-family: VideoJS;
 	font-weight: normal;
@@ -130,7 +130,7 @@
 .video-js.video-js:lang(en-GB) .vjs-subs-caps-button .vjs-icon-placeholder:before,
 .video-js.video-js:lang(en-IE) .vjs-subs-caps-button .vjs-icon-placeholder:before,
 .video-js.video-js:lang(en-AU) .vjs-subs-caps-button .vjs-icon-placeholder:before,
-.video-js.video-js:lang(en-NZ) .vjs-subs-caps-button .vjs-icon-placeholder:before, 
+.video-js.video-js:lang(en-NZ) .vjs-subs-caps-button .vjs-icon-placeholder:before,
 .video-js .vjs-subtitles-button .vjs-icon-placeholder:before {
 	content: "\f10c";
 }

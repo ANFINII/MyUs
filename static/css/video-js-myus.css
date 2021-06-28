@@ -84,8 +84,8 @@
 .vjs-subs-caps-button .vjs-menu-button:hover,
 .vjs-subs-caps-button .vjs-menu-button:focus {
 	text-shadow: 0 0 1em rgba(0, 149, 255, 0.8),
-	 0 0 2em rgba(0, 150, 255, 0.5),
-	 0 0 3em rgba(0, 150, 255, 0.2);
+	0 0 2em rgba(0, 150, 255, 0.5),
+	0 0 3em rgba(0, 150, 255, 0.2);
 }
 
 .video-js .vjs-spacer,.video-js .vjs-time-control {

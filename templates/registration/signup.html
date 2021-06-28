@@ -11,7 +11,7 @@
 <main>
     <form method="POST" action="" class="form-signup">{% csrf_token %}
         <h1 class="h4 mb-3 font-weight-normal">アカウント登録</h1>
-        
+
         {% if messages %}
         <ul class="messages_signup">
             {% for message in messages %}
@@ -19,15 +19,15 @@
             {% endfor %}
         </ul>
         {% endif %}
-        
+
         <label for="last_name">名前</label>
         <div class="form-row form-group">
             <input type="text" name="last_name" id="last_name" class="form-control" maxlength="30" placeholder="姓">
             <input type="text" name="first_name" id="first_name" class="form-control" maxlength="30" placeholder="名">
         </div>
-        
+
         <p><input type="text" name="username" class="form-control" maxlength="30" placeholder="ユーザー名" required></p>
-        
+
         <p><input type="text" name="nickname" class="form-control" maxlength="60" placeholder="投稿者名" required></p>
 
         <p><input type="email" name="email" class="form-control" maxlength="120" placeholder="メールアドレス" required></p>
@@ -35,7 +35,7 @@
         <p><input type="password" name="password1" class="form-control" minlength="8" maxlength="16" placeholder="パスワード" required></p>
 
         <p><input type="password" name="password2" class="form-control" minlength="8" maxlength="16" placeholder="パスワード(確認用)" required></p>
-        
+
         <label for="year">生年月日</label>
         <div id="birthday" class="form-row">
             <div class="col-auto">

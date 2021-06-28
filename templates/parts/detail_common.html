@@ -48,7 +48,7 @@
         </div>
         <p class="content_detail_p1">{{ object.content|linebreaksbr|urlize }}</p>
         <p class="content_detail_p2">{{ object.lyrics|linebreaksbr }}</p>
-        
+
         <div class="content_detail_p3">
             {% if user.nickname == object.author.nickname %}
             <button class="btn btn-secondary" disabled>フォローする</button>
@@ -118,7 +118,7 @@
             <label for="reply_aria_check_id" class="reply_aria_check_id">返信</label>
         </div>
     </div>
-    
+
     <form method="POST" action="{% url 'myus:video_detail' object.id %}" class="comment_aria_list_4">{% csrf_token %}
         <div class="reply_input">
             {% if user.is_authenticated %}
@@ -138,7 +138,7 @@
             {% endif %}
         </div>
     </form>
-    
+
     <div class="reply_aria_list">
         {% for reply in reply_list %}
         <a href="{% url 'myus:userpage' reply.author.nickname %}">
@@ -183,7 +183,7 @@
                     <div class="view_good_font content_nickname">
                         {{ item.author.nickname }}
                     </div>
-                
+
                     <div class="view_good_font view_good_inline">
                         <i class="bi bi-caret-right-square view_good_space" title="閲覧数"></i>
                         {{ item.read|intcomma }}

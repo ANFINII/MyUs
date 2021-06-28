@@ -6,7 +6,7 @@
     <h1>ToDo編集</h1>
     {% if user.is_authenticated %}
     <br>
-    
+
     <form method="POST" action="">{% csrf_token %}
         <p><label for="title">タイトル</label></p>
         <p><input type="text" name="title" id="title" class="form-control" value="{{ todomodel.title }}" required></p>
@@ -19,7 +19,7 @@
         <br>
         <p><input type="submit" class="btn btn-success btn-sm" value="完了する"></p>
     </form>
-    
+
     {% else %}
     <h2 class="login_required_todo">ログインしてください</h2>
     {% endif %}
