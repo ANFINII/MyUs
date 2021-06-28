@@ -13,7 +13,7 @@
     <form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
         <article class="main_profile">
             <h1>Myページ設定</h1>
-            
+
             {% if messages %}
             <ul class="messages_profile">
                 {% for message in messages %}
@@ -55,7 +55,7 @@
                     <tr><td class="td-color">内容</td><td><textarea name="content" rows="1" placeholder="ユーザページ概要" class="form-control textarea">{{ user.content }}</textarea></td></tr>
                 </tfoot>
             </table>
-            
+
             {% include 'parts/footer-profile.html' %}
         </article>
     </form>

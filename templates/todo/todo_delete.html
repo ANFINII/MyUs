@@ -11,7 +11,7 @@
     <form action="" method="POST">{% csrf_token %}
         <p><input type="submit" class="btn btn-danger btn-sm" value="削除する"></p>
     </form>
-    
+
     {% else %}
     <h2 class="login_required_todo">ログインしてください</h2>
     {% endif %}

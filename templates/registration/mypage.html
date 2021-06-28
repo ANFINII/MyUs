@@ -14,7 +14,7 @@
     <article class="main_profile">
         <h1>Myページ設定</h1>
         {% if user.is_authenticated %}
-        
+
         <div class="btn-column">
             <div class="btn-column1">
                 <a href="{% url 'myus:mypage_update' %}" class="btn btn-success btn-sm" role="button">編集</a>
@@ -44,9 +44,9 @@
                 <tr><td class="td-color">内容</td><td class="td-indent">{{ user.content|linebreaksbr|urlize }}</td></tr>
             </tfoot>
         </table>
-        
+
         {% include 'parts/footer-profile.html' %}
-        
+
         {% else %}
         <h2 class="login_required">ログインしてください</h2>
         {% endif %}

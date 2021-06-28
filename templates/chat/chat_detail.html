@@ -54,7 +54,7 @@
                     {% endif %}
                     <time>期間 {{ object.period|date:'Y/m/d' }}</time>
                 </div>
-                
+
                 <div class="chat_section_content">
                     <input type="checkbox" id="chat_content_check_id" class="chat_content_check">
 
@@ -173,7 +173,7 @@
                     <i class="bi bi-x" style="font-size: 1.7em;" title="閉じる"></i>
                 </label>
             </div>
-            
+
             <div class="chat_section_thread">
                 {% for comment in comment_list %}
                     {% if comment.id == form_id %}
@@ -235,7 +235,7 @@
                     </form>
                 </footer>
             </div>
-        </div>    
+        </div>
     {% else %}
     <h2 class="unpublished">非公開に設定されてます！</h2>
     {% endif %}

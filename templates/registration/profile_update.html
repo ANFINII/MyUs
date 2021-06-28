@@ -13,7 +13,7 @@
     <form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
         <article class="main_profile">
             <h1>アカウント設定</h1>
-            
+
             {% if messages %}
             <ul class="messages_profile">
                 {% for message in messages %}
@@ -21,7 +21,7 @@
                 {% endfor %}
             </ul>
             {% endif %}
-            
+
             <div class="btn-column">
                 <div class="btn-column1">
                     <input type="submit" id="submit" class="btn btn-success btn-sm" value="登録">
@@ -90,7 +90,7 @@
                     <tr><td class="td-color">自己紹介</td><td><textarea name="introduction" rows="1" class="form-control textarea">{{ user.introduction }}</textarea></td></tr>
                 </tfoot>
             </table>
-            
+
             {% include 'parts/footer-profile.html' %}
         </article>
     </form>

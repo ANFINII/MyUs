@@ -26,7 +26,7 @@
             <p>{{ expired_seconds }}秒有効なURLを生成します。</p>
 
             <p><input type="password" name="password" class="form-control" minlength="8" maxlength="16" placeholder="パスワード" required></p>
-            
+
             <p><input type="submit" id="submit" class="btn btn-lg btn-info btn-block submit" value="退会URL生成"></p>
 
             <p class="withdrawal">
@@ -37,10 +37,10 @@
                 <button class="btn btn-lg btn-danger btn-block">{{ message }}</button>
             {% endif %}
             </p>
-            
+
             <p><a href="{% url 'myus:index' %}" class="btn btn-lg btn-primary btn-block" role="button" aria-disabled="true">ホーム</a></p>
         </form>
-        
+
         {% include 'parts/footer-myus.html' %}
 
         {% else %}
