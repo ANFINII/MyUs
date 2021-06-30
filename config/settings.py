@@ -87,6 +87,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# Channels
+ASGI_APPLICATION = 'config.asgi.application'
+
 # Database
 # https://docs.djangoproject.com/ja/3.0/ref/settings/#databases
 
@@ -136,9 +139,6 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# Channels
-ASGI_APPLICATION = 'config.asgi.application'
 
 # CKEDITOR
 CKEDITOR_UPLOAD_PATH = 'images/upload_images'
