@@ -240,6 +240,7 @@ class Withdrawal(View):
                 messages.error(self.request, 'パスワードが違います!')
                 return redirect('myus:withdrawal')
 
+# Profile
 def profile(request):
     """アカウント設定"""
     object_profile = User.objects.filter(id=request.user.id)
@@ -379,14 +380,13 @@ def searchtag_create(request):
 
 # LikeForm
 models_like_dict = {
-    'video_detail': VideoModel,
-    'live_detail': LiveModel,
-    'music_detail': MusicModel,
-    'picture_detail': PictureModel,
-    'blog_detail': BlogModel,
-    'collabo_detail': CollaboModel,
-    'chat_detail': ChatModel,
-    'collabo_detail': CollaboModel,
+    'video/detail': VideoModel,
+    'live/detail': LiveModel,
+    'music/detail': MusicModel,
+    'picture/detail': PictureModel,
+    'blog/detail': BlogModel,
+    'chat/detail': ChatModel,
+    'collabo/detail': CollaboModel,
 }
 
 @csrf_exempt
@@ -415,13 +415,13 @@ def like_form(request):
 
 # CommentForm & ReplyForm
 models_comment_dict = {
-    'video_detail': VideoModel,
-    'live_detail': LiveModel,
-    'music_detail': MusicModel,
-    'picture_detail': PictureModel,
-    'blog_detail': BlogModel,
-    'collabo_detail': CollaboModel,
-    'todo_detail': TodoModel,
+    'video/detail': VideoModel,
+    'live/detail': LiveModel,
+    'music/detail': MusicModel,
+    'picture/detail': PictureModel,
+    'blog/detail': BlogModel,
+    'collabo/detail': CollaboModel,
+    'todo/detail': TodoModel,
 }
 
 @csrf_exempt
@@ -472,6 +472,7 @@ def reply_form(request):
         if request.is_ajax():
             return JsonResponse(context)
 
+# Index
 class Index(ListView):
     """Index処理、すべてのメディアmodelを表示"""
     model = SearchTagModel
@@ -577,6 +578,44 @@ class UserPage(ListView):
         return VideoModel.objects.none()
 
 # Follow
+class FollowerList(ListView):
+    """FollowerList"""
+    model = FollowModel
+    template_name = 'follow/follower.html'
+    context_object_name = 'follower_list'
+    count = 0
+
+    def get_context_data(self, **kwargs):
+        context = super(FollowerList, self).get_context_data(**kwargs)
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+        })
+        return context
+
+    def get_queryset(self, **kwargs):
+        result = FollowModel.objects.filter(following_id=self.request.user.id)
+        search = self.request.GET.get('search')
+
+        if search:
+            """除外リストを作成"""
+            exclusion_list = set([' ', '　'])
+            q_list = ''
+            for i in search:
+                """全角半角の空文字が含まれたら無視"""
+                if i in exclusion_list:
+                    pass
+                else:
+                    q_list += i
+            query = reduce(and_, [
+                        Q(follower__nickname__icontains=q) |
+                        Q(follower__introduction__icontains=q) for q in q_list]
+                    )
+            result = result.filter(query).distinct()
+            self.count = len(result)
+        return result
+
 class FollowList(ListView):
     """FollowList"""
     model = FollowModel
@@ -611,44 +650,6 @@ class FollowList(ListView):
             query = reduce(and_, [
                         Q(following__nickname__icontains=q) |
                         Q(following__introduction__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).distinct()
-            self.count = len(result)
-        return result
-
-class FollowerList(ListView):
-    """FollowerList"""
-    model = FollowModel
-    template_name = 'follow/follower.html'
-    context_object_name = 'follower_list'
-    count = 0
-
-    def get_context_data(self, **kwargs):
-        context = super(FollowerList, self).get_context_data(**kwargs)
-        context['count'] = self.count or 0
-        context['query'] = self.request.GET.get('search')
-        context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-        })
-        return context
-
-    def get_queryset(self, **kwargs):
-        result = FollowModel.objects.filter(following_id=self.request.user.id)
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(follower__nickname__icontains=q) |
-                        Q(follower__introduction__icontains=q) for q in q_list]
                     )
             result = result.filter(query).distinct()
             self.count = len(result)
@@ -1207,28 +1208,6 @@ class ChatList(ListView):
             self.count = len(result)
         return result
 
-
-class CommentView(FormView):
-    """CommentView"""
-    model = CommentModel
-    template_name = 'chat/chat_detail.html'
-
-    # def post(self, request, form_id, *args, **kwargs):
-    #     # context = self.get_context_data(object=self.object)
-    #     form_id = request.POST.get('id')
-    #     print(form_id)
-    #     context = {
-    #         'form_id': form_id,
-    #     }
-    #     return self.get_context_data(context)
-
-    def get_context_data(self, **kwargs):
-        context = super(CommentView, self).get_context_data(**kwargs)
-        # obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
-        # obj_user = obj.author.id
-        context['form_id'] = self.kwargs.get('form_id')
-        return context
-
 class ChatDetail(DetailView):
     """ChatDetail"""
     model = ChatModel
@@ -1254,7 +1233,7 @@ class ChatDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ChatDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
-        commnet_id = self.kwargs.get('form_id')
+        comment_id = self.kwargs.get('comment_id')
         obj_user = obj.author.id
         print(obj_user)
         follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
@@ -1273,7 +1252,7 @@ class ChatDetail(DetailView):
         context['is_period'] = is_period
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
-        context['form_id'] = commnet_id
+        context['comment_id'] = comment_id
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
@@ -1325,16 +1304,19 @@ def chat_reply(request):
             return JsonResponse(context)
 
 @csrf_exempt
-def chat_thread(request, id):
+def chat_thread(request, pk, comment_id):
     """chat_thread"""
     if request.method == 'POST':
-        form_id = request.POST.get('form_id')
+        pk = request.POST.get('pk')
+        comment_id = request.POST.get('comment_id')
         context = {
-            'form_id': form_id,
+            'pk': pk,
+            'comment_id': comment_id,
         }
-        print(form_id)
-        # if request.is_ajax():
-        return render(request, 'chat/chat_detail.html', context=context)
+        print(pk)
+        print(comment_id)
+        if request.is_ajax():
+            return render(request, 'chat/chat_detail.html', context)
             # return JsonResponse(context)
         # return HttpResponse(context)
 
