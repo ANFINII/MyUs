@@ -8,10 +8,10 @@ from .views import LiveList, LiveCreate, LiveDetail
 from .views import MusicList, MusicCreate, MusicDetail
 from .views import PictureList, PictureCreate, PictureDetail
 from .views import BlogList, BlogCreate, BlogDetail
-from .views import ChatList, ChatCreate, ChatDetail, chat_message, chat_reply
+from .views import ChatList, ChatCreate, ChatDetail, chat_thread, chat_message, chat_reply
 from .views import CollaboList, CollaboCreate, CollaboDetail
 from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
-from .views import searchtag_create, like_form, comment_form, reply_form, CommentView
+from .views import searchtag_create, like_form, comment_form, reply_form
 from .views import signup_form, login_form, logout_form, Withdrawal
 
 app_name = 'myus'
@@ -49,13 +49,14 @@ urlpatterns = [
     path('picture/detail/<int:pk>', PictureDetail.as_view(), name='picture_detail'),
 
     path('blog/', BlogList.as_view(), name='blog_list'),
-    path('blog_create/', BlogCreate.as_view(), name='blog_create'),
-    path('blog_detail/<int:pk>', BlogDetail.as_view(), name='blog_detail'),
+    path('blog/create/', BlogCreate.as_view(), name='blog_create'),
+    path('blog/detail/<int:pk>', BlogDetail.as_view(), name='blog_detail'),
 
     path('chat/', ChatList.as_view(), name='chat_list'),
     path('chat/create/', ChatCreate.as_view(), name='chat_create'),
     path('chat/detail/<int:pk>', ChatDetail.as_view(), name='chat_detail'),
-    path('chat/detail/<int:pk>/thread/<int:comment_id>', csrf_exempt(ChatDetail.as_view()), name='chat_thread'),
+    path('chat/detail/<int:pk>/thread/<int:comment_id>', ChatDetail.as_view(), name='chat_thread'),
+    # path('chat/detail/<int:pk>/thread/<int:comment_id>', chat_thread, name='chat_thread'),
     path('chat/detail/message', chat_message, name='chat_message'),
     path('chat/detail/reply', chat_reply, name='chat_reply'),
 
