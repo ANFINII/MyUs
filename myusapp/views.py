@@ -1220,22 +1220,42 @@ class ChatDetail(DetailView):
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
-    # def post(self, request, *args, **kwargs):
-    #     pk = request.POST.get('pk')
-    #     form_id = request.POST.get('form_id')
-    #     context = {
-    #         'pk': pk,
-    #         'form_id': form_id
-    #     }
-    #     # context = self.get_context_data(object=self.object)
-    #     return render(request, 'chat/chat_detail.html', context)
-
     def get_context_data(self, **kwargs):
         context = super(ChatDetail, self).get_context_data(**kwargs)
         obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
-        comment_id = self.kwargs.get('comment_id')
         obj_user = obj.author.id
-        print(obj_user)
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        liked = False
+        followed = False
+        if obj.like.filter(id=self.request.user.id).exists():
+            liked = True
+        if follow.exists():
+            followed = True
+        if self.object.period < datetime.date.today():
+            is_period = True
+        else:
+            is_period = False
+        context['liked'] = liked
+        context['followed'] = followed
+        context['is_period'] = is_period
+        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
+        })
+        return context
+
+class ChatThread(DetailView):
+    """ChatDetailThread"""
+    model = ChatModel
+    template_name = 'chat/chat_thread.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ChatThread, self).get_context_data(**kwargs)
+        obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
+        comment_id = id=self.kwargs['comment_id']
+        obj_user = obj.author.id
         follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
         liked = False
         followed = False
@@ -1302,23 +1322,6 @@ def chat_reply(request):
         }
         if request.is_ajax():
             return JsonResponse(context)
-
-@csrf_exempt
-def chat_thread(request, pk, comment_id):
-    """chat_thread"""
-    if request.method == 'POST':
-        pk = request.POST.get('pk')
-        comment_id = request.POST.get('comment_id')
-        context = {
-            'pk': pk,
-            'comment_id': comment_id,
-        }
-        print(pk)
-        print(comment_id)
-        if request.is_ajax():
-            return render(request, 'chat/chat_detail.html', context)
-            # return JsonResponse(context)
-        # return HttpResponse(context)
 
 # Collabo
 class CollaboCreate(CreateView):
