@@ -112,6 +112,11 @@ hr {
     color: rgb(120, 120, 120);
 }
 
+.chat_section_header_cross a {
+    text-decoration: none;
+    color: rgb(120, 120, 120);
+}
+
 .comment_aria_check:checked ~ .chat_section_header_cross {
     display: block;
     grid-column: 3/-1;

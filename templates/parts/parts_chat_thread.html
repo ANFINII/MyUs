@@ -1,0 +1,68 @@
+<div class="chat_section_header_cross">
+    <h3>スレッド</h3>
+    <a href="{% url 'myus:chat_detail' object.pk %}" class="chat_section_header_cross_check">
+        <i class="bi bi-x" style="font-size: 1.7em;" title="閉じる" class="chat_section_header_cross_check get-id-2"></i>
+    </a>
+</div>
+
+<div class="chat_section_thread">
+{% for comment in comment_list %}
+    {% if comment.id == comment_id %}
+    <div class="comment_aria_list">
+        <a href="{% url 'myus:userpage' comment.author.nickname %}">
+            <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+        </a>
+        <div class="comment_aria_list_1">
+            <p>{{ comment.author.nickname }}</p>
+            <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
+        </div>
+        <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
+    </div>
+    {% endif %}
+{% endfor %}
+
+{% for reply in reply_list %}
+    {% if reply.parent.id == comment_id %}
+    <div class="comment_aria_list">
+        <a href="{% url 'myus:userpage' reply.author.nickname %}">
+            <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+        </a>
+        <div class="comment_aria_list_1">
+            <p>{{ reply.author.nickname }}</p>
+            <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
+        </div>
+        <div class="comment_aria_list_2">{{ reply.text|urlize|linebreaks }}</div>
+    </div>
+    {% endif %}
+{% endfor %}
+<div id="reply_aria_add"></div>
+
+<footer class="chat_footer_thread">
+    <form method="POST" action="{% url 'myus:chat_reply' %}" id="reply_form" obj-id="{{ object.id }}" comment-id="{{ comment_id }}">{% csrf_token %}
+        {% if is_period %}
+        <textarea name="text" rows="1" class="textarea_br" placeholder="チャット期間が過ぎています！" disabled="disabled"></textarea>
+        <div class="chat_frame chat_frame_color"></div>
+        <div class="comment_input_chat">
+            <button type="submit" class="btn btn-secondary btn-sm" title="送信" disabled>
+                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
+            </button>
+        </div>
+        {% elif user.is_authenticated %}
+        <textarea name="text" rows="1" class="textarea_br" placeholder="スレッド返信" required></textarea>
+        <div class="chat_frame"></div>
+        <div class="comment_input_chat">
+            <button type="submit" class="btn btn-primary btn-sm" title="送信">
+                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
+            </button>
+        </div>
+        {% else %}
+        <textarea name="text" rows="1" class="textarea_br" placeholder="チャットするにはログインが必要です！" disabled="disabled"></textarea>
+        <div class="chat_frame chat_frame_color"></div>
+        <div class="comment_input_chat">
+            <button type="submit" class="btn btn-secondary btn-sm" disabled title="送信">
+                <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
+            </button>
+        </div>
+        {% endif %}
+    </form>
+</footer>
