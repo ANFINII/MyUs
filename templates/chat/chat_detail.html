@@ -115,11 +115,10 @@
                 </div>
             </div>
 
-            <input type="checkbox" id="comment_aria_check_id_{{ comment.id }}" class="comment_aria_check get-id-1">
             <div class="chat_section_main">
                 <div class="chat_section_main_area">
                     {% for comment in comment_list %}
-                        <label for="comment_aria_check_id_{{ comment.id }}" class="comment_aria_list">
+                        <div class="comment_aria_list">
                             <a href="{% url 'myus:userpage' comment.author.nickname %}">
                                 <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
                             </a>
@@ -128,8 +127,8 @@
                                 <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
                             </div>
                             <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
-                        </label>
-                    <a href="{% url 'myus:chat_thread' object.pk comment.id %}" object-pk="{{ object.pk }}" comment-id="{{ comment.id }}" class="click_id">リンク</a>
+                        </div>
+                        <a href="{% url 'myus:chat_thread' object.pk comment.id %}" class="click_id">スレッド</a>
                     {% endfor %}
                     <div id="comment_aria_add"></div>
                 </div>
