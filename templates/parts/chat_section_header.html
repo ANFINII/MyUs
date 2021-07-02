@@ -1,0 +1,103 @@
+{% load humanize %}
+
+<div class="chat_section_header">
+    <h1 title="{{ object.title }}">{{ object.title }}</h1>
+
+    <div class="article_detail_aria_2">
+        <div class="view_good_inline">
+            <i class="bi bi-caret-right-square" title="閲覧数"></i>
+            <span>{{ object.read|intcomma }}</span>
+        </div>
+
+        <div class="view_good_inline">
+            <i class="bi bi-person" title="参加数"></i>
+            <span id="user_count">{{ object.user_count|intcomma }}</span>
+        </div>
+
+        <div class="view_good_inline">
+            <i class="bi bi-chat-dots" title="投稿数"></i>
+            <span id="comment_count">{{ object.comment_count|intcomma }}</span>
+        </div>
+
+        {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'myus:like_form' %}" class="view_good_inline char_like" path="{{ request.path }}">{% csrf_token %}
+                {% if liked %}
+                <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_fill">
+                    <i class="bi bi-hand-thumbs-up-fill like_color" title="いいね"></i>
+                </button>
+                {% else %}
+                <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_no">
+                    <i class="bi bi-hand-thumbs-up like_color" title="いいね"></i>
+                </button>
+                {% endif %}
+                <span class="like_count">{{ object.total_like|intcomma }}</span>
+            </form>
+        {% else %}
+        <div class="view_good_inline">
+            <i class="bi bi-hand-thumbs-up" title="いいね"></i>
+            <span>{{ object.total_like|intcomma }}</span>
+        </div>
+        {% endif %}
+        <time>期間 {{ object.period|date:'Y/m/d' }}</time>
+    </div>
+
+    <div class="chat_section_content">
+        <input type="checkbox" id="chat_content_check_id" class="chat_content_check">
+
+        <label for="chat_content_check_id" class="chat_content_label" title="内容">
+            <i class="bi bi-file-text" title="内容"></i>
+        </label>
+
+        <div class="chat_content">
+            <div class="chat_content_list">
+                <a href="{% url 'myus:userpage' object.author.nickname %}">
+                    <img src="{{ object.author.user_image.url }}" title="{{ object.author.nickname }}" class="profile_image_comment">
+                </a>
+                <div class="chat_content_list_1">
+                    <p>{{ object.author.nickname }}</p>
+                    <time>{{ object.created|date:'Y/m/d H:i' }}</time>
+                </div>
+                <div class="chat_content_list_2">登録者数
+                    <span class="follower_count">{{ object.author.follower_count }}</span>
+                </div>
+                <div class="chat_content_list_3">
+                    {% if user.nickname == object.author.nickname %}
+                    <button class="btn btn-secondary btn-sm" disabled>フォローする</button>
+                    {% elif user.is_authenticated %}
+                    <form method="POST" action="{% url 'myus:follow_create' object.author.nickname %}" class="follow_form">{% csrf_token %}
+                        {% if followed %}
+                        <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-danger btn-sm followchange">解除する</button>
+                        {% else %}
+                        <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-success btn-sm followchange">フォローする</button>
+                        {% endif %}
+                    </form>
+                    {% else %}
+                    <button class="btn btn-secondary btn-sm" disabled>フォローする</button>
+                    {% endif %}
+                </div>
+                <div class="chat_content_list_4">{{ object.content|linebreaksbr }}</div>
+            </div>
+        </div>
+    </div>
+    {% include 'parts/tag.html' %}
+</div>
+
+<input type="checkbox" id="chat_section_nav_check_id" class="chat_section_nav_check">
+
+<div class="chat_section_nav">
+    <label for="chat_section_nav_check_id" class="chat_section_nav_label">
+        <i class="bi bi-arrow-left-right" title="開閉"></i>
+    </label>
+    <div  class="chat_section_nav_area">
+        {% for item in chat_list %}
+        <div class="chat_section_nav_list">
+            <a href="{% url 'myus:userpage' item.author.nickname %}">
+                <img src="{{ item.author.user_image.url }}" title="{{ item.author.nickname }}" class="profile_image_comment">
+            </a>
+            <a  href="{% url 'myus:chat_detail' item.pk %}">
+                <h3 title="{{ item.title }}">{{ item.title }}</h3>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
