@@ -1507,7 +1507,7 @@ input::placeholder {
 }
 
 .search_icon:focus {
-	outline: none;
+    outline: none;
 }
 
 .search-container {
