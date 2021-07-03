@@ -1329,6 +1329,29 @@ header {
     display: block;
 }
 
+.comment_aria_list a {
+    text-decoration: none;
+}
+
+.comment_aria_thread {
+    grid-column: 2/3;
+    grid-row: 3/4;
+    height: 25px;
+    padding: 2px 0 2px 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    color: rgb(40, 140, 255);
+    border: 1px solid rgba(255, 255, 255, 0);
+    border-radius: 5px;
+}
+
+.comment_aria_thread:hover {
+    color: rgb(40, 140, 255);
+    border: 1px solid rgba(170, 210, 255, 0.8);
+    background: rgb(255, 255, 255);
+}
+
 .advertise_aria h2 {
     font-size: 16px;
     margin: 0 0 12px 0;

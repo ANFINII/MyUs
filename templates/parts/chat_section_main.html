@@ -10,8 +10,8 @@
                     <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
                 </div>
                 <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
+                <a href="{% url 'myus:chat_thread' object.pk comment.id %}" class="comment_aria_thread">スレッド表示</a>
             </div>
-            <a href="{% url 'myus:chat_thread' object.pk comment.id %}" class="click_id">スレッド</a>
         {% endfor %}
         <div id="comment_aria_add"></div>
     </div>
