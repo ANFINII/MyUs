@@ -123,9 +123,9 @@ def mypage_image(self):
 
 class FollowModel(models.Model):
     """FollowModel"""
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
-    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following', verbose_name='follow')
-    created = models.DateTimeField(auto_now_add=True)
+    follower  = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
+    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+    created   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "{} : {}".format(self.follower.username, self.following.username)
@@ -135,10 +135,10 @@ class FollowModel(models.Model):
 
 class SearchTagModel(models.Model):
     """SearchTagModel"""
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    sequence = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=20)
+    author    = models.ForeignKey(User, on_delete=models.CASCADE)
+    sequence  = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=20)
     searchtag = models.CharField(max_length=12, null=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.searchtag
@@ -149,7 +149,7 @@ class SearchTagModel(models.Model):
 class TagModel(models.Model):
     """TagModel"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    tag = models.CharField(max_length=12, null=True)
+    tag    = models.CharField(max_length=12, null=True)
 
     def __str__(self):
         return self.tag
