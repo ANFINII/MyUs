@@ -326,6 +326,10 @@ hr {
     background-color: rgb(240, 245, 255);
 }
 
+.comment_aria_thread {
+    display: block;
+}
+
 /* chat_section_thread */
 .chat_section_thread {
     display: none;
