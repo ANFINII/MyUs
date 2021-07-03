@@ -22,8 +22,11 @@ from operator import and_
 from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm
-import re, datetime, string, random, json, asyncio
-from time import sleep
+import re
+import datetime
+import string
+import random
+import json
 
 # Create your views here.
 
@@ -59,6 +62,7 @@ def has_tag(text):
     if re.search('.{1,12}', text) != None:
         return True
     return False
+
 
 # Signup
 def signup_form(request):
@@ -159,6 +163,7 @@ def signup_form(request):
                     return render(request, 'registration/signup.html')
     return render(request, 'registration/signup.html')
 
+
 # Login
 def login_form(request):
     """ログイン処理"""
@@ -185,12 +190,14 @@ def login_form(request):
             return redirect('myus:login')
     return render(request, 'registration/login.html')
 
+
 # Logout
 @login_required
 def logout_form(request):
     """ログアウト処理"""
     logout(request)
     return redirect('myus:login')
+
 
 # Withdrawal
 EXPIRED_SECONDS = 60
@@ -239,6 +246,7 @@ class Withdrawal(View):
             else:
                 messages.error(self.request, 'パスワードが違います!')
                 return redirect('myus:withdrawal')
+
 
 # Profile
 def profile(request):
@@ -316,6 +324,7 @@ class ProfileUpdate(UpdateView):
     def get_object(self):
         return self.request.user
 
+
 # MyPage
 def mypage(request):
     """Myページ遷移"""
@@ -360,6 +369,7 @@ class MyPageUpdate(UpdateView):
     def get_object(self):
         return self.request.user
 
+
 # SearchTag
 class SearchTagList(ListView):
     """SearchTagList"""
@@ -377,6 +387,7 @@ def searchtag_create(request):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             form = SearchTagForm()
+
 
 # LikeForm
 models_like_dict = {
@@ -412,6 +423,7 @@ def like_form(request):
         }
         if request.is_ajax():
             return JsonResponse(context)
+
 
 # CommentForm & ReplyForm
 models_comment_dict = {
@@ -471,6 +483,7 @@ def reply_form(request):
         }
         if request.is_ajax():
             return JsonResponse(context)
+
 
 # Index
 class Index(ListView):
@@ -576,6 +589,7 @@ class UserPage(ListView):
             self.count = len(result)
             return result
         return VideoModel.objects.none()
+
 
 # Follow
 class FollowerList(ListView):
@@ -696,15 +710,18 @@ def follow_create(request, nickname):
         if request.is_ajax():
             return JsonResponse(context)
 
+
 # UserPolicy
 def userpolicy(request):
     """userpolicy"""
     return render(request, 'common/userpolicy.html')
 
+
 # KnowledgeBase
 def knowledge(request):
     """knowledge"""
     return render(request, 'common/knowledge.html')
+
 
 # Video
 class VideoCreate(CreateView):
@@ -795,6 +812,7 @@ class VideoDetail(DetailView):
         })
         return context
 
+
 # Live
 class LiveCreate(CreateView):
     """LiveCreate"""
@@ -883,6 +901,7 @@ class LiveDetail(DetailView):
             'live_list': LiveModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
+
 
 # Music
 class MusicCreate(CreateView):
@@ -974,6 +993,7 @@ class MusicDetail(DetailView):
         })
         return context
 
+
 # Picture
 class PictureCreate(CreateView):
     """PictureCreate"""
@@ -1062,6 +1082,7 @@ class PictureDetail(DetailView):
             'picture_list': PictureModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
+
 
 # Blog
 class BlogCreate(CreateView):
@@ -1152,6 +1173,7 @@ class BlogDetail(DetailView):
             'blog_list': BlogModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
+
 
 # Chat
 class ChatCreate(CreateView):
@@ -1307,10 +1329,12 @@ def chat_reply(request):
     if request.method == 'POST':
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
+        comment_id = request.POST.get('comment_id')
         obj = ChatModel.objects.get(id=obj_id)
         comment_obj = CommentModel(content_object=obj, text=text)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
+        comment_obj.parent = CommentModel.objects.get(id=comment_id)
         comment_obj.save()
         context = {
             'text': urlize_impl(linebreaks(comment_obj.text)),
@@ -1322,6 +1346,7 @@ def chat_reply(request):
         }
         if request.is_ajax():
             return JsonResponse(context)
+
 
 # Collabo
 class CollaboCreate(CreateView):
@@ -1416,6 +1441,7 @@ class CollaboDetail(DetailView):
             'collabo_list': CollaboModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
         })
         return context
+
 
 # Todo
 class TodoCreate(CreateView):
