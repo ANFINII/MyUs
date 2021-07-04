@@ -455,7 +455,7 @@ def comment_form(request):
             'nickname': comment_obj.author.nickname,
             'user_image': comment_obj.author.user_image.url,
             'created': naturaltime(comment_obj.created),
-            'comment_count': obj.comments.all().count()
+            'comment_count': obj.comments.filter(parent__isnull=False).count()
         }
         if request.is_ajax():
             return JsonResponse(context)
@@ -479,7 +479,7 @@ def reply_form(request):
             'nickname': comment_obj.author.nickname,
             'user_image': comment_obj.author.user_image.url,
             'created': naturaltime(comment_obj.created),
-            'comment_count': obj.comments.all().count()
+            'comment_count': obj.comments.filter(parent__isnull=False).count()
         }
         if request.is_ajax():
             return JsonResponse(context)
@@ -1276,7 +1276,7 @@ class ChatThread(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ChatThread, self).get_context_data(**kwargs)
         obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
-        comment_id = id=self.kwargs['comment_id']
+        comment_id = self.kwargs['comment_id']
         obj_user = obj.author.id
         follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
         liked = False
@@ -1292,9 +1292,9 @@ class ChatThread(DetailView):
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
+        context['comment_id'] = comment_id
         context['comment_list'] = self.object.comments.filter(parent__isnull=True)
         context['reply_list'] = self.object.comments.filter(parent__isnull=False)
-        context['comment_id'] = comment_id
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
@@ -1312,13 +1312,16 @@ def chat_message(request):
         comment_obj.text = text
         comment_obj.author_id = request.user.id
         comment_obj.save()
+        comment_obj = CommentModel.objects.latest('id')
         context = {
             'text': urlize_impl(linebreaks(comment_obj.text)),
+            'pk': obj_id,
+            'comment_id': comment_obj.id,
             'nickname': comment_obj.author.nickname,
             'user_image': comment_obj.author.user_image.url,
             'created': comment_obj.created.strftime("%Y/%m/%d %H:%M"),
             'user_count': obj.user_count(),
-            'comment_count': obj.comments.all().count()
+            'comment_count': obj.comment_count(),
         }
         if request.is_ajax():
             return JsonResponse(context)
@@ -1342,7 +1345,7 @@ def chat_reply(request):
             'user_image': comment_obj.author.user_image.url,
             'created': comment_obj.created.strftime("%Y/%m/%d %H:%M"),
             'user_count': obj.user_count(),
-            'comment_count': obj.comments.all().count()
+            'reply_count':  comment_obj.reply_count,
         }
         if request.is_ajax():
             return JsonResponse(context)
