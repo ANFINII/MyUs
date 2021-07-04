@@ -13,8 +13,8 @@
     <article class="article_detail_chat">
     {% if object.publish %}
         <div class="chat_section">
-            {% include 'parts/chat_section_header.html' %}
             <input type="checkbox" class="comment_aria_check" checked>
+            {% include 'parts/chat_section_header.html' %}
             {% include 'parts/chat_section_main.html' %}
             {% include 'parts/chat_section_thread.html' %}
         </div>
