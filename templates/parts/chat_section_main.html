@@ -1,3 +1,5 @@
+{% load humanize %}
+
 <div class="chat_section_main">
     <div class="chat_section_main_area">
         {% for comment in comment_list %}
@@ -10,14 +12,17 @@
                     <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
                 </div>
                 <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
-                <a href="{% url 'myus:chat_thread' object.pk comment.id %}" class="comment_aria_thread">スレッド表示</a>
+                <a href="{% url 'myus:chat_thread' object.pk comment.id %}" class="comment_aria_thread">
+                    スレッド表示
+                    <span>返信 {{ comment.reply_count|intcomma }} 件</span>
+                </a>
             </div>
         {% endfor %}
         <div id="comment_aria_add"></div>
     </div>
 
     <footer class="chat_footer_main" id="footer">
-        <form method="POST" action="{% url 'myus:chat_message' %}" obj-id="{{ object.id }}">{% csrf_token %}
+        <form method="POST" action="{% url 'myus:chat_message' %}" id="comment_form" obj-id="{{ object.id }}">{% csrf_token %}
             {% if is_period %}
             <textarea name="text" rows="1" class="textarea_br" placeholder="チャット期間が過ぎています！" disabled="disabled"></textarea>
             <div class="chat_frame chat_frame_color"></div>
@@ -30,7 +35,7 @@
             <textarea name="text" rows="1" class="textarea_br" placeholder="メッセージ入力" required></textarea>
             <div class="chat_frame"></div>
             <div class="comment_input_chat">
-                <button type="submit" id="comment_form" class="btn btn-primary btn-sm" title="送信">
+                <button type="submit" id="comment_form_button" class="btn btn-primary btn-sm" title="送信">
                     <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
                 </button>
             </div>

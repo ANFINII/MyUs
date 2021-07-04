@@ -201,7 +201,7 @@ class VideoModel(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.all().count()
+        return self.comments.filter(parent__isnull=True).count()
 
     class Meta:
         verbose_name_plural = '01 Video'
@@ -250,7 +250,7 @@ class LiveModel(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.all().count()
+        return self.comments.filter(parent__isnull=True).count()
 
     class Meta:
         verbose_name_plural = '02 Live'
@@ -300,7 +300,7 @@ class MusicModel(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.all().count()
+        return self.comments.filter(parent__isnull=True).count()
 
     class Meta:
         verbose_name_plural = '03 Music'
@@ -348,7 +348,7 @@ class PictureModel(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.all().count()
+        return self.comments.filter(parent__isnull=True).count()
 
     class Meta:
         verbose_name_plural = '04 Picture'
@@ -398,7 +398,7 @@ class BlogModel(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.all().count()
+        return self.comments.filter(parent__isnull=True).count()
 
     class Meta:
         verbose_name_plural = '05 Blog'
@@ -447,7 +447,7 @@ class ChatModel(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.all().count()
+        return self.comments.filter(parent__isnull=True).count()
 
     def user_count(self):
         self.joined = self.comments.order_by('author').distinct().values_list('author').count()
@@ -477,7 +477,7 @@ class CollaboModel(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.all().count()
+        return self.comments.filter(parent__isnull=True).count()
 
     class Meta:
         verbose_name_plural = '07 Collabo'
@@ -501,7 +501,7 @@ class TodoModel(models.Model):
         return reverse('todo_detail', kwargs={'pk':self.pk})
 
     def comment_count(self):
-        return self.comments.all().count()
+        return self.comments.filter(parent__isnull=True).count()
 
     class Meta:
         verbose_name_plural = '08 ToDo'
@@ -523,6 +523,9 @@ class CommentModel(models.Model):
 
     def total_like(self):
         return self.like.count()
+
+    def reply_count(self):
+        return CommentModel.objects.filter(parent=self).count()
 
     class Meta:
         verbose_name_plural = '12 コメント'

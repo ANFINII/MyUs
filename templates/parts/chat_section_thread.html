@@ -38,7 +38,7 @@
 <div id="reply_aria_add"></div>
 
 <footer class="chat_footer_thread">
-    <form method="POST" action="{% url 'myus:chat_reply' %}" obj-id="{{ object.id }}" comment-id="{{ comment_id }}">{% csrf_token %}
+    <form method="POST" action="{% url 'myus:chat_reply' %}" id="reply_form" obj-id="{{ object.id }}" comment-id="{{ comment_id }}">{% csrf_token %}
         {% if is_period %}
         <textarea name="text" rows="1" class="textarea_br" placeholder="チャット期間が過ぎています！" disabled="disabled"></textarea>
         <div class="chat_frame chat_frame_color"></div>
@@ -51,7 +51,7 @@
         <textarea name="text" rows="1" class="textarea_br" placeholder="スレッド返信" required></textarea>
         <div class="chat_frame"></div>
         <div class="comment_input_chat">
-            <button type="submit" id="reply_form" class="btn btn-primary btn-sm" title="送信">
+            <button type="submit" id="reply_form_button" class="btn btn-primary btn-sm" title="送信">
                 <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
             </button>
         </div>
