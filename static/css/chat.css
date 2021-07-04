@@ -80,8 +80,14 @@ hr {
     grid-row: 1/2;
     min-height: 80px;
     height: fit-content;
-    padding: 5px 8px 5px 8px;
+    padding: 5px 0 5px 8px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+}
+
+.article_detail_aria_2 {
+    font-size: 14px;
+    overflow: hidden;
 }
 
 .comment_aria_check:checked ~ .chat_section_header {
@@ -92,23 +98,17 @@ hr {
     font-size: 16px;
     height: fit-content;
     margin: 0;
-    white-space: nowrap;
 }
 
-.chat_section_header p,
-.chat_section_header time {
-    display: inline;
-    font-size: 14px;
+.article_detail_aria_2 time {
     height: fit-content;
     margin: 0 0 -5px 0;
 }
 
-.article_detail_aria_2 {
-    font-size: 14px;
-}
-
 .chat_section_header_cross {
     display: none;
+    left: 0;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
     color: rgb(120, 120, 120);
 }
 
@@ -121,7 +121,8 @@ hr {
     display: block;
     grid-column: 3/-1;
     grid-row: 1/2;
-    border-left: solid 1px rgba(0, 0, 0, 0.1);
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .chat_section_header_cross_check {
@@ -221,7 +222,7 @@ hr {
     grid-row: 2/-1;
     width: 52px;
     height: calc(100vh - 161px);
-    border-right: solid 1px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .chat_section_nav_area {
@@ -306,13 +307,13 @@ hr {
     overflow-y: scroll;
 }
 
+.comment_aria_check {
+    display: none;
+}
+
 .comment_aria_check:checked ~ .chat_section_main {
     grid-column: 2/3;
     grid-row: 2/-1;
-}
-
-.comment_aria_check {
-    display: none;
 }
 
 .comment_aria_list {
@@ -336,7 +337,7 @@ hr {
     height: calc(100vh - 161px);
     padding: 0 0 86px 0;
     overflow-y: scroll;
-    border-left: solid 1px rgba(0, 0, 0, 0.1);
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
@@ -391,6 +392,7 @@ hr {
     vertical-align: middle;
     outline: none;
     resize: none;
+    overflow: hidden;
     border: 1px solid rgb(120, 120, 120);
     border-bottom: none;
     border-radius: 5px 5px 0 0;

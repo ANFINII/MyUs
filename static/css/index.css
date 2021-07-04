@@ -481,7 +481,7 @@ header {
 
 .tag_menu:checked ~ .main_tag3:focus {
     border-radius: 4px;
-    border: solid 1px rgb(80, 170, 255);
+    border: 1px solid rgb(80, 170, 255);
     box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
 }
 
@@ -595,14 +595,14 @@ header {
     color: #495057;
     box-sizing: border-box;
     border-radius: 4px;
-    border: solid 1px rgb(206, 212, 218);
+    border: 1px solid rgb(206, 212, 218);
     background: transparent;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 .main_contents select:focus {
     border-radius: 4px;
-    border: solid 1px rgb(80, 170, 255);
+    border: 1px solid rgb(80, 170, 255);
     box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
 }
 
