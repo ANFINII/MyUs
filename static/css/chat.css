@@ -193,6 +193,22 @@ hr {
     white-space: nowrap
 }
 
+.chat_content_list_1 {
+    grid-column: 2/3;
+    grid-row: 1/2;
+}
+
+.chat_content_list_1 p {
+    display: inline;
+    font-size: 14px;
+    margin: 0;
+}
+
+.chat_content_list_1 time {
+    font-size: 12px;
+    color: rgb(120, 120, 120);
+}
+
 .chat_content_list_2 {
     grid-column: 2/3;
     grid-row: 2/3;
@@ -209,7 +225,7 @@ hr {
 .chat_content_list_4 {
     grid-column: 2/-1;
     grid-row: 3/-1;
-    margin: 5px 0 0 0;
+    margin: 4px 0;
     font-size: 14px;
 }
 
