@@ -10,18 +10,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.html import urlize as urlize_impl
-from django.db.models import Q, Max, Min, Avg, Count, F, Value
+from django.db.models import Q, F, Count, Max, Min, Avg, Value
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaks, linebreaksbr
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, FormView
 from dateutil.relativedelta import relativedelta
 from itertools import chain, islice
-from functools import reduce
-from operator import and_
 from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm
+from .modules.search import search_follow, search_models, search_music, search_blog, search_todo
 import re
 import datetime
 import string
@@ -609,25 +608,7 @@ class FollowerList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = FollowModel.objects.filter(following_id=self.request.user.id)
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(follower__nickname__icontains=q) |
-                        Q(follower__introduction__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).distinct()
-            self.count = len(result)
+        result = search_follow(self, FollowModel)
         return result
 
 class FollowList(ListView):
@@ -648,25 +629,7 @@ class FollowList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = FollowModel.objects.filter(follower_id=self.request.user.id)
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(following__nickname__icontains=q) |
-                        Q(following__introduction__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).distinct()
-            self.count = len(result)
+        result = search_follow(self, FollowModel)
         return result
 
 @csrf_exempt
@@ -755,27 +718,7 @@ class VideoList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = VideoModel.objects.filter(publish=True).order_by('-created')
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(tags__tag__icontains=q) |
-                        Q(author__nickname__icontains=q) |
-                        Q(content__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            self.count = len(result)
+        result = search_models(self, VideoModel)
         return result
 
 class VideoDetail(DetailView):
@@ -845,27 +788,7 @@ class LiveList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = LiveModel.objects.filter(publish=True).order_by('-created')
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(tags__tag__icontains=q) |
-                        Q(author__nickname__icontains=q) |
-                        Q(content__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            self.count = len(result)
+        result = search_models(self, LiveModel)
         return result
 
 class LiveDetail(DetailView):
@@ -935,28 +858,7 @@ class MusicList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = MusicModel.objects.filter(publish=True).order_by('-created')
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(tags__tag__icontains=q) |
-                        Q(author__nickname__icontains=q) |
-                        Q(content__icontains=q) |
-                        Q(lyrics__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            self.count = len(result)
+        result = search_music(self, MusicModel)
         return result
 
 class MusicDetail(DetailView):
@@ -1026,27 +928,7 @@ class PictureList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = PictureModel.objects.filter(publish=True).order_by('-created')
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(tags__tag__icontains=q) |
-                        Q(author__nickname__icontains=q) |
-                        Q(content__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            self.count = len(result)
+        result = search_models(self, PictureModel)
         return result
 
 class PictureDetail(DetailView):
@@ -1116,28 +998,7 @@ class BlogList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = BlogModel.objects.filter(publish=True).order_by('-created')
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(tags__tag__icontains=q) |
-                        Q(author__nickname__icontains=q) |
-                        Q(content__icontains=q) |
-                        Q(richtext__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            self.count = len(result)
+        result = search_blog(self, BlogModel)
         return result
 
 class BlogDetail(DetailView):
@@ -1207,27 +1068,7 @@ class ChatList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = ChatModel.objects.filter(publish=True).order_by('-created')
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(tags__tag__icontains=q) |
-                        Q(author__nickname__icontains=q) |
-                        Q(content__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            self.count = len(result)
+        result = search_models(self, ChatModel)
         return result
 
 class ChatDetail(DetailView):
@@ -1350,6 +1191,12 @@ def chat_reply(request):
         if request.is_ajax():
             return JsonResponse(context)
 
+class ChatDelete(DeleteView):
+    """ChatDelete"""
+    model = CommentModel
+    template_name = 'chat/chat_detail.html'
+    success_url = reverse_lazy('myus:chat_detail')
+
 
 # Collabo
 class CollaboCreate(CreateView):
@@ -1383,27 +1230,7 @@ class CollaboList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = CollaboModel.objects.filter(publish=True).order_by('-created')
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(tags__tag__icontains=q) |
-                        Q(author__nickname__icontains=q) |
-                        Q(content__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).annotate(score=F('read') + Count('like')*10).order_by('-score').distinct()
-            self.count = len(result)
+        result = search_models(self, CollaboModel)
         return result
 
 class CollaboDetail(DetailView):
@@ -1478,26 +1305,7 @@ class TodoList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = TodoModel.objects.filter(author_id=self.request.user.id)
-        search = self.request.GET.get('search')
-
-        if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
-            query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(content__icontains=q) |
-                        Q(duedate__icontains=q) for q in q_list]
-                    )
-            result = result.filter(query).order_by('-duedate').distinct()
-            self.count = len(result)
+        result = search_todo(self, TodoModel)
         return result
 
 class TodoDetail(DetailView):
