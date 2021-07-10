@@ -84,7 +84,7 @@ class TagAdmin(ImportExportModelAdmin):
 @admin.register(CommentModel)
 class CommentAdmin(ImportExportModelAdmin):
     list_display = ('id', 'content_type', 'object_id', 'content_object', 'author', 'text', 'parent_id', 'total_like', 'created', 'updated')
-    list_select_related = ('author', 'parent')
+    list_select_related = ('author', 'parent', 'content_type')
     search_fields = ('text', 'author__nickname', 'created', 'updated')
     ordering = ('content_type', 'object_id', 'id')
     filter_horizontal = ('like',)
@@ -99,6 +99,9 @@ class CommentAdmin(ImportExportModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('like')
 
 @admin.register(VideoModel)
 class VideoModelAdmin(ImportExportModelAdmin):
@@ -124,6 +127,9 @@ class VideoModelAdmin(ImportExportModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
+
 @admin.register(LiveModel)
 class LiveModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
@@ -147,6 +153,9 @@ class LiveModelAdmin(ImportExportModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
 
 @admin.register(MusicModel)
 class MusicModelAdmin(ImportExportModelAdmin):
@@ -172,6 +181,9 @@ class MusicModelAdmin(ImportExportModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
+
 @admin.register(PictureModel)
 class PictureModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
@@ -195,6 +207,9 @@ class PictureModelAdmin(ImportExportModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
 
 @admin.register(BlogModel)
 class BlogModelAdmin(ImportExportModelAdmin):
@@ -220,6 +235,9 @@ class BlogModelAdmin(ImportExportModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
+
 @admin.register(ChatModel)
 class ChatModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'created', 'updated')
@@ -241,12 +259,15 @@ class ChatModelAdmin(ImportExportModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comments.filter(parent__isnull=True).count()
     comment_count.short_description = 'comment'
 
     def user_count(self, obj):
         return obj.comments.order_by('author').distinct().values_list('author').count()
     user_count.short_description = 'joined'
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
 
 @admin.register(CollaboModel)
 class CollaboModelAdmin(ImportExportModelAdmin):
@@ -271,6 +292,9 @@ class CollaboModelAdmin(ImportExportModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
 
 @admin.register(TodoModel)
 class TodoModelAdmin(ImportExportModelAdmin):
@@ -439,7 +463,7 @@ class VideoModelAdminSite(admin.ModelAdmin):
     unpublished.short_description = '非公開にする'
 
     def get_queryset(self, request):
-        qs = super(VideoModelAdminSite, self).get_queryset(request)
+        qs = super(VideoModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def total_like(self, obj):
@@ -480,7 +504,7 @@ class LiveModelAdminSite(admin.ModelAdmin):
     unpublished.short_description = '非公開にする'
 
     def get_queryset(self, request):
-        qs = super(LiveModelAdminSite, self).get_queryset(request)
+        qs = super(LiveModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def total_like(self, obj):
@@ -521,7 +545,7 @@ class MusicModelAdminSite(admin.ModelAdmin):
     unpublished.short_description = '非公開にする'
 
     def get_queryset(self, request):
-        qs = super(MusicModelAdminSite, self).get_queryset(request)
+        qs = super(MusicModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def total_like(self, obj):
@@ -562,7 +586,7 @@ class PictureModelAdminSite(admin.ModelAdmin):
     unpublished.short_description = '非公開にする'
 
     def get_queryset(self, request):
-        qs = super(PictureModelAdminSite, self).get_queryset(request)
+        qs = super(PictureModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def total_like(self, obj):
@@ -603,7 +627,7 @@ class BlogModelAdminSite(admin.ModelAdmin):
     unpublished.short_description = '非公開にする'
 
     def get_queryset(self, request):
-        qs = super(BlogModelAdminSite, self).get_queryset(request)
+        qs = super(BlogModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def total_like(self, obj):
@@ -644,7 +668,7 @@ class ChatModelAdminSite(admin.ModelAdmin):
     unpublished.short_description = '非公開にする'
 
     def get_queryset(self, request):
-        qs = super(ChatModelAdminSite, self).get_queryset(request)
+        qs = super(ChatModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def total_like(self, obj):
@@ -652,7 +676,7 @@ class ChatModelAdminSite(admin.ModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comments.filter(parent__isnull=True).count()
     comment_count.short_description = 'comment'
 
     def user_count(self, obj):
@@ -689,7 +713,7 @@ class CollaboModelAdminSite(admin.ModelAdmin):
     unpublished.short_description = '非公開にする'
 
     def get_queryset(self, request):
-        qs = super(CollaboModelAdminSite, self).get_queryset(request)
+        qs = super(CollaboModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def total_like(self, obj):
