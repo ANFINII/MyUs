@@ -576,8 +576,7 @@ class FollowerList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = search_follow(self, FollowModel)
-        return result
+        return search_follow(self, FollowModel)
 
 class FollowList(ListView):
     """FollowList"""
@@ -597,8 +596,7 @@ class FollowList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = search_follow(self, FollowModel)
-        return result
+        return search_follow(self, FollowModel)
 
 @csrf_exempt
 def follow_create(request, nickname):
@@ -686,8 +684,7 @@ class VideoList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = search_models(self, VideoModel)
-        return result
+        return search_models(self, VideoModel)
 
 class VideoDetail(DetailView):
     """VideoDetail"""
@@ -756,8 +753,7 @@ class LiveList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = search_models(self, LiveModel)
-        return result
+        return search_models(self, LiveModel)
 
 class LiveDetail(DetailView):
     """LiveDetail"""
@@ -826,8 +822,7 @@ class MusicList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = search_music(self, MusicModel)
-        return result
+        return search_music(self, MusicModel)
 
 class MusicDetail(DetailView):
     """MusicDetail"""
@@ -896,8 +891,7 @@ class PictureList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = search_models(self, PictureModel)
-        return result
+        return search_models(self, PictureModel)
 
 class PictureDetail(DetailView):
     """PictureDetail"""
@@ -966,8 +960,7 @@ class BlogList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = search_blog(self, BlogModel)
-        return result
+        return search_blog(self, BlogModel)
 
 class BlogDetail(DetailView):
     """BlogDetail"""
@@ -1036,8 +1029,7 @@ class ChatList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = search_models(self, ChatModel)
-        return result
+        return search_models(self, ChatModel)
 
 class ChatDetail(DetailView):
     """ChatDetail"""
@@ -1198,8 +1190,7 @@ class CollaboList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = search_models(self, CollaboModel)
-        return result
+        return search_models(self, CollaboModel)
 
 class CollaboDetail(DetailView):
     """CollaboDetail"""
@@ -1273,8 +1264,7 @@ class TodoList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        result = search_todo(self, TodoModel)
-        return result
+        return search_todo(self, TodoModel)
 
 class TodoDetail(DetailView):
     """TodoDetail"""
