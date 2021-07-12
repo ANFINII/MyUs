@@ -1267,7 +1267,7 @@ header {
 
 .comment_aria_list {
     display: grid;
-    grid-template-columns: 40px auto;
+    grid-template-columns: 40px minmax(40px, auto) auto;
     grid-template-rows: 20px minmax(20px, auto) auto auto;
     position: relative;
     grid-gap: 0 10px;
@@ -1290,6 +1290,7 @@ header {
     grid-column: 2/3;
     grid-row: 1/2;
     font-size: 13px;
+    white-space: nowrap;
 }
 
 .comment_aria_list time {
@@ -1301,7 +1302,6 @@ header {
     grid-column: 2/3;
     grid-row: 2/3;
     font-size: 14px;
-    min-width: 0;
     word-wrap: break-word;
 }
 

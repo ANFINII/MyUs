@@ -14,8 +14,13 @@
                 <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
                 <a href="{% url 'myus:chat_thread' object.pk comment.id %}" class="comment_aria_thread">
                     スレッド表示
-                    <span>返信 {{ comment.reply_count|intcomma }} 件</span>
+                    <span>返信 {{ comment.replies|intcomma }} 件</span>
                 </a>
+                <form method="POST" action="{% url 'myus:chat_message_delete' comment.id %}" class="chat_button">
+                    {% csrf_token %}
+                    <input type="button" name="comment_id" value="編集" obj-id="{{ comment.id }}" class="chat_button_1">
+                    <input type="button" name="comment_id" value="削除" obj-id="{{ comment.id }}" class="chat_button_2">
+                </form>
             </div>
         {% endfor %}
         <div id="comment_aria_add"></div>

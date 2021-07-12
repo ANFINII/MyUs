@@ -306,7 +306,7 @@ hr {
 /* chat_section_main */
 .chat_section_main {
     display: grid;
-    grid-template-columns: auto;
+    grid-template-columns: auto auto;
     grid-template-rows: 1fr auto;
     grid-column: 2/-1;
     grid-row: 2/-1;
@@ -316,6 +316,15 @@ hr {
     height: calc(100vh - 161px);
 }
 
+.comment_aria_check:checked ~ .chat_section_main {
+    grid-column: 2/3;
+    grid-row: 2/-1;
+}
+
+.comment_aria_check {
+    display: none;
+}
+
 .chat_section_main_area {
     grid-column: 1/-1;
     grid-row: 1/2;
@@ -323,24 +332,50 @@ hr {
     overflow-y: scroll;
 }
 
-.comment_aria_check {
-    display: none;
-}
-
-.comment_aria_check:checked ~ .chat_section_main {
-    grid-column: 2/3;
-    grid-row: 2/-1;
-}
-
 .comment_aria_list {
     height: fit-content;
-    padding: 8px 16px;
+    padding: 8px 8px 8px 16px;
     margin: 0;
     overflow: hidden;
 }
 
 .comment_aria_list:hover {
     background-color: rgb(240, 245, 255);
+}
+
+.chat_button {
+    display: grid;
+    grid-template-columns: 38px 38px;
+    grid-template-rows: 20px;
+    grid-column: 3/-1;
+    grid-row: 1/2;
+    margin: 0;
+    font-size: 12px;
+    justify-content: end;
+}
+
+.chat_button_1,
+.chat_button_2 {
+    display: none;
+}
+
+.comment_aria_list:hover .chat_button_1,
+.comment_aria_list:hover .chat_button_2 {
+    display: block;
+    border: none;
+    color: rgb(40, 140, 255);
+    border: 1px solid rgba(255, 255, 255, 0);
+    border-radius: 5px;
+    background-color: rgb(240, 245, 255);
+    transition: border 0.1s;
+    transition: background 0.1s;
+}
+
+.comment_aria_list:hover .chat_button_1:hover,
+.comment_aria_list:hover .chat_button_2:hover {
+    display: block;
+    border: 1px solid rgba(170, 210, 255, 0.8);
+    background: rgb(255, 255, 255);
 }
 
 .comment_aria_thread {
