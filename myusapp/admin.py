@@ -260,7 +260,7 @@ class ChatModelAdmin(ImportExportModelAdmin):
 
     def comment_count(self, obj):
         return obj.comments.filter(parent__isnull=True).count()
-    comment_count.short_description = 'comment'
+    comment_count.short_description = 'thread'
 
     def user_count(self, obj):
         return obj.comments.order_by('author').distinct().values_list('author').count()
@@ -677,7 +677,7 @@ class ChatModelAdminSite(admin.ModelAdmin):
 
     def comment_count(self, obj):
         return obj.comments.filter(parent__isnull=True).count()
-    comment_count.short_description = 'comment'
+    comment_count.short_description = 'thread'
 
     def user_count(self, obj):
         return obj.comments.order_by('author').distinct().values_list('author').count()

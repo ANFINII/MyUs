@@ -605,8 +605,8 @@ def follow_create(request, nickname):
         follower = User.objects.get(nickname=request.user.nickname)
         following = User.objects.get(nickname=nickname)
         if follower == following:
-            pass
             # '自分はフォローできません'
+            pass
         elif FollowModel.objects.filter(follower=follower, following=following).exists():
             unfollow = FollowModel.objects.get(follower=follower, following=following)
             unfollow.delete()
@@ -1061,8 +1061,7 @@ class ChatDetail(DetailView):
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
-        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
-        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(replies=Count('reply')).select_related('author', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
@@ -1094,8 +1093,8 @@ class ChatThread(DetailView):
         context['followed'] = followed
         context['is_period'] = is_period
         context['comment_id'] = comment_id
-        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
-        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(replies=Count('reply')).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
@@ -1151,11 +1150,21 @@ def chat_reply(request):
         if request.is_ajax():
             return JsonResponse(context)
 
-class ChatDelete(DeleteView):
-    """ChatDelete"""
-    model = CommentModel
-    template_name = 'chat/chat_detail.html'
-    success_url = reverse_lazy('myus:chat_detail')
+class ChatMessageUpdate(UpdateView):
+    pass
+
+@csrf_exempt
+def ChatMessageDelete(request, comment_id):
+    """ChatMessageDelete"""
+    if request.method == 'POST':
+        comment_id = CommentModel.objects.get(id=comment_id)
+        # comment_id = request.POST.get('comment_id')
+        context = {
+            'comment_id': comment_id,
+        }
+        comment_id.delete()
+        if request.is_ajax():
+            return JsonResponse(context)
 
 
 # Collabo
