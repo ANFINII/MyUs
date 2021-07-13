@@ -1061,7 +1061,7 @@ class ChatDetail(DetailView):
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(replies=Count('reply')).select_related('author', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
@@ -1093,7 +1093,7 @@ class ChatThread(DetailView):
         context['followed'] = followed
         context['is_period'] = is_period
         context['comment_id'] = comment_id
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(replies=Count('reply')).select_related('author', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
