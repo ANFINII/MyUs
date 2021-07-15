@@ -700,9 +700,8 @@ class VideoDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(VideoDetail, self).get_context_data(**kwargs)
-        obj = get_object_or_404(VideoModel, id=self.kwargs['pk'])
-        obj_user = obj.author.id
-        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        obj = self.object
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj.author.id)
         liked = False
         followed = False
         if obj.like.filter(id=self.request.user.id).exists():
@@ -711,12 +710,12 @@ class VideoDetail(DetailView):
             followed = True
         context['liked'] = liked
         context['followed'] = followed
-        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
-        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
-            'video_list': VideoModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
+            'video_list': VideoModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
 
@@ -769,9 +768,8 @@ class LiveDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(LiveDetail, self).get_context_data(**kwargs)
-        obj = get_object_or_404(LiveModel, id=self.kwargs['pk'])
-        obj_user = obj.author.id
-        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        obj = self.object
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj.author.id)
         liked = False
         followed = False
         if obj.like.filter(id=self.request.user.id).exists():
@@ -780,12 +778,12 @@ class LiveDetail(DetailView):
             followed = True
         context['liked'] = liked
         context['followed'] = followed
-        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
-        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
-            'live_list': LiveModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
+            'live_list': LiveModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
 
@@ -838,9 +836,8 @@ class MusicDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MusicDetail, self).get_context_data(**kwargs)
-        obj = get_object_or_404(MusicModel, id=self.kwargs['pk'])
-        obj_user = obj.author.id
-        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        obj = self.object
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj.author.id)
         liked = False
         followed = False
         if obj.like.filter(id=self.request.user.id).exists():
@@ -849,12 +846,12 @@ class MusicDetail(DetailView):
             followed = True
         context['liked'] = liked
         context['followed'] = followed
-        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
-        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
-            'music_list': MusicModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
+            'music_list': MusicModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
 
@@ -907,9 +904,8 @@ class PictureDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PictureDetail, self).get_context_data(**kwargs)
-        obj = get_object_or_404(PictureModel, id=self.kwargs['pk'])
-        obj_user = obj.author.id
-        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        obj = self.object
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj.author.id)
         liked = False
         followed = False
         if obj.like.filter(id=self.request.user.id).exists():
@@ -918,12 +914,12 @@ class PictureDetail(DetailView):
             followed = True
         context['liked'] = liked
         context['followed'] = followed
-        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
-        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
-            'picture_list': PictureModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
+            'picture_list': PictureModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
 
@@ -976,9 +972,8 @@ class BlogDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(BlogDetail, self).get_context_data(**kwargs)
-        obj = get_object_or_404(BlogModel, id=self.kwargs['pk'])
-        obj_user = obj.author.id
-        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        obj = self.object
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj.author.id)
         liked = False
         followed = False
         if obj.like.filter(id=self.request.user.id).exists():
@@ -987,12 +982,12 @@ class BlogDetail(DetailView):
             followed = True
         context['liked'] = liked
         context['followed'] = followed
-        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
-        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
-            'blog_list': BlogModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
+            'blog_list': BlogModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
 
@@ -1045,16 +1040,15 @@ class ChatDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ChatDetail, self).get_context_data(**kwargs)
-        obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
-        obj_user = obj.author.id
-        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        obj = self.object
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj.author.id)
         liked = False
         followed = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
         if follow.exists():
             followed = True
-        if self.object.period < datetime.date.today():
+        if obj.period < datetime.date.today():
             is_period = True
         else:
             is_period = False
@@ -1064,7 +1058,7 @@ class ChatDetail(DetailView):
         context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
+            'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
 
@@ -1075,29 +1069,27 @@ class ChatThread(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ChatThread, self).get_context_data(**kwargs)
-        obj = get_object_or_404(ChatModel, id=self.kwargs['pk'])
-        comment_id = self.kwargs['comment_id']
-        obj_user = obj.author.id
-        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        obj = self.object
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj.author.id)
         liked = False
         followed = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
         if follow.exists():
             followed = True
-        if self.object.period < datetime.date.today():
+        if obj.period < datetime.date.today():
             is_period = True
         else:
             is_period = False
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
-        context['comment_id'] = comment_id
+        context['comment_id'] = self.kwargs['comment_id']
         context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
+            'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
 
@@ -1158,7 +1150,6 @@ def ChatMessageDelete(request, comment_id):
     """ChatMessageDelete"""
     if request.method == 'POST':
         comment_id = CommentModel.objects.get(id=comment_id)
-        # comment_id = request.POST.get('comment_id')
         context = {
             'comment_id': comment_id,
         }
@@ -1215,28 +1206,27 @@ class CollaboDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CollaboDetail, self).get_context_data(**kwargs)
-        obj = get_object_or_404(CollaboModel, id=self.kwargs['pk'])
-        obj_user = obj.author.id
-        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj_user)
+        obj = self.object
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj.author.id)
         liked = False
         followed = False
         if obj.like.filter(id=self.request.user.id).exists():
             liked = True
         if follow.exists():
             followed = True
-        if self.object.period < datetime.date.today():
+        if obj.period < datetime.date.today():
             is_period = True
         else:
             is_period = False
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
-        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
-        context['reply_list'] = self.object.comments.filter(parent__isnull=False)
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
-            'collabo_list': CollaboModel.objects.filter(publish=True).exclude(title=obj).order_by('-created')[:50],
+            'collabo_list': CollaboModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
 
@@ -1291,12 +1281,12 @@ class TodoDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(TodoDetail, self).get_context_data(**kwargs)
-        obj = get_object_or_404(TodoModel, id=self.kwargs['pk'])
-        context['comment_list'] = self.object.comments.filter(parent__isnull=True)
+        obj = self.object
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
-            'todo_list': TodoModel.objects.filter(author_id=self.request.user.id).exclude(title=obj),
+            'todo_list': TodoModel.objects.filter(author_id=self.request.user.id).exclude(title=obj.title),
         })
         return context
 
