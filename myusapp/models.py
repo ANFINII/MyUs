@@ -524,6 +524,9 @@ class CommentModel(models.Model):
     def total_like(self):
         return self.like.count()
 
+    def replies_count(self):
+        return CommentModel.objects.filter(parent=self).count()
+
     class Meta:
         verbose_name_plural = '12 コメント'
 

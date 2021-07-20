@@ -3,7 +3,7 @@ $(window).on('load', function() {
 
     if(pathname) {
         let target = $(pathname).position();
-        // $('.chat_section_main').animate({scrollTop: target}, 'slow');
+        $('.chat_section_main').animate({scrollTop: target}, 'slow');
         $('.chat_section_main').scrollTop(target.top);
     }
 });
@@ -72,31 +72,6 @@ $(document).ready(function() {
         })
     });
 
-    // Commentクリック時の処理を定義
-    // $('.click_id').on('click', function(event) {
-    //     // event.preventDefault();
-    //     const url = $(this).attr('action');
-    //     const object_pk = $(this).attr('object-pk');
-    //     const comment_id = $(this).attr('comment-id');
-    //     const check_id = $(this).children('label').attr('for');
-    //     const comment_aria_check_id_1 = document.getElementsByClassName('get-id-1')[0];
-    //     const comment_aria_check_id_2 = document.getElementsByClassName('get-id-2')[0];
-    //     comment_aria_check_id_1.setAttribute('id', check_id);
-    //     comment_aria_check_id_2.setAttribute('for', check_id);
-    //     $.ajax({
-    //         url: url,
-    //         type: 'POST',
-    //         data: {'comment_id': comment_id, 'pk': object_pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-    //         dataType: 'json',
-    //     })
-    //     .done(function(response) {
-    //         console.log(response)
-    //     })
-    //     .fail(function(response) {
-    //         console.log(response);
-    //     })
-    // });
-
     // 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
     $('#comment_form').submit(function(event) {
         event.preventDefault();
@@ -114,10 +89,10 @@ $(document).ready(function() {
         .done(function(response) {
             function scrollBottom(){
                 let target = $('.chat_section_main_area').last();
-                let position = target.offset().top + $('.chat_section_main_areas').scrollTop();
-                $('.chat_section_main_area').animate({scrollTop: position}, 300, 'swing');
+                let position = target.position().top + $('.chat_section_main_area').scrollTop();
+                $('.chat_section_main_area').animate({scrollTop: position}, 500, 'swing');
             }
-            scrollBottom();
+
             let comment_aria_list_add =
                 '<div class="comment_aria_list">' +
                     '<a href="/userpage/' + response.nickname + '">' +
@@ -139,6 +114,7 @@ $(document).ready(function() {
             $('#user_count').html(response.user_count);
             $('#comment_count').html(response.comment_count);
             $('#comment_aria_add').append(comment_aria_list_add);
+            scrollBottom();
             console.log(response)
         })
         .fail(function(response) {
@@ -153,7 +129,7 @@ $(document).ready(function() {
         const url = form.attr('action');
         const id = form.attr('obj-id');
         const comment_id = form.attr('comment-id');
-        const text = $('form [name=text]').val();
+        const text = $('form [name=reply]').val();
         $.ajax({
             url: url,
             type: 'POST',
@@ -162,7 +138,7 @@ $(document).ready(function() {
             timeout: 10000,
         })
         .done(function(response) {
-            let comment_aria_list_add =
+            let reply_aria_list_add =
                 '<div class="comment_aria_list">' +
                     '<a href="/userpage/' + response.nickname +'">' +
                         '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
@@ -178,12 +154,54 @@ $(document).ready(function() {
             $('#reply_form')[0].reset();
             $('#user_count').html(response.user_count);
             $('#comment_count').html(response.comment_count);
-            $('#reply_count').html(response.reply_count);
-            $('#reply_aria_add').append(comment_aria_list_add);
+            $('#reply_count_' + comment_id).html('返信 ' + response.reply_count + ' 件');
+            $('#reply_aria_add').append(reply_aria_list_add);
             console.log(response)
         })
         .fail(function(response) {
             console.log(response);
         })
     });
+
+    // メッセージ削除
+    $('.openButton').on('click', function(event) {
+        // event.preventDefault();
+        let dialog = document.getElementById('dialog');
+        let openButton = document.getElementById('openButton');
+        let closebutton = document.getElementById('closebutton');
+
+        openButton.onclick = () => {
+            dialog.showModal();
+        }
+        closebutton.onclick = () => {
+            dialog.close();
+        }
+    });
+
+
+    //     if(!confirm('本当に削除しますか？')){
+    //         /* キャンセルの時の処理 */
+    //         return false;
+    //     }else{
+    //         /*　OKの時の処理 */
+    //         const form = $(this);
+    //         const url = form.attr('action');
+    //         const comment_id = form.attr('obj-id');
+    //         $.ajax({
+    //             url: url,
+    //             type: 'POST',
+    //             data: {'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+    //             dataType: 'json',
+    //             timeout: 10000,
+    //         })
+    //         .done(function(response) {
+    //             let comment_aria_list_add = ''
+    //             $('#comment_aria_add').append(comment_aria_list_add);
+    //             console.log(response)
+    //         })
+    //         .fail(function(response) {
+    //             console.log(response);
+    //         })
+    //     }
+    // });
 });

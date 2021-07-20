@@ -1100,11 +1100,10 @@ def chat_message(request):
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj = ChatModel.objects.get(id=obj_id)
-        comment_obj = CommentModel(content_object=obj, text=text)
+        comment_obj = CommentModel(content_object=obj)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
         comment_obj.save()
-        comment_obj = CommentModel.objects.latest('id')
         context = {
             'text': urlize_impl(linebreaks(comment_obj.text)),
             'pk': obj_id,
@@ -1126,7 +1125,7 @@ def chat_reply(request):
         obj_id = request.POST.get('id')
         comment_id = request.POST.get('comment_id')
         obj = ChatModel.objects.get(id=obj_id)
-        comment_obj = CommentModel(content_object=obj, text=text)
+        comment_obj = CommentModel(content_object=obj)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
         comment_obj.parent = CommentModel.objects.get(id=comment_id)
@@ -1137,17 +1136,19 @@ def chat_reply(request):
             'user_image': comment_obj.author.user_image.url,
             'created': comment_obj.created.strftime("%Y/%m/%d %H:%M"),
             'user_count': obj.user_count(),
-            'reply_count':  comment_obj.reply_count,
+            'reply_count': comment_obj.parent.replies_count(),
         }
         if request.is_ajax():
             return JsonResponse(context)
 
-class ChatMessageUpdate(UpdateView):
+@csrf_exempt
+def chat_message_update(request):
+    """chat_message_update"""
     pass
 
 @csrf_exempt
-def ChatMessageDelete(request, comment_id):
-    """ChatMessageDelete"""
+def chat_message_delete(request, comment_id):
+    """chat_message_delete"""
     if request.method == 'POST':
         comment_id = CommentModel.objects.get(id=comment_id)
         context = {

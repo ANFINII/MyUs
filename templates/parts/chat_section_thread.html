@@ -20,8 +20,8 @@
             {% if comment.author.id == user.id %}
             <form method="POST" action="{% url 'myus:chat_message_delete' comment.id %}" class="chat_button">
                 {% csrf_token %}
-                <input type="button" name="comment_id" value="編集" obj-id="{{ comment.id }}" class="chat_button_1">
-                <input type="button" name="comment_id" value="削除" obj-id="{{ comment.id }}" class="chat_button_2">
+                <input type="button" name="comment_id" value="編集" obj-id="{{ comment.id }}" class="chat_button_update">
+                <input type="button" name="comment_id" value="削除" obj-id="{{ comment.id }}" class="chat_button_delete">
             </form>
             {% endif %}
         </div>
@@ -42,8 +42,8 @@
             {% if reply.author.id == user.id %}
             <form method="POST" action="{% url 'myus:chat_message_delete' reply.id %}" class="chat_button">
                 {% csrf_token %}
-                <input type="button" name="comment_id" value="編集" obj-id="{{ reply.id }}" class="chat_button_1">
-                <input type="button" name="comment_id" value="削除" obj-id="{{ reply.id }}" class="chat_button_2">
+                <input type="button" name="comment_id" value="編集" obj-id="{{ reply.id }}" class="chat_button_update">
+                <input type="button" name="comment_id" value="削除" obj-id="{{ reply.id }}" class="chat_button_delete">
             </form>
             {% endif %}
         </div>
@@ -54,7 +54,7 @@
     <footer class="chat_footer_thread">
         <form method="POST" action="{% url 'myus:chat_reply' %}" id="reply_form" obj-id="{{ object.id }}" comment-id="{{ comment_id }}">{% csrf_token %}
             {% if is_period %}
-            <textarea name="text" rows="1" class="textarea_br" placeholder="チャット期間が過ぎています！" disabled="disabled"></textarea>
+            <textarea name="reply" rows="1" class="textarea_br" placeholder="チャット期間が過ぎています！" disabled="disabled"></textarea>
             <div class="chat_frame chat_frame_color"></div>
             <div class="comment_input_chat">
                 <button type="submit" class="btn btn-secondary btn-sm" title="送信" disabled>
@@ -62,18 +62,18 @@
                 </button>
             </div>
             {% elif user.is_authenticated %}
-            <textarea name="text" rows="1" class="textarea_br" placeholder="スレッド返信" required></textarea>
+            <textarea name="reply" rows="1" class="textarea_br" placeholder="スレッド返信" required></textarea>
             <div class="chat_frame"></div>
             <div class="comment_input_chat">
-                <button type="submit" id="reply_form_button" class="btn btn-primary btn-sm" title="送信">
+                <button type="submit" class="btn btn-primary btn-sm" title="送信">
                     <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
                 </button>
             </div>
             {% else %}
-            <textarea name="text" rows="1" class="textarea_br" placeholder="チャットするにはログインが必要です！" disabled="disabled"></textarea>
+            <textarea name="reply" rows="1" class="textarea_br" placeholder="チャットするにはログインが必要です！" disabled="disabled"></textarea>
             <div class="chat_frame chat_frame_color"></div>
             <div class="comment_input_chat">
-                <button type="submit" class="btn btn-secondary btn-sm" disabled title="送信">
+                <button type="submit" class="btn btn-secondary btn-sm" title="送信" disabled>
                     <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
                 </button>
             </div>
