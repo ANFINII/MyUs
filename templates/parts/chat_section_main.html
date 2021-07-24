@@ -3,7 +3,7 @@
 <div class="chat_section_main">
     <div class="chat_section_main_area">
         {% for comment in comment_list %}
-            <div class="comment_aria_list">
+            <div id="comment_aria_list_{{ comment.id }}" class="comment_aria_list">
                 <a href="{% url 'myus:userpage' comment.author.nickname %}">
                     <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
                 </a>
@@ -17,9 +17,9 @@
                     <span id="reply_count_{{ comment.id }}">返信 {{ comment.reply_count|intcomma }} 件</span>
                 </a>
                 {% if comment.author.id == user.id %}
-                <form method="POST" class="chat_button">
+                <div class="chat_button">
                     {% csrf_token %}
-                    <a type="button" name="update" obj-id="{{ comment.id }}" class="chat_button_update" action="{% url 'myus:chat_message_update' comment.id %}">更新</a>
+                    <a type="button" name="update" obj-id="{{ comment.id }}" class="chat_button_update">更新</a>
 
                     <a type="button" name="delete" obj-id="{{ comment.id }}" class="chat_button_delete">削除</a>
                     <div id="modal_content_{{ comment.id }}" class="modal_content">
@@ -46,8 +46,26 @@
                         </div>
                     </div>
                     <div obj-id="{{ comment.id }}" id="mask_{{ comment.id }}" class="mask modal_cancel"></div>
-                </form>
+                </div>
                 {% endif %}
+            </div>
+            <div id="chat_update_main_{{ comment.id }}" class="chat_update_main">
+                <a href="{% url 'myus:userpage' comment.author.nickname %}">
+                    <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+                </a>
+                <form method="POST" action="{% url 'myus:chat_message_update' comment.id %}" obj-id="{{ object.id }}" id="comment_form_update" class="comment_form_update">{% csrf_token %}
+                    <textarea name="text" rows="1" class="textarea_br" placeholder="メッセージ入力" required>{{ comment.text|urlize }}</textarea>
+                    <div class="chat_frame"></div>
+                    <div class="comment_input_chat">
+                        <button type="submit" class="btn btn-primary btn-sm" title="送信">
+                            <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
+                        </button>
+                    </div>
+                    <div class="chat_update_footer">
+                        <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="chat_update_cancel btn btn-light btn-xs">
+                        <input type="button" name="delete" value="更新" obj-id="{{ comment.id }}" action="{% url 'myus:chat_message_delete' comment.id %}" class="btn btn-success btn-xs">
+                    </div>
+                </form>
             </div>
         {% endfor %}
         <div id="comment_aria_add"></div>

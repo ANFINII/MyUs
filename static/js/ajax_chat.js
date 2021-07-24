@@ -163,6 +163,21 @@ $(document).ready(function() {
         })
     });
 
+    // メッセージ編集
+    $('.chat_button_update').on('click', function() {
+        const form = $(this);
+        const comment_id = form.attr('obj-id');
+        document.getElementById('chat_update_main_' + comment_id).classList.add('active');
+        document.getElementById('comment_aria_list_' + comment_id).classList.add('active');
+    })
+
+    $('.chat_update_cancel').on('click', function() {
+        const form = $(this);
+        const comment_id = form.attr('obj-id');
+        document.getElementById('chat_update_main_' + comment_id).classList.remove('active');
+        document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
+    })
+
     // メッセージ削除ダイアログ
     $('.chat_button_delete').on('click', function() {
         const form = $(this);

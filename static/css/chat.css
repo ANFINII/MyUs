@@ -343,6 +343,10 @@ hr {
     background-color: rgb(240, 245, 255);
 }
 
+.comment_aria_list.active {
+    display: none;
+}
+
 .chat_button {
     display: grid;
     grid-template-columns: 38px 38px;
@@ -384,6 +388,50 @@ hr {
     display: block;
 }
 
+
+/* メッセージ編集 */
+.chat_update_main {
+    display: none;
+}
+
+.chat_update_main.active {
+    display: grid;
+    grid-template-columns: 40px auto;
+    grid-template-rows: 40px auto;
+    grid-gap: 0 10px;
+    padding: 8px 8px 8px 16px;
+    background: rgb(255, 240, 230);
+}
+
+.chat_update_main.active .comment_form_update {
+    grid-column: 2/-1;
+    grid-row: 1/-1;
+}
+
+.comment_aria_check:checked ~ .chat_update_main.active {
+    grid-column: 2/3;
+}
+
+.chat_update_main .btn-sm {
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    justify-self: end;
+    border-radius: 5px;
+}
+
+.chat_update_footer {
+    margin: 10px 0 0 0;
+    text-align: right;
+}
+
+.btn-group-xs > .btn, .btn-xs {
+    padding: .3rem .4rem;
+    font-size: .875rem;
+    line-height: 1.2;
+    border-radius: .2rem;
+}
+
+/* メッセージ削除ダイアログ */
 .modal_content {
     display: grid;
     grid-template-columns: auto;
@@ -540,6 +588,7 @@ hr {
     border: 1px solid rgb(120, 120, 120);
     border-top: none;
     border-bottom: none;
+    background-color: rgb(255, 255, 255);
 }
 
 .chat_frame_color {
@@ -555,6 +604,7 @@ hr {
     border: 1px solid rgb(120, 120, 120);
     border-top: 1px solid rgb(220, 220, 220);
     border-radius: 0 0 5px 5px;
+    background-color: rgb(255, 255, 255);
 }
 
 .textarea_br:focus ~ .comment_input_chat {
