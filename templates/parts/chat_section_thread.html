@@ -23,7 +23,7 @@
 
     {% for reply in reply_list %}
         {% if reply.parent.id == comment_id %}
-        <div class="comment_aria_list">
+        <div id="comment_aria_list_{{ comment.id }}" class="comment_aria_list">
             <a href="{% url 'myus:userpage' reply.author.nickname %}">
                 <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
             </a>
@@ -33,7 +33,7 @@
             </div>
             <div class="comment_aria_list_2">{{ reply.text|urlize|linebreaks }}</div>
             {% if reply.author.id == user.id %}
-            <form method="POST" action="{% url 'myus:chat_message_delete' reply.id %}" class="chat_button">
+            <div class="chat_button">
                 {% csrf_token %}
                 <a type="button" name="update" obj-id="{{ reply.id }}" class="chat_button_update" action="{% url 'myus:chat_message_update' reply.id %}">更新</a>
 
@@ -62,8 +62,22 @@
                     </div>
                 </div>
                 <div obj-id="{{ reply.id }}" id="mask_{{ reply.id }}" class="mask modal_cancel"></div>
-            </form>
+            </div>
             {% endif %}
+        </div>
+        <div id="chat_update_main_{{ reply.id }}" class="chat_update_main">
+            <a href="{% url 'myus:userpage' reply.author.nickname %}">
+                <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+            </a>
+            <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" obj-id="{{ object.id }}" id="comment_form_update" class="comment_form_update">{% csrf_token %}
+                <textarea name="text" rows="1" class="textarea_br" placeholder="メッセージ入力" required>{{ reply.text|urlize }}</textarea>
+                <div class="chat_frame"></div>
+                <div class="comment_input_chat"></div>
+                <div class="chat_update_footer">
+                    <input type="button" name="cancel" value="キャンセル" obj-id="{{ reply.id }}" class="chat_update_cancel btn btn-light btn-xs">
+                    <input type="button" name="delete" value="更新" obj-id="{{ reply.id }}" action="{% url 'myus:chat_message_delete' reply.id %}" class="btn btn-success btn-xs">
+                </div>
+            </form>
         </div>
         {% endif %}
     {% endfor %}
