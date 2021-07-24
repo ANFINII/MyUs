@@ -163,45 +163,18 @@ $(document).ready(function() {
         })
     });
 
-    // メッセージ削除
-    $('.openButton').on('click', function(event) {
-        // event.preventDefault();
-        let dialog = document.getElementById('dialog');
-        let openButton = document.getElementById('openButton');
-        let closebutton = document.getElementById('closebutton');
+    // メッセージ削除ダイアログ
+    $('.chat_button_delete').on('click', function() {
+        const form = $(this);
+        const comment_id = form.attr('obj-id');
+        document.getElementById('modal_content_' + comment_id).classList.add('active');
+        document.getElementById('mask_' + comment_id).classList.add('active');
+    })
 
-        openButton.onclick = () => {
-            dialog.showModal();
-        }
-        closebutton.onclick = () => {
-            dialog.close();
-        }
-    });
-
-
-    //     if(!confirm('本当に削除しますか？')){
-    //         /* キャンセルの時の処理 */
-    //         return false;
-    //     }else{
-    //         /*　OKの時の処理 */
-    //         const form = $(this);
-    //         const url = form.attr('action');
-    //         const comment_id = form.attr('obj-id');
-    //         $.ajax({
-    //             url: url,
-    //             type: 'POST',
-    //             data: {'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-    //             dataType: 'json',
-    //             timeout: 10000,
-    //         })
-    //         .done(function(response) {
-    //             let comment_aria_list_add = ''
-    //             $('#comment_aria_add').append(comment_aria_list_add);
-    //             console.log(response)
-    //         })
-    //         .fail(function(response) {
-    //             console.log(response);
-    //         })
-    //     }
-    // });
+    $('.modal_cancel').on('click', function() {
+        const form = $(this);
+        const comment_id = form.attr('obj-id');
+        document.getElementById('modal_content_' + comment_id).classList.remove('active');
+        document.getElementById('mask_' + comment_id).classList.remove('active');
+    })
 });

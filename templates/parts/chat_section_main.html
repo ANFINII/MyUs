@@ -17,10 +17,35 @@
                     <span id="reply_count_{{ comment.id }}">返信 {{ comment.reply_count|intcomma }} 件</span>
                 </a>
                 {% if comment.author.id == user.id %}
-                <form method="POST" action="" class="chat_button" id="dialog">
+                <form method="POST" class="chat_button">
                     {% csrf_token %}
-                    <input type="button" name="update" value="編集" obj-id="{{ comment.id }}" action="{% url 'myus:chat_message_update' comment.id %}" class="chat_button_update">
-                    <input type="button" name="delete" value="削除" obj-id="{{ comment.id }}" action="{% url 'myus:chat_message_delete' comment.id %}" class="chat_button_delete">
+                    <a type="button" name="update" obj-id="{{ comment.id }}" class="chat_button_update" action="{% url 'myus:chat_message_update' comment.id %}">更新</a>
+
+                    <a type="button" name="delete" obj-id="{{ comment.id }}" class="chat_button_delete">削除</a>
+                    <div id="modal_content_{{ comment.id }}" class="modal_content">
+                        <h2 class="modal_content_header">メッセージの削除</h2>
+
+                        <span class="modal_content_body_span">このメッセージを削除しますか？</span>
+
+                        <div class="modal_content_body">
+                            <div class="comment_aria_list">
+                                <a href="{% url 'myus:userpage' comment.author.nickname %}">
+                                    <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+                                </a>
+                                <div class="comment_aria_list_1">
+                                    <p>{{ comment.author.nickname }}</p>
+                                    <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
+                                </div>
+                                <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
+                            </div>
+                        </div>
+
+                        <div class="modal_content_footer">
+                            <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="modal_cancel btn btn-light">
+                            <input type="button" name="delete" value="削除" obj-id="{{ comment.id }}" action="{% url 'myus:chat_message_delete' comment.id %}" class="btn btn-danger">
+                        </div>
+                    </div>
+                    <div obj-id="{{ comment.id }}" id="mask_{{ comment.id }}" class="mask modal_cancel"></div>
                 </form>
                 {% endif %}
             </div>
