@@ -11,7 +11,7 @@
                     <p>{{ comment.author.nickname }}</p>
                     <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
                 </div>
-                <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
+                <div id="comment_aria_list_2_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
                 <a href="{% url 'myus:chat_thread' object.pk comment.id %}" class="comment_aria_thread">
                     スレッド表示
                     <span id="reply_count_{{ comment.id }}">返信 {{ comment.reply_count|intcomma }} 件</span>
@@ -19,7 +19,7 @@
                 {% if comment.author.id == user.id %}
                 <div class="chat_button">
                     {% csrf_token %}
-                    <a type="button" name="update" obj-id="{{ comment.id }}" class="chat_button_update">更新</a>
+                    <a type="button" name="update" obj-id="{{ comment.id }}" class="chat_button_update">編集</a>
 
                     <a type="button" name="delete" obj-id="{{ comment.id }}" class="chat_button_delete">削除</a>
                     <div id="modal_content_{{ comment.id }}" class="modal_content">
@@ -36,14 +36,15 @@
                                     <p>{{ comment.author.nickname }}</p>
                                     <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
                                 </div>
-                                <div class="comment_aria_list_2">{{ comment.text|urlize|linebreaks }}</div>
+                                <div class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
                             </div>
                         </div>
 
-                        <div class="modal_content_footer">
+                        <form method="POST" action="{% url 'myus:chat_message_delete' comment.id %}" class="modal_content_footer">
+                            {% csrf_token %}
                             <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="modal_cancel btn btn-light">
-                            <input type="button" name="delete" value="削除" obj-id="{{ comment.id }}" action="{% url 'myus:chat_message_delete' comment.id %}" class="btn btn-danger">
-                        </div>
+                            <input type="button" name="delete" value="削除" obj-id="{{ comment.id }}" class="chat_delete btn btn-danger">
+                        </form>
                     </div>
                     <div obj-id="{{ comment.id }}" id="mask_{{ comment.id }}" class="mask modal_cancel"></div>
                 </div>
@@ -53,13 +54,14 @@
                 <a href="{% url 'myus:userpage' comment.author.nickname %}">
                     <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
                 </a>
-                <form method="POST" action="{% url 'myus:chat_message_update' comment.id %}" obj-id="{{ object.id }}" id="comment_form_update" class="comment_form_update">{% csrf_token %}
-                    <textarea name="text" rows="1" class="textarea_br" placeholder="メッセージ入力" required>{{ comment.text|urlize }}</textarea>
+                <form method="POST" action="{% url 'myus:chat_message_update' comment.id %}" obj-id="{{ comment.id }}" class="comment_form_update">
+                    {% csrf_token %}
+                    <textarea name="update_text" rows="1" class="textarea_br" placeholder="メッセージ入力" id="comment_form_update_{{ comment.id }}" required>{{ comment.text }}</textarea>
                     <div class="chat_frame"></div>
                     <div class="comment_input_chat"></div>
                     <div class="chat_update_footer">
                         <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="chat_update_cancel btn btn-light btn-xs">
-                        <input type="button" name="delete" value="更新" obj-id="{{ comment.id }}" action="{% url 'myus:chat_message_delete' comment.id %}" class="btn btn-success btn-xs">
+                        <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
                     </div>
                 </form>
             </div>

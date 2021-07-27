@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.utils.html import urlize as urlize_impl
 from django.db.models import Q, F, Count, Max, Min, Avg, Value
 from django.template.loader import render_to_string
-from django.template.defaultfilters import linebreaks, linebreaksbr
+from django.template.defaultfilters import linebreaksbr, linebreaks
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, FormView
 from dateutil.relativedelta import relativedelta
@@ -418,7 +418,7 @@ def comment_form(request):
         comment_obj.author_id = request.user.id
         comment_obj.save()
         context = {
-            'text': urlize_impl(linebreaks(comment_obj.text)),
+            'text': urlize_impl(linebreaksbr(comment_obj.text)),
             'nickname': comment_obj.author.nickname,
             'user_image': comment_obj.author.user_image.url,
             'created': naturaltime(comment_obj.created),
@@ -442,7 +442,7 @@ def reply_form(request):
         comment_obj.author_id = request.user.id
         comment_obj.save()
         context = {
-            'text': urlize_impl(linebreaks(comment_obj.text)),
+            'text': urlize_impl(linebreaksbr(comment_obj.text)),
             'nickname': comment_obj.author.nickname,
             'user_image': comment_obj.author.user_image.url,
             'created': naturaltime(comment_obj.created),
@@ -1105,7 +1105,7 @@ def chat_message(request):
         comment_obj.author_id = request.user.id
         comment_obj.save()
         context = {
-            'text': urlize_impl(linebreaks(comment_obj.text)),
+            'text': urlize_impl(linebreaksbr(comment_obj.text)),
             'pk': obj_id,
             'comment_id': comment_obj.id,
             'nickname': comment_obj.author.nickname,
@@ -1131,7 +1131,7 @@ def chat_reply(request):
         comment_obj.parent = CommentModel.objects.get(id=comment_id)
         comment_obj.save()
         context = {
-            'text': urlize_impl(linebreaks(comment_obj.text)),
+            'text': urlize_impl(linebreaksbr(comment_obj.text)),
             'nickname': comment_obj.author.nickname,
             'user_image': comment_obj.author.user_image.url,
             'created': comment_obj.created.strftime("%Y/%m/%d %H:%M"),
@@ -1142,19 +1142,29 @@ def chat_reply(request):
             return JsonResponse(context)
 
 @csrf_exempt
-def chat_message_update(request):
+def chat_message_update(request, comment_id):
     """chat_message_update"""
-    pass
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        comment_obj = CommentModel.objects.get(id=comment_id)
+        comment_obj.text = text
+        comment_obj.save()
+        context = {
+            'text': urlize_impl(linebreaksbr(comment_obj.text)),
+            'comment_id': comment_id,
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
 
 @csrf_exempt
 def chat_message_delete(request, comment_id):
     """chat_message_delete"""
     if request.method == 'POST':
-        comment_id = CommentModel.objects.get(id=comment_id)
+        comment_obj = CommentModel.objects.get(id=comment_id)
         context = {
             'comment_id': comment_id,
         }
-        comment_id.delete()
+        comment_obj.delete()
         if request.is_ajax():
             return JsonResponse(context)
 
