@@ -21,7 +21,7 @@ from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoMod
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm
 from .modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
-from .modules.search import search_follow, search_models, search_music, search_blog, search_todo
+from .modules.search import search_follower, search_following, search_models, search_music, search_blog, search_todo
 import datetime
 import string
 import random
@@ -391,6 +391,27 @@ def like_form(request):
         if request.is_ajax():
             return JsonResponse(context)
 
+@csrf_exempt
+def like_form_comment(request):
+    """like_form_comment"""
+    if request.method == 'POST':
+        user = request.user
+        obj_id = request.POST.get('id')
+        obj = get_object_or_404(CommentModel, id=obj_id)
+        liked = False
+        if obj.like.filter(id=user.id).exists():
+            liked = False
+            obj.like.remove(user)
+        else:
+            liked = True
+            obj.like.add(user)
+        context = {
+            'liked': liked,
+            'total_like': obj.total_like(),
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+
 
 # CommentForm & ReplyForm
 models_comment_dict = {
@@ -422,7 +443,7 @@ def comment_form(request):
             'nickname': comment_obj.author.nickname,
             'user_image': comment_obj.author.user_image.url,
             'created': naturaltime(comment_obj.created),
-            'comment_count': obj.comments.filter(parent__isnull=False).count()
+            'comment_count': obj.comments.filter(parent__isnull=True).count()
         }
         if request.is_ajax():
             return JsonResponse(context)
@@ -446,7 +467,7 @@ def reply_form(request):
             'nickname': comment_obj.author.nickname,
             'user_image': comment_obj.author.user_image.url,
             'created': naturaltime(comment_obj.created),
-            'comment_count': obj.comments.filter(parent__isnull=False).count()
+            'comment_count': obj.comments.filter(parent__isnull=True).count()
         }
         if request.is_ajax():
             return JsonResponse(context)
@@ -576,14 +597,13 @@ class FollowerList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_follow(self, FollowModel)
+        return search_follower(self, FollowModel)
 
 class FollowList(ListView):
     """FollowList"""
     model = FollowModel
     template_name = 'follow/follow.html'
     context_object_name = 'follow_list'
-    queryset = FollowModel.objects.prefetch_related().all().annotate(total_following=Count('following', distinct=True))
     count = 0
 
     def get_context_data(self, **kwargs):
@@ -596,7 +616,7 @@ class FollowList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_follow(self, FollowModel)
+        return search_following(self, FollowModel)
 
 @csrf_exempt
 def follow_create(request, nickname):

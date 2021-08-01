@@ -2,8 +2,29 @@ from django.db.models import Q, F, Count
 from functools import reduce
 from operator import and_
 
-def search_follow(self, model):
-    result = model.objects.filter(follower_id=self.request.user.id)
+def search_follower(self, model):
+    result = model.objects.filter(following_id=self.request.user.id).exclude(follower_id=self.request.user.id)
+    search = self.request.GET.get('search')
+    if search:
+        """除外リストを作成"""
+        exclusion_list = set([' ', '　'])
+        q_list = ''
+        for i in search:
+            """全角半角の空文字が含まれたら無視"""
+            if i in exclusion_list:
+                pass
+            else:
+                q_list += i
+        query = reduce(and_, [
+                    Q(following__nickname__icontains=q) |
+                    Q(following__introduction__icontains=q) for q in q_list]
+                )
+        result = result.filter(query).distinct()
+        self.count = len(result)
+    return result
+
+def search_following(self, model):
+    result = model.objects.filter(follower_id=self.request.user.id).exclude(following_id=self.request.user.id)
     search = self.request.GET.get('search')
     if search:
         """除外リストを作成"""
