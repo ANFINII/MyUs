@@ -424,11 +424,8 @@ hr {
     text-align: right;
 }
 
-.btn-group-xs > .btn, .btn-xs {
-    padding: .3rem .4rem;
-    font-size: .875rem;
-    line-height: 1.2;
-    border-radius: .2rem;
+.comment_form_update .textarea_br {
+    height: fit-content;
 }
 
 /* メッセージ削除ダイアログ */
@@ -620,4 +617,8 @@ hr {
 
 .textarea_br:focus ~ .comment_input_chat {
     background-color: rgb(235, 240, 255);
+}
+
+.bi-caret-right-fill::before {
+    line-height: 1.2;
 }

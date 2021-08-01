@@ -31,6 +31,38 @@ $('.like_form').on('click', function(event) {
     })
 });
 
+// コメントいいねボタンクリック時の処理を定義
+$('.like_form_comment').on('click', function(event) {
+    event.preventDefault();
+    const id = $(this).attr('value');
+    const url = $(this).parent().attr('action');
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {'id': id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+    })
+    .done(function(response) {
+        if (response['liked']) {
+            $('#like_color_' + response.comment_id).removeClass('bi-hand-thumbs-up');
+            $('#like_color_' + response.comment_id).parent().removeClass('like_no');
+            $('#like_color_' + response.comment_id).addClass('bi-hand-thumbs-up-fill');
+            $('#like_color_' + response.comment_id).parent().addClass('like_fill');
+            $('#like_count_' + response.comment_id).html(response['total_like']);
+        } else {
+            $('#like_color_' + response.comment_id).removeClass('bi-hand-thumbs-up-fill');
+            $('#like_color_' + response.comment_id).parent().removeClass('like_fill');
+            $('#like_color_' + response.comment_id).addClass('bi-hand-thumbs-up');
+            $('#like_color_' + response.comment_id).parent().addClass('like_no');
+            $('#like_count_' + response.comment_id).html(response['total_like']);
+        }
+        console.log(response);
+    })
+    .fail(function(response) {
+        console.log(response);
+    })
+});
+
 // フォローボタンクリック時の処理を定義
 $('.follow_form').on('click', function(event) {
     event.preventDefault();
@@ -62,7 +94,7 @@ $('.follow_form').on('click', function(event) {
 });
 
 // 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
-$('form').submit(function(event) {
+$('#comment_form').submit(function(event) {
     event.preventDefault();
     const form = $(this);
     const url = form.attr('action');
@@ -101,3 +133,14 @@ $('form').submit(function(event) {
         console.log(response);
     })
 });
+
+// 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
+$('.reply_button').on('click', function() {
+    const comment_id = $(this).attr('obj-id');
+    document.getElementById('comment_aria_list_reply_' + comment_id).classList.add('active');
+})
+
+$('.reply_button_cancel').on('click', function() {
+    const comment_id = $(this).attr('obj-id');
+    document.getElementById('comment_aria_list_reply_' + comment_id).classList.remove('active');
+})
