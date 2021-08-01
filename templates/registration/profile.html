@@ -24,9 +24,9 @@
             </div>
         </div>
 
-        <table border="1" bordercolor="green">
+        <table>
             <thead>
-                <tr><th class="td-color">アカウント画像</th>
+                <tr><th class="td-color td-header">アカウント画像</th>
                     <th>
                         <label for="account_image_input" class="account_image">
                             <a href="{{ user.user_image.url }}" data-lightbox="group"><img src="{{ user.user_image.url }}" title="{{ user.nickname }}" width="56px" height="56xp" data-lightbox="group"></a>
@@ -47,7 +47,7 @@
                 <tr><td class="td-color">職業</td><td class="td-indent">{{ user.profession }}</td></tr>
             </tbody>
             <tfoot>
-                <tr><td class="td-color">自己紹介</td><td class="td-indent">{{ user.introduction|linebreaksbr|urlize }}</td></tr>
+                <tr><td class="td-color td-footer">自己紹介</td><td class="td-indent td-footer">{{ user.introduction|linebreaksbr|urlize }}</td></tr>
             </tfoot>
         </table>
 

@@ -31,9 +31,9 @@
                 </div>
             </div>
 
-            <table border="1" bordercolor="green">
+            <table>
                 <thead>
-                    <tr><th class="td-color">バナー画像</th>
+                    <tr><th class="td-color td-header">バナー画像</th>
                         <th valign="baseline">
                             <label for="account_image_input" class="update_account_image">
                                 <svg class="bi bi-person-square" width="3.5em" height="3.5em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -52,7 +52,7 @@
                     <tr><td class="td-color">フォロワー数</td><td class="td-indent">{{ user.follower_count }}</td></tr>
                 </tbody>
                 <tfoot>
-                    <tr><td class="td-color">内容</td><td><textarea name="content" rows="1" placeholder="ユーザページ概要" class="form-control textarea">{{ user.content }}</textarea></td></tr>
+                    <tr><td class="td-color">内容</td><td class="td-footer"><textarea name="content" rows="1" placeholder="ユーザページ概要" class="form-control textarea">{{ user.content }}</textarea></td></tr>
                 </tfoot>
             </table>
 

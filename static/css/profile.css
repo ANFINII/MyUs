@@ -49,16 +49,41 @@
     display: inline;
 }
 
+/* table */
 table {
+    display: block;
     grid-column: 1/-1;
     grid-row: 3/4;
     overflow-y: auto;
+    border: 1px solid green;
+}
+
+.td-header {
+    border-top: 0;
+}
+
+.td-footer {
+    border-bottom: 0;
 }
 
 table th, table td {
     height: 2.5em;
     min-width: 125px;
     font-weight: normal;
+}
+
+table td {
+    width: 100%;
+    border: 1px solid rgb(0, 125, 0);
+    border-left: 0;
+    border-right: 0;
+}
+
+th.td-color, td.td-color {
+    width: 125px;
+    padding: 0 8px 0 4px;
+    background-color: rgb(190, 250, 210);
+    border-right: 1px solid rgb(0, 125, 0);
 }
 
 .td-indent {
@@ -68,12 +93,6 @@ table th, table td {
 
 .form-control {
     height: 2em;
-}
-
-th.td-color, td.td-color {
-    background-color: rgb(190, 250, 210);
-    width: 125px;
-    padding: 0 8px 0 4px;
 }
 
 .account_image {
@@ -119,8 +138,8 @@ th.td-color, td.td-color {
 .td-name {
     display: grid;
     grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
-    border: 0;
     padding: 4px 3px 0px 1px;
+    border-top: 0;
 }
 
 #last_name {
@@ -135,9 +154,9 @@ th.td-color, td.td-color {
 .td-birthday {
     display: grid;
     grid-template-columns: minmax(74px, 1fr) minmax(74px, 1fr) minmax(74px, 1fr);
-    border: 0;
-    border-top: 1px solid green;
     padding: 4px 5px 0 1px;
+    border-top: 0;
+    border-bottom: 0;
 }
 
 #year {

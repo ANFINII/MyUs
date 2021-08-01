@@ -31,9 +31,9 @@
                 </div>
             </div>
 
-            <table border="1" bordercolor="green">
+            <table>
                 <thead>
-                    <tr><th class="td-color">アカウント画像</th>
+                    <tr><th class="td-color td-header">アカウント画像</th>
                         <th valign="baseline">
                             <label for="account_image_input" class="update_account_image">
                                 <svg class="bi bi-person-square" width="3.5em" height="3.5em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -87,7 +87,7 @@
                     <tr><td class="td-color">職業</td><td><input type="text" name="profession" class="form-control" maxlength="120" value="{{ user.profession }}"></td></tr>
                 </tbody>
                 <tfoot>
-                    <tr><td class="td-color">自己紹介</td><td><textarea name="introduction" rows="1" class="form-control textarea">{{ user.introduction }}</textarea></td></tr>
+                    <tr><td class="td-color td-footer">自己紹介</td><td class="td-footer"><textarea name="introduction" rows="1" class="form-control textarea">{{ user.introduction }}</textarea></td></tr>
                 </tfoot>
             </table>
 
