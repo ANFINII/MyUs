@@ -107,36 +107,40 @@ hr {
 
 .chat_section_header_cross {
     display: none;
-    left: 0;
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
-    color: rgb(120, 120, 120);
-}
-
-.chat_section_header_cross a {
-    text-decoration: none;
-    color: rgb(120, 120, 120);
 }
 
 .comment_aria_check:checked ~ .chat_section_header_cross {
     display: block;
     grid-column: 3/-1;
     grid-row: 1/2;
+    padding: 5px 0 5px 8px;
+    color: rgb(120, 120, 120);
     border-left: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.chat_section_header_cross_check {
-    position: fixed;
-    top: 72px;
-    right: 0;
-}
-
-.chat_section_header_cross h3 {
-    width: fit-content;
-    padding: 5px 8px;
+.chat_section_header_cross h2 {
+    height: fit-content;
+    margin: 0;
     font-size: 16px;
     color: rgb(33,37,41);
     white-space: nowrap;
+}
+
+.chat_section_header_cross a {
+    position: fixed;
+    top: 72px;
+    right: 0;
+    max-width: 30px;
+    text-decoration: none;
+    color: rgb(120, 120, 120);
+}
+
+/* 390pxまでの幅の場合に適応される  */
+@media screen and (max-width:390px) {
+    .chat_section_header_cross a {
+        display: none;
+    }
 }
 
 .bi-x:hover,
