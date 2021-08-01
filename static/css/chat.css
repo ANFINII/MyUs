@@ -367,16 +367,15 @@ hr {
     display: none;
     height: 21px;
     padding: 1px 0 0 6px;
+    -webkit-appearance: none;
 }
 
 .comment_aria_list:hover .chat_button_update,
 .comment_aria_list:hover .chat_button_delete {
-    display: block;
-    border: none;
+    display: inline-block;
     color: rgb(40, 140, 255);
     border: 1px solid rgba(255, 255, 255, 0);
     border-radius: 5px;
-    background-color: rgb(240, 245, 255);
     transition: border 0.1s;
     transition: background 0.1s;
 }
@@ -391,7 +390,6 @@ hr {
 .comment_aria_thread {
     display: block;
 }
-
 
 /* メッセージ編集 */
 .chat_update_main {
