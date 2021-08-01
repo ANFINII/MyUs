@@ -16,8 +16,8 @@ def search_follower(self, model):
             else:
                 q_list += i
         query = reduce(and_, [
-                    Q(following__nickname__icontains=q) |
-                    Q(following__introduction__icontains=q) for q in q_list]
+                    Q(follower__nickname__icontains=q) |
+                    Q(follower__introduction__icontains=q) for q in q_list]
                 )
         result = result.filter(query).distinct()
         self.count = len(result)
