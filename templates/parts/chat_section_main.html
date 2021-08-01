@@ -42,8 +42,8 @@
 
                         <form method="POST" action="{% url 'myus:chat_message_delete' comment.id %}" class="modal_content_footer">
                             {% csrf_token %}
-                            <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="modal_cancel btn btn-light">
-                            <input type="button" name="delete" value="削除" obj-id="{{ comment.id }}" class="chat_delete btn btn-danger">
+                            <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="btn btn-light modal_cancel">
+                            <input type="button" name="delete" value="削除" obj-id="{{ comment.id }}" class="btn btn-danger chat_delete">
                         </form>
                     </div>
                     <div obj-id="{{ comment.id }}" id="mask_{{ comment.id }}" class="mask modal_cancel"></div>
@@ -60,7 +60,7 @@
                     <div class="chat_frame"></div>
                     <div class="comment_input_chat"></div>
                     <div class="chat_update_footer">
-                        <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="chat_update_cancel btn btn-light btn-xs">
+                        <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="btn btn-light btn-xs chat_update_cancel">
                         <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
                     </div>
                 </form>
