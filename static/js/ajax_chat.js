@@ -74,9 +74,8 @@ $('.follow_form').on('click', function(event) {
 // 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
 $('#comment_form').submit(function(event) {
     event.preventDefault();
-    const form = $(this);
-    const url = form.attr('action');
-    const id = form.attr('obj-id');
+    const url = $(this).attr('action');
+    const id = $(this).attr('obj-id');
     const text = $('form [name=text]').val();
     $.ajax({
         url: url,
@@ -124,10 +123,9 @@ $('#comment_form').submit(function(event) {
 // 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
 $('#reply_form').submit(function(event) {
     event.preventDefault();
-    const form = $(this);
-    const url = form.attr('action');
-    const id = form.attr('obj-id');
-    const comment_id = form.attr('comment-id');
+    const url = $(this).attr('action');
+    const id = $(this).attr('obj-id');
+    const comment_id = $(this).attr('comment-id');
     const text = $('form [name=reply]').val();
     $.ajax({
         url: url,
@@ -164,27 +162,33 @@ $('#reply_form').submit(function(event) {
 
 // メッセージ編集
 $('.chat_button_update').on('click', function() {
-    const form = $(this);
-    const comment_id = form.attr('obj-id');
+    const comment_id = $(this).attr('obj-id');
+    // const $text = $('#comment_form_update_' + comment_id).val();
+    // $text.replace($text, '\n').css('white-space', 'pre-wrap');
+
+    // console.log($text)
+    // const $textarea = $('.textarea_br');
+    // const lineHeight = parseInt($text.css('white-space', 'pre-wrap'));
+
+    // $text.on('input', function(evt) {
+    //     const lines = ($(this).val() + '\n').match(/\n/g).length;
+    //     $(this).height(lineHeight * lines);
+    // });
     document.getElementById('chat_update_main_' + comment_id).classList.add('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.add('active');
 })
 
 $('.chat_update_cancel').on('click', function() {
-    const form = $(this);
-    const comment_id = form.attr('obj-id');
+    const comment_id = $(this).attr('obj-id');
     document.getElementById('chat_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
 })
 
 $('.comment_form_update').submit(function(event) {
     event.preventDefault();
-    const form = $(this);
-    const url = form.attr('action');
-    const comment_id = form.attr('obj-id');
+    const url = $(this).attr('action');
+    const comment_id = $(this).attr('obj-id');
     const text = $('#comment_form_update_' + comment_id).val();
-    console.log(text)
-
     document.getElementById('chat_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
     $.ajax({
@@ -205,24 +209,21 @@ $('.comment_form_update').submit(function(event) {
 
 // メッセージ削除ダイアログ
 $('.chat_button_delete').on('click', function() {
-    const form = $(this);
-    const comment_id = form.attr('obj-id');
+    const comment_id = $(this).attr('obj-id');
     document.getElementById('modal_content_' + comment_id).classList.add('active');
     document.getElementById('mask_' + comment_id).classList.add('active');
 });
 
 $('.modal_cancel').on('click', function() {
-    const form = $(this);
-    const comment_id = form.attr('obj-id');
+    const comment_id = $(this).attr('obj-id');
     document.getElementById('modal_content_' + comment_id).classList.remove('active');
     document.getElementById('mask_' + comment_id).classList.remove('active');
 });
 
 $('.chat_delete').on('click', function(event) {
     event.preventDefault();
-    const form = $(this);
-    const url = form.parent().attr('action');
-    const comment_id = form.attr('obj-id');
+    const url = $(this).parent().attr('action');
+    const comment_id = $(this).attr('obj-id');
     document.getElementById('modal_content_' + comment_id).classList.remove('active');
     document.getElementById('mask_' + comment_id).classList.remove('active');
     $.ajax({
