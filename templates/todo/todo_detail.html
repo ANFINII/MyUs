@@ -57,15 +57,11 @@
                         <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
                     </a>
                     <textarea name="text" rows="1" class="textarea_br" placeholder="コメント入力" required></textarea>
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
-                    </button>
+                    <input type="submit" name="text" value="コメント" class="btn btn-primary btn-sm">
                     {% else %}
                     <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_comment">
                     <textarea name="text" rows="1" class="textarea_br" placeholder="コメントするにはログインが必要です！" disabled></textarea>
-                    <button type="submit" class="btn btn-secondary btn-sm" disabled>
-                        <i class="bi bi-caret-right-fill" style="font-size: 1.2em;" title="送信"></i>
-                    </button>
+                    <input type="submit" name="text" value="コメント" class="btn btn-secondary btn-sm" disabled>
                     {% endif %}
                 </div>
             </form>
@@ -86,11 +82,68 @@
                         <p>{{ comment.author.nickname }}</p>
                         <time>{{ comment.created|naturaltime }}</time>
                     </div>
-                    <div class="comment_aria_list_2">{{ comment.text|linebreaks|urlize }}</div>
+                    <div class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
+                    <div class="comment_aria_list_3">
+                        {% if user.is_authenticated %}
+                            <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">{% csrf_token %}
+                                {% if liked %}
+                                <button type="submit" name="comment_id" value="{{ comment.id }}" class="like_form_comment like_fill">
+                                    <i id="like_color_{{ comment.id }}" class="bi bi-hand-thumbs-up-fill icon-font" title="いいね"></i>
+                                </button>
+                                {% else %}
+                                <button type="submit" name="comment_id" value="{{ comment.id }}" class="like_form_comment like_no">
+                                    <i id="like_color_{{ comment.id }}" class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
+                                </button>
+                                {% endif %}
+                                <span id="like_count_{{ comment.id }}" class="like_count">{{ comment.total_like|intcomma }}</span>
+                            </form>
+                        {% else %}
+                            <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
+                        {% endif %}
+                        <label for="reply_aria_check_{{ comment.id }}"  obj-id="{{ comment.id }}" class="reply_button">返信</label>
+                        <form method="POST" action="{% url 'myus:video_detail' object.id %}" id="comment_aria_list_reply_{{ comment.id }}" class="comment_aria_list_4">
+                            {% csrf_token %}
+                            <div class="reply_input">
+                                {% if user.is_authenticated %}
+                                <a href="{% url 'myus:userpage' user.nickname %}">
+                                    <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_reply">
+                                </a>
+                                <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメント入力" required></textarea>
+                                <div class="reply_button_group">
+                                    <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="btn btn-light btn-xs reply_button_cancel">
+                                    <input type="submit" name="reply_form" value="リプライ" class="btn btn-primary btn-xs reply_form">
+                                </div>
+                                {% else %}
+                                <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
+                                <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメントするにはログインが必要です！" disabled></textarea>
+                                <div class="reply_button_group">
+                                    <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="btn btn-light btn-xs reply_button_cancel">
+                                    <input type="submit" name="reply_form" value="リプライ" class="btn btn-secondary btn-xs" disabled>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="reply_aria_list">
+                    {% for reply in reply_list %}
+                    <a href="{% url 'myus:userpage' reply.author.nickname %}">
+                        <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+                    </a>
+                    <div class="reply_aria_list1">
+                        <p>{{ reply.author.nickname }}</p>
+                        <time>{{ reply.created|naturaltime }}</time>
+                    </div>
+                    <div class="reply_aria_list2">{{ reply.text|linebreaksbr|urlize }}</div>
+                    <div class="reply_aria_list3">
+                        <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endfor %}
             </div>
-            <hr>
+            <hr class="comment_aria_hr">
 
             <div class="advertise_aria">
                 <h2>広告表示</h2>
