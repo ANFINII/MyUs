@@ -869,6 +869,10 @@ header {
     border-radius: 10px;
 }
 
+.author_follows:hover {
+    background: rgba(200, 230, 255, 0.1);
+}
+
 .author_follows .author_space {
     grid-column: 1/2;
     grid-row: 1/4;
