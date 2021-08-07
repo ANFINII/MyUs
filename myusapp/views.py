@@ -21,7 +21,7 @@ from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoMod
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .forms import SearchTagForm
 from .modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
-from .modules.search import search_follower, search_following, search_models, search_music, search_blog, search_todo
+from .modules.search import Search
 import datetime
 import string
 import random
@@ -434,7 +434,7 @@ def comment_form(request):
         for models_detail, models in models_comment_dict.items():
             if models_detail in obj_path:
                 obj = models.objects.get(id=obj_id)
-        comment_obj = CommentModel(content_object=obj, text=text)
+        comment_obj = CommentModel(content_object=obj)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
         comment_obj.save()
@@ -455,19 +455,23 @@ def reply_form(request):
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        for key, value in models_comment_dict.items():
-            if key in obj_path:
-                obj = value.objects.get(id=obj_id)
-        comment_obj = CommentModel(content_object=obj, text=text)
+        comment_id = request.POST.get('comment_id')
+        for models_detail, models in models_comment_dict.items():
+            if models_detail in obj_path:
+                obj = models.objects.get(id=obj_id)
+        comment_obj = CommentModel(content_object=obj)
         comment_obj.text = text
         comment_obj.author_id = request.user.id
+        comment_obj.parent = CommentModel.objects.get(id=comment_id)
+        comment_obj.save()
         comment_obj.save()
         context = {
             'text': urlize_impl(linebreaksbr(comment_obj.text)),
             'nickname': comment_obj.author.nickname,
             'user_image': comment_obj.author.user_image.url,
             'created': naturaltime(comment_obj.created),
-            'comment_count': obj.comments.filter(parent__isnull=True).count()
+            'comment_count': obj.comments.filter(parent__isnull=True).count(),
+            'reply_count': comment_obj.parent.replies_count(),
         }
         if request.is_ajax():
             return JsonResponse(context)
@@ -597,7 +601,7 @@ class FollowerList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_follower(self, FollowModel)
+        return Search.search_follower(self, FollowModel)
 
 class FollowList(ListView):
     """FollowList"""
@@ -616,7 +620,7 @@ class FollowList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_following(self, FollowModel)
+        return Search.search_following(self, FollowModel)
 
 @csrf_exempt
 def follow_create(request, nickname):
@@ -704,7 +708,7 @@ class VideoList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_models(self, VideoModel)
+        return Search.search_models(self, VideoModel)
 
 class VideoDetail(DetailView):
     """VideoDetail"""
@@ -772,7 +776,7 @@ class LiveList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_models(self, LiveModel)
+        return Search.search_models(self, LiveModel)
 
 class LiveDetail(DetailView):
     """LiveDetail"""
@@ -840,7 +844,7 @@ class MusicList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_music(self, MusicModel)
+        return Search.search_music(self, MusicModel)
 
 class MusicDetail(DetailView):
     """MusicDetail"""
@@ -908,7 +912,7 @@ class PictureList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_models(self, PictureModel)
+        return Search.search_models(self, PictureModel)
 
 class PictureDetail(DetailView):
     """PictureDetail"""
@@ -976,7 +980,7 @@ class BlogList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_blog(self, BlogModel)
+        return Search.search_blog(self, BlogModel)
 
 class BlogDetail(DetailView):
     """BlogDetail"""
@@ -1044,7 +1048,7 @@ class ChatList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_models(self, ChatModel)
+        return Search.search_models(self, ChatModel)
 
 class ChatDetail(DetailView):
     """ChatDetail"""
@@ -1221,7 +1225,7 @@ class CollaboList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_models(self, CollaboModel)
+        return Search.search_models(self, CollaboModel)
 
 class CollaboDetail(DetailView):
     """CollaboDetail"""
@@ -1294,7 +1298,7 @@ class TodoList(ListView):
         return context
 
     def get_queryset(self, **kwargs):
-        return search_todo(self, TodoModel)
+        return Search.search_todo(self, TodoModel)
 
 class TodoDetail(DetailView):
     """TodoDetail"""
