@@ -197,6 +197,9 @@ class VideoModel(models.Model):
     def __str__(self):
         return self.title
 
+    def score(self):
+        return self.read + self.like.count() * 10
+
     def total_like(self):
         return self.like.count()
 
@@ -245,6 +248,9 @@ class LiveModel(models.Model):
 
     def __str__(self):
         return self.title
+
+    def score(self):
+        return self.read + self.like.count() * 10
 
     def total_like(self):
         return self.like.count()
@@ -296,6 +302,9 @@ class MusicModel(models.Model):
     def __str__(self):
         return self.title
 
+    def score(self):
+        return self.read + self.like.count() * 10
+
     def total_like(self):
         return self.like.count()
 
@@ -343,6 +352,9 @@ class PictureModel(models.Model):
 
     def __str__(self):
         return self.title
+
+    def score(self):
+        return self.read + self.like.count() * 10
 
     def total_like(self):
         return self.like.count()
@@ -394,6 +406,9 @@ class BlogModel(models.Model):
     def __str__(self):
         return self.title
 
+    def score(self):
+        return self.read + self.like.count() * 10
+
     def total_like(self):
         return self.like.count()
 
@@ -442,6 +457,9 @@ class ChatModel(models.Model):
 
     def __str__(self):
         return self.title
+
+    def score(self):
+        return self.read + self.like.count() * 10
 
     def total_like(self):
         return self.like.count()

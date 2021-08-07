@@ -509,7 +509,7 @@ class Index(ListView):
             result5 = BlogModel.objects.search(search)
             result6 = ChatModel.objects.search(search)
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
-            result = sorted(queryset_chain, key=lambda instance: instance.like, reverse=True)
+            result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
             self.count = len(result)
             return result
         return VideoModel.objects.none()
@@ -577,7 +577,7 @@ class UserPage(ListView):
             result5 = BlogModel.objects.filter(author_id=author, publish=True).search(search)
             result6 = ChatModel.objects.filter(author_id=author, publish=True).search(search)
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
-            result = sorted(queryset_chain, key=lambda instance: instance.like, reverse=True)
+            result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
             self.count = len(result)
             return result
         return VideoModel.objects.none()
