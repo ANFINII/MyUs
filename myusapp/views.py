@@ -500,14 +500,14 @@ class Index(ListView):
         return context
 
     def get_queryset(self):
-        query = self.request.GET.get('search', None)
-        if query is not None:
-            result1 = VideoModel.objects.search(query)
-            result2 = LiveModel.objects.search(query)
-            result3 = MusicModel.objects.search(query)
-            result4 = PictureModel.objects.search(query)
-            result5 = BlogModel.objects.search(query)
-            result6 = ChatModel.objects.search(query)
+        search = self.request.GET.get('search', None)
+        if search is not None:
+            result1 = VideoModel.objects.search(search)
+            result2 = LiveModel.objects.search(search)
+            result3 = MusicModel.objects.search(search)
+            result4 = PictureModel.objects.search(search)
+            result5 = BlogModel.objects.search(search)
+            result6 = ChatModel.objects.search(search)
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.like, reverse=True)
             self.count = len(result)
@@ -567,15 +567,15 @@ class UserPage(ListView):
         return context
 
     def get_queryset(self):
-        query = self.request.GET.get('search', None)
+        search = self.request.GET.get('search', None)
         author = get_object_or_404(User, nickname=self.kwargs['nickname'])
-        if query is not None:
-            result1 = VideoModel.objects.filter(author_id=author, publish=True).search(query)
-            result2 = LiveModel.objects.filter(author_id=author, publish=True).search(query)
-            result3 = MusicModel.objects.filter(author_id=author, publish=True).search(query)
-            result4 = PictureModel.objects.filter(author_id=author, publish=True).search(query)
-            result5 = BlogModel.objects.filter(author_id=author, publish=True).search(query)
-            result6 = ChatModel.objects.filter(author_id=author, publish=True).search(query)
+        if search is not None:
+            result1 = VideoModel.objects.filter(author_id=author, publish=True).search(search)
+            result2 = LiveModel.objects.filter(author_id=author, publish=True).search(search)
+            result3 = MusicModel.objects.filter(author_id=author, publish=True).search(search)
+            result4 = PictureModel.objects.filter(author_id=author, publish=True).search(search)
+            result5 = BlogModel.objects.filter(author_id=author, publish=True).search(search)
+            result6 = ChatModel.objects.filter(author_id=author, publish=True).search(search)
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.like, reverse=True)
             self.count = len(result)
