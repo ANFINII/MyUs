@@ -17,11 +17,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, FormView
 from dateutil.relativedelta import relativedelta
 from itertools import chain, islice
+from .forms import SearchTagForm
 from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
-from .forms import SearchTagForm
-from .modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 from .modules.search import Search
+from .modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 import datetime
 import string
 import random
