@@ -9,7 +9,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, QueryD
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
-from django.db.models import Q, F, Count, Max, Min, Avg, Value
+from django.db.models import Q, F, Count, Max, Min, Avg, Value, Exists, OuterRef, Subquery
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr, linebreaks
 from django.views.decorators.csrf import csrf_exempt
@@ -395,15 +395,15 @@ def like_form_comment(request):
         user = request.user
         obj_id = request.POST.get('id')
         obj = get_object_or_404(CommentModel, id=obj_id)
-        liked = False
+        comment_liked = False
         if obj.like.filter(id=user.id).exists():
-            liked = False
+            comment_liked = False
             obj.like.remove(user)
         else:
-            liked = True
+            comment_liked = True
             obj.like.add(user)
         context = {
-            'liked': liked,
+            'comment_liked': comment_liked,
             'total_like': obj.total_like(),
         }
         if request.is_ajax():
@@ -460,7 +460,6 @@ def reply_form(request):
         comment_obj.text = text
         comment_obj.author_id = request.user.id
         comment_obj.parent = CommentModel.objects.get(id=comment_id)
-        comment_obj.save()
         comment_obj.save()
         context = {
             'text': urlize_impl(linebreaksbr(comment_obj.text)),
@@ -706,7 +705,7 @@ class VideoDetail(DetailView):
             followed = True
         context['liked'] = liked
         context['followed'] = followed
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -774,7 +773,7 @@ class LiveDetail(DetailView):
             followed = True
         context['liked'] = liked
         context['followed'] = followed
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -842,7 +841,7 @@ class MusicDetail(DetailView):
             followed = True
         context['liked'] = liked
         context['followed'] = followed
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -910,7 +909,7 @@ class PictureDetail(DetailView):
             followed = True
         context['liked'] = liked
         context['followed'] = followed
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -978,7 +977,7 @@ class BlogDetail(DetailView):
             followed = True
         context['liked'] = liked
         context['followed'] = followed
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -1228,7 +1227,7 @@ class CollaboDetail(DetailView):
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -1289,7 +1288,7 @@ class TodoDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(TodoDetail, self).get_context_data(**kwargs)
         obj = self.object
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).select_related('author', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
