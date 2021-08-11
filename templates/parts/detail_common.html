@@ -98,110 +98,119 @@
     <div id="comment_aria_add"></div>
 
     {% for comment in comment_list reversed %}
-    <div class="comment_aria_list">
-        <a href="{% url 'myus:userpage' comment.author.nickname %}">
-            <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
-        </a>
-        <div class="comment_aria_list_1">
-            <p>{{ comment.author.nickname }}</p>
-            <time>{{ comment.created|naturaltime }}</time>
-        </div>
-        <div class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
-        <div class="comment_aria_list_3">
-            {% if user.is_authenticated %}
+        <div class="comment_aria_list">
+            <a href="{% url 'myus:userpage' comment.author.nickname %}">
+                <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+            </a>
+
+            <div class="comment_aria_list_1">
+                <p>{{ comment.author.nickname }}</p>
+                <time>{{ comment.created|naturaltime }}</time>
+            </div>
+
+            <div class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
+
+            <div class="comment_aria_list_3">{{ comment.comment_liked }}
+                {% if user.is_authenticated %}
                 <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">{% csrf_token %}
-                    {% if liked %}
+                    {% if comment.comment_liked %}
                     <button type="submit" name="comment_id" value="{{ comment.id }}" class="like_form_comment like_fill">
-                        <i id="like_color_{{ comment.id }}" class="bi bi-hand-thumbs-up-fill icon-font" title="いいね"></i>
+                        <i class="bi bi-hand-thumbs-up-fill icon-font like_color_{{ comment.id }}" title="いいね"></i>
                     </button>
                     {% else %}
                     <button type="submit" name="comment_id" value="{{ comment.id }}" class="like_form_comment like_no">
-                        <i id="like_color_{{ comment.id }}" class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
+                        <i class="bi bi-hand-thumbs-up icon-font like_color_{{ comment.id }}" title="いいね"></i>
                     </button>
                     {% endif %}
                     <span id="like_count_{{ comment.id }}" class="like_count">{{ comment.total_like|intcomma }}</span>
                 </form>
-            {% else %}
+                {% else %}
                 <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
-            {% endif %}
-            <label for="reply_aria_check_{{ comment.id }}"  obj-id="{{ comment.id }}" class="reply_button">返信</label>
-            <form method="POST" action="{% url 'myus:video_detail' object.id %}" id="comment_aria_list_reply_{{ comment.id }}" class="comment_aria_list_4">
-                {% csrf_token %}
-                <div class="reply_input">
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'myus:userpage' user.nickname %}">
-                        <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_reply">
-                    </a>
-                    <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメント入力" required></textarea>
-                    <div class="reply_button_group">
-                        <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="btn btn-light btn-xs reply_button_cancel">
-                        <input type="submit" name="reply_form" value="リプライ" class="btn btn-primary btn-xs reply_form">
+                {% endif %}
+
+                <label comment-id="{{ comment.id }}" class="reply_button">返信</label>
+
+                <label id="reply_list_button_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_list_button">
+                    <span id="reply_count_{{ comment.id }}" class="reply_count">{{ comment.reply_count|intcomma }} 件</span>
+                    <span>表示</span>
+                </label>
+                <label id="reply_list_button_cancel_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_list_button_cancel vanish">
+                    <span id="reply_count_{{ comment.id }}" class="reply_count">{{ comment.reply_count|intcomma }} 件</span>
+                    <span>表示</span>
+                </label>
+
+                <form method="POST" action="{% url 'myus:reply_form' %}" obj-id="{{ object.id }}" comment-id="{{ comment.id }}" path="{{ request.path }}" id="comment_aria_list_reply_{{ comment.id }}" class="comment_aria_list_4 reply_form">
+                    {% csrf_token %}
+                    <div class="reply_input">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'myus:userpage' user.nickname %}">
+                            <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_reply">
+                        </a>
+                        <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメント入力" required></textarea>
+                        <div class="reply_button_group">
+                            <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_button_cancel">
+                            <input type="submit" name="reply_form" value="コメント" class="btn btn-primary btn-xs">
+                        </div>
+                        {% else %}
+                        <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
+                        <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメントするにはログインが必要です！" disabled></textarea>
+                        <div class="reply_button_group">
+                            <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_button_cancel">
+                            <input type="submit" name="reply_form" value="コメント" class="btn btn-secondary btn-xs" disabled>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% else %}
-                    <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
-                    <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメントするにはログインが必要です！" disabled></textarea>
-                    <div class="reply_button_group">
-                        <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="btn btn-light btn-xs reply_button_cancel">
-                        <input type="submit" name="reply_form" value="リプライ" class="btn btn-secondary btn-xs" disabled>
+                </form>
+
+                <div id="reply_aria_add"></div>
+
+                <div class="comment_aria_list_space"></div>
+
+                <div id="reply_aria_list_{{ comment.id }}" class="comment_aria_list_5">
+                {% for reply in reply_list %}
+                    {% if reply.parent.id == comment.id %}
+                    <div class="reply_aria_list">
+                        <a href="{% url 'myus:userpage' reply.author.nickname %}">
+                            <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+                        </a>
+
+                        <div class="reply_aria_list_1">
+                            <p>{{ reply.author.nickname }}</p>
+                            <time>{{ reply.created|naturaltime }}</time>
+                        </div>
+
+                        <div class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
+
+                        <div class="reply_aria_list_3">{{ comment.comment_liked }}
+                            {% if user.is_authenticated %}
+                            <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">{% csrf_token %}
+                                {% if comment.comment_liked %}
+                                <button type="submit" name="comment_id" value="{{ comment.id }}" class="like_form_comment like_fill">
+                                    <i class="bi bi-hand-thumbs-up-fill icon-font like_color_{{ comment.id }}" title="いいね"></i>
+                                </button>
+                                {% else %}
+                                <button type="submit" name="comment_id" value="{{ comment.id }}" class="like_form_comment like_no">
+                                    <i class="bi bi-hand-thumbs-up icon-font like_color_{{ comment.id }}" title="いいね"></i>
+                                </button>
+                                {% endif %}
+                                <span id="like_count_{{ comment.id }}" class="like_count">{{ comment.total_like|intcomma }}</span>
+                            </form>
+                            {% else %}
+                            <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
+                            {% endif %}
+                        </div>
                     </div>
                     {% endif %}
+                {% endfor %}
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
-
-    <div class="reply_aria_list">
-        {% for reply in reply_list %}
-        <a href="{% url 'myus:userpage' reply.author.nickname %}">
-            <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
-        </a>
-        <div class="reply_aria_list1">
-            <p>{{ reply.author.nickname }}</p>
-            <time>{{ reply.created|naturaltime }}</time>
-        </div>
-        <div class="reply_aria_list2">{{ reply.text|linebreaksbr|urlize }}</div>
-        <div class="reply_aria_list3">
-            <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
-        </div>
-        {% endfor %}
-    </div>
     {% endfor %}
 </div>
+
 <hr class="comment_aria_hr">
 
 <div class="advertise_aria">
     <h2>広告表示</h2>
-    {% for item in advertise_list %}
-    <section class="main_content">
-        <div class="main_decolation">
-            <video class="video-js vjs-big-play-centered vjs-16-9" controls autoplay width="272" height="153" pictureinpicture="falese" poster="{{ item.images.url }}" data-setup="">
-                <source src="{{ item.videos.url }}" type="video/mp4" label="2160p" res="2160">
-                <source src="{{ item.videos.url }}" type="video/mp4" label="1080p" res="1080">
-                <source src="{{ item.videos.url }}" type="video/mp4" label="720p" res="720">
-                <source src="{{ item.videos.url }}" type="video/mp4" label="480p" res="480">
-                <source src="{{ item.videos.url }}" type="video/mp4" label="240p" res="240">
-                <p>動画を再生するには、videoタグをサポートしたブラウザが必要です。</p>
-                <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
-                <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
-                <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that
-                    <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                </p>
-            </video>
-            <a href="{{ item.url }}" class="author_title_space">
-                {% include 'parts/author_space.html' %}
-                <div class="content_title" title="{{ item.title }}">{{ item.title }}</div>
-                <span class="view_good">
-                    <div class="view_good_font content_nickname">
-                        {{ item.author.nickname }}
-                    </div>
-
-                    <div class="view_good_font view_good_inline">
-                        <i class="bi bi-caret-right-square view_good_space" title="閲覧数"></i>
-                        {{ item.read|intcomma }}
-                    </div>
-                </span>
-            </a>
-        </div>
-    </section>
-    {% endfor %}
+    {% include 'parts/article_advertise.html' %}
 </div>

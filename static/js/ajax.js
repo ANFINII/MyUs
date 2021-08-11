@@ -43,18 +43,18 @@ $('.like_form_comment').on('click', function(event) {
         dataType: 'json',
     })
     .done(function(response) {
-        if (response['liked']) {
-            $('#like_color_' + response.comment_id).removeClass('bi-hand-thumbs-up');
-            $('#like_color_' + response.comment_id).parent().removeClass('like_no');
-            $('#like_color_' + response.comment_id).addClass('bi-hand-thumbs-up-fill');
-            $('#like_color_' + response.comment_id).parent().addClass('like_fill');
-            $('#like_count_' + response.comment_id).html(response['total_like']);
+        if (response['comment_liked']) {
+            $('.like_color_' + id).removeClass('bi-hand-thumbs-up');
+            $('.like_color_' + id).parent().removeClass('like_no');
+            $('.like_color_' + id).addClass('bi-hand-thumbs-up-fill');
+            $('.like_color_' + id).parent().addClass('like_fill');
+            $('#like_count_' + id).html(response['total_like']);
         } else {
-            $('#like_color_' + response.comment_id).removeClass('bi-hand-thumbs-up-fill');
-            $('#like_color_' + response.comment_id).parent().removeClass('like_fill');
-            $('#like_color_' + response.comment_id).addClass('bi-hand-thumbs-up');
-            $('#like_color_' + response.comment_id).parent().addClass('like_no');
-            $('#like_count_' + response.comment_id).html(response['total_like']);
+            $('.like_color_' + id).removeClass('bi-hand-thumbs-up-fill');
+            $('.like_color_' + id).parent().removeClass('like_fill');
+            $('.like_color_' + id).addClass('bi-hand-thumbs-up');
+            $('.like_color_' + id).parent().addClass('like_no');
+            $('#like_count_' + id).html(response['total_like']);
         }
         console.log(response);
     })
@@ -93,13 +93,12 @@ $('.follow_form').on('click', function(event) {
     })
 });
 
-// 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
+// コメント 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
 $('#comment_form').submit(function(event) {
     event.preventDefault();
-    const form = $(this);
-    const url = form.attr('action');
-    const id = form.attr('obj-id');
-    const path = form.attr('path');
+    const url = $(this).attr('action');
+    const id = $(this).attr('obj-id');
+    const path = $(this).attr('path');
     const text = $('form [name=text]').val();
     $.ajax({
         url: url,
@@ -134,13 +133,69 @@ $('#comment_form').submit(function(event) {
     })
 });
 
-// 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
+// コメントリプライ 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
 $('.reply_button').on('click', function() {
-    const comment_id = $(this).attr('obj-id');
+    const comment_id = $(this).attr('comment-id');
     document.getElementById('comment_aria_list_reply_' + comment_id).classList.add('active');
 })
 
 $('.reply_button_cancel').on('click', function() {
-    const comment_id = $(this).attr('obj-id');
+    const comment_id = $(this).attr('comment-id');
     document.getElementById('comment_aria_list_reply_' + comment_id).classList.remove('active');
 })
+
+$('.reply_list_button').on('click', function() {
+    const comment_id = $(this).attr('comment-id');
+    document.getElementById('reply_aria_list_' + comment_id).classList.add('active');
+    document.getElementById('reply_list_button_' + comment_id).classList.add('vanish');
+    document.getElementById('reply_list_button_cancel_' + comment_id).classList.remove('vanish');
+})
+
+$('.reply_list_button_cancel').on('click', function() {
+    const comment_id = $(this).attr('comment-id');
+    document.getElementById('reply_aria_list_' + comment_id).classList.remove('active');
+    document.getElementById('reply_list_button_' + comment_id).classList.remove('vanish');
+    document.getElementById('reply_list_button_cancel_' + comment_id).classList.add('vanish');
+})
+
+$('.reply_form').submit(function(event) {
+    event.preventDefault();
+    const url = $(this).attr('action');
+    const id = $(this).attr('obj-id');
+    const path = $(this).attr('path');
+    console.log(path)
+
+    const comment_id = $(this).attr('comment-id');
+    const text = $('form [name=reply]').val();
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {'id': id, 'path': path, 'comment_id': comment_id, 'text': text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+        timeout: 10000,
+    })
+    .done(function(response) {
+        let reply_aria_list_add =
+        '<div class="comment_aria_list">' +
+            '<a href="/userpage/' + response.nickname +'">' +
+                '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
+            '</a>' +
+            '<div class="comment_aria_list_1">' +
+                '<p>' + response.nickname + '</p>' +
+                '<time>' + ' ' + response.created + '</time>' +
+            '</div>' +
+            '<div class="comment_aria_list_2">' + response.text + '</div>' +
+            '<div class="comment_aria_list_3">' +
+                '<i class="bi bi-hand-thumbs-up icon-font" title="いいね数">' + ' ' + '</i>' +
+                '<label for="reply_aria_check_id" class="reply_aria_check_id">' + '返信' + '</label>' +
+            '</div>' +
+        '</div>';
+    $("#comment_aria_list_reply_" + comment_id)[0].reset();
+    $('#reply_count_' + comment_id).html(response.reply_count);
+    $('#reply_aria_add').append(reply_aria_list_add);
+        console.log(response)
+    })
+    .fail(function(response) {
+        console.log(response);
+    })
+});
