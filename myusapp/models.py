@@ -554,13 +554,16 @@ class AdvertiseModel(models.Model):
     url     = models.URLField()
     title   = models.CharField(max_length=100)
     content = models.TextField()
-    images  = models.ImageField(upload_to='images/advertise_images', blank=True, null=True)
-    videos  = models.FileField(upload_to='videos/advertise_videos', blank=True, null=True)
+    images  = models.ImageField(upload_to='images/advertise_images')
+    videos  = models.FileField(upload_to='videos/advertise_videos')
     publish = BooleanField(default=True)
     read    = models.IntegerField(blank=True, null=True, default=0)
     period  = models.DateField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name_plural = '13 広告'
