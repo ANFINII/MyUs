@@ -1,9 +1,10 @@
 {% load static %}
+{% load humanize %}
 
-{% for item in video_list %}
+{% for item in advertise_list %}
 <section class="main_content">
     <div class="main_decolation">
-        <video class="video-js vjs-big-play-centered vjs-16-9" controls preload="none" width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
+        <video class="video-js vjs-big-play-centered vjs-16-9" controls autoplay width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
             <source src="{{ item.videos.url }}" type="video/mp4" label="2160p" res="2160">
             <source src="{{ item.videos.url }}" type="video/mp4" label="1080p" res="1080">
             <source src="{{ item.videos.url }}" type="video/mp4" label="720p" res="720">
@@ -16,9 +17,19 @@
                 <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
             </p>
         </video>
-        <a href="{% url 'myus:video_detail' item.pk %}" class="author_title_space">
+        <a href="{{ item.url }}" class="author_title_space">
             {% include 'parts/author_space.html' %}
-            {% include 'parts/content_title.html' %}
+            <div class="content_title" title="{{ item.title }}">{{ item.title }}</div>
+            <span class="view_good">
+                <div class="view_good_font content_nickname">
+                    {{ item.author.nickname }}
+                </div>
+
+                <div class="view_good_font view_good_inline">
+                    <i class="bi bi-caret-right-square view_good_space" title="閲覧数"></i>
+                    {{ item.read|intcomma }}
+                </div>
+            </span>
         </a>
     </div>
 </section>
