@@ -128,14 +128,15 @@
                 <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
                 {% endif %}
 
-                <label comment-id="{{ comment.id }}" class="reply_button">返信</label>
+                <label id="reply_button_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_button">▼ 返信</label>
+                <label id="reply_button_cancel_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_button_cancel vanish">▲ 返信</label>
 
                 <label id="reply_list_button_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_list_button">
-                    <span id="reply_count_{{ comment.id }}" class="reply_count">{{ comment.reply_count|intcomma }} 件</span>
+                    <span id="reply_count_{{ comment.id }}" class="reply_count">▼ スレッド {{ comment.reply_count|intcomma }}件</span>
                     <span>表示</span>
                 </label>
                 <label id="reply_list_button_cancel_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_list_button_cancel vanish">
-                    <span id="reply_count_{{ comment.id }}" class="reply_count">{{ comment.reply_count|intcomma }} 件</span>
+                    <span id="reply_count_{{ comment.id }}" class="reply_count">▲ スレッド {{ comment.reply_count|intcomma }}件</span>
                     <span>表示</span>
                 </label>
 
@@ -148,26 +149,25 @@
                         </a>
                         <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメント入力" required></textarea>
                         <div class="reply_button_group">
-                            <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_button_cancel">
+                            <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_cancel_button">
                             <input type="submit" name="reply_form" value="コメント" class="btn btn-primary btn-xs">
                         </div>
                         {% else %}
                         <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
                         <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメントするにはログインが必要です！" disabled></textarea>
                         <div class="reply_button_group">
-                            <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_button_cancel">
+                            <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_cancel_button">
                             <input type="submit" name="reply_form" value="コメント" class="btn btn-secondary btn-xs" disabled>
                         </div>
                         {% endif %}
                     </div>
                 </form>
 
-                <div id="reply_aria_add"></div>
-
                 <div class="comment_aria_list_space"></div>
 
                 <div id="reply_aria_list_{{ comment.id }}" class="comment_aria_list_5">
-                {% for reply in reply_list %}
+                <div id="reply_aria_add"></div>
+                {% for reply in reply_list reversed %}
                     {% if reply.parent.id == comment.id %}
                     <div class="reply_aria_list">
                         <a href="{% url 'myus:userpage' reply.author.nickname %}">
@@ -181,19 +181,19 @@
 
                         <div class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
 
-                        <div class="reply_aria_list_3">{{ comment.comment_liked }}
+                        <div class="reply_aria_list_3">{{ reply.comment_liked }}
                             {% if user.is_authenticated %}
                             <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">{% csrf_token %}
-                                {% if comment.comment_liked %}
-                                <button type="submit" name="comment_id" value="{{ comment.id }}" class="like_form_comment like_fill">
-                                    <i class="bi bi-hand-thumbs-up-fill icon-font like_color_{{ comment.id }}" title="いいね"></i>
+                                {% if reply.comment_liked %}
+                                <button type="submit" name="comment_id" value="{{ reply.id }}" class="like_form_comment like_fill">
+                                    <i class="bi bi-hand-thumbs-up-fill icon-font like_color_{{ reply.id }}" title="いいね"></i>
                                 </button>
                                 {% else %}
-                                <button type="submit" name="comment_id" value="{{ comment.id }}" class="like_form_comment like_no">
-                                    <i class="bi bi-hand-thumbs-up icon-font like_color_{{ comment.id }}" title="いいね"></i>
+                                <button type="submit" name="comment_id" value="{{ reply.id }}" class="like_form_comment like_no">
+                                    <i class="bi bi-hand-thumbs-up icon-font like_color_{{ reply.id }}" title="いいね"></i>
                                 </button>
                                 {% endif %}
-                                <span id="like_count_{{ comment.id }}" class="like_count">{{ comment.total_like|intcomma }}</span>
+                                <span id="like_count_{{ reply.id }}" class="like_count">{{ reply.total_like|intcomma }}</span>
                             </form>
                             {% else %}
                             <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>

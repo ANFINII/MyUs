@@ -133,15 +133,26 @@ $('#comment_form').submit(function(event) {
     })
 });
 
-// コメントリプライ 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
+// 返信コメント表示, 非表示
 $('.reply_button').on('click', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('comment_aria_list_reply_' + comment_id).classList.add('active');
+    document.getElementById('reply_button_' + comment_id).classList.add('vanish');
+    document.getElementById('reply_button_cancel_' + comment_id).classList.remove('vanish');
 })
 
 $('.reply_button_cancel').on('click', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('comment_aria_list_reply_' + comment_id).classList.remove('active');
+    document.getElementById('reply_button_' + comment_id).classList.remove('vanish');
+    document.getElementById('reply_button_cancel_' + comment_id).classList.add('vanish');
+})
+
+$('.reply_cancel_button').on('click', function() {
+    const comment_id = $(this).attr('comment-id');
+    document.getElementById('comment_aria_list_reply_' + comment_id).classList.remove('active');
+    document.getElementById('reply_button_' + comment_id).classList.remove('vanish');
+    document.getElementById('reply_button_cancel_' + comment_id).classList.add('vanish');
 })
 
 $('.reply_list_button').on('click', function() {
@@ -158,6 +169,7 @@ $('.reply_list_button_cancel').on('click', function() {
     document.getElementById('reply_list_button_cancel_' + comment_id).classList.add('vanish');
 })
 
+// コメントリプライ 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
 $('.reply_form').submit(function(event) {
     event.preventDefault();
     const url = $(this).attr('action');

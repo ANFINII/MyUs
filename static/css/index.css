@@ -1248,6 +1248,7 @@ header {
 }
 
 .reply_button:hover,
+.reply_button_cancel:hover,
 .reply_list_button:hover,
 .reply_list_button_cancel:hover {
     color: rgb(0, 100, 255);
@@ -1276,7 +1277,7 @@ header {
     grid-row: 2/3;
 }
 
-.reply_button_cancel {
+.reply_cancel_button {
     margin: 0 3px 0 0;
 }
 
