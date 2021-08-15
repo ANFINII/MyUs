@@ -1247,6 +1247,17 @@ header {
     border-bottom: 2px solid rgb(80, 170, 255);
 }
 
+.reply_button,
+.reply_button_cancel {
+    padding: 0 6px 0 0;
+    color: rgb(100, 100, 100);
+}
+
+.reply_list_button,
+.reply_list_button_cancel {
+    color: rgb(100, 100, 100);
+}
+
 .reply_button:hover,
 .reply_button_cancel:hover,
 .reply_list_button:hover,
@@ -1324,7 +1335,12 @@ header {
     grid-template-rows: 20px minmax(20px, auto) auto auto auto;
     position: relative;
     grid-gap: 0 10px;
-    margin: 0 0 10px 0;
+    margin: 0 0 5px 0;
+    padding: 5px;
+}
+
+.comment_aria_list:hover {
+    background: rgb(240, 245, 255);
 }
 
 .comment_aria_list .profile_image {
@@ -1406,7 +1422,12 @@ header {
     grid-template-rows: 20px minmax(20px, auto) auto auto;
     position: relative;
     grid-gap: 0 10px;
-    margin: 0 0 10px 0;
+    margin: 0 0 5px 0;
+    padding: 5px;
+}
+
+.reply_aria_list:hover {
+    background: rgb(220, 235, 255);
 }
 
 .reply_aria_list .profile_image {
@@ -1452,16 +1473,29 @@ header {
     border-color: rgb(100, 100, 100);
 }
 
-.comment_aria_thread {
-    grid-column: 2/3;
-    grid-row: 3/4;
-    min-width: 200px;
-    max-width: 50%;
-    height: 24px;
-    padding: 2px 0 2px 4px;
+/* コメント編集、更新ボタン */
+.edit_button {
+    display: grid;
+    grid-template-columns: 38px 38px;
+    grid-template-rows: auto;
+    grid-column: 3/-1;
+    grid-row: 1/2;
+    margin: 0;
     font-size: 12px;
-    font-weight: bold;
-    text-decoration: none;
+    justify-content: end;
+}
+
+.edit_button_update,
+.edit_button_delete {
+    display: none;
+    height: 21px;
+    padding: 1px 0 0 6px;
+    -webkit-appearance: none;
+}
+
+.comment_aria_list:hover .edit_button_update,
+.comment_aria_list:hover .edit_button_delete {
+    display: inline-block;
     color: rgb(40, 140, 255);
     border: 1px solid rgba(255, 255, 255, 0);
     border-radius: 5px;
@@ -1469,22 +1503,149 @@ header {
     transition: background 0.1s;
 }
 
-.comment_aria_thread:hover {
-    color: rgb(40, 140, 255);
+.comment_aria_list:hover .edit_button_update:hover,
+.comment_aria_list:hover .edit_button_delete:hover {
+    display: block;
     border: 1px solid rgba(170, 210, 255, 0.8);
     background: rgb(255, 255, 255);
 }
 
-.comment_aria_thread span {
-    color: rgb(110, 110, 110);
-    font-weight: normal;
-    margin: 0 0 0 8px;
+/* メッセージ編集 */
+.edit_update_main {
+    display: none;
+}
+
+.edit_update_main.active {
+    display: grid;
+    grid-template-columns: 40px auto;
+    grid-template-rows: 40px auto;
+    grid-gap: 0 10px;
+    padding: 8px 8px 8px 16px;
+    background: rgb(255, 240, 230);
+}
+
+.edit_update_main.active .comment_form_update {
+    grid-column: 2/-1;
+    grid-row: 1/-1;
+}
+
+.comment_aria_check:checked ~ .edit_update_main.active {
+    grid-column: 2/3;
+}
+
+.edit_update_main .btn-sm {
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    justify-self: end;
+    border-radius: 5px;
+}
+
+.edit_update_footer {
+    margin: 10px 0 0 0;
+    text-align: right;
+}
+
+.comment_form_update .textarea_br {
+    height: fit-content;
+}
+
+/* メッセージ削除ダイアログ */
+.modal_content {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 40px 40px auto 55px;
+    position: fixed;
+    z-index: 100;
+    top: 50%;
+    left: 50%;
+    width: calc(100% - 36px);
+    max-width: 580px;
+    height: 330px;
+    padding: 18px;
+    opacity: 0;
+    visibility: hidden;
+    border-radius: 8px;
+    background: rgb(255, 255, 255);
+    transform: translate(-50%, -50%) scale(0.9);
+    transition: 0.3s;
+}
+
+.modal_content.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.modal_content_header {
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    display: flex;
+    margin: 0;
+    font-size: 22px;
+    font-weight: bold;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.modal_content_body_span {
+    grid-column: 1/-1;
+    grid-row: 2/3;
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.modal_content_body {
+    grid-column: 1/-1;
+    grid-row: 3/4;
+    padding: 0;
+    overflow-y: auto;
+}
+
+.modal_content_body .comment_aria_list {
+    padding: 8px;
+}
+
+.modal_content_footer {
+    display: flex;
+    grid-column: 1/-1;
+    grid-row: 4/5;
+    padding: 5px;
+    align-items: flex-end;
+    justify-content: flex-end;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.modal_cancel {
+    margin: 0 8px 0 0;
+}
+
+/* 閉じる用のカバー */
+.mask {
+    position: fixed;
+    z-index: 90;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    transition: 0.3s;
+}
+
+.mask.active {
+    visibility: visible;
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .comment_aria_hr {
     margin: 0 0 16px 0;
 }
 
+/* 広告 */
 .advertise_aria h2 {
     font-size: 16px;
     margin: 0 0 12px 0;

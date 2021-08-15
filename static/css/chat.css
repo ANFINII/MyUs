@@ -273,10 +273,6 @@ hr {
     color: rgb(120, 120, 120);
 }
 
-.chat_section_nav_label:hover {
-    background-color: rgb(240, 245, 255);
-}
-
 .chat_section_nav_list {
     display: grid;
     grid-template-columns: 40px auto;
@@ -285,6 +281,7 @@ hr {
     padding: 5px 6px;
 }
 
+.chat_section_nav_label:hover,
 .chat_section_nav_list:hover {
     background-color: rgb(240, 245, 255);
 }
@@ -351,28 +348,17 @@ hr {
     display: none;
 }
 
-.chat_button {
-    display: grid;
-    grid-template-columns: 38px 38px;
-    grid-template-rows: auto;
-    grid-column: 3/-1;
-    grid-row: 1/2;
-    margin: 0;
+.comment_aria_thread {
+    display: block;
+    grid-column: 2/3;
+    grid-row: 3/4;
+    min-width: 200px;
+    max-width: 50%;
+    height: 24px;
+    padding: 2px 0 2px 4px;
     font-size: 12px;
-    justify-content: end;
-}
-
-.chat_button_update,
-.chat_button_delete {
-    display: none;
-    height: 21px;
-    padding: 1px 0 0 6px;
-    -webkit-appearance: none;
-}
-
-.comment_aria_list:hover .chat_button_update,
-.comment_aria_list:hover .chat_button_delete {
-    display: inline-block;
+    font-weight: bold;
+    text-decoration: none;
     color: rgb(40, 140, 255);
     border: 1px solid rgba(255, 255, 255, 0);
     border-radius: 5px;
@@ -380,140 +366,20 @@ hr {
     transition: background 0.1s;
 }
 
-.comment_aria_list:hover .chat_button_update:hover,
-.comment_aria_list:hover .chat_button_delete:hover {
-    display: block;
+.comment_aria_thread:hover {
+    color: rgb(40, 140, 255);
     border: 1px solid rgba(170, 210, 255, 0.8);
     background: rgb(255, 255, 255);
 }
 
-.comment_aria_thread {
-    display: block;
-}
-
-/* メッセージ編集 */
-.chat_update_main {
-    display: none;
-}
-
-.chat_update_main.active {
-    display: grid;
-    grid-template-columns: 40px auto;
-    grid-template-rows: 40px auto;
-    grid-gap: 0 10px;
-    padding: 8px 8px 8px 16px;
-    background: rgb(255, 240, 230);
-}
-
-.chat_update_main.active .comment_form_update {
-    grid-column: 2/-1;
-    grid-row: 1/-1;
-}
-
-.comment_aria_check:checked ~ .chat_update_main.active {
-    grid-column: 2/3;
-}
-
-.chat_update_main .btn-sm {
-    grid-column: 1/-1;
-    grid-row: 1/2;
-    justify-self: end;
-    border-radius: 5px;
-}
-
-.chat_update_footer {
-    margin: 10px 0 0 0;
-    text-align: right;
+.comment_aria_thread span {
+    color: rgb(110, 110, 110);
+    font-weight: normal;
+    margin: 0 0 0 8px;
 }
 
 .comment_form_update .textarea_br {
     height: fit-content;
-}
-
-/* メッセージ削除ダイアログ */
-.modal_content {
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: 40px 40px auto 50px;
-    position: fixed;
-    z-index: 100;
-    top: 50%;
-    left: 50%;
-    width: calc(100% - 36px);
-    max-width: 580px;
-    height: 330px;
-    padding: 18px;
-    opacity: 0;
-    visibility: hidden;
-    border-radius: 8px;
-    background: rgb(255, 255, 255);
-    transform: translate(-50%, -50%) scale(0.9);
-    transition: 0.3s;
-}
-
-.modal_content.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-}
-
-.modal_content_header {
-    grid-column: 1/-1;
-    grid-row: 1/2;
-    display: flex;
-    margin: 0;
-    font-size: 22px;
-    font-weight: bold;
-    align-items: center;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.modal_content_body_span {
-    grid-column: 1/-1;
-    grid-row: 2/3;
-    display: flex;
-    font-size: 14px;
-    align-items: center;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.modal_content_body {
-    grid-column: 1/-1;
-    grid-row: 3/4;
-    padding: 0;
-    overflow-y: auto;
-}
-
-.modal_content_body .comment_aria_list {
-    padding: 8px;
-}
-
-.modal_content_footer {
-    grid-column: 1/-1;
-    grid-row: 4/5;
-    margin: 10px 0 0 0;
-    text-align: right;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-/* 閉じる用のカバー */
-.mask {
-    position: fixed;
-    z-index: 90;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    visibility: hidden;
-    transition: 0.3s;
-}
-
-.mask.active {
-    visibility: visible;
-    background: rgba(0, 0, 0, 0.3);
 }
 
 /* chat_section_thread */
