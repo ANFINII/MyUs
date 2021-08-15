@@ -211,3 +211,74 @@ $('.reply_form').submit(function(event) {
         console.log(response);
     })
 });
+
+// メッセージ編集
+$('.edit_button_update').on('click', function() {
+    const comment_id = $(this).attr('obj-id');
+    document.getElementById('edit_update_main_' + comment_id).classList.add('active');
+    document.getElementById('comment_aria_list_' + comment_id).classList.add('active');
+})
+
+$('.edit_update_cancel').on('click', function() {
+    const comment_id = $(this).attr('obj-id');
+    document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
+    document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
+})
+
+$('.comment_form_update').submit(function(event) {
+    event.preventDefault();
+    const url = $(this).attr('action');
+    const comment_id = $(this).attr('obj-id');
+    const text = $('#comment_form_update_' + comment_id).val();
+    document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
+    document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {'comment_id': comment_id, 'text': text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+        timeout: 10000,
+    })
+    .done(function(response) {
+        $('#comment_aria_list_2_' + response.comment_id).html(response.text)
+        console.log(response)
+    })
+    .fail(function(response) {
+        console.log(response);
+    })
+});
+
+// メッセージ削除ダイアログ
+$('.edit_button_delete').on('click', function() {
+    const comment_id = $(this).attr('obj-id');
+    document.getElementById('modal_content_' + comment_id).classList.add('active');
+    document.getElementById('mask_' + comment_id).classList.add('active');
+});
+
+$('.modal_cancel').on('click', function() {
+    const comment_id = $(this).attr('obj-id');
+    document.getElementById('modal_content_' + comment_id).classList.remove('active');
+    document.getElementById('mask_' + comment_id).classList.remove('active');
+});
+
+$('.edit_delete').on('click', function(event) {
+    event.preventDefault();
+    const url = $(this).parent().attr('action');
+    const comment_id = $(this).attr('obj-id');
+    document.getElementById('modal_content_' + comment_id).classList.remove('active');
+    document.getElementById('mask_' + comment_id).classList.remove('active');
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+        timeout: 10000,
+    })
+    .done(function(response) {
+        $('#comment_aria_list_' + response.comment_id).remove();
+        console.log(response)
+    })
+    .fail(function(response) {
+        console.log(response);
+    })
+});

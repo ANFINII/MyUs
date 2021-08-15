@@ -3,8 +3,8 @@ $(window).on('load', function() {
 
     if(pathname) {
         let target = $(pathname).position();
-        $('.chat_section_main').animate({scrollTop: target}, 'slow');
-        $('.chat_section_main').scrollTop(target.top);
+        $('.edit_section_main').animate({scrollTop: target}, 'slow');
+        $('.edit_section_main').scrollTop(target.top);
     }
 });
 
@@ -161,7 +161,7 @@ $('#reply_form').submit(function(event) {
 });
 
 // メッセージ編集
-$('.chat_button_update').on('click', function() {
+$('.edit_button_update').on('click', function() {
     const comment_id = $(this).attr('obj-id');
     // const $text = $('#comment_form_update_' + comment_id).val();
     // $text.replace($text, '\n').css('white-space', 'pre-wrap');
@@ -174,13 +174,13 @@ $('.chat_button_update').on('click', function() {
     //     const lines = ($(this).val() + '\n').match(/\n/g).length;
     //     $(this).height(lineHeight * lines);
     // });
-    document.getElementById('chat_update_main_' + comment_id).classList.add('active');
+    document.getElementById('edit_update_main_' + comment_id).classList.add('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.add('active');
 })
 
-$('.chat_update_cancel').on('click', function() {
+$('.edit_update_cancel').on('click', function() {
     const comment_id = $(this).attr('obj-id');
-    document.getElementById('chat_update_main_' + comment_id).classList.remove('active');
+    document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
 })
 
@@ -189,7 +189,7 @@ $('.comment_form_update').submit(function(event) {
     const url = $(this).attr('action');
     const comment_id = $(this).attr('obj-id');
     const text = $('#comment_form_update_' + comment_id).val();
-    document.getElementById('chat_update_main_' + comment_id).classList.remove('active');
+    document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
     $.ajax({
         url: url,
@@ -208,7 +208,7 @@ $('.comment_form_update').submit(function(event) {
 });
 
 // メッセージ削除ダイアログ
-$('.chat_button_delete').on('click', function() {
+$('.edit_button_delete').on('click', function() {
     const comment_id = $(this).attr('obj-id');
     document.getElementById('modal_content_' + comment_id).classList.add('active');
     document.getElementById('mask_' + comment_id).classList.add('active');
@@ -220,7 +220,7 @@ $('.modal_cancel').on('click', function() {
     document.getElementById('mask_' + comment_id).classList.remove('active');
 });
 
-$('.chat_delete').on('click', function(event) {
+$('.edit_delete').on('click', function(event) {
     event.preventDefault();
     const url = $(this).parent().attr('action');
     const comment_id = $(this).attr('obj-id');
