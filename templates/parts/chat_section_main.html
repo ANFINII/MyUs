@@ -20,7 +20,7 @@
                     {% include 'parts/modal_content_comment.html' %}
                 {% endif %}
             </div>
-            <div id="edit_update_main_{{ comment.id }}" class="edit_update_main">
+            <div id="edit_update_main_{{ comment.id }}" class="edit_update_main_chat">
                 <a href="{% url 'myus:userpage' comment.author.nickname %}">
                     <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
                 </a>

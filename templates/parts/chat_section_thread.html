@@ -36,7 +36,7 @@
                 {% include 'parts/modal_content_reply.html' %}
             {% endif %}
         </div>
-        <div id="edit_update_main_{{ reply.id }}" class="edit_update_main">
+        <div id="edit_update_main_{{ reply.id }}" class="edit_update_main_chat">
             <a href="{% url 'myus:userpage' reply.author.nickname %}">
                 <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
             </a>

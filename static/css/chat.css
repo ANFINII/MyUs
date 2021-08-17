@@ -340,14 +340,6 @@ hr {
     overflow: hidden;
 }
 
-.comment_aria_list:hover {
-    background-color: rgb(240, 245, 255);
-}
-
-.comment_aria_list.active {
-    display: none;
-}
-
 .comment_aria_thread {
     display: block;
     grid-column: 2/3;
@@ -376,10 +368,6 @@ hr {
     color: rgb(110, 110, 110);
     font-weight: normal;
     margin: 0 0 0 8px;
-}
-
-.comment_form_update .textarea_br {
-    height: fit-content;
 }
 
 /* chat_section_thread */
@@ -451,10 +439,6 @@ hr {
 
 .textarea_br:focus {
     border-bottom: 0px solid rgb(120, 120, 120);
-}
-
-.comment_form_update .textarea_br {
-    height: fit-content;
 }
 
 .chat_frame {
