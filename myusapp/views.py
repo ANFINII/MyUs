@@ -659,7 +659,7 @@ class VideoCreate(CreateView):
         return super(VideoCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:video_detail', kwargs={'pk': self.object.pk})
+        return reverse('myus:video_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
 class VideoList(ListView):
     """VideoList"""
@@ -727,7 +727,7 @@ class LiveCreate(CreateView):
         return super(LiveCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:live_detail', kwargs={'pk': self.object.pk})
+        return reverse('myus:live_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
 class LiveList(ListView):
     """LiveList"""
@@ -795,7 +795,7 @@ class MusicCreate(CreateView):
         return super(MusicCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:music_detail', kwargs={'pk': self.object.pk})
+        return reverse('myus:music_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
 class MusicList(ListView):
     """MusicList"""
@@ -863,7 +863,7 @@ class PictureCreate(CreateView):
         return super(PictureCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:picture_detail', kwargs={'pk': self.object.pk})
+        return reverse('myus:picture_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
 class PictureList(ListView):
     """PictureList"""
@@ -931,7 +931,7 @@ class BlogCreate(CreateView):
         return super(BlogCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:blog_detail', kwargs={'pk': self.object.pk})
+        return reverse('myus:blog_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
 class BlogList(ListView):
     """BlogList"""
@@ -999,7 +999,7 @@ class ChatCreate(CreateView):
         return super(ChatCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:chat_detail', kwargs={'pk': self.object.pk})
+        return reverse('myus:chat_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
 class ChatList(ListView):
     """ChatList"""
@@ -1176,7 +1176,7 @@ class CollaboCreate(CreateView):
         return super(CollaboCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:collabo_detail', kwargs={'pk': self.object.pk})
+        return reverse('myus:collabo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
 class CollaboList(ListView):
     """CollaboList"""
@@ -1249,7 +1249,7 @@ class TodoCreate(CreateView):
         return super(TodoCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:todo_detail', kwargs={'pk': self.object.pk})
+        return reverse('myus:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
 class TodoList(ListView):
     """TodoList"""
@@ -1303,7 +1303,7 @@ class TodoUpdate(UpdateView):
     template_name = 'todo/todo_update.html'
 
     def get_success_url(self):
-        return reverse('myus:todo_detail', kwargs={'pk': self.object.pk})
+        return reverse('myus:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
 class TodoDelete(DeleteView):
     """TodoUpdate"""

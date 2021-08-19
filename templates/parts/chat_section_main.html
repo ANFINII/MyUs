@@ -12,7 +12,7 @@
                     <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
                 </div>
                 <div id="comment_aria_list_2_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
-                <a href="{% url 'myus:chat_thread' object.pk comment.id %}" class="comment_aria_thread">
+                <a href="{% url 'myus:chat_thread' object.pk object.title comment.id %}" class="comment_aria_thread">
                     スレッド表示
                     <span id="reply_count_{{ comment.id }}">返信 {{ comment.reply_count|intcomma }} 件</span>
                 </a>

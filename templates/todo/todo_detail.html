@@ -17,8 +17,8 @@
 
                 <div class="article_detail_aria_2">
                     <object class="todo_link_detail">
-                        <a href="{% url 'myus:todo_update' object.pk %}" class="btn btn-success btn-sm" role="button">編集</a>
-                        <a href="{% url 'myus:todo_delete' object.pk %}" class="btn btn-danger btn-sm" role="button">削除</a>
+                        <a href="{% url 'myus:todo_update' object.pk object.title %}" class="btn btn-success btn-sm" role="button">編集</a>
+                        <a href="{% url 'myus:todo_delete' object.pk object.title %}" class="btn btn-danger btn-sm" role="button">削除</a>
                     </object>
                 </div>
             </div>

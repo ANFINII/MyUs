@@ -1,6 +1,6 @@
 <div class="chat_section_header_cross">
     <h2>スレッド</h2>
-    <a href="{% url 'myus:chat_detail' object.pk %}">
+    <a href="{% url 'myus:chat_detail' object.pk object.title %}">
         <i class="bi bi-x" style="font-size: 1.7em;" title="閉じる"></i>
     </a>
 </div>

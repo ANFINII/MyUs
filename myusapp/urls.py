@@ -33,28 +33,28 @@ urlpatterns = [
 
     path('video/', VideoList.as_view(), name='video_list'),
     path('video/create/', VideoCreate.as_view(), name='video_create'),
-    path('video/detail/<int:pk>', VideoDetail.as_view(), name='video_detail'),
+    path('video/detail/<int:pk>/<str:title>', VideoDetail.as_view(), name='video_detail'),
 
     path('live/', LiveList.as_view(), name='live_list'),
     path('live/create/', LiveCreate.as_view(), name='live_create'),
-    path('live/detail/<int:pk>', LiveDetail.as_view(), name='live_detail'),
+    path('live/detail/<int:pk>/<str:title>', LiveDetail.as_view(), name='live_detail'),
 
     path('music/', MusicList.as_view(), name='music_list'),
     path('music/create/', MusicCreate.as_view(), name='music_create'),
-    path('music/detail/<int:pk>', MusicDetail.as_view(), name='music_detail'),
+    path('music/detail/<int:pk>/<str:title>', MusicDetail.as_view(), name='music_detail'),
 
     path('picture/', PictureList.as_view(), name='picture_list'),
     path('picture/create/', PictureCreate.as_view(), name='picture_create'),
-    path('picture/detail/<int:pk>', PictureDetail.as_view(), name='picture_detail'),
+    path('picture/detail/<int:pk>/<str:title>', PictureDetail.as_view(), name='picture_detail'),
 
     path('blog/', BlogList.as_view(), name='blog_list'),
     path('blog/create/', BlogCreate.as_view(), name='blog_create'),
-    path('blog/detail/<int:pk>', BlogDetail.as_view(), name='blog_detail'),
+    path('blog/detail/<int:pk>/<str:title>', BlogDetail.as_view(), name='blog_detail'),
 
     path('chat/', ChatList.as_view(), name='chat_list'),
     path('chat/create/', ChatCreate.as_view(), name='chat_create'),
-    path('chat/detail/<int:pk>', ChatDetail.as_view(), name='chat_detail'),
-    path('chat/detail/<int:pk>/thread/<int:comment_id>', ChatThread.as_view(), name='chat_thread'),
+    path('chat/detail/<int:pk>/<str:title>', ChatDetail.as_view(), name='chat_detail'),
+    path('chat/detail/<int:pk>/<str:title>/thread/<int:comment_id>', ChatThread.as_view(), name='chat_thread'),
     path('chat/detail/message', chat_message, name='chat_message'),
     path('chat/detail/reply', chat_reply, name='chat_reply'),
     path('chat/detail/message/update/<int:comment_id>', chat_message_update, name='chat_message_update'),
@@ -62,13 +62,13 @@ urlpatterns = [
 
     path('collabo/', CollaboList.as_view(), name='collabo_list'),
     path('collabo/create/', CollaboCreate.as_view(), name='collabo_create'),
-    path('collabo/detail/<int:pk>', CollaboDetail.as_view(), name='collabo_detail'),
+    path('collabo/detail/<int:pk>/<str:title>', CollaboDetail.as_view(), name='collabo_detail'),
 
     path('todo/', TodoList.as_view(), name='todo_list'),
     path('todo/create/', TodoCreate.as_view(), name='todo_create'),
-    path('todo/detail/<int:pk>', TodoDetail.as_view(), name='todo_detail'),
-    path('todo/update/<int:pk>', TodoUpdate.as_view(), name='todo_update'),
-    path('todo/delete/<int:pk>', TodoDelete.as_view(), name='todo_delete'),
+    path('todo/detail/<int:pk>/<str:title>', TodoDetail.as_view(), name='todo_detail'),
+    path('todo/update/<int:pk>/<str:title>', TodoUpdate.as_view(), name='todo_update'),
+    path('todo/delete/<int:pk>/<str:title>', TodoDelete.as_view(), name='todo_delete'),
 
     path('searchtag/create/', searchtag_create, name='searchtag_create'),
     path('like/form/', like_form, name='like_form'),

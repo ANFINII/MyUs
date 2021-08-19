@@ -15,7 +15,7 @@
         {% for item in collabo_list %}
         <section class="main_content">
             <div class="main_decolation">
-                <a href="{% url 'myus:collabo_detail' item.pk %}" class="author_title_space">
+                <a href="{% url 'myus:collabo_detail' item.pk item.title %}" class="author_title_space">
                     {% include 'parts/author_space.html' %}
                     {% include 'parts/content_title.html' %}
                 </a>
