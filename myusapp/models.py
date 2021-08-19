@@ -537,7 +537,7 @@ class CommentModel(models.Model):
     updated        = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.text
+        return str(self.id)
 
     def total_like(self):
         return self.like.count()

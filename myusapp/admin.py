@@ -17,6 +17,7 @@ class CommentInlineAdmin(GenericTabularInline):
     model = CommentModel
     extra = 0
     max_num = 100
+    fields = ('author', 'parent', 'text', 'total_like')
     readonly_fields = ('total_like',)
     verbose_name_plural = 'コメント'
 
@@ -31,8 +32,8 @@ class UserAdmin(ImportExportModelAdmin):
     search_fields = ('username', 'email', 'nickname', 'full_name', 'phone')
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
-    inlines = [SearchTagInline]
     readonly_fields = ('full_name', 'birthday', 'age', 'date_joined', 'last_login', 'following_count', 'follower_count')
+    inlines = [SearchTagInline]
 
     # 詳細画面
     fieldsets = [
