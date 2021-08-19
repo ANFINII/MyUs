@@ -184,7 +184,7 @@ $('.edit_update_cancel').on('click', function() {
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
 })
 
-$('.comment_form_update').submit(function(event) {
+$('.edit_update_form_caht').submit(function(event) {
     event.preventDefault();
     const url = $(this).attr('action');
     const comment_id = $(this).attr('obj-id');

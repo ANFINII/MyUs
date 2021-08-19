@@ -37,17 +37,19 @@
             {% endif %}
         </div>
         <div id="edit_update_main_{{ reply.id }}" class="edit_update_main_chat">
-            <a href="{% url 'myus:userpage' reply.author.nickname %}">
-                <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
-            </a>
-            <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" obj-id="{{ reply.id }}" class="comment_form_update">
+            <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" obj-id="{{ reply.id }}" class="edit_update_form_caht">
                 {% csrf_token %}
-                <textarea name="update_text" rows="1" class="textarea_br" placeholder="メッセージ入力" id="comment_form_update_{{ reply.id }}" required>{{ reply.text }}</textarea>
-                <div class="chat_frame"></div>
-                <div class="comment_input_chat"></div>
-                <div class="edit_update_footer">
-                    <input type="button" name="cancel" value="キャンセル" obj-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">
-                    <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
+                <a href="{% url 'myus:userpage' reply.author.nickname %}">
+                    <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+                </a>
+                <div class="edit_textarea_caht">
+                    <textarea name="update_text" rows="1" class="textarea_br" placeholder="メッセージ入力" id="comment_form_update_{{ reply.id }}" required>{{ reply.text }}</textarea>
+                    <div class="chat_frame"></div>
+                    <div class="comment_input_chat"></div>
+                    <div class="edit_update_footer">
+                        <input type="button" name="cancel" value="キャンセル" obj-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">
+                        <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
+                    </div>
                 </div>
             </form>
         </div>

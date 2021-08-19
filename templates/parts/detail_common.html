@@ -169,7 +169,7 @@
                 <div id="reply_aria_add"></div>
                 {% for reply in reply_list reversed %}
                     {% if reply.parent.id == comment.id %}
-                    <div class="reply_aria_list">
+                    <div id="comment_aria_list_{{ reply.id }}" class="reply_aria_list">
                         <a href="{% url 'myus:userpage' reply.author.nickname %}">
                             <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
                         </a>
@@ -199,12 +199,29 @@
                             <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
                             {% endif %}
                         </div>
+                        {% if reply.author.id == user.id %}
+                            {% include 'parts/modal_content_reply.html' %}
+                        {% endif %}
+                    </div>
+                    <div id="edit_update_main_{{ reply.id }}" class="edit_update_main">
+                        <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" obj-id="{{ object.id }}" class="edit_update_form">
+                            {% csrf_token %}
+                            <a href="{% url 'myus:userpage' reply.author.nickname %}">
+                                <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+                            </a>
+                            <div class="comment_input_update">
+                                <textarea name="update_text" rows="1" class="textarea_br" placeholder="コメント入力" id="comment_form_update_{{ reply.id }}" required>{{ reply.text }}</textarea>
+                                <div class="edit_update_footer">
+                                    <input type="button" name="cancel" value="キャンセル" obj-id="{{ reply.id }}" class="btn btn-light btn-xs edit_button_reply_cancel">
+                                    <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     {% endif %}
                 {% endfor %}
                 </div>
             </div>
-
             {% if comment.author.id == user.id %}
                 {% include 'parts/modal_content_comment.html' %}
             {% endif %}
