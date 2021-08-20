@@ -200,14 +200,16 @@
                             {% endif %}
                         </div>
                         {% if reply.author.id == user.id %}
+                            <div class="edit_button_reply">
                             {% include 'parts/modal_content_reply.html' %}
+                            </div>
                         {% endif %}
                     </div>
                     <div id="edit_update_main_{{ reply.id }}" class="edit_update_main">
                         <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" obj-id="{{ object.id }}" class="edit_update_form">
                             {% csrf_token %}
                             <a href="{% url 'myus:userpage' reply.author.nickname %}">
-                                <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+                                <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
                             </a>
                             <div class="comment_input_update">
                                 <textarea name="update_text" rows="1" class="textarea_br" placeholder="コメント入力" id="comment_form_update_{{ reply.id }}" required>{{ reply.text }}</textarea>

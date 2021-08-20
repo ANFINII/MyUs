@@ -1164,8 +1164,8 @@ header {
 }
 
 .profile_image_reply {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background-color: rgb(200, 200, 200);
 }
@@ -1183,7 +1183,7 @@ header {
 .comment_input .textarea_br {
     width: 100%;
     min-height: 40px;
-    padding: 8px 2px;
+    padding: 8px 3px;
     font-size: 14px;
     outline: none;
     resize: none;
@@ -1206,11 +1206,12 @@ header {
 /* リプライinput */
 .reply_input {
     display: grid;
-    grid-template-columns: 30px auto;
+    grid-template-columns: 32px auto;
     grid-template-rows: auto auto;
     grid-gap: 8px;
     grid-column: 2/-1;
-    margin: 8px 10px 0 0;
+    margin: 3px 0 5px 0;
+    padding: 5px 0 0 5px;
 }
 
 .reply_input p {
@@ -1218,13 +1219,6 @@ header {
     grid-row: 1/2;
     font-size: 16px;
     margin: 0 0 8px 0;
-}
-
-.profile_image_reply {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: rgb(200, 200, 200);
 }
 
 .reply_input .profile_image_reply {
@@ -1475,12 +1469,13 @@ header {
     grid-column: 2/-1;
     grid-row: 3/4;
     font-size: 12px;
-    min-height: auto;
+    min-height: 30px;
     border-color: rgb(100, 100, 100);
 }
 
 /* コメント編集、更新ボタン */
-.edit_button {
+.edit_button,
+.edit_button_reply {
     display: grid;
     grid-template-columns: 38px 38px;
     grid-template-rows: auto;
@@ -1492,19 +1487,25 @@ header {
 }
 
 .edit_button_update,
-.edit_button_delete,
-.edit_button_reply_update,
-.edit_button_reply_delete {
+.edit_button_delete {
     display: none;
     height: 21px;
     padding: 1px 0 0 6px;
     -webkit-appearance: none;
 }
 
+.comment_aria_list:hover .edit_button_reply .edit_button_update,
+.comment_aria_list:hover .edit_button_reply .edit_button_delete {
+    display: none;
+}
+
+.reply_aria_list:hover .edit_button_reply .edit_button_update,
+.reply_aria_list:hover .edit_button_reply .edit_button_delete {
+    display: block;
+}
+
 .comment_aria_list:hover .edit_button_update,
-.comment_aria_list:hover .edit_button_delete,
-.comment_aria_list:hover .edit_button_reply_update,
-.comment_aria_list:hover .edit_button_reply_delete  {
+.comment_aria_list:hover .edit_button_delete {
     display: inline-block;
     color: rgb(40, 140, 255);
     border: 1px solid rgba(255, 255, 255, 0);
@@ -1514,9 +1515,7 @@ header {
 }
 
 .comment_aria_list:hover .edit_button_update:hover,
-.comment_aria_list:hover .edit_button_delete:hover,
-.comment_aria_list:hover .edit_button_reply_update:hover,
-.comment_aria_list:hover .edit_button_reply_delete:hover {
+.comment_aria_list:hover .edit_button_delete:hover  {
     display: block;
     border: 1px solid rgba(170, 210, 255, 0.8);
     background: rgb(255, 255, 255);
