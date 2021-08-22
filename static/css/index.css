@@ -27,6 +27,11 @@
     background: rgb(120, 120, 120);
 }
 
+/* color */
+.rgb100 {
+    color: rgb(100, 100, 100);
+}
+
 /* 全体のデザイン */
 body {
     display: grid;
@@ -546,7 +551,7 @@ header {
 .tag_list a {
     text-decoration: none;
     font-size: 12px;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
 }
 
 .tag_n_list a:hover,
@@ -739,14 +744,14 @@ header {
 .article_detail_aria_1 {
     grid-column: 1/-1;
     grid-row: 2/3;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
 }
 
 .article_detail_aria_2 {
     display: flex;
     grid-column: 1/-1;
     grid-row: 3/4;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
 }
 
 .article_detail_aria_2 .read {
@@ -756,12 +761,15 @@ header {
 .article_detail_aria_3 {
     grid-column: 1/-1;
     grid-row: 4/-1;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
 }
 
 .like_form_aria {
     display: inline;
-    margin: 0 10px 0 0;
+}
+
+.comment_aria_list_3 .like_count {
+    margin: 0 6px 0 0;
 }
 
 .like_no,
@@ -774,7 +782,7 @@ header {
 }
 
 .like_no {
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
 }
 
 .like_fill,
@@ -1093,7 +1101,7 @@ header {
     grid-column: 2/3;
     grid-row: 2/3;
     font-size: 14px;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
     align-self: center;
 }
 
@@ -1300,7 +1308,7 @@ header {
 }
 
 .comment_aria {
-    height: 300px;
+    height: 560px;
     overflow-y: auto;
 }
 
@@ -1364,7 +1372,7 @@ header {
 
 .comment_aria_list time {
     font-size: 11px;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
 }
 
 .comment_aria_list a {
@@ -1387,7 +1395,6 @@ header {
     grid-row: 3/4;
     font-size: 12px;
     min-height: auto;
-    border-color: rgb(100, 100, 100);
 }
 
 .comment_aria_list_4 {
@@ -1451,7 +1458,7 @@ header {
 
 .reply_aria_list time {
     font-size: 11px;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
 }
 
 .reply_aria_list_2 {

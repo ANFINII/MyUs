@@ -37,7 +37,7 @@
             {% endif %}
         </div>
         <div id="edit_update_main_{{ reply.id }}" class="edit_update_main_chat">
-            <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" obj-id="{{ reply.id }}" class="edit_update_form_caht">
+            <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" comment-id="{{ reply.id }}" class="edit_update_form_caht">
                 {% csrf_token %}
                 <a href="{% url 'myus:userpage' reply.author.nickname %}">
                     <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
@@ -47,7 +47,7 @@
                     <div class="chat_frame"></div>
                     <div class="comment_input_chat"></div>
                     <div class="edit_update_footer">
-                        <input type="button" name="cancel" value="キャンセル" obj-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">
+                        <input type="button" name="cancel" value="キャンセル" comment-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">
                         <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
                     </div>
                 </div>

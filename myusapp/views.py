@@ -1103,6 +1103,7 @@ def chat_message(request):
             'text': urlize_impl(linebreaksbr(comment_obj.text)),
             'pk': obj_id,
             'comment_id': comment_obj.id,
+            'title': obj.title,
             'nickname': comment_obj.author.nickname,
             'user_image': comment_obj.author.user_image.url,
             'created': comment_obj.created.strftime("%Y/%m/%d %H:%M"),

@@ -114,7 +114,7 @@ hr {
     grid-column: 3/-1;
     grid-row: 1/2;
     padding: 5px 0 5px 8px;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
     border-left: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -133,7 +133,7 @@ hr {
     right: 0;
     max-width: 30px;
     text-decoration: none;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
 }
 
 /* 390pxまでの幅の場合に適応される  */
@@ -153,7 +153,7 @@ hr {
 /* chat_section_content */
 .chat_section_content {
     display: inline;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
     font-size: 14px;
 }
 
@@ -210,14 +210,14 @@ hr {
 
 .chat_content_list_1 time {
     font-size: 12px;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
 }
 
 .chat_content_list_2 {
     grid-column: 2/3;
     grid-row: 2/3;
     font-size: 14px;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
 }
 
 .chat_content_list_3 {
@@ -270,7 +270,7 @@ hr {
 .chat_section_nav_label {
     grid-column: 1/-1;
     grid-row: 1/2;
-    color: rgb(120, 120, 120);
+    color: rgb(100, 100, 100);
 }
 
 .chat_section_nav_list {
@@ -432,20 +432,20 @@ hr {
     outline: none;
     resize: none;
     overflow: hidden;
-    border: 1px solid rgb(120, 120, 120);
+    border: 1px solid rgb(100, 100, 100);
     border-bottom: none;
     border-radius: 5px 5px 0 0;
 }
 
 .textarea_br:focus {
-    border-bottom: 0px solid rgb(120, 120, 120);
+    border-bottom: 0px solid rgb(100, 100, 100);
 }
 
 .chat_frame {
     display: block;
     height: 9px;
     margin: 0;
-    border: 1px solid rgb(120, 120, 120);
+    border: 1px solid rgb(100, 100, 100);
     border-top: none;
     border-bottom: none;
     background-color: rgb(255, 255, 255);
@@ -461,7 +461,7 @@ hr {
     grid-template-rows: 38px;
     grid-column: 1/-1;
     grid-row: 2/3;
-    border: 1px solid rgb(120, 120, 120);
+    border: 1px solid rgb(100, 100, 100);
     border-top: 1px solid rgb(220, 220, 220);
     border-radius: 0 0 5px 5px;
     background-color: rgb(255, 255, 255);
