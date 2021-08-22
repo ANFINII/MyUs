@@ -125,7 +125,7 @@ $('#comment_form').submit(function(event) {
                         '</div>' +
                         '<form method="POST" action="chat/detail/message/delete/' + response.comment_id + '" class="modal_content_footer">' +
                             '<input type="button" name="cancel" value="キャンセル" comment-id="' + response.comment_id + '" class="btn btn-light modal_cancel">' +
-                            '<input type="button" name="delete" value="削除" comment-id="' + response.comment_id + '" class="btn btn-danger chat_delete">' +
+                            '<input type="button" name="delete" value="削除" comment-id="' + response.comment_id + '" class="btn btn-danger edit_delete">' +
                         '</form>' +
                     '</div>' +
                     '<div comment-id="' + response.comment_id + '" id="mask_' + response.comment_id + '" class="mask modal_cancel"></div>' +
@@ -261,7 +261,6 @@ $(document).on('click', '.edit_button_delete', function() {
     document.getElementById('modal_content_' + comment_id).classList.add('active');
     document.getElementById('mask_' + comment_id).classList.add('active');
 });
-
 
 $(document).on('click', '.modal_cancel', function() {
     const comment_id = $(this).attr('comment-id');

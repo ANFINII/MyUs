@@ -213,13 +213,13 @@ $('.reply_form').submit(function(event) {
 });
 
 // メッセージ編集
-$('.edit_button_update').on('click', function() {
+$(document).on('click', '.edit_button_update', function() {
     const comment_id = $(this).attr('obj-id');
     document.getElementById('edit_update_main_' + comment_id).classList.add('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.add('active');
 })
 
-$('.edit_update_cancel').on('click', function() {
+$(document).on('click', '.edit_update_cancel', function() {
     const comment_id = $(this).attr('obj-id');
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
@@ -249,13 +249,13 @@ $('.comment_form_update').submit(function(event) {
 });
 
 // メッセージ削除ダイアログ
-$('.edit_button_delete').on('click', function() {
+$(document).on('click', '.edit_button_delete', function() {
     const comment_id = $(this).attr('obj-id');
     document.getElementById('modal_content_' + comment_id).classList.add('active');
     document.getElementById('mask_' + comment_id).classList.add('active');
 });
 
-$('.modal_cancel').on('click', function() {
+$(document).on('click', '.modal_cancel', function() {
     const comment_id = $(this).attr('obj-id');
     document.getElementById('modal_content_' + comment_id).classList.remove('active');
     document.getElementById('mask_' + comment_id).classList.remove('active');

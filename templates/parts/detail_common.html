@@ -110,7 +110,7 @@
 
             <div class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
 
-            <div class="comment_aria_list_3">{{ comment.comment_liked }}
+            <div class="comment_aria_list_3">
                 {% if user.is_authenticated %}
                 <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">
                     {% csrf_token %}

@@ -24,7 +24,7 @@
         <form method="POST" action="{% url 'myus:chat_message_delete' comment.id %}" class="modal_content_footer">
             {% csrf_token %}
             <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light modal_cancel">
-            <input type="button" name="delete" value="削除" comment-id="{{ comment.id }}" class="btn btn-danger chat_delete">
+            <input type="button" name="delete" value="削除" comment-id="{{ comment.id }}" class="btn btn-danger edit_delete">
         </form>
     </div>
     <div comment-id="{{ comment.id }}" id="mask_{{ comment.id }}" class="mask modal_cancel"></div>
