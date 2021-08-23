@@ -1315,12 +1315,12 @@ header {
 }
 
 .comment_aria {
-    height: 560px;
+    height: 500px;
     overflow-y: auto;
 }
 
 .comment_aria_check:checked ~ .comment_aria {
-    min-height: 168px;
+    min-height: 500px;
     height: fit-content;
 }
 
