@@ -177,7 +177,7 @@
 
                         <div class="reply_aria_list_1">
                             <p>{{ reply.author.nickname }}</p>
-                            <time>{{ reply.created|naturaltime }}</time>
+                            <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
                         </div>
 
                         <div class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
