@@ -33,11 +33,11 @@
             </div>
             <div id="comment_aria_list_2_{{ reply.id }}" class="comment_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
             {% if reply.author.id == user.id %}
-                {% include 'parts/modal_content_reply.html' %}
+                {% include 'parts/modal_content_caht_reply.html' %}
             {% endif %}
         </div>
         <div id="edit_update_main_{{ reply.id }}" class="edit_update_main_chat">
-            <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" comment-id="{{ reply.id }}" class="edit_update_form_caht">
+            <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" comment-id="{{ reply.id }}" class="edit_update_chat">
                 {% csrf_token %}
                 <a href="{% url 'myus:userpage' reply.author.nickname %}">
                     <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">

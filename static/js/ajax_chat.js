@@ -123,16 +123,16 @@ $('#comment_form').submit(function(event) {
                                 '<div class="comment_aria_list_2">' + response.text + '</div>' +
                             '</div>' +
                         '</div>' +
-                        '<form method="POST" action="chat/detail/message/delete/' + response.comment_id + '" class="modal_content_footer">' +
+                        '<form method="POST" action="/chat/detail/message/delete/' + response.comment_id + '" class="modal_content_footer">' +
                             '<input type="button" name="cancel" value="キャンセル" comment-id="' + response.comment_id + '" class="btn btn-light modal_cancel">' +
-                            '<input type="button" name="delete" value="削除" comment-id="' + response.comment_id + '" class="btn btn-danger edit_delete">' +
+                            '<input type="button" name="delete" value="削除" comment-id="' + response.comment_id + '"  obj-id="' + id + '" class="btn btn-danger edit_delete">' +
                         '</form>' +
                     '</div>' +
                     '<div comment-id="' + response.comment_id + '" id="mask_' + response.comment_id + '" class="mask modal_cancel"></div>' +
                 '</div>' +
             '</div>' +
             '<div id="edit_update_main_' + response.comment_id + '" class="edit_update_main_chat">' +
-                '<form method="POST" action="/chat/detail/message/update/' + response.comment_id + '" comment-id="' + response.comment_id + '" class="edit_update_form_caht">' +
+                '<form method="POST" action="/chat/detail/message/update/' + response.comment_id + '" comment-id="' + response.comment_id + '" class="edit_update_chat">' +
                     '<a href="/userpage/' + response.nickname + '">' +
                         '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
                     '</a>' +
@@ -232,11 +232,13 @@ $(document).on('click', '.edit_update_cancel', function() {
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
 })
 
-$('.edit_update_form_caht').submit(function(event) {
+$('.edit_update_chat').submit(function(event) {
     event.preventDefault();
     const url = $(this).attr('action');
     const comment_id = $(this).attr('comment-id');
     const text = $('#comment_form_update_' + comment_id).val();
+    // const text =  $('form [name=text]').val();
+    // const text = $('form [name=text]').val();
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
     $.ajax({
@@ -247,7 +249,7 @@ $('.edit_update_form_caht').submit(function(event) {
         timeout: 10000,
     })
     .done(function(response) {
-        $('#comment_aria_list_2_' + response.comment_id).html(response.text)
+        $('#comment_aria_list_2_' + comment_id).html(response.text)
         console.log(response)
     })
     .fail(function(response) {
@@ -268,21 +270,24 @@ $(document).on('click', '.modal_cancel', function() {
     document.getElementById('mask_' + comment_id).classList.remove('active');
 });
 
-$('.edit_delete').on('click', function(event) {
+$(document).on('click', '.edit_delete', function(event) {
     event.preventDefault();
     const url = $(this).parent().attr('action');
+    const id = $(this).attr('obj-id');
     const comment_id = $(this).attr('comment-id');
     document.getElementById('modal_content_' + comment_id).classList.remove('active');
     document.getElementById('mask_' + comment_id).classList.remove('active');
     $.ajax({
         url: url,
         type: 'POST',
-        data: {'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data: {'id': id, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
         dataType: 'json',
         timeout: 10000,
     })
     .done(function(response) {
-        $('#comment_aria_list_' + response.comment_id).remove();
+        $('#comment_aria_list_' + comment_id).remove();
+        $('#user_count').html(response.user_count);
+        $('#comment_count').html(response.comment_count);
         console.log(response)
     })
     .fail(function(response) {

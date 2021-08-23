@@ -37,6 +37,9 @@
 <hr>
 
 <input type="checkbox" id="content_detail_check_id" class="content_detail_check">
+<label for="content_detail_check_id" class="content_detail_check_label1">拡大表示</label>
+<label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
+
 <div class="content_detail_aria">
     <div class="content_detail">
         <a href="{% url 'myus:userpage' object.author.nickname %}">
@@ -66,9 +69,6 @@
         </div>
     </div>
 </div>
-
-<label for="content_detail_check_id" class="content_detail_check_label1">拡大表示</label>
-<label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
 <hr>
 
 <form method="POST" action="{% url 'myus:comment_form' %}" id="comment_form" obj-id="{{ object.id }}" path="{{ request.path }}">{% csrf_token %}
@@ -105,7 +105,7 @@
 
             <div class="comment_aria_list_1">
                 <p>{{ comment.author.nickname }}</p>
-                <time>{{ comment.created|naturaltime }}</time>
+                <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
             </div>
 
             <div class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
@@ -207,7 +207,7 @@
                         {% endif %}
                     </div>
                     <div id="edit_update_main_{{ reply.id }}" class="edit_update_main">
-                        <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" obj-id="{{ object.id }}" class="edit_update_form">
+                        <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" comment-id="{{ object.id }}" class="edit_update_form">
                             {% csrf_token %}
                             <a href="{% url 'myus:userpage' reply.author.nickname %}">
                                 <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
@@ -215,7 +215,7 @@
                             <div class="comment_input_update">
                                 <textarea name="update_text" rows="1" class="textarea_br" placeholder="コメント入力" id="comment_form_update_{{ reply.id }}" required>{{ reply.text }}</textarea>
                                 <div class="edit_update_footer">
-                                    <input type="button" name="cancel" value="キャンセル" obj-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">
+                                    <input type="button" name="cancel" value="キャンセル" comment-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">
                                     <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
                                 </div>
                             </div>
@@ -230,7 +230,7 @@
             {% endif %}
         </div>
         <div id="edit_update_main_{{ comment.id }}" class="edit_update_main">
-            <form method="POST" action="{% url 'myus:chat_message_update' comment.id %}" obj-id="{{ object.id }}" class="edit_update_form">
+            <form method="POST" action="{% url 'myus:chat_message_update' comment.id %}" comment-id="{{ comment.id }}" class="edit_update">
                 {% csrf_token %}
                 <a href="{% url 'myus:userpage' comment.author.nickname %}">
                     <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
@@ -238,7 +238,7 @@
                 <div class="comment_input_update">
                     <textarea name="update_text" rows="1" class="textarea_br" placeholder="コメント入力" id="comment_form_update_{{ comment.id }}" required>{{ comment.text }}</textarea>
                     <div class="edit_update_footer">
-                        <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="btn btn-light btn-xs edit_update_cancel">
+                        <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs edit_update_cancel">
                         <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
                     </div>
                 </div>

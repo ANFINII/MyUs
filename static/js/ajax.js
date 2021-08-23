@@ -214,21 +214,21 @@ $('.reply_form').submit(function(event) {
 
 // メッセージ編集
 $(document).on('click', '.edit_button_update', function() {
-    const comment_id = $(this).attr('obj-id');
+    const comment_id = $(this).attr('comment-id');
     document.getElementById('edit_update_main_' + comment_id).classList.add('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.add('active');
 })
 
 $(document).on('click', '.edit_update_cancel', function() {
-    const comment_id = $(this).attr('obj-id');
+    const comment_id = $(this).attr('comment-id');
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
 })
 
-$('.comment_form_update').submit(function(event) {
+$('.edit_update').submit(function(event) {
     event.preventDefault();
     const url = $(this).attr('action');
-    const comment_id = $(this).attr('obj-id');
+    const comment_id = $(this).attr('comment-id');
     const text = $('#comment_form_update_' + comment_id).val();
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
@@ -240,7 +240,7 @@ $('.comment_form_update').submit(function(event) {
         timeout: 10000,
     })
     .done(function(response) {
-        $('#comment_aria_list_2_' + response.comment_id).html(response.text)
+        $('#comment_aria_list_2_' + comment_id).html(response.text)
         console.log(response)
     })
     .fail(function(response) {
@@ -250,21 +250,21 @@ $('.comment_form_update').submit(function(event) {
 
 // メッセージ削除ダイアログ
 $(document).on('click', '.edit_button_delete', function() {
-    const comment_id = $(this).attr('obj-id');
+    const comment_id = $(this).attr('comment-id');
     document.getElementById('modal_content_' + comment_id).classList.add('active');
     document.getElementById('mask_' + comment_id).classList.add('active');
 });
 
 $(document).on('click', '.modal_cancel', function() {
-    const comment_id = $(this).attr('obj-id');
+    const comment_id = $(this).attr('comment-id');
     document.getElementById('modal_content_' + comment_id).classList.remove('active');
     document.getElementById('mask_' + comment_id).classList.remove('active');
 });
 
-$('.edit_delete').on('click', function(event) {
+$(document).on('click', '.edit_delete', function(event) {
     event.preventDefault();
     const url = $(this).parent().attr('action');
-    const comment_id = $(this).attr('obj-id');
+    const comment_id = $(this).attr('comment-id');
     document.getElementById('modal_content_' + comment_id).classList.remove('active');
     document.getElementById('mask_' + comment_id).classList.remove('active');
     $.ajax({
@@ -275,7 +275,7 @@ $('.edit_delete').on('click', function(event) {
         timeout: 10000,
     })
     .done(function(response) {
-        $('#comment_aria_list_' + response.comment_id).remove();
+        $('#comment_aria_list_' + comment_id).remove();
         console.log(response)
     })
     .fail(function(response) {

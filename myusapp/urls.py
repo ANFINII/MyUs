@@ -10,7 +10,7 @@ from .views import BlogList, BlogCreate, BlogDetail
 from .views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_message, chat_reply, chat_message_update, chat_message_delete
 from .views import CollaboList, CollaboCreate, CollaboDetail
 from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
-from .views import searchtag_create, like_form, like_form_comment, comment_form, reply_form
+from .views import searchtag_create, like_form, like_form_comment, comment_form, reply_form, comment_update, comment_delete
 from .views import signup_form, login_form, logout_form, Withdrawal
 
 app_name = 'myus'
@@ -75,6 +75,8 @@ urlpatterns = [
     path('like/form/comment', like_form_comment, name='like_form_comment'),
     path('comment/form/', comment_form, name='comment_form'),
     path('reply/form/', reply_form, name='reply_form'),
+    path('comment/update/<int:comment_id>', comment_update, name='comment_update'),
+    path('comment/delete/<int:comment_id>', comment_delete, name='comment_delete'),
 
     path('signup/', signup_form, name='signup'),
     path('login/', login_form, name='login'),
