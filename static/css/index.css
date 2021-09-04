@@ -949,10 +949,6 @@ header {
 
 /* UserPage */
 .userpage_banner {
-    margin: 0 0 16px 0;
-}
-
-.userpage_banner_image {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -968,7 +964,7 @@ header {
     display: grid;
     grid-template-columns: 80px auto auto;
     grid-template-rows: 36px 22px 22px;
-    margin: 0 0 16px 0;
+    margin: 16px 20px;
 }
 
 .userpage_image {
@@ -985,9 +981,10 @@ header {
 .userpage_content_1 {
     grid-column: 2/3;
     grid-row: 1/2;
-    font-size: 26px;
+    font-size: 24px;
     vertical-align: bottom;
     padding: 0 0 0 15px;
+    white-space: nowrap
 }
 
 .userpage_content_2 {
@@ -1010,6 +1007,22 @@ header {
     font-size: 14px;
     padding: 0 0 0 15px;
     justify-self: end;
+}
+
+.userpage_content_5 {
+    display: grid;
+    grid-column: 3/-1;
+    grid-row: 1/2;
+    justify-content: end;
+}
+
+.userpage_content_5 form {
+    margin: 0 40px 0 0;
+}
+
+.userpage_content_5 button {
+    width: 140px;
+    font-size: 16px;
 }
 
 .userpage_button_list {
@@ -1035,11 +1048,6 @@ header {
 
 .userpage_hr {
     margin: 0 0 16px 0;
-}
-
-.follow_form {
-    display: inline;
-    width: 102px;
 }
 
 /* コンテンツ説明 */
@@ -1132,6 +1140,11 @@ header {
     font-size: 16px;
     justify-self: end;
     margin: 4px 4px 4px 0;
+}
+
+.content_detail_p3 button {
+    width: 122px;
+    height: 38px;
 }
 
 .content_detail_p4 {

@@ -76,13 +76,13 @@ $('.follow_form').on('click', function(event) {
     })
     .done(function(response) {
         if (response['followed']) {
-            $('.followchange').removeClass('btn-success');
-            $('.followchange').addClass('btn-danger');
+            $('.follow_change').removeClass('btn-success');
+            $('.follow_change').addClass('btn-danger');
             $('.btn-danger').html('解除する');
             $('.follower_count').html(response['follower_count']);
         } else {
-            $('.followchange').removeClass('btn-danger');
-            $('.followchange').addClass('btn-success');
+            $('.follow_change').removeClass('btn-danger');
+            $('.follow_change').addClass('btn-success');
             $('.btn-success').html('フォローする');
             $('.follower_count').html(response['follower_count']);
         }
@@ -264,18 +264,20 @@ $(document).on('click', '.modal_cancel', function() {
 $(document).on('click', '.edit_delete', function(event) {
     event.preventDefault();
     const url = $(this).parent().attr('action');
+    const id = $(this).attr('obj-id');
     const comment_id = $(this).attr('comment-id');
     document.getElementById('modal_content_' + comment_id).classList.remove('active');
     document.getElementById('mask_' + comment_id).classList.remove('active');
     $.ajax({
         url: url,
         type: 'POST',
-        data: {'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data: {'id': id, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
         dataType: 'json',
         timeout: 10000,
     })
     .done(function(response) {
         $('#comment_aria_list_' + comment_id).remove();
+        $('#comment_count').html(response.comment_count);
         console.log(response)
     })
     .fail(function(response) {

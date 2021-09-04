@@ -226,6 +226,11 @@ hr {
     margin: 0 4px 0 4px;
 }
 
+.chat_content_list_3 button {
+    width: 102px;
+    height: 31px;
+}
+
 .chat_content_list_4 {
     grid-column: 2/-1;
     grid-row: 3/-1;

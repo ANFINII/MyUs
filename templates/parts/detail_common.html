@@ -58,9 +58,9 @@
             {% elif user.is_authenticated %}
             <form method="POST" action="{% url 'myus:follow_create' object.author.nickname %}" class="follow_form">{% csrf_token %}
                 {% if followed %}
-                <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-danger followchange">解除する</button>
+                <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-danger follow_change">解除する</button>
                 {% else %}
-                <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-success followchange">フォローする</button>
+                <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-success follow_change">フォローする</button>
                 {% endif %}
             </form>
             {% else %}
@@ -108,7 +108,7 @@
                 <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
             </div>
 
-            <div class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
+            <div id="comment_aria_list_2_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
 
             <div class="comment_aria_list_3">
                 {% if user.is_authenticated %}
@@ -180,7 +180,7 @@
                             <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
                         </div>
 
-                        <div class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
+                        <div id="comment_aria_list_2_{{ reply.id }}" class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
 
                         <div class="reply_aria_list_3">{{ reply.comment_liked }}
                             {% if user.is_authenticated %}
@@ -207,7 +207,7 @@
                         {% endif %}
                     </div>
                     <div id="edit_update_main_{{ reply.id }}" class="edit_update_main">
-                        <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" comment-id="{{ object.id }}" class="edit_update_form">
+                        <form method="POST" action="{% url 'myus:comment_update' reply.id %}" comment-id="{{ reply.id }}" class="edit_update">
                             {% csrf_token %}
                             <a href="{% url 'myus:userpage' reply.author.nickname %}">
                                 <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
@@ -220,6 +220,8 @@
                                 </div>
                             </div>
                         </form>
+
+
                     </div>
                     {% endif %}
                 {% endfor %}
@@ -230,7 +232,7 @@
             {% endif %}
         </div>
         <div id="edit_update_main_{{ comment.id }}" class="edit_update_main">
-            <form method="POST" action="{% url 'myus:chat_message_update' comment.id %}" comment-id="{{ comment.id }}" class="edit_update">
+            <form method="POST" action="{% url 'myus:comment_update' comment.id %}" comment-id="{{ comment.id }}" class="edit_update">
                 {% csrf_token %}
                 <a href="{% url 'myus:userpage' comment.author.nickname %}">
                     <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">

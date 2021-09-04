@@ -54,13 +54,13 @@ $('.follow_form').on('click', function(event) {
     })
     .done(function(response) {
         if (response['followed']) {
-            $('.followchange').removeClass('btn-success');
-            $('.followchange').addClass('btn-danger');
+            $('.follow_change').removeClass('btn-success');
+            $('.follow_change').addClass('btn-danger');
             $('.btn-danger').html('解除する');
             $('.follower_count').html(response['follower_count']);
         } else {
-            $('.followchange').removeClass('btn-danger');
-            $('.followchange').addClass('btn-success');
+            $('.follow_change').removeClass('btn-danger');
+            $('.follow_change').addClass('btn-success');
             $('.btn-success').html('フォローする');
             $('.follower_count').html(response['follower_count']);
         }
