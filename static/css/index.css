@@ -964,7 +964,7 @@ header {
     display: grid;
     grid-template-columns: 80px auto auto;
     grid-template-rows: 36px 22px 22px;
-    margin: 16px 20px;
+    margin: 16px 30px;
 }
 
 .userpage_image {
@@ -981,31 +981,33 @@ header {
 .userpage_content_1 {
     grid-column: 2/3;
     grid-row: 1/2;
+    padding: 0 0 0 15px;
     font-size: 24px;
     vertical-align: bottom;
-    padding: 0 0 0 15px;
     white-space: nowrap
 }
 
 .userpage_content_2 {
     grid-column: 2/3;
     grid-row: 2/3;
-    font-size: 14px;
     padding: 0 0 0 15px;
+    font-size: 14px;
+    white-space: nowrap
 }
 
 .userpage_content_3 {
     grid-column: 2/3;
     grid-row: 3/4;
-    font-size: 14px;
     padding: 0 0 0 15px;
+    font-size: 14px;
+    white-space: nowrap
 }
 
 .userpage_content_4 {
     grid-column: 3/-1;
     grid-row: 1/-1;
-    font-size: 14px;
     padding: 0 0 0 15px;
+    font-size: 14px;
     justify-self: end;
 }
 
@@ -1017,33 +1019,51 @@ header {
 }
 
 .userpage_content_5 form {
-    margin: 0 40px 0 0;
+    margin: 0 60px 0 0;
 }
 
 .userpage_content_5 button {
-    width: 140px;
+    width: 122px;
     font-size: 16px;
 }
 
 .userpage_button_list {
     display: grid;
     grid-template-columns: 120px 120px 120px;
-    grid-template-rows: auto;
+    grid-template-rows: 40px;
+    justify-content: center;
+}
+
+.userpage_button_list a {
+    color: rgb(50, 50, 50);
+    text-decoration: none;
+}
+
+.userpage_button_list a:hover {
+    color: rgb(0, 85, 215);
+    background-color: rgb(220, 235, 255);
+    border-bottom: 1px solid rgb(0, 85, 215);
+}
+
+.userpage_button_list_1,
+.userpage_button_list_2,
+.userpage_button_list_3 {
+    display: grid;
+    grid-row: 1/2;
+    align-items: center;
+    justify-content: center;
 }
 
 .userpage_button_list_1 {
     grid-column: 1/2;
-    grid-row: 1/2;
 }
 
 .userpage_button_list_2 {
     grid-column: 2/3;
-    grid-row: 1/2;
 }
 
 .userpage_button_list_3 {
     grid-column: 3/4;
-    grid-row: 1/2;
 }
 
 .userpage_hr {
