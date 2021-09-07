@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Index, Recommend, UserPage
+from .views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
 from .views import profile, ProfileUpdate, mypage, MyPageUpdate
 from .views import FollowerList, FollowList, follow_create, userpolicy, knowledge
 from .views import VideoList, VideoCreate, VideoDetail
@@ -19,6 +19,8 @@ urlpatterns = [
     path('', Index.as_view(), name='index'),
     path('recommend/', Recommend.as_view(), name='recommend'),
     path('userpage/<str:nickname>', UserPage.as_view(), name='userpage'),
+    path('userpage_info/<str:nickname>', UserPageInfo.as_view(), name='userpage_info'),
+    path('userpage_advertise/<str:nickname>', UserPageAdvertise.as_view(), name='userpage_advertise'),
 
     path('profile/', profile, name='profile'),
     path('profile/update/', ProfileUpdate.as_view(), name='profile_update'),

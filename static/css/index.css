@@ -1037,12 +1037,13 @@ header {
 .userpage_button_list a {
     color: rgb(50, 50, 50);
     text-decoration: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0);
 }
 
 .userpage_button_list a:hover {
     color: rgb(0, 85, 215);
     background-color: rgb(220, 235, 255);
-    border-bottom: 1px solid rgb(0, 85, 215);
+    border-bottom: 2px solid rgb(0, 85, 215);
 }
 
 .userpage_button_list_1,
@@ -1052,6 +1053,7 @@ header {
     grid-row: 1/2;
     align-items: center;
     justify-content: center;
+    transition: all 20ms 0s ease;
 }
 
 .userpage_button_list_1 {

@@ -13,7 +13,7 @@ urlpatterns = [
     path('myus-admin/', admin.site.urls),
     path('mymanage/', mymanage_site.urls),
     path('', include('myusapp.urls')),
-    path('', include("django.contrib.auth.urls")),
+    path('', include('django.contrib.auth.urls')),
     path('markdownx/', include('markdownx.urls')),
     path('upload/', login_required(views.upload), name='ckeditor_upload'),
     path('browse/', never_cache(login_required(views.browse)), name='ckeditor_browse'),

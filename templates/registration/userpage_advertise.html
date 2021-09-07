@@ -1,0 +1,14 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUs UserPage {{ author_name }}</title>{% endblock title %}
+
+{% load static %}
+
+{% block content %}
+<main class="main_contents">
+    {% include 'parts/userpage_common.html' %}
+</main>
+{% endblock content %}
+
+{% block extrajs %}
+<script src="{% static 'js/ajax.js' %}"></script>
+{% endblock extrajs %}

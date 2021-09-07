@@ -491,7 +491,7 @@ def comment_delete(request, comment_id):
     """comment_delete"""
     if request.method == 'POST':
         obj_id = request.POST.get('id')
-        obj = ChatModel.objects.get(id=obj_id)
+        obj = VideoModel.objects.get(id=obj_id)
         comment_id = request.POST.get('comment_id')
         comment_obj = CommentModel.objects.get(id=comment_id)
         comment_obj.delete()
@@ -563,6 +563,8 @@ class Recommend(ListView):
         })
         return context
 
+
+# UserPage
 class UserPage(ListView):
     """UserPage"""
     model = User
@@ -594,6 +596,46 @@ class UserPage(ListView):
 
     def get_queryset(self):
         return Search.search_userpage(self)
+
+class UserPageInfo(ListView):
+    """UserPageInfo"""
+    model = User
+    template_name = 'registration/userpage_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserPageInfo, self).get_context_data(**kwargs)
+        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=author)
+        followed = False
+        if follow.exists():
+            followed = True
+        context['followed'] = followed
+        context['author_name'] = author
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'user_list': User.objects.filter(nickname=author),
+        })
+        return context
+
+class UserPageAdvertise(ListView):
+    """UserPageAdvertise"""
+    model = User
+    template_name = 'registration/userpage_advertise.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserPageAdvertise, self).get_context_data(**kwargs)
+        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=author)
+        followed = False
+        if follow.exists():
+            followed = True
+        context['followed'] = followed
+        context['author_name'] = author
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'user_list': User.objects.filter(nickname=author),
+        })
+        return context
 
 
 # Follow
