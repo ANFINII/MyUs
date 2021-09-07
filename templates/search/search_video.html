@@ -20,7 +20,7 @@
                             <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
                         </p>
                     </video>
-                    <a href="{% url 'myus:video_detail' item.pk %}" class="author_title_space">
+                    <a href="{% url 'myus:video_detail' item.pk item.title %}" class="author_title_space">
                         {% include 'parts/author_space.html' %}
                         {% include 'parts/content_title.html' %}
                     </a>

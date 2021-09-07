@@ -7,10 +7,10 @@
         {% if model_name == 'PictureModel' %}
             <section class="main_content">
                 <figure class="main_decolation">
-                    <a href="{% url 'myus:picture_detail' item.pk %}">
+                    <a href="{% url 'myus:picture_detail' item.pk item.title %}">
                         <img src="{{ item.images.url }}" width="272" height="153">
                     </a>
-                    <a href="{% url 'myus:picture_detail' item.pk %}" class="author_title_space">
+                    <a href="{% url 'myus:picture_detail' item.pk item.title %}" class="author_title_space">
                         {% include 'parts/author_space.html' %}
                         {% include 'parts/content_title.html' %}
                     </a>
