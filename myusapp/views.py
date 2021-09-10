@@ -600,7 +600,7 @@ class UserPage(ListView):
 class UserPageInfo(ListView):
     """UserPageInfo"""
     model = User
-    template_name = 'registration/userpage_info.html'
+    template_name = 'registration/userpage_information.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserPageInfo, self).get_context_data(**kwargs)

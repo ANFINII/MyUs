@@ -1018,10 +1018,6 @@ header {
     justify-content: end;
 }
 
-.userpage_content_5 form {
-    margin: 0 60px 0 0;
-}
-
 .userpage_content_5 button {
     width: 122px;
     font-size: 16px;
@@ -1777,6 +1773,10 @@ audio:active {
 .todo_create,
 .follow_button {
     margin: 0 0 10px 0;
+}
+
+.follow_button a {
+    width: 88px;
 }
 
 .follow_button span {

@@ -19,8 +19,8 @@ urlpatterns = [
     path('', Index.as_view(), name='index'),
     path('recommend/', Recommend.as_view(), name='recommend'),
     path('userpage/<str:nickname>', UserPage.as_view(), name='userpage'),
-    path('userpage_info/<str:nickname>', UserPageInfo.as_view(), name='userpage_info'),
-    path('userpage_advertise/<str:nickname>', UserPageAdvertise.as_view(), name='userpage_advertise'),
+    path('userpage/information/<str:nickname>', UserPageInfo.as_view(), name='userpage_info'),
+    path('userpage/advertise/<str:nickname>', UserPageAdvertise.as_view(), name='userpage_advertise'),
 
     path('profile/', profile, name='profile'),
     path('profile/update/', ProfileUpdate.as_view(), name='profile_update'),
