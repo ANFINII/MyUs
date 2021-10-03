@@ -6,6 +6,16 @@
 {% block content %}
 <main class="main_contents">
     {% include 'parts/userpage_common.html' %}
+
+    <h1>広告
+        {% if query %}
+        <section class="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>
+        {% endif %}
+    </h1>
+
+    <article class="main_article">
+        {% include 'parts/article_advertise.html' %}
+    </article>
 </main>
 {% endblock content %}
 

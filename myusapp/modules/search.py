@@ -174,3 +174,25 @@ class Search:
             result = result.filter(query).order_by('-duedate').distinct()
             self.count = len(result)
         return result
+
+    def search_advertise(self, model):
+        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+        result = model.objects.filter(author_id=author, publish=True).order_by('-created')
+        search = self.request.GET.get('search')
+        if search:
+            """除外リストを作成"""
+            exclusion_list = set([' ', '　'])
+            q_list = ''
+            for i in search:
+                """全角半角の空文字が含まれたら無視"""
+                if i in exclusion_list:
+                    pass
+                else:
+                    q_list += i
+            query = reduce(and_, [
+                        Q(title__icontains=q) |
+                        Q(content__icontains=q) for q in q_list]
+                    )
+            result = result.filter(query).order_by('-created').distinct()
+            self.count = len(result)
+        return result

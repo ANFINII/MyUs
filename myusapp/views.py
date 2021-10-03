@@ -621,6 +621,8 @@ class UserPageAdvertise(ListView):
     """UserPageAdvertise"""
     model = User
     template_name = 'registration/userpage_advertise.html'
+    context_object_name = 'advertise_list'
+    count = 0
 
     def get_context_data(self, **kwargs):
         context = super(UserPageAdvertise, self).get_context_data(**kwargs)
@@ -631,12 +633,16 @@ class UserPageAdvertise(ListView):
             followed = True
         context['followed'] = followed
         context['author_name'] = author
+        context['count'] = self.count or 0
+        context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'user_list': User.objects.filter(nickname=author),
         })
         return context
 
+    def get_queryset(self, **kwargs):
+        return Search.search_advertise(self, AdvertiseModel)
 
 # Follow
 class FollowerList(ListView):
