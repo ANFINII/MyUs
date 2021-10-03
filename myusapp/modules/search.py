@@ -177,7 +177,7 @@ class Search:
 
     def search_advertise(self, model):
         author = get_object_or_404(User, nickname=self.kwargs['nickname'])
-        result = model.objects.filter(author_id=author, publish=True).order_by('-created')
+        result = model.objects.filter(author_id=author, publish=True).order_by('created')
         search = self.request.GET.get('search')
         if search:
             """除外リストを作成"""
@@ -193,6 +193,6 @@ class Search:
                         Q(title__icontains=q) |
                         Q(content__icontains=q) for q in q_list]
                     )
-            result = result.filter(query).order_by('-created').distinct()
+            result = result.filter(query).order_by('created').distinct()
             self.count = len(result)
         return result
