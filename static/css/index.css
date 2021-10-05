@@ -1068,6 +1068,14 @@ header {
     margin: 0 0 16px 0;
 }
 
+.userpage_info_1 {
+    margin: 24px 0 8px 0;
+}
+
+.userpage_info_2 {
+    margin: 0 0 50px 0;
+}
+
 /* コンテンツ説明 */
 .content_detail_check,
 .content_detail_check:checked ~ .content_detail_check_label1,

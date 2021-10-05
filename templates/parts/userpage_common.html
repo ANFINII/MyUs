@@ -1,28 +1,28 @@
-{% for item in user_list %}
+{% for author in user_list %}
     <figure class="userpage_banner">
-        <img src="{{ item.mypage_image.url }}" title="{{ item.nickname }}">
+        <img src="{{ author.mypage_image.url }}" title="{{ author.nickname }}">
     </figure>
 
     <object class="userpage_author">
         <object class="author_space">
             <figure>
-                <img src="{{ item.user_image.url }}" title="{{ item.nickname }}" class="userpage_image">
+                <img src="{{ author.user_image.url }}" title="{{ author.nickname }}" class="userpage_image">
             </figure>
         </object>
-        <span class="userpage_content_1" title="{{ item.nickname }}">{{ item.nickname }}</span>
+        <span class="userpage_content_1" title="{{ author.nickname }}">{{ author.nickname }}</span>
         <span class="userpage_content_2">フォロワー数
-            <span class="follower_count">{{ item.follower_count }}</span>
+            <span class="follower_count">{{ author.follower_count }}</span>
         </span>
-        <span class="userpage_content_3">フォロー数 {{ item.following_count }}</span>
+        <span class="userpage_content_3">フォロー数 {{ author.following_count }}</span>
         <span class="userpage_content_5">
-            {% if user.nickname == item.nickname %}
+            {% if user.nickname == author.nickname %}
             <button class="btn btn-secondary btn" disabled>フォローする</button>
             {% elif user.is_authenticated %}
-            <form method="POST" action="{% url 'myus:follow_create' item.nickname %}" class="follow_form">{% csrf_token %}
+            <form method="POST" action="{% url 'myus:follow_create' author.nickname %}" class="follow_form">{% csrf_token %}
                 {% if followed %}
-                <button type="submit" name="following_id" value="{{ item.nickname }}" class="btn btn-danger btn follow_change">解除する</button>
+                <button type="submit" name="following_id" value="{{ author.nickname }}" class="btn btn-danger btn follow_change">解除する</button>
                 {% else %}
-                <button type="submit" name="following_id" value="{{ item.nickname }}" class="btn btn-success btn follow_change">フォローする</button>
+                <button type="submit" name="following_id" value="{{ author.nickname }}" class="btn btn-success btn follow_change">フォローする</button>
                 {% endif %}
             </form>
             {% else %}
@@ -32,9 +32,9 @@
     </object>
 
     <div class="userpage_button_list">
-        <a href="{% url 'myus:userpage' item.nickname %}" class="userpage_button_list_1">投稿</a>
-        <a href="{% url 'myus:userpage_info' item.nickname %}" class="userpage_button_list_2">情報</a>
-        <a href="{% url 'myus:userpage_advertise' item.nickname %}" class="userpage_button_list_3">広告</a>
+        <a href="{% url 'myus:userpage' author.nickname %}" class="userpage_button_list_1">投稿</a>
+        <a href="{% url 'myus:userpage_info' author.nickname %}" class="userpage_button_list_2">情報</a>
+        <a href="{% url 'myus:userpage_advertise' author.nickname %}" class="userpage_button_list_3">広告</a>
     </div>
 {% endfor %}
 
