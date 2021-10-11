@@ -12,7 +12,7 @@
     <p class="userpage_info_1"><span>概要</span></p>
     <p class="userpage_info_2"><span>{{ author.content|linebreaksbr|urlize }}</span></p>
     <p><span>メール：{{ author.mypage_email }}</span></p>
-    <p><span>登録日：{{ author.date_joined }}</span></p>
+    <p><span>登録日：{{ author.date_joined|date:'Y年m月d日' }}</span></p>
     {% endfor %}
 </main>
 {% endblock content %}
