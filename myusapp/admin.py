@@ -319,15 +319,15 @@ class TodoModelAdmin(ImportExportModelAdmin):
 
 @admin.register(AdvertiseModel)
 class AdvertiseModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'url', 'title', 'content', 'publish', 'read', 'period', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'url', 'publish', 'read', 'period', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
-    ordering = ('author', '-created')
+    ordering = ('author', 'created')
     readonly_fields = ('read', 'created', 'updated')
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'url', 'title', 'content', 'images', 'videos', 'publish', 'period')}),
+        ('編集項目', {'fields': ('author', 'title', 'url', 'content', 'images', 'videos', 'publish', 'period')}),
         ('確認項目', {'fields': ('read', 'created', 'updated')})
     ]
 
@@ -753,3 +753,49 @@ class TodoModelAdminSite(admin.ModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 mymanage_site.register(TodoModel, TodoModelAdminSite)
+
+class AdvertiseModelAdminSite(admin.ModelAdmin):
+    list_display = ('id', 'title', 'url', 'publish', 'read', 'period', 'created', 'updated')
+    list_select_related = ('author',)
+    search_fields = ('title', 'created')
+    ordering = ('author', 'created')
+    readonly_fields = ('read', 'created', 'updated')
+
+    # 詳細画面
+    fieldsets = [
+        ('編集項目', {'fields': ('title', 'url', 'content', 'images', 'videos', 'publish', 'period')}),
+        ('確認項目', {'fields': ('read', 'created', 'updated')})
+    ]
+
+    def save_model(self, request, obj, form, change):
+        obj.author = request.user
+        super(AdvertiseModelAdminSite, self).save_model(request, obj, form, change)
+
+    def get_queryset(self, request):
+        qs = super(AdvertiseModelAdminSite, self).get_queryset(request)
+        return qs.filter(author=request.user)
+
+    def has_view_permission(self, request, obj=None):
+        author = request.user
+        if author.is_premium:
+            return True
+        return False
+
+    def has_add_permission(self, request):
+        author = request.user
+        if author.is_premium:
+            return True
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        author = request.user
+        if author.is_premium:
+            return True
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        author = request.user
+        if author.is_premium:
+            return True
+        return False
+mymanage_site.register(AdvertiseModel, AdvertiseModelAdminSite)
