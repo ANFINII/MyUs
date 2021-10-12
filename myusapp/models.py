@@ -524,6 +524,26 @@ class TodoModel(models.Model):
     class Meta:
         verbose_name_plural = '08 ToDo'
 
+class AdvertiseModel(models.Model):
+    """AdvertiseModel"""
+    author  = models.ForeignKey(User, on_delete=models.CASCADE)
+    title   = models.CharField(max_length=100)
+    url     = models.URLField()
+    content = models.TextField()
+    images  = models.ImageField(upload_to='images/adver_images')
+    videos  = models.FileField(upload_to='videos/adver_videos')
+    publish = BooleanField(default=True)
+    read    = models.IntegerField(blank=True, null=True, default=0)
+    period  = models.DateField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name_plural = '12 広告'
+
 class CommentModel(models.Model):
     """CommentModel"""
     author         = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -546,24 +566,4 @@ class CommentModel(models.Model):
         return CommentModel.objects.filter(parent=self).count()
 
     class Meta:
-        verbose_name_plural = '12 コメント'
-
-class AdvertiseModel(models.Model):
-    """AdvertiseModel"""
-    author  = models.ForeignKey(User, on_delete=models.CASCADE)
-    url     = models.URLField()
-    title   = models.CharField(max_length=100)
-    content = models.TextField()
-    images  = models.ImageField(upload_to='images/adver_images')
-    videos  = models.FileField(upload_to='videos/adver_videos')
-    publish = BooleanField(default=True)
-    read    = models.IntegerField(blank=True, null=True, default=0)
-    period  = models.DateField()
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name_plural = '13 広告'
+        verbose_name_plural = '13 コメント'
