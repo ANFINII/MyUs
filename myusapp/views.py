@@ -799,7 +799,7 @@ class VideoDetail(DetailView):
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
             'video_list': VideoModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
@@ -867,7 +867,7 @@ class LiveDetail(DetailView):
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
             'live_list': LiveModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
@@ -935,7 +935,7 @@ class MusicDetail(DetailView):
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
             'music_list': MusicModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
@@ -1003,7 +1003,7 @@ class PictureDetail(DetailView):
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
             'picture_list': PictureModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
@@ -1071,7 +1071,7 @@ class BlogDetail(DetailView):
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
             'blog_list': BlogModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
@@ -1338,7 +1338,7 @@ class CollaboDetail(DetailView):
         context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
             'collabo_list': CollaboModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
@@ -1398,7 +1398,7 @@ class TodoDetail(DetailView):
         context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
-            'advertise_list': AdvertiseModel.objects.filter(publish=True).order_by('?')[:1],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
             'todo_list': TodoModel.objects.filter(author_id=self.request.user.id).exclude(title=obj.title),
         })
         return context

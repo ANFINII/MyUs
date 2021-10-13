@@ -319,7 +319,7 @@ class TodoModelAdmin(ImportExportModelAdmin):
 
 @admin.register(AdvertiseModel)
 class AdvertiseModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'url', 'publish', 'read', 'period', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'url', 'publish', 'read', 'type', 'period', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', 'created')
@@ -327,7 +327,7 @@ class AdvertiseModelAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'url', 'content', 'images', 'videos', 'publish', 'period')}),
+        ('編集項目', {'fields': ('author', 'title', 'url', 'content', 'images', 'videos', 'publish', 'type', 'period')}),
         ('確認項目', {'fields': ('read', 'created', 'updated')})
     ]
 
@@ -769,6 +769,7 @@ class AdvertiseModelAdminSite(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
+        obj.type = 1
         super(AdvertiseModelAdminSite, self).save_model(request, obj, form, change)
 
     def get_queryset(self, request):

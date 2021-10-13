@@ -50,8 +50,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     day             = models.IntegerField(blank=True, null=True)
     age             = models.IntegerField(blank=True, null=True)
 
-    GENDER_CHOICES  = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
-    gender          = models.CharField(choices=GENDER_CHOICES, max_length=1, blank=True)
+    gender_choice   = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
+    gender          = models.CharField(choices=gender_choice, max_length=1, blank=True)
 
     phone_no        = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message = ('電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます。'))
     phone           = models.CharField(validators=[phone_no], max_length=15, blank=True, default='000-0000-0000')
@@ -534,6 +534,8 @@ class AdvertiseModel(models.Model):
     videos  = models.FileField(upload_to='videos/adver_videos')
     publish = BooleanField(default=True)
     read    = models.IntegerField(blank=True, null=True, default=0)
+    choice  = (('0', '全体'), ('1', '個別'))
+    type    = models.CharField(choices=choice, max_length=2, blank=True)
     period  = models.DateField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

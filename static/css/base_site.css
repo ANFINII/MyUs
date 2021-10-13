@@ -38,7 +38,7 @@
     color: rgb(255, 255, 255);
 }
 
-.module h2, .module caption, .inline-group h2 {
+.module h2, .module caption, .inline-group .h2 {
     background-color: rgb(0, 185, 200);
     color: rgb(255, 255, 255);
     font-size: 14px;
@@ -74,7 +74,8 @@ div .breadcrumbs {
     font-weight: bold;
 }
 
-select:focus, #searchbar:focus, .vTextField:focus, .vLargeTextField:focus, .vIntegerField:focus {
+select:focus, #searchbar:focus, .vTextField:focus, .vLargeTextField:focus,
+.vIntegerField:focus, .vURLField:focus, .vDateField:focus {
     outline: auto rgb(0, 185, 200);
 }
 
