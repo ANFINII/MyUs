@@ -331,6 +331,7 @@ class AdvertiseModelAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('read', 'created', 'updated')})
     ]
 
+
 # MyPgage用の管理画面
 class MyUsAdminSite(AdminSite):
     site_title = 'MyUs投稿管理'
