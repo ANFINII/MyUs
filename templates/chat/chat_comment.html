@@ -1,0 +1,36 @@
+{% load humanize %}
+
+<div id="comment_aria_list_{{ comment.id }}" class="comment_aria_list">
+    <a href="{% url 'myus:userpage' comment.author.nickname %}">
+        <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+    </a>
+    <div class="comment_aria_list_1">
+        <p>{{ comment.author.nickname }}</p>
+        <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
+    </div>
+    <div id="comment_aria_list_2_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
+    <a href="{% url 'myus:chat_thread' object.pk object.title comment.id %}" class="comment_aria_thread">
+        スレッド表示
+        <span id="reply_count_{{ comment.id }}">返信 {{ comment.reply_count|intcomma }} 件</span>
+    </a>
+    {% if comment.author.id == user.id %}
+        {% include 'chat/modal_content_chat_comment.html' %}
+    {% endif %}
+</div>
+<div id="edit_update_main_{{ comment.id }}" class="edit_update_main_chat">
+    <form method="POST" action="{% url 'myus:chat_message_update' comment.id %}" comment-id="{{ comment.id }}" class="edit_update_chat">
+        {% csrf_token %}
+        <a href="{% url 'myus:userpage' comment.author.nickname %}">
+            <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+        </a>
+        <div class="edit_textarea_caht">
+            <textarea name="update_text" rows="1" class="textarea_br" placeholder="メッセージ入力" id="comment_form_update_{{ comment.id }}" required>{{ comment.text }}</textarea>
+            <div class="chat_frame"></div>
+            <div class="comment_input_chat"></div>
+            <div class="edit_update_footer">
+                <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs edit_update_cancel">
+                <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
+            </div>
+        </div>
+    </form>
+</div>
