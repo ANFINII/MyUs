@@ -21,15 +21,13 @@
         {% endif %}
     {% endfor %}
 
-    {% for reply in reply_list %}
-        {% if reply.parent.id == comment_id %}
-            {% include 'chat/chat_reply.html' %}
-        {% endif %}
-    {% endfor %}
+    {% include 'chat/chat_reply.html' %}
+
     <div id="reply_aria_add"></div>
 
     <footer class="chat_footer_thread">
-        <form method="POST" action="{% url 'myus:chat_reply' %}" id="reply_form" obj-id="{{ object.id }}" comment-id="{{ comment_id }}">{% csrf_token %}
+        <form method="POST" action="{% url 'myus:chat_reply' %}" id="reply_form" obj-id="{{ object.id }}" comment-id="{{ comment_id }}">
+            {% csrf_token %}
             {% if is_period %}
             <textarea name="reply" rows="1" class="textarea_br" placeholder="チャット期間が過ぎています！" disabled="disabled"></textarea>
             <div class="chat_frame chat_frame_color"></div>
