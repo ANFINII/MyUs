@@ -1,0 +1,11 @@
+{% load humanize %}
+
+<div class="chat_section_main">
+    <div id="comment_aria_add" class="chat_section_main_area">
+        {% include 'chat/chat_curd/chat_comment.html' %}
+    </div>
+
+    <footer class="chat_footer_main" id="footer">
+        {% include 'chat/chat_curd/chat_comment_create.html' %}
+    </footer>
+</div>
