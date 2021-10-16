@@ -1,3 +1,4 @@
+{% if reply.author.id == user.id %}
 <div class="edit_button">
     {% csrf_token %}
     <a type="button" name="update" comment-id="{{ reply.id }}" class="edit_button_update">編集</a>
@@ -29,3 +30,4 @@
     </div>
     <div comment-id="{{ reply.id }}" id="mask_{{ reply.id }}" class="mask modal_cancel"></div>
 </div>
+{% endif %}

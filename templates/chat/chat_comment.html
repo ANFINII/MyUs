@@ -14,9 +14,7 @@
             スレッド表示
             <span id="reply_count_{{ comment.id }}">返信 {{ comment.reply_count|intcomma }} 件</span>
         </a>
-        {% if comment.author.id == user.id %}
-            {% include 'chat/modal_content_chat_comment.html' %}
-        {% endif %}
+        {% include 'chat/modal_content_chat_comment.html' %}
     </div>
     <div id="edit_update_main_{{ comment.id }}" class="edit_update_main_chat">
         <form method="POST" action="{% url 'myus:chat_message_update' comment.id %}" comment-id="{{ comment.id }}" class="edit_update_chat">

@@ -1,53 +1,53 @@
 {% load humanize %}
 
-<div id="comment_aria_list_{{ reply.id }}" class="reply_aria_list">
-    <a href="{% url 'myus:userpage' reply.author.nickname %}">
-        <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
-    </a>
-
-    <div class="reply_aria_list_1">
-        <p>{{ reply.author.nickname }}</p>
-        <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
-    </div>
-
-    <div id="comment_aria_list_2_{{ reply.id }}" class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
-
-    <div class="reply_aria_list_3">{{ reply.comment_liked }}
-        {% if user.is_authenticated %}
-        <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">{% csrf_token %}
-            {% if reply.comment_liked %}
-            <button type="submit" name="comment_id" value="{{ reply.id }}" class="like_form_comment like_fill">
-                <i class="bi bi-hand-thumbs-up-fill icon-font like_color_{{ reply.id }}" title="いいね"></i>
-            </button>
-            {% else %}
-            <button type="submit" name="comment_id" value="{{ reply.id }}" class="like_form_comment like_no">
-                <i class="bi bi-hand-thumbs-up icon-font like_color_{{ reply.id }}" title="いいね"></i>
-            </button>
-            {% endif %}
-        </form>
-        {% else %}
-        <i class="bi bi-hand-thumbs-up icon-font rgb100" title="いいね"></i>
-        {% endif %}
-        <span id="like_count_{{ reply.id }}" class="like_count rgb100">{{ reply.total_like|intcomma }}</span>
-    </div>
-    {% if reply.author.id == user.id %}
-        <div class="edit_button_reply">
-        {% include 'parts/modal_content_reply.html' %}
-        </div>
-    {% endif %}
-</div>
-<div id="edit_update_main_{{ reply.id }}" class="edit_update_main">
-    <form method="POST" action="{% url 'myus:comment_update' reply.id %}" comment-id="{{ reply.id }}" class="edit_update">
-        {% csrf_token %}
+{% for reply in reply_list reversed %}
+    {% if reply.parent.id == comment.id %}
+    <div id="comment_aria_list_{{ reply.id }}" class="reply_aria_list">
         <a href="{% url 'myus:userpage' reply.author.nickname %}">
             <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
         </a>
-        <div class="comment_input_update">
-            <textarea name="update_text" rows="1" class="textarea_br" placeholder="コメント入力" id="comment_form_update_{{ reply.id }}" required>{{ reply.text }}</textarea>
-            <div class="edit_update_footer">
-                <input type="button" name="cancel" value="キャンセル" comment-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">
-                <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
-            </div>
+
+        <div class="reply_aria_list_1">
+            <p>{{ reply.author.nickname }}</p>
+            <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
         </div>
-    </form>
-</div>
+
+        <div id="comment_aria_list_2_{{ reply.id }}" class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
+
+        <div class="reply_aria_list_3">{{ reply.comment_liked }}
+            {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">{% csrf_token %}
+                {% if reply.comment_liked %}
+                <button type="submit" name="comment_id" value="{{ reply.id }}" class="like_form_comment like_fill">
+                    <i class="bi bi-hand-thumbs-up-fill icon-font like_color_{{ reply.id }}" title="いいね"></i>
+                </button>
+                {% else %}
+                <button type="submit" name="comment_id" value="{{ reply.id }}" class="like_form_comment like_no">
+                    <i class="bi bi-hand-thumbs-up icon-font like_color_{{ reply.id }}" title="いいね"></i>
+                </button>
+                {% endif %}
+            </form>
+            {% else %}
+            <i class="bi bi-hand-thumbs-up icon-font rgb100" title="いいね"></i>
+            {% endif %}
+            <span id="like_count_{{ reply.id }}" class="like_count rgb100">{{ reply.total_like|intcomma }}</span>
+        </div>
+        {% include 'parts/modal_content_reply.html' %}
+    </div>
+    <div id="edit_update_main_{{ reply.id }}" class="edit_update_main">
+        <form method="POST" action="{% url 'myus:comment_update' reply.id %}" comment-id="{{ reply.id }}" class="edit_update">
+            {% csrf_token %}
+            <a href="{% url 'myus:userpage' reply.author.nickname %}">
+                <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
+            </a>
+            <div class="comment_input_update">
+                <textarea name="update_text" rows="1" class="textarea_br" placeholder="コメント入力" id="comment_form_update_{{ reply.id }}" required>{{ reply.text }}</textarea>
+                <div class="edit_update_footer">
+                    <input type="button" name="cancel" value="キャンセル" comment-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">
+                    <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+{% endfor %}

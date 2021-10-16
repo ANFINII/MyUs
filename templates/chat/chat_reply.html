@@ -11,9 +11,7 @@
                 <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
             </div>
             <div id="comment_aria_list_2_{{ reply.id }}" class="comment_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
-            {% if reply.author.id == user.id %}
-                {% include 'chat/modal_content_caht_reply.html' %}
-            {% endif %}
+            {% include 'chat/modal_content_caht_reply.html' %}
         </div>
         <div id="edit_update_main_{{ reply.id }}" class="edit_update_main_chat">
             <form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" comment-id="{{ reply.id }}" class="edit_update_chat">
