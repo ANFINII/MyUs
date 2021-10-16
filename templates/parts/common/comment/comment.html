@@ -72,10 +72,10 @@
 
         <div id="reply_aria_list_{{ comment.id }}" class="comment_aria_list_5">
         <div id="reply_aria_add"></div>
-        {% include 'parts/reply.html' %}
+        {% include 'parts/common/reply/reply.html' %}
         </div>
     </div>
-    {% include 'parts/modal_content_comment.html' %}
+    {% include 'parts/common/comment/modal_content_comment.html' %}
 </div>
 <div id="edit_update_main_{{ comment.id }}" class="edit_update_main">
     <form method="POST" action="{% url 'myus:comment_update' comment.id %}" comment-id="{{ comment.id }}" class="edit_update">
