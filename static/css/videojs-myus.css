@@ -3,7 +3,7 @@
 }
 
 .video-js .vjs-controls-disabled .vjs-big-play-button {
-	display: none!important;
+	display: none !important;
 }
 
 .video-js .vjs-control {
@@ -23,7 +23,7 @@
 }
 
 .video-js .vjs-load-progress div,.vjs-seeking .vjs-big-play-button,.vjs-waiting .vjs-big-play-button {
-	display: none!important;
+	display: none !important;
 }
 
 .video-js .vjs-mouse-display:after,.video-js .vjs-play-progress:after {
@@ -46,8 +46,8 @@
 }
 
 .video-js.vjs-fullscreen,.video-js.vjs-fullscreen .vjs-tech {
-	width: 100%!important;
-	height: 100%!important;
+	width: 100% !important;
+	height: 100% !important;
 }
 
 .video-js {
@@ -292,4 +292,22 @@
 
 .video-js .vjs-load-progress {
 	background: rgba(255,255,255,0.3);
+}
+
+/* リストホバー自動再生 */
+.video .video-js .vjs-big-play-button {
+	display: none;
+	border: 0 solid #fff; /* none → 0.06666em solid #fff */
+	opacity: 0;
+	background-color: rgba(255, 255, 255, 0); /* #cc181e → rgba(0, 105, 255, 0) */
+	color: rgba(255, 255, 255, 0);
+}
+
+@import "bourbon";
+.video .video-js {
+  background-color: rgb(0, 0, 0) !important;
+}
+
+.video .vjs-control-bar {
+  display: none !important;
 }

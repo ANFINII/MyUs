@@ -3,23 +3,20 @@
 {% for item in video_list %}
 <section class="main_content">
     <div class="main_decolation">
-        <video class="video-js vjs-big-play-centered vjs-16-9" controls preload="none" width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
-            <source src="{{ item.videos.url }}" type="video/mp4" label="2160p" res="2160">
-            <source src="{{ item.videos.url }}" type="video/mp4" label="1080p" res="1080">
-            <source src="{{ item.videos.url }}" type="video/mp4" label="720p" res="720">
-            <source src="{{ item.videos.url }}" type="video/mp4" label="480p" res="480">
-            <source src="{{ item.videos.url }}" type="video/mp4" label="240p" res="240">
-            <p>動画を再生するには、videoタグをサポートしたブラウザが必要です。</p>
-            <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
-            <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
-            <p class="vjs-no-js">この動画を見るには、JavaScriptを有効にしてください!
-                <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-            </p>
-        </video>
-        <a href="{% url 'myus:video_detail' item.pk item.title %}" class="author_title_space">
-            {% include 'parts/author_space.html' %}
-            {% include 'parts/content_title.html' %}
-        </a>
+        <div class="video">
+            <a href="{% url 'myus:video_detail' item.pk item.title %}">
+                <video class="video-js vjs-16-9" controls muted preload="none" width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
+                    <source src="{{ item.videos.url }}" type="video/mp4" label="480p" res="480">
+                    <p>動画を再生するには、videoタグをサポートしたブラウザが必要です。</p>
+                    <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
+                    <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
+                </video>
+            </a>
+            <a href="{% url 'myus:video_detail' item.pk item.title %}" class="author_title_space">
+                {% include 'parts/author_space.html' %}
+                {% include 'parts/content_title.html' %}
+            </a>
+        </div>
     </div>
 </section>
 {% endfor %}
