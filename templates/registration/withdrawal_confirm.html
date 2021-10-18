@@ -14,7 +14,8 @@
         <h1>MyUs退会</h1>
         {% if user.is_authenticated %}
 
-        <form method="POST" action="{% url 'myus:withdrawal' %}" class="form-signup">{% csrf_token %}
+        <form method="POST" action="{% url 'myus:withdrawal' %}" class="form-signup">
+            {% csrf_token %}
             <p style="color: red;">本当に退会しますか？</p>
 
             <p><input type="password" name="password2" class="form-control" minlength="8" maxlength="16" placeholder="パスワード" required></p>

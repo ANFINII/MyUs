@@ -47,7 +47,8 @@
             <label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
             <hr>
 
-            <form method="POST" action="{% url 'myus:comment_form' %}" id="comment_form" obj-id="{{ object.id }}" path="{{ request.path }}">{% csrf_token %}
+            <form method="POST" action="{% url 'myus:comment_form' %}" id="comment_form" obj-id="{{ object.id }}" path="{{ request.path }}">
+                {% csrf_token %}
                 <div class="comment_input">
                     <p>コメント総数
                         <span id="comment_count">{{ object.comment_count|intcomma }}</span>
@@ -85,7 +86,8 @@
                     <div class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
                     <div class="comment_aria_list_3">
                         {% if user.is_authenticated %}
-                            <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">{% csrf_token %}
+                            <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">
+                                {% csrf_token %}
                                 {% if liked %}
                                 <button type="submit" name="comment_id" value="{{ comment.id }}" class="like_form_comment like_fill">
                                     <i id="like_color_{{ comment.id }}" class="bi bi-hand-thumbs-up-fill icon-font" title="いいね"></i>

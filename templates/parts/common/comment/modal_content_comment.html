@@ -1,6 +1,5 @@
 {% if comment.author.id == user.id %}
 <div class="edit_button">
-    {% csrf_token %}
     <a type="button" name="update" comment-id="{{ comment.id }}" class="edit_button_update">編集</a>
 
     <a type="button" name="delete" comment-id="{{ comment.id }}" class="edit_button_delete">削除</a>

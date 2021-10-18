@@ -10,7 +10,8 @@
 
 {% block content %}
 <main class="main_contents">
-    <form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
         <article class="main_profile">
             <h1>アカウント設定</h1>
 

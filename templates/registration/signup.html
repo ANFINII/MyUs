@@ -9,7 +9,8 @@
 
 {% block content %}
 <main>
-    <form method="POST" action="" class="form-signup">{% csrf_token %}
+    <form method="POST" action="" class="form-signup">
+        {% csrf_token %}
         <h1 class="h4 mb-3 font-weight-normal">アカウント登録</h1>
 
         {% if messages %}

@@ -14,7 +14,8 @@
         <h1>MyUs退会</h1>
         {% if user.is_authenticated %}
 
-        <form method="POST" action="{% url 'myus:withdrawal' %}" class="form-signup">{% csrf_token %}
+        <form method="POST" action="{% url 'myus:withdrawal' %}" class="form-signup">
+            {% csrf_token %}
             {% if messages %}
             <ul class="messages_login">
                 {% for message in messages %}

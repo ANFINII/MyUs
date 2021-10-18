@@ -7,7 +7,8 @@
     {% if user.is_authenticated %}
     <br>
 
-    <form method="POST" action="">{% csrf_token %}
+    <form method="POST" action="">
+        {% csrf_token %}
         <p><label for="title">タイトル</label></p>
         <p><input type="text" name="title" id="title" class="form-control" required></p>
         <p><label for="content">内容</label></p>
