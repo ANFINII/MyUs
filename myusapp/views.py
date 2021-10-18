@@ -14,7 +14,7 @@ from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr, linebreaks
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, TemplateView, FormView, CreateView, ListView, DetailView, UpdateView, DeleteView
-from .forms import SearchTagForm
+from .forms import SearchTagForm, ChatCommentForm
 from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .modules.search import Search
@@ -340,6 +340,7 @@ class SearchTagList(ListView):
     model = SearchTagModel
     template_name = 'base2.html'
 
+@csrf_exempt
 def searchtag_create(request):
     """searchtag_create"""
     if request.method == 'POST':
@@ -348,7 +349,10 @@ def searchtag_create(request):
             form = form.save(commit=False)
             form.author_id = request.user.id
             form.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            context = {
+                'searchtag': form.searchtag,
+            }
+            return JsonResponse(context)
         else:
             form = SearchTagForm()
 
@@ -1178,30 +1182,66 @@ class ChatThread(DetailView):
         })
         return context
 
+# @csrf_exempt
+# def chat_message(request):
+#     """chat_message"""
+#     if request.method == 'POST':
+#         text = request.POST.get('text')
+#         obj_id = request.POST.get('id')
+#         obj = ChatModel.objects.get(id=obj_id)
+#         comment_obj = CommentModel(content_object=obj)
+#         comment_obj.text = text
+#         comment_obj.author_id = request.user.id
+#         comment_obj.save()
+#         context = {
+#             'text': urlize_impl(linebreaksbr(comment_obj.text)),
+#             'pk': obj_id,
+#             'comment_id': comment_obj.id,
+#             'title': obj.title,
+#             'nickname': comment_obj.author.nickname,
+#             'user_image': comment_obj.author.user_image.url,
+#             'created': comment_obj.created.strftime("%Y/%m/%d %H:%M"),
+#             'user_count': obj.user_count(),
+#             'comment_count': obj.comment_count(),
+#         }
+#         if request.is_ajax():
+#             return JsonResponse(context)
+
+
+def save_comment_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            text = request.POST.get('text')
+            obj_id = request.POST.get('id')
+            obj = ChatModel.objects.get(id=obj_id)
+            form = CommentModel(content_object=obj)
+            form.text = text
+            form.author_id = request.user.id
+            form.save()
+            data['form_is_valid'] = True
+            comments = CommentModel.objects.all()
+            data['comment_list'] = render_to_string('chat/chat_comment/chat_comment.html', {
+                'comments': comments,
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {
+                'form': form,
+                'user_count': obj.user_count(),
+                'comment_count': obj.comment_count(),
+               }
+    data['html'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+
 @csrf_exempt
 def chat_message(request):
-    """chat_message"""
     if request.method == 'POST':
-        text = request.POST.get('text')
-        obj_id = request.POST.get('id')
-        obj = ChatModel.objects.get(id=obj_id)
-        comment_obj = CommentModel(content_object=obj)
-        comment_obj.text = text
-        comment_obj.author_id = request.user.id
-        comment_obj.save()
-        context = {
-            'text': urlize_impl(linebreaksbr(comment_obj.text)),
-            'pk': obj_id,
-            'comment_id': comment_obj.id,
-            'title': obj.title,
-            'nickname': comment_obj.author.nickname,
-            'user_image': comment_obj.author.user_image.url,
-            'created': comment_obj.created.strftime("%Y/%m/%d %H:%M"),
-            'user_count': obj.user_count(),
-            'comment_count': obj.comment_count(),
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
+        form = ChatCommentForm(request.POST)
+    else:
+        form = ChatCommentForm()
+    return save_comment_form(request, form, 'chat/chat_comment/crud/chat_comment_create.html')
+
 
 @csrf_exempt
 def chat_reply(request):

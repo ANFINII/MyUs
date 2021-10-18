@@ -530,7 +530,7 @@ header {
 .main_tag_n {
     grid-column: 3/-1;
     grid-row: 1/2;
-    white-space: nowrap
+    white-space: nowrap;
 }
 
 .tag_menu:checked ~ .main_tag_n {
@@ -540,18 +540,22 @@ header {
 
 .tag_n_list {
     display: inline;
-    margin: 0 0 0 4px;
-}
-
-.tag_list {
-    display: inline;
-    margin: 0 2px 0 0;
+    margin: 0 0 0 4.3px;
 }
 
 .tag_n_list a {
     text-decoration: none;
     font-size: 14px;
     color: rgb(100, 100, 100);
+}
+
+.tag_n_add {
+    margin: 0 4.3px 0 0;
+}
+
+.tag_list {
+    display: inline;
+    margin: 0 2px 0 0;
 }
 
 .tag_list a {

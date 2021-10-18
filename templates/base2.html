@@ -363,7 +363,8 @@
 {% endblock nav %}
 
 {% block tagnav %}
-<form method="POST" action="{% url 'myus:searchtag_create' %}" id="tag_form">{% csrf_token %}
+<form method="POST" action="{% url 'myus:searchtag_create' %}" id="tag_form">
+    {% csrf_token %}
     <nav class="tag_nav">
         <input type="checkbox" id="tag_add" class="tag_menu">
 
@@ -374,9 +375,11 @@
         <input type="text" name="searchtag" class="main_tag_3" maxlength="12" placeholder="タグ名" required>
 
         <div class="main_tag_n">
+            <div class="tag_n_list">
             {% for item in searchtag_list %}
-            <div class="tag_n_list"><a href="?search={{ item.searchtag }}">{{ item.searchtag }}</a></div>
+                <a href="?search={{ item.searchtag }}">{{ item.searchtag }}</a>
             {% endfor %}
+            </div>
         </div>
 
         <label for="tag_add" class="main_tag_4">完了</label>
@@ -394,6 +397,7 @@
 <script src="{% static 'js/csrf.js' %}"></script>
 <script src="{% static 'js/date.js' %}"></script>
 <script src="{% static 'js/textarea.js' %}"></script>
+<script src="{% static 'js/ajax_searchtag.js' %}"></script>
 <!-- videojs -->
 <script src="{% static 'js/video.js' %}"></script>
 <script src="{% static 'js/videojs_auto.js' %}"></script>
