@@ -773,7 +773,7 @@ class AdvertiseModelAdminSite(admin.ModelAdmin):
     list_select_related = ('author',)
     search_fields = ('title', 'created')
     ordering = ('author', 'created')
-    actions = ('delete_action',)
+    actions = ('published', 'unpublished')
     readonly_fields = ('read', 'created', 'updated')
 
     # 詳細画面
@@ -815,7 +815,11 @@ class AdvertiseModelAdminSite(admin.ModelAdmin):
             return True
         return False
 
-    def delete_action(self, request, queryset):
-        queryset.delete()
-    delete_action.short_description = '削除する'
+    def published(self, request, queryset):
+        queryset.update(publish=True)
+    published.short_description = '公開する'
+
+    def unpublished(self, request, queryset):
+        queryset.update(publish=False)
+    unpublished.short_description = '非公開にする'
 mymanage_site.register(AdvertiseModel, AdvertiseModelAdminSite)
