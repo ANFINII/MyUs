@@ -148,8 +148,9 @@ class SearchTagModel(models.Model):
 
 class TagModel(models.Model):
     """TagModel"""
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    tag    = models.CharField(max_length=12, null=True)
+    author      = models.ForeignKey(User, on_delete=models.CASCADE)
+    tag         = models.CharField(max_length=20, null=True)
+    english_tag = models.CharField(max_length=40, null=True)
 
     def __str__(self):
         return self.tag

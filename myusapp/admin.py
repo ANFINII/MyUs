@@ -73,14 +73,19 @@ class SearchTagAdmin(ImportExportModelAdmin):
 
 @admin.register(TagModel)
 class TagAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'tag',)
-    search_fields = ('author__nickname', 'tag',)
-    ordering = ('author', 'tag',)
+    list_display = ('id', 'tag', 'english_tag')
+    list_editable = ('tag', 'english_tag')
+    search_fields = ('tag', 'english_tag')
+    ordering = ('id',)
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('tag',)}),
+        ('編集項目', {'fields': ('tag', 'english_tag')}),
     ]
+
+    def save_model(self, request, obj, form, change):
+        obj.author = request.user
+        super(TagAdmin, self).save_model(request, obj, form, change)
 
 @admin.register(CommentModel)
 class CommentAdmin(ImportExportModelAdmin):
@@ -413,13 +418,13 @@ class SearchTagAdminSite(admin.ModelAdmin):
 mymanage_site.register(SearchTagModel, SearchTagAdminSite)
 
 class TagAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'tag',)
-    search_fields = ('tag',)
-    ordering = ('tag',)
+    list_display = ('id', 'tag', 'english_tag')
+    search_fields = ('tag', 'english_tag')
+    ordering = ('id',)
 
     # 詳細画面
     fieldsets = [
-        ('確認項目', {'fields': ('tag',)}),
+        ('確認項目', {'fields': ('tag', 'english_tag')}),
     ]
 
     def has_add_permission(self, request):
