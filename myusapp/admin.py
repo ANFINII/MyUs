@@ -97,12 +97,12 @@ class CommentAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('like')
+
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('like')
 
 @admin.register(VideoModel)
 class VideoModelAdmin(ImportExportModelAdmin):
@@ -120,6 +120,9 @@ class VideoModelAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
+
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
@@ -127,9 +130,6 @@ class VideoModelAdmin(ImportExportModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
 
 @admin.register(LiveModel)
 class LiveModelAdmin(ImportExportModelAdmin):
@@ -147,6 +147,9 @@ class LiveModelAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
+
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
@@ -154,9 +157,6 @@ class LiveModelAdmin(ImportExportModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
 
 @admin.register(MusicModel)
 class MusicModelAdmin(ImportExportModelAdmin):
@@ -174,6 +174,9 @@ class MusicModelAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
+
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
@@ -181,9 +184,6 @@ class MusicModelAdmin(ImportExportModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
 
 @admin.register(PictureModel)
 class PictureModelAdmin(ImportExportModelAdmin):
@@ -201,6 +201,9 @@ class PictureModelAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
+
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
@@ -208,9 +211,6 @@ class PictureModelAdmin(ImportExportModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
 
 @admin.register(BlogModel)
 class BlogModelAdmin(ImportExportModelAdmin):
@@ -228,6 +228,9 @@ class BlogModelAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
+
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
@@ -235,9 +238,6 @@ class BlogModelAdmin(ImportExportModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
 
 @admin.register(ChatModel)
 class ChatModelAdmin(ImportExportModelAdmin):
@@ -255,6 +255,9 @@ class ChatModelAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'comment_count', 'user_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
+
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
@@ -266,9 +269,6 @@ class ChatModelAdmin(ImportExportModelAdmin):
     def user_count(self, obj):
         return obj.comments.order_by('author').distinct().values_list('author').count()
     user_count.short_description = 'joined'
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
 
 @admin.register(CollaboModel)
 class CollaboModelAdmin(ImportExportModelAdmin):
@@ -286,6 +286,9 @@ class CollaboModelAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('tags', 'like')
+
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
@@ -293,9 +296,6 @@ class CollaboModelAdmin(ImportExportModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
 
 @admin.register(TodoModel)
 class TodoModelAdmin(ImportExportModelAdmin):
@@ -353,6 +353,7 @@ class FollowModelAdminSite(admin.ModelAdmin):
     list_select_related = ('following',)
     search_fields = ('following__nickname', 'following__introduction', 'created')
     ordering = ('following', '-created')
+    actions = ('delete_action',)
     readonly_fields = ('following', 'created')
 
     # 詳細画面
@@ -360,13 +361,13 @@ class FollowModelAdminSite(admin.ModelAdmin):
         ('確認項目', {'fields': ('following', 'following_introduction', 'created')})
     ]
 
-    def save_model(self, request, obj, form, change):
-        obj.follower = request.user
-        super(FollowModelAdminSite, self).save_model(request, obj, form, change)
-
     def get_queryset(self, request):
         qs = super(FollowModelAdminSite, self).get_queryset(request)
         return qs.filter(follower=request.user)
+
+    def save_model(self, request, obj, form, change):
+        obj.follower = request.user
+        super(FollowModelAdminSite, self).save_model(request, obj, form, change)
 
     def has_add_permission(self, request):
         return False
@@ -374,8 +375,9 @@ class FollowModelAdminSite(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    def delete_action(self, request, queryset):
+        queryset.delete()
+    delete_action.short_description = '削除する'
 
     def following_introduction(self, obj):
         return obj.following.introduction
@@ -388,6 +390,7 @@ class SearchTagAdminSite(admin.ModelAdmin):
     list_per_page = 10
     search_fields = ('searchtag', 'created')
     ordering = ('sequence', 'created')
+    actions = ('delete_action',)
     readonly_fields = ('created',)
 
     # 詳細画面
@@ -396,13 +399,17 @@ class SearchTagAdminSite(admin.ModelAdmin):
         ('確認項目', {'fields': ('created',)})
     ]
 
+    def get_queryset(self, request):
+        qs = super(SearchTagAdminSite, self).get_queryset(request)
+        return qs.filter(author=request.user)
+
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(SearchTagAdminSite, self).save_model(request, obj, form, change)
 
-    def get_queryset(self, request):
-        qs = super(SearchTagAdminSite, self).get_queryset(request)
-        return qs.filter(author=request.user)
+    def delete_action(self, request, queryset):
+        queryset.delete()
+    delete_action.short_description = '削除する'
 mymanage_site.register(SearchTagModel, SearchTagAdminSite)
 
 class TagAdminSite(admin.ModelAdmin):
@@ -412,16 +419,17 @@ class TagAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('tag',)}),
+        ('確認項目', {'fields': ('tag',)}),
     ]
 
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(TagAdminSite, self).save_model(request, obj, form, change)
+    def has_add_permission(self, request):
+        return False
 
-    def get_queryset(self, request):
-        qs = super(TagAdminSite, self).get_queryset(request)
-        return qs.filter(author=request.user)
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 mymanage_site.register(TagModel, TagAdminSite)
 
 class CommentInline(GenericTabularInline):
@@ -452,6 +460,10 @@ class VideoModelAdminSite(admin.ModelAdmin):
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        qs = super(VideoModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        return qs.filter(author=request.user)
+
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(VideoModelAdminSite, self).save_model(request, obj, form, change)
@@ -463,10 +475,6 @@ class VideoModelAdminSite(admin.ModelAdmin):
     def unpublished(self, request, queryset):
         queryset.update(publish=False)
     unpublished.short_description = '非公開にする'
-
-    def get_queryset(self, request):
-        qs = super(VideoModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
-        return qs.filter(author=request.user)
 
     def total_like(self, obj):
         return obj.like.count()
@@ -493,6 +501,10 @@ class LiveModelAdminSite(admin.ModelAdmin):
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        qs = super(LiveModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        return qs.filter(author=request.user)
+
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(LiveModelAdminSite, self).save_model(request, obj, form, change)
@@ -504,10 +516,6 @@ class LiveModelAdminSite(admin.ModelAdmin):
     def unpublished(self, request, queryset):
         queryset.update(publish=False)
     unpublished.short_description = '非公開にする'
-
-    def get_queryset(self, request):
-        qs = super(LiveModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
-        return qs.filter(author=request.user)
 
     def total_like(self, obj):
         return obj.like.count()
@@ -534,6 +542,10 @@ class MusicModelAdminSite(admin.ModelAdmin):
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        qs = super(MusicModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        return qs.filter(author=request.user)
+
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(MusicModelAdminSite, self).save_model(request, obj, form, change)
@@ -545,10 +557,6 @@ class MusicModelAdminSite(admin.ModelAdmin):
     def unpublished(self, request, queryset):
         queryset.update(publish=False)
     unpublished.short_description = '非公開にする'
-
-    def get_queryset(self, request):
-        qs = super(MusicModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
-        return qs.filter(author=request.user)
 
     def total_like(self, obj):
         return obj.like.count()
@@ -575,6 +583,10 @@ class PictureModelAdminSite(admin.ModelAdmin):
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        qs = super(PictureModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        return qs.filter(author=request.user)
+
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(PictureModelAdminSite, self).save_model(request, obj, form, change)
@@ -586,10 +598,6 @@ class PictureModelAdminSite(admin.ModelAdmin):
     def unpublished(self, request, queryset):
         queryset.update(publish=False)
     unpublished.short_description = '非公開にする'
-
-    def get_queryset(self, request):
-        qs = super(PictureModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
-        return qs.filter(author=request.user)
 
     def total_like(self, obj):
         return obj.like.count()
@@ -616,6 +624,10 @@ class BlogModelAdminSite(admin.ModelAdmin):
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        qs = super(BlogModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        return qs.filter(author=request.user)
+
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(BlogModelAdminSite, self).save_model(request, obj, form, change)
@@ -627,10 +639,6 @@ class BlogModelAdminSite(admin.ModelAdmin):
     def unpublished(self, request, queryset):
         queryset.update(publish=False)
     unpublished.short_description = '非公開にする'
-
-    def get_queryset(self, request):
-        qs = super(BlogModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
-        return qs.filter(author=request.user)
 
     def total_like(self, obj):
         return obj.like.count()
@@ -657,6 +665,10 @@ class ChatModelAdminSite(admin.ModelAdmin):
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        qs = super(ChatModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        return qs.filter(author=request.user)
+
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(ChatModelAdminSite, self).save_model(request, obj, form, change)
@@ -668,10 +680,6 @@ class ChatModelAdminSite(admin.ModelAdmin):
     def unpublished(self, request, queryset):
         queryset.update(publish=False)
     unpublished.short_description = '非公開にする'
-
-    def get_queryset(self, request):
-        qs = super(ChatModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
-        return qs.filter(author=request.user)
 
     def total_like(self, obj):
         return obj.like.count()
@@ -702,6 +710,10 @@ class CollaboModelAdminSite(admin.ModelAdmin):
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        qs = super(CollaboModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        return qs.filter(author=request.user)
+
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(CollaboModelAdminSite, self).save_model(request, obj, form, change)
@@ -713,10 +725,6 @@ class CollaboModelAdminSite(admin.ModelAdmin):
     def unpublished(self, request, queryset):
         queryset.update(publish=False)
     unpublished.short_description = '非公開にする'
-
-    def get_queryset(self, request):
-        qs = super(CollaboModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
-        return qs.filter(author=request.user)
 
     def total_like(self, obj):
         return obj.like.count()
@@ -733,6 +741,7 @@ class TodoModelAdminSite(admin.ModelAdmin):
     list_filter = ('priority', 'duedate')
     search_fields = ('title', 'duedate')
     ordering = ('priority', '-duedate')
+    actions = ('delete_action',)
     readonly_fields = ('comment_count', 'created', 'updated')
     inlines = [CommentInline]
 
@@ -742,13 +751,17 @@ class TodoModelAdminSite(admin.ModelAdmin):
         ('確認項目', {'fields': ('comment_count', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        qs = super(TodoModelAdminSite, self).get_queryset(request)
+        return qs.filter(author=request.user)
+
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(TodoModelAdminSite, self).save_model(request, obj, form, change)
 
-    def get_queryset(self, request):
-        qs = super(TodoModelAdminSite, self).get_queryset(request)
-        return qs.filter(author=request.user)
+    def delete_action(self, request, queryset):
+        queryset.delete()
+    delete_action.short_description = '削除する'
 
     def comment_count(self, obj):
         return obj.comments.all().count()
@@ -760,6 +773,7 @@ class AdvertiseModelAdminSite(admin.ModelAdmin):
     list_select_related = ('author',)
     search_fields = ('title', 'created')
     ordering = ('author', 'created')
+    actions = ('delete_action',)
     readonly_fields = ('read', 'created', 'updated')
 
     # 詳細画面
@@ -768,14 +782,14 @@ class AdvertiseModelAdminSite(admin.ModelAdmin):
         ('確認項目', {'fields': ('read', 'created', 'updated')})
     ]
 
+    def get_queryset(self, request):
+        qs = super(AdvertiseModelAdminSite, self).get_queryset(request)
+        return qs.filter(author=request.user)
+
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         obj.type = 1
         super(AdvertiseModelAdminSite, self).save_model(request, obj, form, change)
-
-    def get_queryset(self, request):
-        qs = super(AdvertiseModelAdminSite, self).get_queryset(request)
-        return qs.filter(author=request.user)
 
     def has_view_permission(self, request, obj=None):
         author = request.user
@@ -800,4 +814,8 @@ class AdvertiseModelAdminSite(admin.ModelAdmin):
         if author.is_premium:
             return True
         return False
+
+    def delete_action(self, request, queryset):
+        queryset.delete()
+    delete_action.short_description = '削除する'
 mymanage_site.register(AdvertiseModel, AdvertiseModelAdminSite)
