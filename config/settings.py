@@ -12,11 +12,11 @@ https://docs.djangoproject.com/ja/3.0/ref/settings/
 import os
 import environ
 
-env = environ.Env()
-env.read_env('.env')
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+env = environ.Env(DEBUG=(bool,False))
+env.read_env(os.path.join(BASE_DIR,'.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/ja/3.0/howto/deployment/checklist/
@@ -28,6 +28,12 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
+# Database
+# https://docs.djangoproject.com/ja/3.0/ref/settings/#databases
+DATABASES = {
+   'default': env.db(),
+}
 
 # Application definition
 INSTALLED_APPS = [
@@ -93,13 +99,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Channels
 ASGI_APPLICATION = 'config.asgi.application'
-
-# Database
-# https://docs.djangoproject.com/ja/3.0/ref/settings/#databases
-
-DATABASES = {
-   'default': env.db(),
-}
 
 # pkのデフォルト設定
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
