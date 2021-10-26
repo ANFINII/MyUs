@@ -26,9 +26,9 @@
 
             <p>{{ expired_seconds }}秒有効なURLを生成します。</p>
 
-            <p><input type="password" name="password" class="form-control" minlength="8" maxlength="16" placeholder="パスワード" required></p>
+            <p><input type="password" name="password" placeholder="パスワード" minlength="8" maxlength="16" class="form-control" required></p>
 
-            <p><input type="submit" id="submit" class="btn btn-lg btn-info btn-block submit" value="退会URL生成"></p>
+            <p><input type="submit" value="退会URL生成" id="submit" class="btn btn-lg btn-info btn-block submit"></p>
 
             <p class="withdrawal">
             {% if token_signed %}

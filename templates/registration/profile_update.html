@@ -25,7 +25,7 @@
 
             <div class="btn-column">
                 <div class="btn-column1">
-                    <input type="submit" id="submit" class="btn btn-success btn-sm" value="登録">
+                    <input type="submit" value="登録" id="submit" class="btn btn-success btn-sm">
                 </div>
                 <div class="btn-column2">
                     <a href="{% url 'myus:profile' %}" class="btn btn-primary btn-sm" role="button">戻る</a>
@@ -47,14 +47,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td class="td-color">ユーザー名</td><td><input type="text" name="username" class="form-control" maxlength="30" placeholder="英数字" value="{{ user.username }}"></td></tr>
-                    <tr><td class="td-color">メールアドレス</td><td><input type="text" name="email" class="form-control" maxlength="120" value="{{ user.email }}"></td></tr>
-                    <tr><td class="td-color">投稿者名</td><td><input type="text" name="nickname" class="form-control" maxlength="60" value="{{ user.nickname }}"></td></tr>
+                    <tr><td class="td-color">ユーザー名</td><td><input type="text" name="username" value="{{ user.username }}" maxlength="30" placeholder="英数字" class="form-control"></td></tr>
+                    <tr><td class="td-color">メールアドレス</td><td><input type="text" name="email" value="{{ user.email }}" maxlength="120" class="form-control"></td></tr>
+                    <tr><td class="td-color">投稿者名</td><td><input type="text" name="nickname" value="{{ user.nickname }}" maxlength="60" class="form-control"></td></tr>
                     <tr>
                         <td class="td-color">名前</td>
                         <td class="td-name">
-                            <input type="text" name="last_name" id="last_name" class="form-control" maxlength="30" placeholder="姓" value="{{ user.last_name }}">
-                            <input type="text" name="first_name" id="first_name" class="form-control" maxlength="30" placeholder="名" value="{{ user.first_name }}">
+                            <input type="text" name="last_name" value="{{ user.last_name }}" id="last_name" placeholder="姓" maxlength="30" class="form-control">
+                            <input type="text" name="first_name" value="{{ user.first_name }}" id="first_name" placeholder="名" maxlength="30" class="form-control">
                         </td>
                     </tr>
                     <tr>
@@ -83,9 +83,9 @@
                             {% endfor %}
                         </td>
                     </tr>
-                    <tr><td class="td-color">電話</td><td><input type="tel" name="phone" class="form-control" maxlength="15" value="{{ user.phone }}" required></td></tr>
-                    <tr><td class="td-color">住所</td><td><input type="text" name="location" class="form-control" maxlength="255" value="{{ user.location }}"></td></tr>
-                    <tr><td class="td-color">職業</td><td><input type="text" name="profession" class="form-control" maxlength="120" value="{{ user.profession }}"></td></tr>
+                    <tr><td class="td-color">電話</td><td><input type="tel" name="phone" value="{{ user.phone }}" maxlength="15" class="form-control" required></td></tr>
+                    <tr><td class="td-color">住所</td><td><input type="text" name="location" value="{{ user.location }}" maxlength="255" class="form-control"></td></tr>
+                    <tr><td class="td-color">職業</td><td><input type="text" name="profession" value="{{ user.profession }}" maxlength="120" class="form-control"></td></tr>
                 </tbody>
                 <tfoot>
                     <tr><td class="td-color td-footer">自己紹介</td><td class="td-footer"><textarea name="introduction" rows="1" class="form-control textarea">{{ user.introduction }}</textarea></td></tr>

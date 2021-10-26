@@ -1,4 +1,4 @@
-{% if comment.author.id == user.id %}
+{% if comment.author.id == user.id or user_id %}
 <div class="edit_button">
     <a type="button" name="update" comment-id="{{ comment.id }}" class="edit_button_update">編集</a>
 
@@ -24,9 +24,9 @@
         <form method="POST" action="{% url 'myus:chat_message_delete' comment.id %}" class="modal_content_footer">
             {% csrf_token %}
             <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light modal_cancel">
-            <input type="button" name="delete" value="削除" comment-id="{{ comment.id }}" obj-id="{{ object.id }}" class="btn btn-danger edit_delete">
+            <input type="button" name="delete" value="削除" comment-id="{{ comment.id }}" obj-id="{{ obj_id }}" class="btn btn-danger edit_delete">
         </form>
     </div>
-    <div comment-id="{{ comment.id }}" id="mask_{{ comment.id }}" class="mask modal_cancel"></div>
+    <div id="mask_{{ comment.id }}" comment-id="{{ comment.id }}" class="mask modal_cancel"></div>
 </div>
 {% endif %}

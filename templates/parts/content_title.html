@@ -1,6 +1,6 @@
 {% load humanize %}
 
-<div class="content_title" title="{{ item.title }}">{{ item.title }}</div>
+<div title="{{ item.title }}" class="content_title">{{ item.title }}</div>
 
 <span class="view_good">
     <div class="view_good_font content_nickname">
@@ -8,12 +8,12 @@
     </div>
 
     <div class="view_good_font view_good_inline">
-        <i class="bi bi-caret-right-square view_good_space" title="閲覧数"></i>
+        <i title="閲覧数" class="bi bi-caret-right-square view_good_space"></i>
         {{ item.read|intcomma }}
     </div>
 
     <div class="view_good_font view_good_inline">
-        <i class="bi bi-hand-thumbs-up" title="いいね数"></i>
+        <i title="いいね数" class="bi bi-hand-thumbs-up"></i>
         {{ item.total_like|intcomma }}
     </div>
 

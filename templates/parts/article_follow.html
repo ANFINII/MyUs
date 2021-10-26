@@ -9,10 +9,10 @@
                     <img src="{{ item.following.user_image.url }}" title="{{ item.following.nickname }}" class="follow_image">
                 </a>
             </object>
-            <span class="follow_content_1" title="{{ item.following.nickname }}">{{ item.following.nickname }}</span>
+            <span title="{{ item.following.nickname }}" class="follow_content_1">{{ item.following.nickname }}</span>
             <span class="follow_content_2">フォロワー数：{{ item.following.follower_count }}</span>
             <span class="follow_content_3">フォロー数　：{{ item.following.following_count }}</span>
-            <object class="follow_content_4" title="{{ item.following.introduction }}">
+            <object title="{{ item.following.introduction }}" class="follow_content_4">
                 {{ item.following.introduction|linebreaksbr|urlize }}
             </object>
         </a>

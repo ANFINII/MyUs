@@ -1,26 +1,26 @@
 <form method="POST" action="{% url 'myus:chat_reply' %}" id="reply_form" obj-id="{{ object.id }}" comment-id="{{ comment_id }}">
     {% csrf_token %}
     {% if is_period %}
-    <textarea name="reply" rows="1" class="textarea_br" placeholder="チャット期間が過ぎています！" disabled="disabled"></textarea>
+    <textarea name="reply" rows="1" placeholder="チャット期間が過ぎています！" class="textarea_br" disabled="disabled"></textarea>
     <div class="chat_frame chat_frame_color"></div>
     <div class="comment_input_chat">
-        <button type="submit" class="btn btn-secondary btn-sm" title="送信" disabled>
+        <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
             <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
         </button>
     </div>
     {% elif user.is_authenticated %}
-    <textarea name="reply" rows="1" class="textarea_br" placeholder="スレッド返信" required></textarea>
+    <textarea name="reply" rows="1" placeholder="スレッド返信" class="textarea_br" required></textarea>
     <div class="chat_frame"></div>
     <div class="comment_input_chat">
-        <button type="submit" class="btn btn-primary btn-sm" title="送信">
+        <button type="submit" title="送信" class="btn btn-primary btn-sm">
             <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
         </button>
     </div>
     {% else %}
-    <textarea name="reply" rows="1" class="textarea_br" placeholder="チャットするにはログインが必要です！" disabled="disabled"></textarea>
+    <textarea name="reply" rows="1" placeholder="チャットするにはログインが必要です！" class="textarea_br" disabled="disabled"></textarea>
     <div class="chat_frame chat_frame_color"></div>
     <div class="comment_input_chat">
-        <button type="submit" class="btn btn-secondary btn-sm" title="送信" disabled>
+        <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
             <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
         </button>
     </div>

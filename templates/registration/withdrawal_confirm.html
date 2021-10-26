@@ -18,9 +18,9 @@
             {% csrf_token %}
             <p style="color: red;">本当に退会しますか？</p>
 
-            <p><input type="password" name="password2" class="form-control" minlength="8" maxlength="16" placeholder="パスワード" required></p>
+            <p><input type="password" name="password2" placeholder="パスワード" minlength="8" maxlength="16" class="form-control" required></p>
 
-            <p><input type="submit" id="submit" class="btn btn-lg btn-danger btn-block submit" value="退会する"></p>
+            <p><input type="submit" value="退会する" id="submit" class="btn btn-lg btn-danger btn-block submit"></p>
 
             <p><a href="{% url 'myus:withdrawal' %}" class="btn btn-lg btn-primary btn-block" role="button" aria-disabled="true">戻る</a></p>
         </form>

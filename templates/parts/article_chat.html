@@ -6,30 +6,30 @@
     <div class="main_decolation">
         <a href="{% url 'myus:chat_detail' item.pk item.title %}" class="author_title_space">
             {% include 'parts/author_space.html' %}
-            <div class="content_title" title="{{ item.title }}">{{ item.title }}</div>
+            <div title="{{ item.title }}" class="content_title">{{ item.title }}</div>
             <span class="view_good">
                 <div class="view_good_font content_nickname">
                     {{ item.author.nickname }}
                 </div>
 
                 <div class="view_good_font view_good_inline">
-                    <i class="bi bi-caret-right-square" title="閲覧数"></i>
+                    <i title="閲覧数" class="bi bi-caret-right-square"></i>
                     {{ item.read|intcomma }}
                 </div>
 
                 <div class="view_good_font view_good_inline">
-                    <i class="bi bi-hand-thumbs-up" title="いいね数"></i>
+                    <i title="いいね数" class="bi bi-hand-thumbs-up"></i>
                     {{ item.total_like|intcomma }}
                 </div>
                 <br>
 
                 <div class="view_good_font view_good_inline">
-                    <i class="bi bi-person" title="参加数"></i>
+                    <i title="参加数" class="bi bi-person"></i>
                     {{ item.user_count|intcomma }}
                 </div>
 
                 <div class="view_good_font view_good_inline">
-                    <i class="bi bi-chat-dots" title="スレッド数"></i>
+                    <i title="スレッド数" class="bi bi-chat-dots"></i>
                     {{ item.comment_count|intcomma }}
                 </div>
                 <br>

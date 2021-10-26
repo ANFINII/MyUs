@@ -57,11 +57,11 @@
                     <a href="{% url 'myus:userpage' user.nickname %}">
                         <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
                     </a>
-                    <textarea name="text" rows="1" class="textarea_br" placeholder="コメント入力" required></textarea>
+                    <textarea name="text" rows="1" placeholder="コメント入力" class="textarea_br" required></textarea>
                     <input type="submit" name="text" value="コメント" class="btn btn-primary btn-sm">
                     {% else %}
                     <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_comment">
-                    <textarea name="text" rows="1" class="textarea_br" placeholder="コメントするにはログインが必要です！" disabled></textarea>
+                    <textarea name="text" rows="1" placeholder="コメントするにはログインが必要です！" class="textarea_br" disabled></textarea>
                     <input type="submit" name="text" value="コメント" class="btn btn-secondary btn-sm" disabled>
                     {% endif %}
                 </div>
@@ -100,9 +100,9 @@
                                 <span id="like_count_{{ comment.id }}" class="like_count">{{ comment.total_like|intcomma }}</span>
                             </form>
                         {% else %}
-                            <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
+                            <i title="いいね" class="bi bi-hand-thumbs-up icon-font"></i>
                         {% endif %}
-                        <label for="reply_aria_check_{{ comment.id }}"  obj-id="{{ comment.id }}" class="reply_button">返信</label>
+                        <label for="reply_aria_check_{{ comment.id }}" obj-id="{{ comment.id }}" class="reply_button">返信</label>
                         <form method="POST" action="{% url 'myus:video_detail' object.id %}" id="comment_aria_list_reply_{{ comment.id }}" class="comment_aria_list_4">
                             {% csrf_token %}
                             <div class="reply_input">
@@ -110,14 +110,14 @@
                                 <a href="{% url 'myus:userpage' user.nickname %}">
                                     <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_reply">
                                 </a>
-                                <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメント入力" required></textarea>
+                                <textarea name="reply" rows="1" placeholder="返信コメント入力" class="textarea_br" required></textarea>
                                 <div class="reply_button_group">
                                     <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="btn btn-light btn-xs reply_button_cancel">
                                     <input type="submit" name="reply_form" value="リプライ" class="btn btn-primary btn-xs reply_form">
                                 </div>
                                 {% else %}
                                 <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
-                                <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメントするにはログインが必要です！" disabled></textarea>
+                                <textarea name="reply" rows="1" placeholder="返信コメントするにはログインが必要です！" class="textarea_br" disabled></textarea>
                                 <div class="reply_button_group">
                                     <input type="button" name="cancel" value="キャンセル" obj-id="{{ comment.id }}" class="btn btn-light btn-xs reply_button_cancel">
                                     <input type="submit" name="reply_form" value="リプライ" class="btn btn-secondary btn-xs" disabled>
@@ -139,7 +139,7 @@
                     </div>
                     <div class="reply_aria_list2">{{ reply.text|linebreaksbr|urlize }}</div>
                     <div class="reply_aria_list3">
-                        <i class="bi bi-hand-thumbs-up icon-font" title="いいね数"></i>
+                        <i title="いいね数" class="bi bi-hand-thumbs-up icon-font"></i>
                     </div>
                     {% endfor %}
                 </div>
@@ -167,14 +167,14 @@
                         </video>
                         <a href="{{ item.url }}" class="author_title_space">
                             {% include 'parts/author_space.html' %}
-                            <div class="content_title" title="{{ item.title }}">{{ item.title }}</div>
+                            <div title="{{ item.title }}" class="content_title">{{ item.title }}</div>
                             <span class="view_good">
                                 <div class="view_good_font content_nickname">
                                     {{ item.author.nickname }}
                                 </div>
 
                                 <div class="view_good_font view_good_inline">
-                                    <i class="bi bi-caret-right-square view_good_space" title="閲覧数"></i>
+                                    <i title="閲覧数" class="bi bi-caret-right-square view_good_space"></i>
                                     {{ item.read|intcomma }}
                                 </div>
                             </span>

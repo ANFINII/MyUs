@@ -23,19 +23,19 @@
 
         <label for="last_name">名前</label>
         <div class="form-row form-group">
-            <input type="text" name="last_name" id="last_name" class="form-control" maxlength="30" placeholder="姓">
-            <input type="text" name="first_name" id="first_name" class="form-control" maxlength="30" placeholder="名">
+            <input type="text" name="last_name" placeholder="姓" maxlength="30" id="last_name" class="form-control">
+            <input type="text" name="first_name" placeholder="名" maxlength="30" id="first_name" class="form-control">
         </div>
 
-        <p><input type="text" name="username" class="form-control" maxlength="30" placeholder="ユーザー名(英数字)" required></p>
+        <p><input type="text" name="username" placeholder="ユーザー名(英数字)" maxlength="30" class="form-control" required></p>
 
-        <p><input type="text" name="nickname" class="form-control" maxlength="60" placeholder="投稿者名" required></p>
+        <p><input type="text" name="nickname" placeholder="投稿者名" maxlength="60" class="form-control" required></p>
 
-        <p><input type="email" name="email" class="form-control" maxlength="120" placeholder="メールアドレス" required></p>
+        <p><input type="email" name="email" placeholder="メールアドレス" maxlength="120" class="form-control" required></p>
 
-        <p><input type="password" name="password1" class="form-control" minlength="8" maxlength="16" placeholder="パスワード(英数字8~16文字)" required></p>
+        <p><input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minlength="8" maxlength="16" class="form-control" required></p>
 
-        <p><input type="password" name="password2" class="form-control" minlength="8" maxlength="16" placeholder="パスワード(確認用)" required></p>
+        <p><input type="password" name="password2" placeholder="パスワード(確認用)" minlength="8" maxlength="16" class="form-control" required></p>
 
         <label for="year">生年月日</label>
         <div id="birthday" class="form-row">
@@ -70,7 +70,7 @@
             <label for="secret" class="custom-control-label">秘密</label>
         </div>
 
-        <p><input type="submit" id="submit" class="btn btn-lg btn-success btn-block" value="アカウント登録"></p>
+        <p><input type="submit" value="アカウント登録" id="submit" class="btn btn-lg btn-success btn-block"></p>
 
         <p><a href="{% url 'myus:login' %}" class="btn btn-lg btn-primary btn-block" role="button">戻る</a></p>
     </form>

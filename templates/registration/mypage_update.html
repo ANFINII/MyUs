@@ -25,7 +25,7 @@
 
             <div class="btn-column">
                 <div class="btn-column1">
-                    <input type="submit" id="submit" class="btn btn-success btn-sm" value="登録">
+                    <input type="submit" value="登録" id="submit" class="btn btn-success btn-sm">
                 </div>
                 <div class="btn-column2">
                     <a href="{% url 'myus:mypage' %}" class="btn btn-primary btn-sm" role="button">戻る</a>
@@ -48,7 +48,7 @@
                 </thead>
                 <tbody>
                     <tr><td class="td-color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
-                    <tr><td class="td-color">メールアドレス</td><td><input type="text" name="mypage_email" class="form-control" maxlength="120" placeholder="メールアドレス" value="{{ user.mypage_email }}"></td></tr>
+                    <tr><td class="td-color">メールアドレス</td><td><input type="text" name="mypage_email" value="{{ user.mypage_email }}" placeholder="メールアドレス" maxlength="120" class="form-control"></td></tr>
                     <tr><td class="td-color">フォロー数</td><td class="td-indent">{{ user.following_count }}</td></tr>
                     <tr><td class="td-color">フォロワー数</td><td class="td-indent">{{ user.follower_count }}</td></tr>
                 </tbody>

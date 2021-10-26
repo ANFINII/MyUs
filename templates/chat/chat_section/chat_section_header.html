@@ -5,37 +5,37 @@
 
     <div class="article_detail_aria_2">
         <div class="view_good_inline">
-            <i class="bi bi-caret-right-square" title="閲覧数"></i>
+            <i title="閲覧数" class="bi bi-caret-right-square"></i>
             <span>{{ object.read|intcomma }}</span>
         </div>
 
         <div class="view_good_inline">
-            <i class="bi bi-person" title="参加数"></i>
+            <i title="参加数" class="bi bi-person"></i>
             <span id="user_count">{{ object.user_count|intcomma }}</span>
         </div>
 
         <div class="view_good_inline">
-            <i class="bi bi-chat-dots" title="スレッド数"></i>
+            <i title="スレッド数" class="bi bi-chat-dots"></i>
             <span id="comment_count">{{ object.comment_count|intcomma }}</span>
         </div>
 
         {% if user.is_authenticated %}
-            <form method="POST" action="{% url 'myus:like_form' %}" class="view_good_inline char_like" path="{{ request.path }}">
+            <form method="POST" action="{% url 'myus:like_form' %}" path="{{ request.path }}" class="view_good_inline char_like">
                 {% csrf_token %}
                 {% if liked %}
                 <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_fill">
-                    <i class="bi bi-hand-thumbs-up-fill like_color" title="いいね"></i>
+                    <i title="いいね" class="bi bi-hand-thumbs-up-fill like_color"></i>
                 </button>
                 {% else %}
                 <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_no">
-                    <i class="bi bi-hand-thumbs-up like_color" title="いいね"></i>
+                    <i title="いいね" class="bi bi-hand-thumbs-up like_color"></i>
                 </button>
                 {% endif %}
                 <span class="like_count">{{ object.total_like|intcomma }}</span>
             </form>
         {% else %}
         <div class="view_good_inline">
-            <i class="bi bi-hand-thumbs-up" title="いいね"></i>
+            <i title="いいね" class="bi bi-hand-thumbs-up"></i>
             <span>{{ object.total_like|intcomma }}</span>
         </div>
         {% endif %}
@@ -45,8 +45,8 @@
     <div class="chat_section_content">
         <input type="checkbox" id="chat_content_check_id" class="chat_content_check">
 
-        <label for="chat_content_check_id" class="chat_content_label" title="内容">
-            <i class="bi bi-file-text" title="内容"></i>
+        <label for="chat_content_check_id" title="内容" class="chat_content_label">
+            <i title="内容" class="bi bi-file-text"></i>
         </label>
 
         <div class="chat_content">
@@ -88,7 +88,7 @@
 
 <div class="chat_section_nav">
     <label for="chat_section_nav_check_id" class="chat_section_nav_label">
-        <i class="bi bi-arrow-left-right" title="開閉"></i>
+        <i title="開閉" class="bi bi-arrow-left-right"></i>
     </label>
     <div  class="chat_section_nav_area">
         {% for item in chat_list %}

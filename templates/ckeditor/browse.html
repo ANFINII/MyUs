@@ -61,7 +61,7 @@
                                         </a>
                                         <div class="caption">
                                             <div class="submit-row">
-                                                <input href="{{ file.src }}" class="default embed" type="submit" name="_embed" value="{% trans 'Embed Image' %}">
+                                                <input href="{{ file.src }}" type="submit" name="_embed" value="{% trans 'Embed Image' %}" class="default embed">
                                             </div>
                                         </div>
                                     </li>
@@ -71,7 +71,7 @@
                     {% else %}
                         {% for file in files %}
                             <li>
-                                <a class="thumb" href="{% if file.is_image %}{{ file.src }}{% else %}{{ file.thumb }}{% endif %}">
+                                <a href="{% if file.is_image %}{{ file.src }}{% else %}{{ file.thumb }}{% endif %}" class="thumb">
                                     <img src="{{ file.thumb }}" style="max-width: 75px;"/>
                                     {% if file.visible_filename %}
                                         <span class="filename">{{ file.visible_filename }}</span>
@@ -79,7 +79,7 @@
                                 </a>
                                 <div class="caption">
                                     <div class="submit-row">
-                                        <input href="{{ file.src }}" class="default embed" type="submit" name="_embed" value="{% trans 'Embed Image' %}">
+                                        <input href="{{ file.src }}" type="submit" name="_embed" value="{% trans 'Embed Image' %}" class="default embed">
                                     </div>
                                 </div>
                             </li>

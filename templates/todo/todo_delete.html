@@ -8,9 +8,9 @@
     <br>
 
     <p>{{ object.title }}</p>
-    <form action="" method="POST">
+    <form method="POST" action="">
         {% csrf_token %}
-        <p><input type="submit" class="btn btn-danger btn-sm" value="削除する"></p>
+        <p><input type="submit" value="削除する" class="btn btn-danger btn-sm"></p>
     </form>
 
     {% else %}
