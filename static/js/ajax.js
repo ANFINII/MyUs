@@ -123,10 +123,10 @@ $('#comment_form').submit(function(event) {
                     '<label for="reply_aria_check_id" class="reply_aria_check_id">' + '返信' + '</label>' +
                 '</div>' +
             '</div>';
-        $("#comment_form")[0].reset();
+        $('#comment_form')[0].reset();
         $('#comment_count').html(response.comment_count);
         $('#comment_aria_add').append(comment_aria_list_add);
-        console.log(response)
+        console.log(response);
     })
     .fail(function(response) {
         console.log(response);
@@ -175,8 +175,6 @@ $('.reply_form').submit(function(event) {
     const url = $(this).attr('action');
     const id = $(this).attr('obj-id');
     const path = $(this).attr('path');
-    console.log(path)
-
     const comment_id = $(this).attr('comment-id');
     const text = $('form [name=reply]').val();
     $.ajax({
@@ -202,10 +200,10 @@ $('.reply_form').submit(function(event) {
                 '<label for="reply_aria_check_id" class="reply_aria_check_id">' + '返信' + '</label>' +
             '</div>' +
         '</div>';
-    $("#comment_aria_list_reply_" + comment_id)[0].reset();
+    $('#comment_aria_list_reply_' + comment_id)[0].reset();
     $('#reply_count_' + comment_id).html(response.reply_count);
     $('#reply_aria_add').append(reply_aria_list_add);
-        console.log(response)
+        console.log(response);
     })
     .fail(function(response) {
         console.log(response);
@@ -240,8 +238,8 @@ $('.edit_update').submit(function(event) {
         timeout: 10000,
     })
     .done(function(response) {
-        $('#comment_aria_list_2_' + comment_id).html(response.text)
-        console.log(response)
+        $('#comment_aria_list_2_' + comment_id).html(response.text);
+        console.log(response);
     })
     .fail(function(response) {
         console.log(response);
@@ -278,7 +276,7 @@ $(document).on('click', '.edit_delete', function(event) {
     .done(function(response) {
         $('#comment_aria_list_' + comment_id).remove();
         $('#comment_count').html(response.comment_count);
-        console.log(response)
+        console.log(response);
     })
     .fail(function(response) {
         console.log(response);

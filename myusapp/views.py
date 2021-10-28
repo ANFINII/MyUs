@@ -1144,6 +1144,8 @@ class ChatDetail(DetailView):
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
+        context['obj_id'] = obj.id
+        context['obj_title'] = obj.title
         context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
@@ -1159,6 +1161,7 @@ class ChatThread(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ChatThread, self).get_context_data(**kwargs)
         obj = self.object
+        comment_id = self.kwargs['comment_id']
         follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj.author.id)
         liked = False
         followed = False
@@ -1173,9 +1176,11 @@ class ChatThread(DetailView):
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
-        context['comment_id'] = self.kwargs['comment_id']
+        context['obj_id'] = obj.id
+        context['obj_title'] = obj.title
+        context['comment_id'] = comment_id
         context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
@@ -1208,46 +1213,38 @@ class ChatThread(DetailView):
 #             return JsonResponse(context)
 
 
-def save_comment_form(request, form, template_name):
-    data = dict()
-    if request.method == 'POST':
-        if form.is_valid():
-            text = request.POST.get('text')
-            obj_id = request.POST.get('id')
-            obj = ChatModel.objects.get(id=obj_id)
-            form = CommentModel(content_object=obj)
-            form.text = text
-            form.author_id = request.user.id
-            form.save()
-            data['form_is_valid'] = True
-            comments = CommentModel.objects.all()
-            data['comment_list'] = render_to_string('chat/chat_comment/chat_comment.html', {
-                'comments': comments,
-            })
-        else:
-            data['form_is_valid'] = False
-    context = {
-                'form': form,
-                'user_count': obj.user_count(),
-                'comment_count': obj.comment_count(),
-               }
-    data['html'] = render_to_string(template_name, context, request=request)
-    return JsonResponse(data)
-
 @csrf_exempt
 def chat_message(request):
+    """chat_message"""
+    context = dict()
     if request.method == 'POST':
-        form = ChatCommentForm(request.POST)
-    else:
-        form = ChatCommentForm()
-    return save_comment_form(request, form, 'chat/chat_comment/crud/chat_comment_create.html')
-
+        text = request.POST.get('text')
+        obj_id = request.POST.get('id')
+        obj = ChatModel.objects.get(id=obj_id)
+        comment_obj = CommentModel(content_object=obj)
+        comment_obj.content_object = obj
+        comment_obj.text = text
+        comment_obj.author_id = request.user.id
+        comment_obj.save()
+        comment_list = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
+        context['user_count'] = obj.user_count()
+        context['comment_count'] = obj.comment_count()
+        context['comment_lists'] = render_to_string('chat/chat_comment/chat_comment.html', {
+            'comment_list': comment_list,
+            'user_id': request.user.id,
+            'obj_id': obj_id,
+            'obj_title': obj.title,
+            'comment_id': comment_obj.id,
+        })
+        if request.is_ajax():
+            return JsonResponse(context)
 
 @csrf_exempt
 def chat_reply(request):
     """chat_reply"""
+    context = dict()
     if request.method == 'POST':
-        text = request.POST.get('text')
+        text = request.POST.get('reply')
         obj_id = request.POST.get('id')
         comment_id = request.POST.get('comment_id')
         obj = ChatModel.objects.get(id=obj_id)
@@ -1256,14 +1253,16 @@ def chat_reply(request):
         comment_obj.author_id = request.user.id
         comment_obj.parent = CommentModel.objects.get(id=comment_id)
         comment_obj.save()
-        context = {
-            'text': urlize_impl(linebreaksbr(comment_obj.text)),
-            'nickname': comment_obj.author.nickname,
-            'user_image': comment_obj.author.user_image.url,
-            'created': comment_obj.created.strftime("%Y/%m/%d %H:%M"),
-            'user_count': obj.user_count(),
-            'reply_count': comment_obj.parent.replies_count(),
-        }
+        reply_list = obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
+        context['user_count'] = obj.user_count()
+        context['comment_count'] = obj.comment_count()
+        context['reply_count'] = comment_obj.parent.replies_count()
+        context['reply_lists'] = render_to_string('chat/chat_reply/chat_reply.html', {
+            'reply_list': reply_list,
+            'user_id': request.user.id,
+            'obj_id': obj_id,
+            # 'reply_id': comment_id,
+        })
         if request.is_ajax():
             return JsonResponse(context)
 
@@ -1271,12 +1270,13 @@ def chat_reply(request):
 def chat_message_update(request, comment_id):
     """chat_message_update"""
     if request.method == 'POST':
-        text = request.POST.get('text')
+        update_text = request.POST.get('update_text')
         comment_obj = CommentModel.objects.get(id=comment_id)
-        comment_obj.text = text
+        comment_obj.text = update_text
         comment_obj.save()
         context = {
             'text': urlize_impl(linebreaksbr(comment_obj.text)),
+            'comment_id': comment_obj.id,
         }
         if request.is_ajax():
             return JsonResponse(context)
@@ -1286,7 +1286,6 @@ def chat_message_delete(request, comment_id):
     """chat_message_delete"""
     if request.method == 'POST':
         obj_id = request.POST.get('id')
-        comment_id = request.POST.get('comment_id')
         obj = ChatModel.objects.get(id=obj_id)
         comment_obj = CommentModel.objects.get(id=comment_id)
         comment_obj.delete()
@@ -1301,10 +1300,12 @@ def chat_message_delete(request, comment_id):
 def chat_reply_delete(request, comment_id):
     """chat_reply_delete"""
     if request.method == 'POST':
-        comment_id = request.POST.get('comment_id')
+        obj_id = request.POST.get('id')
+        obj = ChatModel.objects.get(id=obj_id)
         comment_obj = CommentModel.objects.get(id=comment_id)
         comment_obj.delete()
         context = {
+            'user_count': obj.user_count(),
             'reply_count': comment_obj.parent.replies_count(),
         }
         if request.is_ajax():

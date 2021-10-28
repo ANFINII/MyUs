@@ -1,20 +1,18 @@
 {% load humanize %}
 
 {% for reply in reply_list %}
-    {% if reply.parent.id == comment_id %}
-        <div id="comment_aria_list_{{ reply.id }}" class="comment_aria_list">
-            <a href="{% url 'myus:userpage' reply.author.nickname %}">
-                <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
-            </a>
-            <div class="comment_aria_list_1">
-                <p>{{ reply.author.nickname }}</p>
-                <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
-            </div>
-            <div id="comment_aria_list_2_{{ reply.id }}" class="comment_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
-            {% include 'chat/chat_reply/crud/modal_content_caht_reply.html' %}
+    <div id="comment_aria_list_{{ reply.id }}" class="comment_aria_list">
+        <a href="{% url 'myus:userpage' reply.author.nickname %}">
+            <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+        </a>
+        <div class="comment_aria_list_1">
+            <p>{{ reply.author.nickname }}</p>
+            <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
         </div>
-        <div id="edit_update_main_{{ reply.id }}" class="edit_update_main_chat">
-            {% include 'chat/chat_reply/crud/chat_reply_update.html' %}
-        </div>
-    {% endif %}
+        <div id="comment_aria_list_2_{{ reply.id }}" class="comment_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
+        {% include 'chat/chat_reply/crud/modal_content_caht_reply.html' %}
+    </div>
+    <div id="edit_update_main_{{ reply.id }}" class="edit_update_main_chat">
+        {% include 'chat/chat_reply/crud/chat_reply_update.html' %}
+    </div>
 {% endfor %}

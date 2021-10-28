@@ -96,7 +96,6 @@ $('#comment_form').submit(function(event) {
         $('#user_count').html(response.user_count);
         $('#comment_count').html(response.comment_count);
         $('#chat_section_main_area_add').html(response.comment_lists);
-        // $('#comment_aria_add').append(response.comment_lists);
         scrollBottom();
         console.log(response);
     })
@@ -111,74 +110,28 @@ $('#reply_form').submit(function(event) {
     const url = $(this).attr('action');
     const id = $(this).attr('obj-id');
     const comment_id = $(this).attr('comment-id');
-    const text = $('form [name=reply]').val();
+    const reply = $('form [name=reply]').val();
     $.ajax({
         url: url,
         type: 'POST',
-        data: {'id': id, 'text': text, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data: {'id': id, 'reply': reply, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
         dataType: 'json',
         timeout: 10000,
     })
     .done(function(response) {
-        let reply_aria_list_add =
-            '<div id="comment_aria_list_' + response.comment_id + '" class="comment_aria_list">' +
-                '<a href="/userpage/' + response.nickname +'">' +
-                    '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
-                '</a>' +
-                '<div class="comment_aria_list_1">' +
-                    '<p>' + response.nickname + '</p>' +
-                    '<time> ' + response.created + '</time>' +
-                '</div>' +
-                '<div id="comment_aria_list_2_' + response.comment_id + '" class="comment_aria_list_2">' + response.text + '</div>' +
-                '<div class="edit_button">' +
-                    '<a type="button" name="update" comment-id="' + response.comment_id + '" class="edit_button_update">編集</a>' +
-                    '<a type="button" name="delete" comment-id="' + response.comment_id + '" class="edit_button_delete">削除</a>' +
-                    '<div id="modal_content_' + response.comment_id + '" class="modal_content">' +
-                        '<h2 class="modal_content_header">メッセージの削除</h2>' +
-                        '<span class="modal_content_body_span">このメッセージを削除しますか？</span>' +
-                        '<div class="modal_content_body">' +
-                            '<div class="comment_aria_list">' +
-                                '<a href="/userpage/' + response.nickname + '">' +
-                                    '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
-                                '</a>' +
-                                '<div class="comment_aria_list_1">' +
-                                    '<p>' + response.nickname + '</p>' +
-                                    '<time>' + response.created + '</time>' +
-                                '</div>' +
-                                '<div class="comment_aria_list_2">' + response.text + '</div>' +
-                            '</div>' +
-                        '</div>' +
-                        '<form method="POST" action="/chat/detail/message/delete/' + response.comment_id + '" class="modal_content_footer">' +
-                            '<input type="button" name="cancel" value="キャンセル" comment-id="' + response.comment_id + '" class="btn btn-light modal_cancel">' +
-                            '<input type="button" name="delete" value="削除" comment-id="' + response.comment_id + '"  obj-id="' + id + '" class="btn btn-danger edit_delete">' +
-                        '</form>' +
-                    '</div>' +
-                    '<div comment-id="' + response.comment_id + '" id="mask_' + response.comment_id + '" class="mask modal_cancel"></div>' +
-                '</div>' +
-            '</div>' +
-            '<div id="edit_update_main_' + response.comment_id + '" class="edit_update_main_chat">' +
-                '<form method="POST" action="/chat/detail/message/update/' + response.comment_id + '" comment-id="' + response.comment_id + '" class="edit_update_chat">' +
-                    '<a href="/userpage/' + response.nickname + '">' +
-                        '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
-                    '</a>' +
-                    '<div class="edit_textarea_caht">' +
-                        '<textarea name="update_text" rows="1" class="textarea_br" placeholder="メッセージ入力" id="comment_form_update_' + response.comment_id + '" required>' + response.text + '</textarea>' +
-                        '<div class="chat_frame"></div>' +
-                        '<div class="comment_input_chat"></div>' +
-                        '<div class="edit_update_footer">' +
-                            '<input type="button" name="cancel" value="キャンセル" comment-id="' + response.comment_id + '" class="btn btn-light btn-xs edit_update_cancel">' +
-                            '<input type="submit" name="update" value="更新" class="btn btn-success btn-xs">' +
-                        '</div>' +
-                    '</div>' +
-                '</form>' +
-            '</div>';
-        let obj = document.getElementById('reply_aria_add');
+        function scrollBottom() {
+            let target = $('.chat_section_thread').last();
+            let position = target.position().top + $('.chat_section_thread').scrollTop();
+            $('.chat_section_thread').animate({scrollTop: position}, 700, 'swing');
+        }
+        let obj = document.getElementById('chat_section_thread_area_add');
         obj.scrollTop = obj.scrollHeight;
         $('#reply_form')[0].reset();
         $('#user_count').html(response.user_count);
         $('#comment_count').html(response.comment_count);
         $('#reply_count_' + comment_id).html('返信 ' + response.reply_count + ' 件');
-        $('#reply_aria_add').append(reply_aria_list_add);
+        $('#chat_section_thread_area_add').html(response.reply_lists);
+        scrollBottom();
         console.log(response);
     })
     .fail(function(response) {
@@ -204,9 +157,6 @@ $('.edit_update_chat').submit(function(event) {
     const url = $(this).attr('action');
     const comment_id = $(this).attr('comment-id');
     const update_text = $('#comment_form_update_' + comment_id).val();
-    // const update_text = $('form [name=update_text]').val();
-    console.log(comment_id);
-    console.log(update_text);
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
     $.ajax({
@@ -256,7 +206,7 @@ $(document).on('click', '.edit_delete', function(event) {
         $('#comment_aria_list_' + comment_id).remove();
         $('#user_count').html(response.user_count);
         $('#comment_count').html(response.comment_count);
-        console.log(response)
+        console.log(response);
     })
     .fail(function(response) {
         console.log(response);

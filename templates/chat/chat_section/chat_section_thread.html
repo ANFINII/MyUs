@@ -21,9 +21,9 @@
         {% endif %}
     {% endfor %}
 
-    {% include 'chat/chat_reply/chat_reply.html' %}
-
-    <div id="reply_aria_add"></div>
+    <div id="chat_section_thread_area_add">
+        {% include 'chat/chat_reply/chat_reply.html' %}
+    </div>
 
     <footer class="chat_footer_thread">
         {% include 'chat/chat_reply/crud/chat_reply_create.html' %}
