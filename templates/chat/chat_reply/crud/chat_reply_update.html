@@ -1,4 +1,4 @@
-<form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" comment-id="{{ reply.id }}" class="edit_update_chat">
+<form method="POST" action="{% url 'myus:chat_message_update' reply.id %}" obj-id="{{ obj_id }}" comment-id="{{ reply.id }}" class="edit_update_chat">
     {% csrf_token %}
     <a href="{% url 'myus:userpage' reply.author.nickname %}">
         <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">

@@ -155,6 +155,7 @@ $(document).on('click', '.edit_update_cancel', function() {
 $('.edit_update_chat').submit(function(event) {
     event.preventDefault();
     const url = $(this).attr('action');
+    const id= $(this).attr('obj-id');
     const comment_id = $(this).attr('comment-id');
     const update_text = $('#comment_form_update_' + comment_id).val();
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
@@ -162,12 +163,12 @@ $('.edit_update_chat').submit(function(event) {
     $.ajax({
         url: url,
         type: 'POST',
-        data: {'comment_id': comment_id, 'update_text': update_text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data: {'id': id, 'comment_id': comment_id, 'update_text': update_text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
         dataType: 'json',
         timeout: 10000,
     })
     .done(function(response) {
-        $('#comment_aria_list_2_' + comment_id).html(response.text);
+        $('#comment_aria_list_2_' + comment_id).html(response.update_text);
         console.log(response);
     })
     .fail(function(response) {
