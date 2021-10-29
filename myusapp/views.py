@@ -1187,32 +1187,6 @@ class ChatThread(DetailView):
         })
         return context
 
-# @csrf_exempt
-# def chat_message(request):
-#     """chat_message"""
-#     if request.method == 'POST':
-#         text = request.POST.get('text')
-#         obj_id = request.POST.get('id')
-#         obj = ChatModel.objects.get(id=obj_id)
-#         comment_obj = CommentModel(content_object=obj)
-#         comment_obj.text = text
-#         comment_obj.author_id = request.user.id
-#         comment_obj.save()
-#         context = {
-#             'text': urlize_impl(linebreaksbr(comment_obj.text)),
-#             'pk': obj_id,
-#             'comment_id': comment_obj.id,
-#             'title': obj.title,
-#             'nickname': comment_obj.author.nickname,
-#             'user_image': comment_obj.author.user_image.url,
-#             'created': comment_obj.created.strftime("%Y/%m/%d %H:%M"),
-#             'user_count': obj.user_count(),
-#             'comment_count': obj.comment_count(),
-#         }
-#         if request.is_ajax():
-#             return JsonResponse(context)
-
-
 @csrf_exempt
 def chat_message(request):
     """chat_message"""
@@ -1261,7 +1235,6 @@ def chat_reply(request):
             'reply_list': reply_list,
             'user_id': request.user.id,
             'obj_id': obj_id,
-            # 'reply_id': comment_id,
         })
         if request.is_ajax():
             return JsonResponse(context, safe=False)
@@ -1269,7 +1242,6 @@ def chat_reply(request):
 @csrf_exempt
 def chat_message_update(request, comment_id):
     """chat_message_update"""
-    context = dict()
     if request.method == 'POST':
         text = request.POST.get('text')
         comment_obj = CommentModel.objects.get(id=comment_id)
