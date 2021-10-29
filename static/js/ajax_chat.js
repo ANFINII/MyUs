@@ -152,23 +152,22 @@ $(document).on('click', '.edit_update_cancel', function() {
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
 })
 
-$('.edit_update_chat').submit(function(event) {
+$(document).on('click', '.edit_update_chat_button', function(event) {
     event.preventDefault();
-    const url = $(this).attr('action');
-    const id= $(this).attr('obj-id');
+    const url = $(this).closest('form').attr('action');
     const comment_id = $(this).attr('comment-id');
-    const update_text = $('#comment_form_update_' + comment_id).val();
+    const text = $('#comment_form_update_' + comment_id).val();
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
     $.ajax({
         url: url,
         type: 'POST',
-        data: {'id': id, 'comment_id': comment_id, 'update_text': update_text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data: {'comment_id': comment_id, 'text': text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
         dataType: 'json',
         timeout: 10000,
     })
     .done(function(response) {
-        $('#comment_aria_list_2_' + comment_id).html(response.update_text);
+        $('#comment_aria_list_2_' + comment_id).html(response.text);
         console.log(response);
     })
     .fail(function(response) {

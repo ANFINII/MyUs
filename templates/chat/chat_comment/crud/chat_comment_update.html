@@ -1,4 +1,4 @@
-<form method="POST" action="{% url 'myus:chat_message_update' comment.id %}" obj-id="{{ obj_id }}" comment-id="{{ comment.id }}" class="edit_update_chat">
+<form method="POST" action="{% url 'myus:chat_message_update' comment.id %}" class="edit_update_chat">
     {% csrf_token %}
     <a href="{% url 'myus:userpage' comment.author.nickname %}">
         <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
@@ -9,7 +9,7 @@
         <div class="comment_input_chat"></div>
         <div class="edit_update_footer">
             <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs edit_update_cancel">
-            <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
+            <input type="submit" name="update" value="更新" comment-id="{{ comment.id }}" class="btn btn-success btn-xs edit_update_chat_button">
         </div>
     </div>
 </form>

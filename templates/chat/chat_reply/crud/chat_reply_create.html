@@ -1,4 +1,4 @@
-<form method="POST" action="{% url 'myus:chat_reply' %}" id="reply_form" obj-id="{{ obj_id }}" comment-id="{{ comment_id }}">
+<form method="POST" action="{% url 'myus:chat_reply' %}" id="reply_form" obj-id="{{ object.id }}" comment-id="{{ comment_id }}">
     {% csrf_token %}
     {% if is_period %}
     <textarea name="reply" rows="1" placeholder="チャット期間が過ぎています！" class="textarea_br" disabled="disabled"></textarea>

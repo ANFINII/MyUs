@@ -1264,19 +1264,19 @@ def chat_reply(request):
             # 'reply_id': comment_id,
         })
         if request.is_ajax():
-            return JsonResponse(context)
+            return JsonResponse(context, safe=False)
 
 @csrf_exempt
 def chat_message_update(request, comment_id):
     """chat_message_update"""
+    context = dict()
     if request.method == 'POST':
-        update_text = request.POST.get('update_text')
+        text = request.POST.get('text')
         comment_obj = CommentModel.objects.get(id=comment_id)
-        comment_obj.text = update_text
+        comment_obj.text = text
         comment_obj.save()
         context = {
-            'text': urlize_impl(linebreaksbr(comment_obj.text)),
-            'comment_id': comment_obj.id,
+            'text': urlize_impl(linebreaksbr(text)),
         }
         if request.is_ajax():
             return JsonResponse(context)
