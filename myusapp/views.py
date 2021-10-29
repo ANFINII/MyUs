@@ -1130,10 +1130,11 @@ class ChatDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ChatDetail, self).get_context_data(**kwargs)
         obj = self.object
-        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj.author.id)
+        user_id = self.request.user.id
+        follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
         followed = False
-        if obj.like.filter(id=self.request.user.id).exists():
+        if obj.like.filter(id=user_id).exists():
             liked = True
         if follow.exists():
             followed = True
@@ -1146,9 +1147,10 @@ class ChatDetail(DetailView):
         context['is_period'] = is_period
         context['obj_id'] = obj.id
         context['obj_title'] = obj.title
+        context['user_id'] = user_id
         context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
@@ -1161,11 +1163,12 @@ class ChatThread(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ChatThread, self).get_context_data(**kwargs)
         obj = self.object
+        user_id = self.request.user.id
         comment_id = self.kwargs['comment_id']
-        follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=obj.author.id)
+        follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
         followed = False
-        if obj.like.filter(id=self.request.user.id).exists():
+        if obj.like.filter(id=user_id).exists():
             liked = True
         if follow.exists():
             followed = True
@@ -1178,11 +1181,12 @@ class ChatThread(DetailView):
         context['is_period'] = is_period
         context['obj_id'] = obj.id
         context['obj_title'] = obj.title
+        context['user_id'] = user_id
         context['comment_id'] = comment_id
         context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context['reply_list'] = obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:10],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
         })
         return context
