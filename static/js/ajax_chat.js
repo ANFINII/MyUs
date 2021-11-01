@@ -183,7 +183,9 @@ $(document).on('click', '.edit_delete_comment', function(event) {
     const highlight_1 = document.querySelector('#comment_aria_list_' + comment_id);
     const highlight_2 = document.querySelector('#comment_aria_list_cross_' + comment_id);
     highlight_1.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important');
-    highlight_2.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important');
+    if (highlight_2 !== null) {
+        highlight_2.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important');
+    }
     $.ajax({
         url: url,
         type: 'POST',
