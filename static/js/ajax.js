@@ -16,13 +16,13 @@ $('.like_form').on('click', function(event) {
             $('.like_color').parent().removeClass('like_no');
             $('.like_color').addClass('bi-hand-thumbs-up-fill');
             $('.like_color').parent().addClass('like_fill');
-            $('.like_count').html(response['total_like']);
+            $('#like_count_' + id).html(response['total_like']);
         } else {
             $('.like_color').removeClass('bi-hand-thumbs-up-fill');
             $('.like_color').parent().removeClass('like_fill');
             $('.like_color').addClass('bi-hand-thumbs-up');
             $('.like_color').parent().addClass('like_no');
-            $('.like_count').html(response['total_like']);
+            $('#like_count_' + id).html(response['total_like']);
         }
         console.log(response);
     })
@@ -172,7 +172,7 @@ $(document).on('click', '.reply_form', function(event) {
     .done(function(response) {
         $('#comment_aria_list_reply_' + comment_id)[0].reset();
         $('#reply_count_open_' + comment_id).html('▼ スレッド ' + response.reply_count + ' 件');
-        $('#reply_count_close_' + comment_id).html('▼ スレッド ' + response.reply_count + ' 件');
+        $('#reply_count_close_' + comment_id).html('▲ スレッド ' + response.reply_count + ' 件');
         $('#reply_aria_add_' + comment_id).html(response.reply_lists);
         console.log(response);
     })
