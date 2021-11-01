@@ -8,7 +8,7 @@
 <div class="chat_section_thread">
     {% for comment in comment_list %}
         {% if comment.id == comment_id %}
-        <div class="comment_aria_list">
+        <div id="comment_aria_list_cross_{{ comment.id }}" class="comment_aria_list">
             <a href="{% url 'myus:userpage' comment.author.nickname %}">
                 <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
             </a>
