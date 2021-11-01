@@ -1,13 +1,3 @@
-$(window).on('load', function() {
-    let pathname = $(location).attr('pathname');
-
-    if(pathname) {
-        let target = $(pathname).position();
-        $('.edit_section_main').animate({scrollTop: target}, 'slow');
-        $('.edit_section_main').scrollTop(target.top);
-    }
-});
-
 // いいねボタンクリック時の処理を定義
 $('.like_form').on('click', function(event) {
     event.preventDefault();
@@ -85,18 +75,12 @@ $('#comment_form').submit(function(event) {
         timeout: 10000,
     })
     .done(function(response) {
-        function scrollBottom() {
-            let target = $('.chat_section_main_area').last();
-            let position = target.position().top + $('.chat_section_main_area').scrollTop();
-            $('.chat_section_main_area').animate({scrollTop: position}, 700, 'swing');
-        }
-        let obj = document.getElementById('chat_section_main_area_add');
-        obj.scrollTop = obj.scrollHeight;
         $('#comment_form')[0].reset();
         $('#user_count').html(response.user_count);
         $('#comment_count').html(response.comment_count);
         $('#chat_section_main_area_add').html(response.comment_lists);
-        scrollBottom();
+        const obj = document.getElementById('chat_section_main_area_add');
+        obj.scrollTop = obj.scrollHeight;
         console.log(response);
     })
     .fail(function(response) {
@@ -119,19 +103,12 @@ $('#reply_form').submit(function(event) {
         timeout: 10000,
     })
     .done(function(response) {
-        function scrollBottom() {
-            let target = $('.chat_section_thread').last();
-            let position = target.position().top + $('.chat_section_thread').scrollTop();
-            $('.chat_section_thread').animate({scrollTop: position}, 700, 'swing');
-        }
-        let obj = document.getElementById('chat_section_thread_area_add');
-        obj.scrollTop = obj.scrollHeight;
         $('#reply_form')[0].reset();
         $('#user_count').html(response.user_count);
-        $('#comment_count').html(response.comment_count);
         $('#reply_count_' + comment_id).html('返信 ' + response.reply_count + ' 件');
         $('#chat_section_thread_area_add').html(response.reply_lists);
-        scrollBottom();
+        const obj = document.getElementById('chat_section_thread');
+        obj.scrollTop = obj.scrollHeight;
         console.log(response);
     })
     .fail(function(response) {
@@ -159,6 +136,9 @@ $(document).on('click', '.edit_update_chat_button', function(event) {
     const text = $('#comment_form_update_' + comment_id).val();
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
+    // 更新時のアニメーション
+    const highlight = document.querySelector('#comment_aria_list_' + comment_id);
+    highlight.style.setProperty('background-color', 'rgb(235, 255, 245)', 'important');
     $.ajax({
         url: url,
         type: 'POST',
@@ -167,10 +147,14 @@ $(document).on('click', '.edit_update_chat_button', function(event) {
         timeout: 10000,
     })
     .done(function(response) {
+        // 成功した時、背景色を戻す
+        highlight.style.setProperty('background-color', 'rgb(255, 255, 255)', 'important');
         $('#comment_aria_list_2_' + comment_id).html(response.text);
         console.log(response);
     })
     .fail(function(response) {
+        // 失敗した時、背景色を戻す
+        highlight.style.setProperty('background-color', 'rgb(255, 255, 255)', 'important');
         console.log(response);
     })
 });
@@ -188,13 +172,50 @@ $(document).on('click', '.modal_cancel', function() {
     document.getElementById('mask_' + comment_id).classList.remove('active');
 });
 
-$(document).on('click', '.edit_delete', function(event) {
+$(document).on('click', '.edit_delete_comment', function(event) {
     event.preventDefault();
     const url = $(this).parent().attr('action');
     const id = $(this).attr('obj-id');
     const comment_id = $(this).attr('comment-id');
     document.getElementById('modal_content_' + comment_id).classList.remove('active');
     document.getElementById('mask_' + comment_id).classList.remove('active');
+    // 削除時のアニメーション
+    const highlight_1 = document.querySelector('#comment_aria_list_' + comment_id);
+    const highlight_2 = document.querySelector('#comment_aria_list_cross_' + comment_id);
+    highlight_1.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important');
+    highlight_2.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important');
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {'id': id, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+        timeout: 10000,
+    })
+    .done(function(response) {
+        $('#comment_aria_list_' + comment_id).remove();
+        $('#comment_aria_list_2_' + comment_id).html('スレッドが削除されました！');
+        $('#user_count').html(response.user_count);
+        $('#comment_count').html(response.comment_count);
+        console.log(response);
+    })
+    .fail(function(response) {
+        // 失敗した時、背景色を戻す
+        highlight_1.style.setProperty('background-color', 'rgb(255, 255, 255)', 'important');
+        highlight_2.style.setProperty('background-color', 'rgb(255, 255, 255)', 'important');
+        console.log(response);
+    })
+});
+
+$(document).on('click', '.edit_delete_reply', function(event) {
+    event.preventDefault();
+    const url = $(this).parent().attr('action');
+    const id = $(this).attr('obj-id');
+    const comment_id = $(this).attr('comment-id');
+    document.getElementById('modal_content_' + comment_id).classList.remove('active');
+    document.getElementById('mask_' + comment_id).classList.remove('active');
+    // 削除時のアニメーション
+    const highlight = document.querySelector('#comment_aria_list_' + comment_id);
+    highlight.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important');
     $.ajax({
         url: url,
         type: 'POST',
@@ -205,10 +226,12 @@ $(document).on('click', '.edit_delete', function(event) {
     .done(function(response) {
         $('#comment_aria_list_' + comment_id).remove();
         $('#user_count').html(response.user_count);
-        $('#comment_count').html(response.comment_count);
+        $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
         console.log(response);
     })
     .fail(function(response) {
+        // 失敗した時、背景色を戻す
+        highlight.style.setProperty('background-color', 'rgb(255, 255, 255)', 'important');
         console.log(response);
     })
 });
