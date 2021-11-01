@@ -5,7 +5,7 @@
     </a>
 </div>
 
-<div class="chat_section_thread">
+<div id="chat_section_thread" class="chat_section_thread">
     {% for comment in comment_list %}
         {% if comment.id == comment_id %}
         <div id="comment_aria_list_cross_{{ comment.id }}" class="comment_aria_list">
