@@ -73,33 +73,13 @@
 </div>
 <hr>
 
-<form method="POST" action="{% url 'myus:comment_form' %}" id="comment_form" obj-id="{{ object.id }}" path="{{ request.path }}">
-    {% csrf_token %}
-    <div class="comment_input">
-        <p>コメント総数
-            <span id="comment_count">{{ object.comment_count|intcomma }}</span>
-        </p>
-        {% if user.is_authenticated %}
-        <a href="{% url 'myus:userpage' user.nickname %}">
-            <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
-        </a>
-        <textarea name="text" rows="1" class="textarea_br" placeholder="コメント入力" required></textarea>
-        <input type="submit" name="text" value="コメント" class="btn btn-primary btn-sm">
-        {% else %}
-        <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_comment">
-        <textarea name="text" rows="1" class="textarea_br" placeholder="コメントするにはログインが必要です！" disabled></textarea>
-        <input type="submit" name="text" value="コメント" class="btn btn-secondary btn-sm" disabled>
-        {% endif %}
-    </div>
-</form>
+{% include 'parts/common/comment/comment_create.html' %}
 
 <input type="checkbox" id="comment_aria_check_id" class="comment_aria_check">
 <label for="comment_aria_check_id" class="comment_aria_check_label1">拡大表示</label>
 <label for="comment_aria_check_id" class="comment_aria_check_label2">縮小表示</label>
 
-<div class="comment_aria">
-    <div id="comment_aria_add"></div>
-
+<div id="comment_aria_add" class="comment_aria">
     {% include 'parts/common/comment/comment.html' %}
 </div>
 

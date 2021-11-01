@@ -7,7 +7,7 @@ from .views import LiveList, LiveCreate, LiveDetail
 from .views import MusicList, MusicCreate, MusicDetail
 from .views import PictureList, PictureCreate, PictureDetail
 from .views import BlogList, BlogCreate, BlogDetail
-from .views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_message, chat_reply, chat_message_update, chat_message_delete
+from .views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_message, chat_message_update, chat_message_delete, chat_reply, chat_reply_delete
 from .views import CollaboList, CollaboCreate, CollaboDetail
 from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 from .views import searchtag_create, like_form, like_form_comment, comment_form, reply_form, comment_update, comment_delete
@@ -58,9 +58,10 @@ urlpatterns = [
     path('chat/detail/<int:pk>/<str:title>', ChatDetail.as_view(), name='chat_detail'),
     path('chat/detail/<int:pk>/<str:title>/thread/<int:comment_id>', ChatThread.as_view(), name='chat_thread'),
     path('chat/detail/message', chat_message, name='chat_message'),
-    path('chat/detail/reply', chat_reply, name='chat_reply'),
     path('chat/detail/message/update/<int:comment_id>', chat_message_update, name='chat_message_update'),
     path('chat/detail/message/delete/<int:comment_id>', chat_message_delete, name='chat_message_delete'),
+    path('chat/detail/reply', chat_reply, name='chat_reply'),
+    path('chat/detail/reply/delete/<int:comment_id>', chat_reply_delete, name='chat_reply_delete'),
 
     path('collabo/', CollaboList.as_view(), name='collabo_list'),
     path('collabo/create/', CollaboCreate.as_view(), name='collabo_create'),

@@ -1,0 +1,24 @@
+{% load static %}
+
+<form method="POST" action="{% url 'myus:reply_form' %}" id="comment_aria_list_reply_{{ comment.id }}" class="comment_aria_list_4">
+    {% csrf_token %}
+    <div class="reply_input">
+        {% if user.is_authenticated %}
+        <a href="{% url 'myus:userpage' user.nickname %}">
+            <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_reply">
+        </a>
+        <textarea name="reply" rows="1" placeholder="返信コメント入力" id="reply_{{ comment.id }}" class="textarea_br" required></textarea>
+        <div class="reply_button_group">
+            <button type="button" name="cancel" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_cancel_button">キャンセル</button>
+            <button type="button" name="reply_form" obj-id="{{ obj_id }}" path="{{ obj_path }}" comment-id="{{ comment.id }}" class="btn btn-primary btn-xs reply_form">コメント</button>
+        </div>
+        {% else %}
+        <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
+        <textarea name="reply" rows="1" placeholder="返信コメントするにはログインが必要です！" class="textarea_br" disabled></textarea>
+        <div class="reply_button_group">
+            <button type="button" name="cancel" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_cancel_button">キャンセル</button>
+            <button type="button" name="reply_form" class="btn btn-secondary btn-xs" disabled>コメント</button>
+        </div>
+        {% endif %}
+    </div>
+</form>

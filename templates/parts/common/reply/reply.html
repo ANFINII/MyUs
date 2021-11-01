@@ -1,7 +1,7 @@
 {% load humanize %}
 
 {% for reply in reply_list reversed %}
-    {% if reply.parent.id == comment.id %}
+    {% if reply.parent.id == comment.id or comment_id %}
     <div id="comment_aria_list_{{ reply.id }}" class="reply_aria_list">
         <a href="{% url 'myus:userpage' reply.author.nickname %}">
             <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
@@ -15,7 +15,7 @@
         <div id="comment_aria_list_2_{{ reply.id }}" class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
 
         <div class="reply_aria_list_3">{{ reply.comment_liked }}
-            {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
             <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">
                 {% csrf_token %}
                 {% if reply.comment_liked %}
@@ -36,19 +36,7 @@
         {% include 'parts/common/reply/modal_content_reply.html' %}
     </div>
     <div id="edit_update_main_{{ reply.id }}" class="edit_update_main">
-        <form method="POST" action="{% url 'myus:comment_update' reply.id %}" comment-id="{{ reply.id }}" class="edit_update">
-            {% csrf_token %}
-            <a href="{% url 'myus:userpage' reply.author.nickname %}">
-                <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
-            </a>
-            <div class="comment_input_update">
-                <textarea name="update_text" rows="1" class="textarea_br" placeholder="コメント入力" id="comment_form_update_{{ reply.id }}" required>{{ reply.text }}</textarea>
-                <div class="edit_update_footer">
-                    <input type="button" name="cancel" value="キャンセル" comment-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">
-                    <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
-                </div>
-            </div>
-        </form>
+        {% include 'parts/common/reply/reply_update.html' %}
     </div>
     {% endif %}
 {% endfor %}

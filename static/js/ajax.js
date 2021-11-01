@@ -108,24 +108,9 @@ $('#comment_form').submit(function(event) {
         timeout: 10000,
     })
     .done(function(response) {
-        let comment_aria_list_add =
-            '<div class="comment_aria_list">' +
-                '<a href="/userpage/' + response.nickname +'">' +
-                    '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
-                '</a>' +
-                '<div class="comment_aria_list_1">' +
-                    '<p>' + response.nickname + '</p>' +
-                    '<time>' + ' ' + response.created + '</time>' +
-                '</div>' +
-                '<div class="comment_aria_list_2">' + response.text + '</div>' +
-                '<div class="comment_aria_list_3">' +
-                    '<i class="bi bi-hand-thumbs-up icon-font" title="いいね数">' + ' ' + '</i>' +
-                    '<label for="reply_aria_check_id" class="reply_aria_check_id">' + '返信' + '</label>' +
-                '</div>' +
-            '</div>';
         $('#comment_form')[0].reset();
         $('#comment_count').html(response.comment_count);
-        $('#comment_aria_add').append(comment_aria_list_add);
+        $('#comment_aria_add').html(response.comment_lists);
         console.log(response);
     })
     .fail(function(response) {
@@ -134,35 +119,35 @@ $('#comment_form').submit(function(event) {
 });
 
 // 返信コメント表示, 非表示
-$('.reply_button').on('click', function() {
+$(document).on('click', '.reply_button', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('comment_aria_list_reply_' + comment_id).classList.add('active');
     document.getElementById('reply_button_' + comment_id).classList.add('vanish');
     document.getElementById('reply_button_cancel_' + comment_id).classList.remove('vanish');
 })
 
-$('.reply_button_cancel').on('click', function() {
+$(document).on('click', '.reply_button_cancel', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('comment_aria_list_reply_' + comment_id).classList.remove('active');
     document.getElementById('reply_button_' + comment_id).classList.remove('vanish');
     document.getElementById('reply_button_cancel_' + comment_id).classList.add('vanish');
 })
 
-$('.reply_cancel_button').on('click', function() {
+$(document).on('click', '.reply_cancel_button', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('comment_aria_list_reply_' + comment_id).classList.remove('active');
     document.getElementById('reply_button_' + comment_id).classList.remove('vanish');
     document.getElementById('reply_button_cancel_' + comment_id).classList.add('vanish');
 })
 
-$('.reply_list_button').on('click', function() {
+$(document).on('click', '.reply_list_button', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('reply_aria_list_' + comment_id).classList.add('active');
     document.getElementById('reply_list_button_' + comment_id).classList.add('vanish');
     document.getElementById('reply_list_button_cancel_' + comment_id).classList.remove('vanish');
 })
 
-$('.reply_list_button_cancel').on('click', function() {
+$(document).on('click', '.reply_list_button_cancel', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('reply_aria_list_' + comment_id).classList.remove('active');
     document.getElementById('reply_list_button_' + comment_id).classList.remove('vanish');
@@ -170,13 +155,13 @@ $('.reply_list_button_cancel').on('click', function() {
 })
 
 // コメントリプライ 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
-$('.reply_form').submit(function(event) {
+$(document).on('click', '.reply_form', function(event) {
     event.preventDefault();
-    const url = $(this).attr('action');
+    const url = $(this).closest('form').attr('action');
     const id = $(this).attr('obj-id');
     const path = $(this).attr('path');
     const comment_id = $(this).attr('comment-id');
-    const text = $('form [name=reply]').val();
+    const text = $('#reply_' + comment_id).val();
     $.ajax({
         url: url,
         type: 'POST',
@@ -185,24 +170,10 @@ $('.reply_form').submit(function(event) {
         timeout: 10000,
     })
     .done(function(response) {
-        let reply_aria_list_add =
-        '<div class="comment_aria_list">' +
-            '<a href="/userpage/' + response.nickname +'">' +
-                '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
-            '</a>' +
-            '<div class="comment_aria_list_1">' +
-                '<p>' + response.nickname + '</p>' +
-                '<time>' + ' ' + response.created + '</time>' +
-            '</div>' +
-            '<div class="comment_aria_list_2">' + response.text + '</div>' +
-            '<div class="comment_aria_list_3">' +
-                '<i class="bi bi-hand-thumbs-up icon-font" title="いいね数">' + ' ' + '</i>' +
-                '<label for="reply_aria_check_id" class="reply_aria_check_id">' + '返信' + '</label>' +
-            '</div>' +
-        '</div>';
-    $('#comment_aria_list_reply_' + comment_id)[0].reset();
-    $('#reply_count_' + comment_id).html(response.reply_count);
-    $('#reply_aria_add').append(reply_aria_list_add);
+        $('#comment_aria_list_reply_' + comment_id)[0].reset();
+        $('#reply_count_open_' + comment_id).html('▼ スレッド ' + response.reply_count + ' 件');
+        $('#reply_count_close_' + comment_id).html('▼ スレッド ' + response.reply_count + ' 件');
+        $('#reply_aria_add_' + comment_id).html(response.reply_lists);
         console.log(response);
     })
     .fail(function(response) {
@@ -223,9 +194,9 @@ $(document).on('click', '.edit_update_cancel', function() {
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
 })
 
-$('.edit_update').submit(function(event) {
+$(document).on('click', '.edit_update_button', function(event) {
     event.preventDefault();
-    const url = $(this).attr('action');
+    const url = $(this).closest('form').attr('action');
     const comment_id = $(this).attr('comment-id');
     const text = $('#comment_form_update_' + comment_id).val();
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');

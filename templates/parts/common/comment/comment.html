@@ -37,59 +37,27 @@
         <label id="reply_button_cancel_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_button_cancel vanish">▲ 返信</label>
 
         <label id="reply_list_button_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_list_button">
-            <span id="reply_count_{{ comment.id }}" class="reply_count">▼ スレッド {{ comment.reply_count|intcomma }} 件</span>
+            <span id="reply_count_open_{{ comment.id }}" class="reply_count">▼ スレッド {{ comment.reply_count|intcomma }} 件</span>
             <span>表示</span>
         </label>
         <label id="reply_list_button_cancel_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_list_button_cancel vanish">
-            <span id="reply_count_{{ comment.id }}" class="reply_count">▲ スレッド {{ comment.reply_count|intcomma }} 件</span>
-            <span>表示</span>
+            <span id="reply_count_close_{{ comment.id }}" class="reply_count">▲ スレッド {{ comment.reply_count|intcomma }} 件</span>
+            <span>非表示</span>
         </label>
 
-        <form method="POST" action="{% url 'myus:reply_form' %}" obj-id="{{ object.id }}" comment-id="{{ comment.id }}" path="{{ request.path }}" id="comment_aria_list_reply_{{ comment.id }}" class="comment_aria_list_4 reply_form">
-            {% csrf_token %}
-            <div class="reply_input">
-                {% if user.is_authenticated %}
-                <a href="{% url 'myus:userpage' user.nickname %}">
-                    <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_reply">
-                </a>
-                <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメント入力" required></textarea>
-                <div class="reply_button_group">
-                    <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_cancel_button">
-                    <input type="submit" name="reply_form" value="コメント" class="btn btn-primary btn-xs">
-                </div>
-                {% else %}
-                <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
-                <textarea name="reply" rows="1" class="textarea_br" placeholder="返信コメントするにはログインが必要です！" disabled></textarea>
-                <div class="reply_button_group">
-                    <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_cancel_button">
-                    <input type="submit" name="reply_form" value="コメント" class="btn btn-secondary btn-xs" disabled>
-                </div>
-                {% endif %}
-            </div>
-        </form>
+        {% include 'parts/common/reply/reply_create.html' %}
 
         <div class="comment_aria_list_space"></div>
 
         <div id="reply_aria_list_{{ comment.id }}" class="comment_aria_list_5">
-        <div id="reply_aria_add"></div>
-        {% include 'parts/common/reply/reply.html' %}
+            <div id="reply_aria_add_{{ comment.id }}">
+                {% include 'parts/common/reply/reply.html' %}
+            </div>
         </div>
     </div>
     {% include 'parts/common/comment/modal_content_comment.html' %}
 </div>
 <div id="edit_update_main_{{ comment.id }}" class="edit_update_main">
-    <form method="POST" action="{% url 'myus:comment_update' comment.id %}" comment-id="{{ comment.id }}" class="edit_update">
-        {% csrf_token %}
-        <a href="{% url 'myus:userpage' comment.author.nickname %}">
-            <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
-        </a>
-        <div class="comment_input_update">
-            <textarea name="update_text" rows="1" id="comment_form_update_{{ comment.id }}" class="textarea_br" placeholder="コメント入力" required>{{ comment.text }}</textarea>
-            <div class="edit_update_footer">
-                <input type="button" name="cancel" value="キャンセル" comment-id="{{ comment.id }}" class="btn btn-light btn-xs edit_update_cancel">
-                <input type="submit" name="update" value="更新" class="btn btn-success btn-xs">
-            </div>
-        </div>
-    </form>
+{% include 'parts/common/comment/comment_update.html' %}
 </div>
 {% endfor %}
