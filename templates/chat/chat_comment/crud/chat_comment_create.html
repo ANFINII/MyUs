@@ -9,7 +9,7 @@
         </button>
     </div>
     {% elif user.is_authenticated %}
-    <textarea name="text" rows="1" placeholder="メッセージ入力" class="textarea_br" required></textarea>
+    <textarea name="text" rows="1" placeholder="メッセージ入力" id="comment_form_area" class="textarea_br" required></textarea>
     <div class="chat_frame"></div>
     <div class="comment_input_chat">
         <button type="submit" title="送信" class="btn btn-primary btn-sm">

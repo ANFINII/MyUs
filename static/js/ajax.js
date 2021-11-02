@@ -99,11 +99,11 @@ $('#comment_form').submit(function(event) {
     const url = $(this).attr('action');
     const id = $(this).attr('obj-id');
     const path = $(this).attr('path');
-    const text = $('form [name=text]').val();
+    const text = $('form [name=text]').val().replace(/\n+$/g,'');
     $.ajax({
         url: url,
         type: 'POST',
-        data: {'id':id, 'path': path, 'text':text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data: {'id': id, 'path': path, 'text': text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
         dataType: 'json',
         timeout: 10000,
     })
@@ -111,6 +111,8 @@ $('#comment_form').submit(function(event) {
         $('#comment_form')[0].reset();
         $('#comment_count').html(response.comment_count);
         $('#comment_aria_add').html(response.comment_lists);
+        const form_reset = document.getElementById('comment_form_area');
+        form_reset.style.height = '39px';
         console.log(response);
     })
     .fail(function(response) {
@@ -124,6 +126,7 @@ $(document).on('click', '.reply_button', function() {
     document.getElementById('comment_aria_list_reply_' + comment_id).classList.add('active');
     document.getElementById('reply_button_' + comment_id).classList.add('vanish');
     document.getElementById('reply_button_cancel_' + comment_id).classList.remove('vanish');
+    $('#reply_' + comment_id).textareaAutoHeight();
 })
 
 $(document).on('click', '.reply_button_cancel', function() {
@@ -161,7 +164,7 @@ $(document).on('click', '.reply_form', function(event) {
     const id = $(this).attr('obj-id');
     const path = $(this).attr('path');
     const comment_id = $(this).attr('comment-id');
-    const text = $('#reply_' + comment_id).val();
+    const text = $('#reply_' + comment_id).val().replace(/\n+$/g,'');
     $.ajax({
         url: url,
         type: 'POST',
@@ -174,6 +177,8 @@ $(document).on('click', '.reply_form', function(event) {
         $('#reply_count_open_' + comment_id).html('▼ スレッド ' + response.reply_count + ' 件');
         $('#reply_count_close_' + comment_id).html('▲ スレッド ' + response.reply_count + ' 件');
         $('#reply_aria_add_' + comment_id).html(response.reply_lists);
+        const form_reset = document.getElementById('reply_' + comment_id);
+        form_reset.style.height = '39px';
         console.log(response);
     })
     .fail(function(response) {

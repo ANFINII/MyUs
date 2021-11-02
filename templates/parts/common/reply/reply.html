@@ -15,7 +15,7 @@
         <div id="comment_aria_list_2_{{ reply.id }}" class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
 
         <div class="reply_aria_list_3">
-        {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
             <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">
                 {% csrf_token %}
                 {% if reply.comment_liked %}

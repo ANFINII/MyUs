@@ -11,7 +11,7 @@
         <a href="{% url 'myus:userpage' user.nickname %}">
             <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
         </a>
-        <textarea name="text" rows="1" placeholder="コメント入力" class="textarea_br" required></textarea>
+        <textarea name="text" rows="1" placeholder="コメント入力" id="comment_form_area" class="textarea_br" required></textarea>
         <button type="submit" title="送信" class="btn btn-primary btn-sm">コメント</button>
         {% else %}
         <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_comment">

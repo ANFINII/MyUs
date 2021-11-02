@@ -66,7 +66,7 @@ $('#comment_form').submit(function(event) {
     event.preventDefault();
     const url = $(this).attr('action');
     const id = $(this).attr('obj-id');
-    const text = $('form [name=text]').val();
+    const text = $('form [name=text]').val().replace(/\n+$/g,'');
     $.ajax({
         url: url,
         type: 'POST',
@@ -79,6 +79,8 @@ $('#comment_form').submit(function(event) {
         $('#user_count').html(response.user_count);
         $('#comment_count').html(response.comment_count);
         $('#chat_section_main_area_add').html(response.comment_lists);
+        const form_reset = document.getElementById('comment_form_area');
+        form_reset.style.height = '31px';
         const obj = document.getElementById('chat_section_main_area_add');
         obj.scrollTop = obj.scrollHeight;
         console.log(response);
@@ -94,7 +96,7 @@ $('#reply_form').submit(function(event) {
     const url = $(this).attr('action');
     const id = $(this).attr('obj-id');
     const comment_id = $(this).attr('comment-id');
-    const reply = $('form [name=reply]').val();
+    const reply = $('form [name=reply]').val().replace(/\n+$/g,'');
     $.ajax({
         url: url,
         type: 'POST',
@@ -107,6 +109,8 @@ $('#reply_form').submit(function(event) {
         $('#user_count').html(response.user_count);
         $('#reply_count_' + comment_id).html('返信 ' + response.reply_count + ' 件');
         $('#chat_section_thread_area_add').html(response.reply_lists);
+        const form_reset = document.getElementById('reply_form_area');
+        form_reset.style.height = '31px';
         const obj = document.getElementById('chat_section_thread');
         obj.scrollTop = obj.scrollHeight;
         console.log(response);
