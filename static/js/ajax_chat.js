@@ -1,5 +1,5 @@
 // いいねボタンクリック時の処理を定義
-$('.like_form').on('click', function(event) {
+$(document).on('click', '.like_form', function(event) {
     event.preventDefault();
     const id = $(this).attr('value');
     const url = $(this).parent().attr('action');
@@ -16,13 +16,13 @@ $('.like_form').on('click', function(event) {
             $('.like_color').parent().removeClass('like_no');
             $('.like_color').addClass('bi-hand-thumbs-up-fill');
             $('.like_color').parent().addClass('like_fill');
-            $('.like_count').html(response['total_like']);
+            $('#like_count_' + id).html(response['total_like']);
         } else {
             $('.like_color').removeClass('bi-hand-thumbs-up-fill');
             $('.like_color').parent().removeClass('like_fill');
             $('.like_color').addClass('bi-hand-thumbs-up');
             $('.like_color').parent().addClass('like_no');
-            $('.like_count').html(response['total_like']);
+            $('#like_count_' + id).html(response['total_like']);
         }
         console.log(response);
     })
@@ -32,7 +32,7 @@ $('.like_form').on('click', function(event) {
 });
 
 // フォローボタンクリック時の処理を定義
-$('.follow_form').on('click', function(event) {
+$(document).on('click', '.follow_form', function(event) {
     event.preventDefault();
     const url = $(this).attr('action');
     const nickname = $(this).children().attr('value');
@@ -121,6 +121,7 @@ $(document).on('click', '.edit_button_update', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('edit_update_main_' + comment_id).classList.add('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.add('active');
+    $('#comment_form_update_' + comment_id).textareaAutoHeight();
 })
 
 $(document).on('click', '.edit_update_cancel', function() {

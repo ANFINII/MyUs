@@ -397,8 +397,8 @@ def like_form_comment(request):
     """like_form_comment"""
     if request.method == 'POST':
         user = request.user
-        obj_id = request.POST.get('id')
-        obj = get_object_or_404(CommentModel, id=obj_id)
+        comment_id = request.POST.get('comment_id')
+        obj = get_object_or_404(CommentModel, id=comment_id)
         comment_liked = False
         if obj.like.filter(id=user.id).exists():
             comment_liked = False
@@ -430,6 +430,7 @@ def comment_form(request):
     """comment_form"""
     context = dict()
     if request.method == 'POST':
+        user_id = request.user.id
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
@@ -438,13 +439,17 @@ def comment_form(request):
                 obj = models.objects.get(id=obj_id)
         comment_obj = CommentModel(content_object=obj)
         comment_obj.text = text
-        comment_obj.author_id = request.user.id
+        comment_obj.author_id = user_id
         comment_obj.save()
+        filter_kwargs = {}
+        filter_kwargs['id'] = OuterRef('pk')
+        filter_kwargs['like'] = user_id
+        subquery = CommentModel.objects.filter(**filter_kwargs)
         context['comment_count'] = obj.comment_count()
         context['comment_lists'] = render_to_string('parts/common/comment/comment.html', {
-            'comment_list': obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
-            'reply_list' : obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type'),
-            'user_id': request.user.id,
+            'comment_list': obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type'),
+            'reply_list' : obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type'),
+            'user_id': user_id,
             'obj_id': obj_id,
             'obj_path': obj_path,
         }, request=request)
@@ -456,6 +461,7 @@ def reply_form(request):
     """reply_form"""
     context = dict()
     if request.method == 'POST':
+        user_id = request.user.id
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
@@ -465,14 +471,18 @@ def reply_form(request):
                 obj = models.objects.get(id=obj_id)
         comment_obj = CommentModel(content_object=obj)
         comment_obj.text = text
-        comment_obj.author_id = request.user.id
+        comment_obj.author_id = user_id
         comment_obj.parent = CommentModel.objects.get(id=comment_id)
         comment_obj.save()
+        filter_kwargs = {}
+        filter_kwargs['id'] = OuterRef('pk')
+        filter_kwargs['like'] = user_id
+        subquery = CommentModel.objects.filter(**filter_kwargs)
         context['comment_count'] = obj.comment_count()
         context['reply_count'] = comment_obj.parent.replies_count()
         context['reply_lists'] = render_to_string('parts/common/reply/reply.html', {
-            'reply_list': obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type'),
-            'user_id': request.user.id,
+            'reply_list': obj.comments.filter(parent__isnull=False, parent_id=comment_id).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type'),
+            'user_id': user_id,
             'obj_id': obj_id,
             'comment_id': comment_id,
         }, request=request)
@@ -796,18 +806,22 @@ class VideoDetail(DetailView):
         user_id = self.request.user.id
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
-        followed = False
         if obj.like.filter(id=user_id).exists():
             liked = True
+        followed = False
         if follow.exists():
             followed = True
+        filter_kwargs = {}
+        filter_kwargs['id'] = OuterRef('pk')
+        filter_kwargs['like'] = user_id
+        subquery = CommentModel.objects.filter(**filter_kwargs)
         context['liked'] = liked
         context['followed'] = followed
         context['user_id'] = user_id
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
@@ -868,18 +882,22 @@ class LiveDetail(DetailView):
         user_id = self.request.user.id
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
-        followed = False
         if obj.like.filter(id=user_id).exists():
             liked = True
+        followed = False
         if follow.exists():
             followed = True
+        filter_kwargs = {}
+        filter_kwargs['id'] = OuterRef('pk')
+        filter_kwargs['like'] = user_id
+        subquery = CommentModel.objects.filter(**filter_kwargs)
         context['liked'] = liked
         context['followed'] = followed
         context['user_id'] = user_id
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
@@ -940,18 +958,22 @@ class MusicDetail(DetailView):
         user_id = self.request.user.id
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
-        followed = False
         if obj.like.filter(id=user_id).exists():
             liked = True
+        followed = False
         if follow.exists():
             followed = True
+        filter_kwargs = {}
+        filter_kwargs['id'] = OuterRef('pk')
+        filter_kwargs['like'] = user_id
+        subquery = CommentModel.objects.filter(**filter_kwargs)
         context['liked'] = liked
         context['followed'] = followed
         context['user_id'] = user_id
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
@@ -1012,18 +1034,22 @@ class PictureDetail(DetailView):
         user_id = self.request.user.id
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
-        followed = False
         if obj.like.filter(id=user_id).exists():
             liked = True
+        followed = False
         if follow.exists():
             followed = True
+        filter_kwargs = {}
+        filter_kwargs['id'] = OuterRef('pk')
+        filter_kwargs['like'] = user_id
+        subquery = CommentModel.objects.filter(**filter_kwargs)
         context['liked'] = liked
         context['followed'] = followed
         context['user_id'] = user_id
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
@@ -1084,18 +1110,22 @@ class BlogDetail(DetailView):
         user_id = self.request.user.id
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
-        followed = False
         if obj.like.filter(id=user_id).exists():
             liked = True
+        followed = False
         if follow.exists():
             followed = True
+        filter_kwargs = {}
+        filter_kwargs['id'] = OuterRef('pk')
+        filter_kwargs['like'] = user_id
+        subquery = CommentModel.objects.filter(**filter_kwargs)
         context['liked'] = liked
         context['followed'] = followed
         context['user_id'] = user_id
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
@@ -1156,9 +1186,9 @@ class ChatDetail(DetailView):
         user_id = self.request.user.id
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
-        followed = False
         if obj.like.filter(id=user_id).exists():
             liked = True
+        followed = False
         if follow.exists():
             followed = True
         if obj.period < datetime.date.today():
@@ -1190,9 +1220,9 @@ class ChatThread(DetailView):
         comment_id = self.kwargs['comment_id']
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
-        followed = False
         if obj.like.filter(id=user_id).exists():
             liked = True
+        followed = False
         if follow.exists():
             followed = True
         if obj.period < datetime.date.today():
@@ -1363,23 +1393,27 @@ class CollaboDetail(DetailView):
         user_id = self.request.user.id
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
-        followed = False
         if obj.like.filter(id=user_id).exists():
             liked = True
+        followed = False
         if follow.exists():
             followed = True
         if obj.period < datetime.date.today():
             is_period = True
         else:
             is_period = False
+        filter_kwargs = {}
+        filter_kwargs['id'] = OuterRef('pk')
+        filter_kwargs['like'] = user_id
+        subquery = CommentModel.objects.filter(**filter_kwargs)
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
         context['user_id'] = user_id
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:10],
             'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],

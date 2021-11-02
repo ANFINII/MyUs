@@ -1,5 +1,5 @@
 // いいねボタンクリック時の処理を定義
-$('.like_form').on('click', function(event) {
+$(document).on('click', '.like_form', function(event) {
     event.preventDefault();
     const id = $(this).attr('value');
     const url = $(this).parent().attr('action');
@@ -32,29 +32,29 @@ $('.like_form').on('click', function(event) {
 });
 
 // コメントいいねボタンクリック時の処理を定義
-$('.like_form_comment').on('click', function(event) {
+$(document).on('click', '.like_form_comment', function(event) {
     event.preventDefault();
-    const id = $(this).attr('value');
     const url = $(this).parent().attr('action');
+    const comment_id = $(this).attr('value');
     $.ajax({
         url: url,
         type: 'POST',
-        data: {'id': id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data: {'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
         dataType: 'json',
     })
     .done(function(response) {
         if (response['comment_liked']) {
-            $('.like_color_' + id).removeClass('bi-hand-thumbs-up');
-            $('.like_color_' + id).parent().removeClass('like_no');
-            $('.like_color_' + id).addClass('bi-hand-thumbs-up-fill');
-            $('.like_color_' + id).parent().addClass('like_fill');
-            $('#like_count_' + id).html(response['total_like']);
+            $('.like_color_' + comment_id).removeClass('bi-hand-thumbs-up');
+            $('.like_color_' + comment_id).parent().removeClass('like_no');
+            $('.like_color_' + comment_id).addClass('bi-hand-thumbs-up-fill');
+            $('.like_color_' + comment_id).parent().addClass('like_fill');
+            $('#like_count_' + comment_id).html(response['total_like']);
         } else {
-            $('.like_color_' + id).removeClass('bi-hand-thumbs-up-fill');
-            $('.like_color_' + id).parent().removeClass('like_fill');
-            $('.like_color_' + id).addClass('bi-hand-thumbs-up');
-            $('.like_color_' + id).parent().addClass('like_no');
-            $('#like_count_' + id).html(response['total_like']);
+            $('.like_color_' + comment_id).removeClass('bi-hand-thumbs-up-fill');
+            $('.like_color_' + comment_id).parent().removeClass('like_fill');
+            $('.like_color_' + comment_id).addClass('bi-hand-thumbs-up');
+            $('.like_color_' + comment_id).parent().addClass('like_no');
+            $('#like_count_' + comment_id).html(response['total_like']);
         }
         console.log(response);
     })
@@ -64,7 +64,7 @@ $('.like_form_comment').on('click', function(event) {
 });
 
 // フォローボタンクリック時の処理を定義
-$('.follow_form').on('click', function(event) {
+$(document).on('click', '.follow_form', function(event) {
     event.preventDefault();
     const url = $(this).attr('action');
     const nickname = $(this).children().attr('value');
