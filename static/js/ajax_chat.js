@@ -149,13 +149,13 @@ $(document).on('click', '.edit_update_chat_button', function(event) {
     })
     .done(function(response) {
         // 成功した時、背景色を戻す
-        highlight.style.setProperty('background-color', 'rgb(255, 255, 255)', 'important');
+        highlight.style.removeProperty('background-color');
         $('#comment_aria_list_2_' + comment_id).html(response.text);
         console.log(response);
     })
     .fail(function(response) {
         // 失敗した時、背景色を戻す
-        highlight.style.setProperty('background-color', 'rgb(255, 255, 255)', 'important');
+        highlight.style.removeProperty('background-color');
         console.log(response);
     })
 });
@@ -203,8 +203,8 @@ $(document).on('click', '.edit_delete_comment', function(event) {
     })
     .fail(function(response) {
         // 失敗した時、背景色を戻す
-        highlight_1.style.setProperty('background-color', 'rgb(255, 255, 255)', 'important');
-        highlight_2.style.setProperty('background-color', 'rgb(255, 255, 255)', 'important');
+        highlight_1.style.removeProperty('background-color');
+        highlight_2.style.removeProperty('background-color');
         console.log(response);
     })
 });
@@ -234,7 +234,7 @@ $(document).on('click', '.edit_delete_reply', function(event) {
     })
     .fail(function(response) {
         // 失敗した時、背景色を戻す
-        highlight.style.setProperty('background-color', 'rgb(255, 255, 255)', 'important');
+        highlight.style.removeProperty('background-color');
         console.log(response);
     })
 });

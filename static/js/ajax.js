@@ -186,6 +186,7 @@ $(document).on('click', '.edit_button_update', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('edit_update_main_' + comment_id).classList.add('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.add('active');
+    $('#comment_form_update_' + comment_id).textareaAutoHeight();
 })
 
 $(document).on('click', '.edit_update_cancel', function() {
@@ -201,6 +202,9 @@ $(document).on('click', '.edit_update_button', function(event) {
     const text = $('#comment_form_update_' + comment_id).val();
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
+    // 更新時のアニメーション
+    const highlight = document.querySelector('#comment_aria_list_' + comment_id);
+    highlight.style.setProperty('background-color', 'rgb(235, 255, 245)', 'important');
     $.ajax({
         url: url,
         type: 'POST',
@@ -209,10 +213,14 @@ $(document).on('click', '.edit_update_button', function(event) {
         timeout: 10000,
     })
     .done(function(response) {
+        // 成功した時、背景色を戻す
+        highlight.style.removeProperty('background-color');
         $('#comment_aria_list_2_' + comment_id).html(response.text);
         console.log(response);
     })
     .fail(function(response) {
+        // 失敗した時、背景色を戻す
+        highlight.style.removeProperty('background-color');
         console.log(response);
     })
 });
@@ -237,6 +245,9 @@ $(document).on('click', '.edit_delete', function(event) {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('modal_content_' + comment_id).classList.remove('active');
     document.getElementById('mask_' + comment_id).classList.remove('active');
+    // 削除時のアニメーション
+    const highlight = document.querySelector('#comment_aria_list_' + comment_id);
+    highlight.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important');
     $.ajax({
         url: url,
         type: 'POST',
@@ -250,6 +261,8 @@ $(document).on('click', '.edit_delete', function(event) {
         console.log(response);
     })
     .fail(function(response) {
+        // 失敗した時、背景色を戻す
+        highlight.style.removeProperty('background-color');
         console.log(response);
     })
 });
