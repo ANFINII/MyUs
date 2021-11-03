@@ -18,6 +18,7 @@ from .forms import SearchTagForm
 from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .modules.search import Search
+from .modules.get_form import get_detail
 from .modules.context_data import models_context_data, chat_context_data
 from .modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 import datetime
@@ -795,11 +796,7 @@ class VideoDetail(DetailView):
     template_name = 'video/video_detail.html'
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.read += 1
-        self.object.save()
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
+        return get_detail(self)
 
     def get_context_data(self, **kwargs):
         return models_context_data(self, VideoDetail, **kwargs)
@@ -845,11 +842,7 @@ class LiveDetail(DetailView):
     template_name = 'live/live_detail.html'
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.read += 1
-        self.object.save()
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
+        return get_detail(self)
 
     def get_context_data(self, **kwargs):
         return models_context_data(self, LiveDetail, **kwargs)
@@ -895,11 +888,7 @@ class MusicDetail(DetailView):
     template_name = 'music/music_detail.html'
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.read += 1
-        self.object.save()
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
+        return get_detail(self)
 
     def get_context_data(self, **kwargs):
         return models_context_data(self, MusicDetail, **kwargs)
@@ -945,11 +934,7 @@ class PictureDetail(DetailView):
     template_name = 'picture/picture_detail.html'
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.read += 1
-        self.object.save()
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
+        return get_detail(self)
 
     def get_context_data(self, **kwargs):
         return models_context_data(self, PictureDetail, **kwargs)
@@ -995,11 +980,7 @@ class BlogDetail(DetailView):
     template_name = 'blog/blog_detail.html'
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.read += 1
-        self.object.save()
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
+        return get_detail(self)
 
     def get_context_data(self, **kwargs):
         return models_context_data(self, BlogDetail, **kwargs)
@@ -1045,11 +1026,7 @@ class ChatDetail(DetailView):
     template_name = 'chat/chat_detail.html'
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.read += 1
-        self.object.save()
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
+        return get_detail(self)
 
     def get_context_data(self, **kwargs):
         return chat_context_data(self, ChatDetail, **kwargs)
@@ -1199,11 +1176,7 @@ class CollaboDetail(DetailView):
     template_name = 'collabo/collabo_detail.html'
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.read += 1
-        self.object.save()
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
+        return get_detail(self)
 
     def get_context_data(self, **kwargs):
         return models_context_data(self, CollaboDetail, **kwargs)
