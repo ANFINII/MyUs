@@ -546,7 +546,7 @@ class Index(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
             'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:8],
             'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:8],
             'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:8],
@@ -572,7 +572,7 @@ class Recommend(ListView):
         # socreはread + like*10
         aggregation_date = datetime.datetime.today() - datetime.timedelta(days=100)
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
             'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
             'live_list': LiveModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
             'music_list': MusicModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10).filter(score__gte=100).order_by('-score')[:8],
@@ -602,7 +602,7 @@ class UserPage(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
             'user_list': User.objects.filter(nickname=author),
             'video_list': VideoModel.objects.filter(author_id=author, publish=True),
             'live_list': LiveModel.objects.filter(author_id=author, publish=True),
@@ -631,7 +631,7 @@ class UserPageInfo(ListView):
         context['followed'] = followed
         context['author_name'] = author
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
             'user_list': User.objects.filter(nickname=author),
         })
         return context
@@ -655,7 +655,7 @@ class UserPageAdvertise(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
             'user_list': User.objects.filter(nickname=author),
         })
         return context
@@ -676,7 +676,7 @@ class FollowerList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
         })
         return context
 
@@ -695,7 +695,7 @@ class FollowList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
         })
         return context
 
@@ -783,7 +783,7 @@ class VideoList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
         })
         return context
 
@@ -829,7 +829,7 @@ class LiveList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
         })
         return context
 
@@ -875,7 +875,7 @@ class MusicList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
         })
         return context
 
@@ -921,7 +921,7 @@ class PictureList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
         })
         return context
 
@@ -967,7 +967,7 @@ class BlogList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
         })
         return context
 
@@ -1013,7 +1013,7 @@ class ChatList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
         })
         return context
 
@@ -1163,7 +1163,7 @@ class CollaboList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
         })
         return context
 
@@ -1209,7 +1209,7 @@ class TodoList(ListView):
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:10],
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
         })
         return context
 

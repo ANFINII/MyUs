@@ -367,11 +367,8 @@
     {% csrf_token %}
     <nav class="tag_nav">
         <input type="checkbox" id="tag_add" class="tag_menu">
-
-        <label for="tag_add" class="main_tag_1">タグ</label>
-
+        <label for="tag_add" class="main_tag_1"><span class="main_tag_center">タグ</span></label>
         <input type="submit" class="main_tag_2" value="追加">
-
         <input type="text" name="searchtag" class="main_tag_3" maxlength="12" placeholder="タグ名" required>
 
         <div class="main_tag_n">
@@ -382,7 +379,19 @@
             </div>
         </div>
 
-        <label for="tag_add" class="main_tag_4">完了</label>
+        <label for="tag_add" class="main_tag_4"><span class="main_tag_center">完了</span></label>
+
+        <botton class="main_tag_left">
+            <svg class="bi bi-chevron-left" width="18" height="17" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+            </svg>
+        </botton>
+
+        <botton class="main_tag_right">
+            <svg class="bi bi-chevron-right" width="18" height="17" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </botton>
     </nav>
 </form>
 {% endblock tagnav %}
@@ -398,6 +407,7 @@
 <script src="{% static 'js/date.js' %}"></script>
 <script src="{% static 'js/textarea.js' %}"></script>
 <script src="{% static 'js/textarea-auto-height.js' %}"></script>
+<script src="{% static 'js/scroll_button.js' %}"></script>
 <script src="{% static 'js/ajax_searchtag.js' %}"></script>
 <!-- videojs -->
 <script src="{% static 'js/video.js' %}"></script>

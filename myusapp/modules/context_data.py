@@ -29,7 +29,7 @@ def models_context_data(self, model_detail, **kwargs):
     context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
     context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
     context.update({
-        'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:10],
+        'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
         'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
     })
     if 'myusapp.views.VideoDetail' in str(model_detail):
@@ -80,7 +80,7 @@ def chat_context_data(self, model_detail, **kwargs):
     context['obj_title'] = obj.title
     context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
     context.update({
-        'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:10],
+        'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
         'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
     })
     if 'myusapp.views.ChatThread' in str(model_detail):
