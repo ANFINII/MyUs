@@ -540,7 +540,7 @@ header {
 .main_tag_n {
     grid-column: 3/4;
     grid-row: 1/2;
-    width: calc(100vw - 165px);
+    width: calc(100vw - 174px);
     overflow-x: auto;
     white-space: nowrap;
 }
@@ -551,7 +551,7 @@ header {
 
 .tag_menu:checked ~ .main_tag_n {
     grid-column: 5/6;
-    width: calc(100vw - 310px);
+    width: calc(100vw - 319px);
 }
 
 .tag_n_list {
@@ -568,8 +568,7 @@ header {
 .main_tag_left {
     position: fixed;
     right: 20px;
-    padding: 0 2px 0 0;
-    justify-self: end;
+    padding: 0 2px 2px 0;
     color: rgb(120, 120, 120);
     background-color: rgb(240, 240, 240);
 }
@@ -577,8 +576,7 @@ header {
 .main_tag_right {
     position: fixed;
     right: 0;
-    padding: 0 0 0 2px;
-    justify-self: end;
+    padding: 0 0 2px 2px;
     color: rgb(120, 120, 120);
     background-color: rgb(240, 240, 240);
 }
