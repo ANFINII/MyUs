@@ -10,7 +10,7 @@ from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, 
 class SearchTagInline(admin.TabularInline):
     model = SearchTagModel
     extra = 1
-    max_num = 10
+    max_num = 20
     verbose_name_plural = '検索タグ'
 
 class CommentInlineAdmin(GenericTabularInline):
@@ -60,7 +60,7 @@ class FollowModelAdmin(ImportExportModelAdmin):
 class SearchTagAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'sequence', 'searchtag', 'created')
     list_select_related = ('author',)
-    list_per_page = 10
+    list_per_page = 20
     search_fields = ('author__nickname', 'searchtag', 'created')
     ordering = ('author', 'sequence', 'created')
     readonly_fields = ('author', 'created')
@@ -392,7 +392,7 @@ mymanage_site.register(FollowModel, FollowModelAdminSite)
 class SearchTagAdminSite(admin.ModelAdmin):
     list_display = ('id', 'sequence', 'searchtag', 'created')
     list_editable = ('sequence', 'searchtag',)
-    list_per_page = 10
+    list_per_page = 20
     search_fields = ('searchtag', 'created')
     ordering = ('sequence', 'created')
     actions = ('delete_action',)
