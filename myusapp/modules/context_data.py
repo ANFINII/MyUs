@@ -30,7 +30,8 @@ def models_context_data(self, model_detail, **kwargs):
     context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
     context.update({
         'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
-        'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
+        'advertise_list': AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:6],
+        'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
     })
     if 'myusapp.views.VideoDetail' in str(model_detail):
         context.update(video_list=VideoModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50])
