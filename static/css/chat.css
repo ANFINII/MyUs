@@ -428,28 +428,36 @@ hr {
 .textarea_br {
     grid-column: 1/-1;
     grid-row: 1/2;
-    min-height: 28px;
-    max-height: 356px;
+    min-height: 21px;
+    max-height: 282px;
     width: 100%;
-    padding: 9px 9px 0 9px;
+    padding: 5px 9px 4px 9px;
     font-size: 14px;
     vertical-align: middle;
     outline: none;
     resize: none;
-    overflow: hidden;
+    overflow-y: auto;
     border: 1px solid rgb(100, 100, 100);
+    border-top: none;
     border-bottom: none;
-    border-radius: 5px 5px 0 0;
 }
 
 .textarea_br:focus {
     border-bottom: 0px solid rgb(100, 100, 100);
 }
 
-.chat_frame {
+.chat_frame_1 {
     display: block;
-    height: 9px;
-    margin: 0;
+    height: 5px;
+    border: 1px solid rgb(100, 100, 100);
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    background-color: rgb(255, 255, 255);
+}
+
+.chat_frame_2 {
+    display: block;
+    height: 5px;
     border: 1px solid rgb(100, 100, 100);
     border-top: none;
     border-bottom: none;
