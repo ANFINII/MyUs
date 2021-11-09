@@ -7,10 +7,10 @@
         <a href="{% url 'myus:userpage' user.nickname %}">
             <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_reply">
         </a>
-        <textarea name="reply" rows="1" placeholder="返信コメント入力" id="reply_{{ comment.id }}" class="textarea_br" required></textarea>
+        <textarea name="reply" rows="1" placeholder="返信コメント入力" id="reply_{{ comment.id }}" comment-id="{{ comment.id }}" class="textarea_br reply_update"></textarea>
         <div class="reply_button_group">
             <button type="button" name="cancel" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_cancel_button">キャンセル</button>
-            <button type="button" name="reply_form" obj-id="{{ obj_id }}" path="{{ obj_path }}" comment-id="{{ comment.id }}" class="btn btn-primary btn-xs reply_form">コメント</button>
+            <button type="button" name="reply_form" id="reply_form_button_{{ comment.id }}" obj-id="{{ obj_id }}" path="{{ obj_path }}" comment-id="{{ comment.id }}" class="btn btn-primary btn-xs reply_form" disabled>コメント</button>
         </div>
         {% else %}
         <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">

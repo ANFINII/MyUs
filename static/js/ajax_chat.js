@@ -255,6 +255,8 @@ $(document).on('click', '.edit_delete_reply', function(event) {
 // textareaのdisabled判定
 $(document).on('focus', '#comment_form_area', function(event) {
     event.preventDefault();
+
+    // focus時にそれ以外のtextareaを無効化する
     if (document.getElementById('reply_form_button')) {
         document.getElementById('reply_form_button').setAttribute('disabled', true);
     }
@@ -287,6 +289,8 @@ $(document).on('focus', '#comment_form_area', function(event) {
 
 $(document).on('focus', '#reply_form_area', function(event) {
     event.preventDefault();
+
+    // focus時にそれ以外のtextareaを無効化する
     if (document.getElementById('comment_form_button')) {
         document.getElementById('comment_form_button').setAttribute('disabled', true);
     }
