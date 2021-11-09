@@ -67,27 +67,31 @@ $('#comment_form').submit(function(event) {
     const url = $(this).attr('action');
     const id = $(this).attr('obj-id');
     const text = $('form [name=text]').val().replace(/\n+$/g,'');
-    $.ajax({
-        url: url,
-        type: 'POST',
-        data: {'id': id, 'text': text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-        dataType: 'json',
-        timeout: 10000,
-    })
-    .done(function(response) {
-        $('#comment_form')[0].reset();
-        $('#user_count').html(response.user_count);
-        $('#comment_count').html(response.comment_count);
-        $('#chat_section_main_area_add').html(response.comment_lists);
-        const form_reset = document.getElementById('comment_form_area');
-        form_reset.style.height = '31px';
-        const obj = document.getElementById('chat_section_main_area_add');
-        obj.scrollTop = obj.scrollHeight;
-        console.log(response);
-    })
-    .fail(function(response) {
-        console.log(response);
-    })
+    $('#comment_form')[0].reset();
+    if (!text || !text.match(/\S/g)) {
+		document.getElementById('comment_form_button').setAttribute('disabled', true);
+	} else {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {'id': id, 'text': text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            dataType: 'json',
+            timeout: 10000,
+        })
+        .done(function(response) {
+            document.getElementById('comment_form_button').setAttribute('disabled', true);
+            $('#user_count').html(response.user_count);
+            $('#comment_count').html(response.comment_count);
+            $('#chat_section_main_area_add').html(response.comment_lists);
+            document.getElementById('comment_form_area').style.height = '31px';
+            const obj = document.getElementById('chat_section_main_area_add');
+            obj.scrollTop = obj.scrollHeight;
+            console.log(response);
+        })
+        .fail(function(response) {
+            console.log(response);
+        })
+    }
 });
 
 // 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
@@ -97,27 +101,31 @@ $('#reply_form').submit(function(event) {
     const id = $(this).attr('obj-id');
     const comment_id = $(this).attr('comment-id');
     const reply = $('form [name=reply]').val().replace(/\n+$/g,'');
-    $.ajax({
-        url: url,
-        type: 'POST',
-        data: {'id': id, 'reply': reply, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-        dataType: 'json',
-        timeout: 10000,
-    })
-    .done(function(response) {
-        $('#reply_form')[0].reset();
-        $('#user_count').html(response.user_count);
-        $('#reply_count_' + comment_id).html('返信 ' + response.reply_count + ' 件');
-        $('#chat_section_thread_area_add').html(response.reply_lists);
-        const form_reset = document.getElementById('reply_form_area');
-        form_reset.style.height = '31px';
-        const obj = document.getElementById('chat_section_thread');
-        obj.scrollTop = obj.scrollHeight;
-        console.log(response);
-    })
-    .fail(function(response) {
-        console.log(response);
-    })
+    $('#reply_form')[0].reset();
+    if (!reply || !reply.match(/\S/g)) {
+        document.getElementById('reply_form_button').setAttribute('disabled', true);
+	} else {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {'id': id, 'reply': reply, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            dataType: 'json',
+            timeout: 10000,
+        })
+        .done(function(response) {
+            document.getElementById('reply_form_button').setAttribute('disabled', true);
+            $('#user_count').html(response.user_count);
+            $('#reply_count_' + comment_id).html('返信 ' + response.reply_count + ' 件');
+            $('#chat_section_thread_area_add').html(response.reply_lists);
+            document.getElementById('reply_form_area').style.height = '31px';
+            const obj = document.getElementById('chat_section_thread');
+            obj.scrollTop = obj.scrollHeight;
+            console.log(response);
+        })
+        .fail(function(response) {
+            console.log(response);
+        })
+    }
 });
 
 // メッセージ編集
@@ -125,6 +133,7 @@ $(document).on('click', '.edit_button_update', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('edit_update_main_' + comment_id).classList.add('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.add('active');
+    document.getElementById('comment_form_update_' + comment_id).style.height = '31px';
     $('#comment_form_update_' + comment_id).textareaAutoHeight();
 })
 
@@ -138,7 +147,7 @@ $(document).on('click', '.edit_update_chat_button', function(event) {
     event.preventDefault();
     const url = $(this).closest('form').attr('action');
     const comment_id = $(this).attr('comment-id');
-    const text = $('#comment_form_update_' + comment_id).val();
+    const text = $('#comment_form_update_' + comment_id).val().replace(/\n+$/g,'');
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
     // 更新時のアニメーション
@@ -241,4 +250,70 @@ $(document).on('click', '.edit_delete_reply', function(event) {
         highlight.style.removeProperty('background-color');
         console.log(response);
     })
+});
+
+// textareaのdisabled判定
+$(document).on('focus', '#comment_form_area', function(event) {
+    event.preventDefault();
+    if (document.getElementById('reply_form_button')) {
+        document.getElementById('reply_form_button').setAttribute('disabled', true);
+    }
+
+    const text = $(this).val();
+    if (text || text.match(/\S/g)) {
+        // disabled属性を削除
+        document.getElementById('comment_form_button').removeAttribute('disabled');
+    }
+
+    $(document).on('input', '#comment_form_area', function(event) {
+        event.preventDefault();
+        const text = $(this).val();
+        if (!text || !text.match(/\S/g)) {
+            // disabled属性を設定
+            document.getElementById('comment_form_button').setAttribute('disabled', true);
+        } else {
+            // disabled属性を削除
+            document.getElementById('comment_form_button').removeAttribute('disabled');
+            // ショートカット
+            shortcut.add('Ctrl+Enter', function() {
+                $('#comment_form_button').click();
+            });
+            shortcut.add('meta+Enter', function() {
+                $('#comment_form_button').click();
+            });
+        }
+    });
+});
+
+$(document).on('focus', '#reply_form_area', function(event) {
+    event.preventDefault();
+    if (document.getElementById('comment_form_button')) {
+        document.getElementById('comment_form_button').setAttribute('disabled', true);
+    }
+
+    const text = $(this).val();
+    if (text || text.match(/\S/g)) {
+        // disabled属性を削除
+        document.getElementById('reply_form_button').removeAttribute('disabled');
+    }
+
+    $(document).on('input', '#reply_form_area', function(event) {
+        event.preventDefault();
+        const text = $(this).val();
+        if (!text || !text.match(/\S/g)) {
+            // disabled属性を設定
+            document.getElementById('reply_form_button').setAttribute('disabled', true);
+        } else {
+            // disabled属性を削除
+            document.getElementById('reply_form_button').removeAttribute('disabled');
+
+            // ショートカット
+            shortcut.add('Ctrl+Enter', function() {
+                $('#reply_form_button').click();
+            });
+            shortcut.add('meta+Enter', function() {
+                $('#reply_form_button').click();
+            });
+        }
+    });
 });
