@@ -59,10 +59,10 @@ $(document).on('focus', '.update_form_area', function(event) {
 
     // ショートカット
     shortcut.add('Ctrl+Enter', function() {
-        $('.edit_update_button').click();
+        $('#update_form_button_' + comment_id).click();
     });
     shortcut.add('meta+Enter', function() {
-        $('.edit_update_button').click();
+        $('#update_form_button_' + comment_id).click();
     });
 
     $(document).on('input', '#comment_form_update_' + comment_id, function(event) {
@@ -77,10 +77,10 @@ $(document).on('focus', '.update_form_area', function(event) {
 
             // ショートカット
             shortcut.add('Ctrl+Enter', function() {
-                $('.edit_update_button').click();
+                $('#update_form_button_' + comment_id).click();
             });
             shortcut.add('meta+Enter', function() {
-                $('.edit_update_button').click();
+                $('#update_form_button_' + comment_id).click();
             });
         }
     });

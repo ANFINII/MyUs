@@ -280,7 +280,7 @@ $(document).on('click', '.edit_delete', function(event) {
 
 // textareaのdisabled判定
 // replyショートカット
-$(document).on('focus', '.update_form_area', function(event) {
+$(document).on('focus', '.reply_form_area', function(event) {
     event.preventDefault();
     const comment_id = $(this).attr('comment-id');
 
@@ -295,25 +295,25 @@ $(document).on('focus', '.update_form_area', function(event) {
     const text = $(this).val();
     if (text || text.match(/\S/g)) {
         // disabled属性を削除
-        document.getElementById('update_form_button_' + comment_id).removeAttribute('disabled');
+        document.getElementById('reply_form_button_' + comment_id).removeAttribute('disabled');
     }
 
-    $(document).on('input', '#comment_form_update_' + comment_id, function(event) {
+    $(document).on('input', '#reply_' + comment_id, function(event) {
         event.preventDefault();
         const text = $(this).val();
         if (!text || !text.match(/\S/g)) {
             // disabled属性を設定
-            document.getElementById('update_form_button_' + comment_id).setAttribute('disabled', true);
+            document.getElementById('reply_form_button_' + comment_id).setAttribute('disabled', true);
         } else {
             // disabled属性を削除
-            document.getElementById('update_form_button_' + comment_id).removeAttribute('disabled');
+            document.getElementById('reply_form_button_' + comment_id).removeAttribute('disabled');
 
             // ショートカット
             shortcut.add('Ctrl+Enter', function() {
-                $('.edit_update_button').click();
+                $('#reply_form_button_' + comment_id).click();
             });
             shortcut.add('meta+Enter', function() {
-                $('.edit_update_button').click();
+                $('#reply_form_button_' + comment_id).click();
             });
         }
     });
