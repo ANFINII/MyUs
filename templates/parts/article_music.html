@@ -3,7 +3,7 @@
 {% for item in music_list %}
 <section class="main_content_music">
     <div class="main_decolation">
-        <audio controls muted preload="none" controlslist="nodownload">
+        <audio controls preload controlslist="nodownload">
             <source src="{{ item.musics.url }}">
             <p>audioに対応していない場合のメッセージ</p>
         </audio>
