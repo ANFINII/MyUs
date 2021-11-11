@@ -1,27 +1,21 @@
 <form method="POST" action="{% url 'myus:chat_message' %}" id="comment_form" obj-id="{{ object.id }}">
     {% csrf_token %}
     {% if is_period %}
-    <div class="chat_frame_1 chat_frame_color"></div>
     <textarea name="text" rows="1" placeholder="チャット期間が過ぎています！" class="textarea_br" disabled="disabled"></textarea>
-    <div class="chat_frame_2 chat_frame_color"></div>
     <div class="comment_input_chat">
         <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
             <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
         </button>
     </div>
     {% elif user.is_authenticated %}
-    <div class="chat_frame_1"></div>
     <textarea name="text" rows="1" placeholder="メッセージ入力" id="comment_form_area" class="textarea_br"></textarea>
-    <div class="chat_frame_2"></div>
     <div class="comment_input_chat">
         <button type="submit" title="送信" id="comment_form_button" class="btn btn-primary btn-sm form_button" disabled>
             <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
         </button>
     </div>
     {% else %}
-    <div class="chat_frame_1 chat_frame_color"></div>
     <textarea name="text" rows="1" placeholder="チャットするにはログインが必要です！" class="textarea_br" disabled="disabled"></textarea>
-    <div class="chat_frame_2 chat_frame_color"></div>
     <div class="comment_input_chat">
         <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
             <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
