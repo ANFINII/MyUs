@@ -68,7 +68,7 @@ $('#comment_form').submit(function(event) {
     const id = $(this).attr('obj-id');
     const text = $('form [name=text]').val().replace(/\n+$/g,'');
     $('#comment_form')[0].reset();
-    document.getElementById('comment_form_area').style.height = '31px';
+    document.getElementById('comment_form_area').style.height = '40px';
     document.getElementById('comment_form_button').setAttribute('disabled', true);
     $.ajax({
         url: url,
@@ -99,7 +99,7 @@ $('#reply_form').submit(function(event) {
     const comment_id = $(this).attr('comment-id');
     const reply = $('form [name=reply]').val().replace(/\n+$/g,'');
     $('#reply_form')[0].reset();
-    document.getElementById('reply_form_area').style.height = '31px';
+    document.getElementById('reply_form_area').style.height = '40px';
     document.getElementById('reply_form_button').setAttribute('disabled', true);
     $.ajax({
         url: url,
@@ -126,7 +126,7 @@ $(document).on('click', '.edit_button_update', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('edit_update_main_' + comment_id).classList.add('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.add('active');
-    document.getElementById('comment_form_update_' + comment_id).style.height = '31px';
+    document.getElementById('comment_form_update_' + comment_id).style.height = '40px';
     $('#comment_form_update_' + comment_id).textareaAutoHeight();
 })
 
