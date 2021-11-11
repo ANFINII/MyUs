@@ -101,6 +101,7 @@ $('#comment_form').submit(function(event) {
     const path = $(this).attr('path');
     const text = $('form [name=text]').val().replace(/\n+$/g,'');
     $('#comment_form')[0].reset();
+    document.getElementById('comment_form_area').style.height = '39px';
     document.getElementById('comment_form_button').setAttribute('disabled', true);
     $.ajax({
         url: url,
@@ -112,8 +113,6 @@ $('#comment_form').submit(function(event) {
     .done(function(response) {
         $('#comment_count').html(response.comment_count);
         $('#comment_aria_add').html(response.comment_lists);
-        const form_reset = document.getElementById('comment_form_area');
-        form_reset.style.height = '39px';
         console.log(response);
     })
     .fail(function(response) {
@@ -167,6 +166,7 @@ $(document).on('click', '.reply_form', function(event) {
     const comment_id = $(this).attr('comment-id');
     const text = $('#reply_' + comment_id).val().replace(/\n+$/g,'');
     $('#comment_aria_list_reply_' + comment_id)[0].reset();
+    document.getElementById('reply_' + comment_id).style.height = '39px';
     document.getElementById('reply_form_button_' + comment_id).setAttribute('disabled', true);
     $.ajax({
         url: url,
@@ -179,8 +179,6 @@ $(document).on('click', '.reply_form', function(event) {
         $('#reply_count_open_' + comment_id).html('▼ スレッド ' + response.reply_count + ' 件');
         $('#reply_count_close_' + comment_id).html('▲ スレッド ' + response.reply_count + ' 件');
         $('#reply_aria_add_' + comment_id).html(response.reply_lists);
-        const form_reset = document.getElementById('reply_' + comment_id);
-        form_reset.style.height = '39px';
         console.log(response);
     })
     .fail(function(response) {
