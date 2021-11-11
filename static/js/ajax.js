@@ -251,6 +251,7 @@ $(document).on('click', '.edit_delete', function(event) {
     event.preventDefault();
     const url = $(this).parent().attr('action');
     const id = $(this).attr('obj-id');
+    const path = $(this).attr('path');
     const comment_id = $(this).attr('comment-id');
     document.getElementById('modal_content_' + comment_id).classList.remove('active');
     document.getElementById('mask_' + comment_id).classList.remove('active');
@@ -260,7 +261,7 @@ $(document).on('click', '.edit_delete', function(event) {
     $.ajax({
         url: url,
         type: 'POST',
-        data: {'id': id, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        data: {'id': id, 'path': path, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
         dataType: 'json',
         timeout: 10000,
     })

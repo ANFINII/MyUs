@@ -510,8 +510,11 @@ def comment_delete(request, comment_id):
     """comment_delete"""
     if request.method == 'POST':
         obj_id = request.POST.get('id')
-        obj = VideoModel.objects.get(id=obj_id)
+        obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
+        for models_detail, models in models_comment_dict.items():
+            if models_detail in obj_path:
+                obj = models.objects.get(id=obj_id)
         comment_obj = CommentModel.objects.get(id=comment_id)
         comment_obj.delete()
         context = {
