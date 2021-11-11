@@ -1,4 +1,4 @@
-let figure = $(".video").hover(playVideo, hideVideo);
+let figure = $('.video').hover(playVideo, hideVideo);
 
 // ホバーすると再生開始
 function playVideo(e) {

@@ -1,6 +1,12 @@
 {% extends 'base2.html' %}
 {% block title %}<title>MyUsブログ</title>{% endblock title %}
 
+{% load static %}
+
+{% block extracss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/ckeditor.css' %}">
+{% endblock extracss %}
+
 {% block content %}
 <main class="main_contents">
     <h1>Blog</h1>
@@ -27,3 +33,7 @@
     {% endif %}
 </main>
 {% endblock content %}
+
+{% block extrajs %}
+<script src="{% static 'js/ckeditor_config.js' %}"></script>
+{% endblock extrajs %}
