@@ -4,10 +4,10 @@
         <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
     </a>
     <div class="comment_input_update">
-        <textarea name="update_text" rows="1" placeholder="コメント入力" id="comment_form_update_{{ reply.id }}" class="textarea_br" required>{{ reply.text }}</textarea>
+        <textarea name="update_text" rows="1" placeholder="コメント入力" id="comment_form_update_{{ reply.id }}" comment-id="{{ reply.id }}" class="textarea_br update_form_area">{{ reply.text }}</textarea>
         <div class="edit_update_footer">
             <button type="button" name="cancel" comment-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">キャンセル</button>
-            <button type="button" name="update" comment-id="{{ reply.id }}" class="btn btn-success btn-xs edit_update_button">更新</button>
+            <button type="button" name="update" id="update_form_button_{{ reply.id }}" comment-id="{{ reply.id }}" class="btn btn-success btn-xs edit_update_button form_button" disabled>更新</button>
         </div>
     </div>
 </form>

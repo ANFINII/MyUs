@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <form method="POST" action="{% url 'myus:comment_delete' reply.id %}" class="modal_content_footer">
+            <form method="POST" action="{% url 'myus:reply_delete' reply.id %}" class="modal_content_footer">
                 {% csrf_token %}
                 <button type="button" name="cancel" comment-id="{{ reply.id }}" class="btn btn-light modal_cancel">キャンセル</button>
                 <button type="button" name="delete" obj-id="{{ obj_id }}" comment-id="{{ reply.id }}" class="btn btn-danger edit_delete">削除</button>

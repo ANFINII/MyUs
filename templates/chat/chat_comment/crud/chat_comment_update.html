@@ -5,12 +5,12 @@
     </a>
     <div class="edit_textarea_caht">
         <div class="chat_frame_1"></div>
-        <textarea name="update_text" rows="1" placeholder="メッセージ入力" id="comment_form_update_{{ comment.id }}" class="textarea_br" required>{{ comment.text }}</textarea>
+        <textarea name="update_text" rows="1" placeholder="メッセージ入力" id="comment_form_update_{{ comment.id }}" comment-id="{{ comment.id }}" class="textarea_br update_form_area">{{ comment.text }}</textarea>
         <div class="chat_frame_2"></div>
         <div class="comment_input_chat"></div>
         <div class="edit_update_footer">
             <button type="button" name="cancel" comment-id="{{ comment.id }}" class="btn btn-light btn-xs edit_update_cancel">キャンセル</button>
-            <button type="button" name="update" comment-id="{{ comment.id }}" class="btn btn-success btn-xs edit_update_chat_button">更新</button>
+            <button type="button" name="update" id="update_form_button_{{ comment.id }}" comment-id="{{ comment.id }}" class="btn btn-success btn-xs edit_update_button form_button" disabled>更新</button>
         </div>
     </div>
 </form>

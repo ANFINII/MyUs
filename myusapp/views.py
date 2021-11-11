@@ -528,6 +528,7 @@ def reply_delete(request, comment_id):
         comment_obj = CommentModel.objects.get(id=comment_id)
         comment_obj.delete()
         context = {
+            'parent_id': comment_obj.parent.id,
             'reply_count': comment_obj.parent.replies_count(),
         }
         if request.is_ajax():
