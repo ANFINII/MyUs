@@ -3,6 +3,10 @@
     border-radius: 10px;
 }
 
+.django-ckeditor-widget {
+    width: 100%;
+}
+
 .cke_dialog_title {
     background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%) !important;
     color: rgb(255, 255, 255) !important;
