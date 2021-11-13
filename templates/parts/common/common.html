@@ -51,9 +51,8 @@
             <span class="follower_count">{{ object.author.follower_count|intcomma }}</span>
         </div>
         <p class="content_detail_p1">{{ object.content|linebreaksbr|urlize }}</p>
-        <p class="content_detail_p2">{{ object.lyrics|linebreaksbr }}</p>
 
-        <div class="content_detail_p3">
+        <div class="content_detail_p2">
             {% if user.nickname == object.author.nickname %}
             <button class="btn btn-secondary" disabled>フォローする</button>
             {% elif user.is_authenticated %}

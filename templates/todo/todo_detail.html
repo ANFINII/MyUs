@@ -35,11 +35,11 @@
                     <div class="registered_person">登録者数
                         <span class="follower_count">{{ object.author.follower_count|intcomma }}</span>
                     </div>
-                    <p class="content_detail_p4">
+                    <p class="content_detail_p3">
                         優先度：{{ object.get_priority_display }}<br>
                         期日：{{ object.duedate }}
                     </p>
-                    <p class="content_detail_p5">{{ object.content|linebreaksbr|urlize }}</p>
+                    <p class="content_detail_p4">{{ object.content|linebreaksbr|urlize }}</p>
                 </div>
             </div>
 

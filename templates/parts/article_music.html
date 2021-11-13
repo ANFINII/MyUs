@@ -3,9 +3,9 @@
 {% for item in music_list %}
 <section class="main_content_music">
     <div class="main_decolation">
-        <audio controls preload controlslist="nodownload">
+        <audio controls preload controlslist="nodownload" class="audio_auto">
             <source src="{{ item.musics.url }}">
-            <p>audioに対応していない場合のメッセージ</p>
+            <p>ブラウザがaudioに対応しておりません</p>
         </audio>
         <a href="{% url 'myus:music_detail' item.pk item.title %}" class="author_title_space">
             {% include 'parts/author_space.html' %}
