@@ -8,14 +8,10 @@
 <main class="main_contents">
     <article class="article_detail">
         {% if object.publish %}
-        <div class="main-image-color">
-            <div class="main-image">
-                <audio controls preload controlslist="nodownload">
-                    <source src="{{ object.musics.url }}">
-                    <p>ブラウザがaudioに対応しておりません</p>
-                </audio>
-            </div>
-        </div>
+        <audio controls controlslist="nodownload">
+            <source src="{{ object.musics.url }}">
+            <p>ブラウザがaudioに対応しておりません</p>
+        </audio>
 
         <input type="checkbox" id="article_detail_lyric_check" class="article_detail_lyric_check">
         <label for="article_detail_lyric_check" class="article_detail_lyric_check_label1">拡大表示</label>
