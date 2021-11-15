@@ -269,7 +269,7 @@
 }
 
 .video-js:hover .vjs-big-play-button,.video-js .vjs-big-play-button:focus,.video-js .vjs-big-play-button:active {
-	background-color: rgba(0, 106, 255, 0.6);
+	background-color: rgba(0, 105, 255, 0.6);
 }
 
 .video-js .vjs-loading-spinner {
