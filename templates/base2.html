@@ -5,6 +5,7 @@
 {% block customcss %}
 <link rel="stylesheet" type="text/css" href="https://vjs.zencdn.net/7.15.4/video-js.css">
 <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/audio.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/videojs-myus.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/videojs-resolution-switcher.css' %}">
 {% endblock customcss %}
@@ -403,27 +404,25 @@
 {% endblock footer %}
 
 {% block customjs %}
+<!-- audiojs -->
+<script src="{% static 'js/audioplayer.js' %}"></script>
+<script>$(function() { $('audio').audioPlayer(); });</script>
+
+<!-- videojs -->
+<script src="https://vjs.zencdn.net/7.15.4/video.min.js"></script>
+<script>videojs.options.flash.swf = "{% static 'vtt/video-js.swf' %}";</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-resolution-switcher/0.4.2/videojs-resolution-switcher.min.js"></script>
+<script>videojs('video').videoJsResolutionSwitcher()</script>
+<script src="{% static 'js/video_auto.js' %}"></script>
+
+<!-- その他js -->
 <script src="{% static 'js/csrf.js' %}"></script>
 <script src="{% static 'js/date.js' %}"></script>
 <script src="{% static 'js/scroll_button.js' %}"></script>
 <script src="{% static 'js/ajax_searchtag.js' %}"></script>
 <script src="{% static 'js/textarea.js' %}"></script>
 <script src="{% static 'js/textarea-auto-height.js' %}"></script>
-<script src="{% static 'js/audio_auto.js' %}"></script>
-<!-- videojs -->
-<script src="https://vjs.zencdn.net/7.15.4/video.min.js"></script>
-<script src="{% static 'js/video_auto.js' %}"></script>
-<script>videojs.options.flash.swf = "{% static 'vtt/video-js.swf' %}";</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-resolution-switcher/0.4.2/videojs-resolution-switcher.min.js"></script>
-<script>videojs('video').videoJsResolutionSwitcher()</script>
 {% endblock customjs %}
 
 {% block extrajs %}
-<!-- <script src="{% static 'js/audioplayer.js' %}"></script>
-<script>
-    $( function()
-    {
-        $('audio').audioPlayer();
-    });
-</script> -->
 {% endblock extrajs %}
