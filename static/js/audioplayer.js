@@ -118,7 +118,7 @@
                                 audios[j].pause();
                                 this.ontimeupdate = function() {
                                     let time = this.currentTime;
-                                    if (time > 10 && this.classList.contains('audio_auto')) {
+                                    if (time > 30 && this.classList.contains('audio_auto')) {
                                         this.pause();
                                         $(this).closest('.audioplayer').removeClass('audioplayer-playing');
                                         this.load();
