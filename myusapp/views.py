@@ -774,6 +774,13 @@ class VideoCreate(CreateView):
     def get_success_url(self):
         return reverse('myus:video_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
+    def get_context_data(self, **kwargs):
+        context = super(VideoCreate, self).get_context_data(**kwargs)
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
+        })
+        return context
+
 class VideoList(ListView):
     """VideoList"""
     model = VideoModel
@@ -819,6 +826,13 @@ class LiveCreate(CreateView):
 
     def get_success_url(self):
         return reverse('myus:live_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+
+    def get_context_data(self, **kwargs):
+        context = super(LiveCreate, self).get_context_data(**kwargs)
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
+        })
+        return context
 
 class LiveList(ListView):
     """LiveList"""
@@ -866,6 +880,13 @@ class MusicCreate(CreateView):
     def get_success_url(self):
         return reverse('myus:music_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
+    def get_context_data(self, **kwargs):
+        context = super(MusicCreate, self).get_context_data(**kwargs)
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
+        })
+        return context
+
 class MusicList(ListView):
     """MusicList"""
     model = MusicModel
@@ -911,6 +932,13 @@ class PictureCreate(CreateView):
 
     def get_success_url(self):
         return reverse('myus:picture_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+
+    def get_context_data(self, **kwargs):
+        context = super(PictureCreate, self).get_context_data(**kwargs)
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
+        })
+        return context
 
 class PictureList(ListView):
     """PictureList"""
@@ -958,6 +986,13 @@ class BlogCreate(CreateView):
     def get_success_url(self):
         return reverse('myus:blog_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
+    def get_context_data(self, **kwargs):
+        context = super(BlogCreate, self).get_context_data(**kwargs)
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
+        })
+        return context
+
 class BlogList(ListView):
     """BlogList"""
     model = BlogModel
@@ -1003,6 +1038,13 @@ class ChatCreate(CreateView):
 
     def get_success_url(self):
         return reverse('myus:chat_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+
+    def get_context_data(self, **kwargs):
+        context = super(ChatCreate, self).get_context_data(**kwargs)
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
+        })
+        return context
 
 class ChatList(ListView):
     """ChatList"""
@@ -1154,6 +1196,13 @@ class CollaboCreate(CreateView):
     def get_success_url(self):
         return reverse('myus:collabo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
+    def get_context_data(self, **kwargs):
+        context = super(CollaboCreate, self).get_context_data(**kwargs)
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
+        })
+        return context
+
 class CollaboList(ListView):
     """CollaboList"""
     model = CollaboModel
@@ -1199,6 +1248,13 @@ class TodoCreate(CreateView):
 
     def get_success_url(self):
         return reverse('myus:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+
+    def get_context_data(self, **kwargs):
+        context = super(TodoCreate, self).get_context_data(**kwargs)
+        context.update({
+            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
+        })
+        return context
 
 class TodoList(ListView):
     """TodoList"""
