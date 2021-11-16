@@ -19,7 +19,7 @@ from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoMod
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .modules.search import Search
 from .modules.get_form import get_detail
-from .modules.context_data import models_context_data, chat_context_data
+from .modules.context_data import create_context_data, models_context_data, chat_context_data
 from .modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 import datetime
 import string
@@ -775,11 +775,7 @@ class VideoCreate(CreateView):
         return reverse('myus:video_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
     def get_context_data(self, **kwargs):
-        context = super(VideoCreate, self).get_context_data(**kwargs)
-        context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
-        })
-        return context
+        return create_context_data(self, VideoCreate, **kwargs)
 
 class VideoList(ListView):
     """VideoList"""
@@ -828,11 +824,7 @@ class LiveCreate(CreateView):
         return reverse('myus:live_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
     def get_context_data(self, **kwargs):
-        context = super(LiveCreate, self).get_context_data(**kwargs)
-        context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
-        })
-        return context
+        return create_context_data(self, LiveCreate, **kwargs)
 
 class LiveList(ListView):
     """LiveList"""
@@ -881,11 +873,7 @@ class MusicCreate(CreateView):
         return reverse('myus:music_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
     def get_context_data(self, **kwargs):
-        context = super(MusicCreate, self).get_context_data(**kwargs)
-        context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
-        })
-        return context
+        return create_context_data(self, MusicCreate, **kwargs)
 
 class MusicList(ListView):
     """MusicList"""
@@ -934,11 +922,7 @@ class PictureCreate(CreateView):
         return reverse('myus:picture_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
     def get_context_data(self, **kwargs):
-        context = super(PictureCreate, self).get_context_data(**kwargs)
-        context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
-        })
-        return context
+        return create_context_data(self, PictureCreate, **kwargs)
 
 class PictureList(ListView):
     """PictureList"""
@@ -987,11 +971,7 @@ class BlogCreate(CreateView):
         return reverse('myus:blog_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
     def get_context_data(self, **kwargs):
-        context = super(BlogCreate, self).get_context_data(**kwargs)
-        context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
-        })
-        return context
+        return create_context_data(self, BlogCreate, **kwargs)
 
 class BlogList(ListView):
     """BlogList"""
@@ -1040,11 +1020,7 @@ class ChatCreate(CreateView):
         return reverse('myus:chat_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
     def get_context_data(self, **kwargs):
-        context = super(ChatCreate, self).get_context_data(**kwargs)
-        context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
-        })
-        return context
+        return create_context_data(self, ChatCreate, **kwargs)
 
 class ChatList(ListView):
     """ChatList"""
@@ -1197,11 +1173,7 @@ class CollaboCreate(CreateView):
         return reverse('myus:collabo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
     def get_context_data(self, **kwargs):
-        context = super(CollaboCreate, self).get_context_data(**kwargs)
-        context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
-        })
-        return context
+        return create_context_data(self, CollaboCreate, **kwargs)
 
 class CollaboList(ListView):
     """CollaboList"""
@@ -1250,11 +1222,7 @@ class TodoCreate(CreateView):
         return reverse('myus:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
     def get_context_data(self, **kwargs):
-        context = super(TodoCreate, self).get_context_data(**kwargs)
-        context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
-        })
-        return context
+        return create_context_data(self, TodoCreate, **kwargs)
 
 class TodoList(ListView):
     """TodoList"""

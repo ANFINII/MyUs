@@ -6,6 +6,13 @@ import datetime
 
 User = get_user_model()
 
+def create_context_data(self, model_create, **kwargs):
+    context = super(model_create, self).get_context_data(**kwargs)
+    context.update({
+        'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
+    })
+    return context
+
 def models_context_data(self, model_detail, **kwargs):
     context = super(model_detail, self).get_context_data(**kwargs)
     obj = self.object
