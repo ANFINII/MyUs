@@ -111,9 +111,26 @@
                 timeCurrent.text(secondsToTime(0));
 
                 const audios = document.querySelectorAll('audio');
-                for (let i=0; i<audios.length; i++) {
+                for (let i = 0; i < audios.length; i++) {
                     audios[i].addEventListener('play', function() {
-                        for (let j=0; j<audios.length; j++) {
+                        for (let j = 0; j < audios.length; j++) {
+                            if (audios[j] != this) {
+                                audios[j].pause();
+                                theAudio.pause();
+                                this.ontimeupdate = function() {
+                                    let time = this.currentTime;
+                                    if (time > 30 && this.classList.contains('audio_auto')) {
+                                        this.pause();
+                                        $(this).closest('.audioplayer').removeClass('audioplayer-playing');
+                                        this.load();
+                                    }
+                                }
+                            }
+                        }
+                    }, false);
+
+                    theAudio.addEventListener('play', function() {
+                        for (let j = 0; j < audios.length; j++) {
                             if (audios[j] != this) {
                                 audios[j].pause();
                                 this.ontimeupdate = function() {
@@ -126,7 +143,7 @@
                                 }
                             }
                         }
-                    }, false);
+                    })
                 }
 
                 theAudio.addEventListener('loadeddata', function() {
