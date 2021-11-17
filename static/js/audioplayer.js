@@ -143,7 +143,7 @@
                                 }
                             }
                         }
-                    })
+                    }, false);
                 }
 
                 theAudio.addEventListener('loadeddata', function() {
