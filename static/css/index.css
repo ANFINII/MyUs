@@ -540,7 +540,7 @@ header {
 .main_tag_n {
     grid-column: 3/4;
     grid-row: 1/2;
-    width: calc(100vw - 165px);
+    width: calc(100vw - 166px);
     overflow-x: auto;
     white-space: nowrap;
 }
@@ -551,7 +551,7 @@ header {
 
 .tag_menu:checked ~ .main_tag_n {
     grid-column: 5/6;
-    width: calc(100vw - 407px);
+    width: calc(100vw - 408px);
 }
 
 .tag_n_list {
