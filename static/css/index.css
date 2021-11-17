@@ -408,7 +408,7 @@ header {
 /* タグナビゲーション */
 .tag_nav {
     display: grid;
-    grid-template-columns: 4.5em 3em 6.1em 3em auto;
+    grid-template-columns: 4.5em 3em 12.125em 3em auto;
     grid-template-rows: auto;
     position: fixed;
     z-index: 50;
@@ -486,9 +486,9 @@ header {
     display: block;
     grid-column: 3/4;
     grid-row: 1/2;
-    height: 26px;
-    width: 6em;
-    margin: 0 0 0 1px;
+    height: 24px;
+    width: 12em;
+    margin: 1px 0 1px 1px;
     outline: none;
     border-radius: 4px;
     border: 1px solid rgb(206, 212, 218);
@@ -540,7 +540,7 @@ header {
 .main_tag_n {
     grid-column: 3/4;
     grid-row: 1/2;
-    width: calc(100vw - 174px);
+    width: calc(100vw - 165px);
     overflow-x: auto;
     white-space: nowrap;
 }
@@ -551,7 +551,7 @@ header {
 
 .tag_menu:checked ~ .main_tag_n {
     grid-column: 5/6;
-    width: calc(100vw - 319px);
+    width: calc(100vw - 407px);
 }
 
 .tag_n_list {
@@ -567,8 +567,8 @@ header {
 
 .main_tag_left {
     position: fixed;
-    right: 20px;
-    padding: 0 2px 2px 0;
+    right: 18px;
+    padding: 0 0 2px 0;
     color: rgb(120, 120, 120);
     background-color: rgb(240, 240, 240);
 }
@@ -576,7 +576,7 @@ header {
 .main_tag_right {
     position: fixed;
     right: 0;
-    padding: 0 0 2px 2px;
+    padding: 0 0 2px 0;
     color: rgb(120, 120, 120);
     background-color: rgb(240, 240, 240);
 }
@@ -584,13 +584,13 @@ header {
 .main_tag_left:hover,
 .main_tag_right:hover {
     color: rgb(35, 150, 255);
-    background-color: rgb(220, 220, 220);
+    background-color: rgb(210, 210, 210);
 }
 
 .main_tag_left:active,
 .main_tag_right:active {
     color: rgb(0, 130, 255);
-    background-color: rgb(210, 210, 210);
+    background-color: rgb(200, 200, 200);
 }
 
 .tag_n_add {

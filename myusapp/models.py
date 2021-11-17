@@ -137,7 +137,7 @@ class SearchTagModel(models.Model):
     """SearchTagModel"""
     author    = models.ForeignKey(User, on_delete=models.CASCADE)
     sequence  = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=20)
-    searchtag = models.CharField(max_length=12, null=True)
+    searchtag = models.CharField(max_length=30, null=True)
     created   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -149,8 +149,8 @@ class SearchTagModel(models.Model):
 class TagModel(models.Model):
     """TagModel"""
     author      = models.ForeignKey(User, on_delete=models.CASCADE)
-    tag         = models.CharField(max_length=20, null=True)
-    english_tag = models.CharField(max_length=40, null=True)
+    tag         = models.CharField(max_length=30, null=True)
+    english_tag = models.CharField(max_length=60, null=True)
 
     def __str__(self):
         return self.tag
