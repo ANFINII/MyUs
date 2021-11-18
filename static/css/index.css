@@ -1505,7 +1505,8 @@ header {
     grid-column: 2/-1;
     grid-row: 2/3;
     font-size: 14px;
-    overflow-wrap: anywhere;
+    overflow: hidden;
+    overflow-wrap: break-word;
 }
 
 .comment_aria_list_2 p {
