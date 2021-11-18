@@ -41,19 +41,19 @@ def models_context_data(self, model_detail, **kwargs):
         'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
     })
     if 'myusapp.views.VideoDetail' in str(model_detail):
-        context.update(video_list=VideoModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50])
+        context.update(video_list=VideoModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
     if 'myusapp.views.LiveDetail' in str(model_detail):
-        context.update(live_list=LiveModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50])
+        context.update(live_list=LiveModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
     if 'myusapp.views.MusicDetail' in str(model_detail):
-        context.update(music_list=MusicModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50])
+        context.update(music_list=MusicModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
     if 'myusapp.views.PictureDetail' in str(model_detail):
-        context.update(picture_list=PictureModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50])
+        context.update(picture_list=PictureModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
     if 'myusapp.views.BlogDetail' in str(model_detail):
-        context.update(blog_list=BlogModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50])
+        context.update(blog_list=BlogModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
     if 'myusapp.views.CollaboDetail' in str(model_detail):
         if obj.period < datetime.date.today():
@@ -61,7 +61,7 @@ def models_context_data(self, model_detail, **kwargs):
         else:
             is_period = False
         context['is_period'] = is_period
-        context.update(collabo_list=CollaboModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50])
+        context.update(collabo_list=CollaboModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
     return context
 
 
@@ -89,7 +89,7 @@ def chat_context_data(self, model_detail, **kwargs):
     context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
     context.update({
         'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
-        'chat_list': ChatModel.objects.filter(publish=True).exclude(title=obj.title).order_by('-created')[:50],
+        'chat_list': ChatModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50],
     })
     if 'myusapp.views.ChatThread' in str(model_detail):
         comment_id = self.kwargs['comment_id']
