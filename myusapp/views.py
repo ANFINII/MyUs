@@ -572,17 +572,17 @@ class Recommend(ListView):
         context = super(Recommend, self).get_context_data(**kwargs)
         context['Recommend'] = 'Recommend'
         # 急上昇はcreatedが1日以内かつscoreが100000以上の上位8レコード
-        # テストはcreatedが100日以内かつscoreが100以上の上位8レコード
-        # socre = (read + like*10) + (read + like*10) * like/read * 20
+        # テストはcreatedが100日以内かつscoreが50以上の上位8レコード
+        # socre = (read + like*10) + read * like/read * 20
         aggregation_date = datetime.datetime.today() - datetime.timedelta(days=100)
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=self.request.user.id).order_by('sequence')[:20],
-            'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=(F('read')+Count('like')*10) + (F('read')+Count('like')*10)*Count('like')/F('read')*20).filter(score__gte=100).order_by('-score')[:8],
-            'live_list': LiveModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=(F('read')+Count('like')*10) + (F('read')+Count('like')*10)*Count('like')/F('read')*20).filter(score__gte=100).order_by('-score')[:8],
-            'music_list': MusicModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=(F('read')+Count('like')*10) + (F('read')+Count('like')*10)*Count('like')/F('read')*20).filter(score__gte=100).order_by('-score')[:8],
-            'picture_list': PictureModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=(F('read')+Count('like')*10) + (F('read')+Count('like')*10)*Count('like')/F('read')*20).filter(score__gte=100).order_by('-score')[:8],
-            'blog_list': BlogModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=(F('read')+Count('like')*10) + (F('read')+Count('like')*10)*Count('like')/F('read')*20).filter(score__gte=100).order_by('-score')[:8],
-            'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate( score=(F('read')+Count('like')*10) + (F('read')+Count('like')*10)*Count('like')/F('read')*20).filter(score__gte=100).order_by('-score')[:8],
+            'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=(F('read')+Count('like')*10) + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+            'live_list': LiveModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=(F('read')+Count('like')*10) + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+            'music_list': MusicModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=(F('read')+Count('like')*10) + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+            'picture_list': PictureModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=(F('read')+Count('like')*10) + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+            'blog_list': BlogModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=(F('read')+Count('like')*10) + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+            'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate( score=(F('read')+Count('like')*10) + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
         })
         return context
 
