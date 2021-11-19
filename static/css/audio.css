@@ -305,3 +305,20 @@
 	-o-transition: color .25s ease, background-color .25s ease, opacity .5s ease;
 	transition: color .25s ease, background-color .25s ease, opacity .5s ease;
 }
+
+/* audioplayerを読み込まなかった時のデザイン */
+audio {
+    width: 272px;
+    height: 40px;
+    background-color: rgb(243, 243, 243);
+}
+
+audio:active {
+    text-decoration: none;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}

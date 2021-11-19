@@ -1833,23 +1833,6 @@ header {
     margin: 31px 0 0 0;
 }
 
-/* audioデザイン */
-audio {
-    width: 272px;
-    height: 40px;
-    background-color: rgb(243, 243, 243);
-}
-
-audio:active {
-    text-decoration: none;
-    text-decoration: none;
-    border: none;
-    outline: none;
-    appearance: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-}
-
 /* ToDoデザイン */
 .todo_create,
 .follow_button {
@@ -2004,11 +1987,6 @@ input::placeholder {
 
 .search-container {
     padding: 0;
-}
-
-.player {
-    --plyr-color-main: #1ac266;
-    width: 768px;
 }
 
 /* メディアクエリ */
