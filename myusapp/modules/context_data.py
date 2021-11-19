@@ -154,18 +154,24 @@ class ContextData:
             context['reply_list'] = obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
         return context
 
+
     def todo_context_data(self, model_detail, **kwargs):
         context = super(model_detail, self).get_context_data(**kwargs)
         obj = self.object
         user_id = self.request.user.id
+        filter_kwargs = {}
+        filter_kwargs['id'] = OuterRef('pk')
+        filter_kwargs['like'] = user_id
+        subquery = CommentModel.objects.filter(**filter_kwargs)
         context['user_id'] = user_id
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-        context['reply_list'] = obj.comments.filter(parent__isnull=False).select_related('author', 'parent', 'content_type')
+        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
+        context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:10],
-            'advertise_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
-            'todo_list': TodoModel.objects.filter(author_id=user_id).exclude(title=obj.title),
+            'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
+            'advertise_list': AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:6],
+            'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
+            'todo_list': TodoModel.objects.filter(author_id=user_id).exclude(id=obj.id),
         })
         return context

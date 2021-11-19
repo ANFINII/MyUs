@@ -851,6 +851,16 @@ header {
     color: rgb(100, 100, 100);
 }
 
+.article_detail_aria_todo {
+    grid-column: 1/-1;
+    grid-row: 4/-1;
+}
+
+.article_detail_aria_todo span {
+    display: block;
+    margin: 20px 0;
+}
+
 .like_form_aria {
     display: inline;
 }
@@ -1193,7 +1203,7 @@ header {
 .content_detail {
     display: grid;
     grid-template-columns: 48px auto auto;
-    grid-template-rows: 24px 24px auto auto;
+    grid-template-rows: 24px 24px;
     gap: 0 10px;
 }
 
@@ -1246,20 +1256,6 @@ header {
 .content_detail_p2 button {
     width: 122px;
     height: 38px;
-}
-
-.content_detail_p3 {
-    grid-column: 2/-1;
-    grid-row: 3/4;
-    font-size: 14px;
-    margin: 7px 0 0 0;
-}
-
-.content_detail_p4 {
-    grid-column: 2/-1;
-    grid-row: 4/-1;
-    font-size: 14px;
-    margin: 7px 0 0 0;
 }
 
 .follow_messages {
@@ -1876,6 +1872,7 @@ audio:active {
 .main_decolation_todo {
     padding: 0;
     margin: 0;
+    border-radius: 5px;
 }
 
 .author_title_space_todo {
