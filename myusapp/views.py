@@ -599,6 +599,7 @@ class UserPageAdvertise(ListView):
     def get_queryset(self, **kwargs):
         return Search.search_advertise(self, AdvertiseModel)
 
+
 # Follow
 class FollowerList(ListView):
     """FollowerList"""
