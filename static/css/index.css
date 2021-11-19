@@ -7,28 +7,41 @@
 }
 
 ::-webkit-scrollbar-track,
-.comment_aria::-webkit-scrollbar-track,
+.content_detail_aria::-webkit-scrollbar-track,
+.comment_aria::-webkit-scrollbar-track {
+    background: rgb(255, 255, 255);
+    border-radius: 10px;
+}
+
+.content_detail_aria::-webkit-scrollbar-thumb,
 .comment_aria::-webkit-scrollbar-thumb {
     background: rgb(255, 255, 255);
 }
 
-::-webkit-scrollbar-track:hover,
-.comment_aria:hover::-webkit-scrollbar-track {
+::-webkit-scrollbar-track:hover {
     background: rgb(225, 225, 225);
 }
 
+.content_detail_aria::-webkit-scrollbar-track:hover,
+.comment_aria::-webkit-scrollbar-track:hover {
+    background: rgb(255, 255, 255);
+}
+
 ::-webkit-scrollbar-thumb,
+.content_detail_aria:hover::-webkit-scrollbar-thumb,
 .comment_aria:hover::-webkit-scrollbar-thumb {
     background: rgb(180, 180, 180);
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover,
+.content_detail_aria::-webkit-scrollbar-thumb:hover,
 .comment_aria::-webkit-scrollbar-thumb:hover {
     background: rgb(150, 150, 150);
 }
 
 ::-webkit-scrollbar-thumb:active,
+.content_detail_aria::-webkit-scrollbar-thumb:active,
 .comment_aria::-webkit-scrollbar-thumb:active {
     background: rgb(120, 120, 120);
 }
@@ -1171,7 +1184,7 @@ header {
 .content_detail_aria {
     height: 167px;
     margin: 8px 0 0 0;
-    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .content_detail_check:checked ~ .content_detail_aria {
