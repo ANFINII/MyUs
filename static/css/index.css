@@ -1482,6 +1482,10 @@ header {
     display: none;
 }
 
+.comment_aria_list a {
+    text-decoration: none;
+}
+
 .comment_aria_list .profile_image {
     grid-column: 1/2;
     grid-row: 1/2;
@@ -1493,7 +1497,7 @@ header {
     white-space: nowrap;
 }
 
-.comment_aria_list p {
+.comment_aria_list_1 p {
     display: inline;
     grid-column: 2/-1;
     grid-row: 1/2;
@@ -1501,13 +1505,9 @@ header {
     white-space: nowrap;
 }
 
-.comment_aria_list time {
+.comment_aria_list_1 time {
     font-size: 11px;
     color: rgb(120, 120, 120);
-}
-
-.comment_aria_list a {
-    text-decoration: none;
 }
 
 .comment_aria_list_2 {
