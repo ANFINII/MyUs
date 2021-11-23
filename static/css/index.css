@@ -1432,7 +1432,7 @@ header {
 /* コメントエリア */
 .comment_aria {
     height: 500px;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 .comment_aria_check:checked ~ .comment_aria {
