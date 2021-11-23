@@ -96,7 +96,7 @@
             <a href="{% url 'myus:userpage' item.author.nickname %}">
                 <img src="{{ item.author.user_image.url }}" title="{{ item.author.nickname }}" class="profile_image_comment">
             </a>
-            <a  href="{% url 'myus:chat_detail' item.pk item.title %}">
+            <a  href="{% url 'myus:chat_detail' item.pk %}">
                 <h3 title="{{ item.title }}">{{ item.title }}</h3>
             </a>
         </div>
