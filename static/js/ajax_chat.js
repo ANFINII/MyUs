@@ -1,95 +1,95 @@
 // WebSocketオブジェクト
-// let ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
-// const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
-// const chatSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + '/ws/chat/detail/' + obj_id);
+let ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
+const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
+const chatSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + '/ws/chat/detail/' + obj_id);
 
-// $('#comment_form').submit(function(event) {
-//     event.preventDefault();
-//     const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
-//     const user_id = JSON.parse(document.getElementById('user_id').textContent);
-//     const message = $('form [name=text]').val().replace(/\n+$/g,'');
-//     $('#comment_form')[0].reset();
-//     document.getElementById('comment_form_area').style.height = '40px';
-//     document.getElementById('comment_form_button').setAttribute('disabled', true);
-//     chatSocket.send(JSON.stringify({
-//         'command': 'create_message',
-//         'obj_id': obj_id,
-//         'user_id': user_id,
-//         'message': message,
-//     }));
-// })
+$('#comment_form').submit(function(event) {
+    event.preventDefault();
+    const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
+    const user_id = JSON.parse(document.getElementById('user_id').textContent);
+    const message = $('form [name=text]').val().replace(/\n+$/g,'');
+    $('#comment_form')[0].reset();
+    document.getElementById('comment_form_area').style.height = '40px';
+    document.getElementById('comment_form_button').setAttribute('disabled', true);
+    chatSocket.send(JSON.stringify({
+        'command': 'create_message',
+        'obj_id': obj_id,
+        'user_id': user_id,
+        'message': message,
+    }));
+})
 
-// chatSocket.onmessage = function(e) {
-//     document.getElementById('comment_form_button').setAttribute('disabled', true);
-//     const data = JSON.parse(e.data);
-//     const response = data['message'];
-//     console.log(response)
-//     const render =
-//     '<div id="comment_aria_list_' + response.comment_id +'" class="comment_aria_list">' +
-//         '<a href="/userpage/' + response.nickname + '">' +
-//             '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
-//         '</a>' +
-//         '<div class="comment_aria_list_1">' +
-//             '<p>' + response.nickname + ' ' + '</p>' +
-//             '<time class="time">' + ' ' + response.created + '</time>' +
-//         '</div>' +
-//         '<div id="comment_aria_list_2_' + response.comment_id + '" class="comment_aria_list_2">' + response.text + '</div>' +
-//         '<a href="/chat/detail/thread/' + response.comment_id + '" class="comment_aria_thread">' +
-//             'スレッド表示' +
-//             '<span id="reply_count_' + response.comment_id + '">返信 0 件</span>' +
-//         '</a>' +
-//         '<div class="edit_button">' +
-//             '<a type="button" name="update" comment-id="' + response.comment_id + '" class="edit_button_update">編集</a>' +
-//             '<a type="button" name="delete" comment-id="' + response.comment_id + '" class="edit_button_delete">削除</a>' +
-//             '<div id="modal_content_' + response.comment_id + '" class="modal_content">' +
-//                 '<h2 class="modal_content_header">メッセージの削除</h2>' +
-//                 '<span class="modal_content_body_span">このメッセージを削除しますか？</span>' +
-//                 '<div class="modal_content_body">' +
-//                     '<div class="comment_aria_list">' +
-//                         '<a href="/userpage/' + response.nickname + '">' +
-//                             '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
-//                         '</a>' +
-//                         '<div class="comment_aria_list_1">' +
-//                             '<div class="comment_aria_list_nickname">' + response.nickname + '</div>' +
-//                             '<time class="comment_aria_list_time">' + response.created + '</time>' +
-//                         '</div>' +
-//                         '<div class="comment_aria_list_1">' + response.message + '</div>' +
-//                     '</div>' +
-//                 '</div>' +
-//                 '<form method="POST" action="/chat/detail/message/delete/' + response.comment_id + '" class="modal_content_footer">' +
-//                     '<input type="button" name="cancel" value="キャンセル" comment-id="' + response.comment_id + '" class="btn btn-light modal_cancel">' +
-//                     '<input type="button" name="delete" value="削除" comment-id="' + response.comment_id + '"  obj-id="' + response.obj_id + '" class="btn btn-danger edit_delete">' +
-//                 '</form>' +
-//             '</div>' +
-//             '<div comment-id="' + response.comment_id + '" id="mask_' + response.comment_id + '" class="mask modal_cancel"></div>' +
-//         '</div>' +
-//     '</div>' +
-//     '<div id="edit_update_main_' + response.comment_id + '" class="edit_update_main_chat">' +
-//         '<form method="POST" action="/chat/detail/message/update/' + response.comment_id + '" comment-id="' + response.comment_id + '" class="edit_update_chat">' +
-//             '<a href="/userpage/' + response.nickname + '">' +
-//                 '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
-//             '</a>' +
-//             '<div class="edit_textarea_caht">' +
-//                 '<textarea name="update_text" rows="1" class="textarea_br" placeholder="メッセージ入力" id="comment_form_update_' + response.comment_id + '" required>' + response.text + '</textarea>' +
-//                 '<div class="chat_frame"></div>' +
-//                 '<div class="comment_input_chat"></div>' +
-//                 '<div class="edit_update_footer">' +
-//                     '<input type="button" name="cancel" value="キャンセル" comment-id="' + response.comment_id + '" class="btn btn-light btn-xs edit_update_cancel">' +
-//                     '<input type="submit" name="update" value="更新" class="btn btn-success btn-xs">' +
-//                 '</div>' +
-//             '</div>' +
-//         '</form>' +
-//     '</div>';
+chatSocket.onmessage = function(e) {
+    document.getElementById('comment_form_button').setAttribute('disabled', true);
+    const data = JSON.parse(e.data);
+    const response = data['message'];
+    console.log(response)
+    const render =
+    '<div id="comment_aria_list_' + response.comment_id +'" class="comment_aria_list">' +
+        '<a href="/userpage/' + response.nickname + '">' +
+            '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
+        '</a>' +
+        '<div class="comment_aria_list_1">' +
+            '<p>' + response.nickname + ' ' + '</p>' +
+            '<time class="time">' + ' ' + response.created + '</time>' +
+        '</div>' +
+        '<div id="comment_aria_list_2_' + response.comment_id + '" class="comment_aria_list_2">' + response.text + '</div>' +
+        '<a href="/chat/detail/thread/' + response.comment_id + '" class="comment_aria_thread">' +
+            'スレッド表示' +
+            '<span id="reply_count_' + response.comment_id + '">返信 0 件</span>' +
+        '</a>' +
+        '<div class="edit_button">' +
+            '<a type="button" name="update" comment-id="' + response.comment_id + '" class="edit_button_update">編集</a>' +
+            '<a type="button" name="delete" comment-id="' + response.comment_id + '" class="edit_button_delete">削除</a>' +
+            '<div id="modal_content_' + response.comment_id + '" class="modal_content">' +
+                '<h2 class="modal_content_header">メッセージの削除</h2>' +
+                '<span class="modal_content_body_span">このメッセージを削除しますか？</span>' +
+                '<div class="modal_content_body">' +
+                    '<div class="comment_aria_list">' +
+                        '<a href="/userpage/' + response.nickname + '">' +
+                            '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
+                        '</a>' +
+                        '<div class="comment_aria_list_1">' +
+                            '<div class="comment_aria_list_nickname">' + response.nickname + '</div>' +
+                            '<time class="comment_aria_list_time">' + response.created + '</time>' +
+                        '</div>' +
+                        '<div class="comment_aria_list_1">' + response.message + '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<form method="POST" action="/chat/detail/message/delete/' + response.comment_id + '" class="modal_content_footer">' +
+                    '<input type="button" name="cancel" value="キャンセル" comment-id="' + response.comment_id + '" class="btn btn-light modal_cancel">' +
+                    '<input type="button" name="delete" value="削除" comment-id="' + response.comment_id + '"  obj-id="' + response.obj_id + '" class="btn btn-danger edit_delete">' +
+                '</form>' +
+            '</div>' +
+            '<div comment-id="' + response.comment_id + '" id="mask_' + response.comment_id + '" class="mask modal_cancel"></div>' +
+        '</div>' +
+    '</div>' +
+    '<div id="edit_update_main_' + response.comment_id + '" class="edit_update_main_chat">' +
+        '<form method="POST" action="/chat/detail/message/update/' + response.comment_id + '" comment-id="' + response.comment_id + '" class="edit_update_chat">' +
+            '<a href="/userpage/' + response.nickname + '">' +
+                '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
+            '</a>' +
+            '<div class="edit_textarea_caht">' +
+                '<textarea name="update_text" rows="1" class="textarea_br" placeholder="メッセージ入力" id="comment_form_update_' + response.comment_id + '" required>' + response.text + '</textarea>' +
+                '<div class="chat_frame"></div>' +
+                '<div class="comment_input_chat"></div>' +
+                '<div class="edit_update_footer">' +
+                    '<input type="button" name="cancel" value="キャンセル" comment-id="' + response.comment_id + '" class="btn btn-light btn-xs edit_update_cancel">' +
+                    '<input type="submit" name="update" value="更新" class="btn btn-success btn-xs">' +
+                '</div>' +
+            '</div>' +
+        '</form>' +
+    '</div>';
 
-//     // $('#chat_section_main_area').append(render);
+    $('#chat_section_main_area').append(render);
 //     // $('#chat_section_main_area').append(response.comment_lists);
 //     // $('#user_count').html(response.user_count);
 //     // $('#comment_count').html(response.comment_count);
 //     $('#chat_section_main_area').html(response.comment_lists);
 //     // const obj = document.getElementById('chat_section_main_area');
 //     // obj.scrollTop = obj.scrollHeight;
-//     console.log(e);
-// };
+    console.log(e);
+};
 
 
 // chatSocket.onopen = function(e) {
@@ -188,34 +188,34 @@ $(document).on('click', '.follow_form', function(event) {
 });
 
 // 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
-$('#comment_form').submit(function(event) {
-    event.preventDefault();
-    const url = $(this).attr('action');
-    const id = $(this).attr('obj-id');
-    const text = $('form [name=text]').val().replace(/\n+$/g,'');
-    $('#comment_form')[0].reset();
-    document.getElementById('comment_form_area').style.height = '40px';
-    document.getElementById('comment_form_button').setAttribute('disabled', true);
-    $.ajax({
-        url: url,
-        type: 'POST',
-        data: {'id': id, 'text': text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-        dataType: 'json',
-        timeout: 10000,
-    })
-    .done(function(response) {
-        document.getElementById('comment_form_button').setAttribute('disabled', true);
-        $('#user_count').html(response.user_count);
-        $('#comment_count').html(response.comment_count);
-        $('#chat_section_main_area').append(response.comment_lists);
-        const obj = document.getElementById('chat_section_main_area');
-        obj.scrollTop = obj.scrollHeight;
-        console.log(response);
-    })
-    .fail(function(response) {
-        console.log(response);
-    })
-});
+// $('#comment_form').submit(function(event) {
+//     event.preventDefault();
+//     const url = $(this).attr('action');
+//     const id = $(this).attr('obj-id');
+//     const text = $('form [name=text]').val().replace(/\n+$/g,'');
+//     $('#comment_form')[0].reset();
+//     document.getElementById('comment_form_area').style.height = '40px';
+//     document.getElementById('comment_form_button').setAttribute('disabled', true);
+//     $.ajax({
+//         url: url,
+//         type: 'POST',
+//         data: {'id': id, 'text': text, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+//         dataType: 'json',
+//         timeout: 10000,
+//     })
+//     .done(function(response) {
+//         document.getElementById('comment_form_button').setAttribute('disabled', true);
+//         $('#user_count').html(response.user_count);
+//         $('#comment_count').html(response.comment_count);
+//         $('#chat_section_main_area').append(response.comment_lists);
+//         const obj = document.getElementById('chat_section_main_area');
+//         obj.scrollTop = obj.scrollHeight;
+//         console.log(response);
+//     })
+//     .fail(function(response) {
+//         console.log(response);
+//     })
+// });
 
 // 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
 $('#reply_form').submit(function(event) {
