@@ -112,7 +112,7 @@ $('#comment_form').submit(function(event) {
     })
     .done(function(response) {
         $('#comment_count').html(response.comment_count);
-        $('#comment_aria_add').html(response.comment_lists);
+        $('#comment_aria').prepend(response.comment_lists);
         console.log(response);
     })
     .fail(function(response) {
@@ -178,7 +178,7 @@ $(document).on('click', '.reply_form', function(event) {
     .done(function(response) {
         $('#reply_count_open_' + comment_id).html('▼ スレッド ' + response.reply_count + ' 件');
         $('#reply_count_close_' + comment_id).html('▲ スレッド ' + response.reply_count + ' 件');
-        $('#reply_aria_add_' + comment_id).html(response.reply_lists);
+        $('#reply_aria_list_' + comment_id).prepend(response.reply_lists);
         console.log(response);
     })
     .fail(function(response) {

@@ -5,17 +5,17 @@ from django.contrib import messages
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.contrib.contenttypes.models import ContentType
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, QueryDict
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
-from django.db.models import Q, F, Count, Max, Min, Avg, Value, Exists, OuterRef, Subquery
+from django.db.models import Count
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr, linebreaks
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import View, TemplateView, FormView, CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, DeleteView
 from .forms import SearchTagForm
-from .models import SearchTagModel, TagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
+from .models import SearchTagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .modules.search import Search
 from .modules.get_form import get_detail
@@ -24,7 +24,6 @@ from .modules.validation import has_username, has_email, has_phone, has_alphabet
 import datetime
 import string
 import random
-import json
 
 # Create your views here.
 
@@ -443,14 +442,9 @@ def comment_form(request):
         comment_obj.text = text
         comment_obj.author_id = user_id
         comment_obj.save()
-        filter_kwargs = {}
-        filter_kwargs['id'] = OuterRef('pk')
-        filter_kwargs['like'] = user_id
-        subquery = CommentModel.objects.filter(**filter_kwargs)
         context['comment_count'] = obj.comment_count()
         context['comment_lists'] = render_to_string('parts/common/comment/comment.html', {
-            'comment_list': obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type'),
-            'reply_list' : obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type'),
+            'comment_list': obj.comments.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
             'user_id': user_id,
             'obj_id': obj_id,
             'obj_path': obj_path,
@@ -476,14 +470,10 @@ def reply_form(request):
         comment_obj.author_id = user_id
         comment_obj.parent = CommentModel.objects.get(id=comment_id)
         comment_obj.save()
-        filter_kwargs = {}
-        filter_kwargs['id'] = OuterRef('pk')
-        filter_kwargs['like'] = user_id
-        subquery = CommentModel.objects.filter(**filter_kwargs)
         context['comment_count'] = obj.comment_count()
         context['reply_count'] = comment_obj.parent.replies_count()
         context['reply_lists'] = render_to_string('parts/common/reply/reply.html', {
-            'reply_list': obj.comments.filter(parent__isnull=False, parent_id=comment_id).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type'),
+            'reply_list': obj.comments.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type'),
             'user_id': user_id,
             'obj_id': obj_id,
             'comment_id': comment_id,
@@ -908,7 +898,7 @@ class ChatCreate(CreateView):
         return super(ChatCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:chat_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+        return reverse('myus:chat_detail', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, ChatCreate, **kwargs)
@@ -938,10 +928,31 @@ class ChatDetail(DetailView):
     def get_context_data(self, **kwargs):
         return ContextData.chat_context_data(self, ChatDetail, **kwargs)
 
+    def get_message(self, obj_id):
+        # obj = get_object_or_404(ChatModel, id=obj_id)
+        obj = self.object
+        return obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
+        # return obj.comments.order_by('created').all()
+
+    # def get_user_follow(nickname):
+    #     user = get_object_or_404(User, nickname=nickname)
+    #     return get_object_or_404(FollowModel, user=user)
+
+    def get_current_chat(obj_id):
+        return get_object_or_404(ChatModel, id=obj_id)
+
 class ChatThread(DetailView):
     """ChatDetailThread"""
     model = ChatModel
     template_name = 'chat/chat_thread.html'
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+        comment_id = self.kwargs.get('comment_id') or self.request.GET.get('comment_id') or None
+        queryset = queryset.filter(comments__id=comment_id)
+        obj = queryset.get()
+        return obj
 
     def get_context_data(self, **kwargs):
         return ContextData.chat_context_data(self, ChatThread, **kwargs)
@@ -959,7 +970,7 @@ def chat_message(request):
         comment_obj.text = text
         comment_obj.author_id = request.user.id
         comment_obj.save()
-        comment_list = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
+        comment_list = obj.comments.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context['user_count'] = obj.user_count()
         context['comment_count'] = obj.comment_count()
         context['comment_lists'] = render_to_string('chat/chat_comment/chat_comment.html', {
@@ -986,7 +997,7 @@ def chat_reply(request):
         comment_obj.author_id = request.user.id
         comment_obj.parent = CommentModel.objects.get(id=comment_id)
         comment_obj.save()
-        reply_list = obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
+        reply_list = obj.comments.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type')
         context['user_count'] = obj.user_count()
         context['reply_count'] = comment_obj.parent.replies_count()
         context['reply_lists'] = render_to_string('chat/chat_reply/chat_reply.html', {

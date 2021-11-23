@@ -50,9 +50,7 @@
         <div class="comment_aria_list_space"></div>
 
         <div id="reply_aria_list_{{ comment.id }}" class="comment_aria_list_5">
-            <div id="reply_aria_add_{{ comment.id }}">
-                {% include 'parts/common/reply/reply.html' %}
-            </div>
+            {% include 'parts/common/reply/reply.html' %}
         </div>
     </div>
     {% include 'parts/common/comment/modal_content_comment.html' %}
