@@ -19,76 +19,17 @@ $('#comment_form').submit(function(event) {
     }));
 })
 
-chatSocket.onmessage = function(e) {
+chatSocket.onmessage = function(event) {
     document.getElementById('comment_form_button').setAttribute('disabled', true);
-    const data = JSON.parse(e.data);
+    const data = JSON.parse(event.data);
     const response = data['message'];
+    $('#chat_section_main_area').append(response.comment_lists);
+    $('#user_count').html(response.user_count);
+    $('#comment_count').html(response.comment_count);
+    const obj = document.getElementById('chat_section_main_area');
+    obj.scrollTop = obj.scrollHeight;
     console.log(response)
-    const render =
-    '<div id="comment_aria_list_' + response.comment_id +'" class="comment_aria_list">' +
-        '<a href="/userpage/' + response.nickname + '">' +
-            '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
-        '</a>' +
-        '<div class="comment_aria_list_1">' +
-            '<p>' + response.nickname + ' ' + '</p>' +
-            '<time class="time">' + ' ' + response.created + '</time>' +
-        '</div>' +
-        '<div id="comment_aria_list_2_' + response.comment_id + '" class="comment_aria_list_2">' + response.text + '</div>' +
-        '<a href="/chat/detail/thread/' + response.comment_id + '" class="comment_aria_thread">' +
-            'スレッド表示' +
-            '<span id="reply_count_' + response.comment_id + '">返信 0 件</span>' +
-        '</a>' +
-        '<div class="edit_button">' +
-            '<a type="button" name="update" comment-id="' + response.comment_id + '" class="edit_button_update">編集</a>' +
-            '<a type="button" name="delete" comment-id="' + response.comment_id + '" class="edit_button_delete">削除</a>' +
-            '<div id="modal_content_' + response.comment_id + '" class="modal_content">' +
-                '<h2 class="modal_content_header">メッセージの削除</h2>' +
-                '<span class="modal_content_body_span">このメッセージを削除しますか？</span>' +
-                '<div class="modal_content_body">' +
-                    '<div class="comment_aria_list">' +
-                        '<a href="/userpage/' + response.nickname + '">' +
-                            '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
-                        '</a>' +
-                        '<div class="comment_aria_list_1">' +
-                            '<div class="comment_aria_list_nickname">' + response.nickname + '</div>' +
-                            '<time class="comment_aria_list_time">' + response.created + '</time>' +
-                        '</div>' +
-                        '<div class="comment_aria_list_1">' + response.message + '</div>' +
-                    '</div>' +
-                '</div>' +
-                '<form method="POST" action="/chat/detail/message/delete/' + response.comment_id + '" class="modal_content_footer">' +
-                    '<input type="button" name="cancel" value="キャンセル" comment-id="' + response.comment_id + '" class="btn btn-light modal_cancel">' +
-                    '<input type="button" name="delete" value="削除" comment-id="' + response.comment_id + '"  obj-id="' + response.obj_id + '" class="btn btn-danger edit_delete">' +
-                '</form>' +
-            '</div>' +
-            '<div comment-id="' + response.comment_id + '" id="mask_' + response.comment_id + '" class="mask modal_cancel"></div>' +
-        '</div>' +
-    '</div>' +
-    '<div id="edit_update_main_' + response.comment_id + '" class="edit_update_main_chat">' +
-        '<form method="POST" action="/chat/detail/message/update/' + response.comment_id + '" comment-id="' + response.comment_id + '" class="edit_update_chat">' +
-            '<a href="/userpage/' + response.nickname + '">' +
-                '<img src="' + response.user_image +'" title="' + response.nickname + '" class="profile_image_comment">' +
-            '</a>' +
-            '<div class="edit_textarea_caht">' +
-                '<textarea name="update_text" rows="1" class="textarea_br" placeholder="メッセージ入力" id="comment_form_update_' + response.comment_id + '" required>' + response.text + '</textarea>' +
-                '<div class="chat_frame"></div>' +
-                '<div class="comment_input_chat"></div>' +
-                '<div class="edit_update_footer">' +
-                    '<input type="button" name="cancel" value="キャンセル" comment-id="' + response.comment_id + '" class="btn btn-light btn-xs edit_update_cancel">' +
-                    '<input type="submit" name="update" value="更新" class="btn btn-success btn-xs">' +
-                '</div>' +
-            '</div>' +
-        '</form>' +
-    '</div>';
-
-    $('#chat_section_main_area').append(render);
-//     // $('#chat_section_main_area').append(response.comment_lists);
-//     // $('#user_count').html(response.user_count);
-//     // $('#comment_count').html(response.comment_count);
-//     $('#chat_section_main_area').html(response.comment_lists);
-//     // const obj = document.getElementById('chat_section_main_area');
-//     // obj.scrollTop = obj.scrollHeight;
-    console.log(e);
+    console.log(event);
 };
 
 
