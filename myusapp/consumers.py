@@ -5,6 +5,7 @@ from channels.generic.websocket import WebsocketConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync
 from .models import ChatModel, CommentModel
+from .views import ChatDetail
 
 User = get_user_model()
 
@@ -45,14 +46,16 @@ class ChatConsumer(WebsocketConsumer):
     def message_to_json(self, message):
         print('message_to_json:')
         print(message)
+        comment_list = ChatDetail.get_message(self, message)
         return {
-            'text': message.text,
-            'obj_id': message.object_id,
-            'comment_id': message.id,
-            'user_id': message.author.id,
-            'nickname': message.author.nickname,
-            'user_image': message.author.user_image.url,
-            'created': str(message.created.strftime("%Y/%m/%d %H:%M")),
+            'user_count': comment_list['user_count'],
+            'comment_count': comment_list['comment_count'],
+            'comment_lists': render_to_string('chat/chat_comment/chat_comment.html', {
+                'comment_list': comment_list['comment_list'],
+                'user_id': message.author.id,
+                'obj_id': message.object_id,
+                'comment_id': message.id,
+            })
         }
 
     commands = {
@@ -88,7 +91,8 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': message
+                'message': message,
+                'comment_list': message,
             }
         )
 
@@ -98,7 +102,6 @@ class ChatConsumer(WebsocketConsumer):
         print(event)
         print('chat_message')
         print(message)
-
         self.send(text_data=json.dumps(message))
 
     def send_message(self, message):

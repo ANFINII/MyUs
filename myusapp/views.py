@@ -928,11 +928,13 @@ class ChatDetail(DetailView):
     def get_context_data(self, **kwargs):
         return ContextData.chat_context_data(self, ChatDetail, **kwargs)
 
-    def get_message(self, obj_id):
-        # obj = get_object_or_404(ChatModel, id=obj_id)
-        obj = self.object
-        return obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-        # return obj.comments.order_by('created').all()
+    def get_message(self, comment_obj):
+        obj = get_object_or_404(ChatModel, id=comment_obj.object_id)
+        context = dict()
+        context['user_count'] = obj.user_count()
+        context['comment_count'] = obj.comment_count()
+        context['comment_list'] = obj.comments.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
+        return context
 
     # def get_user_follow(nickname):
     #     user = get_object_or_404(User, nickname=nickname)
@@ -977,7 +979,6 @@ def chat_message(request):
             'comment_list': comment_list,
             'user_id': request.user.id,
             'obj_id': obj_id,
-            'obj_title': obj.title,
             'comment_id': comment_obj.id,
         })
         if request.is_ajax():
