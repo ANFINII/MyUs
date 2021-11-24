@@ -47,7 +47,7 @@ class ChatConsumer(WebsocketConsumer):
         print('message_to_json:')
         print(message)
         comment_list = ChatDetail.get_message(self, message)
-        return {
+        context = {
             'user_count': comment_list['user_count'],
             'comment_count': comment_list['comment_count'],
             'comment_lists': render_to_string('chat/chat_comment/chat_comment.html', {
@@ -57,6 +57,7 @@ class ChatConsumer(WebsocketConsumer):
                 'comment_id': message.id,
             })
         }
+        return context
 
     commands = {
         'fetch_message': fetch_message,
