@@ -937,11 +937,6 @@ class ChatDetail(DetailView):
         context['comment_list'] = obj.comments.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         return context
 
-    def get_chat_message(obj_id):
-        print('get_chat_message')
-        obj = get_object_or_404(ChatModel, id=obj_id)
-        return obj.comments.all()
-
 class ChatThread(DetailView):
     """ChatDetailThread"""
     model = ChatModel
