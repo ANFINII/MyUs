@@ -13,7 +13,11 @@ chatSocket.onmessage = function(event) {
         $('#comment_count').html(response.comment_count);
         const obj = document.getElementById('chat_section_main_area');
         obj.scrollTop = obj.scrollHeight;
-        console.log(response)
+        const login_user_id = document.getElementById('user_id').textContent;
+        if (login_user_id != response.user_id) {
+            $('#edit_button_' + response.comment_id).remove();
+            $('#edit_update_main_' + response.comment_id).remove();
+        }
         console.log(event);
     } else if (data['command'] === 'update_message') {
         const response = data['message'];
@@ -21,7 +25,6 @@ chatSocket.onmessage = function(event) {
         const highlight = document.querySelector('#comment_aria_list_' + response.comment_id);
         highlight.style.removeProperty('background-color');
         $('#comment_aria_list_2_' + response.comment_id).html(response.text);
-        console.log(response);
         console.log(event);
     } else if (data['command'] === 'delete_message') {
         const response = data['message'];
@@ -30,7 +33,7 @@ chatSocket.onmessage = function(event) {
         $('#comment_aria_list_2_' + response.comment_id).html('スレッドが削除されました！');
         $('#user_count').html(response.user_count);
         $('#comment_count').html(response.comment_count);
-        console.log(response);
+        console.log(event);
     }
 };
 

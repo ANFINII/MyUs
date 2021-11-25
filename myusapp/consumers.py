@@ -63,10 +63,12 @@ class ChatConsumer(WebsocketConsumer):
         print(message)
         comment_list = ChatDetail.get_new_message(self, message)
         context = {
+            'user_id': self.scope['user'].id,
+            'comment_id': message.id,
             'user_count': comment_list['user_count'],
             'comment_count': comment_list['comment_count'],
             'comment_lists': render_to_string('chat/chat_comment/chat_comment.html', {
-
+                'user_id': self.scope['user'].id,
                 'obj_id': message.object_id,
                 'comment_id': message.id,
                 'comment_list': comment_list['comment_list'],
