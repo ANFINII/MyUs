@@ -11,57 +11,125 @@ User = get_user_model()
 
 class ChatConsumer(WebsocketConsumer):
     def fetch_message(self, data):
-        print('fetch')
-        messages = CommentModel.get_message()
+        print('fetch_message:')
+        messages = ChatDetail.get_chat_message(data['obj_id'])
         content = {
-            'command': 'messages',
-            'messages': self.fetch_messages_to_json(messages)
+            'command': 'fetch_message',
+            'messages': self.fetch_message_to_json(messages)
         }
+        print(content)
         self.send_message(content)
 
     def create_message(self, data):
-        print('create_message')
+        print('create_message:')
         print(data)
-        user = User.objects.get(id=data['user_id'])
         obj = ChatModel.objects.get(id=data['obj_id'])
         message = CommentModel.objects.create(
-            author=user,
+            author_id=self.scope['user'].id,
             text=data['message'],
             content_object = obj,
             )
         content = {
             'command': 'create_message',
-            'message': self.message_to_json(message)
+            'message': self.create_message_to_json(message)
         }
         print('create content:')
         print(content)
         return self.send_chat_message(content)
 
-    def fetch_messages_to_json(self, messages):
+    def update_message(self, data):
+        print('update_message:')
+        print(data)
+        message = CommentModel.objects.get(id=data['comment_id'])
+        message.text = data['message']
+        message.save()
+        print(message)
+        content = {
+            'command': 'update_message',
+            'message': self.update_message_to_json(message)
+        }
+        print('update content:')
+        print(content)
+        return self.send_chat_message(content)
+
+    def delete_message(self, data):
+        print('delete_message:')
+        print(data)
+        message = CommentModel.objects.get(id=data['comment_id'])
+        print(message)
+        message.delete()
+        content = {
+            'command': 'delete_message',
+            'message': self.delete_message_to_json(message)
+        }
+        message_dict = content['message']
+        message_dict['comment_id'] = data['comment_id']
+        print('delete content:')
+        print(content)
+        return self.send_chat_message(content)
+
+
+    def fetch_message_to_json(self, messages):
+        print('fetch_messages_to_json:')
+        print(messages)
         result = []
         for message in messages:
-            result.append(self.message_to_json(message))
+            result.append(self.fetch_message_json(message))
         return result
 
-    def message_to_json(self, message):
-        print('message_to_json:')
+    def fetch_message_json(self, message):
+        print('fetch_message_json:')
         print(message)
-        comment_list = ChatDetail.get_message(self, message)
+        context = {
+            'comment_id': message.id,
+            'author': message.author.nickname,
+            'text': message.text,
+            'created': str(message.created)
+        }
+        print(context)
+        return context
+
+    def create_message_to_json(self, message):
+        print('create_message_to_json:')
+        print(message)
+        comment_list = ChatDetail.get_new_message(self, message)
         context = {
             'user_count': comment_list['user_count'],
             'comment_count': comment_list['comment_count'],
             'comment_lists': render_to_string('chat/chat_comment/chat_comment.html', {
-                'comment_list': comment_list['comment_list'],
-                'user_id': message.author.id,
+
                 'obj_id': message.object_id,
                 'comment_id': message.id,
+                'comment_list': comment_list['comment_list'],
             })
+        }
+        return context
+
+    def update_message_to_json(self, message):
+        print('update_message_to_json:')
+        print(message)
+        context = {
+            'text': message.text,
+            'comment_id': message.id,
+        }
+        return context
+
+    def delete_message_to_json(self, message):
+        print('delete_message_to_json:')
+        print(message)
+        obj_id = message.object_id
+        obj = ChatModel.objects.get(id=obj_id)
+        context = {
+            'user_count': obj.user_count(),
+            'comment_count': obj.comment_count(),
         }
         return context
 
     commands = {
         'fetch_message': fetch_message,
         'create_message': create_message,
+        'update_message': update_message,
+        'delete_message': delete_message,
     }
 
     def connect(self):
@@ -93,14 +161,11 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
-                'comment_list': message,
             }
         )
 
     def chat_message(self, event):
         message = event['message']
-        print('chat_message_event')
-        print(event)
         print('chat_message')
         print(message)
         self.send(text_data=json.dumps(message))
