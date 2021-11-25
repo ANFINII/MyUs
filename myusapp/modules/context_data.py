@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from django.utils.safestring import mark_safe
 from django.db.models import F, Count, Exists, OuterRef
 from myusapp.models import SearchTagModel, CommentModel, FollowModel, AdvertiseModel, TodoModel
 from myusapp.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 import datetime
+import json
 
 User = get_user_model()
 
@@ -137,6 +139,8 @@ class ContextData:
             is_period = True
         else:
             is_period = False
+        # context['room_name_json'] = mark_safe(json.dump(obj.id))
+        # context['nickname'] = mark_safe(json.dump(self.request.user.nickname))
         context['liked'] = liked
         context['followed'] = followed
         context['is_period'] = is_period
