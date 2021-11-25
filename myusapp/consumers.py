@@ -10,16 +10,6 @@ from .views import ChatDetail
 User = get_user_model()
 
 class ChatConsumer(WebsocketConsumer):
-    def fetch_message(self, data):
-        print('fetch_message:')
-        messages = ChatDetail.get_chat_message(data['obj_id'])
-        content = {
-            'command': 'fetch_message',
-            'messages': self.fetch_message_to_json(messages)
-        }
-        print(content)
-        self.send_message(content)
-
     def create_message(self, data):
         print('create_message:')
         print(data)
@@ -68,27 +58,6 @@ class ChatConsumer(WebsocketConsumer):
         print(content)
         return self.send_chat_message(content)
 
-
-    def fetch_message_to_json(self, messages):
-        print('fetch_messages_to_json:')
-        print(messages)
-        result = []
-        for message in messages:
-            result.append(self.fetch_message_json(message))
-        return result
-
-    def fetch_message_json(self, message):
-        print('fetch_message_json:')
-        print(message)
-        context = {
-            'comment_id': message.id,
-            'author': message.author.nickname,
-            'text': message.text,
-            'created': str(message.created)
-        }
-        print(context)
-        return context
-
     def create_message_to_json(self, message):
         print('create_message_to_json:')
         print(message)
@@ -126,7 +95,6 @@ class ChatConsumer(WebsocketConsumer):
         return context
 
     commands = {
-        'fetch_message': fetch_message,
         'create_message': create_message,
         'update_message': update_message,
         'delete_message': delete_message,
@@ -167,11 +135,6 @@ class ChatConsumer(WebsocketConsumer):
     def chat_message(self, event):
         message = event['message']
         print('chat_message')
-        print(message)
-        self.send(text_data=json.dumps(message))
-
-    def send_message(self, message):
-        print('send_message:')
         print(message)
         self.send(text_data=json.dumps(message))
 
