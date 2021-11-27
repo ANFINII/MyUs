@@ -36,7 +36,7 @@
 - chatコメント
 - chatコメント編集
 - chatコメント削除
-- chatリプライ編集
+- chatリプライ
 - chatリプライ編集
 - chatリプライ削除
 
