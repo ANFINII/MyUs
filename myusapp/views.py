@@ -601,7 +601,7 @@ class FollowerList(ListView):
         return ContextData.list_context_data(self, FollowerList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_follower(self, FollowModel)
+        return Search.search_follow(self, FollowModel)
 
 class FollowList(ListView):
     """FollowList"""
@@ -614,7 +614,7 @@ class FollowList(ListView):
         return ContextData.list_context_data(self, FollowList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_following(self, FollowModel)
+        return Search.search_follow(self, FollowModel)
 
 @csrf_exempt
 def follow_create(request, nickname):
