@@ -931,7 +931,6 @@ class ChatDetail(DetailView):
     def get_new_message(self, comment_obj):
         obj = get_object_or_404(ChatModel, id=comment_obj.object_id)
         context = dict()
-        print('get_message')
         context['user_count'] = obj.user_count()
         context['comment_count'] = obj.comment_count()
         context['comment_list'] = obj.comments.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
@@ -942,111 +941,111 @@ class ChatThread(DetailView):
     model = ChatModel
     template_name = 'chat/chat_thread.html'
 
-    def get_object(self, queryset=None):
-        if queryset is None:
-            queryset = self.get_queryset()
-        comment_id = self.kwargs.get('comment_id') or self.request.GET.get('comment_id') or None
-        queryset = queryset.filter(comments__id=comment_id)
-        obj = queryset.get()
-        return obj
-
     def get_context_data(self, **kwargs):
         return ContextData.chat_context_data(self, ChatThread, **kwargs)
 
-@csrf_exempt
-def chat_message(request):
-    """chat_message"""
-    context = dict()
-    if request.method == 'POST':
-        text = request.POST.get('text')
-        obj_id = request.POST.get('id')
-        obj = ChatModel.objects.get(id=obj_id)
-        comment_obj = CommentModel(content_object=obj)
-        comment_obj.content_object = obj
-        comment_obj.text = text
-        comment_obj.author_id = request.user.id
-        comment_obj.save()
-        comment_list = obj.comments.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-        context['user_count'] = obj.user_count()
-        context['comment_count'] = obj.comment_count()
-        context['comment_lists'] = render_to_string('chat/chat_comment/chat_comment.html', {
-            'comment_list': comment_list,
-            'user_id': request.user.id,
-            'obj_id': obj_id,
-            'comment_id': comment_obj.id,
-        })
-        if request.is_ajax():
-            return JsonResponse(context)
-
-@csrf_exempt
-def chat_reply(request):
-    """chat_reply"""
-    context = dict()
-    if request.method == 'POST':
-        text = request.POST.get('reply')
-        obj_id = request.POST.get('id')
-        comment_id = request.POST.get('comment_id')
-        obj = ChatModel.objects.get(id=obj_id)
-        comment_obj = CommentModel(content_object=obj)
-        comment_obj.text = text
-        comment_obj.author_id = request.user.id
-        comment_obj.parent = CommentModel.objects.get(id=comment_id)
-        comment_obj.save()
-        reply_list = obj.comments.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type')
+    def get_new_reply(self, comment_obj):
+        obj = get_object_or_404(ChatModel, id=comment_obj.object_id)
+        context = dict()
         context['user_count'] = obj.user_count()
         context['reply_count'] = comment_obj.parent.replies_count()
-        context['reply_lists'] = render_to_string('chat/chat_reply/chat_reply.html', {
-            'reply_list': reply_list,
-            'user_id': request.user.id,
-            'obj_id': obj_id,
-        })
-        if request.is_ajax():
-            return JsonResponse(context, safe=False)
+        context['reply_list'] = obj.comments.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type')
+        return context
 
-@csrf_exempt
-def chat_message_update(request, comment_id):
-    """chat_message_update"""
-    if request.method == 'POST':
-        text = request.POST.get('text')
-        comment_obj = CommentModel.objects.get(id=comment_id)
-        comment_obj.text = text
-        comment_obj.save()
-        context = {
-            'text': urlize_impl(linebreaksbr(text)),
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
+# @csrf_exempt
+# def chat_message(request):
+#     """chat_message"""
+#     context = dict()
+#     if request.method == 'POST':
+#         text = request.POST.get('text')
+#         obj_id = request.POST.get('id')
+#         obj = ChatModel.objects.get(id=obj_id)
+#         comment_obj = CommentModel(content_object=obj)
+#         comment_obj.content_object = obj
+#         comment_obj.text = text
+#         comment_obj.author_id = request.user.id
+#         comment_obj.save()
+#         comment_list = obj.comments.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
+#         context['user_count'] = obj.user_count()
+#         context['comment_count'] = obj.comment_count()
+#         context['comment_lists'] = render_to_string('chat/chat_comment/chat_comment.html', {
+#             'comment_list': comment_list,
+#             'user_id': request.user.id,
+#             'obj_id': obj_id,
+#             'comment_id': comment_obj.id,
+#         })
+#         if request.is_ajax():
+#             return JsonResponse(context)
 
-@csrf_exempt
-def chat_message_delete(request, comment_id):
-    """chat_message_delete"""
-    if request.method == 'POST':
-        obj_id = request.POST.get('id')
-        obj = ChatModel.objects.get(id=obj_id)
-        comment_obj = CommentModel.objects.get(id=comment_id)
-        comment_obj.delete()
-        context = {
-            'user_count': obj.user_count(),
-            'comment_count': obj.comment_count(),
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
+# @csrf_exempt
+# def chat_reply(request):
+#     """chat_reply"""
+#     context = dict()
+#     if request.method == 'POST':
+#         text = request.POST.get('reply')
+#         obj_id = request.POST.get('id')
+#         comment_id = request.POST.get('comment_id')
+#         obj = ChatModel.objects.get(id=obj_id)
+#         comment_obj = CommentModel(content_object=obj)
+#         comment_obj.text = text
+#         comment_obj.author_id = request.user.id
+#         comment_obj.parent = CommentModel.objects.get(id=comment_id)
+#         comment_obj.save()
+#         reply_list = obj.comments.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type')
+#         context['user_count'] = obj.user_count()
+#         context['reply_count'] = comment_obj.parent.replies_count()
+#         context['reply_lists'] = render_to_string('chat/chat_reply/chat_reply.html', {
+#             'reply_list': reply_list,
+#             'user_id': request.user.id,
+#             'obj_id': obj_id,
+#         })
+#         if request.is_ajax():
+#             return JsonResponse(context, safe=False)
 
-@csrf_exempt
-def chat_reply_delete(request, comment_id):
-    """chat_reply_delete"""
-    if request.method == 'POST':
-        obj_id = request.POST.get('id')
-        obj = ChatModel.objects.get(id=obj_id)
-        comment_obj = CommentModel.objects.get(id=comment_id)
-        comment_obj.delete()
-        context = {
-            'parent_id': comment_obj.parent_id,
-            'user_count': obj.user_count(),
-            'reply_count': comment_obj.parent.replies_count(),
-        }
-        if request.is_ajax():
-            return JsonResponse(context)
+# @csrf_exempt
+# def chat_message_update(request, comment_id):
+#     """chat_message_update"""
+#     if request.method == 'POST':
+#         text = request.POST.get('text')
+#         comment_obj = CommentModel.objects.get(id=comment_id)
+#         comment_obj.text = text
+#         comment_obj.save()
+#         context = {
+#             'text': urlize_impl(linebreaksbr(text)),
+#         }
+#         if request.is_ajax():
+#             return JsonResponse(context)
+
+# @csrf_exempt
+# def chat_message_delete(request, comment_id):
+#     """chat_message_delete"""
+#     if request.method == 'POST':
+#         obj_id = request.POST.get('id')
+#         obj = ChatModel.objects.get(id=obj_id)
+#         comment_obj = CommentModel.objects.get(id=comment_id)
+#         comment_obj.delete()
+#         context = {
+#             'user_count': obj.user_count(),
+#             'comment_count': obj.comment_count(),
+#         }
+#         if request.is_ajax():
+#             return JsonResponse(context)
+
+# @csrf_exempt
+# def chat_reply_delete(request, comment_id):
+#     """chat_reply_delete"""
+#     if request.method == 'POST':
+#         obj_id = request.POST.get('id')
+#         obj = ChatModel.objects.get(id=obj_id)
+#         comment_obj = CommentModel.objects.get(id=comment_id)
+#         comment_obj.delete()
+#         context = {
+#             'parent_id': comment_obj.parent_id,
+#             'user_count': obj.user_count(),
+#             'reply_count': comment_obj.parent.replies_count(),
+#         }
+#         if request.is_ajax():
+#             return JsonResponse(context)
 
 
 # Collabo

@@ -9,7 +9,7 @@
 {% endblock customcss %}
 
 {% block content %}
-{% include 'chat/json_script.html' %}
+{% include 'chat/json_script_chat.html' %}
 
 <main class="main_contents">
     <article class="article_detail_chat">
@@ -27,5 +27,6 @@
 
 {% block extrajs %}
 <script src="{% static 'js/reconnecting-websocket.js' %}"></script>
-<script src="{% static 'js/ajax_chat.js' %}"></script>
+<script src="{% static 'js/chat_common.js' %}"></script>
+<script src="{% static 'js/websocket_chat.js' %}"></script>
 {% endblock extrajs %}
