@@ -9,6 +9,7 @@
 {% endblock customcss %}
 
 {% block content %}
+{% include 'chat/json_script_chat.html' %}
 <main class="main_contents">
     <article class="article_detail_chat">
     {% if object.publish %}

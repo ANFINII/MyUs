@@ -1,6 +1,7 @@
 import json
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
+from django.template.defaultfilters import linebreaksbr
 from channels.generic.websocket import WebsocketConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync
@@ -132,7 +133,7 @@ class ChatConsumer(WebsocketConsumer):
         print('update_message_to_json:')
         print(message)
         context = {
-            'text': message.text,
+            'text': linebreaksbr(message.text),
             'comment_id': message.id,
         }
         return context

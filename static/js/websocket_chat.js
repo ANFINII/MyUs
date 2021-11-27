@@ -3,7 +3,6 @@ let ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
 const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
 const chatSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + '/ws/chat/detail/' + obj_id);
 
-
 // chatSocket の websocket 処理
 chatSocket.onmessage = function(event) {
     let data = JSON.parse(event.data);
@@ -20,15 +19,10 @@ chatSocket.onmessage = function(event) {
             $('#edit_button_' + response.comment_id).remove();
             $('#edit_update_main_' + response.comment_id).remove();
         }
-        console.log(event);
     } else if (data['command'] === 'create_reply_message') {
         const response = data['message'];
         const url = location.pathname;
-        if ('/chat/detail/' + obj_id === url) {
-            $('#user_count').html(response.user_count);
-            $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
-            console.log(event);
-        } else if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === url) {
+        if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === url) {
             document.getElementById('reply_form_button').setAttribute('disabled', true);
             $('#user_count').html(response.user_count);
             $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
@@ -40,7 +34,9 @@ chatSocket.onmessage = function(event) {
                 $('#edit_button_' + response.comment_id).remove();
                 $('#edit_update_main_' + response.comment_id).remove();
             }
-            console.log(event);
+        } else {
+            $('#user_count').html(response.user_count);
+            $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
         }
     } else if (data['command'] === 'update_message') {
         const response = data['message'];
@@ -49,7 +45,6 @@ chatSocket.onmessage = function(event) {
         highlight.style.removeProperty('background-color');
         $('#comment_aria_list_2_' + response.comment_id).html(response.text);
         $('#comment_aria_list_thread_' + response.comment_id).html(response.text);
-        console.log(event);
     } else if (data['command'] === 'delete_message') {
         const response = data['message'];
         const highlight = document.querySelector('#comment_aria_list_cross_' + response.comment_id);
@@ -61,34 +56,31 @@ chatSocket.onmessage = function(event) {
         $('#comment_aria_list_thread_' + response.comment_id).html('スレッドが削除されました！');
         $('#user_count').html(response.user_count);
         $('#comment_count').html(response.comment_count);
-        console.log(event);
     } else if (data['command'] === 'delete_reply_message') {
         const response = data['message'];
         const url = location.pathname;
-        if ('/chat/detail/' + obj_id === url) {
-            $('#user_count').html(response.user_count);
-            $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
-            console.log(event);
-        } else if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === url) {
+        if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === url) {
             $('#comment_aria_list_' + response.comment_id).remove();
             $('#user_count').html(response.user_count);
             $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
-            console.log(event);
+        } else {
+            $('#user_count').html(response.user_count);
+            $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
         }
     }
 };
 
 chatSocket.onopen = function(event) {
     console.log('open', event)
-}
+};
 
 chatSocket.onerror = function(event) {
     console.log('error', event)
-}
+};
 
 chatSocket.onclose = function(event) {
     console.log('close', event)
-}
+};
 
 // 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
 // メッセージ作成
@@ -104,7 +96,7 @@ $('#comment_form').submit(function(event) {
         'obj_id': obj_id,
         'message': message,
     }));
-})
+});
 
 // リプライ作成
 $('#reply_form').submit(function(event) {
@@ -121,7 +113,7 @@ $('#reply_form').submit(function(event) {
         'message': message,
         'parent_id': parent_id,
     }));
-})
+});
 
 // メッセージ編集
 $(document).on('click', '.edit_button_update', function() {
@@ -130,13 +122,13 @@ $(document).on('click', '.edit_button_update', function() {
     document.getElementById('comment_aria_list_' + comment_id).classList.add('active');
     document.getElementById('comment_form_update_' + comment_id).style.height = '40px';
     $('#comment_form_update_' + comment_id).textareaAutoHeight();
-})
+});
 
 $(document).on('click', '.edit_update_cancel', function() {
     const comment_id = $(this).attr('comment-id');
     document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
     document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
-})
+});
 
 $(document).on('click', '.edit_update_button', function(event) {
     event.preventDefault();
@@ -153,7 +145,7 @@ $(document).on('click', '.edit_update_button', function(event) {
         'comment_id': comment_id,
         'message': message,
     }));
-})
+});
 
 // メッセージ削除
 $(document).on('click', '.edit_button_delete', function() {
@@ -180,11 +172,10 @@ $(document).on('click', '.edit_delete_comment', function(event) {
         'command': 'delete_message',
         'comment_id': comment_id,
     }));
-})
+});
 
 $(document).on('click', '.edit_delete_reply', function(event) {
     event.preventDefault();
-    // const obj_id = $(this).attr('obj-id');
     const comment_id = $(this).attr('comment-id');
     document.getElementById('modal_content_' + comment_id).classList.remove('active');
     document.getElementById('mask_' + comment_id).classList.remove('active');
@@ -195,46 +186,6 @@ $(document).on('click', '.edit_delete_reply', function(event) {
         'command': 'delete_reply_message',
         'comment_id': comment_id,
     }));
-})
-
-
-// replyショートカット
-$(document).on('focus', '#reply_form_area', function(event) {
-    event.preventDefault();
-
-    // focus時にそれ以外のtextareaを無効化する
-    const targetElem = document.querySelectorAll('.form_button');
-    const targetCount = targetElem.length;
-    if (targetElem) {
-        for (let i = 0; i < targetCount; i++)
-        targetElem[i].setAttribute('disabled', true);
-    }
-
-    const text = $(this).val();
-    if (text || text.match(/\S/g)) {
-        // disabled属性を削除
-        document.getElementById('reply_form_button').removeAttribute('disabled');
-    }
-
-    $(document).on('input', '#reply_form_area', function(event) {
-        event.preventDefault();
-        const text = $(this).val();
-        if (!text || !text.match(/\S/g)) {
-            // disabled属性を設定
-            document.getElementById('reply_form_button').setAttribute('disabled', true);
-        } else {
-            // disabled属性を削除
-            document.getElementById('reply_form_button').removeAttribute('disabled');
-
-            // ショートカット
-            shortcut.add('Ctrl+Enter', function() {
-                $('#reply_form_button').click();
-            });
-            shortcut.add('meta+Enter', function() {
-                $('#reply_form_button').click();
-            });
-        }
-    });
 });
 
 
@@ -300,4 +251,43 @@ $(document).on('click', '.follow_form', function(event) {
     .fail(function(response) {
         console.log(response);
     })
+});
+
+// replyショートカット
+$(document).on('focus', '#reply_form_area', function(event) {
+    event.preventDefault();
+
+    // focus時にそれ以外のtextareaを無効化する
+    const targetElem = document.querySelectorAll('.form_button');
+    const targetCount = targetElem.length;
+    if (targetElem) {
+        for (let i = 0; i < targetCount; i++)
+        targetElem[i].setAttribute('disabled', true);
+    }
+
+    const text = $(this).val();
+    if (text || text.match(/\S/g)) {
+        // disabled属性を削除
+        document.getElementById('reply_form_button').removeAttribute('disabled');
+    }
+
+    $(document).on('input', '#reply_form_area', function(event) {
+        event.preventDefault();
+        const text = $(this).val();
+        if (!text || !text.match(/\S/g)) {
+            // disabled属性を設定
+            document.getElementById('reply_form_button').setAttribute('disabled', true);
+        } else {
+            // disabled属性を削除
+            document.getElementById('reply_form_button').removeAttribute('disabled');
+
+            // ショートカット
+            shortcut.add('Ctrl+Enter', function() {
+                $('#reply_form_button').click();
+            });
+            shortcut.add('meta+Enter', function() {
+                $('#reply_form_button').click();
+            });
+        }
+    });
 });
