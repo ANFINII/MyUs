@@ -86,7 +86,7 @@ chatSocket.onclose = function(event) {
 // メッセージ作成
 $('#comment_form').submit(function(event) {
     event.preventDefault();
-    const obj_id = $(this).attr('obj-id');
+    const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
     const message = $('form [name=text]').val().replace(/\n+$/g,'');
     $('#comment_form')[0].reset();
     document.getElementById('comment_form_area').style.height = '40px';
@@ -101,12 +101,12 @@ $('#comment_form').submit(function(event) {
 // リプライ作成
 $('#reply_form').submit(function(event) {
     event.preventDefault();
-    const obj_id = $(this).attr('obj-id');
+    const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
     const parent_id = $(this).attr('comment-id');
     const message = $('form [name=reply]').val().replace(/\n+$/g,'');
     $('#reply_form')[0].reset();
-    document.getElementById('comment_form_area').style.height = '40px';
-    document.getElementById('comment_form_button').setAttribute('disabled', true);
+    document.getElementById('reply_form_area').style.height = '40px';
+    document.getElementById('reply_form_button').setAttribute('disabled', true);
     chatSocket.send(JSON.stringify({
         'command': 'create_reply_message',
         'obj_id': obj_id,
