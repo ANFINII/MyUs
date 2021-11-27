@@ -11,15 +11,15 @@ from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.db.models import Count
 from django.template.loader import render_to_string
-from django.template.defaultfilters import linebreaksbr, linebreaks
+from django.template.defaultfilters import linebreaksbr
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, DeleteView
 from .forms import SearchTagForm
 from .models import SearchTagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
-from .modules.search import Search
-from .modules.get_form import get_detail
 from .modules.context_data import ContextData
+from .modules.get_form import get_detail
+from .modules.search import Search
 from .modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 import datetime
 import string
@@ -165,23 +165,22 @@ def logout_form(request):
 
 
 # Withdrawal
-EXPIRED_SECONDS = 60
-
 class Withdrawal(View):
     """退会処理"""
     model = User
     template_name = 'registration/withdrawal.html'
     timestamp_signer = TimestampSigner()
+    EXPIRED_SECONDS = 60
 
     def get_random_chars(self, char_num=30):
         return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(char_num)])
 
     def get(self, request, token=None, *args, **kwargs):
         context = {}
-        context['expired_seconds'] = EXPIRED_SECONDS
+        context['expired_seconds'] = self.EXPIRED_SECONDS
         if token:
             try:
-                unsigned_token = self.timestamp_signer.unsign(token, max_age=datetime.timedelta(seconds=EXPIRED_SECONDS))
+                unsigned_token = self.timestamp_signer.unsign(token, max_age=datetime.timedelta(seconds=self.EXPIRED_SECONDS))
                 context['message'] = '有効なURLです'
                 return render(request, 'registration/withdrawal_confirm.html', context)
             except SignatureExpired:
@@ -196,7 +195,7 @@ class Withdrawal(View):
             password2 = self.request.POST.get('password2')
             if self.request.user.check_password(password):
                 context = {}
-                context['expired_seconds'] = EXPIRED_SECONDS
+                context['expired_seconds'] = self.EXPIRED_SECONDS
                 token = self.get_random_chars()
                 token_signed = self.timestamp_signer.sign(token)
                 context['token_signed'] = token_signed
