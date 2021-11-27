@@ -16,12 +16,12 @@
                 <p>{{ comment.author.nickname }}</p>
                 <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
             </div>
-            <div id="comment_aria_list_2_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
+            <div id="comment_aria_list_thread_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
         </div>
         {% endif %}
     {% endfor %}
 
-    <div id="chat_section_thread_area">
+    <div id="chat_section_thread_area_{{ comment_id }}">
         {% include 'chat/chat_reply/chat_reply.html' %}
     </div>
 

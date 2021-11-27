@@ -5,7 +5,7 @@ from channels.generic.websocket import WebsocketConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync
 from .models import ChatModel, CommentModel
-from .views import ChatDetail
+from .views import ChatDetail, ChatThread
 
 User = get_user_model()
 
@@ -22,6 +22,24 @@ class ChatConsumer(WebsocketConsumer):
         content = {
             'command': 'create_message',
             'message': self.create_message_to_json(message)
+        }
+        print('create content:')
+        print(content)
+        return self.send_chat_message(content)
+
+    def create_reply_message(self, data):
+        print('create_reply_message:')
+        print(data)
+        obj = ChatModel.objects.get(id=data['obj_id'])
+        message = CommentModel.objects.create(
+            author_id=self.scope['user'].id,
+            text=data['message'],
+            content_object=obj,
+            parent_id=data['parent_id'],
+            )
+        content = {
+            'command': 'create_reply_message',
+            'message': self.create_reply_message_to_json(message)
         }
         print('create content:')
         print(content)
@@ -58,6 +76,21 @@ class ChatConsumer(WebsocketConsumer):
         print(content)
         return self.send_chat_message(content)
 
+    def delete_reply_message(self, data):
+        print('delete_reply_message:')
+        print(data)
+        message = CommentModel.objects.get(id=data['comment_id'])
+        print(message)
+        content = {
+            'command': 'delete_reply_message',
+            'message': self.delete_reply_message_to_json(message)
+        }
+        message_dict = content['message']
+        message_dict['comment_id'] = data['comment_id']
+        print('delete reply content:')
+        print(content)
+        return self.send_chat_message(content)
+
     def create_message_to_json(self, message):
         print('create_message_to_json:')
         print(message)
@@ -74,6 +107,25 @@ class ChatConsumer(WebsocketConsumer):
                 'comment_list': comment_list['comment_list'],
             })
         }
+        return context
+
+    def create_reply_message_to_json(self, message):
+        print('create_reply_message_to_json:')
+        print(message)
+        reply_list = ChatThread.get_new_reply(self, message)
+        context = {
+            'user_id': self.scope['user'].id,
+            'comment_id': message.id,
+            'parent_id': message.parent.id,
+            'user_count': reply_list['user_count'],
+            'reply_count': reply_list['reply_count'],
+            'reply_lists': render_to_string('chat/chat_reply/chat_reply.html', {
+                'user_id': self.scope['user'].id,
+                'obj_id': message.object_id,
+                'reply_list': reply_list['reply_list'],
+            })
+        }
+        print(context)
         return context
 
     def update_message_to_json(self, message):
@@ -96,10 +148,27 @@ class ChatConsumer(WebsocketConsumer):
         }
         return context
 
+    def delete_reply_message_to_json(self, message):
+        print('delete_reply_message_to_json:')
+        print(message)
+        obj_id = message.object_id
+        obj = ChatModel.objects.get(id=obj_id)
+        comment_obj = CommentModel.objects.get(id=message.id)
+        message.delete()
+        context = {
+            'user_count': obj.user_count(),
+            'parent_id': comment_obj.parent_id,
+            'reply_count': comment_obj.parent.replies_count(),
+        }
+        print(context)
+        return context
+
     commands = {
         'create_message': create_message,
+        'create_reply_message': create_reply_message,
         'update_message': update_message,
         'delete_message': delete_message,
+        'delete_reply_message': delete_reply_message,
     }
 
     def connect(self):
@@ -136,17 +205,6 @@ class ChatConsumer(WebsocketConsumer):
 
     def chat_message(self, event):
         message = event['message']
-        print('chat_message')
+        print('chat_message:')
         print(message)
         self.send(text_data=json.dumps(message))
-
-
-class ChatThereadConsumer(WebsocketConsumer):
-    def connect(self):
-        self.comment_id = self.scope['url_route']['kwargs']['comment_id']
-        self.room_group_name = 'chat_detail_thread_%s' % self.comment_id
-        async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name,
-            self.channel_name
-        )
-        self.accept()
