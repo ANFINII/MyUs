@@ -20,7 +20,7 @@
         </div>
 
         {% if user.is_authenticated %}
-            <form method="POST" action="{% url 'myus:like_form' %}" path="{{ request.path }}" class="view_good_inline char_like">
+            <form method="POST" action="{% url 'myus:like_form' %}" path="{{ request.path }}" class="view_good_inline">
                 {% csrf_token %}
                 {% if liked %}
                 <button type="submit" name="chatmodel_id" value="{{ object.id }}" class="like_form like_fill">
