@@ -142,7 +142,6 @@ class ContextData:
         context['is_period'] = is_period
         context['user_id'] = user_id
         context['obj_id'] = obj.id
-        context['obj_title'] = obj.title
         context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],

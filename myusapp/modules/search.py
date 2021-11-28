@@ -60,9 +60,9 @@ class Search:
     def search_follow(self, model):
         path = self.request.path
         user_id = self.request.user.id
-        if '/follow/' in path:
+        if '/follow' in path:
             result = model.objects.filter(follower_id=user_id).exclude(following_id=user_id)
-        if '/follower/' in path:
+        if '/follower' in path:
             result = model.objects.filter(following_id=user_id).exclude(follower_id=user_id)
         search = self.request.GET.get('search')
         if search:

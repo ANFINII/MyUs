@@ -13,9 +13,9 @@ from django.db.models import Count
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, DeleteView, TemplateView
 from .forms import SearchTagForm
-from .models import SearchTagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
+from .models import NotifyModel, SearchTagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .modules.context_data import ContextData
 from .modules.get_form import get_detail
@@ -332,6 +332,13 @@ class MyPageUpdate(UpdateView):
 
     def get_object(self):
         return self.request.user
+
+
+# 通知設定
+class Notify(TemplateView):
+    """Notify"""
+    model = NotifyModel
+    template_name = 'common/notify.html'
 
 
 # SearchTag

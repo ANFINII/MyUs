@@ -1,0 +1,40 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUs通知</title>{% endblock title %}
+
+{% load static %}
+
+{% block customcss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+{% endblock customcss %}
+
+{% block content %}
+<main class="main_contents">
+    <article class="main_profile">
+        <h1>通知設定</h1>
+
+        <table>
+            <thead>
+                <tr><th class="td-color td-header">通知設定</th><th class="td-indent td-header"></th></tr>
+            </thead>
+            <tbody>
+                <tr><td class="td-color">Movie通知</td><td class="td-indent"></td></tr>
+                <tr><td class="td-color">Live通知</td><td class="td-indent"></td></tr>
+                <tr><td class="td-color">Music通知</td><td class="td-indent"></td></tr>
+                <tr><td class="td-color">Picture通知</td><td class="td-indent"></td></tr>
+                <tr><td class="td-color">Blog通知</td><td class="td-indent"></td></tr>
+                <tr><td class="td-color">Chat通知</td><td class="td-indent"></td></tr>
+                <tr><td class="td-color">Collabo通知</td><td class="td-indent"></td></tr>
+                <tr><td class="td-color">返信通知</td><td class="td-indent"></td></tr>
+                <tr><td class="td-color">閲覧数通知</td><td class="td-indent"></td></tr>
+                <tr><td class="td-color">いいね通知</td><td class="td-indent"></td></tr>
+            </tbody>
+            <tfoot>
+                <tr><td class="td-color td-footer">フォロワー通知</td><td class="td-indent td-footer"></td></tr>
+            </tfoot>
+        </table>
+
+        {% include "parts/footer-myus.html" %}
+    </article>
+</main>
+{% endblock content %}
