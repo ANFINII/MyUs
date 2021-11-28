@@ -158,6 +158,10 @@ class TagModel(models.Model):
     class Meta:
         verbose_name_plural = '11 ハッシュタグ'
 
+class NotifyModel(models.Model):
+    """NotifyModel"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
 class VideoQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
