@@ -15,7 +15,7 @@ from django.template.defaultfilters import linebreaksbr
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, DeleteView, TemplateView
 from .forms import SearchTagForm
-from .models import NotifyModel, SearchTagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
+from .models import SearchTagModel, NotifyModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .modules.context_data import ContextData
 from .modules.get_form import get_detail

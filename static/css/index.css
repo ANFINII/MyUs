@@ -265,6 +265,7 @@ header {
     background: rgb(255, 250, 245);
     color: rgb(50, 50, 50);
     transition: all 0.2s;
+    overflow-x: hidden;
 }
 
 .dropdown_menu_cloud,
@@ -337,6 +338,40 @@ header {
 .drop-fill-color:hover {
     color: rgb(250, 130, 0);
     background-color: rgb(255, 230, 200);
+}
+
+/* 通知メニュー */
+.notify_aria_list {
+    display: grid;
+    grid-template-columns: 36px auto;
+    grid-template-rows: 36px;
+    grid-gap: 0 10px;
+    padding: 6px 0px 6px 10px;
+}
+
+.notify_aria_list:hover {
+    color: rgb(250, 130, 0);
+    background-color: rgb(255, 230, 200);
+}
+
+.notify_aria_list a {
+    text-decoration: none;
+}
+
+.notify_aria_list .profile_image {
+    grid-column: 1/2;
+    grid-row: 1/2;
+}
+
+.notify_aria_list_1 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    grid-column: 2/-1;
+    grid-row: 1/2;
+    font-size: 12px;
+    overflow: hidden;
+    word-break: break-all;
 }
 
 /* メインナビゲーション */
@@ -634,15 +669,10 @@ header {
 }
 
 .main_contents h1 {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
     display: flex;
-    font-size: 24px;
     height: 30px;
     margin: 10px 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 24px;
 }
 
 .main_contents h1 span {
@@ -948,16 +978,15 @@ header {
     font-size: 14px;
     color: rgb(3, 3, 3);
     overflow: hidden;
-    text-overflow: ellipsis;
+    word-break: break-all;
 }
 
 .content_nickname {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
+    margin: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 0 0 0 0;
 }
 
 .view_good {
@@ -1040,7 +1069,7 @@ header {
     font-size: 13px;
     padding: 0px 6px 6px 6px;
     overflow: hidden;
-    text-overflow: ellipsis;
+    word-break: break-all;
 }
 
 .follow_content_4 a {
@@ -1884,10 +1913,10 @@ header {
     grid-column: 1/-1;
     grid-row: 1/2;
     height: 4.5em;
+    margin: 8px 4px 8px 10px;
     font-size: 14px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 8px 4px 8px 10px;
+    word-break: break-all;
 }
 
 .author_title_space_todo .priority {

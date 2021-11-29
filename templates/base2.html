@@ -207,7 +207,16 @@
                     <div>通知設定</div>
                     <a href="{% url 'myus:notify' %}" class="icon_link" role="button" aria-disabled="true"></a>
                 </div>
-                <div>お知らせ</div>
+                {% for notify in notify_list %}
+                <div class="dropdown_menu_item side_indent">
+                    <div class="notify_aria_list">
+                        <a href="{% url 'myus:userpage' notify.author.nickname %}">
+                            <img src="{{ notify.author.user_image.url }}" title="{{ notify.author.nickname }}" class="profile_image">
+                        </a>
+                        <div class="notify_aria_list_1" title="{{ notify.author.nickname }}が{{ notify.title }}を投稿しました">{{ notify.text }}</div>
+                    </div>
+                </div>
+                {% endfor %}
             </nav>
         </div>
 
