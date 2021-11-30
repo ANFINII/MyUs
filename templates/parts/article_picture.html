@@ -6,7 +6,7 @@
         <a href="{% url 'myus:picture_detail' item.pk item.title %}">
             <img src="{{ item.images.url }}" width="272" height="153">
         </a>
-        <a href="{% url 'myus:picture_detail' item.pk item.title %}" class="author_title_space">
+        <a href="{% url 'myus:picture_detail' item.pk item.title %}" class="author_space">
             {% include 'parts/author_space.html' %}
             {% include 'parts/content_title.html' %}
         </a>
