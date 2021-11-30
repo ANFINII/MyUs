@@ -12,7 +12,7 @@
                     <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
                 </video>
             </a>
-            <a href="{% url 'myus:live_detail' item.pk item.title %}" class="author_title_space">
+            <a href="{% url 'myus:live_detail' item.pk item.title %}" class="author_space">
                 {% include 'parts/author_space.html' %}
                 {% include 'parts/content_title.html' %}
             </a>

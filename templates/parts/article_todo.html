@@ -3,7 +3,7 @@
 {% for item in todo_list %}
 <section class="main_content_todo">
     <div class="main_decolation_todo alert-{{ item.priority }}" role="alert">
-        <a href="{% url 'myus:todo_detail' item.pk item.title %}" class="author_title_space_todo">
+        <a href="{% url 'myus:todo_detail' item.pk item.title %}" class="author_space_todo">
             <div class="content_title">{{ item.title }}</div>
             <p class="priority">優先度 {{ item.get_priority_display }}</p>
             <time class="todo_time">期日 {{ item.duedate }}</time>

@@ -7,7 +7,7 @@
             <source src="{{ item.musics.url }}">
             <p>ブラウザがaudioに対応しておりません</p>
         </audio>
-        <a href="{% url 'myus:music_detail' item.pk item.title %}" class="author_title_space">
+        <a href="{% url 'myus:music_detail' item.pk item.title %}" class="author_space">
             {% include 'parts/author_space.html' %}
             {% include 'parts/content_title.html' %}
         </a>
