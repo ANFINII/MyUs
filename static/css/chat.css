@@ -266,7 +266,7 @@ hr {
     width: 46vw;
 }
 
-.chat_section_nav_check:checked ~ .chat_section_nav .chat_section_nav_area:hover {
+.chat_section_nav_check:checked ~ .chat_section_nav .chat_section_nav_area {
     overflow-y: scroll;
 }
 
@@ -293,22 +293,28 @@ hr {
     background-color: rgb(240, 245, 255);
 }
 
-.chat_section_nav img {
+.chat_section_nav_list a {
+    text-decoration: none;
+}
+
+.chat_section_nav_list img {
     grid-column: 1/2;
     grid-row: 1/2;
 }
 
-.chat_section_nav h3 {
-    display: inline-block;
+.chat_section_nav_list h3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     grid-column: 2/3;
     grid-row: 1/2;
-    font-size: 13px;
+    font-size: 14px;
     color: rgb(33,37,41);
-    text-decoration: none;
-    padding: 12px 0 13px 0;
+    height: 40px;
+    padding: 3px 0;
     margin: 0;
-    overflow-x: hidden;
-    white-space: nowrap;
+    overflow: hidden;
+    word-break: break-all;
 }
 
 /* chat_section_main */
