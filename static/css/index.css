@@ -834,10 +834,12 @@ header {
 .author_space_side {
     display: grid;
     grid-template-columns: 2px 290px;
-    grid-template-rows: 44px 62px;
+    grid-template-rows: 48px 60px;
 }
 
 .author_space_side .content_title {
+    height: 48px;
+    max-width: 232px;
     margin: 0 0 0 6px;
 }
 
@@ -850,12 +852,6 @@ header {
 .content_side {
     display: flex;
     width: 100%;
-}
-
-.content_size {
-    display: block;
-    width: 192px;
-    height: 106px;
 }
 
 /* コンテンツ詳細セクション分 */
@@ -872,7 +868,7 @@ header {
 
 .article_detail_section_side {
     display: grid;
-    grid-template-columns: minmax(400px, 7fr) minmax(500px, 500px);
+    grid-template-columns: minmax(400px, 7fr) minmax(450px, 450px);
     grid-template-rows: auto auto;
 }
 
