@@ -158,9 +158,24 @@ class TagModel(models.Model):
     class Meta:
         verbose_name_plural = '11 ハッシュタグ'
 
-class NotifyModel(models.Model):
-    """NotifyModel"""
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class NotificationModel(models.Model):
+    """NotificationModel"""
+    # {'1':'video', '2':'live', '3':'music', '4':'picture', '5':'blog', '6':'chat',
+    # '7':'collabo', '8':'follow', '9':'like', '10':'reply', '11':'views'}
+    notification_type = models.IntegerField(default=0)
+    user_to           = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, null=True)
+    user_from         = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE, null=True)
+    content_type      = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id         = models.PositiveIntegerField()
+    content_object    = GenericForeignKey('content_type', 'object_id')
+    confirmed         = models.BooleanField(default=False)
+    created           = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user_from.nickname
+
+    class Meta:
+        verbose_name_plural = '12 通知設定'
 
 class VideoQuerySet(models.QuerySet):
     def search(self, query=None):
@@ -549,7 +564,7 @@ class AdvertiseModel(models.Model):
         return self.title
 
     class Meta:
-        verbose_name_plural = '12 広告'
+        verbose_name_plural = '13 広告'
 
 class CommentModel(models.Model):
     """CommentModel"""
@@ -573,4 +588,4 @@ class CommentModel(models.Model):
         return CommentModel.objects.filter(parent=self).count()
 
     class Meta:
-        verbose_name_plural = '13 コメント'
+        verbose_name_plural = '14 コメント'

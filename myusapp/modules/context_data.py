@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
-from myusapp.models import SearchTagModel, CommentModel, FollowModel, AdvertiseModel, TodoModel
+from myusapp.models import SearchTagModel, NotificationModel, CommentModel, FollowModel, AdvertiseModel, TodoModel
 from myusapp.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 import datetime
 
@@ -13,6 +13,7 @@ class ContextData:
         user_id = self.request.user.id
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
+            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
         })
         return context
 
@@ -24,6 +25,7 @@ class ContextData:
         context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
+            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
         })
         if 'myusapp.views.Index' in str(model_list):
             context.update({
@@ -94,6 +96,7 @@ class ContextData:
         context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
+            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
             'advertise_list': AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:6],
             'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
         })
@@ -145,6 +148,7 @@ class ContextData:
         context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
+            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50],
         })
         if 'myusapp.views.ChatThread' in str(model_detail):
@@ -169,6 +173,7 @@ class ContextData:
         context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
+            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
             'advertise_list': AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:6],
             'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
             'todo_list': TodoModel.objects.filter(author_id=user_id).exclude(id=obj.id),

@@ -340,30 +340,35 @@ header {
     background-color: rgb(255, 230, 200);
 }
 
-/* 通知メニュー */
-.notify_aria_list {
+/* ドロップダウンメニュー 通知 */
+.notification_aria_link a {
+    text-decoration: none;
+    color: rgb(33, 37, 41);
+}
+
+.notification_aria_list {
     display: grid;
     grid-template-columns: 36px auto;
     grid-template-rows: 36px;
     grid-gap: 0 10px;
-    padding: 6px 0px 6px 10px;
+    padding: 6px 0px 6px 11px;
 }
 
-.notify_aria_list:hover {
+.notification_aria_list:hover {
     color: rgb(250, 130, 0);
     background-color: rgb(255, 230, 200);
 }
 
-.notify_aria_list a {
+.notification_aria_list a {
     text-decoration: none;
 }
 
-.notify_aria_list .profile_image {
+.notification_aria_list .profile_image {
     grid-column: 1/2;
     grid-row: 1/2;
 }
 
-.notify_aria_list_1 {
+.notification_aria_list_1 {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
