@@ -667,6 +667,20 @@ header {
     color: rgb(0, 130, 255);
 }
 
+/* 通知設定 */
+.bi-toggle-on {
+    color: rgb(0, 130, 255);
+}
+
+.bi-toggle-off {
+    color: rgb(0, 40, 80);
+}
+
+.bi-toggle-on:hover,
+.bi-toggle-off:hover {
+    color: rgb(50, 155, 255);
+}
+
 /* メインコンテンツ */
 .main_contents {
     grid-column: 2/-1;
