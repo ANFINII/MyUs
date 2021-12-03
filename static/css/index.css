@@ -155,6 +155,7 @@ header {
     display: block;
     height: 3.5em;
     margin: 16px 0 0 0;
+    cursor: pointer;
     text-align: start;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -623,6 +624,7 @@ header {
     position: fixed;
     right: 18px;
     padding: 0 0 2px 0;
+    cursor: pointer;
     color: rgb(120, 120, 120);
     background-color: rgb(240, 240, 240);
 }
@@ -631,6 +633,7 @@ header {
     position: fixed;
     right: 0;
     padding: 0 0 2px 0;
+    cursor: pointer;
     color: rgb(120, 120, 120);
     background-color: rgb(240, 240, 240);
 }
