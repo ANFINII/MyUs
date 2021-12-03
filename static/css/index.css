@@ -377,6 +377,7 @@ header {
     font-size: 12px;
     overflow: hidden;
     word-break: break-all;
+    padding: 1px 0;
 }
 
 /* メインナビゲーション */
