@@ -342,6 +342,10 @@ class Notification(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Notification, self).get_context_data(**kwargs)
+        user_id = self.request.user.id
+        context.update({
+            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
+        })
         return context
 
 
