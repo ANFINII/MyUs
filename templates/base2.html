@@ -207,31 +207,7 @@
                     <div>通知設定</div>
                     <a href="{% url 'myus:notification' %}" class="icon_link" role="button" aria-disabled="true"></a>
                 </div>
-                {% for notification in notification_list %}
-                    {% if notification.notification_type == '1' %}
-                    <div class="dropdown_menu_item side_indent notification_aria_link">
-                        <a href="{% url 'myus:video_detail' notification.content_object.id notification.content_object.title %}">
-                            <object class="notification_aria_list">
-                                <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
-                                    <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
-                                </a>
-                                <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}が{{ notification.content_object.title }}を投稿しました">{{ notification.content_object.title }}</div>
-                            </object>
-                        </a>
-                    </div>
-                    {% elif notification.notification_type == '3' %}
-                    <div class="dropdown_menu_item side_indent notification_aria_link">
-                        <a href="{% url 'myus:music_detail' notification.content_object.id notification.content_object.title %}">
-                            <object class="notification_aria_list">
-                                <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
-                                    <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
-                                </a>
-                                <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}が{{ notification.content_object.title }}を投稿しました">{{ notification.content_object.title }}</div>
-                            </object>
-                        </a>
-                    </div>
-                    {% endif %}
-                {% endfor %}
+                {% include 'parts/notification_list.html' %}
             </nav>
         </div>
 
