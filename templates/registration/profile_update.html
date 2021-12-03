@@ -75,10 +75,10 @@
                     <tr>
                         <td class="td-color">性別</td>
                         <td class="td-gender">
-                            {% for count, gender in usergender.gender.items %}
+                            {% for key, gender in gender.items %}
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" name="gender" value="{{ count }}" id="gender_{{ count }}" class="custom-control-input" {% if user.gender == count %} checked {% endif %}>
-                                <label for="gender_{{ count }}" class="custom-control-label">{{ gender }}</label>
+                                <input type="radio" name="gender" value="{{ key }}" id="gender_{{ key }}" class="custom-control-input" {% if user.gender == key %} checked {% endif %}>
+                                <label for="gender_{{ key }}" class="custom-control-label">{{ gender }}</label>
                             </div>
                             {% endfor %}
                         </td>
