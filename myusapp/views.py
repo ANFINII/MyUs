@@ -227,7 +227,7 @@ class ProfileUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileUpdate, self).get_context_data(**kwargs)
-        context['usergender'] = {'gender':{'0':'男性', '1':'女性', '2':'秘密'}}
+        context['gender'] = {'0':'男性', '1':'女性', '2':'秘密'}
         return context
 
     def form_valid(self, form):
@@ -344,12 +344,8 @@ class Notification(TemplateView):
         context = super(Notification, self).get_context_data(**kwargs)
         return context
 
-# SearchTag
-class SearchTagList(ListView):
-    """SearchTagList"""
-    model = SearchTagModel
-    template_name = 'base2.html'
 
+# SearchTag
 @csrf_exempt
 def searchtag_create(request):
     """searchtag_create"""
