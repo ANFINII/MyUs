@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
-from .views import profile, ProfileUpdate, mypage, MyPageUpdate, Notify
+from .views import profile, ProfileUpdate, mypage, MyPageUpdate, Notification
 from .views import FollowerList, FollowList, follow_create, userpolicy, knowledge
 from .views import VideoList, VideoCreate, VideoDetail
 from .views import LiveList, LiveCreate, LiveDetail
@@ -27,7 +27,7 @@ urlpatterns = [
     path('profile/update', ProfileUpdate.as_view(), name='profile_update'),
     path('mypage', mypage, name='mypage'),
     path('mypage/update', MyPageUpdate.as_view(), name='mypage_update'),
-    path('notify', Notify.as_view(), name='notify'),
+    path('notification', Notification.as_view(), name='notification'),
 
     path('follower', FollowerList.as_view(), name='follower_list'),
     path('follow', FollowList.as_view(), name='follow_list'),

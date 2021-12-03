@@ -15,7 +15,7 @@ from django.template.defaultfilters import linebreaksbr
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, DeleteView, TemplateView
 from .forms import SearchTagForm
-from .models import SearchTagModel, NotifyModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
+from .models import SearchTagModel, NotificationModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from .modules.context_data import ContextData
 from .modules.get_form import get_detail
@@ -335,11 +335,14 @@ class MyPageUpdate(UpdateView):
 
 
 # 通知設定
-class Notify(TemplateView):
-    """Notify"""
-    model = NotifyModel
-    template_name = 'common/notify.html'
+class Notification(TemplateView):
+    """Notification"""
+    model = NotificationModel
+    template_name = 'common/notification.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(Notification, self).get_context_data(**kwargs)
+        return context
 
 # SearchTag
 class SearchTagList(ListView):

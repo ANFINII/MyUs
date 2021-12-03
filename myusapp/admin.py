@@ -3,8 +3,8 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
 from import_export.admin import ImportExportModelAdmin
-from .models import User, SearchTagModel, TagModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
-from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
+from .models import User, SearchTagModel, TagModel, NotificationModel, CommentModel, FollowModel, AdvertiseModel
+from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, TodoModel
 
 # Admin用の管理画面
 class SearchTagInline(admin.TabularInline):
@@ -86,6 +86,19 @@ class TagAdmin(ImportExportModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(TagAdmin, self).save_model(request, obj, form, change)
+
+@admin.register(NotificationModel)
+class NotificationAdmin(ImportExportModelAdmin):
+    list_display = ('id', 'notification_type', 'content_type', 'object_id', 'content_object', 'user_to', 'user_from', 'confirmed', 'created')
+    search_fields = ('content_type', 'created')
+    ordering = ('notification_type', 'object_id', 'id')
+    readonly_fields = ('created',)
+
+    # 詳細画面
+    fieldsets = [
+        ('編集項目', {'fields': ('notification_type', 'content_type', 'object_id', 'user_to', 'user_from', 'confirmed')}),
+        ('確認項目', {'fields': ('created',)})
+    ]
 
 @admin.register(CommentModel)
 class CommentAdmin(ImportExportModelAdmin):
