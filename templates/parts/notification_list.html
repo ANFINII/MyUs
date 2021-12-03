@@ -132,36 +132,61 @@
     {% elif notification.notification_type == '11' %}
     <div class="dropdown_menu_item side_indent notification_aria_link">
         <a href="">
+            {% if  notification.content_object.read >= 1000000000 %}
             <object class="notification_aria_list">
                 <a href="{% url 'myus:userpage' notification.user_to.nickname %}">
                     <img src="{{ notification.user_to.user_image.url }}" title="{{ notification.user_to.nickname }}" class="profile_image">
                 </a>
-                {% if  notification.content_object.read >= 1000000000 %}
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10億回閲覧されました">
                     {{ notification.content_object.title }}が10億回閲覧されました
                 </div>
-                {% elif  notification.content_object.read >= 100000000 %}
+            </object>
+            {% elif  notification.content_object.read >= 100000000 %}
+            <object class="notification_aria_list">
+                <a href="{% url 'myus:userpage' notification.user_to.nickname %}">
+                    <img src="{{ notification.user_to.user_image.url }}" title="{{ notification.user_to.nickname }}" class="profile_image">
+                </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1億回閲覧されました">
                     {{ notification.content_object.title }}が1億回閲覧されました
                 </div>
-                {% elif  notification.content_object.read >= 10000000 %}
+            </object>
+            {% elif  notification.content_object.read >= 10000000 %}
+            <object class="notification_aria_list">
+                <a href="{% url 'myus:userpage' notification.user_to.nickname %}">
+                    <img src="{{ notification.user_to.user_image.url }}" title="{{ notification.user_to.nickname }}" class="profile_image">
+                </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1000万回閲覧されました">
                     {{ notification.content_object.title }}が1000万回閲覧されました
                 </div>
-                {% elif  notification.content_object.read >= 1000000 %}
+            </object>
+            {% elif  notification.content_object.read >= 1000000 %}
+            <object class="notification_aria_list">
+                <a href="{% url 'myus:userpage' notification.user_to.nickname %}">
+                    <img src="{{ notification.user_to.user_image.url }}" title="{{ notification.user_to.nickname }}" class="profile_image">
+                </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が100万回閲覧されました">
                     {{ notification.content_object.title }}が100万回閲覧されました
                 </div>
-                {% elif  notification.content_object.read >= 100000 %}
+            </object>
+            {% elif  notification.content_object.read >= 100000 %}
+            <object class="notification_aria_list">
+                <a href="{% url 'myus:userpage' notification.user_to.nickname %}">
+                    <img src="{{ notification.user_to.user_image.url }}" title="{{ notification.user_to.nickname }}" class="profile_image">
+                </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10万回閲覧されました">
                     {{ notification.content_object.title }}が10万回閲覧されました
                 </div>
-                {% elif  notification.content_object.read >= 10000 %}
+            </object>
+            {% elif  notification.content_object.read >= 10000 %}
+            <object class="notification_aria_list">
+                <a href="{% url 'myus:userpage' notification.user_to.nickname %}">
+                    <img src="{{ notification.user_to.user_image.url }}" title="{{ notification.user_to.nickname }}" class="profile_image">
+                </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1万回閲覧されました">
                     {{ notification.content_object.title }}が1万回閲覧されました
                 </div>
-                {% endif %}
             </object>
+            {% endif %}
         </a>
     </div>
     {% endif %}
