@@ -504,9 +504,6 @@ class TodoModel(models.Model):
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self):
-        return reverse('todo_detail', kwargs={'pk':self.pk})
-
     def comment_count(self):
         return self.comments.filter(parent__isnull=True).count()
 
