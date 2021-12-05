@@ -11,9 +11,10 @@ class ContextData:
     def create_context_data(self, model_create, **kwargs):
         context = super(model_create, self).get_context_data(**kwargs)
         user_id = self.request.user.id
+        following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', flat=True))
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
-            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
+            'notification_list': NotificationModel.objects.filter(user_from_id__in=following_list).order_by('-created')[:50],
         })
         return context
 
@@ -21,11 +22,12 @@ class ContextData:
     def list_context_data(self, model_list, **kwargs):
         context = super(model_list, self).get_context_data(**kwargs)
         user_id = self.request.user.id
+        following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', flat=True))
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
-            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
+            'notification_list': NotificationModel.objects.filter(user_from_id__in=following_list).order_by('-created')[:50],
         })
         if 'myusapp.views.Index' in str(model_list):
             context.update({
@@ -54,20 +56,21 @@ class ContextData:
 
         if 'myusapp.views.UserPage' in str(model_list) or 'myusapp.views.UserPageInfo' in str(model_list) or 'myusapp.views.UserPageAdvertise' in str(model_list):
             author = get_object_or_404(User, nickname=self.kwargs['nickname'])
-            follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=author)
+            author_id = author.id
+            follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=author_id)
             followed = False
             if follow.exists():
                 followed = True
             context['followed'] = followed
-            context['author_name'] = author
+            context['author_name'] = author.nickname
             context.update({
-                'user_list': User.objects.filter(nickname=author),
-                'video_list': VideoModel.objects.filter(author_id=author, publish=True),
-                'live_list': LiveModel.objects.filter(author_id=author, publish=True),
-                'music_list': MusicModel.objects.filter(author_id=author, publish=True),
-                'picture_list': PictureModel.objects.filter(author_id=author, publish=True),
-                'blog_list': BlogModel.objects.filter(author_id=author, publish=True),
-                'chat_list': ChatModel.objects.filter(author_id=author, publish=True),
+                'user_list': User.objects.filter(id=author_id),
+                'video_list': VideoModel.objects.filter(author_id=author_id, publish=True),
+                'live_list': LiveModel.objects.filter(author_id=author_id, publish=True),
+                'music_list': MusicModel.objects.filter(author_id=author_id, publish=True),
+                'picture_list': PictureModel.objects.filter(author_id=author_id, publish=True),
+                'blog_list': BlogModel.objects.filter(author_id=author_id, publish=True),
+                'chat_list': ChatModel.objects.filter(author_id=author_id, publish=True),
             })
         return context
 
@@ -76,6 +79,7 @@ class ContextData:
         context = super(model_detail, self).get_context_data(**kwargs)
         obj = self.object
         user_id = self.request.user.id
+        following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', flat=True))
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
         if obj.like.filter(id=user_id).exists():
@@ -96,7 +100,7 @@ class ContextData:
         context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
-            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
+            'notification_list': NotificationModel.objects.filter(user_from_id__in=following_list).order_by('-created')[:50],
             'advertise_list': AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:6],
             'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
         })
@@ -129,6 +133,7 @@ class ContextData:
         context = super(model_detail, self).get_context_data(**kwargs)
         obj = self.object
         user_id = self.request.user.id
+        following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', flat=True))
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
         if obj.like.filter(id=user_id).exists():
@@ -148,7 +153,7 @@ class ContextData:
         context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
-            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
+            'notification_list': NotificationModel.objects.filter(user_from_id__in=following_list).order_by('-created')[:50],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50],
         })
         if 'myusapp.views.ChatThread' in str(model_detail):
@@ -162,6 +167,7 @@ class ContextData:
         context = super(model_detail, self).get_context_data(**kwargs)
         obj = self.object
         user_id = self.request.user.id
+        following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', flat=True))
         filter_kwargs = {}
         filter_kwargs['id'] = OuterRef('pk')
         filter_kwargs['like'] = user_id
@@ -173,7 +179,7 @@ class ContextData:
         context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
-            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
+            'notification_list': NotificationModel.objects.filter(user_from_id__in=following_list).order_by('-created')[:50],
             'advertise_list': AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:6],
             'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
             'todo_list': TodoModel.objects.filter(author_id=user_id).exclude(id=obj.id),
