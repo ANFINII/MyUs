@@ -89,16 +89,29 @@ class TagAdmin(ImportExportModelAdmin):
 
 @admin.register(NotificationModel)
 class NotificationAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'notification_type', 'content_type', 'object_id', 'content_object', 'user_to', 'user_from', 'confirmed', 'created')
-    search_fields = ('content_type', 'created')
-    ordering = ('notification_type', 'object_id', 'id')
-    readonly_fields = ('created',)
+    list_display = ('id', 'user_from', 'user_to', 'type_no', 'content_type', 'object_id', 'title', 'confirmed_count', 'delete_count', 'created')
+    search_fields = ('type_no', 'created')
+    ordering = ('type_no', '-created')
+    filter_horizontal = ('confirmed', 'delete')
+    readonly_fields = ('title', 'confirmed_count', 'delete_count', 'created')
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('notification_type', 'content_type', 'object_id', 'user_to', 'user_from', 'confirmed')}),
-        ('確認項目', {'fields': ('created',)})
+        ('編集項目', {'fields': ('user_from', 'user_to', 'type_no', 'content_type', 'object_id', 'confirmed', 'delete')}),
+        ('確認項目', {'fields': ('title', 'confirmed_count', 'delete_count', 'created')})
     ]
+
+    def confirmed_count(self, obj):
+        return obj.confirmed.count()
+    confirmed_count.short_description = 'confirmed'
+
+    def delete_count(self, obj):
+        return obj.delete.count()
+    delete_count.short_description = 'delete'
+
+    def title(self, obj):
+        return obj.content_object.title
+    title.short_description = 'title'
 
 @admin.register(CommentModel)
 class CommentAdmin(ImportExportModelAdmin):
@@ -786,6 +799,44 @@ class TodoModelAdminSite(admin.ModelAdmin):
     comment_count.short_description = 'comment'
 mymanage_site.register(TodoModel, TodoModelAdminSite)
 
+class NotificationAdminSite(admin.ModelAdmin):
+    list_display = ('id', 'type_no', 'content_type', 'title', 'confirmed_count', 'delete_count', 'created')
+    search_fields = ('type_no', 'created')
+    ordering = ('type_no', '-created')
+    filter_horizontal = ('confirmed', 'delete')
+    readonly_fields = ('content_type', 'title', 'confirmed_count', 'delete_count', 'created')
+
+    # 詳細画面
+    fieldsets = [
+        ('確認項目', {'fields': ('content_type', 'title', 'confirmed_count', 'delete_count', 'created')}),
+    ]
+
+    def get_queryset(self, request):
+        qs = super(NotificationAdminSite, self).get_queryset(request)
+        return qs.filter(user_from=request.user)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def confirmed_count(self, obj):
+        return obj.confirmed.count()
+    confirmed_count.short_description = 'confirmed'
+
+    def delete_count(self, obj):
+        return obj.delete.count()
+    delete_count.short_description = 'delete'
+
+    def title(self, obj):
+        return obj.content_object.title
+    title.short_description = 'title'
+mymanage_site.register(NotificationModel, NotificationAdminSite)
+
 class AdvertiseModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'url', 'publish', 'read', 'period', 'created', 'updated')
     list_select_related = ('author',)
@@ -808,12 +859,6 @@ class AdvertiseModelAdminSite(admin.ModelAdmin):
         obj.author = request.user
         obj.type = 1
         super(AdvertiseModelAdminSite, self).save_model(request, obj, form, change)
-
-    def has_view_permission(self, request, obj=None):
-        author = request.user
-        if author.is_premium:
-            return True
-        return False
 
     def has_add_permission(self, request):
         author = request.user

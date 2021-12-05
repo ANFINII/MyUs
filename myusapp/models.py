@@ -81,9 +81,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'nickname'
     REQUIRED_FIELDS = ['username', 'email']
 
-    class Meta:
-        verbose_name_plural = '00 User'
-
     def has_perm(self, perm, obj=None):
         return True
 
@@ -111,6 +108,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.follower_count = FollowModel.objects.filter(following=User.id).count()
         return self.follower_count
 
+    class Meta:
+        verbose_name_plural = '00 User'
+
 @property
 def image_url(self):
     if self.user_image and hasattr(self.user_image, 'url'):
@@ -120,18 +120,6 @@ def image_url(self):
 def mypage_image(self):
     if self.mypage_image and hasattr(self.mypage_image, 'url'):
         return self.mypage_image.url
-
-class FollowModel(models.Model):
-    """FollowModel"""
-    follower  = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
-    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
-    created   = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return "{} : {}".format(self.follower.username, self.following.username)
-
-    class Meta:
-        verbose_name_plural = '09 フォロー'
 
 class SearchTagModel(models.Model):
     """SearchTagModel"""
@@ -144,7 +132,7 @@ class SearchTagModel(models.Model):
         return self.searchtag
 
     class Meta:
-        verbose_name_plural = '10 検索タグ'
+        verbose_name_plural = '09 検索タグ'
 
 class TagModel(models.Model):
     """TagModel"""
@@ -156,26 +144,7 @@ class TagModel(models.Model):
         return self.tag
 
     class Meta:
-        verbose_name_plural = '11 ハッシュタグ'
-
-class NotificationModel(models.Model):
-    """NotificationModel"""
-    # {'1':'video', '2':'live', '3':'music', '4':'picture', '5':'blog', '6':'chat',
-    # '7':'collabo', '8':'follow', '9':'like', '10':'reply', '11':'views'}
-    notification_type = models.IntegerField(default=0)
-    user_to           = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, null=True)
-    user_from         = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE, null=True)
-    content_type      = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id         = models.PositiveIntegerField()
-    content_object    = GenericForeignKey('content_type', 'object_id')
-    confirmed         = models.BooleanField(default=False)
-    created           = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.user_from.nickname
-
-    class Meta:
-        verbose_name_plural = '12 通知設定'
+        verbose_name_plural = '10 ハッシュタグ'
 
 class VideoQuerySet(models.QuerySet):
     def search(self, query=None):
@@ -520,13 +489,13 @@ class CollaboModel(models.Model):
     class Meta:
         verbose_name_plural = '07 Collabo'
 
-PRIORITY = (('danger','高'),('success','普通'),('info','低'))
 class TodoModel(models.Model):
     """TodoModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    priority = models.CharField(max_length=10, choices=PRIORITY)
+    choice   = (('danger','高'),('success','普通'),('info','低'))
+    priority = models.CharField(max_length=10, choices=choice, blank=False)
     duedate  = models.DateField()
     comments = GenericRelation('CommentModel')
     created  = models.DateTimeField(auto_now_add=True)
@@ -543,6 +512,44 @@ class TodoModel(models.Model):
 
     class Meta:
         verbose_name_plural = '08 ToDo'
+
+class FollowModel(models.Model):
+    """FollowModel"""
+    follower  = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
+    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+    created   = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{} : {}".format(self.follower.username, self.following.username)
+
+    class Meta:
+        verbose_name_plural = '11 フォロー'
+
+class NotificationModel(models.Model):
+    """NotificationModel"""
+    # {'1':'video', '2':'live', '3':'music', '4':'picture', '5':'blog', '6':'chat',
+    # '7':'collabo', '8':'follow', '9':'like', '10':'reply', '11':'views'}
+    user_from       = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE)
+    user_to         = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, blank=True, null=True)
+    type_no         = models.IntegerField(default=0)
+    content_type    = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id       = models.PositiveIntegerField()
+    content_object  = GenericForeignKey('content_type', 'object_id')
+    confirmed       = models.ManyToManyField(User, related_name='confirmed', blank=True)
+    delete          = models.ManyToManyField(User, related_name='delete', blank=True)
+    created         = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.content_object)
+
+    def confirmed_count(self):
+        return self.confirmed.count()
+
+    def delete_count(self):
+        return self.delete.count()
+
+    class Meta:
+        verbose_name_plural = '12 通知確認'
 
 class AdvertiseModel(models.Model):
     """AdvertiseModel"""
@@ -564,7 +571,7 @@ class AdvertiseModel(models.Model):
         return self.title
 
     class Meta:
-        verbose_name_plural = '13 広告'
+        verbose_name_plural = '13 広告設定'
 
 class CommentModel(models.Model):
     """CommentModel"""
