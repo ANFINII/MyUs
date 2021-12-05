@@ -20,6 +20,7 @@ from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, 
 from .modules.context_data import ContextData
 from .modules.get_form import get_detail
 from .modules.search import Search
+from .modules.success_url import success_url
 from .modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 import datetime
 import string
@@ -692,7 +693,7 @@ class VideoCreate(CreateView):
         return super(VideoCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:video_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+        return success_url(self, 'myus:video_detail', 1)
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, VideoCreate, **kwargs)
@@ -735,7 +736,7 @@ class LiveCreate(CreateView):
         return super(LiveCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:live_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+        return success_url(self, 'myus:live_detail', 2)
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, LiveCreate, **kwargs)
@@ -778,7 +779,7 @@ class MusicCreate(CreateView):
         return super(MusicCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:music_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+        return success_url(self, 'myus:music_detail', 3)
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, MusicCreate, **kwargs)
@@ -821,7 +822,7 @@ class PictureCreate(CreateView):
         return super(PictureCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:picture_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+        return success_url(self, 'myus:picture_detail', 4)
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, PictureCreate, **kwargs)
@@ -864,7 +865,7 @@ class BlogCreate(CreateView):
         return super(BlogCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:blog_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+        return success_url(self, 'myus:blog_detail', 5)
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, BlogCreate, **kwargs)
@@ -907,7 +908,7 @@ class ChatCreate(CreateView):
         return super(ChatCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:chat_detail', kwargs={'pk': self.object.pk})
+        return success_url(self, 'myus:chat_detail', 6)
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, ChatCreate, **kwargs)
@@ -974,7 +975,7 @@ class CollaboCreate(CreateView):
         return super(CollaboCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:collabo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+        return success_url(self, 'myus:collabo_detail', 7)
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, CollaboCreate, **kwargs)
