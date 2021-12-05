@@ -42,20 +42,6 @@ class UserAdmin(ImportExportModelAdmin):
         ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content', 'following_count', 'follower_count')})
     ]
 
-@admin.register(FollowModel)
-class FollowModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'follower', 'following', 'created')
-    list_select_related = ('follower', 'following')
-    search_fields = ('follower__nickname', 'following__nickname', 'created')
-    ordering = ('follower', 'following', '-created')
-    readonly_fields = ('created',)
-
-    # 詳細画面
-    fieldsets = [
-        ('編集項目', {'fields': ('follower', 'following',)}),
-        ('確認項目', {'fields': ('created',)})
-    ]
-
 @admin.register(SearchTagModel)
 class SearchTagAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'sequence', 'searchtag', 'created')
@@ -86,54 +72,6 @@ class TagAdmin(ImportExportModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(TagAdmin, self).save_model(request, obj, form, change)
-
-@admin.register(NotificationModel)
-class NotificationAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'user_from', 'user_to', 'type_no', 'content_type', 'object_id', 'title', 'confirmed_count', 'delete_count', 'created')
-    search_fields = ('type_no', 'created')
-    ordering = ('type_no', '-created')
-    filter_horizontal = ('confirmed', 'delete')
-    readonly_fields = ('title', 'confirmed_count', 'delete_count', 'created')
-
-    # 詳細画面
-    fieldsets = [
-        ('編集項目', {'fields': ('user_from', 'user_to', 'type_no', 'content_type', 'object_id', 'confirmed', 'delete')}),
-        ('確認項目', {'fields': ('title', 'confirmed_count', 'delete_count', 'created')})
-    ]
-
-    def confirmed_count(self, obj):
-        return obj.confirmed.count()
-    confirmed_count.short_description = 'confirmed'
-
-    def delete_count(self, obj):
-        return obj.delete.count()
-    delete_count.short_description = 'delete'
-
-    def title(self, obj):
-        return obj.content_object.title
-    title.short_description = 'title'
-
-@admin.register(CommentModel)
-class CommentAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'content_type', 'object_id', 'content_object', 'author', 'text', 'parent_id', 'total_like', 'created', 'updated')
-    list_select_related = ('author', 'parent', 'content_type')
-    search_fields = ('text', 'author__nickname', 'created', 'updated')
-    ordering = ('content_type', 'object_id', 'id')
-    filter_horizontal = ('like',)
-    readonly_fields = ('total_like', 'created', 'updated')
-
-    # 詳細画面
-    fieldsets = [
-        ('編集項目', {'fields': ('author', 'parent', 'text', 'like', 'content_type', 'object_id')}),
-        ('確認項目', {'fields': ('total_like', 'created', 'updated')})
-    ]
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('like')
-
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = 'like'
 
 @admin.register(VideoModel)
 class VideoModelAdmin(ImportExportModelAdmin):
@@ -348,6 +286,46 @@ class TodoModelAdmin(ImportExportModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 
+@admin.register(FollowModel)
+class FollowModelAdmin(ImportExportModelAdmin):
+    list_display = ('id', 'follower', 'following', 'created')
+    list_select_related = ('follower', 'following')
+    search_fields = ('follower__nickname', 'following__nickname', 'created')
+    ordering = ('follower', 'following', '-created')
+    readonly_fields = ('created',)
+
+    # 詳細画面
+    fieldsets = [
+        ('編集項目', {'fields': ('follower', 'following',)}),
+        ('確認項目', {'fields': ('created',)})
+    ]
+
+@admin.register(NotificationModel)
+class NotificationAdmin(ImportExportModelAdmin):
+    list_display = ('id', 'user_from', 'user_to', 'type_no', 'content_type', 'object_id', 'title', 'confirmed_count', 'delete_count', 'created')
+    search_fields = ('type_no', 'created')
+    ordering = ('type_no', '-created')
+    filter_horizontal = ('confirmed', 'delete')
+    readonly_fields = ('title', 'confirmed_count', 'delete_count', 'created')
+
+    # 詳細画面
+    fieldsets = [
+        ('編集項目', {'fields': ('user_from', 'user_to', 'type_no', 'content_type', 'object_id', 'confirmed', 'delete')}),
+        ('確認項目', {'fields': ('title', 'confirmed_count', 'delete_count', 'created')})
+    ]
+
+    def confirmed_count(self, obj):
+        return obj.confirmed.count()
+    confirmed_count.short_description = 'confirmed'
+
+    def delete_count(self, obj):
+        return obj.delete.count()
+    delete_count.short_description = 'delete'
+
+    def title(self, obj):
+        return obj.content_object.title
+    title.short_description = 'title'
+
 @admin.register(AdvertiseModel)
 class AdvertiseModelAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'url', 'publish', 'read', 'type', 'period', 'created', 'updated')
@@ -361,6 +339,28 @@ class AdvertiseModelAdmin(ImportExportModelAdmin):
         ('編集項目', {'fields': ('author', 'title', 'url', 'content', 'images', 'videos', 'publish', 'type', 'period')}),
         ('確認項目', {'fields': ('read', 'created', 'updated')})
     ]
+
+@admin.register(CommentModel)
+class CommentAdmin(ImportExportModelAdmin):
+    list_display = ('id', 'content_type', 'object_id', 'content_object', 'author', 'text', 'parent_id', 'total_like', 'created', 'updated')
+    list_select_related = ('author', 'parent', 'content_type')
+    search_fields = ('text', 'author__nickname', 'created', 'updated')
+    ordering = ('content_type', 'object_id', 'id')
+    filter_horizontal = ('like',)
+    readonly_fields = ('total_like', 'created', 'updated')
+
+    # 詳細画面
+    fieldsets = [
+        ('編集項目', {'fields': ('author', 'parent', 'text', 'like', 'content_type', 'object_id')}),
+        ('確認項目', {'fields': ('total_like', 'created', 'updated')})
+    ]
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('like')
+
+    def total_like(self, obj):
+        return obj.like.count()
+    total_like.short_description = 'like'
 
 
 # MyPgage用の管理画面
@@ -379,41 +379,17 @@ class MyUsAdminSite(AdminSite):
 mymanage_site = MyUsAdminSite(name='mymanage')
 mymanage_site.disable_action('delete_selected')
 
-class FollowModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'following', 'created')
-    list_select_related = ('following',)
-    search_fields = ('following__nickname', 'following__introduction', 'created')
-    ordering = ('following', '-created')
-    actions = ('delete_action',)
-    readonly_fields = ('following', 'created')
+class CommentInline(GenericTabularInline):
+    model = CommentModel
+    extra = 0
+    max_num = 100
+    exclude = ('like',)
+    readonly_fields = ('author', 'parent', 'text', 'total_like')
+    verbose_name_plural = 'コメント'
 
-    # 詳細画面
-    fieldsets = [
-        ('確認項目', {'fields': ('following', 'following_introduction', 'created')})
-    ]
-
-    def get_queryset(self, request):
-        qs = super(FollowModelAdminSite, self).get_queryset(request)
-        return qs.filter(follower=request.user)
-
-    def save_model(self, request, obj, form, change):
-        obj.follower = request.user
-        super(FollowModelAdminSite, self).save_model(request, obj, form, change)
-
-    def has_add_permission(self, request):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-    def delete_action(self, request, queryset):
-        queryset.delete()
-    delete_action.short_description = '削除する'
-
-    def following_introduction(self, obj):
-        return obj.following.introduction
-    following_introduction.short_description = 'Introduction'
-mymanage_site.register(FollowModel, FollowModelAdminSite)
+    def total_like(self, obj):
+        return obj.like.count()
+    total_like.short_description = 'いいね数'
 
 class SearchTagAdminSite(admin.ModelAdmin):
     list_display = ('id', 'sequence', 'searchtag', 'created')
@@ -462,18 +438,6 @@ class TagAdminSite(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 mymanage_site.register(TagModel, TagAdminSite)
-
-class CommentInline(GenericTabularInline):
-    model = CommentModel
-    extra = 0
-    max_num = 100
-    exclude = ('like',)
-    readonly_fields = ('author', 'parent', 'text', 'total_like')
-    verbose_name_plural = 'コメント'
-
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = 'いいね数'
 
 class VideoModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
@@ -798,6 +762,42 @@ class TodoModelAdminSite(admin.ModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 mymanage_site.register(TodoModel, TodoModelAdminSite)
+
+class FollowModelAdminSite(admin.ModelAdmin):
+    list_display = ('id', 'following', 'created')
+    list_select_related = ('following',)
+    search_fields = ('following__nickname', 'following__introduction', 'created')
+    ordering = ('following', '-created')
+    actions = ('delete_action',)
+    readonly_fields = ('following', 'created')
+
+    # 詳細画面
+    fieldsets = [
+        ('確認項目', {'fields': ('following', 'following_introduction', 'created')})
+    ]
+
+    def get_queryset(self, request):
+        qs = super(FollowModelAdminSite, self).get_queryset(request)
+        return qs.filter(follower=request.user)
+
+    def save_model(self, request, obj, form, change):
+        obj.follower = request.user
+        super(FollowModelAdminSite, self).save_model(request, obj, form, change)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def delete_action(self, request, queryset):
+        queryset.delete()
+    delete_action.short_description = '削除する'
+
+    def following_introduction(self, obj):
+        return obj.following.introduction
+    following_introduction.short_description = 'Introduction'
+mymanage_site.register(FollowModel, FollowModelAdminSite)
 
 class NotificationAdminSite(admin.ModelAdmin):
     list_display = ('id', 'type_no', 'content_type', 'title', 'confirmed_count', 'delete_count', 'created')
