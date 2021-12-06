@@ -10,7 +10,9 @@
     </h1>
 
     <article class="main_article">
+    {% for item in music_list %}
         {% include 'parts/article_music.html' %}
+    {% endfor %}
     </article>
 </main>
 {% endblock content %}

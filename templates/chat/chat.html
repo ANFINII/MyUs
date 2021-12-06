@@ -10,7 +10,9 @@
     </h1>
 
     <article class="main_article">
+    {% for item in chat_list %}
         {% include 'parts/article_chat.html' %}
+    {% endfor %}
     </article>
 </main>
 {% endblock content %}

@@ -1,7 +1,6 @@
 {% load static %}
 {% load humanize %}
 
-{% for item in chat_list %}
 <section class="main_content_music">
     <div class="main_decolation">
         <a href="{% url 'myus:chat_detail' item.pk %}" class="author_space">
@@ -39,4 +38,3 @@
         </a>
     </div>
 </section>
-{% endfor %}

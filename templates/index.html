@@ -17,7 +17,9 @@
         {% if query %}
             {% include "search/search_video.html" %}
         {% else %}
-            {% include "parts/article_video.html" %}
+            {% for item in video_list %}
+                {% include 'parts/article_video.html' %}
+            {% endfor %}
         {% endif %}
     </article>
     <hr>
@@ -27,7 +29,9 @@
         {% if query %}
             {% include "search/search_live.html" %}
         {% else %}
-            {% include "parts/article_live.html" %}
+            {% for item in live_list %}
+                {% include 'parts/article_live.html' %}
+            {% endfor %}
         {% endif %}
     </article>
     <hr>
@@ -37,7 +41,9 @@
         {% if query %}
             {% include "search/search_music.html" %}
         {% else %}
-            {% include "parts/article_music.html" %}
+            {% for item in music_list %}
+                {% include 'parts/article_music.html' %}
+            {% endfor %}
         {% endif %}
     </article>
     <hr>
@@ -47,7 +53,9 @@
         {% if query %}
             {% include "search/search_picture.html" %}
         {% else %}
-            {% include "parts/article_picture.html" %}
+            {% for item in picture_list %}
+                {% include 'parts/article_picture.html' %}
+            {% endfor %}
         {% endif %}
     </article>
     <hr>
@@ -57,7 +65,9 @@
         {% if query %}
             {% include "search/search_blog.html" %}
         {% else %}
-            {% include "parts/article_blog.html" %}
+            {% for item in blog_list %}
+                {% include 'parts/article_blog.html' %}
+            {% endfor %}
         {% endif %}
     </article>
     <hr>
@@ -67,7 +77,9 @@
         {% if query %}
             {% include "search/search_chat.html" %}
         {% else %}
-            {% include "parts/article_chat.html" %}
+            {% for item in chat_list %}
+                {% include 'parts/article_chat.html' %}
+            {% endfor %}
         {% endif %}
     </article>
 </main>
