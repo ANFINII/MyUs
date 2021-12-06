@@ -296,7 +296,7 @@ class FollowModelAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('follower', 'following',)}),
+        ('編集項目', {'fields': ('follower', 'following')}),
         ('確認項目', {'fields': ('created',)})
     ]
 
@@ -393,7 +393,7 @@ class CommentInline(GenericTabularInline):
 
 class SearchTagAdminSite(admin.ModelAdmin):
     list_display = ('id', 'sequence', 'searchtag', 'created')
-    list_editable = ('sequence', 'searchtag',)
+    list_editable = ('sequence', 'searchtag')
     list_per_page = 20
     search_fields = ('searchtag', 'created')
     ordering = ('sequence', 'created')
