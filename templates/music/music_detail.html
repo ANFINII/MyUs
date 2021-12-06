@@ -23,7 +23,9 @@
                 {% include 'parts/common/common.html' %}
             </div>
             <div class="article_detail_section_2">
+            {% for item in music_list %}
                 {% include 'parts/article_music.html' %}
+            {% endfor %}
             </div>
         </div>
         {% else %}

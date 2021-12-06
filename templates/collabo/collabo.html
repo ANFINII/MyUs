@@ -12,16 +12,9 @@
     </h1>
 
     <article class="main_article">
-        {% for item in collabo_list %}
-        <section class="main_content">
-            <div class="main_decolation">
-                <a href="{% url 'myus:collabo_detail' item.pk item.title %}" class="author_space">
-                    {% include 'parts/author_space.html' %}
-                    {% include 'parts/content_title.html' %}
-                </a>
-            </div>
-        </section>
-        {% endfor %}
+    {% for item in collabo_list %}
+        {% include 'parts/article_collabo.html' %}
+    {% endfor %}
     </article>
 </main>
 {% endblock content %}
