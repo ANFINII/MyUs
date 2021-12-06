@@ -792,7 +792,7 @@ header {
     height: 265px;
 }
 
-.main_content_music {
+.main_content_other {
     max-width: 272px;
     height: 158px;
     margin: 0;
@@ -931,7 +931,7 @@ header {
 }
 
 .article_detail_section_2 .main_content,
-.article_detail_section_2 .main_content_music,
+.article_detail_section_2 .main_content_other,
 .article_detail_section_2 .main_content_todo {
     margin: 0 0 12px 0;
 }
