@@ -5,18 +5,7 @@
 {% for item in object_list %}
     {% with item|class_name as model_name %}
         {% if model_name == 'MusicModel' %}
-            <section class="main_content_music">
-                <div class="main_decolation">
-                    <audio controls muted preload="none" controlslist="nodownload">
-                        <source src="{{ item.musics.url }}">
-                        <p>audioに対応していない場合のメッセージ</p>
-                    </audio>
-                    <a href="{% url 'myus:music_detail' item.pk item.title %}" class="author_title_space">
-                        {% include 'parts/author_space.html' %}
-                        {% include 'parts/content_title.html' %}
-                    </a>
-                </div>
-            </section>
+            {% include 'parts/article_music.html' %}
         {% endif %}
     {% endwith %}
 {% endfor %}

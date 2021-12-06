@@ -12,7 +12,9 @@
     </h1>
 
     <article class="main_article">
+    {% for item in live_list %}
         {% include 'parts/article_live.html' %}
+    {% endfor %}
     </article>
 </main>
 {% endblock content %}

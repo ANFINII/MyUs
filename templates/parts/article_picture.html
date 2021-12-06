@@ -1,6 +1,5 @@
 {% load static %}
 
-{% for item in picture_list %}
 <section class="main_content">
     <figure class="main_decolation">
         <a href="{% url 'myus:picture_detail' item.pk item.title %}">
@@ -12,4 +11,3 @@
         </a>
     </figure>
 </section>
-{% endfor %}
