@@ -792,10 +792,14 @@ header {
     height: 265px;
 }
 
-.main_content_other {
+.main_content_music {
     max-width: 272px;
     height: 158px;
-    margin: 0;
+}
+
+.main_content_other {
+    max-width: 272px;
+    height: 138px;
 }
 
 .main_decolation a {
