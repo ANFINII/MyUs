@@ -304,7 +304,7 @@ class FollowModelAdmin(ImportExportModelAdmin):
 class NotificationAdmin(ImportExportModelAdmin):
     list_display = ('id', 'user_from', 'user_to', 'type_no', 'content_type', 'object_id', 'title', 'confirmed_count', 'delete_count', 'created')
     search_fields = ('type_no', 'created')
-    ordering = ('type_no', '-created')
+    ordering = ('type_no', 'created')
     filter_horizontal = ('confirmed', 'delete')
     readonly_fields = ('title', 'confirmed_count', 'delete_count', 'created')
 
@@ -323,7 +323,7 @@ class NotificationAdmin(ImportExportModelAdmin):
     delete_count.short_description = 'delete'
 
     def title(self, obj):
-        return obj.content_object.title
+        return obj.content_object
     title.short_description = 'title'
 
 @admin.register(AdvertiseModel)
@@ -802,7 +802,7 @@ mymanage_site.register(FollowModel, FollowModelAdminSite)
 class NotificationAdminSite(admin.ModelAdmin):
     list_display = ('id', 'type_no', 'content_type', 'title', 'confirmed_count', 'delete_count', 'created')
     search_fields = ('type_no', 'created')
-    ordering = ('type_no', '-created')
+    ordering = ('type_no', 'created')
     filter_horizontal = ('confirmed', 'delete')
     readonly_fields = ('content_type', 'title', 'confirmed_count', 'delete_count', 'created')
 
@@ -833,7 +833,7 @@ class NotificationAdminSite(admin.ModelAdmin):
     delete_count.short_description = 'delete'
 
     def title(self, obj):
-        return obj.content_object.title
+        return obj.content_object
     title.short_description = 'title'
 mymanage_site.register(NotificationModel, NotificationAdminSite)
 
