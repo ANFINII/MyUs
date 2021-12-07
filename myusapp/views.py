@@ -392,10 +392,18 @@ def like_form(request):
         liked = False
         if obj.like.filter(id=user.id).exists():
             liked = False
+            notification_obj = NotificationModel.objects.filter(type_no=9, object_id=obj.id)
+            notification_obj.delete()
             obj.like.remove(user)
         else:
             liked = True
             obj.like.add(user)
+            NotificationModel.objects.create(
+                user_from_id=user.id,
+                user_to_id=obj.author.id,
+                type_no=9,
+                content_object=obj,
+            )
         context = {
             'liked': liked,
             'total_like': obj.total_like(),
@@ -413,10 +421,18 @@ def like_form_comment(request):
         comment_liked = False
         if obj.like.filter(id=user.id).exists():
             comment_liked = False
+            notification_obj = NotificationModel.objects.filter(type_no=9, object_id=obj.id)
+            notification_obj.delete()
             obj.like.remove(user)
         else:
             comment_liked = True
             obj.like.add(user)
+            NotificationModel.objects.create(
+                user_from_id=user.id,
+                user_to_id=obj.author.id,
+                type_no=9,
+                content_object=obj,
+            )
         context = {
             'comment_liked': comment_liked,
             'total_like': obj.total_like(),
@@ -535,6 +551,8 @@ def reply_delete(request, comment_id):
     if request.method == 'POST':
         comment_id = request.POST.get('comment_id')
         comment_obj = CommentModel.objects.get(id=comment_id)
+        notification_obj = NotificationModel.objects.filter(type_no=10, object_id=comment_obj.id)
+        notification_obj.delete()
         comment_obj.delete()
         context = {
             'parent_id': comment_obj.parent.id,
@@ -644,7 +662,7 @@ def follow_create(request, nickname):
             pass
         elif FollowModel.objects.filter(follower=follower, following=following).exists():
             unfollow = FollowModel.objects.get(follower=follower, following=following)
-            notification_obj = NotificationModel.objects.filter(user_from_id=follower.id, user_to_id=following.id, type_no=11)
+            notification_obj = NotificationModel.objects.filter(type_no=8, object_id=unfollow.id)
             notification_obj.delete()
             unfollow.delete()
             followed = False
@@ -672,7 +690,7 @@ def follow_create(request, nickname):
             NotificationModel.objects.create(
                 user_from_id=follower.id,
                 user_to_id=following.id,
-                type_no=11,
+                type_no=8,
                 content_object=follow_obj,
             )
         context = {
