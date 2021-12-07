@@ -517,7 +517,7 @@ class FollowModel(models.Model):
     created   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{} : {}".format(self.follower.username, self.following.username)
+        return "{} : {}".format(self.follower.nickname, self.following.nickname)
 
     class Meta:
         verbose_name_plural = '11 フォロー'
@@ -583,7 +583,7 @@ class CommentModel(models.Model):
     updated        = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.id)
+        return self.text
 
     def total_like(self):
         return self.like.count()
