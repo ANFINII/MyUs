@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from channels.generic.websocket import WebsocketConsumer
-from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync
 from .models import ChatModel, CommentModel
 from .views import ChatDetail, ChatThread
