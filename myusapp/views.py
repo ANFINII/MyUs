@@ -638,6 +638,8 @@ def follow_create(request, nickname):
             pass
         elif FollowModel.objects.filter(follower=follower, following=following).exists():
             unfollow = FollowModel.objects.get(follower=follower, following=following)
+            notification_obj = NotificationModel.objects.filter(user_from_id=follower.id, user_to_id=following.id, type_no=11)
+            notification_obj.delete()
             unfollow.delete()
             followed = False
             #ログインユーザーのフォロー数
@@ -650,7 +652,7 @@ def follow_create(request, nickname):
             following.save()
             # 'フォローを外しました'
         else:
-            FollowModel.objects.get_or_create(follower=follower, following=following)
+            follow_obj = FollowModel.objects.create(follower=follower, following=following)
             followed = True
             #ログインユーザーのフォロー数
             following_count = FollowModel.objects.filter(follower=follower).count()
@@ -661,6 +663,12 @@ def follow_create(request, nickname):
             following.follower_count = follower_count
             following.save()
             # 'フォローしました'
+            NotificationModel.objects.create(
+                user_from_id=follower.id,
+                user_to_id=following.id,
+                type_no=11,
+                content_object=follow_obj,
+            )
         context = {
             'followed': followed,
             'follower_count': follower_count,
