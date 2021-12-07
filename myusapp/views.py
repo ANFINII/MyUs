@@ -480,6 +480,12 @@ def reply_form(request):
         comment_obj.author_id = user_id
         comment_obj.parent = CommentModel.objects.get(id=comment_id)
         comment_obj.save()
+        NotificationModel.objects.create(
+            user_from_id=user_id,
+            user_to_id=comment_obj.parent.author.id,
+            type_no=10,
+            content_object=comment_obj,
+        )
         context['comment_count'] = obj.comment_count()
         context['reply_count'] = comment_obj.parent.replies_count()
         context['reply_lists'] = render_to_string('parts/common/reply/reply.html', {
