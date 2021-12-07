@@ -517,7 +517,7 @@ class FollowModel(models.Model):
     created   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{} : {}".format(self.follower.nickname, self.following.nickname)
+        return "{} : {}".format(self.follower, self.following)
 
     class Meta:
         verbose_name_plural = '11 フォロー'
