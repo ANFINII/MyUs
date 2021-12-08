@@ -350,6 +350,16 @@ class Notification(TemplateView):
         return context
 
 @csrf_exempt
+def notification_confirmed(request):
+    """notification_confirmed"""
+    user = request.user
+    notification_id = request.POST.get('notification_id')
+    notification_obj = get_object_or_404(NotificationModel, id=notification_id)
+    notification_obj.confirmed.add(user)
+    if request.is_ajax():
+        return JsonResponse()
+
+@csrf_exempt
 def notification_delete(request):
     """notification_delete"""
     if request.method == 'POST':

@@ -1,7 +1,7 @@
 {% for notification in notification_list %}
     {% if notification.type_no == 1 %}
     <div class="dropdown_menu_item side_indent notification_aria_link" id="notification_aria_link_{{ notification.id }}">
-        <a href="{% url 'myus:video_detail' notification.content_object.id notification.content_object.title %}">
+        <a href="{% url 'myus:video_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
             <object class="notification_aria_list">
                 <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
@@ -18,7 +18,7 @@
     </div>
     {% elif notification.type_no == 2 %}
     <div class="dropdown_menu_item side_indent notification_aria_link" id="notification_aria_link_{{ notification.id }}">
-        <a href="{% url 'myus:live_detail' notification.content_object.id notification.content_object.title %}">
+        <a href="{% url 'myus:live_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker %}">
             <object class="notification_aria_list">
                 <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
@@ -35,7 +35,7 @@
     </div>
     {% elif notification.type_no == 3 %}
     <div class="dropdown_menu_item side_indent notification_aria_link" id="notification_aria_link_{{ notification.id }}">
-        <a href="{% url 'myus:music_detail' notification.content_object.id notification.content_object.title %}">
+        <a href="{% url 'myus:music_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker %}">
             <object class="notification_aria_list">
                 <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
@@ -52,7 +52,7 @@
     </div>
     {% elif notification.type_no == 4 %}
     <div class="dropdown_menu_item side_indent notification_aria_link" id="notification_aria_link_{{ notification.id }}">
-        <a href="{% url 'myus:picture_detail' notification.content_object.id notification.content_object.title %}">
+        <a href="{% url 'myus:picture_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker %}">
             <object class="notification_aria_list">
                 <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
@@ -69,7 +69,7 @@
     </div>
     {% elif notification.type_no == 5 %}
     <div class="dropdown_menu_item side_indent notification_aria_link" id="notification_aria_link_{{ notification.id }}">
-        <a href="{% url 'myus:blog_detail' notification.content_object.id notification.content_object.title %}">
+        <a href="{% url 'myus:blog_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker %}">
             <object class="notification_aria_list">
                 <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
@@ -103,7 +103,7 @@
     </div>
     {% elif notification.type_no == 7 %}
     <div class="dropdown_menu_item side_indent notification_aria_link" id="notification_aria_link_{{ notification.id }}">
-        <a href="{% url 'myus:collabo_detail' notification.content_object.id notification.content_object.title %}">
+        <a href="{% url 'myus:collabo_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker %}">
             <object class="notification_aria_list">
                 <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
@@ -120,7 +120,7 @@
     </div>
     {% elif notification.type_no == 8 %}
     <div class="dropdown_menu_item side_indent notification_aria_link" id="notification_aria_link_{{ notification.id }}">
-        <a href="{% url 'myus:userpage' notification.content_object.follower.nickname %}">
+        <a href="{% url 'myus:userpage' notification.content_object.follower.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
             <object class="notification_aria_list">
                 <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
@@ -139,7 +139,7 @@
     <div class="dropdown_menu_item side_indent notification_aria_link" id="notification_aria_link_{{ notification.id }}">
         <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
             <object id="notification_aria_list_{{ notification.id }}" class="notification_aria_list">
-                <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
+                <a href="{% url 'myus:userpage' notification.user_from.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
                 </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が{{ notification.user_from.nickname }}さんにいいねされました">
@@ -156,7 +156,7 @@
     <div class="dropdown_menu_item side_indent notification_aria_link" id="notification_aria_link_{{ notification.id }}">
         <a href="{% url 'myus:chat_thread' notification.content_object.object_id notification.content_object.parent.id %}">
             <object class="notification_aria_list">
-                <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
+                <a href="{% url 'myus:userpage' notification.user_from.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
                 </a>
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんから返信がありました {{ notification.content_object.text }}">
@@ -177,7 +177,7 @@
         <a href="">
             {% if  notification.content_object.read >= 1000000000 %}
             <object class="notification_aria_list">
-                <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
+                <a href="{% url 'myus:userpage' notification.user_from.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
                 </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10億回閲覧されました">
@@ -190,7 +190,7 @@
             </object>
             {% elif  notification.content_object.read >= 100000000 %}
             <object class="notification_aria_list">
-                <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
+                <a href="{% url 'myus:userpage' notification.user_from.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
                 </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1億回閲覧されました">
@@ -203,7 +203,7 @@
             </object>
             {% elif  notification.content_object.read >= 10000000 %}
             <object class="notification_aria_list">
-                <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
+                <a href="{% url 'myus:userpage' notification.user_from.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
                 </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1000万回閲覧されました">
@@ -216,7 +216,7 @@
             </object>
             {% elif  notification.content_object.read >= 1000000 %}
             <object class="notification_aria_list">
-                <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
+                <a href="{% url 'myus:userpage' notification.user_from.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
                 </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が100万回閲覧されました">
@@ -229,7 +229,7 @@
             </object>
             {% elif  notification.content_object.read >= 100000 %}
             <object class="notification_aria_list">
-                <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
+                <a href="{% url 'myus:userpage' notification.user_from.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
                 </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10万回閲覧されました">
@@ -242,7 +242,7 @@
             </object>
             {% elif  notification.content_object.read >= 10000 %}
             <object class="notification_aria_list">
-                <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
+                <a href="{% url 'myus:userpage' notification.user_from.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
                 </a>
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1万回閲覧されました">
