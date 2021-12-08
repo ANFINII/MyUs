@@ -17,6 +17,6 @@ def get_detail(self):
         notification_obj = get_object_or_404(NotificationModel, type_no=11, object_id=self.object.id)
         if notification_obj.confirmed.filter(id=self.object.author.id).exists():
             notification_obj.confirmed.remove(self.object.author)
-        if notification_obj.delete.filter(id=self.object.author.id).exists():
-            notification_obj.delete.remove(self.object.author)
+        if notification_obj.deleted.filter(id=self.object.author.id).exists():
+            notification_obj.deleted.remove(self.object.author)
     return self.render_to_response(context)

@@ -302,25 +302,28 @@ class FollowModelAdmin(ImportExportModelAdmin):
 
 @admin.register(NotificationModel)
 class NotificationAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'user_from', 'user_to', 'type_no', 'content_type', 'object_id', 'title', 'confirmed_count', 'delete_count', 'created')
+    list_display = ('id', 'user_from', 'user_to', 'type_no', 'content_type', 'object_id', 'title', 'confirmed_count', 'deleted_count', 'created')
     search_fields = ('type_no', 'created')
     ordering = ('type_no', 'created')
-    filter_horizontal = ('confirmed', 'delete')
-    readonly_fields = ('title', 'confirmed_count', 'delete_count', 'created')
+    filter_horizontal = ('confirmed', 'deleted')
+    readonly_fields = ('title', 'confirmed_count', 'deleted_count', 'created')
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('user_from', 'user_to', 'type_no', 'content_type', 'object_id', 'confirmed', 'delete')}),
-        ('確認項目', {'fields': ('title', 'confirmed_count', 'delete_count', 'created')})
+        ('編集項目', {'fields': ('user_from', 'user_to', 'type_no', 'content_type', 'object_id', 'confirmed', 'deleted')}),
+        ('確認項目', {'fields': ('title', 'confirmed_count', 'deleted_count', 'created')})
     ]
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('confirmed', 'deleted')
 
     def confirmed_count(self, obj):
         return obj.confirmed.count()
     confirmed_count.short_description = 'confirmed'
 
-    def delete_count(self, obj):
-        return obj.delete.count()
-    delete_count.short_description = 'delete'
+    def deleted_count(self, obj):
+        return obj.deleted.count()
+    deleted_count.short_description = 'deleted'
 
     def title(self, obj):
         return obj.content_object
@@ -800,19 +803,19 @@ class FollowModelAdminSite(admin.ModelAdmin):
 mymanage_site.register(FollowModel, FollowModelAdminSite)
 
 class NotificationAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'type_no', 'content_type', 'title', 'confirmed_count', 'delete_count', 'created')
+    list_display = ('id', 'type_no', 'content_type', 'title', 'confirmed_count', 'deleted_count', 'created')
     search_fields = ('type_no', 'created')
     ordering = ('type_no', 'created')
-    filter_horizontal = ('confirmed', 'delete')
-    readonly_fields = ('content_type', 'title', 'confirmed_count', 'delete_count', 'created')
+    filter_horizontal = ('confirmed', 'deleted')
+    readonly_fields = ('content_type', 'title', 'confirmed_count', 'deleted_count', 'created')
 
     # 詳細画面
     fieldsets = [
-        ('確認項目', {'fields': ('content_type', 'title', 'confirmed_count', 'delete_count', 'created')}),
+        ('確認項目', {'fields': ('content_type', 'title', 'confirmed_count', 'deleted_count', 'created')}),
     ]
 
     def get_queryset(self, request):
-        qs = super(NotificationAdminSite, self).get_queryset(request)
+        qs = super(NotificationAdminSite, self).get_queryset(request).prefetch_related('confirmed', 'deleted')
         return qs.filter(user_from=request.user)
 
     def has_add_permission(self, request):
@@ -828,9 +831,9 @@ class NotificationAdminSite(admin.ModelAdmin):
         return obj.confirmed.count()
     confirmed_count.short_description = 'confirmed'
 
-    def delete_count(self, obj):
-        return obj.delete.count()
-    delete_count.short_description = 'delete'
+    def deleted_count(self, obj):
+        return obj.deleted.count()
+    deleted_count.short_description = 'deleted'
 
     def title(self, obj):
         return obj.content_object
