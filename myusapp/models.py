@@ -533,17 +533,11 @@ class NotificationModel(models.Model):
     object_id       = models.PositiveIntegerField()
     content_object  = GenericForeignKey('content_type', 'object_id')
     confirmed       = models.ManyToManyField(User, related_name='confirmed', blank=True)
-    delete          = models.ManyToManyField(User, related_name='delete', blank=True)
+    deleted         = models.ManyToManyField(User, related_name='deleted', blank=True)
     created         = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.content_object)
-
-    def confirmed_count(self):
-        return self.confirmed.count()
-
-    def delete_count(self):
-        return self.delete.count()
 
     class Meta:
         verbose_name_plural = '12 通知確認'
