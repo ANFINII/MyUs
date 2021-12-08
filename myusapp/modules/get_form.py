@@ -13,7 +13,7 @@ def get_detail(self):
             type_no=11,
             content_object=self.object,
         )
-    if self.object.read == 100000 or 1000000 or 10000000 or 100000000 or 1000000000:
+    if self.object.read in (100000, 1000000, 10000000, 100000000, 1000000000):
         notification_obj = get_object_or_404(NotificationModel, type_no=11, object_id=self.object.id)
         if notification_obj.confirmed.filter(id=self.object.author.id).exists():
             notification_obj.confirmed.remove(self.object.author)
