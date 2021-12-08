@@ -9,7 +9,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}が{{ notification.content_object.title }}を投稿しました">
                     {{ notification.content_object.title }}
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
         </a>
     </div>
@@ -23,7 +26,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}が{{ notification.content_object.title }}を投稿しました">
                     {{ notification.content_object.title }}
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
         </a>
     </div>
@@ -37,7 +43,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}が{{ notification.content_object.title }}を投稿しました">
                     {{ notification.content_object.title }}
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
         </a>
     </div>
@@ -51,7 +60,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}が{{ notification.content_object.title }}を投稿しました">
                     {{ notification.content_object.title }}
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
         </a>
     </div>
@@ -65,7 +77,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}が{{ notification.content_object.title }}を投稿しました">
                     {{ notification.content_object.title }}
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
         </a>
     </div>
@@ -79,7 +94,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}が{{ notification.content_object.title }}を投稿しました">
                     {{ notification.content_object.title }}
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
         </a>
     </div>
@@ -93,7 +111,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}が{{ notification.content_object.title }}を投稿しました">
                     {{ notification.content_object.title }}
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
         </a>
     </div>
@@ -107,7 +128,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんにフォローされました">
                     {{ notification.user_from.nickname }}さんにフォローされました
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
         </a>
     </div>
@@ -121,7 +145,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が{{ notification.user_from.nickname }}さんにいいねされました">
                     {{ notification.content_object.title }}が{{ notification.user_from.nickname }}さんにいいねされました
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
         </a>
     </div>
@@ -135,7 +162,13 @@
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんから返信がありました {{ notification.content_object.text }}">
                     {{ notification.content_object.text }}
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
+                </form>
             </object>
         </a>
     </div>
@@ -150,7 +183,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10億回閲覧されました">
                     {{ notification.content_object.title }}が10億回閲覧されました
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
             {% elif  notification.content_object.read >= 100000000 %}
             <object class="notification_aria_list">
@@ -160,7 +196,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1億回閲覧されました">
                     {{ notification.content_object.title }}が1億回閲覧されました
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
             {% elif  notification.content_object.read >= 10000000 %}
             <object class="notification_aria_list">
@@ -170,7 +209,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1000万回閲覧されました">
                     {{ notification.content_object.title }}が1000万回閲覧されました
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
             {% elif  notification.content_object.read >= 1000000 %}
             <object class="notification_aria_list">
@@ -180,7 +222,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が100万回閲覧されました">
                     {{ notification.content_object.title }}が100万回閲覧されました
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
             {% elif  notification.content_object.read >= 100000 %}
             <object class="notification_aria_list">
@@ -190,7 +235,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10万回閲覧されました">
                     {{ notification.content_object.title }}が10万回閲覧されました
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
             {% elif  notification.content_object.read >= 10000 %}
             <object class="notification_aria_list">
@@ -200,7 +248,10 @@
                 <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1万回閲覧されました">
                     {{ notification.content_object.title }}が1万回閲覧されました
                 </div>
-                <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                <form method="POST" action="{% url 'myus:notification_delete' %}">
+                    {% csrf_token %}
+                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+                </form>
             </object>
             {% endif %}
         </a>
