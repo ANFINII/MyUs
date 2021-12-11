@@ -526,15 +526,16 @@ class NotificationModel(models.Model):
     """NotificationModel"""
     # {'1':'video', '2':'live', '3':'music', '4':'picture', '5':'blog', '6':'chat',
     # '7':'collabo', '8':'follow', '9':'like', '10':'reply', '11':'views'}
-    user_from       = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE)
-    user_to         = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, blank=True, null=True)
-    type_no         = models.IntegerField(default=0)
-    content_type    = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id       = models.PositiveIntegerField()
-    content_object  = GenericForeignKey('content_type', 'object_id')
-    confirmed       = models.ManyToManyField(User, related_name='confirmed', blank=True)
-    deleted         = models.ManyToManyField(User, related_name='deleted', blank=True)
-    created         = models.DateTimeField(auto_now_add=True)
+    user_from      = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE)
+    user_to        = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, blank=True, null=True)
+    type_no        = models.IntegerField(default=0)
+    type_name      = models.CharField(max_length=7, blank=True, null=True)
+    content_type   = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id      = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    confirmed      = models.ManyToManyField(User, related_name='confirmed', blank=True)
+    deleted        = models.ManyToManyField(User, related_name='deleted', blank=True)
+    created        = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.content_object)
