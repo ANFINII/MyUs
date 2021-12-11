@@ -7,6 +7,7 @@
 }
 
 ::-webkit-scrollbar-track,
+.dropdown_menu_notice::-webkit-scrollbar-track,
 .content_detail_aria::-webkit-scrollbar-track,
 .comment_aria::-webkit-scrollbar-track {
     background: rgb(255, 255, 255);
@@ -22,6 +23,7 @@
     background: rgb(225, 225, 225);
 }
 
+.dropdown_menu_notice::-webkit-scrollbar-track:hover,
 .content_detail_aria::-webkit-scrollbar-track:hover,
 .comment_aria::-webkit-scrollbar-track:hover {
     background: rgb(255, 255, 255);
@@ -342,6 +344,21 @@ header {
 }
 
 /* ドロップダウンメニュー 通知 */
+.drop_open_notice .bi-bell-fill.active {
+    position: relative;
+    margin: -25px 0 0 0;
+}
+
+.bi-exclamation-lg {
+    display: none;
+}
+
+.bi-exclamation-lg.active {
+    display: block;
+    margin: -43px 0 0 25px;
+    color: rgb(255, 220, 0);
+}
+
 .notification_aria_link a {
     text-decoration: none;
     color: rgb(33, 37, 41);
@@ -349,9 +366,9 @@ header {
 
 .notification_aria_list {
     display: grid;
-    grid-template-columns: 36px auto 22.5px;
+    grid-template-columns: 36px 8px auto 22.5px;
     grid-template-rows: 36px;
-    grid-gap: 0 10px;
+    grid-gap: 0 2px;
     position: relative;
     padding: 6px 0px 6px 11px;
 }
@@ -370,11 +387,21 @@ header {
     grid-row: 1/2;
 }
 
+.notification_aria_list span {
+    display: block;
+    grid-column: 2/3;
+    grid-row: 1/2;
+    font-size: 1px;
+    margin: -4px 0 0 -3px;
+    justify-self: start;
+    color: rgb(255, 100, 100);
+}
+
 .notification_aria_list_1 {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-    grid-column: 2/4;
+    grid-column: 3/5;
     grid-row: 1/2;
     font-size: 12px;
     overflow: hidden;
@@ -387,13 +414,13 @@ header {
 }
 
 .notification_aria_list:hover .notification_aria_list_1 {
-    grid-column: 2/3;
+    grid-column: 3/4;
     width: auto;
 }
 
 .notification_aria_list:hover .notification_aria_list_2 {
     display: block;
-    grid-column: 3/4;
+    grid-column: 4/5;
     grid-row: 1/3;
     justify-self: end;
     margin: 0;
@@ -2155,6 +2182,10 @@ input::placeholder {
     .search_input {
         width: 200px;
         transition: width 0.01s linear;
+    }
+
+    .bi-exclamation-lg.active {
+        margin: -43px 0 0 21px;
     }
 }
 
