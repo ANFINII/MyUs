@@ -1,5 +1,4 @@
 {% for notification in notification_list %}
-    {% if notification.type_no >= 1 and notification.type_no <= 7 %}
     <div id="notification_aria_link_{{ notification.id }}" class="dropdown_menu_item side_indent notification_aria_link">
         {% if notification.type_no == 1 %}
         <a href="{% url 'myus:video_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
@@ -15,31 +14,19 @@
         <a href="{% url 'myus:chat_detail' notification.content_object.id %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
         {% elif notification.type_no == 7 %}
         <a href="{% url 'myus:collabo_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
+        {% elif notification.type_no >= 8 and notification.type_no <= 11 %}
+        <a href="{% url 'myus:userpage' notification.user_from.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
         {% endif %}
             <object class="notification_aria_list">
                 <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
                 </a>
                 {% if notification.user_confirmed %}<span></span>{% else %}<span>⚫</span>{% endif %}
+                {% if notification.type_no >= 1 and notification.type_no <= 7 %}
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}が{{ notification.content_object.title }}を投稿しました">
                     {{ notification.content_object.title }}
                 </div>
-                <form method="POST" action="{% url 'myus:notification_deleted' %}">
-                    {% csrf_token %}
-                    <i title="閉じる" notification-id="{{ notification.id }}" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
-                </form>
-            </object>
-        </a>
-    </div>
-    {% elif notification.type_no >= 8 and notification.type_no <= 11 %}
-    <div id="notification_aria_link_{{ notification.id }}" class="dropdown_menu_item side_indent notification_aria_link">
-        <a href="{% url 'myus:userpage' notification.user_from.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
-            <object class="notification_aria_list">
-                <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
-                    <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
-                </a>
-                {% if notification.user_confirmed %}<span></span>{% else %}<span>⚫</span>{% endif %}
-                {% if notification.type_no == 8 %}
+                {% elif notification.type_no == 8 %}
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんにフォローされました">
                     {{ notification.user_from.nickname }}さんにフォローされました
                 </div>
@@ -81,5 +68,4 @@
             </object>
         </a>
     </div>
-    {% endif %}
 {% endfor %}
