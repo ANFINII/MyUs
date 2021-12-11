@@ -11,6 +11,7 @@ def get_detail(self):
             user_from_id=self.object.author.id,
             user_to_id=self.object.author.id,
             type_no=11,
+            tpye_name='views',
             content_object=self.object,
         )
     if self.object.read in (100000, 1000000, 10000000, 100000000, 1000000000):

@@ -35,6 +35,7 @@ class ChatConsumer(WebsocketConsumer):
             user_from_id=self.scope['user'].id,
             user_to_id=message.parent.author.id,
             type_no=10,
+            type_name='reply',
             content_object=message,
         )
         content = {

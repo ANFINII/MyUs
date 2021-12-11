@@ -9,7 +9,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
-from django.db.models import Count
+from django.db.models import Count, Exists
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from django.views.decorators.csrf import csrf_exempt
@@ -360,15 +360,17 @@ def notification_confirmed(request):
         return JsonResponse()
 
 @csrf_exempt
-def notification_delete(request):
-    """notification_delete"""
+def notification_deleted(request):
+    """notification_deleted"""
     if request.method == 'POST':
         user = request.user
         notification_id = request.POST.get('notification_id')
         notification_obj = get_object_or_404(NotificationModel, id=notification_id)
-        notification_obj.delete.add(user)
+        notification_obj.confirmed.add(user)
+        notification_obj.deleted.add(user)
+        following_id_list = list(FollowModel.objects.filter(follower_id=user.id).values_list('following_id', flat=True))
         context = {
-            # 'notification_count': notification_obj.notification_count(),
+            'notification_count': NotificationModel.objects.filter(user_from_id__in=following_id_list, user_to_id=user.id).exclude(confirmed=user.id).count(),
         }
         if request.is_ajax():
             return JsonResponse(context)
@@ -426,6 +428,7 @@ def like_form(request):
                 user_from_id=user.id,
                 user_to_id=obj.author.id,
                 type_no=9,
+                type_name='like',
                 content_object=obj,
             )
         context = {
@@ -455,6 +458,7 @@ def like_form_comment(request):
                 user_from_id=user.id,
                 user_to_id=obj.author.id,
                 type_no=9,
+                type_name='like',
                 content_object=obj,
             )
         context = {
@@ -524,6 +528,7 @@ def reply_form(request):
             user_from_id=user_id,
             user_to_id=comment_obj.parent.author.id,
             type_no=10,
+            type_name='reply',
             content_object=comment_obj,
         )
         context['comment_count'] = obj.comment_count()
@@ -715,6 +720,7 @@ def follow_create(request, nickname):
                 user_from_id=follower.id,
                 user_to_id=following.id,
                 type_no=8,
+                type_name='follow',
                 content_object=follow_obj,
             )
         context = {
@@ -749,7 +755,7 @@ class VideoCreate(CreateView):
         return super(VideoCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:video_detail', 1)
+        return success_url(self, 'myus:video_detail', 1, 'video')
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, VideoCreate, **kwargs)
@@ -792,7 +798,7 @@ class LiveCreate(CreateView):
         return super(LiveCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:live_detail', 2)
+        return success_url(self, 'myus:live_detail', 2, 'live')
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, LiveCreate, **kwargs)
@@ -835,7 +841,7 @@ class MusicCreate(CreateView):
         return super(MusicCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:music_detail', 3)
+        return success_url(self, 'myus:music_detail', 3, 'music')
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, MusicCreate, **kwargs)
@@ -878,7 +884,7 @@ class PictureCreate(CreateView):
         return super(PictureCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:picture_detail', 4)
+        return success_url(self, 'myus:picture_detail', 4, 'picture')
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, PictureCreate, **kwargs)
@@ -921,7 +927,7 @@ class BlogCreate(CreateView):
         return super(BlogCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:blog_detail', 5)
+        return success_url(self, 'myus:blog_detail', 5, 'blog')
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, BlogCreate, **kwargs)
@@ -964,7 +970,7 @@ class ChatCreate(CreateView):
         return super(ChatCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:chat_detail', 6)
+        return success_url(self, 'myus:chat_detail', 6, 'chat')
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, ChatCreate, **kwargs)
@@ -1031,7 +1037,7 @@ class CollaboCreate(CreateView):
         return super(CollaboCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:collabo_detail', 7)
+        return success_url(self, 'myus:collabo_detail', 7, 'collabo')
 
     def get_context_data(self, **kwargs):
         return ContextData.create_context_data(self, CollaboCreate, **kwargs)
