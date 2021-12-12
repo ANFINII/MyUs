@@ -3,7 +3,7 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
 from import_export.admin import ImportExportModelAdmin
-from .models import User, NotifySettingModel, SearchTagModel, TagModel, NotificationModel, CommentModel, FollowModel
+from .models import User, SearchTagModel, TagModel, NotifySettingModel, NotificationModel, CommentModel, FollowModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, TodoModel, AdvertiseModel
 
 # Admin用の管理画面
