@@ -1,20 +1,20 @@
 {% for notification in notification_list %}
     <div id="notification_aria_link_{{ notification.id }}" class="dropdown_menu_item side_indent notification_aria_link">
-        {% if notification.type_no == 1 %}
+        {% if notification.type_no == 1 or notification.type_no == 11 and notification.type_name == 'video' %}
         <a href="{% url 'myus:video_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
-        {% elif notification.type_no == 2 %}
+        {% elif notification.type_no == 2 or notification.type_no == 11 and notification.type_name == 'live' %}
         <a href="{% url 'myus:live_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
-        {% elif notification.type_no == 3 %}
+        {% elif notification.type_no == 3 or notification.type_no == 11 and notification.type_name == 'music' %}
         <a href="{% url 'myus:music_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
-        {% elif notification.type_no == 4 %}
+        {% elif notification.type_no == 4 or notification.type_no == 11 and notification.type_name == 'picture' %}
         <a href="{% url 'myus:picture_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
-        {% elif notification.type_no == 5 %}
+        {% elif notification.type_no == 5 or notification.type_no == 11 and notification.type_name == 'blog' %}
         <a href="{% url 'myus:blog_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
-        {% elif notification.type_no == 6 %}
+        {% elif notification.type_no == 6 or notification.type_no == 11 and notification.type_name == 'chat' %}
         <a href="{% url 'myus:chat_detail' notification.content_object.id %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
-        {% elif notification.type_no == 7 %}
+        {% elif notification.type_no == 7 or notification.type_no == 11 and notification.type_name == 'collabo' %}
         <a href="{% url 'myus:collabo_detail' notification.content_object.id notification.content_object.title %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
-        {% elif notification.type_no >= 8 and notification.type_no <= 11 %}
+        {% elif notification.type_no >= 8 and notification.type_no <= 10 %}
         <a href="{% url 'myus:userpage' notification.user_from.nickname %}" action="{% url 'myus:notification_confirmed' %}" notification-id="{{ notification.id }}" class="notification_aria_anker">
         {% endif %}
             <object class="notification_aria_list">
@@ -23,7 +23,7 @@
                 </a>
                 {% if notification.user_confirmed %}<span></span>{% else %}<span>⚫</span>{% endif %}
                 {% if notification.type_no >= 1 and notification.type_no <= 7 %}
-                <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}が{{ notification.content_object.title }}を投稿しました">
+                <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんが{{ notification.content_object.title }}を投稿しました">
                     {{ notification.content_object.title }}
                 </div>
                 {% elif notification.type_no == 8 %}
@@ -56,6 +56,10 @@
                         {{ notification.content_object.title }}が100万回閲覧されました
                     </div>
                     {% elif  notification.content_object.read >= 100000 %}
+                    <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10万回閲覧されました">
+                        {{ notification.content_object.title }}が10万回閲覧されました
+                    </div>
+                    {% elif  notification.content_object.read >= 10000 %}
                     <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1万回閲覧されました">
                         {{ notification.content_object.title }}が1万回閲覧されました
                     </div>
