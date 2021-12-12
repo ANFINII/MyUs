@@ -351,8 +351,8 @@ class Notification(TemplateView):
         return context
 
 @csrf_exempt
-def notification_on_off(request):
-    """notification_on_off"""
+def notification_setting(request):
+    """notification_setting"""
     context = dict()
     if request.method == 'POST':
         user_id = request.user.id
