@@ -15,8 +15,8 @@ from django.template.defaultfilters import linebreaksbr
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, DeleteView, TemplateView
 from .forms import SearchTagForm
-from .models import SearchTagModel, NotificationModel, CommentModel, FollowModel, TodoModel, AdvertiseModel
-from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
+from .models import SearchTagModel, NotifySettingModel, NotificationModel, CommentModel, FollowModel, TodoModel
+from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, AdvertiseModel
 from .modules.context_data import ContextData
 from .modules.get_form import get_detail
 from .modules.search import Search
@@ -338,16 +338,82 @@ class MyPageUpdate(UpdateView):
 # 通知設定
 class Notification(TemplateView):
     """Notification"""
-    model = NotificationModel
+    model = NotifySettingModel
     template_name = 'common/notification.html'
 
     def get_context_data(self, **kwargs):
         context = super(Notification, self).get_context_data(**kwargs)
         user_id = self.request.user.id
         context.update({
+            'notify_setting_list': NotifySettingModel.objects.filter(owner_id=user_id),
             'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
         })
         return context
+
+@csrf_exempt
+def notification_on_off(request):
+    """notification_on_off"""
+    context = dict()
+    if request.method == 'POST':
+        user_id = request.user.id
+        notify = request.POST.get('notify')
+        notify_type = request.POST.get('notify_type')
+        notify_obj = NotifySettingModel.objects.get(owner_id=user_id)
+        if notify == 'True':
+            notify = False
+            if 'video' == notify_type:
+                notify_obj.video = False
+            if 'live' == notify_type:
+                notify_obj.live = False
+            if 'music' == notify_type:
+                notify_obj.music = False
+            if 'picture' == notify_type:
+                notify_obj.picture = False
+            if 'blog' == notify_type:
+                notify_obj.blog = False
+            if 'chat' == notify_type:
+                notify_obj.chat = False
+            if 'collabo' == notify_type:
+                notify_obj.collabo = False
+            if 'follow' == notify_type:
+                notify_obj.follow = False
+            if 'reply' == notify_type:
+                notify_obj.reply = False
+            if 'like' == notify_type:
+                notify_obj.like = False
+            if 'views' == notify_type:
+                notify_obj.views = False
+        else:
+            notify = True
+            if 'video' == notify_type:
+                notify_obj.video = True
+            if 'live' == notify_type:
+                notify_obj.live = True
+            if 'music' == notify_type:
+                notify_obj.music = True
+            if 'picture' == notify_type:
+                notify_obj.picture = True
+            if 'blog' == notify_type:
+                notify_obj.blog = True
+            if 'chat' == notify_type:
+                notify_obj.chat = True
+            if 'collabo' == notify_type:
+                notify_obj.collabo = True
+            if 'follow' == notify_type:
+                notify_obj.follow = True
+            if 'reply' == notify_type:
+                notify_obj.reply = True
+            if 'like' == notify_type:
+                notify_obj.like = True
+            if 'views' == notify_type:
+                notify_obj.views = True
+        notify_obj.save()
+        context['notify_setting_lists'] = render_to_string('parts/notify_setting_list.html', {
+            'notify_setting_list': NotifySettingModel.objects.filter(owner_id=user_id),
+            'notify': notify,
+        }, request=request)
+        if request.is_ajax():
+            return JsonResponse(context)
 
 @csrf_exempt
 def notification_confirmed(request):
