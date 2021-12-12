@@ -31,7 +31,10 @@ $(document).on('click', '.notification_aria_list_2', function(event) {
     })
     .done(function(response) {
         document.getElementById('notification_aria_link_' + notification_id).remove();
-        // $('#notification_count').html(response.notification_count);
+        if (response.notification_count === 0) {
+            $('.bi-bell-fill').removeClass('active');
+            $('.bi-exclamation-lg').removeClass('active');
+        }
         console.log(response);
     })
     .fail(function(response) {
