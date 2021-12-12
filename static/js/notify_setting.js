@@ -12,11 +12,7 @@ $(document).on('click', '.toggle_button', function(event) {
         timeout: 10000,
     })
     .done(function(response) {
-        if (response.notify) {
-            $('#notification_table').html(response.notify_setting_lists);
-        } else {
-            $('#notification_table').html(response.notify_setting_lists);
-        }
+        $('#notification_table').html(response.notify_setting_lists);
         console.log(response);
     })
     .fail(function(response) {
