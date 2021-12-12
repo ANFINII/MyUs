@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import Q
 from django.db.models.fields import BooleanField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
@@ -57,7 +59,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone           = models.CharField(validators=[phone_no], max_length=15, blank=True, default='000-0000-0000')
 
     location        = models.CharField(max_length=255, blank=True)
-    profession      = models.CharField(max_length=120, blank=True)
     introduction    = models.TextField(blank=True)
 
     is_active       = models.BooleanField(default=True)
@@ -120,6 +121,30 @@ def image_url(self):
 def mypage_image(self):
     if self.mypage_image and hasattr(self.mypage_image, 'url'):
         return self.mypage_image.url
+
+class NotifySettingModel(models.Model):
+    """NotifySettingModel"""
+    owner   = models.OneToOneField(User, on_delete=models.CASCADE)
+    video   = models.BooleanField(default=False)
+    live    = models.BooleanField(default=False)
+    music   = models.BooleanField(default=False)
+    picture = models.BooleanField(default=False)
+    blog    = models.BooleanField(default=False)
+    chat    = models.BooleanField(default=False)
+    collabo = models.BooleanField(default=False)
+    follow  = models.BooleanField(default=True)
+    reply   = models.BooleanField(default=True)
+    like    = models.BooleanField(default=True)
+    views   = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.owner.nickname
+
+@receiver(post_save, sender=User)
+def create_notify_setting(sender, **kwargs):
+    """ 新ユーザー作成時に空のnotify_settingも作成する """
+    if kwargs['created']:
+        NotifySettingModel.objects.get_or_create(owner=kwargs['instance'])
 
 class SearchTagModel(models.Model):
     """SearchTagModel"""

@@ -3,10 +3,18 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
 from import_export.admin import ImportExportModelAdmin
-from .models import User, SearchTagModel, TagModel, NotificationModel, CommentModel, FollowModel, AdvertiseModel
-from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, TodoModel
+from .models import User, NotifySettingModel, SearchTagModel, TagModel, NotificationModel, CommentModel, FollowModel
+from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, TodoModel, AdvertiseModel
 
 # Admin用の管理画面
+class NotifySettingInline(admin.TabularInline):
+    model = NotifySettingModel
+    fields = ('video', 'live', 'music', 'picture', 'blog', 'chat', 'collabo', 'follow', 'reply', 'like', 'views')
+    verbose_name_plural = '通知設定'
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 class SearchTagInline(admin.TabularInline):
     model = SearchTagModel
     extra = 1
@@ -33,11 +41,12 @@ class UserAdmin(ImportExportModelAdmin):
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
     readonly_fields = ('full_name', 'birthday', 'age', 'date_joined', 'last_login', 'following_count', 'follower_count')
-    inlines = [SearchTagInline]
+    inlines = [NotifySettingInline]
+    inlines += [SearchTagInline]
 
     # 詳細画面
     fieldsets = [
-        ('アカウント情報', {'fields': ('user_image', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone', 'location', 'profession', 'introduction', 'groups', 'user_permissions')}),
+        ('アカウント情報', {'fields': ('user_image', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone', 'location', 'introduction', 'groups', 'user_permissions')}),
         ('権限情報', {'fields': ('is_active', 'is_premium', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
         ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content', 'following_count', 'follower_count')})
     ]
@@ -304,7 +313,6 @@ class FollowModelAdmin(ImportExportModelAdmin):
 class NotificationAdmin(ImportExportModelAdmin):
     list_display = ('id', 'user_from', 'user_to', 'type_no', 'type_name', 'content_type', 'object_id', 'title', 'confirmed_count', 'deleted_count', 'created')
     search_fields = ('type_name', 'created')
-    list_editable = ('type_name',)
     ordering = ('type_no', 'created')
     filter_horizontal = ('confirmed', 'deleted')
     readonly_fields = ('title', 'confirmed_count', 'deleted_count', 'created')
