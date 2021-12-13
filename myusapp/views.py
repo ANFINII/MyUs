@@ -361,51 +361,51 @@ def notification_setting(request):
         notify_obj = NotifySettingModel.objects.get(owner_id=user_id)
         if notify == 'True':
             notify = False
-            if 'video' == notify_type:
+            if notify_type == 'video':
                 notify_obj.video = False
-            if 'live' == notify_type:
+            if notify_type == 'live':
                 notify_obj.live = False
-            if 'music' == notify_type:
+            if notify_type == 'music':
                 notify_obj.music = False
-            if 'picture' == notify_type:
+            if notify_type == 'picture':
                 notify_obj.picture = False
-            if 'blog' == notify_type:
+            if notify_type == 'blog':
                 notify_obj.blog = False
-            if 'chat' == notify_type:
+            if notify_type == 'chat':
                 notify_obj.chat = False
-            if 'collabo' == notify_type:
+            if notify_type == 'collabo':
                 notify_obj.collabo = False
-            if 'follow' == notify_type:
+            if notify_type == 'follow':
                 notify_obj.follow = False
-            if 'reply' == notify_type:
+            if notify_type == 'reply':
                 notify_obj.reply = False
-            if 'like' == notify_type:
+            if notify_type == 'like':
                 notify_obj.like = False
-            if 'views' == notify_type:
+            if notify_type == 'views':
                 notify_obj.views = False
         else:
             notify = True
-            if 'video' == notify_type:
+            if notify_type == 'video':
                 notify_obj.video = True
-            if 'live' == notify_type:
+            if notify_type == 'live':
                 notify_obj.live = True
-            if 'music' == notify_type:
+            if notify_type == 'music':
                 notify_obj.music = True
-            if 'picture' == notify_type:
+            if notify_type == 'picture':
                 notify_obj.picture = True
-            if 'blog' == notify_type:
+            if notify_type == 'blog':
                 notify_obj.blog = True
-            if 'chat' == notify_type:
+            if notify_type == 'chat':
                 notify_obj.chat = True
-            if 'collabo' == notify_type:
+            if notify_type == 'collabo':
                 notify_obj.collabo = True
-            if 'follow' == notify_type:
+            if notify_type == 'follow':
                 notify_obj.follow = True
-            if 'reply' == notify_type:
+            if notify_type == 'reply':
                 notify_obj.reply = True
-            if 'like' == notify_type:
+            if notify_type == 'like':
                 notify_obj.like = True
-            if 'views' == notify_type:
+            if notify_type == 'views':
                 notify_obj.views = True
         notify_obj.save()
         context['notify_setting_lists'] = render_to_string('parts/notify_setting_list.html', {
@@ -662,10 +662,9 @@ class Index(ListView):
     """Index処理、すべてのメディアmodelを表示"""
     model = SearchTagModel
     template_name = 'index.html'
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, Index, **kwargs)
+        return ContextData.context_data(self, Index, **kwargs)
 
     def get_queryset(self):
         return Search.search_index(self)
@@ -674,10 +673,9 @@ class Recommend(ListView):
     """急上昇機能、すべてのメディアmodelを表示"""
     model = SearchTagModel
     template_name = 'index.html'
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, Recommend, **kwargs)
+        return ContextData.context_data(self, Recommend, **kwargs)
 
     def get_queryset(self):
         return Search.search_recommend(self)
@@ -688,10 +686,9 @@ class UserPage(ListView):
     """UserPage"""
     model = User
     template_name = 'userpage/userpage.html'
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, UserPage, **kwargs)
+        return ContextData.context_data(self, UserPage, **kwargs)
 
     def get_queryset(self):
         return Search.search_userpage(self)
@@ -700,20 +697,18 @@ class UserPageInfo(ListView):
     """UserPageInfo"""
     model = User
     template_name = 'userpage/userpage_information.html'
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, UserPageInfo, **kwargs)
+        return ContextData.context_data(self, UserPageInfo, **kwargs)
 
 class UserPageAdvertise(ListView):
     """UserPageAdvertise"""
     model = User
     template_name = 'userpage/userpage_advertise.html'
     context_object_name = 'advertise_list'
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, UserPageAdvertise, **kwargs)
+        return ContextData.context_data(self, UserPageAdvertise, **kwargs)
 
     def get_queryset(self, **kwargs):
         return Search.search_advertise(self, AdvertiseModel)
@@ -725,10 +720,9 @@ class FollowerList(ListView):
     model = FollowModel
     template_name = 'follow/follower.html'
     context_object_name = 'follower_list'
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, FollowerList, **kwargs)
+        return ContextData.context_data(self, FollowerList, **kwargs)
 
     def get_queryset(self, **kwargs):
         return Search.search_follow(self, FollowModel)
@@ -738,10 +732,9 @@ class FollowList(ListView):
     model = FollowModel
     template_name = 'follow/follow.html'
     context_object_name = 'follow_list'
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, FollowList, **kwargs)
+        return ContextData.context_data(self, FollowList, **kwargs)
 
     def get_queryset(self, **kwargs):
         return Search.search_follow(self, FollowModel)
@@ -824,7 +817,7 @@ class VideoCreate(CreateView):
         return success_url(self, 'myus:video_detail', 1, 'video')
 
     def get_context_data(self, **kwargs):
-        return ContextData.create_context_data(self, VideoCreate, **kwargs)
+        return ContextData.context_data(self, VideoCreate, **kwargs)
 
 class VideoList(ListView):
     """VideoList"""
@@ -832,10 +825,9 @@ class VideoList(ListView):
     template_name = 'video/video.html'
     context_object_name = 'video_list'
     ordering = ['-created']
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, VideoList, **kwargs)
+        return ContextData.context_data(self, VideoList, **kwargs)
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, VideoModel)
@@ -867,7 +859,7 @@ class LiveCreate(CreateView):
         return success_url(self, 'myus:live_detail', 2, 'live')
 
     def get_context_data(self, **kwargs):
-        return ContextData.create_context_data(self, LiveCreate, **kwargs)
+        return ContextData.context_data(self, LiveCreate, **kwargs)
 
 class LiveList(ListView):
     """LiveList"""
@@ -875,10 +867,9 @@ class LiveList(ListView):
     template_name = 'live/live.html'
     context_object_name = 'live_list'
     ordering = ['-created']
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, LiveList, **kwargs)
+        return ContextData.context_data(self, LiveList, **kwargs)
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, LiveModel)
@@ -910,7 +901,7 @@ class MusicCreate(CreateView):
         return success_url(self, 'myus:music_detail', 3, 'music')
 
     def get_context_data(self, **kwargs):
-        return ContextData.create_context_data(self, MusicCreate, **kwargs)
+        return ContextData.context_data(self, MusicCreate, **kwargs)
 
 class MusicList(ListView):
     """MusicList"""
@@ -918,10 +909,9 @@ class MusicList(ListView):
     template_name = 'music/music.html'
     context_object_name = 'music_list'
     ordering = ['-created']
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, MusicList, **kwargs)
+        return ContextData.context_data(self, MusicList, **kwargs)
 
     def get_queryset(self, **kwargs):
         return Search.search_music(self, MusicModel)
@@ -953,7 +943,7 @@ class PictureCreate(CreateView):
         return success_url(self, 'myus:picture_detail', 4, 'picture')
 
     def get_context_data(self, **kwargs):
-        return ContextData.create_context_data(self, PictureCreate, **kwargs)
+        return ContextData.context_data(self, PictureCreate, **kwargs)
 
 class PictureList(ListView):
     """PictureList"""
@@ -961,10 +951,9 @@ class PictureList(ListView):
     template_name = 'picture/picture.html'
     context_object_name = 'picture_list'
     ordering = ['-created']
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, PictureList, **kwargs)
+        return ContextData.context_data(self, PictureList, **kwargs)
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, PictureModel)
@@ -996,7 +985,7 @@ class BlogCreate(CreateView):
         return success_url(self, 'myus:blog_detail', 5, 'blog')
 
     def get_context_data(self, **kwargs):
-        return ContextData.create_context_data(self, BlogCreate, **kwargs)
+        return ContextData.context_data(self, BlogCreate, **kwargs)
 
 class BlogList(ListView):
     """BlogList"""
@@ -1004,10 +993,9 @@ class BlogList(ListView):
     template_name = 'blog/blog.html'
     context_object_name = 'blog_list'
     ordering = ['-created']
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, BlogList, **kwargs)
+        return ContextData.context_data(self, BlogList, **kwargs)
 
     def get_queryset(self, **kwargs):
         return Search.search_blog(self, BlogModel)
@@ -1039,7 +1027,7 @@ class ChatCreate(CreateView):
         return success_url(self, 'myus:chat_detail', 6, 'chat')
 
     def get_context_data(self, **kwargs):
-        return ContextData.create_context_data(self, ChatCreate, **kwargs)
+        return ContextData.context_data(self, ChatCreate, **kwargs)
 
 class ChatList(ListView):
     """ChatList"""
@@ -1047,10 +1035,9 @@ class ChatList(ListView):
     template_name = 'chat/chat.html'
     context_object_name = 'chat_list'
     ordering = ['-created']
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, ChatList, **kwargs)
+        return ContextData.context_data(self, ChatList, **kwargs)
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, ChatModel)
@@ -1106,7 +1093,7 @@ class CollaboCreate(CreateView):
         return success_url(self, 'myus:collabo_detail', 7, 'collabo')
 
     def get_context_data(self, **kwargs):
-        return ContextData.create_context_data(self, CollaboCreate, **kwargs)
+        return ContextData.context_data(self, CollaboCreate, **kwargs)
 
 class CollaboList(ListView):
     """CollaboList"""
@@ -1114,10 +1101,9 @@ class CollaboList(ListView):
     template_name = 'collabo/collabo.html'
     context_object_name = 'collabo_list'
     ordering = ['-created']
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, CollaboList, **kwargs)
+        return ContextData.context_data(self, CollaboList, **kwargs)
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, CollaboModel)
@@ -1149,7 +1135,7 @@ class TodoCreate(CreateView):
         return reverse('myus:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
     def get_context_data(self, **kwargs):
-        return ContextData.create_context_data(self, TodoCreate, **kwargs)
+        return ContextData.context_data(self, TodoCreate, **kwargs)
 
 class TodoList(ListView):
     """TodoList"""
@@ -1157,10 +1143,9 @@ class TodoList(ListView):
     template_name = 'todo/todo.html'
     context_object_name = 'todo_list'
     ordering = ['-duedate']
-    count = 0
 
     def get_context_data(self, **kwargs):
-        return ContextData.list_context_data(self, TodoList, **kwargs)
+        return ContextData.context_data(self, TodoList, **kwargs)
 
     def get_queryset(self, **kwargs):
         return Search.search_todo(self, TodoModel)
@@ -1180,7 +1165,7 @@ class TodoDetail(DetailView):
             return TodoModel.objects.filter(author=current_user.id)
 
     def get_context_data(self, **kwargs):
-        return ContextData.todo_context_data(self, TodoDetail, **kwargs)
+        return ContextData.models_context_data(self, TodoDetail, **kwargs)
 
 class TodoUpdate(UpdateView):
     """TodoUpdate"""
