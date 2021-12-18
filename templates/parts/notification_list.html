@@ -31,8 +31,8 @@
                     {{ notification.user_from.nickname }}さんにフォローされました
                 </div>
                 {% elif notification.type_no == 9 %}
-                <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が{{ notification.user_from.nickname }}さんにいいねされました">
-                    {{ notification.content_object.title }}が{{ notification.user_from.nickname }}さんにいいねされました
+                <div class="notification_aria_list_1" title="{{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました">
+                    {{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました
                 </div>
                 {% elif notification.type_no == 10 %}
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんから返信がありました {{ notification.content_object.text }}">
