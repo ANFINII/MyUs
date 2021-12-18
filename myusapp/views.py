@@ -484,19 +484,10 @@ def like_form(request):
         liked = False
         if obj.like.filter(id=user.id).exists():
             liked = False
-            notification_obj = NotificationModel.objects.filter(type_no=9, object_id=obj.id)
-            notification_obj.delete()
             obj.like.remove(user)
         else:
             liked = True
             obj.like.add(user)
-            NotificationModel.objects.create(
-                user_from_id=user.id,
-                user_to_id=obj.author.id,
-                type_no=9,
-                type_name='like',
-                content_object=obj,
-            )
         context = {
             'liked': liked,
             'total_like': obj.total_like(),
