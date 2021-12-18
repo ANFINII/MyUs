@@ -31,13 +31,14 @@ class ChatConsumer(WebsocketConsumer):
             content_object=obj,
             parent_id=data['parent_id'],
             )
-        NotificationModel.objects.create(
-            user_from_id=self.scope['user'].id,
-            user_to_id=message.parent.author.id,
-            type_no=10,
-            type_name='reply',
-            content_object=message,
-        )
+        if self.scope['user'].id != message.parent.author.id:
+            NotificationModel.objects.create(
+                user_from_id=self.scope['user'].id,
+                user_to_id=message.parent.author.id,
+                type_no=10,
+                type_name='reply',
+                content_object=message,
+            )
         content = {
             'command': 'create_reply_message',
             'message': self.create_reply_message_to_json(message)

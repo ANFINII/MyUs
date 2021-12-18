@@ -511,13 +511,14 @@ def like_form_comment(request):
         else:
             comment_liked = True
             obj.like.add(user)
-            NotificationModel.objects.create(
-                user_from_id=user.id,
-                user_to_id=obj.author.id,
-                type_no=9,
-                type_name='like',
-                content_object=obj,
-            )
+            if user.id != obj.author.id:
+                NotificationModel.objects.create(
+                    user_from_id=user.id,
+                    user_to_id=obj.author.id,
+                    type_no=9,
+                    type_name='like',
+                    content_object=obj,
+                )
         context = {
             'comment_liked': comment_liked,
             'total_like': obj.total_like(),
@@ -581,13 +582,14 @@ def reply_form(request):
         comment_obj.author_id = user_id
         comment_obj.parent = CommentModel.objects.get(id=comment_id)
         comment_obj.save()
-        NotificationModel.objects.create(
-            user_from_id=user_id,
-            user_to_id=comment_obj.parent.author.id,
-            type_no=10,
-            type_name='reply',
-            content_object=comment_obj,
-        )
+        if user_id != comment_obj.parent.author.id:
+            NotificationModel.objects.create(
+                user_from_id=user_id,
+                user_to_id=comment_obj.parent.author.id,
+                type_no=10,
+                type_name='reply',
+                content_object=comment_obj,
+            )
         context['comment_count'] = obj.comment_count()
         context['reply_count'] = comment_obj.parent.replies_count()
         context['reply_lists'] = render_to_string('parts/common/reply/reply.html', {
