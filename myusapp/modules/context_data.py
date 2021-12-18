@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from django.db.models import F, Count, Exists, OuterRef
 from itertools import chain
-from django.db.models import Q, F, Count, Exists, OuterRef
-from myusapp.models import NotifySettingModel, SearchTagModel, NotificationModel, CommentModel, FollowModel, AdvertiseModel, TodoModel
-from myusapp.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
+from myusapp.models import SearchTagModel, NotifySettingModel, NotificationModel, CommentModel, FollowModel, TodoModel
+from myusapp.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, AdvertiseModel
 import datetime
 
 User = get_user_model()
@@ -13,7 +13,7 @@ class ContextData:
         context = super(models, self).get_context_data(**kwargs)
         self.count = 0
         user_id = self.request.user.id
-        following_id_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', flat=True))
+        following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', 'created'))
         confirmed_kwargs = {}
         confirmed_kwargs['id'] = OuterRef('pk')
         confirmed_kwargs['confirmed'] = user_id
@@ -43,9 +43,13 @@ class ContextData:
             notify_obj_list_2 += [10]
         if notify_obj.views:
             notify_obj_list_2 += [11]
-        notify_list_1 = NotificationModel.objects.filter(user_from_id__in=following_id_list, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
+        notify_list_1 = []
+        notify_list_confirmed = []
+        for id, dates in following_list:
+            notify_list_1 += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
+            notify_list_confirmed += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id, confirmed=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
         notify_list_2 = NotificationModel.objects.filter(user_to_id=user_id, type_no__in=notify_obj_list_2).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
-        context['notification_count'] = len(list(chain(notify_list_1, notify_list_2)))
+        context['notification_count'] = len(list(chain(notify_list_confirmed, notify_list_2.exclude(confirmed=user_id))))
         context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
@@ -102,7 +106,7 @@ class ContextData:
         context = super(models, self).get_context_data(**kwargs)
         obj = self.object
         user_id = self.request.user.id
-        following_id_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', flat=True))
+        following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', 'created'))
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
         if 'myusapp.views.TodoDetail' not in str(models):
@@ -151,9 +155,13 @@ class ContextData:
             notify_obj_list_2 += [10]
         if notify_obj.views:
             notify_obj_list_2 += [11]
-        notify_list_1 = NotificationModel.objects.filter(user_from_id__in=following_id_list, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
+        notify_list_1 = []
+        notify_list_confirmed = []
+        for id, dates in following_list:
+            notify_list_1 += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
+            notify_list_confirmed += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id, confirmed=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
         notify_list_2 = NotificationModel.objects.filter(user_to_id=user_id, type_no__in=notify_obj_list_2).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
-        context['notification_count'] = len(list(chain(notify_list_1, notify_list_2)))
+        context['notification_count'] = len(list(chain(notify_list_confirmed, notify_list_2.exclude(confirmed=user_id))))
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
             'notification_list': list(chain(notify_list_1, notify_list_2)),
@@ -192,7 +200,7 @@ class ContextData:
         context = super(models, self).get_context_data(**kwargs)
         obj = self.object
         user_id = self.request.user.id
-        following_id_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', flat=True))
+        following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', 'created'))
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
         if obj.like.filter(id=user_id).exists():
@@ -239,9 +247,13 @@ class ContextData:
             notify_obj_list_2 += [10]
         if notify_obj.views:
             notify_obj_list_2 += [11]
-        notify_list_1 = NotificationModel.objects.filter(user_from_id__in=following_id_list, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
+        notify_list_1 = []
+        notify_list_confirmed = []
+        for id, dates in following_list:
+            notify_list_1 += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
+            notify_list_confirmed += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id, confirmed=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
         notify_list_2 = NotificationModel.objects.filter(user_to_id=user_id, type_no__in=notify_obj_list_2).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
-        context['notification_count'] = len(list(chain(notify_list_1, notify_list_2)))
+        context['notification_count'] = len(list(chain(notify_list_confirmed, notify_list_2.exclude(confirmed=user_id))))
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
             'notification_list': list(chain(notify_list_1, notify_list_2)),
