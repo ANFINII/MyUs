@@ -150,8 +150,7 @@ header {
     z-index: 100; /* 最前面 */
     overflow-y: auto;
     top: 0;
-    left: -200%;
-    width: 100%; /* 右側に隙間を作る */
+    left: -250px;
     width: 250px;
     height: 100%;
     padding: 0;
@@ -269,7 +268,7 @@ header {
     overflow-y: auto;
     top: 3.5em;
     right: -250px;
-    width: 250px; /* 右側に隙間を作る */
+    width: 250px;
     padding: 0;
     background: rgb(255, 250, 245);
     color: rgb(50, 50, 50);
