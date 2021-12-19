@@ -11,7 +11,7 @@ from .views import BlogList, BlogCreate, BlogDetail
 from .views import ChatList, ChatCreate, ChatDetail, ChatThread
 from .views import CollaboList, CollaboCreate, CollaboDetail
 from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
-from .views import searchtag_create, like_form, like_form_comment
+from .views import searchtag_create, advertise_read, like_form, like_form_comment
 from .views import comment_form, reply_form, comment_update, comment_delete, reply_delete
 from .views import signup_form, login_form, logout_form, Withdrawal
 
@@ -76,6 +76,7 @@ urlpatterns = [
     path('todo/delete/<int:pk>/<str:title>', TodoDelete.as_view(), name='todo_delete'),
 
     path('searchtag/create', searchtag_create, name='searchtag_create'),
+    path('url/read', advertise_read, name='advertise_read'),
     path('like/form', like_form, name='like_form'),
     path('like/form/comment', like_form_comment, name='like_form_comment'),
 
