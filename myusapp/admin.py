@@ -47,8 +47,8 @@ class UserAdmin(ImportExportModelAdmin):
     # 詳細画面
     fieldsets = [
         ('アカウント情報', {'fields': ('user_image', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone', 'location', 'introduction', 'groups', 'user_permissions')}),
-        ('権限情報', {'fields': ('is_active', 'is_premium', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
-        ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content', 'following_count', 'follower_count')})
+        ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
+        ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content', 'following_count', 'follower_count', 'rate_plan')})
     ]
 
 @admin.register(SearchTagModel)
