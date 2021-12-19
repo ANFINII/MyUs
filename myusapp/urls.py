@@ -1,8 +1,8 @@
 from django.urls import path
 from .views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
-from .views import profile, ProfileUpdate, mypage, MyPageUpdate
+from .views import Profile, ProfileUpdate, MyPage, MyPageUpdate
 from .views import Notification, notification_setting, notification_confirmed, notification_deleted
-from .views import FollowerList, FollowList, follow_create, userpolicy, knowledge
+from .views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
 from .views import VideoList, VideoCreate, VideoDetail
 from .views import LiveList, LiveCreate, LiveDetail
 from .views import MusicList, MusicCreate, MusicDetail
@@ -24,9 +24,9 @@ urlpatterns = [
     path('userpage/information/<str:nickname>', UserPageInfo.as_view(), name='userpage_info'),
     path('userpage/advertise/<str:nickname>', UserPageAdvertise.as_view(), name='userpage_advertise'),
 
-    path('profile', profile, name='profile'),
+    path('profile', Profile.as_view(), name='profile'),
     path('profile/update', ProfileUpdate.as_view(), name='profile_update'),
-    path('mypage', mypage, name='mypage'),
+    path('mypage', MyPage.as_view(), name='mypage'),
     path('mypage/update', MyPageUpdate.as_view(), name='mypage_update'),
 
     path('notification', Notification.as_view(), name='notification'),
@@ -34,11 +34,11 @@ urlpatterns = [
     path('notification/confirmed', notification_confirmed, name='notification_confirmed'),
     path('notification/deleted', notification_deleted, name='notification_deleted'),
 
+    path('userpolicy', UserPolicy.as_view(), name='userpolicy'),
+    path('knowledge', Knowledge.as_view(), name='knowledge'),
     path('follower', FollowerList.as_view(), name='follower_list'),
     path('follow', FollowList.as_view(), name='follow_list'),
     path('follow/create/<str:nickname>', follow_create, name='follow_create'),
-    path('userpolicy', userpolicy, name='userpolicy'),
-    path('knowledge', knowledge, name='knowledge'),
 
     path('video', VideoList.as_view(), name='video_list'),
     path('video/create', VideoCreate.as_view(), name='video_create'),
