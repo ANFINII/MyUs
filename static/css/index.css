@@ -7,11 +7,15 @@
 }
 
 ::-webkit-scrollbar-track,
-.dropdown_menu_notice::-webkit-scrollbar-track,
 .content_detail_aria::-webkit-scrollbar-track,
 .comment_aria::-webkit-scrollbar-track {
     background: rgb(255, 255, 255);
     border-radius: 10px;
+}
+
+.dropdown_menu_notice::-webkit-scrollbar-track,
+.dropdown_menu_notice::-webkit-scrollbar-thumb {
+    background: rgb(255, 250, 245);
 }
 
 .content_detail_aria::-webkit-scrollbar-thumb,
@@ -30,6 +34,7 @@
 }
 
 ::-webkit-scrollbar-thumb,
+.dropdown_menu_notice:hover::-webkit-scrollbar-thumb,
 .content_detail_aria:hover::-webkit-scrollbar-thumb,
 .comment_aria:hover::-webkit-scrollbar-thumb {
     background: rgb(180, 180, 180);
@@ -37,12 +42,14 @@
 }
 
 ::-webkit-scrollbar-thumb:hover,
+.dropdown_menu_notice::-webkit-scrollbar-thumb:hover,
 .content_detail_aria::-webkit-scrollbar-thumb:hover,
 .comment_aria::-webkit-scrollbar-thumb:hover {
     background: rgb(150, 150, 150);
 }
 
 ::-webkit-scrollbar-thumb:active,
+.dropdown_menu_notice::-webkit-scrollbar-thumb:active,
 .content_detail_aria::-webkit-scrollbar-thumb:active,
 .comment_aria::-webkit-scrollbar-thumb:active {
     background: rgb(120, 120, 120);
@@ -261,9 +268,8 @@ header {
     z-index: 80; /* サイドメニューよりかは小さい */
     overflow-y: auto;
     top: 3.5em;
-    right: -200%;
-    width: 100%; /* 右側に隙間を作る */
-    width: 250px;
+    right: -250px;
+    width: 250px; /* 右側に隙間を作る */
     padding: 0;
     background: rgb(255, 250, 245);
     color: rgb(50, 50, 50);

@@ -4,7 +4,7 @@
         <tr><th class="td-color td-header">通知設定</th><th class="td-indent td-header">フォローしているユーザの投稿通知などを設定</th></tr>
     </thead>
     <tbody>
-        <tr><td class="td-color">Movie通知</td><td class="td-indent">
+        <tr><td class="td-color">Video通知</td><td class="td-indent">
             <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.video }}" notify-type="video">
                 {% if notify.video %}
                 <svg class="bi bi-toggle-on toggle_button" width="25" height="25" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
