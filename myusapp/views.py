@@ -460,6 +460,22 @@ def searchtag_create(request):
             form = SearchTagForm()
 
 
+# advertise_read
+@csrf_exempt
+def advertise_read(request):
+    """advertise_read"""
+    if request.method == 'POST':
+        advertise_id = request.POST.get('advertise_id')
+        advertise_obj = AdvertiseModel.objects.get(id=advertise_id)
+        advertise_obj.read += 1
+        advertise_obj.save()
+        context = {
+            'read': advertise_obj.read,
+        }
+        if request.is_ajax():
+            return JsonResponse(context)
+
+
 # LikeForm
 models_like_dict = {
     'video/detail': VideoModel,

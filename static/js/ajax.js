@@ -278,6 +278,26 @@ $(document).on('click', '.follow_form', function(event) {
     })
 });
 
+// 広告のリンクをクリックした時の処理
+$(document).on('click', '.advertise_anker', function() {
+    const url = $(this).closest('form').attr('action');
+    const advertise_id = $(this).closest('form').attr('advertise-id');
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {'advertise_id': advertise_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+        timeout: 10000,
+    })
+    .done(function(response) {
+        $('.advertise_read').html(response.read);
+        console.log(response);
+    })
+    .fail(function(response) {
+        console.log(response);
+    })
+});
+
 // replyショートカット
 $(document).on('focus', '.reply_form_area', function(event) {
     event.preventDefault();
