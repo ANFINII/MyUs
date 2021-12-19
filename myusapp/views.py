@@ -214,10 +214,13 @@ class Withdrawal(View):
 
 
 # Profile
-def profile(request):
-    """アカウント設定"""
-    object_profile = User.objects.filter(id=request.user.id)
-    return render(request, 'registration/profile.html', {'object_profile':object_profile})
+class Profile(TemplateView):
+    """Profile"""
+    model = User
+    template_name = 'registration/profile.html'
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, Profile, **kwargs)
 
 class ProfileUpdate(UpdateView):
     """アカウント更新"""
@@ -291,10 +294,13 @@ class ProfileUpdate(UpdateView):
 
 
 # MyPage
-def mypage(request):
+class MyPage(TemplateView):
     """Myページ遷移"""
-    object_profile = User.objects.filter(id=request.user.id)
-    return render(request, 'registration/mypage.html', {'object_profile':object_profile})
+    model = User
+    template_name = 'registration/mypage.html'
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, MyPage, **kwargs)
 
 class MyPageUpdate(UpdateView):
     """Myページ更新"""
@@ -342,13 +348,7 @@ class Notification(TemplateView):
     template_name = 'common/notification.html'
 
     def get_context_data(self, **kwargs):
-        context = super(Notification, self).get_context_data(**kwargs)
-        user_id = self.request.user.id
-        context.update({
-            'notify_setting_list': NotifySettingModel.objects.filter(owner_id=user_id),
-            'notification_list': NotificationModel.objects.filter(user_to_id=user_id).order_by('-created')[:50],
-        })
-        return context
+        return ContextData.context_data(self, Notification, **kwargs)
 
 @csrf_exempt
 def notification_setting(request):
@@ -784,15 +784,23 @@ def follow_create(request, nickname):
 
 
 # UserPolicy
-def userpolicy(request):
-    """userpolicy"""
-    return render(request, 'common/userpolicy.html')
+class UserPolicy(TemplateView):
+    """UserPolicy"""
+    model = NotificationModel
+    template_name = 'common/userpolicy.html'
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, UserPolicy, **kwargs)
 
 
-# KnowledgeBase
-def knowledge(request):
-    """knowledge"""
-    return render(request, 'common/knowledge.html')
+# Knowledge
+class Knowledge(TemplateView):
+    """Knowledge"""
+    model = NotificationModel
+    template_name = 'common/knowledge.html'
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, Knowledge, **kwargs)
 
 
 # Video

@@ -56,7 +56,10 @@ class ContextData:
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
             'notification_list': list(chain(notify_list_1, notify_list_2)),
         })
-        if 'myusapp.views.Index' in str(models):
+        if 'Notification' in str(models.__name__):
+            context.update(notify_setting_list=NotifySettingModel.objects.filter(owner_id=user_id))
+
+        if 'Index' in str(models.__name__):
             context.update({
                 'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:8],
                 'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:8],
@@ -66,7 +69,7 @@ class ContextData:
                 'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:8],
             })
 
-        if 'myusapp.views.Recommend' in str(models):
+        if 'Recommend' in str(models.__name__):
             # 急上昇はcreatedが1日以内かつscoreが100000以上の上位8レコード
             # テストはcreatedが100日以内かつscoreが50以上の上位8レコード
             # socre = (read + like*10) + read * like/read * 20
@@ -81,7 +84,7 @@ class ContextData:
                 'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
             })
 
-        if ('myusapp.views.UserPage' or 'myusapp.views.UserPageInfo' or 'myusapp.views.UserPageAdvertise') in str(models):
+        if ('UserPage' or 'UserPageInfo' or 'UserPageAdvertise') in str(models.__name__):
             author = get_object_or_404(User, nickname=self.kwargs['nickname'])
             author_id = author.id
             follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=author_id)
@@ -109,7 +112,7 @@ class ContextData:
         following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', 'created'))
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         liked = False
-        if 'myusapp.views.TodoDetail' not in str(models):
+        if 'TodoDetail' not in str(models.__name__):
             if obj.like.filter(id=user_id).exists():
                 liked = True
         followed = False
@@ -168,25 +171,25 @@ class ContextData:
             'advertise_list': AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:6],
             'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
         })
-        if 'myusapp.views.VideoDetail' in str(models):
+        if 'VideoDetail' in str(models.__name__):
             context.update(video_list=VideoModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
-        if 'myusapp.views.LiveDetail' in str(models):
+        if 'LiveDetail' in str(models.__name__):
             context.update(live_list=LiveModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
-        if 'myusapp.views.MusicDetail' in str(models):
+        if 'MusicDetail' in str(models.__name__):
             context.update(music_list=MusicModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
-        if 'myusapp.views.PictureDetail' in str(models):
+        if 'PictureDetail' in str(models.__name__):
             context.update(picture_list=PictureModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
-        if 'myusapp.views.BlogDetail' in str(models):
+        if 'BlogDetail' in str(models.__name__):
             context.update(blog_list=BlogModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
-        if 'myusapp.views.TodoDetail' in str(models):
+        if 'TodoDetail' in str(models.__name__):
             context.update(todo_list=TodoModel.objects.filter(author_id=user_id).exclude(id=obj.id)[:50])
 
-        if 'myusapp.views.CollaboDetail' in str(models):
+        if 'CollaboDetail' in str(models.__name__):
             if obj.period < datetime.date.today():
                 is_period = True
             else:
@@ -259,7 +262,7 @@ class ContextData:
             'notification_list': list(chain(notify_list_1, notify_list_2)),
             'chat_list': ChatModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50],
         })
-        if 'myusapp.views.ChatThread' in str(models):
+        if 'ChatThread' in str(models.__name__):
             comment_id = self.kwargs['comment_id']
             context['comment_id'] = comment_id
             context['reply_list'] = obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
