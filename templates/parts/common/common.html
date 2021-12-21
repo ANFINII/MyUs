@@ -12,22 +12,22 @@
             <span>{{ object.read|intcomma }}</span>
         </div>
         {% if user.is_authenticated %}
-            <form method="POST" action="{% url 'myus:like_form' %}" path="{{ request.path }}">
-                {% csrf_token %}
-                {% if liked %}
-                <button type="submit" name="videomodel_id" value="{{ object.id }}" class="like_form like_fill">
-                    <i class="bi bi-hand-thumbs-up-fill icon-font like_color" title="いいね"></i>
-                </button>
-                {% else %}
-                <button type="submit" name="videomodel_id" value="{{ object.id }}" class="like_form like_no">
-                    <i class="bi bi-hand-thumbs-up icon-font like_color" title="いいね"></i>
-                </button>
-                {% endif %}
-                <span id="like_count_{{ object.id }}" class="like_count">{{ object.total_like|intcomma }}</span>
-            </form>
+        <form method="POST" action="{% url 'myus:like_form' %}" path="{{ request.path }}">
+            {% csrf_token %}
+            {% if liked %}
+            <button type="submit" name="videomodel_id" value="{{ object.id }}" class="like_form like_fill">
+                <i class="bi bi-hand-thumbs-up-fill icon-font like_color" title="いいね"></i>
+            </button>
+            {% else %}
+            <button type="submit" name="videomodel_id" value="{{ object.id }}" class="like_form like_no">
+                <i class="bi bi-hand-thumbs-up icon-font like_color" title="いいね"></i>
+            </button>
+            {% endif %}
+            <span id="like_count_{{ object.id }}" class="like_count">{{ object.total_like|intcomma }}</span>
+        </form>
         {% else %}
-            <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
-            <span>{{ object.total_like|intcomma }}</span>
+        <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
+        <span>{{ object.total_like|intcomma }}</span>
         {% endif %}
     </div>
 

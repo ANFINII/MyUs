@@ -5,14 +5,11 @@
 <main class="main_contents">
     <h1>ToDo削除</h1>
     {% if user.is_authenticated %}
-    <br>
-
     <p>{{ object.title }}</p>
     <form method="POST" action="">
         {% csrf_token %}
         <p><input type="submit" value="削除する" class="btn btn-danger btn-sm"></p>
     </form>
-
     {% else %}
     <h2 class="login_required">ログインしてください</h2>
     {% endif %}
