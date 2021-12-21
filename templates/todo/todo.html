@@ -12,16 +12,15 @@
     </h1>
 
     {% if user.is_authenticated %}
-
     <div class="todo_create">
         <a href="{% url 'myus:todo_create' %}" class="btn btn-primary btn-sm" role="button">ToDo作成</a>
     </div>
 
     <article class="main_article">
         {% include 'parts/article_todo.html' %}
-        {% else %}
-        <h2 class="login_required_todo">ログインしてください</h2>
-        {% endif %}
     </article>
+    {% else %}
+    <h2 class="login_required">ログインしてください</h2>
+    {% endif %}
 </main>
 {% endblock content %}

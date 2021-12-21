@@ -1984,12 +1984,6 @@ header {
     color: rgb(255, 0, 0);
 }
 
-.login_required_todo {
-    font-size: 16px;
-    color: rgb(255, 0, 0);
-    margin: 31px 0 0 0;
-}
-
 /* ToDoデザイン */
 .todo_create,
 .follow_button {
