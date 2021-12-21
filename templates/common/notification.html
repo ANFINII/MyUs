@@ -12,8 +12,12 @@
 <main class="main_contents">
     <article class="main_profile">
         <h1>通知設定</h1>
+        {% if user.is_authenticated %}
         {% include "parts/notify_setting_list.html" %}
         {% include "parts/footer-myus.html" %}
+        {% else %}
+        <h2 class="login_required">ログインしてください</h2>
+        {% endif %}
     </article>
 </main>
 {% endblock content %}
