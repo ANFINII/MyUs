@@ -230,9 +230,7 @@ class ProfileUpdate(UpdateView):
     success_url = reverse_lazy('myus:profile')
 
     def get_context_data(self, **kwargs):
-        context = super(ProfileUpdate, self).get_context_data(**kwargs)
-        context['gender'] = {'0':'男性', '1':'女性', '2':'秘密'}
-        return context
+        return ContextData.context_data(self, ProfileUpdate, **kwargs)
 
     def form_valid(self, form):
         """バリデーションに成功した時"""
@@ -308,6 +306,9 @@ class MyPageUpdate(UpdateView):
     fields = ('mypage_image', 'mypage_email', 'content')
     template_name = 'registration/mypage_update.html'
     success_url = reverse_lazy('myus:mypage')
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, MyPageUpdate, **kwargs)
 
     def form_valid(self, form):
         """バリデーションに成功した時"""
