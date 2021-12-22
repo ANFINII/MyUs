@@ -410,14 +410,9 @@ header {
     grid-row: 1/2;
 }
 
-.notification_aria_list span {
-    display: block;
-    grid-column: 2/3;
-    grid-row: 1/2;
-    font-size: 10px;
-    margin: -4px 0 0 -3px;
-    justify-self: start;
-    color: rgb(255, 100, 100);
+.notification_aria_list .svg-circle {
+    width: 60%;
+    fill: rgb(255, 100, 100);
 }
 
 .notification_aria_list_1 {
