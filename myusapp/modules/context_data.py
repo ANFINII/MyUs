@@ -59,6 +59,9 @@ class ContextData:
         if 'Notification' in str(models.__name__):
             context.update(notify_setting_list=NotifySettingModel.objects.filter(owner_id=user_id))
 
+        if 'ProfileUpdate' in str(models.__name__):
+            context['gender'] = {'0':'男性', '1':'女性', '2':'秘密'}
+
         if 'Index' in str(models.__name__):
             context.update({
                 'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:8],
