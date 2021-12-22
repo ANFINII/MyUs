@@ -791,6 +791,10 @@ header {
     box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
 }
 
+.main_contents p textarea {
+    height: 38px;
+}
+
 /* メインリストデザイン index用 */
 .main_article_index {
     display: grid;
@@ -1436,6 +1440,10 @@ header {
     grid-row: 1/2;
     font-size: 16px;
     margin: 0 0 8px 0;
+}
+
+.comment_input textarea {
+    height: 40px;
 }
 
 .profile_image_comment {
