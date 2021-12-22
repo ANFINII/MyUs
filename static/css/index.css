@@ -55,6 +55,24 @@
     background: rgb(120, 120, 120);
 }
 
+/* スクロールバー firefox */
+* {
+    scrollbar-width: thin; /* 細さ */
+    scrollbar-color: rgb(255, 255, 255) rgba(255, 255, 255, 0); /* つまみの色 軌道の色 */
+}
+
+*.dropdown_menu_notice {
+    scrollbar-color: rgb(255, 250, 245) rgba(255, 250, 245, 0); /* つまみの色 軌道の色 */
+}
+
+*:hover {
+    scrollbar-color: rgb(180, 180, 180) rgba(255, 255, 255, 0); /* つまみの色 軌道の色 */
+}
+
+*:active {
+    scrollbar-color: rgb(120, 120, 120) rgba(255, 255, 255, 0); /* つまみの色 軌道の色 */
+}
+
 /* color */
 .rgb100 {
     color: rgb(100, 100, 100);
