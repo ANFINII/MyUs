@@ -21,7 +21,13 @@
                 <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
                     <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
                 </a>
-                {% if notification.user_confirmed %}<span></span>{% else %}<span>⚫</span>{% endif %}
+                {% if notification.user_confirmed %}
+                <span></span>
+                {% else %}
+                <svg class="svg-circle" viewbox="0 0 2 2" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="1" cy="1" r="1"></circle>
+                </svg>
+                {% endif %}
                 {% if notification.type_no >= 1 and notification.type_no <= 7 %}
                 <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんが{{ notification.content_object.title }}を投稿しました">
                     {{ notification.content_object.title }}
