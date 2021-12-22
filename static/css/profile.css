@@ -66,6 +66,10 @@ table {
     border-bottom: 0;
 }
 
+.td-footer textarea {
+    height: 40px;
+}
+
 table th, table td {
     height: 2.5em;
     min-width: 125px;
