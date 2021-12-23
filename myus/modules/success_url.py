@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from myusapp.models import NotificationModel
+from myus.models import NotificationModel
 
 User = get_user_model()
 

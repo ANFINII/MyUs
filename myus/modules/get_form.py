@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
-from myusapp.models import NotificationModel
-from myusapp.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
+from myus.models import NotificationModel
+from myus.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 
 def get_detail(self):
     self.object = self.get_object()

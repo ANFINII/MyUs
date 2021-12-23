@@ -4,7 +4,7 @@ from django.db.models import Q, F, Count
 from functools import reduce
 from operator import and_
 from itertools import chain
-from myusapp.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel
+from myus.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel
 import datetime
 
 User = get_user_model()

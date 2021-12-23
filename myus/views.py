@@ -342,6 +342,20 @@ class MyPageUpdate(UpdateView):
         return self.request.user
 
 
+# 決済システム
+class PaymentCheckout(TemplateView):
+   template_name = 'payment/checkout.html'
+
+class PaymentSuccess(TemplateView):
+   template_name = 'payment/success.html'
+
+class PaymentCancel(TemplateView):
+   template_name = 'payment/cancel.html'
+
+def create_checkout_session(request):
+    pass
+
+
 # 通知設定
 class Notification(TemplateView):
     """Notification"""

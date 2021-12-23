@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
 from .views import Profile, ProfileUpdate, MyPage, MyPageUpdate
+from .views import PaymentCheckout, PaymentSuccess, PaymentCancel, create_checkout_session
 from .views import Notification, notification_setting, notification_confirmed, notification_deleted
 from .views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
 from .views import VideoList, VideoCreate, VideoDetail
@@ -28,6 +29,11 @@ urlpatterns = [
     path('profile/update', ProfileUpdate.as_view(), name='profile_update'),
     path('mypage', MyPage.as_view(), name='mypage'),
     path('mypage/update', MyPageUpdate.as_view(), name='mypage_update'),
+
+    path('payment/checkout', PaymentCheckout.as_view(), name='payment_checkout'),
+    path('payment/success', PaymentSuccess.as_view(), name='payment_success'),
+    path('payment/cancel', PaymentCancel.as_view(), name='payment_cancel'),
+    path('create_checkout_session', create_checkout_session, name='create_checkout_session'),
 
     path('notification', Notification.as_view(), name='notification'),
     path('notification/setting', notification_setting, name='notification_setting'),

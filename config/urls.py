@@ -7,12 +7,12 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from ckeditor_uploader import views
-from myusapp.admin import mymanage_site
+from myus.admin import mymanage_site
 
 urlpatterns = [
     path('myus-admin/', admin.site.urls),
-    path('mymanage/', mymanage_site.urls),
-    path('', include('myusapp.urls')),
+    path('myus-manage/', mymanage_site.urls),
+    path('', include('myus.urls')),
     path('', include('django.contrib.auth.urls')),
     path('markdownx/', include('markdownx.urls')),
     path('upload/', login_required(views.upload), name='ckeditor_upload'),
