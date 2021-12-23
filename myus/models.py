@@ -578,7 +578,7 @@ class AdvertiseModel(models.Model):
     publish = BooleanField(default=True)
     read    = models.IntegerField(blank=True, null=True, default=0)
     choice  = (('0', '全体'), ('1', '個別'))
-    type    = models.CharField(choices=choice, max_length=2, blank=True)
+    type    = models.CharField(choices=choice, max_length=2, default='1')
     period  = models.DateField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
