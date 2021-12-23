@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 
 # Add Application
 INSTALLED_APPS += [
-    'myusapp.apps.MyusappConfig',
+    'myus.apps.MyUsConfig',
     'django.contrib.humanize',
     'django_cleanup',
     'debug_toolbar',
@@ -60,10 +60,10 @@ INSTALLED_APPS += [
 
 NUMBER_GROUPING = 3
 
-AUTH_USER_MODEL = 'myusapp.User'
+AUTH_USER_MODEL = 'myus.User'
 
 AUTHENTICATION_BACKENDS = [
-    'myusapp.backends.MyBackend',
+    'myus.backends.MyBackend',
 ]
 
 MIDDLEWARE = [
