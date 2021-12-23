@@ -52,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     age             = models.IntegerField(blank=True, null=True)
 
     gender_choice   = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
-    gender          = models.CharField(choices=gender_choice, max_length=1, default='秘密')
+    gender          = models.CharField(choices=gender_choice, max_length=1, default='2')
 
     phone_no        = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message = ('電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます。'))
     phone           = models.CharField(validators=[phone_no], max_length=15, blank=True, default='000-0000-0000')
@@ -73,7 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     follower_count  = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
     following_count = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
     plan_choice     = (('0', 'free'), ('1', 'basic'), ('2', 'standard'), ('3', 'premium'))
-    rate_plan       = models.CharField(choices=plan_choice, max_length=1, default='free')
+    rate_plan       = models.CharField(choices=plan_choice, max_length=1, default='0')
 
     objects = UserManager()
 
@@ -519,7 +519,7 @@ class TodoModel(models.Model):
     title    = models.CharField(max_length=100)
     content  = models.TextField()
     choice   = (('danger','高'),('success','普通'),('info','低'))
-    priority = models.CharField(max_length=10, choices=choice, default='普通')
+    priority = models.CharField(max_length=10, choices=choice, default='success')
     duedate  = models.DateField()
     comments = GenericRelation('CommentModel')
     created  = models.DateTimeField(auto_now_add=True)
