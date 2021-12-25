@@ -295,12 +295,9 @@ header {
 }
 
 .dropdown_menu_cloud,
-.dropdown_menu_notice {
-    height: 337px;
-}
-
+.dropdown_menu_notice,
 .dropdown_menu_profile {
-    height: 289px;
+    height: 337px;
 }
 
 /* 閉じる用のカバー */
