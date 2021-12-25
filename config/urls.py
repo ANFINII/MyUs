@@ -10,10 +10,10 @@ from ckeditor_uploader import views
 from myus.admin import mymanage_site
 
 urlpatterns = [
-    path('myus-admin/', admin.site.urls),
-    path('myus-manage/', mymanage_site.urls),
     path('', include('myus.urls')),
     path('', include('django.contrib.auth.urls')),
+    path('myus-admin/', admin.site.urls),
+    path('myus-manage/', mymanage_site.urls),
     path('markdownx/', include('markdownx.urls')),
     path('upload/', login_required(views.upload), name='ckeditor_upload'),
     path('browse/', never_cache(login_required(views.browse)), name='ckeditor_browse'),
