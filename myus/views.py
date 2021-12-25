@@ -343,6 +343,9 @@ class MyPageUpdate(UpdateView):
 
 
 # 決済システム
+class Payment(TemplateView):
+   template_name = 'payment/payment.html'
+
 class PaymentCheckout(TemplateView):
    template_name = 'payment/checkout.html'
 
