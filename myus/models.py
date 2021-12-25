@@ -72,7 +72,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     content         = models.TextField(blank=True)
     follower_count  = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
     following_count = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
-    plan_choice     = (('0', 'free'), ('1', 'basic'), ('2', 'standard'), ('3', 'premium'))
+    plan_choice     = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
     rate_plan       = models.CharField(choices=plan_choice, max_length=1, default='0')
 
     objects = UserManager()
