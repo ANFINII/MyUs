@@ -344,16 +344,24 @@ class MyPageUpdate(UpdateView):
 
 # 決済システム
 class Payment(TemplateView):
-   template_name = 'payment/payment.html'
+    model = User
+    template_name = 'payment/payment.html'
 
 class PaymentCheckout(TemplateView):
-   template_name = 'payment/checkout.html'
+    model = User
+    template_name = 'payment/checkout.html'
 
 class PaymentSuccess(TemplateView):
-   template_name = 'payment/success.html'
+    model = User
+    template_name = 'payment/success.html'
 
 class PaymentCancel(TemplateView):
-   template_name = 'payment/cancel.html'
+    model = User
+    template_name = 'payment/cancel.html'
+
+class ChangePlan(TemplateView):
+    model = User
+    template_name = 'payment/change_plan.html'
 
 def create_checkout_session(request):
     pass
