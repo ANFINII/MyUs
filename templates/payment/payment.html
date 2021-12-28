@@ -20,7 +20,7 @@
                 ・個別広告表示1つ<br>
                 ・全体広告OFF
             </div>
-            <button class="btn btn-primary btn-sm">購入する</button>
+            <button class="btn btn-primary btn-sm checkout-button" value="price_1K9VSxCHdDAlRliqOZnYuctl">購入する</button>
         </section>
 
         <section class="main_content_plan">
@@ -36,7 +36,7 @@
                 ・個別広告表示3つ<br>
                 ・全体広告OFF
             </div>
-            <button class="btn btn-primary btn-sm">購入する</button>
+            <button class="btn btn-primary btn-sm checkout-button" value="price_1K9VTbCHdDAlRliq3YNA768b">購入する</button>
         </section>
 
         <section class="main_content_plan">
@@ -53,7 +53,7 @@
                 ・全体広告OFF<br>
                 ・楽曲ダウンロード
             </div>
-            <button class="btn btn-primary btn-sm">購入する</button>
+            <button class="btn btn-primary btn-sm checkout-button" value="price_1K9VU9CHdDAlRliqXsIS6GC4">購入する</button>
         </section>
 
         <section class="main_content_plan">
@@ -87,3 +87,8 @@
     </article>
 </main>
 {% endblock content %}
+
+{% block extrajs %}
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{% static 'js/payment.js' %}"></script>
+{% endblock extrajs %}
