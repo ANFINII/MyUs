@@ -1,0 +1,14 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUs料金プラン</title>{% endblock title %}
+{% load static %}
+
+{% block content %}
+<main class="main_contents">
+    <h1>料金プラン</h1>
+
+    <article class="main_article">
+        <p>購入ありがとうございます!</p>
+    </article>
+    <a href="{% url 'myus:payment' %}" class="btn btn-primary btn-sm" role="button">戻る</a>
+</main>
+{% endblock content %}
