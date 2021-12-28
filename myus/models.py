@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models import Q
-from django.db.models.fields import BooleanField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
@@ -8,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
+from django.forms.widgets import Textarea
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -198,7 +198,7 @@ class VideoModel(models.Model):
     images   = models.ImageField(upload_to='images/video_images')
     videos   = models.FileField(upload_to='videos/video_videos')
     comments = GenericRelation('CommentModel')
-    publish  = BooleanField(default=True)
+    publish  = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='video_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
@@ -250,7 +250,7 @@ class LiveModel(models.Model):
     images   = models.ImageField(upload_to='images/live_images')
     lives    = models.FileField(upload_to='videos/live_videos')
     comments = GenericRelation('CommentModel')
-    publish  = BooleanField(default=True)
+    publish  = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='live_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
@@ -303,7 +303,7 @@ class MusicModel(models.Model):
     lyrics   = models.TextField(blank=True, null=True)
     musics   = models.FileField(upload_to='musics/')
     comments = GenericRelation('CommentModel')
-    publish  = BooleanField(default=True)
+    publish  = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='music_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
@@ -354,7 +354,7 @@ class PictureModel(models.Model):
     content  = models.TextField()
     images   = models.ImageField(upload_to='images/picture_images')
     comments = GenericRelation('CommentModel')
-    publish  = BooleanField(default=True)
+    publish  = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='picture_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
@@ -407,7 +407,7 @@ class BlogModel(models.Model):
     images   = models.ImageField(upload_to='images/blog_images')
     richtext = RichTextUploadingField(blank=True, null=True)
     comments = GenericRelation('CommentModel')
-    publish  = BooleanField(default=True)
+    publish  = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='blog_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
@@ -457,7 +457,7 @@ class ChatModel(models.Model):
     title    = models.CharField(max_length=100)
     content  = models.TextField()
     comments = GenericRelation('CommentModel')
-    publish  = BooleanField(default=True)
+    publish  = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='chat_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
@@ -493,7 +493,7 @@ class CollaboModel(models.Model):
     title    = models.CharField(max_length=100)
     content  = models.TextField()
     comments = GenericRelation('CommentModel')
-    publish  = BooleanField(default=True)
+    publish  = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='collabo_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
@@ -575,7 +575,7 @@ class AdvertiseModel(models.Model):
     content = models.TextField()
     images  = models.ImageField(upload_to='images/adver_images')
     videos  = models.FileField(upload_to='videos/adver_videos')
-    publish = BooleanField(default=True)
+    publish = models.BooleanField(default=True)
     read    = models.IntegerField(blank=True, null=True, default=0)
     choice  = (('0', '全体'), ('1', '個別'))
     type    = models.CharField(choices=choice, max_length=2, default='1')
