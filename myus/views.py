@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.contrib.contenttypes.models import ContentType
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
+from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -25,6 +26,8 @@ from .modules.validation import has_username, has_email, has_phone, has_alphabet
 import datetime
 import string
 import random
+import stripe
+import json
 
 # Create your views here.
 
@@ -347,24 +350,42 @@ class Payment(TemplateView):
     model = User
     template_name = 'payment/payment.html'
 
-class PaymentCheckout(TemplateView):
-    model = User
-    template_name = 'payment/checkout.html'
+    def get_context_data(self, **kwargs):
+        context = super(Payment, self).get_context_data(**kwargs)
+        context['publicKey'] = settings.STRIPE_PUBLIC_KEY
+        return context
 
 class PaymentSuccess(TemplateView):
-    model = User
     template_name = 'payment/success.html'
 
 class PaymentCancel(TemplateView):
-    model = User
     template_name = 'payment/cancel.html'
 
 class ChangePlan(TemplateView):
     model = User
     template_name = 'payment/change_plan.html'
 
+@csrf_exempt
 def create_checkout_session(request):
-    pass
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    post_data = json.loads(request.body.decode('utf-8'))
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price': post_data['priceId'],
+                    'quantity': 1,
+                },
+            ],
+            mode='subscription',
+            success_url=request.build_absolute_uri(reverse('myus:payment_success')),
+            cancel_url=request.build_absolute_uri(reverse('myus:payment_cancel')),
+        )
+        print(post_data)
+        return JsonResponse({'id': checkout_session.id})
+    except Exception as e:
+        return JsonResponse({'error':str(e)})
 
 
 # 通知設定
