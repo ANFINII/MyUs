@@ -49,19 +49,19 @@
             <i title="内容" class="bi bi-file-text"></i>
         </label>
 
-        <div class="chat_content">
-            <div class="chat_content_list">
+        <div class="chat_section_content_area">
+            <div class="chat_content_area">
                 <a href="{% url 'myus:userpage' object.author.nickname %}">
                     <img src="{{ object.author.user_image.url }}" title="{{ object.author.nickname }}" class="profile_image_comment">
                 </a>
-                <div class="chat_content_list_1">
+                <div class="chat_content_area_1">
                     <p>{{ object.author.nickname }}</p>
                     <time>{{ object.created|date:'Y/m/d H:i' }}</time>
                 </div>
-                <div class="chat_content_list_2">登録者数
+                <div class="chat_content_area_2">登録者数
                     <span class="follower_count">{{ object.author.follower_count }}</span>
                 </div>
-                <div class="chat_content_list_3">
+                <div class="chat_content_area_3">
                     {% if user.nickname == object.author.nickname %}
                     <button class="btn btn-secondary btn-sm" disabled>フォローする</button>
                     {% elif user.is_authenticated %}
@@ -77,7 +77,16 @@
                     <button class="btn btn-secondary btn-sm" disabled>フォローする</button>
                     {% endif %}
                 </div>
-                <div class="chat_content_list_4">{{ object.content|linebreaksbr }}</div>
+            </div>
+            <input type="checkbox" id="chat_content_area_4_check_id" class="chat_content_area_4_check">
+            <label for="chat_content_area_4_check_id" class="chat_content_area_4_check_label1">拡大表示</label>
+            <label for="chat_content_area_4_check_id" class="chat_content_area_4_check_label2">縮小表示</label>
+            <div class="chat_content_area_4">{{ object.content|linebreaksbr }}</div>
+            <div class="advertise_aria">
+                <h2>個別広告</h2>
+                <article class="main_article_adver">
+                    {% include 'parts/article_advertise.html' %}
+                </article>
             </div>
         </div>
     </div>
