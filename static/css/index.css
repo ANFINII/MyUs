@@ -2130,6 +2130,7 @@ header {
 
 /* Reset input[type="search"] */
 input[type="search"]:-webkit-autofill {
+    box-shadow: 0 0 0 1000px rgb(255, 255, 255) inset;
     margin-bottom: auto;
     margin-top: auto;
     height: 32px;
