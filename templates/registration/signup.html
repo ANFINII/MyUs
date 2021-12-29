@@ -21,11 +21,17 @@
         </ul>
         {% endif %}
 
-        <label for="last_name">名前</label>
-        <div class="form-row form-group">
-            <input type="text" name="last_name" placeholder="姓" maxlength="30" id="last_name" class="form-control">
-            <input type="text" name="first_name" placeholder="名" maxlength="30" id="first_name" class="form-control">
-        </div>
+        <p><label for="last_name">名前</label></p>
+        <p>
+            <div class="row">
+                <div class="col-auto last_name">
+                    <input type="text" name="last_name" placeholder="姓" maxlength="30" id="last_name" class="form-control">
+                </div>
+                <div class="col-auto first_name">
+                    <input type="text" name="first_name" placeholder="名" maxlength="30" id="first_name" class="form-control">
+                </div>
+            </div>
+        </p>
 
         <p><input type="text" name="username" placeholder="ユーザー名(英数字)" maxlength="30" class="form-control" required></p>
 
@@ -37,37 +43,39 @@
 
         <p><input type="password" name="password2" placeholder="パスワード(確認用)" minlength="8" maxlength="16" class="form-control" required></p>
 
-        <label for="year">生年月日</label>
-        <div id="birthday" class="form-row">
-            <div class="col-auto">
-                <select name="year" id="year" class="form-control">
-                    <option style="display:none;">年</option>
-                </select>
+        <p><label for="year">生年月日</label></p>
+        <p>
+            <div id="birthday" class="row g-3">
+                <div class="col-auto year">
+                    <select name="year" id="year" class="form-control">
+                        <option style="display:none;">年</option>
+                    </select>
+                </div>
+                <div class="col-auto month">
+                    <select name="month" id="month" class="form-control">
+                        <option style="display:none;">月</option>
+                    </select>
+                </div>
+                <div class="col-auto day">
+                    <select name="day" id="day" class="form-control">
+                        <option style="display:none;">日</option>
+                    </select>
+                </div>
             </div>
-            <div class="col-auto">
-                <select name="month" id="month" class="form-control">
-                    <option style="display:none;">月</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <select name="day" id="day" class="form-control">
-                    <option style="display:none;">日</option>
-                </select>
-            </div>
-        </div><br>
+        </p>
 
-        <label for="secret">性別</label><br>
-        <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" name="gender" value="0" id="male" class="custom-control-input">
-            <label for="male" class="custom-control-label">男性</label>
+        <p><label for="secret">性別</label><br></p>
+        <div class="form-check-inline">
+            <input type="radio" name="gender" value="0" id="male">
+            <label for="male">男性</label>
         </div>
-        <div class="custom-control custom-radio custom-control-inline">
-            <input type="radio" name="gender" value="1" id="female" class="custom-control-input">
-            <label for="female" class="custom-control-label">女性</label>
+        <div class="form-check form-check-inline">
+            <input type="radio" name="gender" value="1" id="female">
+            <label for="female">女性</label>
         </div>
-        <div id="gender" class="custom-control custom-radio custom-control-inline">
-            <input type="radio" name="gender" value="2" id="secret" class="custom-control-input" checked>
-            <label for="secret" class="custom-control-label">秘密</label>
+        <div class="form-check form-check-inline gender">
+            <input type="radio" name="gender" value="2" id="secret" checked>
+            <label for="secret">秘密</label>
         </div>
 
         <p><input type="submit" value="アカウント登録" id="submit" class="btn btn-lg btn-success btn-block"></p>
