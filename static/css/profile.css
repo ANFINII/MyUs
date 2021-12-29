@@ -252,6 +252,10 @@ ul, .messages_password_change {
     font-size: 16px;
 }
 
+.btn-block {
+    width: 100%;
+}
+
 .submit {
     margin: 40px 0 24px 0;
 }

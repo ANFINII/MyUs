@@ -15,17 +15,22 @@
         {% csrf_token %}
         <p><label for="title">タイトル</label></p>
         <p><input type="text" name="title" id="title" class="form-control" required></p>
+
         <p><label for="content">内容</label></p>
         <p><textarea name="content" cols="100" rows="1" id="content" class="form-control textarea" required></textarea></p>
-        <p><label for="customFile_1">サムネイル</label></p>
+
+        <p><label for="custom_file_1">サムネイル</label></p>
         <p>
-            <div class="custom-file">
-                <input type="file" name="images" accept="image/*" id="customFile_1" class="custom-file-input" required>
-                <label for="customFile_1" class="custom-file-label" data-browse="選択">ファイルを選択する</label>
+            <input type="file" name="images" accept="image/*" id="custom_file_1" class="form-control" style="display:none" required>
+            <div class="input-group">
+                <input type="text" id="file_1" class="form-control" placeholder="ファイル選択..." onclick="$('input[id=custom_file_1]').click();">
             </div>
         </p>
+
         <p>本文</p>
-        <p>{{ form.media }}{{ form.richtext }}</p><br>
+        <p>{{ form.media }}{{ form.richtext }}</p>
+        <br>
+
         <p><input type="submit" value="作成する" class="btn btn-success btn-sm"></p>
     </form>
     {% else %}
