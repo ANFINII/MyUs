@@ -1069,6 +1069,24 @@ header {
     height: auto;
 }
 
+.article_detail_music {
+    margin: 0 0 16px 0;
+}
+
+.article_detail .bi-download {
+    margin: 12px 0 0 0;
+}
+
+.music_download {
+    text-decoration: none;
+    color: rgb(120, 120, 120);
+}
+
+.music_download:hover {
+    color: rgb(0, 100, 255);
+    cursor: pointer;
+}
+
 .article_detail_lyric {
     display: block;
     height: 285px;

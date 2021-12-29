@@ -304,6 +304,7 @@ class MusicModel(models.Model):
     musics   = models.FileField(upload_to='musics/')
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
+    download = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
     like     = models.ManyToManyField(User, related_name='music_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
@@ -612,3 +613,19 @@ class CommentModel(models.Model):
 
     class Meta:
         verbose_name_plural = '14 コメント'
+
+class ProductModel(models.Model):
+    name              = models.CharField(max_length=100)
+    stripe_product_id = models.CharField(max_length=100)
+    description       = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+class PriceModel(models.Model):
+    product         = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
+    stripe_price_id = models.CharField(max_length=100)
+    price           = models.IntegerField(default=0)
+
+    def get_display_price(self):
+        return "{0:.2f}".format(self.price / 100)

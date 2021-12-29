@@ -138,7 +138,7 @@ class LiveModelAdmin(ImportExportModelAdmin):
 
 @admin.register(MusicModel)
 class MusicModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'publish', 'download', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -148,7 +148,7 @@ class MusicModelAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'lyrics', 'musics', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'lyrics', 'musics', 'publish', 'download', 'tags', 'like', 'read')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -534,7 +534,7 @@ class LiveModelAdminSite(admin.ModelAdmin):
 mymanage_site.register(LiveModel, LiveModelAdminSite)
 
 class MusicModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'title', 'publish', 'download', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -545,7 +545,7 @@ class MusicModelAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'lyrics', 'musics', 'publish', 'tags')}),
+        ('編集項目', {'fields': ('title', 'content', 'lyrics', 'musics', 'publish', 'download', 'tags')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
