@@ -44,7 +44,6 @@
 
     <div class="chat_section_content">
         <input type="checkbox" id="chat_content_check_id" class="chat_content_check">
-
         <label for="chat_content_check_id" title="内容" class="chat_content_label">
             <i title="内容" class="bi bi-file-text"></i>
         </label>
@@ -78,10 +77,12 @@
                     {% endif %}
                 </div>
             </div>
+
             <input type="checkbox" id="chat_content_area_4_check_id" class="chat_content_area_4_check">
             <label for="chat_content_area_4_check_id" class="chat_content_area_4_check_label1">拡大表示</label>
             <label for="chat_content_area_4_check_id" class="chat_content_area_4_check_label2">縮小表示</label>
             <div class="chat_content_area_4">{{ object.content|linebreaksbr }}</div>
+
             <div class="advertise_aria">
                 <h2>個別広告</h2>
                 <article class="main_article_adver">
