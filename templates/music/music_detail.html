@@ -13,6 +13,10 @@
                 <source src="{{ object.musics.url }}">
                 <p>ブラウザがaudioに対応しておりません</p>
             </audio>
+            <div class="music_speed">Speed
+                <input type="range" min="0" max="2" step="0.25" value="1.0" id="speed" class="form-range">
+                <span id="speed_range">1.0</span>
+            </div>
             {% if object.download and user.rate_plan == '3' %}
             <a href="{{ object.musics.url }}" download class="music_download">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">

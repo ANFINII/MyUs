@@ -1077,6 +1077,25 @@ header {
     margin: 12px 0 0 0;
 }
 
+.music_speed {
+    display: inline-block;
+    width: 295px;
+    height: 40px;
+    padding: 0px 10px;
+    margin: 16px 16px 0 0;
+    color: rgb(255, 255, 255);
+    font-size: 13px;
+	text-shadow: 1px 1px 0 rgb(0, 0, 0);
+    background: rgb(0, 135, 180);
+    border: 1px solid rgb(0, 135, 180);
+    border-radius: 5px;
+}
+
+.form-range {
+    width: 200px;
+    padding: 13px 8px 0 8px;
+}
+
 .music_download {
     text-decoration: none;
     color: rgb(120, 120, 120);

@@ -110,6 +110,15 @@
                 timeDuration.html('&hellip;');
                 timeCurrent.text(secondsToTime(0));
 
+                // speed setting
+                let speed = document.getElementById('speed');
+                let range = document.getElementById('speed_range');
+                theAudio.playbackRate = speed.value;
+                speed.addEventListener('change', function() {
+                    theAudio.playbackRate = speed.value;
+                    range.textContent = speed.value;
+                }, false);
+
                 const audios = document.querySelectorAll('audio');
                 for (let i = 0; i < audios.length; i++) {
                     audios[i].addEventListener('play', function() {
