@@ -954,7 +954,7 @@ class LiveDetail(DetailView):
 class MusicCreate(CreateView):
     """MusicCreate"""
     model = MusicModel
-    fields = ('title', 'content', 'musics', 'lyrics')
+    fields = ('title', 'content', 'lyrics', 'musics', 'download')
     template_name = 'music/music_create.html'
 
     def form_valid(self, form):
