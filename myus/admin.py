@@ -35,7 +35,7 @@ class CommentInlineAdmin(GenericTabularInline):
 
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone', 'following_count', 'follower_count')
+    list_display = ('id', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'following_count', 'follower_count', 'rate_plan')
     list_filter = ('birthday', 'gender')
     search_fields = ('username', 'email', 'nickname', 'full_name', 'phone')
     ordering = ('id',)
@@ -48,7 +48,7 @@ class UserAdmin(ImportExportModelAdmin):
     fieldsets = [
         ('アカウント情報', {'fields': ('user_image', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone', 'location', 'introduction', 'groups', 'user_permissions')}),
         ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
-        ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content', 'following_count', 'follower_count', 'rate_plan')})
+        ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content', 'following_count', 'follower_count', 'rate_plan', 'auto_advertise')})
     ]
 
 @admin.register(SearchTagModel)
