@@ -74,6 +74,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     following_count = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
     plan_choice     = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
     rate_plan       = models.CharField(choices=plan_choice, max_length=1, default='0')
+    auto_advertise  = models.BooleanField(default=True)
 
     objects = UserManager()
 
