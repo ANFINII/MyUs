@@ -3,11 +3,11 @@
 	position: relative;
 	height: 2.5em; /* 40 */
 	text-shadow: 1px 1px 0 rgb(0, 0, 0);
+	color: rgb(255, 255, 255);
 	border: 1px solid rgb(0, 135, 180);
 	border-radius: 5px;
-	color: rgb(255, 255, 255);
-	z-index: 40;
 	background-color: rgb(0, 135, 180);
+	z-index: 40;
 }
 
 .audioplayer-mini {
@@ -111,19 +111,20 @@
 }
 
 .audioplayer-novolume .audioplayer-time-duration {
-	border-right: 0;
 	right: 0;
+	border-right: 0;
 }
 
 .audioplayer-bar {
 	top: 50%;
-	height: 0.75em; /* 12 */
-	left: 85px; /* 110 */
-	right: 83px; /* 110 */
-	margin-top: -0.375em; /* 6 */
+	left: 85px; /* 85 */
+	right: 83px; /* 83 */
+	height: 9px; /* 9 */
+	margin-top: -4.5px; /* 4.5 */
+	border-radius: 10px;
+	background-color: rgb(50, 50, 50);
 	cursor: pointer;
 	z-index: 1;
-	background-color: rgb(50, 50, 50);
 }
 
 .audioplayer-novolume .audioplayer-bar {
@@ -139,7 +140,8 @@
 }
 
 .audioplayer-bar-loaded {
-	background-color: rgb(230, 240, 255);;
+	background-color: rgb(225, 225, 235);
+	border-radius: 10px;
 	z-index: 1;
 }
 
@@ -151,6 +153,7 @@
     background: -ms-radial-gradient(left, rgb(50, 150, 255) 50%, rgb(255, 0, 130));
     background: -o-linear-gradient(left, rgb(50, 150, 255) 50%, rgb(255, 0, 130));
     background: linear-gradient(to right, rgb(50, 150, 255) 50%, rgb(255, 0, 130));
+	border-radius: 10px;
 	z-index: 2;
 }
 
@@ -163,6 +166,7 @@
 	text-indent: -9999px;
 	border-left: 0px solid rgb(0, 135, 180); /* 1px solid #111 */
 	border-left-color: rgba(0, 0, 0, .25);
+	border-radius: 10px;
 	cursor: pointer;
 	z-index: 100;
 }
@@ -184,8 +188,8 @@
 	left: 35%;
 	width: 0.313em; /* 5 */
 	height: 0.375em; /* 6 */
-	z-index: 1;
 	background-color: rgb(255, 255, 255);
+	z-index: 1;
 }
 
 .audioplayer-volume-button a:before,
@@ -230,9 +234,9 @@
 	left: 0;
 	right: -1px;
 	height: 6.25em; /* 100 */
-	cursor: default;
 	border-radius: 5px;
 	background: rgb(0, 135, 180);
+	cursor: default;
 }
 
 .audioplayer-volume:not(:hover) .audioplayer-volume-adjust {
@@ -246,12 +250,13 @@
 
 .audioplayer-volume-adjust > div {
 	position: relative;
-	width: 20%;
+	width: 9px;
 	height: 80%;
 	margin: 30% auto 0;
+	background-color: rgb(50, 50, 50);
+	border-radius: 10px;
 	cursor: pointer;
 	z-index: 1;
-	background-color: rgb(50, 50, 50);
 }
 
 .audioplayer-volume-adjust div div {
@@ -288,6 +293,7 @@
 	-webkit-box-shadow: inset 0 0 5px rgba(255, 255, 255, .5);
 	-moz-box-shadow: inset 0 0 5px rgba(255, 255, 255, .5);
 	box-shadow: inset 0 0 5px rgba(255, 255, 255, .5);
+	border-radius: 10px;
 }
 
 .audioplayer-volume-adjust {
