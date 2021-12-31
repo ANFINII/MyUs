@@ -111,6 +111,7 @@ class ContextData:
     def models_context_data(self, models, **kwargs):
         context = super(models, self).get_context_data(**kwargs)
         obj = self.object
+        user = self.request.user
         user_id = self.request.user.id
         following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', 'created'))
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
@@ -167,10 +168,15 @@ class ContextData:
             notify_list_confirmed += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id, confirmed=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
         notify_list_2 = NotificationModel.objects.filter(user_to_id=user_id, type_no__in=notify_obj_list_2).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
         context['notification_count'] = len(list(chain(notify_list_confirmed, notify_list_2.exclude(confirmed=user_id))))
+        if user.rate_plan == '1':
+            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:1])
+        if user.rate_plan == '2':
+            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:3])
+        if user.rate_plan == '3':
+            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:4])
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
             'notification_list': list(chain(notify_list_1, notify_list_2)),
-            'advertise_list': AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:4],
             'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
         })
         if 'VideoDetail' in str(models.__name__):
@@ -204,6 +210,7 @@ class ContextData:
     def chat_context_data(self, models, **kwargs):
         context = super(models, self).get_context_data(**kwargs)
         obj = self.object
+        user = self.request.user
         user_id = self.request.user.id
         following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', 'created'))
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
@@ -258,10 +265,15 @@ class ContextData:
             notify_list_confirmed += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id, confirmed=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
         notify_list_2 = NotificationModel.objects.filter(user_to_id=user_id, type_no__in=notify_obj_list_2).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
         context['notification_count'] = len(list(chain(notify_list_confirmed, notify_list_2.exclude(confirmed=user_id))))
+        if user.rate_plan == '1':
+            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:1])
+        if user.rate_plan == '2':
+            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:3])
+        if user.rate_plan == '3':
+            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:4])
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
             'notification_list': list(chain(notify_list_1, notify_list_2)),
-            'advertise_list': AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:4],
             'chat_list': ChatModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50],
         })
         if 'ChatThread' in str(models.__name__):
