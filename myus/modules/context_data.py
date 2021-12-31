@@ -9,6 +9,36 @@ import datetime
 
 User = get_user_model()
 
+def notifySetting_list(self, list_no):
+    user_id = self.request.user.id
+    notify_obj, notify_obj_list = QuerySet, []
+    notify_obj = NotifySettingModel.objects.get(owner_id=user_id)
+    if list_no == 1:
+        if notify_obj.video:
+            notify_obj_list += [1]
+        if notify_obj.live:
+            notify_obj_list += [2]
+        if notify_obj.music:
+            notify_obj_list += [3]
+        if notify_obj.picture:
+            notify_obj_list += [4]
+        if notify_obj.blog:
+            notify_obj_list += [5]
+        if notify_obj.chat:
+            notify_obj_list += [6]
+        if notify_obj.collabo:
+            notify_obj_list += [7]
+    if list_no == 2:
+        if notify_obj.follow:
+            notify_obj_list += [8]
+        if notify_obj.like:
+            notify_obj_list += [9]
+        if notify_obj.reply:
+            notify_obj_list += [10]
+        if notify_obj.views:
+            notify_obj_list += [11]
+    return notify_obj_list
+
 class ContextData:
     def context_data(self, models, **kwargs):
         context = super(models, self).get_context_data(**kwargs)
@@ -19,31 +49,9 @@ class ContextData:
         confirmed_kwargs['id'] = OuterRef('pk')
         confirmed_kwargs['confirmed'] = user_id
         subquery_confirmed = NotificationModel.objects.filter(**confirmed_kwargs)
-        notify_obj, notify_obj_list_1, notify_obj_list_2 = QuerySet, [], []
         if user_id is not None:
-            notify_obj = NotifySettingModel.objects.get(owner_id=user_id)
-            if notify_obj.video:
-                notify_obj_list_1 += [1]
-            if notify_obj.live:
-                notify_obj_list_1 += [2]
-            if notify_obj.music:
-                notify_obj_list_1 += [3]
-            if notify_obj.picture:
-                notify_obj_list_1 += [4]
-            if notify_obj.blog:
-                notify_obj_list_1 += [5]
-            if notify_obj.chat:
-                notify_obj_list_1 += [6]
-            if notify_obj.collabo:
-                notify_obj_list_1 += [7]
-            if notify_obj.follow:
-                notify_obj_list_2 += [8]
-            if notify_obj.like:
-                notify_obj_list_2 += [9]
-            if notify_obj.reply:
-                notify_obj_list_2 += [10]
-            if notify_obj.views:
-                notify_obj_list_2 += [11]
+            notify_obj_list_1 = notifySetting_list(self, 1)
+            notify_obj_list_2 = notifySetting_list(self, 2)
         notify_list_1, notify_list_confirmed = [], []
         for id, dates in following_list:
             notify_list_1 += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
@@ -137,31 +145,9 @@ class ContextData:
         confirmed_kwargs['id'] = OuterRef('pk')
         confirmed_kwargs['confirmed'] = user_id
         subquery_confirmed = NotificationModel.objects.filter(**confirmed_kwargs)
-        notify_obj, notify_obj_list_1, notify_obj_list_2 = QuerySet, [], []
         if user_id is not None:
-            notify_obj = NotifySettingModel.objects.get(owner_id=user_id)
-            if notify_obj.video:
-                notify_obj_list_1 += [1]
-            if notify_obj.live:
-                notify_obj_list_1 += [2]
-            if notify_obj.music:
-                notify_obj_list_1 += [3]
-            if notify_obj.picture:
-                notify_obj_list_1 += [4]
-            if notify_obj.blog:
-                notify_obj_list_1 += [5]
-            if notify_obj.chat:
-                notify_obj_list_1 += [6]
-            if notify_obj.collabo:
-                notify_obj_list_1 += [7]
-            if notify_obj.follow:
-                notify_obj_list_2 += [8]
-            if notify_obj.like:
-                notify_obj_list_2 += [9]
-            if notify_obj.reply:
-                notify_obj_list_2 += [10]
-            if notify_obj.views:
-                notify_obj_list_2 += [11]
+            notify_obj_list_1 = notifySetting_list(self, 1)
+            notify_obj_list_2 = notifySetting_list(self, 2)
         notify_list_1, notify_list_confirmed = [], []
         for id, dates in following_list:
             notify_list_1 += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
@@ -234,31 +220,9 @@ class ContextData:
         confirmed_kwargs['id'] = OuterRef('pk')
         confirmed_kwargs['confirmed'] = user_id
         subquery_confirmed = NotificationModel.objects.filter(**confirmed_kwargs)
-        notify_obj, notify_obj_list_1, notify_obj_list_2 = QuerySet, [], []
         if user_id is not None:
-            notify_obj = NotifySettingModel.objects.get(owner_id=user_id)
-            if notify_obj.video:
-                notify_obj_list_1 += [1]
-            if notify_obj.live:
-                notify_obj_list_1 += [2]
-            if notify_obj.music:
-                notify_obj_list_1 += [3]
-            if notify_obj.picture:
-                notify_obj_list_1 += [4]
-            if notify_obj.blog:
-                notify_obj_list_1 += [5]
-            if notify_obj.chat:
-                notify_obj_list_1 += [6]
-            if notify_obj.collabo:
-                notify_obj_list_1 += [7]
-            if notify_obj.follow:
-                notify_obj_list_2 += [8]
-            if notify_obj.like:
-                notify_obj_list_2 += [9]
-            if notify_obj.reply:
-                notify_obj_list_2 += [10]
-            if notify_obj.views:
-                notify_obj_list_2 += [11]
+            notify_obj_list_1 = notifySetting_list(self, 1)
+            notify_obj_list_2 = notifySetting_list(self, 2)
         notify_list_1, notify_list_confirmed = [], []
         for id, dates in following_list:
             notify_list_1 += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
