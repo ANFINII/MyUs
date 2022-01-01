@@ -1,6 +1,5 @@
 {% extends 'base2.html' %}
 {% block title %}<title>MyUsアカウント</title>{% endblock title %}
-
 {% load static %}
 
 {% block customcss %}
@@ -14,7 +13,6 @@
         {% csrf_token %}
         <article class="main_profile">
             <h1>アカウント設定</h1>
-
             {% if messages %}
             <ul class="messages_profile">
                 {% for message in messages %}

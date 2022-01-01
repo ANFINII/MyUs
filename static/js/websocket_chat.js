@@ -53,7 +53,7 @@ chatSocket.onmessage = function(event) {
         }
         $('#comment_aria_list_' + response.comment_id).remove();
         $('#edit_update_main_' + response.comment_id).remove();
-        $('#comment_aria_list_thread_' + response.comment_id).html('スレッドが削除されました！');
+        $('#comment_aria_list_thread_' + response.comment_id).html('スレッドが削除されました!');
         $('#user_count').html(response.user_count);
         $('#comment_count').html(response.comment_count);
     } else if (data['command'] === 'delete_reply_message') {

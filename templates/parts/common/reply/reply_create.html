@@ -14,7 +14,7 @@
         </div>
         {% else %}
         <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
-        <textarea name="reply" rows="1" placeholder="返信コメントするにはログインが必要です！" class="textarea_br" disabled></textarea>
+        <textarea name="reply" rows="1" placeholder="返信コメントするにはログインが必要です!" class="textarea_br" disabled></textarea>
         <div class="reply_button_group">
             <button type="button" name="cancel" comment-id="{{ comment.id }}" class="btn btn-light btn-xs reply_cancel_button">キャンセル</button>
             <button type="button" name="reply_form" class="btn btn-secondary btn-xs" disabled>コメント</button>
