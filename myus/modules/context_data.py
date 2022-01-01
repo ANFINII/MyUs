@@ -67,9 +67,6 @@ class ContextData:
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
         })
-        if 'Payment' in str(models.__name__):
-            context['publicKey'] = settings.STRIPE_PUBLIC_KEY
-
         if 'Notification' in str(models.__name__):
             context.update(notify_setting_list=NotifySettingModel.objects.filter(owner_id=user_id))
 
