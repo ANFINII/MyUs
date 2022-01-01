@@ -74,7 +74,7 @@ div .breadcrumbs {
     font-weight: bold;
 }
 
-select:focus, #searchbar:focus, .vTextField:focus, .vLargeTextField:focus,
+select:focus, #nav-filter:focus, #searchbar:focus, .vTextField:focus, .vLargeTextField:focus,
 .vIntegerField:focus, .vURLField:focus, .vDateField:focus {
     outline: auto rgb(0, 185, 200);
 }
