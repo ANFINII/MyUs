@@ -57,7 +57,6 @@ INSTALLED_APPS += [
     'debug_toolbar',
     'import_export',
     'channels',
-    'markdownx',
     'ckeditor',
     'ckeditor_uploader',
 ]
