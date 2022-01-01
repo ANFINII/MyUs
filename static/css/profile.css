@@ -208,16 +208,15 @@ th.td-color, td.td-color {
     display: grid;
     grid-gap: 3px;
     grid-template-columns: 1fr;
-    grid-template-rows: 2.5em auto auto 1fr;
-    margin: 6px 0;
-    height: 100%;
+    grid-template-rows: 2.6em auto auto 1fr;
 }
 
 .main_pass h1 {
     grid-column: 1/2;
     grid-row: 1/2;
-    font-size: 1.5em;
-    margin: -12px 0 0 0;
+    font-size: 24px;
+    max-height: 2em;
+    margin: -6px 0 -8px 0;
 }
 
 ul, .messages_password_change {
