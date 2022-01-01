@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
@@ -5,12 +6,11 @@ from django.contrib import messages
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.contrib.contenttypes.models import ContentType
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
-from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
-from django.db.models import Count, Exists
+from django.db.models import Count
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from django.views.decorators.csrf import csrf_exempt
@@ -351,9 +351,7 @@ class Payment(TemplateView):
     template_name = 'payment/payment.html'
 
     def get_context_data(self, **kwargs):
-        context = super(Payment, self).get_context_data(**kwargs)
-        context['publicKey'] = settings.STRIPE_PUBLIC_KEY
-        return context
+        return ContextData.context_data(self, Payment, **kwargs)
 
 class PaymentSuccess(TemplateView):
     template_name = 'payment/success.html'
@@ -1115,7 +1113,7 @@ class ChatDetail(DetailView):
         return get_detail(self)
 
     def get_context_data(self, **kwargs):
-        return ContextData.chat_context_data(self, ChatDetail, **kwargs)
+        return ContextData.models_context_data(self, ChatDetail, **kwargs)
 
     def get_new_message(self, comment_obj):
         obj = get_object_or_404(ChatModel, id=comment_obj.object_id)
@@ -1131,7 +1129,7 @@ class ChatThread(DetailView):
     template_name = 'chat/chat_thread.html'
 
     def get_context_data(self, **kwargs):
-        return ContextData.chat_context_data(self, ChatThread, **kwargs)
+        return ContextData.models_context_data(self, ChatThread, **kwargs)
 
     def get_new_reply(self, comment_obj):
         obj = get_object_or_404(ChatModel, id=comment_obj.object_id)

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
@@ -66,6 +67,9 @@ class ContextData:
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
         })
+        if 'Payment' in str(models.__name__):
+            context['publicKey'] = settings.STRIPE_PUBLIC_KEY
+
         if 'Notification' in str(models.__name__):
             context.update(notify_setting_list=NotifySettingModel.objects.filter(owner_id=user_id))
 
@@ -122,18 +126,28 @@ class ContextData:
         context = super(models, self).get_context_data(**kwargs)
         obj = self.object
         user_id = self.request.user.id
-        liked = False
-        if 'TodoDetail' not in str(models.__name__):
-            if obj.like.filter(id=user_id).exists():
-                liked = True
         follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
         followed = False
         if follow.exists():
             followed = True
-        filter_kwargs = {}
-        filter_kwargs['id'] = OuterRef('pk')
-        filter_kwargs['like'] = user_id
-        subquery = CommentModel.objects.filter(**filter_kwargs)
+        liked = False
+        if 'TodoDetail' not in str(models.__name__):
+            if obj.like.filter(id=user_id).exists():
+                liked = True
+        if 'Chat' not in str(models.__name__):
+            filter_kwargs = {}
+            filter_kwargs['id'] = OuterRef('pk')
+            filter_kwargs['like'] = user_id
+            subquery = CommentModel.objects.filter(**filter_kwargs)
+            context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
+            context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
+        else:
+            if obj.period < datetime.date.today():
+                is_period = True
+            else:
+                is_period = False
+            context['is_period'] = is_period
+            context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         if user_id is not None:
             notify_list = notify_data(self)
             context['notification_count'] = notify_list['notification_count']
@@ -149,8 +163,6 @@ class ContextData:
         context['user_id'] = user_id
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
-        context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
             'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
@@ -170,8 +182,14 @@ class ContextData:
         if 'BlogDetail' in str(models.__name__):
             context.update(blog_list=BlogModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
-        if 'TodoDetail' in str(models.__name__):
-            context.update(todo_list=TodoModel.objects.filter(author_id=user_id).exclude(id=obj.id)[:50])
+        if 'ChatDetail' in str(models.__name__):
+            context.update(chat_list=ChatModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+
+        if 'ChatThread' in str(models.__name__):
+            comment_id = self.kwargs['comment_id']
+            context['comment_id'] = comment_id
+            context['reply_list'] = obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
+            context.update(chat_list=ChatModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'CollaboDetail' in str(models.__name__):
             if obj.period < datetime.date.today():
@@ -180,46 +198,7 @@ class ContextData:
                 is_period = False
             context['is_period'] = is_period
             context.update(collabo_list=CollaboModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
-        return context
 
-
-    def chat_context_data(self, models, **kwargs):
-        context = super(models, self).get_context_data(**kwargs)
-        obj = self.object
-        user_id = self.request.user.id
-        liked = False
-        if obj.like.filter(id=user_id).exists():
-            liked = True
-        follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
-        followed = False
-        if follow.exists():
-            followed = True
-        if obj.period < datetime.date.today():
-            is_period = True
-        else:
-            is_period = False
-        if user_id is not None:
-            notify_list = notify_data(self)
-            context['notification_count'] = notify_list['notification_count']
-            context['notification_list'] = notify_list['notification_list']
-        if obj.author.rate_plan == '1':
-            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:1])
-        if obj.author.rate_plan == '2':
-            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:3])
-        if obj.author.rate_plan == '3':
-            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:4])
-        context['liked'] = liked
-        context['followed'] = followed
-        context['is_period'] = is_period
-        context['user_id'] = user_id
-        context['obj_id'] = obj.id
-        context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-        context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
-            'chat_list': ChatModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50],
-        })
-        if 'ChatThread' in str(models.__name__):
-            comment_id = self.kwargs['comment_id']
-            context['comment_id'] = comment_id
-            context['reply_list'] = obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
+        if 'TodoDetail' in str(models.__name__):
+            context.update(todo_list=TodoModel.objects.filter(author_id=user_id).exclude(id=obj.id)[:50])
         return context
