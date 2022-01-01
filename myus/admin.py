@@ -9,8 +9,7 @@ from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, 
 # Admin用の管理画面
 class NotifySettingInline(admin.TabularInline):
     model = NotifySettingModel
-    fields = ('video', 'live', 'music', 'picture', 'blog', 'chat', 'collabo', 'follow', 'reply', 'like', 'views')
-    verbose_name_plural = '通知設定'
+    verbose_name = "通知設定"
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -40,15 +39,14 @@ class UserAdmin(ImportExportModelAdmin):
     search_fields = ('username', 'email', 'nickname', 'full_name', 'phone')
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
-    readonly_fields = ('full_name', 'birthday', 'age', 'date_joined', 'last_login', 'following_count', 'follower_count')
-    inlines = [NotifySettingInline]
-    inlines += [SearchTagInline]
+    readonly_fields = ('full_name', 'birthday', 'age', 'date_joined', 'last_login', 'following_count', 'follower_count', 'rate_plan_date')
+    inlines = [NotifySettingInline, SearchTagInline]
 
     # 詳細画面
     fieldsets = [
         ('アカウント情報', {'fields': ('user_image', 'username', 'email', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'phone', 'location', 'introduction', 'groups', 'user_permissions')}),
         ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
-        ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content', 'following_count', 'follower_count', 'rate_plan', 'auto_advertise')})
+        ('Myページ情報', {'fields': ('mypage_image', 'mypage_email', 'content', 'following_count', 'follower_count', 'rate_plan', 'rate_plan_date', 'auto_advertise')})
     ]
 
 @admin.register(SearchTagModel)

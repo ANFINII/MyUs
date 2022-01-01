@@ -74,6 +74,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     following_count = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
     plan_choice     = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
     rate_plan       = models.CharField(choices=plan_choice, max_length=1, default='0')
+    rate_plan_date  = models.DateTimeField(blank=True, null=True)
     auto_advertise  = models.BooleanField(default=True)
 
     objects = UserManager()
@@ -139,6 +140,9 @@ class NotifySettingModel(models.Model):
 
     def __str__(self):
         return self.owner.nickname
+
+    class Meta:
+        verbose_name_plural = '00 通知設定'
 
 @receiver(post_save, sender=User)
 def create_notify_setting(sender, **kwargs):
