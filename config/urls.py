@@ -14,7 +14,6 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('myus-admin/', admin.site.urls),
     path('myus-manage/', mymanage_site.urls),
-    path('markdownx/', include('markdownx.urls')),
     path('upload/', login_required(views.upload), name='ckeditor_upload'),
     path('browse/', never_cache(login_required(views.browse)), name='ckeditor_browse'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
