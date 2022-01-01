@@ -356,12 +356,21 @@ class Payment(TemplateView):
 class PaymentSuccess(TemplateView):
     template_name = 'payment/success.html'
 
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, PaymentSuccess, **kwargs)
+
 class PaymentCancel(TemplateView):
     template_name = 'payment/cancel.html'
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, PaymentCancel, **kwargs)
 
 class ChangePlan(TemplateView):
     model = User
     template_name = 'payment/change_plan.html'
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, ChangePlan, **kwargs)
 
 @csrf_exempt
 def create_checkout_session(request):
@@ -380,8 +389,7 @@ def create_checkout_session(request):
             success_url=request.build_absolute_uri(reverse('myus:payment_success')),
             cancel_url=request.build_absolute_uri(reverse('myus:payment_cancel')),
         )
-        print(post_data)
-        return JsonResponse({'id': checkout_session.id})
+        return JsonResponse({'id': checkout_session.id, 'publicKey': settings.STRIPE_PUBLIC_KEY})
     except Exception as e:
         return JsonResponse({'error':str(e)})
 

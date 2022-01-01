@@ -1,5 +1,4 @@
 // 発行可能なAPIキーでStripeオブジェクトのインスタンスを作成します
-let stripe = Stripe(publicKey);
 let checkoutButtons = document.querySelectorAll('.checkout-button');
 
 checkoutButtons.forEach(function(checkoutButton) {
@@ -19,6 +18,7 @@ checkoutButtons.forEach(function(checkoutButton) {
             return response.json();
         })
         .then(function(session) {
+            const stripe = Stripe(session.publicKey);
             return stripe.redirectToCheckout({ sessionId: session.id });
         })
         .then(function(result) {
