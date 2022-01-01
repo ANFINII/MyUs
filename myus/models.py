@@ -9,7 +9,6 @@ from django.core.mail import send_mail
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from django.forms.widgets import Textarea
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
 from ckeditor_uploader.fields import RichTextUploadingField
 
 # Create your models here.
@@ -63,8 +62,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active       = models.BooleanField(default=True)
     is_staff        = models.BooleanField(default=False)
     is_admin        = models.BooleanField(default=False)
-    last_login      = models.DateTimeField(_('last login'), auto_now_add=True)
-    date_joined     = models.DateTimeField(_('date joined'), default=timezone.now)
+    last_login      = models.DateTimeField(auto_now_add=True)
+    date_joined     = models.DateTimeField(default=timezone.now)
 
     # Myページ用フィールド
     mypage_image    = models.ImageField(upload_to='users/mypage_images', default='../static/img/MyUs_banner.png', blank=True, null=True)
