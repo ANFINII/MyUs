@@ -5,7 +5,7 @@
 {% block content %}
 <main class="main_contents">
     <h1>料金プラン</h1>
-
+    {% if user.is_authenticated %}
     <article class="main_article">
         <section class="main_content_plan">
             <div class="main_decolation_payment">
@@ -85,6 +85,9 @@
             <button class="btn btn-success btn-sm">変更する</button>
         </section>
     </article>
+    {% else %}
+    <h2 class="login_required">ログインしてください</h2>
+    {% endif %}
 </main>
 {% endblock content %}
 

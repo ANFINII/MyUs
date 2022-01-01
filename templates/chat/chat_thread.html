@@ -1,6 +1,5 @@
 {% extends 'base2.html' %}
 {% block title %}<title>MyUsチャット</title>{% endblock title %}
-
 {% load static %}
 
 {% block customcss %}
@@ -22,7 +21,7 @@
             {% include 'chat/chat_section/chat_section_thread.html' %}
         </div>
     {% else %}
-    <h2 class="unpublished">非公開に設定されてます！</h2>
+    <h2 class="unpublished">非公開に設定されてます!</h2>
     {% endif %}
     </article>
 </main>

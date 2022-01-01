@@ -1,7 +1,7 @@
 <form method="POST" action="" id="comment_form">
     {% csrf_token %}
     {% if is_period %}
-    <textarea name="text" rows="1" placeholder="チャット期間が過ぎています！" class="textarea_br" disabled="disabled"></textarea>
+    <textarea name="text" rows="1" placeholder="チャット期間が過ぎています!" class="textarea_br" disabled="disabled"></textarea>
     <div class="comment_input_chat">
         <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
             <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
@@ -15,7 +15,7 @@
         </button>
     </div>
     {% else %}
-    <textarea name="text" rows="1" placeholder="チャットするにはログインが必要です！" class="textarea_br" disabled="disabled"></textarea>
+    <textarea name="text" rows="1" placeholder="チャットするにはログインが必要です!" class="textarea_br" disabled="disabled"></textarea>
     <div class="comment_input_chat">
         <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
             <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
