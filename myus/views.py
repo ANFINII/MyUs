@@ -465,8 +465,7 @@ def notification_setting(request):
             'notify_setting_list': NotifySettingModel.objects.filter(owner_id=user_id),
             'notify': notify,
         }, request=request)
-        if request.is_ajax():
-            return JsonResponse(context)
+        return JsonResponse(context)
 
 @csrf_exempt
 def notification_confirmed(request):
@@ -475,8 +474,7 @@ def notification_confirmed(request):
     notification_id = request.POST.get('notification_id')
     notification_obj = get_object_or_404(NotificationModel, id=notification_id)
     notification_obj.confirmed.add(user)
-    if request.is_ajax():
-        return JsonResponse()
+    return JsonResponse()
 
 @csrf_exempt
 def notification_deleted(request):
@@ -491,8 +489,7 @@ def notification_deleted(request):
         context = {
             'notification_count': NotificationModel.objects.filter(user_from_id__in=following_id_list, user_to_id=user.id).exclude(confirmed=user.id).count(),
         }
-        if request.is_ajax():
-            return JsonResponse(context)
+        return JsonResponse(context)
 
 
 # SearchTag
@@ -525,8 +522,7 @@ def advertise_read(request):
         context = {
             'read': advertise_obj.read,
         }
-        if request.is_ajax():
-            return JsonResponse(context)
+        return JsonResponse(context)
 
 
 # LikeForm
@@ -561,8 +557,7 @@ def like_form(request):
             'liked': liked,
             'total_like': obj.total_like(),
         }
-        if request.is_ajax():
-            return JsonResponse(context)
+        return JsonResponse(context)
 
 @csrf_exempt
 def like_form_comment(request):
@@ -592,8 +587,7 @@ def like_form_comment(request):
             'comment_liked': comment_liked,
             'total_like': obj.total_like(),
         }
-        if request.is_ajax():
-            return JsonResponse(context)
+        return JsonResponse(context)
 
 
 # CommentForm & ReplyForm
@@ -630,8 +624,7 @@ def comment_form(request):
             'obj_id': obj_id,
             'obj_path': obj_path,
         }, request=request)
-        if request.is_ajax():
-            return JsonResponse(context)
+        return JsonResponse(context)
 
 @csrf_exempt
 def reply_form(request):
@@ -667,8 +660,7 @@ def reply_form(request):
             'obj_id': obj_id,
             'comment_id': comment_id,
         }, request=request)
-        if request.is_ajax():
-            return JsonResponse(context)
+        return JsonResponse(context)
 
 @csrf_exempt
 def comment_update(request, comment_id):
@@ -681,8 +673,7 @@ def comment_update(request, comment_id):
         context = {
             'text': urlize_impl(linebreaksbr(comment_obj.text)),
         }
-        if request.is_ajax():
-            return JsonResponse(context)
+        return JsonResponse(context)
 
 @csrf_exempt
 def comment_delete(request, comment_id):
@@ -699,8 +690,7 @@ def comment_delete(request, comment_id):
         context = {
             'comment_count': obj.comment_count(),
         }
-        if request.is_ajax():
-            return JsonResponse(context)
+        return JsonResponse(context)
 
 @csrf_exempt
 def reply_delete(request, comment_id):
@@ -715,8 +705,7 @@ def reply_delete(request, comment_id):
             'parent_id': comment_obj.parent.id,
             'reply_count': comment_obj.parent.replies_count(),
         }
-        if request.is_ajax():
-            return JsonResponse(context)
+        return JsonResponse(context)
 
 
 # Index
@@ -848,8 +837,7 @@ def follow_create(request, nickname):
             'followed': followed,
             'follower_count': follower_count,
         }
-        if request.is_ajax():
-            return JsonResponse(context)
+        return JsonResponse(context)
 
 
 # UserPolicy
