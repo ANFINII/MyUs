@@ -15,8 +15,8 @@ import environ
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-env = environ.Env(DEBUG=(bool,False))
-env.read_env(os.path.join(BASE_DIR,'.env'))
+env = environ.Env(DEBUG=(bool, False))
+env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/ja/4.0/howto/deployment/checklist/
@@ -114,7 +114,7 @@ CHANNEL_LAYERS = {
 }
 
 # pkのデフォルト設定
-DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -170,7 +170,7 @@ CKEDITOR_CONFIGS = {
             ['Font', 'FontSize'],
             ['TextColor', 'BGColor'],
             ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
-            ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
             ['Link', 'Unlink'],
             ['Image', 'Table', 'SpecialChar', 'HorizontalRule'],
             ['Source'],
