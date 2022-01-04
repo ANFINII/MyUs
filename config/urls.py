@@ -12,6 +12,7 @@ from myus.admin import mymanage_site
 urlpatterns = [
     path('', include('myus.urls')),
     path('', include('django.contrib.auth.urls')),
+    path('api-auth/', include('rest_framework.urls')),
     path('myus-admin/', admin.site.urls),
     path('myus-manage/', mymanage_site.urls),
     path('upload/', login_required(views.upload), name='ckeditor_upload'),

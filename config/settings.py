@@ -56,6 +56,7 @@ INSTALLED_APPS += [
     'django_cleanup',
     'debug_toolbar',
     'import_export',
+    'rest_framework',
     'channels',
     'ckeditor',
     'ckeditor_uploader',
