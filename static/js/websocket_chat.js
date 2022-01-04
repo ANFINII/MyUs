@@ -82,7 +82,6 @@ chatSocket.onclose = function(event) {
     console.log('close', event)
 };
 
-// 送信ボタンにイベントリスナーを設定。内部に Ajax 処理を記述
 // メッセージ作成
 $('#comment_form').submit(function(event) {
     event.preventDefault();
@@ -187,7 +186,6 @@ $(document).on('click', '.edit_delete_reply', function(event) {
         'comment_id': comment_id,
     }));
 });
-
 
 // いいねボタンクリック時の処理を定義
 $(document).on('click', '.like_form', function(event) {
