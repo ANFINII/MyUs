@@ -1,13 +1,4 @@
-{% extends 'base2.html' %}
-{% block title %}<title>MyUsチャット</title>{% endblock title %}
-{% load static %}
-
-{% block customcss %}
-<link rel="stylesheet" type="text/css" href="https://vjs.zencdn.net/7.15.4/video-js.css">
-<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/videojs-myus.css' %}">
-{% endblock customcss %}
+{% extends 'chat/chat_detail.html' %}
 
 {% block content %}
 {% include 'chat/json_script_chat.html' %}
@@ -26,8 +17,3 @@
     </article>
 </main>
 {% endblock content %}
-
-{% block extrajs %}
-<script src="{% static 'js/reconnecting-websocket.js' %}"></script>
-<script src="{% static 'js/websocket_chat.js' %}"></script>
-{% endblock extrajs %}
