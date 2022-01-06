@@ -141,18 +141,17 @@ hr {
     white-space: nowrap;
 }
 
-.chat_section_header_cross a {
+.chat_section_header_cross i {
     position: fixed;
     top: 72px;
     right: 0;
     max-width: 30px;
-    text-decoration: none;
     color: rgb(100, 100, 100);
 }
 
 /* 390pxまでの幅の場合に適応される  */
 @media screen and (max-width:390px) {
-    .chat_section_header_cross a {
+    .chat_section_header_cross i {
         display: none;
     }
 }
@@ -499,6 +498,7 @@ hr {
     border: 1px solid rgb(100, 100, 100);
     border-bottom: none;
     border-radius: 5px 5px 0 0;
+    white-space: nowrap;
 }
 
 .textarea_br:focus {
