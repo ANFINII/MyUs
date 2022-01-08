@@ -9,7 +9,7 @@ from .views import LiveList, LiveCreate, LiveDetail
 from .views import MusicList, MusicCreate, MusicDetail
 from .views import PictureList, PictureCreate, PictureDetail
 from .views import BlogList, BlogCreate, BlogDetail
-from .views import ChatList, ChatCreate, ChatDetail, ChatThread
+from .views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
 from .views import CollaboList, CollaboCreate, CollaboDetail
 from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 from .views import searchtag_create, advertise_read, like_form, like_form_comment
@@ -71,6 +71,7 @@ urlpatterns = [
     path('chat/create', ChatCreate.as_view(), name='chat_create'),
     path('chat/detail/<int:pk>', ChatDetail.as_view(), name='chat_detail'),
     path('chat/detail/<int:pk>/thread/<int:comment_id>', ChatThread.as_view(), name='chat_thread'),
+    path('chat/detail/thread', chat_thread_button, name='chat_thread_button'),
 
     path('collabo', CollaboList.as_view(), name='collabo_list'),
     path('collabo/create', CollaboCreate.as_view(), name='collabo_create'),
