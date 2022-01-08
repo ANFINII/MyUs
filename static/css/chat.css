@@ -494,11 +494,12 @@ hr {
     vertical-align: middle;
     outline: none;
     resize: none;
-    overflow-y: auto;
     border: 1px solid rgb(100, 100, 100);
     border-bottom: none;
     border-radius: 5px 5px 0 0;
-    white-space: nowrap;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
 }
 
 .textarea_br:focus {
