@@ -101,7 +101,7 @@ $('#comment_form').submit(function(event) {
 $('#reply_form').submit(function(event) {
     event.preventDefault();
     const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
-    const parent_id = $(this).attr('comment-id');
+    const parent_id = document.getElementById('parent_id').getAttribute('value');
     const message = $('form [name=reply]').val().replace(/\n+$/g,'');
     $('#reply_form')[0].reset();
     document.getElementById('reply_form_area').style.height = '40px';
@@ -187,6 +187,38 @@ $(document).on('click', '.edit_delete_reply', function(event) {
     }));
 });
 
+// スレッドボタンを押した時の処理
+$(document).on('click', '.comment_aria_thread', function(event) {
+    event.preventDefault();
+    const url = $(this).attr('thread');
+    const href = $(this).attr('href');
+    const comment_id = $(this).attr('comment-id');
+    window.addEventListener('popstate', function(event) {
+        history.pushState(null, null, href);
+    }, false);
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: {'obj_id': obj_id, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+    })
+    .done(function(response) {
+        history.replaceState(null, null, href);
+        document.querySelector('.comment_aria_check').checked = true;
+        $('#chat_section_thread_area').html(response.thread);
+        console.log(response);
+    })
+    .fail(function(response) {
+        console.log(response);
+    })
+});
+
+$(document).on('click', '.bi-x', function() {
+    document.querySelector('.comment_aria_check').checked = false;
+    const href = $(this).attr('href');
+    history.pushState(null, null, href);
+});
+
 // いいねボタンクリック時の処理を定義
 $(document).on('click', '.like_form', function(event) {
     event.preventDefault();
@@ -219,7 +251,6 @@ $(document).on('click', '.like_form', function(event) {
         console.log(response);
     })
 });
-
 
 // フォローボタンクリック時の処理を定義
 $(document).on('click', '.follow_form', function(event) {

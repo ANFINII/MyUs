@@ -1135,6 +1135,24 @@ class ChatThread(DetailView):
         context['reply_list'] = obj.comments.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type')
         return context
 
+def chat_thread_button(request):
+    context = dict()
+    if request.method == 'GET':
+        user_id = request.user.id
+        obj_id = request.GET.get('obj_id')
+        comment_id = request.GET.get('comment_id')
+        obj = ChatModel.objects.get(id=obj_id)
+        context['obj_id'] = obj_id
+        context['comment_id'] = comment_id
+        context['thread'] = render_to_string('chat/chat_reply/chat_section_thread_area.html', {
+            'comment_parent': obj.comments.filter(id=comment_id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
+            'reply_list': obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type'),
+            'user_id': user_id,
+            'obj_id': obj_id,
+            'comment_id': comment_id,
+        }, request=request)
+        return JsonResponse(context)
+
 
 # Collabo
 class CollaboCreate(CreateView):

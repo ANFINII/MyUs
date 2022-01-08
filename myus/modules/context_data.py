@@ -184,6 +184,7 @@ class ContextData:
         if 'ChatThread' in str(models.__name__):
             comment_id = self.kwargs['comment_id']
             context['comment_id'] = comment_id
+            context['comment_parent'] = obj.comments.filter(id=comment_id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
             context['reply_list'] = obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
             context.update(chat_list=ChatModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
