@@ -15,8 +15,10 @@
     <article class="article_detail_chat">
     {% if object.publish %}
         <div class="chat_section">
+            <input type="checkbox" class="comment_aria_check">
             {% include 'chat/chat_section/chat_section_header.html' %}
             {% include 'chat/chat_section/chat_section_main.html' %}
+            {% include 'chat/chat_section/chat_section_thread.html' %}
         </div>
     {% else %}
     <h2 class="unpublished">非公開に設定されてます!</h2>

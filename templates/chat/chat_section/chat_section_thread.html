@@ -1,30 +1,12 @@
 <div class="chat_section_header_cross">
     <h2>スレッド</h2>
-    <a href="{% url 'myus:chat_detail' obj_id %}">
-        <i title="閉じる" class="bi bi-x" style="font-size: 1.7em;"></i>
-    </a>
+    <i title="閉じる" class="bi bi-x" href="{% url 'myus:chat_detail' obj_id %}" style="font-size: 1.7em;"></i>
 </div>
 
-<div id="chat_section_thread" class="chat_section_thread">
-    {% for comment in comment_list %}
-        {% if comment.id == comment_id %}
-        <div id="comment_aria_list_cross_{{ comment.id }}" class="comment_aria_list">
-            <a href="{% url 'myus:userpage' comment.author.nickname %}">
-                <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
-            </a>
-            <div class="comment_aria_list_1">
-                <p>{{ comment.author.nickname }}</p>
-                <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
-            </div>
-            <div id="comment_aria_list_thread_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
-        </div>
-        {% endif %}
-    {% endfor %}
-
-    <div id="chat_section_thread_area_{{ comment_id }}">
-        {% include 'chat/chat_reply/chat_reply.html' %}
+<div class="chat_section_thread">
+    <div id="chat_section_thread_area">
+        {% include 'chat/chat_reply/chat_section_thread_area.html' %}
     </div>
-
     <footer class="chat_footer_thread">
         {% include 'chat/chat_reply/crud/chat_reply_create.html' %}
     </footer>

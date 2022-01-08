@@ -10,7 +10,7 @@
             <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
         </div>
         <div id="comment_aria_list_2_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
-        <a href="{% url 'myus:chat_thread' obj_id comment.id %}" class="comment_aria_thread">
+        <a href="{% url 'myus:chat_thread' obj_id comment.id %}" thread="{% url 'myus:chat_thread_button' %}" comment-id="{{ comment.id }}" class="comment_aria_thread">
             スレッド表示
             <span id="reply_count_{{ comment.id }}">返信 {{ comment.reply_count|intcomma }} 件</span>
         </a>
