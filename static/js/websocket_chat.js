@@ -3,6 +3,16 @@ let ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
 const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
 const chatSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + '/ws/chat/detail/' + obj_id);
 
+// Pjax処理
+let thread_dict = {};
+history.replaceState(null, null, location.href);
+
+function pop_state(href) {
+    const thread_obj = document.querySelector('.chat_section_thread_area').innerHTML;
+    thread_dict[href] = thread_obj;
+    history.pushState(null, null, href);
+}
+
 // chatSocket の websocket 処理
 chatSocket.onmessage = function(event) {
     let data = JSON.parse(event.data);
@@ -12,8 +22,6 @@ chatSocket.onmessage = function(event) {
         $('#chat_section_main_area').append(response.comment_lists);
         $('#user_count').html(response.user_count);
         $('#comment_count').html(response.comment_count);
-        const obj = document.getElementById('chat_section_main_area');
-        obj.scrollTop = obj.scrollHeight;
         const login_user_id = document.getElementById('user_id').textContent;
         if (login_user_id != response.user_id) {
             $('#edit_button_' + response.comment_id).remove();
@@ -21,19 +29,17 @@ chatSocket.onmessage = function(event) {
         }
     } else if (data['command'] === 'create_reply_message') {
         const response = data['message'];
-        const url = location.pathname;
-        if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === url) {
+        if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === location.pathname) {
             document.getElementById('reply_form_button').setAttribute('disabled', true);
             $('#user_count').html(response.user_count);
             $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
             $('#chat_section_thread_area_' + response.parent_id).append(response.reply_lists);
-            const obj = document.getElementById('chat_section_thread');
-            obj.scrollTop = obj.scrollHeight;
             const login_user_id = document.getElementById('user_id').textContent;
             if (login_user_id != response.user_id) {
                 $('#edit_button_' + response.comment_id).remove();
                 $('#edit_update_main_' + response.comment_id).remove();
             }
+            pop_state(location.pathname)
         } else {
             $('#user_count').html(response.user_count);
             $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
@@ -45,6 +51,7 @@ chatSocket.onmessage = function(event) {
         highlight.style.removeProperty('background-color');
         $('#comment_aria_list_2_' + response.comment_id).html(response.text);
         $('#comment_aria_list_thread_' + response.comment_id).html(response.text);
+        pop_state(location.pathname)
     } else if (data['command'] === 'delete_message') {
         const response = data['message'];
         const highlight = document.querySelector('#comment_aria_list_cross_' + response.comment_id);
@@ -63,6 +70,7 @@ chatSocket.onmessage = function(event) {
             $('#comment_aria_list_' + response.comment_id).remove();
             $('#user_count').html(response.user_count);
             $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
+            pop_state(location.pathname)
         } else {
             $('#user_count').html(response.user_count);
             $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
@@ -188,9 +196,6 @@ $(document).on('click', '.edit_delete_reply', function(event) {
 });
 
 // スレッドボタンを押した時の処理
-let thread_dict = {};
-history.replaceState(null, null, location.href);
-
 $(document).on('click', '.comment_aria_thread', function(event) {
     event.preventDefault();
     const url = $(this).attr('thread');
@@ -203,23 +208,20 @@ $(document).on('click', '.comment_aria_thread', function(event) {
         dataType: 'json',
     })
     .done(function(response) {
-        const thread_obj = response.thread;
-        thread_dict[href] = thread_obj;
-        history.pushState(null, null, href);
-
+        pop_state(href)
         window.addEventListener('popstate', e => {
-            document.querySelector('.comment_aria_check').checked = true;
             const back_url = location.pathname;
             const back_obj = thread_dict[back_url];
             if (back_url.indexOf('thread') !== -1) {
                 $('.chat_section_thread_area').html(back_obj);
+                document.querySelector('.comment_aria_check').checked = true;
             } else {
                 $('.chat_section_thread_area').html(back_obj);
                 document.querySelector('.comment_aria_check').checked = false;
             }
         });
 
-        $('.chat_section_thread_area').html(thread_obj);
+        $('.chat_section_thread_area').html(response.thread);
         document.querySelector('.comment_aria_check').checked = true;
         console.log(response);
     })
@@ -231,9 +233,7 @@ $(document).on('click', '.comment_aria_thread', function(event) {
 $(document).on('click', '.bi-x', function() {
     document.querySelector('.comment_aria_check').checked = false;
     const href = $(this).attr('href');
-    const thread_obj = document.querySelector('.chat_section_thread_area');
-    thread_dict[href] = thread_obj;
-    history.pushState(null, null, href);
+    pop_state(href)
 });
 
 // いいねボタンクリック時の処理を定義
