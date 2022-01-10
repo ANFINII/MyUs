@@ -188,14 +188,14 @@ $(document).on('click', '.edit_delete_reply', function(event) {
 });
 
 // スレッドボタンを押した時の処理
+let thread_dict = {};
+history.replaceState(null, null, location.href);
+
 $(document).on('click', '.comment_aria_thread', function(event) {
     event.preventDefault();
     const url = $(this).attr('thread');
     const href = $(this).attr('href');
     const comment_id = $(this).attr('comment-id');
-    window.addEventListener('popstate', function(event) {
-        history.pushState(null, null, href);
-    }, false);
     $.ajax({
         url: url,
         type: 'GET',
@@ -203,9 +203,24 @@ $(document).on('click', '.comment_aria_thread', function(event) {
         dataType: 'json',
     })
     .done(function(response) {
-        history.replaceState(null, null, href);
+        const thread_obj = response.thread;
+        thread_dict[href] = thread_obj;
+        history.pushState(null, null, href);
+
+        window.addEventListener('popstate', e => {
+            document.querySelector('.comment_aria_check').checked = true;
+            const back_url = location.pathname;
+            const back_obj = thread_dict[back_url];
+            if (back_url.indexOf('thread') !== -1) {
+                $('.chat_section_thread_area').html(back_obj);
+            } else {
+                $('.chat_section_thread_area').html(back_obj);
+                document.querySelector('.comment_aria_check').checked = false;
+            }
+        });
+
+        $('.chat_section_thread_area').html(thread_obj);
         document.querySelector('.comment_aria_check').checked = true;
-        $('#chat_section_thread_area').html(response.thread);
         console.log(response);
     })
     .fail(function(response) {
@@ -216,6 +231,8 @@ $(document).on('click', '.comment_aria_thread', function(event) {
 $(document).on('click', '.bi-x', function() {
     document.querySelector('.comment_aria_check').checked = false;
     const href = $(this).attr('href');
+    const thread_obj = document.querySelector('.chat_section_thread_area');
+    thread_dict[href] = thread_obj;
     history.pushState(null, null, href);
 });
 
