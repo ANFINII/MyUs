@@ -27,6 +27,8 @@ chatSocket.onmessage = function(event) {
             $('#edit_button_' + response.comment_id).remove();
             $('#edit_update_main_' + response.comment_id).remove();
         }
+        const obj = document.getElementById('chat_section_main_area');
+        obj.scrollTop = obj.scrollHeight;
     } else if (data['command'] === 'create_reply_message') {
         const response = data['message'];
         if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === location.pathname) {
@@ -39,6 +41,8 @@ chatSocket.onmessage = function(event) {
                 $('#edit_button_' + response.comment_id).remove();
                 $('#edit_update_main_' + response.comment_id).remove();
             }
+            const obj = document.querySelector('.chat_section_thread');
+            obj.scrollTop = obj.scrollHeight;
             pop_state(location.pathname)
         } else {
             $('#user_count').html(response.user_count);
