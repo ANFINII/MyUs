@@ -55,13 +55,15 @@ def notify_data(self):
 class ContextData:
     def context_data(self, models, **kwargs):
         context = super(models, self).get_context_data(**kwargs)
-        self.count = 0
         user_id = self.request.user.id
         if user_id is not None:
             notify_list = notify_data(self)
             context['notification_count'] = notify_list['notification_count']
             context['notification_list'] = notify_list['notification_list']
-        context['count'] = self.count or 0
+        try:
+            context['count'] = self.count or 0
+        except AttributeError:
+            pass
         context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
