@@ -67,7 +67,7 @@ class Search:
         search = self.request.GET.get('search')
         if search:
             """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
+            exclusion_list = set([' ', ' '])
             q_list = ''
             for i in search:
                 """全角半角の空文字が含まれたら無視"""
@@ -88,7 +88,7 @@ class Search:
         search = self.request.GET.get('search')
         if search:
             """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
+            exclusion_list = set([' ', ' '])
             q_list = ''
             for i in search:
                 """全角半角の空文字が含まれたら無視"""
@@ -111,7 +111,7 @@ class Search:
         search = self.request.GET.get('search')
         if search:
             """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
+            exclusion_list = set([' ', ' '])
             q_list = ''
             for i in search:
                 """全角半角の空文字が含まれたら無視"""
@@ -135,7 +135,7 @@ class Search:
         search = self.request.GET.get('search')
         if search:
             """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
+            exclusion_list = set([' ', ' '])
             q_list = ''
             for i in search:
                 """全角半角の空文字が含まれたら無視"""
@@ -159,7 +159,7 @@ class Search:
         search = self.request.GET.get('search')
         if search:
             """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
+            exclusion_list = set([' ', ' '])
             q_list = ''
             for i in search:
                 """全角半角の空文字が含まれたら無視"""
@@ -182,7 +182,7 @@ class Search:
         search = self.request.GET.get('search')
         if search:
             """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
+            exclusion_list = set([' ', ' '])
             q_list = ''
             for i in search:
                 """全角半角の空文字が含まれたら無視"""
