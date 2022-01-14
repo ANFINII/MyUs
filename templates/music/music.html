@@ -3,16 +3,6 @@
 
 {% block content %}
 <main class="main_contents">
-    <h1>Music
-        {% if query %}
-        <section class="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>
-        {% endif %}
-    </h1>
-
-    <article class="main_article">
-    {% for item in music_list %}
-        {% include 'parts/article_music.html' %}
-    {% endfor %}
-    </article>
+    {% include 'music/music_list.html' %}
 </main>
 {% endblock content %}
