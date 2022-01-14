@@ -168,6 +168,38 @@ def logout_form(request):
     return redirect('myus:login')
 
 
+# pjax
+def pjax(request):
+    context = dict()
+    if request.method == 'GET':
+        href = request.GET.get('href')
+        if 'music' in href:
+            context['html'] = render_to_string('music/music_list.html', {
+            'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:50],
+            }, request=request)
+        if 'picture' in href:
+            context['html'] = render_to_string('picture/picture_list.html', {
+            'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:50],
+            }, request=request)
+        if 'blog' in href:
+            context['html'] = render_to_string('blog/blog_list.html', {
+                'blog_list': BlogModel.objects.filter(publish=True).order_by('-created')[:50],
+            }, request=request)
+        if 'chat' in href:
+            context['html'] = render_to_string('chat/chat_list.html', {
+                'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:50],
+            }, request=request)
+        if 'collabo' in href:
+            context['html'] = render_to_string('collabo/collabo_list.html', {
+                'collabo_list': CollaboModel.objects.filter(publish=True).order_by('-created')[:50],
+            }, request=request)
+        if 'todo' in href:
+            context['html'] = render_to_string('todo/todo_list.html', {
+                'todo_list': TodoModel.objects.filter(author_id=request.user.id)[:50],
+            }, request=request)
+        return JsonResponse(context)
+
+
 # Withdrawal
 class Withdrawal(View):
     """退会処理"""

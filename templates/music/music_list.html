@@ -1,0 +1,27 @@
+{% load static %}
+
+<h1>Music
+    {% if query %}
+    <section class="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>
+    {% endif %}
+</h1>
+
+<article class="main_article">
+{% for item in music_list %}
+    {% include 'parts/article_music.html' %}
+{% endfor %}
+</article>
+
+{% block customjs %}
+<!-- audiojs -->
+<script src="{% static 'js/audioplayer.js' %}"></script>
+<script>$(function() { $('audio').audioPlayer(); });</script>
+
+<!-- その他js -->
+<script src="{% static 'js/pjax.js' %}"></script>
+<script src="{% static 'js/notification.js' %}"></script>
+<script src="{% static 'js/scroll_button.js' %}"></script>
+<script src="{% static 'js/shortcut.js' %}"></script>
+<script src="{% static 'js/shortcut_myus.js' %}"></script>
+<script src="{% static 'js/ajax_searchtag.js' %}"></script>
+{% endblock customjs %}

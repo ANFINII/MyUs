@@ -14,7 +14,7 @@ from .views import CollaboList, CollaboCreate, CollaboDetail
 from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 from .views import searchtag_create, advertise_read, like_form, like_form_comment
 from .views import comment_form, reply_form, comment_update, comment_delete, reply_delete
-from .views import signup_form, login_form, logout_form, Withdrawal
+from .views import pjax, signup_form, login_form, logout_form, Withdrawal
 
 app_name = 'myus'
 
@@ -94,6 +94,7 @@ urlpatterns = [
     path('comment/delete/<int:comment_id>', comment_delete, name='comment_delete'),
     path('reply/delete/<int:comment_id>', reply_delete, name='reply_delete'),
 
+    path('pjax', pjax, name='pjax'),
     path('signup', signup_form, name='signup'),
     path('login', login_form, name='login'),
     path('logout', logout_form, name='logout'),

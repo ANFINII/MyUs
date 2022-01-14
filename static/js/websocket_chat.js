@@ -7,7 +7,7 @@ const chatSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location
 let thread_dict = {};
 history.replaceState(null, null, location.href);
 
-function pop_state(href) {
+function pjax_dict(href) {
     const thread_obj = document.querySelector('.chat_section_thread_area').innerHTML;
     thread_dict[href] = thread_obj;
     history.pushState(null, null, href);
@@ -43,7 +43,7 @@ chatSocket.onmessage = function(event) {
             }
             const obj = document.querySelector('.chat_section_thread');
             obj.scrollTop = obj.scrollHeight;
-            pop_state(location.pathname)
+            pjax_dict(location.pathname)
         } else {
             $('#user_count').html(response.user_count);
             $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
@@ -55,7 +55,7 @@ chatSocket.onmessage = function(event) {
         highlight.style.removeProperty('background-color');
         $('#comment_aria_list_2_' + response.comment_id).html(response.text);
         $('#comment_aria_list_thread_' + response.comment_id).html(response.text);
-        pop_state(location.pathname)
+        pjax_dict(location.pathname)
     } else if (data['command'] === 'delete_message') {
         const response = data['message'];
         const highlight = document.querySelector('#comment_aria_list_cross_' + response.comment_id);
@@ -74,7 +74,7 @@ chatSocket.onmessage = function(event) {
             $('#comment_aria_list_' + response.comment_id).remove();
             $('#user_count').html(response.user_count);
             $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
-            pop_state(location.pathname)
+            pjax_dict(location.pathname)
         } else {
             $('#user_count').html(response.user_count);
             $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
@@ -212,7 +212,7 @@ $(document).on('click', '.comment_aria_thread', function(event) {
         dataType: 'json',
     })
     .done(function(response) {
-        pop_state(href)
+        pjax_dict(href)
         window.addEventListener('popstate', e => {
             const back_url = location.pathname;
             const back_obj = thread_dict[back_url];
@@ -237,7 +237,7 @@ $(document).on('click', '.comment_aria_thread', function(event) {
 $(document).on('click', '.bi-x', function() {
     document.querySelector('.comment_aria_check').checked = false;
     const href = $(this).attr('href');
-    pop_state(href)
+    pjax_dict(href)
 });
 
 // いいねボタンクリック時の処理を定義
