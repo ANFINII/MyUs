@@ -1,19 +1,8 @@
 {% extends 'base2.html' %}
 {% block title %}<title>MyUsライブ</title>{% endblock title %}
-{% load static %}
 
 {% block content %}
 <main class="main_contents">
-    <h1>Live
-        {% if query %}
-        <section class="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>
-        {% endif %}
-    </h1>
-
-    <article class="main_article">
-    {% for item in live_list %}
-        {% include 'parts/article_live.html' %}
-    {% endfor %}
-    </article>
+    {% include 'live/live_list.html' %}
 </main>
 {% endblock content %}
