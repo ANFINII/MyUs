@@ -15,7 +15,7 @@ from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, DeleteView, TemplateView
-from .forms import SearchTagForm
+from .forms import SearchTagForm, BlogForm
 from .models import SearchTagModel, NotifySettingModel, NotificationModel, CommentModel, FollowModel, TodoModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, AdvertiseModel
 from .modules.context_data import ContextData
@@ -173,62 +173,77 @@ def pjax(request):
     context = dict()
     if request.method == 'GET':
         href = request.GET.get('href')
-        if 'video' in href:
+        print(href)
+        if '/video' == href:
             context['html'] = render_to_string('video/video_list.html', {
             'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:50],
             }, request=request)
-        if 'live' in href:
+        if '/live' == href:
             context['html'] = render_to_string('live/live_list.html', {
             'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:50],
             }, request=request)
-        if 'music' in href:
+        if '/music' == href:
             context['html'] = render_to_string('music/music_list.html', {
             'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:50],
             }, request=request)
-        if 'picture' in href:
+        if '/picture' == href:
             context['html'] = render_to_string('picture/picture_list.html', {
             'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
-        if 'blog' in href:
+        if '/blog' == href:
             context['html'] = render_to_string('blog/blog_list.html', {
                 'blog_list': BlogModel.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
-        if 'chat' in href:
+        if '/chat' == href:
             context['html'] = render_to_string('chat/chat_list.html', {
                 'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
-        if 'collabo' in href:
+        if '/collabo' == href:
             context['html'] = render_to_string('collabo/collabo_list.html', {
                 'collabo_list': CollaboModel.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
-        if 'todo' in href:
+        if '/todo' == href:
             context['html'] = render_to_string('todo/todo_list.html', {
                 'todo_list': TodoModel.objects.filter(author_id=request.user.id).order_by('-created')[:100],
             }, request=request)
-        if 'follow' in href:
+        if '/follow' == href:
             context['html'] = render_to_string('follow/follow_list.html', {
                 'follow_list': FollowModel.objects.filter(follower_id=request.user.id).order_by('created')[:100],
             }, request=request)
-        if 'follower' in href:
+        if '/follower' == href:
             context['html'] = render_to_string('follow/follower_list.html', {
                 'follower_list': FollowModel.objects.filter(following_id=request.user.id).order_by('created')[:100],
             }, request=request)
-        if 'notification' in href:
+        if '/notification' == href:
             context['html'] = render_to_string('common/notification_content.html', {
                 'notify_setting_list': NotifySettingModel.objects.filter(owner_id=request.user.id),
             }, request=request)
-        if 'userpolicy' in href:
+        if '/userpolicy' == href:
             context['html'] = render_to_string('common/userpolicy_content.html', request=request)
-        if 'knowledge' in href:
+        if '/knowledge' == href:
             context['html'] = render_to_string('common/knowledge_content.html', request=request)
-        if 'payment' in href:
+        if '/payment' == href:
             context['html'] = render_to_string('payment/payment_content.html', request=request)
-        if 'profile' in href:
+        if '/profile' == href:
             context['html'] = render_to_string('registration/profile_content.html', request=request)
-        if 'mypage' in href:
+        if '/mypage' == href:
             context['html'] = render_to_string('registration/mypage_content.html', request=request)
-        if 'withdrawal' in href:
+        if '/withdrawal' == href:
             context['html'] = render_to_string('registration/withdrawal_content.html', request=request)
+        if '/video/create' == href:
+            context['html'] = render_to_string('video/video_create_content.html', request=request)
+        if '/live/create' == href:
+            context['html'] = render_to_string('live/live_create_content.html', request=request)
+        if '/music/create' == href:
+            context['html'] = render_to_string('music/music_create_content.html', request=request)
+        if '/picture/create' == href:
+            context['html'] = render_to_string('picture/picture_create_content.html', request=request)
+        if '/blog/create' == href:
+            context['html'] = render_to_string('blog/blog_create_content.html', {'form' :BlogForm(),}, request=request)
+        if '/chat/create' == href:
+            context['html'] = render_to_string('chat/chat_create_content.html', request=request)
+        if '/collabo/create' == href:
+            context['html'] = render_to_string('collabo/collabo_create_content.html', request=request)
         return JsonResponse(context)
 
 
