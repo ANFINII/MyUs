@@ -2,11 +2,6 @@
 {% block title %}<title>MyUsアカウント</title>{% endblock title %}
 {% load static %}
 
-{% block customcss %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
-{% endblock customcss %}
-
 {% block content %}
 <main class="main_contents">
     <form method="POST" action="" enctype="multipart/form-data">
@@ -26,7 +21,7 @@
                     <input type="submit" value="登録" id="submit" class="btn btn-success btn-sm">
                 </div>
                 <div class="btn-column2">
-                    <a href="{% url 'myus:profile' %}" class="btn btn-primary btn-sm" role="button">戻る</a>
+                    <a href="{% url 'myus:profile' %}" path="{% url 'myus:pjax' %}" class="btn btn-primary btn-sm pjax_button" role="button">戻る</a>
                 </div>
             </div>
 
@@ -89,8 +84,12 @@
                 </tfoot>
             </table>
 
-            {% include 'parts/footer-profile.html' %}
+            {% include 'parts/footer-myus.html' %}
         </article>
     </form>
 </main>
 {% endblock content %}
+
+{% block extrajs %}
+<script src="{% static 'js/date.js' %}"></script>
+{% endblock extrajs %}
