@@ -173,6 +173,14 @@ def pjax(request):
     context = dict()
     if request.method == 'GET':
         href = request.GET.get('href')
+        if 'video' in href:
+            context['html'] = render_to_string('video/video_list.html', {
+            'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:50],
+            }, request=request)
+        if 'live' in href:
+            context['html'] = render_to_string('live/live_list.html', {
+            'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:50],
+            }, request=request)
         if 'music' in href:
             context['html'] = render_to_string('music/music_list.html', {
             'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:50],
