@@ -179,24 +179,48 @@ def pjax(request):
             }, request=request)
         if 'picture' in href:
             context['html'] = render_to_string('picture/picture_list.html', {
-            'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:50],
+            'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
         if 'blog' in href:
             context['html'] = render_to_string('blog/blog_list.html', {
-                'blog_list': BlogModel.objects.filter(publish=True).order_by('-created')[:50],
+                'blog_list': BlogModel.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
         if 'chat' in href:
             context['html'] = render_to_string('chat/chat_list.html', {
-                'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:50],
+                'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
         if 'collabo' in href:
             context['html'] = render_to_string('collabo/collabo_list.html', {
-                'collabo_list': CollaboModel.objects.filter(publish=True).order_by('-created')[:50],
+                'collabo_list': CollaboModel.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
         if 'todo' in href:
             context['html'] = render_to_string('todo/todo_list.html', {
-                'todo_list': TodoModel.objects.filter(author_id=request.user.id)[:50],
+                'todo_list': TodoModel.objects.filter(author_id=request.user.id).order_by('-created')[:100],
             }, request=request)
+        if 'follow' in href:
+            context['html'] = render_to_string('follow/follow_list.html', {
+                'follow_list': FollowModel.objects.filter(follower_id=request.user.id).order_by('created')[:100],
+            }, request=request)
+        if 'follower' in href:
+            context['html'] = render_to_string('follow/follower_list.html', {
+                'follower_list': FollowModel.objects.filter(following_id=request.user.id).order_by('created')[:100],
+            }, request=request)
+        if 'notification' in href:
+            context['html'] = render_to_string('common/notification_content.html', {
+                'notify_setting_list': NotifySettingModel.objects.filter(owner_id=request.user.id),
+            }, request=request)
+        if 'userpolicy' in href:
+            context['html'] = render_to_string('common/userpolicy_content.html', request=request)
+        if 'knowledge' in href:
+            context['html'] = render_to_string('common/knowledge_content.html', request=request)
+        if 'payment' in href:
+            context['html'] = render_to_string('payment/payment_content.html', request=request)
+        if 'profile' in href:
+            context['html'] = render_to_string('registration/profile_content.html', request=request)
+        if 'mypage' in href:
+            context['html'] = render_to_string('registration/mypage_content.html', request=request)
+        if 'withdrawal' in href:
+            context['html'] = render_to_string('registration/withdrawal_content.html', request=request)
         return JsonResponse(context)
 
 

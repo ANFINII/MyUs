@@ -1,65 +1,8 @@
 {% extends 'base2.html' %}
 {% block title %}<title>MyUsマイページ設定</title>{% endblock title %}
-{% load static %}
-
-{% block customcss %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
-{% endblock customcss %}
 
 {% block content %}
 <main class="main_contents">
-    <article class="main_profile">
-        <h1>Myページ設定</h1>
-        {% if user.is_authenticated %}
-        <div class="btn-column">
-            <div class="btn-column1">
-                <a href="{% url 'myus:mypage_update' %}" class="btn btn-success btn-sm" role="button">編集</a>
-            </div>
-            <div class="btn-column2">
-                <a href="{% url 'myus:userpage' user.nickname %}" class="btn btn-success btn-sm" role="button">ユーザページ</a>
-            </div>
-        </div>
-
-        <table>
-            <thead>
-                <tr><th class="td-color td-header">バナー画像</th>
-                    <th>
-                        <label for="account_image_input" class="mypage_image">
-                            <a href="{{ user.mypage_image.url }}" data-lightbox="group"><img src="{{ user.mypage_image.url }}" title="{{ user.nickname }}" width="270px" height="56xp" data-lightbox="group"></a>
-                        </label>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td class="td-color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
-                <tr><td class="td-color">メールアドレス</td><td class="td-indent">{{ user.mypage_email }}</td></tr>
-                <tr><td class="td-color">フォロー数</td><td class="td-indent">{{ user.following_count }}</td></tr>
-                <tr><td class="td-color">フォロワー数</td><td class="td-indent">{{ user.follower_count }}</td></tr>
-                <tr><td class="td-color">料金プラン</td><td class="td-indent">{{ user.get_rate_plan_display }}</td></tr>
-                <tr><td class="td-color">全体広告</td><td class="td-indent">
-                    <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.video }}" notify-type="video">
-                        {% if user.auto_advertise %}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
-                            <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
-                        </svg>
-                        {% else %}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-off toggle_button" viewBox="0 0 16 16">
-                            <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
-                        </svg>
-                        {% endif %}
-                    </form>
-                </td></tr>
-            </tbody>
-            <tfoot>
-                <tr><td class="td-color td-footer">概要</td><td class="td-indent td-footer">{{ user.content|linebreaksbr|urlize }}</td></tr>
-            </tfoot>
-        </table>
-        {% include 'parts/footer-profile.html' %}
-        {% else %}
-        <h2 class="login_required">ログインしてください</h2>
-        {% endif %}
-    </article>
+    {% include 'registration/mypage_content.html' %}
 </main>
 {% endblock content %}

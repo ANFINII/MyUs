@@ -1,26 +1,8 @@
 {% extends 'base2.html' %}
 {% block title %}<title>MyUs通知</title>{% endblock title %}
-{% load static %}
-
-{% block customcss %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
-{% endblock customcss %}
 
 {% block content %}
 <main class="main_contents">
-    <article class="main_profile">
-        <h1>通知設定</h1>
-        {% if user.is_authenticated %}
-        {% include "parts/notify_setting_list.html" %}
-        {% include "parts/footer-myus.html" %}
-        {% else %}
-        <h2 class="login_required">ログインしてください</h2>
-        {% endif %}
-    </article>
+    {% include 'common/notification_content.html' %}
 </main>
 {% endblock content %}
-
-{% block extrajs %}
-<script src="{% static 'js/notify_setting.js' %}"></script>
-{% endblock extrajs %}

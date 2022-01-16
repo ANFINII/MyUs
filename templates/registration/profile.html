@@ -1,56 +1,8 @@
 {% extends 'base2.html' %}
 {% block title %}<title>MyUsアカウント</title>{% endblock title %}
-{% load static %}
-
-{% block customcss %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
-{% endblock customcss %}
 
 {% block content %}
 <main class="main_contents">
-    <article class="main_profile">
-        <h1>アカウント設定</h1>
-        {% if user.is_authenticated %}
-        <div class="btn-column">
-            <div class="btn-column1">
-                <a href="{% url 'myus:profile_update' %}" class="btn btn-success btn-sm" role="button">編集</a>
-            </div>
-            <div class="btn-column2">
-                <a href="{% url 'password_change' %}" class="btn btn-success btn-sm" role="button">パスワード変更</a>
-            </div>
-        </div>
-
-        <table>
-            <thead>
-                <tr><th class="td-color td-header">アカウント画像</th>
-                    <th>
-                        <label for="account_image_input" class="account_image">
-                            <a href="{{ user.user_image.url }}" data-lightbox="group"><img src="{{ user.user_image.url }}" title="{{ user.nickname }}" width="56px" height="56xp" data-lightbox="group"></a>
-                        </label>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td class="td-color">ユーザー名</td><td class="td-indent">{{ user.username }}</td></tr>
-                <tr><td class="td-color">メールアドレス</td><td class="td-indent">{{ user.email }}</td></tr>
-                <tr><td class="td-color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
-                <tr><td class="td-color">名前</td><td class="td-indent">{{ user.full_name }}</td></tr>
-                <tr><td class="td-color">生年月日</td><td class="td-indent">{{ user.year }}年{{ user.month }}月{{ user.day }}日</td></tr>
-                <tr><td class="td-color">年齢</td><td class="td-indent">{{ user.age }}歳</td></tr>
-                <tr><td class="td-color">性別</td><td class="td-indent">{{ user.get_gender_display }}</td></tr>
-                <tr><td class="td-color">電話</td><td class="td-indent">{{ user.phone }}</td></tr>
-                <tr><td class="td-color">住所</td><td class="td-indent">{{ user.location }}</td></tr>
-            </tbody>
-            <tfoot>
-                <tr><td class="td-color td-footer">自己紹介</td><td class="td-indent td-footer">{{ user.introduction|linebreaksbr|urlize }}</td></tr>
-            </tfoot>
-        </table>
-        {% include 'parts/footer-profile.html' %}
-        {% else %}
-        <h2 class="login_required">ログインしてください</h2>
-        {% endif %}
-    </article>
+    {% include 'registration/profile_content.html' %}
 </main>
 {% endblock content %}

@@ -13,7 +13,7 @@
             {% endif %}
         </h2>
         {% if query %}
-            {% include "search/search_video.html" %}
+            {% include 'search/search_video.html' %}
         {% else %}
             {% for item in video_list %}
                 {% include 'parts/article_video.html' %}
@@ -25,7 +25,7 @@
     <article class="main_article_index">
         <h2>Live</h2>
         {% if query %}
-            {% include "search/search_live.html" %}
+            {% include 'search/search_live.html' %}
         {% else %}
             {% for item in live_list %}
                 {% include 'parts/article_live.html' %}
@@ -37,7 +37,7 @@
     <article class="main_article_index">
         <h2>Music</h2>
         {% if query %}
-            {% include "search/search_music.html" %}
+            {% include 'search/search_music.html' %}
         {% else %}
             {% for item in music_list %}
                 {% include 'parts/article_music.html' %}
@@ -49,7 +49,7 @@
     <article class="main_article_index">
         <h2>Picture</h2>
         {% if query %}
-            {% include "search/search_picture.html" %}
+            {% include 'search/search_picture.html' %}
         {% else %}
             {% for item in picture_list %}
                 {% include 'parts/article_picture.html' %}
@@ -61,7 +61,7 @@
     <article class="main_article_index">
         <h2>Blog</h2>
         {% if query %}
-            {% include "search/search_blog.html" %}
+            {% include 'search/search_blog.html' %}
         {% else %}
             {% for item in blog_list %}
                 {% include 'parts/article_blog.html' %}
@@ -73,7 +73,7 @@
     <article class="main_article_index">
         <h2>Chat</h2>
         {% if query %}
-            {% include "search/search_chat.html" %}
+            {% include 'search/search_chat.html' %}
         {% else %}
             {% for item in chat_list %}
                 {% include 'parts/article_chat.html' %}
