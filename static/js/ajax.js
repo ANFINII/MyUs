@@ -18,7 +18,6 @@ $('#comment_form').submit(function(event) {
     .done(function(response) {
         $('#comment_count').html(response.comment_count);
         $('#comment_aria').prepend(response.comment_lists);
-        console.log(response);
     })
     .fail(function(response) {
         console.log(response);
@@ -84,7 +83,6 @@ $(document).on('click', '.reply_form', function(event) {
         $('#reply_count_open_' + comment_id).html('▼ スレッド ' + response.reply_count + ' 件');
         $('#reply_count_close_' + comment_id).html('▲ スレッド ' + response.reply_count + ' 件');
         $('#reply_aria_list_' + comment_id).prepend(response.reply_lists);
-        console.log(response);
     })
     .fail(function(response) {
         console.log(response);
@@ -128,7 +126,6 @@ $(document).on('click', '.edit_update_button', function(event) {
         // 成功した時、背景色を戻す
         highlight.style.removeProperty('background-color');
         $('#comment_aria_list_2_' + comment_id).html(response.text);
-        console.log(response);
     })
     .fail(function(response) {
         // 失敗した時、背景色を戻す
@@ -173,7 +170,6 @@ $(document).on('click', '.edit_delete', function(event) {
         $('#comment_count').html(response.comment_count);
         $('#reply_count_open_' + response.parent_id).html('▼ スレッド ' + response.reply_count + ' 件');
         $('#reply_count_close_' + response.parent_id).html('▲ スレッド ' + response.reply_count + ' 件');
-        console.log(response);
     })
     .fail(function(response) {
         // 失敗した時、背景色を戻す
@@ -209,7 +205,6 @@ $(document).on('click', '.like_form', function(event) {
             $('.like_color').parent().addClass('like_no');
             $('#like_count_' + id).html(response['total_like']);
         }
-        console.log(response);
     })
     .fail(function(response) {
         console.log(response);
@@ -241,7 +236,6 @@ $(document).on('click', '.like_form_comment', function(event) {
             $('.like_color_' + comment_id).parent().addClass('like_no');
             $('#like_count_' + comment_id).html(response['total_like']);
         }
-        console.log(response);
     })
     .fail(function(response) {
         console.log(response);
@@ -271,7 +265,6 @@ $(document).on('click', '.follow_form', function(event) {
             $('.btn-success').html('フォローする');
             $('.follower_count').html(response['follower_count']);
         }
-        console.log(response);
     })
     .fail(function(response) {
         console.log(response);
@@ -291,7 +284,6 @@ $(document).on('click', '.advertise_anker', function() {
     })
     .done(function(response) {
         $('.advertise_read').html(response.read);
-        console.log(response);
     })
     .fail(function(response) {
         console.log(response);

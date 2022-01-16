@@ -17,7 +17,6 @@ $(document).on('click', '.main_tag_2', function(event) {
         let searchtag_add =
             '<a class="tag_n_add" href="?search=' + response.searchtag + '">' + response.searchtag + '</a>'
         $('.tag_n_list').append(searchtag_add);
-        console.log(response)
     })
     .fail(function(response) {
         console.log(response);

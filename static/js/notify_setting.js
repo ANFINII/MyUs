@@ -13,7 +13,6 @@ $(document).on('click', '.toggle_button', function(event) {
     })
     .done(function(response) {
         $('#notification_table').html(response.notify_setting_lists);
-        console.log(response);
     })
     .fail(function(response) {
         console.log(response);

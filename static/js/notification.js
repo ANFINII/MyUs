@@ -35,7 +35,6 @@ $(document).on('click', '.notification_aria_list_2', function(event) {
             $('.bi-bell-fill').removeClass('active');
             $('.bi-exclamation-lg').removeClass('active');
         }
-        console.log(response);
     })
     .fail(function(response) {
         console.log(response);
