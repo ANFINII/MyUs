@@ -283,21 +283,16 @@ header {
 .dropdown_menu_profile {
     position: fixed;
     z-index: 80; /* サイドメニューよりかは小さい */
-    overflow-y: auto;
     top: 3.5em;
     right: -250px;
     width: 250px;
+    height: 337px;
     padding: 0;
     background: rgb(255, 250, 245);
     color: rgb(50, 50, 50);
     transition: all 0.2s;
+    overflow-y: auto;
     overflow-x: hidden;
-}
-
-.dropdown_menu_cloud,
-.dropdown_menu_notice,
-.dropdown_menu_profile {
-    height: 337px;
 }
 
 /* 閉じる用のカバー */
@@ -1577,7 +1572,7 @@ header {
     outline: none;
     resize: none;
     border: none;
-    border-bottom: 2px solid rgb(206, 212, 218);
+    border-bottom: 2px solid rgb(200, 200, 200);
     overflow-y: hidden;
 }
 
@@ -1623,7 +1618,7 @@ header {
     outline: none;
     resize: none;
     border: none;
-    border-bottom: 2px solid rgb(206, 212, 218);
+    border-bottom: 2px solid rgb(200, 200, 200);
     overflow-y: hidden;
 }
 

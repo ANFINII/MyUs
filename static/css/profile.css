@@ -1,20 +1,26 @@
 /* プロフィール */
-.tag_nav {
-    display: none;
-}
-
 .main_profile {
     display: grid;
     grid-gap: 3px;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 2.6em auto auto 2.4em;
+    grid-template-rows: 42px auto;
+    margin: 14px 0 22px 0;
 }
 
-.main_profile h1 {
+.main_knowledge {
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 30px auto;
+    margin: 14px 0 22px 0;
+}
+
+.main_profile h1,
+.main_knowledge h1 {
     display: flex;
     font-size: 24px;
     max-height: 2em;
-    margin: -6px 0 -8px 0;
+    margin: -4px 0 0 0;
 }
 
 .main_profile .login_required {
@@ -38,13 +44,10 @@
 .btn-column {
     grid-column: 2/3;
     justify-self: end;
-    margin: -4px 0 -8px 0;
+    margin: -4px 0 0 0;
 }
 
-.btn-column1 {
-    display: inline;
-}
-
+.btn-column1,
 .btn-column2 {
     display: inline;
 }
@@ -92,7 +95,7 @@ th.td-color, td.td-color {
 }
 
 .form-control {
-    height: 2em;
+    min-height: 2em;
 }
 
 .account_image {
@@ -182,16 +185,6 @@ th.td-color, td.td-color {
     padding: 0 0 0 8px;
 }
 
-.footer-profile {
-    grid-column: 1/-1;
-    grid-row: 4/-1;
-    align-self: end;
-    text-align: center;
-    height: 26px;
-    background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
-    color: rgb(255, 255, 255);
-}
-
 .footer-myus {
     position: fixed;
     bottom: 0;
@@ -208,7 +201,8 @@ th.td-color, td.td-color {
     display: grid;
     grid-gap: 3px;
     grid-template-columns: 1fr;
-    grid-template-rows: 2.6em auto auto 1fr;
+    grid-template-rows: 42px auto auto 1fr;
+    margin: 14px 0 0 0;
 }
 
 .main_pass h1 {
@@ -216,7 +210,7 @@ th.td-color, td.td-color {
     grid-row: 1/2;
     font-size: 24px;
     max-height: 2em;
-    margin: -6px 0 -8px 0;
+    margin: -4px 0 0 0;
 }
 
 ul, .messages_password_change {
