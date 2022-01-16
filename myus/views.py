@@ -10,7 +10,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
-from django.db.models import Count
+from django.db.models import Count, F
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from django.views.decorators.csrf import csrf_exempt
@@ -174,21 +174,41 @@ def pjax(request):
     if request.method == 'GET':
         href = request.GET.get('href')
         print(href)
+        if '/' == href:
+            context['html'] = render_to_string('index_list.html', {
+                'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:8],
+                'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:8],
+                'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:8],
+                'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:8],
+                'blog_list': BlogModel.objects.filter(publish=True).order_by('-created')[:8],
+                'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:8],
+            }, request=request)
+        if '/recommend' == href:
+            aggregation_date = datetime.datetime.today() - datetime.timedelta(days=100)
+            context['html'] = render_to_string('index_list.html', {
+                'Recommend': 'Recommend',
+                'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'live_list': LiveModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'music_list': MusicModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'picture_list': PictureModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'blog_list': BlogModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+            }, request=request)
         if '/video' == href:
             context['html'] = render_to_string('video/video_list.html', {
-            'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:50],
+                'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:50],
             }, request=request)
         if '/live' == href:
             context['html'] = render_to_string('live/live_list.html', {
-            'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:50],
+                'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:50],
             }, request=request)
         if '/music' == href:
             context['html'] = render_to_string('music/music_list.html', {
-            'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:50],
+                'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:50],
             }, request=request)
         if '/picture' == href:
             context['html'] = render_to_string('picture/picture_list.html', {
-            'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:100],
+                'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
         if '/blog' == href:
             context['html'] = render_to_string('blog/blog_list.html', {

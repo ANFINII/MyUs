@@ -1,0 +1,86 @@
+{% load static %}
+
+<h1>{% if Recommend %}{{ Recommend }}{% else %}Home{% endif %}
+    {% if query %}
+    <section class="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>
+    {% endif %}
+</h1>
+<hr>
+
+<article class="main_article_index">
+    <h2>Video</h2>
+    {% if query %}
+        {% include 'search/search_video.html' %}
+    {% else %}
+        {% for item in video_list %}
+            {% include 'parts/article_video.html' %}
+        {% endfor %}
+    {% endif %}
+</article>
+<hr>
+
+<article class="main_article_index">
+    <h2>Live</h2>
+    {% if query %}
+        {% include 'search/search_live.html' %}
+    {% else %}
+        {% for item in live_list %}
+            {% include 'parts/article_live.html' %}
+        {% endfor %}
+    {% endif %}
+</article>
+<hr>
+
+<article class="main_article_index">
+    <h2>Music</h2>
+    {% if query %}
+        {% include 'search/search_music.html' %}
+    {% else %}
+        {% for item in music_list %}
+            {% include 'parts/article_music.html' %}
+        {% endfor %}
+    {% endif %}
+</article>
+<hr>
+
+<article class="main_article_index">
+    <h2>Picture</h2>
+    {% if query %}
+        {% include 'search/search_picture.html' %}
+    {% else %}
+        {% for item in picture_list %}
+            {% include 'parts/article_picture.html' %}
+        {% endfor %}
+    {% endif %}
+</article>
+<hr>
+
+<article class="main_article_index">
+    <h2>Blog</h2>
+    {% if query %}
+        {% include 'search/search_blog.html' %}
+    {% else %}
+        {% for item in blog_list %}
+            {% include 'parts/article_blog.html' %}
+        {% endfor %}
+    {% endif %}
+</article>
+<hr>
+
+<article class="main_article_index">
+    <h2>Chat</h2>
+    {% if query %}
+        {% include 'search/search_chat.html' %}
+    {% else %}
+        {% for item in chat_list %}
+            {% include 'parts/article_chat.html' %}
+        {% endfor %}
+    {% endif %}
+</article>
+
+{% block extrajs %}
+<script src="{% static 'js/audioplayer.js' %}"></script>
+<script>$(function() { $('audio').audioPlayer(); });</script>
+<script src="https://vjs.zencdn.net/7.15.4/video.min.js"></script>
+<script src="{% static 'js/video_auto.js' %}"></script>
+{% endblock extrajs %}
