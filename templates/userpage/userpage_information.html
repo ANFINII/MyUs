@@ -1,21 +1,8 @@
 {% extends 'base2.html' %}
 {% block title %}<title>MyUs UserPage {{ author_name }}</title>{% endblock title %}
-{% load static %}
 
 {% block content %}
 <main class="main_contents">
-    {% include 'userpage/userpage_common.html' %}
-
-    {% for author in user_list %}
-    <h1>チャンネル情報</h1>
-    <p class="userpage_info_1"><span>概要</span></p>
-    <p class="userpage_info_2"><span>{{ author.content|linebreaksbr|urlize }}</span></p>
-    <p><span>メール：{{ author.mypage_email }}</span></p>
-    <p><span>登録日：{{ author.date_joined|date:'Y年m月d日' }}</span></p>
-    {% endfor %}
+    {% include 'userpage/userpage_information_content.html' %}
 </main>
 {% endblock content %}
-
-{% block extrajs %}
-<script src="{% static 'js/ajax.js' %}"></script>
-{% endblock extrajs %}

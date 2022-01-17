@@ -193,6 +193,52 @@ def pjax(request):
                 'blog_list': BlogModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
                 'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
             }, request=request)
+        if '/userpage/post' in href:
+            nickname = request.GET.get('nickname')
+            author = get_object_or_404(User, nickname=nickname)
+            author_id = author.id
+            follow = FollowModel.objects.filter(follower=request.user.id).filter(following=author_id)
+            followed = False
+            if follow.exists():
+                followed = True
+            context['html'] = render_to_string('userpage/userpage_list.html', {
+                'followed': followed,
+                'author_name': author.nickname,
+                'user_list': User.objects.filter(id=author_id),
+                'video_list': VideoModel.objects.filter(author_id=author_id, publish=True),
+                'live_list': LiveModel.objects.filter(author_id=author_id, publish=True),
+                'music_list': MusicModel.objects.filter(author_id=author_id, publish=True),
+                'picture_list': PictureModel.objects.filter(author_id=author_id, publish=True),
+                'blog_list': BlogModel.objects.filter(author_id=author_id, publish=True),
+                'chat_list': ChatModel.objects.filter(author_id=author_id, publish=True),
+            }, request=request)
+        if '/userpage/information' in href:
+            nickname = request.GET.get('nickname')
+            author = get_object_or_404(User, nickname=nickname)
+            author_id = author.id
+            follow = FollowModel.objects.filter(follower=request.user.id).filter(following=author_id)
+            followed = False
+            if follow.exists():
+                followed = True
+            context['html'] = render_to_string('userpage/userpage_information_content.html', {
+                'followed': followed,
+                'author_name': author.nickname,
+                'user_list': User.objects.filter(id=author_id),
+            }, request=request)
+        if '/userpage/advertise' in href:
+            nickname = request.GET.get('nickname')
+            author = get_object_or_404(User, nickname=nickname)
+            author_id = author.id
+            follow = FollowModel.objects.filter(follower=request.user.id).filter(following=author_id)
+            followed = False
+            if follow.exists():
+                followed = True
+            context['html'] = render_to_string('userpage/userpage_advertise_list.html', {
+                'followed': followed,
+                'author_name': author.nickname,
+                'user_list': User.objects.filter(id=author_id),
+                'advertise_list': AdvertiseModel.objects.filter(author_id=author_id, publish=True),
+            }, request=request)
         if '/video' == href:
             context['html'] = render_to_string('video/video_list.html', {
                 'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:50],
