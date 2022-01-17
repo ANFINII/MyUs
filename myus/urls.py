@@ -21,7 +21,7 @@ app_name = 'myus'
 urlpatterns = [
     path('', Index.as_view(), name='index'),
     path('recommend', Recommend.as_view(), name='recommend'),
-    path('userpage/<str:nickname>', UserPage.as_view(), name='userpage'),
+    path('userpage/post/<str:nickname>', UserPage.as_view(), name='userpage'),
     path('userpage/information/<str:nickname>', UserPageInfo.as_view(), name='userpage_info'),
     path('userpage/advertise/<str:nickname>', UserPageAdvertise.as_view(), name='userpage_advertise'),
 
