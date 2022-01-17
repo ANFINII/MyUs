@@ -9,11 +9,9 @@ $(document).on('click', '.notification_aria_anker', function() {
         dataType: 'json',
         timeout: 10000,
     })
-    .done(function(response) {
-        console.log(response);
+    .done(function() {
     })
-    .fail(function(response) {
-        console.log(response);
+    .fail(function() {
     })
 });
 
