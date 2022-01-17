@@ -8,7 +8,7 @@ function pjax_dict(href) {
     history.pushState(null, null, href);
 }
 
-// サイドボタンを押した時の処理
+// pjax_button ボタンを押した時の処理
 $(document).on('click', '.pjax_button', function(event) {
     event.preventDefault();
     const url = $(this).attr('path');
@@ -41,6 +41,39 @@ $(document).on('click', '.pjax_button', function(event) {
         document.querySelector('.dropdown_menu_cloud').checked = false;
         document.querySelector('.dropdown_menu_notice').checked = false;
         document.querySelector('.dropdown_menu_profile').checked = false;
+    })
+    .fail(function(response) {
+        console.log(response);
+    })
+});
+
+
+// pjax_button_userpage ボタンを押した時の処理
+$(document).on('click', '.pjax_button_userpage', function(event) {
+    event.preventDefault();
+    const url = $(this).attr('path');
+    const href = $(this).attr('href');
+    const nickname = $(this).attr('data');
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: {'href': href, 'nickname': nickname, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+    })
+    .done(function(response) {
+        pjax_dict(href)
+        window.addEventListener('popstate', e => {
+            const back_url = location.pathname;
+            const back_obj = object_dict[back_url];
+            $('.main_contents').html(back_obj);
+            if (document.querySelector('.chat_remove') != null) {
+                document.querySelector('.chat_remove').remove();
+            }
+        });
+        $('.main_contents').html(response.html);
+        if (document.querySelector('.chat_remove') != null) {
+            document.querySelector('.chat_remove').remove();
+        }
     })
     .fail(function(response) {
         console.log(response);
