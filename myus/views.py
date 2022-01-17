@@ -173,7 +173,6 @@ def pjax(request):
     context = dict()
     if request.method == 'GET':
         href = request.GET.get('href')
-        print(href)
         if '/' == href:
             context['html'] = render_to_string('index_list.html', {
                 'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:8],
