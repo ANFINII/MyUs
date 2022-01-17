@@ -33,9 +33,9 @@
     </object>
 
     <div class="userpage_button_list">
-        <a href="{% url 'myus:userpage' author.nickname %}" class="userpage_button_list_1">投稿</a>
-        <a href="{% url 'myus:userpage_info' author.nickname %}" class="userpage_button_list_2">情報</a>
-        <a href="{% url 'myus:userpage_advertise' author.nickname %}" class="userpage_button_list_3">広告</a>
+        <a href="{% url 'myus:userpage' author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ author.nickname }}" class="userpage_button_list_1 pjax_button_userpage">投稿</a>
+        <a href="{% url 'myus:userpage_info' author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ author.nickname }}" class="userpage_button_list_2 pjax_button_userpage">情報</a>
+        <a href="{% url 'myus:userpage_advertise' author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ author.nickname }}" class="userpage_button_list_3 pjax_button_userpage">広告</a>
     </div>
 {% endfor %}
 

@@ -1,5 +1,5 @@
 {% for notification in notification_list %}
-<div id="notification_aria_link_{{ notification.id }}" class="dropdown_menu_item side_indent notification_aria_link">
+<div id="notification_aria_link_{{ notification.id }}" class="dropdown_menu_item side_indent">
     <object class="notification_aria_list">
         <a href="{% url 'myus:userpage' notification.user_from.nickname %}">
             <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
