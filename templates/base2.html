@@ -291,7 +291,7 @@
                     {% if user.is_staff %}
                     <a class="icon_link" role="button" aria-disabled="true"></a>
                     {% else %}
-                    <a href="{% url 'myus:withdrawal' %}" role="button" aria-disabled="true"></a>
+                    <a href="{% url 'myus:withdrawal' %}" path="{% url 'myus:pjax' %}" class="icon_link pjax_button" aria-disabled="true"></a>
                     {% endif %}
                 </div>
 
