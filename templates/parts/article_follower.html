@@ -3,9 +3,9 @@
 {% for item in follower_list %}
 <section class="main_content">
     <div class="main_decolation">
-        <a href="{% url 'myus:userpage' item.follower.nickname %}" class="author_follows">
+        <a href="{% url 'myus:userpage' item.follower.nickname %}" path="{% url 'myus:pjax' %}" data="{{ item.follower.nickname }}" class="author_follows pjax_button_userpage">
             <object class="author_space">
-                <a href="{% url 'myus:userpage' item.follower.nickname %}">
+                <a href="{% url 'myus:userpage' item.follower.nickname %}" path="{% url 'myus:pjax' %}" data="{{ item.follower.nickname }}" class="pjax_button_userpage">
                     <img src="{{ item.follower.user_image.url }}" title="{{ item.follower.nickname }}" class="follow_image">
                 </a>
             </object>

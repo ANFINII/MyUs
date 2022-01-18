@@ -3,7 +3,7 @@
 {% for reply in reply_list reversed %}
     {% if reply.parent.id == comment.id or comment_id %}
     <div id="comment_aria_list_{{ reply.id }}" class="reply_aria_list">
-        <a href="{% url 'myus:userpage' reply.author.nickname %}">
+        <a href="{% url 'myus:userpage' reply.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
             <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
         </a>
 

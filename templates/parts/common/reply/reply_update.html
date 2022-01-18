@@ -1,6 +1,6 @@
 <form method="POST" action="{% url 'myus:comment_update' reply.id %}" class="edit_update">
     {% csrf_token %}
-    <a href="{% url 'myus:userpage' reply.author.nickname %}">
+    <a href="{% url 'myus:userpage' reply.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
         <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
     </a>
     <div class="comment_input_update">
