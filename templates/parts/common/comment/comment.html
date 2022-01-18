@@ -3,7 +3,7 @@
 
 {% for comment in comment_list reversed %}
 <div id="comment_aria_list_{{ comment.id }}" class="comment_aria_list">
-    <a href="{% url 'myus:userpage' comment.author.nickname %}">
+    <a href="{% url 'myus:userpage' comment.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ comment.author.nickname }}" class="pjax_button_userpage">
         <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
     </a>
 

@@ -1,6 +1,6 @@
 <form method="POST" action="" class="edit_update_chat">
     {% csrf_token %}
-    <a href="{% url 'myus:userpage' reply.author.nickname %}">
+    <a href="{% url 'myus:userpage' reply.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
         <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
     </a>
     <div class="edit_textarea_caht">
