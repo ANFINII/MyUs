@@ -20,14 +20,10 @@ $(document).on('click', '.pjax_button', function(event) {
         dataType: 'json',
     })
     .done(function(response) {
-        pjax_dict(href)
         window.addEventListener('popstate', e => {
             const back_url = location.pathname;
             const back_obj = object_dict[back_url];
             $('.main_contents').html(back_obj);
-            if (document.querySelector('.chat_remove') != null) {
-                document.querySelector('.chat_remove').remove();
-            }
             document.querySelector('.side_menu').checked = false;
             document.querySelector('.dropdown_menu_cloud').checked = false;
             document.querySelector('.dropdown_menu_notice').checked = false;
@@ -41,6 +37,7 @@ $(document).on('click', '.pjax_button', function(event) {
         document.querySelector('.dropdown_menu_cloud').checked = false;
         document.querySelector('.dropdown_menu_notice').checked = false;
         document.querySelector('.dropdown_menu_profile').checked = false;
+        pjax_dict(href)
     })
     .fail(function(response) {
         console.log(response);
@@ -61,7 +58,6 @@ $(document).on('click', '.pjax_button_userpage', function(event) {
         dataType: 'json',
     })
     .done(function(response) {
-        pjax_dict(href)
         window.addEventListener('popstate', e => {
             const back_url = location.pathname;
             const back_obj = object_dict[back_url];
@@ -74,6 +70,7 @@ $(document).on('click', '.pjax_button_userpage', function(event) {
         if (document.querySelector('.chat_remove') != null) {
             document.querySelector('.chat_remove').remove();
         }
+        pjax_dict(href)
     })
     .fail(function(response) {
         console.log(response);
