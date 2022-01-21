@@ -212,7 +212,6 @@ $(document).on('click', '.comment_aria_thread', function(event) {
         dataType: 'json',
     })
     .done(function(response) {
-        pjax_thread_dict(href)
         window.addEventListener('popstate', e => {
             const back_url = location.pathname;
             const back_obj = thread_dict[back_url];
@@ -226,6 +225,7 @@ $(document).on('click', '.comment_aria_thread', function(event) {
         });
         $('.chat_section_thread_area').html(response.thread);
         document.querySelector('.comment_aria_check').checked = true;
+        pjax_thread_dict(href)
     })
     .fail(function(response) {
         console.log(response);
