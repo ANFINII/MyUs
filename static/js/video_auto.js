@@ -11,9 +11,9 @@ function playVideo(e) {
             videos[i].playbackRate = 2.0;
         }
     }
-}
+};
 
 // ホバーアウトするとサムネイル表示
 function hideVideo(e) {
     $('video', this).get(0).load();
-}
+};
