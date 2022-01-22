@@ -309,6 +309,8 @@ def pjax(request):
             context['html'] = render_to_string('chat/chat_create_content.html', request=request)
         if '/collabo/create' == href:
             context['html'] = render_to_string('collabo/collabo_create_content.html', request=request)
+        if '/todo/create' == href:
+            context['html'] = render_to_string('todo/todo_create_content.html', request=request)
         return JsonResponse(context)
 
 
