@@ -13,6 +13,47 @@ function pjax_thread_dict(href) {
     history.pushState(null, null, href);
 }
 
+window.addEventListener('popstate', e => {
+    const back_url = location.pathname;
+    const back_obj = thread_dict[back_url];
+    if (back_url.indexOf('thread') !== -1) {
+        $('.chat_section_thread_area').html(back_obj);
+        document.querySelector('.comment_aria_check').checked = true;
+    } else {
+        $('.chat_section_thread_area').html(back_obj);
+        document.querySelector('.comment_aria_check').checked = false;
+    }
+});
+
+// スレッドボタンを押した時の処理
+$(document).on('click', '.comment_aria_thread', function(event) {
+    event.preventDefault();
+    const url = $(this).attr('thread');
+    const href = $(this).attr('href');
+    const comment_id = $(this).attr('comment-id');
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: {'obj_id': obj_id, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+    })
+    .done(function(response) {
+        $('.chat_section_thread_area').html(response.thread);
+        document.querySelector('.comment_aria_check').checked = true;
+        pjax_thread_dict(href)
+    })
+    .fail(function(response) {
+        console.log(response);
+    })
+});
+
+// バツボタンを押した時の処理
+$(document).on('click', '.bi-x', function() {
+    document.querySelector('.comment_aria_check').checked = false;
+    const href = $(this).attr('href');
+    pjax_thread_dict(href)
+});
+
 // chatSocket の websocket 処理
 chatSocket.onmessage = function(event) {
     let data = JSON.parse(event.data);
@@ -197,45 +238,6 @@ $(document).on('click', '.edit_delete_reply', function(event) {
         'command': 'delete_reply_message',
         'comment_id': comment_id,
     }));
-});
-
-// スレッドボタンを押した時の処理
-$(document).on('click', '.comment_aria_thread', function(event) {
-    event.preventDefault();
-    const url = $(this).attr('thread');
-    const href = $(this).attr('href');
-    const comment_id = $(this).attr('comment-id');
-    $.ajax({
-        url: url,
-        type: 'GET',
-        data: {'obj_id': obj_id, 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-        dataType: 'json',
-    })
-    .done(function(response) {
-        window.addEventListener('popstate', e => {
-            const back_url = location.pathname;
-            const back_obj = thread_dict[back_url];
-            if (back_url.indexOf('thread') !== -1) {
-                $('.chat_section_thread_area').html(back_obj);
-                document.querySelector('.comment_aria_check').checked = true;
-            } else {
-                $('.chat_section_thread_area').html(back_obj);
-                document.querySelector('.comment_aria_check').checked = false;
-            }
-        });
-        $('.chat_section_thread_area').html(response.thread);
-        document.querySelector('.comment_aria_check').checked = true;
-        pjax_thread_dict(href)
-    })
-    .fail(function(response) {
-        console.log(response);
-    })
-});
-
-$(document).on('click', '.bi-x', function() {
-    document.querySelector('.comment_aria_check').checked = false;
-    const href = $(this).attr('href');
-    pjax_thread_dict(href)
 });
 
 // いいねボタンクリック時の処理を定義
