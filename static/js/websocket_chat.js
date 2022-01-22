@@ -44,7 +44,7 @@ $(document).on('click', '.comment_aria_thread', function(event) {
     .done(function(response) {
         $('.chat_section_thread_area').html(response.thread);
         document.querySelector('.comment_aria_check').checked = true;
-        pjax_thread_dict(href)
+        pjax_thread_dict(href);
     })
     .fail(function(response) {
         console.log(response);
@@ -55,7 +55,7 @@ $(document).on('click', '.comment_aria_thread', function(event) {
 $(document).on('click', '.bi-x', function() {
     document.querySelector('.comment_aria_check').checked = false;
     const href = $(this).attr('href');
-    pjax_thread_dict(href)
+    pjax_thread_dict(href);
 });
 
 // chatSocket の websocket 処理
@@ -128,16 +128,16 @@ chatSocket.onmessage = function(event) {
 };
 
 chatSocket.onopen = function(event) {
-    console.log('open', event)
-};
+    console.log('open', event);
+}
 
 chatSocket.onerror = function(event) {
-    console.log('error', event)
-};
+    console.log('error', event);
+}
 
 chatSocket.onclose = function(event) {
-    console.log('close', event)
-};
+    console.log('close', event);
+}
 
 // メッセージ作成
 $('#comment_form').submit(function(event) {
@@ -270,7 +270,6 @@ $(document).on('click', '.like_form', function(event) {
             $('.like_color').parent().addClass('like_no');
             $('#like_count_' + id).html(response['total_like']);
         }
-        console.log(response);
     })
     .fail(function(response) {
         console.log(response);
