@@ -18,10 +18,14 @@ window.addEventListener('popstate', e => {
     const back_obj = thread_dict[back_url];
     if (back_url.indexOf('thread') !== -1) {
         $('.chat_section_thread_area').html(back_obj);
-        document.querySelector('.comment_aria_check').checked = true;
+        if (document.querySelector('.comment_aria_check') != null) {
+            document.querySelector('.comment_aria_check').checked = true;
+        }
     } else {
         $('.chat_section_thread_area').html(back_obj);
-        document.querySelector('.comment_aria_check').checked = false;
+        if (document.querySelector('.comment_aria_check') != null) {
+            document.querySelector('.comment_aria_check').checked = false;
+        }
     }
 });
 
