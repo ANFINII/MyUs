@@ -6,7 +6,7 @@
 
 {% if user.is_authenticated %}
 <div class="todo_create">
-    <a href="{% url 'myus:todo_create' %}" class="btn btn-primary btn-sm" role="button">ToDo作成</a>
+    <a href="{% url 'myus:todo_create' %}" path="{% url 'myus:pjax' %}" class="btn btn-primary btn-sm pjax_button" role="button">ToDo作成</a>
 </div>
 
 <article class="main_article">
