@@ -5,7 +5,16 @@
 <main class="main_contents">
     <h1>ToDo削除</h1>
     {% if user.is_authenticated %}
-    <p>{{ object.title }}</p>
+    <p>タイトル：{{ object.title }}</p>
+
+    <p>優先度：{{ object.get_priority_display }}</p>
+
+    <p>期日：{{ todomodel.duedate|date:'Y-m-j' }}</p>
+
+    <p>内容：{{ todomodel.content }}</p>
+
+    <br>
+
     <form method="POST" action="">
         {% csrf_token %}
         <p><input type="submit" value="削除する" class="btn btn-danger btn-sm"></p>
