@@ -294,7 +294,10 @@ def pjax(request):
         if '/mypage' == href:
             context['html'] = render_to_string('registration/mypage_content.html', request=request)
         if '/withdrawal' == href:
-            context['html'] = render_to_string('registration/withdrawal_content.html', request=request)
+            EXPIRED_SECONDS = 60
+            context['html'] = render_to_string('registration/withdrawal_content.html', {
+                'expired_seconds': EXPIRED_SECONDS,
+            }, request=request)
         if '/video/create' == href:
             context['html'] = render_to_string('video/video_create_content.html', request=request)
         if '/live/create' == href:
