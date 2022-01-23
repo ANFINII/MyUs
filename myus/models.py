@@ -7,7 +7,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
-from django.forms.widgets import Textarea
 from django.utils import timezone
 from ckeditor_uploader.fields import RichTextUploadingField
 
