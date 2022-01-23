@@ -1,7 +1,7 @@
 {% load static %}
 
 {% for item in follower_list %}
-<section class="main_content">
+<section class="main_content_follow">
     <div class="main_decolation">
         <a href="{% url 'myus:userpage' item.follower.nickname %}" path="{% url 'myus:pjax' %}" data="{{ item.follower.nickname }}" class="author_follows pjax_button_userpage">
             <object class="author_space">
