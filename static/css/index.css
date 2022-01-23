@@ -858,14 +858,14 @@ header {
     height: 150px;
 }
 
-.main_content_plan {
-    max-width: 272px;
-    height: 230px;
-}
-
 .main_content_follow {
     max-width: 272px;
     height: 250px;
+}
+
+.main_content_plan {
+    max-width: 272px;
+    height: 230px;
 }
 
 .main_decolation a {
