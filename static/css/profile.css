@@ -211,11 +211,10 @@ th.td-color, td.td-color {
     grid-column: 1/2;
     grid-row: 1/2;
     font-size: 24px;
-    max-height: 2em;
     margin: -4px 0 0 0;
 }
 
-ul, .messages_password_change {
+form ul {
     grid-column: 1/2;
     grid-row: 2/3;
     list-style: none;
@@ -223,21 +222,25 @@ ul, .messages_password_change {
     color: rgb(255, 0, 0);
     height: 0.8em;
     padding: 0;
-    margin: -40px 0 40px 0;
+    margin: 0 0 40px 0;
 }
 
 .messages_password_done {
     font-size: 14px;
     color: rgb(255, 0, 0);
-    margin: 0px 0 5px 0;
+    margin: 0 0 10px 0;
 }
 
 .form-signup {
     grid-row: 3/4;
     width: 100%;
     max-width: 380px;
-    padding: 50px 15px;
+    padding: 0 15px;
     margin: auto;
+}
+
+.password_done {
+    padding: 50px 15px;
 }
 
 .form-signup .form-control {
@@ -258,8 +261,4 @@ ul, .messages_password_change {
 
 .withdrawal {
     margin: 0 0 24px 0;
-}
-
-.main_pass .btn-primary {
-    margin: 0;
 }
