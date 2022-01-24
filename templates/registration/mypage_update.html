@@ -44,6 +44,17 @@
                     <tr><td class="td-color">フォロー数</td><td class="td-indent">{{ user.following_count }}</td></tr>
                     <tr><td class="td-color">フォロワー数</td><td class="td-indent">{{ user.follower_count }}</td></tr>
                     <tr><td class="td-color">料金プラン</td><td class="td-indent">{{ user.get_rate_plan_display }}</td></tr>
+                    <tr><td class="td-color">全体広告</td><td class="td-indent" id="auto_advertise">
+                        <form method="POST" action="{% url 'myus:mypage_toggle' %}" advertise="{{ user.auto_advertise }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-disable" viewBox="0 0 16 16">
+                                {% if user.auto_advertise %}
+                                <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+                                {% else %}
+                                <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
+                                {% endif %}
+                            </svg>
+                        </form>
+                    </td></tr>
                 </tbody>
                 <tfoot>
                     <tr><td class="td-color td-footer">概要</td><td class="td-footer"><textarea name="content" rows="1" placeholder="ユーザページ概要" class="form-control textarea">{{ user.content }}</textarea></td></tr>
