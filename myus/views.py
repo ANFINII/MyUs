@@ -493,6 +493,21 @@ class MyPageUpdate(UpdateView):
     def get_object(self):
         return self.request.user
 
+@csrf_exempt
+def mypage_toggle(request):
+    """mypage_toggle"""
+    context = dict()
+    if request.method == 'POST':
+        user = request.user
+        auto_advertise = request.POST.get('advertise')
+        if auto_advertise == 'True':
+            user.auto_advertise = False
+        else:
+            user.auto_advertise = True
+        user.save()
+        context['advertise'] = render_to_string('registration/mypage_advertise.html', request=request)
+        return JsonResponse(context)
+
 
 # 決済システム
 class Payment(TemplateView):

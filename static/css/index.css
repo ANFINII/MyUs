@@ -749,7 +749,8 @@ header {
     color: rgb(0, 130, 255);
 }
 
-.bi-toggle-off {
+.bi-toggle-off,
+.bi-toggle-disable {
     color: rgb(0, 40, 80);
 }
 
