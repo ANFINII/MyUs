@@ -9,7 +9,7 @@
     {% if object.publish %}
         <div class="main-image-color">
             <div class="main-image">
-                <video id="video" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls poster="{{ object.images.url }}" data-setup='{"playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]}'>
+                <video id="video" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" poster="{{ object.images.url }}" data-setup='{"playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]}'>
                     <source src="{{ object.videos.url }}" type="video/mp4" label="2160p" res="2160">
                     <source src="{{ object.videos.url }}" type="video/mp4" label="1080p" res="1080">
                     <source src="{{ object.videos.url }}" type="video/mp4" label="720p" res="720">
