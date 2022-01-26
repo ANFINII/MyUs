@@ -96,10 +96,6 @@ th.td-color, td.td-color {
     white-space: nowrap;
 }
 
-.form-control {
-    min-height: 2em;
-}
-
 .account_image {
     width: 56px;
     margin: 0;
@@ -143,44 +139,43 @@ th.td-color, td.td-color {
 .td-name {
     display: grid;
     grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
+    height: 40.5px;
     padding: 4px 3px 0px 1px;
     border-top: 0;
 }
 
 #last_name {
     grid-column: 1/2;
+    margin: -3px 0 1px 0;
 }
 
 #first_name {
     grid-column: 2/3;
-    margin: 0 0 0 2px;
+    margin: -3px 0 1px 2px;
 }
 
 .td-birthday {
     display: grid;
     grid-template-columns: minmax(74px, 1fr) minmax(74px, 1fr) minmax(74px, 1fr);
+    height: 40.5px;
     padding: 4px 5px 0 1px;
     border-top: 0;
     border-bottom: 0;
 }
 
-.td-birthday .form-control {
-    height: 36px;
-}
-
 #year {
     grid-column: 1/2;
-    margin: -2px 0 0 0;
+    margin: -3px 0 1px 0;
 }
 
 #month {
     grid-column: 2/3;
-    margin: -2px 0 0 2px;
+    margin: -3px 0 1px 2px;
 }
 
 #day {
     grid-column: 3/4;
-    margin: -2px 0 0 4px;
+    margin: -3px 0 1px 4px;
 }
 
 .td-gender {
@@ -239,16 +234,16 @@ form ul {
     margin: auto;
 }
 
-.password_done {
-    padding: 50px 15px;
-}
-
 .form-signup .form-control {
     position: relative;
     box-sizing: border-box;
     height: auto;
     padding: 6px;
     font-size: 16px;
+}
+
+.password_done {
+    padding: 50px 15px;
 }
 
 .btn-block {
