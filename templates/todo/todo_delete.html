@@ -9,6 +9,8 @@
 
     <p>優先度：{{ object.get_priority_display }}</p>
 
+    <p>進捗度：{{ object.get_progress_display }}</p>
+
     <p>期日：{{ todomodel.duedate|date:'Y-m-j' }}</p>
 
     <p>内容：{{ todomodel.content }}</p>

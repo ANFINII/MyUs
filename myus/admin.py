@@ -275,17 +275,17 @@ class CollaboModelAdmin(ImportExportModelAdmin):
 
 @admin.register(TodoModel)
 class TodoModelAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'comment_count', 'priority', 'duedate')
+    list_display = ('id', 'author', 'title', 'comment_count', 'priority', 'progress', 'duedate')
     list_select_related = ('author',)
-    list_filter = ('priority', 'duedate')
-    search_fields = ('title', 'author__nickname', 'priority', 'duedate')
+    list_filter = ('priority', 'progress', 'duedate')
+    search_fields = ('title', 'author__nickname', 'priority', 'progress', 'duedate')
     ordering = ('author', 'priority', '-duedate')
     readonly_fields = ('comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'priority', 'duedate')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'priority', 'progress', 'duedate')}),
         ('確認項目', {'fields': ('comment_count', 'created', 'updated')})
     ]
 
@@ -741,9 +741,9 @@ class CollaboModelAdminSite(admin.ModelAdmin):
 mymanage_site.register(CollaboModel, CollaboModelAdminSite)
 
 class TodoModelAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'comment_count', 'priority', 'duedate')
-    list_editable = ('title', 'priority', 'duedate')
-    list_filter = ('priority', 'duedate')
+    list_display = ('id', 'title', 'comment_count', 'priority', 'progress', 'duedate')
+    list_editable = ('title', 'priority', 'progress', 'duedate')
+    list_filter = ('priority', 'progress', 'duedate')
     search_fields = ('title', 'duedate')
     ordering = ('priority', '-duedate')
     actions = ('delete_action',)
@@ -752,7 +752,7 @@ class TodoModelAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'priority', 'duedate')}),
+        ('編集項目', {'fields': ('title', 'content', 'priority', 'progress', 'duedate')}),
         ('確認項目', {'fields': ('comment_count', 'created', 'updated')})
     ]
 
