@@ -11,16 +11,14 @@
     </div>
 
     <table>
-        <thead>
-            <tr><th class="td-color td-header">アカウント画像</th>
-                <th>
+        <tbody>
+            <tr><td class="td-color td-header">アカウント画像</td>
+                <td>
                     <label for="account_image_input" class="account_image">
                         <a href="{{ user.user_image.url }}" data-lightbox="group"><img src="{{ user.user_image.url }}" title="{{ user.nickname }}" width="56px" height="56xp" data-lightbox="group"></a>
                     </label>
-                </th>
+                </td>
             </tr>
-        </thead>
-        <tbody>
             <tr><td class="td-color">ユーザー名</td><td class="td-indent">{{ user.username }}</td></tr>
             <tr><td class="td-color">メールアドレス</td><td class="td-indent">{{ user.email }}</td></tr>
             <tr><td class="td-color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
@@ -30,10 +28,8 @@
             <tr><td class="td-color">性別</td><td class="td-indent">{{ user.get_gender_display }}</td></tr>
             <tr><td class="td-color">電話</td><td class="td-indent">{{ user.phone }}</td></tr>
             <tr><td class="td-color">住所</td><td class="td-indent">{{ user.location }}</td></tr>
+            <tr><td class="td-color">自己紹介</td><td class="td-indent">{{ user.introduction|linebreaksbr|urlize }}</td></tr>
         </tbody>
-        <tfoot>
-            <tr><td class="td-color td-footer">自己紹介</td><td class="td-indent td-footer">{{ user.introduction|linebreaksbr|urlize }}</td></tr>
-        </tfoot>
     </table>
 
     {% include 'parts/footer-myus.html' %}

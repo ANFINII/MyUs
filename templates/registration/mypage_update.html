@@ -25,9 +25,9 @@
             </div>
 
             <table>
-                <thead>
-                    <tr><th class="td-color td-header">バナー画像</th>
-                        <th valign="baseline">
+                <tbody>
+                    <tr><td class="td-color td-header">バナー画像</td>
+                        <td valign="baseline">
                             <label for="account_image_input" class="update_account_image">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
                                     <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
@@ -35,10 +35,8 @@
                                 </svg>
                                 <input type="file" name="mypage_image" accept="image/*" id="account_image_input" class="custom-file-input">
                             </label>
-                        </th>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
                     <tr><td class="td-color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
                     <tr><td class="td-color">メールアドレス</td><td><input type="text" name="mypage_email" value="{{ user.mypage_email }}" placeholder="メールアドレス" maxlength="120" class="form-control"></td></tr>
                     <tr><td class="td-color">フォロー数</td><td class="td-indent">{{ user.following_count }}</td></tr>
@@ -55,10 +53,8 @@
                             </svg>
                         </form>
                     </td></tr>
+                    <tr><td class="td-color">概要</td><td><textarea name="content" rows="1" placeholder="ユーザページ概要" class="form-control textarea">{{ user.content }}</textarea></td></tr>
                 </tbody>
-                <tfoot>
-                    <tr><td class="td-color td-footer">概要</td><td class="td-footer"><textarea name="content" rows="1" placeholder="ユーザページ概要" class="form-control textarea">{{ user.content }}</textarea></td></tr>
-                </tfoot>
             </table>
 
             {% include 'parts/footer-myus.html' %}

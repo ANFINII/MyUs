@@ -60,31 +60,17 @@ table {
     grid-column: 1/-1;
     grid-row: 3/4;
     overflow-y: auto;
-    border: 1px solid green;
-}
-
-.td-header {
-    border-top: 0;
-}
-
-.td-footer {
-    border-bottom: 0;
-}
-
-table th, table td {
-    height: 2.5em;
-    min-width: 125px;
-    font-weight: normal;
 }
 
 table td {
+    height: 2.5em;
     width: 100%;
+    min-width: 125px;
+    font-weight: normal;
     border: 1px solid rgb(0, 125, 0);
-    border-left: 0;
-    border-right: 0;
 }
 
-th.td-color, td.td-color {
+td.td-color {
     width: 125px;
     padding: 0 8px 0 4px;
     background-color: rgb(190, 250, 210);
@@ -139,9 +125,8 @@ th.td-color, td.td-color {
 .td-name {
     display: grid;
     grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
-    height: 40.5px;
-    padding: 4px 3px 0px 1px;
-    border-top: 0;
+    height: 38px;
+    padding: 3px 2px 0 0;
 }
 
 #last_name {
@@ -157,10 +142,8 @@ th.td-color, td.td-color {
 .td-birthday {
     display: grid;
     grid-template-columns: minmax(74px, 1fr) minmax(74px, 1fr) minmax(74px, 1fr);
-    height: 40.5px;
-    padding: 4px 5px 0 1px;
-    border-top: 0;
-    border-bottom: 0;
+    height: 38px;
+    padding: 3px 4px 0 0;
 }
 
 #year {
