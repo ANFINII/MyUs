@@ -1,9 +1,7 @@
 {% for notify in notify_setting_list %}
 <table id="notification_table">
-    <thead>
-        <tr><th class="td-color td-header">通知設定</th><th class="td-indent td-header">フォローしているユーザの投稿通知などを設定</th></tr>
-    </thead>
     <tbody>
+        <tr><td class="td-color">通知設定</td><td class="td-indent">フォローしているユーザの投稿通知などを設定</td></tr>
         <tr><td class="td-color">Video通知</td><td class="td-indent">
             <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.video }}" notify-type="video">
                 {% if notify.video %}
@@ -134,9 +132,7 @@
                 {% endif %}
             </form>
         </td></tr>
-    </tbody>
-    <tfoot>
-        <tr><td class="td-color td-footer">閲覧数通知</td><td class="td-indent td-footer">
+        <tr><td class="td-color">閲覧数通知</td><td class="td-indent">
             <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.views }}" notify-type="views">
                 {% if notify.views %}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
@@ -149,6 +145,6 @@
                 {% endif %}
             </form>
         </td></tr>
-    </tfoot>
+    </tbody>
 </table>
 {% endfor %}
