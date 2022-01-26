@@ -387,7 +387,6 @@ header {
     grid-template-rows: 48px;
     grid-gap: 0 2px;
     position: relative;
-    /* padding: 6px 0 6px 11px; */
     padding: 0 0 0 11px;
 }
 
@@ -422,7 +421,7 @@ header {
 }
 
 .notification_aria_list:hover .notification_aria_anker {
-    width: 166px;
+    width: 156px;
 }
 
 .notification_aria_list_1 {
