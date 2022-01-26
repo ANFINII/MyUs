@@ -26,9 +26,9 @@
             </div>
 
             <table>
-                <thead>
-                    <tr><th class="td-color td-header">アカウント画像</th>
-                        <th valign="baseline">
+                <tbody>
+                    <tr><td class="td-color">アカウント画像</td>
+                        <td valign="baseline">
                             <label for="account_image_input" class="update_account_image">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
                                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
@@ -36,32 +36,32 @@
                                 </svg>
                                 <input type="file" name="user_image" accept="image/*" id="account_image_input" class="custom-file-input">
                             </label>
-                        </th>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
                     <tr><td class="td-color">ユーザー名</td><td><input type="text" name="username" value="{{ user.username }}" maxlength="30" placeholder="英数字" class="form-control"></td></tr>
                     <tr><td class="td-color">メールアドレス</td><td><input type="text" name="email" value="{{ user.email }}" maxlength="120" class="form-control"></td></tr>
                     <tr><td class="td-color">投稿者名</td><td><input type="text" name="nickname" value="{{ user.nickname }}" maxlength="60" class="form-control"></td></tr>
-                    <tr>
-                        <td class="td-color">名前</td>
-                        <td class="td-name">
-                            <input type="text" name="last_name" value="{{ user.last_name }}" id="last_name" placeholder="姓" maxlength="30" class="form-control">
-                            <input type="text" name="first_name" value="{{ user.first_name }}" id="first_name" placeholder="名" maxlength="30" class="form-control">
+                    <tr><td class="td-color">名前</td>
+                        <td>
+                            <div class="td-name">
+                                <input type="text" name="last_name" value="{{ user.last_name }}" id="last_name" placeholder="姓" maxlength="30" class="form-control">
+                                <input type="text" name="first_name" value="{{ user.first_name }}" id="first_name" placeholder="名" maxlength="30" class="form-control">
+                            </div>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="td-color">生年月日</td>
-                        <td class="td-birthday">
-                            <select name="year" id="year" class="form-control">
-                                <option value="{{ user.year }}" style="display:none;">{{ user.year }}</option>
-                            </select>
-                            <select name="month" id="month" class="form-control">
-                                <option value="{{ user.month }}" style="display:none;">{{ user.month }}</option>
-                            </select>
-                            <select name="day" id="day" class="form-control">
-                                <option value="{{ user.day }}" style="display:none;">{{ user.day }}</option>
-                            </select>
+                    <tr><td class="td-color">生年月日</td>
+                        <td>
+                            <div class="td-birthday">
+                                <select name="year" id="year" class="form-control">
+                                    <option value="{{ user.year }}" style="display:none;">{{ user.year }}</option>
+                                </select>
+                                <select name="month" id="month" class="form-control">
+                                    <option value="{{ user.month }}" style="display:none;">{{ user.month }}</option>
+                                </select>
+                                <select name="day" id="day" class="form-control">
+                                    <option value="{{ user.day }}" style="display:none;">{{ user.day }}</option>
+                                </select>
+                            </div>
                         </td>
                     </tr>
                     <tr><td class="td-color">年齢</td><td class="td-indent">{{ user.age }}歳</td></tr>
@@ -78,10 +78,8 @@
                     </tr>
                     <tr><td class="td-color">電話</td><td><input type="tel" name="phone" value="{{ user.phone }}" maxlength="15" class="form-control" required></td></tr>
                     <tr><td class="td-color">住所</td><td><input type="text" name="location" value="{{ user.location }}" maxlength="255" class="form-control"></td></tr>
+                    <tr><td class="td-color">自己紹介</td><td><textarea name="introduction" rows="1" class="form-control textarea">{{ user.introduction }}</textarea></td></tr>
                 </tbody>
-                <tfoot>
-                    <tr><td class="td-color td-footer">自己紹介</td><td class="td-footer"><textarea name="introduction" rows="1" class="form-control textarea">{{ user.introduction }}</textarea></td></tr>
-                </tfoot>
             </table>
 
             {% include 'parts/footer-myus.html' %}
