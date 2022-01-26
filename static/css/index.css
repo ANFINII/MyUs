@@ -78,6 +78,13 @@
     color: rgb(100, 100, 100);
 }
 
+/* form-control */
+.form-control:focus {
+    border-radius: 4px;
+    border: 1px solid rgb(80, 170, 255);
+    box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
+}
+
 /* 全体のデザイン */
 body {
     display: grid;
@@ -803,12 +810,6 @@ header {
     border: 1px solid rgb(206, 212, 218);
     background: transparent;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-}
-
-.main_contents select:focus {
-    border-radius: 4px;
-    border: 1px solid rgb(80, 170, 255);
-    box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
 }
 
 .main_contents p textarea {
