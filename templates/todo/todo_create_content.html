@@ -18,8 +18,19 @@
         </select>
     </p>
 
+    <p><label for="id_progress">進捗度</label></p>
+    <p>
+        <select name="progress" id="id_progress" class="form-control" required>
+            <option value="" selected>--------</option>
+            <option value="0">未着手</option>
+            <option value="1">進行中</option>
+            <option value="2">完了</option>
+        </select>
+    </p>
+
     <p><label for="id_duedate">期日</label></p>
     <p><input type="text" name="duedate" placeholder="2021-12-31" id="id_duedate" class="form-control" required></p>
+
     <br>
 
     <p><input type="submit" value="作成する" class="btn btn-success btn-sm"></p>

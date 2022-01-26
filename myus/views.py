@@ -1410,7 +1410,7 @@ class TodoDetail(DetailView):
 class TodoUpdate(UpdateView):
     """TodoUpdate"""
     model = TodoModel
-    fields = ('title', 'content', 'priority', 'duedate')
+    fields = ('title', 'content', 'priority', 'progress', 'duedate')
     template_name = 'todo/todo_update.html'
 
     def get_success_url(self):

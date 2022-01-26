@@ -32,8 +32,28 @@
             </select>
         </p>
 
+        <p><label for="id_progress">進捗度</label></p>
+        <p>
+            <select name="progress" id="id_progress" class="form-control" required>
+                {% if object.progress == '0' %}
+                <option value="0" selected>未着手</option>
+                <option value="1">進行中</option>
+                <option value="2">完了</option>
+                {% elif object.progress == '1' %}
+                <option value="0">未着手</option>
+                <option value="1" selected>進行中</option>
+                <option value="2">完了</option>
+                {% elif object.progress == '2' %}
+                <option value="0">未着手</option>
+                <option value="1">進行中</option>
+                <option value="2" selected>完了</option>
+                {% endif %}
+            </select>
+        </p>
+
         <p><label for="id_duedate">期日</label></p>
         <p><input type="text" name="duedate" value="{{ todomodel.duedate|date:'Y-m-j' }}" placeholder="2020-01-01" id="id_duedate" class="form-control" required></p>
+
         <br>
 
         <p><input type="submit" value="完了する" class="btn btn-success btn-sm"></p>
