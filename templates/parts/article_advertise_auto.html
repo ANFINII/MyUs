@@ -5,7 +5,7 @@
 <section class="main_content">
     <div class="main_decolation">
         {% if user.auto_advertise %}
-        <video id="auto" class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" autoplay width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
+        <video id="auto" class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" autoplay width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
             <source src="{{ item.videos.url }}" type="video/mp4" label="2160p" res="2160">
             <source src="{{ item.videos.url }}" type="video/mp4" label="1080p" res="1080">
             <source src="{{ item.videos.url }}" type="video/mp4" label="720p" res="720">
@@ -19,7 +19,7 @@
             </p>
         </video>
         {% else %}
-        <video class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
+        <video class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
             <source src="{{ item.videos.url }}" type="video/mp4" label="2160p" res="2160">
             <source src="{{ item.videos.url }}" type="video/mp4" label="1080p" res="1080">
             <source src="{{ item.videos.url }}" type="video/mp4" label="720p" res="720">
