@@ -245,6 +245,7 @@
 	background-color: transparent;
 	width: 12em;
 	left: -1.5em;
+	max-height: auto;
 	padding-bottom: 0.5em;
 }
 
@@ -292,6 +293,38 @@
 
 .video-js .vjs-load-progress {
 	background: rgba(255,255,255,0.3);
+}
+
+.vjs-error .vjs-error-display .vjs-modal-dialog-content {
+	font-size: 15px;
+}
+
+.vjs-playback-rate .vjs-playback-rate-value {
+    line-height: 2.5;
+    font-size: 1.3em;
+}
+
+.video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-item {
+	padding: 0.1em;
+	font-size: 1em;
+}
+
+.skip {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    bottom: 40px;
+    right: 10px;
+    width: 150px;
+    box-sizing: border-box;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    border: 1px solid #00008b;
+    background-color: #0000cd;
 }
 
 /* リストホバー自動再生 */
