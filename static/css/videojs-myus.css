@@ -11,8 +11,10 @@
 	display: none;
 }
 
-.video-js .vjs-menu-button-inline.vjs-slider-active,.video-js .vjs-menu-button-inline:focus,
-.video-js .vjs-menu-button-inline:hover,.video-js.vjs-no-flex .vjs-menu-button-inline {
+.video-js .vjs-menu-button-inline.vjs-slider-active,
+.video-js .vjs-menu-button-inline:focus,
+.video-js .vjs-menu-button-inline:hover,
+.video-js.vjs-no-flex .vjs-menu-button-inline {
 	width: 10em;
 }
 
@@ -30,11 +32,14 @@
 	display: block;
 }
 
-.video-js .vjs-load-progress div,.vjs-seeking .vjs-big-play-button,.vjs-waiting .vjs-big-play-button {
+.video-js .vjs-load-progress div,
+.vjs-seeking .vjs-big-play-button,
+.vjs-waiting .vjs-big-play-button {
 	display: none !important;
 }
 
-.video-js .vjs-mouse-display:after,.video-js .vjs-play-progress:after {
+.video-js .vjs-mouse-display:after,
+.video-js .vjs-play-progress:after {
 	padding: 0 0.4em 0.3em;
 }
 
@@ -318,18 +323,18 @@
 }
 
 .video-js .vjs-control-bar {
-	background-color: rgba(0,0,0,0.3) !important;
+	background-color: rgba(0, 0, 0, 0.3) !important;
 	color: #ffffff;
 	font-size: 12px;
 }
 
 .video-js .vjs-play-progress,
-.video-js	.vjs-volume-level {
+.video-js .vjs-volume-level {
 	background-color: rgb(50, 150, 255); /* #cc181e → rgb(50, 150, 255) */
 }
 
 .video-js .vjs-load-progress {
-	background: rgba(255,255,255,0.3);
+	background: rgba(255, 255, 255, 0.3);
 }
 
 .vjs-error .vjs-error-display .vjs-modal-dialog-content {
