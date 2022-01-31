@@ -11,6 +11,11 @@
 	display: none;
 }
 
+.vjs-track-setting > select,
+.vjs-text-track-settings fieldset span > select {
+	color: rgb(0, 0, 0);
+}
+
 .video-js .vjs-menu-button-inline.vjs-slider-active,
 .video-js .vjs-menu-button-inline:focus,
 .video-js .vjs-menu-button-inline:hover,
@@ -54,9 +59,9 @@
 .video-js *,
 .video-js:after,
 .video-js:before {
+	color: inherit;
 	box-sizing: inherit;
 	font-size: inherit;
-	color: inherit;
 	line-height: inherit;
 }
 
@@ -77,8 +82,8 @@
 }
 
 .video-js .vjs-volume-menu-button.vjs-volume-menu-button-horizontal:hover .vjs-menu .vjs-menu-content {
-	height: 3em;
 	width: 6.35em;
+	height: 3em;
 }
 
 .video-js .vjs-control:focus:before,
@@ -90,8 +95,8 @@
 .video-js .vjs-control:hover,
 .video-js .vjs-control:focus {
 	text-shadow: 0 0 1em rgba(0, 149, 255, 0.8),
-	 0 0 2em rgba(0, 150, 255, 0.5),
-	 0 0 3em rgba(0, 150, 255, 0.2);
+	0 0 2em rgba(0, 150, 255, 0.5),
+	0 0 3em rgba(0, 150, 255, 0.2);
 }
 
 .vjs-subs-caps-button .vjs-menu-button:focus:before,
@@ -174,11 +179,11 @@
 
 .video-js .vjs-progress-control {
 	position: absolute;
+	top: -0.3em; /* 0.5em → 0.3em */
 	left: 0;
 	right: 0;
 	width: 100%;
 	height: 0.3em; /* 0.5em → 0.3em */
-	top: -0.3em; /* 0.5em → 0.3em */
 }
 
 .video-js .vjs-progress-control .vjs-load-progress,
@@ -192,8 +197,8 @@
 }
 
 .video-js .vjs-progress-control:hover {
-	height: 0.5em; /* 1.5em → 0.5em */
 	top: -0.5em; /* 1.5em → 0.5em */
+	height: 0.5em; /* 1.5em → 0.5em */
 }
 
 .video-js .vjs-control-bar {
@@ -281,8 +286,8 @@
 
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-content {
 	background-color: transparent;
-	width: 12em;
-	left: -1.5em;
+	width: 10em;
+	left: -4em;
 	max-height: auto;
 	padding-bottom: 0.5em;
 }
@@ -374,15 +379,15 @@
 	display: none;
 	border: 0 solid #fff; /* none → 0.06666em solid #fff */
 	opacity: 0;
-	background-color: rgba(255, 255, 255, 0); /* #cc181e → rgba(0, 105, 255, 0) */
 	color: rgba(255, 255, 255, 0);
+	background-color: rgba(255, 255, 255, 0); /* #cc181e → rgba(0, 105, 255, 0) */
 }
 
 @import "bourbon";
 .video .video-js {
-  background-color: rgb(0, 0, 0) !important;
+	background-color: rgb(0, 0, 0) !important;
 }
 
 .video .vjs-control-bar {
-  display: none !important;
+	display: none !important;
 }
