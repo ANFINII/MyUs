@@ -287,7 +287,7 @@
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-content {
 	background-color: transparent;
 	width: 10em;
-	left: -4em;
+	left: -3.5em;
 	max-height: auto;
 	padding-bottom: 0.5em;
 }
@@ -296,8 +296,13 @@
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-title {
 	background-color: #151b17;
 	margin: 0.3em 0;
-	padding: 0.5em;
 	border-radius: 0.3em;
+}
+
+.vjs-menu li.vjs-menu-title {
+	text-transform: none;
+	font-weight: lighter;
+	line-height: 1.5em;
 }
 
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-item.vjs-selected {
@@ -354,6 +359,10 @@
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-item {
 	padding: 0.1em;
 	font-size: 1em;
+}
+
+.video-js.vjs-hls-quality-selector {
+    display: block
 }
 
 .skip {
