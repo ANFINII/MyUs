@@ -3,7 +3,7 @@
 
 {% block customcss %}
 <link rel="stylesheet" type="text/css" href="https://vjs.zencdn.net/7.17.0/video-js.css">
-<link rel="stylesheet" type="text/css" href="//unpkg.com/videojs-record/dist/css/videojs.record.min.css">
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/videojs-record/dist/css/videojs.record.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
 <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
@@ -11,7 +11,6 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/ckeditor.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/audio.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/videojs-myus.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/videojs-resolution-switcher.css' %}">
 {% endblock customcss %}
 
 {% block header %}
@@ -423,10 +422,12 @@
 
 <!-- video-js -->
 <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
+<script src="{% static 'js/videojs-contrib-quality-levels.min.js' %}"></script>
+<script src="{% static 'js/videojs-hls-quality-selector.min.js' %}"></script>
+<script>let player = videojs('video'); player.hlsQualitySelector();</script>
 <script src="//unpkg.com/videojs-record/dist/videojs.record.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-resolution-switcher/0.4.2/videojs-resolution-switcher.min.js"></script>
-<script>videojs('video').videoJsResolutionSwitcher()</script>
 <script src="{% static 'js/video_auto.js' %}"></script>
+<script src="{% static 'js/video_volume.js' %}"></script>
 
 <!-- その他-js -->
 <script src="{% static 'js/pjax.js' %}"></script>
