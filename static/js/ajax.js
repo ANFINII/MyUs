@@ -197,13 +197,13 @@ $(document).on('click', '.like_form', function(event) {
             $('.like_color').parent().removeClass('like_no');
             $('.like_color').addClass('bi-hand-thumbs-up-fill');
             $('.like_color').parent().addClass('like_fill');
-            $('#like_count_' + id).html(response['total_like']);
+            $('#like_count_object_' + id).html(response['total_like']);
         } else {
             $('.like_color').removeClass('bi-hand-thumbs-up-fill');
             $('.like_color').parent().removeClass('like_fill');
             $('.like_color').addClass('bi-hand-thumbs-up');
             $('.like_color').parent().addClass('like_no');
-            $('#like_count_' + id).html(response['total_like']);
+            $('#like_count_object_' + id).html(response['total_like']);
         }
     })
     .fail(function(response) {
