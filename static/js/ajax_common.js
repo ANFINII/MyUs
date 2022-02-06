@@ -1,4 +1,4 @@
-// 検索タグの作成ボタンの処理を定義
+// 検索タグの作成ボタンの処理
 $(document).on('click', '.main_tag_2', function(event) {
     event.preventDefault();
     const url = $(this).closest('form').attr('action');
@@ -24,7 +24,7 @@ $(document).on('click', '.main_tag_2', function(event) {
 });
 
 
-// フォローボタンクリック時の処理を定義
+// フォローボタンクリック時の処理
 $(document).on('click', '.follow_form', function(event) {
     event.preventDefault();
     const url = $(this).attr('action');
@@ -54,7 +54,7 @@ $(document).on('click', '.follow_form', function(event) {
 });
 
 
-// いいねボタンクリック時の処理を定義
+// いいねボタンクリック時の処理
 $(document).on('click', '.like_form', function(event) {
     event.preventDefault();
     const id = $(this).attr('value');
@@ -87,7 +87,7 @@ $(document).on('click', '.like_form', function(event) {
 });
 
 
-// コメントいいねボタンクリック時の処理を定義
+// コメントいいねボタンクリック時の処理
 $(document).on('click', '.like_form_comment', function(event) {
     event.preventDefault();
     const url = $(this).parent().attr('action');
@@ -112,6 +112,92 @@ $(document).on('click', '.like_form_comment', function(event) {
             $('.like_color_' + comment_id).parent().addClass('like_no');
             $('#like_count_' + comment_id).html(response['total_like']);
         }
+    })
+    .fail(function(response) {
+        console.log(response);
+    })
+});
+
+
+// 通知リンクをクリックした時の処理
+$(document).on('click', '.notification_aria_anker', function() {
+    const url = $(this).attr('action');
+    const notification_id = $(this).attr('notification-id');
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {'notification_id': notification_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+        timeout: 10000,
+    })
+    .done(function() {
+    })
+    .fail(function() {
+    })
+});
+
+
+// 通知のバツボタンをクリックした時の処理
+$(document).on('click', '.notification_aria_list_2', function(event) {
+    event.preventDefault();
+    const url = $(this).closest('form').attr('action');
+    const notification_id = $(this).attr('notification-id');
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {'notification_id': notification_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+        timeout: 10000,
+    })
+    .done(function(response) {
+        document.getElementById('notification_aria_link_' + notification_id).remove();
+        if (response.notification_count === 0) {
+            $('.bi-bell-fill').removeClass('active');
+            $('.bi-exclamation-lg').removeClass('active');
+        }
+    })
+    .fail(function(response) {
+        console.log(response);
+    })
+});
+
+
+// 通知設定のトグルボタンをクリックした時の処理
+$(document).on('click', '.toggle_button', function(event) {
+    event.preventDefault();
+    const url = $(this).closest('form').attr('action');
+    const notify = $(this).closest('form').attr('notify');
+    const notify_type = $(this).closest('form').attr('notify-type');
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {'notify': notify, 'notify_type': notify_type, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+        timeout: 10000,
+    })
+    .done(function(response) {
+        $('#notification_table').html(response.notify_setting_lists);
+    })
+    .fail(function(response) {
+        console.log(response);
+    })
+});
+
+
+// MyPageの全体広告のトグルボタンをクリックした時の処理
+$(document).on('click', '.toggle_mypage', function(event) {
+    event.preventDefault();
+    const url = $(this).closest('form').attr('action');
+    const advertise = $(this).closest('form').attr('advertise');
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {'advertise': advertise, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: 'json',
+        timeout: 10000,
+    })
+    .done(function(response) {
+        $('#auto_advertise').html(response.advertise);
     })
     .fail(function(response) {
         console.log(response);
