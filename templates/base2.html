@@ -422,21 +422,21 @@
 
 <!-- video-js -->
 <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
+<script src="//unpkg.com/videojs-record/dist/videojs.record.min.js"></script>
 <script src="{% static 'js/videojs-contrib-quality-levels.min.js' %}"></script>
 <script src="{% static 'js/videojs-hls-quality-selector.min.js' %}"></script>
 <script>let player = videojs('video'); player.hlsQualitySelector();</script>
-<script src="//unpkg.com/videojs-record/dist/videojs.record.min.js"></script>
-<script src="{% static 'js/video_auto.js' %}"></script>
 <script src="{% static 'js/video_volume.js' %}"></script>
+<script src="{% static 'js/video_auto.js' %}"></script>
 
 <!-- その他-js -->
 <script src="{% static 'js/pjax.js' %}"></script>
 <script src="{% static 'js/ajax_common.js' %}"></script>
+<script src="{% static 'js/attachment_name.js' %}"></script>
 <script src="{% static 'js/shortcut.js' %}"></script>
 <script src="{% static 'js/shortcut_myus.js' %}"></script>
 <script src="{% static 'js/textarea.js' %}"></script>
 <script src="{% static 'js/textarea-auto-height.js' %}"></script>
 <script src="{% static 'js/ckeditor_config.js' %}"></script>
-<script src="{% static 'js/attachment_name.js' %}"></script>
 <script src="{% static 'js/csrf.js' %}"></script>
 {% endblock customjs %}
