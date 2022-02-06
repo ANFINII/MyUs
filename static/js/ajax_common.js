@@ -23,6 +23,22 @@ $(document).on('click', '.main_tag_2', function(event) {
     })
 });
 
+// 検索タグスクロールボタンを押した時の処理 右に0.2秒かけて500px移動
+$(document).on('click', '.main_tag_right', function() {
+    $('.main_tag_n').animate({
+        scrollLeft: $('.main_tag_n').scrollLeft() + 300,
+    }, 200);
+    return false;
+});
+
+// 検索タグスクロールボタンを押した時の処理 左に0.2秒かけて500px移動
+$(document).on('click', '.main_tag_left', function() {
+    $('.main_tag_n').animate({
+        scrollLeft: $('.main_tag_n').scrollLeft() - 300,
+    }, 200);
+    return false;
+});
+
 
 // フォローボタンクリック時の処理
 $(document).on('click', '.follow_form', function(event) {
