@@ -33,9 +33,15 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+def user_image_path(instance, filename):
+    return f'users/images_user/{instance.id}/{filename}'
+
+def mypage_image_path(instance, filename):
+    return f'users/images_mypage/{instance.id}/{filename}'
+
 class User(AbstractBaseUser, PermissionsMixin):
     """CustomUserModel"""
-    user_image      = models.ImageField(upload_to='users/user_images', default='../static/img/user_icon.png', blank=True, null=True)
+    user_image      = models.ImageField(upload_to=user_image_path, default='../static/img/user_icon.png', blank=True, null=True)
     email           = models.EmailField(max_length=120, unique=True, db_index=True)
     username        = models.CharField(max_length=30, unique=True, db_index=True)
     nickname        = models.CharField(max_length=60, unique=True, db_index=True)
@@ -65,7 +71,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined     = models.DateTimeField(default=timezone.now)
 
     # Myページ用フィールド
-    mypage_image    = models.ImageField(upload_to='users/mypage_images', default='../static/img/MyUs_banner.png', blank=True, null=True)
+    mypage_image    = models.ImageField(upload_to=mypage_image_path, default='../static/img/MyUs_banner.png', blank=True, null=True)
     mypage_email    = models.EmailField(max_length=120, blank=True, null=True, default='abc@gmail.com')
     content         = models.TextField(blank=True)
     follower_count  = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
@@ -107,6 +113,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_follower_count(self):
         self.follower_count = FollowModel.objects.filter(following=User.id).count()
         return self.follower_count
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            user_image = self.user_image
+            mypage_image = self.mypage_image
+            self.user_image = None
+            self.mypage_image = None
+            super().save(*args, **kwargs)
+            self.user_image = user_image
+            self.mypage_image = mypage_image
+            if 'force_insert' in kwargs:
+                kwargs.pop('force_insert')
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = '00 User'
@@ -193,13 +212,20 @@ class VideoManager(models.Manager):
     def search(self, query=None):
         return self.get_queryset().search(query=query)
 
+def images_video_upload_path(instance, filename):
+    return f'images/images_video/{instance.author.id}/{instance.id}/{filename}'
+
+def videos_video_upload_path(instance, filename):
+    return f'videos/videos_video/{instance.author.id}/{instance.id}/{filename}'
+
 class VideoModel(models.Model):
     """VideoModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    images   = models.ImageField(upload_to='images/video_images')
-    videos   = models.FileField(upload_to='videos/video_videos')
+    images   = models.ImageField(upload_to=images_video_upload_path)
+    videos   = models.FileField(upload_to=videos_video_upload_path)
+    # convert  = models.FileField(upload_to=videos_video_upload_path)
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
@@ -221,6 +247,19 @@ class VideoModel(models.Model):
 
     def comment_count(self):
         return self.comments.filter(parent__isnull=True).count()
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            images = self.images
+            videos = self.videos
+            self.images = None
+            self.videos = None
+            super().save(*args, **kwargs)
+            self.images = images
+            self.videos = videos
+            if 'force_insert' in kwargs:
+                kwargs.pop('force_insert')
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = '01 Video'
@@ -245,13 +284,19 @@ class LiveManager(models.Manager):
     def search(self, query=None):
         return self.get_queryset().search(query=query)
 
+def images_live_upload_path(instance, filename):
+    return f'images/images_live/{instance.author.id}/{instance.id}/{filename}'
+
+def videos_live_upload_path(instance, filename):
+    return f'videos/videos_live/{instance.author.id}/{instance.id}/{filename}'
+
 class LiveModel(models.Model):
     """LiveModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    images   = models.ImageField(upload_to='images/live_images')
-    lives    = models.FileField(upload_to='videos/live_videos')
+    images   = models.ImageField(upload_to=images_live_upload_path)
+    lives    = models.FileField(upload_to=videos_live_upload_path)
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
@@ -273,6 +318,19 @@ class LiveModel(models.Model):
 
     def comment_count(self):
         return self.comments.filter(parent__isnull=True).count()
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            images = self.images
+            lives = self.lives
+            self.images = None
+            self.lives = None
+            super().save(*args, **kwargs)
+            self.images = images
+            self.lives = lives
+            if 'force_insert' in kwargs:
+                kwargs.pop('force_insert')
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = '02 Live'
@@ -298,13 +356,16 @@ class MusicManager(models.Manager):
     def search(self, query=None):
         return self.get_queryset().search(query=query)
 
+def musics_upload_path(instance, filename):
+    return f'musics/{instance.author.id}/{instance.id}/{filename}'
+
 class MusicModel(models.Model):
     """MusicModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
     lyrics   = models.TextField(blank=True, null=True)
-    musics   = models.FileField(upload_to='musics/')
+    musics   = models.FileField(upload_to=musics_upload_path)
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
     download = models.BooleanField(default=True)
@@ -327,6 +388,16 @@ class MusicModel(models.Model):
 
     def comment_count(self):
         return self.comments.filter(parent__isnull=True).count()
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            musics = self.musics
+            self.musics = None
+            super().save(*args, **kwargs)
+            self.musics = musics
+            if 'force_insert' in kwargs:
+                kwargs.pop('force_insert')
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = '03 Music'
@@ -351,12 +422,15 @@ class PictureManager(models.Manager):
     def search(self, query=None):
         return self.get_queryset().search(query=query)
 
+def images_picture_upload_path(instance, filename):
+    return f'images/images_picture/{instance.author.id}/{instance.id}/{filename}'
+
 class PictureModel(models.Model):
     """PictureModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    images   = models.ImageField(upload_to='images/picture_images')
+    images   = models.ImageField(upload_to=images_picture_upload_path)
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
@@ -378,6 +452,16 @@ class PictureModel(models.Model):
 
     def comment_count(self):
         return self.comments.filter(parent__isnull=True).count()
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            images = self.images
+            self.images = None
+            super().save(*args, **kwargs)
+            self.images = images
+            if 'force_insert' in kwargs:
+                kwargs.pop('force_insert')
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = '04 Picture'
@@ -403,12 +487,15 @@ class BlogManager(models.Manager):
     def search(self, query=None):
         return self.get_queryset().search(query=query)
 
+def images_blog_upload_path(instance, filename):
+    return f'images/images_blog/{instance.author.id}/{instance.id}/{filename}'
+
 class BlogModel(models.Model):
     """BlogModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    images   = models.ImageField(upload_to='images/blog_images')
+    images   = models.ImageField(upload_to=images_blog_upload_path)
     richtext = RichTextUploadingField(blank=True, null=True)
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
@@ -431,6 +518,16 @@ class BlogModel(models.Model):
 
     def comment_count(self):
         return self.comments.filter(parent__isnull=True).count()
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            images = self.images
+            self.images = None
+            super().save(*args, **kwargs)
+            self.images = images
+            if 'force_insert' in kwargs:
+                kwargs.pop('force_insert')
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = '05 Blog'
@@ -573,14 +670,20 @@ class NotificationModel(models.Model):
     class Meta:
         verbose_name_plural = '12 通知確認'
 
+def images_adver_upload_path(instance, filename):
+    return f'images/images_adver/{instance.author.id}/{instance.id}/{filename}'
+
+def videos_adver_upload_path(instance, filename):
+    return f'videos/videos_adver/{instance.author.id}/{instance.id}/{filename}'
+
 class AdvertiseModel(models.Model):
     """AdvertiseModel"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
     url     = models.URLField()
     content = models.TextField()
-    images  = models.ImageField(upload_to='images/adver_images')
-    videos  = models.FileField(upload_to='videos/adver_videos')
+    images  = models.ImageField(upload_to=images_adver_upload_path)
+    videos  = models.FileField(upload_to=videos_adver_upload_path)
     publish = models.BooleanField(default=True)
     read    = models.IntegerField(blank=True, null=True, default=0)
     choice  = (('0', '全体'), ('1', '個別'))
@@ -591,6 +694,19 @@ class AdvertiseModel(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            images = self.images
+            videos = self.videos
+            self.images = None
+            self.videos = None
+            super().save(*args, **kwargs)
+            self.images = images
+            self.videos = videos
+            if 'force_insert' in kwargs:
+                kwargs.pop('force_insert')
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = '13 広告設定'
