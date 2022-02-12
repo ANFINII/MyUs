@@ -92,7 +92,7 @@ class VideoModelAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'videos', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'videos', 'convert', 'publish', 'tags', 'like', 'read')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -461,7 +461,7 @@ class VideoModelAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'images', 'videos', 'publish', 'tags')}),
+        ('編集項目', {'fields': ('title', 'content', 'images', 'videos', 'convert', 'publish', 'tags')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
