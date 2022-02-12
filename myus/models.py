@@ -225,7 +225,7 @@ class VideoModel(models.Model):
     content  = models.TextField()
     images   = models.ImageField(upload_to=images_video_upload_path)
     videos   = models.FileField(upload_to=videos_video_upload_path)
-    # convert  = models.FileField(upload_to=videos_video_upload_path)
+    convert  = models.FileField(upload_to=videos_video_upload_path)
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
     tags     = models.ManyToManyField(TagModel, blank=True)
@@ -252,11 +252,14 @@ class VideoModel(models.Model):
         if self.id is None:
             images = self.images
             videos = self.videos
+            convert = self.convert
             self.images = None
             self.videos = None
+            self.convert = None
             super().save(*args, **kwargs)
             self.images = images
             self.videos = videos
+            self.convert = convert
             if 'force_insert' in kwargs:
                 kwargs.pop('force_insert')
         super().save(*args, **kwargs)
