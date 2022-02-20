@@ -98,7 +98,7 @@ urlpatterns = [
     path('pjax', pjax, name='pjax'),
     path('signup', signup_form, name='signup'),
     path('login', login_form, name='login'),
-    path('logout', logout_form, name='logout'),
+    path('login', logout_form, name='logout'),
     path('withdrawal', Withdrawal.as_view(), name='withdrawal'),
     path('withdrawal/<str:token>', Withdrawal.as_view(), name='withdrawal'),
 ]
