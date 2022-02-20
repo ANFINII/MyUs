@@ -18,14 +18,14 @@ class UserManager(BaseUserManager):
         if not username:
             raise ValueError('Users must have an username')
         elif not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError('Users must have an email')
         user = self.model(username=username, email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, email, password, **extra_fields):
-        user = self.create_user(username, email=self.normalize_email(email), password=password)
+    def create_superuser(self, username, nickname, email, password, **extra_fields):
+        user = self.create_user(username, nickname=nickname, email=self.normalize_email(email), password=password)
         user.is_premium = True
         user.is_staff = True
         user.is_admin = True
