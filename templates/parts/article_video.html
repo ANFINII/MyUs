@@ -1,20 +1,20 @@
 {% load static %}
 
 <section class="main_content">
-    <div class="main_decolation">
-        <div class="video video_auto">
-            <a href="{% url 'myus:video_detail' item.pk item.title %}">
-                <video class="video-js vjs-16-9" muted width="272" height="153" controlsList="nodownload" oncontextmenu="return false;" poster="{{ item.images.url }}" data-setup="">
-                    <source src="{{ item.videos.url }}#t=,16" type="video/mp4" label="360p" res="360">
-                    <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>
-                    <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
-                    <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
-                </video>
-            </a>
-            <a href="{% url 'myus:video_detail' item.pk item.title %}" class="author_space">
-                {% include 'parts/author_space.html' %}
-                {% include 'parts/content_title.html' %}
-            </a>
-        </div>
+  <div class="main_decolation">
+    <div class="video video_auto">
+      <a href="{% url 'myus:video_detail' item.pk item.title %}">
+        <video class="video-js vjs-16-9" muted width="272" height="153" controlsList="nodownload" oncontextmenu="return false;" poster="{{ item.images.url }}" data-setup="">
+          <source src="{{ item.videos.url }}#t=,16" type="video/mp4" label="360p" res="360">
+          <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>
+          <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
+          <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
+        </video>
+      </a>
+      <a href="{% url 'myus:video_detail' item.pk item.title %}" class="author_space">
+        {% include 'parts/author_space.html' %}
+        {% include 'parts/content_title.html' %}
+      </a>
     </div>
+  </div>
 </section>

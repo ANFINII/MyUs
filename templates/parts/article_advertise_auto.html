@@ -3,37 +3,37 @@
 
 {% for item in advertise_auto_list %}
 <section class="main_content">
-    <div class="main_decolation">
-        {% if user.auto_advertise %}
-        <video id="auto" class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" autoplay width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
-        {% else %}
-        <video class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
-        {% endif %}
-            <source src="{{ item.videos.url }}" type="video/mp4">
-            <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>
-            <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
-            <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
-            <p class="vjs-no-js">この動画を見るには、JavaScriptを有効にしてください!
-                <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-            </p>
-        </video>
-        <form method="POST" action="{% url 'myus:advertise_read' %}" advertise-id="{{ item.id }}">
-            {% csrf_token %}
-            <a href="{{ item.url }}" class="author_space advertise_anker">
-                {% include 'parts/author_space.html' %}
-                <div title="{{ item.title }}" class="content_title">{{ item.title }}</div>
-                <span class="view_good">
-                    <div class="view_good_font content_nickname">
-                        {{ item.author.nickname }}
-                    </div>
+  <div class="main_decolation">
+    {% if user.auto_advertise %}
+    <video id="auto" class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" autoplay width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
+    {% else %}
+    <video class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
+    {% endif %}
+      <source src="{{ item.videos.url }}" type="video/mp4">
+      <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>
+      <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
+      <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
+      <p class="vjs-no-js">この動画を見るには、JavaScriptを有効にしてください!
+        <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+      </p>
+    </video>
+    <form method="POST" action="{% url 'myus:advertise_read' %}" advertise-id="{{ item.id }}">
+      {% csrf_token %}
+      <a href="{{ item.url }}" class="author_space advertise_anker">
+        {% include 'parts/author_space.html' %}
+        <div title="{{ item.title }}" class="content_title">{{ item.title }}</div>
+        <span class="view_good">
+          <div class="view_good_font content_nickname">
+            {{ item.author.nickname }}
+          </div>
 
-                    <div class="view_good_font view_good_inline">
-                        <i title="閲覧数" class="bi bi-caret-right-square view_good_space"></i>
-                        <span class="advertise_read">{{ item.read|intcomma }}</span>
-                    </div>
-                </span>
-            </a>
-        </form>
-    </div>
+          <div class="view_good_font view_good_inline">
+            <i title="閲覧数" class="bi bi-caret-right-square view_good_space"></i>
+            <span class="advertise_read">{{ item.read|intcomma }}</span>
+          </div>
+        </span>
+      </a>
+    </form>
+  </div>
 </section>
 {% endfor %}
