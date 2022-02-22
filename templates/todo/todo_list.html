@@ -1,16 +1,16 @@
 <h1>ToDo
-    {% if query %}
-    <section class="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>
-    {% endif %}
+  {% if query %}
+  <section class="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>
+  {% endif %}
 </h1>
 
 {% if user.is_authenticated %}
 <div class="todo_create">
-    <a href="{% url 'myus:todo_create' %}" path="{% url 'myus:pjax' %}" class="btn btn-primary btn-sm pjax_button" role="button">ToDo作成</a>
+  <a href="{% url 'myus:todo_create' %}" path="{% url 'myus:pjax' %}" class="btn btn-primary btn-sm pjax_button" role="button">ToDo作成</a>
 </div>
 
 <article class="main_article">
-    {% include 'parts/article_todo.html' %}
+  {% include 'parts/article_todo.html' %}
 </article>
 {% else %}
 <h2 class="login_required">ログインしてください</h2>
