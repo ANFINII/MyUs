@@ -4,43 +4,43 @@
 
 {% block content %}
 <main class="main_contents">
-    <h1>料金プランの変更</h1>
-    <article class="main_article">
-        <section class="main_content_plan">
-            <div class="main_decolation_payment">
-                <div class="payment_img">
-                    <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
-                    Basic
-                </div>
-            </div>
-            <div class="content_title">【料金】550円</div>
-            <div class="content_description">
-                Basicプランに変更<br>
-                ・個別広告表示1つ<br>
-                ・全体広告OFF
-            </div>
-        </section>
+  <h1>料金プランの変更</h1>
+  <article class="main_article">
+    <section class="main_content_plan">
+      <div class="main_decolation_payment">
+        <div class="payment_img">
+          <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
+          Basic
+        </div>
+      </div>
+      <div class="content_title">【料金】550円</div>
+      <div class="content_description">
+        Basicプランに変更<br>
+        ・個別広告表示1つ<br>
+        ・全体広告OFF
+      </div>
+    </section>
 
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
-            <label class="form-check-label" for="exampleRadios1">
-                Basic
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-            <label class="form-check-label" for="exampleRadios2">
-                Standard
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3">
-            <label class="form-check-label" for="exampleRadios3">
-                Premium
-            </label>
-        </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+      <label class="form-check-label" for="exampleRadios1">
+        Basic
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+      <label class="form-check-label" for="exampleRadios2">
+        Standard
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3">
+      <label class="form-check-label" for="exampleRadios3">
+        Premium
+      </label>
+    </div>
 
-        <button class="btn btn-primary btn-sm">変更する</button>
-    </article>
+    <button class="btn btn-primary btn-sm">変更する</button>
+  </article>
 </main>
 {% endblock content %}
