@@ -5,30 +5,30 @@
 
 {% block content %}
 <main class="main_contents">
-    <article class="article_detail">
-        <div class="article_detail_aria">
-            <div class="article_detail_aria_2">
-                <object class="todo_link_detail">
-                    <a href="{% url 'myus:todo_update' object.pk object.title %}" class="btn btn-success btn-sm" role="button">編集</a>
-                    <a href="{% url 'myus:todo_delete' object.pk object.title %}" class="btn btn-danger btn-sm" role="button">削除</a>
-                </object>
-            </div>
-            <div class="article_detail_aria_todo">
-                <span>優先度：{{ object.get_priority_display }}<span>
-                <span>進捗度：{{ object.get_progress_display }}<span>
-                <span>期日：{{ object.duedate }}<span>
-            </div>
-        </div>
+  <article class="article_detail">
+    <div class="article_detail_aria">
+      <div class="article_detail_aria_2">
+        <object class="todo_link_detail">
+          <a href="{% url 'myus:todo_update' object.pk object.title %}" class="btn btn-success btn-sm" role="button">編集</a>
+          <a href="{% url 'myus:todo_delete' object.pk object.title %}" class="btn btn-danger btn-sm" role="button">削除</a>
+        </object>
+      </div>
+      <div class="article_detail_aria_todo">
+        <span>優先度：{{ object.get_priority_display }}<span>
+        <span>進捗度：{{ object.get_progress_display }}<span>
+        <span>期日：{{ object.duedate }}<span>
+      </div>
+    </div>
 
-        <div class="article_detail_section">
-            <div class="article_detail_section_1">
-                {% include 'parts/common/common.html' %}
-            </div>
-            <div class="article_detail_section_2">
-                {% include 'parts/article_todo.html' %}
-            </div>
-        </div>
-    </article>
+    <div class="article_detail_section">
+      <div class="article_detail_section_1">
+        {% include 'parts/common/common.html' %}
+      </div>
+      <div class="article_detail_section_2">
+        {% include 'parts/article_todo.html' %}
+      </div>
+    </div>
+  </article>
 </main>
 {% endblock content %}
 
