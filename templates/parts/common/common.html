@@ -2,38 +2,38 @@
 {% load humanize %}
 
 <div class="article_detail_aria">
-    <h1 title="{{ object.title }}">{{ object.title }}</h1>
+  <h1 title="{{ object.title }}">{{ object.title }}</h1>
 
-    <time class="article_detail_aria_1">{{ object.created|date:'Y/m/d H:i' }}</time>
+  <time class="article_detail_aria_1">{{ object.created|date:'Y/m/d H:i' }}</time>
 
-    <div class="article_detail_aria_2">
-        <div class="read">
-            <i class="bi bi-caret-right-square icon-font" title="閲覧数"></i>
-            <span>{{ object.read|intcomma }}</span>
-        </div>
-        {% if user.is_authenticated %}
-        <form method="POST" action="{% url 'myus:like_form' %}" path="{{ request.path }}">
-            {% csrf_token %}
-            {% if liked %}
-            <button type="submit" name="videomodel_id" value="{{ object.id }}" class="like_form like_fill">
-                <i class="bi bi-hand-thumbs-up-fill icon-font like_color" title="いいね"></i>
-            </button>
-            {% else %}
-            <button type="submit" name="videomodel_id" value="{{ object.id }}" class="like_form like_no">
-                <i class="bi bi-hand-thumbs-up icon-font like_color" title="いいね"></i>
-            </button>
-            {% endif %}
-            <span id="like_count_object_{{ object.id }}" class="like_count">{{ object.total_like|intcomma }}</span>
-        </form>
-        {% else %}
-        <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
-        <span>{{ object.total_like|intcomma }}</span>
-        {% endif %}
+  <div class="article_detail_aria_2">
+    <div class="read">
+      <i class="bi bi-caret-right-square icon-font" title="閲覧数"></i>
+      <span>{{ object.read|intcomma }}</span>
     </div>
+    {% if user.is_authenticated %}
+    <form method="POST" action="{% url 'myus:like_form' %}" path="{{ request.path }}">
+      {% csrf_token %}
+      {% if liked %}
+      <button type="submit" name="videomodel_id" value="{{ object.id }}" class="like_form like_fill">
+        <i class="bi bi-hand-thumbs-up-fill icon-font like_color" title="いいね"></i>
+      </button>
+      {% else %}
+      <button type="submit" name="videomodel_id" value="{{ object.id }}" class="like_form like_no">
+        <i class="bi bi-hand-thumbs-up icon-font like_color" title="いいね"></i>
+      </button>
+      {% endif %}
+      <span id="like_count_object_{{ object.id }}" class="like_count">{{ object.total_like|intcomma }}</span>
+    </form>
+    {% else %}
+    <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
+    <span>{{ object.total_like|intcomma }}</span>
+    {% endif %}
+  </div>
 
-    <div class="article_detail_aria_3">
-        {% include 'parts/common/tag.html' %}
-    </div>
+  <div class="article_detail_aria_3">
+    {% include 'parts/common/tag.html' %}
+  </div>
 </div>
 <hr>
 
@@ -42,33 +42,33 @@
 <label for="content_detail_check_id" class="content_detail_check_label2">縮小表示</label>
 
 <div class="content_detail_aria">
-    <div class="content_detail">
-        <a href="{% url 'myus:userpage' object.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ object.author.nickname }}" class="pjax_button_userpage">
-            <img src="{{ object.author.user_image.url }}" title="{{ object.author.nickname }}" class="profile_image_detail">
-        </a>
-        <div class="username_space">{{ object.author.nickname }}</div>
-        <div class="registered_person">登録者数
-            <span class="follower_count">{{ object.author.follower_count|intcomma }}</span>
-        </div>
-        <p class="content_detail_p1">{{ object.content|linebreaksbr|urlize }}</p>
-
-        <div class="content_detail_p2">
-            {% if user.nickname == object.author.nickname %}
-            <button class="btn btn-secondary" disabled>フォローする</button>
-            {% elif user.is_authenticated %}
-            <form method="POST" action="{% url 'myus:follow_create' object.author.nickname %}" class="follow_form">
-                {% csrf_token %}
-                {% if followed %}
-                <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-danger follow_change">解除する</button>
-                {% else %}
-                <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-success follow_change">フォローする</button>
-                {% endif %}
-            </form>
-            {% else %}
-            <button class="btn btn-secondary" disabled>フォローする</button>
-            {% endif %}
-        </div>
+  <div class="content_detail">
+    <a href="{% url 'myus:userpage' object.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ object.author.nickname }}" class="pjax_button_userpage">
+      <img src="{{ object.author.user_image.url }}" title="{{ object.author.nickname }}" class="profile_image_detail">
+    </a>
+    <div class="username_space">{{ object.author.nickname }}</div>
+    <div class="registered_person">登録者数
+      <span class="follower_count">{{ object.author.follower_count|intcomma }}</span>
     </div>
+    <p class="content_detail_p1">{{ object.content|linebreaksbr|urlize }}</p>
+
+    <div class="content_detail_p2">
+      {% if user.nickname == object.author.nickname %}
+      <button class="btn btn-secondary" disabled>フォローする</button>
+      {% elif user.is_authenticated %}
+      <form method="POST" action="{% url 'myus:follow_create' object.author.nickname %}" class="follow_form">
+        {% csrf_token %}
+        {% if followed %}
+        <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-danger follow_change">解除する</button>
+        {% else %}
+        <button type="submit" name="following_id" value="{{ object.author.nickname }}" class="btn btn-success follow_change">フォローする</button>
+        {% endif %}
+      </form>
+      {% else %}
+      <button class="btn btn-secondary" disabled>フォローする</button>
+      {% endif %}
+    </div>
+  </div>
 </div>
 <hr>
 
@@ -79,20 +79,20 @@
 <label for="comment_aria_check_id" class="comment_aria_check_label2">縮小表示</label>
 
 <div id="comment_aria" class="comment_aria">
-    {% include 'parts/common/comment/comment.html' %}
+  {% include 'parts/common/comment/comment.html' %}
 </div>
 
 <hr class="comment_aria_hr">
 
 <div class="advertise_aria">
-    <h2>広告表示</h2>
-    <article class="main_article">
-        {% include 'parts/article_advertise_auto.html' %}
-    </article>
-    <hr>
+  <h2>広告表示</h2>
+  <article class="main_article">
+    {% include 'parts/article_advertise_auto.html' %}
+  </article>
+  <hr>
 
-    <h2>個別広告</h2>
-    <article class="main_article">
-        {% include 'parts/article_advertise.html' %}
-    </article>
+  <h2>個別広告</h2>
+  <article class="main_article">
+    {% include 'parts/article_advertise.html' %}
+  </article>
 </div>

@@ -1,42 +1,42 @@
 {% load humanize %}
 
 {% for reply in reply_list reversed %}
-    {% if reply.parent.id == comment.id or comment_id %}
-    <div id="comment_aria_list_{{ reply.id }}" class="reply_aria_list">
-        <a href="{% url 'myus:userpage' reply.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
-            <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
-        </a>
+  {% if reply.parent.id == comment.id or comment_id %}
+  <div id="comment_aria_list_{{ reply.id }}" class="reply_aria_list">
+    <a href="{% url 'myus:userpage' reply.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
+      <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
+    </a>
 
-        <div class="reply_aria_list_1">
-            <p>{{ reply.author.nickname }}</p>
-            <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
-        </div>
-
-        <div id="comment_aria_list_2_{{ reply.id }}" class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
-
-        <div class="reply_aria_list_3">
-            {% if user.is_authenticated %}
-            <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">
-                {% csrf_token %}
-                {% if reply.comment_liked %}
-                <button type="submit" name="comment_id" value="{{ reply.id }}" class="like_form_comment like_fill">
-                    <i class="bi bi-hand-thumbs-up-fill icon-font like_color_{{ reply.id }}" title="いいね"></i>
-                </button>
-                {% else %}
-                <button type="submit" name="comment_id" value="{{ reply.id }}" class="like_form_comment like_no">
-                    <i class="bi bi-hand-thumbs-up icon-font like_color_{{ reply.id }}" title="いいね"></i>
-                </button>
-                {% endif %}
-            </form>
-            {% else %}
-            <i class="bi bi-hand-thumbs-up icon-font rgb100" title="いいね"></i>
-            {% endif %}
-            <span id="like_count_{{ reply.id }}" class="like_count rgb100">{{ reply.total_like|intcomma }}</span>
-        </div>
-        {% include 'parts/common/reply/modal_content_reply.html' %}
+    <div class="reply_aria_list_1">
+      <p>{{ reply.author.nickname }}</p>
+      <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
     </div>
-    <div id="edit_update_main_{{ reply.id }}" class="edit_update_main">
-        {% include 'parts/common/reply/reply_update.html' %}
+
+    <div id="comment_aria_list_2_{{ reply.id }}" class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
+
+    <div class="reply_aria_list_3">
+      {% if user.is_authenticated %}
+      <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">
+        {% csrf_token %}
+        {% if reply.comment_liked %}
+        <button type="submit" name="comment_id" value="{{ reply.id }}" class="like_form_comment like_fill">
+          <i class="bi bi-hand-thumbs-up-fill icon-font like_color_{{ reply.id }}" title="いいね"></i>
+        </button>
+        {% else %}
+        <button type="submit" name="comment_id" value="{{ reply.id }}" class="like_form_comment like_no">
+          <i class="bi bi-hand-thumbs-up icon-font like_color_{{ reply.id }}" title="いいね"></i>
+        </button>
+        {% endif %}
+      </form>
+      {% else %}
+      <i class="bi bi-hand-thumbs-up icon-font rgb100" title="いいね"></i>
+      {% endif %}
+      <span id="like_count_{{ reply.id }}" class="like_count rgb100">{{ reply.total_like|intcomma }}</span>
     </div>
-    {% endif %}
+    {% include 'parts/common/reply/modal_content_reply.html' %}
+  </div>
+  <div id="edit_update_main_{{ reply.id }}" class="edit_update_main">
+    {% include 'parts/common/reply/reply_update.html' %}
+  </div>
+  {% endif %}
 {% endfor %}
