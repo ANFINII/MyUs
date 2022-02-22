@@ -55,14 +55,14 @@
 <hr>
 
 <article class="main_article_index">
-    <h2>Blog</h2>
-    {% if query %}
-        {% include 'search/search_blog.html' %}
-    {% else %}
-        {% for item in blog_list %}
-            {% include 'parts/article_blog.html' %}
-        {% endfor %}
-    {% endif %}
+  <h2>Blog</h2>
+  {% if query %}
+    {% include 'search/search_blog.html' %}
+  {% else %}
+    {% for item in blog_list %}
+      {% include 'parts/article_blog.html' %}
+    {% endfor %}
+  {% endif %}
 </article>
 <hr>
 
