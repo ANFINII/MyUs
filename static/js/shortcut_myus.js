@@ -1,129 +1,129 @@
 // textareaのdisabled判定
 
 // 検索タグショートカット
-$(document).on('focus', '.main_tag_3', function(event) {
+$(document).on('focus', '.main_tag_3', function (event) {
+  event.preventDefault();
+
+  // focus時にそれ以外のtextareaを無効化する
+  const targetElem = document.querySelectorAll('.form_button');
+  const targetCount = targetElem.length;
+  if (targetElem) {
+    for (let i = 0; i < targetCount; i++)
+      targetElem[i].setAttribute('disabled', true);
+  }
+
+  const text = $(this).val();
+  if (text || text.match(/\S/g)) {
+    // disabled属性を削除
+    document.querySelector('.main_tag_2').removeAttribute('disabled');
+  }
+
+  $(document).on('input', '.main_tag_3', function (event) {
     event.preventDefault();
-
-    // focus時にそれ以外のtextareaを無効化する
-    const targetElem = document.querySelectorAll('.form_button');
-    const targetCount = targetElem.length;
-    if (targetElem) {
-        for (let i = 0; i < targetCount; i++)
-        targetElem[i].setAttribute('disabled', true);
-    }
-
     const text = $(this).val();
-    if (text || text.match(/\S/g)) {
-        // disabled属性を削除
-        document.querySelector('.main_tag_2').removeAttribute('disabled');
+    if (!text || !text.match(/\S/g)) {
+      // disabled属性を設定
+      document.querySelector('.main_tag_2').setAttribute('disabled', true);
+    } else {
+      // disabled属性を削除
+      document.querySelector('.main_tag_2').removeAttribute('disabled');
+
+      // ショートカット
+      shortcut.add('Ctrl+Enter', function () {
+        $('.main_tag_2').click();
+      });
+      shortcut.add('meta+Enter', function () {
+        $('.main_tag_2').click();
+      });
     }
-
-    $(document).on('input', '.main_tag_3', function(event) {
-        event.preventDefault();
-        const text = $(this).val();
-        if (!text || !text.match(/\S/g)) {
-            // disabled属性を設定
-            document.querySelector('.main_tag_2').setAttribute('disabled', true);
-        } else {
-            // disabled属性を削除
-            document.querySelector('.main_tag_2').removeAttribute('disabled');
-
-            // ショートカット
-            shortcut.add('Ctrl+Enter', function() {
-                $('.main_tag_2').click();
-            });
-            shortcut.add('meta+Enter', function() {
-                $('.main_tag_2').click();
-            });
-        }
-    });
+  });
 });
 
 
 // commentショートカット
-$(document).on('focus', '#comment_form_area', function(event) {
+$(document).on('focus', '#comment_form_area', function (event) {
+  event.preventDefault();
+
+  // focus時にそれ以外のtextareaを無効化する
+  const targetElem = document.querySelectorAll('.form_button');
+  const targetCount = targetElem.length;
+  if (targetElem) {
+    for (let i = 0; i < targetCount; i++)
+      targetElem[i].setAttribute('disabled', true);
+  }
+
+  const text = $(this).val();
+  if (text || text.match(/\S/g)) {
+    // disabled属性を削除
+    document.getElementById('comment_form_button').removeAttribute('disabled');
+  }
+
+  $(document).on('input', '#comment_form_area', function (event) {
     event.preventDefault();
-
-    // focus時にそれ以外のtextareaを無効化する
-    const targetElem = document.querySelectorAll('.form_button');
-    const targetCount = targetElem.length;
-    if (targetElem) {
-        for (let i = 0; i < targetCount; i++)
-        targetElem[i].setAttribute('disabled', true);
-    }
-
     const text = $(this).val();
-    if (text || text.match(/\S/g)) {
-        // disabled属性を削除
-        document.getElementById('comment_form_button').removeAttribute('disabled');
+    if (!text || !text.match(/\S/g)) {
+      // disabled属性を設定
+      document.getElementById('comment_form_button').setAttribute('disabled', true);
+    } else {
+      // disabled属性を削除
+      document.getElementById('comment_form_button').removeAttribute('disabled');
+
+      // ショートカット
+      shortcut.add('Ctrl+Enter', function () {
+        $('#comment_form_button').click();
+      });
+      shortcut.add('meta+Enter', function () {
+        $('#comment_form_button').click();
+      });
     }
-
-    $(document).on('input', '#comment_form_area', function(event) {
-        event.preventDefault();
-        const text = $(this).val();
-        if (!text || !text.match(/\S/g)) {
-            // disabled属性を設定
-            document.getElementById('comment_form_button').setAttribute('disabled', true);
-        } else {
-            // disabled属性を削除
-            document.getElementById('comment_form_button').removeAttribute('disabled');
-
-            // ショートカット
-            shortcut.add('Ctrl+Enter', function() {
-                $('#comment_form_button').click();
-            });
-            shortcut.add('meta+Enter', function() {
-                $('#comment_form_button').click();
-            });
-        }
-    });
+  });
 });
 
 
 // updateショートカット
-$(document).on('focus', '.update_form_area', function(event) {
+$(document).on('focus', '.update_form_area', function (event) {
+  event.preventDefault();
+  const comment_id = $(this).attr('comment-id');
+
+  // focus時にそれ以外のtextareaを無効化する
+  const targetElem = document.querySelectorAll('.form_button');
+  const targetCount = targetElem.length;
+  if (targetElem) {
+    for (let i = 0; i < targetCount; i++)
+      targetElem[i].setAttribute('disabled', true);
+  }
+
+  const text = $(this).val();
+  if (text || text.match(/\S/g)) {
+    // disabled属性を削除
+    document.getElementById('update_form_button_' + comment_id).removeAttribute('disabled');
+  }
+
+  // ショートカット
+  shortcut.add('Ctrl+Enter', function () {
+    $('#update_form_button_' + comment_id).click();
+  });
+  shortcut.add('meta+Enter', function () {
+    $('#update_form_button_' + comment_id).click();
+  });
+
+  $(document).on('input', '#comment_form_update_' + comment_id, function (event) {
     event.preventDefault();
-    const comment_id = $(this).attr('comment-id');
-
-    // focus時にそれ以外のtextareaを無効化する
-    const targetElem = document.querySelectorAll('.form_button');
-    const targetCount = targetElem.length;
-    if (targetElem) {
-        for (let i = 0; i < targetCount; i++)
-        targetElem[i].setAttribute('disabled', true);
-    }
-
     const text = $(this).val();
-    if (text || text.match(/\S/g)) {
-        // disabled属性を削除
-        document.getElementById('update_form_button_' + comment_id).removeAttribute('disabled');
+    if (!text || !text.match(/\S/g)) {
+      // disabled属性を設定
+      document.getElementById('update_form_button_' + comment_id).setAttribute('disabled', true);
+    } else {
+      // disabled属性を削除
+      document.getElementById('update_form_button_' + comment_id).removeAttribute('disabled');
+
+      // ショートカット
+      shortcut.add('Ctrl+Enter', function () {
+        $('#update_form_button_' + comment_id).click();
+      });
+      shortcut.add('meta+Enter', function () {
+        $('#update_form_button_' + comment_id).click();
+      });
     }
-
-    // ショートカット
-    shortcut.add('Ctrl+Enter', function() {
-        $('#update_form_button_' + comment_id).click();
-    });
-    shortcut.add('meta+Enter', function() {
-        $('#update_form_button_' + comment_id).click();
-    });
-
-    $(document).on('input', '#comment_form_update_' + comment_id, function(event) {
-        event.preventDefault();
-        const text = $(this).val();
-        if (!text || !text.match(/\S/g)) {
-            // disabled属性を設定
-            document.getElementById('update_form_button_' + comment_id).setAttribute('disabled', true);
-        } else {
-            // disabled属性を削除
-            document.getElementById('update_form_button_' + comment_id).removeAttribute('disabled');
-
-            // ショートカット
-            shortcut.add('Ctrl+Enter', function() {
-                $('#update_form_button_' + comment_id).click();
-            });
-            shortcut.add('meta+Enter', function() {
-                $('#update_form_button_' + comment_id).click();
-            });
-        }
-    });
+  });
 });
