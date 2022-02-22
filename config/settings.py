@@ -57,6 +57,7 @@ INSTALLED_APPS += [
     'debug_toolbar',
     'import_export',
     'rest_framework',
+    'corsheaders',
     'channels',
     'ckeditor',
     'ckeditor_uploader',
@@ -78,10 +79,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+MIDDLEWARE += [
+    'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+)
 
 TEMPLATES = [
     {
