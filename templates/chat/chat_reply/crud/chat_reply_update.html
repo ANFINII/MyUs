@@ -1,16 +1,16 @@
 <form method="POST" action="" class="edit_update_chat">
-    {% csrf_token %}
-    <a href="{% url 'myus:userpage' reply.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
-        <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
-    </a>
-    <div class="edit_textarea_caht">
-        <div class="chat_frame_1"></div>
-        <textarea name="update_text" rows="1" placeholder="メッセージ入力" id="comment_form_update_{{ reply.id }}" comment-id="{{ reply.id }}" class="textarea_br update_form_area">{{ reply.text }}</textarea>
-        <div class="chat_frame_2"></div>
-        <div class="comment_input_chat"></div>
-        <div class="edit_update_footer">
-            <button type="button" name="cancel" comment-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">キャンセル</button>
-            <button type="button" name="update" id="update_form_button_{{ reply.id }}" comment-id="{{ reply.id }}" class="btn btn-success btn-xs edit_update_button form_button" disabled>更新</button>
-        </div>
+  {% csrf_token %}
+  <a href="{% url 'myus:userpage' reply.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
+    <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+  </a>
+  <div class="edit_textarea_caht">
+    <div class="chat_frame_1"></div>
+    <textarea name="update_text" rows="1" placeholder="メッセージ入力" id="comment_form_update_{{ reply.id }}" comment-id="{{ reply.id }}" class="textarea_br update_form_area">{{ reply.text }}</textarea>
+    <div class="chat_frame_2"></div>
+    <div class="comment_input_chat"></div>
+    <div class="edit_update_footer">
+      <button type="button" name="cancel" comment-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">キャンセル</button>
+      <button type="button" name="update" id="update_form_button_{{ reply.id }}" comment-id="{{ reply.id }}" class="btn btn-success btn-xs edit_update_button form_button" disabled>更新</button>
     </div>
+  </div>
 </form>

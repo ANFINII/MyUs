@@ -1,24 +1,24 @@
 {% load humanize %}
 
 {% for comment in comment_list %}
-    <div id="comment_aria_list_{{ comment.id }}" class="comment_aria_list">
-        <a href="{% url 'myus:userpage' comment.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ comment.author.nickname }}" class="pjax_button_userpage">
-            <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
-        </a>
-        <div class="comment_aria_list_1">
-            <p>{{ comment.author.nickname }}</p>
-            <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
-        </div>
-        <div id="comment_aria_list_2_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
-        <a href="{% url 'myus:chat_thread' obj_id comment.id %}" thread="{% url 'myus:chat_thread_button' %}" comment-id="{{ comment.id }}" class="comment_aria_thread">
-            スレッド表示
-            <span id="reply_count_{{ comment.id }}">返信 {{ comment.reply_count|intcomma }} 件</span>
-        </a>
-        {% include 'chat/chat_comment/crud/modal_content_chat_comment.html' %}
+  <div id="comment_aria_list_{{ comment.id }}" class="comment_aria_list">
+    <a href="{% url 'myus:userpage' comment.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ comment.author.nickname }}" class="pjax_button_userpage">
+      <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+    </a>
+    <div class="comment_aria_list_1">
+      <p>{{ comment.author.nickname }}</p>
+      <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
     </div>
-    {% if comment.author.id == user_id %}
-    <div id="edit_update_main_{{ comment.id }}" class="edit_update_main_chat">
-        {% include 'chat/chat_comment/crud/chat_comment_update.html' %}
-    </div>
-    {% endif %}
+    <div id="comment_aria_list_2_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
+    <a href="{% url 'myus:chat_thread' obj_id comment.id %}" thread="{% url 'myus:chat_thread_button' %}" comment-id="{{ comment.id }}" class="comment_aria_thread">
+      スレッド表示
+      <span id="reply_count_{{ comment.id }}">返信 {{ comment.reply_count|intcomma }} 件</span>
+    </a>
+    {% include 'chat/chat_comment/crud/modal_content_chat_comment.html' %}
+  </div>
+  {% if comment.author.id == user_id %}
+  <div id="edit_update_main_{{ comment.id }}" class="edit_update_main_chat">
+    {% include 'chat/chat_comment/crud/chat_comment_update.html' %}
+  </div>
+  {% endif %}
 {% endfor %}
