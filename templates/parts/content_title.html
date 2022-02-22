@@ -3,21 +3,21 @@
 <div title="{{ item.title }}" class="content_title">{{ item.title }}</div>
 
 <span class="view_good">
-    <div class="view_good_font content_nickname">
-        {{ item.author.nickname }}
-    </div>
+  <div class="view_good_font content_nickname">
+    {{ item.author.nickname }}
+  </div>
 
-    <div class="view_good_font view_good_inline">
-        <i title="閲覧数" class="bi bi-caret-right-square view_good_space"></i>
-        {{ item.read|intcomma }}
-    </div>
+  <div class="view_good_font view_good_inline">
+    <i title="閲覧数" class="bi bi-caret-right-square view_good_space"></i>
+    {{ item.read|intcomma }}
+  </div>
 
-    <div class="view_good_font view_good_inline">
-        <i title="いいね数" class="bi bi-hand-thumbs-up"></i>
-        {{ item.total_like|intcomma }}
-    </div>
+  <div class="view_good_font view_good_inline">
+    <i title="いいね数" class="bi bi-hand-thumbs-up"></i>
+    {{ item.total_like|intcomma }}
+  </div>
 
-    <div class="view_good_font">
-        <time>{{ item.created|naturaltime }}</time>
-    </div>
+  <div class="view_good_font">
+    <time>{{ item.created|naturaltime }}</time>
+  </div>
 </span>
