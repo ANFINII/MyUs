@@ -1,18 +1,18 @@
 <h1>Chat</h1>
 {% if user.is_authenticated %}
 <form method="POST" action="" enctype="multipart/form-data">
-    {% csrf_token %}
-    <p><label for="title">タイトル</label></p>
-    <p><input type="text" name="title" id="title" class="form-control" required></p>
+  {% csrf_token %}
+  <p><label for="title">タイトル</label></p>
+  <p><input type="text" name="title" id="title" class="form-control" required></p>
 
-    <p><label for="content">内容</label></p>
-    <p><textarea name="content" cols="100" rows="1" id="content" class="form-control textarea" required></textarea></p>
+  <p><label for="content">内容</label></p>
+  <p><textarea name="content" cols="100" rows="1" id="content" class="form-control textarea" required></textarea></p>
 
-    <p><label for="id_period">期間</label></p>
-    <p><input type="text" name="period" placeholder="2021-12-31" id="id_period" class="form-control" required></p>
-    <br>
+  <p><label for="id_period">期間</label></p>
+  <p><input type="text" name="period" placeholder="2021-12-31" id="id_period" class="form-control" required></p>
+  <br>
 
-    <p><input type="submit" value="作成する" class="btn btn-success btn-sm"></p>
+  <p><input type="submit" value="作成する" class="btn btn-success btn-sm"></p>
 </form>
 {% else %}
 <h2 class="login_required">ログインしてください</h2>

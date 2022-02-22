@@ -1,17 +1,17 @@
 {% for comment in comment_parent %}
-    <div id="comment_aria_list_cross_{{ comment.id }}" class="comment_aria_list">
-        <input type="hidden" value="{{ comment_id }}" id="parent_id">
-        <a href="{% url 'myus:userpage' comment.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ comment.author.nickname }}" class="pjax_button_userpage">
-            <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
-        </a>
-        <div class="comment_aria_list_1">
-            <p>{{ comment.author.nickname }}</p>
-            <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
-        </div>
-        <div id="comment_aria_list_thread_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
+  <div id="comment_aria_list_cross_{{ comment.id }}" class="comment_aria_list">
+    <input type="hidden" value="{{ comment_id }}" id="parent_id">
+    <a href="{% url 'myus:userpage' comment.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ comment.author.nickname }}" class="pjax_button_userpage">
+      <img src="{{ comment.author.user_image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+    </a>
+    <div class="comment_aria_list_1">
+      <p>{{ comment.author.nickname }}</p>
+      <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
     </div>
+    <div id="comment_aria_list_thread_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
+  </div>
 {% endfor %}
 
 <div id="chat_section_thread_area_{{ comment_id }}">
-    {% include 'chat/chat_reply/chat_reply.html' %}
+  {% include 'chat/chat_reply/chat_reply.html' %}
 </div>
