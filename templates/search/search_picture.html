@@ -3,9 +3,9 @@
 {% load class_name %}
 
 {% for item in object_list %}
-    {% with item|class_name as model_name %}
-        {% if model_name == 'PictureModel' %}
-            {% include 'parts/article_picture.html' %}
-        {% endif %}
-    {% endwith %}
+  {% with item|class_name as model_name %}
+    {% if model_name == 'PictureModel' %}
+      {% include 'parts/article_picture.html' %}
+    {% endif %}
+  {% endwith %}
 {% endfor %}
