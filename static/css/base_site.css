@@ -1,99 +1,113 @@
 /* スクロールバー */
 ::-webkit-scrollbar {
-    width: 9px;
-    height: 9px;
+  width: 9px;
+  height: 9px;
 }
 
 ::-webkit-scrollbar-track {
-    background: rgb(255, 255, 255);
+  background: rgb(255, 255, 255);
 }
 
 ::-webkit-scrollbar-track:hover {
-    background: rgb(245, 245, 245);
+  background: rgb(245, 245, 245);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgb(180, 180, 180);
-    border-radius: 10px;
+  background: rgb(180, 180, 180);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgb(150, 150, 150);
+  background: rgb(150, 150, 150);
 }
 
 ::-webkit-scrollbar-thumb:active {
-    background: rgb(120, 120, 120);
+  background: rgb(120, 120, 120);
 }
 
 .content {
-    background-color: rgb(230, 230, 230);
+  background-color: rgb(230, 230, 230);
 }
 
 #header {
-    background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
-    color: rgb(255, 255, 255);
+  background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+  color: rgb(255, 255, 255);
 }
 
-#branding h1, #branding h1 a:link, #branding h1 a:visited {
-    color: rgb(255, 255, 255);
+#branding h1,
+#branding h1 a:link,
+#branding h1 a:visited {
+  color: rgb(255, 255, 255);
 }
 
-.module h2, .module caption, .inline-group .h2 {
-    background-color: rgb(0, 185, 200);
-    color: rgb(255, 255, 255);
-    font-size: 14px;
+.module h2,
+.module caption,
+.inline-group .h2 {
+  background-color: rgb(0, 185, 200);
+  color: rgb(255, 255, 255);
+  font-size: 14px;
 }
 
 #content-related .module h2 {
-    background: none;
-    padding: 6px 16px !important;
-    margin-bottom: 16px;
-    border-bottom: 1px solid #eaeaea;
-    font-size: 14px !important;
-    background-color: rgb(0, 185, 200);
-    color: rgb(255, 255, 255);
+  background: none;
+  padding: 6px 16px !important;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #eaeaea;
+  font-size: 14px !important;
+  background-color: rgb(0, 185, 200);
+  color: rgb(255, 255, 255);
 }
 
 #content-related h3 {
-    padding: 0 16px;
-    margin: 0 0 16px 0;
-    font-size: 13px;
-    color: rgb(100, 100, 100);
+  padding: 0 16px;
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  color: rgb(100, 100, 100);
 }
 
 div .breadcrumbs {
-    padding: 10px 40px;
-    text-align: left;
-    font-size: 14px;
-    background-color: rgb(0, 185, 200);
-    color: rgb(210, 240, 250);
+  padding: 10px 40px;
+  text-align: left;
+  font-size: 14px;
+  background-color: rgb(0, 185, 200);
+  color: rgb(210, 240, 250);
 }
 
-#nav-sidebar .current-app .section:link, #nav-sidebar .current-app .section:visited {
-    color: rgb(255, 255, 255);
-    font-weight: bold;
+#nav-sidebar .current-app .section:link,
+#nav-sidebar .current-app .section:visited {
+  color: rgb(255, 255, 255);
+  font-weight: bold;
 }
 
-select:focus, #nav-filter:focus, #searchbar:focus, .vTextField:focus, .vLargeTextField:focus,
-.vIntegerField:focus, .vURLField:focus, .vDateField:focus {
-    outline: auto rgb(0, 185, 200);
+select:focus,
+#nav-filter:focus,
+#searchbar:focus,
+.vTextField:focus,
+.vLargeTextField:focus,
+.vIntegerField:focus,
+.vURLField:focus,
+.vDateField:focus {
+  outline: auto rgb(0, 185, 200);
 }
 
-h1, h2, .required {
-    font-weight: normal;
-    color: rgb(50, 50, 50);
+h1,
+h2,
+.required {
+  font-weight: normal;
+  color: rgb(50, 50, 50);
 }
 
-a:active, a:focus {
-    text-decoration: none;
+a:active,
+a:focus {
+  text-decoration: none;
 }
 
 .field-text textarea {
-    width: 90%;
-    min-width: 200px;
-    height: 20px;
-    min-height: 20px;
-    max-height: 100px;
-    resize: vertical;
-    overflow-y: hidden;
+  width: 90%;
+  min-width: 200px;
+  height: 20px;
+  min-height: 20px;
+  max-height: 100px;
+  resize: vertical;
+  overflow-y: hidden;
 }
