@@ -9,79 +9,79 @@
 
 {% block content %}
 <main>
-    <form method="POST" action="" class="form-signup">
-        {% csrf_token %}
-        <h1 class="h4 mb-3 font-weight-normal">アカウント登録</h1>
+  <form method="POST" action="" class="form-signup">
+    {% csrf_token %}
+    <h1 class="h4 mb-3 font-weight-normal">アカウント登録</h1>
 
-        {% if messages %}
-        <ul class="messages_signup">
-            {% for message in messages %}
-            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+    {% if messages %}
+    <ul class="messages_signup">
+      {% for message in messages %}
+      <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
 
-        <p><label for="last_name">名前</label></p>
-        <p>
-            <div class="row">
-                <div class="col-auto last_name">
-                    <input type="text" name="last_name" placeholder="姓" maxlength="30" id="last_name" class="form-control">
-                </div>
-                <div class="col-auto first_name">
-                    <input type="text" name="first_name" placeholder="名" maxlength="30" id="first_name" class="form-control">
-                </div>
-            </div>
-        </p>
-
-        <p><input type="text" name="username" placeholder="ユーザー名(英数字)" maxlength="30" class="form-control" required></p>
-
-        <p><input type="text" name="nickname" placeholder="投稿者名" maxlength="60" class="form-control" required></p>
-
-        <p><input type="email" name="email" placeholder="メールアドレス" maxlength="120" class="form-control" required></p>
-
-        <p><input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minlength="8" maxlength="16" class="form-control" required></p>
-
-        <p><input type="password" name="password2" placeholder="パスワード(確認用)" minlength="8" maxlength="16" class="form-control" required></p>
-
-        <p><label for="year">生年月日</label></p>
-        <p>
-            <div id="birthday" class="row g-3">
-                <div class="col-auto year">
-                    <select name="year" id="year" class="form-control">
-                        <option style="display:none;">年</option>
-                    </select>
-                </div>
-                <div class="col-auto month">
-                    <select name="month" id="month" class="form-control">
-                        <option style="display:none;">月</option>
-                    </select>
-                </div>
-                <div class="col-auto day">
-                    <select name="day" id="day" class="form-control">
-                        <option style="display:none;">日</option>
-                    </select>
-                </div>
-            </div>
-        </p>
-
-        <p><label for="secret">性別</label><br></p>
-        <div class="form-check-inline">
-            <input type="radio" name="gender" value="0" id="male">
-            <label for="male">男性</label>
+    <p><label for="last_name">名前</label></p>
+    <p>
+      <div class="row">
+        <div class="col-auto last_name">
+          <input type="text" name="last_name" placeholder="姓" maxlength="30" id="last_name" class="form-control">
         </div>
-        <div class="form-check form-check-inline">
-            <input type="radio" name="gender" value="1" id="female">
-            <label for="female">女性</label>
+        <div class="col-auto first_name">
+          <input type="text" name="first_name" placeholder="名" maxlength="30" id="first_name" class="form-control">
         </div>
-        <div class="form-check form-check-inline gender">
-            <input type="radio" name="gender" value="2" id="secret" checked>
-            <label for="secret">秘密</label>
+      </div>
+    </p>
+
+    <p><input type="text" name="username" placeholder="ユーザー名(英数字)" maxlength="30" class="form-control" required></p>
+
+    <p><input type="text" name="nickname" placeholder="投稿者名" maxlength="60" class="form-control" required></p>
+
+    <p><input type="email" name="email" placeholder="メールアドレス" maxlength="120" class="form-control" required></p>
+
+    <p><input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minlength="8" maxlength="16" class="form-control" required></p>
+
+    <p><input type="password" name="password2" placeholder="パスワード(確認用)" minlength="8" maxlength="16" class="form-control" required></p>
+
+    <p><label for="year">生年月日</label></p>
+    <p>
+      <div id="birthday" class="row g-3">
+        <div class="col-auto year">
+          <select name="year" id="year" class="form-control">
+            <option style="display:none;">年</option>
+          </select>
         </div>
+        <div class="col-auto month">
+          <select name="month" id="month" class="form-control">
+            <option style="display:none;">月</option>
+          </select>
+        </div>
+        <div class="col-auto day">
+          <select name="day" id="day" class="form-control">
+            <option style="display:none;">日</option>
+          </select>
+        </div>
+      </div>
+    </p>
 
-        <p><input type="submit" value="アカウント登録" id="submit" class="btn btn-lg btn-success btn-block"></p>
+    <p><label for="secret">性別</label><br></p>
+    <div class="form-check-inline">
+      <input type="radio" name="gender" value="0" id="male">
+      <label for="male">男性</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input type="radio" name="gender" value="1" id="female">
+      <label for="female">女性</label>
+    </div>
+    <div class="form-check form-check-inline gender">
+      <input type="radio" name="gender" value="2" id="secret" checked>
+      <label for="secret">秘密</label>
+    </div>
 
-        <p><a href="{% url 'myus:login' %}" class="btn btn-lg btn-primary btn-block" role="button">戻る</a></p>
-    </form>
+    <p><input type="submit" value="アカウント登録" id="submit" class="btn btn-lg btn-success btn-block"></p>
+
+    <p><a href="{% url 'myus:login' %}" class="btn btn-lg btn-primary btn-block" role="button">戻る</a></p>
+  </form>
 </main>
 {% endblock content %}
 

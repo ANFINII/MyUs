@@ -1,36 +1,36 @@
 <article class="main_profile">
-    <h1>Myページ設定</h1>
-    {% if user.is_authenticated %}
-    <div class="btn-column">
-        <div class="btn-column1">
-            <a href="{% url 'myus:mypage_update' %}" class="btn btn-success btn-sm" role="button">編集</a>
-        </div>
-        <div class="btn-column2">
-            <a href="{% url 'myus:userpage' user.nickname %}" path="{% url 'myus:pjax' %}" data="{{ user.nickname }}" class="btn btn-success btn-sm pjax_button_userpage" role="button">ユーザページ</a>
-        </div>
+  <h1>Myページ設定</h1>
+  {% if user.is_authenticated %}
+  <div class="btn-column">
+    <div class="btn-column1">
+      <a href="{% url 'myus:mypage_update' %}" class="btn btn-success btn-sm" role="button">編集</a>
     </div>
+    <div class="btn-column2">
+      <a href="{% url 'myus:userpage' user.nickname %}" path="{% url 'myus:pjax' %}" data="{{ user.nickname }}" class="btn btn-success btn-sm pjax_button_userpage" role="button">ユーザページ</a>
+    </div>
+  </div>
 
-    <table>
-        <tbody>
-            <tr><td class="td-color">バナー画像</td>
-                <td>
-                    <label for="account_image_input" class="mypage_image">
-                        <a href="{{ user.mypage_image.url }}" data-lightbox="group"><img src="{{ user.mypage_image.url }}" title="{{ user.nickname }}" width="270px" height="56xp" data-lightbox="group"></a>
-                    </label>
-                </td>
-            </tr>
-            <tr><td class="td-color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
-            <tr><td class="td-color">メールアドレス</td><td class="td-indent">{{ user.mypage_email }}</td></tr>
-            <tr><td class="td-color">フォロー数</td><td class="td-indent">{{ user.following_count }}</td></tr>
-            <tr><td class="td-color">フォロワー数</td><td class="td-indent">{{ user.follower_count }}</td></tr>
-            <tr><td class="td-color">料金プラン</td><td class="td-indent">{{ user.get_rate_plan_display }}</td></tr>
-            <tr><td class="td-color">全体広告</td><td class="td-indent" id="auto_advertise">{% include 'registration/mypage_advertise.html' %}</td></tr>
-            <tr><td class="td-color">概要</td><td class="td-indent">{{ user.content|linebreaksbr|urlize }}</td></tr>
-        </tbody>
-    </table>
+  <table>
+    <tbody>
+      <tr><td class="td-color">バナー画像</td>
+        <td>
+          <label for="account_image_input" class="mypage_image">
+            <a href="{{ user.mypage_image.url }}" data-lightbox="group"><img src="{{ user.mypage_image.url }}" title="{{ user.nickname }}" width="270px" height="56xp" data-lightbox="group"></a>
+          </label>
+        </td>
+      </tr>
+      <tr><td class="td-color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
+      <tr><td class="td-color">メールアドレス</td><td class="td-indent">{{ user.mypage_email }}</td></tr>
+      <tr><td class="td-color">フォロー数</td><td class="td-indent">{{ user.following_count }}</td></tr>
+      <tr><td class="td-color">フォロワー数</td><td class="td-indent">{{ user.follower_count }}</td></tr>
+      <tr><td class="td-color">料金プラン</td><td class="td-indent">{{ user.get_rate_plan_display }}</td></tr>
+      <tr><td class="td-color">全体広告</td><td class="td-indent" id="auto_advertise">{% include 'registration/mypage_advertise.html' %}</td></tr>
+      <tr><td class="td-color">概要</td><td class="td-indent">{{ user.content|linebreaksbr|urlize }}</td></tr>
+    </tbody>
+  </table>
 
-    {% include 'parts/footer-myus.html' %}
-    {% else %}
-    <h2 class="login_required">ログインしてください</h2>
-    {% endif %}
+  {% include 'parts/footer-myus.html' %}
+  {% else %}
+  <h2 class="login_required">ログインしてください</h2>
+  {% endif %}
 </article>
