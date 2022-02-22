@@ -1,39 +1,39 @@
 /* ユーザーポリシー */
 .main_userpolicy {
-    display: block;
-    max-height: 100vh;
-    margin: 14px 0 0 0;
+  display: block;
+  max-height: 100vh;
+  margin: 14px 0 0 0;
 }
 
 .main_userpolicy h1 {
-    display: block;
-    font-size: 24px;
-    max-height: 2em;
-    margin: -4px 0 16px 0;
+  display: block;
+  font-size: 24px;
+  max-height: 2em;
+  margin: -4px 0 16px 0;
 }
 
 .main_userpolicy h2 {
-    font-size: 16px;
-    margin: 0 0 14px 0;
+  font-size: 16px;
+  margin: 0 0 14px 0;
 }
 
 .main_userpolicy p {
-    font-size: 14px;
-    color: rgb(80, 80, 80);
-    margin: 0 0 12px 0;
+  font-size: 14px;
+  color: rgb(80, 80, 80);
+  margin: 0 0 12px 0;
 }
 
 .footer-myus {
-    position: fixed;
-    bottom: 0;
-    width: calc(100% - 102px);
-    height: 26px;
-    margin: 12px 0 0 0;
-    text-align: center;
-    background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
-    color: rgb(255, 255, 255);
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 102px);
+  height: 26px;
+  margin: 12px 0 0 0;
+  text-align: center;
+  background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+  color: rgb(255, 255, 255);
 }
 
 hr {
-    margin: 12px 0;
+  margin: 12px 0;
 }
