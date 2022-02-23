@@ -223,7 +223,7 @@
     <div class="head_nav_7 fill-color-header">
       <input type="checkbox" id="drop_menu_profile" class="dropdown_menu_profile">
       <label for="drop_menu_profile" class="drop_open_profile">
-        {% if user.username %}
+        {% if user.is_authenticated %}
         <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" width="32px" height="32xp">
         {% else %}
         <img src="{% static 'img/user_icon.png' %}" title="匿名" width="32px" height="32xp">
@@ -301,7 +301,11 @@
             <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
           </svg>
           <div>ログアウト</div>
+          {% if user.is_authenticated %}
           <a href="{% url 'myus:logout' %}" class="icon_link" role="button" aria-disabled="true"></a>
+          {% else %}
+          <a href="{% url 'myus:login' %}" class="icon_link" role="button" aria-disabled="true"></a>
+          {% endif %}
         </div>
       </nav>
     </div>

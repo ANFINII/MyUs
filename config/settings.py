@@ -47,12 +47,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 ]
 
 # Add Application
 INSTALLED_APPS += [
     'myus.apps.MyUsConfig',
-    'django.contrib.humanize',
     'django_cleanup',
     'debug_toolbar',
     'import_export',
@@ -72,6 +72,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,15 +83,13 @@ MIDDLEWARE = [
 ]
 
 MIDDLEWARE += [
-    'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-)
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = ('http://localhost:3000',)
 
 TEMPLATES = [
     {
@@ -158,9 +157,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_URL = 'myus:login'
+LOGIN_REDIRECT_URL = 'myus:index'
+LOGOUT_REDIRECT_URL = 'myus:login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
