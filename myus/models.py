@@ -34,10 +34,10 @@ class UserManager(BaseUserManager):
         return user
 
 def user_image_path(instance, filename):
-    return f'users/images_user/{instance.id}/{filename}'
+    return f'users/images_user/user_{instance.id}/{filename}'
 
 def mypage_image_path(instance, filename):
-    return f'users/images_mypage/{instance.id}/{filename}'
+    return f'users/images_mypage/user_{instance.id}/{filename}'
 
 class User(AbstractBaseUser, PermissionsMixin):
     """CustomUserModel"""
@@ -213,10 +213,10 @@ class VideoManager(models.Manager):
         return self.get_queryset().search(query=query)
 
 def images_video_upload_path(instance, filename):
-    return f'images/images_video/{instance.author.id}/{instance.id}/{filename}'
+    return f'images/images_video/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 def videos_video_upload_path(instance, filename):
-    return f'videos/videos_video/{instance.author.id}/{instance.id}/{filename}'
+    return f'videos/videos_video/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class VideoModel(models.Model):
     """VideoModel"""
@@ -288,10 +288,10 @@ class LiveManager(models.Manager):
         return self.get_queryset().search(query=query)
 
 def images_live_upload_path(instance, filename):
-    return f'images/images_live/{instance.author.id}/{instance.id}/{filename}'
+    return f'images/images_live/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 def videos_live_upload_path(instance, filename):
-    return f'videos/videos_live/{instance.author.id}/{instance.id}/{filename}'
+    return f'videos/videos_live/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class LiveModel(models.Model):
     """LiveModel"""
@@ -360,7 +360,7 @@ class MusicManager(models.Manager):
         return self.get_queryset().search(query=query)
 
 def musics_upload_path(instance, filename):
-    return f'musics/{instance.author.id}/{instance.id}/{filename}'
+    return f'musics/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class MusicModel(models.Model):
     """MusicModel"""
@@ -426,7 +426,7 @@ class PictureManager(models.Manager):
         return self.get_queryset().search(query=query)
 
 def images_picture_upload_path(instance, filename):
-    return f'images/images_picture/{instance.author.id}/{instance.id}/{filename}'
+    return f'images/images_picture/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class PictureModel(models.Model):
     """PictureModel"""
@@ -491,7 +491,7 @@ class BlogManager(models.Manager):
         return self.get_queryset().search(query=query)
 
 def images_blog_upload_path(instance, filename):
-    return f'images/images_blog/{instance.author.id}/{instance.id}/{filename}'
+    return f'images/images_blog/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class BlogModel(models.Model):
     """BlogModel"""
@@ -674,10 +674,10 @@ class NotificationModel(models.Model):
         verbose_name_plural = '12 通知確認'
 
 def images_adver_upload_path(instance, filename):
-    return f'images/images_adver/{instance.author.id}/{instance.id}/{filename}'
+    return f'images/images_adver/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 def videos_adver_upload_path(instance, filename):
-    return f'videos/videos_adver/{instance.author.id}/{instance.id}/{filename}'
+    return f'videos/videos_adver/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class AdvertiseModel(models.Model):
     """AdvertiseModel"""
