@@ -37,12 +37,12 @@ User = get_user_model()
 def signup_form(request):
     """サインアップ処理"""
     if request.method == 'POST':
-        username_form = request.POST['username']
-        if User.objects.filter(username=username_form).count():
+        username = request.POST['username']
+        if User.objects.filter(username=username).count():
             messages.error(request, 'このユーザー名は既に登録されております!')
             return render(request, 'registration/signup.html')
 
-        if has_username(username_form):
+        if has_username(username):
             messages.error(request, 'ユーザー名は半角英数字のみ入力できます!')
             return render(request, 'registration/signup.html')
 
@@ -51,12 +51,12 @@ def signup_form(request):
             messages.error(request, 'この投稿者名は既に登録されております!')
             return render(request, 'registration/signup.html')
 
-        email_form = request.POST['email']
-        if User.objects.filter(email=email_form).count():
+        email = request.POST['email']
+        if User.objects.filter(email=email).count():
             messages.error(request, 'このメールアドレスは既に登録されております!')
             return render(request, 'registration/signup.html')
 
-        if has_email(email_form):
+        if has_email(email):
             messages.error(request, 'メールアドレスの形式が違います!')
             return render(request, 'registration/signup.html')
 
@@ -104,12 +104,12 @@ def signup_form(request):
                 messages.error(request, str(year)+'年'+str(month)+'月'+str(day)+'日'+'は存在しない日付です!')
                 return render(request, 'registration/signup.html')
             try:
-                User.objects.get(username=username_form)
+                User.objects.get(username=username)
                 messages.error(request, 'このアカウントは既に登録されております!')
                 return render(request, 'registration/signup.html')
             except User.DoesNotExist:
                 if password1==password2:
-                    user = User.objects.create_user(username_form, email_form, password1)
+                    user = User.objects.create_user(username, email, password1)
                     user.nickname = nickname_form
                     user.full_name = last_name + ' ' + first_name
                     user.last_name = last_name
