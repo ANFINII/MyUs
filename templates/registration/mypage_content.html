@@ -12,20 +12,22 @@
 
   <table>
     <tbody>
-      <tr><td class="td-color">バナー画像</td>
+      <tr><td class="td-color">バナー画像
         <td>
           <label for="account_image_input" class="mypage_image">
-            <a href="{{ user.mypage_image.url }}" data-lightbox="group"><img src="{{ user.mypage_image.url }}" title="{{ user.nickname }}" width="270px" height="56xp" data-lightbox="group"></a>
+            <a href="{{ user.mypage.mypage_image.url }}" data-lightbox="group">
+              <img src="{{ user.mypage.mypage_image.url }}" title="{{ user.nickname }}" width="270px" height="56xp" data-lightbox="group">
+            </a>
           </label>
         </td>
       </tr>
-      <tr><td class="td-color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
-      <tr><td class="td-color">メールアドレス</td><td class="td-indent">{{ user.mypage_email }}</td></tr>
-      <tr><td class="td-color">フォロー数</td><td class="td-indent">{{ user.following_count }}</td></tr>
-      <tr><td class="td-color">フォロワー数</td><td class="td-indent">{{ user.follower_count }}</td></tr>
-      <tr><td class="td-color">料金プラン</td><td class="td-indent">{{ user.get_rate_plan_display }}</td></tr>
-      <tr><td class="td-color">全体広告</td><td class="td-indent" id="auto_advertise">{% include 'registration/mypage_advertise.html' %}</td></tr>
-      <tr><td class="td-color">概要</td><td class="td-indent">{{ user.content|linebreaksbr|urlize }}</td></tr>
+      <tr><td class="td-color">投稿者名<td class="td-indent">{{ user.nickname }}
+      <tr><td class="td-color">メールアドレス<td class="td-indent">{{ user.mypage.mypage_email }}
+      <tr><td class="td-color">フォロー数<td class="td-indent">{{ user.mypage.following_count }}
+      <tr><td class="td-color">フォロワー数<td class="td-indent">{{ user.mypage.follower_count }}
+      <tr><td class="td-color">料金プラン<td class="td-indent">{{ user.mypage.get_rate_plan_display }}
+      <tr><td class="td-color">全体広告<td class="td-indent" id="auto_advertise">{% include 'registration/mypage_advertise.html' %}
+      <tr><td class="td-color">概要<td class="td-indent">{{ user.mypage.content|linebreaksbr|urlize }}
     </tbody>
   </table>
 
