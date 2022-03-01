@@ -29,6 +29,11 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
+# Database
+# https://docs.djangoproject.com/ja/4.0/ref/settings/#databases
+DATABASES = {
+   'default': env.db(),
+}
 
 DATABASES = {
     'default': {
@@ -36,12 +41,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
-# Database
-# https://docs.djangoproject.com/ja/4.0/ref/settings/#databases
-# DATABASES = {
-#    'default': env.db(),
-# }
 
 # Stripe API keys
 STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
