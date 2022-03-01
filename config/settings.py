@@ -60,26 +60,23 @@ INSTALLED_APPS = [
 
 # Add Application
 INSTALLED_APPS += [
-    'myus.apps.MyUsConfig',
-    # 'api.apps.ApiConfig',
+    'api.apps.ApiConfig',
     'django_cleanup',
     'debug_toolbar',
     'import_export',
     'rest_framework',
     'corsheaders',
-    # 'channels',
+    'channels',
     'ckeditor',
     'ckeditor_uploader',
 ]
 
 NUMBER_GROUPING = 3
 
-# AUTH_USER_MODEL = 'api.User'
-AUTH_USER_MODEL = 'myus.User'
+AUTH_USER_MODEL = 'api.User'
 
 AUTHENTICATION_BACKENDS = [
-    'myus.backends.MyBackend',
-    # 'api.backends.MyBackend',
+    'api.backends.MyBackend',
 ]
 
 MIDDLEWARE = [
@@ -167,10 +164,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# LOGIN_URL = 'api:login'
-# LOGIN_REDIRECT_URL = 'api:index'
-# LOGOUT_REDIRECT_URL = 'api:login'
 
 LOGIN_URL = 'myus:login'
 LOGIN_REDIRECT_URL = 'myus:index'
