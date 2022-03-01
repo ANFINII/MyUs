@@ -28,7 +28,7 @@ urlpatterns = [
     path('profile', Profile.as_view(), name='profile'),
     path('profile/update', ProfileUpdate.as_view(), name='profile_update'),
     path('mypage', MyPage.as_view(), name='mypage'),
-    path('mypage/update', MyPageUpdate.as_view(), name='mypage_update'),
+    path('mypage/update', MyPageUpdate, name='mypage_update'),
     path('mypage/toggle', mypage_toggle, name='mypage_toggle'),
 
     path('payment', Payment.as_view(), name='payment'),

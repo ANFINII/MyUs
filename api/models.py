@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from django.utils import timezone
 from ckeditor_uploader.fields import RichTextUploadingField
+import datetime
 
 # Create your models here.
 
@@ -36,50 +37,28 @@ class UserManager(BaseUserManager):
 def user_image_path(instance, filename):
     return f'users/images_user/user_{instance.id}/{filename}'
 
-def mypage_image_path(instance, filename):
-    return f'users/images_mypage/user_{instance.id}/{filename}'
-
 class User(AbstractBaseUser, PermissionsMixin):
     """CustomUserModel"""
-    user_image      = models.ImageField(upload_to=user_image_path, default='../static/img/user_icon.png', blank=True, null=True)
-    email           = models.EmailField(max_length=120, unique=True, db_index=True)
-    username        = models.CharField(max_length=30, unique=True, db_index=True)
-    nickname        = models.CharField(max_length=60, unique=True, db_index=True)
-    full_name       = models.CharField(max_length=60, blank=True)
-    last_name       = models.CharField(max_length=30, blank=True)
-    first_name      = models.CharField(max_length=30, blank=True)
+    user_image    = models.ImageField(upload_to=user_image_path, default='../static/img/user_icon.png', blank=True, null=True)
+    email         = models.EmailField(max_length=255, unique=True, db_index=True)
+    username      = models.CharField(max_length=20, unique=True, db_index=True)
+    nickname      = models.CharField(max_length=80, unique=True, db_index=True)
+    last_name     = models.CharField(max_length=40, blank=True)
+    first_name    = models.CharField(max_length=40, blank=True)
 
-    birthday        = models.DateField(blank=True, null=True)
-    year            = models.IntegerField(blank=True, null=True)
-    month           = models.IntegerField(blank=True, null=True)
-    day             = models.IntegerField(blank=True, null=True)
-    age             = models.IntegerField(blank=True, null=True)
+    birthday      = models.DateField(blank=True, null=True)
+    gender_choice = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
+    gender        = models.CharField(choices=gender_choice, max_length=1, default='2')
+    phone_no      = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message = ('電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます。'))
+    phone         = models.CharField(validators=[phone_no], max_length=15, blank=True, default='000-0000-0000')
+    location      = models.CharField(max_length=255, blank=True)
+    introduction  = models.TextField(blank=True)
 
-    gender_choice   = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
-    gender          = models.CharField(choices=gender_choice, max_length=1, default='2')
-
-    phone_no        = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message = ('電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます。'))
-    phone           = models.CharField(validators=[phone_no], max_length=15, blank=True, default='000-0000-0000')
-
-    location        = models.CharField(max_length=255, blank=True)
-    introduction    = models.TextField(blank=True)
-
-    is_active       = models.BooleanField(default=True)
-    is_staff        = models.BooleanField(default=False)
-    is_admin        = models.BooleanField(default=False)
-    last_login      = models.DateTimeField(auto_now_add=True)
-    date_joined     = models.DateTimeField(default=timezone.now)
-
-    # Myページ用フィールド
-    mypage_image    = models.ImageField(upload_to=mypage_image_path, default='../static/img/MyUs_banner.png', blank=True, null=True)
-    mypage_email    = models.EmailField(max_length=120, blank=True, null=True, default='abc@gmail.com')
-    content         = models.TextField(blank=True)
-    follower_count  = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
-    following_count = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
-    plan_choice     = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
-    rate_plan       = models.CharField(choices=plan_choice, max_length=1, default='0')
-    rate_plan_date  = models.DateTimeField(blank=True, null=True)
-    auto_advertise  = models.BooleanField(default=True)
+    is_active     = models.BooleanField(default=True)
+    is_staff      = models.BooleanField(default=False)
+    is_admin      = models.BooleanField(default=False)
+    last_login    = models.DateTimeField(auto_now_add=True)
+    date_joined   = models.DateTimeField(default=timezone.now)
 
     objects = UserManager()
 
@@ -96,33 +75,35 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_username(self):
         return self.nickname
 
-    def get_full_name(self):
-        full_name = '%s %s' % (self.first_name, self.last_name)
-        return full_name.strip()
+    def get_fullname(self):
+        return self.last_name + ' ' + self.first_name
 
-    def get_short_name(self):
-        return self.first_name
+    def get_year(self):
+        if self.birthday is not None:
+            return self.birthday.year
+
+    def get_month(self):
+        if self.birthday is not None:
+            return self.birthday.month
+
+    def get_day(self):
+        if self.birthday is not None:
+            return self.birthday.day
+
+    def get_age(self):
+        if self.birthday is not None:
+            DAYS_IN_YEAR = 365.2425
+            return int((datetime.date.today() - self.birthday).days / DAYS_IN_YEAR)
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
-    def get_following_count(self):
-        self.following_count = FollowModel.objects.filter(follower=User.id).count()
-        return self.following_count
-
-    def get_follower_count(self):
-        self.follower_count = FollowModel.objects.filter(following=User.id).count()
-        return self.follower_count
-
     def save(self, *args, **kwargs):
         if self.id is None:
             user_image = self.user_image
-            mypage_image = self.mypage_image
             self.user_image = None
-            self.mypage_image = None
             super().save(*args, **kwargs)
             self.user_image = user_image
-            self.mypage_image = mypage_image
             if 'force_insert' in kwargs:
                 kwargs.pop('force_insert')
         super().save(*args, **kwargs)
@@ -135,14 +116,61 @@ def image_url(self):
     if self.user_image and hasattr(self.user_image, 'url'):
         return self.user_image.url
 
+
+def mypage_image_path(instance, filename):
+    return f'users/images_mypage/user_{instance.id}/{filename}'
+
+class MyPage(models.Model):
+    user            = models.OneToOneField(User, on_delete=models.CASCADE)
+    mypage_image    = models.ImageField(upload_to=mypage_image_path, default='../static/img/MyUs_banner.png', blank=True, null=True)
+    mypage_email    = models.EmailField(max_length=120, blank=True, null=True, default='abc@gmail.com')
+    content         = models.TextField(blank=True)
+    follower_count  = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
+    following_count = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
+    plan_choice     = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
+    rate_plan       = models.CharField(choices=plan_choice, max_length=1, default='0')
+    rate_plan_date  = models.DateTimeField(blank=True, null=True)
+    auto_advertise  = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.user.nickname
+
+    def get_following_count(self):
+        self.following_count = FollowModel.objects.filter(follower=User.id).count()
+        return self.following_count
+
+    def get_follower_count(self):
+        self.follower_count = FollowModel.objects.filter(following=User.id).count()
+        return self.follower_count
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            mypage_image = self.mypage_image
+            self.mypage_image = None
+            super().save(*args, **kwargs)
+            self.mypage_image = mypage_image
+            if 'force_insert' in kwargs:
+                kwargs.pop('force_insert')
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = '00 MyPage'
+
 @property
 def mypage_image(self):
     if self.mypage_image and hasattr(self.mypage_image, 'url'):
         return self.mypage_image.url
 
+@receiver(post_save, sender=User)
+def create_mypage(sender, **kwargs):
+    """ユーザー作成時に空のMyPageも作成する"""
+    if kwargs['created']:
+        MyPage.objects.get_or_create(owner=kwargs['instance'])
+
+
 class NotifySettingModel(models.Model):
     """NotifySettingModel"""
-    owner   = models.OneToOneField(User, on_delete=models.CASCADE)
+    user    = models.OneToOneField(User, on_delete=models.CASCADE)
     video   = models.BooleanField(default=False)
     live    = models.BooleanField(default=False)
     music   = models.BooleanField(default=False)
@@ -156,7 +184,7 @@ class NotifySettingModel(models.Model):
     views   = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.owner.nickname
+        return self.user.nickname
 
     class Meta:
         verbose_name_plural = '00 通知設定'
@@ -166,6 +194,7 @@ def create_notify_setting(sender, **kwargs):
     """ユーザー作成時に空のnotify_settingも作成する"""
     if kwargs['created']:
         NotifySettingModel.objects.get_or_create(owner=kwargs['instance'])
+
 
 class SearchTagModel(models.Model):
     """SearchTagModel"""
@@ -180,6 +209,7 @@ class SearchTagModel(models.Model):
     class Meta:
         verbose_name_plural = '09 検索タグ'
 
+
 class TagModel(models.Model):
     """TagModel"""
     author      = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -191,6 +221,7 @@ class TagModel(models.Model):
 
     class Meta:
         verbose_name_plural = '10 ハッシュタグ'
+
 
 class VideoQuerySet(models.QuerySet):
     def search(self, query=None):
@@ -267,6 +298,7 @@ class VideoModel(models.Model):
     class Meta:
         verbose_name_plural = '01 Video'
 
+
 class LiveQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
@@ -337,6 +369,7 @@ class LiveModel(models.Model):
 
     class Meta:
         verbose_name_plural = '02 Live'
+
 
 class MusicQuerySet(models.QuerySet):
     def search(self, query=None):
@@ -418,6 +451,7 @@ class PictureQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
+
 class PictureManager(models.Manager):
     def get_queryset(self):
         return PictureQuerySet(self.model, using=self._db)
@@ -468,6 +502,7 @@ class PictureModel(models.Model):
 
     class Meta:
         verbose_name_plural = '04 Picture'
+
 
 class BlogQuerySet(models.QuerySet):
     def search(self, query=None):
@@ -535,6 +570,7 @@ class BlogModel(models.Model):
     class Meta:
         verbose_name_plural = '05 Blog'
 
+
 class ChatQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
@@ -591,6 +627,7 @@ class ChatModel(models.Model):
     class Meta:
         verbose_name_plural = '06 Chat'
 
+
 class CollaboModel(models.Model):
     """CollaboModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -617,6 +654,7 @@ class CollaboModel(models.Model):
     class Meta:
         verbose_name_plural = '07 Collabo'
 
+
 class TodoModel(models.Model):
     """TodoModel"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -640,6 +678,7 @@ class TodoModel(models.Model):
     class Meta:
         verbose_name_plural = '08 ToDo'
 
+
 class FollowModel(models.Model):
     """FollowModel"""
     follower  = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
@@ -651,6 +690,7 @@ class FollowModel(models.Model):
 
     class Meta:
         verbose_name_plural = '11 フォロー'
+
 
 class NotificationModel(models.Model):
     """NotificationModel"""
@@ -672,6 +712,7 @@ class NotificationModel(models.Model):
 
     class Meta:
         verbose_name_plural = '12 通知確認'
+
 
 def images_adver_upload_path(instance, filename):
     return f'images/images_adver/user_{instance.author.id}/object_{instance.id}/{filename}'
@@ -714,6 +755,7 @@ class AdvertiseModel(models.Model):
     class Meta:
         verbose_name_plural = '13 広告設定'
 
+
 class CommentModel(models.Model):
     """CommentModel"""
     author         = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -738,6 +780,7 @@ class CommentModel(models.Model):
     class Meta:
         verbose_name_plural = '14 コメント'
 
+
 class ProductModel(models.Model):
     name              = models.CharField(max_length=100)
     stripe_product_id = models.CharField(max_length=100)
@@ -745,6 +788,7 @@ class ProductModel(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class PriceModel(models.Model):
     product         = models.ForeignKey(ProductModel, on_delete=models.CASCADE)

@@ -7,10 +7,10 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from ckeditor_uploader import views
-from myus.admin import mymanage_site
+from api.admin import mymanage_site
 
 urlpatterns = [
-    path('', include('myus.urls')),
+    path('', include('api.urls')),
     path('', include('django.contrib.auth.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('myus-admin/', admin.site.urls),

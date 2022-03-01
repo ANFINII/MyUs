@@ -29,11 +29,19 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
 # Database
 # https://docs.djangoproject.com/ja/4.0/ref/settings/#databases
-DATABASES = {
-   'default': env.db(),
-}
+# DATABASES = {
+#    'default': env.db(),
+# }
 
 # Stripe API keys
 STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
@@ -53,22 +61,25 @@ INSTALLED_APPS = [
 # Add Application
 INSTALLED_APPS += [
     'myus.apps.MyUsConfig',
+    # 'api.apps.ApiConfig',
     'django_cleanup',
     'debug_toolbar',
     'import_export',
     'rest_framework',
     'corsheaders',
-    'channels',
+    # 'channels',
     'ckeditor',
     'ckeditor_uploader',
 ]
 
 NUMBER_GROUPING = 3
 
+# AUTH_USER_MODEL = 'api.User'
 AUTH_USER_MODEL = 'myus.User'
 
 AUTHENTICATION_BACKENDS = [
     'myus.backends.MyBackend',
+    # 'api.backends.MyBackend',
 ]
 
 MIDDLEWARE = [
@@ -156,6 +167,10 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# LOGIN_URL = 'api:login'
+# LOGIN_REDIRECT_URL = 'api:index'
+# LOGOUT_REDIRECT_URL = 'api:login'
 
 LOGIN_URL = 'myus:login'
 LOGIN_REDIRECT_URL = 'myus:index'
