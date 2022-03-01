@@ -53,18 +53,18 @@
             <td>
               <div class="td-birthday">
                 <select name="year" id="year" class="form-control">
-                  <option value="{{ user.year }}" style="display:none;">{{ user.year }}</option>
+                  <option value="{{ user.get_year }}" style="display:none;">{{ user.get_year }}</option>
                 </select>
                 <select name="month" id="month" class="form-control">
-                  <option value="{{ user.month }}" style="display:none;">{{ user.month }}</option>
+                  <option value="{{ user.get_month }}" style="display:none;">{{ user.get_month }}</option>
                 </select>
                 <select name="day" id="day" class="form-control">
-                  <option value="{{ user.day }}" style="display:none;">{{ user.day }}</option>
+                  <option value="{{ user.get_day }}" style="display:none;">{{ user.get_day }}</option>
                 </select>
               </div>
             </td>
           </tr>
-          <tr><td class="td-color">年齢</td><td class="td-indent">{{ user.age }}歳</td></tr>
+          <tr><td class="td-color">年齢</td><td class="td-indent">{{ user.get_age }}歳</td></tr>
           <tr>
             <td class="td-color">性別</td>
             <td class="td-gender">
