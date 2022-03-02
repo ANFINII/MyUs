@@ -165,7 +165,7 @@ def mypage_image(self):
 def create_mypage(sender, **kwargs):
     """ユーザー作成時に空のMyPageも作成する"""
     if kwargs['created']:
-        MyPage.objects.get_or_create(owner=kwargs['instance'])
+        MyPage.objects.get_or_create(user=kwargs['instance'])
 
 
 class NotifySettingModel(models.Model):
@@ -193,7 +193,7 @@ class NotifySettingModel(models.Model):
 def create_notify_setting(sender, **kwargs):
     """ユーザー作成時に空のnotify_settingも作成する"""
     if kwargs['created']:
-        NotifySettingModel.objects.get_or_create(owner=kwargs['instance'])
+        NotifySettingModel.objects.get_or_create(user=kwargs['instance'])
 
 
 class SearchTagModel(models.Model):

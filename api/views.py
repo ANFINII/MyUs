@@ -23,6 +23,10 @@ from .modules.get_form import get_detail
 from .modules.search import Search
 from .modules.success_url import success_url
 from .modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import authentication, permissions
 import datetime
 import random
 import string
@@ -33,11 +37,7 @@ import json
 
 User = get_user_model()
 
-from django.contrib.auth import authenticate, get_user_model, login, logout
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import authentication, permissions
+
 
 # Create your views here.
 
@@ -466,67 +466,57 @@ class ProfileUpdate(UpdateView):
 
 
 # MyPage
-class MyPage(TemplateView):
+class MyPageView(TemplateView):
     """Myページ遷移"""
     model = MyPage
     template_name = 'registration/mypage.html'
 
     def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, MyPage, **kwargs)
+        return ContextData.context_data(self, MyPageView, **kwargs)
 
-def MyPageUpdate(request):
+class MyPageUpdate(UpdateView):
+    """Myページ更新"""
+    model = MyPage
+    fields = ('mypage_image', 'mypage_email', 'content')
+    template_name = 'registration/mypage_update.html'
+    success_url = reverse_lazy('myus:mypage')
 
-    user_id = request.user.id
-    mypage_obj = MyPage.objects.get(user_id=user_id)
-    mypage_obj.mypage_image = request.POST.get('mypage_image')
-    mypage_obj.mypage_email = request.POST.get('mypage_email')
-    mypage_obj.content = request.POST.get('content')
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, MyPageUpdate, **kwargs)
 
-    mypage_obj.save()
-    return render(request, 'registration/mypage_update.html', mypage_obj)
+    def form_valid(self, form):
+        """バリデーションに成功した時"""
+        try:
+            mypage_obj = form.save(commit=False)
+            user = self.request.user
+            mypage_obj = MyPage.objects.get(user=user)
 
-# class MyPageUpdate(UpdateView):
-#     """Myページ更新"""
-#     model = MyPage
-#     fields = ('mypage_image', 'mypage_email', 'content')
-#     template_name = 'registration/mypage_update.html'
-#     success_url = reverse_lazy('myus:mypage')
+            if has_email(mypage_obj.mypage_email):
+                messages.error(self.request, 'メールアドレスの形式が違います!')
+                return super().form_invalid(form)
 
-#     # def get_context_data(self, **kwargs):
-#     #     return ContextData.context_data(self, MyPageUpdate, **kwargs)
+            mypage_obj.save()
+            return super(MyPageUpdate, self).form_valid(form)
+        except ValueError:
+            messages.error(self.request, '更新できませんでした!')
+            return super().form_invalid(form)
+        except TypeError:
+            messages.error(self.request, '更新できませんでした!')
+            return super().form_invalid(form)
 
-#     def form_valid(self, form):
-#         """バリデーションに成功した時"""
-#         try:
-#             userpage = form.save(commit=False)
-#             userpage.user = self.request.user
+    def form_invalid(self, form):
+        """バリデーションに失敗した時"""
+        user = self.request.user
+        mypage_obj = MyPage.objects.get(user=user)
+        if has_email(mypage_obj.mypage_email):
+            messages.error(self.request, 'メールアドレスの形式が違います!')
+            return super().form_invalid(form)
+        else:
+            messages.error(self.request, 'メールアドレスの形式が違います!')
+            return super().form_invalid(form)
 
-#             if has_email(MyPage.mypage_email):
-#                 messages.error(self.request, 'メールアドレスの形式が違います!')
-#                 return super().form_invalid(form)
-
-#             userpage.save()
-#             return super(MyPageUpdate, self).form_valid(form)
-#         except ValueError:
-#             messages.error(self.request, '更新できませんでした!')
-#             return super().form_invalid(form)
-#         except TypeError:
-#             messages.error(self.request, '更新できませんでした!')
-#             return super().form_invalid(form)
-
-#     def form_invalid(self, form):
-#         """バリデーションに失敗した時"""
-#         if has_email(self.request.user.mypage_email):
-#             messages.error(self.request, 'メールアドレスの形式が違います!')
-#             return super().form_invalid(form)
-#         else:
-#             messages.error(self.request, 'メールアドレスの形式が違います!')
-#             return super().form_invalid(form)
-
-#     def get_object(self):
-#         user_id = self.request.user.id
-#         mypage_obj = MyPage.object.get(user_id=user_id)
-#         return mypage_obj
+    def get_object(self):
+        return MyPage.objects.get(user=self.request.user)
 
 @csrf_exempt
 def mypage_toggle(request):
