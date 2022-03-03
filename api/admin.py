@@ -10,6 +10,7 @@ import datetime
 # Admin用の管理画面
 class MyPageInline(admin.StackedInline):
     model = MyPage
+    readonly_fields = ('mypage_image', 'follower_count', 'following_count', 'rate_plan', 'rate_plan_date', 'auto_advertise')
     verbose_name = 'Myページ情報'
 
     def has_delete_permission(self, request, obj=None):
@@ -42,7 +43,7 @@ class CommentInlineAdmin(GenericTabularInline):
 
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'email', 'username', 'nickname', 'fullname', 'birthday', 'age', 'gender')
+    list_display = ('id', 'email', 'username', 'nickname', 'fullname', 'birthday', 'age', 'gender', 'rate_plan')
     list_filter = ('birthday', 'gender')
     search_fields = ('email', 'username', 'nickname', 'last_name', 'first_name', 'phone')
     ordering = ('id',)
@@ -65,6 +66,15 @@ class UserAdmin(ImportExportModelAdmin):
             DAYS_IN_YEAR = 365.2425
             return int((datetime.date.today() - obj.birthday).days / DAYS_IN_YEAR)
     age.short_description = 'age'
+
+    def rate_plan(self, obj):
+        RATE_PLAN = {'0': 'Free', '1': 'Basic', '2': 'Standard', '3': 'Premium'}
+        mypage_obj = MyPage.objects.values_list('rate_plan').get(user_id=obj.id)
+        for rate_plan in mypage_obj:
+            for rate_paln_key, rate_paln_value in RATE_PLAN.items():
+                if rate_plan in rate_paln_key:
+                    return rate_paln_value
+    rate_plan.short_description = 'rate plan'
 
 @admin.register(SearchTagModel)
 class SearchTagAdmin(ImportExportModelAdmin):
