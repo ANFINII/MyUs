@@ -123,7 +123,7 @@ def mypage_image_path(instance, filename):
 class MyPage(models.Model):
     user            = models.OneToOneField(User, on_delete=models.CASCADE)
     mypage_image    = models.ImageField(upload_to=mypage_image_path, default='../static/img/MyUs_banner.png', blank=True, null=True)
-    mypage_email    = models.EmailField(max_length=120, blank=True, null=True, default='abc@gmail.com')
+    mypage_email    = models.EmailField(max_length=255, blank=True, null=True, default='abc@gmail.com')
     content         = models.TextField(blank=True)
     follower_count  = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
     following_count = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
