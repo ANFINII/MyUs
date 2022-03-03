@@ -1,9 +1,9 @@
-<form method="POST" action="{% url 'myus:mypage_toggle' %}" advertise="{{ user.auto_advertise }}">
-  {% if user.rate_plan == '0' %}
+<form method="POST" action="{% url 'myus:mypage_toggle' %}" advertise="{{ user.mypage.auto_advertise }}">
+  {% if user.mypage.rate_plan == '0' %}
   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-disable" viewBox="0 0 16 16">
     <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
   </svg>
-  {% elif user.auto_advertise %}
+  {% elif user.mypage.auto_advertise %}
   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_mypage" viewBox="0 0 16 16">
     <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
   </svg>

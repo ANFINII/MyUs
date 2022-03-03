@@ -197,7 +197,6 @@ def pjax(request):
     context = dict()
     if request.method == 'GET':
         href = request.GET.get('href')
-        user = request.user
         if '/' == href:
             context['html'] = render_to_string('index_list.html', {
                 'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:8],
@@ -523,13 +522,14 @@ def mypage_toggle(request):
     """mypage_toggle"""
     context = dict()
     if request.method == 'POST':
-        user = request.user
+        user_id = request.user.id
         auto_advertise = request.POST.get('advertise')
+        myapge_obj = MyPage.objects.get(user_id=user_id)
         if auto_advertise == 'True':
-            user.auto_advertise = False
+            myapge_obj.auto_advertise = False
         else:
-            user.auto_advertise = True
-        user.save()
+            myapge_obj.auto_advertise = True
+        myapge_obj.save()
         context['advertise'] = render_to_string('registration/mypage_advertise.html', request=request)
         return JsonResponse(context)
 
