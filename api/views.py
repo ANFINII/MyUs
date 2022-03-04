@@ -144,10 +144,7 @@ def signup_form(request):
                     user.last_name = last_name
                     user.first_name = first_name
                     user.gender = gender
-
-                    birthday = datetime.date(year=int(year), month=int(month), day=int(day))
-                    user.birthday = birthday.isoformat()
-
+                    user.birthday = birthday
                     user.save()
                     messages.success(request, '登録が完了しました!')
                     return redirect('myus:login')
