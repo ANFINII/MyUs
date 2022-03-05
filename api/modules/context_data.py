@@ -151,11 +151,11 @@ class ContextData:
             notify_list = notify_data(self)
             context['notification_count'] = notify_list['notification_count']
             context['notification_list'] = notify_list['notification_list']
-        if obj.author.rate_plan == '1':
+        if obj.author.mypage.rate_plan == '1':
             context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:1])
-        if obj.author.rate_plan == '2':
+        if obj.author.mypage.rate_plan == '2':
             context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:3])
-        if obj.author.rate_plan == '3':
+        if obj.author.mypage.rate_plan == '3':
             context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:4])
         context['liked'] = liked
         context['followed'] = followed
