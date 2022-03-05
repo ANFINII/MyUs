@@ -895,13 +895,13 @@ class AdvertiseModelAdminSite(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         author = request.user
-        if author.rate_plan != '0':
+        if author.mypage.rate_plan != '0':
             return True
         return False
 
     def has_change_permission(self, request, obj=None):
         author = request.user
-        if author.rate_plan != '0':
+        if author.mypage.rate_plan != '0':
             return True
         return False
 
