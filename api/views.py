@@ -13,8 +13,13 @@ from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
+from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, DeleteView, TemplateView
+from rest_framework import views
+from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+from api.serializers import UserSerializer
 from .forms import SearchTagForm, BlogForm
 from .models import MyPage, SearchTagModel, NotifySettingModel, NotificationModel, CommentModel, FollowModel, TodoModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, AdvertiseModel
@@ -23,10 +28,6 @@ from .modules.get_form import get_detail
 from .modules.search import Search
 from .modules.success_url import success_url
 from .modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import authentication, permissions
 import datetime
 import random
 import string
@@ -37,19 +38,14 @@ import json
 
 User = get_user_model()
 
+class SignUpAPIView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-
-# Create your views here.
-
-User = get_user_model()
-
-# class Signup(APIView):
+# class Login(view.APIView):
 #     pass
 
-# class Login(APIView):
-#     pass
-
-# class Index(APIView):
+# class Index(view.APIView):
 #     authentication_classes = (authentication.TokenAuthentication,)
 #     permission_classes = (permissions.IsAdminUser,)
 
