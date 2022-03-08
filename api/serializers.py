@@ -13,6 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
             'is_active', 'is_staff', 'is_admin', 'last_login', 'date_joined',
         )
 
+
 class MyPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyPage
@@ -21,18 +22,68 @@ class MyPageSerializer(serializers.ModelSerializer):
             'rate_plan', 'rate_plan_date', 'auto_advertise',
         )
 
+
 class NotificationSettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotificationSetting
         fields = (
-            'id', 'user', 'image', 'email', 'content', 'follower_num', 'follow_num',
-            'rate_plan', 'rate_plan_date', 'auto_advertise',
+            'id', 'user', 'is_video', 'is_live', 'is_music', 'is_picture', 'is_blog',
+            'is_chat', 'is_collabo', 'is_follow', 'is_reply', 'is_like', 'is_views',
         )
+
 
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = (
-            'id', 'user', 'image', 'email', 'content', 'follower_num', 'follow_num',
-            'rate_plan', 'rate_plan_date', 'auto_advertise',
+            'id', 'user_from', 'user_to', 'type_no', 'type_name', 'content_type',
+            'object_id', 'content_object', 'confirmed', 'deleted', 'created',
+        )
+
+
+class SearchTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SearchTagModel
+        fields = ('id', 'author', 'sequence', 'searchtag', 'created',)
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TagModel
+        fields = ('id', 'author', 'tag', 'english_tag',)
+
+
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoModel
+        fields = (
+            'id', 'author', 'title', 'content', 'images', 'videos', 'convert', 'comments',
+            'publish', 'tags', 'like', 'read', 'created', 'updated',
+        )
+
+
+class LiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LiveModel
+        fields = (
+            'id', 'author', 'title', 'content', 'images', 'lives', 'comments',
+            'publish', 'tags', 'like', 'read', 'created', 'updated',
+        )
+
+
+class MusicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MusicModel
+        fields = (
+            'id', 'author', 'title', 'content', 'lyrics', 'musics', 'comments',
+            'publish', 'download', 'tags', 'like', 'read', 'created', 'updated',
+        )
+
+
+class PictureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PictureModel
+        fields = (
+            'id', 'author', 'title', 'content', 'images', 'comments',
+            'publish', 'tags', 'like', 'read', 'created', 'updated',
         )
