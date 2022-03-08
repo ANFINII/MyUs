@@ -9,7 +9,7 @@
     </p>
     {% if user.is_authenticated %}
     <a href="{% url 'myus:userpage' user.nickname %}" path="{% url 'myus:pjax' %}" data="{{ user.nickname }}" class="pjax_button_userpage">
-      <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
+      <img src="{{ user.image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
     </a>
     <textarea name="text" rows="1" placeholder="コメント入力" id="comment_form_area" class="textarea_br"></textarea>
     <button type="submit" title="送信" id="comment_form_button" class="btn btn-primary btn-sm form_button" disabled>コメント</button>

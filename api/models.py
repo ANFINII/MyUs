@@ -39,7 +39,7 @@ def user_image_path(instance, filename):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """CustomUserModel"""
-    user_image    = models.ImageField(upload_to=user_image_path, default='../static/img/user_icon.png', blank=True, null=True)
+    image         = models.ImageField(upload_to=user_image_path, default='../static/img/user_icon.png', blank=True, null=True)
     email         = models.EmailField(max_length=255, unique=True, db_index=True)
     username      = models.CharField(max_length=20, unique=True, db_index=True)
     nickname      = models.CharField(max_length=80, unique=True, db_index=True)
@@ -100,10 +100,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            user_image = self.user_image
-            self.user_image = None
+            image = self.image
+            self.image = None
             super().save(*args, **kwargs)
-            self.user_image = user_image
+            self.image = image
             if 'force_insert' in kwargs:
                 kwargs.pop('force_insert')
         super().save(*args, **kwargs)
@@ -113,42 +113,42 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 @property
 def image_url(self):
-    if self.user_image and hasattr(self.user_image, 'url'):
-        return self.user_image.url
+    if self.image and hasattr(self.image, 'url'):
+        return self.image.url
 
 
-def mypage_image_path(instance, filename):
+def mypage_banner_path(instance, filename):
     return f'users/images_mypage/user_{instance.id}/{filename}'
 
 class MyPage(models.Model):
-    user            = models.OneToOneField(User, on_delete=models.CASCADE)
-    mypage_image    = models.ImageField(upload_to=mypage_image_path, default='../static/img/MyUs_banner.png', blank=True, null=True)
-    mypage_email    = models.EmailField(max_length=255, blank=True, null=True, default='abc@gmail.com')
-    content         = models.TextField(blank=True)
-    follower_count  = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
-    following_count = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
-    plan_choice     = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
-    rate_plan       = models.CharField(choices=plan_choice, max_length=1, default='0')
-    rate_plan_date  = models.DateTimeField(blank=True, null=True)
-    auto_advertise  = models.BooleanField(default=True)
+    user           = models.OneToOneField(User, on_delete=models.CASCADE)
+    banner         = models.ImageField(upload_to=mypage_banner_path, default='../static/img/MyUs_banner.png', blank=True, null=True)
+    email          = models.EmailField(max_length=255, blank=True, null=True, default='abc@gmail.com')
+    content        = models.TextField(blank=True)
+    follow_num     = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
+    follower_num   = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
+    plan_choice    = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
+    rate_plan      = models.CharField(choices=plan_choice, max_length=1, default='0')
+    rate_plan_date = models.DateTimeField(blank=True, null=True)
+    auto_advertise = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.nickname
 
     def get_following_count(self):
-        self.following_count = FollowModel.objects.filter(follower=User.id).count()
-        return self.following_count
+        self.follow_num = FollowModel.objects.filter(follower=User.id).count()
+        return self.follow_num
 
     def get_follower_count(self):
-        self.follower_count = FollowModel.objects.filter(following=User.id).count()
-        return self.follower_count
+        self.follower_num = FollowModel.objects.filter(following=User.id).count()
+        return self.follower_num
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            mypage_image = self.mypage_image
-            self.mypage_image = None
+            banner = self.banner
+            self.banner = None
             super().save(*args, **kwargs)
-            self.mypage_image = mypage_image
+            self.banner = banner
             if 'force_insert' in kwargs:
                 kwargs.pop('force_insert')
         super().save(*args, **kwargs)
@@ -157,9 +157,9 @@ class MyPage(models.Model):
         verbose_name_plural = '00 MyPage'
 
 @property
-def mypage_image(self):
-    if self.mypage_image and hasattr(self.mypage_image, 'url'):
-        return self.mypage_image.url
+def mypage_banner(self):
+    if self.banner and hasattr(self.banner, 'url'):
+        return self.banner.url
 
 @receiver(post_save, sender=User)
 def create_mypage(sender, **kwargs):
@@ -438,6 +438,7 @@ class MusicModel(models.Model):
     class Meta:
         verbose_name_plural = '03 Music'
 
+
 class PictureQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
@@ -450,7 +451,6 @@ class PictureQuerySet(models.QuerySet):
             )
             qs = qs.filter(or_lookup).distinct()
         return qs
-
 
 class PictureManager(models.Manager):
     def get_queryset(self):

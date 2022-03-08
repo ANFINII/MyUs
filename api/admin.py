@@ -10,7 +10,7 @@ import datetime
 # Admin用の管理画面
 class MyPageInline(admin.StackedInline):
     model = MyPage
-    readonly_fields = ('mypage_image', 'follower_count', 'following_count', 'rate_plan', 'rate_plan_date', 'auto_advertise')
+    readonly_fields = ('banner', 'follow_num', 'follower_num', 'rate_plan', 'rate_plan_date', 'auto_advertise')
     verbose_name = 'Myページ情報'
 
     def has_delete_permission(self, request, obj=None):
@@ -53,7 +53,7 @@ class UserAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('アカウント情報', {'fields': ('user_image', 'email', 'username', 'nickname', 'last_name', 'first_name', 'birthday', 'age', 'gender', 'phone', 'location', 'introduction', 'groups', 'user_permissions')}),
+        ('アカウント情報', {'fields': ('image', 'email', 'username', 'nickname', 'last_name', 'first_name', 'birthday', 'age', 'gender', 'phone', 'location', 'introduction', 'groups', 'user_permissions')}),
         ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
     ]
 

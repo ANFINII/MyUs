@@ -9,7 +9,7 @@
     <div class="modal_content_body">
       <div class="comment_aria_list">
         <a href="{% url 'myus:userpage' reply.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
-          <img src="{{ reply.author.user_image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+          <img src="{{ reply.author.image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
         </a>
         <div class="comment_aria_list_1">
           <p>{{ reply.author.nickname }}</p>

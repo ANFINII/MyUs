@@ -394,7 +394,7 @@ class Profile(TemplateView):
 class ProfileUpdate(UpdateView):
     """アカウント更新"""
     model = User
-    fields = ('user_image', 'username', 'email', 'nickname', 'last_name', 'first_name', 'gender', 'phone', 'location', 'introduction')
+    fields = ('image', 'username', 'email', 'nickname', 'last_name', 'first_name', 'gender', 'phone', 'location', 'introduction')
     template_name = 'registration/profile_update.html'
     success_url = reverse_lazy('myus:profile')
 
@@ -469,7 +469,7 @@ class MyPageView(TemplateView):
 class MyPageUpdate(UpdateView):
     """Myページ更新"""
     model = MyPage
-    fields = ('mypage_image', 'mypage_email', 'content')
+    fields = ('banner', 'email', 'content')
     template_name = 'registration/mypage_update.html'
     success_url = reverse_lazy('myus:mypage')
 
@@ -483,7 +483,7 @@ class MyPageUpdate(UpdateView):
             user = self.request.user
             mypage_obj = MyPage.objects.get(user=user)
 
-            if has_email(mypage_obj.mypage_email):
+            if has_email(mypage_obj.email):
                 messages.error(self.request, 'メールアドレスの形式が違います!')
                 return super().form_invalid(form)
 
@@ -500,7 +500,7 @@ class MyPageUpdate(UpdateView):
         """バリデーションに失敗した時"""
         user = self.request.user
         mypage_obj = MyPage.objects.get(user=user)
-        if has_email(mypage_obj.mypage_email):
+        if has_email(mypage_obj.email):
             messages.error(self.request, 'メールアドレスの形式が違います!')
             return super().form_invalid(form)
         else:

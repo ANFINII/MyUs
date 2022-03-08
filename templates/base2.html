@@ -224,7 +224,7 @@
       <input type="checkbox" id="drop_menu_profile" class="dropdown_menu_profile">
       <label for="drop_menu_profile" class="drop_open_profile">
         {% if user.is_authenticated %}
-        <img src="{{ user.user_image.url }}" title="{{ user.nickname }}" width="32px" height="32xp">
+        <img src="{{ user.image.url }}" title="{{ user.nickname }}" width="32px" height="32xp">
         {% else %}
         <img src="{% static 'img/user_icon.png' %}" title="匿名" width="32px" height="32xp">
         {% endif %}

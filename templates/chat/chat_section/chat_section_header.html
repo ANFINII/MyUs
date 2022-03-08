@@ -51,14 +51,14 @@
     <div class="chat_section_content_area">
       <div class="chat_content_area">
         <a href="{% url 'myus:userpage' object.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ object.author.nickname }}" class="pjax_button_userpage">
-          <img src="{{ object.author.user_image.url }}" title="{{ object.author.nickname }}" class="profile_image_comment">
+          <img src="{{ object.author.image.url }}" title="{{ object.author.nickname }}" class="profile_image_comment">
         </a>
         <div class="chat_content_area_1">
           <p>{{ object.author.nickname }}</p>
           <time>{{ object.created|date:'Y/m/d H:i' }}</time>
         </div>
         <div class="chat_content_area_2">登録者数
-          <span class="follower_count">{{ object.author.follower_count }}</span>
+          <span class="follower_count">{{ object.author.mypage.follower_num }}</span>
         </div>
         <div class="chat_content_area_3">
           {% if user.nickname == object.author.nickname %}
@@ -104,7 +104,7 @@
     {% for item in chat_list %}
     <div class="chat_section_nav_list">
       <a href="{% url 'myus:userpage' item.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ item.author.nickname }}" class="pjax_button_userpage">
-        <img src="{{ item.author.user_image.url }}" title="{{ item.author.nickname }}" class="profile_image_comment">
+        <img src="{{ item.author.image.url }}" title="{{ item.author.nickname }}" class="profile_image_comment">
       </a>
       <a  href="{% url 'myus:chat_detail' item.pk %}">
         <h3 title="{{ item.title }}">{{ item.title }}</h3>

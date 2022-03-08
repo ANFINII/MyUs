@@ -2,7 +2,7 @@
 <div id="notification_aria_link_{{ notification.id }}" class="dropdown_menu_item side_indent">
   <object class="notification_aria_list">
     <a href="{% url 'myus:userpage' notification.user_from.nickname %}" path="{% url 'myus:pjax' %}" data="{{ notification.user_from.nickname }}" class="pjax_button_userpage">
-      <img src="{{ notification.user_from.user_image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
+      <img src="{{ notification.user_from.image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
     </a>
     {% if notification.user_confirmed %}
     <span></span>

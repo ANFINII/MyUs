@@ -1,19 +1,19 @@
 {% for author in user_list %}
   <figure class="userpage_banner">
-    <img src="{{ author.mypage_image.url }}" title="{{ author.nickname }}">
+    <img src="{{ author.mypage.banner.url }}" title="{{ author.nickname }}">
   </figure>
 
   <object class="userpage_author">
     <object class="author_space">
       <figure>
-        <img src="{{ author.user_image.url }}" title="{{ author.nickname }}" class="userpage_image">
+        <img src="{{ author.image.url }}" title="{{ author.nickname }}" class="userpage_image">
       </figure>
     </object>
     <span title="{{ author.nickname }}" class="userpage_content_1">{{ author.nickname }}</span>
     <span class="userpage_content_2">フォロワー数
-      <span class="follower_count">{{ author.follower_count }}</span>
+      <span class="follower_count">{{ author.mypage.follower_num }}</span>
     </span>
-    <span class="userpage_content_3">フォロー数 {{ author.following_count }}</span>
+    <span class="userpage_content_3">フォロー数 {{ author.mypage.follow_num }}</span>
     <span class="userpage_content_5">
       {% if user.nickname == author.nickname %}
       <button class="btn btn-secondary btn" disabled>フォローする</button>

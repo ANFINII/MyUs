@@ -15,18 +15,18 @@
       <tr><td class="td-color">バナー画像</td>
         <td>
           <label for="account_image_input" class="mypage_image">
-            {% if user.mypage.mypage_image %}
-            <a href="{{ user.mypage.mypage_image.url }}" data-lightbox="group">
-              <img src="{{ user.mypage.mypage_image.url }}" title="{{ user.nickname }}" width="270px" height="56xp" data-lightbox="group">
+            {% if user.mypage.banner %}
+            <a href="{{ user.mypage.banner.url }}" data-lightbox="group">
+              <img src="{{ user.mypage.banner.url }}" title="{{ user.nickname }}" width="270px" height="56xp" data-lightbox="group">
             </a>
             {% endif %}
           </label>
         </td>
       </tr>
       <tr><td class="td-color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
-      <tr><td class="td-color">メールアドレス</td><td class="td-indent">{{ user.mypage.mypage_email }}</td></tr>
-      <tr><td class="td-color">フォロー数</td><td class="td-indent">{{ user.mypage.following_count }}</td></tr>
-      <tr><td class="td-color">フォロワー数</td><td class="td-indent">{{ user.mypage.follower_count }}</td></tr>
+      <tr><td class="td-color">メールアドレス</td><td class="td-indent">{{ user.mypage.email }}</td></tr>
+      <tr><td class="td-color">フォロー数</td><td class="td-indent">{{ user.mypage.follow_num }}</td></tr>
+      <tr><td class="td-color">フォロワー数</td><td class="td-indent">{{ user.mypage.follower_num }}</td></tr>
       <tr><td class="td-color">料金プラン</td><td class="td-indent">{{ user.mypage.get_rate_plan_display }}</td></tr>
       <tr><td class="td-color">全体広告</td><td class="td-indent" id="auto_advertise">{% include 'registration/mypage_advertise.html' %}</td></tr>
       <tr><td class="td-color">概要</td><td class="td-indent">{{ user.mypage.content|linebreaksbr|urlize }}</td></tr>
