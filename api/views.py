@@ -643,7 +643,7 @@ def notification_setting(request):
             if notification_type == 'views':
                 notification_obj.is_views = True
         notification_obj.save()
-        context['notification_setting_lists'] = render_to_string('parts/notification_setting_list.html', {
+        context['notification_setting_lists'] = render_to_string('parts/notification_setting.html', {
             'notification_setting_list': NotificationSetting.objects.filter(user_id=user_id),
             'notification': notification,
         }, request=request)
