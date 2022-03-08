@@ -170,18 +170,18 @@ def create_mypage(sender, **kwargs):
 
 class NotificationSetting(models.Model):
     """NotificationSetting"""
-    user    = models.OneToOneField(User, on_delete=models.CASCADE)
-    video   = models.BooleanField(default=False)
-    live    = models.BooleanField(default=False)
-    music   = models.BooleanField(default=False)
-    picture = models.BooleanField(default=False)
-    blog    = models.BooleanField(default=False)
-    chat    = models.BooleanField(default=False)
-    collabo = models.BooleanField(default=False)
-    follow  = models.BooleanField(default=True)
-    reply   = models.BooleanField(default=True)
-    like    = models.BooleanField(default=True)
-    views   = models.BooleanField(default=True)
+    user       = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_video   = models.BooleanField(default=False)
+    is_live    = models.BooleanField(default=False)
+    is_music   = models.BooleanField(default=False)
+    is_picture = models.BooleanField(default=False)
+    is_blog    = models.BooleanField(default=False)
+    is_chat    = models.BooleanField(default=False)
+    is_collabo = models.BooleanField(default=False)
+    is_follow  = models.BooleanField(default=True)
+    is_reply   = models.BooleanField(default=True)
+    is_like    = models.BooleanField(default=True)
+    is_views   = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.nickname

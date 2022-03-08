@@ -20,27 +20,27 @@ def notification_data(self):
     following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', 'created'))
     if user_id is not None:
         notification_obj = NotificationSetting.objects.get(user_id=user_id)
-        if notification_obj.video:
+        if notification_obj.is_video:
             notification_obj_list_1 += [1]
-        if notification_obj.live:
+        if notification_obj.is_live:
             notification_obj_list_1 += [2]
-        if notification_obj.music:
+        if notification_obj.is_music:
             notification_obj_list_1 += [3]
-        if notification_obj.picture:
+        if notification_obj.is_picture:
             notification_obj_list_1 += [4]
-        if notification_obj.blog:
+        if notification_obj.is_blog:
             notification_obj_list_1 += [5]
-        if notification_obj.chat:
+        if notification_obj.is_chat:
             notification_obj_list_1 += [6]
-        if notification_obj.collabo:
+        if notification_obj.is_collabo:
             notification_obj_list_1 += [7]
-        if notification_obj.follow:
+        if notification_obj.is_follow:
             notification_obj_list_2 += [8]
-        if notification_obj.like:
+        if notification_obj.is_like:
             notification_obj_list_2 += [9]
-        if notification_obj.reply:
+        if notification_obj.is_reply:
             notification_obj_list_2 += [10]
-        if notification_obj.views:
+        if notification_obj.is_views:
             notification_obj_list_2 += [11]
         for id, dates in following_list:
             notification_list_1 += Notification.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notification_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
