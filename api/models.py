@@ -168,8 +168,8 @@ def create_mypage(sender, **kwargs):
         MyPage.objects.get_or_create(user=kwargs['instance'])
 
 
-class NotifySettingModel(models.Model):
-    """NotifySettingModel"""
+class NotificationSetting(models.Model):
+    """NotificationSetting"""
     user    = models.OneToOneField(User, on_delete=models.CASCADE)
     video   = models.BooleanField(default=False)
     live    = models.BooleanField(default=False)
@@ -190,10 +190,10 @@ class NotifySettingModel(models.Model):
         verbose_name_plural = '00 通知設定'
 
 @receiver(post_save, sender=User)
-def create_notify_setting(sender, **kwargs):
-    """ユーザー作成時に空のnotify_settingも作成する"""
+def create_notification_setting(sender, **kwargs):
+    """ユーザー作成時に空のnotification_settingも作成する"""
     if kwargs['created']:
-        NotifySettingModel.objects.get_or_create(user=kwargs['instance'])
+        NotificationSetting.objects.get_or_create(user=kwargs['instance'])
 
 
 class SearchTagModel(models.Model):
@@ -692,8 +692,8 @@ class FollowModel(models.Model):
         verbose_name_plural = '11 フォロー'
 
 
-class NotificationModel(models.Model):
-    """NotificationModel"""
+class Notification(models.Model):
+    """Notification"""
     # {'1':'video', '2':'live', '3':'music', '4':'picture', '5':'blog', '6':'chat',
     # '7':'collabo', '8':'follow', '9':'like', '10':'reply', '11':'views'}
     user_from      = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE)

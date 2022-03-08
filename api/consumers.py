@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
-from .models import ChatModel, CommentModel, NotificationModel
+from .models import ChatModel, CommentModel, Notification
 from .views import ChatDetail, ChatThread
 
 User = get_user_model()
@@ -32,7 +32,7 @@ class ChatConsumer(WebsocketConsumer):
             parent_id=data['parent_id'],
             )
         if self.scope['user'].id != message.parent.author.id:
-            NotificationModel.objects.create(
+            Notification.objects.create(
                 user_from_id=self.scope['user'].id,
                 user_to_id=message.parent.author.id,
                 type_no=10,

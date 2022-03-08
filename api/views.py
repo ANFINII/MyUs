@@ -21,7 +21,7 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from api.serializers import UserSerializer
 from .forms import SearchTagForm, BlogForm
-from .models import MyPage, SearchTagModel, NotifySettingModel, NotificationModel, CommentModel, FollowModel, TodoModel
+from .models import MyPage, SearchTagModel, NotificationSetting, Notification, CommentModel, FollowModel, TodoModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, AdvertiseModel
 from .modules.context_data import ContextData
 from .modules.get_form import get_detail
@@ -298,7 +298,7 @@ def pjax(request):
             }, request=request)
         if '/notification' == href:
             context['html'] = render_to_string('common/notification_content.html', {
-                'notify_setting_list': NotifySettingModel.objects.filter(user_id=request.user.id),
+                'notification_setting_list': NotificationSetting.objects.filter(user_id=request.user.id),
             }, request=request)
         if '/userpolicy' == href:
             context['html'] = render_to_string('common/userpolicy_content.html', request=request)
@@ -579,7 +579,7 @@ def create_checkout_session(request):
 # 通知設定
 class Notification(TemplateView):
     """Notification"""
-    model = NotifySettingModel
+    model = NotificationSetting
     template_name = 'common/notification.html'
 
     def get_context_data(self, **kwargs):
@@ -591,61 +591,61 @@ def notification_setting(request):
     context = dict()
     if request.method == 'POST':
         user_id = request.user.id
-        notify = request.POST.get('notify')
-        notify_type = request.POST.get('notify_type')
-        notify_obj = NotifySettingModel.objects.get(user_id=user_id)
-        if notify == 'True':
-            notify = False
-            if notify_type == 'video':
-                notify_obj.video = False
-            if notify_type == 'live':
-                notify_obj.live = False
-            if notify_type == 'music':
-                notify_obj.music = False
-            if notify_type == 'picture':
-                notify_obj.picture = False
-            if notify_type == 'blog':
-                notify_obj.blog = False
-            if notify_type == 'chat':
-                notify_obj.chat = False
-            if notify_type == 'collabo':
-                notify_obj.collabo = False
-            if notify_type == 'follow':
-                notify_obj.follow = False
-            if notify_type == 'reply':
-                notify_obj.reply = False
-            if notify_type == 'like':
-                notify_obj.like = False
-            if notify_type == 'views':
-                notify_obj.views = False
+        notification = request.POST.get('notification')
+        notification_type = request.POST.get('notification_type')
+        notification_obj = NotificationSetting.objects.get(user_id=user_id)
+        if notification == 'True':
+            notification = False
+            if notification_type == 'video':
+                notification_obj.video = False
+            if notification_type == 'live':
+                notification_obj.live = False
+            if notification_type == 'music':
+                notification_obj.music = False
+            if notification_type == 'picture':
+                notification_obj.picture = False
+            if notification_type == 'blog':
+                notification_obj.blog = False
+            if notification_type == 'chat':
+                notification_obj.chat = False
+            if notification_type == 'collabo':
+                notification_obj.collabo = False
+            if notification_type == 'follow':
+                notification_obj.follow = False
+            if notification_type == 'reply':
+                notification_obj.reply = False
+            if notification_type == 'like':
+                notification_obj.like = False
+            if notification_type == 'views':
+                notification_obj.views = False
         else:
-            notify = True
-            if notify_type == 'video':
-                notify_obj.video = True
-            if notify_type == 'live':
-                notify_obj.live = True
-            if notify_type == 'music':
-                notify_obj.music = True
-            if notify_type == 'picture':
-                notify_obj.picture = True
-            if notify_type == 'blog':
-                notify_obj.blog = True
-            if notify_type == 'chat':
-                notify_obj.chat = True
-            if notify_type == 'collabo':
-                notify_obj.collabo = True
-            if notify_type == 'follow':
-                notify_obj.follow = True
-            if notify_type == 'reply':
-                notify_obj.reply = True
-            if notify_type == 'like':
-                notify_obj.like = True
-            if notify_type == 'views':
-                notify_obj.views = True
-        notify_obj.save()
-        context['notify_setting_lists'] = render_to_string('parts/notify_setting_list.html', {
-            'notify_setting_list': NotifySettingModel.objects.filter(user_id=user_id),
-            'notify': notify,
+            notification = True
+            if notification_type == 'video':
+                notification_obj.video = True
+            if notification_type == 'live':
+                notification_obj.live = True
+            if notification_type == 'music':
+                notification_obj.music = True
+            if notification_type == 'picture':
+                notification_obj.picture = True
+            if notification_type == 'blog':
+                notification_obj.blog = True
+            if notification_type == 'chat':
+                notification_obj.chat = True
+            if notification_type == 'collabo':
+                notification_obj.collabo = True
+            if notification_type == 'follow':
+                notification_obj.follow = True
+            if notification_type == 'reply':
+                notification_obj.reply = True
+            if notification_type == 'like':
+                notification_obj.like = True
+            if notification_type == 'views':
+                notification_obj.views = True
+        notification_obj.save()
+        context['notification_setting_lists'] = render_to_string('parts/notification_setting_list.html', {
+            'notification_setting_list': NotificationSetting.objects.filter(user_id=user_id),
+            'notification': notification,
         }, request=request)
         return JsonResponse(context)
 
@@ -654,7 +654,7 @@ def notification_confirmed(request):
     """notification_confirmed"""
     user = request.user
     notification_id = request.POST.get('notification_id')
-    notification_obj = get_object_or_404(NotificationModel, id=notification_id)
+    notification_obj = get_object_or_404(Notification, id=notification_id)
     notification_obj.confirmed.add(user)
     return JsonResponse()
 
@@ -664,12 +664,12 @@ def notification_deleted(request):
     if request.method == 'POST':
         user = request.user
         notification_id = request.POST.get('notification_id')
-        notification_obj = get_object_or_404(NotificationModel, id=notification_id)
+        notification_obj = get_object_or_404(Notification, id=notification_id)
         notification_obj.confirmed.add(user)
         notification_obj.deleted.add(user)
         following_id_list = list(FollowModel.objects.filter(follower_id=user.id).values_list('following_id', flat=True))
         context = {
-            'notification_count': NotificationModel.objects.filter(user_from_id__in=following_id_list, user_to_id=user.id).exclude(confirmed=user.id).count(),
+            'notification_count': Notification.objects.filter(user_from_id__in=following_id_list, user_to_id=user.id).exclude(confirmed=user.id).count(),
         }
         return JsonResponse(context)
 
@@ -751,14 +751,14 @@ def like_form_comment(request):
         comment_liked = False
         if obj.like.filter(id=user.id).exists():
             comment_liked = False
-            notification_obj = NotificationModel.objects.filter(type_no=9, object_id=obj.id)
+            notification_obj = Notification.objects.filter(type_no=9, object_id=obj.id)
             notification_obj.delete()
             obj.like.remove(user)
         else:
             comment_liked = True
             obj.like.add(user)
             if user.id != obj.author.id:
-                NotificationModel.objects.create(
+                Notification.objects.create(
                     user_from_id=user.id,
                     user_to_id=obj.author.id,
                     type_no=9,
@@ -827,7 +827,7 @@ def reply_form(request):
         comment_obj.parent = CommentModel.objects.get(id=comment_id)
         comment_obj.save()
         if user_id != comment_obj.parent.author.id:
-            NotificationModel.objects.create(
+            Notification.objects.create(
                 user_from_id=user_id,
                 user_to_id=comment_obj.parent.author.id,
                 type_no=10,
@@ -880,7 +880,7 @@ def reply_delete(request, comment_id):
     if request.method == 'POST':
         comment_id = request.POST.get('comment_id')
         comment_obj = CommentModel.objects.get(id=comment_id)
-        notification_obj = NotificationModel.objects.filter(type_no=10, object_id=comment_obj.id)
+        notification_obj = Notification.objects.filter(type_no=10, object_id=comment_obj.id)
         notification_obj.delete()
         comment_obj.delete()
         context = {
@@ -983,7 +983,7 @@ def follow_create(request, nickname):
             pass
         elif FollowModel.objects.filter(follower=follower, following=following).exists():
             unfollow = FollowModel.objects.get(follower=follower, following=following)
-            notification_obj = NotificationModel.objects.filter(type_no=8, object_id=unfollow.id)
+            notification_obj = Notification.objects.filter(type_no=8, object_id=unfollow.id)
             notification_obj.delete()
             unfollow.delete()
             followed = False
@@ -1008,7 +1008,7 @@ def follow_create(request, nickname):
             following.follower_count = follower_count
             following.save()
             # 'フォローしました'
-            NotificationModel.objects.create(
+            Notification.objects.create(
                 user_from_id=follower.id,
                 user_to_id=following.id,
                 type_no=8,
@@ -1025,7 +1025,7 @@ def follow_create(request, nickname):
 # UserPolicy
 class UserPolicy(TemplateView):
     """UserPolicy"""
-    model = NotificationModel
+    model = Notification
     template_name = 'common/userpolicy.html'
 
     def get_context_data(self, **kwargs):
@@ -1035,7 +1035,7 @@ class UserPolicy(TemplateView):
 # Knowledge
 class Knowledge(TemplateView):
     """Knowledge"""
-    model = NotificationModel
+    model = Notification
     template_name = 'common/knowledge.html'
 
     def get_context_data(self, **kwargs):

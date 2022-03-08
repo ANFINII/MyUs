@@ -3,7 +3,7 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
 from import_export.admin import ImportExportModelAdmin
-from .models import User, MyPage, SearchTagModel, TagModel, NotifySettingModel, NotificationModel, CommentModel, FollowModel
+from .models import User, MyPage, SearchTagModel, TagModel, NotificationSetting, Notification, CommentModel, FollowModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, TodoModel, AdvertiseModel
 import datetime
 
@@ -16,8 +16,8 @@ class MyPageInline(admin.StackedInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
-class NotifySettingInline(admin.TabularInline):
-    model = NotifySettingModel
+class NotificationSettingInline(admin.TabularInline):
+    model = NotificationSetting
     verbose_name = '通知設定'
 
     def has_delete_permission(self, request, obj=None):
@@ -49,7 +49,7 @@ class UserAdmin(ImportExportModelAdmin):
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
     readonly_fields = ('birthday', 'age', 'date_joined', 'last_login')
-    inlines = [MyPageInline, NotifySettingInline, SearchTagInline]
+    inlines = [MyPageInline, NotificationSettingInline, SearchTagInline]
 
     # 詳細画面
     fieldsets = [
@@ -334,7 +334,7 @@ class FollowModelAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('created',)})
     ]
 
-@admin.register(NotificationModel)
+@admin.register(Notification)
 class NotificationAdmin(ImportExportModelAdmin):
     list_display = ('id', 'user_from', 'user_to', 'type_no', 'type_name', 'content_type', 'object_id', 'title', 'confirmed_count', 'deleted_count', 'created')
     search_fields = ('type_name', 'created')
@@ -868,7 +868,7 @@ class NotificationAdminSite(admin.ModelAdmin):
     def title(self, obj):
         return obj.content_object
     title.short_description = 'title'
-mymanage_site.register(NotificationModel, NotificationAdminSite)
+mymanage_site.register(Notification, NotificationAdminSite)
 
 class AdvertiseModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'url', 'publish', 'read', 'period', 'created', 'updated')

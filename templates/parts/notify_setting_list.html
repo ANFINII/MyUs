@@ -1,10 +1,10 @@
-{% for notify in notify_setting_list %}
+{% for notification in notification_setting_list %}
 <table id="notification_table">
   <tbody>
     <tr><td class="td-color">通知設定</td><td class="td-indent">フォローしているユーザの投稿通知などを設定</td></tr>
     <tr><td class="td-color">Video通知</td><td class="td-indent">
-      <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.video }}" notify-type="video">
-        {% if notify.video %}
+      <form method="POST" action="{% url 'myus:notification_setting' %}" notification="{{ notification.video }}" notification-type="video">
+        {% if notification.video %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -16,8 +16,8 @@
       </form>
     </td></tr>
     <tr><td class="td-color">Live通知</td><td class="td-indent">
-      <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.live }}" notify-type="live">
-        {% if notify.live %}
+      <form method="POST" action="{% url 'myus:notification_setting' %}" notification="{{ notification.live }}" notification-type="live">
+        {% if notification.live %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -29,8 +29,8 @@
       </form>
     </td></tr>
     <tr><td class="td-color">Music通知</td><td class="td-indent">
-      <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.music }}" notify-type="music">
-        {% if notify.music %}
+      <form method="POST" action="{% url 'myus:notification_setting' %}" notification="{{ notification.music }}" notification-type="music">
+        {% if notification.music %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -42,8 +42,8 @@
       </form>
     </td></tr>
     <tr><td class="td-color">Picture通知</td><td class="td-indent">
-      <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.picture }}"  notify-type="picture">
-        {% if notify.picture %}
+      <form method="POST" action="{% url 'myus:notification_setting' %}" notification="{{ notification.picture }}"  notification-type="picture">
+        {% if notification.picture %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -55,8 +55,8 @@
       </form>
     </td></tr>
     <tr><td class="td-color">Blog通知</td><td class="td-indent">
-      <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.blog }}" notify-type="blog">
-        {% if notify.blog %}
+      <form method="POST" action="{% url 'myus:notification_setting' %}" notification="{{ notification.blog }}" notification-type="blog">
+        {% if notification.blog %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -68,8 +68,8 @@
       </form>
     </td></tr>
     <tr><td class="td-color">Chat通知</td><td class="td-indent">
-      <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.chat }}" notify-type="chat">
-        {% if notify.chat %}
+      <form method="POST" action="{% url 'myus:notification_setting' %}" notification="{{ notification.chat }}" notification-type="chat">
+        {% if notification.chat %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -81,8 +81,8 @@
       </form>
     </td></tr>
     <tr><td class="td-color">Collabo通知</td><td class="td-indent">
-      <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.collabo }}" notify-type="collabo">
-        {% if notify.collabo %}
+      <form method="POST" action="{% url 'myus:notification_setting' %}" notification="{{ notification.collabo }}" notification-type="collabo">
+        {% if notification.collabo %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -94,8 +94,8 @@
       </form>
     </td></tr>
     <tr><td class="td-color">フォロー通知</td><td class="td-indent">
-      <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.follow }}" notify-type="follow">
-        {% if notify.follow %}
+      <form method="POST" action="{% url 'myus:notification_setting' %}" notification="{{ notification.follow }}" notification-type="follow">
+        {% if notification.follow %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -107,8 +107,8 @@
       </form>
     </td></tr>
     <tr><td class="td-color">返信通知</td><td class="td-indent">
-      <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.reply }}" notify-type="reply">
-        {% if notify.reply %}
+      <form method="POST" action="{% url 'myus:notification_setting' %}" notification="{{ notification.reply }}" notification-type="reply">
+        {% if notification.reply %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -120,8 +120,8 @@
       </form>
     </td></tr>
     <tr><td class="td-color">いいね通知</td><td class="td-indent">
-      <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.like }}" notify-type="like">
-        {% if notify.like %}
+      <form method="POST" action="{% url 'myus:notification_setting' %}" notification="{{ notification.like }}" notification-type="like">
+        {% if notification.like %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -133,8 +133,8 @@
       </form>
     </td></tr>
     <tr><td class="td-color">閲覧数通知</td><td class="td-indent">
-      <form method="POST" action="{% url 'myus:notification_setting' %}" notify="{{ notify.views }}" notify-type="views">
-        {% if notify.views %}
+      <form method="POST" action="{% url 'myus:notification_setting' %}" notification="{{ notification.views }}" notification-type="views">
+        {% if notification.views %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>

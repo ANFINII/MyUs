@@ -3,54 +3,54 @@ from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
 from django.db.models.query import QuerySet
 from itertools import chain
-from api.models import SearchTagModel, NotifySettingModel, NotificationModel, CommentModel, FollowModel, TodoModel
+from api.models import SearchTagModel, NotificationSetting, Notification, CommentModel, FollowModel, TodoModel
 from api.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, AdvertiseModel
 import datetime
 
 User = get_user_model()
 
-def notify_data(self):
+def notification_data(self):
     user_id = self.request.user.id
-    notify_obj, notify_obj_list_1, notify_obj_list_2 = QuerySet, [], []
-    notify_list_1, notify_list_confirmed = [], []
+    notification_obj, notification_obj_list_1, notification_obj_list_2 = QuerySet, [], []
+    notification_list_1, notification_list_confirmed = [], []
     confirmed_kwargs = {}
     confirmed_kwargs['id'] = OuterRef('pk')
     confirmed_kwargs['confirmed'] = user_id
-    subquery_confirmed = NotificationModel.objects.filter(**confirmed_kwargs)
+    subquery_confirmed = Notification.objects.filter(**confirmed_kwargs)
     following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', 'created'))
     if user_id is not None:
-        notify_obj = NotifySettingModel.objects.get(user_id=user_id)
-        if notify_obj.video:
-            notify_obj_list_1 += [1]
-        if notify_obj.live:
-            notify_obj_list_1 += [2]
-        if notify_obj.music:
-            notify_obj_list_1 += [3]
-        if notify_obj.picture:
-            notify_obj_list_1 += [4]
-        if notify_obj.blog:
-            notify_obj_list_1 += [5]
-        if notify_obj.chat:
-            notify_obj_list_1 += [6]
-        if notify_obj.collabo:
-            notify_obj_list_1 += [7]
-        if notify_obj.follow:
-            notify_obj_list_2 += [8]
-        if notify_obj.like:
-            notify_obj_list_2 += [9]
-        if notify_obj.reply:
-            notify_obj_list_2 += [10]
-        if notify_obj.views:
-            notify_obj_list_2 += [11]
+        notification_obj = NotificationSetting.objects.get(user_id=user_id)
+        if notification_obj.video:
+            notification_obj_list_1 += [1]
+        if notification_obj.live:
+            notification_obj_list_1 += [2]
+        if notification_obj.music:
+            notification_obj_list_1 += [3]
+        if notification_obj.picture:
+            notification_obj_list_1 += [4]
+        if notification_obj.blog:
+            notification_obj_list_1 += [5]
+        if notification_obj.chat:
+            notification_obj_list_1 += [6]
+        if notification_obj.collabo:
+            notification_obj_list_1 += [7]
+        if notification_obj.follow:
+            notification_obj_list_2 += [8]
+        if notification_obj.like:
+            notification_obj_list_2 += [9]
+        if notification_obj.reply:
+            notification_obj_list_2 += [10]
+        if notification_obj.views:
+            notification_obj_list_2 += [11]
         for id, dates in following_list:
-            notify_list_1 += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
-            notify_list_confirmed += NotificationModel.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notify_obj_list_1).exclude(deleted=user_id, confirmed=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
-        notify_list_2 = NotificationModel.objects.filter(user_to_id=user_id, type_no__in=notify_obj_list_2).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
-        notify_list_data = {
-            'notification_count': len(list(chain(notify_list_confirmed, notify_list_2.exclude(confirmed=user_id)))),
-            'notification_list': list(chain(notify_list_1, notify_list_2)),
+            notification_list_1 += Notification.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notification_obj_list_1).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
+            notification_list_confirmed += Notification.objects.filter(user_from_id__in=[id], created__gt=dates, user_to_id=None, type_no__in=notification_obj_list_1).exclude(deleted=user_id, confirmed=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
+        notification_list_2 = Notification.objects.filter(user_to_id=user_id, type_no__in=notification_obj_list_2).exclude(deleted=user_id).annotate(user_confirmed=Exists(subquery_confirmed)).order_by('-created')
+        notification_list_data = {
+            'notification_count': len(list(chain(notification_list_confirmed, notification_list_2.exclude(confirmed=user_id)))),
+            'notification_list': list(chain(notification_list_1, notification_list_2)),
         }
-        return notify_list_data
+        return notification_list_data
 
 class ContextData:
     def context_data(self, models, **kwargs):
@@ -58,9 +58,9 @@ class ContextData:
         user = self.request.user
         user_id = self.request.user.id
         if user_id is not None:
-            notify_list = notify_data(self)
-            context['notification_count'] = notify_list['notification_count']
-            context['notification_list'] = notify_list['notification_list']
+            notification_list = notification_data(self)
+            context['notification_count'] = notification_list['notification_count']
+            context['notification_list'] = notification_list['notification_list']
         try:
             context['count'] = self.count or 0
         except AttributeError:
@@ -70,7 +70,7 @@ class ContextData:
             'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
         })
         if 'Notification' in str(models.__name__):
-            context.update(notify_setting_list=NotifySettingModel.objects.filter(user_id=user_id))
+            context.update(notification_setting_list=NotificationSetting.objects.filter(user_id=user_id))
 
         if 'ProfileUpdate' in str(models.__name__):
             context['gender'] = {'0':'男性', '1':'女性', '2':'秘密'}
@@ -148,9 +148,9 @@ class ContextData:
             context['is_period'] = is_period
             context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         if user_id is not None:
-            notify_list = notify_data(self)
-            context['notification_count'] = notify_list['notification_count']
-            context['notification_list'] = notify_list['notification_list']
+            notification_list = notification_data(self)
+            context['notification_count'] = notification_list['notification_count']
+            context['notification_list'] = notification_list['notification_list']
         if obj.author.mypage.rate_plan == '1':
             context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:1])
         if obj.author.mypage.rate_plan == '2':

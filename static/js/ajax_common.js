@@ -182,17 +182,17 @@ $(document).on('click', '.notification_aria_list_2', function (event) {
 $(document).on('click', '.toggle_button', function (event) {
   event.preventDefault();
   const url = $(this).closest('form').attr('action');
-  const notify = $(this).closest('form').attr('notify');
-  const notify_type = $(this).closest('form').attr('notify-type');
+  const notification = $(this).closest('form').attr('notification');
+  const notification_type = $(this).closest('form').attr('notification-type');
   $.ajax({
     url: url,
     type: 'POST',
-    data: { 'notify': notify, 'notify_type': notify_type, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'notification': notification, 'notification_type': notification_type, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
     dataType: 'json',
     timeout: 10000,
   })
     .done(function (response) {
-      $('#notification_table').html(response.notify_setting_lists);
+      $('#notification_table').html(response.notification_setting_lists);
     })
     .fail(function (response) {
       console.log(response);

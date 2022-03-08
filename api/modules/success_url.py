@@ -1,13 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from api.models import NotificationModel
+from api.models import Notification
 
 User = get_user_model()
 
 def success_url(self, myus_detail, type_no, type_name):
     obj = self.object
     user = self.request.user
-    NotificationModel.objects.create(
+    Notification.objects.create(
         user_from=user,
         type_no=type_no,
         type_name=type_name,

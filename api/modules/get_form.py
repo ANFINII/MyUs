@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from api.models import NotificationModel
+from api.models import Notification
 from api.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 
 def get_detail(self):
@@ -23,7 +23,7 @@ def get_detail(self):
             type_name = 'chat'
         if self.object.__class__ == CollaboModel:
             type_name = 'collabo'
-        NotificationModel.objects.create(
+        Notification.objects.create(
             user_from_id=self.object.author.id,
             user_to_id=self.object.author.id,
             type_no=11,
@@ -31,7 +31,7 @@ def get_detail(self):
             content_object=self.object,
         )
     if self.object.read in (100000, 1000000, 10000000, 100000000, 1000000000):
-        notification_obj = get_object_or_404(NotificationModel, type_no=11, object_id=self.object.id)
+        notification_obj = get_object_or_404(Notification, type_no=11, object_id=self.object.id)
         if notification_obj.confirmed.filter(id=self.object.author.id).exists():
             notification_obj.confirmed.remove(self.object.author)
         if notification_obj.deleted.filter(id=self.object.author.id).exists():
