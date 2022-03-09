@@ -662,10 +662,10 @@ class TodoModel(models.Model):
     content  = models.TextField()
     priority_choice = (('danger', '高'), ('success', '普通'), ('info', '低'))
     priority = models.CharField(max_length=10, choices=priority_choice, default='success')
-    duedate  = models.DateField()
     progress_choice = (('0', '未着手'), ('1', '進行中'), ('2', '完了'))
     progress = models.CharField(max_length=10, choices=progress_choice, default='0')
     comments = GenericRelation('CommentModel')
+    duedate  = models.DateField()
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
 
