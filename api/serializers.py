@@ -87,3 +87,62 @@ class PictureSerializer(serializers.ModelSerializer):
             'id', 'author', 'title', 'content', 'images', 'comments',
             'publish', 'tags', 'like', 'read', 'created', 'updated',
         )
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogModel
+        fields = (
+            'id', 'author', 'title', 'content', 'images', 'richtext', 'comments',
+            'publish', 'tags', 'like', 'read', 'created', 'updated',
+        )
+
+
+class ChatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChatModel
+        fields = (
+            'id', 'author', 'title', 'content', 'comments', 'publish', 'tags',
+            'like', 'read', 'joined', 'period', 'created', 'updated',
+        )
+
+
+class CollaboSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CollaboModel
+        fields = (
+            'id', 'author', 'title', 'content', 'comments', 'publish',
+            'tags', 'like', 'read', 'period', 'created', 'updated',
+        )
+
+class TodoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TodoModel
+        fields = (
+            'id', 'author', 'title', 'content', 'priority', 'progress',
+            'comments', 'duedate', 'created', 'updated',
+        )
+
+
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FollowModel
+        fields = ('id', 'follower', 'following', 'created')
+
+
+class AdvertiseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdvertiseModel
+        fields = (
+            'id', 'author', 'title', 'url', 'content', 'images', 'videos', 'publish',
+            'read', 'type', 'period', 'created', 'updated',
+        )
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentModel
+        fields = (
+            'id', 'author', 'parent', 'text', 'like', 'content_type',
+            'object_id', 'content_object', 'created', 'updated',
+        )
