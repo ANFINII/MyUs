@@ -196,28 +196,27 @@ def create_notification_setting(sender, **kwargs):
         NotificationSetting.objects.get_or_create(user=kwargs['instance'])
 
 
-class SearchTagModel(models.Model):
-    """SearchTagModel"""
-    author    = models.ForeignKey(User, on_delete=models.CASCADE)
-    sequence  = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=20)
-    searchtag = models.CharField(max_length=30, null=True)
-    created   = models.DateTimeField(auto_now_add=True)
+class SearchTag(models.Model):
+    """SearchTag"""
+    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    sequence = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=20)
+    name     = models.CharField(max_length=30, null=True)
+    created  = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.searchtag
+        return self.name
 
     class Meta:
         verbose_name_plural = '09 検索タグ'
 
 
-class TagModel(models.Model):
-    """TagModel"""
-    author      = models.ForeignKey(User, on_delete=models.CASCADE)
-    tag         = models.CharField(max_length=30, null=True)
-    english_tag = models.CharField(max_length=60, null=True)
+class HashTag(models.Model):
+    """HashTag"""
+    name    = models.CharField(max_length=30, null=True)
+    en_name = models.CharField(max_length=60, null=True)
 
     def __str__(self):
-        return self.tag
+        return self.name
 
     class Meta:
         verbose_name_plural = '10 ハッシュタグ'
@@ -229,7 +228,7 @@ class VideoQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__tag__icontains=query) |
+                Q(tags__name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query)
             )
@@ -259,7 +258,7 @@ class VideoModel(models.Model):
     convert  = models.FileField(upload_to=videos_video_upload_path)
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
-    tags     = models.ManyToManyField(TagModel, blank=True)
+    tags     = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name='video_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
@@ -305,7 +304,7 @@ class LiveQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__tag__icontains=query) |
+                Q(tags__name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query)
             )
@@ -334,7 +333,7 @@ class LiveModel(models.Model):
     lives    = models.FileField(upload_to=videos_live_upload_path)
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
-    tags     = models.ManyToManyField(TagModel, blank=True)
+    tags     = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name='live_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
@@ -377,7 +376,7 @@ class MusicQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__tag__icontains=query) |
+                Q(tags__name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query) |
                 Q(lyrics__icontains=query)
@@ -405,7 +404,7 @@ class MusicModel(models.Model):
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
     download = models.BooleanField(default=True)
-    tags     = models.ManyToManyField(TagModel, blank=True)
+    tags     = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name='music_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
@@ -445,7 +444,7 @@ class PictureQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__tag__icontains=query) |
+                Q(tags__name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query)
             )
@@ -470,7 +469,7 @@ class PictureModel(models.Model):
     images   = models.ImageField(upload_to=images_picture_upload_path)
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
-    tags     = models.ManyToManyField(TagModel, blank=True)
+    tags     = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name='picture_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
@@ -510,7 +509,7 @@ class BlogQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__tag__icontains=query) |
+                Q(tags__name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query) |
                 Q(richtext__icontains=query)
@@ -537,7 +536,7 @@ class BlogModel(models.Model):
     richtext = RichTextUploadingField(blank=True, null=True)
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
-    tags     = models.ManyToManyField(TagModel, blank=True)
+    tags     = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name='blog_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     created  = models.DateTimeField(auto_now_add=True)
@@ -577,7 +576,7 @@ class ChatQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__tag__icontains=query) |
+                Q(tags__name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query)
             )
@@ -598,7 +597,7 @@ class ChatModel(models.Model):
     content  = models.TextField()
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
-    tags     = models.ManyToManyField(TagModel, blank=True)
+    tags     = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name='chat_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     joined   = models.IntegerField(blank=True, null=True, default=0)
@@ -635,7 +634,7 @@ class CollaboModel(models.Model):
     content  = models.TextField()
     comments = GenericRelation('CommentModel')
     publish  = models.BooleanField(default=True)
-    tags     = models.ManyToManyField(TagModel, blank=True)
+    tags     = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name='collabo_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
     period   = models.DateField()

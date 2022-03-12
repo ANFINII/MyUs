@@ -390,8 +390,8 @@
 
     <div class="main_tag_n">
       <div class="tag_n_list">
-      {% for item in searchtag_list %}
-        <a href="?search={{ item.searchtag }}">{{ item.searchtag }}</a>
+      {% for searchtag in searchtag_list %}
+        <a href="?search={{ searchtag.name }}">{{ searchtag.name }}</a>
       {% endfor %}
       </div>
     </div>

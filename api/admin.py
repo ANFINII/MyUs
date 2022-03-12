@@ -3,7 +3,7 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
 from import_export.admin import ImportExportModelAdmin
-from .models import User, MyPage, SearchTagModel, TagModel, NotificationSetting, Notification, CommentModel, FollowModel
+from .models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, CommentModel, FollowModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, TodoModel, AdvertiseModel
 import datetime
 
@@ -24,7 +24,7 @@ class NotificationSettingInline(admin.TabularInline):
         return False
 
 class SearchTagInline(admin.TabularInline):
-    model = SearchTagModel
+    model = SearchTag
     extra = 1
     max_num = 20
     verbose_name_plural = '検索タグ'
@@ -76,31 +76,31 @@ class UserAdmin(ImportExportModelAdmin):
                     return rate_paln_value
     rate_plan.short_description = 'rate plan'
 
-@admin.register(SearchTagModel)
+@admin.register(SearchTag)
 class SearchTagAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'sequence', 'searchtag', 'created')
+    list_display = ('id', 'author', 'sequence', 'name', 'created')
     list_select_related = ('author',)
     list_per_page = 20
-    search_fields = ('author__nickname', 'searchtag', 'created')
+    search_fields = ('author__nickname', 'name', 'created')
     ordering = ('author', 'sequence', 'created')
     readonly_fields = ('author', 'created')
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('sequence', 'searchtag')}),
+        ('編集項目', {'fields': ('sequence', 'name')}),
         ('確認項目', {'fields': ('author', 'created')})
     ]
 
-@admin.register(TagModel)
+@admin.register(HashTag)
 class TagAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'tag', 'english_tag')
-    list_editable = ('tag', 'english_tag')
-    search_fields = ('tag', 'english_tag')
+    list_display = ('id', 'name', 'en_name')
+    list_editable = ('name', 'en_name')
+    search_fields = ('name', 'en_name')
     ordering = ('id',)
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('tag', 'english_tag')}),
+        ('編集項目', {'fields': ('name', 'en_name')}),
     ]
 
     def save_model(self, request, obj, form, change):
@@ -429,17 +429,17 @@ class CommentInline(GenericTabularInline):
     total_like.short_description = 'いいね数'
 
 class SearchTagAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'sequence', 'searchtag', 'created')
-    list_editable = ('sequence', 'searchtag')
+    list_display = ('id', 'sequence', 'name', 'created')
+    list_editable = ('sequence', 'name')
     list_per_page = 20
-    search_fields = ('searchtag', 'created')
+    search_fields = ('name', 'created')
     ordering = ('sequence', 'created')
     actions = ('delete_action',)
     readonly_fields = ('created',)
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('sequence', 'searchtag')}),
+        ('編集項目', {'fields': ('sequence', 'name')}),
         ('確認項目', {'fields': ('created',)})
     ]
 
@@ -454,16 +454,16 @@ class SearchTagAdminSite(admin.ModelAdmin):
     def delete_action(self, request, queryset):
         queryset.delete()
     delete_action.short_description = '削除する'
-mymanage_site.register(SearchTagModel, SearchTagAdminSite)
+mymanage_site.register(SearchTag, SearchTagAdminSite)
 
 class TagAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'tag', 'english_tag')
-    search_fields = ('tag', 'english_tag')
+    list_display = ('id', 'name', 'en_name')
+    search_fields = ('name', 'en_name')
     ordering = ('id',)
 
     # 詳細画面
     fieldsets = [
-        ('確認項目', {'fields': ('tag', 'english_tag')}),
+        ('確認項目', {'fields': ('name', 'en_name')}),
     ]
 
     def has_add_permission(self, request):
@@ -474,7 +474,7 @@ class TagAdminSite(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
-mymanage_site.register(TagModel, TagAdminSite)
+mymanage_site.register(HashTag, TagAdminSite)
 
 class VideoModelAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')

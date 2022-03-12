@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
 from django.db.models.query import QuerySet
 from itertools import chain
-from api.models import SearchTagModel, NotificationSetting, Notification, CommentModel, FollowModel, TodoModel
+from api.models import SearchTag, NotificationSetting, Notification, CommentModel, FollowModel, TodoModel
 from api.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, AdvertiseModel
 import datetime
 
@@ -67,7 +67,7 @@ class ContextData:
             pass
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
+            'searchtag_list': SearchTag.objects.filter(author_id=user_id).order_by('sequence')[:20],
         })
         if 'Notification' in str(models.__name__):
             context.update(notification_setting_list=NotificationSetting.objects.filter(user_id=user_id))
@@ -163,7 +163,7 @@ class ContextData:
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
         context.update({
-            'searchtag_list': SearchTagModel.objects.filter(author_id=user_id).order_by('sequence')[:20],
+            'searchtag_list': SearchTag.objects.filter(author_id=user_id).order_by('sequence')[:20],
             'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
         })
         if 'VideoDetail' in str(models.__name__):

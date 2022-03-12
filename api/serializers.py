@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import User, MyPage, NotificationSetting, Notification, SearchTagModel, TagModel
+from api.models import User, MyPage, NotificationSetting, Notification, SearchTag, HashTag
 from api.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
 from api.models import TodoModel, FollowModel, AdvertiseModel, CommentModel
 
@@ -12,6 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
             'birthday', 'gender', 'phone', 'location', 'introduction',
             'is_active', 'is_staff', 'is_admin', 'last_login', 'date_joined',
         )
+        read_only_field = ['is_staff', 'is_admin', 'last_login', 'date_joined']
 
 
 class MyPageSerializer(serializers.ModelSerializer):
@@ -43,14 +44,14 @@ class NotificationSerializer(serializers.ModelSerializer):
 
 class SearchTagSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SearchTagModel
-        fields = ('id', 'author', 'sequence', 'searchtag', 'created',)
+        model = SearchTag
+        fields = ('id', 'author', 'sequence', 'name', 'created',)
 
 
-class TagSerializer(serializers.ModelSerializer):
+class HashTagSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TagModel
-        fields = ('id', 'author', 'tag', 'english_tag',)
+        model = HashTag
+        fields = ('id', 'author', 'name', 'en_name',)
 
 
 class VideoSerializer(serializers.ModelSerializer):

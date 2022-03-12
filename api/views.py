@@ -21,7 +21,7 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from api.serializers import UserSerializer
 from .forms import SearchTagForm, BlogForm
-from .models import MyPage, SearchTagModel, NotificationSetting, Notification, CommentModel, FollowModel, TodoModel
+from .models import MyPage, SearchTag, NotificationSetting, Notification, CommentModel, FollowModel, TodoModel
 from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, AdvertiseModel
 from .modules.context_data import ContextData
 from .modules.get_form import get_detail
@@ -685,7 +685,7 @@ def searchtag_create(request):
             form.author_id = request.user.id
             form.save()
             context = {
-                'searchtag': form.searchtag,
+                'searchtag': form.name,
             }
             return JsonResponse(context)
         else:
@@ -893,7 +893,7 @@ def reply_delete(request, comment_id):
 # Index
 class Index(ListView):
     """Index処理、すべてのメディアmodelを表示"""
-    model = SearchTagModel
+    model = SearchTag
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
@@ -904,7 +904,7 @@ class Index(ListView):
 
 class Recommend(ListView):
     """急上昇機能、すべてのメディアmodelを表示"""
-    model = SearchTagModel
+    model = SearchTag
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
