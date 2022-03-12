@@ -91,6 +91,10 @@ class SearchTagAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('author', 'created')})
     ]
 
+    def save_model(self, request, obj, form, change):
+        obj.author = request.user
+        super(SearchTagAdmin, self).save_model(request, obj, form, change)
+
 @admin.register(HashTag)
 class TagAdmin(ImportExportModelAdmin):
     list_display = ('id', 'name', 'en_name')

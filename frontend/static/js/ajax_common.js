@@ -8,7 +8,7 @@ $(document).on('click', '.main_tag_2', function (event) {
   $.ajax({
     url: url,
     type: 'POST',
-    data: { 'searchtag': searchtag, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'name': searchtag, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
     dataType: 'json',
     timeout: 10000,
   })
