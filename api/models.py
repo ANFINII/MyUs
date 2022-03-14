@@ -39,7 +39,7 @@ def user_image_path(instance, filename):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """CustomUserModel"""
-    image         = models.ImageField(upload_to=user_image_path, default='../static/img/user_icon.png', blank=True, null=True)
+    image         = models.ImageField(upload_to=user_image_path, default='../frontend/static/img/user_icon.png', blank=True, null=True)
     email         = models.EmailField(max_length=255, unique=True, db_index=True)
     username      = models.CharField(max_length=20, unique=True, db_index=True)
     nickname      = models.CharField(max_length=80, unique=True, db_index=True)
@@ -122,7 +122,7 @@ def mypage_banner_path(instance, filename):
 
 class MyPage(models.Model):
     user           = models.OneToOneField(User, on_delete=models.CASCADE)
-    banner         = models.ImageField(upload_to=mypage_banner_path, default='../static/img/MyUs_banner.png', blank=True, null=True)
+    banner         = models.ImageField(upload_to=mypage_banner_path, default='../frontend/static/img/MyUs_banner.png', blank=True, null=True)
     email          = models.EmailField(max_length=255, blank=True, null=True, default='abc@gmail.com')
     content        = models.TextField(blank=True)
     follow_num     = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
