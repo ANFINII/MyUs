@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from ckeditor.fields import RichTextFormField
-from .models import SearchTag, BlogModel
+from .models import SearchTag, Blog
 
 User = get_user_model()
 
@@ -14,7 +14,7 @@ class SearchTagForm(forms.ModelForm):
 
 class BlogForm(forms.ModelForm):
     class Meta:
-        model = BlogModel
+        model = Blog
         fields = ('richtext',)
         widgets = {
             'richtext': RichTextFormField(),

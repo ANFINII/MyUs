@@ -21,8 +21,8 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from api.serializers import UserSerializer
 from .forms import SearchTagForm, BlogForm
-from .models import MyPage, SearchTag, NotificationSetting, Notification, CommentModel, FollowModel, TodoModel
-from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, AdvertiseModel
+from .models import MyPage, SearchTag, NotificationSetting, Notification, Comment, Follow, Todo
+from .models import Video, Live, Music, Picture, Blog, Chat, Collabo, Advertise
 from .modules.context_data import ContextData
 from .modules.get_form import get_detail
 from .modules.search import Search
@@ -192,29 +192,29 @@ def pjax(request):
         href = request.GET.get('href')
         if '/' == href:
             context['html'] = render_to_string('index_list.html', {
-                'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:8],
-                'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:8],
-                'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:8],
-                'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:8],
-                'blog_list': BlogModel.objects.filter(publish=True).order_by('-created')[:8],
-                'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:8],
+                'video_list': Video.objects.filter(publish=True).order_by('-created')[:8],
+                'live_list': Live.objects.filter(publish=True).order_by('-created')[:8],
+                'music_list': Music.objects.filter(publish=True).order_by('-created')[:8],
+                'picture_list': Picture.objects.filter(publish=True).order_by('-created')[:8],
+                'blog_list': Blog.objects.filter(publish=True).order_by('-created')[:8],
+                'chat_list': Chat.objects.filter(publish=True).order_by('-created')[:8],
             }, request=request)
         if '/recommend' == href:
             aggregation_date = datetime.datetime.today() - datetime.timedelta(days=100)
             context['html'] = render_to_string('index_list.html', {
                 'Recommend': 'Recommend',
-                'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'live_list': LiveModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'music_list': MusicModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'picture_list': PictureModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'blog_list': BlogModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'live_list': Live.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'music_list': Music.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'picture_list': Picture.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'chat_list': Chat.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
             }, request=request)
         if '/userpage/post' in href:
             nickname = request.GET.get('nickname')
             author = get_object_or_404(User, nickname=nickname)
             author_id = author.id
-            follow = FollowModel.objects.filter(follower=request.user.id).filter(following=author_id)
+            follow = Follow.objects.filter(follower=request.user.id).filter(following=author_id)
             followed = False
             if follow.exists():
                 followed = True
@@ -222,18 +222,18 @@ def pjax(request):
                 'followed': followed,
                 'author_name': author.nickname,
                 'user_list': User.objects.filter(id=author_id),
-                'video_list': VideoModel.objects.filter(author_id=author_id, publish=True),
-                'live_list': LiveModel.objects.filter(author_id=author_id, publish=True),
-                'music_list': MusicModel.objects.filter(author_id=author_id, publish=True),
-                'picture_list': PictureModel.objects.filter(author_id=author_id, publish=True),
-                'blog_list': BlogModel.objects.filter(author_id=author_id, publish=True),
-                'chat_list': ChatModel.objects.filter(author_id=author_id, publish=True),
+                'video_list': Video.objects.filter(author_id=author_id, publish=True),
+                'live_list': Live.objects.filter(author_id=author_id, publish=True),
+                'music_list': Music.objects.filter(author_id=author_id, publish=True),
+                'picture_list': Picture.objects.filter(author_id=author_id, publish=True),
+                'blog_list': Blog.objects.filter(author_id=author_id, publish=True),
+                'chat_list': Chat.objects.filter(author_id=author_id, publish=True),
             }, request=request)
         if '/userpage/information' in href:
             nickname = request.GET.get('nickname')
             author = get_object_or_404(User, nickname=nickname)
             author_id = author.id
-            follow = FollowModel.objects.filter(follower=request.user.id).filter(following=author_id)
+            follow = Follow.objects.filter(follower=request.user.id).filter(following=author_id)
             followed = False
             if follow.exists():
                 followed = True
@@ -246,7 +246,7 @@ def pjax(request):
             nickname = request.GET.get('nickname')
             author = get_object_or_404(User, nickname=nickname)
             author_id = author.id
-            follow = FollowModel.objects.filter(follower=request.user.id).filter(following=author_id)
+            follow = Follow.objects.filter(follower=request.user.id).filter(following=author_id)
             followed = False
             if follow.exists():
                 followed = True
@@ -254,47 +254,47 @@ def pjax(request):
                 'followed': followed,
                 'author_name': author.nickname,
                 'user_list': User.objects.filter(id=author_id),
-                'advertise_list': AdvertiseModel.objects.filter(author_id=author_id, publish=True),
+                'advertise_list': Advertise.objects.filter(author_id=author_id, publish=True),
             }, request=request)
         if '/video' == href:
             context['html'] = render_to_string('video/video_list.html', {
-                'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:50],
+                'video_list': Video.objects.filter(publish=True).order_by('-created')[:50],
             }, request=request)
         if '/live' == href:
             context['html'] = render_to_string('live/live_list.html', {
-                'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:50],
+                'live_list': Live.objects.filter(publish=True).order_by('-created')[:50],
             }, request=request)
         if '/music' == href:
             context['html'] = render_to_string('music/music_list.html', {
-                'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:50],
+                'music_list': Music.objects.filter(publish=True).order_by('-created')[:50],
             }, request=request)
         if '/picture' == href:
             context['html'] = render_to_string('picture/picture_list.html', {
-                'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:100],
+                'picture_list': Picture.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
         if '/blog' == href:
             context['html'] = render_to_string('blog/blog_list.html', {
-                'blog_list': BlogModel.objects.filter(publish=True).order_by('-created')[:100],
+                'blog_list': Blog.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
         if '/chat' == href:
             context['html'] = render_to_string('chat/chat_list.html', {
-                'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:100],
+                'chat_list': Chat.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
         if '/collabo' == href:
             context['html'] = render_to_string('collabo/collabo_list.html', {
-                'collabo_list': CollaboModel.objects.filter(publish=True).order_by('-created')[:100],
+                'collabo_list': Collabo.objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
         if '/todo' == href:
             context['html'] = render_to_string('todo/todo_list.html', {
-                'todo_list': TodoModel.objects.filter(author_id=request.user.id).order_by('-created')[:100],
+                'todo_list': Todo.objects.filter(author_id=request.user.id).order_by('-created')[:100],
             }, request=request)
         if '/follow' == href:
             context['html'] = render_to_string('follow/follow_list.html', {
-                'follow_list': FollowModel.objects.filter(follower_id=request.user.id).order_by('created')[:100],
+                'follow_list': Follow.objects.filter(follower_id=request.user.id).order_by('created')[:100],
             }, request=request)
         if '/follower' == href:
             context['html'] = render_to_string('follow/follower_list.html', {
-                'follower_list': FollowModel.objects.filter(following_id=request.user.id).order_by('created')[:100],
+                'follower_list': Follow.objects.filter(following_id=request.user.id).order_by('created')[:100],
             }, request=request)
         if '/notification' == href:
             context['html'] = render_to_string('common/notification_content.html', {
@@ -667,7 +667,7 @@ def notification_deleted(request):
         notification_obj = get_object_or_404(Notification, id=notification_id)
         notification_obj.confirmed.add(user)
         notification_obj.deleted.add(user)
-        following_id_list = list(FollowModel.objects.filter(follower_id=user.id).values_list('following_id', flat=True))
+        following_id_list = list(Follow.objects.filter(follower_id=user.id).values_list('following_id', flat=True))
         context = {
             'notification_count': Notification.objects.filter(user_from_id__in=following_id_list, user_to_id=user.id).exclude(confirmed=user.id).count(),
         }
@@ -698,7 +698,7 @@ def advertise_read(request):
     """advertise_read"""
     if request.method == 'POST':
         advertise_id = request.POST.get('advertise_id')
-        advertise_obj = AdvertiseModel.objects.get(id=advertise_id)
+        advertise_obj = Advertise.objects.get(id=advertise_id)
         advertise_obj.read += 1
         advertise_obj.save()
         context = {
@@ -709,13 +709,13 @@ def advertise_read(request):
 
 # LikeForm
 models_like_dict = {
-    'video/detail': VideoModel,
-    'live/detail': LiveModel,
-    'music/detail': MusicModel,
-    'picture/detail': PictureModel,
-    'blog/detail': BlogModel,
-    'chat/detail': ChatModel,
-    'collabo/detail': CollaboModel,
+    'video/detail': Video,
+    'live/detail': Live,
+    'music/detail': Music,
+    'picture/detail': Picture,
+    'blog/detail': Blog,
+    'chat/detail': Chat,
+    'collabo/detail': Collabo,
 }
 
 @csrf_exempt
@@ -747,7 +747,7 @@ def like_form_comment(request):
     if request.method == 'POST':
         user = request.user
         comment_id = request.POST.get('comment_id')
-        obj = get_object_or_404(CommentModel, id=comment_id)
+        obj = get_object_or_404(Comment, id=comment_id)
         comment_liked = False
         if obj.like.filter(id=user.id).exists():
             comment_liked = False
@@ -774,13 +774,13 @@ def like_form_comment(request):
 
 # CommentForm & ReplyForm
 models_comment_dict = {
-    'video/detail': VideoModel,
-    'live/detail': LiveModel,
-    'music/detail': MusicModel,
-    'picture/detail': PictureModel,
-    'blog/detail': BlogModel,
-    'collabo/detail': CollaboModel,
-    'todo/detail': TodoModel,
+    'video/detail': Video,
+    'live/detail': Live,
+    'music/detail': Music,
+    'picture/detail': Picture,
+    'blog/detail': Blog,
+    'collabo/detail': Collabo,
+    'todo/detail': Todo,
 }
 
 @csrf_exempt
@@ -795,7 +795,7 @@ def comment_form(request):
         for models_detail, models in models_comment_dict.items():
             if models_detail in obj_path:
                 obj = models.objects.get(id=obj_id)
-        comment_obj = CommentModel(content_object=obj)
+        comment_obj = Comment(content_object=obj)
         comment_obj.text = text
         comment_obj.author_id = user_id
         comment_obj.save()
@@ -821,10 +821,10 @@ def reply_form(request):
         for models_detail, models in models_comment_dict.items():
             if models_detail in obj_path:
                 obj = models.objects.get(id=obj_id)
-        comment_obj = CommentModel(content_object=obj)
+        comment_obj = Comment(content_object=obj)
         comment_obj.text = text
         comment_obj.author_id = user_id
-        comment_obj.parent = CommentModel.objects.get(id=comment_id)
+        comment_obj.parent = Comment.objects.get(id=comment_id)
         comment_obj.save()
         if user_id != comment_obj.parent.author.id:
             Notification.objects.create(
@@ -849,7 +849,7 @@ def comment_update(request, comment_id):
     """comment_update"""
     if request.method == 'POST':
         text = request.POST.get('text')
-        comment_obj = CommentModel.objects.get(id=comment_id)
+        comment_obj = Comment.objects.get(id=comment_id)
         comment_obj.text = text
         comment_obj.save()
         context = {
@@ -867,7 +867,7 @@ def comment_delete(request, comment_id):
         for models_detail, models in models_comment_dict.items():
             if models_detail in obj_path:
                 obj = models.objects.get(id=obj_id)
-        comment_obj = CommentModel.objects.get(id=comment_id)
+        comment_obj = Comment.objects.get(id=comment_id)
         comment_obj.delete()
         context = {
             'comment_count': obj.comment_count(),
@@ -879,7 +879,7 @@ def reply_delete(request, comment_id):
     """reply_delete"""
     if request.method == 'POST':
         comment_id = request.POST.get('comment_id')
-        comment_obj = CommentModel.objects.get(id=comment_id)
+        comment_obj = Comment.objects.get(id=comment_id)
         notification_obj = Notification.objects.filter(type_no=10, object_id=comment_obj.id)
         notification_obj.delete()
         comment_obj.delete()
@@ -944,13 +944,13 @@ class UserPageAdvertise(ListView):
         return ContextData.context_data(self, UserPageAdvertise, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_advertise(self, AdvertiseModel)
+        return Search.search_advertise(self, Advertise)
 
 
 # Follow
 class FollowerList(ListView):
     """FollowerList"""
-    model = FollowModel
+    model = Follow
     template_name = 'follow/follower.html'
     context_object_name = 'follower_list'
 
@@ -958,11 +958,11 @@ class FollowerList(ListView):
         return ContextData.context_data(self, FollowerList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_follow(self, FollowModel)
+        return Search.search_follow(self, Follow)
 
 class FollowList(ListView):
     """FollowList"""
-    model = FollowModel
+    model = Follow
     template_name = 'follow/follow.html'
     context_object_name = 'follow_list'
 
@@ -970,7 +970,7 @@ class FollowList(ListView):
         return ContextData.context_data(self, FollowList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_follow(self, FollowModel)
+        return Search.search_follow(self, Follow)
 
 @csrf_exempt
 def follow_create(request, nickname):
@@ -981,30 +981,30 @@ def follow_create(request, nickname):
         if follower == following:
             # '自分はフォローできません'
             pass
-        elif FollowModel.objects.filter(follower=follower, following=following).exists():
-            unfollow = FollowModel.objects.get(follower=follower, following=following)
+        elif Follow.objects.filter(follower=follower, following=following).exists():
+            unfollow = Follow.objects.get(follower=follower, following=following)
             notification_obj = Notification.objects.filter(type_no=8, object_id=unfollow.id)
             notification_obj.delete()
             unfollow.delete()
             followed = False
             #ログインユーザーのフォロー数
-            following_count = FollowModel.objects.filter(follower=follower).count()
+            following_count = Follow.objects.filter(follower=follower).count()
             follower.following_count = following_count
             follower.save()
             #フォローユーザーのフォロワー数
-            follower_count = FollowModel.objects.filter(following=following).count()
+            follower_count = Follow.objects.filter(following=following).count()
             following.follower_count = follower_count
             following.save()
             # 'フォローを外しました'
         else:
-            follow_obj = FollowModel.objects.create(follower=follower, following=following)
+            follow_obj = Follow.objects.create(follower=follower, following=following)
             followed = True
             #ログインユーザーのフォロー数
-            following_count = FollowModel.objects.filter(follower=follower).count()
+            following_count = Follow.objects.filter(follower=follower).count()
             follower.following_count = following_count
             follower.save()
             #フォローユーザーのフォロワー数
-            follower_count = FollowModel.objects.filter(following=following).count()
+            follower_count = Follow.objects.filter(following=following).count()
             following.follower_count = follower_count
             following.save()
             # 'フォローしました'
@@ -1045,7 +1045,7 @@ class Knowledge(TemplateView):
 # Video
 class VideoCreate(CreateView):
     """VideoCreate"""
-    model = VideoModel
+    model = Video
     fields = ('title', 'content', 'images', 'videos')
     template_name = 'video/video_create.html'
 
@@ -1061,7 +1061,7 @@ class VideoCreate(CreateView):
 
 class VideoList(ListView):
     """VideoList"""
-    model = VideoModel
+    model = Video
     template_name = 'video/video.html'
     context_object_name = 'video_list'
     ordering = ['-created']
@@ -1070,11 +1070,11 @@ class VideoList(ListView):
         return ContextData.context_data(self, VideoList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_models(self, VideoModel)
+        return Search.search_models(self, Video)
 
 class VideoDetail(DetailView):
     """VideoDetail"""
-    model = VideoModel
+    model = Video
     template_name = 'video/video_detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -1087,7 +1087,7 @@ class VideoDetail(DetailView):
 # Live
 class LiveCreate(CreateView):
     """LiveCreate"""
-    model = LiveModel
+    model = Live
     fields = ('title', 'content', 'images', 'lives')
     template_name = 'live/live_create.html'
 
@@ -1103,7 +1103,7 @@ class LiveCreate(CreateView):
 
 class LiveList(ListView):
     """LiveList"""
-    model = LiveModel
+    model = Live
     template_name = 'live/live.html'
     context_object_name = 'live_list'
     ordering = ['-created']
@@ -1112,11 +1112,11 @@ class LiveList(ListView):
         return ContextData.context_data(self, LiveList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_models(self, LiveModel)
+        return Search.search_models(self, Live)
 
 class LiveDetail(DetailView):
     """LiveDetail"""
-    model = LiveModel
+    model = Live
     template_name = 'live/live_detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -1129,7 +1129,7 @@ class LiveDetail(DetailView):
 # Music
 class MusicCreate(CreateView):
     """MusicCreate"""
-    model = MusicModel
+    model = Music
     fields = ('title', 'content', 'lyrics', 'musics', 'download')
     template_name = 'music/music_create.html'
 
@@ -1145,7 +1145,7 @@ class MusicCreate(CreateView):
 
 class MusicList(ListView):
     """MusicList"""
-    model = MusicModel
+    model = Music
     template_name = 'music/music.html'
     context_object_name = 'music_list'
     ordering = ['-created']
@@ -1154,11 +1154,11 @@ class MusicList(ListView):
         return ContextData.context_data(self, MusicList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_music(self, MusicModel)
+        return Search.search_music(self, Music)
 
 class MusicDetail(DetailView):
     """MusicDetail"""
-    model = MusicModel
+    model = Music
     template_name = 'music/music_detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -1171,7 +1171,7 @@ class MusicDetail(DetailView):
 # Picture
 class PictureCreate(CreateView):
     """PictureCreate"""
-    model = PictureModel
+    model = Picture
     fields = ('title', 'content', 'images')
     template_name = 'picture/picture_create.html'
 
@@ -1187,7 +1187,7 @@ class PictureCreate(CreateView):
 
 class PictureList(ListView):
     """PictureList"""
-    model = PictureModel
+    model = Picture
     template_name = 'picture/picture.html'
     context_object_name = 'picture_list'
     ordering = ['-created']
@@ -1196,11 +1196,11 @@ class PictureList(ListView):
         return ContextData.context_data(self, PictureList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_models(self, PictureModel)
+        return Search.search_models(self, Picture)
 
 class PictureDetail(DetailView):
     """PictureDetail"""
-    model = PictureModel
+    model = Picture
     template_name = 'picture/picture_detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -1213,7 +1213,7 @@ class PictureDetail(DetailView):
 # Blog
 class BlogCreate(CreateView):
     """BlogCreate"""
-    model = BlogModel
+    model = Blog
     fields = ('title', 'content', 'images', 'richtext')
     template_name = 'blog/blog_create.html'
 
@@ -1229,7 +1229,7 @@ class BlogCreate(CreateView):
 
 class BlogList(ListView):
     """BlogList"""
-    model = BlogModel
+    model = Blog
     template_name = 'blog/blog.html'
     context_object_name = 'blog_list'
     ordering = ['-created']
@@ -1238,11 +1238,11 @@ class BlogList(ListView):
         return ContextData.context_data(self, BlogList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_blog(self, BlogModel)
+        return Search.search_blog(self, Blog)
 
 class BlogDetail(DetailView):
     """BlogDetail"""
-    model = BlogModel
+    model = Blog
     template_name = 'blog/blog_detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -1255,7 +1255,7 @@ class BlogDetail(DetailView):
 # Chat
 class ChatCreate(CreateView):
     """ChatCreate"""
-    model = ChatModel
+    model = Chat
     fields = ('title', 'content', 'period')
     template_name = 'chat/chat_create.html'
 
@@ -1271,7 +1271,7 @@ class ChatCreate(CreateView):
 
 class ChatList(ListView):
     """ChatList"""
-    model = ChatModel
+    model = Chat
     template_name = 'chat/chat.html'
     context_object_name = 'chat_list'
     ordering = ['-created']
@@ -1280,11 +1280,11 @@ class ChatList(ListView):
         return ContextData.context_data(self, ChatList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_models(self, ChatModel)
+        return Search.search_models(self, Chat)
 
 class ChatDetail(DetailView):
     """ChatDetail"""
-    model = ChatModel
+    model = Chat
     template_name = 'chat/chat_detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -1294,7 +1294,7 @@ class ChatDetail(DetailView):
         return ContextData.models_context_data(self, ChatDetail, **kwargs)
 
     def get_new_message(self, comment_obj):
-        obj = get_object_or_404(ChatModel, id=comment_obj.object_id)
+        obj = get_object_or_404(Chat, id=comment_obj.object_id)
         context = dict()
         context['user_count'] = obj.user_count()
         context['comment_count'] = obj.comment_count()
@@ -1303,14 +1303,14 @@ class ChatDetail(DetailView):
 
 class ChatThread(DetailView):
     """ChatDetailThread"""
-    model = ChatModel
+    model = Chat
     template_name = 'chat/chat_thread.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, ChatThread, **kwargs)
 
     def get_new_reply(self, comment_obj):
-        obj = get_object_or_404(ChatModel, id=comment_obj.object_id)
+        obj = get_object_or_404(Chat, id=comment_obj.object_id)
         context = dict()
         context['user_count'] = obj.user_count()
         context['reply_count'] = comment_obj.parent.replies_count()
@@ -1323,7 +1323,7 @@ def chat_thread_button(request):
         user_id = request.user.id
         obj_id = request.GET.get('obj_id')
         comment_id = request.GET.get('comment_id')
-        obj = ChatModel.objects.get(id=obj_id)
+        obj = Chat.objects.get(id=obj_id)
         context['obj_id'] = obj_id
         context['comment_id'] = comment_id
         context['thread'] = render_to_string('chat/chat_reply/chat_section_thread_area.html', {
@@ -1339,7 +1339,7 @@ def chat_thread_button(request):
 # Collabo
 class CollaboCreate(CreateView):
     """CollaboCreate"""
-    model = CollaboModel
+    model = Collabo
     fields = ('title', 'content', 'period')
     template_name = 'collabo/collabo_create.html'
 
@@ -1355,7 +1355,7 @@ class CollaboCreate(CreateView):
 
 class CollaboList(ListView):
     """CollaboList"""
-    model = CollaboModel
+    model = Collabo
     template_name = 'collabo/collabo.html'
     context_object_name = 'collabo_list'
     ordering = ['-created']
@@ -1364,11 +1364,11 @@ class CollaboList(ListView):
         return ContextData.context_data(self, CollaboList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_models(self, CollaboModel)
+        return Search.search_models(self, Collabo)
 
 class CollaboDetail(DetailView):
     """CollaboDetail"""
-    model = CollaboModel
+    model = Collabo
     template_name = 'collabo/collabo_detail.html'
 
     def get(self, request, *args, **kwargs):
@@ -1381,7 +1381,7 @@ class CollaboDetail(DetailView):
 # Todo
 class TodoCreate(CreateView):
     """TodoCreate"""
-    model = TodoModel
+    model = Todo
     fields = ('title', 'content', 'priority', 'duedate')
     template_name = 'todo/todo_create.html'
 
@@ -1397,7 +1397,7 @@ class TodoCreate(CreateView):
 
 class TodoList(ListView):
     """TodoList"""
-    model = TodoModel
+    model = Todo
     template_name = 'todo/todo.html'
     context_object_name = 'todo_list'
     ordering = ['-duedate']
@@ -1406,28 +1406,28 @@ class TodoList(ListView):
         return ContextData.context_data(self, TodoList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_todo(self, TodoModel)
+        return Search.search_todo(self, Todo)
 
 class TodoDetail(DetailView):
     """TodoDetail"""
-    model = TodoModel
+    model = Todo
     template_name = 'todo/todo_detail.html'
 
     def get_queryset(self):
         current_user = self.request.user
         # スーパーユーザの場合、リストにすべてを表示する。
         if current_user.is_superuser:
-            return TodoModel.objects.all()
+            return Todo.objects.all()
         else:
             # 一般ユーザは自分のレコードのみ表示する。
-            return TodoModel.objects.filter(author=current_user.id)
+            return Todo.objects.filter(author=current_user.id)
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, TodoDetail, **kwargs)
 
 class TodoUpdate(UpdateView):
     """TodoUpdate"""
-    model = TodoModel
+    model = Todo
     fields = ('title', 'content', 'priority', 'progress', 'duedate')
     template_name = 'todo/todo_update.html'
 
@@ -1436,6 +1436,6 @@ class TodoUpdate(UpdateView):
 
 class TodoDelete(DeleteView):
     """TodoUpdate"""
-    model = TodoModel
+    model = Todo
     template_name = 'todo/todo_delete.html'
     success_url = reverse_lazy('myus:todo_list')

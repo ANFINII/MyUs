@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
 from django.db.models.query import QuerySet
 from itertools import chain
-from api.models import SearchTag, NotificationSetting, Notification, CommentModel, FollowModel, TodoModel
-from api.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, AdvertiseModel
+from api.models import SearchTag, NotificationSetting, Notification, Comment, Follow, Todo
+from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Advertise
 import datetime
 
 User = get_user_model()
@@ -17,7 +17,7 @@ def notification_data(self):
     confirmed_kwargs['id'] = OuterRef('pk')
     confirmed_kwargs['confirmed'] = user_id
     subquery_confirmed = Notification.objects.filter(**confirmed_kwargs)
-    following_list = list(FollowModel.objects.filter(follower_id=user_id).values_list('following_id', 'created'))
+    following_list = list(Follow.objects.filter(follower_id=user_id).values_list('following_id', 'created'))
     if user_id is not None:
         notification_obj = NotificationSetting.objects.get(user_id=user_id)
         if notification_obj.is_video:
@@ -77,12 +77,12 @@ class ContextData:
 
         if 'Index' in str(models.__name__):
             context.update({
-                'video_list': VideoModel.objects.filter(publish=True).order_by('-created')[:8],
-                'live_list': LiveModel.objects.filter(publish=True).order_by('-created')[:8],
-                'music_list': MusicModel.objects.filter(publish=True).order_by('-created')[:8],
-                'picture_list': PictureModel.objects.filter(publish=True).order_by('-created')[:8],
-                'blog_list': BlogModel.objects.filter(publish=True).order_by('-created')[:8],
-                'chat_list': ChatModel.objects.filter(publish=True).order_by('-created')[:8],
+                'video_list': Video.objects.filter(publish=True).order_by('-created')[:8],
+                'live_list': Live.objects.filter(publish=True).order_by('-created')[:8],
+                'music_list': Music.objects.filter(publish=True).order_by('-created')[:8],
+                'picture_list': Picture.objects.filter(publish=True).order_by('-created')[:8],
+                'blog_list': Blog.objects.filter(publish=True).order_by('-created')[:8],
+                'chat_list': Chat.objects.filter(publish=True).order_by('-created')[:8],
             })
 
         if 'Recommend' in str(models.__name__):
@@ -92,18 +92,18 @@ class ContextData:
             aggregation_date = datetime.datetime.today() - datetime.timedelta(days=100)
             context['Recommend'] = 'Recommend'
             context.update({
-                'video_list': VideoModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'live_list': LiveModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'music_list': MusicModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'picture_list': PictureModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'blog_list': BlogModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'chat_list': ChatModel.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'live_list': Live.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'music_list': Music.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'picture_list': Picture.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'chat_list': Chat.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
             })
 
         if ('UserPage' or 'UserPageInfo' or 'UserPageAdvertise') in str(models.__name__):
             author = get_object_or_404(User, nickname=self.kwargs['nickname'])
             author_id = author.id
-            follow = FollowModel.objects.filter(follower=self.request.user.id).filter(following=author_id)
+            follow = Follow.objects.filter(follower=self.request.user.id).filter(following=author_id)
             followed = False
             if follow.exists():
                 followed = True
@@ -111,12 +111,12 @@ class ContextData:
             context['author_name'] = author.nickname
             context.update({
                 'user_list': User.objects.filter(id=author_id),
-                'video_list': VideoModel.objects.filter(author_id=author_id, publish=True),
-                'live_list': LiveModel.objects.filter(author_id=author_id, publish=True),
-                'music_list': MusicModel.objects.filter(author_id=author_id, publish=True),
-                'picture_list': PictureModel.objects.filter(author_id=author_id, publish=True),
-                'blog_list': BlogModel.objects.filter(author_id=author_id, publish=True),
-                'chat_list': ChatModel.objects.filter(author_id=author_id, publish=True),
+                'video_list': Video.objects.filter(author_id=author_id, publish=True),
+                'live_list': Live.objects.filter(author_id=author_id, publish=True),
+                'music_list': Music.objects.filter(author_id=author_id, publish=True),
+                'picture_list': Picture.objects.filter(author_id=author_id, publish=True),
+                'blog_list': Blog.objects.filter(author_id=author_id, publish=True),
+                'chat_list': Chat.objects.filter(author_id=author_id, publish=True),
             })
         return context
 
@@ -125,7 +125,7 @@ class ContextData:
         context = super(models, self).get_context_data(**kwargs)
         obj = self.object
         user_id = self.request.user.id
-        follow = FollowModel.objects.filter(follower=user_id).filter(following=obj.author.id)
+        follow = Follow.objects.filter(follower=user_id).filter(following=obj.author.id)
         followed = False
         if follow.exists():
             followed = True
@@ -137,7 +137,7 @@ class ContextData:
             filter_kwargs = {}
             filter_kwargs['id'] = OuterRef('pk')
             filter_kwargs['like'] = user_id
-            subquery = CommentModel.objects.filter(**filter_kwargs)
+            subquery = Comment.objects.filter(**filter_kwargs)
             context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
             context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         else:
@@ -152,11 +152,11 @@ class ContextData:
             context['notification_count'] = notification_list['notification_count']
             context['notification_list'] = notification_list['notification_list']
         if obj.author.mypage.rate_plan == '1':
-            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:1])
+            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:1])
         if obj.author.mypage.rate_plan == '2':
-            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:3])
+            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:3])
         if obj.author.mypage.rate_plan == '3':
-            context.update(advertise_list=AdvertiseModel.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:4])
+            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:4])
         context['liked'] = liked
         context['followed'] = followed
         context['user_id'] = user_id
@@ -164,32 +164,32 @@ class ContextData:
         context['obj_path'] = self.request.path
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=user_id).order_by('sequence')[:20],
-            'advertise_auto_list': AdvertiseModel.objects.filter(publish=True, type=0).order_by('?')[:1],
+            'advertise_auto_list': Advertise.objects.filter(publish=True, type=0).order_by('?')[:1],
         })
         if 'VideoDetail' in str(models.__name__):
-            context.update(video_list=VideoModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context.update(video_list=Video.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'LiveDetail' in str(models.__name__):
-            context.update(live_list=LiveModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context.update(live_list=Live.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'MusicDetail' in str(models.__name__):
-            context.update(music_list=MusicModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context.update(music_list=Music.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'PictureDetail' in str(models.__name__):
-            context.update(picture_list=PictureModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context.update(picture_list=Picture.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'BlogDetail' in str(models.__name__):
-            context.update(blog_list=BlogModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context.update(blog_list=Blog.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'ChatDetail' in str(models.__name__):
-            context.update(chat_list=ChatModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context.update(chat_list=Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'ChatThread' in str(models.__name__):
             comment_id = self.kwargs['comment_id']
             context['comment_id'] = comment_id
             context['comment_parent'] = obj.comments.filter(id=comment_id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
             context['reply_list'] = obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
-            context.update(chat_list=ChatModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context.update(chat_list=Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'CollaboDetail' in str(models.__name__):
             if obj.period < datetime.date.today():
@@ -197,8 +197,8 @@ class ContextData:
             else:
                 is_period = False
             context['is_period'] = is_period
-            context.update(collabo_list=CollaboModel.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context.update(collabo_list=Collabo.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'TodoDetail' in str(models.__name__):
-            context.update(todo_list=TodoModel.objects.filter(author_id=user_id).exclude(id=obj.id)[:50])
+            context.update(todo_list=Todo.objects.filter(author_id=user_id).exclude(id=obj.id)[:50])
         return context

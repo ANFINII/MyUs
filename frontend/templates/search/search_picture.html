@@ -4,7 +4,7 @@
 
 {% for item in object_list %}
   {% with item|class_name as model_name %}
-    {% if model_name == 'PictureModel' %}
+    {% if model_name == 'Picture' %}
       {% include 'parts/article_picture.html' %}
     {% endif %}
   {% endwith %}

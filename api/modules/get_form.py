@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from api.models import Notification
-from api.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
+from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo
 
 def get_detail(self):
     self.object = self.get_object()
@@ -9,19 +9,19 @@ def get_detail(self):
     context = self.get_context_data(object=self.object)
     if self.object.read == 10000:
         type_name = ''
-        if self.object.__class__ == VideoModel:
+        if self.object.__class__ == Video:
             type_name = 'video'
-        if self.object.__class__ == LiveModel:
+        if self.object.__class__ == Live:
             type_name = 'live'
-        if self.object.__class__ == MusicModel:
+        if self.object.__class__ == Music:
             type_name = 'music'
-        if self.object.__class__ == PictureModel:
+        if self.object.__class__ == Picture:
             type_name = 'picture'
-        if self.object.__class__ == BlogModel:
+        if self.object.__class__ == Blog:
             type_name = 'blog'
-        if self.object.__class__ == ChatModel:
+        if self.object.__class__ == Chat:
             type_name = 'chat'
-        if self.object.__class__ == CollaboModel:
+        if self.object.__class__ == Collabo:
             type_name = 'collabo'
         Notification.objects.create(
             user_from_id=self.object.author.id,

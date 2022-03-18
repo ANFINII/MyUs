@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from api.models import User, MyPage, NotificationSetting, Notification, SearchTag, HashTag
-from api.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel
-from api.models import TodoModel, FollowModel, AdvertiseModel, CommentModel
+from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo
+from api.models import Todo, Follow, Advertise, Comment
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -56,7 +56,7 @@ class HashTagSerializer(serializers.ModelSerializer):
 
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = VideoModel
+        model = Video
         fields = (
             'id', 'author', 'title', 'content', 'images', 'videos', 'convert', 'comments',
             'publish', 'tags', 'like', 'read', 'created', 'updated',
@@ -65,7 +65,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
 class LiveSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LiveModel
+        model = Live
         fields = (
             'id', 'author', 'title', 'content', 'images', 'lives', 'comments',
             'publish', 'tags', 'like', 'read', 'created', 'updated',
@@ -74,7 +74,7 @@ class LiveSerializer(serializers.ModelSerializer):
 
 class MusicSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MusicModel
+        model = Music
         fields = (
             'id', 'author', 'title', 'content', 'lyrics', 'musics', 'comments',
             'publish', 'download', 'tags', 'like', 'read', 'created', 'updated',
@@ -83,7 +83,7 @@ class MusicSerializer(serializers.ModelSerializer):
 
 class PictureSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PictureModel
+        model = Picture
         fields = (
             'id', 'author', 'title', 'content', 'images', 'comments',
             'publish', 'tags', 'like', 'read', 'created', 'updated',
@@ -92,7 +92,7 @@ class PictureSerializer(serializers.ModelSerializer):
 
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BlogModel
+        model = Blog
         fields = (
             'id', 'author', 'title', 'content', 'images', 'richtext', 'comments',
             'publish', 'tags', 'like', 'read', 'created', 'updated',
@@ -101,7 +101,7 @@ class BlogSerializer(serializers.ModelSerializer):
 
 class ChatSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ChatModel
+        model = Chat
         fields = (
             'id', 'author', 'title', 'content', 'comments', 'publish', 'tags',
             'like', 'read', 'joined', 'period', 'created', 'updated',
@@ -110,7 +110,7 @@ class ChatSerializer(serializers.ModelSerializer):
 
 class CollaboSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CollaboModel
+        model = Collabo
         fields = (
             'id', 'author', 'title', 'content', 'comments', 'publish',
             'tags', 'like', 'read', 'period', 'created', 'updated',
@@ -118,7 +118,7 @@ class CollaboSerializer(serializers.ModelSerializer):
 
 class TodoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TodoModel
+        model = Todo
         fields = (
             'id', 'author', 'title', 'content', 'priority', 'progress',
             'comments', 'duedate', 'created', 'updated',
@@ -127,13 +127,13 @@ class TodoSerializer(serializers.ModelSerializer):
 
 class FollowSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FollowModel
+        model = Follow
         fields = ('id', 'follower', 'following', 'created')
 
 
 class AdvertiseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AdvertiseModel
+        model = Advertise
         fields = (
             'id', 'author', 'title', 'url', 'content', 'images', 'videos', 'publish',
             'read', 'type', 'period', 'created', 'updated',
@@ -142,7 +142,7 @@ class AdvertiseSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CommentModel
+        model = Comment
         fields = (
             'id', 'author', 'parent', 'text', 'like', 'content_type',
             'object_id', 'content_object', 'created', 'updated',

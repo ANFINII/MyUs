@@ -4,15 +4,15 @@ from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
-from .models import ChatModel, CommentModel, Notification
+from .models import Chat, Comment, Notification
 from .views import ChatDetail, ChatThread
 
 User = get_user_model()
 
 class ChatConsumer(WebsocketConsumer):
     def create_message(self, data):
-        obj = ChatModel.objects.get(id=data['obj_id'])
-        message = CommentModel.objects.create(
+        obj = Chat.objects.get(id=data['obj_id'])
+        message = Comment.objects.create(
             author_id=self.scope['user'].id,
             text=data['message'],
             content_object = obj,
@@ -24,8 +24,8 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
 
     def create_reply_message(self, data):
-        obj = ChatModel.objects.get(id=data['obj_id'])
-        message = CommentModel.objects.create(
+        obj = Chat.objects.get(id=data['obj_id'])
+        message = Comment.objects.create(
             author_id=self.scope['user'].id,
             text=data['message'],
             content_object=obj,
@@ -46,7 +46,7 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
 
     def update_message(self, data):
-        message = CommentModel.objects.get(id=data['comment_id'])
+        message = Comment.objects.get(id=data['comment_id'])
         message.text = data['message']
         message.save()
         content = {
@@ -56,7 +56,7 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
 
     def delete_message(self, data):
-        message = CommentModel.objects.get(id=data['comment_id'])
+        message = Comment.objects.get(id=data['comment_id'])
         message.delete()
         content = {
             'command': 'delete_message',
@@ -67,7 +67,7 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
 
     def delete_reply_message(self, data):
-        message = CommentModel.objects.get(id=data['comment_id'])
+        message = Comment.objects.get(id=data['comment_id'])
         content = {
             'command': 'delete_reply_message',
             'message': self.delete_reply_message_to_json(message)
@@ -117,7 +117,7 @@ class ChatConsumer(WebsocketConsumer):
 
     def delete_message_to_json(self, message):
         obj_id = message.object_id
-        obj = ChatModel.objects.get(id=obj_id)
+        obj = Chat.objects.get(id=obj_id)
         context = {
             'user_count': obj.user_count(),
             'comment_count': obj.comment_count(),
@@ -126,8 +126,8 @@ class ChatConsumer(WebsocketConsumer):
 
     def delete_reply_message_to_json(self, message):
         obj_id = message.object_id
-        obj = ChatModel.objects.get(id=obj_id)
-        comment_obj = CommentModel.objects.get(id=message.id)
+        obj = Chat.objects.get(id=obj_id)
+        comment_obj = Comment.objects.get(id=message.id)
         message.delete()
         context = {
             'user_count': obj.user_count(),

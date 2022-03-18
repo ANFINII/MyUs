@@ -3,8 +3,8 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
 from import_export.admin import ImportExportModelAdmin
-from .models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, CommentModel, FollowModel
-from .models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel, CollaboModel, TodoModel, AdvertiseModel
+from .models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, Comment, Follow
+from .models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 import datetime
 
 # Admin用の管理画面
@@ -30,7 +30,7 @@ class SearchTagInline(admin.TabularInline):
     verbose_name_plural = '検索タグ'
 
 class CommentInlineAdmin(GenericTabularInline):
-    model = CommentModel
+    model = Comment
     extra = 0
     max_num = 100
     fields = ('author', 'parent', 'text', 'total_like')
@@ -111,8 +111,8 @@ class TagAdmin(ImportExportModelAdmin):
         obj.author = request.user
         super(TagAdmin, self).save_model(request, obj, form, change)
 
-@admin.register(VideoModel)
-class VideoModelAdmin(ImportExportModelAdmin):
+@admin.register(Video)
+class VideoAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -138,8 +138,8 @@ class VideoModelAdmin(ImportExportModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 
-@admin.register(LiveModel)
-class LiveModelAdmin(ImportExportModelAdmin):
+@admin.register(Live)
+class LiveAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -165,8 +165,8 @@ class LiveModelAdmin(ImportExportModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 
-@admin.register(MusicModel)
-class MusicModelAdmin(ImportExportModelAdmin):
+@admin.register(Music)
+class MusicAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'download', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -192,8 +192,8 @@ class MusicModelAdmin(ImportExportModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 
-@admin.register(PictureModel)
-class PictureModelAdmin(ImportExportModelAdmin):
+@admin.register(Picture)
+class PictureAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -219,8 +219,8 @@ class PictureModelAdmin(ImportExportModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 
-@admin.register(BlogModel)
-class BlogModelAdmin(ImportExportModelAdmin):
+@admin.register(Blog)
+class BlogAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -246,8 +246,8 @@ class BlogModelAdmin(ImportExportModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 
-@admin.register(ChatModel)
-class ChatModelAdmin(ImportExportModelAdmin):
+@admin.register(Chat)
+class ChatAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -277,8 +277,8 @@ class ChatModelAdmin(ImportExportModelAdmin):
         return obj.comments.order_by('author').distinct().values_list('author').count()
     user_count.short_description = 'joined'
 
-@admin.register(CollaboModel)
-class CollaboModelAdmin(ImportExportModelAdmin):
+@admin.register(Collabo)
+class CollaboAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'period', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -304,8 +304,8 @@ class CollaboModelAdmin(ImportExportModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 
-@admin.register(TodoModel)
-class TodoModelAdmin(ImportExportModelAdmin):
+@admin.register(Todo)
+class TodoAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'comment_count', 'priority', 'progress', 'duedate')
     list_select_related = ('author',)
     list_filter = ('priority', 'progress', 'duedate')
@@ -324,8 +324,8 @@ class TodoModelAdmin(ImportExportModelAdmin):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
 
-@admin.register(FollowModel)
-class FollowModelAdmin(ImportExportModelAdmin):
+@admin.register(Follow)
+class FollowAdmin(ImportExportModelAdmin):
     list_display = ('id', 'follower', 'following', 'created')
     list_select_related = ('follower', 'following')
     search_fields = ('follower__nickname', 'following__nickname', 'created')
@@ -367,8 +367,8 @@ class NotificationAdmin(ImportExportModelAdmin):
         return obj.content_object
     title.short_description = 'title'
 
-@admin.register(AdvertiseModel)
-class AdvertiseModelAdmin(ImportExportModelAdmin):
+@admin.register(Advertise)
+class AdvertiseAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'url', 'publish', 'read', 'type', 'period', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
@@ -381,7 +381,7 @@ class AdvertiseModelAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('read', 'created', 'updated')})
     ]
 
-@admin.register(CommentModel)
+@admin.register(Comment)
 class CommentAdmin(ImportExportModelAdmin):
     list_display = ('id', 'content_type', 'object_id', 'content_object', 'author', 'text', 'parent_id', 'total_like', 'created', 'updated')
     list_select_related = ('author', 'parent', 'content_type')
@@ -421,7 +421,7 @@ mymanage_site = MyUsAdminSite(name='mymanage')
 mymanage_site.disable_action('delete_selected')
 
 class CommentInline(GenericTabularInline):
-    model = CommentModel
+    model = Comment
     extra = 0
     max_num = 100
     exclude = ('like',)
@@ -480,7 +480,7 @@ class TagAdminSite(admin.ModelAdmin):
         return False
 mymanage_site.register(HashTag, TagAdminSite)
 
-class VideoModelAdminSite(admin.ModelAdmin):
+class VideoAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -497,12 +497,12 @@ class VideoModelAdminSite(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request):
-        qs = super(VideoModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(VideoAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
-        super(VideoModelAdminSite, self).save_model(request, obj, form, change)
+        super(VideoAdminSite, self).save_model(request, obj, form, change)
 
     def published(self, request, queryset):
         queryset.update(publish=True)
@@ -519,9 +519,9 @@ class VideoModelAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(VideoModel, VideoModelAdminSite)
+mymanage_site.register(Video, VideoAdminSite)
 
-class LiveModelAdminSite(admin.ModelAdmin):
+class LiveAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -538,12 +538,12 @@ class LiveModelAdminSite(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request):
-        qs = super(LiveModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(LiveAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
-        super(LiveModelAdminSite, self).save_model(request, obj, form, change)
+        super(LiveAdminSite, self).save_model(request, obj, form, change)
 
     def published(self, request, queryset):
         queryset.update(publish=True)
@@ -560,9 +560,9 @@ class LiveModelAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(LiveModel, LiveModelAdminSite)
+mymanage_site.register(Live, LiveAdminSite)
 
-class MusicModelAdminSite(admin.ModelAdmin):
+class MusicAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'download', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -579,12 +579,12 @@ class MusicModelAdminSite(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request):
-        qs = super(MusicModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(MusicAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
-        super(MusicModelAdminSite, self).save_model(request, obj, form, change)
+        super(MusicAdminSite, self).save_model(request, obj, form, change)
 
     def published(self, request, queryset):
         queryset.update(publish=True)
@@ -601,9 +601,9 @@ class MusicModelAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(MusicModel, MusicModelAdminSite)
+mymanage_site.register(Music, MusicAdminSite)
 
-class PictureModelAdminSite(admin.ModelAdmin):
+class PictureAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -620,12 +620,12 @@ class PictureModelAdminSite(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request):
-        qs = super(PictureModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(PictureAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
-        super(PictureModelAdminSite, self).save_model(request, obj, form, change)
+        super(PictureAdminSite, self).save_model(request, obj, form, change)
 
     def published(self, request, queryset):
         queryset.update(publish=True)
@@ -642,9 +642,9 @@ class PictureModelAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(PictureModel, PictureModelAdminSite)
+mymanage_site.register(Picture, PictureAdminSite)
 
-class BlogModelAdminSite(admin.ModelAdmin):
+class BlogAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -661,12 +661,12 @@ class BlogModelAdminSite(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request):
-        qs = super(BlogModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(BlogAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
-        super(BlogModelAdminSite, self).save_model(request, obj, form, change)
+        super(BlogAdminSite, self).save_model(request, obj, form, change)
 
     def published(self, request, queryset):
         queryset.update(publish=True)
@@ -683,9 +683,9 @@ class BlogModelAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(BlogModel, BlogModelAdminSite)
+mymanage_site.register(Blog, BlogAdminSite)
 
-class ChatModelAdminSite(admin.ModelAdmin):
+class ChatAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -702,12 +702,12 @@ class ChatModelAdminSite(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request):
-        qs = super(ChatModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(ChatAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
-        super(ChatModelAdminSite, self).save_model(request, obj, form, change)
+        super(ChatAdminSite, self).save_model(request, obj, form, change)
 
     def published(self, request, queryset):
         queryset.update(publish=True)
@@ -728,9 +728,9 @@ class ChatModelAdminSite(admin.ModelAdmin):
     def user_count(self, obj):
         return obj.comments.order_by('author').distinct().values_list('author').count()
     user_count.short_description = 'joined'
-mymanage_site.register(ChatModel, ChatModelAdminSite)
+mymanage_site.register(Chat, ChatAdminSite)
 
-class CollaboModelAdminSite(admin.ModelAdmin):
+class CollaboAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'period', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -747,12 +747,12 @@ class CollaboModelAdminSite(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request):
-        qs = super(CollaboModelAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(CollaboAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
-        super(CollaboModelAdminSite, self).save_model(request, obj, form, change)
+        super(CollaboAdminSite, self).save_model(request, obj, form, change)
 
     def published(self, request, queryset):
         queryset.update(publish=True)
@@ -769,9 +769,9 @@ class CollaboModelAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(CollaboModel, CollaboModelAdminSite)
+mymanage_site.register(Collabo, CollaboAdminSite)
 
-class TodoModelAdminSite(admin.ModelAdmin):
+class TodoAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'comment_count', 'priority', 'progress', 'duedate')
     list_editable = ('title', 'priority', 'progress', 'duedate')
     list_filter = ('priority', 'progress', 'duedate')
@@ -788,12 +788,12 @@ class TodoModelAdminSite(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request):
-        qs = super(TodoModelAdminSite, self).get_queryset(request)
+        qs = super(TodoAdminSite, self).get_queryset(request)
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
-        super(TodoModelAdminSite, self).save_model(request, obj, form, change)
+        super(TodoAdminSite, self).save_model(request, obj, form, change)
 
     def delete_action(self, request, queryset):
         queryset.delete()
@@ -802,9 +802,9 @@ class TodoModelAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comments.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(TodoModel, TodoModelAdminSite)
+mymanage_site.register(Todo, TodoAdminSite)
 
-class FollowModelAdminSite(admin.ModelAdmin):
+class FollowAdminSite(admin.ModelAdmin):
     list_display = ('id', 'following', 'created')
     list_select_related = ('following',)
     search_fields = ('following__nickname', 'following__introduction', 'created')
@@ -818,12 +818,12 @@ class FollowModelAdminSite(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request):
-        qs = super(FollowModelAdminSite, self).get_queryset(request)
+        qs = super(FollowAdminSite, self).get_queryset(request)
         return qs.filter(follower=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.follower = request.user
-        super(FollowModelAdminSite, self).save_model(request, obj, form, change)
+        super(FollowAdminSite, self).save_model(request, obj, form, change)
 
     def has_add_permission(self, request):
         return False
@@ -838,7 +838,7 @@ class FollowModelAdminSite(admin.ModelAdmin):
     def following_introduction(self, obj):
         return obj.following.introduction
     following_introduction.short_description = 'Introduction'
-mymanage_site.register(FollowModel, FollowModelAdminSite)
+mymanage_site.register(Follow, FollowAdminSite)
 
 class NotificationAdminSite(admin.ModelAdmin):
     list_display = ('id', 'type_no', 'type_name', 'title', 'confirmed_count', 'created')
@@ -874,7 +874,7 @@ class NotificationAdminSite(admin.ModelAdmin):
     title.short_description = 'title'
 mymanage_site.register(Notification, NotificationAdminSite)
 
-class AdvertiseModelAdminSite(admin.ModelAdmin):
+class AdvertiseAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'url', 'publish', 'read', 'period', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'created')
@@ -889,13 +889,13 @@ class AdvertiseModelAdminSite(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request):
-        qs = super(AdvertiseModelAdminSite, self).get_queryset(request)
+        qs = super(AdvertiseAdminSite, self).get_queryset(request)
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         obj.type = 1
-        super(AdvertiseModelAdminSite, self).save_model(request, obj, form, change)
+        super(AdvertiseAdminSite, self).save_model(request, obj, form, change)
 
     def has_add_permission(self, request):
         author = request.user
@@ -916,4 +916,4 @@ class AdvertiseModelAdminSite(admin.ModelAdmin):
     def unpublished(self, request, queryset):
         queryset.update(publish=False)
     unpublished.short_description = '非公開にする'
-mymanage_site.register(AdvertiseModel, AdvertiseModelAdminSite)
+mymanage_site.register(Advertise, AdvertiseAdminSite)

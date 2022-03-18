@@ -4,7 +4,7 @@ from django.db.models import Q, F, Count
 from functools import reduce
 from operator import and_
 from itertools import chain
-from api.models import VideoModel, LiveModel, MusicModel, PictureModel, BlogModel, ChatModel
+from api.models import Video, Live, Music, Picture, Blog, Chat
 import datetime
 
 User = get_user_model()
@@ -13,49 +13,49 @@ class Search:
     def search_index(self):
         search = self.request.GET.get('search', None)
         if search is not None:
-            result1 = VideoModel.objects.search(search)[:8]
-            result2 = LiveModel.objects.search(search)[:8]
-            result3 = MusicModel.objects.search(search)[:8]
-            result4 = PictureModel.objects.search(search)[:8]
-            result5 = BlogModel.objects.search(search)[:8]
-            result6 = ChatModel.objects.search(search)[:8]
+            result1 = Video.objects.search(search)[:8]
+            result2 = Live.objects.search(search)[:8]
+            result3 = Music.objects.search(search)[:8]
+            result4 = Picture.objects.search(search)[:8]
+            result5 = Blog.objects.search(search)[:8]
+            result6 = Chat.objects.search(search)[:8]
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
             self.count = len(result)
             return result
-        return VideoModel.objects.none()
+        return Video.objects.none()
 
     def search_recommend(self):
         search = self.request.GET.get('search', None)
         aggregation_date = datetime.datetime.today() - datetime.timedelta(days=100)
         if search is not None:
-            result1 = VideoModel.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
-            result2 = LiveModel.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
-            result3 = MusicModel.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
-            result4 = PictureModel.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
-            result5 = BlogModel.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
-            result6 = ChatModel.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
+            result1 = Video.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
+            result2 = Live.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
+            result3 = Music.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
+            result4 = Picture.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
+            result5 = Blog.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
+            result6 = Chat.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
             self.count = len(result)
             return result
-        return VideoModel.objects.none()
+        return Video.objects.none()
 
     def search_userpage(self):
         search = self.request.GET.get('search', None)
         author = get_object_or_404(User, nickname=self.kwargs['nickname'])
         if search is not None:
-            result1 = VideoModel.objects.filter(author_id=author.id, publish=True).search(search)
-            result2 = LiveModel.objects.filter(author_id=author.id, publish=True).search(search)
-            result3 = MusicModel.objects.filter(author_id=author.id, publish=True).search(search)
-            result4 = PictureModel.objects.filter(author_id=author.id, publish=True).search(search)
-            result5 = BlogModel.objects.filter(author_id=author.id, publish=True).search(search)
-            result6 = ChatModel.objects.filter(author_id=author.id, publish=True).search(search)
+            result1 = Video.objects.filter(author_id=author.id, publish=True).search(search)
+            result2 = Live.objects.filter(author_id=author.id, publish=True).search(search)
+            result3 = Music.objects.filter(author_id=author.id, publish=True).search(search)
+            result4 = Picture.objects.filter(author_id=author.id, publish=True).search(search)
+            result5 = Blog.objects.filter(author_id=author.id, publish=True).search(search)
+            result6 = Chat.objects.filter(author_id=author.id, publish=True).search(search)
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
             self.count = len(result)
             return result
-        return VideoModel.objects.none()
+        return Video.objects.none()
 
     def search_follow(self, model):
         path = self.request.path

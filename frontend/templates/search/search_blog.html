@@ -4,7 +4,7 @@
 
 {% for item in object_list %}
   {% with item|class_name as model_name %}
-    {% if model_name == 'BlogModel' %}
+    {% if model_name == 'Blog' %}
       {% include 'parts/article_blog.html' %}
     {% endif %}
   {% endwith %}
