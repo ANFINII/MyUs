@@ -113,7 +113,7 @@ class TagAdmin(ImportExportModelAdmin):
 
 @admin.register(Video)
 class VideoAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -123,7 +123,7 @@ class VideoAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'videos', 'convert', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'video', 'convert', 'tags', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -135,12 +135,12 @@ class VideoAdmin(ImportExportModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 
 @admin.register(Live)
 class LiveAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -150,7 +150,7 @@ class LiveAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'lives', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'live', 'tags', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -162,12 +162,12 @@ class LiveAdmin(ImportExportModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 
 @admin.register(Music)
 class MusicAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'download', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'download', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -177,7 +177,7 @@ class MusicAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'lyrics', 'musics', 'publish', 'download', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'lyric', 'music', 'tags', 'like', 'read', 'publish', 'download')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -189,12 +189,12 @@ class MusicAdmin(ImportExportModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 
 @admin.register(Picture)
 class PictureAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -204,7 +204,7 @@ class PictureAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'tags', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -216,12 +216,12 @@ class PictureAdmin(ImportExportModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 
 @admin.register(Blog)
 class BlogAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -231,7 +231,7 @@ class BlogAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'images', 'richtext', 'publish', 'tags', 'like', 'read')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'richtext', 'tags', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -243,12 +243,12 @@ class BlogAdmin(ImportExportModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 
 @admin.register(Chat)
 class ChatAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -258,7 +258,7 @@ class ChatAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'publish', 'tags', 'like', 'read', 'period')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'tags', 'like', 'read', 'period', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'user_count', 'created', 'updated')})
     ]
 
@@ -270,16 +270,16 @@ class ChatAdmin(ImportExportModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.filter(parent__isnull=True).count()
+        return obj.comment.filter(parent__isnull=True).count()
     comment_count.short_description = 'thread'
 
     def user_count(self, obj):
-        return obj.comments.order_by('author').distinct().values_list('author').count()
+        return obj.comment.order_by('author').distinct().values_list('author').count()
     user_count.short_description = 'joined'
 
 @admin.register(Collabo)
 class CollaboAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'publish', 'read', 'total_like', 'comment_count', 'period', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -289,7 +289,7 @@ class CollaboAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'publish', 'tags', 'like', 'read', 'period')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'tags', 'like', 'read', 'period', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -301,7 +301,7 @@ class CollaboAdmin(ImportExportModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 
 @admin.register(Todo)
@@ -321,7 +321,7 @@ class TodoAdmin(ImportExportModelAdmin):
     ]
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 
 @admin.register(Follow)
@@ -369,7 +369,7 @@ class NotificationAdmin(ImportExportModelAdmin):
 
 @admin.register(Advertise)
 class AdvertiseAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'url', 'publish', 'read', 'type', 'period', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'url', 'read', 'type', 'period', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', 'created')
@@ -377,7 +377,7 @@ class AdvertiseAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'url', 'content', 'images', 'videos', 'publish', 'type', 'period')}),
+        ('編集項目', {'fields': ('author', 'title', 'url', 'content', 'image', 'video', 'type', 'period', 'publish')}),
         ('確認項目', {'fields': ('read', 'created', 'updated')})
     ]
 
@@ -481,7 +481,7 @@ class TagAdminSite(admin.ModelAdmin):
 mymanage_site.register(HashTag, TagAdminSite)
 
 class VideoAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -492,7 +492,7 @@ class VideoAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'images', 'videos', 'convert', 'publish', 'tags')}),
+        ('編集項目', {'fields': ('title', 'content', 'image', 'video', 'convert', 'tags', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -517,12 +517,12 @@ class VideoAdminSite(admin.ModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 mymanage_site.register(Video, VideoAdminSite)
 
 class LiveAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -533,7 +533,7 @@ class LiveAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'images', 'lives', 'publish', 'tags')}),
+        ('編集項目', {'fields': ('title', 'content', 'image', 'live', 'tags', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -558,12 +558,12 @@ class LiveAdminSite(admin.ModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 mymanage_site.register(Live, LiveAdminSite)
 
 class MusicAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'download', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'download', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -574,7 +574,7 @@ class MusicAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'lyrics', 'musics', 'publish', 'download', 'tags')}),
+        ('編集項目', {'fields': ('title', 'content', 'lyric', 'music', 'tags', 'download', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -599,12 +599,12 @@ class MusicAdminSite(admin.ModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 mymanage_site.register(Music, MusicAdminSite)
 
 class PictureAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -615,7 +615,7 @@ class PictureAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'images', 'publish', 'tags')}),
+        ('編集項目', {'fields': ('title', 'content', 'image', 'tags', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -640,12 +640,12 @@ class PictureAdminSite(admin.ModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 mymanage_site.register(Picture, PictureAdminSite)
 
 class BlogAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'created', 'updated')
+    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -656,7 +656,7 @@ class BlogAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'images', 'richtext', 'publish', 'tags')}),
+        ('編集項目', {'fields': ('title', 'content', 'image', 'richtext', 'tags', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -681,12 +681,12 @@ class BlogAdminSite(admin.ModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 mymanage_site.register(Blog, BlogAdminSite)
 
 class ChatAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'created', 'updated')
+    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -697,7 +697,7 @@ class ChatAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'publish', 'tags', 'period')}),
+        ('編集項目', {'fields': ('title', 'content', 'tags', 'period', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')})
     ]
 
@@ -722,16 +722,16 @@ class ChatAdminSite(admin.ModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.filter(parent__isnull=True).count()
+        return obj.comment.filter(parent__isnull=True).count()
     comment_count.short_description = 'thread'
 
     def user_count(self, obj):
-        return obj.comments.order_by('author').distinct().values_list('author').count()
+        return obj.comment.order_by('author').distinct().values_list('author').count()
     user_count.short_description = 'joined'
 mymanage_site.register(Chat, ChatAdminSite)
 
 class CollaboAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'publish', 'read', 'total_like', 'comment_count', 'period', 'created', 'updated')
+    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -742,7 +742,7 @@ class CollaboAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'publish', 'tags', 'period')}),
+        ('編集項目', {'fields': ('title', 'content', 'tags', 'period', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -767,7 +767,7 @@ class CollaboAdminSite(admin.ModelAdmin):
     total_like.short_description = 'like'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 mymanage_site.register(Collabo, CollaboAdminSite)
 
@@ -800,7 +800,7 @@ class TodoAdminSite(admin.ModelAdmin):
     delete_action.short_description = '削除する'
 
     def comment_count(self, obj):
-        return obj.comments.all().count()
+        return obj.comment.all().count()
     comment_count.short_description = 'comment'
 mymanage_site.register(Todo, TodoAdminSite)
 
@@ -875,7 +875,7 @@ class NotificationAdminSite(admin.ModelAdmin):
 mymanage_site.register(Notification, NotificationAdminSite)
 
 class AdvertiseAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'url', 'publish', 'read', 'period', 'created', 'updated')
+    list_display = ('id', 'title', 'url', 'read', 'period', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'created')
     ordering = ('author', 'created')
@@ -884,7 +884,7 @@ class AdvertiseAdminSite(admin.ModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'url', 'content', 'images', 'videos', 'publish', 'period')}),
+        ('編集項目', {'fields': ('title', 'url', 'content', 'image', 'video', 'period', 'publish')}),
         ('確認項目', {'fields': ('read', 'created', 'updated')})
     ]
 

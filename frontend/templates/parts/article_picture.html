@@ -3,7 +3,7 @@
 <section class="main_content">
   <figure class="main_decolation">
     <a href="{% url 'myus:picture_detail' item.pk item.title %}">
-      <img src="{{ item.images.url }}" width="272" height="153">
+      <img src="{{ item.image.url }}" width="272" height="153">
     </a>
     <a href="{% url 'myus:picture_detail' item.pk item.title %}" class="author_space">
       {% include 'parts/author_space.html' %}

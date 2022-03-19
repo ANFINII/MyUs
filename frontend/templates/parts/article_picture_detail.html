@@ -4,7 +4,7 @@
 <section class="main_content_detail">
   <figure class="main_decolation content_side">
     <a href="{% url 'myus:picture_detail' item.pk item.title %}">
-      <img src="{{ item.images.url }}" width="192" height="108">
+      <img src="{{ item.image.url }}" width="192" height="108">
     </a>
     <a href="{% url 'myus:picture_detail' item.pk item.title %}" class="author_space_side">
       {% include 'parts/content_title.html' %}

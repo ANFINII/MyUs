@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from api.models import User, MyPage, NotificationSetting, Notification, SearchTag, HashTag
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo
-from api.models import Todo, Follow, Advertise, Comment
+from api.models import Todo, Advertise, Follow, Comment
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -58,8 +58,8 @@ class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
         fields = (
-            'id', 'author', 'title', 'content', 'images', 'videos', 'convert', 'comments',
-            'publish', 'tags', 'like', 'read', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'image', 'video', 'convert', 'comment',
+            'tags', 'like', 'read', 'publish', 'created', 'updated',
         )
 
 
@@ -67,8 +67,8 @@ class LiveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Live
         fields = (
-            'id', 'author', 'title', 'content', 'images', 'lives', 'comments',
-            'publish', 'tags', 'like', 'read', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'image', 'live', 'comment',
+            'tags', 'like', 'read', 'publish', 'created', 'updated',
         )
 
 
@@ -76,8 +76,8 @@ class MusicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Music
         fields = (
-            'id', 'author', 'title', 'content', 'lyrics', 'musics', 'comments',
-            'publish', 'download', 'tags', 'like', 'read', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'lyric', 'music', 'comment',
+            'tags', 'like', 'read', 'download', 'publish', 'created', 'updated',
         )
 
 
@@ -85,8 +85,8 @@ class PictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Picture
         fields = (
-            'id', 'author', 'title', 'content', 'images', 'comments',
-            'publish', 'tags', 'like', 'read', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'image', 'comment',
+            'tags', 'like', 'read', 'publish', 'created', 'updated',
         )
 
 
@@ -94,8 +94,8 @@ class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = (
-            'id', 'author', 'title', 'content', 'images', 'richtext', 'comments',
-            'publish', 'tags', 'like', 'read', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'image', 'richtext', 'comment',
+            'tags', 'like', 'read', 'publish', 'created', 'updated',
         )
 
 
@@ -103,8 +103,8 @@ class ChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chat
         fields = (
-            'id', 'author', 'title', 'content', 'comments', 'publish', 'tags',
-            'like', 'read', 'joined', 'period', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'comment', 'tags', 'like',
+            'read', 'joined', 'period', 'publish', 'created', 'updated',
         )
 
 
@@ -112,8 +112,8 @@ class CollaboSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collabo
         fields = (
-            'id', 'author', 'title', 'content', 'comments', 'publish',
-            'tags', 'like', 'read', 'period', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'comment', 'tags', 'like',
+            'read', 'period', 'publish', 'created', 'updated',
         )
 
 class TodoSerializer(serializers.ModelSerializer):
@@ -121,7 +121,7 @@ class TodoSerializer(serializers.ModelSerializer):
         model = Todo
         fields = (
             'id', 'author', 'title', 'content', 'priority', 'progress',
-            'comments', 'duedate', 'created', 'updated',
+            'comment', 'duedate', 'created', 'updated',
         )
 
 
@@ -135,8 +135,8 @@ class AdvertiseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Advertise
         fields = (
-            'id', 'author', 'title', 'url', 'content', 'images', 'videos', 'publish',
-            'read', 'type', 'period', 'created', 'updated',
+            'id', 'author', 'title', 'url', 'content', 'image', 'video',
+            'read', 'type', 'period', 'publish', 'created', 'updated',
         )
 
 

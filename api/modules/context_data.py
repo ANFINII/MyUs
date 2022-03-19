@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
 from django.db.models.query import QuerySet
 from itertools import chain
-from api.models import SearchTag, NotificationSetting, Notification, Comment, Follow, Todo
-from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Advertise
+from api.models import SearchTag, NotificationSetting, Notification, Comment, Follow
+from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 import datetime
 
 User = get_user_model()
@@ -138,15 +138,15 @@ class ContextData:
             filter_kwargs['id'] = OuterRef('pk')
             filter_kwargs['like'] = user_id
             subquery = Comment.objects.filter(**filter_kwargs)
-            context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
-            context['reply_list'] = obj.comments.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
+            context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
+            context['reply_list'] = obj.comment.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         else:
             if obj.period < datetime.date.today():
                 is_period = True
             else:
                 is_period = False
             context['is_period'] = is_period
-            context['comment_list'] = obj.comments.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
+            context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         if user_id is not None:
             notification_list = notification_data(self)
             context['notification_count'] = notification_list['notification_count']
@@ -187,8 +187,8 @@ class ContextData:
         if 'ChatThread' in str(models.__name__):
             comment_id = self.kwargs['comment_id']
             context['comment_id'] = comment_id
-            context['comment_parent'] = obj.comments.filter(id=comment_id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-            context['reply_list'] = obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
+            context['comment_parent'] = obj.comment.filter(id=comment_id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
+            context['reply_list'] = obj.comment.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
             context.update(chat_list=Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'CollaboDetail' in str(models.__name__):

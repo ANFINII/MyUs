@@ -4,8 +4,8 @@
 {% for item in advertise_list %}
 <section class="main_content">
   <div class="main_decolation">
-    <video class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" width="272" height="153" poster="{{ item.images.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
-      <source src="{{ item.videos.url }}" type="video/mp4">
+    <video class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" width="272" height="153" poster="{{ item.image.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
+      <source src="{{ item.video.url }}" type="video/mp4">
       <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>
       <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
       <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">

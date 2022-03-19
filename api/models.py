@@ -250,21 +250,21 @@ def videos_video_upload_path(instance, filename):
 
 class Video(models.Model):
     """Video"""
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    images   = models.ImageField(upload_to=images_video_upload_path)
-    videos   = models.FileField(upload_to=videos_video_upload_path)
-    convert  = models.FileField(upload_to=videos_video_upload_path)
-    comments = GenericRelation('Comment')
-    publish  = models.BooleanField(default=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='video_like', blank=True)
-    read     = models.IntegerField(blank=True, null=True, default=0)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    author  = models.ForeignKey(User, on_delete=models.CASCADE)
+    title   = models.CharField(max_length=100)
+    content = models.TextField()
+    image   = models.ImageField(upload_to=images_video_upload_path)
+    video   = models.FileField(upload_to=videos_video_upload_path)
+    convert = models.FileField(upload_to=videos_video_upload_path)
+    comment = GenericRelation('Comment')
+    hashtag = models.ManyToManyField(HashTag, blank=True)
+    like    = models.ManyToManyField(User, related_name='video_like', blank=True)
+    read    = models.IntegerField(blank=True, null=True, default=0)
+    publish = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
-    objects  = VideoManager()
+    objects = VideoManager()
 
     def __str__(self):
         return self.title
@@ -276,19 +276,19 @@ class Video(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.filter(parent__isnull=True).count()
+        return self.comment.filter(parent__isnull=True).count()
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            images = self.images
-            videos = self.videos
+            image = self.image
+            video  = self.video
             convert = self.convert
-            self.images = None
-            self.videos = None
+            self.image = None
+            self.video  = None
             self.convert = None
             super().save(*args, **kwargs)
-            self.images = images
-            self.videos = videos
+            self.image = image
+            self.video  = video
             self.convert = convert
             if 'force_insert' in kwargs:
                 kwargs.pop('force_insert')
@@ -326,20 +326,20 @@ def videos_live_upload_path(instance, filename):
 
 class Live(models.Model):
     """Live"""
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    images   = models.ImageField(upload_to=images_live_upload_path)
-    lives    = models.FileField(upload_to=videos_live_upload_path)
-    comments = GenericRelation('Comment')
-    publish  = models.BooleanField(default=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='live_like', blank=True)
-    read     = models.IntegerField(blank=True, null=True, default=0)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    author  = models.ForeignKey(User, on_delete=models.CASCADE)
+    title   = models.CharField(max_length=100)
+    content = models.TextField()
+    image   = models.ImageField(upload_to=images_live_upload_path)
+    live    = models.FileField(upload_to=videos_live_upload_path)
+    comment = GenericRelation('Comment')
+    hashtag = models.ManyToManyField(HashTag, blank=True)
+    like    = models.ManyToManyField(User, related_name='live_like', blank=True)
+    read    = models.IntegerField(blank=True, null=True, default=0)
+    publish = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
-    objects  = LiveManager()
+    objects = LiveManager()
 
     def __str__(self):
         return self.title
@@ -351,17 +351,17 @@ class Live(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.filter(parent__isnull=True).count()
+        return self.comment.filter(parent__isnull=True).count()
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            images = self.images
-            lives = self.lives
-            self.images = None
-            self.lives = None
+            image = self.image
+            live = self.live
+            self.image = None
+            self.live = None
             super().save(*args, **kwargs)
-            self.images = images
-            self.lives = lives
+            self.image = image
+            self.live = live
             if 'force_insert' in kwargs:
                 kwargs.pop('force_insert')
         super().save(*args, **kwargs)
@@ -379,7 +379,7 @@ class MusicQuerySet(models.QuerySet):
                 Q(tags__name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query) |
-                Q(lyrics__icontains=query)
+                Q(lyric__icontains=query)
             )
             qs = qs.filter(or_lookup).distinct()
         return qs
@@ -399,14 +399,14 @@ class Music(models.Model):
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    lyrics   = models.TextField(blank=True, null=True)
-    musics   = models.FileField(upload_to=musics_upload_path)
-    comments = GenericRelation('Comment')
-    publish  = models.BooleanField(default=True)
-    download = models.BooleanField(default=True)
+    lyric    = models.TextField(blank=True, null=True)
+    music    = models.FileField(upload_to=musics_upload_path)
+    comment  = GenericRelation('Comment')
     hashtag  = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name='music_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
+    download = models.BooleanField(default=True)
+    publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
 
@@ -422,14 +422,14 @@ class Music(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.filter(parent__isnull=True).count()
+        return self.comment.filter(parent__isnull=True).count()
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            musics = self.musics
-            self.musics = None
+            music = self.music
+            self.music = None
             super().save(*args, **kwargs)
-            self.musics = musics
+            self.music = music
             if 'force_insert' in kwargs:
                 kwargs.pop('force_insert')
         super().save(*args, **kwargs)
@@ -463,19 +463,19 @@ def images_picture_upload_path(instance, filename):
 
 class Picture(models.Model):
     """Picture"""
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    images   = models.ImageField(upload_to=images_picture_upload_path)
-    comments = GenericRelation('Comment')
-    publish  = models.BooleanField(default=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='picture_like', blank=True)
-    read     = models.IntegerField(blank=True, null=True, default=0)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    author  = models.ForeignKey(User, on_delete=models.CASCADE)
+    title   = models.CharField(max_length=100)
+    content = models.TextField()
+    image   = models.ImageField(upload_to=images_picture_upload_path)
+    comment = GenericRelation('Comment')
+    hashtag = models.ManyToManyField(HashTag, blank=True)
+    like    = models.ManyToManyField(User, related_name='picture_like', blank=True)
+    read    = models.IntegerField(blank=True, null=True, default=0)
+    publish = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
-    objects  = PictureManager()
+    objects = PictureManager()
 
     def __str__(self):
         return self.title
@@ -487,14 +487,14 @@ class Picture(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.filter(parent__isnull=True).count()
+        return self.comment.filter(parent__isnull=True).count()
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            images = self.images
-            self.images = None
+            image = self.image
+            self.image = None
             super().save(*args, **kwargs)
-            self.images = images
+            self.image = image
             if 'force_insert' in kwargs:
                 kwargs.pop('force_insert')
         super().save(*args, **kwargs)
@@ -532,13 +532,13 @@ class Blog(models.Model):
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    images   = models.ImageField(upload_to=images_blog_upload_path)
+    image    = models.ImageField(upload_to=images_blog_upload_path)
     richtext = RichTextUploadingField(blank=True, null=True)
-    comments = GenericRelation('Comment')
-    publish  = models.BooleanField(default=True)
+    comment  = GenericRelation('Comment')
     hashtag  = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name='blog_like', blank=True)
     read     = models.IntegerField(blank=True, null=True, default=0)
+    publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
 
@@ -554,14 +554,14 @@ class Blog(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.filter(parent__isnull=True).count()
+        return self.comment.filter(parent__isnull=True).count()
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            images = self.images
-            self.images = None
+            image = self.image
+            self.image = None
             super().save(*args, **kwargs)
-            self.images = images
+            self.image = image
             if 'force_insert' in kwargs:
                 kwargs.pop('force_insert')
         super().save(*args, **kwargs)
@@ -592,20 +592,20 @@ class ChatManager(models.Manager):
 
 class Chat(models.Model):
     """Chat"""
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    comments = GenericRelation('Comment')
-    publish  = models.BooleanField(default=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='chat_like', blank=True)
-    read     = models.IntegerField(blank=True, null=True, default=0)
-    joined   = models.IntegerField(blank=True, null=True, default=0)
-    period   = models.DateField()
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    author  = models.ForeignKey(User, on_delete=models.CASCADE)
+    title   = models.CharField(max_length=100)
+    content = models.TextField()
+    comment = GenericRelation('Comment')
+    hashtag = models.ManyToManyField(HashTag, blank=True)
+    like    = models.ManyToManyField(User, related_name='chat_like', blank=True)
+    read    = models.IntegerField(blank=True, null=True, default=0)
+    joined  = models.IntegerField(blank=True, null=True, default=0)
+    period  = models.DateField()
+    publish = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
-    objects  = ChatManager()
+    objects = ChatManager()
 
     def __str__(self):
         return self.title
@@ -617,10 +617,10 @@ class Chat(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.filter(parent__isnull=True).count()
+        return self.comment.filter(parent__isnull=True).count()
 
     def user_count(self):
-        self.joined = self.comments.order_by('author').distinct().values_list('author').count()
+        self.joined = self.comment.order_by('author').distinct().values_list('author').count()
         return self.joined
 
     class Meta:
@@ -629,17 +629,17 @@ class Chat(models.Model):
 
 class Collabo(models.Model):
     """Collabo"""
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    comments = GenericRelation('Comment')
-    publish  = models.BooleanField(default=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='collabo_like', blank=True)
-    read     = models.IntegerField(blank=True, null=True, default=0)
-    period   = models.DateField()
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    author  = models.ForeignKey(User, on_delete=models.CASCADE)
+    title   = models.CharField(max_length=100)
+    content = models.TextField()
+    comment = GenericRelation('Comment')
+    hashtag = models.ManyToManyField(HashTag, blank=True)
+    like    = models.ManyToManyField(User, related_name='collabo_like', blank=True)
+    read    = models.IntegerField(blank=True, null=True, default=0)
+    period  = models.DateField()
+    publish = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
@@ -648,7 +648,7 @@ class Collabo(models.Model):
         return self.like.count()
 
     def comment_count(self):
-        return self.comments.filter(parent__isnull=True).count()
+        return self.comment.filter(parent__isnull=True).count()
 
     class Meta:
         verbose_name_plural = '07 Collabo'
@@ -663,7 +663,7 @@ class Todo(models.Model):
     priority = models.CharField(max_length=10, choices=priority_choice, default='success')
     progress_choice = (('0', '未着手'), ('1', '進行中'), ('2', '完了'))
     progress = models.CharField(max_length=10, choices=progress_choice, default='0')
-    comments = GenericRelation('Comment')
+    comment  = GenericRelation('Comment')
     duedate  = models.DateField()
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
@@ -672,7 +672,7 @@ class Todo(models.Model):
         return self.title
 
     def comment_count(self):
-        return self.comments.filter(parent__isnull=True).count()
+        return self.comment.filter(parent__isnull=True).count()
 
     class Meta:
         verbose_name_plural = '08 ToDo'
@@ -725,13 +725,13 @@ class Advertise(models.Model):
     title   = models.CharField(max_length=100)
     url     = models.URLField()
     content = models.TextField()
-    images  = models.ImageField(upload_to=images_adver_upload_path)
-    videos  = models.FileField(upload_to=videos_adver_upload_path)
-    publish = models.BooleanField(default=True)
+    image   = models.ImageField(upload_to=images_adver_upload_path)
+    video   = models.FileField(upload_to=videos_adver_upload_path)
     read    = models.IntegerField(blank=True, null=True, default=0)
     choice  = (('0', '全体'), ('1', '個別'))
     type    = models.CharField(choices=choice, max_length=2, default='1')
     period  = models.DateField()
+    publish = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -740,13 +740,13 @@ class Advertise(models.Model):
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            images = self.images
-            videos = self.videos
-            self.images = None
-            self.videos = None
+            image = self.image
+            video  = self.video
+            self.image = None
+            self.video  = None
             super().save(*args, **kwargs)
-            self.images = images
-            self.videos = videos
+            self.image = image
+            self.video  = video
             if 'force_insert' in kwargs:
                 kwargs.pop('force_insert')
         super().save(*args, **kwargs)

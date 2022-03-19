@@ -21,8 +21,8 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from api.serializers import UserSerializer
 from .forms import SearchTagForm, BlogForm
-from .models import MyPage, SearchTag, NotificationSetting, Notification, Comment, Follow, Todo
-from .models import Video, Live, Music, Picture, Blog, Chat, Collabo, Advertise
+from .models import MyPage, SearchTag, NotificationSetting, Notification, Comment, Follow
+from .models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 from .modules.context_data import ContextData
 from .modules.get_form import get_detail
 from .modules.search import Search
@@ -801,7 +801,7 @@ def comment_form(request):
         comment_obj.save()
         context['comment_count'] = obj.comment_count()
         context['comment_lists'] = render_to_string('parts/common/comment/comment.html', {
-            'comment_list': obj.comments.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
+            'comment_list': obj.comment.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
             'user_id': user_id,
             'obj_id': obj_id,
             'obj_path': obj_path,
@@ -837,7 +837,7 @@ def reply_form(request):
         context['comment_count'] = obj.comment_count()
         context['reply_count'] = comment_obj.parent.replies_count()
         context['reply_lists'] = render_to_string('parts/common/reply/reply.html', {
-            'reply_list': obj.comments.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type'),
+            'reply_list': obj.comment.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type'),
             'user_id': user_id,
             'obj_id': obj_id,
             'comment_id': comment_id,
@@ -1046,7 +1046,7 @@ class Knowledge(TemplateView):
 class VideoCreate(CreateView):
     """VideoCreate"""
     model = Video
-    fields = ('title', 'content', 'images', 'videos')
+    fields = ('title', 'content', 'image', 'video')
     template_name = 'video/video_create.html'
 
     def form_valid(self, form):
@@ -1088,7 +1088,7 @@ class VideoDetail(DetailView):
 class LiveCreate(CreateView):
     """LiveCreate"""
     model = Live
-    fields = ('title', 'content', 'images', 'lives')
+    fields = ('title', 'content', 'image', 'live')
     template_name = 'live/live_create.html'
 
     def form_valid(self, form):
@@ -1130,7 +1130,7 @@ class LiveDetail(DetailView):
 class MusicCreate(CreateView):
     """MusicCreate"""
     model = Music
-    fields = ('title', 'content', 'lyrics', 'musics', 'download')
+    fields = ('title', 'content', 'lyric', 'music', 'download')
     template_name = 'music/music_create.html'
 
     def form_valid(self, form):
@@ -1172,7 +1172,7 @@ class MusicDetail(DetailView):
 class PictureCreate(CreateView):
     """PictureCreate"""
     model = Picture
-    fields = ('title', 'content', 'images')
+    fields = ('title', 'content', 'image')
     template_name = 'picture/picture_create.html'
 
     def form_valid(self, form):
@@ -1214,7 +1214,7 @@ class PictureDetail(DetailView):
 class BlogCreate(CreateView):
     """BlogCreate"""
     model = Blog
-    fields = ('title', 'content', 'images', 'richtext')
+    fields = ('title', 'content', 'image', 'richtext')
     template_name = 'blog/blog_create.html'
 
     def form_valid(self, form):
@@ -1298,7 +1298,7 @@ class ChatDetail(DetailView):
         context = dict()
         context['user_count'] = obj.user_count()
         context['comment_count'] = obj.comment_count()
-        context['comment_list'] = obj.comments.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
+        context['comment_list'] = obj.comment.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         return context
 
 class ChatThread(DetailView):
@@ -1314,7 +1314,7 @@ class ChatThread(DetailView):
         context = dict()
         context['user_count'] = obj.user_count()
         context['reply_count'] = comment_obj.parent.replies_count()
-        context['reply_list'] = obj.comments.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type')
+        context['reply_list'] = obj.comment.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type')
         return context
 
 def chat_thread_button(request):
@@ -1327,8 +1327,8 @@ def chat_thread_button(request):
         context['obj_id'] = obj_id
         context['comment_id'] = comment_id
         context['thread'] = render_to_string('chat/chat_reply/chat_section_thread_area.html', {
-            'comment_parent': obj.comments.filter(id=comment_id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
-            'reply_list': obj.comments.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type'),
+            'comment_parent': obj.comment.filter(id=comment_id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
+            'reply_list': obj.comment.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type'),
             'user_id': user_id,
             'obj_id': obj_id,
             'comment_id': comment_id,
