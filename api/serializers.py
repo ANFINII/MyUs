@@ -51,7 +51,7 @@ class SearchTagSerializer(serializers.ModelSerializer):
 class HashTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = HashTag
-        fields = ('id', 'author', 'name', 'en_name',)
+        fields = ('id', 'author', 'jp_name', 'en_name',)
 
 
 class VideoSerializer(serializers.ModelSerializer):

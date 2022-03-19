@@ -97,14 +97,14 @@ class SearchTagAdmin(ImportExportModelAdmin):
 
 @admin.register(HashTag)
 class HashTagAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'name', 'en_name')
-    list_editable = ('name', 'en_name')
-    search_fields = ('name', 'en_name')
+    list_display = ('id', 'jp_name', 'en_name')
+    list_editable = ('jp_name', 'en_name')
+    search_fields = ('jp_name', 'en_name')
     ordering = ('id',)
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('name', 'en_name')}),
+        ('編集項目', {'fields': ('jp_name', 'en_name')}),
     ]
 
     def save_model(self, request, obj, form, change):
@@ -167,7 +167,7 @@ class LiveAdmin(ImportExportModelAdmin):
 
 @admin.register(Music)
 class MusicAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'download', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'download', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -461,13 +461,13 @@ class SearchTagAdminSite(admin.ModelAdmin):
 mymanage_site.register(SearchTag, SearchTagAdminSite)
 
 class HashTagAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'name', 'en_name')
-    search_fields = ('name', 'en_name')
+    list_display = ('id', 'jp_name', 'en_name')
+    search_fields = ('jp_name', 'en_name')
     ordering = ('id',)
 
     # 詳細画面
     fieldsets = [
-        ('確認項目', {'fields': ('name', 'en_name')}),
+        ('確認項目', {'fields': ('jp_name', 'en_name')}),
     ]
 
     def has_add_permission(self, request):

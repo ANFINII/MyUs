@@ -212,7 +212,7 @@ class SearchTag(models.Model):
 
 class HashTag(models.Model):
     """HashTag"""
-    name    = models.CharField(max_length=30, null=True)
+    jp_name = models.CharField(max_length=30, null=True)
     en_name = models.CharField(max_length=60, null=True)
 
     def __str__(self):
