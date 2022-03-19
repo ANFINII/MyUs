@@ -59,7 +59,7 @@ class VideoSerializer(serializers.ModelSerializer):
         model = Video
         fields = (
             'id', 'author', 'title', 'content', 'image', 'video', 'convert', 'comment',
-            'tags', 'like', 'read', 'publish', 'created', 'updated',
+            'hashtag', 'like', 'read', 'publish', 'created', 'updated',
         )
 
 
@@ -68,7 +68,7 @@ class LiveSerializer(serializers.ModelSerializer):
         model = Live
         fields = (
             'id', 'author', 'title', 'content', 'image', 'live', 'comment',
-            'tags', 'like', 'read', 'publish', 'created', 'updated',
+            'hashtag', 'like', 'read', 'publish', 'created', 'updated',
         )
 
 
@@ -77,7 +77,7 @@ class MusicSerializer(serializers.ModelSerializer):
         model = Music
         fields = (
             'id', 'author', 'title', 'content', 'lyric', 'music', 'comment',
-            'tags', 'like', 'read', 'download', 'publish', 'created', 'updated',
+            'hashtag', 'like', 'read', 'download', 'publish', 'created', 'updated',
         )
 
 
@@ -86,7 +86,7 @@ class PictureSerializer(serializers.ModelSerializer):
         model = Picture
         fields = (
             'id', 'author', 'title', 'content', 'image', 'comment',
-            'tags', 'like', 'read', 'publish', 'created', 'updated',
+            'hashtag', 'like', 'read', 'publish', 'created', 'updated',
         )
 
 
@@ -95,7 +95,7 @@ class BlogSerializer(serializers.ModelSerializer):
         model = Blog
         fields = (
             'id', 'author', 'title', 'content', 'image', 'richtext', 'comment',
-            'tags', 'like', 'read', 'publish', 'created', 'updated',
+            'hashtag', 'like', 'read', 'publish', 'created', 'updated',
         )
 
 
@@ -103,8 +103,8 @@ class ChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chat
         fields = (
-            'id', 'author', 'title', 'content', 'comment', 'tags', 'like',
-            'read', 'joined', 'period', 'publish', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'comment', 'hashtag',
+            'like', 'read', 'joined', 'period', 'publish', 'created', 'updated',
         )
 
 
@@ -112,8 +112,8 @@ class CollaboSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collabo
         fields = (
-            'id', 'author', 'title', 'content', 'comment', 'tags', 'like',
-            'read', 'period', 'publish', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'comment', 'hashtag',
+            'like', 'read', 'period', 'publish', 'created', 'updated',
         )
 
 class TodoSerializer(serializers.ModelSerializer):

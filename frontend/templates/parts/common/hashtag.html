@@ -1,0 +1,3 @@
+{% for hashtag in object.hashtag.all %}
+  <div class="tag_list"><a href="/?search={{ hashtag.name }}">#{{ hashtag.name }}</a></div>
+{% endfor %}

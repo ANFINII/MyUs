@@ -96,7 +96,7 @@ class SearchTagAdmin(ImportExportModelAdmin):
         super(SearchTagAdmin, self).save_model(request, obj, form, change)
 
 @admin.register(HashTag)
-class TagAdmin(ImportExportModelAdmin):
+class HashTagAdmin(ImportExportModelAdmin):
     list_display = ('id', 'name', 'en_name')
     list_editable = ('name', 'en_name')
     search_fields = ('name', 'en_name')
@@ -109,7 +109,7 @@ class TagAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
-        super(TagAdmin, self).save_model(request, obj, form, change)
+        super(HashTagAdmin, self).save_model(request, obj, form, change)
 
 @admin.register(Video)
 class VideoAdmin(ImportExportModelAdmin):
@@ -117,18 +117,18 @@ class VideoAdmin(ImportExportModelAdmin):
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
-    filter_horizontal = ('tags', 'like')
+    filter_horizontal = ('hashtag', 'like')
     readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'video', 'convert', 'tags', 'like', 'read', 'publish')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'video', 'convert', 'hashtag', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
+        return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
     def total_like(self, obj):
         return obj.like.count()
@@ -144,18 +144,18 @@ class LiveAdmin(ImportExportModelAdmin):
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
-    filter_horizontal = ('tags', 'like')
+    filter_horizontal = ('hashtag', 'like')
     readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'live', 'tags', 'like', 'read', 'publish')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'live', 'hashtag', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
+        return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
     def total_like(self, obj):
         return obj.like.count()
@@ -171,18 +171,18 @@ class MusicAdmin(ImportExportModelAdmin):
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
-    filter_horizontal = ('tags', 'like')
+    filter_horizontal = ('hashtag', 'like')
     readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'lyric', 'music', 'tags', 'like', 'read', 'publish', 'download')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'lyric', 'music', 'hashtag', 'like', 'read', 'publish', 'download')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
+        return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
     def total_like(self, obj):
         return obj.like.count()
@@ -198,18 +198,18 @@ class PictureAdmin(ImportExportModelAdmin):
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
-    filter_horizontal = ('tags', 'like')
+    filter_horizontal = ('hashtag', 'like')
     readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'tags', 'like', 'read', 'publish')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'hashtag', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
+        return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
     def total_like(self, obj):
         return obj.like.count()
@@ -225,18 +225,18 @@ class BlogAdmin(ImportExportModelAdmin):
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
-    filter_horizontal = ('tags', 'like')
+    filter_horizontal = ('hashtag', 'like')
     readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'richtext', 'tags', 'like', 'read', 'publish')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'richtext', 'hashtag', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
+        return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
     def total_like(self, obj):
         return obj.like.count()
@@ -252,18 +252,18 @@ class ChatAdmin(ImportExportModelAdmin):
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
-    filter_horizontal = ('tags', 'like')
+    filter_horizontal = ('hashtag', 'like')
     readonly_fields = ('total_like', 'comment_count', 'user_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'tags', 'like', 'read', 'period', 'publish')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'hashtag', 'like', 'read', 'period', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'user_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
+        return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
     def total_like(self, obj):
         return obj.like.count()
@@ -283,18 +283,18 @@ class CollaboAdmin(ImportExportModelAdmin):
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
-    filter_horizontal = ('tags', 'like')
+    filter_horizontal = ('hashtag', 'like')
     readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'tags', 'like', 'read', 'period', 'publish')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'hashtag', 'like', 'read', 'period', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags', 'like')
+        return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
     def total_like(self, obj):
         return obj.like.count()
@@ -460,7 +460,7 @@ class SearchTagAdminSite(admin.ModelAdmin):
     delete_action.short_description = '削除する'
 mymanage_site.register(SearchTag, SearchTagAdminSite)
 
-class TagAdminSite(admin.ModelAdmin):
+class HashTagAdminSite(admin.ModelAdmin):
     list_display = ('id', 'name', 'en_name')
     search_fields = ('name', 'en_name')
     ordering = ('id',)
@@ -478,7 +478,7 @@ class TagAdminSite(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
-mymanage_site.register(HashTag, TagAdminSite)
+mymanage_site.register(HashTag, HashTagAdminSite)
 
 class VideoAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
@@ -486,18 +486,18 @@ class VideoAdminSite(admin.ModelAdmin):
     search_fields = ('title', 'created')
     ordering = ('-created',)
     actions = ('published', 'unpublished')
-    filter_horizontal = ('tags',)
+    filter_horizontal = ('hashtag',)
     readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'image', 'video', 'convert', 'tags', 'publish')}),
+        ('編集項目', {'fields': ('title', 'content', 'image', 'video', 'convert', 'hashtag', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        qs = super(VideoAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(VideoAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
@@ -527,18 +527,18 @@ class LiveAdminSite(admin.ModelAdmin):
     search_fields = ('title', 'created')
     ordering = ('-created',)
     actions = ('published', 'unpublished')
-    filter_horizontal = ('tags',)
+    filter_horizontal = ('hashtag',)
     readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'image', 'live', 'tags', 'publish')}),
+        ('編集項目', {'fields': ('title', 'content', 'image', 'live', 'hashtag', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        qs = super(LiveAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(LiveAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
@@ -568,18 +568,18 @@ class MusicAdminSite(admin.ModelAdmin):
     search_fields = ('title', 'created')
     ordering = ('-created',)
     actions = ('published', 'unpublished')
-    filter_horizontal = ('tags',)
+    filter_horizontal = ('hashtag',)
     readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'lyric', 'music', 'tags', 'download', 'publish')}),
+        ('編集項目', {'fields': ('title', 'content', 'lyric', 'music', 'hashtag', 'download', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        qs = super(MusicAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(MusicAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
@@ -609,18 +609,18 @@ class PictureAdminSite(admin.ModelAdmin):
     search_fields = ('title', 'created')
     ordering = ('-created',)
     actions = ('published', 'unpublished')
-    filter_horizontal = ('tags',)
+    filter_horizontal = ('hashtag',)
     readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'image', 'tags', 'publish')}),
+        ('編集項目', {'fields': ('title', 'content', 'image', 'hashtag', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        qs = super(PictureAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(PictureAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
@@ -650,18 +650,18 @@ class BlogAdminSite(admin.ModelAdmin):
     search_fields = ('title', 'created')
     ordering = ('-created',)
     actions = ('published', 'unpublished')
-    filter_horizontal = ('tags',)
+    filter_horizontal = ('hashtag',)
     readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'image', 'richtext', 'tags', 'publish')}),
+        ('編集項目', {'fields': ('title', 'content', 'image', 'richtext', 'hashtag', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        qs = super(BlogAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(BlogAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
@@ -691,18 +691,18 @@ class ChatAdminSite(admin.ModelAdmin):
     search_fields = ('title', 'created')
     ordering = ('-created',)
     actions = ('published', 'unpublished')
-    filter_horizontal = ('tags',)
+    filter_horizontal = ('hashtag',)
     readonly_fields = ('read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'tags', 'period', 'publish')}),
+        ('編集項目', {'fields': ('title', 'content', 'hashtag', 'period', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        qs = super(ChatAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(ChatAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
@@ -736,18 +736,18 @@ class CollaboAdminSite(admin.ModelAdmin):
     search_fields = ('title', 'created')
     ordering = ('-created',)
     actions = ('published', 'unpublished')
-    filter_horizontal = ('tags',)
+    filter_horizontal = ('hashtag',)
     readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'tags', 'period', 'publish')}),
+        ('編集項目', {'fields': ('title', 'content', 'hashtag', 'period', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        qs = super(CollaboAdminSite, self).get_queryset(request).prefetch_related('tags', 'like')
+        qs = super(CollaboAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
