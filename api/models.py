@@ -216,7 +216,7 @@ class HashTag(models.Model):
     en_name = models.CharField(max_length=60, null=True)
 
     def __str__(self):
-        return self.name
+        return self.jp_name
 
     class Meta:
         verbose_name_plural = '10 ハッシュタグ'
