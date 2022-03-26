@@ -8,6 +8,7 @@ from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.db.models import Count, F
 from django.http import JsonResponse, HttpResponse
+from django.middleware.csrf import get_token
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
@@ -58,6 +59,12 @@ class SignUpAPIView(CreateAPIView):
 #         users = [User(username=username) for username in request.POST.getlist('username')]
 #         User.objects.bulk_create(users)
 #         return Response({'succeeded': True})
+
+def CsrfView(request):
+    return JsonResponse({'token': get_token(request)})
+
+def PingView(request):
+    return JsonResponse({'result': True})
 
 # Signup
 def signup_form(request):
@@ -894,7 +901,7 @@ def reply_delete(request, comment_id):
 class Index(ListView):
     """Index処理、すべてのメディアmodelを表示"""
     model = SearchTag
-    template_name = 'index.html'
+    template_name = 'index2.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, Index, **kwargs)
