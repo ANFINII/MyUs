@@ -523,14 +523,14 @@ def mypage_toggle(request):
     context = dict()
     if request.method == 'POST':
         user_id = request.user.id
-        auto_advertise = request.POST.get('advertise')
+        is_advertise = request.POST.get('is_advertise')
         myapge_obj = MyPage.objects.get(user_id=user_id)
-        if auto_advertise == 'True':
-            myapge_obj.auto_advertise = False
+        if is_advertise == 'True':
+            myapge_obj.is_advertise = False
         else:
-            myapge_obj.auto_advertise = True
+            myapge_obj.is_advertise = True
         myapge_obj.save()
-        context['advertise'] = render_to_string('registration/mypage_advertise.html', request=request)
+        context['is_advertise'] = render_to_string('registration/mypage_advertise.html', request=request)
         return JsonResponse(context)
 
 

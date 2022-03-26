@@ -20,7 +20,7 @@ class MyPageSerializer(serializers.ModelSerializer):
         model = MyPage
         fields = (
             'id', 'user', 'banner', 'email', 'content', 'follow_num', 'follower_num',
-            'rate_plan', 'rate_plan_date', 'auto_advertise',
+            'rate_plan', 'rate_plan_date', 'is_advertise',
         )
 
 

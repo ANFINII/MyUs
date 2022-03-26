@@ -4,7 +4,7 @@
 {% for item in advertise_auto_list %}
 <section class="main_content">
   <div class="main_decolation">
-    {% if user.auto_advertise %}
+    {% if user.mypage.is_advertise %}
     <video id="auto" class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" autoplay width="272" height="153" poster="{{ item.image.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
     {% else %}
     <video class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" width="272" height="153" poster="{{ item.image.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>

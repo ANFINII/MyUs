@@ -10,7 +10,7 @@ import datetime
 # Admin用の管理画面
 class MyPageInline(admin.StackedInline):
     model = MyPage
-    readonly_fields = ('banner', 'follow_num', 'follower_num', 'rate_plan', 'rate_plan_date', 'auto_advertise')
+    readonly_fields = ('banner', 'follow_num', 'follower_num', 'rate_plan', 'rate_plan_date', 'is_advertise')
     verbose_name = 'Myページ情報'
 
     def has_delete_permission(self, request, obj=None):

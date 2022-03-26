@@ -130,7 +130,7 @@ class MyPage(models.Model):
     plan_choice    = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
     rate_plan      = models.CharField(choices=plan_choice, max_length=1, default='0')
     rate_plan_date = models.DateTimeField(blank=True, null=True)
-    auto_advertise = models.BooleanField(default=True)
+    is_advertise   = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.nickname

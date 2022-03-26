@@ -204,16 +204,16 @@ $(document).on('click', '.toggle_button', function (event) {
 $(document).on('click', '.toggle_mypage', function (event) {
   event.preventDefault();
   const url = $(this).closest('form').attr('action');
-  const advertise = $(this).closest('form').attr('advertise');
+  const is_advertise = $(this).closest('form').attr('advertise');
   $.ajax({
     url: url,
     type: 'POST',
-    data: { 'advertise': advertise, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'is_advertise': is_advertise, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
     dataType: 'json',
     timeout: 10000,
   })
     .done(function (response) {
-      $('#auto_advertise').html(response.advertise);
+      $('#is_advertise').html(response.is_advertise);
     })
     .fail(function (response) {
       console.log(response);
