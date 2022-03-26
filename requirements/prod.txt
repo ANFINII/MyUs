@@ -1,1 +1,3 @@
+-r common.txt
+
 mysqlclient==2.0.3
