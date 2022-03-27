@@ -27,7 +27,6 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, username, nickname, email, password, **extra_fields):
         user = self.create_user(username, nickname=nickname, email=self.normalize_email(email), password=password)
-        user.is_premium = True
         user.is_staff = True
         user.is_admin = True
         user.is_superuser = True
@@ -109,6 +108,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         super().save(*args, **kwargs)
 
     class Meta:
+        db_table = 'user'
         verbose_name_plural = '00 User'
 
 @property
@@ -154,6 +154,7 @@ class MyPage(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
+        db_table = 'mypage'
         verbose_name_plural = '00 MyPage'
 
 @property
@@ -187,6 +188,7 @@ class NotificationSetting(models.Model):
         return self.user.nickname
 
     class Meta:
+        db_table = 'notificationSetting'
         verbose_name_plural = '00 通知設定'
 
 @receiver(post_save, sender=User)
@@ -207,6 +209,7 @@ class SearchTag(models.Model):
         return self.name
 
     class Meta:
+        db_table = 'searchTag'
         verbose_name_plural = '09 検索タグ'
 
 
@@ -219,6 +222,7 @@ class HashTag(models.Model):
         return self.jp_name
 
     class Meta:
+        db_table = 'hashTag'
         verbose_name_plural = '10 ハッシュタグ'
 
 
@@ -295,6 +299,7 @@ class Video(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
+        db_table = 'video'
         verbose_name_plural = '01 Video'
 
 
@@ -367,6 +372,7 @@ class Live(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
+        db_table = 'live'
         verbose_name_plural = '02 Live'
 
 
@@ -435,6 +441,7 @@ class Music(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
+        db_table = 'music'
         verbose_name_plural = '03 Music'
 
 
@@ -500,6 +507,7 @@ class Picture(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
+        db_table = 'picture'
         verbose_name_plural = '04 Picture'
 
 
@@ -567,6 +575,7 @@ class Blog(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
+        db_table = 'blog'
         verbose_name_plural = '05 Blog'
 
 
@@ -624,6 +633,7 @@ class Chat(models.Model):
         return self.joined
 
     class Meta:
+        db_table = 'chat'
         verbose_name_plural = '06 Chat'
 
 
@@ -651,6 +661,7 @@ class Collabo(models.Model):
         return self.comment.filter(parent__isnull=True).count()
 
     class Meta:
+        db_table = 'collabo'
         verbose_name_plural = '07 Collabo'
 
 
@@ -675,6 +686,7 @@ class Todo(models.Model):
         return self.comment.filter(parent__isnull=True).count()
 
     class Meta:
+        db_table = 'todo'
         verbose_name_plural = '08 ToDo'
 
 
@@ -688,6 +700,7 @@ class Follow(models.Model):
         return "{} : {}".format(self.follower, self.following)
 
     class Meta:
+        db_table = 'follow'
         verbose_name_plural = '11 フォロー'
 
 
@@ -710,6 +723,7 @@ class Notification(models.Model):
         return str(self.content_object)
 
     class Meta:
+        db_table = 'notification'
         verbose_name_plural = '12 通知確認'
 
 
@@ -752,6 +766,7 @@ class Advertise(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
+        db_table = 'advertise'
         verbose_name_plural = '13 広告設定'
 
 
@@ -777,10 +792,11 @@ class Comment(models.Model):
         return Comment.objects.filter(parent=self).count()
 
     class Meta:
+        db_table = 'comment'
         verbose_name_plural = '14 コメント'
 
 
-class ProductModel(models.Model):
+class Product(models.Model):
     name              = models.CharField(max_length=100)
     stripe_product_id = models.CharField(max_length=100)
     description       = models.TextField(blank=True)
@@ -788,11 +804,16 @@ class ProductModel(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        db_table = 'product'
 
-class PriceModel(models.Model):
-    product         = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
+class Price(models.Model):
+    product         = models.ForeignKey(Product, on_delete=models.CASCADE)
     stripe_price_id = models.CharField(max_length=100)
     price           = models.IntegerField(default=0)
 
     def get_display_price(self):
         return "{0:.2f}".format(self.price / 100)
+
+    class Meta:
+        db_table = 'price'
