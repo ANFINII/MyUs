@@ -31,14 +31,16 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Database
 # https://docs.djangoproject.com/ja/4.0/ref/settings/#databases
-DATABASES = {
-   'default': env.db(),
-}
 
+# MySQL
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': env('MYSQL_ENGINE'),
+        'NAME': env('MYSQL_DATABASE'),
+        'USER': env('MYSQL_USER'),
+        'PASSWORD': env('MYSQL_PASSWORD'),
+        'HOST': env('MYSQL_HOST'),
+        'PORT': env('MYSQL_PORT'),
     }
 }
 
@@ -136,7 +138,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
+            'hosts': [(env('REDIS_HOST'), env('REDIS_PORT'))],
         },
     },
 }
@@ -163,8 +165,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/ja/4.0/topics/i18n/
-LANGUAGE_CODE = 'ja'
 TIME_ZONE = 'Asia/Tokyo'
+LANGUAGE_CODE = 'ja'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
