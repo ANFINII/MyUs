@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    command: gunicorn config.wsgi --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - frontend_build:/frontend/build
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:8080"
+    volumes:
+      - ./nginx:/nginx-setup.conf:/etc/nginx/conf.MyUs/default.conf:ro
+      - frontend_build:/var/www/frontend
+
+  redis:
+    image: redis:5.0
+    container_name: myus_redis
+    command: redis-server --requirepass A5656gu3y!redis
+
+depends_on:
+  backend
+  frontend
+
+volumes:
+  frontend_build:
