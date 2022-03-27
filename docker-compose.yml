@@ -24,9 +24,15 @@ services:
       - ./nginx:/nginx-setup.conf:/etc/nginx/conf.MyUs/default.conf:ro
       - frontend_build:/var/www/frontend
 
+  mysql:
+    image: mysql:8.0.28
+    env_file:
+      - .envs/local/.mysql
+    ports:
+      - "3306:3306"
+
   redis:
     image: redis:5.0
-    container_name: myus_redis
     command: redis-server --requirepass A5656gu3y!redis
 
 depends_on:
