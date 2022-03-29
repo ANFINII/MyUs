@@ -13,6 +13,12 @@ class UserSerializer(serializers.ModelSerializer):
             'is_active', 'is_staff', 'is_admin', 'last_login', 'date_joined',
         )
         read_only_field = ['is_staff', 'is_admin', 'last_login', 'date_joined']
+        extra_kwargs = {
+            'password':{
+                'write_only': True,
+                'style': {'input_type': 'password'}
+            }
+        }
 
 
 class MyPageSerializer(serializers.ModelSerializer):
