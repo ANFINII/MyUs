@@ -62,7 +62,6 @@ INSTALLED_APPS = [
 # Add Application
 INSTALLED_APPS += [
     'api.apps.ApiConfig',
-    'frontend.apps.FrontendConfig',
     'django_cleanup',
     'debug_toolbar',
     'import_export',
