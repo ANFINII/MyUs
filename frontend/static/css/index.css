@@ -753,7 +753,7 @@ header {
 
 /* 通知設定 */
 .bi-toggle-on {
-  color: rgb(0, 130, 255);
+  color: rgb(0, 120, 220);
 }
 
 .bi-toggle-off,
@@ -764,7 +764,6 @@ header {
 .bi-toggle-on:hover,
 .bi-toggle-off:hover {
   cursor: pointer;
-  color: rgb(50, 155, 255);
 }
 
 /* メインコンテンツ */
