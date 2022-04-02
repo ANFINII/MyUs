@@ -98,7 +98,7 @@ class Search:
                     q_list += i
             query = reduce(and_, [
                         Q(title__icontains=q) |
-                        Q(tags__tag__icontains=q) |
+                        Q(hashtag__jp_name__icontains=q) |
                         Q(author__nickname__icontains=q) |
                         Q(content__icontains=q) for q in q_list]
                     )
@@ -121,10 +121,10 @@ class Search:
                     q_list += i
             query = reduce(and_, [
                         Q(title__icontains=q) |
-                        Q(tags__tag__icontains=q) |
+                        Q(hashtag__jp_name__icontains=q) |
                         Q(author__nickname__icontains=q) |
                         Q(content__icontains=q) |
-                        Q(lyrics__icontains=q) for q in q_list]
+                        Q(lyric__icontains=q) for q in q_list]
                     )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
             self.count = len(result)
@@ -145,7 +145,7 @@ class Search:
                     q_list += i
             query = reduce(and_, [
                         Q(title__icontains=q) |
-                        Q(tags__tag__icontains=q) |
+                        Q(hashtag__jp_name__icontains=q) |
                         Q(author__nickname__icontains=q) |
                         Q(content__icontains=q) |
                         Q(richtext__icontains=q) for q in q_list]

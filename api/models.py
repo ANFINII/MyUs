@@ -232,7 +232,7 @@ class VideoQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__name__icontains=query) |
+                Q(hashtag__jp_name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query)
             )
@@ -309,7 +309,7 @@ class LiveQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__name__icontains=query) |
+                Q(hashtag__jp_name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query)
             )
@@ -382,7 +382,7 @@ class MusicQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__name__icontains=query) |
+                Q(hashtag__jp_name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query) |
                 Q(lyric__icontains=query)
@@ -451,7 +451,7 @@ class PictureQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__name__icontains=query) |
+                Q(hashtag__jp_name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query)
             )
@@ -517,7 +517,7 @@ class BlogQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__name__icontains=query) |
+                Q(hashtag__jp_name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query) |
                 Q(richtext__icontains=query)
@@ -585,7 +585,7 @@ class ChatQuerySet(models.QuerySet):
         if query is not None:
             or_lookup = (
                 Q(title__icontains=query) |
-                Q(tags__name__icontains=query) |
+                Q(hashtag__jp_name__icontains=query) |
                 Q(author__nickname__icontains=query) |
                 Q(content__icontains=query)
             )
