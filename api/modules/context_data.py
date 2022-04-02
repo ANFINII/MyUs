@@ -14,8 +14,8 @@ class ContextData:
         user_id = self.request.user.id
         if user_id is not None:
             notification_list = notification_data(self)
-            context['notification_count'] = notification_list['notification_count']
             context['notification_list'] = notification_list['notification_list']
+            context['notification_count'] = notification_list['notification_count']
         if hasattr(self, 'count'):
             context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
@@ -102,8 +102,8 @@ class ContextData:
             context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
         if user_id is not None:
             notification_list = notification_data(self)
-            context['notification_count'] = notification_list['notification_count']
             context['notification_list'] = notification_list['notification_list']
+            context['notification_count'] = notification_list['notification_count']
         if obj.author.mypage.rate_plan == '1':
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:1])
         if obj.author.mypage.rate_plan == '2':
