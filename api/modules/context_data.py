@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
 from api.models import SearchTag, NotificationSetting, Comment, Follow
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
-from api.modules.notification_data import notification_data
+from api.modules.notification import notification_data
 import datetime
 
 User = get_user_model()

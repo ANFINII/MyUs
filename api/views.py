@@ -15,7 +15,6 @@ from django.template.defaultfilters import linebreaksbr
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.views.generic.base import ContextMixin
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import views
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
@@ -27,6 +26,7 @@ from api.models import MyPage, SearchTag, NotificationSetting, Notification, Com
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 from api.modules.context_data import ContextData
 from api.modules.get_form import get_detail
+from api.modules.notification import notification_data
 from api.modules.search import Search
 from api.modules.success_url import success_url
 from api.modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
@@ -343,21 +343,21 @@ def pjax(request):
 
 
 # Withdrawal
-class Withdrawal(ContextMixin, View):
+class Withdrawal(View):
     """退会処理"""
     model = User
     template_name = 'registration/withdrawal.html'
     timestamp_signer = TimestampSigner()
     EXPIRED_SECONDS = 60
 
-    def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, Withdrawal, **kwargs)
-
     def get_random_chars(self, char_num=30):
         return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(char_num)])
 
     def get(self, request, token=None, *args, **kwargs):
         context = {}
+        notification_list = notification_data(self)
+        context['notification_list'] = notification_list['notification_list']
+        context['notification_count'] = notification_list['notification_count']
         context['expired_seconds'] = self.EXPIRED_SECONDS
         if token:
             try:
@@ -376,10 +376,13 @@ class Withdrawal(ContextMixin, View):
             password2 = self.request.POST.get('password2')
             if self.request.user.check_password(password):
                 context = {}
-                context['expired_seconds'] = self.EXPIRED_SECONDS
                 token = self.get_random_chars()
                 token_signed = self.timestamp_signer.sign(token)
                 context['token_signed'] = token_signed
+                notification_list = notification_data(self)
+                context['notification_list'] = notification_list['notification_list']
+                context['notification_count'] = notification_list['notification_count']
+                context['expired_seconds'] = self.EXPIRED_SECONDS
                 return render(request, self.template_name, context)
             elif self.request.user.check_password(password2):
                 user = self.request.user

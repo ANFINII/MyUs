@@ -1,12 +1,11 @@
 from django.db.models import Exists, OuterRef
-from django.db.models.query import QuerySet
 from itertools import chain
 from api.models import NotificationSetting, Notification, Follow
 
 
 def notification_data(self):
     user_id = self.request.user.id
-    notification_obj, notification_obj_list_1, notification_obj_list_2 = QuerySet, [], []
+    notification_obj_list_1, notification_obj_list_2 = [], []
     notification_list_1, notification_list_confirmed = [], []
     confirmed_kwargs = {}
     confirmed_kwargs['id'] = OuterRef('pk')
