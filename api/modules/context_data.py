@@ -16,10 +16,8 @@ class ContextData:
             notification_list = notification_data(self)
             context['notification_count'] = notification_list['notification_count']
             context['notification_list'] = notification_list['notification_list']
-        try:
+        if hasattr(self, 'count'):
             context['count'] = self.count or 0
-        except AttributeError:
-            pass
         context['query'] = self.request.GET.get('search')
         context.update({
             'searchtag_list': SearchTag.objects.filter(author_id=user_id).order_by('sequence')[:20],
