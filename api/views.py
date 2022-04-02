@@ -15,20 +15,21 @@ from django.template.defaultfilters import linebreaksbr
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic.base import ContextMixin
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import views
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 from api.serializers import UserSerializer
-from .forms import SearchTagForm, BlogForm
-from .models import MyPage, SearchTag, NotificationSetting, Notification, Comment, Follow
-from .models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
-from .modules.context_data import ContextData
-from .modules.get_form import get_detail
-from .modules.search import Search
-from .modules.success_url import success_url
-from .modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
+from api.forms import SearchTagForm, BlogForm
+from api.models import MyPage, SearchTag, NotificationSetting, Notification, Comment, Follow
+from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from api.modules.context_data import ContextData
+from api.modules.get_form import get_detail
+from api.modules.search import Search
+from api.modules.success_url import success_url
+from api.modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 import datetime
 import random
 import string
@@ -342,12 +343,15 @@ def pjax(request):
 
 
 # Withdrawal
-class Withdrawal(View):
+class Withdrawal(ContextMixin, View):
     """退会処理"""
     model = User
     template_name = 'registration/withdrawal.html'
     timestamp_signer = TimestampSigner()
     EXPIRED_SECONDS = 60
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, Withdrawal, **kwargs)
 
     def get_random_chars(self, char_num=30):
         return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(char_num)])
@@ -387,6 +391,7 @@ class Withdrawal(View):
             else:
                 messages.error(self.request, 'パスワードが違います!')
                 return redirect('myus:withdrawal')
+
 
 
 # Profile
@@ -584,13 +589,13 @@ def create_checkout_session(request):
 
 
 # 通知設定
-class Notification(TemplateView):
-    """Notification"""
+class NotificationSettingView(TemplateView):
+    """NotificationSettingView"""
     model = NotificationSetting
     template_name = 'common/notification.html'
 
     def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, Notification, **kwargs)
+        return ContextData.context_data(self, NotificationSettingView, **kwargs)
 
 @csrf_exempt
 def notification_setting(request):
@@ -901,7 +906,7 @@ def reply_delete(request, comment_id):
 class Index(ListView):
     """Index処理、すべてのメディアmodelを表示"""
     model = SearchTag
-    template_name = 'index2.html'
+    template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, Index, **kwargs)
