@@ -4,7 +4,7 @@ from ffmpeg_streaming import Formats, Bitrate, Representation, Size
 from pathlib import Path
 
 
-def create_hls(video_file, path_dir, start_dir):
+def convert_hls(video_file, path_dir, start_dir):
     """
         videos/videos_video/user_{instance.author.id}/object_{instance.id}/file_name.mp4
         videos/videos_video/user_{instance.author.id}/object_{instance.id}/file_name.m3u8
@@ -32,7 +32,7 @@ def create_hls(video_file, path_dir, start_dir):
     return os.path.relpath(hls_file, os.path.abspath(start_dir))
 
 
-def create_mp4(video_file, path_dir, start_dir):
+def convert_mp4(video_file, path_dir, start_dir):
     # mp4の作成 (input.mp4 -> file_name_360p.mp4)
     video = ffmpeg_streaming.input(video_file)
     _360p  = Representation(Size(640, 360), Bitrate(276 * 1024, 128 * 1024))
