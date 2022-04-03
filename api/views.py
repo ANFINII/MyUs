@@ -29,12 +29,14 @@ from api.modules.get_form import get_detail
 from api.modules.notification import notification_data
 from api.modules.search import Search
 from api.modules.success_url import success_url
+from api.modules.hls import create_hls, create_mp4
 from api.modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 import datetime
+import json
+import os
 import random
 import string
 import stripe
-import json
 
 # Create your views here.
 
@@ -1066,6 +1068,16 @@ class VideoCreate(CreateView):
 
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
+        form.instance.convert = form.instance.video
+        form.save()
+
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+        VIDEO_PATH = os.path.join(MEDIA_ROOT, 'videos', 'videos_video', f'user_{form.instance.author.id}', f'object_{form.instance.id}')
+        VIDEO_FILE = os.path.join(VIDEO_PATH, os.path.basename(f'{form.instance.video}'))
+
+        form.instance.video = create_hls(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)
+        form.save()
         return super(VideoCreate, self).form_valid(form)
 
     def get_success_url(self):
