@@ -2,7 +2,7 @@ from django.urls import path
 from .views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
 from .views import Profile, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle
 from .views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
-from .views import Notification, notification_setting, notification_confirmed, notification_deleted
+from .views import NotificationSettingView, notification_setting, notification_confirmed, notification_deleted
 from .views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
 from .views import VideoList, VideoCreate, VideoDetail
 from .views import LiveList, LiveCreate, LiveDetail
@@ -15,8 +15,9 @@ from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 from .views import searchtag_create, advertise_read, like_form, like_form_comment
 from .views import comment_form, reply_form, comment_update, comment_delete, reply_delete
 from .views import pjax, signup_form, login_form, logout_form, Withdrawal
-
 from .views import SignUpAPIView
+
+from .views import CsrfView, PingView
 
 app_name = 'myus'
 
@@ -39,7 +40,7 @@ urlpatterns = [
     path('payment/chage_plan', ChangePlan.as_view(), name='chage_plan'),
     path('payment/create_checkout_session', create_checkout_session, name='create_checkout_session'),
 
-    path('notification', Notification.as_view(), name='notification'),
+    path('notification', NotificationSettingView.as_view(), name='notification'),
     path('notification/setting', notification_setting, name='notification_setting'),
     path('notification/confirmed', notification_confirmed, name='notification_confirmed'),
     path('notification/deleted', notification_deleted, name='notification_deleted'),
@@ -98,11 +99,13 @@ urlpatterns = [
     path('reply/delete/<int:comment_id>', reply_delete, name='reply_delete'),
 
     path('pjax', pjax, name='pjax'),
-    # path('signus', signup_form, name='signup'),
+    path('signup', signup_form, name='signup'),
     path('login', login_form, name='login'),
     path('logout', logout_form, name='logout'),
     path('withdrawal', Withdrawal.as_view(), name='withdrawal'),
     path('withdrawal/<str:token>', Withdrawal.as_view(), name='withdrawal'),
 
-    path('signup', SignUpAPIView.as_view(), name='signup')
+    # path('signup', SignUpAPIView.as_view(), name='signup')
+    path('csrf/', CsrfView),
+    path('ping/', PingView),
 ]
