@@ -16,10 +16,9 @@ from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import views
+from rest_framework import authentication, permissions, views
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
-from rest_framework import authentication, permissions
 from api.serializers import UserSerializer
 from api.forms import SearchTagForm, BlogForm
 from api.models import MyPage, SearchTag, NotificationSetting, Notification, Comment, Follow
