@@ -697,7 +697,7 @@ class Follow(models.Model):
     created   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{} : {}".format(self.follower, self.following)
+        return f'{self.follower} : {self.following}'
 
     class Meta:
         db_table = 'follow'
@@ -813,7 +813,7 @@ class Price(models.Model):
     price           = models.IntegerField(default=0)
 
     def get_display_price(self):
-        return "{0:.2f}".format(self.price / 100)
+        return '{0:.2f}'.format(self.price / 100)
 
     class Meta:
         db_table = 'price'

@@ -137,7 +137,7 @@ def signup_form(request):
             try:
                 birthday = datetime.date(year=int(year), month=int(month), day=int(day)).isoformat()
             except ValueError:
-                messages.error(request, str(year)+'年'+str(month)+'月'+str(day)+'日'+'は存在しない日付です!')
+                messages.error(request, f'{year}年{month}月{day}日は存在しない日付です!')
                 return render(request, 'registration/signup.html')
             try:
                 User.objects.get(username=username)
@@ -452,7 +452,7 @@ class ProfileUpdate(UpdateView):
             profile.save()
             return super(ProfileUpdate, self).form_valid(form)
         except ValueError:
-            messages.error(self.request, year + '年' + month + '月' + day + '日は存在しない日付です!')
+            messages.error(self.request, f'{year}年{month}月{day}日は存在しない日付です!')
             return super().form_invalid(form)
 
     def form_invalid(self, form):
