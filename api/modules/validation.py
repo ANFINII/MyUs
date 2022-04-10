@@ -1,5 +1,6 @@
 import re
 
+
 # バリデーション関数定義
 def has_username(text):
     if re.fullmatch('^[a-zA-Z0-9_]+$', text) is not None:

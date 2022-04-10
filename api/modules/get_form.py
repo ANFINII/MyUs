@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from api.models import Notification
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo
 
+
 def get_detail(self):
     self.object = self.get_object()
     self.object.read += 1
