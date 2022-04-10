@@ -1069,12 +1069,12 @@ class VideoCreate(CreateView):
         form.instance.author_id = self.request.user.id
         form.save()
 
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+        MEDIA_ROOT = settings.MEDIA_ROOT
         VIDEO_PATH = os.path.join(MEDIA_ROOT, 'videos', 'videos_video', f'user_{form.instance.author.id}', f'object_{form.instance.id}')
         VIDEO_FILE = os.path.join(VIDEO_PATH, os.path.basename(f'{form.instance.convert}'))
 
         form.instance.video = convert_hls(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)
+        # form.instance.convert = convert_mp4(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)
         form.save()
         return super(VideoCreate, self).form_valid(form)
 
