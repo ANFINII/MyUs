@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = True
 ALLOWED_HOSTS = ['*']
-INTERNAL_IPS = ['127.0.0.1', '192.168.33.1']
+INTERNAL_IPS = ['127.0.0.1']
 
 # Add Application
 INSTALLED_APPS += [
