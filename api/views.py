@@ -23,6 +23,7 @@ from api.serializers import UserSerializer
 from api.forms import SearchTagForm, BlogForm
 from api.models import MyPage, SearchTag, NotificationSetting, Notification, Comment, Follow
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from api.modules import contains
 from api.modules.context_data import ContextData
 from api.modules.get_form import get_detail
 from api.modules.notification import notification_data
@@ -767,7 +768,7 @@ def like_form_comment(request):
         comment_liked = False
         if obj.like.filter(id=user.id).exists():
             comment_liked = False
-            notification_obj = Notification.objects.filter(type_no=9, object_id=obj.id)
+            notification_obj = Notification.objects.filter(type_no=contains.notification_type_no['like'], object_id=obj.id)
             notification_obj.delete()
             obj.like.remove(user)
         else:
@@ -777,7 +778,7 @@ def like_form_comment(request):
                 Notification.objects.create(
                     user_from_id=user.id,
                     user_to_id=obj.author.id,
-                    type_no=9,
+                    type_no=contains.notification_type_no['like'],
                     type_name='like',
                     content_object=obj,
                 )
@@ -846,7 +847,7 @@ def reply_form(request):
             Notification.objects.create(
                 user_from_id=user_id,
                 user_to_id=comment_obj.parent.author.id,
-                type_no=10,
+                type_no=contains.notification_type_no['reply'],
                 type_name='reply',
                 content_object=comment_obj,
             )
@@ -896,7 +897,7 @@ def reply_delete(request, comment_id):
     if request.method == 'POST':
         comment_id = request.POST.get('comment_id')
         comment_obj = Comment.objects.get(id=comment_id)
-        notification_obj = Notification.objects.filter(type_no=10, object_id=comment_obj.id)
+        notification_obj = Notification.objects.filter(type_no=contains.notification_type_no['reply'], object_id=comment_obj.id)
         notification_obj.delete()
         comment_obj.delete()
         context = {
@@ -999,7 +1000,7 @@ def follow_create(request, nickname):
             pass
         elif Follow.objects.filter(follower=follower, following=following).exists():
             unfollow = Follow.objects.get(follower=follower, following=following)
-            notification_obj = Notification.objects.filter(type_no=8, object_id=unfollow.id)
+            notification_obj = Notification.objects.filter(type_no=contains.notification_type_no['follow'], object_id=unfollow.id)
             notification_obj.delete()
             unfollow.delete()
             followed = False
@@ -1027,7 +1028,7 @@ def follow_create(request, nickname):
             Notification.objects.create(
                 user_from_id=follower.id,
                 user_to_id=following.id,
-                type_no=8,
+                type_no=contains.notification_type_no['follow'],
                 type_name='follow',
                 content_object=follow_obj,
             )

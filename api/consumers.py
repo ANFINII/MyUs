@@ -4,8 +4,9 @@ from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
-from .models import Chat, Comment, Notification
-from .views import ChatDetail, ChatThread
+from api.models import Chat, Comment, Notification
+from api.modules import contains
+from api.views import ChatDetail, ChatThread
 
 User = get_user_model()
 
@@ -35,7 +36,7 @@ class ChatConsumer(WebsocketConsumer):
             Notification.objects.create(
                 user_from_id=self.scope['user'].id,
                 user_to_id=message.parent.author.id,
-                type_no=10,
+                type_no=contains.notification_type_no['reply'],
                 type_name='reply',
                 content_object=message,
             )

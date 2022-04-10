@@ -706,8 +706,8 @@ class Follow(models.Model):
 
 class Notification(models.Model):
     """Notification"""
-    # {'1':'video', '2':'live', '3':'music', '4':'picture', '5':'blog', '6':'chat',
-    # '7':'collabo', '8':'follow', '9':'like', '10':'reply', '11':'views'}
+    # 'video': 1, 'live': 2, 'music': 3, 'picture': 4, 'blog': 5, 'chat': 6, 'collabo': 7,
+    # 'follow': 8, 'like': 9, 'reply': 10, 'views': 11
     user_from      = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE)
     user_to        = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, blank=True, null=True)
     type_no        = models.IntegerField(default=0)
