@@ -26,11 +26,17 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
-
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
+# Stripe API keys
+STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
 
 # Database
 # https://docs.djangoproject.com/ja/4.0/ref/settings/#databases
+
+# pkのデフォルト設定
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # MySQL
 DATABASES = {
@@ -43,10 +49,6 @@ DATABASES = {
         'PORT': env('MYSQL_PORT'),
     }
 }
-
-# Stripe API keys
-STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
-STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
 
 # Application definition
 INSTALLED_APPS = [
@@ -63,21 +65,12 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     'api.apps.ApiConfig',
     'django_cleanup',
-    'debug_toolbar',
     'import_export',
     'rest_framework',
     'corsheaders',
     'channels',
     'ckeditor',
     'ckeditor_uploader',
-]
-
-NUMBER_GROUPING = 3
-
-AUTH_USER_MODEL = 'api.User'
-
-AUTHENTICATION_BACKENDS = [
-    'api.backends.MyBackend',
 ]
 
 MIDDLEWARE = [
@@ -91,20 +84,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-MIDDLEWARE += [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-]
-
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ]
 }
 
-ROOT_URLCONF = 'config.urls'
-
 CORS_ORIGIN_ALLOW_ALL = True
-
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
@@ -128,11 +114,11 @@ TEMPLATES = [
     },
 ]
 
+ROOT_URLCONF = 'config.urls'
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Channels
 ASGI_APPLICATION = 'config.asgi.application'
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -142,24 +128,20 @@ CHANNEL_LAYERS = {
     },
 }
 
-# pkのデフォルト設定
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+AUTH_USER_MODEL = 'api.User'
+AUTHENTICATION_BACKENDS = ['api.backends.MyBackend',]
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# humanize カンマ区切り値
+NUMBER_GROUPING = 3
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
 # Internationalization
@@ -182,8 +164,6 @@ LOGIN_URL = 'myus:login'
 LOGIN_REDIRECT_URL = 'myus:index'
 LOGOUT_REDIRECT_URL = 'myus:login'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 # CKEDITOR
 CKEDITOR_UPLOAD_PATH = 'images/upload_images'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
@@ -192,7 +172,6 @@ CKEDITOR_RESTRICT_BY_DATE = False
 CKEDITOR_BROWSE_SHOW_DIRS = True
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
-
 CKEDITOR_CONFIGS = {
    'default': {
        'toolbar_Full': [
