@@ -7,10 +7,6 @@
   display: none !important;
 }
 
-.video-js .vjs-picture-in-picture-control {
-  display: none;
-}
-
 .vjs-track-setting > select,
 .vjs-text-track-settings fieldset span > select {
   color: rgb(0, 0, 0);
@@ -367,6 +363,14 @@
 .video-js.vjs-hls-quality-selector {
   display: block;
 }
+
+.vjs-menu-title {
+  display: none;
+}
+
+/* .video-js .vjs-picture-in-picture-control {
+  display: none;
+} */
 
 .skip {
   display: none;
