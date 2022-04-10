@@ -1,5 +1,4 @@
-from base import *
-from django.core.exceptions import ImproperlyConfigured
+from .base import *
 
 DEBUG = True
 ALLOWED_HOSTS = ['*']
@@ -26,10 +25,3 @@ MIDDLEWARE += [
 # SECURE_SSL_REDIRECT = True
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SECURE = True
-
-def get_env_variable(var_nama):
-    try:
-        os.environ[var_nama]
-    except KeyError:
-        error_msg = f'Set the {var_nama} enviroment variable'
-        raise ImproperlyConfigured(error_msg)
