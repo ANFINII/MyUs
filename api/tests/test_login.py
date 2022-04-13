@@ -16,7 +16,7 @@ class LoginTest(TestCase):
             last_name='苗字テスト',
             first_name='名前テスト',
             is_active=True,
-            )
+        )
 
     def test_login_success(self):
         client = Client()
