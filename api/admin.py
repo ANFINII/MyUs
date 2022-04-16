@@ -417,8 +417,8 @@ class MyUsAdminSite(AdminSite):
     def has_permission(self, request):
         return request.user.is_active
 
-mymanage_site = MyUsAdminSite(name='mymanage')
-mymanage_site.disable_action('delete_selected')
+manage_site = MyUsAdminSite(name='mymanage')
+manage_site.disable_action('delete_selected')
 
 class CommentInline(GenericTabularInline):
     model = Comment
@@ -458,7 +458,7 @@ class SearchTagAdminSite(admin.ModelAdmin):
     def delete_action(self, request, queryset):
         queryset.delete()
     delete_action.short_description = '削除する'
-mymanage_site.register(SearchTag, SearchTagAdminSite)
+manage_site.register(SearchTag, SearchTagAdminSite)
 
 class HashTagAdminSite(admin.ModelAdmin):
     list_display = ('id', 'jp_name', 'en_name')
@@ -478,7 +478,7 @@ class HashTagAdminSite(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
-mymanage_site.register(HashTag, HashTagAdminSite)
+manage_site.register(HashTag, HashTagAdminSite)
 
 class VideoAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
@@ -519,7 +519,7 @@ class VideoAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comment.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(Video, VideoAdminSite)
+manage_site.register(Video, VideoAdminSite)
 
 class LiveAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
@@ -560,7 +560,7 @@ class LiveAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comment.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(Live, LiveAdminSite)
+manage_site.register(Live, LiveAdminSite)
 
 class MusicAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'download', 'publish', 'created', 'updated')
@@ -601,7 +601,7 @@ class MusicAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comment.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(Music, MusicAdminSite)
+manage_site.register(Music, MusicAdminSite)
 
 class PictureAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
@@ -642,7 +642,7 @@ class PictureAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comment.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(Picture, PictureAdminSite)
+manage_site.register(Picture, PictureAdminSite)
 
 class BlogAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
@@ -683,7 +683,7 @@ class BlogAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comment.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(Blog, BlogAdminSite)
+manage_site.register(Blog, BlogAdminSite)
 
 class ChatAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'publish', 'created', 'updated')
@@ -728,7 +728,7 @@ class ChatAdminSite(admin.ModelAdmin):
     def user_count(self, obj):
         return obj.comment.order_by('author').distinct().values_list('author').count()
     user_count.short_description = 'joined'
-mymanage_site.register(Chat, ChatAdminSite)
+manage_site.register(Chat, ChatAdminSite)
 
 class CollaboAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
@@ -769,7 +769,7 @@ class CollaboAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comment.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(Collabo, CollaboAdminSite)
+manage_site.register(Collabo, CollaboAdminSite)
 
 class TodoAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'comment_count', 'priority', 'progress', 'duedate')
@@ -802,7 +802,7 @@ class TodoAdminSite(admin.ModelAdmin):
     def comment_count(self, obj):
         return obj.comment.all().count()
     comment_count.short_description = 'comment'
-mymanage_site.register(Todo, TodoAdminSite)
+manage_site.register(Todo, TodoAdminSite)
 
 class FollowAdminSite(admin.ModelAdmin):
     list_display = ('id', 'following', 'created')
@@ -838,7 +838,7 @@ class FollowAdminSite(admin.ModelAdmin):
     def following_introduction(self, obj):
         return obj.following.introduction
     following_introduction.short_description = 'Introduction'
-mymanage_site.register(Follow, FollowAdminSite)
+manage_site.register(Follow, FollowAdminSite)
 
 class NotificationAdminSite(admin.ModelAdmin):
     list_display = ('id', 'type_no', 'type_name', 'title', 'confirmed_count', 'created')
@@ -872,7 +872,7 @@ class NotificationAdminSite(admin.ModelAdmin):
     def title(self, obj):
         return obj.content_object
     title.short_description = 'title'
-mymanage_site.register(Notification, NotificationAdminSite)
+manage_site.register(Notification, NotificationAdminSite)
 
 class AdvertiseAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'url', 'read', 'period', 'publish', 'created', 'updated')
@@ -916,4 +916,4 @@ class AdvertiseAdminSite(admin.ModelAdmin):
     def unpublished(self, request, queryset):
         queryset.update(publish=False)
     unpublished.short_description = '非公開にする'
-mymanage_site.register(Advertise, AdvertiseAdminSite)
+manage_site.register(Advertise, AdvertiseAdminSite)

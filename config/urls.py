@@ -7,14 +7,16 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from ckeditor_uploader import views
-from api.admin import mymanage_site
+from api.admin import manage_site
+import rest_framework.authtoken.views as auth_views
 
 urlpatterns = [
     path('', include('api.urls')),
     path('', include('django.contrib.auth.urls')),
     path('api-auth/', include('rest_framework.urls')),
+    path('api-token-auth/', auth_views.obtain_auth_token),
     path('myus-admin/', admin.site.urls),
-    path('myus-manage/', mymanage_site.urls),
+    path('myus-manage/', manage_site.urls),
     path('upload/', login_required(views.upload), name='ckeditor_upload'),
     path('browse/', never_cache(login_required(views.browse)), name='ckeditor_browse'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
