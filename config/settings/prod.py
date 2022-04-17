@@ -1,8 +1,5 @@
 from .base import *
 
-DEBUG = False
-ALLOWED_HOSTS = ['myus.com']
-
 # Security
 # https://docs.djangoproject.com/ja/4.0/ref/settings/
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
