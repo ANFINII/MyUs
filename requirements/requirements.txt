@@ -44,7 +44,7 @@ MarkupPy==1.14
 matplotlib==3.5.1
 msgpack==1.0.3
 mysql-connector-python==8.0.28
-mysqlclient @ file:///opt/concourse/worker/volumes/live/3e2c08bc-c6d4-44b9-6985-8c1059f99ec2/volume/mysqlclient_1609786255460/work
+mysqlclient==2.1.0
 numpy==1.22.2
 odfpy==1.4.1
 openpyxl==3.0.9
