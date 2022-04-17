@@ -13,7 +13,7 @@ import os
 import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = environ.Path(__file__) - 3
 
 env = environ.Env(DEBUG=(bool, False))
 env.read_env(os.path.join(BASE_DIR, '.env'))
@@ -64,13 +64,13 @@ INSTALLED_APPS = [
 # Add Application
 INSTALLED_APPS += [
     'api.apps.ApiConfig',
-    'django_cleanup',
-    'import_export',
     'rest_framework',
     'corsheaders',
     'channels',
     'ckeditor',
     'ckeditor_uploader',
+    'django_cleanup',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -87,16 +87,14 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-    ]
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
 }
-
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-    "http://127.0.0.1",
-    "http://localhost",
-]
 
 TEMPLATES = [
     {
