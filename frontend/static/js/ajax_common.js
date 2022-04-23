@@ -2,12 +2,13 @@
 $(document).on('click', '.main_tag_2', function (event) {
   event.preventDefault();
   const searchtag = $('form [name=searchtag]').val();
+  const csrf = $(this).attr('csrf');
   $('#tag_form')[0].reset();
   document.querySelector('.main_tag_2').setAttribute('disabled', true);
   $.ajax({
     url: '/searchtag/create',
     type: 'POST',
-    data: { 'name': searchtag, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'name': searchtag, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
