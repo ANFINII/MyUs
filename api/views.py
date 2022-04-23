@@ -527,7 +527,6 @@ class MyPageUpdate(UpdateView):
     def get_object(self):
         return MyPage.objects.get(user=self.request.user)
 
-@csrf_exempt
 def mypage_toggle(request):
     """mypage_toggle"""
     context = dict()
@@ -692,7 +691,6 @@ def notification_deleted(request):
 
 
 # SearchTag
-@csrf_exempt
 def searchtag_create(request):
     """searchtag_create"""
     if request.method == 'POST':
@@ -710,7 +708,6 @@ def searchtag_create(request):
 
 
 # advertise_read
-@csrf_exempt
 def advertise_read(request):
     """advertise_read"""
     if request.method == 'POST':
@@ -989,7 +986,6 @@ class FollowList(ListView):
     def get_queryset(self, **kwargs):
         return Search.search_follow(self, Follow)
 
-@csrf_exempt
 def follow_create(request, nickname):
     """follow_create"""
     if request.method == 'POST':

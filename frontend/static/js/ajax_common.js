@@ -203,17 +203,37 @@ $(document).on('click', '.toggle_button', function (event) {
 // MyPageの全体広告のトグルボタンをクリックした時の処理
 $(document).on('click', '.toggle_mypage', function (event) {
   event.preventDefault();
-  const url = $(this).closest('form').attr('action');
   const is_advertise = $(this).closest('form').attr('advertise');
+  const csrf = $(this).closest('form').attr('csrf');
   $.ajax({
-    url: url,
+    url: '/mypage/toggle',
     type: 'POST',
-    data: { 'is_advertise': is_advertise, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'is_advertise': is_advertise, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
     .done(function (response) {
       $('#is_advertise').html(response.is_advertise);
+    })
+    .fail(function (response) {
+      console.log(response);
+    })
+});
+
+
+// 広告のリンクをクリックした時の処理
+$(document).on('click', '.advertise_anker', function () {
+  const advertise_id = $(this).closest('form').attr('advertise-id');
+  const csrf = $(this).closest('form').attr('csrf');
+  $.ajax({
+    url: '/url/read',
+    type: 'POST',
+    data: { 'advertise_id': advertise_id, 'csrfmiddlewaretoken': csrf },
+    dataType: 'json',
+    timeout: 10000,
+  })
+    .done(function (response) {
+      $('.advertise_read').html(response.read);
     })
     .fail(function (response) {
       console.log(response);
