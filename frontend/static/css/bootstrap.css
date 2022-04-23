@@ -1,0 +1,22 @@
+/* form-control */
+.form-control:focus {
+  border-radius: 4px;
+  border: 1px solid rgba(80, 170, 255, 0.3);
+  box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
+}
+
+.btn-primary:active.btn-primary:focus, .btn-primary:focus {
+  box-shadow: 0 0 0 2px rgb(49 132 253 / 50%);
+}
+
+.btn-success:active.btn-success:focus, .btn-success:focus {
+  box-shadow: 0 0 0 2px rgb(60 153 110 / 50%);
+}
+
+.btn-danger:active.btn-danger:focus, .btn-danger:focus {
+  box-shadow: 0 0 0 2px rgb(225 83 97 / 50%);
+}
+
+.btn-light:active.btn-light:focus, .btn-light:focus {
+  box-shadow: 0 0 0 2px rgb(211 212 213 / 50%);
+}
