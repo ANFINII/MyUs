@@ -380,7 +380,7 @@
 {% endblock nav %}
 
 {% block tagnav %}
-<form method="POST" action="{% url 'myus:searchtag_create' %}" id="tag_form">
+<form method="POST" action="" id="tag_form">
   {% csrf_token %}
   <nav class="tag_nav">
     <input type="checkbox" id="tag_add" class="tag_menu">

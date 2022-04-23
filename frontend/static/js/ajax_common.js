@@ -1,12 +1,11 @@
 // 検索タグの作成ボタンの処理
 $(document).on('click', '.main_tag_2', function (event) {
   event.preventDefault();
-  const url = $(this).closest('form').attr('action');
   const searchtag = $('form [name=searchtag]').val();
   $('#tag_form')[0].reset();
   document.querySelector('.main_tag_2').setAttribute('disabled', true);
   $.ajax({
-    url: url,
+    url: '/searchtag/create',
     type: 'POST',
     data: { 'name': searchtag, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
     dataType: 'json',
@@ -43,12 +42,12 @@ $(document).on('click', '.main_tag_left', function () {
 // フォローボタンクリック時の処理
 $(document).on('click', '.follow_form', function (event) {
   event.preventDefault();
-  const url = $(this).attr('action');
-  const nickname = $(this).children().attr('value');
+  const nickname = $(this).attr('value');
+  const csrf = $(this).attr('csrf');
   $.ajax({
-    url: url,
+    url: `/follow/create/${nickname}`,
     type: 'POST',
-    data: { 'nickname': nickname, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
   })
     .done(function (response) {
