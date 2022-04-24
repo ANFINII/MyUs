@@ -83,7 +83,7 @@ $(document).on('focus', '#comment_form_area', function (event) {
 // updateショートカット
 $(document).on('focus', '.update_form_area', function (event) {
   event.preventDefault();
-  const comment_id = $(this).attr('comment-id');
+  const comment_id = $(this).closest('form').attr('comment-id');
 
   // focus時にそれ以外のtextareaを無効化する
   const targetElem = document.querySelectorAll('.form_button');
