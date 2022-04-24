@@ -106,12 +106,13 @@ $(document).on('click', '.like_form', function (event) {
 // コメントいいねボタンクリック時の処理
 $(document).on('click', '.like_form_comment', function (event) {
   event.preventDefault();
-  const url = $(this).parent().attr('action');
-  const comment_id = $(this).attr('value');
+  const comment_id = $(this).parent().attr('comment-id');
+  const csrf = $(this).parent().attr('csrf');
+  console.log(csrf)
   $.ajax({
-    url: url,
+    url: '/like/form/comment',
     type: 'POST',
-    data: { 'comment_id': comment_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'comment_id': comment_id, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
   })
     .done(function (response) {

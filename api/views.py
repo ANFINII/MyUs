@@ -797,7 +797,6 @@ models_comment_dict = {
     'todo/detail': Todo,
 }
 
-@csrf_exempt
 def comment_form(request):
     """comment_form"""
     context = dict()
@@ -858,7 +857,6 @@ def reply_form(request):
         }, request=request)
         return JsonResponse(context)
 
-@csrf_exempt
 def comment_update(request, comment_id):
     """comment_update"""
     if request.method == 'POST':
@@ -871,7 +869,6 @@ def comment_update(request, comment_id):
         }
         return JsonResponse(context)
 
-@csrf_exempt
 def comment_delete(request, comment_id):
     """comment_delete"""
     if request.method == 'POST':
@@ -888,7 +885,6 @@ def comment_delete(request, comment_id):
         }
         return JsonResponse(context)
 
-@csrf_exempt
 def reply_delete(request, comment_id):
     """reply_delete"""
     if request.method == 'POST':

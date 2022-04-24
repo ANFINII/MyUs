@@ -14,16 +14,15 @@
 
   <div id="comment_aria_list_2_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
 
-  <div class="comment_aria_list_3">
+  <div comment-id="{{ comment.id }}" class="comment_aria_list_3">
     {% if user.is_authenticated %}
-    <form method="POST" action="{% url 'myus:like_form_comment' %}" class="like_form_aria">
-      {% csrf_token %}
+    <form method="POST" action="" comment-id="{{ comment.id }}" csrf="{{ csrf_token }}" class="like_form_aria">
       {% if comment.comment_liked %}
-      <button type="submit" name="comment_id" value="{{ comment.id }}" class="like_form_comment like_fill">
+      <button type="submit" name="like" class="like_form_comment like_fill">
         <i title="いいね" class="bi bi-hand-thumbs-up-fill icon-font like_color_{{ comment.id }}"></i>
       </button>
       {% else %}
-      <button type="submit" name="comment_id" value="{{ comment.id }}" class="like_form_comment like_no">
+      <button type="submit" name="like" class="like_form_comment like_no">
         <i title="いいね" class="bi bi-hand-thumbs-up icon-font like_color_{{ comment.id }}"></i>
       </button>
       {% endif %}
@@ -33,14 +32,14 @@
     {% endif %}
     <span id="like_count_{{ comment.id }}" class="like_count rgb100">{{ comment.total_like|intcomma }}</span>
 
-    <label id="reply_button_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_button">▼ 返信</label>
-    <label id="reply_button_cancel_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_button_cancel vanish">▲ 返信</label>
+    <label id="reply_button_{{ comment.id }}" class="reply_button">▼ 返信</label>
+    <label id="reply_button_cancel_{{ comment.id }}" class="reply_button_cancel vanish">▲ 返信</label>
 
-    <label id="reply_list_button_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_list_button">
+    <label id="reply_list_button_{{ comment.id }}" class="reply_list_button">
       <span id="reply_count_open_{{ comment.id }}" class="reply_count">▼ スレッド {{ comment.reply_count|intcomma }} 件</span>
       <span>表示</span>
     </label>
-    <label id="reply_list_button_cancel_{{ comment.id }}" comment-id="{{ comment.id }}" class="reply_list_button_cancel vanish">
+    <label id="reply_list_button_cancel_{{ comment.id }}" class="reply_list_button_cancel vanish">
       <span id="reply_count_close_{{ comment.id }}" class="reply_count">▲ スレッド {{ comment.reply_count|intcomma }} 件</span>
       <span>非表示</span>
     </label>

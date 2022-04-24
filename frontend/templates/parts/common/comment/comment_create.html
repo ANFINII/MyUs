@@ -1,8 +1,7 @@
 {% load static %}
 {% load humanize %}
 
-<form method="POST" action="{% url 'myus:comment_form' %}" id="comment_form" obj-id="{{ obj_id }}" path="{{ request.path }}">
-  {% csrf_token %}
+<form method="POST" action="" id="comment_form" obj-id="{{ obj_id }}" path="{{ request.path }}" csrf="{{ csrf_token }}">
   <div class="comment_input">
     <p>コメント総数
       <span id="comment_count">{{ object.comment_count|intcomma }}</span>

@@ -15,11 +15,11 @@
     <form method="POST" action="{% url 'myus:like_form' %}" path="{{ request.path }}">
       {% csrf_token %}
       {% if liked %}
-      <button type="submit" name="video_id" value="{{ object.id }}" class="like_form like_fill">
+      <button type="submit" name="like" value="{{ object.id }}" class="like_form like_fill">
         <i class="bi bi-hand-thumbs-up-fill icon-font like_color" title="いいね"></i>
       </button>
       {% else %}
-      <button type="submit" name="video_id" value="{{ object.id }}" class="like_form like_no">
+      <button type="submit" name="like" value="{{ object.id }}" class="like_form like_no">
         <i class="bi bi-hand-thumbs-up icon-font like_color" title="いいね"></i>
       </button>
       {% endif %}
