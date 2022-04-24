@@ -1,13 +1,12 @@
-<form method="POST" action="{% url 'myus:comment_update' reply.id %}" class="edit_update">
-  {% csrf_token %}
+<form method="POST" action="" comment-id="{{ reply.id }}" csrf="{{ csrf_token }}" class="edit_update">
   <a href="{% url 'myus:userpage' reply.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
     <img src="{{ reply.author.image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
   </a>
   <div class="comment_input_update">
-    <textarea name="update_text" rows="1" placeholder="コメント入力" id="comment_form_update_{{ reply.id }}" comment-id="{{ reply.id }}" class="textarea_br update_form_area">{{ reply.text }}</textarea>
+    <textarea name="update_text" rows="1" placeholder="コメント入力" id="comment_form_update_{{ reply.id }}" class="textarea_br update_form_area">{{ reply.text }}</textarea>
     <div class="edit_update_footer">
-      <button type="button" name="cancel" comment-id="{{ reply.id }}" class="btn btn-light btn-xs edit_update_cancel">キャンセル</button>
-      <button type="button" name="update" id="update_form_button_{{ reply.id }}" comment-id="{{ reply.id }}" class="btn btn-success btn-xs edit_update_button form_button" disabled>更新</button>
+      <button type="button" name="cancel" class="btn btn-light btn-xs edit_update_cancel">キャンセル</button>
+      <button type="button" name="update" id="update_form_button_{{ reply.id }}" class="btn btn-success btn-xs edit_update_button form_button" disabled>更新</button>
     </div>
   </div>
 </form>
