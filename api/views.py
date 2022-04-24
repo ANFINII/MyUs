@@ -732,7 +732,6 @@ models_like_dict = {
     'collabo/detail': Collabo,
 }
 
-@csrf_exempt
 def like_form(request):
     """like_form"""
     if request.method == 'POST':
@@ -755,7 +754,6 @@ def like_form(request):
         }
         return JsonResponse(context)
 
-@csrf_exempt
 def like_form_comment(request):
     """like_form_comment"""
     if request.method == 'POST':
@@ -821,7 +819,6 @@ def comment_form(request):
         }, request=request)
         return JsonResponse(context)
 
-@csrf_exempt
 def reply_form(request):
     """reply_form"""
     context = dict()

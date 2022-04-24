@@ -108,7 +108,6 @@ $(document).on('click', '.like_form_comment', function (event) {
   event.preventDefault();
   const comment_id = $(this).parent().attr('comment-id');
   const csrf = $(this).parent().attr('csrf');
-  console.log(csrf)
   $.ajax({
     url: '/like/form/comment',
     type: 'POST',

@@ -66,6 +66,7 @@ $(document).on('click', '.reply_form', function (event) {
   event.preventDefault();
   const id = $(this).closest('form').attr('obj-id');
   const path = $(this).closest('form').attr('path');
+  const csrf = $(this).closest('form').attr('csrf');
   const comment_id = $(this).closest('form').attr('comment-id');
   const text = $('#reply_' + comment_id).val().replace(/\n+$/g, '');
   $('#comment_aria_list_reply_' + comment_id)[0].reset();
@@ -74,7 +75,7 @@ $(document).on('click', '.reply_form', function (event) {
   $.ajax({
     url: '/reply/form',
     type: 'POST',
-    data: { 'id': id, 'path': path, 'comment_id': comment_id, 'text': text, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'id': id, 'path': path, 'comment_id': comment_id, 'text': text, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
@@ -105,8 +106,8 @@ $(document).on('click', '.edit_update_cancel', function () {
 
 $(document).on('click', '.edit_update_button', function (event) {
   event.preventDefault();
-  const comment_id = $(this).closest('form').attr('comment-id');
   const csrf = $(this).closest('form').attr('csrf');
+  const comment_id = $(this).closest('form').attr('comment-id');
   const text = $('#comment_form_update_' + comment_id).val().replace(/\n+$/g, '');
   document.getElementById('edit_update_main_' + comment_id).classList.remove('active');
   document.getElementById('comment_aria_list_' + comment_id).classList.remove('active');
