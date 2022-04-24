@@ -48,12 +48,14 @@ class NotificationSerializer(serializers.ModelSerializer):
             'id', 'user_from', 'user_to', 'type_no', 'type_name', 'content_type',
             'object_id', 'content_object', 'confirmed', 'deleted', 'created',
         )
+        read_only_field = ['created',]
 
 
 class SearchTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = SearchTag
         fields = ('id', 'author', 'sequence', 'name', 'created',)
+        read_only_field = ['created',]
 
 
 class HashTagSerializer(serializers.ModelSerializer):
@@ -69,6 +71,7 @@ class VideoSerializer(serializers.ModelSerializer):
             'id', 'author', 'title', 'content', 'image', 'video', 'convert', 'comment',
             'hashtag', 'like', 'read', 'publish', 'created', 'updated',
         )
+        read_only_field = ['created', 'updated']
 
 
 class LiveSerializer(serializers.ModelSerializer):
@@ -78,6 +81,7 @@ class LiveSerializer(serializers.ModelSerializer):
             'id', 'author', 'title', 'content', 'image', 'live', 'comment',
             'hashtag', 'like', 'read', 'publish', 'created', 'updated',
         )
+        read_only_field = ['created', 'updated']
 
 
 class MusicSerializer(serializers.ModelSerializer):
@@ -87,6 +91,7 @@ class MusicSerializer(serializers.ModelSerializer):
             'id', 'author', 'title', 'content', 'lyric', 'music', 'comment',
             'hashtag', 'like', 'read', 'download', 'publish', 'created', 'updated',
         )
+        read_only_field = ['created', 'updated']
 
 
 class PictureSerializer(serializers.ModelSerializer):
@@ -96,6 +101,7 @@ class PictureSerializer(serializers.ModelSerializer):
             'id', 'author', 'title', 'content', 'image', 'comment',
             'hashtag', 'like', 'read', 'publish', 'created', 'updated',
         )
+        read_only_field = ['created', 'updated']
 
 
 class BlogSerializer(serializers.ModelSerializer):
@@ -105,6 +111,7 @@ class BlogSerializer(serializers.ModelSerializer):
             'id', 'author', 'title', 'content', 'image', 'richtext', 'comment',
             'hashtag', 'like', 'read', 'publish', 'created', 'updated',
         )
+        read_only_field = ['created', 'updated']
 
 
 class ChatSerializer(serializers.ModelSerializer):
@@ -114,6 +121,7 @@ class ChatSerializer(serializers.ModelSerializer):
             'id', 'author', 'title', 'content', 'comment', 'hashtag',
             'like', 'read', 'joined', 'period', 'publish', 'created', 'updated',
         )
+        read_only_field = ['created', 'updated']
 
 
 class CollaboSerializer(serializers.ModelSerializer):
@@ -123,6 +131,8 @@ class CollaboSerializer(serializers.ModelSerializer):
             'id', 'author', 'title', 'content', 'comment', 'hashtag',
             'like', 'read', 'period', 'publish', 'created', 'updated',
         )
+        read_only_field = ['created', 'updated']
+
 
 class TodoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -131,12 +141,7 @@ class TodoSerializer(serializers.ModelSerializer):
             'id', 'author', 'title', 'content', 'priority', 'progress',
             'comment', 'duedate', 'created', 'updated',
         )
-
-
-class FollowSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Follow
-        fields = ('id', 'follower', 'following', 'created')
+        read_only_field = ['created', 'updated']
 
 
 class AdvertiseSerializer(serializers.ModelSerializer):
@@ -146,6 +151,14 @@ class AdvertiseSerializer(serializers.ModelSerializer):
             'id', 'author', 'title', 'url', 'content', 'image', 'video',
             'read', 'type', 'period', 'publish', 'created', 'updated',
         )
+        read_only_field = ['created', 'updated']
+
+
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Follow
+        fields = ('id', 'follower', 'following', 'created')
+        read_only_field = ['created',]
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -155,3 +168,4 @@ class CommentSerializer(serializers.ModelSerializer):
             'id', 'author', 'parent', 'text', 'like', 'content_type',
             'object_id', 'content_object', 'created', 'updated',
         )
+        read_only_field = ['created', 'updated']
