@@ -125,8 +125,8 @@ class MyPage(models.Model):
     banner         = models.ImageField(upload_to=mypage_banner_path, default='../frontend/static/img/MyUs_banner.png', blank=True, null=True)
     email          = models.EmailField(max_length=255, blank=True, null=True, default='abc@gmail.com')
     content        = models.TextField(blank=True)
-    follow_num     = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
     follower_num   = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
+    following_num  = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
     plan_choice    = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
     rate_plan      = models.CharField(choices=plan_choice, max_length=1, default='0')
     rate_plan_date = models.DateTimeField(blank=True, null=True)
@@ -135,13 +135,13 @@ class MyPage(models.Model):
     def __str__(self):
         return self.user.nickname
 
-    def get_following_count(self):
-        self.follow_num = Follow.objects.filter(follower=User.id).count()
-        return self.follow_num
-
     def get_follower_count(self):
-        self.follower_num = Follow.objects.filter(following=User.id).count()
+        self.follower_num = Follow.objects.filter(following=User).count()
         return self.follower_num
+
+    def get_following_count(self):
+        self.following_num = Follow.objects.filter(follower=User).count()
+        return self.following_num
 
     def save(self, *args, **kwargs):
         if self.id is None:
