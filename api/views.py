@@ -601,7 +601,6 @@ class NotificationSettingView(TemplateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, NotificationSettingView, **kwargs)
 
-@csrf_exempt
 def notification_setting(request):
     """notification_setting"""
     context = dict()
@@ -665,7 +664,6 @@ def notification_setting(request):
         }, request=request)
         return JsonResponse(context)
 
-@csrf_exempt
 def notification_confirmed(request):
     """notification_confirmed"""
     user = request.user
@@ -674,7 +672,6 @@ def notification_confirmed(request):
     notification_obj.confirmed.add(user)
     return JsonResponse()
 
-@csrf_exempt
 def notification_deleted(request):
     """notification_deleted"""
     if request.method == 'POST':
@@ -955,18 +952,6 @@ class UserPageAdvertise(ListView):
 
 
 # Follow
-class FollowerList(ListView):
-    """FollowerList"""
-    model = Follow
-    template_name = 'follow/follower.html'
-    context_object_name = 'follower_list'
-
-    def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, FollowerList, **kwargs)
-
-    def get_queryset(self, **kwargs):
-        return Search.search_follow(self, Follow)
-
 class FollowList(ListView):
     """FollowList"""
     model = Follow
@@ -979,44 +964,56 @@ class FollowList(ListView):
     def get_queryset(self, **kwargs):
         return Search.search_follow(self, Follow)
 
+class FollowerList(ListView):
+    """FollowerList"""
+    model = Follow
+    template_name = 'follow/follower.html'
+    context_object_name = 'follower_list'
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, FollowerList, **kwargs)
+
+    def get_queryset(self, **kwargs):
+        return Search.search_follow(self, Follow)
+
 def follow_create(request, nickname):
     """follow_create"""
     if request.method == 'POST':
-        follower = User.objects.get(nickname=request.user.nickname)
-        following = User.objects.get(nickname=nickname)
+        follower = MyPage.objects.get(user=request.user)
+        following = MyPage.objects.get(user__nickname=nickname)
+        follow_obj = Follow.objects.filter(follower=follower.user, following=following.user)
         if follower == following:
             # '自分はフォローできません'
             pass
-        elif Follow.objects.filter(follower=follower, following=following).exists():
-            unfollow = Follow.objects.get(follower=follower, following=following)
-            notification_obj = Notification.objects.filter(type_no=contains.notification_type_no['follow'], object_id=unfollow.id)
+        elif follow_obj.exists():
+            notification_obj = Notification.objects.filter(type_no=contains.notification_type_no['follow'], object_id=follow_obj[0].id)
             notification_obj.delete()
-            unfollow.delete()
+            follow_obj.delete()
             followed = False
             #ログインユーザーのフォロー数
-            following_count = Follow.objects.filter(follower=follower).count()
-            follower.following_count = following_count
+            following_count = Follow.objects.filter(follower=follower.user).count()
+            follower.following_num = following_count
             follower.save()
             #フォローユーザーのフォロワー数
-            follower_count = Follow.objects.filter(following=following).count()
-            following.follower_count = follower_count
+            follower_count = Follow.objects.filter(following=following.user).count()
+            following.follower_num = follower_count
             following.save()
             # 'フォローを外しました'
         else:
-            follow_obj = Follow.objects.create(follower=follower, following=following)
+            follow_obj = Follow.objects.create(follower=follower.user, following=following.user)
             followed = True
             #ログインユーザーのフォロー数
-            following_count = Follow.objects.filter(follower=follower).count()
-            follower.following_count = following_count
+            following_count = Follow.objects.filter(follower=follower.user).count()
+            follower.following_num = following_count
             follower.save()
             #フォローユーザーのフォロワー数
-            follower_count = Follow.objects.filter(following=following).count()
-            following.follower_count = follower_count
+            follower_count = Follow.objects.filter(following=following.user).count()
+            following.follower_num = follower_count
             following.save()
             # 'フォローしました'
             Notification.objects.create(
-                user_from_id=follower.id,
-                user_to_id=following.id,
+                user_from_id=following.id,
+                user_to_id=follower.id,
                 type_no=contains.notification_type_no['follow'],
                 type_name='follow',
                 content_object=follow_obj,
