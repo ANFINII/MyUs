@@ -73,13 +73,13 @@ $(document).on('click', '.follow_form', function (event) {
 // いいねボタンクリック時の処理
 $(document).on('click', '.like_form', function (event) {
   event.preventDefault();
-  const id = $(this).attr('value');
-  const url = $(this).parent().attr('action');
+  const id = $(this).parent().attr('obj-id');
   const path = $(this).parent().attr('path');
+  const csrf = $(this).parent().attr('csrf');
   $.ajax({
-    url: url,
+    url: '/like/form',
     type: 'POST',
-    data: { 'id': id, 'path': path, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'id': id, 'path': path, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
   })
     .done(function (response) {
@@ -137,12 +137,12 @@ $(document).on('click', '.like_form_comment', function (event) {
 
 // 通知リンクをクリックした時の処理
 $(document).on('click', '.notification_aria_anker', function () {
-  const url = $(this).attr('action');
-  const notification_id = $(this).attr('notification-id');
+  const notification_id = $(this).closest('object').attr('notification-id');
+  const csrf = $(this).closest('object').attr('csrf');
   $.ajax({
-    url: url,
+    url: '/notification/confirmed',
     type: 'POST',
-    data: { 'notification_id': notification_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'notification_id': notification_id, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
@@ -156,12 +156,12 @@ $(document).on('click', '.notification_aria_anker', function () {
 // 通知のバツボタンをクリックした時の処理
 $(document).on('click', '.notification_aria_list_2', function (event) {
   event.preventDefault();
-  const url = $(this).closest('form').attr('action');
-  const notification_id = $(this).attr('notification-id');
+  const notification_id = $(this).closest('object').attr('notification-id');
+  const csrf = $(this).closest('object').attr('csrf');
   $.ajax({
-    url: url,
+    url: '/notification/deleted',
     type: 'POST',
-    data: { 'notification_id': notification_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'notification_id': notification_id, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
@@ -181,13 +181,13 @@ $(document).on('click', '.notification_aria_list_2', function (event) {
 // 通知設定のトグルボタンをクリックした時の処理
 $(document).on('click', '.toggle_button', function (event) {
   event.preventDefault();
-  const url = $(this).closest('form').attr('action');
-  const notification = $(this).closest('form').attr('notification');
-  const notification_type = $(this).closest('form').attr('notification-type');
+  const notification = $(this).parent().attr('notification');
+  const notification_type = $(this).parent().attr('notification-type');
+  const csrf = $(this).closest('#notification_table').attr('csrf');
   $.ajax({
-    url: url,
+    url: '/notification/setting',
     type: 'POST',
-    data: { 'notification': notification, 'notification_type': notification_type, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'notification': notification, 'notification_type': notification_type, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
@@ -203,8 +203,8 @@ $(document).on('click', '.toggle_button', function (event) {
 // MyPageの全体広告のトグルボタンをクリックした時の処理
 $(document).on('click', '.toggle_mypage', function (event) {
   event.preventDefault();
-  const is_advertise = $(this).closest('form').attr('advertise');
-  const csrf = $(this).closest('form').attr('csrf');
+  const is_advertise = $(this).parent().attr('advertise');
+  const csrf = $(this).parent().attr('csrf');
   $.ajax({
     url: '/mypage/toggle',
     type: 'POST',
@@ -223,8 +223,8 @@ $(document).on('click', '.toggle_mypage', function (event) {
 
 // 広告のリンクをクリックした時の処理
 $(document).on('click', '.advertise_anker', function () {
-  const advertise_id = $(this).closest('form').attr('advertise-id');
-  const csrf = $(this).closest('form').attr('csrf');
+  const advertise_id = $(this).parent().attr('advertise-id');
+  const csrf = $(this).parent().attr('csrf');
   $.ajax({
     url: '/url/read',
     type: 'POST',

@@ -12,14 +12,13 @@
       <span>{{ object.read|intcomma }}</span>
     </div>
     {% if user.is_authenticated %}
-    <form method="POST" action="{% url 'myus:like_form' %}" path="{{ request.path }}">
-      {% csrf_token %}
+    <form method="POST" action="" obj-id="{{ object.id }}" path="{{ request.path }}" csrf="{{ csrf_token }}">
       {% if liked %}
-      <button type="submit" name="like" value="{{ object.id }}" class="like_form like_fill">
+      <button type="submit" name="like" class="like_form like_fill">
         <i class="bi bi-hand-thumbs-up-fill icon-font like_color" title="いいね"></i>
       </button>
       {% else %}
-      <button type="submit" name="like" value="{{ object.id }}" class="like_form like_no">
+      <button type="submit" name="like" class="like_form like_no">
         <i class="bi bi-hand-thumbs-up icon-font like_color" title="いいね"></i>
       </button>
       {% endif %}
@@ -48,7 +47,7 @@
     </a>
     <div class="username_space">{{ object.author.nickname }}</div>
     <div class="registered_person">登録者数
-      <span class="follower_count">{{ object.author.mypage.follower_num|intcomma }}</span>
+      <span class="follower_count">{{ object.author.mypage.follower_num }}</span>
     </div>
     <p class="content_detail_p1">{{ object.content|linebreaksbr|urlize }}</p>
 
