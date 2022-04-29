@@ -211,14 +211,14 @@ $(document).on('click', '.edit_button_delete', function () {
 });
 
 $(document).on('click', '.modal_cancel', function () {
-  const comment_id = $(this).parent().attr('comment-id');
+  const comment_id = $(this).closest('.edit_button').attr('comment-id');
   document.getElementById('modal_content_' + comment_id).classList.remove('active');
   document.getElementById('mask_' + comment_id).classList.remove('active');
 });
 
 $(document).on('click', '.edit_delete_comment', function (event) {
   event.preventDefault();
-  const comment_id = $(this).parent().attr('comment-id');
+  const comment_id = $(this).closest('.edit_button').attr('comment-id');
   document.getElementById('modal_content_' + comment_id).classList.remove('active');
   document.getElementById('mask_' + comment_id).classList.remove('active');
   // 削除時のアニメーション
