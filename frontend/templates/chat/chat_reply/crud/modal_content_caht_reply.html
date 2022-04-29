@@ -19,8 +19,7 @@
       </div>
     </div>
 
-    <form method="POST" action="" comment-id="{{ reply.id }}" class="modal_content_footer">
-      {% csrf_token %}
+    <form method="POST" action="" class="modal_content_footer">
       <button type="button" name="cancel" class="btn btn-light modal_cancel">キャンセル</button>
       <button type="button" name="delete" class="btn btn-danger edit_delete_reply">削除</button>
     </form>

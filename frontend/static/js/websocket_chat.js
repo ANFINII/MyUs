@@ -232,7 +232,7 @@ $(document).on('click', '.edit_delete_comment', function (event) {
 
 $(document).on('click', '.edit_delete_reply', function (event) {
   event.preventDefault();
-  const comment_id = $(this).parent().attr('comment-id');
+  const comment_id = $(this).closest('.edit_button').attr('comment-id');
   document.getElementById('modal_content_' + comment_id).classList.remove('active');
   document.getElementById('mask_' + comment_id).classList.remove('active');
   // 削除時のアニメーション
