@@ -8,14 +8,12 @@ from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.db.models import Count, F
 from django.http import JsonResponse, HttpResponse
-from django.middleware.csrf import get_token
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import authentication, permissions, views
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
@@ -63,8 +61,6 @@ class SignUpAPIView(CreateAPIView):
 #         User.objects.bulk_create(users)
 #         return Response({'succeeded': True})
 
-def CsrfView(request):
-    return JsonResponse({'token': get_token(request)})
 
 def PingView(request):
     return JsonResponse({'result': True})
@@ -570,7 +566,6 @@ class ChangePlan(TemplateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, ChangePlan, **kwargs)
 
-@csrf_exempt
 def create_checkout_session(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     post_data = json.loads(request.body.decode('utf-8'))

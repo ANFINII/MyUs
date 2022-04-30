@@ -147,8 +147,10 @@ $(document).on('click', '.notification_aria_anker', function () {
     timeout: 10000,
   })
     .done(function () {
+      console.log(response);
     })
     .fail(function () {
+      console.log(response);
     })
 });
 

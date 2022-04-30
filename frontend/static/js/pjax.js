@@ -23,7 +23,7 @@ $(document).on('click', '.pjax_button', function (event) {
   $.ajax({
     url: url,
     type: 'GET',
-    data: { 'href': href, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'href': href },
     dataType: 'json',
   })
     .done(function (response) {
@@ -52,7 +52,7 @@ $(document).on('click', '.pjax_button_userpage', function (event) {
   $.ajax({
     url: url,
     type: 'GET',
-    data: { 'href': href, 'nickname': nickname, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+    data: { 'href': href, 'nickname': nickname },
     dataType: 'json',
   })
     .done(function (response) {
