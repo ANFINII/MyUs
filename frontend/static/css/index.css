@@ -252,7 +252,7 @@ header {
 
 .side-fill-color:hover {
   color: rgb(0, 100, 255);
-  background-color: rgb(200, 230, 255);
+  background: rgb(200, 230, 255);
 }
 
 .side_menu_item {
@@ -356,7 +356,7 @@ header {
 
 .drop-fill-color:hover {
   color: rgb(250, 130, 0);
-  background-color: rgb(255, 230, 200);
+  background: rgb(255, 230, 200);
 }
 
 /* ドロップダウンメニュー 通知 */
@@ -386,7 +386,7 @@ header {
 
 .notification_aria_list:hover {
   color: rgb(250, 130, 0);
-  background-color: rgb(255, 230, 200);
+  background: rgb(255, 230, 200);
 }
 
 .notification_aria_list a {
@@ -464,7 +464,7 @@ header {
   width: 4.5em;
   height: 100%;
   overflow-y: auto;
-  background-color: rgb(0, 0, 80);
+  background: rgb(0, 0, 80);
 }
 
 .main_aside::-webkit-scrollbar {
@@ -544,7 +544,7 @@ header {
   top: 3.5em;
   width: 100%;
   height: 26px;
-  background-color: rgb(240, 240, 240);
+  background: rgb(240, 240, 240);
 }
 
 .tag_menu {
@@ -562,16 +562,16 @@ header {
   text-align: center;
   outline: none;
   color: rgb(255, 255, 255);
-  background-color: rgb(0, 170, 130);
+  background: rgb(0, 170, 130);
 }
 
 .main_tag_1:hover {
   cursor: pointer;
-  background-color: rgb(0, 190, 150);
+  background: rgb(0, 190, 150);
 }
 
 .main_tag_1:active {
-  background-color: rgb(0, 215, 170);
+  background: rgb(0, 215, 170);
 }
 
 .tag_menu:checked ~ .main_tag_1 {
@@ -593,16 +593,16 @@ header {
   outline: none;
   border-style: none;
   color: rgb(255, 255, 255);
-  background-color: rgb(200, 0, 140);
+  background: rgb(200, 0, 140);
 }
 
 .tag_menu:checked ~ .main_tag_2:hover {
   cursor: pointer;
-  background-color: rgb(240, 0, 150);
+  background: rgb(240, 0, 150);
 }
 
 .tag_menu:checked ~ .main_tag_2:active {
-  background-color: rgb(255, 100, 200);
+  background: rgb(255, 100, 200);
 }
 
 .main_tag_3 {
@@ -646,16 +646,16 @@ header {
   margin: 0;
   text-align: center;
   color: rgb(255, 255, 255);
-  background-color: rgb(0, 140, 175);
+  background: rgb(0, 140, 175);
 }
 
 .tag_menu:checked ~ .main_tag_4:hover {
   cursor: pointer;
-  background-color: rgb(0, 160, 190);
+  background: rgb(0, 160, 190);
 }
 
 .tag_menu:checked ~ .main_tag_4:active {
-  background-color: rgb(0, 180, 220);
+  background: rgb(0, 180, 220);
 }
 
 .main_tag_center {
@@ -697,7 +697,7 @@ header {
   padding: 0 0 2px 0;
   cursor: pointer;
   color: rgb(120, 120, 120);
-  background-color: rgb(240, 240, 240);
+  background: rgb(240, 240, 240);
 }
 
 .main_tag_right {
@@ -706,19 +706,19 @@ header {
   padding: 0 0 2px 0;
   cursor: pointer;
   color: rgb(120, 120, 120);
-  background-color: rgb(240, 240, 240);
+  background: rgb(240, 240, 240);
 }
 
 .main_tag_left:hover,
 .main_tag_right:hover {
   color: rgb(35, 150, 255);
-  background-color: rgb(210, 210, 210);
+  background: rgb(210, 210, 210);
 }
 
 .main_tag_left:active,
 .main_tag_right:active {
   color: rgb(0, 130, 255);
-  background-color: rgb(200, 200, 200);
+  background: rgb(200, 200, 200);
 }
 
 .tag_n_add {
@@ -927,7 +927,7 @@ div.field > button {
 .profile_image {
   width: 36px;
   height: 36px;
-  background-color: rgb(200, 200, 200);
+  background: rgb(200, 200, 200);
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
@@ -1069,11 +1069,11 @@ div.field > button {
 }
 
 .main-image-color {
-  background-color: rgb(220, 220, 220);
+  background: rgb(220, 220, 220);
 }
 
 .main-image-blog {
-  background-color: rgb(255, 255, 255);
+  background: rgb(255, 255, 255);
   height: auto;
 }
 
@@ -1205,7 +1205,7 @@ div.field > button {
 
 .like_no,
 .like_fill {
-  background-color: transparent;
+  background: transparent;
   border: none;
   cursor: pointer;
   padding: 0;
@@ -1255,7 +1255,7 @@ div.field > button {
 .follow_image {
   width: 60px;
   height: 60px;
-  background-color: rgb(200, 200, 200);
+  background: rgb(200, 200, 200);
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
@@ -1329,7 +1329,7 @@ div.field > button {
 .userpage_image {
   width: 80px;
   height: 80px;
-  background-color: rgb(200, 200, 200);
+  background: rgb(200, 200, 200);
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
@@ -1397,7 +1397,7 @@ div.field > button {
 
 .userpage_button_list a:hover {
   color: rgb(0, 85, 215);
-  background-color: rgb(220, 235, 255);
+  background: rgb(220, 235, 255);
   border-bottom: 2px solid rgb(0, 85, 215);
 }
 
@@ -1478,7 +1478,7 @@ div.field > button {
 .profile_image_detail {
   width: 48px;
   height: 48px;
-  background-color: rgb(200, 200, 200);
+  background: rgb(200, 200, 200);
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
@@ -1557,14 +1557,14 @@ div.field > button {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: rgb(200, 200, 200);
+  background: rgb(200, 200, 200);
 }
 
 .profile_image_reply {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: rgb(200, 200, 200);
+  background: rgb(200, 200, 200);
 }
 
 .comment_input .profile_image_comment {
@@ -2216,7 +2216,7 @@ input[type="submit"]::-moz-focus-inner {
   margin-bottom: auto;
   margin-top: auto;
   height: 32px;
-  background-color: rgb(255, 255, 255);
+  background: rgb(255, 255, 255);
   border-radius: 32px;
   font-size: 16px;
 }

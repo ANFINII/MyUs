@@ -270,7 +270,7 @@
   line-height: 2em;
   border: 0.06666em solid #fff; /* none → 0.06666em solid #fff */
   font-size: 2.5em;
-  background-color: rgba(0, 105, 255, 0.2); /* #cc181e → rgba(0, 105, 255, 0.2) */
+  background: rgba(0, 105, 255, 0.2); /* #cc181e → rgba(0, 105, 255, 0.2) */
   color: #fff;
   -webkit-transition: border-color 0.4s, outline 0.4s, background-color 0.4s;
   -moz-transition: border-color 0.4s, outline 0.4s, background-color 0.4s;
@@ -284,7 +284,7 @@
 }
 
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-content {
-  background-color: transparent;
+  background: transparent;
   width: 10em;
   left: -3.5em;
   max-height: auto;
@@ -293,7 +293,7 @@
 
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-item,
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-title {
-  background-color: #151b17;
+  background: #151b17;
   margin: 0.3em 0;
   border-radius: 0.3em;
 }
@@ -305,11 +305,11 @@
 }
 
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-item.vjs-selected {
-  background-color: #2483d5;
+  background: #2483d5;
 }
 
 .video-js .vjs-big-play-button {
-  background-color: rgba(0, 0, 0, 0.1); /* (0, 0, 0, 0.5) → (0, 0, 0, 0.1) */
+  background: rgba(0, 0, 0, 0.1); /* (0, 0, 0, 0.5) → (0, 0, 0, 0.1) */
   font-size: 2.5em;
   border-radius: 0.3em; /* 20% → 0.3em */
   height: 1.4em !important;
@@ -320,7 +320,7 @@
 .video-js:hover .vjs-big-play-button,
 .video-js .vjs-big-play-button:focus,
 .video-js .vjs-big-play-button:active {
-  background-color: rgba(0, 105, 255, 0.6);
+  background: rgba(0, 105, 255, 0.6);
 }
 
 .video-js .vjs-loading-spinner {
@@ -328,18 +328,18 @@
 }
 
 .video-js .vjs-control-bar2 {
-  background-color: #000000;
+  background: #000000;
 }
 
 .video-js .vjs-control-bar {
-  background-color: rgba(0, 0, 0, 0.3) !important;
+  background: rgba(0, 0, 0, 0.3) !important;
   color: #ffffff;
   font-size: 12px;
 }
 
 .video-js .vjs-play-progress,
 .video-js .vjs-volume-level {
-  background-color: rgb(50, 150, 255); /* #cc181e → rgb(50, 150, 255) */
+  background: rgb(50, 150, 255); /* #cc181e → rgb(50, 150, 255) */
 }
 
 .video-js .vjs-load-progress {
@@ -387,7 +387,7 @@
   font-weight: bold;
   color: #fff;
   border: 1px solid #00008b;
-  background-color: #0000cd;
+  background: #0000cd;
 }
 
 /* リストホバー自動再生 */
@@ -396,12 +396,12 @@
   border: 0 solid #fff; /* none → 0.06666em solid #fff */
   opacity: 0;
   color: rgba(255, 255, 255, 0);
-  background-color: rgba(255, 255, 255, 0); /* #cc181e → rgba(0, 105, 255, 0) */
+  background: rgba(255, 255, 255, 0); /* #cc181e → rgba(0, 105, 255, 0) */
 }
 
 @import "bourbon";
 .video .video-js {
-  background-color: rgb(0, 0, 0) !important;
+  background: rgb(0, 0, 0) !important;
 }
 
 .video .vjs-control-bar {
