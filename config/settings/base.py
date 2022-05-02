@@ -178,7 +178,7 @@ CKEDITOR_CONFIGS = {
             ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
             ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
             ['Link', 'Unlink'],
-            ['Image', 'Table', 'SpecialChar', 'HorizontalRule'],
+            ['Image', 'Table', 'HorizontalRule'],
             ['Source'],
             ['Undo', 'Redo'],
             ['Maximize'],
