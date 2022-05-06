@@ -44,7 +44,6 @@
 
 .cke_dialog_footer * {
   color: rgb(255, 255, 255) !important;
-  /* text-align: right !important; */
 }
 
 .cke_dialog_ui_input_text,
@@ -93,15 +92,33 @@ span.cke_dialog_ui_button {
 .cke_dialog_ui_hbox_last a.cke_dialog_ui_button,
 .cke_dialog_ui_vbox_child a.cke_dialog_ui_fileButton {
   padding: 4px 1px !important;
-  background: rgb(11, 144, 97) !important;
-  border: 1px solid rgb(13, 149, 90) !important;
+  border: 1px solid rgb(15, 150, 90) !important;
+  background: rgb(10, 145, 95) !important;
 }
 
-.cke_dialog_ui_hbox_last a.cke_dialog_ui_button_cancel,
+.cke_dialog_ui_hbox_last a.cke_dialog_ui_button:hover,
+.cke_dialog_ui_vbox_child a.cke_dialog_ui_fileButton:hover {
+  background: rgb(10, 130, 85) !important;
+}
+
+.cke_dialog_ui_hbox_last a.cke_dialog_ui_button:active,
+.cke_dialog_ui_vbox_child a.cke_dialog_ui_fileButton:active {
+  background: rgb(10, 115, 75) !important;
+}
+
 .cke_dialog_ui_hbox_first a.cke_dialog_ui_button_cancel {
-  color: rgb(255, 255, 255) !important;
-  background: #6c757d !important;
-  border-color: #6c757d !important;
+  /* color: rgb(255, 255, 255) !important; */
+  padding: 4px 1px !important;
+  border: 1px solid rgb(100, 105, 110) !important;
+  background: rgb(100, 110, 120) !important;
+}
+
+.cke_dialog_ui_hbox_first a.cke_dialog_ui_button_cancel:hover {
+  background: rgb(90, 100, 110) !important;
+}
+
+.cke_dialog_ui_hbox_first a.cke_dialog_ui_button_cancel:active {
+  background: rgb(75, 85, 95) !important;
 }
 
 a.cke_dialog_ui_button_ok:focus {
@@ -111,9 +128,17 @@ a.cke_dialog_ui_button_ok:focus {
 }
 
 .cke_dialog_ui_hbox_last a.cke_dialog_ui_button_ok,
-.cke_dialog_ui_button_ok span.cke_dialog_ui_button,
-.cke_dialog_ui_hbox_last a.cke_dialog_ui_button_ok:hover,
-.cke_dialog_ui_button_ok span.cke_dialog_ui_button:hover {
+.cke_dialog_ui_button_ok span.cke_dialog_ui_button　{
   border: 1px solid rgb(30, 140, 255) !important;
   background: rgb(30, 140, 255) !important;
+}
+
+.cke_dialog_ui_hbox_last a.cke_dialog_ui_button_ok:hover,
+.cke_dialog_ui_button_ok span.cke_dialog_ui_button:hover {
+  background: rgb(20, 120, 220) !important;
+}
+
+.cke_dialog_ui_hbox_last a.cke_dialog_ui_button_ok:active,
+.cke_dialog_ui_button_ok span.cke_dialog_ui_button:active {
+  background: rgb(20, 110, 205) !important;
 }
