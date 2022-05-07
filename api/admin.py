@@ -69,11 +69,9 @@ class UserAdmin(ImportExportModelAdmin):
 
     def rate_plan(self, obj):
         RATE_PLAN = {'0': 'Free', '1': 'Basic', '2': 'Standard', '3': 'Premium'}
-        mypage_obj = MyPage.objects.values_list('rate_plan').get(user_id=obj.id)
-        for rate_plan in mypage_obj:
-            for rate_paln_key, rate_paln_value in RATE_PLAN.items():
-                if rate_plan in rate_paln_key:
-                    return rate_paln_value
+        for rate_paln_key, rate_paln_value in RATE_PLAN.items():
+            if obj.mypage.rate_plan in rate_paln_key:
+                return rate_paln_value
     rate_plan.short_description = 'rate plan'
 
 @admin.register(SearchTag)
