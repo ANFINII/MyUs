@@ -61,9 +61,9 @@ class Search:
         path = self.request.path
         user_id = self.request.user.id
         if '/follow' in path:
-            result = model.objects.filter(follower_id=user_id).exclude(following_id=user_id)
+            result = model.objects.filter(follower_id=user_id).exclude(following_id=user_id).select_related('following__mypage')
         if '/follower' in path:
-            result = model.objects.filter(following_id=user_id).exclude(follower_id=user_id)
+            result = model.objects.filter(following_id=user_id).exclude(follower_id=user_id).select_related('follower__mypage')
         search = self.request.GET.get('search')
         if search:
             """除外リストを作成"""

@@ -198,23 +198,23 @@ def pjax(request):
         href = request.GET.get('href')
         if '/' == href:
             context['html'] = render_to_string('index_list.html', {
-                'video_list': Video.objects.filter(publish=True).order_by('-created')[:8],
-                'live_list': Live.objects.filter(publish=True).order_by('-created')[:8],
-                'music_list': Music.objects.filter(publish=True).order_by('-created')[:8],
-                'picture_list': Picture.objects.filter(publish=True).order_by('-created')[:8],
-                'blog_list': Blog.objects.filter(publish=True).order_by('-created')[:8],
-                'chat_list': Chat.objects.filter(publish=True).order_by('-created')[:8],
+                'video_list': Video.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:8],
+                'live_list': Live.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:8],
+                'music_list': Music.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:8],
+                'picture_list': Picture.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:8],
+                'blog_list': Blog.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:8],
+                'chat_list': Chat.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:8],
             }, request=request)
         if '/recommend' == href:
             aggregation_date = datetime.datetime.today() - datetime.timedelta(days=100)
             context['html'] = render_to_string('index_list.html', {
                 'Recommend': 'Recommend',
-                'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'live_list': Live.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'music_list': Music.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'picture_list': Picture.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'chat_list': Chat.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).select_related('author').prefetch_related('like').order_by('-score')[:8],
+                'live_list': Live.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).select_related('author').prefetch_related('like').order_by('-score')[:8],
+                'music_list': Music.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).select_related('author').prefetch_related('like').order_by('-score')[:8],
+                'picture_list': Picture.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).select_related('author').prefetch_related('like').order_by('-score')[:8],
+                'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).select_related('author').prefetch_related('like').order_by('-score')[:8],
+                'chat_list': Chat.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).select_related('author').prefetch_related('like').order_by('-score')[:8],
             }, request=request)
         if '/userpage/post' in href:
             nickname = request.GET.get('nickname')
@@ -228,12 +228,12 @@ def pjax(request):
                 'followed': followed,
                 'author_name': author.nickname,
                 'user_list': User.objects.filter(id=author_id),
-                'video_list': Video.objects.filter(author_id=author_id, publish=True),
-                'live_list': Live.objects.filter(author_id=author_id, publish=True),
-                'music_list': Music.objects.filter(author_id=author_id, publish=True),
-                'picture_list': Picture.objects.filter(author_id=author_id, publish=True),
-                'blog_list': Blog.objects.filter(author_id=author_id, publish=True),
-                'chat_list': Chat.objects.filter(author_id=author_id, publish=True),
+                'video_list': Video.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
+                'live_list': Live.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
+                'music_list': Music.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
+                'picture_list': Picture.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
+                'blog_list': Blog.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
+                'chat_list': Chat.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
             }, request=request)
         if '/userpage/information' in href:
             nickname = request.GET.get('nickname')
@@ -264,31 +264,31 @@ def pjax(request):
             }, request=request)
         if '/video' == href:
             context['html'] = render_to_string('video/video_list.html', {
-                'video_list': Video.objects.filter(publish=True).order_by('-created')[:50],
+                'video_list': Video.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:50],
             }, request=request)
         if '/live' == href:
             context['html'] = render_to_string('live/live_list.html', {
-                'live_list': Live.objects.filter(publish=True).order_by('-created')[:50],
+                'live_list': Live.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:50],
             }, request=request)
         if '/music' == href:
             context['html'] = render_to_string('music/music_list.html', {
-                'music_list': Music.objects.filter(publish=True).order_by('-created')[:50],
+                'music_list': Music.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:50],
             }, request=request)
         if '/picture' == href:
             context['html'] = render_to_string('picture/picture_list.html', {
-                'picture_list': Picture.objects.filter(publish=True).order_by('-created')[:100],
+                'picture_list': Picture.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:100],
             }, request=request)
         if '/blog' == href:
             context['html'] = render_to_string('blog/blog_list.html', {
-                'blog_list': Blog.objects.filter(publish=True).order_by('-created')[:100],
+                'blog_list': Blog.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:100],
             }, request=request)
         if '/chat' == href:
             context['html'] = render_to_string('chat/chat_list.html', {
-                'chat_list': Chat.objects.filter(publish=True).order_by('-created')[:100],
+                'chat_list': Chat.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:100],
             }, request=request)
         if '/collabo' == href:
             context['html'] = render_to_string('collabo/collabo_list.html', {
-                'collabo_list': Collabo.objects.filter(publish=True).order_by('-created')[:100],
+                'collabo_list': Collabo.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:100],
             }, request=request)
         if '/todo' == href:
             context['html'] = render_to_string('todo/todo_list.html', {
@@ -296,11 +296,11 @@ def pjax(request):
             }, request=request)
         if '/follow' == href:
             context['html'] = render_to_string('follow/follow_list.html', {
-                'follow_list': Follow.objects.filter(follower_id=request.user.id).order_by('created')[:100],
+                'follow_list': Follow.objects.filter(follower_id=request.user.id).select_related('following__mypage').order_by('created')[:100],
             }, request=request)
         if '/follower' == href:
             context['html'] = render_to_string('follow/follower_list.html', {
-                'follower_list': Follow.objects.filter(following_id=request.user.id).order_by('created')[:100],
+                'follower_list': Follow.objects.filter(following_id=request.user.id).select_related('follower__mypage').order_by('created')[:100],
             }, request=request)
         if '/notification' == href:
             context['html'] = render_to_string('common/notification_content.html', {
