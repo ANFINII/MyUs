@@ -33,6 +33,9 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def get_queryset(self):
+        return super(UserManager,self).get_queryset().select_related('mypage')
+
 def user_image_path(instance, filename):
     return f'users/images_user/user_{instance.id}/{filename}'
 
@@ -59,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_login    = models.DateTimeField(auto_now_add=True)
     date_joined   = models.DateTimeField(default=timezone.now)
 
-    objects = UserManager()
+    objects       = UserManager()
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'nickname'
@@ -117,6 +120,10 @@ def image_url(self):
         return self.image.url
 
 
+class MyPageManager(models.Manager):
+    def get_queryset(self):
+        return super(MyPageManager,self).get_queryset().select_related('user')
+
 def mypage_banner_path(instance, filename):
     return f'users/images_mypage/user_{instance.id}/{filename}'
 
@@ -131,6 +138,8 @@ class MyPage(models.Model):
     rate_plan      = models.CharField(choices=plan_choice, max_length=1, default='0')
     rate_plan_date = models.DateTimeField(blank=True, null=True)
     is_advertise   = models.BooleanField(default=True)
+
+    objects        = MyPageManager()
 
     def __str__(self):
         return self.user.nickname
