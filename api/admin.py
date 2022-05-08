@@ -59,7 +59,7 @@ class UserAdmin(ImportExportModelAdmin):
 
     def fullname(self, obj):
         return obj.last_name + ' ' + obj.first_name
-    fullname.short_description = 'fullname'
+    fullname.short_description = 'name'
 
     def age(self, obj):
         if obj.birthday is not None:
@@ -128,13 +128,6 @@ class VideoAdmin(ImportExportModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = 'like'
-
-    def comment_count(self, obj):
-        return obj.comment.all().count()
-    comment_count.short_description = 'comment'
 
 @admin.register(Live)
 class LiveAdmin(ImportExportModelAdmin):
@@ -155,13 +148,6 @@ class LiveAdmin(ImportExportModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = 'like'
-
-    def comment_count(self, obj):
-        return obj.comment.all().count()
-    comment_count.short_description = 'comment'
 
 @admin.register(Music)
 class MusicAdmin(ImportExportModelAdmin):
@@ -182,13 +168,6 @@ class MusicAdmin(ImportExportModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = 'like'
-
-    def comment_count(self, obj):
-        return obj.comment.all().count()
-    comment_count.short_description = 'comment'
 
 @admin.register(Picture)
 class PictureAdmin(ImportExportModelAdmin):
@@ -209,13 +188,6 @@ class PictureAdmin(ImportExportModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = 'like'
-
-    def comment_count(self, obj):
-        return obj.comment.all().count()
-    comment_count.short_description = 'comment'
 
 @admin.register(Blog)
 class BlogAdmin(ImportExportModelAdmin):
@@ -236,13 +208,6 @@ class BlogAdmin(ImportExportModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = 'like'
-
-    def comment_count(self, obj):
-        return obj.comment.all().count()
-    comment_count.short_description = 'comment'
 
 @admin.register(Chat)
 class ChatAdmin(ImportExportModelAdmin):
@@ -263,17 +228,6 @@ class ChatAdmin(ImportExportModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = 'like'
-
-    def comment_count(self, obj):
-        return obj.comment.filter(parent__isnull=True).count()
-    comment_count.short_description = 'thread'
-
-    def user_count(self, obj):
-        return obj.comment.order_by('author').distinct().values_list('author').count()
-    user_count.short_description = 'joined'
 
 @admin.register(Collabo)
 class CollaboAdmin(ImportExportModelAdmin):
@@ -294,13 +248,6 @@ class CollaboAdmin(ImportExportModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('hashtag', 'like')
 
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = 'like'
-
-    def comment_count(self, obj):
-        return obj.comment.all().count()
-    comment_count.short_description = 'comment'
 
 @admin.register(Todo)
 class TodoAdmin(ImportExportModelAdmin):
@@ -318,9 +265,6 @@ class TodoAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('comment_count', 'created', 'updated')})
     ]
 
-    def comment_count(self, obj):
-        return obj.comment.all().count()
-    comment_count.short_description = 'comment'
 
 @admin.register(Follow)
 class FollowAdmin(ImportExportModelAdmin):
@@ -339,6 +283,7 @@ class FollowAdmin(ImportExportModelAdmin):
 @admin.register(Notification)
 class NotificationAdmin(ImportExportModelAdmin):
     list_display = ('id', 'user_from', 'user_to', 'type_no', 'type_name', 'content_type', 'object_id', 'title', 'confirmed_count', 'deleted_count', 'created')
+    list_select_related = ('user_from', 'user_to', 'content_type')
     search_fields = ('type_name', 'created')
     ordering = ('type_no', 'created')
     filter_horizontal = ('confirmed', 'deleted')
@@ -351,19 +296,8 @@ class NotificationAdmin(ImportExportModelAdmin):
     ]
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('confirmed', 'deleted')
+        return super().get_queryset(request).prefetch_related('confirmed', 'deleted', 'content_object')
 
-    def confirmed_count(self, obj):
-        return obj.confirmed.count()
-    confirmed_count.short_description = 'confirmed'
-
-    def deleted_count(self, obj):
-        return obj.deleted.count()
-    deleted_count.short_description = 'deleted'
-
-    def title(self, obj):
-        return obj.content_object
-    title.short_description = 'title'
 
 @admin.register(Advertise)
 class AdvertiseAdmin(ImportExportModelAdmin):
