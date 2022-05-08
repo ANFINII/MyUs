@@ -235,6 +235,19 @@ class HashTag(models.Model):
         verbose_name_plural = '10 ハッシュタグ'
 
 
+class MediaCommon(object):
+    def score(self):
+        return self.read + self.like.count()*10 + self.read*self.like.count()/self.read*20
+
+    def total_like(self):
+        return self.like.count()
+    total_like.short_description = 'like'
+
+    def comment_count(self):
+        return self.comment.filter(parent__isnull=True).count()
+    comment_count.short_description = 'comment'
+
+
 class VideoQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
@@ -261,7 +274,7 @@ def images_video_upload_path(instance, filename):
 def videos_video_upload_path(instance, filename):
     return f'videos/videos_video/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-class Video(models.Model):
+class Video(models.Model, MediaCommon):
     """Video"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
@@ -281,15 +294,6 @@ class Video(models.Model):
 
     def __str__(self):
         return self.title
-
-    def score(self):
-        return self.read + self.like.count()*10 + self.read*self.like.count()/self.read*20
-
-    def total_like(self):
-        return self.like.count()
-
-    def comment_count(self):
-        return self.comment.filter(parent__isnull=True).count()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -338,7 +342,7 @@ def images_live_upload_path(instance, filename):
 def videos_live_upload_path(instance, filename):
     return f'videos/videos_live/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-class Live(models.Model):
+class Live(models.Model, MediaCommon):
     """Live"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
@@ -357,15 +361,6 @@ class Live(models.Model):
 
     def __str__(self):
         return self.title
-
-    def score(self):
-        return self.read + self.like.count()*10 + self.read*self.like.count()/self.read*20
-
-    def total_like(self):
-        return self.like.count()
-
-    def comment_count(self):
-        return self.comment.filter(parent__isnull=True).count()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -409,7 +404,7 @@ class MusicManager(models.Manager):
 def musics_upload_path(instance, filename):
     return f'musics/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-class Music(models.Model):
+class Music(models.Model, MediaCommon):
     """Music"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
@@ -429,15 +424,6 @@ class Music(models.Model):
 
     def __str__(self):
         return self.title
-
-    def score(self):
-        return self.read + self.like.count()*10 + self.read*self.like.count()/self.read*20
-
-    def total_like(self):
-        return self.like.count()
-
-    def comment_count(self):
-        return self.comment.filter(parent__isnull=True).count()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -477,7 +463,7 @@ class PictureManager(models.Manager):
 def images_picture_upload_path(instance, filename):
     return f'images/images_picture/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-class Picture(models.Model):
+class Picture(models.Model, MediaCommon):
     """Picture"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
@@ -495,15 +481,6 @@ class Picture(models.Model):
 
     def __str__(self):
         return self.title
-
-    def score(self):
-        return self.read + self.like.count()*10 + self.read*self.like.count()/self.read*20
-
-    def total_like(self):
-        return self.like.count()
-
-    def comment_count(self):
-        return self.comment.filter(parent__isnull=True).count()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -544,7 +521,7 @@ class BlogManager(models.Manager):
 def images_blog_upload_path(instance, filename):
     return f'images/images_blog/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-class Blog(models.Model):
+class Blog(models.Model, MediaCommon):
     """Blog"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
@@ -563,15 +540,6 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
-
-    def score(self):
-        return self.read + self.like.count()*10 + self.read*self.like.count()/self.read*20
-
-    def total_like(self):
-        return self.like.count()
-
-    def comment_count(self):
-        return self.comment.filter(parent__isnull=True).count()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -608,7 +576,7 @@ class ChatManager(models.Manager):
     def search(self, query=None):
         return self.get_queryset().search(query=query)
 
-class Chat(models.Model):
+class Chat(models.Model, MediaCommon):
     """Chat"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
@@ -628,25 +596,17 @@ class Chat(models.Model):
     def __str__(self):
         return self.title
 
-    def score(self):
-        return self.read + self.like.count()*10 + self.read*self.like.count()/self.read*20
-
-    def total_like(self):
-        return self.like.count()
-
-    def comment_count(self):
-        return self.comment.filter(parent__isnull=True).count()
-
     def user_count(self):
         self.joined = self.comment.order_by('author').distinct().values_list('author').count()
         return self.joined
+    user_count.short_description = 'joined'
 
     class Meta:
         db_table = 'chat'
         verbose_name_plural = '06 Chat'
 
 
-class Collabo(models.Model):
+class Collabo(models.Model, MediaCommon):
     """Collabo"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
@@ -662,12 +622,6 @@ class Collabo(models.Model):
 
     def __str__(self):
         return self.title
-
-    def total_like(self):
-        return self.like.count()
-
-    def comment_count(self):
-        return self.comment.filter(parent__isnull=True).count()
 
     class Meta:
         db_table = 'collabo'
@@ -693,6 +647,7 @@ class Todo(models.Model):
 
     def comment_count(self):
         return self.comment.filter(parent__isnull=True).count()
+    comment_count.short_description = 'comment'
 
     class Meta:
         db_table = 'todo'
@@ -730,6 +685,18 @@ class Notification(models.Model):
 
     def __str__(self):
         return str(self.content_object)
+
+    def title(self):
+        return self.content_object
+    title.short_description = 'title'
+
+    def confirmed_count(self):
+        return self.confirmed.count()
+    confirmed_count.short_description = 'confirmed'
+
+    def deleted_count(self):
+        return self.deleted.count()
+    deleted_count.short_description = 'deleted'
 
     class Meta:
         db_table = 'notification'
