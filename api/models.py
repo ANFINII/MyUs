@@ -244,7 +244,10 @@ class HashTag(models.Model):
         verbose_name_plural = '10 ハッシュタグ'
 
 
-class MediaCommon(object):
+class MediaModel(object):
+    def __str__(self):
+        return self.title
+
     def score(self):
         return self.read + self.like.count()*10 + self.read*self.like.count()/self.read*20
 
@@ -255,6 +258,10 @@ class MediaCommon(object):
     def comment_count(self):
         return self.comment.filter(parent__isnull=True).count()
     comment_count.short_description = 'comment'
+
+class MediaManager(object):
+    def search(self, query=None):
+        return self.get_queryset().search(query=query)
 
 
 class VideoQuerySet(models.QuerySet):
@@ -270,12 +277,9 @@ class VideoQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class VideoManager(models.Manager):
+class VideoManager(models.Manager, MediaManager):
     def get_queryset(self):
         return VideoQuerySet(self.model, using=self._db)
-
-    def search(self, query=None):
-        return self.get_queryset().search(query=query)
 
 def images_video_upload_path(instance, filename):
     return f'images/images_video/user_{instance.author.id}/object_{instance.id}/{filename}'
@@ -283,7 +287,7 @@ def images_video_upload_path(instance, filename):
 def videos_video_upload_path(instance, filename):
     return f'videos/videos_video/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-class Video(models.Model, MediaCommon):
+class Video(models.Model, MediaModel):
     """Video"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
@@ -300,9 +304,6 @@ class Video(models.Model, MediaCommon):
     updated = models.DateTimeField(auto_now=True)
 
     objects = VideoManager()
-
-    def __str__(self):
-        return self.title
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -338,12 +339,9 @@ class LiveQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class LiveManager(models.Manager):
+class LiveManager(models.Manager, MediaManager):
     def get_queryset(self):
         return LiveQuerySet(self.model, using=self._db)
-
-    def search(self, query=None):
-        return self.get_queryset().search(query=query)
 
 def images_live_upload_path(instance, filename):
     return f'images/images_live/user_{instance.author.id}/object_{instance.id}/{filename}'
@@ -351,7 +349,7 @@ def images_live_upload_path(instance, filename):
 def videos_live_upload_path(instance, filename):
     return f'videos/videos_live/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-class Live(models.Model, MediaCommon):
+class Live(models.Model, MediaModel):
     """Live"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
@@ -367,9 +365,6 @@ class Live(models.Model, MediaCommon):
     updated = models.DateTimeField(auto_now=True)
 
     objects = LiveManager()
-
-    def __str__(self):
-        return self.title
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -403,17 +398,14 @@ class MusicQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class MusicManager(models.Manager):
+class MusicManager(models.Manager, MediaManager):
     def get_queryset(self):
         return MusicQuerySet(self.model, using=self._db)
-
-    def search(self, query=None):
-        return self.get_queryset().search(query=query)
 
 def musics_upload_path(instance, filename):
     return f'musics/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-class Music(models.Model, MediaCommon):
+class Music(models.Model, MediaModel):
     """Music"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
@@ -430,9 +422,6 @@ class Music(models.Model, MediaCommon):
     updated  = models.DateTimeField(auto_now=True)
 
     objects  = MusicManager()
-
-    def __str__(self):
-        return self.title
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -462,17 +451,14 @@ class PictureQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class PictureManager(models.Manager):
+class PictureManager(models.Manager, MediaManager):
     def get_queryset(self):
         return PictureQuerySet(self.model, using=self._db)
-
-    def search(self, query=None):
-        return self.get_queryset().search(query=query)
 
 def images_picture_upload_path(instance, filename):
     return f'images/images_picture/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-class Picture(models.Model, MediaCommon):
+class Picture(models.Model, MediaModel):
     """Picture"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
@@ -487,9 +473,6 @@ class Picture(models.Model, MediaCommon):
     updated = models.DateTimeField(auto_now=True)
 
     objects = PictureManager()
-
-    def __str__(self):
-        return self.title
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -520,17 +503,14 @@ class BlogQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class BlogManager(models.Manager):
+class BlogManager(models.Manager, MediaManager):
     def get_queryset(self):
         return BlogQuerySet(self.model, using=self._db)
-
-    def search(self, query=None):
-        return self.get_queryset().search(query=query)
 
 def images_blog_upload_path(instance, filename):
     return f'images/images_blog/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-class Blog(models.Model, MediaCommon):
+class Blog(models.Model, MediaModel):
     """Blog"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
@@ -546,9 +526,6 @@ class Blog(models.Model, MediaCommon):
     updated  = models.DateTimeField(auto_now=True)
 
     objects  = BlogManager()
-
-    def __str__(self):
-        return self.title
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -578,14 +555,11 @@ class ChatQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class ChatManager(models.Manager):
+class ChatManager(models.Manager, MediaManager):
     def get_queryset(self):
         return ChatQuerySet(self.model, using=self._db)
 
-    def search(self, query=None):
-        return self.get_queryset().search(query=query)
-
-class Chat(models.Model, MediaCommon):
+class Chat(models.Model, MediaModel):
     """Chat"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
@@ -602,9 +576,6 @@ class Chat(models.Model, MediaCommon):
 
     objects = ChatManager()
 
-    def __str__(self):
-        return self.title
-
     def user_count(self):
         self.joined = self.comment.order_by('author').distinct().values_list('author').count()
         return self.joined
@@ -615,7 +586,7 @@ class Chat(models.Model, MediaCommon):
         verbose_name_plural = '06 Chat'
 
 
-class Collabo(models.Model, MediaCommon):
+class Collabo(models.Model, MediaModel):
     """Collabo"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
@@ -628,9 +599,6 @@ class Collabo(models.Model, MediaCommon):
     publish = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.title
 
     class Meta:
         db_table = 'collabo'
