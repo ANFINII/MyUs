@@ -16,6 +16,7 @@ class MyPageInline(admin.StackedInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
+
 class NotificationSettingInline(admin.TabularInline):
     model = NotificationSetting
     verbose_name = '通知設定'
@@ -23,11 +24,13 @@ class NotificationSettingInline(admin.TabularInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
+
 class SearchTagInline(admin.TabularInline):
     model = SearchTag
     extra = 1
     max_num = 20
     verbose_name_plural = '検索タグ'
+
 
 class CommentInlineAdmin(GenericTabularInline):
     model = Comment
@@ -41,38 +44,23 @@ class CommentInlineAdmin(GenericTabularInline):
         return obj.like.count()
     total_like.short_description = 'いいね数'
 
+
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'email', 'username', 'nickname', 'fullname', 'birthday', 'age', 'gender', 'rate_plan')
+    list_display = ('id', 'email', 'username', 'nickname', 'get_fullname', 'birthday', 'get_age', 'gender', 'rate_plan')
     list_filter = ('birthday', 'gender')
     search_fields = ('email', 'username', 'nickname', 'last_name', 'first_name', 'phone')
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
-    readonly_fields = ('birthday', 'age', 'date_joined', 'last_login')
+    readonly_fields = ('birthday', 'get_age', 'date_joined', 'last_login')
     inlines = [MyPageInline, NotificationSettingInline, SearchTagInline]
 
     # 詳細画面
     fieldsets = [
-        ('アカウント情報', {'fields': ('image', 'email', 'username', 'nickname', 'last_name', 'first_name', 'birthday', 'age', 'gender', 'phone', 'location', 'introduction', 'groups', 'user_permissions')}),
+        ('アカウント情報', {'fields': ('image', 'email', 'username', 'nickname', 'last_name', 'first_name', 'birthday', 'get_age', 'gender', 'phone', 'location', 'introduction', 'groups', 'user_permissions')}),
         ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
     ]
 
-    def fullname(self, obj):
-        return obj.last_name + ' ' + obj.first_name
-    fullname.short_description = 'name'
-
-    def age(self, obj):
-        if obj.birthday is not None:
-            DAYS_IN_YEAR = 365.2425
-            return int((datetime.date.today() - obj.birthday).days / DAYS_IN_YEAR)
-    age.short_description = 'age'
-
-    def rate_plan(self, obj):
-        RATE_PLAN = {'0': 'Free', '1': 'Basic', '2': 'Standard', '3': 'Premium'}
-        for rate_paln_key, rate_paln_value in RATE_PLAN.items():
-            if obj.mypage.rate_plan in rate_paln_key:
-                return rate_paln_value
-    rate_plan.short_description = 'rate plan'
 
 @admin.register(SearchTag)
 class SearchTagAdmin(ImportExportModelAdmin):
@@ -93,6 +81,7 @@ class SearchTagAdmin(ImportExportModelAdmin):
         obj.author = request.user
         super(SearchTagAdmin, self).save_model(request, obj, form, change)
 
+
 @admin.register(HashTag)
 class HashTagAdmin(ImportExportModelAdmin):
     list_display = ('id', 'jp_name', 'en_name')
@@ -108,6 +97,7 @@ class HashTagAdmin(ImportExportModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(HashTagAdmin, self).save_model(request, obj, form, change)
+
 
 @admin.register(Video)
 class VideoAdmin(ImportExportModelAdmin):
@@ -280,6 +270,7 @@ class FollowAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('created',)})
     ]
 
+
 @admin.register(Notification)
 class NotificationAdmin(ImportExportModelAdmin):
     list_display = ('id', 'user_from', 'user_to', 'type_no', 'type_name', 'content_type', 'object_id', 'title', 'confirmed_count', 'deleted_count', 'created')
@@ -312,6 +303,7 @@ class AdvertiseAdmin(ImportExportModelAdmin):
         ('編集項目', {'fields': ('author', 'title', 'url', 'content', 'image', 'video', 'type', 'period', 'publish')}),
         ('確認項目', {'fields': ('read', 'created', 'updated')})
     ]
+
 
 @admin.register(Comment)
 class CommentAdmin(ImportExportModelAdmin):
@@ -352,6 +344,7 @@ class MyUsAdminSite(AdminSite):
 manage_site = MyUsAdminSite(name='mymanage')
 manage_site.disable_action('delete_selected')
 
+
 class CommentInline(GenericTabularInline):
     model = Comment
     extra = 0
@@ -363,6 +356,7 @@ class CommentInline(GenericTabularInline):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'いいね数'
+
 
 class SearchTagAdminSite(admin.ModelAdmin):
     list_display = ('id', 'sequence', 'name', 'created')
@@ -392,6 +386,7 @@ class SearchTagAdminSite(admin.ModelAdmin):
     delete_action.short_description = '削除する'
 manage_site.register(SearchTag, SearchTagAdminSite)
 
+
 class HashTagAdminSite(admin.ModelAdmin):
     list_display = ('id', 'jp_name', 'en_name')
     search_fields = ('jp_name', 'en_name')
@@ -411,6 +406,7 @@ class HashTagAdminSite(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 manage_site.register(HashTag, HashTagAdminSite)
+
 
 class VideoAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
@@ -453,6 +449,7 @@ class VideoAdminSite(admin.ModelAdmin):
     comment_count.short_description = 'comment'
 manage_site.register(Video, VideoAdminSite)
 
+
 class LiveAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
@@ -493,6 +490,7 @@ class LiveAdminSite(admin.ModelAdmin):
         return obj.comment.all().count()
     comment_count.short_description = 'comment'
 manage_site.register(Live, LiveAdminSite)
+
 
 class MusicAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'download', 'publish', 'created', 'updated')
@@ -535,6 +533,7 @@ class MusicAdminSite(admin.ModelAdmin):
     comment_count.short_description = 'comment'
 manage_site.register(Music, MusicAdminSite)
 
+
 class PictureAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
@@ -576,6 +575,7 @@ class PictureAdminSite(admin.ModelAdmin):
     comment_count.short_description = 'comment'
 manage_site.register(Picture, PictureAdminSite)
 
+
 class BlogAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
@@ -616,6 +616,7 @@ class BlogAdminSite(admin.ModelAdmin):
         return obj.comment.all().count()
     comment_count.short_description = 'comment'
 manage_site.register(Blog, BlogAdminSite)
+
 
 class ChatAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'publish', 'created', 'updated')
@@ -662,6 +663,7 @@ class ChatAdminSite(admin.ModelAdmin):
     user_count.short_description = 'joined'
 manage_site.register(Chat, ChatAdminSite)
 
+
 class CollaboAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
     list_editable = ('title',)
@@ -703,6 +705,7 @@ class CollaboAdminSite(admin.ModelAdmin):
     comment_count.short_description = 'comment'
 manage_site.register(Collabo, CollaboAdminSite)
 
+
 class TodoAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'comment_count', 'priority', 'progress', 'duedate')
     list_editable = ('title', 'priority', 'progress', 'duedate')
@@ -735,6 +738,7 @@ class TodoAdminSite(admin.ModelAdmin):
         return obj.comment.all().count()
     comment_count.short_description = 'comment'
 manage_site.register(Todo, TodoAdminSite)
+
 
 class FollowAdminSite(admin.ModelAdmin):
     list_display = ('id', 'following', 'created')
@@ -772,6 +776,7 @@ class FollowAdminSite(admin.ModelAdmin):
     following_introduction.short_description = 'Introduction'
 manage_site.register(Follow, FollowAdminSite)
 
+
 class NotificationAdminSite(admin.ModelAdmin):
     list_display = ('id', 'type_no', 'type_name', 'title', 'confirmed_count', 'created')
     search_fields = ('type_name', 'created')
@@ -805,6 +810,7 @@ class NotificationAdminSite(admin.ModelAdmin):
         return obj.content_object
     title.short_description = 'title'
 manage_site.register(Notification, NotificationAdminSite)
+
 
 class AdvertiseAdminSite(admin.ModelAdmin):
     list_display = ('id', 'title', 'url', 'read', 'period', 'publish', 'created', 'updated')
