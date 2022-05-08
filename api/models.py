@@ -74,11 +74,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         return True
 
+    def email_user(self, subject, message, from_email=None, **kwargs):
+        send_mail(subject, message, from_email, [self.email], **kwargs)
+
     def get_username(self):
         return self.nickname
 
     def get_fullname(self):
         return self.last_name + ' ' + self.first_name
+    get_fullname.short_description = 'name'
 
     def get_year(self):
         if self.birthday is not None:
@@ -96,9 +100,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.birthday is not None:
             DAYS_IN_YEAR = 365.2425
             return int((datetime.date.today() - self.birthday).days / DAYS_IN_YEAR)
+    get_age.short_description = 'age'
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        send_mail(subject, message, from_email, [self.email], **kwargs)
+    def rate_plan(self):
+        RATE_PLAN = {'0': 'Free', '1': 'Basic', '2': 'Standard', '3': 'Premium'}
+        for rate_paln_key, rate_paln_value in RATE_PLAN.items():
+            if self.mypage.rate_plan in rate_paln_key:
+                return rate_paln_value
+    rate_plan.short_description = 'rate plan'
 
     def save(self, *args, **kwargs):
         if self.id is None:
