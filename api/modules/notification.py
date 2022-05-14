@@ -46,3 +46,55 @@ def notification_data(self):
             'notification_count': len(list(chain(notification_list_confirmed, notification_list_2.exclude(confirmed=user_id)))),
         }
         return notification_list_data
+
+
+def notification_setting_update(notification, notification_type, notification_obj):
+    if notification == 'True':
+        notification = False
+        if notification_type == 'video':
+            notification_obj.is_video = False
+        if notification_type == 'live':
+            notification_obj.is_live = False
+        if notification_type == 'music':
+            notification_obj.is_music = False
+        if notification_type == 'picture':
+            notification_obj.is_picture = False
+        if notification_type == 'blog':
+            notification_obj.is_blog = False
+        if notification_type == 'chat':
+            notification_obj.is_chat = False
+        if notification_type == 'collabo':
+            notification_obj.is_collabo = False
+        if notification_type == 'follow':
+            notification_obj.is_follow = False
+        if notification_type == 'reply':
+            notification_obj.is_reply = False
+        if notification_type == 'like':
+            notification_obj.is_like = False
+        if notification_type == 'views':
+            notification_obj.is_views = False
+    if notification == 'False':
+        notification = True
+        if notification_type == 'video':
+            notification_obj.is_video = True
+        if notification_type == 'live':
+            notification_obj.is_live = True
+        if notification_type == 'music':
+            notification_obj.is_music = True
+        if notification_type == 'picture':
+            notification_obj.is_picture = True
+        if notification_type == 'blog':
+            notification_obj.is_blog = True
+        if notification_type == 'chat':
+            notification_obj.is_chat = True
+        if notification_type == 'collabo':
+            notification_obj.is_collabo = True
+        if notification_type == 'follow':
+            notification_obj.is_follow = True
+        if notification_type == 'reply':
+            notification_obj.is_reply = True
+        if notification_type == 'like':
+            notification_obj.is_like = True
+        if notification_type == 'views':
+            notification_obj.is_views = True
+    notification_obj.save()

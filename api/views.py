@@ -24,7 +24,7 @@ from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, A
 from api.modules import contains
 from api.modules.context_data import ContextData
 from api.modules.get_form import get_detail
-from api.modules.notification import notification_data
+from api.modules.notification import notification_data, notification_setting_update
 from api.modules.search import Search
 from api.modules.success_url import success_url
 from api.modules.convert_hls import convert_hls, convert_mp4
@@ -394,7 +394,6 @@ class Withdrawal(View):
                 return redirect('myus:withdrawal')
 
 
-
 # Profile
 class Profile(TemplateView):
     """Profile"""
@@ -601,63 +600,15 @@ def notification_setting(request):
     context = dict()
     if request.method == 'POST':
         user_id = request.user.id
-        notification = request.POST.get('notification')
+        is_notification = request.POST.get('notification')
         notification_type = request.POST.get('notification_type')
         notification_obj = NotificationSetting.objects.get(user_id=user_id)
-        if notification == 'True':
-            notification = False
-            if notification_type == 'video':
-                notification_obj.is_video = False
-            if notification_type == 'live':
-                notification_obj.is_live = False
-            if notification_type == 'music':
-                notification_obj.is_music = False
-            if notification_type == 'picture':
-                notification_obj.is_picture = False
-            if notification_type == 'blog':
-                notification_obj.is_blog = False
-            if notification_type == 'chat':
-                notification_obj.is_chat = False
-            if notification_type == 'collabo':
-                notification_obj.is_collabo = False
-            if notification_type == 'follow':
-                notification_obj.is_follow = False
-            if notification_type == 'reply':
-                notification_obj.is_reply = False
-            if notification_type == 'like':
-                notification_obj.is_like = False
-            if notification_type == 'views':
-                notification_obj.is_views = False
-        else:
-            notification = True
-            if notification_type == 'video':
-                notification_obj.is_video = True
-            if notification_type == 'live':
-                notification_obj.is_live = True
-            if notification_type == 'music':
-                notification_obj.is_music = True
-            if notification_type == 'picture':
-                notification_obj.is_picture = True
-            if notification_type == 'blog':
-                notification_obj.is_blog = True
-            if notification_type == 'chat':
-                notification_obj.is_chat = True
-            if notification_type == 'collabo':
-                notification_obj.is_collabo = True
-            if notification_type == 'follow':
-                notification_obj.is_follow = True
-            if notification_type == 'reply':
-                notification_obj.is_reply = True
-            if notification_type == 'like':
-                notification_obj.is_like = True
-            if notification_type == 'views':
-                notification_obj.is_views = True
-        notification_obj.save()
-        context['notification_setting_lists'] = render_to_string('parts/notification_setting.html', {
-            'notification_setting_list': NotificationSetting.objects.filter(user_id=user_id),
-            'notification': notification,
-        }, request=request)
-        return JsonResponse(context)
+        notification_setting_update(is_notification, notification_type, notification_obj)
+    context['notification_setting_lists'] = render_to_string('parts/notification_setting.html', {
+        'notification_setting_list': NotificationSetting.objects.filter(user_id=user_id),
+        'notification': is_notification,
+    }, request=request)
+    return JsonResponse(context)
 
 def notification_confirmed(request):
     """notification_confirmed"""
