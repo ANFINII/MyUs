@@ -28,6 +28,7 @@ from api.modules.notification import notification_data, notification_setting_upd
 from api.modules.search import Search
 from api.modules.success_url import success_url
 from api.modules.convert_hls import convert_hls, convert_mp4
+from api.modules.follow import follow_update_data
 from api.modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 import datetime
 import json
@@ -665,25 +666,14 @@ def advertise_read(request):
 
 
 # LikeForm
-models_like_dict = {
-    'video/detail': Video,
-    'live/detail': Live,
-    'music/detail': Music,
-    'picture/detail': Picture,
-    'blog/detail': Blog,
-    'chat/detail': Chat,
-    'collabo/detail': Collabo,
-}
-
 def like_form(request):
     """like_form"""
     if request.method == 'POST':
         user = request.user
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        for models_detail, models in models_like_dict.items():
-            if models_detail in obj_path:
-                obj = get_object_or_404(models, id=obj_id)
+        obj = [get_object_or_404(models, id=obj_id) for models_detail, models
+            in contains.models_like_dict.items() if models_detail in obj_path]
         liked = False
         if obj.like.filter(id=user.id).exists():
             liked = False
@@ -728,16 +718,6 @@ def like_form_comment(request):
 
 
 # CommentForm & ReplyForm
-models_comment_dict = {
-    'video/detail': Video,
-    'live/detail': Live,
-    'music/detail': Music,
-    'picture/detail': Picture,
-    'blog/detail': Blog,
-    'collabo/detail': Collabo,
-    'todo/detail': Todo,
-}
-
 def comment_form(request):
     """comment_form"""
     context = dict()
@@ -746,9 +726,8 @@ def comment_form(request):
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        for models_detail, models in models_comment_dict.items():
-            if models_detail in obj_path:
-                obj = models.objects.get(id=obj_id)
+        obj = [models.objects.get(id=obj_id) for models_detail, models
+            in contains.models_comment_dict.items() if models_detail in obj_path]
         comment_obj = Comment(content_object=obj)
         comment_obj.text = text
         comment_obj.author_id = user_id
@@ -771,9 +750,8 @@ def reply_form(request):
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
-        for models_detail, models in models_comment_dict.items():
-            if models_detail in obj_path:
-                obj = models.objects.get(id=obj_id)
+        obj = [models.objects.get(id=obj_id) for models_detail, models
+            in contains.models_comment_dict.items() if models_detail in obj_path]
         comment_obj = Comment(content_object=obj)
         comment_obj.text = text
         comment_obj.author_id = user_id
@@ -815,9 +793,8 @@ def comment_delete(request, comment_id):
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
-        for models_detail, models in models_comment_dict.items():
-            if models_detail in obj_path:
-                obj = models.objects.get(id=obj_id)
+        obj = [models.objects.get(id=obj_id) for models_detail, models
+            in contains.models_comment_dict.items() if models_detail in obj_path]
         comment_obj = Comment.objects.get(id=comment_id)
         comment_obj.delete()
         context = {
@@ -928,45 +905,10 @@ def follow_create(request, nickname):
         follower = MyPage.objects.get(user=request.user)
         following = MyPage.objects.get(user__nickname=nickname)
         follow_obj = Follow.objects.filter(follower=follower.user, following=following.user)
-        if follower == following:
-            # '自分はフォローできません'
-            pass
-        elif follow_obj.exists():
-            notification_obj = Notification.objects.filter(type_no=contains.notification_type_no['follow'], object_id=follow_obj[0].id)
-            notification_obj.delete()
-            follow_obj.delete()
-            followed = False
-            #ログインユーザーのフォロー数
-            following_count = Follow.objects.filter(follower=follower.user).count()
-            follower.following_num = following_count
-            follower.save()
-            #フォローユーザーのフォロワー数
-            follower_count = Follow.objects.filter(following=following.user).count()
-            following.follower_num = follower_count
-            following.save()
-            # 'フォローを外しました'
-        else:
-            follow_obj = Follow.objects.create(follower=follower.user, following=following.user)
-            followed = True
-            #ログインユーザーのフォロー数
-            following_count = Follow.objects.filter(follower=follower.user).count()
-            follower.following_num = following_count
-            follower.save()
-            #フォローユーザーのフォロワー数
-            follower_count = Follow.objects.filter(following=following.user).count()
-            following.follower_num = follower_count
-            following.save()
-            # 'フォローしました'
-            Notification.objects.create(
-                user_from_id=following.id,
-                user_to_id=follower.id,
-                type_no=contains.notification_type_no['follow'],
-                type_name='follow',
-                content_object=follow_obj,
-            )
+        follow_data = follow_update_data(follower, following, follow_obj)
         context = {
-            'followed': followed,
-            'follower_count': follower_count,
+            'followed': follow_data['followed'],
+            'follower_count': follow_data['follower_count'],
         }
         return JsonResponse(context)
 
