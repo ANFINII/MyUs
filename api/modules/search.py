@@ -9,10 +9,24 @@ import datetime
 
 User = get_user_model()
 
+
+def get_q_list(search):
+    """除外リストを作成"""
+    exclusion_list = set([' ', '　'])
+    q_list = ''
+    for q in search:
+        # 半角と全角の空文字が含まれたら無視
+        if q in exclusion_list:
+            pass
+        else:
+            q_list += q
+    return q_list
+
+
 class Search:
     def search_index(self):
-        search = self.request.GET.get('search', None)
-        if search is not None:
+        search = self.request.GET.get('search')
+        if search:
             result1 = Video.objects.search(search)[:8]
             result2 = Live.objects.search(search)[:8]
             result3 = Music.objects.search(search)[:8]
@@ -26,9 +40,9 @@ class Search:
         return Video.objects.none()
 
     def search_recommend(self):
-        search = self.request.GET.get('search', None)
         aggregation_date = datetime.datetime.today() - datetime.timedelta(days=100)
-        if search is not None:
+        search = self.request.GET.get('search')
+        if search:
             result1 = Video.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
             result2 = Live.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
             result3 = Music.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
@@ -42,9 +56,9 @@ class Search:
         return Video.objects.none()
 
     def search_userpage(self):
-        search = self.request.GET.get('search', None)
         author = get_object_or_404(User, nickname=self.kwargs['nickname'])
-        if search is not None:
+        search = self.request.GET.get('search')
+        if search:
             result1 = Video.objects.filter(author_id=author.id, publish=True).search(search)
             result2 = Live.objects.filter(author_id=author.id, publish=True).search(search)
             result3 = Music.objects.filter(author_id=author.id, publish=True).search(search)
@@ -66,21 +80,13 @@ class Search:
             result = model.objects.filter(following_id=user_id).exclude(follower_id=user_id).select_related('follower__mypage')
         search = self.request.GET.get('search')
         if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
+            q_list = get_q_list(search)
             query = reduce(and_, [
-                        Q(following__nickname__icontains=q) |
-                        Q(following__introduction__icontains=q) |
-                        Q(follower__nickname__icontains=q) |
-                        Q(follower__introduction__icontains=q) for q in q_list]
-                    )
+                Q(following__nickname__icontains=q) |
+                Q(following__introduction__icontains=q) |
+                Q(follower__nickname__icontains=q) |
+                Q(follower__introduction__icontains=q) for q in q_list]
+            )
             result = result.filter(query).distinct()
             self.count = len(result)
         return result
@@ -89,21 +95,13 @@ class Search:
         result = model.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
         if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
+            q_list = get_q_list(search)
             query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(hashtag__jp_name__icontains=q) |
-                        Q(author__nickname__icontains=q) |
-                        Q(content__icontains=q) for q in q_list]
-                    )
+                Q(title__icontains=q) |
+                Q(hashtag__jp_name__icontains=q) |
+                Q(author__nickname__icontains=q) |
+                Q(content__icontains=q) for q in q_list]
+            )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
             self.count = len(result)
         return result
@@ -112,22 +110,14 @@ class Search:
         result = model.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
         if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
+            q_list = get_q_list(search)
             query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(hashtag__jp_name__icontains=q) |
-                        Q(author__nickname__icontains=q) |
-                        Q(content__icontains=q) |
-                        Q(lyric__icontains=q) for q in q_list]
-                    )
+                Q(title__icontains=q) |
+                Q(hashtag__jp_name__icontains=q) |
+                Q(author__nickname__icontains=q) |
+                Q(content__icontains=q) |
+                Q(lyric__icontains=q) for q in q_list]
+            )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
             self.count = len(result)
         return result
@@ -136,22 +126,14 @@ class Search:
         result = model.objects.filter(publish=True).order_by('-created')
         search = self.request.GET.get('search')
         if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
+            q_list = get_q_list(search)
             query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(hashtag__jp_name__icontains=q) |
-                        Q(author__nickname__icontains=q) |
-                        Q(content__icontains=q) |
-                        Q(richtext__icontains=q) for q in q_list]
-                    )
+                Q(title__icontains=q) |
+                Q(hashtag__jp_name__icontains=q) |
+                Q(author__nickname__icontains=q) |
+                Q(content__icontains=q) |
+                Q(richtext__icontains=q) for q in q_list]
+            )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
             self.count = len(result)
         return result
@@ -160,20 +142,12 @@ class Search:
         result = model.objects.filter(author_id=self.request.user.id)
         search = self.request.GET.get('search')
         if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
+            q_list = get_q_list(search)
             query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(content__icontains=q) |
-                        Q(duedate__icontains=q) for q in q_list]
-                    )
+                Q(title__icontains=q) |
+                Q(content__icontains=q) |
+                Q(duedate__icontains=q) for q in q_list]
+            )
             result = result.filter(query).order_by('-duedate').distinct()
             self.count = len(result)
         return result
@@ -183,19 +157,11 @@ class Search:
         result = model.objects.filter(author_id=author, publish=True).order_by('created')
         search = self.request.GET.get('search')
         if search:
-            """除外リストを作成"""
-            exclusion_list = set([' ', '　'])
-            q_list = ''
-            for i in search:
-                """全角半角の空文字が含まれたら無視"""
-                if i in exclusion_list:
-                    pass
-                else:
-                    q_list += i
+            q_list = get_q_list(search)
             query = reduce(and_, [
-                        Q(title__icontains=q) |
-                        Q(content__icontains=q) for q in q_list]
-                    )
+                Q(title__icontains=q) |
+                Q(content__icontains=q) for q in q_list]
+            )
             result = result.filter(query).order_by('created').distinct()
             self.count = len(result)
         return result
