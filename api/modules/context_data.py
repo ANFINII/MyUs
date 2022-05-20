@@ -11,8 +11,8 @@ User = get_user_model()
 class ContextData:
     def context_data(self, models, **kwargs):
         context = super(models, self).get_context_data(**kwargs)
-        user_id = self.request.user.id
-        if user_id is not None:
+        user = self.request.user
+        if user is not None:
             notification_list = notification_data(self)
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
@@ -20,10 +20,10 @@ class ContextData:
             context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=user_id).order_by('sequence')[:20],
+            'searchtag_list': SearchTag.objects.filter(author=user).order_by('sequence')[:20],
         })
         if 'NotificationSettingView' in str(models.__name__):
-            context.update(notification_setting_list=NotificationSetting.objects.filter(user_id=user_id))
+            context.update(notification_setting_list=NotificationSetting.objects.filter(user=user))
 
         if 'ProfileUpdate' in str(models.__name__):
             context['gender'] = {'0':'男性', '1':'女性', '2':'秘密'}
