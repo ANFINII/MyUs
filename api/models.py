@@ -42,9 +42,9 @@ def user_image_path(instance, filename):
 class User(AbstractBaseUser, PermissionsMixin):
     """CustomUser"""
     image         = models.ImageField(upload_to=user_image_path, default='../frontend/static/img/user_icon.png', blank=True, null=True)
-    email         = models.EmailField(max_length=255, unique=True, db_index=True)
-    username      = models.CharField(max_length=20, unique=True, db_index=True)
-    nickname      = models.CharField(max_length=80, unique=True, db_index=True)
+    email         = models.EmailField(max_length=255, unique=True)
+    username      = models.CharField(max_length=20, unique=True)
+    nickname      = models.CharField(max_length=80, unique=True)
     last_name     = models.CharField(max_length=40, blank=True)
     first_name    = models.CharField(max_length=40, blank=True)
 
@@ -122,6 +122,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         db_table = 'user'
         verbose_name_plural = '00 User'
+        indexes = [
+            models.Index(fields=['email'], name='email_idx'),
+            models.Index(fields=['username'], name='username_idx'),
+            models.Index(fields=['nickname'], name='nickname_idx'),
+        ]
 
 @property
 def image_url(self):
@@ -643,6 +648,11 @@ class Follow(models.Model):
     class Meta:
         db_table = 'follow'
         verbose_name_plural = '11 フォロー'
+        indexes = [
+            models.Index(fields=['follower'], name='follower_idx'),
+            models.Index(fields=['following'], name='following_idx'),
+            models.Index(fields=['follower', 'following'], name='follower_following_idx'),
+        ]
 
 
 class Notification(models.Model):
@@ -678,6 +688,10 @@ class Notification(models.Model):
     class Meta:
         db_table = 'notification'
         verbose_name_plural = '12 通知確認'
+        indexes = [
+            models.Index(fields=['user_from', 'user_to'], name='notification_from_to_idx'),
+            models.Index(fields=['type_no', 'object_id'], name='notification_type_object_idx'),
+        ]
 
 
 def images_adver_upload_path(instance, filename):
@@ -747,6 +761,9 @@ class Comment(models.Model):
     class Meta:
         db_table = 'comment'
         verbose_name_plural = '14 コメント'
+        indexes = [
+            models.Index(fields=['parent'], name='comment_parent_idx'),
+        ]
 
 
 class Product(models.Model):
@@ -759,6 +776,7 @@ class Product(models.Model):
 
     class Meta:
         db_table = 'product'
+
 
 class Price(models.Model):
     product         = models.ForeignKey(Product, on_delete=models.CASCADE)
