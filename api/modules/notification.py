@@ -33,9 +33,7 @@ def notification_data(self):
             notification_type_list_2 += [contains.notification_type_no['views']]
 
         notification_obj_1 = None
-        confirmed_kwargs = {}
-        confirmed_kwargs['id'] = OuterRef('pk')
-        confirmed_kwargs['confirmed'] = user
+        confirmed_kwargs = {'id': OuterRef('pk'), 'confirmed': user}
         subquery = Notification.objects.filter(**confirmed_kwargs)
         following_list = Follow.objects.filter(follower=user).values_list('following_id', 'created')
 
