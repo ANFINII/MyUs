@@ -33,8 +33,8 @@ def follow_update_data(follower, following, follow_obj):
         following.save()
         # 'フォローしました'
         Notification.objects.create(
-            user_from_id=following.id,
-            user_to_id=follower.id,
+            user_from_id=follower.id,
+            user_to_id=following.id,
             type_no=contains.notification_type_no['follow'],
             type_name='follow',
             content_object=follow_obj,
