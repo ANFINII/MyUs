@@ -28,7 +28,7 @@
       <tr><td class="td-color">フォロー数</td><td class="td-indent">{{ user.mypage.following_num }}</td></tr>
       <tr><td class="td-color">フォロワー数</td><td class="td-indent">{{ user.mypage.follower_num }}</td></tr>
       <tr><td class="td-color">料金プラン</td><td class="td-indent">{{ user.mypage.get_rate_plan_display }}</td></tr>
-      <tr><td class="td-color">全体広告</td><td class="td-indent" id="is_advertise">{% include 'registration/mypage_advertise.html' %}</td></tr>
+      <tr><td class="td-color">全体広告</td><td class="td-indent" id="toggle_mypage">{% include 'registration/mypage_advertise.html' %}</td></tr>
       <tr><td class="td-color">概要</td><td class="td-indent">{{ user.mypage.content|linebreaksbr|urlize }}</td></tr>
     </tbody>
   </table>

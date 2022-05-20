@@ -215,7 +215,7 @@ $(document).on('click', '.toggle_mypage', function (event) {
     timeout: 10000,
   })
     .done(function (response) {
-      $('#is_advertise').html(response.is_advertise);
+      $('#toggle_mypage').html(response.toggle_mypage);
     })
     .fail(function (response) {
       console.log(response);

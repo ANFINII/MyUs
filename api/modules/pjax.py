@@ -4,13 +4,14 @@ from django.db.models import Count, F
 from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
 from api.forms import BlogForm
+from api.models import MyPage, NotificationSetting, Follow, Advertise
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
-from api.models import NotificationSetting, Follow, Advertise
 
 User = get_user_model()
 
 def pjax_context(request, href):
     context = dict()
+    user = request.user
     if '/' == href:
         context['html'] = render_to_string('index_list.html', {
             'video_list': Video.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:8],
@@ -34,7 +35,7 @@ def pjax_context(request, href):
     if '/userpage/post' in href:
         nickname = request.GET.get('nickname')
         author = get_object_or_404(User, nickname=nickname)
-        follow = Follow.objects.filter(follower=request.user, following=author)
+        follow = Follow.objects.filter(follower=user, following=author)
         followed = False
         if follow.exists():
             followed = True
@@ -52,7 +53,7 @@ def pjax_context(request, href):
     if '/userpage/information' in href:
         nickname = request.GET.get('nickname')
         author = get_object_or_404(User, nickname=nickname)
-        follow = Follow.objects.filter(follower=request.user, following=author)
+        follow = Follow.objects.filter(follower=user, following=author)
         followed = False
         if follow.exists():
             followed = True
@@ -64,7 +65,7 @@ def pjax_context(request, href):
     if '/userpage/advertise' in href:
         nickname = request.GET.get('nickname')
         author = get_object_or_404(User, nickname=nickname)
-        follow = Follow.objects.filter(follower=request.user, following=author)
+        follow = Follow.objects.filter(follower=user, following=author)
         followed = False
         if follow.exists():
             followed = True
@@ -104,19 +105,19 @@ def pjax_context(request, href):
         }, request=request)
     if '/todo' == href:
         context['html'] = render_to_string('todo/todo_list.html', {
-            'todo_list': Todo.objects.filter(author=request.user).order_by('-created')[:100],
+            'todo_list': Todo.objects.filter(author=user).order_by('-created')[:100],
         }, request=request)
     if '/follow' == href:
         context['html'] = render_to_string('follow/follow_list.html', {
-            'follow_list': Follow.objects.filter(follower=request.user).select_related('following__mypage').order_by('created')[:100],
+            'follow_list': Follow.objects.filter(follower=user).select_related('following__mypage').order_by('created')[:100],
         }, request=request)
     if '/follower' == href:
         context['html'] = render_to_string('follow/follower_list.html', {
-            'follower_list': Follow.objects.filter(following=request.user).select_related('follower__mypage').order_by('created')[:100],
+            'follower_list': Follow.objects.filter(following=user).select_related('follower__mypage').order_by('created')[:100],
         }, request=request)
     if '/notification' == href:
         context['html'] = render_to_string('common/notification_content.html', {
-            'notification_setting_list': NotificationSetting.objects.filter(user=request.user),
+            'notification_setting_list': NotificationSetting.objects.filter(user=user),
         }, request=request)
     if '/userpolicy' == href:
         context['html'] = render_to_string('common/userpolicy_content.html', request=request)
@@ -127,7 +128,9 @@ def pjax_context(request, href):
     if '/profile' == href:
         context['html'] = render_to_string('registration/profile_content.html', request=request)
     if '/mypage' == href:
-        context['html'] = render_to_string('registration/mypage_content.html', request=request)
+        context['html'] = render_to_string('registration/mypage_content.html', {
+            'mypage_list': MyPage.objects.filter(user=user)
+        }, request=request)
     if '/withdrawal' == href:
         EXPIRED_SECONDS = 60
         context['html'] = render_to_string('registration/withdrawal_content.html', {

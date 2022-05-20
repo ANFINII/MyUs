@@ -1,10 +1,10 @@
+import datetime
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
-from api.models import SearchTag, NotificationSetting, Comment, Follow
-from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from api.models import MyPage, NotificationSetting, SearchTag, Follow, Advertise, Comment
+from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 from api.modules.notification import notification_data
-import datetime
 
 User = get_user_model()
 
@@ -27,6 +27,9 @@ class ContextData:
 
         if 'ProfileUpdate' in str(models.__name__):
             context['gender'] = {'0':'男性', '1':'女性', '2':'秘密'}
+
+        if 'MyPageView' in str(models.__name__):
+            context.update(mypage_list=MyPage.objects.filter(user=user))
 
         if 'Index' in str(models.__name__):
             context.update({

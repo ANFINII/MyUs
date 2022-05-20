@@ -387,15 +387,17 @@ def mypage_toggle(request):
     """mypage_toggle"""
     context = dict()
     if request.method == 'POST':
-        user_id = request.user.id
+        user = request.user
         is_advertise = request.POST.get('is_advertise')
-        myapge_obj = MyPage.objects.get(user_id=user_id)
+        myapge_obj = MyPage.objects.get(user=user)
         if is_advertise == 'True':
             myapge_obj.is_advertise = False
-        else:
+        if is_advertise == 'False':
             myapge_obj.is_advertise = True
-        myapge_obj.save()
-        context['is_advertise'] = render_to_string('registration/mypage_advertise.html', request=request)
+        myapge_obj.save(update_fields=['is_advertise'])
+        context['toggle_mypage'] = render_to_string('registration/mypage_advertise.html', {
+            'mypage_list': MyPage.objects.filter(user=user),
+        }, request=request)
         return JsonResponse(context)
 
 
@@ -460,14 +462,13 @@ def notification_setting(request):
     """notification_setting"""
     context = dict()
     if request.method == 'POST':
-        user_id = request.user.id
+        user = request.user
         is_notification = request.POST.get('notification')
         notification_type = request.POST.get('notification_type')
-        notification_obj = NotificationSetting.objects.get(user_id=user_id)
+        notification_obj = NotificationSetting.objects.get(user=user)
         notification_setting_update(is_notification, notification_type, notification_obj)
     context['notification_setting_lists'] = render_to_string('parts/notification_setting.html', {
-        'notification_setting_list': NotificationSetting.objects.filter(user_id=user_id),
-        'notification': is_notification,
+        'notification_setting_list': NotificationSetting.objects.filter(user=user),
     }, request=request)
     return JsonResponse(context)
 
@@ -487,9 +488,9 @@ def notification_deleted(request):
         notification_obj = get_object_or_404(Notification, id=notification_id)
         notification_obj.confirmed.add(user)
         notification_obj.deleted.add(user)
-        following_id_list = list(Follow.objects.filter(follower_id=user.id).values_list('following_id', flat=True))
+        following_id_list = list(Follow.objects.filter(follower=user).values_list('following_id', flat=True))
         context = {
-            'notification_count': Notification.objects.filter(user_from_id__in=following_id_list, user_to_id=user.id).exclude(confirmed=user.id).count(),
+            'notification_count': Notification.objects.filter(user_from__in=following_id_list, user_to=user).exclude(confirmed=user).count(),
         }
         return JsonResponse(context)
 
@@ -501,7 +502,7 @@ def searchtag_create(request):
         form = SearchTagForm(request.POST)
         if form.is_valid():
             form = form.save(commit=False)
-            form.author_id = request.user.id
+            form.author = request.user
             form.save()
             context = {
                 'searchtag': form.name,
@@ -518,7 +519,7 @@ def advertise_read(request):
         advertise_id = request.POST.get('advertise_id')
         advertise_obj = Advertise.objects.get(id=advertise_id)
         advertise_obj.read += 1
-        advertise_obj.save()
+        advertise_obj.save(update_fields=['read'])
         context = {
             'read': advertise_obj.read,
         }
@@ -533,7 +534,7 @@ def like_form(request):
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
         obj = [get_object_or_404(models, id=obj_id) for models_detail, models
-            in contains.models_like_dict.items() if models_detail in obj_path]
+            in contains.models_like_dict.items() if models_detail in obj_path][0]
         liked = False
         if obj.like.filter(id=user.id).exists():
             liked = False
@@ -562,10 +563,10 @@ def like_form_comment(request):
         else:
             comment_liked = True
             obj.like.add(user)
-            if user.id != obj.author.id:
+            if user != obj.author:
                 Notification.objects.create(
-                    user_from_id=user.id,
-                    user_to_id=obj.author.id,
+                    user_from=user,
+                    user_to=obj.author,
                     type_no=contains.notification_type_no['like'],
                     type_name='like',
                     content_object=obj,
@@ -587,7 +588,7 @@ def comment_form(request):
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
         obj = [models.objects.get(id=obj_id) for models_detail, models
-            in contains.models_comment_dict.items() if models_detail in obj_path]
+            in contains.models_comment_dict.items() if models_detail in obj_path][0]
         comment_obj = Comment(content_object=obj)
         comment_obj.text = text
         comment_obj.author_id = user_id
@@ -611,7 +612,7 @@ def reply_form(request):
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
         obj = [models.objects.get(id=obj_id) for models_detail, models
-            in contains.models_comment_dict.items() if models_detail in obj_path]
+            in contains.models_comment_dict.items() if models_detail in obj_path][0]
         comment_obj = Comment(content_object=obj)
         comment_obj.text = text
         comment_obj.author_id = user_id

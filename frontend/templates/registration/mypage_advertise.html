@@ -1,9 +1,10 @@
-<form method="POST" action="" advertise="{{ user.mypage.is_advertise }}" csrf="{{ csrf_token }}">
-  {% if user.mypage.rate_plan == '0' %}
+{% for mypage in mypage_list %}
+<form method="POST" action="" advertise="{{ mypage.is_advertise }}" csrf="{{ csrf_token }}">
+  {% if mypage.rate_plan == '0' %}
   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-disable" viewBox="0 0 16 16">
     <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
   </svg>
-  {% elif user.mypage.is_advertise %}
+  {% elif mypage.is_advertise %}
   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_mypage" viewBox="0 0 16 16">
     <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
   </svg>
@@ -13,3 +14,4 @@
   </svg>
   {% endif %}
 </form>
+{% endfor %}
