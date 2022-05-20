@@ -55,21 +55,20 @@ class ContextData:
 
         if ('UserPage' or 'UserPageInfo' or 'UserPageAdvertise') in str(models.__name__):
             author = get_object_or_404(User, nickname=self.kwargs['nickname'])
-            author_id = author.id
-            follow = Follow.objects.filter(follower=self.request.user.id).filter(following=author_id)
+            follow = Follow.objects.filter(follower=self.request.user, following=author)
             followed = False
             if follow.exists():
                 followed = True
             context['followed'] = followed
             context['author_name'] = author.nickname
             context.update({
-                'user_list': User.objects.filter(id=author_id),
-                'video_list': Video.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
-                'live_list': Live.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
-                'music_list': Music.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
-                'picture_list': Picture.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
-                'blog_list': Blog.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
-                'chat_list': Chat.objects.filter(author_id=author_id, publish=True).select_related('author').prefetch_related('like'),
+                'user_list': User.objects.filter(id=author.id),
+                'video_list': Video.objects.filter(author=author, publish=True).select_related('author').prefetch_related('like'),
+                'live_list': Live.objects.filter(author=author, publish=True).select_related('author').prefetch_related('like'),
+                'music_list': Music.objects.filter(author=author, publish=True).select_related('author').prefetch_related('like'),
+                'picture_list': Picture.objects.filter(author=author, publish=True).select_related('author').prefetch_related('like'),
+                'blog_list': Blog.objects.filter(author=author, publish=True).select_related('author').prefetch_related('like'),
+                'chat_list': Chat.objects.filter(author=author, publish=True).select_related('author').prefetch_related('like'),
             })
         return context
 
@@ -77,19 +76,19 @@ class ContextData:
     def models_context_data(self, models, **kwargs):
         context = super(models, self).get_context_data(**kwargs)
         obj = self.object
-        user_id = self.request.user.id
-        follow = Follow.objects.filter(follower=user_id).filter(following=obj.author.id)
+        user = self.request.user
+        follow = Follow.objects.filter(follower=user, following=obj.author)
         followed = False
         if follow.exists():
             followed = True
         liked = False
         if 'TodoDetail' not in str(models.__name__):
-            if obj.like.filter(id=user_id).exists():
+            if obj.like.filter(id=user.id).exists():
                 liked = True
         if 'Chat' not in str(models.__name__):
             filter_kwargs = {}
             filter_kwargs['id'] = OuterRef('pk')
-            filter_kwargs['like'] = user_id
+            filter_kwargs['like'] = user.id
             subquery = Comment.objects.filter(**filter_kwargs)
             context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
             context['reply_list'] = obj.comment.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
@@ -100,23 +99,23 @@ class ContextData:
                 is_period = False
             context['is_period'] = is_period
             context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'parent', 'content_type').prefetch_related('like')
-        if user_id is not None:
+        if user is not None:
             notification_list = notification_data(self)
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
         if obj.author.mypage.rate_plan == '1':
-            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:1])
+            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author).order_by('?')[:1])
         if obj.author.mypage.rate_plan == '2':
-            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:3])
+            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author).order_by('?')[:3])
         if obj.author.mypage.rate_plan == '3':
-            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author.id).order_by('?')[:4])
+            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author).order_by('?')[:4])
         context['liked'] = liked
         context['followed'] = followed
-        context['user_id'] = user_id
+        context['user_id'] = user.id
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
         context.update({
-            'searchtag_list': SearchTag.objects.filter(author_id=user_id).order_by('sequence')[:20],
+            'searchtag_list': SearchTag.objects.filter(author=user).order_by('sequence')[:20],
             'advertise_auto_list': Advertise.objects.filter(publish=True, type=0).order_by('?')[:1],
         })
         if 'VideoDetail' in str(models.__name__):
@@ -153,5 +152,5 @@ class ContextData:
             context.update(collabo_list=Collabo.objects.filter(publish=True).exclude(id=obj.id).select_related('author').order_by('-created')[:50])
 
         if 'TodoDetail' in str(models.__name__):
-            context.update(todo_list=Todo.objects.filter(author_id=user_id).exclude(id=obj.id)[:50])
+            context.update(todo_list=Todo.objects.filter(author=user).exclude(id=obj.id)[:50])
         return context
