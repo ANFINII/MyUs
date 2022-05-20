@@ -32,29 +32,25 @@ def notification_data(self):
         if notification_setting_obj.is_views:
             notification_type_list_2 += [contains.notification_type_no['views']]
 
-        notification_obj_1 = None
+        notification_list_1, notification_list_confirmed = [], []
         confirmed_kwargs = {'id': OuterRef('pk'), 'confirmed': user}
         subquery = Notification.objects.filter(**confirmed_kwargs)
         following_list = Follow.objects.filter(follower=user).values_list('following_id', 'created')
 
         for id, dates in following_list:
-            notification_obj_1 = Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).annotate(user_confirmed=Exists(subquery))
-        notification_obj_2 = Notification.objects.filter(user_to=user, type_no__in=notification_type_list_2).exclude(deleted=user).annotate(user_confirmed=Exists(subquery))
+            notification_list_1 += Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).order_by('-created')
+            notification_list_confirmed += Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).exclude(confirmed=user).annotate(user_confirmed=Exists(subquery))
+        notification_list_2 = Notification.objects.filter(user_to_id=user, type_no__in=notification_type_list_2).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).order_by('-created')
 
-        notification_list, notification_count = [], 0
-        if notification_obj_1 is not None:
-            notification_list = notification_obj_1.union(notification_obj_2).order_by('-created')
-            notification_count = notification_obj_1.exclude(confirmed=user).union(notification_obj_2.exclude(confirmed=user)).count()
         notification_list_data = {
-            'notification_list': notification_list,
-            'notification_count': notification_count,
+            'notification_list': notification_list_1 + list(notification_list_2),
+            'notification_count': len(notification_list_confirmed) + notification_list_2.exclude(confirmed=user).count(),
         }
         return notification_list_data
 
 
-def notification_setting_update(notification, notification_type, notification_obj):
-    if notification == 'True':
-        notification = False
+def notification_setting_update(is_notification, notification_type, notification_obj):
+    if is_notification == 'True':
         if notification_type == 'video':
             notification_obj.is_video = False
         if notification_type == 'live':
@@ -77,8 +73,7 @@ def notification_setting_update(notification, notification_type, notification_ob
             notification_obj.is_like = False
         if notification_type == 'views':
             notification_obj.is_views = False
-    if notification == 'False':
-        notification = True
+    if is_notification == 'False':
         if notification_type == 'video':
             notification_obj.is_video = True
         if notification_type == 'live':
