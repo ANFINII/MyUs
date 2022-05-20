@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import post_save
@@ -9,7 +10,6 @@ from django.core.mail import send_mail
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from django.utils import timezone
 from ckeditor_uploader.fields import RichTextUploadingField
-import datetime
 
 # Create your models here.
 
