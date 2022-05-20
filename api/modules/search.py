@@ -59,12 +59,12 @@ class Search:
         author = get_object_or_404(User, nickname=self.kwargs['nickname'])
         search = self.request.GET.get('search')
         if search:
-            result1 = Video.objects.filter(author_id=author.id, publish=True).search(search)
-            result2 = Live.objects.filter(author_id=author.id, publish=True).search(search)
-            result3 = Music.objects.filter(author_id=author.id, publish=True).search(search)
-            result4 = Picture.objects.filter(author_id=author.id, publish=True).search(search)
-            result5 = Blog.objects.filter(author_id=author.id, publish=True).search(search)
-            result6 = Chat.objects.filter(author_id=author.id, publish=True).search(search)
+            result1 = Video.objects.filter(author=author, publish=True).search(search)
+            result2 = Live.objects.filter(author=author, publish=True).search(search)
+            result3 = Music.objects.filter(author=author, publish=True).search(search)
+            result4 = Picture.objects.filter(author=author, publish=True).search(search)
+            result5 = Blog.objects.filter(author=author, publish=True).search(search)
+            result6 = Chat.objects.filter(author=author, publish=True).search(search)
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
             self.count = len(result)
@@ -73,11 +73,11 @@ class Search:
 
     def search_follow(self, model):
         path = self.request.path
-        user_id = self.request.user.id
+        user = self.request.user
         if '/follow' in path:
-            result = model.objects.filter(follower_id=user_id).exclude(following_id=user_id).select_related('following__mypage')
+            result = model.objects.filter(follower=user).exclude(following=user).select_related('following__mypage')
         if '/follower' in path:
-            result = model.objects.filter(following_id=user_id).exclude(follower_id=user_id).select_related('follower__mypage')
+            result = model.objects.filter(following=user).exclude(follower=user).select_related('follower__mypage')
         search = self.request.GET.get('search')
         if search:
             q_list = get_q_list(search)
@@ -139,7 +139,7 @@ class Search:
         return result
 
     def search_todo(self, model):
-        result = model.objects.filter(author_id=self.request.user.id)
+        result = model.objects.filter(author=self.request.user)
         search = self.request.GET.get('search')
         if search:
             q_list = get_q_list(search)
@@ -154,7 +154,7 @@ class Search:
 
     def search_advertise(self, model):
         author = get_object_or_404(User, nickname=self.kwargs['nickname'])
-        result = model.objects.filter(author_id=author, publish=True).order_by('created')
+        result = model.objects.filter(author=author, publish=True).order_by('created')
         search = self.request.GET.get('search')
         if search:
             q_list = get_q_list(search)
