@@ -6,14 +6,15 @@ from api.modules import contains
 def get_detail(self):
     self.object = self.get_object()
     obj = self.object
+    obj.read += 1
+    obj.save(update_fields=['read'])
     obj_class = obj.__class__
-    obj_class.objects.filter(id=obj.id).update(read=obj.read + 1)
     context = self.get_context_data(object=obj)
     if obj.read == 10000:
-        type_name = [value for key, value in contains.models_dict.items() if obj_class == key]
+        type_name = [value for key, value in contains.models_dict.items() if obj_class == key][0]
         Notification.objects.create(
-            user_from_id=obj.author.id,
-            user_to_id=obj.author.id,
+            user_from=obj.author,
+            user_to=obj.author,
             type_no=contains.notification_type_no['views'],
             type_name=type_name,
             content_object=obj,
