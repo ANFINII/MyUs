@@ -40,8 +40,8 @@ def notification_data(self):
             notification_obj_1 = Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).order_by('-created')
         notification_obj_2 = Notification.objects.filter(user_to=user, type_no__in=notification_type_list_2).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).order_by('-created')
         notification_list_data = {
-            'notification_list': list(notification_obj_1) + list(notification_obj_2),
-            'notification_count': notification_obj_1.exclude(confirmed=user).count() + notification_obj_2.exclude(confirmed=user).count(),
+            'notification_list': notification_obj_1.union(notification_obj_2).order_by('-created'),
+            'notification_count': notification_obj_1.exclude(confirmed=user).union(notification_obj_2.exclude(confirmed=user)).count(),
         }
         return notification_list_data
 
