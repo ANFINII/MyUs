@@ -6,12 +6,7 @@ from api.modules import contains
 def notification_data(self):
     user = self.request.user
     notification_type_list_1, notification_type_list_2 = [], []
-    notification_obj_1 = None
-    confirmed_kwargs = {}
-    confirmed_kwargs['id'] = OuterRef('pk')
-    confirmed_kwargs['confirmed'] = user
-    subquery = Notification.objects.filter(**confirmed_kwargs)
-    following_list = Follow.objects.filter(follower=user).values_list('following_id', 'created')
+
     if user is not None:
         notification_setting_obj = NotificationSetting.objects.get(user=user)
         if notification_setting_obj.is_video:
@@ -36,12 +31,25 @@ def notification_data(self):
             notification_type_list_2 += [contains.notification_type_no['reply']]
         if notification_setting_obj.is_views:
             notification_type_list_2 += [contains.notification_type_no['views']]
+
+        notification_obj_1 = None
+        confirmed_kwargs = {}
+        confirmed_kwargs['id'] = OuterRef('pk')
+        confirmed_kwargs['confirmed'] = user
+        subquery = Notification.objects.filter(**confirmed_kwargs)
+        following_list = Follow.objects.filter(follower=user).values_list('following_id', 'created')
+
         for id, dates in following_list:
-            notification_obj_1 = Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).order_by('-created')
-        notification_obj_2 = Notification.objects.filter(user_to=user, type_no__in=notification_type_list_2).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).order_by('-created')
+            notification_obj_1 = Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).annotate(user_confirmed=Exists(subquery))
+        notification_obj_2 = Notification.objects.filter(user_to=user, type_no__in=notification_type_list_2).exclude(deleted=user).annotate(user_confirmed=Exists(subquery))
+
+        notification_list, notification_count = [], 0
+        if notification_obj_1 is not None:
+            notification_list = notification_obj_1.union(notification_obj_2).order_by('-created')
+            notification_count = notification_obj_1.exclude(confirmed=user).union(notification_obj_2.exclude(confirmed=user)).count()
         notification_list_data = {
-            'notification_list': notification_obj_1.union(notification_obj_2).order_by('-created'),
-            'notification_count': notification_obj_1.exclude(confirmed=user).union(notification_obj_2.exclude(confirmed=user)).count(),
+            'notification_list': notification_list,
+            'notification_count': notification_count,
         }
         return notification_list_data
 
