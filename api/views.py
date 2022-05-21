@@ -221,7 +221,7 @@ class Withdrawal(View):
         }
         if token:
             try:
-                unsigned_token = self.timestamp_signer.unsign(token, max_age=datetime.timedelta(seconds=self.EXPIRED_SECONDS))
+                self.timestamp_signer.unsign(token, max_age=datetime.timedelta(seconds=self.EXPIRED_SECONDS))
                 context['message'] = '有効なURLです'
                 return render(request, 'registration/withdrawal_confirm.html', context)
             except SignatureExpired:
@@ -236,10 +236,9 @@ class Withdrawal(View):
             password2 = self.request.POST.get('password2')
             if self.request.user.check_password(password):
                 token = self.get_random_chars()
-                token_signed = self.timestamp_signer.sign(token)
                 notification_list = notification_data(self)
                 context = {
-                    'token_signed': token_signed,
+                    'token_signed': self.timestamp_signer.sign(token),
                     'expired_seconds': self.EXPIRED_SECONDS,
                     'notification_list': notification_list['notification_list'],
                     'notification_count': notification_list['notification_count'],
