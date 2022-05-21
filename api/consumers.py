@@ -4,9 +4,9 @@ from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
+from api.views import ChatDetail, ChatThread
 from api.models import Chat, Comment, Notification
 from api.modules import contains
-from api.views import ChatDetail, ChatThread
 
 User = get_user_model()
 
@@ -14,7 +14,7 @@ class ChatConsumer(WebsocketConsumer):
     def create_message(self, data):
         obj = Chat.objects.get(id=data['obj_id'])
         message = Comment.objects.create(
-            author_id=self.scope['user'].id,
+            author=self.scope['user'],
             text=data['message'],
             content_object = obj,
             )
@@ -27,12 +27,12 @@ class ChatConsumer(WebsocketConsumer):
     def create_reply_message(self, data):
         obj = Chat.objects.get(id=data['obj_id'])
         message = Comment.objects.create(
-            author_id=self.scope['user'].id,
+            author=self.scope['user'],
             text=data['message'],
             content_object=obj,
             parent_id=data['parent_id'],
             )
-        if self.scope['user'].id != message.parent.author.id:
+        if self.scope['user'] != message.parent.author:
             Notification.objects.create(
                 user_from=self.scope['user'],
                 user_to=message.parent.author,
@@ -49,7 +49,7 @@ class ChatConsumer(WebsocketConsumer):
     def update_message(self, data):
         message = Comment.objects.get(id=data['comment_id'])
         message.text = data['message']
-        message.save()
+        message.save(update_fields=['text', 'updated'])
         content = {
             'command': 'update_message',
             'message': self.update_message_to_json(message)
