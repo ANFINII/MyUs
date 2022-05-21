@@ -2,8 +2,8 @@ import datetime
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
-from api.models import MyPage, NotificationSetting, SearchTag, Follow, Advertise, Comment
-from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
+from api.models import MyPage, NotificationSetting, SearchTag, Follow, Comment
+from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 from api.modules.notification import notification_data
 
 User = get_user_model()

@@ -4,8 +4,8 @@ from django.db.models import Count, F
 from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
 from api.forms import BlogForm
-from api.models import MyPage, NotificationSetting, Follow, Advertise
-from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
+from api.models import MyPage, NotificationSetting, Follow
+from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 
 User = get_user_model()
 

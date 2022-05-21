@@ -1,5 +1,6 @@
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 
+
 models_dict = {
     Video  : 'video',
     Live   : 'live',
