@@ -20,12 +20,8 @@ from django.template.defaultfilters import linebreaksbr
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
-from rest_framework import authentication, permissions, views
-from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
-from rest_framework.response import Response
-from api.serializers import UserSerializer
 from api.forms import SearchTagForm
-from api.models import MyPage, SearchTag, NotificationSetting, Notification, Comment, Follow
+from api.models import MyPage, NotificationSetting, Notification, SearchTag, Follow, Comment
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 from api.modules import contains
 from api.modules.context_data import ContextData
@@ -41,31 +37,6 @@ from api.modules.validation import has_username, has_email, has_phone, has_alpha
 # Create your views here.
 
 User = get_user_model()
-
-class SignUpAPIView(CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-# class Login(view.APIView):
-#     pass
-
-# class Index(view.APIView):
-#     authentication_classes = (authentication.TokenAuthentication,)
-#     permission_classes = (permissions.IsAdminUser,)
-
-#     def get(self, request, format=None):
-#         nicknames = [user.nickname for user in User.objects.all()]
-#         return Response(nicknames)
-
-#     def post(self, request):
-#         # 普通こんなことはしないが..
-#         users = [User(username=username) for username in request.POST.getlist('username')]
-#         User.objects.bulk_create(users)
-#         return Response({'succeeded': True})
-
-
-def PingView(request):
-    return JsonResponse({'result': True})
 
 # Signup
 def signup_form(request):

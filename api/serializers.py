@@ -1,7 +1,6 @@
 from rest_framework import serializers
-from api.models import User, MyPage, NotificationSetting, Notification, SearchTag, HashTag
-from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo
-from api.models import Todo, Advertise, Follow, Comment
+from api.models import User, MyPage, NotificationSetting, Notification, SearchTag, HashTag, Follow, Comment
+from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -15,9 +15,6 @@ from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 from .views import searchtag_create, advertise_read, like_form, like_form_comment
 from .views import comment_form, reply_form, comment_update, comment_delete, reply_delete
 from .views import pjax, signup_form, login_form, logout_form, Withdrawal
-from .views import SignUpAPIView
-
-from .views import CsrfView, PingView
 
 app_name = 'myus'
 
@@ -104,8 +101,4 @@ urlpatterns = [
     path('logout', logout_form, name='logout'),
     path('withdrawal', Withdrawal.as_view(), name='withdrawal'),
     path('withdrawal/<str:token>', Withdrawal.as_view(), name='withdrawal'),
-
-    # path('signup', SignUpAPIView.as_view(), name='signup')
-    path('csrf/', CsrfView),
-    path('ping/', PingView),
 ]
