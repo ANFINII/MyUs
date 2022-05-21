@@ -324,14 +324,13 @@ class MyPageUpdate(UpdateView):
     def form_valid(self, form):
         """バリデーションに成功した時"""
         try:
-            mypage_obj = form.save(commit=False)
             user = self.request.user
+            mypage_obj = form.save(commit=False)
             mypage_obj = MyPage.objects.get(user=user)
 
             if has_email(mypage_obj.email):
                 messages.error(self.request, 'メールアドレスの形式が違います!')
                 return super().form_invalid(form)
-
             mypage_obj.save()
             return super(MyPageUpdate, self).form_valid(form)
         except ValueError:
