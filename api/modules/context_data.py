@@ -89,9 +89,7 @@ class ContextData:
             if obj.like.filter(id=user.id).exists():
                 liked = True
         if 'Chat' not in str(models.__name__):
-            filter_kwargs = {}
-            filter_kwargs['id'] = OuterRef('pk')
-            filter_kwargs['like'] = user.id
+            filter_kwargs = {'id': OuterRef('pk'), 'like': user.id}
             subquery = Comment.objects.filter(**filter_kwargs)
             context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
             context['reply_list'] = obj.comment.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')

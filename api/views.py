@@ -213,11 +213,12 @@ class Withdrawal(View):
         return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(char_num)])
 
     def get(self, request, token=None, *args, **kwargs):
-        context = {}
         notification_list = notification_data(self)
-        context['notification_list'] = notification_list['notification_list']
-        context['notification_count'] = notification_list['notification_count']
-        context['expired_seconds'] = self.EXPIRED_SECONDS
+        context = {
+            'expired_seconds': self.EXPIRED_SECONDS,
+            'notification_list': notification_list['notification_list'],
+            'notification_count': notification_list['notification_count'],
+        }
         if token:
             try:
                 unsigned_token = self.timestamp_signer.unsign(token, max_age=datetime.timedelta(seconds=self.EXPIRED_SECONDS))
@@ -234,19 +235,20 @@ class Withdrawal(View):
             password = self.request.POST.get('password')
             password2 = self.request.POST.get('password2')
             if self.request.user.check_password(password):
-                context = {}
                 token = self.get_random_chars()
                 token_signed = self.timestamp_signer.sign(token)
-                context['token_signed'] = token_signed
                 notification_list = notification_data(self)
-                context['notification_list'] = notification_list['notification_list']
-                context['notification_count'] = notification_list['notification_count']
-                context['expired_seconds'] = self.EXPIRED_SECONDS
+                context = {
+                    'token_signed': token_signed,
+                    'expired_seconds': self.EXPIRED_SECONDS,
+                    'notification_list': notification_list['notification_list'],
+                    'notification_count': notification_list['notification_count'],
+                }
                 return render(request, self.template_name, context)
             elif self.request.user.check_password(password2):
                 user = self.request.user
                 user.is_active = False
-                user.save()
+                user.save(update_fields=['is_active'])
                 logout(self.request)
                 messages.error(self.request, '退会しました!')
                 return redirect('myus:login')
