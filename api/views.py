@@ -579,7 +579,7 @@ def comment_form(request):
     """comment_form"""
     context = dict()
     if request.method == 'POST':
-        user_id = request.user.id
+        user = request.user
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
@@ -587,12 +587,12 @@ def comment_form(request):
             in contains.models_comment_dict.items() if models_detail in obj_path][0]
         comment_obj = Comment(content_object=obj)
         comment_obj.text = text
-        comment_obj.author_id = user_id
+        comment_obj.author = user
         comment_obj.save()
         context['comment_count'] = obj.comment_count()
         context['comment_lists'] = render_to_string('parts/common/comment/comment.html', {
             'comment_list': obj.comment.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
-            'user_id': user_id,
+            'user_id': user.id,
             'obj_id': obj_id,
             'obj_path': obj_path,
         }, request=request)
@@ -638,7 +638,7 @@ def comment_update(request, comment_id):
         text = request.POST.get('text')
         comment_obj = Comment.objects.get(id=comment_id)
         comment_obj.text = text
-        comment_obj.save()
+        comment_obj.save(update_fields=['text', 'updated'])
         context = {
             'text': urlize_impl(linebreaksbr(comment_obj.text)),
         }
@@ -651,7 +651,7 @@ def comment_delete(request, comment_id):
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
         obj = [models.objects.get(id=obj_id) for models_detail, models
-            in contains.models_comment_dict.items() if models_detail in obj_path]
+            in contains.models_comment_dict.items() if models_detail in obj_path][0]
         comment_obj = Comment.objects.get(id=comment_id)
         comment_obj.delete()
         context = {
@@ -798,7 +798,7 @@ class VideoCreate(CreateView):
     template_name = 'video/video_create.html'
 
     def form_valid(self, form):
-        form.instance.author_id = self.request.user.id
+        form.instance.author = self.request.user
         form.save()
 
         MEDIA_ROOT = settings.MEDIA_ROOT
@@ -849,7 +849,7 @@ class LiveCreate(CreateView):
     template_name = 'live/live_create.html'
 
     def form_valid(self, form):
-        form.instance.author_id = self.request.user.id
+        form.instance.author = self.request.user
         return super(LiveCreate, self).form_valid(form)
 
     def get_success_url(self):
@@ -891,7 +891,7 @@ class MusicCreate(CreateView):
     template_name = 'music/music_create.html'
 
     def form_valid(self, form):
-        form.instance.author_id = self.request.user.id
+        form.instance.author = self.request.user
         return super(MusicCreate, self).form_valid(form)
 
     def get_success_url(self):
@@ -933,7 +933,7 @@ class PictureCreate(CreateView):
     template_name = 'picture/picture_create.html'
 
     def form_valid(self, form):
-        form.instance.author_id = self.request.user.id
+        form.instance.author = self.request.user
         return super(PictureCreate, self).form_valid(form)
 
     def get_success_url(self):
@@ -975,7 +975,7 @@ class BlogCreate(CreateView):
     template_name = 'blog/blog_create.html'
 
     def form_valid(self, form):
-        form.instance.author_id = self.request.user.id
+        form.instance.author = self.request.user
         return super(BlogCreate, self).form_valid(form)
 
     def get_success_url(self):
@@ -1017,7 +1017,7 @@ class ChatCreate(CreateView):
     template_name = 'chat/chat_create.html'
 
     def form_valid(self, form):
-        form.instance.author_id = self.request.user.id
+        form.instance.author = self.request.user
         return super(ChatCreate, self).form_valid(form)
 
     def get_success_url(self):
@@ -1052,10 +1052,11 @@ class ChatDetail(DetailView):
 
     def get_new_message(self, comment_obj):
         obj = get_object_or_404(Chat, id=comment_obj.object_id)
-        context = dict()
-        context['user_count'] = obj.user_count()
-        context['comment_count'] = obj.comment_count()
-        context['comment_list'] = obj.comment.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
+        context = {
+            'user_count': obj.user_count(),
+            'comment_count': obj.comment_count(),
+            'comment_list': obj.comment.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
+        }
         return context
 
 class ChatThread(DetailView):
@@ -1068,16 +1069,17 @@ class ChatThread(DetailView):
 
     def get_new_reply(self, comment_obj):
         obj = get_object_or_404(Chat, id=comment_obj.object_id)
-        context = dict()
-        context['user_count'] = obj.user_count()
-        context['reply_count'] = comment_obj.parent.replies_count()
-        context['reply_list'] = obj.comment.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type')
+        context = {
+            'user_count': obj.user_count(),
+            'reply_count': comment_obj.parent.replies_count(),
+            'reply_list': obj.comment.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type'),
+        }
         return context
 
 def chat_thread_button(request):
     context = dict()
     if request.method == 'GET':
-        user_id = request.user.id
+        user = request.user
         obj_id = request.GET.get('obj_id')
         comment_id = request.GET.get('comment_id')
         obj = Chat.objects.get(id=obj_id)
@@ -1086,7 +1088,7 @@ def chat_thread_button(request):
         context['thread'] = render_to_string('chat/chat_reply/chat_section_thread_area.html', {
             'comment_parent': obj.comment.filter(id=comment_id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
             'reply_list': obj.comment.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type'),
-            'user_id': user_id,
+            'user_id': user.id,
             'obj_id': obj_id,
             'comment_id': comment_id,
         }, request=request)
@@ -1101,7 +1103,7 @@ class CollaboCreate(CreateView):
     template_name = 'collabo/collabo_create.html'
 
     def form_valid(self, form):
-        form.instance.author_id = self.request.user.id
+        form.instance.author = self.request.user
         return super(CollaboCreate, self).form_valid(form)
 
     def get_success_url(self):
@@ -1143,7 +1145,7 @@ class TodoCreate(CreateView):
     template_name = 'todo/todo_create.html'
 
     def form_valid(self, form):
-        form.instance.author_id = self.request.user.id
+        form.instance.author = self.request.user
         return super(TodoCreate, self).form_valid(form)
 
     def get_success_url(self):
@@ -1171,13 +1173,13 @@ class TodoDetail(DetailView):
     template_name = 'todo/todo_detail.html'
 
     def get_queryset(self):
-        current_user = self.request.user
+        user = self.request.user
         # スーパーユーザの場合、リストにすべてを表示する。
-        if current_user.is_superuser:
+        if user.is_superuser:
             return Todo.objects.all()
         else:
             # 一般ユーザは自分のレコードのみ表示する。
-            return Todo.objects.filter(author=current_user.id)
+            return Todo.objects.filter(author=user)
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, TodoDetail, **kwargs)
