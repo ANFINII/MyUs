@@ -15,12 +15,12 @@ def get_detail(self):
         Notification.objects.create(
             user_from=obj.author,
             user_to=obj.author,
-            type_no=contains.notification_type_no['views'],
+            type_no=contains.notification_type_dict['views'][0],
             type_name=type_name,
             content_object=obj,
         )
     if obj.read in (100000, 1000000, 10000000, 100000000, 1000000000):
-        notification_obj = get_object_or_404(Notification, type_no=contains.notification_type_no['views'], object_id=obj.id)
+        notification_obj = get_object_or_404(Notification, type_no=contains.notification_type_dict['views'][0], object_id=obj.id)
         if notification_obj.confirmed.filter(id=obj.author.id).exists():
             notification_obj.confirmed.remove(obj.author)
         if notification_obj.deleted.filter(id=obj.author.id).exists():

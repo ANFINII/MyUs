@@ -7,7 +7,7 @@ def follow_update_data(follower, following, follow_obj):
         # '自分はフォローできません'
         pass
     elif follow_obj.exists():
-        notification_obj = Notification.objects.filter(type_no=contains.notification_type_no['follow'], object_id=follow_obj[0].id)
+        notification_obj = Notification.objects.filter(type_no=contains.notification_type_dict['follow'][0], object_id=follow_obj[0].id)
         notification_obj.delete()
         follow_obj.delete()
         followed = False
@@ -33,9 +33,9 @@ def follow_update_data(follower, following, follow_obj):
         following.save()
         # 'フォローしました'
         Notification.objects.create(
-            user_from_id=follower.id,
-            user_to_id=following.id,
-            type_no=contains.notification_type_no['follow'],
+            user_from=follower.user,
+            user_to=following.user,
+            type_no=contains.notification_type_dict['follow'][0],
             type_name='follow',
             content_object=follow_obj,
         )

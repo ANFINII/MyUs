@@ -557,7 +557,7 @@ def like_form_comment(request):
         comment_liked = False
         if obj.like.filter(id=user.id).exists():
             comment_liked = False
-            notification_obj = Notification.objects.filter(type_no=contains.notification_type_no['like'], object_id=obj.id)
+            notification_obj = Notification.objects.filter(type_no=contains.notification_type_dict['like'][0], object_id=obj.id)
             notification_obj.delete()
             obj.like.remove(user)
         else:
@@ -567,7 +567,7 @@ def like_form_comment(request):
                 Notification.objects.create(
                     user_from=user,
                     user_to=obj.author,
-                    type_no=contains.notification_type_no['like'],
+                    type_no=contains.notification_type_dict['like'][0],
                     type_name='like',
                     content_object=obj,
                 )
@@ -606,7 +606,7 @@ def reply_form(request):
     """reply_form"""
     context = dict()
     if request.method == 'POST':
-        user_id = request.user.id
+        user = request.user
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
@@ -615,14 +615,14 @@ def reply_form(request):
             in contains.models_comment_dict.items() if models_detail in obj_path][0]
         comment_obj = Comment(content_object=obj)
         comment_obj.text = text
-        comment_obj.author_id = user_id
+        comment_obj.author = user
         comment_obj.parent = Comment.objects.get(id=comment_id)
         comment_obj.save()
-        if user_id != comment_obj.parent.author.id:
+        if user != comment_obj.parent.author.id:
             Notification.objects.create(
-                user_from_id=user_id,
-                user_to_id=comment_obj.parent.author.id,
-                type_no=contains.notification_type_no['reply'],
+                user_from=user,
+                user_to=comment_obj.parent.author,
+                type_no=contains.notification_type_dict['reply'][0],
                 type_name='reply',
                 content_object=comment_obj,
             )
@@ -630,7 +630,7 @@ def reply_form(request):
         context['reply_count'] = comment_obj.parent.replies_count()
         context['reply_lists'] = render_to_string('parts/common/reply/reply.html', {
             'reply_list': obj.comment.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type'),
-            'user_id': user_id,
+            'user_id': user.id,
             'obj_id': obj_id,
             'comment_id': comment_id,
         }, request=request)
@@ -668,7 +668,7 @@ def reply_delete(request, comment_id):
     if request.method == 'POST':
         comment_id = request.POST.get('comment_id')
         comment_obj = Comment.objects.get(id=comment_id)
-        notification_obj = Notification.objects.filter(type_no=contains.notification_type_no['reply'], object_id=comment_obj.id)
+        notification_obj = Notification.objects.filter(type_no=contains.notification_type_dict['reply'][0], object_id=comment_obj.id)
         notification_obj.delete()
         comment_obj.delete()
         context = {
