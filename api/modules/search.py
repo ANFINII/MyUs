@@ -74,10 +74,10 @@ class Search:
         path = self.request.path
         user = self.request.user
         if '/follow' in path:
-            result = model.objects.filter(follower=user).exclude(following=user).select_related('following__mypage')
+            result = model.objects.filter(follower=user.id).exclude(following=user.id).select_related('following__mypage')
         if '/follower' in path:
-            result = model.objects.filter(following=user).exclude(follower=user).select_related('follower__mypage')
-        search = self.request.GET.get('search')
+            result = model.objects.filter(following=user.id).exclude(follower=user.id).select_related('follower__mypage')
+        search = self.request.GET.get('search', None)
         if search:
             q_list = get_q_list(search)
             query = reduce(and_, [
@@ -138,7 +138,7 @@ class Search:
         return result
 
     def search_todo(self, model):
-        result = model.objects.filter(author=self.request.user)
+        result = model.objects.filter(author=self.request.user.id)
         search = self.request.GET.get('search')
         if search:
             q_list = get_q_list(search)

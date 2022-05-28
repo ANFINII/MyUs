@@ -185,10 +185,10 @@ class Withdrawal(View):
         return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(char_num)])
 
     def get(self, request, token=None, *args, **kwargs):
-        user = self.request.user.id
+        user = self.request.user
         context = {}
         notification_list = notification_data(self)
-        if user is not None:
+        if user.id is not None:
             context = {
                 'expired_seconds': self.EXPIRED_SECONDS,
                 'notification_list': notification_list['notification_list'],
@@ -432,7 +432,7 @@ def notification_setting(request):
     """notification_setting"""
     context = dict()
     if request.method == 'POST':
-        user = request.user.id
+        user = request.user
         is_notification = request.POST.get('notification')
         notification_type = request.POST.get('notification_type')
         notification_obj = NotificationSetting.objects.get(user=user)

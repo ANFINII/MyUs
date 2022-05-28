@@ -35,7 +35,7 @@ def pjax_context(request, href):
     if '/userpage/post' in href:
         nickname = request.GET.get('nickname')
         author = get_object_or_404(User, nickname=nickname)
-        follow = Follow.objects.filter(follower=user, following=author)
+        follow = Follow.objects.filter(follower=user.id, following=author)
         followed = False
         if follow.exists():
             followed = True
@@ -53,7 +53,7 @@ def pjax_context(request, href):
     if '/userpage/information' in href:
         nickname = request.GET.get('nickname')
         author = get_object_or_404(User, nickname=nickname)
-        follow = Follow.objects.filter(follower=user, following=author)
+        follow = Follow.objects.filter(follower=user.id, following=author)
         followed = False
         if follow.exists():
             followed = True
@@ -65,7 +65,7 @@ def pjax_context(request, href):
     if '/userpage/advertise' in href:
         nickname = request.GET.get('nickname')
         author = get_object_or_404(User, nickname=nickname)
-        follow = Follow.objects.filter(follower=user, following=author)
+        follow = Follow.objects.filter(follower=user.id, following=author)
         followed = False
         if follow.exists():
             followed = True
@@ -105,19 +105,19 @@ def pjax_context(request, href):
         }, request=request)
     if '/todo' == href:
         context['html'] = render_to_string('todo/todo_list.html', {
-            'todo_list': Todo.objects.filter(author=user).order_by('-created')[:100],
+            'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100],
         }, request=request)
     if '/follow' == href:
         context['html'] = render_to_string('follow/follow_list.html', {
-            'follow_list': Follow.objects.filter(follower=user).select_related('following__mypage').order_by('created')[:100],
+            'follow_list': Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100],
         }, request=request)
     if '/follower' == href:
         context['html'] = render_to_string('follow/follower_list.html', {
-            'follower_list': Follow.objects.filter(following=user).select_related('follower__mypage').order_by('created')[:100],
+            'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100],
         }, request=request)
     if '/notification' == href:
         context['html'] = render_to_string('common/notification_content.html', {
-            'notification_setting_list': NotificationSetting.objects.filter(user=user),
+            'notification_setting_list': NotificationSetting.objects.filter(user=user.id),
         }, request=request)
     if '/userpolicy' == href:
         context['html'] = render_to_string('common/userpolicy_content.html', request=request)
@@ -129,7 +129,7 @@ def pjax_context(request, href):
         context['html'] = render_to_string('registration/profile_content.html', request=request)
     if '/mypage' == href:
         context['html'] = render_to_string('registration/mypage_content.html', {
-            'mypage_list': MyPage.objects.filter(user=user)
+            'mypage_list': MyPage.objects.filter(user=user.id)
         }, request=request)
     if '/withdrawal' == href:
         EXPIRED_SECONDS = 60

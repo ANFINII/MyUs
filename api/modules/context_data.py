@@ -12,24 +12,22 @@ class ContextData:
     def context_data(self, models, **kwargs):
         context = super(models, self).get_context_data(**kwargs)
         user = self.request.user
-        if user is not None:
+        if user.id is not None:
             notification_list = notification_data(self)
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
+            context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
         if hasattr(self, 'count'):
             context['count'] = self.count or 0
         context['query'] = self.request.GET.get('search')
-        context.update({
-            'searchtag_list': SearchTag.objects.filter(author=user).order_by('sequence')[:20],
-        })
         if 'NotificationSettingView' in str(models.__name__):
-            context.update(notification_setting_list=NotificationSetting.objects.filter(user=user))
+            context.update(notification_setting_list=NotificationSetting.objects.filter(user=user.id))
 
         if 'ProfileUpdate' in str(models.__name__):
             context['gender'] = {'0':'男性', '1':'女性', '2':'秘密'}
 
         if 'MyPageView' in str(models.__name__):
-            context.update(mypage_list=MyPage.objects.filter(user=user))
+            context.update(mypage_list=MyPage.objects.filter(user=user.id))
 
         if 'Index' in str(models.__name__):
             context.update({
@@ -45,7 +43,7 @@ class ContextData:
             # 急上昇はcreatedが1日以内かつscoreが100000以上の上位8レコード
             # テストはcreatedが100日以内かつscoreが50以上の上位8レコード
             # socre = (read + like*10) + read * like/read * 20
-            aggregation_date = datetime.datetime.today() - datetime.timedelta(days=500)
+            aggregation_date = datetime.datetime.today() - datetime.timedelta(days=100)
             context['Recommend'] = 'Recommend'
             context.update({
                 'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).select_related('author').prefetch_related('like').order_by('-score')[:8],
@@ -58,7 +56,7 @@ class ContextData:
 
         if ('UserPage' or 'UserPageInfo' or 'UserPageAdvertise') in str(models.__name__):
             author = get_object_or_404(User, nickname=self.kwargs['nickname'])
-            follow = Follow.objects.filter(follower=self.request.user, following=author)
+            follow = Follow.objects.filter(follower=self.request.user.id, following=author)
             followed = False
             if follow.exists():
                 followed = True
@@ -80,7 +78,7 @@ class ContextData:
         context = super(models, self).get_context_data(**kwargs)
         obj = self.object
         user = self.request.user
-        follow = Follow.objects.filter(follower=user, following=obj.author)
+        follow = Follow.objects.filter(follower=user.id, following=obj.author)
         followed = False
         if follow.exists():
             followed = True
@@ -100,10 +98,11 @@ class ContextData:
                 is_period = False
             context['is_period'] = is_period
             context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'parent', 'content_type').prefetch_related('like')
-        if user is not None:
+        if user.id is not None:
             notification_list = notification_data(self)
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
+            context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
         if obj.author.mypage.rate_plan == '1':
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author).order_by('?')[:1])
         if obj.author.mypage.rate_plan == '2':
@@ -115,10 +114,7 @@ class ContextData:
         context['user_id'] = user.id
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
-        context.update({
-            'searchtag_list': SearchTag.objects.filter(author=user).order_by('sequence')[:20],
-            'advertise_auto_list': Advertise.objects.filter(publish=True, type=0).order_by('?')[:1],
-        })
+        context['advertise_auto_list'] = Advertise.objects.filter(publish=True, type=0).order_by('?')[:1]
         if 'VideoDetail' in str(models.__name__):
             context.update(video_list=Video.objects.filter(publish=True).exclude(id=obj.id).select_related('author').prefetch_related('like').order_by('-created')[:50])
 

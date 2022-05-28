@@ -1,4 +1,6 @@
+from itertools import chain
 from django.db.models import Exists, OuterRef
+from matplotlib.style import context
 from api.models import NotificationSetting, Notification, Follow
 from api.modules import contains
 
@@ -7,7 +9,7 @@ def notification_data(self):
     user = self.request.user
     notification_type_list_1, notification_type_list_2 = [], []
 
-    if user is not None:
+    if user.id is not None:
         notification_setting_obj = NotificationSetting.objects.get(user=user)
         if notification_setting_obj.is_video:
             notification_type_list_1 += [contains.notification_type_dict['video'][0]]
@@ -32,21 +34,25 @@ def notification_data(self):
         if notification_setting_obj.is_views:
             notification_type_list_2 += [contains.notification_type_dict['views'][0]]
 
-        notification_list_1, notification_list_confirmed = [], []
+        notification_qs= Notification.objects.none()
+        notification_qs_1 = Notification.objects.none()
+        notification_confirmed_list = []
         confirmed_kwargs = {'id': OuterRef('pk'), 'confirmed': user}
         subquery = Notification.objects.filter(**confirmed_kwargs)
         following_list = Follow.objects.filter(follower=user).values_list('following_id', 'created')
 
         for id, dates in following_list:
-            notification_list_1 += Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).order_by('-created')
-            notification_list_confirmed += Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).exclude(confirmed=user).annotate(user_confirmed=Exists(subquery))
-        notification_list_2 = Notification.objects.filter(user_to=user, type_no__in=notification_type_list_2).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).order_by('-created')
+            notification_qs_1 = Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).annotate(user_confirmed=Exists(subquery))
+            notification_qs = notification_qs.union(notification_qs_1)
+            notification_confirmed_list += Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).exclude(confirmed=user).annotate(user_confirmed=Exists(subquery))
+        notification_qs_2 = Notification.objects.filter(user_to=user, type_no__in=notification_type_list_2).exclude(deleted=user).annotate(user_confirmed=Exists(subquery))
+        notification_list = notification_qs.union(notification_qs_2).order_by('-created')
 
-        notification_list_data = {
-            'notification_list': notification_list_1 + list(notification_list_2),
-            'notification_count': len(notification_list_confirmed) + notification_list_2.exclude(confirmed=user).count(),
+        context = {
+            'notification_list': notification_list,
+            'notification_count': len(notification_confirmed_list) + notification_qs_2.exclude(confirmed=user).count(),
         }
-        return notification_list_data
+        return context
 
 
 def notification_setting_update(is_notification, notification_type, notification_obj):
