@@ -1,6 +1,4 @@
-from itertools import chain
 from django.db.models import Exists, OuterRef
-from matplotlib.style import context
 from api.models import NotificationSetting, Notification, Follow
 from api.modules import contains
 
