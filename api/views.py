@@ -1,4 +1,5 @@
 import datetime
+import logging
 import json
 import os
 import random
@@ -184,12 +185,15 @@ class Withdrawal(View):
         return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(char_num)])
 
     def get(self, request, token=None, *args, **kwargs):
+        user = self.request.user.id
+        context = {}
         notification_list = notification_data(self)
-        context = {
-            'expired_seconds': self.EXPIRED_SECONDS,
-            'notification_list': notification_list['notification_list'],
-            'notification_count': notification_list['notification_count'],
-        }
+        if user is not None:
+            context = {
+                'expired_seconds': self.EXPIRED_SECONDS,
+                'notification_list': notification_list['notification_list'],
+                'notification_count': notification_list['notification_count'],
+            }
         if token:
             try:
                 self.timestamp_signer.unsign(token, max_age=datetime.timedelta(seconds=self.EXPIRED_SECONDS))
@@ -428,7 +432,7 @@ def notification_setting(request):
     """notification_setting"""
     context = dict()
     if request.method == 'POST':
-        user = request.user
+        user = request.user.id
         is_notification = request.POST.get('notification')
         notification_type = request.POST.get('notification_type')
         notification_obj = NotificationSetting.objects.get(user=user)
@@ -466,16 +470,20 @@ def searchtag_create(request):
     """searchtag_create"""
     if request.method == 'POST':
         form = SearchTagForm(request.POST)
-        if form.is_valid():
-            form = form.save(commit=False)
-            form.author = request.user
-            form.save()
-            context = {
-                'searchtag': form.name,
-            }
-            return JsonResponse(context)
-        else:
-            form = SearchTagForm()
+        try:
+            if form.is_valid():
+                form = form.save(commit=False)
+                form.author = request.user
+                form.save()
+                context = {
+                    'searchtag': form.name,
+                }
+                return JsonResponse(context)
+            else:
+                form = SearchTagForm()
+            logging.info({'info': str(e)})
+        except Exception as e:
+            return logging.error({'error': str(e)})
 
 
 # advertise_read
