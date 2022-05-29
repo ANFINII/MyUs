@@ -18,6 +18,10 @@ class ChatConsumer(WebsocketConsumer):
             text=data['message'],
             content_object = obj,
             )
+        obj.thread = obj.comment.filter(parent__isnull=True).count()
+        obj.joined = obj.comment.values_list('author').distinct().count()
+        obj.save(update_fields=['thread', 'joined'])
+        print(obj.joined)
         content = {
             'command': 'create_message',
             'message': self.create_message_to_json(message)
@@ -59,6 +63,11 @@ class ChatConsumer(WebsocketConsumer):
     def delete_message(self, data):
         message = Comment.objects.get(id=data['comment_id'])
         message.delete()
+        obj = Chat.objects.get(id=data['obj_id'])
+        obj.thread = obj.comment.filter(parent__isnull=True).count()
+        obj.joined = obj.comment.values_list('author').distinct().count()
+        print(obj.joined)
+        obj.save(update_fields=['thread', 'joined'])
         content = {
             'command': 'delete_message',
             'message': self.delete_message_to_json(message)
@@ -83,7 +92,7 @@ class ChatConsumer(WebsocketConsumer):
             'user_id': self.scope['user'].id,
             'comment_id': message.id,
             'user_count': comment_list['user_count'],
-            'comment_count': comment_list['comment_count'],
+            'thread': comment_list['thread'],
             'comment_lists': render_to_string('chat/chat_comment/chat_comment.html', {
                 'user_id': self.scope['user'].id,
                 'obj_id': message.object_id,
@@ -121,7 +130,7 @@ class ChatConsumer(WebsocketConsumer):
         obj = Chat.objects.get(id=obj_id)
         context = {
             'user_count': obj.user_count(),
-            'comment_count': obj.comment_count(),
+            'thread': obj.thread,
         }
         return context
 

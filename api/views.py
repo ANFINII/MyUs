@@ -567,7 +567,9 @@ def comment_form(request):
         comment_obj.text = text
         comment_obj.author = user
         comment_obj.save()
-        context['comment_count'] = obj.comment_count()
+        obj.comment_num = obj.comment.filter(parent__isnull=True).count()
+        obj.save(update_fields=['comment_num'])
+        context['comment_num'] = obj.comment_num
         context['comment_lists'] = render_to_string('parts/common/comment/comment.html', {
             'comment_list': obj.comment.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
             'user_id': user.id,
@@ -600,7 +602,7 @@ def reply_form(request):
                 type_name='reply',
                 content_object=comment_obj,
             )
-        context['comment_count'] = obj.comment_count()
+        context['comment_num'] = obj.comment_num
         context['reply_count'] = comment_obj.parent.replies_count()
         context['reply_lists'] = render_to_string('parts/common/reply/reply.html', {
             'reply_list': obj.comment.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type'),
@@ -632,8 +634,10 @@ def comment_delete(request, comment_id):
             in contains.models_comment_dict.items() if models_detail in obj_path][0]
         comment_obj = Comment.objects.get(id=comment_id)
         comment_obj.delete()
+        obj.comment_num = obj.comment.filter(parent__isnull=True).count()
+        obj.save(update_fields=['comment_num'])
         context = {
-            'comment_count': obj.comment_count(),
+            'comment_num': obj.comment_num,
         }
         return JsonResponse(context)
 
@@ -1031,8 +1035,8 @@ class ChatDetail(DetailView):
     def get_new_message(self, comment_obj):
         obj = get_object_or_404(Chat, id=comment_obj.object_id)
         context = {
-            'user_count': obj.user_count(),
-            'comment_count': obj.comment_count(),
+            'user_count': obj.joined,
+            'thread': obj.thread,
             'comment_list': obj.comment.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
         }
         return context

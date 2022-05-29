@@ -66,7 +66,7 @@ chatSocket.onmessage = function (event) {
     const response = data['message'];
     $('#chat_section_main_area').append(response.comment_lists);
     $('#user_count').html(response.user_count);
-    $('#comment_count').html(response.comment_count);
+    $('#thread').html(response.thread);
     const login_user_id = document.getElementById('user_id').textContent;
     if (login_user_id != response.user_id) {
       $('#edit_button_' + response.comment_id).remove();
@@ -111,7 +111,7 @@ chatSocket.onmessage = function (event) {
     $('#edit_update_main_' + response.comment_id).remove();
     $('#comment_aria_list_thread_' + response.comment_id).html('スレッドが削除されました!');
     $('#user_count').html(response.user_count);
-    $('#comment_count').html(response.comment_count);
+    $('#thread').html(response.thread);
   } else if (data['command'] === 'delete_reply_message') {
     const response = data['message'];
     const url = location.pathname;
@@ -226,6 +226,7 @@ $(document).on('click', '.edit_delete_comment', function (event) {
   highlight.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important');
   chatSocket.send(JSON.stringify({
     'command': 'delete_message',
+    'obj_id': obj_id,
     'comment_id': comment_id,
   }));
 });

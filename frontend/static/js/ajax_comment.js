@@ -16,7 +16,7 @@ $('#comment_form').submit(function (event) {
     timeout: 10000,
   })
     .done(function (response) {
-      $('#comment_count').html(response.comment_count);
+      $('#comment_num').html(response.comment_num);
       $('#comment_aria').prepend(response.comment_lists);
     })
     .fail(function (response) {
@@ -172,7 +172,7 @@ $(document).on('click', '.edit_delete', function (event) {
   })
     .done(function (response) {
       $('#comment_aria_list_' + comment_id).remove();
-      $('#comment_count').html(response.comment_count);
+      $('#comment_num').html(response.comment_num);
       $('#reply_count_open_' + response.parent_id).html('▼ スレッド ' + response.reply_count + ' 件');
       $('#reply_count_close_' + response.parent_id).html('▲ スレッド ' + response.reply_count + ' 件');
     })
