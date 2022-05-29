@@ -62,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_login    = models.DateTimeField(auto_now_add=True)
     date_joined   = models.DateTimeField(default=timezone.now)
 
-    objects       = UserManager()
+    objects = UserManager()
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'nickname'
@@ -261,7 +261,7 @@ class MediaModel(object):
     total_like.short_description = 'like'
 
     def comment_count(self):
-        return self.comment.filter(parent__isnull=True).count()
+        return self.comment_num
     comment_count.short_description = 'comment'
 
 class MediaManager(object):
@@ -284,7 +284,7 @@ class VideoQuerySet(models.QuerySet):
 
 class VideoManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return VideoQuerySet(self.model, using=self._db)
+        return VideoQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 def images_video_upload_path(instance, filename):
     return f'images/images_video/user_{instance.author.id}/object_{instance.id}/{filename}'
@@ -294,19 +294,20 @@ def videos_video_upload_path(instance, filename):
 
 class Video(models.Model, MediaModel):
     """Video"""
-    author  = models.ForeignKey(User, on_delete=models.CASCADE)
-    title   = models.CharField(max_length=100)
-    content = models.TextField()
-    image   = models.ImageField(upload_to=images_video_upload_path)
-    video   = models.FileField(upload_to=videos_video_upload_path)
-    convert = models.FileField(upload_to=videos_video_upload_path)
-    comment = GenericRelation('Comment')
-    hashtag = models.ManyToManyField(HashTag, blank=True)
-    like    = models.ManyToManyField(User, related_name='video_like', blank=True)
-    read    = models.IntegerField(blank=True, null=True, default=0)
-    publish = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    author      = models.ForeignKey(User, on_delete=models.CASCADE)
+    title       = models.CharField(max_length=100)
+    content     = models.TextField()
+    image       = models.ImageField(upload_to=images_video_upload_path)
+    video       = models.FileField(upload_to=videos_video_upload_path)
+    convert     = models.FileField(upload_to=videos_video_upload_path)
+    comment     = GenericRelation('Comment')
+    hashtag     = models.ManyToManyField(HashTag, blank=True)
+    like        = models.ManyToManyField(User, related_name='video_like', blank=True)
+    read        = models.IntegerField(blank=True, null=True, default=0)
+    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    publish     = models.BooleanField(default=True)
+    created     = models.DateTimeField(auto_now_add=True)
+    updated     = models.DateTimeField(auto_now=True)
 
     objects = VideoManager()
 
@@ -346,7 +347,7 @@ class LiveQuerySet(models.QuerySet):
 
 class LiveManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return LiveQuerySet(self.model, using=self._db)
+        return LiveQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 def images_live_upload_path(instance, filename):
     return f'images/images_live/user_{instance.author.id}/object_{instance.id}/{filename}'
@@ -356,18 +357,20 @@ def videos_live_upload_path(instance, filename):
 
 class Live(models.Model, MediaModel):
     """Live"""
-    author  = models.ForeignKey(User, on_delete=models.CASCADE)
-    title   = models.CharField(max_length=100)
-    content = models.TextField()
-    image   = models.ImageField(upload_to=images_live_upload_path)
-    live    = models.FileField(upload_to=videos_live_upload_path)
-    comment = GenericRelation('Comment')
-    hashtag = models.ManyToManyField(HashTag, blank=True)
-    like    = models.ManyToManyField(User, related_name='live_like', blank=True)
-    read    = models.IntegerField(blank=True, null=True, default=0)
-    publish = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    author      = models.ForeignKey(User, on_delete=models.CASCADE)
+    title       = models.CharField(max_length=100)
+    content     = models.TextField()
+    image       = models.ImageField(upload_to=images_live_upload_path)
+    live        = models.FileField(upload_to=videos_live_upload_path)
+    convert     = models.FileField(upload_to=videos_live_upload_path)
+    comment     = GenericRelation('Comment')
+    hashtag     = models.ManyToManyField(HashTag, blank=True)
+    like        = models.ManyToManyField(User, related_name='live_like', blank=True)
+    read        = models.IntegerField(blank=True, null=True, default=0)
+    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    publish     = models.BooleanField(default=True)
+    created     = models.DateTimeField(auto_now_add=True)
+    updated     = models.DateTimeField(auto_now=True)
 
     objects = LiveManager()
 
@@ -405,28 +408,29 @@ class MusicQuerySet(models.QuerySet):
 
 class MusicManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return MusicQuerySet(self.model, using=self._db)
+        return MusicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 def musics_upload_path(instance, filename):
     return f'musics/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class Music(models.Model, MediaModel):
     """Music"""
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    lyric    = models.TextField(blank=True, null=True)
-    music    = models.FileField(upload_to=musics_upload_path)
-    comment  = GenericRelation('Comment')
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='music_like', blank=True)
-    read     = models.IntegerField(blank=True, null=True, default=0)
-    download = models.BooleanField(default=True)
-    publish  = models.BooleanField(default=True)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    author      = models.ForeignKey(User, on_delete=models.CASCADE)
+    title       = models.CharField(max_length=100)
+    content     = models.TextField()
+    lyric       = models.TextField(blank=True, null=True)
+    music       = models.FileField(upload_to=musics_upload_path)
+    comment     = GenericRelation('Comment')
+    hashtag     = models.ManyToManyField(HashTag, blank=True)
+    like        = models.ManyToManyField(User, related_name='music_like', blank=True)
+    read        = models.IntegerField(blank=True, null=True, default=0)
+    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    download    = models.BooleanField(default=True)
+    publish     = models.BooleanField(default=True)
+    created     = models.DateTimeField(auto_now_add=True)
+    updated     = models.DateTimeField(auto_now=True)
 
-    objects  = MusicManager()
+    objects = MusicManager()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -458,24 +462,25 @@ class PictureQuerySet(models.QuerySet):
 
 class PictureManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return PictureQuerySet(self.model, using=self._db)
+        return PictureQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 def images_picture_upload_path(instance, filename):
     return f'images/images_picture/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class Picture(models.Model, MediaModel):
     """Picture"""
-    author  = models.ForeignKey(User, on_delete=models.CASCADE)
-    title   = models.CharField(max_length=100)
-    content = models.TextField()
-    image   = models.ImageField(upload_to=images_picture_upload_path)
-    comment = GenericRelation('Comment')
-    hashtag = models.ManyToManyField(HashTag, blank=True)
-    like    = models.ManyToManyField(User, related_name='picture_like', blank=True)
-    read    = models.IntegerField(blank=True, null=True, default=0)
-    publish = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    author      = models.ForeignKey(User, on_delete=models.CASCADE)
+    title       = models.CharField(max_length=100)
+    content     = models.TextField()
+    image       = models.ImageField(upload_to=images_picture_upload_path)
+    comment     = GenericRelation('Comment')
+    hashtag     = models.ManyToManyField(HashTag, blank=True)
+    like        = models.ManyToManyField(User, related_name='picture_like', blank=True)
+    read        = models.IntegerField(blank=True, null=True, default=0)
+    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    publish     = models.BooleanField(default=True)
+    created     = models.DateTimeField(auto_now_add=True)
+    updated     = models.DateTimeField(auto_now=True)
 
     objects = PictureManager()
 
@@ -510,27 +515,28 @@ class BlogQuerySet(models.QuerySet):
 
 class BlogManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return BlogQuerySet(self.model, using=self._db)
+        return BlogQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 def images_blog_upload_path(instance, filename):
     return f'images/images_blog/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class Blog(models.Model, MediaModel):
     """Blog"""
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    image    = models.ImageField(upload_to=images_blog_upload_path)
-    richtext = RichTextUploadingField(blank=True, null=True)
-    comment  = GenericRelation('Comment')
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='blog_like', blank=True)
-    read     = models.IntegerField(blank=True, null=True, default=0)
-    publish  = models.BooleanField(default=True)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    author      = models.ForeignKey(User, on_delete=models.CASCADE)
+    title       = models.CharField(max_length=100)
+    content     = models.TextField()
+    image       = models.ImageField(upload_to=images_blog_upload_path)
+    richtext    = RichTextUploadingField(blank=True, null=True)
+    comment     = GenericRelation('Comment')
+    hashtag     = models.ManyToManyField(HashTag, blank=True)
+    like        = models.ManyToManyField(User, related_name='blog_like', blank=True)
+    read        = models.IntegerField(blank=True, null=True, default=0)
+    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    publish     = models.BooleanField(default=True)
+    created     = models.DateTimeField(auto_now_add=True)
+    updated     = models.DateTimeField(auto_now=True)
 
-    objects  = BlogManager()
+    objects = BlogManager()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -562,7 +568,7 @@ class ChatQuerySet(models.QuerySet):
 
 class ChatManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return ChatQuerySet(self.model, using=self._db)
+        return ChatQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 class Chat(models.Model, MediaModel):
     """Chat"""
@@ -573,6 +579,7 @@ class Chat(models.Model, MediaModel):
     hashtag = models.ManyToManyField(HashTag, blank=True)
     like    = models.ManyToManyField(User, related_name='chat_like', blank=True)
     read    = models.IntegerField(blank=True, null=True, default=0)
+    thread  = models.IntegerField(blank=True, null=True, default=0)
     joined  = models.IntegerField(blank=True, null=True, default=0)
     period  = models.DateField()
     publish = models.BooleanField(default=True)
@@ -581,11 +588,6 @@ class Chat(models.Model, MediaModel):
 
     objects = ChatManager()
 
-    def user_count(self):
-        self.joined = self.comment.order_by('author').distinct().values_list('author').count()
-        return self.joined
-    user_count.short_description = 'joined'
-
     class Meta:
         db_table = 'chat'
         verbose_name_plural = '06 Chat'
@@ -593,17 +595,18 @@ class Chat(models.Model, MediaModel):
 
 class Collabo(models.Model, MediaModel):
     """Collabo"""
-    author  = models.ForeignKey(User, on_delete=models.CASCADE)
-    title   = models.CharField(max_length=100)
-    content = models.TextField()
-    comment = GenericRelation('Comment')
-    hashtag = models.ManyToManyField(HashTag, blank=True)
-    like    = models.ManyToManyField(User, related_name='collabo_like', blank=True)
-    read    = models.IntegerField(blank=True, null=True, default=0)
-    period  = models.DateField()
-    publish = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    author      = models.ForeignKey(User, on_delete=models.CASCADE)
+    title       = models.CharField(max_length=100)
+    content     = models.TextField()
+    comment     = GenericRelation('Comment')
+    hashtag     = models.ManyToManyField(HashTag, blank=True)
+    like        = models.ManyToManyField(User, related_name='collabo_like', blank=True)
+    read        = models.IntegerField(blank=True, null=True, default=0)
+    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    period      = models.DateField()
+    publish     = models.BooleanField(default=True)
+    created     = models.DateTimeField(auto_now_add=True)
+    updated     = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'collabo'
@@ -612,23 +615,24 @@ class Collabo(models.Model, MediaModel):
 
 class Todo(models.Model):
     """Todo"""
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
     priority_choice = (('danger', '高'), ('success', '普通'), ('info', '低'))
-    priority = models.CharField(max_length=10, choices=priority_choice, default='success')
     progress_choice = (('0', '未着手'), ('1', '進行中'), ('2', '完了'))
-    progress = models.CharField(max_length=10, choices=progress_choice, default='0')
-    comment  = GenericRelation('Comment')
-    duedate  = models.DateField()
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
+    author      = models.ForeignKey(User, on_delete=models.CASCADE)
+    title       = models.CharField(max_length=100)
+    content     = models.TextField()
+    priority    = models.CharField(max_length=10, choices=priority_choice, default='success')
+    progress    = models.CharField(max_length=10, choices=progress_choice, default='0')
+    comment     = GenericRelation('Comment')
+    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    duedate     = models.DateField()
+    created     = models.DateTimeField(auto_now_add=True)
+    updated     = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
 
     def comment_count(self):
-        return self.comment.filter(parent__isnull=True).count()
+        return self.comment_num
     comment_count.short_description = 'comment'
 
     class Meta:
@@ -702,6 +706,7 @@ def videos_adver_upload_path(instance, filename):
 
 class Advertise(models.Model):
     """Advertise"""
+    choice  = (('0', '全体'), ('1', '個別'))
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
     url     = models.URLField()
@@ -709,7 +714,6 @@ class Advertise(models.Model):
     image   = models.ImageField(upload_to=images_adver_upload_path)
     video   = models.FileField(upload_to=videos_adver_upload_path)
     read    = models.IntegerField(blank=True, null=True, default=0)
-    choice  = (('0', '全体'), ('1', '個別'))
     type    = models.CharField(choices=choice, max_length=2, default='1')
     period  = models.DateField()
     publish = models.BooleanField(default=True)
@@ -743,6 +747,7 @@ class Comment(models.Model):
     parent         = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)
     text           = models.TextField()
     like           = models.ManyToManyField(User, related_name='comment_like', blank=True)
+    reply_num      = models.IntegerField(blank=True, null=True, default=0)
     content_type   = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id      = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
@@ -756,7 +761,13 @@ class Comment(models.Model):
         return self.like.count()
 
     def replies_count(self):
-        return Comment.objects.filter(parent=self).count()
+        # return Comment.objects.filter(parent=self).count()
+        return self.reply_num
+    replies_count.short_description = 'reply'
+
+    def comment_count(self):
+        return self.comment_num
+    comment_count.short_description = 'comment'
 
     class Meta:
         db_table = 'comment'
