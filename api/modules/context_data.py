@@ -86,18 +86,18 @@ class ContextData:
         if 'TodoDetail' not in str(models.__name__):
             if obj.like.filter(id=user.id).exists():
                 liked = True
-        if 'Chat' not in str(models.__name__):
-            filter_kwargs = {'id': OuterRef('pk'), 'like': user.id}
-            subquery = Comment.objects.filter(**filter_kwargs)
-            context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
-            context['reply_list'] = obj.comment.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
-        else:
+        if 'Chat' in str(models.__name__):
             if obj.period < datetime.date.today():
                 is_period = True
             else:
                 is_period = False
             context['is_period'] = is_period
             context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'parent', 'content_type').prefetch_related('like')
+        else:
+            filter_kwargs = {'id': OuterRef('pk'), 'like': user.id}
+            subquery = Comment.objects.filter(**filter_kwargs)
+            context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
+            context['reply_list'] = obj.comment.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
         if user.id is not None:
             notification_list = notification_data(self)
             context['notification_list'] = notification_list['notification_list']
