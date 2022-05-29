@@ -65,7 +65,7 @@ chatSocket.onmessage = function (event) {
     document.getElementById('comment_form_button').setAttribute('disabled', true);
     const response = data['message'];
     $('#chat_section_main_area').append(response.comment_lists);
-    $('#user_count').html(response.user_count);
+    $('#joined').html(response.joined);
     $('#thread').html(response.thread);
     const login_user_id = document.getElementById('user_id').textContent;
     if (login_user_id != response.user_id) {
@@ -78,7 +78,7 @@ chatSocket.onmessage = function (event) {
     const response = data['message'];
     if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === location.pathname) {
       document.getElementById('reply_form_button').setAttribute('disabled', true);
-      $('#user_count').html(response.user_count);
+      $('#joined').html(response.joined);
       $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
       $('#chat_section_thread_area_' + response.parent_id).append(response.reply_lists);
       const login_user_id = document.getElementById('user_id').textContent;
@@ -90,7 +90,7 @@ chatSocket.onmessage = function (event) {
       obj.scrollTop = obj.scrollHeight;
       pjax_thread_dict(location.pathname)
     } else {
-      $('#user_count').html(response.user_count);
+      $('#joined').html(response.joined);
       $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
     }
   } else if (data['command'] === 'update_message') {
@@ -110,18 +110,18 @@ chatSocket.onmessage = function (event) {
     $('#comment_aria_list_' + response.comment_id).remove();
     $('#edit_update_main_' + response.comment_id).remove();
     $('#comment_aria_list_thread_' + response.comment_id).html('スレッドが削除されました!');
-    $('#user_count').html(response.user_count);
+    $('#joined').html(response.joined);
     $('#thread').html(response.thread);
   } else if (data['command'] === 'delete_reply_message') {
     const response = data['message'];
     const url = location.pathname;
     if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === url) {
       $('#comment_aria_list_' + response.comment_id).remove();
-      $('#user_count').html(response.user_count);
+      $('#joined').html(response.joined);
       $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
       pjax_thread_dict(location.pathname)
     } else {
-      $('#user_count').html(response.user_count);
+      $('#joined').html(response.joined);
       $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
     }
   }

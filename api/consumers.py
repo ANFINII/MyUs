@@ -21,7 +21,6 @@ class ChatConsumer(WebsocketConsumer):
         obj.thread = obj.comment.filter(parent__isnull=True).count()
         obj.joined = obj.comment.values_list('author').distinct().count()
         obj.save(update_fields=['thread', 'joined'])
-        print(obj.joined)
         content = {
             'command': 'create_message',
             'message': self.create_message_to_json(message)
@@ -66,7 +65,6 @@ class ChatConsumer(WebsocketConsumer):
         obj = Chat.objects.get(id=data['obj_id'])
         obj.thread = obj.comment.filter(parent__isnull=True).count()
         obj.joined = obj.comment.values_list('author').distinct().count()
-        print(obj.joined)
         obj.save(update_fields=['thread', 'joined'])
         content = {
             'command': 'delete_message',
@@ -91,7 +89,7 @@ class ChatConsumer(WebsocketConsumer):
         context = {
             'user_id': self.scope['user'].id,
             'comment_id': message.id,
-            'user_count': comment_list['user_count'],
+            'joined': comment_list['joined'],
             'thread': comment_list['thread'],
             'comment_lists': render_to_string('chat/chat_comment/chat_comment.html', {
                 'user_id': self.scope['user'].id,
@@ -108,7 +106,7 @@ class ChatConsumer(WebsocketConsumer):
             'user_id': self.scope['user'].id,
             'comment_id': message.id,
             'parent_id': message.parent.id,
-            'user_count': reply_list['user_count'],
+            'joined': reply_list['joined'],
             'reply_count': reply_list['reply_count'],
             'reply_lists': render_to_string('chat/chat_reply/chat_reply.html', {
                 'user_id': self.scope['user'].id,
@@ -129,7 +127,7 @@ class ChatConsumer(WebsocketConsumer):
         obj_id = message.object_id
         obj = Chat.objects.get(id=obj_id)
         context = {
-            'user_count': obj.user_count(),
+            'joined': obj.joined,
             'thread': obj.thread,
         }
         return context
@@ -140,7 +138,7 @@ class ChatConsumer(WebsocketConsumer):
         comment_obj = Comment.objects.get(id=message.id)
         message.delete()
         context = {
-            'user_count': obj.user_count(),
+            'joined': obj.joined,
             'parent_id': comment_obj.parent_id,
             'reply_count': comment_obj.parent.replies_count(),
         }

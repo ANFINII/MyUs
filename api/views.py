@@ -1035,7 +1035,7 @@ class ChatDetail(DetailView):
     def get_new_message(self, comment_obj):
         obj = get_object_or_404(Chat, id=comment_obj.object_id)
         context = {
-            'user_count': obj.joined,
+            'joined': obj.joined,
             'thread': obj.thread,
             'comment_list': obj.comment.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
         }
