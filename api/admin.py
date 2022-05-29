@@ -315,17 +315,17 @@ class AdvertiseAdmin(ImportExportModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'content_type', 'object_id', 'author', 'text', 'parent_id', 'total_like', 'replies_count', 'created', 'updated')
+    list_display = ('id', 'content_type', 'object_id', 'author', 'text', 'parent_id', 'total_like', 'reply_count', 'created', 'updated')
     list_select_related = ('author', 'parent', 'content_type')
     search_fields = ('text', 'author__nickname', 'created', 'updated')
     ordering = ('created',)
     filter_horizontal = ('like',)
-    readonly_fields = ('total_like', 'replies_count', 'created', 'updated')
+    readonly_fields = ('total_like', 'reply_count', 'created', 'updated')
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'parent', 'text', 'like', 'content_type', 'object_id')}),
-        ('確認項目', {'fields': ('total_like', 'replies_count', 'created', 'updated')})
+        ('確認項目', {'fields': ('total_like', 'reply_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):

@@ -17,7 +17,7 @@ class ChatConsumer(WebsocketConsumer):
             author=self.scope['user'],
             text=data['message'],
             content_object = obj,
-            )
+        )
         obj.thread = obj.comment.filter(parent__isnull=True).count()
         obj.joined = obj.comment.values_list('author').distinct().count()
         obj.save(update_fields=['thread', 'joined'])
@@ -34,7 +34,12 @@ class ChatConsumer(WebsocketConsumer):
             text=data['message'],
             content_object=obj,
             parent_id=data['parent_id'],
-            )
+        )
+        obj.joined = obj.comment.values_list('author').distinct().count()
+        obj.save(update_fields=['joined'])
+        comment_obj = Comment.objects.get(id=data['parent_id'])
+        comment_obj.reply_num = Comment.objects.filter(parent=data['parent_id']).count()
+        comment_obj.save(update_fields=['reply_num'])
         if self.scope['user'] != message.parent.author:
             Notification.objects.create(
                 user_from=self.scope['user'],
@@ -85,33 +90,33 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
 
     def create_message_to_json(self, message):
-        comment_list = ChatDetail.get_new_message(self, message)
+        message_data = ChatDetail.get_message_data(self, message)
         context = {
             'user_id': self.scope['user'].id,
             'comment_id': message.id,
-            'joined': comment_list['joined'],
-            'thread': comment_list['thread'],
+            'joined': message_data['joined'],
+            'thread': message_data['thread'],
             'comment_lists': render_to_string('chat/chat_comment/chat_comment.html', {
                 'user_id': self.scope['user'].id,
                 'obj_id': message.object_id,
                 'comment_id': message.id,
-                'comment_list': comment_list['comment_list'],
+                'comment_list': message_data['comment_obj'],
             })
         }
         return context
 
     def create_reply_message_to_json(self, message):
-        reply_list = ChatThread.get_new_reply(self, message)
+        reply_data = ChatThread.get_reply_data(self, message)
         context = {
             'user_id': self.scope['user'].id,
             'comment_id': message.id,
             'parent_id': message.parent.id,
-            'joined': reply_list['joined'],
-            'reply_count': reply_list['reply_count'],
+            'joined': reply_data['joined'],
+            'reply_num': reply_data['reply_num'],
             'reply_lists': render_to_string('chat/chat_reply/chat_reply.html', {
                 'user_id': self.scope['user'].id,
                 'obj_id': message.object_id,
-                'reply_list': reply_list['reply_list'],
+                'reply_list': reply_data['reply_obj'],
             })
         }
         return context
@@ -134,13 +139,18 @@ class ChatConsumer(WebsocketConsumer):
 
     def delete_reply_message_to_json(self, message):
         obj_id = message.object_id
-        obj = Chat.objects.get(id=obj_id)
-        comment_obj = Comment.objects.get(id=message.id)
+        message_parent_id = message.parent.id
         message.delete()
+        obj = Chat.objects.get(id=obj_id)
+        obj.joined = obj.comment.values_list('author').distinct().count()
+        obj.save(update_fields=['joined'])
+        comment_obj = Comment.objects.get(id=message_parent_id)
+        comment_obj.reply_num = Comment.objects.filter(parent=message_parent_id).count()
+        comment_obj.save(update_fields=['reply_num'])
         context = {
             'joined': obj.joined,
-            'parent_id': comment_obj.parent_id,
-            'reply_count': comment_obj.parent.replies_count(),
+            'parent_id': message_parent_id,
+            'reply_num': comment_obj.reply_num,
         }
         return context
 

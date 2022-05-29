@@ -760,10 +760,9 @@ class Comment(models.Model):
     def total_like(self):
         return self.like.count()
 
-    def replies_count(self):
-        # return Comment.objects.filter(parent=self).count()
+    def reply_count(self):
         return self.reply_num
-    replies_count.short_description = 'reply'
+    reply_count.short_description = 'reply'
 
     def comment_count(self):
         return self.comment_num

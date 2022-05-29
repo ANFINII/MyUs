@@ -79,7 +79,7 @@ chatSocket.onmessage = function (event) {
     if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === location.pathname) {
       document.getElementById('reply_form_button').setAttribute('disabled', true);
       $('#joined').html(response.joined);
-      $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
+      $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件');
       $('#chat_section_thread_area_' + response.parent_id).append(response.reply_lists);
       const login_user_id = document.getElementById('user_id').textContent;
       if (login_user_id != response.user_id) {
@@ -91,7 +91,7 @@ chatSocket.onmessage = function (event) {
       pjax_thread_dict(location.pathname)
     } else {
       $('#joined').html(response.joined);
-      $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
+      $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件');
     }
   } else if (data['command'] === 'update_message') {
     const response = data['message'];
@@ -118,11 +118,11 @@ chatSocket.onmessage = function (event) {
     if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === url) {
       $('#comment_aria_list_' + response.comment_id).remove();
       $('#joined').html(response.joined);
-      $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
+      $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件');
       pjax_thread_dict(location.pathname)
     } else {
       $('#joined').html(response.joined);
-      $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件');
+      $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件');
     }
   }
 };
@@ -231,6 +231,7 @@ $(document).on('click', '.edit_delete_comment', function (event) {
   }));
 });
 
+// リプライ削除
 $(document).on('click', '.edit_delete_reply', function (event) {
   event.preventDefault();
   const comment_id = $(this).closest('.edit_button').attr('comment-id');

@@ -12,7 +12,7 @@
     <div id="comment_aria_list_2_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
     <a href="{% url 'myus:chat_thread' obj_id comment.id %}" thread="{% url 'myus:chat_thread_button' %}" comment-id="{{ comment.id }}" class="comment_aria_thread">
       スレッド表示
-      <span id="reply_count_{{ comment.id }}">返信 {{ comment.reply_count|intcomma }} 件</span>
+      <span id="reply_num_{{ comment.id }}">返信 {{ comment.reply_num|intcomma }} 件</span>
     </a>
     {% include 'chat/chat_comment/crud/modal_content_chat_comment.html' %}
   </div>
