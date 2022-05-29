@@ -206,18 +206,18 @@ class BlogAdmin(ImportExportModelAdmin):
 
 @admin.register(Chat)
 class ChatAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'joined', 'period', 'publish', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'thread', 'joined', 'period', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
     filter_horizontal = ('hashtag', 'like')
-    readonly_fields = ('total_like', 'comment_count', 'joined', 'created', 'updated')
+    readonly_fields = ('total_like', 'thread', 'joined', 'created', 'updated')
     inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'hashtag', 'like', 'read', 'period', 'publish')}),
-        ('確認項目', {'fields': ('total_like', 'comment_count', 'joined', 'created', 'updated')})
+        ('確認項目', {'fields': ('total_like', 'thread', 'joined', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
@@ -315,17 +315,17 @@ class AdvertiseAdmin(ImportExportModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'content_type', 'object_id', 'content_object', 'author', 'text', 'parent_id', 'total_like', 'created', 'updated')
+    list_display = ('id', 'content_type', 'object_id', 'author', 'text', 'parent_id', 'total_like', 'replies_count', 'created', 'updated')
     list_select_related = ('author', 'parent', 'content_type')
     search_fields = ('text', 'author__nickname', 'created', 'updated')
-    ordering = ('content_type', 'object_id', 'id')
+    ordering = ('created',)
     filter_horizontal = ('like',)
-    readonly_fields = ('total_like', 'created', 'updated')
+    readonly_fields = ('total_like', 'replies_count', 'created', 'updated')
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'parent', 'text', 'like', 'content_type', 'object_id')}),
-        ('確認項目', {'fields': ('total_like', 'created', 'updated')})
+        ('確認項目', {'fields': ('total_like', 'replies_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
@@ -587,19 +587,19 @@ manage_site.register(Blog, BlogAdminSite)
 
 
 class ChatAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'user_count', 'period', 'publish', 'created', 'updated')
+    list_display = ('id', 'title', 'read', 'total_like', 'thread', 'joined', 'period', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
     actions = ('published', 'unpublished')
     filter_horizontal = ('hashtag',)
-    readonly_fields = ('read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')
+    readonly_fields = ('read', 'total_like', 'thread', 'joined', 'created', 'updated')
     inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('title', 'content', 'hashtag', 'period', 'publish')}),
-        ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'user_count', 'created', 'updated')})
+        ('確認項目', {'fields': ('read', 'total_like', 'thread', 'joined', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
@@ -617,10 +617,6 @@ class ChatAdminSite(admin.ModelAdmin):
     def unpublished(self, request, queryset):
         queryset.update(publish=False)
     unpublished.short_description = '非公開にする'
-
-    def user_count(self, obj):
-        return obj.comment.order_by('author').distinct().values_list('author').count()
-    user_count.short_description = 'joined'
 manage_site.register(Chat, ChatAdminSite)
 
 
