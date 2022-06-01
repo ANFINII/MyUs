@@ -40,10 +40,10 @@ def notification_data(self):
         following_list = Follow.objects.filter(follower=user).values_list('following_id', 'created')
 
         for id, dates in following_list:
-            notification_qs_1 = Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).annotate(user_confirmed=Exists(subquery))
+            notification_qs_1 = Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).select_related('user_from').prefetch_related('content_object')
             notification_qs = notification_qs.union(notification_qs_1)
             notification_confirmed_list += Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).exclude(confirmed=user).annotate(user_confirmed=Exists(subquery))
-        notification_qs_2 = Notification.objects.filter(user_to=user, type_no__in=notification_type_list_2).exclude(deleted=user).annotate(user_confirmed=Exists(subquery))
+        notification_qs_2 = Notification.objects.filter(user_to=user, type_no__in=notification_type_list_2).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).select_related('user_from').prefetch_related('content_object')
         notification_list = notification_qs.union(notification_qs_2).order_by('-created')
 
         context = {
