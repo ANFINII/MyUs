@@ -226,7 +226,6 @@ $(document).on('click', '.edit_delete_comment', function (event) {
   highlight.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important');
   chatSocket.send(JSON.stringify({
     'command': 'delete_message',
-    'obj_id': obj_id,
     'comment_id': comment_id,
   }));
 });
