@@ -80,8 +80,9 @@ $(document).on('click', '.reply_form', function (event) {
     timeout: 10000,
   })
     .done(function (response) {
-      $('#reply_count_open_' + comment_id).html('▼ スレッド ' + response.reply_count + ' 件');
-      $('#reply_count_close_' + comment_id).html('▲ スレッド ' + response.reply_count + ' 件');
+      $('#comment_num').html(response.comment_num);
+      $('#reply_num_open_' + comment_id).html('▼ スレッド ' + response.reply_num + ' 件');
+      $('#reply_num_close_' + comment_id).html('▲ スレッド ' + response.reply_num + ' 件');
       $('#reply_aria_list_' + comment_id).prepend(response.reply_lists);
     })
     .fail(function (response) {
@@ -166,15 +167,15 @@ $(document).on('click', '.edit_delete', function (event) {
   $.ajax({
     url: url,
     type: 'POST',
-    data: { 'id': id, 'path': path, 'comment_id': comment_id, 'csrfmiddlewaretoken': csrf },
+    data: { 'id': id, 'path': path, 'comment_id': comment_id, 'parent_id': parent_id, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
     .done(function (response) {
       $('#comment_aria_list_' + comment_id).remove();
       $('#comment_num').html(response.comment_num);
-      $('#reply_count_open_' + response.parent_id).html('▼ スレッド ' + response.reply_count + ' 件');
-      $('#reply_count_close_' + response.parent_id).html('▲ スレッド ' + response.reply_count + ' 件');
+      $('#reply_num_open_' + response.parent_id).html('▼ スレッド ' + response.reply_num + ' 件');
+      $('#reply_num_close_' + response.parent_id).html('▲ スレッド ' + response.reply_num + ' 件');
     })
     .fail(function (response) {
       // 失敗した時、背景色を戻す

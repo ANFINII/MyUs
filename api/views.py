@@ -563,15 +563,12 @@ def comment_form(request):
         obj_path = request.POST.get('path')
         obj = [models.objects.get(id=obj_id) for models_detail, models
             in contains.models_comment_dict.items() if models_detail in obj_path][0]
-        comment_obj = Comment(content_object=obj)
-        comment_obj.text = text
-        comment_obj.author = user
-        comment_obj.save()
-        obj.comment_num = obj.comment.filter(parent__isnull=True).count()
+        comment_obj = Comment.objects.create(content_object=obj, text=text, author=user)
+        obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
         context['comment_num'] = obj.comment_num
         context['comment_lists'] = render_to_string('parts/common/comment/comment.html', {
-            'comment_list': obj.comment.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
+            'comment_list': obj.comment.filter(id=comment_obj.id).select_related('author').prefetch_related('like'),
             'user_id': user.id,
             'obj_id': obj_id,
             'obj_path': obj_path,
@@ -589,12 +586,18 @@ def reply_form(request):
         comment_id = request.POST.get('comment_id')
         obj = [models.objects.get(id=obj_id) for models_detail, models
             in contains.models_comment_dict.items() if models_detail in obj_path][0]
-        comment_obj = Comment(content_object=obj)
-        comment_obj.text = text
-        comment_obj.author = user
-        comment_obj.parent = Comment.objects.get(id=comment_id)
-        comment_obj.save()
-        if user != comment_obj.parent.author.id:
+        comment_obj = Comment.objects.create(
+            content_object=obj,
+            text=text,
+            author=user,
+            parent=Comment.objects.get(id=comment_id)
+        )
+        obj.comment_num = obj.comment.all().count()
+        obj.save(update_fields=['comment_num'])
+        parent_obj = Comment.objects.get(id=comment_id)
+        parent_obj.reply_num = Comment.objects.filter(parent=comment_id).count()
+        parent_obj.save(update_fields=['reply_num'])
+        if user.id != comment_obj.parent.author.id:
             Notification.objects.create(
                 user_from=user,
                 user_to=comment_obj.parent.author,
@@ -603,11 +606,12 @@ def reply_form(request):
                 content_object=comment_obj,
             )
         context['comment_num'] = obj.comment_num
-        context['reply_count'] = comment_obj.parent.replies_count()
+        context['reply_num'] = parent_obj.reply_num
         context['reply_lists'] = render_to_string('parts/common/reply/reply.html', {
-            'reply_list': obj.comment.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type'),
+            'reply_list': obj.comment.filter(id=comment_obj.id).select_related('author', 'parent').prefetch_related('like'),
             'user_id': user.id,
             'obj_id': obj_id,
+            'obj_path': obj_path,
             'comment_id': comment_id,
         }, request=request)
         return JsonResponse(context)
@@ -634,7 +638,7 @@ def comment_delete(request, comment_id):
             in contains.models_comment_dict.items() if models_detail in obj_path][0]
         comment_obj = Comment.objects.get(id=comment_id)
         comment_obj.delete()
-        obj.comment_num = obj.comment.filter(parent__isnull=True).count()
+        obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
         context = {
             'comment_num': obj.comment_num,
@@ -644,14 +648,25 @@ def comment_delete(request, comment_id):
 def reply_delete(request, comment_id):
     """reply_delete"""
     if request.method == 'POST':
+        obj_id = request.POST.get('id')
+        obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
+        parent_id = request.POST.get('parent_id')
         comment_obj = Comment.objects.get(id=comment_id)
         notification_obj = Notification.objects.filter(type_no=contains.notification_type_dict['reply'][0], object_id=comment_obj.id)
         notification_obj.delete()
+        obj = [models.objects.get(id=obj_id) for models_detail, models
+            in contains.models_comment_dict.items() if models_detail in obj_path][0]
         comment_obj.delete()
+        parent_obj = Comment.objects.get(id=parent_id)
+        parent_obj.reply_num = Comment.objects.filter(parent=parent_id).count()
+        parent_obj.save(update_fields=['reply_num'])
+        obj.comment_num = obj.comment.all().count()
+        obj.save(update_fields=['comment_num'])
         context = {
-            'parent_id': comment_obj.parent.id,
-            'reply_count': comment_obj.parent.replies_count(),
+            'comment_num': obj.comment_num,
+            'parent_id': parent_id,
+            'reply_num': parent_obj.reply_num,
         }
         return JsonResponse(context)
 
@@ -1032,12 +1047,12 @@ class ChatDetail(DetailView):
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, ChatDetail, **kwargs)
 
-    def get_new_message(self, comment_obj):
+    def get_message_data(self, comment_obj):
         obj = get_object_or_404(Chat, id=comment_obj.object_id)
         context = {
             'joined': obj.joined,
             'thread': obj.thread,
-            'comment_list': obj.comment.filter(id=comment_obj.id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
+            'comment_obj': obj.comment.filter(id=comment_obj.id).select_related('author'),
         }
         return context
 
@@ -1049,12 +1064,12 @@ class ChatThread(DetailView):
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, ChatThread, **kwargs)
 
-    def get_new_reply(self, comment_obj):
+    def get_reply_data(self, comment_obj):
         obj = get_object_or_404(Chat, id=comment_obj.object_id)
         context = {
-            'user_count': obj.user_count(),
-            'reply_count': comment_obj.parent.replies_count(),
-            'reply_list': obj.comment.filter(id=comment_obj.id).select_related('author', 'parent', 'content_type'),
+            'joined': obj.joined,
+            'reply_num': comment_obj.parent.reply_num,
+            'reply_obj': obj.comment.filter(id=comment_obj.id).select_related('author'),
         }
         return context
 
@@ -1068,8 +1083,8 @@ def chat_thread_button(request):
         context['obj_id'] = obj_id
         context['comment_id'] = comment_id
         context['thread'] = render_to_string('chat/chat_reply/chat_section_thread_area.html', {
-            'comment_parent': obj.comment.filter(id=comment_id).annotate(reply_count=Count('reply')).select_related('author', 'content_type'),
-            'reply_list': obj.comment.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type'),
+            'comment_parent': obj.comment.filter(id=comment_id),
+            'reply_list': obj.comment.filter(parent_id=comment_id).select_related('author'),
             'user_id': user.id,
             'obj_id': obj_id,
             'comment_id': comment_id,

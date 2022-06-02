@@ -92,12 +92,12 @@ class ContextData:
             else:
                 is_period = False
             context['is_period'] = is_period
-            context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).select_related('author', 'parent', 'content_type').prefetch_related('like')
+            context['comment_list'] = obj.comment.filter(parent__isnull=True).select_related('author')
         else:
             filter_kwargs = {'id': OuterRef('pk'), 'like': user.id}
             subquery = Comment.objects.filter(**filter_kwargs)
-            context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(reply_count=Count('reply')).annotate(comment_liked=Exists(subquery)).select_related('author', 'content_type')
-            context['reply_list'] = obj.comment.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent', 'content_type')
+            context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery)).select_related('author').prefetch_related('like')
+            context['reply_list'] = obj.comment.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent').prefetch_related('like')
         if user.id is not None:
             notification_list = notification_data(self)
             context['notification_list'] = notification_list['notification_list']
@@ -136,8 +136,8 @@ class ContextData:
         if 'ChatThread' in str(models.__name__):
             comment_id = self.kwargs['comment_id']
             context['comment_id'] = comment_id
-            context['comment_parent'] = obj.comment.filter(id=comment_id).annotate(reply_count=Count('reply')).select_related('author', 'content_type')
-            context['reply_list'] = obj.comment.filter(parent__isnull=False, parent_id=comment_id).select_related('author', 'parent', 'content_type')
+            context['comment_parent'] = obj.comment.filter(id=comment_id)
+            context['reply_list'] = obj.comment.filter(parent_id=comment_id).select_related('author')
             context.update(chat_list=Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'CollaboDetail' in str(models.__name__):

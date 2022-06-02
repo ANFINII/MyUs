@@ -21,7 +21,7 @@
         </div>
       </div>
 
-      <form method="POST" action="" obj-id="{{ obj_id }}" comment-id="{{ reply.id }}" parent-id="{{ reply.parent.id }}" csrf="{{ csrf_token }}" class="modal_content_footer">
+      <form method="POST" action="" obj-id="{{ obj_id }}" path="{{ obj_path }}" comment-id="{{ reply.id }}" parent-id="{{ reply.parent.id }}" csrf="{{ csrf_token }}" class="modal_content_footer">
         <button type="button" name="cancel" class="btn btn-light modal_cancel">キャンセル</button>
         <button type="button" name="delete" class="btn btn-danger edit_delete">削除</button>
       </form>
