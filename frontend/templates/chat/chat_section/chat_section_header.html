@@ -20,14 +20,13 @@
     </div>
 
     {% if user.is_authenticated %}
-    <form method="POST" action="{% url 'myus:like_form' %}" path="{{ request.path }}" class="view_good_inline">
-      {% csrf_token %}
+    <form method="POST" action="" obj-id="{{ object.id }}" path="{{ request.path }}" csrf="{{ csrf_token }}" class="view_good_inline">
       {% if liked %}
-      <button type="submit" name="like" value="{{ object.id }}" class="like_form like_fill">
+      <button type="submit" name="like" class="like_form like_fill">
         <i title="いいね" class="bi bi-hand-thumbs-up-fill like_color"></i>
       </button>
       {% else %}
-      <button type="submit" name="like" value="{{ object.id }}" class="like_form like_no">
+      <button type="submit" name="like" class="like_form like_no">
         <i title="いいね" class="bi bi-hand-thumbs-up like_color"></i>
       </button>
       {% endif %}
