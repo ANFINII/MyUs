@@ -592,7 +592,7 @@ def reply_form(request):
         parent_obj = Comment.objects.get(id=comment_id)
         parent_obj.reply_num = Comment.objects.filter(parent=comment_id).count()
         parent_obj.save(update_fields=['reply_num'])
-        if user.id != comment_obj.parent.author.id:
+        if user != comment_obj.parent.author:
             Notification.objects.create(
                 user_from=user,
                 user_to=comment_obj.parent.author,
