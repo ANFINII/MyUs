@@ -32,15 +32,28 @@ models_comment_dict = {
 }
 
 notification_type_dict = {
-    'video'  : [1 , 'is_video'],
-    'live'   : [2 , 'is_live'],
-    'music'  : [3 , 'is_music'],
-    'picture': [4 , 'is_picture'],
-    'blog'   : [5 , 'is_blog'],
-    'chat'   : [6 , 'is_chat'],
-    'collabo': [7 , 'is_collabo'],
-    'follow' : [8 , 'is_follow'],
-    'like'   : [9 , 'is_like'],
-    'reply'  : [10, 'is_reply'],
-    'views'  : [11, 'is_views'],
+    'video'  : 'is_video',
+    'live'   : 'is_live',
+    'music'  : 'is_music',
+    'picture': 'is_picture',
+    'blog'   : 'is_blog',
+    'chat'   : 'is_chat',
+    'collabo': 'is_collabo',
+    'follow' : 'is_follow',
+    'like'   : 'is_like',
+    'reply'  : 'is_reply',
+    'views'  : 'is_views',
 }
+
+class NotificationTypeNo:
+    video   = 1
+    live    = 2
+    music   = 3
+    picture = 4
+    blog    = 5
+    chat    = 6
+    collabo = 7
+    follow  = 8
+    like    = 9
+    reply   = 10
+    views   = 11

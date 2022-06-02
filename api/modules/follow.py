@@ -1,5 +1,5 @@
 from api.models import Follow, Notification
-from api.modules import contains
+from api.modules.contains import NotificationTypeNo
 
 
 def follow_update_data(follower, following, follow_obj):
@@ -7,7 +7,7 @@ def follow_update_data(follower, following, follow_obj):
         # '自分はフォローできません'
         pass
     elif follow_obj.exists():
-        notification_obj = Notification.objects.filter(type_no=contains.notification_type_dict['follow'][0], object_id=follow_obj[0].id)
+        notification_obj = Notification.objects.filter(type_no=NotificationTypeNo.follow, object_id=follow_obj[0].id)
         notification_obj.delete()
         follow_obj.delete()
         followed = False
@@ -35,7 +35,7 @@ def follow_update_data(follower, following, follow_obj):
         Notification.objects.create(
             user_from=follower.user,
             user_to=following.user,
-            type_no=contains.notification_type_dict['follow'][0],
+            type_no=NotificationTypeNo.follow,
             type_name='follow',
             content_object=follow_obj,
         )

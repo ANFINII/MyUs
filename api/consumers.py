@@ -6,7 +6,7 @@ from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 from api.views import ChatDetail, ChatThread
 from api.models import Chat, Comment, Notification
-from api.modules import contains
+from api.modules.contains import NotificationTypeNo
 
 User = get_user_model()
 
@@ -44,7 +44,7 @@ class ChatConsumer(WebsocketConsumer):
             Notification.objects.create(
                 user_from=self.scope['user'],
                 user_to=message.parent.author,
-                type_no=contains.notification_type_dict['reply'][0],
+                type_no=NotificationTypeNo.reply,
                 type_name='reply',
                 content_object=message,
             )

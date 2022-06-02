@@ -1,6 +1,6 @@
 from django.db.models import Exists, OuterRef
 from api.models import NotificationSetting, Notification, Follow
-from api.modules import contains
+from api.modules.contains import NotificationTypeNo, notification_type_dict
 
 
 def notification_data(self):
@@ -10,27 +10,27 @@ def notification_data(self):
     if user.id is not None:
         notification_setting_obj = NotificationSetting.objects.get(user=user)
         if notification_setting_obj.is_video:
-            notification_type_list_1 += [contains.notification_type_dict['video'][0]]
+            notification_type_list_1 += [NotificationTypeNo.video]
         if notification_setting_obj.is_live:
-            notification_type_list_1 += [contains.notification_type_dict['live'][0]]
+            notification_type_list_1 += [NotificationTypeNo.live]
         if notification_setting_obj.is_music:
-            notification_type_list_1 += [contains.notification_type_dict['music'][0]]
+            notification_type_list_1 += [NotificationTypeNo.music]
         if notification_setting_obj.is_picture:
-            notification_type_list_1 += [contains.notification_type_dict['picture'][0]]
+            notification_type_list_1 += [NotificationTypeNo.picture]
         if notification_setting_obj.is_blog:
-            notification_type_list_1 += [contains.notification_type_dict['blog'][0]]
+            notification_type_list_1 += [NotificationTypeNo.blog]
         if notification_setting_obj.is_chat:
-            notification_type_list_1 += [contains.notification_type_dict['chat'][0]]
+            notification_type_list_1 += [NotificationTypeNo.chat]
         if notification_setting_obj.is_collabo:
-            notification_type_list_1 += [contains.notification_type_dict['collabo'][0]]
+            notification_type_list_1 += [NotificationTypeNo.collabo]
         if notification_setting_obj.is_follow:
-            notification_type_list_2 += [contains.notification_type_dict['follow'][0]]
+            notification_type_list_2 += [NotificationTypeNo.follow]
         if notification_setting_obj.is_like:
-            notification_type_list_2 += [contains.notification_type_dict['like'][0]]
+            notification_type_list_2 += [NotificationTypeNo.like]
         if notification_setting_obj.is_reply:
-            notification_type_list_2 += [contains.notification_type_dict['reply'][0]]
+            notification_type_list_2 += [NotificationTypeNo.reply]
         if notification_setting_obj.is_views:
-            notification_type_list_2 += [contains.notification_type_dict['views'][0]]
+            notification_type_list_2 += [NotificationTypeNo.views]
 
         notification_qs= Notification.objects.none()
         notification_qs_1 = Notification.objects.none()
@@ -100,4 +100,4 @@ def notification_setting_update(is_notification, notification_type, notification
             notification_obj.is_like = True
         if notification_type == 'views':
             notification_obj.is_views = True
-    notification_obj.save(update_fields=[contains.notification_type_dict[notification_type][1]])
+    notification_obj.save(update_fields=[notification_type_dict[notification_type]])

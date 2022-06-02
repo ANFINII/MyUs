@@ -21,10 +21,11 @@ from django.template.defaultfilters import linebreaksbr
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+
 from api.forms import SearchTagForm
 from api.models import MyPage, NotificationSetting, Notification, SearchTag, Follow, Comment
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
-from api.modules import contains
+from api.modules.contains import NotificationTypeNo, models_like_dict, models_comment_dict
 from api.modules.context_data import ContextData
 from api.modules.get_form import get_detail
 from api.modules.pjax import pjax_context
@@ -494,9 +495,7 @@ def advertise_read(request):
         advertise_obj = Advertise.objects.get(id=advertise_id)
         advertise_obj.read += 1
         advertise_obj.save(update_fields=['read'])
-        context = {
-            'read': advertise_obj.read,
-        }
+        context = {'read': advertise_obj.read}
         return JsonResponse(context)
 
 
@@ -507,8 +506,7 @@ def like_form(request):
         user = request.user
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        obj = [get_object_or_404(models, id=obj_id) for models_detail, models
-            in contains.models_like_dict.items() if models_detail in obj_path][0]
+        obj = [get_object_or_404(models, id=obj_id) for detail, models in models_like_dict.items() if detail in obj_path][0]
         liked = False
         if obj.like.filter(id=user.id).exists():
             liked = False
@@ -531,7 +529,7 @@ def like_form_comment(request):
         comment_liked = False
         if obj.like.filter(id=user.id).exists():
             comment_liked = False
-            notification_obj = Notification.objects.filter(type_no=contains.notification_type_dict['like'][0], object_id=obj.id)
+            notification_obj = Notification.objects.filter(type_no=NotificationTypeNo.like, object_id=obj.id)
             notification_obj.delete()
             obj.like.remove(user)
         else:
@@ -541,7 +539,7 @@ def like_form_comment(request):
                 Notification.objects.create(
                     user_from=user,
                     user_to=obj.author,
-                    type_no=contains.notification_type_dict['like'][0],
+                    type_no=NotificationTypeNo.like,
                     type_name='like',
                     content_object=obj,
                 )
@@ -561,8 +559,7 @@ def comment_form(request):
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        obj = [models.objects.get(id=obj_id) for models_detail, models
-            in contains.models_comment_dict.items() if models_detail in obj_path][0]
+        obj = [models.objects.get(id=obj_id) for detail, models in models_comment_dict.items() if detail in obj_path][0]
         comment_obj = Comment.objects.create(content_object=obj, text=text, author=user)
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
@@ -584,8 +581,7 @@ def reply_form(request):
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
-        obj = [models.objects.get(id=obj_id) for models_detail, models
-            in contains.models_comment_dict.items() if models_detail in obj_path][0]
+        obj = [models.objects.get(id=obj_id) for detail, models in models_comment_dict.items() if detail in obj_path][0]
         comment_obj = Comment.objects.create(
             content_object=obj,
             text=text,
@@ -601,7 +597,7 @@ def reply_form(request):
             Notification.objects.create(
                 user_from=user,
                 user_to=comment_obj.parent.author,
-                type_no=contains.notification_type_dict['reply'][0],
+                type_no=NotificationTypeNo.reply,
                 type_name='reply',
                 content_object=comment_obj,
             )
@@ -623,9 +619,7 @@ def comment_update(request, comment_id):
         comment_obj = Comment.objects.get(id=comment_id)
         comment_obj.text = text
         comment_obj.save(update_fields=['text', 'updated'])
-        context = {
-            'text': urlize_impl(linebreaksbr(comment_obj.text)),
-        }
+        context = {'text': urlize_impl(linebreaksbr(comment_obj.text))}
         return JsonResponse(context)
 
 def comment_delete(request, comment_id):
@@ -634,15 +628,12 @@ def comment_delete(request, comment_id):
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
-        obj = [models.objects.get(id=obj_id) for models_detail, models
-            in contains.models_comment_dict.items() if models_detail in obj_path][0]
+        obj = [models.objects.get(id=obj_id) for detail, models in models_comment_dict.items() if detail in obj_path][0]
         comment_obj = Comment.objects.get(id=comment_id)
         comment_obj.delete()
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
-        context = {
-            'comment_num': obj.comment_num,
-        }
+        context = {'comment_num': obj.comment_num}
         return JsonResponse(context)
 
 def reply_delete(request, comment_id):
@@ -653,10 +644,9 @@ def reply_delete(request, comment_id):
         comment_id = request.POST.get('comment_id')
         parent_id = request.POST.get('parent_id')
         comment_obj = Comment.objects.get(id=comment_id)
-        notification_obj = Notification.objects.filter(type_no=contains.notification_type_dict['reply'][0], object_id=comment_obj.id)
+        notification_obj = Notification.objects.filter(type_no=NotificationTypeNo.reply, object_id=comment_obj.id)
         notification_obj.delete()
-        obj = [models.objects.get(id=obj_id) for models_detail, models
-            in contains.models_comment_dict.items() if models_detail in obj_path][0]
+        obj = [models.objects.get(id=obj_id) for detail, models in models_comment_dict.items() if detail in obj_path][0]
         comment_obj.delete()
         parent_obj = Comment.objects.get(id=parent_id)
         parent_obj.reply_num = Comment.objects.filter(parent=parent_id).count()
@@ -808,7 +798,7 @@ class VideoCreate(CreateView):
         return super(VideoCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:video_detail', 1, 'video')
+        return success_url(self, 'myus:video_detail', NotificationTypeNo.video, 'video')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, VideoCreate, **kwargs)
@@ -850,7 +840,7 @@ class LiveCreate(CreateView):
         return super(LiveCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:live_detail', 2, 'live')
+        return success_url(self, 'myus:live_detail', NotificationTypeNo.live, 'live')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, LiveCreate, **kwargs)
@@ -892,7 +882,7 @@ class MusicCreate(CreateView):
         return super(MusicCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:music_detail', 3, 'music')
+        return success_url(self, 'myus:music_detail', NotificationTypeNo.music, 'music')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, MusicCreate, **kwargs)
@@ -934,7 +924,7 @@ class PictureCreate(CreateView):
         return super(PictureCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:picture_detail', 4, 'picture')
+        return success_url(self, 'myus:picture_detail', NotificationTypeNo.picture, 'picture')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, PictureCreate, **kwargs)
@@ -976,7 +966,7 @@ class BlogCreate(CreateView):
         return super(BlogCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:blog_detail', 5, 'blog')
+        return success_url(self, 'myus:blog_detail', NotificationTypeNo.blog, 'blog')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, BlogCreate, **kwargs)
@@ -1018,7 +1008,7 @@ class ChatCreate(CreateView):
         return super(ChatCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:chat_detail', 6, 'chat')
+        return success_url(self, 'myus:chat_detail', NotificationTypeNo.chat, 'chat')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, ChatCreate, **kwargs)
@@ -1104,7 +1094,7 @@ class CollaboCreate(CreateView):
         return super(CollaboCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:collabo_detail', 7, 'collabo')
+        return success_url(self, 'myus:collabo_detail', NotificationTypeNo.collabo, 'collabo')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, CollaboCreate, **kwargs)
