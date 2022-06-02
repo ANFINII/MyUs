@@ -529,8 +529,7 @@ def like_form_comment(request):
         comment_liked = False
         if obj.like.filter(id=user.id).exists():
             comment_liked = False
-            notification_obj = Notification.objects.filter(type_no=NotificationTypeNo.like, object_id=obj.id)
-            notification_obj.delete()
+            Notification.objects.filter(type_no=NotificationTypeNo.like, object_id=obj.id).delete()
             obj.like.remove(user)
         else:
             comment_liked = True
@@ -629,8 +628,7 @@ def comment_delete(request, comment_id):
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
         obj = [models.objects.get(id=obj_id) for detail, models in models_comment_dict.items() if detail in obj_path][0]
-        comment_obj = Comment.objects.get(id=comment_id)
-        comment_obj.delete()
+        Comment.objects.get(id=comment_id).delete()
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
         context = {'comment_num': obj.comment_num}
@@ -643,14 +641,12 @@ def reply_delete(request, comment_id):
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
         parent_id = request.POST.get('parent_id')
-        comment_obj = Comment.objects.get(id=comment_id)
-        notification_obj = Notification.objects.filter(type_no=NotificationTypeNo.reply, object_id=comment_obj.id)
-        notification_obj.delete()
-        obj = [models.objects.get(id=obj_id) for detail, models in models_comment_dict.items() if detail in obj_path][0]
-        comment_obj.delete()
+        Notification.objects.filter(type_no=NotificationTypeNo.reply, object_id=comment_id).delete()
+        Comment.objects.get(id=comment_id).delete()
         parent_obj = Comment.objects.get(id=parent_id)
         parent_obj.reply_num = Comment.objects.filter(parent=parent_id).count()
         parent_obj.save(update_fields=['reply_num'])
+        obj = [models.objects.get(id=obj_id) for detail, models in models_comment_dict.items() if detail in obj_path][0]
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
         context = {

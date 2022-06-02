@@ -37,9 +37,9 @@ class ChatConsumer(WebsocketConsumer):
         )
         obj.joined = obj.comment.values_list('author').distinct().count()
         obj.save(update_fields=['joined'])
-        comment_obj = Comment.objects.get(id=data['parent_id'])
-        comment_obj.reply_num = Comment.objects.filter(parent=data['parent_id']).count()
-        comment_obj.save(update_fields=['reply_num'])
+        parent_obj = Comment.objects.get(id=data['parent_id'])
+        parent_obj.reply_num = Comment.objects.filter(parent=data['parent_id']).count()
+        parent_obj.save(update_fields=['reply_num'])
         if self.scope['user'] != message.parent.author:
             Notification.objects.create(
                 user_from=self.scope['user'],
@@ -66,11 +66,6 @@ class ChatConsumer(WebsocketConsumer):
 
     def delete_message(self, data):
         message = Comment.objects.get(id=data['comment_id'])
-        message.delete()
-        obj = Chat.objects.get(id=data['obj_id'])
-        obj.thread = obj.comment.filter(parent__isnull=True).count()
-        obj.joined = obj.comment.values_list('author').distinct().count()
-        obj.save(update_fields=['thread', 'joined'])
         content = {
             'command': 'delete_message',
             'message': self.delete_message_to_json(message)
@@ -129,8 +124,11 @@ class ChatConsumer(WebsocketConsumer):
         return context
 
     def delete_message_to_json(self, message):
-        obj_id = message.object_id
-        obj = Chat.objects.get(id=obj_id)
+        message.delete()
+        obj = Chat.objects.get(id=message.object_id)
+        obj.thread = obj.comment.filter(parent__isnull=True).count()
+        obj.joined = obj.comment.values_list('author').distinct().count()
+        obj.save(update_fields=['thread', 'joined'])
         context = {
             'joined': obj.joined,
             'thread': obj.thread,
@@ -138,18 +136,17 @@ class ChatConsumer(WebsocketConsumer):
         return context
 
     def delete_reply_message_to_json(self, message):
-        obj_id = message.object_id
-        message_parent_id = message.parent.id
+        Notification.objects.filter(type_no=NotificationTypeNo.reply, object_id=message.id).delete()
         message.delete()
-        obj = Chat.objects.get(id=obj_id)
+        obj = Chat.objects.get(id=message.object_id)
         obj.joined = obj.comment.values_list('author').distinct().count()
         obj.save(update_fields=['joined'])
-        comment_obj = Comment.objects.get(id=message_parent_id)
-        comment_obj.reply_num = Comment.objects.filter(parent=message_parent_id).count()
+        comment_obj = Comment.objects.get(id=message.parent_id)
+        comment_obj.reply_num = Comment.objects.filter(parent=message.parent_id).count()
         comment_obj.save(update_fields=['reply_num'])
         context = {
             'joined': obj.joined,
-            'parent_id': message_parent_id,
+            'parent_id': message.parent_id,
             'reply_num': comment_obj.reply_num,
         }
         return context
