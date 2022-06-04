@@ -64,12 +64,12 @@ body {
   grid-column: 2/-1;
   grid-row: 3/-1;
   height: 100vh;
-  margin: -12px 0 2px 0;
+  margin: 0 0 5px 0;
 }
 
 .article_detail_chat {
   padding: 0;
-  margin: 12px 0 0 0;
+  margin: 0;
 }
 
 /* chat_section */
