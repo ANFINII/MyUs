@@ -536,15 +536,18 @@ header {
 
 /* タグナビゲーション */
 .tag_nav {
-  display: grid;
-  grid-template-columns: 4.5em 3em 12.125em 3em auto;
-  grid-template-rows: auto;
   position: fixed;
   z-index: 50;
   top: 3.5em;
   width: 100%;
   height: 26px;
   background: rgb(240, 240, 240);
+}
+
+.tag_nav_grid {
+  display: grid;
+  grid-template-columns: 4.5em 3em 12.125em 3em auto;
+  grid-template-rows: auto;
 }
 
 .tag_menu {
@@ -1563,6 +1566,7 @@ div.field > button {
 .profile_image_reply {
   width: 32px;
   height: 32px;
+  margin: 4px;
   border-radius: 50%;
   background: rgb(200, 200, 200);
 }
@@ -1576,8 +1580,8 @@ div.field > button {
   resize: none;
 }
 
-.comment_input_update .textarea_br,
-.comment_input .textarea_br {
+.comment_input .textarea_br,
+.comment_input_update .textarea_br {
   width: 100%;
   min-height: 40px;
   padding: 8px 3px;
@@ -1603,7 +1607,7 @@ div.field > button {
 /* リプライinput */
 .reply_input {
   display: grid;
-  grid-template-columns: 32px auto;
+  grid-template-columns: 40px auto;
   grid-template-rows: auto auto;
   grid-gap: 8px;
   grid-column: 2/-1;
@@ -1623,10 +1627,14 @@ div.field > button {
   grid-row: 1/2;
 }
 
+.reply_input textarea {
+  height: 40px;
+}
+
 .reply_input .textarea_br {
   width: 100%;
-  min-height: 30px;
-  padding: 8px 2px;
+  height: 40px;
+  padding: 8px 3px;
   font-size: 14px;
   outline: none;
   resize: none;
@@ -1666,6 +1674,7 @@ div.field > button {
 .reply_button_group {
   display: grid;
   grid-column: 2/-1;
+  margin: 0 3px 0 0;
   justify-content: end;
 }
 
@@ -1682,7 +1691,7 @@ div.field > button {
 }
 
 .reply_cancel_button {
-  margin: 0 3px 0 0;
+  margin: 0 5px 0 0;
 }
 
 .reply_input .bi-caret-right-fill {
@@ -1729,13 +1738,11 @@ div.field > button {
   grid-template-rows: 20px minmax(20px, auto) auto auto auto;
   position: relative;
   grid-gap: 0 10px;
-  margin: 0 0 5px 0;
-  padding: 5px 5px 0 5px;
 }
 
-.comment_aria_list:hover {
+/* .comment_aria_list:hover {
   background: rgb(240, 245, 255);
-}
+} */
 
 .comment_aria_list.active,
 .reply_aria_list.active {
@@ -1825,9 +1832,9 @@ div.field > button {
   padding: 5px 5px 0 5px;
 }
 
-.reply_aria_list:hover {
+/* .reply_aria_list:hover {
   background: rgb(220, 235, 255);
-}
+} */
 
 .reply_aria_list .profile_image {
   grid-column: 2/3;
@@ -1857,6 +1864,7 @@ div.field > button {
   grid-column: 2/-1;
   grid-row: 2/3;
   font-size: 14px;
+  overflow: hidden;
   word-wrap: break-word;
 }
 
