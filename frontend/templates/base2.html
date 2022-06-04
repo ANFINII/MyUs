@@ -380,8 +380,8 @@
 {% endblock nav %}
 
 {% block tagnav %}
-<form method="POST" action="" id="tag_form">
-  <nav class="tag_nav">
+<nav class="tag_nav">
+  <form method="POST" action="" id="tag_form" class="tag_nav_grid">
     <input type="checkbox" id="tag_add" class="tag_menu">
     <label for="tag_add" class="main_tag_1"><span class="main_tag_center">タグ</span></label>
     <input type="submit" class="main_tag_2 form_button" value="追加" csrf="{{ csrf_token }}">
@@ -411,8 +411,8 @@
         <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
       </svg>
     </botton>
-  </nav>
-</form>
+  </form>
+</nav>
 {% endblock tagnav %}
 
 {% block content %}
