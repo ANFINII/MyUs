@@ -1,11 +1,15 @@
 import datetime
+from functools import reduce
+from itertools import chain
+from operator import and_
 from django.contrib.auth import get_user_model
-from django.db.models import F, Count
+from django.db.models import Q, F, Count
 from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
 from api.forms import BlogForm
 from api.models import MyPage, NotificationSetting, Follow
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from api.modules.search import get_q_list
 
 User = get_user_model()
 
@@ -92,9 +96,29 @@ def pjax_context(request, href):
             'picture_list': Picture.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:100],
         }, request=request)
     if '/blog' == href:
-        context['html'] = render_to_string('blog/blog_list.html', {
-            'blog_list': Blog.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:100],
-        }, request=request)
+        result = Blog.objects.filter(publish=True).order_by('-created')
+        search = request.GET.get('search')
+        context = {}
+        if search:
+            print('test')
+            q_list = get_q_list(search)
+            query = reduce(and_, [
+                Q(title__icontains=q) |
+                Q(hashtag__jp_name__icontains=q) |
+                Q(author__nickname__icontains=q) |
+                Q(content__icontains=q) |
+                Q(richtext__icontains=q) for q in q_list]
+            )
+            result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
+            context['count'] = len(result)
+            context['html'] = render_to_string('blog/blog_list.html', {
+                'blog_list': result[:100],
+                'count': len(result),
+            }, request=request)
+        else:
+            context['html'] = render_to_string('blog/blog_list.html', {
+                'blog_list': Blog.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:100],
+            }, request=request)
     if '/chat' == href:
         context['html'] = render_to_string('chat/chat_list.html', {
             'chat_list': Chat.objects.filter(publish=True).select_related('author').prefetch_related('like').order_by('-created')[:100],
