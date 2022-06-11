@@ -18,10 +18,9 @@ window.addEventListener('popstate', e => {
 // pjax_button ボタンを押した時の処理
 $(document).on('click', '.pjax_button', function (event) {
   event.preventDefault();
-  const url = $(this).attr('path');
   const href = $(this).attr('href');
   $.ajax({
-    url: url,
+    url: '/pjax',
     type: 'GET',
     data: { 'href': href },
     dataType: 'json',
@@ -46,11 +45,10 @@ $(document).on('click', '.pjax_button', function (event) {
 // pjax_button_userpage ボタンを押した時の処理
 $(document).on('click', '.pjax_button_userpage', function (event) {
   event.preventDefault();
-  const url = $(this).attr('path');
   const href = $(this).attr('href');
   const nickname = $(this).attr('data');
   $.ajax({
-    url: url,
+    url: '/pjax',
     type: 'GET',
     data: { 'href': href, 'nickname': nickname },
     dataType: 'json',
@@ -61,6 +59,33 @@ $(document).on('click', '.pjax_button_userpage', function (event) {
         document.querySelector('.chat_remove').remove();
       }
       pjax_dict(href);
+    })
+    .fail(function (response) {
+      console.log(response);
+    })
+});
+
+
+// 検索ボタンを押した時の処理
+$(document).on('click', '.pjax_search_button', function (event) {
+  event.preventDefault();
+  const path = location.pathname;
+  const href = $(this).attr('href');
+  const url = `${path}${href}`
+  const search = $(this).attr('search');
+  $.ajax({
+    url: '/pjax',
+    type: 'GET',
+    data: { 'href': path, 'search': search },
+    dataType: 'json',
+    timeout: 10000,
+  })
+    .done(function (response) {
+      $('.main_contents').html(response.html);
+      if (document.querySelector('.chat_remove') != null) {
+        document.querySelector('.chat_remove').remove();
+      }
+      pjax_dict(url);
     })
     .fail(function (response) {
       console.log(response);
