@@ -19,7 +19,8 @@ class ContextData:
             context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
         if hasattr(self, 'count'):
             context['count'] = self.count or 0
-        context['query'] = self.request.GET.get('search')
+            context['query'] = self.request.GET.get('search')
+
         if 'NotificationSettingView' in str(models.__name__):
             context.update(notification_setting_list=NotificationSetting.objects.filter(user=user.id))
 
@@ -78,11 +79,11 @@ class ContextData:
         context = super(models, self).get_context_data(**kwargs)
         obj = self.object
         user = self.request.user
-        follow = Follow.objects.filter(follower=user.id, following=obj.author)
+        liked = False
         followed = False
+        follow = Follow.objects.filter(follower=user.id, following=obj.author)
         if follow.exists():
             followed = True
-        liked = False
         if 'TodoDetail' not in str(models.__name__):
             if obj.like.filter(id=user.id).exists():
                 liked = True
