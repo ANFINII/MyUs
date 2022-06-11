@@ -5,7 +5,10 @@ import os
 import random
 import string
 import stripe
+import itertools
 
+from ffmpeg_streaming import FFProbe
+from pathlib import Path
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
@@ -32,7 +35,8 @@ from api.modules.pjax import pjax_context
 from api.modules.notification import notification_data, notification_setting_update
 from api.modules.search import Search
 from api.modules.success_url import success_url
-from api.modules.convert_hls import convert_hls, convert_mp4
+from api.modules.convert_hls import convert_hls_144p, convert_hls_240p, convert_hls_360p
+from api.modules.convert_hls import convert_hls_480p, convert_hls_720p, convert_hls_1080p
 from api.modules.follow import follow_update_data
 from api.modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 
@@ -788,7 +792,36 @@ class VideoCreate(CreateView):
         VIDEO_PATH = os.path.join(MEDIA_ROOT, 'videos', 'videos_video', f'user_{form.instance.author.id}', f'object_{form.instance.id}')
         VIDEO_FILE = os.path.join(VIDEO_PATH, os.path.basename(f'{form.instance.convert}'))
 
-        form.instance.video = convert_hls(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)
+        ffprobe = FFProbe(VIDEO_FILE)
+        video_height = ffprobe.streams().video().get('height', 'Unknown')
+        file_name = Path(VIDEO_FILE).stem
+        print(f'file_name: {file_name}, video_height: {video_height}')
+
+        filenames = []
+        if video_height <= 360:
+            filenames += [convert_hls_144p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
+            filenames += [convert_hls_360p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
+        elif video_height <= 480:
+            filenames += [convert_hls_240p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
+            filenames += [convert_hls_480p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
+        elif video_height <= 720:
+            filenames += [convert_hls_240p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
+            filenames += [convert_hls_480p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
+            filenames += [convert_hls_720p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
+        else:
+            filenames += [convert_hls_240p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
+            filenames += [convert_hls_480p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
+            filenames += [convert_hls_720p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
+            filenames += [convert_hls_1080p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
+
+        print(filenames)
+        with open(f'{filenames}.m3u8', 'w') as master_file:
+            for line in itertools.chain.from_iterable(map(open, filenames)):
+                master_file.write(line)
+                print(line)
+        print(master_file)
+        form.instance.video = master_file
+
         # form.instance.convert = convert_mp4(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)
         form.save()
         return super(VideoCreate, self).form_valid(form)
@@ -894,7 +927,7 @@ class MusicList(ListView):
         return ContextData.context_data(self, MusicList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_music(self, Music)
+        return Search.search_models(self, Music)
 
 class MusicDetail(DetailView):
     """MusicDetail"""
@@ -978,7 +1011,7 @@ class BlogList(ListView):
         return ContextData.context_data(self, BlogList, **kwargs)
 
     def get_queryset(self, **kwargs):
-        return Search.search_blog(self, Blog)
+        return Search.search_models(self, Blog)
 
 class BlogDetail(DetailView):
     """BlogDetail"""
