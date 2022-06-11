@@ -173,7 +173,7 @@ def logout_form(request):
 # pjax
 def pjax(request):
     if request.method == 'GET':
-        href = request.GET.get('href')
+        href = request.GET.get('href').lstrip('/')
         context = pjax_context(request, href)
         return JsonResponse(context)
 
@@ -365,7 +365,7 @@ class MyPageUpdate(UpdateView):
 
 def mypage_toggle(request):
     """mypage_toggle"""
-    context = dict()
+    context = {}
     if request.method == 'POST':
         user = request.user
         is_advertise = request.POST.get('is_advertise')
@@ -435,7 +435,7 @@ class NotificationSettingView(TemplateView):
 
 def notification_setting(request):
     """notification_setting"""
-    context = dict()
+    context = {}
     if request.method == 'POST':
         user = request.user
         is_notification = request.POST.get('notification')
@@ -556,7 +556,7 @@ def like_form_comment(request):
 # CommentForm & ReplyForm
 def comment_form(request):
     """comment_form"""
-    context = dict()
+    context = {}
     if request.method == 'POST':
         user = request.user
         text = request.POST.get('text')
@@ -577,7 +577,7 @@ def comment_form(request):
 
 def reply_form(request):
     """reply_form"""
-    context = dict()
+    context = {}
     if request.method == 'POST':
         user = request.user
         text = request.POST.get('text')
@@ -1093,7 +1093,7 @@ class ChatThread(DetailView):
         return context
 
 def chat_thread_button(request):
-    context = dict()
+    context = {}
     if request.method == 'GET':
         user = request.user
         obj_id = request.GET.get('obj_id')

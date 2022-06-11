@@ -31,6 +31,27 @@ models_comment_dict = {
     'todo/detail'   : Todo,
 }
 
+models_pjax = {
+    'video'  : Video,
+    'live'   : Live,
+    'music'  : Music,
+    'picture': Picture,
+    'blog'   : Blog,
+    'chat'   : Chat,
+    'collabo': Collabo,
+}
+
+models_create_pjax = (
+    'video/create',
+    'live/create',
+    'music/create',
+    'picture/create',
+    'blog/create',
+    'chat/create',
+    'collabo/create',
+    'todo/create',
+)
+
 notification_type_dict = {
     'video'  : 'is_video',
     'live'   : 'is_live',
