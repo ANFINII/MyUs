@@ -1,10 +1,10 @@
 import datetime
+from functools import reduce
+from itertools import chain
+from operator import and_
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, F, Count
-from functools import reduce
-from operator import and_
-from itertools import chain
 from api.models import Video, Live, Music, Picture, Blog, Chat
 
 User = get_user_model()
@@ -95,44 +95,29 @@ class Search:
         search = self.request.GET.get('search')
         if search:
             q_list = get_q_list(search)
-            query = reduce(and_, [
-                Q(title__icontains=q) |
-                Q(hashtag__jp_name__icontains=q) |
-                Q(author__nickname__icontains=q) |
-                Q(content__icontains=q) for q in q_list]
-            )
-            result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
-            self.count = len(result)
-        return result
-
-    def search_music(self, model):
-        result = model.objects.filter(publish=True).order_by('-created')
-        search = self.request.GET.get('search')
-        if search:
-            q_list = get_q_list(search)
-            query = reduce(and_, [
-                Q(title__icontains=q) |
-                Q(hashtag__jp_name__icontains=q) |
-                Q(author__nickname__icontains=q) |
-                Q(content__icontains=q) |
-                Q(lyric__icontains=q) for q in q_list]
-            )
-            result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
-            self.count = len(result)
-        return result
-
-    def search_blog(self, model):
-        result = model.objects.filter(publish=True).order_by('-created')
-        search = self.request.GET.get('search')
-        if search:
-            q_list = get_q_list(search)
-            query = reduce(and_, [
-                Q(title__icontains=q) |
-                Q(hashtag__jp_name__icontains=q) |
-                Q(author__nickname__icontains=q) |
-                Q(content__icontains=q) |
-                Q(richtext__icontains=q) for q in q_list]
-            )
+            if model in (Video, Live, Picture):
+                query = reduce(and_, [
+                    Q(title__icontains=q) |
+                    Q(hashtag__jp_name__icontains=q) |
+                    Q(author__nickname__icontains=q) |
+                    Q(content__icontains=q) for q in q_list]
+                )
+            if model == Music:
+                query = reduce(and_, [
+                    Q(title__icontains=q) |
+                    Q(hashtag__jp_name__icontains=q) |
+                    Q(author__nickname__icontains=q) |
+                    Q(content__icontains=q) |
+                    Q(lyric__icontains=q) for q in q_list]
+                )
+            if model == Blog:
+                query = reduce(and_, [
+                    Q(title__icontains=q) |
+                    Q(hashtag__jp_name__icontains=q) |
+                    Q(author__nickname__icontains=q) |
+                    Q(content__icontains=q) |
+                    Q(richtext__icontains=q) for q in q_list]
+                )
             result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
             self.count = len(result)
         return result
