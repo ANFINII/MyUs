@@ -34,7 +34,7 @@ class Search:
             result6 = Chat.objects.search(search)[:8]
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
-            self.count = len(result)
+            self.count = result.count()
             return result
         return Video.objects.none()
 
@@ -50,7 +50,7 @@ class Search:
             result6 = Chat.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
-            self.count = len(result)
+            self.count = result.count()
             return result
         return Video.objects.none()
 
@@ -66,7 +66,7 @@ class Search:
             result6 = Chat.objects.filter(author=author, publish=True).search(search)
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
-            self.count = len(result)
+            self.count = result.count()
             return result
         return Video.objects.none()
 
@@ -87,7 +87,7 @@ class Search:
                 Q(follower__introduction__icontains=q) for q in q_list
             ])
             result = result.filter(query).distinct()
-            self.count = len(result)
+            self.count = result.count()
         return result
 
     def search_models(self, model):
@@ -119,7 +119,7 @@ class Search:
                     Q(richtext__icontains=q) for q in q_list
                 ])
             result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
-            self.count = len(result)
+            self.count = result.count()
         return result
 
     def search_todo(self, model):
@@ -133,7 +133,7 @@ class Search:
                 Q(duedate__icontains=q) for q in q_list
             ])
             result = result.filter(query).order_by('-duedate').distinct()
-            self.count = len(result)
+            self.count = result.count()
         return result
 
     def search_advertise(self, model):
@@ -147,7 +147,7 @@ class Search:
                 Q(content__icontains=q) for q in q_list
             ])
             result = result.filter(query).order_by('created').distinct()
-            self.count = len(result)
+            self.count = result.count()
         return result
 
 
@@ -163,7 +163,7 @@ class SearchPjax:
             result6 = Chat.objects.search(search)[:8]
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
-            self.count = len(result)
+            self.count = result.count()
             return result
         return Video.objects.none()
 
@@ -179,7 +179,7 @@ class SearchPjax:
             result6 = Chat.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(scr__gte=50).search(search)[:8]
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
-            self.count = len(result)
+            self.count = result.count()
             return result
         return Video.objects.none()
 
@@ -195,7 +195,7 @@ class SearchPjax:
             result6 = Chat.objects.filter(author=author, publish=True).search(search)
             queryset_chain = chain(result1, result2, result3, result4, result5, result6)
             result = sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
-            self.count = len(result)
+            self.count = result.count()
             return result
         return Video.objects.none()
 
@@ -216,7 +216,7 @@ class SearchPjax:
                 Q(follower__introduction__icontains=q) for q in q_list
             ])
             result = result.filter(query).distinct()
-            self.count = len(result)
+            self.count = result.count()
         return result
 
     def search_models(model, search):
@@ -260,7 +260,7 @@ class SearchPjax:
                 Q(duedate__icontains=q) for q in q_list
             ])
             result = result.filter(query).order_by('-duedate').distinct()
-            self.count = len(result)
+            self.count = result.count()
         return result
 
     def search_advertise(self, model):
@@ -274,5 +274,5 @@ class SearchPjax:
                 Q(content__icontains=q) for q in q_list
             ])
             result = result.filter(query).order_by('created').distinct()
-            self.count = len(result)
+            self.count = result.count()
         return result

@@ -85,7 +85,7 @@ def pjax_context(request, href):
         if search:
             result = SearchPjax.search_models(models_pjax[href], search)
             context['html'] = render_to_string(f'{href}/{href}_list.html', {
-                f'{href}_list': result[:100], 'query': search, 'count': len(result)
+                f'{href}_list': result[:100], 'query': search, 'count': result.count()
             }, request=request)
         else:
             context['html'] = render_to_string(f'{href}/{href}_list.html', {
