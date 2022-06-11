@@ -8,7 +8,7 @@
     <span class="modal_content_body_span">このメッセージを削除しますか？</span>
     <div class="modal_content_body">
       <div class="comment_aria_list">
-        <a href="{% url 'myus:userpage' comment.author.nickname %}" path="{% url 'myus:pjax' %}" data="{{ comment.author.nickname }}" class="pjax_button_userpage">
+        <a href="{% url 'myus:userpage' comment.author.nickname %}" data="{{ comment.author.nickname }}" class="pjax_button_userpage">
           <img src="{{ comment.author.image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
         </a>
         <div class="comment_aria_list_1">

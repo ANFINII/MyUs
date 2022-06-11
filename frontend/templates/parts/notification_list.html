@@ -1,7 +1,7 @@
 {% for notification in notification_list %}
 <div id="notification_aria_link_{{ notification.id }}" class="dropdown_menu_item side_indent">
   <object notification-id="{{ notification.id }}" csrf="{{ csrf_token }}" class="notification_aria_list">
-    <a href="{% url 'myus:userpage' notification.user_from.nickname %}" path="{% url 'myus:pjax' %}" data="{{ notification.user_from.nickname }}" class="pjax_button_userpage">
+    <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" class="pjax_button_userpage">
       <img src="{{ notification.user_from.image.url }}" title="{{ notification.user_from.nickname }}" class="profile_image">
     </a>
     {% if notification.user_confirmed %}
@@ -27,7 +27,7 @@
     {% elif notification.type_name == 'collabo' %}
     <a href="{% url 'myus:collabo_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
     {% elif notification.type_no >= 8 and notification.type_no <= 10 %}
-    <a href="{% url 'myus:userpage' notification.user_from.nickname %}" path="{% url 'myus:pjax' %}" data="{{ notification.user_from.nickname }}" class="notification_aria_anker pjax_button_userpage">
+    <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" class="notification_aria_anker pjax_button_userpage">
     {% endif %}
       {% if notification.type_no >= 1 and notification.type_no <= 7 %}
       <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんが{{ notification.content_object.title }}を投稿しました">

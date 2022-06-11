@@ -6,7 +6,7 @@
       <a href="{% url 'myus:mypage_update' %}" class="btn btn-success btn-sm" role="button">編集</a>
     </div>
     <div class="btn-column2">
-      <a href="{% url 'myus:userpage' user.nickname %}" path="{% url 'myus:pjax' %}" data="{{ user.nickname }}" class="btn btn-success btn-sm pjax_button_userpage" role="button">ユーザページ</a>
+      <a href="{% url 'myus:userpage' user.nickname %}" data="{{ user.nickname }}" class="btn btn-success btn-sm pjax_button_userpage" role="button">ユーザページ</a>
     </div>
   </div>
 

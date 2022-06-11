@@ -7,7 +7,7 @@
       <span id="comment_num">{{ object.comment_num|intcomma }}</span>
     </p>
     {% if user.is_authenticated %}
-    <a href="{% url 'myus:userpage' user.nickname %}" path="{% url 'myus:pjax' %}" data="{{ user.nickname }}" class="pjax_button_userpage">
+    <a href="{% url 'myus:userpage' user.nickname %}" data="{{ user.nickname }}" class="pjax_button_userpage">
       <img src="{{ user.image.url }}" title="{{ user.nickname }}" class="profile_image_comment">
     </a>
     <textarea name="text" rows="1" placeholder="コメント入力" id="comment_form_area" class="textarea_br"></textarea>
