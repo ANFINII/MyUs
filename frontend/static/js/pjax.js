@@ -67,6 +67,32 @@ $(document).on('click', '.pjax_button_userpage', function (event) {
 
 
 // 検索ボタンを押した時の処理
+$(document).on('click', '.search_icon', function (event) {
+  event.preventDefault();
+  const path = location.pathname;
+  const search = document.querySelector('.search_input').value;
+  const url = `${path}?search=${search}`
+  $.ajax({
+    url: '/pjax',
+    type: 'GET',
+    data: { 'href': path, 'search': search },
+    dataType: 'json',
+    timeout: 10000,
+  })
+    .done(function (response) {
+      $('.main_contents').html(response.html);
+      if (document.querySelector('.chat_remove') != null) {
+        document.querySelector('.chat_remove').remove();
+      }
+      pjax_dict(url);
+    })
+    .fail(function (response) {
+      console.log(response);
+    })
+});
+
+
+// 検索タグを押した時の処理
 $(document).on('click', '.pjax_search_button', function (event) {
   event.preventDefault();
   const path = location.pathname;
