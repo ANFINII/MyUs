@@ -191,14 +191,11 @@ class SearchPjax:
             return result
         return Video.objects.none()
 
-    def search_follow(self, model):
-        path = self.request.path
-        user = self.request.user
-        if '/follow' in path:
+    def search_follow(model, search, path, user):
+        if path == 'follow':
             result = model.objects.filter(follower=user.id).exclude(following=user.id).select_related('following__mypage')
-        if '/follower' in path:
+        if path == 'follower':
             result = model.objects.filter(following=user.id).exclude(follower=user.id).select_related('follower__mypage')
-        search = self.request.GET.get('search', None)
         if search:
             q_list = get_q_list(search)
             query = reduce(and_, [
@@ -208,7 +205,6 @@ class SearchPjax:
                 Q(follower__introduction__icontains=q) for q in q_list
             ])
             result = result.filter(query).distinct()
-            self.count = result.count()
         return result
 
     def search_models(model, search):

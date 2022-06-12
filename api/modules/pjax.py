@@ -92,14 +92,22 @@ def pjax_context(request, href):
         context['html'] = render_to_string('todo/todo_list.html', {
             'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100],
         }, request=request)
-    if href == 'follow':
-        context['html'] = render_to_string('follow/follow_list.html', {
-            'follow_list': Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100],
-        }, request=request)
-    if href == 'follower':
-        context['html'] = render_to_string('follow/follower_list.html', {
-            'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100],
-        }, request=request)
+    if href in ('follow', 'follower'):
+        search = request.GET.get('search')
+        if search:
+            result = SearchPjax.search_follow(Follow, search, href, request.user)
+            context['html'] = render_to_string(f'follow/{href}_list.html', {
+                f'{href}_list': result[:100], 'query': search, 'count': result.count()
+            }, request=request)
+        else:
+            if href == 'follow':
+                context['html'] = render_to_string('follow/follow_list.html', {
+                    'follow_list': Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100],
+                }, request=request)
+            if href == 'follower':
+                context['html'] = render_to_string('follow/follower_list.html', {
+                    'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100],
+                }, request=request)
     if href == 'notification':
         context['html'] = render_to_string('common/notification_content.html', {
             'notification_setting_list': NotificationSetting.objects.filter(user=user.id),
