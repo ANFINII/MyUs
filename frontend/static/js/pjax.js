@@ -75,9 +75,10 @@ $(document).on('click', '.pjax_button_userpage', function (event) {
 $(document).on('click', '.search_icon', function (event) {
   event.preventDefault();
   const href = location.pathname;
-  const search = document.querySelector('.search_input').value;
+  const search = $('.search_input').val();
   const url = `${href}?search=${search}`
-  data = { 'href': href, 'search': search }
+  const nickname = $('.userpage_image').attr('title');
+  data = { 'href': href, 'search': search, 'nickname': nickname }
   ajax_data(url, data)
 });
 
@@ -88,6 +89,7 @@ $(document).on('click', '.pjax_search_button', function (event) {
   const href = location.pathname;
   const search = $(this).attr('search');
   const url = `${href}?search=${search}`
-  data = { 'href': href, 'search': search }
+  const nickname = $('.userpage_image').attr('title');
+  data = { 'href': href, 'search': search, 'nickname': nickname }
   ajax_data(url, data)
 });

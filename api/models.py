@@ -254,7 +254,7 @@ class MediaModel(object):
         return self.title
 
     def score(self):
-        return self.read + self.like.count()*10 + self.read*self.like.count()/self.read*20
+        return self.read + self.like.count()*10 + self.read*self.like.count()/(self.read + 1)*20
 
     def total_like(self):
         return self.like.count()

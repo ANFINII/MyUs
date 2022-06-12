@@ -15,56 +15,73 @@ def pjax_context(request, href):
     context = {}
     user = request.user
     if href == '':
-        context['html'] = render_to_string('index_list.html', {
-            'video_list': Video.objects.filter(publish=True).order_by('-created')[:8],
-            'live_list': Live.objects.filter(publish=True).order_by('-created')[:8],
-            'music_list': Music.objects.filter(publish=True).order_by('-created')[:8],
-            'picture_list': Picture.objects.filter(publish=True).order_by('-created')[:8],
-            'blog_list': Blog.objects.filter(publish=True).order_by('-created')[:8],
-            'chat_list': Chat.objects.filter(publish=True).order_by('-created')[:8],
-        }, request=request)
+        search = request.GET.get('search')
+        if search:
+            result = SearchPjax.search_index(search)
+            context['html'] = render_to_string('index_list.html', {
+                'object_list': result, 'query': search, 'count': len(result)
+            }, request=request)
+        else:
+            context['html'] = render_to_string('index_list.html', {
+                'video_list': Video.objects.filter(publish=True).order_by('-created')[:8],
+                'live_list': Live.objects.filter(publish=True).order_by('-created')[:8],
+                'music_list': Music.objects.filter(publish=True).order_by('-created')[:8],
+                'picture_list': Picture.objects.filter(publish=True).order_by('-created')[:8],
+                'blog_list': Blog.objects.filter(publish=True).order_by('-created')[:8],
+                'chat_list': Chat.objects.filter(publish=True).order_by('-created')[:8],
+            }, request=request)
     if href == 'recommend':
         aggregation_date = datetime.datetime.today() - datetime.timedelta(days=200)
-        context['html'] = render_to_string('index_list.html', {
-            'Recommend': 'Recommend',
-            'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-            'live_list': Live.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-            'music_list': Music.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-            'picture_list': Picture.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-            'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-            'chat_list': Chat.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-        }, request=request)
+        search = request.GET.get('search')
+        if search:
+            result = SearchPjax.search_recommend(search, aggregation_date)
+            context['html'] = render_to_string('index_list.html', {
+                'object_list': result, 'query': search, 'count': len(result)
+            }, request=request)
+        else:
+            context['html'] = render_to_string('index_list.html', {
+                'Recommend': 'Recommend',
+                'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'live_list': Live.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'music_list': Music.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'picture_list': Picture.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'chat_list': Chat.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+            }, request=request)
     if 'userpage/post' in href or 'userpage/information' in href or 'userpage/advertise' in href:
         nickname = request.GET.get('nickname')
         author = get_object_or_404(User, nickname=nickname)
+        user_list = User.objects.filter(id=author.id)
         follow = Follow.objects.filter(follower=user.id, following=author)
         followed = False
         if follow.exists():
             followed = True
         if 'userpage/post' in href:
-            context['html'] = render_to_string('userpage/userpage_list.html', {
-                'followed': followed,
-                'author_name': author.nickname,
-                'user_list': User.objects.filter(id=author.id),
-                'video_list': Video.objects.filter(author=author, publish=True).order_by('-created'),
-                'live_list': Live.objects.filter(author=author, publish=True).order_by('-created'),
-                'music_list': Music.objects.filter(author=author, publish=True).order_by('-created'),
-                'picture_list': Picture.objects.filter(author=author, publish=True).order_by('-created'),
-                'blog_list': Blog.objects.filter(author=author, publish=True).order_by('-created'),
-                'chat_list': Chat.objects.filter(author=author, publish=True).order_by('-created'),
-            }, request=request)
+            search = request.GET.get('search')
+            if search:
+                result = SearchPjax.search_userpage(search, author)
+                context['html'] = render_to_string('userpage/userpage_list.html', {
+                    'followed': followed, 'author_name': nickname, 'user_list': user_list,
+                    'object_list': result, 'query': search, 'count': len(result)
+                }, request=request)
+            else:
+                context['html'] = render_to_string('userpage/userpage_list.html', {
+                    'followed': followed, 'author_name': nickname, 'user_list': user_list,
+                    'video_list': Video.objects.filter(author=author, publish=True).order_by('-created'),
+                    'live_list': Live.objects.filter(author=author, publish=True).order_by('-created'),
+                    'music_list': Music.objects.filter(author=author, publish=True).order_by('-created'),
+                    'picture_list': Picture.objects.filter(author=author, publish=True).order_by('-created'),
+                    'blog_list': Blog.objects.filter(author=author, publish=True).order_by('-created'),
+                    'chat_list': Chat.objects.filter(author=author, publish=True).order_by('-created'),
+                }, request=request)
         if 'userpage/information' in href:
             context['html'] = render_to_string('userpage/userpage_information_content.html', {
-                'followed': followed,
-                'author_name': author.nickname,
-                'user_list': User.objects.filter(id=author.id),
+                'followed': followed, 'author_name': nickname, 'user_list': user_list
             }, request=request)
         if 'userpage/advertise' in href:
             context['html'] = render_to_string('userpage/userpage_advertise_list.html', {
-                'followed': followed,
-                'author_name': author.nickname,
-                'user_list': User.objects.filter(id=author.id),
-                'advertise_list': Advertise.objects.filter(author=author, publish=True),
+                'followed': followed, 'author_name': nickname, 'user_list': user_list,
+                'advertise_list': Advertise.objects.filter(author=author, publish=True)
             }, request=request)
     if href in models_pjax:
         search = request.GET.get('search')
@@ -75,7 +92,7 @@ def pjax_context(request, href):
             }, request=request)
         else:
             context['html'] = render_to_string(f'{href}/{href}_list.html', {
-                f'{href}_list': models_pjax[href].objects.filter(publish=True).order_by('-created')[:100],
+                f'{href}_list': models_pjax[href].objects.filter(publish=True).order_by('-created')[:100]
             }, request=request)
     if href == 'todo':
         search = request.GET.get('search')
@@ -86,7 +103,7 @@ def pjax_context(request, href):
             }, request=request)
         else:
             context['html'] = render_to_string('todo/todo_list.html', {
-                'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100],
+                'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100]
             }, request=request)
     if href in ('follow', 'follower'):
         search = request.GET.get('search')
@@ -106,12 +123,12 @@ def pjax_context(request, href):
     if href in models_create_pjax:
         model = href.replace('/create', '')
         if model == 'blog':
-            context['html'] = render_to_string(f'{model}/{model}_create_content.html', {'form' :BlogForm(),}, request=request)
+            context['html'] = render_to_string(f'{model}/{model}_create_content.html', {'form': BlogForm()}, request=request)
         else:
             context['html'] = render_to_string(f'{model}/{model}_create_content.html', request=request)
     if href == 'notification':
         context['html'] = render_to_string('common/notification_content.html', {
-            'notification_setting_list': NotificationSetting.objects.filter(user=user.id),
+            'notification_setting_list': NotificationSetting.objects.filter(user=user.id)
         }, request=request)
     if href == 'userpolicy':
         context['html'] = render_to_string('common/userpolicy_content.html', request=request)
@@ -122,11 +139,7 @@ def pjax_context(request, href):
     if href == 'profile':
         context['html'] = render_to_string('registration/profile_content.html', request=request)
     if href == 'mypage':
-        context['html'] = render_to_string('registration/mypage_content.html', {
-            'mypage_list': MyPage.objects.filter(user=user.id)
-        }, request=request)
+        context['html'] = render_to_string('registration/mypage_content.html', {'mypage_list': MyPage.objects.filter(user=user.id)}, request=request)
     if href == 'withdrawal':
-        context['html'] = render_to_string('registration/withdrawal_content.html', {
-            'expired_seconds': 60,
-        }, request=request)
+        context['html'] = render_to_string('registration/withdrawal_content.html', {'expired_seconds': 60}, request=request)
     return context
