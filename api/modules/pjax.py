@@ -95,15 +95,20 @@ def pjax_context(request, href):
             context['html'] = render_to_string(f'follow/{href}_list.html', {
                 f'{href}_list': result[:100], 'query': search, 'count': result.count()
             }, request=request)
+        elif href == 'follow':
+            context['html'] = render_to_string('follow/follow_list.html', {
+                'follow_list': Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100],
+            }, request=request)
+        elif href == 'follower':
+            context['html'] = render_to_string('follow/follower_list.html', {
+                'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100],
+            }, request=request)
+    if href in models_create_pjax:
+        model = href.replace('/create', '')
+        if model == 'blog':
+            context['html'] = render_to_string(f'{model}/{model}_create_content.html', {'form' :BlogForm(),}, request=request)
         else:
-            if href == 'follow':
-                context['html'] = render_to_string('follow/follow_list.html', {
-                    'follow_list': Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100],
-                }, request=request)
-            if href == 'follower':
-                context['html'] = render_to_string('follow/follower_list.html', {
-                    'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100],
-                }, request=request)
+            context['html'] = render_to_string(f'{model}/{model}_create_content.html', request=request)
     if href == 'notification':
         context['html'] = render_to_string('common/notification_content.html', {
             'notification_setting_list': NotificationSetting.objects.filter(user=user.id),
@@ -121,14 +126,7 @@ def pjax_context(request, href):
             'mypage_list': MyPage.objects.filter(user=user.id)
         }, request=request)
     if href == 'withdrawal':
-        EXPIRED_SECONDS = 60
         context['html'] = render_to_string('registration/withdrawal_content.html', {
-            'expired_seconds': EXPIRED_SECONDS,
+            'expired_seconds': 60,
         }, request=request)
-    if href in models_create_pjax:
-        model = href.replace('/create', '')
-        if model == 'blog':
-            context['html'] = render_to_string(f'{model}/{model}_create_content.html', {'form' :BlogForm(),}, request=request)
-        else:
-            context['html'] = render_to_string(f'{model}/{model}_create_content.html', request=request)
     return context
