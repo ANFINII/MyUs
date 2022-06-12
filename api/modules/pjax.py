@@ -1,14 +1,11 @@
 import datetime
-from functools import reduce
-from itertools import chain
-from operator import and_
 from django.contrib.auth import get_user_model
-from django.db.models import Q, F, Count
+from django.db.models import F, Count
 from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
 from api.forms import BlogForm
 from api.models import MyPage, NotificationSetting, Follow
-from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from api.models import Video, Live, Music, Picture, Blog, Chat, Todo, Advertise
 from api.modules.contains import models_pjax, models_create_pjax
 from api.modules.search import SearchPjax
 
@@ -17,7 +14,7 @@ User = get_user_model()
 def pjax_context(request, href):
     context = {}
     user = request.user
-    if '' == href:
+    if href == '':
         context['html'] = render_to_string('index_list.html', {
             'video_list': Video.objects.filter(publish=True).order_by('-created')[:8],
             'live_list': Live.objects.filter(publish=True).order_by('-created')[:8],
@@ -26,7 +23,7 @@ def pjax_context(request, href):
             'blog_list': Blog.objects.filter(publish=True).order_by('-created')[:8],
             'chat_list': Chat.objects.filter(publish=True).order_by('-created')[:8],
         }, request=request)
-    if 'recommend' == href:
+    if href == 'recommend':
         aggregation_date = datetime.datetime.today() - datetime.timedelta(days=200)
         context['html'] = render_to_string('index_list.html', {
             'Recommend': 'Recommend',
@@ -91,42 +88,42 @@ def pjax_context(request, href):
             context['html'] = render_to_string(f'{href}/{href}_list.html', {
                 f'{href}_list': models_pjax[href].objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
-    if 'todo' == href:
+    if href == 'todo':
         context['html'] = render_to_string('todo/todo_list.html', {
             'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100],
         }, request=request)
-    if 'follow' == href:
+    if href == 'follow':
         context['html'] = render_to_string('follow/follow_list.html', {
             'follow_list': Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100],
         }, request=request)
-    if 'follower' == href:
+    if href == 'follower':
         context['html'] = render_to_string('follow/follower_list.html', {
             'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100],
         }, request=request)
-    if 'notification' == href:
+    if href == 'notification':
         context['html'] = render_to_string('common/notification_content.html', {
             'notification_setting_list': NotificationSetting.objects.filter(user=user.id),
         }, request=request)
-    if 'userpolicy' == href:
+    if href == 'userpolicy':
         context['html'] = render_to_string('common/userpolicy_content.html', request=request)
-    if 'knowledge' == href:
+    if href == 'knowledge':
         context['html'] = render_to_string('common/knowledge_content.html', request=request)
-    if 'payment' == href:
+    if href == 'payment':
         context['html'] = render_to_string('payment/payment_content.html', request=request)
-    if 'profile' == href:
+    if href == 'profile':
         context['html'] = render_to_string('registration/profile_content.html', request=request)
-    if 'mypage' == href:
+    if href == 'mypage':
         context['html'] = render_to_string('registration/mypage_content.html', {
             'mypage_list': MyPage.objects.filter(user=user.id)
         }, request=request)
-    if 'withdrawal' == href:
+    if href == 'withdrawal':
         EXPIRED_SECONDS = 60
         context['html'] = render_to_string('registration/withdrawal_content.html', {
             'expired_seconds': EXPIRED_SECONDS,
         }, request=request)
     if href in models_create_pjax:
         model = href.replace('/create', '')
-        if 'blog' == model:
+        if model == 'blog':
             context['html'] = render_to_string(f'{model}/{model}_create_content.html', {'form' :BlogForm(),}, request=request)
         else:
             context['html'] = render_to_string(f'{model}/{model}_create_content.html', request=request)
