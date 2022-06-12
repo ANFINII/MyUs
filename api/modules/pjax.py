@@ -34,49 +34,38 @@ def pjax_context(request, href):
             'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
             'chat_list': Chat.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
         }, request=request)
-    if 'userpage/post' in href:
+    if 'userpage/post' in href or 'userpage/information' in href or 'userpage/advertise' in href:
         nickname = request.GET.get('nickname')
         author = get_object_or_404(User, nickname=nickname)
         follow = Follow.objects.filter(follower=user.id, following=author)
         followed = False
         if follow.exists():
             followed = True
-        context['html'] = render_to_string('userpage/userpage_list.html', {
-            'followed': followed,
-            'author_name': author.nickname,
-            'user_list': User.objects.filter(id=author.id),
-            'video_list': Video.objects.filter(author=author, publish=True).order_by('-created'),
-            'live_list': Live.objects.filter(author=author, publish=True).order_by('-created'),
-            'music_list': Music.objects.filter(author=author, publish=True).order_by('-created'),
-            'picture_list': Picture.objects.filter(author=author, publish=True).order_by('-created'),
-            'blog_list': Blog.objects.filter(author=author, publish=True).order_by('-created'),
-            'chat_list': Chat.objects.filter(author=author, publish=True).order_by('-created'),
-        }, request=request)
-    if 'userpage/information' in href:
-        nickname = request.GET.get('nickname')
-        author = get_object_or_404(User, nickname=nickname)
-        follow = Follow.objects.filter(follower=user.id, following=author)
-        followed = False
-        if follow.exists():
-            followed = True
-        context['html'] = render_to_string('userpage/userpage_information_content.html', {
-            'followed': followed,
-            'author_name': author.nickname,
-            'user_list': User.objects.filter(id=author.id),
-        }, request=request)
-    if 'userpage/advertise' in href:
-        nickname = request.GET.get('nickname')
-        author = get_object_or_404(User, nickname=nickname)
-        follow = Follow.objects.filter(follower=user.id, following=author)
-        followed = False
-        if follow.exists():
-            followed = True
-        context['html'] = render_to_string('userpage/userpage_advertise_list.html', {
-            'followed': followed,
-            'author_name': author.nickname,
-            'user_list': User.objects.filter(id=author.id),
-            'advertise_list': Advertise.objects.filter(author=author, publish=True),
-        }, request=request)
+        if 'userpage/post' in href:
+            context['html'] = render_to_string('userpage/userpage_list.html', {
+                'followed': followed,
+                'author_name': author.nickname,
+                'user_list': User.objects.filter(id=author.id),
+                'video_list': Video.objects.filter(author=author, publish=True).order_by('-created'),
+                'live_list': Live.objects.filter(author=author, publish=True).order_by('-created'),
+                'music_list': Music.objects.filter(author=author, publish=True).order_by('-created'),
+                'picture_list': Picture.objects.filter(author=author, publish=True).order_by('-created'),
+                'blog_list': Blog.objects.filter(author=author, publish=True).order_by('-created'),
+                'chat_list': Chat.objects.filter(author=author, publish=True).order_by('-created'),
+            }, request=request)
+        if 'userpage/information' in href:
+            context['html'] = render_to_string('userpage/userpage_information_content.html', {
+                'followed': followed,
+                'author_name': author.nickname,
+                'user_list': User.objects.filter(id=author.id),
+            }, request=request)
+        if 'userpage/advertise' in href:
+            context['html'] = render_to_string('userpage/userpage_advertise_list.html', {
+                'followed': followed,
+                'author_name': author.nickname,
+                'user_list': User.objects.filter(id=author.id),
+                'advertise_list': Advertise.objects.filter(author=author, publish=True),
+            }, request=request)
     if href in models_pjax:
         search = request.GET.get('search')
         if search:
