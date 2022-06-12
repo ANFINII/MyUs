@@ -1,10 +1,11 @@
+from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
-from import_export.admin import ImportExportModelAdmin
-from .models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, Comment, Follow
-from .models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from api.models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, Comment, Follow
+from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from api.modules.contains import RatePlan
 
 
 # Admin用の管理画面
@@ -781,13 +782,13 @@ class AdvertiseAdminSite(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         author = request.user
-        if author.mypage.rate_plan != '0':
+        if author.mypage.rate_plan != RatePlan.free:
             return True
         return False
 
     def has_change_permission(self, request, obj=None):
         author = request.user
-        if author.mypage.rate_plan != '0':
+        if author.mypage.rate_plan != RatePlan.free:
             return True
         return False
 
