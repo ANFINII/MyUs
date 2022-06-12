@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
 from api.models import MyPage, NotificationSetting, SearchTag, Follow, Comment
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from api.modules.contains import RatePlan
 from api.modules.notification import notification_data
 
 User = get_user_model()
@@ -104,11 +105,13 @@ class ContextData:
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
             context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
-        if obj.author.mypage.rate_plan == '1':
+        print(obj.author.mypage.rate_plan)
+        print(obj.author.mypage.rate_plan == RatePlan.premium)
+        if obj.author.mypage.rate_plan == RatePlan.basic:
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author).order_by('?')[:1])
-        if obj.author.mypage.rate_plan == '2':
+        if obj.author.mypage.rate_plan == RatePlan.standard:
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author).order_by('?')[:3])
-        if obj.author.mypage.rate_plan == '3':
+        if obj.author.mypage.rate_plan == RatePlan.premium:
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author).order_by('?')[:4])
         context['liked'] = liked
         context['followed'] = followed

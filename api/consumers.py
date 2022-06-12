@@ -1,9 +1,9 @@
 import json
+from asgiref.sync import async_to_sync
+from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
-from channels.generic.websocket import WebsocketConsumer
-from asgiref.sync import async_to_sync
 from api.views import ChatDetail, ChatThread
 from api.models import Chat, Comment, Notification
 from api.modules.contains import NotificationTypeNo

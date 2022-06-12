@@ -5,7 +5,6 @@ from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, D
 from rest_framework.response import Response
 from api.serializers import UserSerializer
 
-
 # Create your views here.
 
 User = get_user_model()

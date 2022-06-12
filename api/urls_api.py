@@ -1,5 +1,5 @@
 from django.urls import path
-from .views_api import SignUpAPIView, PingView
+from api.views_api import SignUpAPIView, PingView
 
 app_name = 'myus'
 

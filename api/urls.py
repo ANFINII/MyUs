@@ -1,20 +1,20 @@
 from django.urls import path
-from .views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
-from .views import Profile, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle
-from .views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
-from .views import NotificationSettingView, notification_setting, notification_confirmed, notification_deleted
-from .views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
-from .views import VideoList, VideoCreate, VideoDetail
-from .views import LiveList, LiveCreate, LiveDetail
-from .views import MusicList, MusicCreate, MusicDetail
-from .views import PictureList, PictureCreate, PictureDetail
-from .views import BlogList, BlogCreate, BlogDetail
-from .views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
-from .views import CollaboList, CollaboCreate, CollaboDetail
-from .views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
-from .views import searchtag_create, advertise_read, like_form, like_form_comment
-from .views import comment_form, reply_form, comment_update, comment_delete, reply_delete
-from .views import pjax, signup_form, login_form, logout_form, Withdrawal
+from api.views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
+from api.views import Profile, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle
+from api.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
+from api.views import NotificationSettingView, notification_setting, notification_confirmed, notification_deleted
+from api.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
+from api.views import VideoList, VideoCreate, VideoDetail
+from api.views import LiveList, LiveCreate, LiveDetail
+from api.views import MusicList, MusicCreate, MusicDetail
+from api.views import PictureList, PictureCreate, PictureDetail
+from api.views import BlogList, BlogCreate, BlogDetail
+from api.views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
+from api.views import CollaboList, CollaboCreate, CollaboDetail
+from api.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
+from api.views import searchtag_create, advertise_read, like_form, like_form_comment
+from api.views import comment_form, reply_form, comment_update, comment_delete, reply_delete
+from api.views import pjax, signup_form, login_form, logout_form, Withdrawal
 
 app_name = 'myus'
 

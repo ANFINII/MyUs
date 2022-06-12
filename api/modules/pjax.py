@@ -122,11 +122,11 @@ def pjax_context(request, href):
             }, request=request)
         elif href == 'follow':
             context['html'] = render_to_string('follow/follow_list.html', {
-                'follow_list': Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100],
+                'follow_list': Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100]
             }, request=request)
         elif href == 'follower':
             context['html'] = render_to_string('follow/follower_list.html', {
-                'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100],
+                'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100]
             }, request=request)
     if href in models_create_pjax:
         model = href.replace('/create', '')
