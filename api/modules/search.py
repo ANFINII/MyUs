@@ -196,51 +196,46 @@ class SearchPjax:
             result = model.objects.filter(follower=user.id).exclude(following=user.id).select_related('following__mypage')
         if path == 'follower':
             result = model.objects.filter(following=user.id).exclude(follower=user.id).select_related('follower__mypage')
-        if search:
-            q_list = get_q_list(search)
-            query = reduce(and_, [
-                Q(following__nickname__icontains=q) |
-                Q(following__introduction__icontains=q) |
-                Q(follower__nickname__icontains=q) |
-                Q(follower__introduction__icontains=q) for q in q_list
-            ])
-            result = result.filter(query).distinct()
+        q_list = get_q_list(search)
+        query = reduce(and_, [
+            Q(following__nickname__icontains=q) |
+            Q(following__introduction__icontains=q) |
+            Q(follower__nickname__icontains=q) |
+            Q(follower__introduction__icontains=q) for q in q_list
+        ])
+        result = result.filter(query).distinct()
         return result
 
     def search_models(model, search):
         result = model.objects.filter(publish=True).order_by('-created')
-        if search:
-            q_list = get_q_list(search)
-            if model == Music:
-                query = reduce(and_, [
-                    Q(title__icontains=q) |
-                    Q(hashtag__jp_name__icontains=q) |
-                    Q(author__nickname__icontains=q) |
-                    Q(content__icontains=q) |
-                    Q(lyric__icontains=q) for q in q_list
-                ])
-            else:
-                query = reduce(and_, [
-                    Q(title__icontains=q) |
-                    Q(hashtag__jp_name__icontains=q) |
-                    Q(author__nickname__icontains=q) |
-                    Q(content__icontains=q) for q in q_list
-                ])
-            result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
-        return result
-
-    def search_todo(self, model):
-        result = model.objects.filter(author=self.request.user.id)
-        search = self.request.GET.get('search')
-        if search:
-            q_list = get_q_list(search)
+        q_list = get_q_list(search)
+        if model == Music:
             query = reduce(and_, [
                 Q(title__icontains=q) |
+                Q(hashtag__jp_name__icontains=q) |
+                Q(author__nickname__icontains=q) |
                 Q(content__icontains=q) |
-                Q(duedate__icontains=q) for q in q_list
+                Q(lyric__icontains=q) for q in q_list
             ])
-            result = result.filter(query).order_by('-duedate').distinct()
-            self.count = result.count()
+        else:
+            query = reduce(and_, [
+                Q(title__icontains=q) |
+                Q(hashtag__jp_name__icontains=q) |
+                Q(author__nickname__icontains=q) |
+                Q(content__icontains=q) for q in q_list
+            ])
+        result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
+        return result
+
+    def search_todo(model, search, user):
+        result = model.objects.filter(author=user.id)
+        q_list = get_q_list(search)
+        query = reduce(and_, [
+            Q(title__icontains=q) |
+            Q(content__icontains=q) |
+            Q(duedate__icontains=q) for q in q_list
+        ])
+        result = result.filter(query).order_by('-duedate').distinct()
         return result
 
     def search_advertise(self, model):

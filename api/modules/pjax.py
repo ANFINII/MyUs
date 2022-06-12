@@ -78,13 +78,20 @@ def pjax_context(request, href):
                 f'{href}_list': models_pjax[href].objects.filter(publish=True).order_by('-created')[:100],
             }, request=request)
     if href == 'todo':
-        context['html'] = render_to_string('todo/todo_list.html', {
-            'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100],
-        }, request=request)
+        search = request.GET.get('search')
+        if search:
+            result = SearchPjax.search_todo(Todo, search, user)
+            context['html'] = render_to_string('todo/todo_list.html', {
+                'todo_list': result[:100], 'query': search, 'count': result.count()
+            }, request=request)
+        else:
+            context['html'] = render_to_string('todo/todo_list.html', {
+                'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100],
+            }, request=request)
     if href in ('follow', 'follower'):
         search = request.GET.get('search')
         if search:
-            result = SearchPjax.search_follow(Follow, search, href, request.user)
+            result = SearchPjax.search_follow(Follow, search, href, user)
             context['html'] = render_to_string(f'follow/{href}_list.html', {
                 f'{href}_list': result[:100], 'query': search, 'count': result.count()
             }, request=request)
