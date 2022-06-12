@@ -16,8 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
-from django.db.models import Count
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr

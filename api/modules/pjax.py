@@ -7,7 +7,7 @@ from api.forms import BlogForm
 from api.models import MyPage, NotificationSetting, Follow
 from api.models import Video, Live, Music, Picture, Blog, Chat, Todo, Advertise
 from api.modules.contains import models_pjax, models_create_pjax
-from api.modules.search import SearchPjax
+from api.modules.search import SearchData
 
 User = get_user_model()
 
@@ -17,7 +17,7 @@ def pjax_context(request, href):
     if href == '':
         search = request.GET.get('search')
         if search:
-            result = SearchPjax.search_index(search)
+            result = SearchData.search_index(search)
             context['html'] = render_to_string('index_list.html', {
                 'object_list': result, 'query': search, 'count': len(result)
             }, request=request)
@@ -34,19 +34,19 @@ def pjax_context(request, href):
         aggregation_date = datetime.datetime.today() - datetime.timedelta(days=200)
         search = request.GET.get('search')
         if search:
-            result = SearchPjax.search_recommend(search, aggregation_date)
+            result = SearchData.search_recommend(aggregation_date, search)
             context['html'] = render_to_string('index_list.html', {
                 'object_list': result, 'query': search, 'count': len(result)
             }, request=request)
         else:
             context['html'] = render_to_string('index_list.html', {
                 'Recommend': 'Recommend',
-                'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'live_list': Live.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'music_list': Music.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'picture_list': Picture.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
-                'chat_list': Chat.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).filter(score__gte=50).order_by('-score')[:8],
+                'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
+                'live_list': Live.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
+                'music_list': Music.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
+                'picture_list': Picture.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
+                'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
+                'chat_list': Chat.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
             }, request=request)
     if 'userpage/post' in href or 'userpage/information' in href or 'userpage/advertise' in href:
         nickname = request.GET.get('nickname')
@@ -59,7 +59,7 @@ def pjax_context(request, href):
         if 'userpage/post' in href:
             search = request.GET.get('search')
             if search:
-                result = SearchPjax.search_userpage(search, author)
+                result = SearchData.search_userpage(author, search)
                 context['html'] = render_to_string('userpage/userpage_list.html', {
                     'followed': followed, 'author_name': nickname, 'user_list': user_list,
                     'object_list': result, 'query': search, 'count': len(result)
@@ -81,7 +81,7 @@ def pjax_context(request, href):
         if 'userpage/advertise' in href:
             search = request.GET.get('search')
             if search:
-                result = SearchPjax.search_advertise(Advertise, search, author)
+                result = SearchData.search_advertise(Advertise, author, search)
                 context['html'] = render_to_string('userpage/userpage_advertise_list.html', {
                     'followed': followed, 'author_name': nickname, 'user_list': user_list,
                     'advertise_list': result, 'query': search, 'count': len(result)
@@ -94,7 +94,7 @@ def pjax_context(request, href):
     if href in models_pjax:
         search = request.GET.get('search')
         if search:
-            result = SearchPjax.search_models(models_pjax[href], search)
+            result = SearchData.search_models(models_pjax[href], search)
             context['html'] = render_to_string(f'{href}/{href}_list.html', {
                 f'{href}_list': result[:100], 'query': search, 'count': result.count()
             }, request=request)
@@ -105,7 +105,7 @@ def pjax_context(request, href):
     if href == 'todo':
         search = request.GET.get('search')
         if search:
-            result = SearchPjax.search_todo(Todo, search, user)
+            result = SearchData.search_todo(Todo, user, search)
             context['html'] = render_to_string('todo/todo_list.html', {
                 'todo_list': result[:100], 'query': search, 'count': result.count()
             }, request=request)
@@ -116,7 +116,7 @@ def pjax_context(request, href):
     if href in ('follow', 'follower'):
         search = request.GET.get('search')
         if search:
-            result = SearchPjax.search_follow(Follow, search, href, user)
+            result = SearchData.search_follow(Follow, href, user, search)
             context['html'] = render_to_string(f'follow/{href}_list.html', {
                 f'{href}_list': result[:100], 'query': search, 'count': result.count()
             }, request=request)
