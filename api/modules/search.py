@@ -224,16 +224,12 @@ class SearchPjax:
         result = result.filter(query).order_by('-duedate').distinct()
         return result
 
-    def search_advertise(self, model):
-        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+    def search_advertise(model, search, author):
         result = model.objects.filter(author=author, publish=True).order_by('created')
-        search = self.request.GET.get('search')
-        if search:
-            q_list = get_q_list(search)
-            query = reduce(and_, [
-                Q(title__icontains=q) |
-                Q(content__icontains=q) for q in q_list
-            ])
-            result = result.filter(query).order_by('created').distinct()
-            self.count = result.count()
+        q_list = get_q_list(search)
+        query = reduce(and_, [
+            Q(title__icontains=q) |
+            Q(content__icontains=q) for q in q_list
+        ])
+        result = result.filter(query).order_by('created').distinct()
         return result

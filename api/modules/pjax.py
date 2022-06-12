@@ -79,10 +79,18 @@ def pjax_context(request, href):
                 'followed': followed, 'author_name': nickname, 'user_list': user_list
             }, request=request)
         if 'userpage/advertise' in href:
-            context['html'] = render_to_string('userpage/userpage_advertise_list.html', {
-                'followed': followed, 'author_name': nickname, 'user_list': user_list,
-                'advertise_list': Advertise.objects.filter(author=author, publish=True)
-            }, request=request)
+            search = request.GET.get('search')
+            if search:
+                result = SearchPjax.search_advertise(Advertise, search, author)
+                context['html'] = render_to_string('userpage/userpage_advertise_list.html', {
+                    'followed': followed, 'author_name': nickname, 'user_list': user_list,
+                    'advertise_list': result, 'query': search, 'count': len(result)
+                }, request=request)
+            else:
+                context['html'] = render_to_string('userpage/userpage_advertise_list.html', {
+                    'followed': followed, 'author_name': nickname, 'user_list': user_list,
+                    'advertise_list': Advertise.objects.filter(author=author, publish=True)
+                }, request=request)
     if href in models_pjax:
         search = request.GET.get('search')
         if search:
