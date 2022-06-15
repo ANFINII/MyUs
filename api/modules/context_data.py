@@ -44,7 +44,7 @@ class ContextData:
         if 'Recommend' in str(models.__name__):
             # 急上昇はcreatedが1日以内かつscoreが100000以上の上位8レコード
             # テストはcreatedが100日以内かつscoreが50以上の上位8レコード
-            # socre = (read + like*10) + read * like/read * 20
+            # socre = (read + like*10) + read * like/(read+1)*20
             aggregation_date = datetime.datetime.today() - datetime.timedelta(days=200)
             context['Recommend'] = 'Recommend'
             context.update({

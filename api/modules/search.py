@@ -103,7 +103,7 @@ class SearchData:
                 Q(author__nickname__icontains=q) |
                 Q(content__icontains=q) for q in q_list
             ])
-        result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/F('read')*20).order_by('-score').distinct()
+        result = result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).order_by('-score').distinct()
         return result
 
     def search_todo(model, user, search):
