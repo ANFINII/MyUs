@@ -16,7 +16,7 @@ class ChatConsumer(WebsocketConsumer):
         message = Comment.objects.create(
             author=self.scope['user'],
             text=data['message'],
-            content_object = obj,
+            content_object=obj,
         )
         obj.thread = obj.comment.filter(parent__isnull=True).count()
         obj.joined = obj.comment.values_list('author').distinct().count()
@@ -28,22 +28,24 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
 
     def create_reply_message(self, data):
+        user = self.scope['user']
         obj = Chat.objects.get(id=data['obj_id'])
         message = Comment.objects.create(
-            author=self.scope['user'],
+            author=user,
             text=data['message'],
             content_object=obj,
             parent_id=data['parent_id'],
         )
+        author = message.parent.author
         obj.joined = obj.comment.values_list('author').distinct().count()
         obj.save(update_fields=['joined'])
         parent_obj = Comment.objects.get(id=data['parent_id'])
         parent_obj.reply_num = Comment.objects.filter(parent=data['parent_id']).count()
         parent_obj.save(update_fields=['reply_num'])
-        if self.scope['user'] != message.parent.author:
+        if user != author and author.notificationsetting.is_reply:
             Notification.objects.create(
-                user_from=self.scope['user'],
-                user_to=message.parent.author,
+                user_from=user,
+                user_to=author,
                 type_no=NotificationTypeNo.reply,
                 type_name='reply',
                 content_object=message,
