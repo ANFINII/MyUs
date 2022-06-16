@@ -58,7 +58,7 @@ class ContextData:
 
         if ('UserPage' or 'UserPageInfo' or 'UserPageAdvertise') in str(models.__name__):
             author = get_object_or_404(User, nickname=self.kwargs['nickname'])
-            follow = Follow.objects.filter(follower=self.request.user.id, following=author)
+            follow = Follow.objects.filter(follower=user.id, following=author)
             followed = False
             if follow.exists():
                 followed = True
@@ -80,9 +80,10 @@ class ContextData:
         context = super(models, self).get_context_data(**kwargs)
         obj = self.object
         user = self.request.user
+        author = obj.author
         liked = False
         followed = False
-        follow = Follow.objects.filter(follower=user.id, following=obj.author)
+        follow = Follow.objects.filter(follower=user.id, following=author)
         if follow.exists():
             followed = True
         if 'TodoDetail' not in str(models.__name__):
@@ -105,14 +106,12 @@ class ContextData:
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
             context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
-        print(obj.author.mypage.rate_plan)
-        print(obj.author.mypage.rate_plan == RatePlan.premium)
-        if obj.author.mypage.rate_plan == RatePlan.basic:
-            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author).order_by('?')[:1])
-        if obj.author.mypage.rate_plan == RatePlan.standard:
-            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author).order_by('?')[:3])
-        if obj.author.mypage.rate_plan == RatePlan.premium:
-            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=obj.author).order_by('?')[:4])
+        if author.mypage.rate_plan == RatePlan.basic:
+            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:1])
+        if author.mypage.rate_plan == RatePlan.standard:
+            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:3])
+        if author.mypage.rate_plan == RatePlan.premium:
+            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:4])
         context['liked'] = liked
         context['followed'] = followed
         context['user_id'] = user.id
