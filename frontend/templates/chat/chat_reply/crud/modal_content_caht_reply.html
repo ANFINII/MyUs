@@ -1,4 +1,4 @@
-{% if reply.author.id == user_id %}
+{% if reply.author_id == user_id %}
 <div id="edit_button_{{ reply.id }}" comment-id="{{ reply.id }}" class="edit_button">
   <a type="button" name="update" class="edit_button_update">編集</a>
   <a type="button" name="delete" class="edit_button_delete">削除</a>

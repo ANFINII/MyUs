@@ -16,7 +16,7 @@
     </a>
     {% include 'chat/chat_comment/crud/modal_content_chat_comment.html' %}
   </div>
-  {% if comment.author.id == user_id %}
+  {% if comment.author_id == user_id %}
   <div id="edit_update_main_{{ comment.id }}" class="edit_update_main_chat">
     {% include 'chat/chat_comment/crud/chat_comment_update.html' %}
   </div>

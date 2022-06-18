@@ -290,10 +290,10 @@ class VideoManager(models.Manager, MediaManager):
         return VideoQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 def images_video_upload(instance, filename):
-    return f'images/images_video/user_{instance.author.id}/object_{instance.id}/{filename}'
+    return f'images/images_video/user_{instance.author_id}/object_{instance.id}/{filename}'
 
 def videos_video_upload(instance, filename):
-    return f'videos/videos_video/user_{instance.author.id}/object_{instance.id}/{filename}'
+    return f'videos/videos_video/user_{instance.author_id}/object_{instance.id}/{filename}'
 
 class Video(models.Model, MediaModel):
     """Video"""
@@ -353,10 +353,10 @@ class LiveManager(models.Manager, MediaManager):
         return LiveQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 def images_live_upload(instance, filename):
-    return f'images/images_live/user_{instance.author.id}/object_{instance.id}/{filename}'
+    return f'images/images_live/user_{instance.author_id}/object_{instance.id}/{filename}'
 
 def videos_live_upload(instance, filename):
-    return f'videos/videos_live/user_{instance.author.id}/object_{instance.id}/{filename}'
+    return f'videos/videos_live/user_{instance.author_id}/object_{instance.id}/{filename}'
 
 class Live(models.Model, MediaModel):
     """Live"""
@@ -414,7 +414,7 @@ class MusicManager(models.Manager, MediaManager):
         return MusicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 def musics_upload(instance, filename):
-    return f'musics/user_{instance.author.id}/object_{instance.id}/{filename}'
+    return f'musics/user_{instance.author_id}/object_{instance.id}/{filename}'
 
 class Music(models.Model, MediaModel):
     """Music"""
@@ -468,7 +468,7 @@ class PictureManager(models.Manager, MediaManager):
         return PictureQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 def images_picture_upload(instance, filename):
-    return f'images/images_picture/user_{instance.author.id}/object_{instance.id}/{filename}'
+    return f'images/images_picture/user_{instance.author_id}/object_{instance.id}/{filename}'
 
 class Picture(models.Model, MediaModel):
     """Picture"""
@@ -521,7 +521,7 @@ class BlogManager(models.Manager, MediaManager):
         return BlogQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 def images_blog_upload(instance, filename):
-    return f'images/images_blog/user_{instance.author.id}/object_{instance.id}/{filename}'
+    return f'images/images_blog/user_{instance.author_id}/object_{instance.id}/{filename}'
 
 class Blog(models.Model, MediaModel):
     """Blog"""
@@ -702,10 +702,10 @@ class Notification(models.Model):
 
 
 def images_adver_upload(instance, filename):
-    return f'images/images_adver/user_{instance.author.id}/object_{instance.id}/{filename}'
+    return f'images/images_adver/user_{instance.author_id}/object_{instance.id}/{filename}'
 
 def videos_adver_upload(instance, filename):
-    return f'videos/videos_adver/user_{instance.author.id}/object_{instance.id}/{filename}'
+    return f'videos/videos_adver/user_{instance.author_id}/object_{instance.id}/{filename}'
 
 class Advertise(models.Model):
     """Advertise"""
