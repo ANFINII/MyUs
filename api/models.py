@@ -36,23 +36,25 @@ class UserManager(BaseUserManager):
     def get_queryset(self):
         return super(UserManager,self).get_queryset().select_related('mypage')
 
-def user_image_path(instance, filename):
+def user_icon(instance, filename):
     return f'users/images_user/user_{instance.id}/{filename}'
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """CustomUser"""
-    image         = models.ImageField(upload_to=user_image_path, default='../frontend/static/img/user_icon.png', blank=True, null=True)
+    """User"""
+    img           = '../frontend/static/img/user_icon.png'
+    image         = models.ImageField(upload_to=user_icon, default=img, blank=True, null=True)
     email         = models.EmailField(max_length=255, unique=True)
     username      = models.CharField(max_length=20, unique=True)
     nickname      = models.CharField(max_length=80, unique=True)
     last_name     = models.CharField(max_length=40, blank=True)
     first_name    = models.CharField(max_length=40, blank=True)
 
-    birthday      = models.DateField(blank=True, null=True)
     gender_choice = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
+    message       = '電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます'
+    birthday      = models.DateField(blank=True, null=True)
     gender        = models.CharField(choices=gender_choice, max_length=1, default='2')
-    phone_no      = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message = ('電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます。'))
-    phone         = models.CharField(validators=[phone_no], max_length=15, blank=True, default='000-0000-0000')
+    phone_no      = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message=message)
+    phone         = models.CharField(validators=[phone_no], max_length=15, blank=True, null=True)
     location      = models.CharField(max_length=255, blank=True)
     introduction  = models.TextField(blank=True)
 
@@ -138,17 +140,18 @@ class MyPageManager(models.Manager):
     def get_queryset(self):
         return super(MyPageManager,self).get_queryset().select_related('user')
 
-def mypage_banner_path(instance, filename):
+def mypage_banner(instance, filename):
     return f'users/images_mypage/user_{instance.id}/{filename}'
 
 class MyPage(models.Model):
+    img            = '../frontend/static/img/MyUs_banner.png'
+    plan_choice    = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
     user           = models.OneToOneField(User, on_delete=models.CASCADE)
-    banner         = models.ImageField(upload_to=mypage_banner_path, default='../frontend/static/img/MyUs_banner.png', blank=True, null=True)
+    banner         = models.ImageField(upload_to=mypage_banner, default=img, blank=True, null=True)
     email          = models.EmailField(max_length=255, blank=True, null=True, default='abc@gmail.com')
     content        = models.TextField(blank=True)
     follower_num   = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
     following_num  = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
-    plan_choice    = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
     rate_plan      = models.CharField(choices=plan_choice, max_length=1, default='0')
     rate_plan_date = models.DateTimeField(blank=True, null=True)
     is_advertise   = models.BooleanField(default=True)
@@ -286,10 +289,10 @@ class VideoManager(models.Manager, MediaManager):
     def get_queryset(self):
         return VideoQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
-def images_video_upload_path(instance, filename):
+def images_video_upload(instance, filename):
     return f'images/images_video/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-def videos_video_upload_path(instance, filename):
+def videos_video_upload(instance, filename):
     return f'videos/videos_video/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class Video(models.Model, MediaModel):
@@ -297,9 +300,9 @@ class Video(models.Model, MediaModel):
     author      = models.ForeignKey(User, on_delete=models.CASCADE)
     title       = models.CharField(max_length=100)
     content     = models.TextField()
-    image       = models.ImageField(upload_to=images_video_upload_path)
-    video       = models.FileField(upload_to=videos_video_upload_path)
-    convert     = models.FileField(upload_to=videos_video_upload_path)
+    image       = models.ImageField(upload_to=images_video_upload)
+    video       = models.FileField(upload_to=videos_video_upload)
+    convert     = models.FileField(upload_to=videos_video_upload)
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
     like        = models.ManyToManyField(User, related_name='video_like', blank=True)
@@ -349,10 +352,10 @@ class LiveManager(models.Manager, MediaManager):
     def get_queryset(self):
         return LiveQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
-def images_live_upload_path(instance, filename):
+def images_live_upload(instance, filename):
     return f'images/images_live/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-def videos_live_upload_path(instance, filename):
+def videos_live_upload(instance, filename):
     return f'videos/videos_live/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class Live(models.Model, MediaModel):
@@ -360,9 +363,9 @@ class Live(models.Model, MediaModel):
     author      = models.ForeignKey(User, on_delete=models.CASCADE)
     title       = models.CharField(max_length=100)
     content     = models.TextField()
-    image       = models.ImageField(upload_to=images_live_upload_path)
-    live        = models.FileField(upload_to=videos_live_upload_path)
-    convert     = models.FileField(upload_to=videos_live_upload_path)
+    image       = models.ImageField(upload_to=images_live_upload)
+    live        = models.FileField(upload_to=videos_live_upload)
+    convert     = models.FileField(upload_to=videos_live_upload)
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
     like        = models.ManyToManyField(User, related_name='live_like', blank=True)
@@ -410,7 +413,7 @@ class MusicManager(models.Manager, MediaManager):
     def get_queryset(self):
         return MusicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
-def musics_upload_path(instance, filename):
+def musics_upload(instance, filename):
     return f'musics/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class Music(models.Model, MediaModel):
@@ -419,7 +422,7 @@ class Music(models.Model, MediaModel):
     title       = models.CharField(max_length=100)
     content     = models.TextField()
     lyric       = models.TextField(blank=True, null=True)
-    music       = models.FileField(upload_to=musics_upload_path)
+    music       = models.FileField(upload_to=musics_upload)
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
     like        = models.ManyToManyField(User, related_name='music_like', blank=True)
@@ -464,7 +467,7 @@ class PictureManager(models.Manager, MediaManager):
     def get_queryset(self):
         return PictureQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
-def images_picture_upload_path(instance, filename):
+def images_picture_upload(instance, filename):
     return f'images/images_picture/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class Picture(models.Model, MediaModel):
@@ -472,7 +475,7 @@ class Picture(models.Model, MediaModel):
     author      = models.ForeignKey(User, on_delete=models.CASCADE)
     title       = models.CharField(max_length=100)
     content     = models.TextField()
-    image       = models.ImageField(upload_to=images_picture_upload_path)
+    image       = models.ImageField(upload_to=images_picture_upload)
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
     like        = models.ManyToManyField(User, related_name='picture_like', blank=True)
@@ -517,7 +520,7 @@ class BlogManager(models.Manager, MediaManager):
     def get_queryset(self):
         return BlogQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
-def images_blog_upload_path(instance, filename):
+def images_blog_upload(instance, filename):
     return f'images/images_blog/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class Blog(models.Model, MediaModel):
@@ -525,7 +528,7 @@ class Blog(models.Model, MediaModel):
     author      = models.ForeignKey(User, on_delete=models.CASCADE)
     title       = models.CharField(max_length=100)
     content     = models.TextField()
-    image       = models.ImageField(upload_to=images_blog_upload_path)
+    image       = models.ImageField(upload_to=images_blog_upload)
     richtext    = RichTextUploadingField(blank=True, null=True)
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
@@ -661,10 +664,10 @@ class Follow(models.Model):
 
 class Notification(models.Model):
     """Notification"""
-    # 'video': 1, 'live': 2, 'music': 3, 'picture': 4, 'blog': 5, 'chat': 6, 'collabo': 7,
-    # 'follow': 8, 'like': 9, 'reply': 10, 'views': 11
-    user_from      = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE)
-    user_to        = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, blank=True, null=True)
+    # 'video': 1, 'live': 2, 'music': 3, 'picture': 4, 'blog': 5, 'chat': 6
+    # 'collabo': 7, 'follow': 8, 'like': 9, 'reply': 10, 'views': 11
+    user_from      = models.ForeignKey(User, related_name='user_from', on_delete=models.CASCADE)
+    user_to        = models.ForeignKey(User, related_name='user_to', on_delete=models.CASCADE, blank=True, null=True)
     type_no        = models.IntegerField(default=0)
     type_name      = models.CharField(max_length=7, blank=True, null=True)
     content_type   = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -698,10 +701,10 @@ class Notification(models.Model):
         ]
 
 
-def images_adver_upload_path(instance, filename):
+def images_adver_upload(instance, filename):
     return f'images/images_adver/user_{instance.author.id}/object_{instance.id}/{filename}'
 
-def videos_adver_upload_path(instance, filename):
+def videos_adver_upload(instance, filename):
     return f'videos/videos_adver/user_{instance.author.id}/object_{instance.id}/{filename}'
 
 class Advertise(models.Model):
@@ -711,8 +714,8 @@ class Advertise(models.Model):
     title   = models.CharField(max_length=100)
     url     = models.URLField()
     content = models.TextField()
-    image   = models.ImageField(upload_to=images_adver_upload_path)
-    video   = models.FileField(upload_to=videos_adver_upload_path)
+    image   = models.ImageField(upload_to=images_adver_upload)
+    video   = models.FileField(upload_to=videos_adver_upload)
     read    = models.IntegerField(blank=True, null=True, default=0)
     type    = models.CharField(choices=choice, max_length=2, default='1')
     period  = models.DateField()
