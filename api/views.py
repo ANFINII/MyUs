@@ -529,6 +529,7 @@ def like_form_comment(request):
         user = request.user
         comment_id = request.POST.get('comment_id')
         obj = get_object_or_404(Comment, id=comment_id)
+        author = obj.author
         comment_liked = False
         if obj.like.filter(id=user.id).exists():
             comment_liked = False
@@ -537,10 +538,10 @@ def like_form_comment(request):
         else:
             comment_liked = True
             obj.like.add(user)
-            if user != obj.author:
+            if user != author and author.notificationsetting.is_like:
                 Notification.objects.create(
                     user_from=user,
-                    user_to=obj.author,
+                    user_to=author,
                     type_no=NotificationTypeNo.like,
                     type_name='like',
                     content_object=obj,
@@ -595,10 +596,11 @@ def reply_form(request):
         parent_obj = Comment.objects.get(id=comment_id)
         parent_obj.reply_num = Comment.objects.filter(parent=comment_id).count()
         parent_obj.save(update_fields=['reply_num'])
-        if user != comment_obj.parent.author:
+        author = comment_obj.parent.author
+        if user != author and author.notificationsetting.is_reply:
             Notification.objects.create(
                 user_from=user,
-                user_to=comment_obj.parent.author,
+                user_to=author,
                 type_no=NotificationTypeNo.reply,
                 type_name='reply',
                 content_object=comment_obj,

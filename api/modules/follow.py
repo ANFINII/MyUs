@@ -32,11 +32,12 @@ def follow_update_data(follower, following, follow_obj):
         following.follower_num = follower_count
         following.save()
         # 'フォローしました'
-        Notification.objects.create(
-            user_from=follower.user,
-            user_to=following.user,
-            type_no=NotificationTypeNo.follow,
-            type_name='follow',
-            content_object=follow_obj,
-        )
+        if following.user.notificationsetting.is_follow:
+            Notification.objects.create(
+                user_from=follower.user,
+                user_to=following.user,
+                type_no=NotificationTypeNo.follow,
+                type_name='follow',
+                content_object=follow_obj,
+            )
     return {'followed': followed, 'follower_count': follower_count}
