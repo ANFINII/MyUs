@@ -14,8 +14,8 @@ User = get_user_model()
 def pjax_context(request, href):
     context = {}
     user = request.user
+    search = request.GET.get('search')
     if href == '':
-        search = request.GET.get('search')
         if search:
             result = SearchData.search_index(search)
             context['html'] = render_to_string('index_list.html', {
@@ -32,7 +32,6 @@ def pjax_context(request, href):
             }, request=request)
     if href == 'recommend':
         aggregation_date = datetime.datetime.today() - datetime.timedelta(days=200)
-        search = request.GET.get('search')
         if search:
             result = SearchData.search_recommend(aggregation_date, search)
             context['html'] = render_to_string('index_list.html', {
@@ -57,7 +56,6 @@ def pjax_context(request, href):
         if follow.exists():
             followed = True
         if 'userpage/post' in href:
-            search = request.GET.get('search')
             if search:
                 result = SearchData.search_userpage(author, search)
                 context['html'] = render_to_string('userpage/userpage_list.html', {
@@ -79,7 +77,6 @@ def pjax_context(request, href):
                 'followed': followed, 'author_name': nickname, 'user_list': user_list
             }, request=request)
         if 'userpage/advertise' in href:
-            search = request.GET.get('search')
             if search:
                 result = SearchData.search_advertise(Advertise, author, search)
                 context['html'] = render_to_string('userpage/userpage_advertise_list.html', {
@@ -92,7 +89,6 @@ def pjax_context(request, href):
                     'advertise_list': Advertise.objects.filter(author=author, publish=True)
                 }, request=request)
     if href in models_pjax:
-        search = request.GET.get('search')
         if search:
             result = SearchData.search_models(models_pjax[href], search)
             context['html'] = render_to_string(f'{href}/{href}_list.html', {
@@ -103,7 +99,6 @@ def pjax_context(request, href):
                 f'{href}_list': models_pjax[href].objects.filter(publish=True).order_by('-created')[:100]
             }, request=request)
     if href == 'todo':
-        search = request.GET.get('search')
         if search:
             result = SearchData.search_todo(Todo, user, search)
             context['html'] = render_to_string('todo/todo_list.html', {
@@ -114,7 +109,6 @@ def pjax_context(request, href):
                 'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100]
             }, request=request)
     if href in ('follow', 'follower'):
-        search = request.GET.get('search')
         if search:
             result = SearchData.search_follow(Follow, href, user, search)
             context['html'] = render_to_string(f'follow/{href}_list.html', {
