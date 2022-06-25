@@ -728,19 +728,19 @@ header {
   margin: 0 4.3px 0 0;
 }
 
-.tag_list {
+.hashtag_list {
   display: inline;
   margin: 0 2px 0 0;
 }
 
-.tag_list a {
+.hashtag_list a {
   text-decoration: none;
   font-size: 12px;
   color: rgb(100, 100, 100);
 }
 
 .tag_n_list a:hover,
-.tag_list a:hover {
+.hashtag_list a:hover {
   color: rgb(0, 130, 255);
 }
 

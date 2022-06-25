@@ -15,7 +15,7 @@ $(document).on('click', '.main_tag_2', function (event) {
     .done(function (response) {
       document.querySelector('.main_tag_2').setAttribute('disabled', true);
       let searchtag_add =
-        '<a href="?search=' + response.searchtag + '" search="' + response.searchtag + '" class="tag_n_add pjax_search_button">' + response.searchtag + '</a>'
+        '<a href="?search=' + response.searchtag + '" search="' + response.searchtag + '" class="tag_n_add pjax_search">' + response.searchtag + '</a>'
       $('.tag_n_list').append(searchtag_add);
     })
     .fail(function (response) {
