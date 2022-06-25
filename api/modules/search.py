@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, F, Count
 from api.models import Video, Live, Music, Picture, Blog, Chat
+from api.modules.filter_data import DeferData
 
 User = get_user_model()
 
@@ -145,9 +146,9 @@ class Search:
             self.count = result.count()
             return result
         if path == 'follow':
-            return model.objects.filter(follower=user.id).exclude(following=user.id).select_related('following__mypage')
+            return model.objects.filter(follower=user.id).exclude(following=user.id).select_related('following__mypage').defer(*DeferData.follow)
         if path == 'follower':
-            return model.objects.filter(following=user.id).exclude(follower=user.id).select_related('follower__mypage')
+            return model.objects.filter(following=user.id).exclude(follower=user.id).select_related('follower__mypage').defer(*DeferData.follow)
 
     def search_models(self, model):
         search = self.request.GET.get('search')
@@ -155,7 +156,7 @@ class Search:
             result = SearchData.search_models(model, search)
             self.count = result.count()
             return result
-        return model.objects.filter(publish=True).order_by('-created')
+        return model.objects.filter(publish=True).defer(*DeferData.defer_list).order_by('-created')
 
     def search_todo(self, model):
         user = self.request.user
@@ -164,7 +165,7 @@ class Search:
             result = SearchData.search_todo(model, user, search)
             self.count = result.count()
             return result
-        return model.objects.filter(author=user.id)
+        return model.objects.filter(author=user.id).defer(*DeferData.defer_list)
 
     def search_advertise(self, model):
         author = get_object_or_404(User, nickname=self.kwargs['nickname'])
