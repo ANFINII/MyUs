@@ -1,4 +1,4 @@
-from .base import *
+from settings.base import *
 
 DEBUG = True
 ALLOWED_HOSTS = ['*']
@@ -7,10 +7,12 @@ INTERNAL_IPS = ['127.0.0.1']
 # Add Application
 INSTALLED_APPS += [
     'debug_toolbar',
+    # 'debug_panel',
 ]
 
 MIDDLEWARE += [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_panel.middleware.DebugPanelMiddleware',
 ]
 
 # Cors headers

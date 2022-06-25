@@ -1,4 +1,4 @@
-from .base import *
+from settings.base import *
 
 # Security
 # https://docs.djangoproject.com/ja/4.0/ref/settings/

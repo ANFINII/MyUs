@@ -1,4 +1,4 @@
-from .base import *
+from settings.base import *
 
 DEBUG = True
 ALLOWED_HOSTS = ['dev.myus.com']
