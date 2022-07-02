@@ -214,7 +214,7 @@ class NotificationSetting(models.Model):
         return self.user.nickname
 
     class Meta:
-        db_table = 'notificationSetting'
+        db_table = 'notification_setting'
         verbose_name_plural = '00 通知設定'
 
 @receiver(post_save, sender=User)
@@ -222,6 +222,20 @@ def create_notification_setting(sender, **kwargs):
     """ユーザー作成時に空のnotification_settingも作成する"""
     if kwargs['created']:
         NotificationSetting.objects.get_or_create(user=kwargs['instance'])
+
+
+class IpAccessLog(models.Model):
+    ip_address = models.CharField(max_length=15)
+    type_name  = models.CharField(max_length=7, blank=True, null=True)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'ip_access_log'
+        verbose_name_plural = '00 アクセスログ'
+        indexes = [
+            models.Index(fields=['ip_address', 'type_name'], name='ip_address_type_idx'),
+        ]
 
 
 class SearchTag(models.Model):
@@ -235,7 +249,7 @@ class SearchTag(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'searchTag'
+        db_table = 'searchtag'
         verbose_name_plural = '09 検索タグ'
 
 
@@ -248,7 +262,7 @@ class HashTag(models.Model):
         return self.jp_name
 
     class Meta:
-        db_table = 'hashTag'
+        db_table = 'hashtag'
         verbose_name_plural = '10 ハッシュタグ'
 
 
