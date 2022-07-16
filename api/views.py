@@ -5,10 +5,7 @@ import os
 import random
 import string
 import stripe
-import itertools
 
-from ffmpeg_streaming import FFProbe
-from pathlib import Path
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
@@ -34,10 +31,10 @@ from api.modules.pjax import pjax_context
 from api.modules.notification import notification_data, notification_setting_update
 from api.modules.search import Search
 from api.modules.success_url import success_url
-from api.modules.convert_hls import convert_hls_144p, convert_hls_240p, convert_hls_360p
-from api.modules.convert_hls import convert_hls_480p, convert_hls_720p, convert_hls_1080p
+from api.modules.convert_hls import convert_hls
 from api.modules.follow import follow_update_data
 from api.modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
+
 
 # Create your views here.
 
@@ -789,42 +786,14 @@ class VideoCreate(CreateView):
         form.instance.author = self.request.user
         form.save()
 
-        MEDIA_ROOT = settings.MEDIA_ROOT
-        VIDEO_PATH = os.path.join(MEDIA_ROOT, 'videos', 'videos_video', f'user_{form.instance.author.id}', f'object_{form.instance.id}')
-        VIDEO_FILE = os.path.join(VIDEO_PATH, os.path.basename(f'{form.instance.convert}'))
+        obj_id = f'object_{form.instance.id}'
+        user_id = f'user_{form.instance.author.id}'
+        media_root = settings.MEDIA_ROOT
+        video_path = os.path.join(media_root, 'videos', 'videos_video', user_id, obj_id)
+        video_file = os.path.join(video_path, os.path.basename(f'{form.instance.convert}'))
 
-        ffprobe = FFProbe(VIDEO_FILE)
-        video_height = ffprobe.streams().video().get('height', 'Unknown')
-        file_name = Path(VIDEO_FILE).stem
-        print(f'file_name: {file_name}, video_height: {video_height}')
-
-        filenames = []
-        if video_height <= 360:
-            filenames += [convert_hls_144p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
-            filenames += [convert_hls_360p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
-        elif video_height <= 480:
-            filenames += [convert_hls_240p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
-            filenames += [convert_hls_480p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
-        elif video_height <= 720:
-            filenames += [convert_hls_240p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
-            filenames += [convert_hls_480p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
-            filenames += [convert_hls_720p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
-        else:
-            filenames += [convert_hls_240p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
-            filenames += [convert_hls_480p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
-            filenames += [convert_hls_720p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
-            filenames += [convert_hls_1080p(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)]
-
-        print(filenames)
-        with open(f'{filenames}.m3u8', 'w') as master_file:
-            for line in itertools.chain.from_iterable(map(open, filenames)):
-                master_file.write(line)
-                print(line)
-        print(master_file)
-        form.instance.video = master_file
-
-        # form.instance.convert = convert_mp4(VIDEO_FILE, VIDEO_PATH, MEDIA_ROOT)
-        form.save()
+        hls_file_path = convert_hls(video_file, video_path, media_root)
+        form.instance.video = hls_file_path
         return super(VideoCreate, self).form_valid(form)
 
     def get_success_url(self):
