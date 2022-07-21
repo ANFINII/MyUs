@@ -11,7 +11,7 @@ from api.modules.contains import RatePlan
 # Admin用の管理画面
 class MyPageInline(admin.StackedInline):
     model = MyPage
-    readonly_fields = ('banner', 'follower_num', 'following_num', 'rate_plan', 'rate_plan_date', 'is_advertise')
+    readonly_fields = ('banner', 'follower_num', 'following_num', 'plan', 'plan_date', 'is_advertise')
     verbose_name = 'Myページ情報'
 
     def has_delete_permission(self, request, obj=None):
@@ -48,7 +48,7 @@ class CommentInlineAdmin(GenericTabularInline):
 
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'email', 'username', 'nickname', 'get_fullname', 'birthday', 'get_age', 'gender', 'rate_plan')
+    list_display = ('id', 'email', 'username', 'nickname', 'get_fullname', 'birthday', 'get_age', 'gender', 'plan')
     list_filter = ('birthday', 'gender')
     search_fields = ('email', 'username', 'nickname', 'last_name', 'first_name', 'phone')
     ordering = ('id',)
@@ -782,13 +782,13 @@ class AdvertiseAdminSite(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         author = request.user
-        if author.mypage.rate_plan != RatePlan.free:
+        if author.mypage.plan != RatePlan.free:
             return True
         return False
 
     def has_change_permission(self, request, obj=None):
         author = request.user
-        if author.mypage.rate_plan != RatePlan.free:
+        if author.mypage.plan != RatePlan.free:
             return True
         return False
 

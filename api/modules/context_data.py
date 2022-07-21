@@ -106,11 +106,11 @@ class ContextData:
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
             context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
-        if author.mypage.rate_plan == RatePlan.basic:
+        if author.mypage.plan == RatePlan.basic:
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:1])
-        if author.mypage.rate_plan == RatePlan.standard:
+        if author.mypage.plan == RatePlan.standard:
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:3])
-        if author.mypage.rate_plan == RatePlan.premium:
+        if author.mypage.plan == RatePlan.premium:
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:4])
         context['liked'] = liked
         context['followed'] = followed
