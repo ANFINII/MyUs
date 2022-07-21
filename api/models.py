@@ -123,7 +123,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         db_table = 'user'
-        verbose_name_plural = '00 User'
+        verbose_name_plural = '001 User'
         indexes = [
             models.Index(fields=['email'], name='email_idx'),
             models.Index(fields=['username'], name='username_idx'),
@@ -181,7 +181,7 @@ class MyPage(models.Model):
 
     class Meta:
         db_table = 'mypage'
-        verbose_name_plural = '00 MyPage'
+        verbose_name_plural = '002 MyPage'
 
 @property
 def mypage_banner(self):
@@ -215,7 +215,7 @@ class NotificationSetting(models.Model):
 
     class Meta:
         db_table = 'notification_setting'
-        verbose_name_plural = '00 通知設定'
+        verbose_name_plural = '003 通知設定'
 
 @receiver(post_save, sender=User)
 def create_notification_setting(sender, **kwargs):
@@ -232,7 +232,7 @@ class IpAccessLog(models.Model):
 
     class Meta:
         db_table = 'ip_access_log'
-        verbose_name_plural = '00 アクセスログ'
+        verbose_name_plural = '004 アクセスログ'
         indexes = [
             models.Index(fields=['ip_address', 'type_name'], name='ip_address_type_idx'),
         ]
