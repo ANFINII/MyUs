@@ -106,10 +106,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def plan(self):
         plan_dict = {'0': 'Free', '1': 'Basic', '2': 'Standard', '3': 'Premium'}
-        for rate_paln_key, rate_paln_value in plan_dict.items():
-            if self.mypage.plan in rate_paln_key:
-                return rate_paln_value
-    plan.short_description = 'rate plan'
+        for paln_key, paln_value in plan_dict.items():
+            if self.mypage.plan in paln_key:
+                return paln_value
+    plan.short_description = 'plan'
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -156,7 +156,7 @@ class MyPage(models.Model):
     plan_date     = models.DateTimeField(blank=True, null=True)
     is_advertise  = models.BooleanField(default=True)
 
-    objects        = MyPageManager()
+    objects = MyPageManager()
 
     def __str__(self):
         return self.user.nickname
@@ -181,7 +181,7 @@ class MyPage(models.Model):
 
     class Meta:
         db_table = 'mypage'
-        verbose_name_plural = '002 MyPage'
+        verbose_name_plural = '001 MyPage'
 
 @property
 def mypage_banner(self):
@@ -215,7 +215,7 @@ class NotificationSetting(models.Model):
 
     class Meta:
         db_table = 'notification_setting'
-        verbose_name_plural = '003 通知設定'
+        verbose_name_plural = '001 通知設定'
 
 @receiver(post_save, sender=User)
 def create_notification_setting(sender, **kwargs):
@@ -232,7 +232,7 @@ class IpAccessLog(models.Model):
 
     class Meta:
         db_table = 'ip_access_log'
-        verbose_name_plural = '004 アクセスログ'
+        verbose_name_plural = '002 アクセスログ'
         indexes = [
             models.Index(fields=['ip_address', 'type_name'], name='ip_address_type_idx'),
         ]
