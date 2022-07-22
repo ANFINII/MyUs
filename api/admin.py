@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.contenttypes.admin import GenericTabularInline
-from api.models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, Comment, Follow
+from api.models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, IpAccessLog, Comment, Follow
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 from api.modules.contains import RatePlan
 
@@ -60,6 +60,19 @@ class UserAdmin(ImportExportModelAdmin):
     fieldsets = [
         ('アカウント情報', {'fields': ('image', 'email', 'username', 'nickname', 'last_name', 'first_name', 'birthday', 'get_age', 'gender', 'phone', 'location', 'introduction')}),
         ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
+    ]
+
+
+@admin.register(IpAccessLog)
+class IpAccessLogAdmin(ImportExportModelAdmin):
+    list_display = ('id', 'ip_address', 'type_name', 'created', 'updated')
+    search_fields = ('ip_address', 'type_name')
+    ordering = ('id', 'type_name')
+    readonly_fields = ('ip_address', 'type_name', 'created', 'updated')
+
+    # 詳細画面
+    fieldsets = [
+        ('確認項目', {'fields': ('ip_address', 'type_name', 'created', 'updated')})
     ]
 
 
