@@ -41,28 +41,28 @@ def user_icon(instance, filename):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """User"""
-    img           = '../frontend/static/img/user_icon.png'
-    image         = models.ImageField(upload_to=user_icon, default=img, blank=True, null=True)
-    email         = models.EmailField(max_length=255, unique=True)
-    username      = models.CharField(max_length=20, unique=True)
-    nickname      = models.CharField(max_length=80, unique=True)
-    last_name     = models.CharField(max_length=40, blank=True)
-    first_name    = models.CharField(max_length=40, blank=True)
+    img          = '../frontend/static/img/user_icon.png'
+    image        = models.ImageField(upload_to=user_icon, default=img, blank=True, null=True)
+    email        = models.EmailField(max_length=255, unique=True)
+    username     = models.CharField(max_length=20, unique=True)
+    nickname     = models.CharField(max_length=80, unique=True)
+    last_name    = models.CharField(max_length=40, blank=True)
+    first_name   = models.CharField(max_length=40, blank=True)
 
-    gender_choice = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
-    message       = '電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます'
-    birthday      = models.DateField(blank=True, null=True)
-    gender        = models.CharField(choices=gender_choice, max_length=1, default='2')
-    phone_no      = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message=message)
-    phone         = models.CharField(validators=[phone_no], max_length=15, blank=True, null=True)
-    location      = models.CharField(max_length=255, blank=True)
-    introduction  = models.TextField(blank=True)
+    gender_type  = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
+    message      = '電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます'
+    birthday     = models.DateField(blank=True, null=True)
+    gender       = models.CharField(choices=gender_type, max_length=1, default='2')
+    phone_no     = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message=message)
+    phone        = models.CharField(validators=[phone_no], max_length=15, blank=True, null=True)
+    location     = models.CharField(max_length=255, blank=True)
+    introduction = models.TextField(blank=True)
 
-    is_active     = models.BooleanField(default=True)
-    is_staff      = models.BooleanField(default=False)
-    is_admin      = models.BooleanField(default=False)
-    last_login    = models.DateTimeField(auto_now_add=True)
-    date_joined   = models.DateTimeField(default=timezone.now)
+    is_active    = models.BooleanField(default=True)
+    is_staff     = models.BooleanField(default=False)
+    is_admin     = models.BooleanField(default=False)
+    last_login   = models.DateTimeField(auto_now_add=True)
+    date_joined  = models.DateTimeField(default=timezone.now)
 
     objects = UserManager()
 
@@ -632,13 +632,13 @@ class Collabo(models.Model, MediaModel):
 
 class Todo(models.Model):
     """Todo"""
-    priority_choice = (('danger', '高'), ('success', '普通'), ('info', '低'))
-    progress_choice = (('0', '未着手'), ('1', '進行中'), ('2', '完了'))
+    priority_type = (('danger', '高'), ('success', '普通'), ('info', '低'))
+    progress_type = (('0', '未着手'), ('1', '進行中'), ('2', '完了'))
     author      = models.ForeignKey(User, on_delete=models.CASCADE)
     title       = models.CharField(max_length=100)
     content     = models.TextField()
-    priority    = models.CharField(max_length=10, choices=priority_choice, default='success')
-    progress    = models.CharField(max_length=10, choices=progress_choice, default='0')
+    priority    = models.CharField(max_length=10, choices=priority_type, default='success')
+    progress    = models.CharField(max_length=10, choices=progress_type, default='0')
     comment     = GenericRelation('Comment')
     comment_num = models.IntegerField(blank=True, null=True, default=0)
     duedate     = models.DateField()
