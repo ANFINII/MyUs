@@ -2,6 +2,7 @@ from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
 from api.models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, IpAccessLog, Comment, Follow
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
@@ -9,6 +10,13 @@ from api.modules.contains import RatePlan
 
 
 # Admin用の管理画面
+admin.site.site_title = 'MyUs管理者画面'
+admin.site.site_header = 'MyUs管理者画面'
+admin.site.index_title = 'メニュー'
+admin.site.unregister(Group)
+admin.site.disable_action('delete_selected')
+
+
 class MyPageInline(admin.StackedInline):
     model = MyPage
     readonly_fields = ('banner', 'follower_num', 'following_num', 'plan', 'plan_date', 'is_advertise')
