@@ -1,3 +1,4 @@
+import time
 import datetime
 import logging
 import json
@@ -31,7 +32,7 @@ from api.modules.pjax import pjax_context
 from api.modules.notification import notification_data, notification_setting_update
 from api.modules.search import Search
 from api.modules.success_url import success_url
-from api.modules.convert_hls import convert_hls
+from api.modules.convert_hls import convert_hls, convert_mp4
 from api.modules.follow import follow_update_data
 from api.modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 
@@ -783,6 +784,8 @@ class VideoCreate(CreateView):
     template_name = 'video/video_create.html'
 
     def form_valid(self, form):
+        start_time = time.perf_counter()
+
         form.instance.author = self.request.user
         form.save()
 
@@ -792,8 +795,13 @@ class VideoCreate(CreateView):
         video_path = os.path.join(media_root, 'videos', 'videos_video', user_id, obj_id)
         video_file = os.path.join(video_path, os.path.basename(f'{form.instance.convert}'))
 
-        hls_file_path = convert_hls(video_file, video_path, media_root)
-        form.instance.video = hls_file_path
+        # hls_file_path = convert_hls(video_file, video_path, media_root)
+        form.instance.video = convert_hls(video_file, video_path, media_root)
+        # form.instance.convert = convert_mp4(video_file, video_path, media_root)
+
+        end_time = time.perf_counter()
+        elapsed_time = end_time - start_time
+        print(elapsed_time)
         return super(VideoCreate, self).form_valid(form)
 
     def get_success_url(self):
