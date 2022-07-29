@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
 from api.models import MyPage, NotificationSetting, SearchTag, Follow, Comment
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
-from api.modules.contains import RatePlan
+from api.modules.contains import PlanType
 from api.modules.notification import notification_data
 
 User = get_user_model()
@@ -106,11 +106,11 @@ class ContextData:
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
             context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
-        if author.mypage.plan == RatePlan.basic:
+        if author.mypage.plan == PlanType.basic:
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:1])
-        if author.mypage.plan == RatePlan.standard:
+        if author.mypage.plan == PlanType.standard:
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:3])
-        if author.mypage.plan == RatePlan.premium:
+        if author.mypage.plan == PlanType.premium:
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:4])
         context['liked'] = liked
         context['followed'] = followed

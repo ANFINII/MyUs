@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
 from api.models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, IpAccessLog, Comment, Follow
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
-from api.modules.contains import RatePlan
+from api.modules.contains import PlanType
 
 
 # Admin用の管理画面
@@ -803,13 +803,13 @@ class AdvertiseAdminSite(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         author = request.user
-        if author.mypage.plan != RatePlan.free:
+        if author.mypage.plan != PlanType.free:
             return True
         return False
 
     def has_change_permission(self, request, obj=None):
         author = request.user
-        if author.mypage.plan != RatePlan.free:
+        if author.mypage.plan != PlanType.free:
             return True
         return False
 

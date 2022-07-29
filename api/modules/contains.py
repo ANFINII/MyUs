@@ -79,7 +79,7 @@ class NotificationTypeNo:
     reply   = 10
     views   = 11
 
-class RatePlan:
+class PlanType:
     free     = '0'
     basic    = '1'
     standard = '2'

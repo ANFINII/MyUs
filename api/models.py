@@ -145,14 +145,14 @@ def mypage_banner(instance, filename):
 
 class MyPage(models.Model):
     img           = '../frontend/static/img/MyUs_banner.png'
-    plan_choice   = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
+    plan_type     = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
     user          = models.OneToOneField(User, on_delete=models.CASCADE)
     banner        = models.ImageField(upload_to=mypage_banner, default=img, blank=True, null=True)
     email         = models.EmailField(max_length=255, blank=True, null=True, default='abc@gmail.com')
     content       = models.TextField(blank=True)
     follower_num  = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
     following_num = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
-    plan          = models.CharField(choices=plan_choice, max_length=1, default='0')
+    plan          = models.CharField(choices=plan_type, max_length=1, default='0')
     plan_date     = models.DateTimeField(blank=True, null=True)
     is_advertise  = models.BooleanField(default=True)
 
