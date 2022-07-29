@@ -1,4 +1,4 @@
-class master_m3u8:
+class Masterm3u8:
     def master_360p(file_name):
         master = (
             '#EXTM3U\n'

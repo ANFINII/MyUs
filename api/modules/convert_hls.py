@@ -5,7 +5,7 @@ import ffmpeg_streaming
 from ffmpeg_streaming import FFProbe, Formats, Bitrate, Representation, Size
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
-from api.modules.master_m3u8 import master_m3u8
+from api.modules.master_m3u8 import Masterm3u8
 
 # from ffmpeg_streaming import  S3, CloudManager
 # s3 = S3(aws_access_key_id='YOUR_KEY_ID', aws_secret_access_key='YOUR_KEY_SECRET', region_name='YOUR_REGION')
@@ -89,25 +89,25 @@ def convert_hls(video_file, path_dir, start_dir):
         with ProcessPoolExecutor(max_workers=2) as exe:
             exe.submit(thread_144p, video_file)
             exe.submit(thread_360p, video_file)
-        master = master_m3u8.master_360p(file_name)
+        master = Masterm3u8.master_360p(file_name)
     elif video_height <= 480:
         with ProcessPoolExecutor(max_workers=2) as exe:
             exe.submit(thread_240p, video_file)
             exe.submit(thread_480p, video_file)
-        master = master_m3u8.master_480p(file_name)
+        master = Masterm3u8.master_480p(file_name)
     elif video_height <= 720:
         with ProcessPoolExecutor(max_workers=3) as exe:
             exe.submit(thread_240p, video_file)
             exe.submit(thread_480p, video_file)
             exe.submit(thread_720p, video_file)
-        master = master_m3u8.master_720p(file_name)
+        master = Masterm3u8.master_720p(file_name)
     else:
         with ProcessPoolExecutor(max_workers=4) as exe:
             exe.submit(thread_240p, video_file)
             exe.submit(thread_480p, video_file)
             exe.submit(thread_720p, video_file)
             exe.submit(thread_1080p, video_file)
-        master = master_m3u8.master_1080p(file_name)
+        master = Masterm3u8.master_1080p(file_name)
 
     hls_file = os.path.join(path_dir, f'{file_name}.m3u8')
     hls_file_path = os.path.relpath(hls_file, os.path.abspath(start_dir))
