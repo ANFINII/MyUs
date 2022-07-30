@@ -6,10 +6,10 @@ from api.modules.contains import NotificationTypeNo, models_dict
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
-        ip_address = x_forwarded_for.split(',')[0]
+        ip = x_forwarded_for.split(',')[0]
     else:
-        ip_address = request.META.get('REMOTE_ADDR')
-    return ip_address
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 
 def get_detail(self, request):
@@ -17,16 +17,16 @@ def get_detail(self, request):
     obj = self.object
     obj_class = obj.__class__
     obj_name = obj_class.__name__
-    ip_address = get_client_ip(request)
-    access_log_obj = AccessLog.objects.filter(ip_address=ip_address, type=obj_name, type_id=obj.id).first()
+    ip = get_client_ip(request)
+    access_log = AccessLog.objects.filter(ip_address=ip, type=obj_name, type_id=obj.id).first()
     JST = timezone(timedelta(hours=9), 'JST')
-    if access_log_obj:
-        if datetime.now(JST) - access_log_obj.updated > timedelta(hours=2):
+    if access_log:
+        if datetime.now(JST) - access_log.updated > timedelta(hours=2):
             obj.read += 1
             obj.save(update_fields=['read'])
-            access_log_obj.save(update_fields=['updated'])
+            access_log.save(update_fields=['updated'])
     else:
-        AccessLog.objects.create(ip_address=ip_address, type=obj_name, type_id=obj.id)
+        AccessLog.objects.create(ip_address=ip, type=obj_name, type_id=obj.id)
         obj.read += 1
         obj.save(update_fields=['read'])
     author = obj.author
