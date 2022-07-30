@@ -226,7 +226,8 @@ def create_notification_setting(sender, **kwargs):
 
 class AccessLog(models.Model):
     ip_address = models.CharField(max_length=15)
-    type_name  = models.CharField(max_length=7, blank=True, null=True)
+    type       = models.CharField(max_length=7, blank=True, null=True)
+    type_id    = models.IntegerField(blank=True, null=True)
     created    = models.DateTimeField(auto_now_add=True)
     updated    = models.DateTimeField(auto_now=True)
 
@@ -234,7 +235,7 @@ class AccessLog(models.Model):
         db_table = 'access_log'
         verbose_name_plural = '002 Access Log'
         indexes = [
-            models.Index(fields=['ip_address', 'type_name'], name='ip_address_type_idx'),
+            models.Index(fields=['ip_address', 'type'], name='ip_address_type_idx'),
         ]
 
 
