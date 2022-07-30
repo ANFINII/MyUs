@@ -235,7 +235,7 @@ class AccessLog(models.Model):
         db_table = 'access_log'
         verbose_name_plural = '002 Access Log'
         indexes = [
-            models.Index(fields=['ip_address', 'type'], name='ip_address_type_idx'),
+            models.Index(fields=['ip_address', 'type', 'type_id'], name='ip_address_type_idx'),
         ]
 
 
@@ -283,7 +283,7 @@ class MediaModel:
     comment_count.short_description = 'comment'
 
 
-class MediaManager(object):
+class MediaManager:
     def search(self, query=None):
         return self.get_queryset().search(query=query)
 
