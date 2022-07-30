@@ -99,27 +99,13 @@ $(document).on('click', '.pjax_search', function (event) {
 $(document).on('click', '.pjax_hash_search', function (event) {
   event.preventDefault();
   let href = location.pathname;
-  if (href.match('/video')) {
-    href = 'video'
-  }
-  if (href.match('/live')) {
-    href = 'live'
-  }
-  if (href.match('/music')) {
-    href = 'music'
-  }
-  if (href.match('/picture')) {
-    href = 'picture'
-  }
-  if (href.match('/blog')) {
-    href = 'blog'
-  }
-  if (href.match('/chat')) {
-    href = 'chat'
-  }
-  if (href.match('/collabo')) {
-    href = 'collabo'
-  }
+  if (href.match('/video'))   { href = 'video' }
+  if (href.match('/live'))    { href = 'live' }
+  if (href.match('/music'))   { href = 'music' }
+  if (href.match('/picture')) { href = 'picture' }
+  if (href.match('/blog'))    { href = 'blog' }
+  if (href.match('/chat'))    { href = 'chat' }
+  if (href.match('/collabo')) { href = 'collabo' }
   const search = $(this).attr('search');
   const url = `/${href}?search=${search}`
   const nickname = $('.userpage_image').attr('title');
