@@ -4,7 +4,7 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
-from api.models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, IpAccessLog, Comment, Follow
+from api.models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, AccessLog, Comment, Follow
 from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 from api.modules.contains import PlanType
 
@@ -71,8 +71,8 @@ class UserAdmin(ImportExportModelAdmin):
     ]
 
 
-@admin.register(IpAccessLog)
-class IpAccessLogAdmin(ImportExportModelAdmin):
+@admin.register(AccessLog)
+class AccessLogAdmin(ImportExportModelAdmin):
     list_display = ('id', 'ip_address', 'type_name', 'created', 'updated')
     search_fields = ('ip_address', 'type_name')
     ordering = ('id', 'type_name')
@@ -137,10 +137,6 @@ class VideoAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.prefetch_related('hashtag', 'like')
-
 
 @admin.register(Live)
 class LiveAdmin(ImportExportModelAdmin):
@@ -157,10 +153,6 @@ class LiveAdmin(ImportExportModelAdmin):
         ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'live', 'hashtag', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.prefetch_related('hashtag', 'like')
 
 
 @admin.register(Music)
@@ -179,10 +171,6 @@ class MusicAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.prefetch_related('hashtag', 'like')
-
 
 @admin.register(Picture)
 class PictureAdmin(ImportExportModelAdmin):
@@ -199,10 +187,6 @@ class PictureAdmin(ImportExportModelAdmin):
         ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'hashtag', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.prefetch_related('hashtag', 'like')
 
 
 @admin.register(Blog)
@@ -221,10 +205,6 @@ class BlogAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.prefetch_related('hashtag', 'like')
-
 
 @admin.register(Chat)
 class ChatAdmin(ImportExportModelAdmin):
@@ -242,10 +222,6 @@ class ChatAdmin(ImportExportModelAdmin):
         ('確認項目', {'fields': ('total_like', 'thread', 'joined', 'created', 'updated')})
     ]
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.prefetch_related('hashtag', 'like')
-
 
 @admin.register(Collabo)
 class CollaboAdmin(ImportExportModelAdmin):
@@ -262,10 +238,6 @@ class CollaboAdmin(ImportExportModelAdmin):
         ('編集項目', {'fields': ('author', 'title', 'content', 'hashtag', 'like', 'read', 'period', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.prefetch_related('hashtag', 'like')
 
 
 @admin.register(Todo)
@@ -438,7 +410,17 @@ class HashTagAdminSite(admin.ModelAdmin):
 manage_site.register(HashTag, HashTagAdminSite)
 
 
-class VideoAdminSite(admin.ModelAdmin):
+class Publish:
+    def published(self, request, queryset):
+        queryset.update(publish=True)
+    published.short_description = '公開する'
+
+    def unpublished(self, request, queryset):
+        queryset.update(publish=False)
+    unpublished.short_description = '非公開にする'
+
+
+class VideoAdminSite(admin.ModelAdmin, Publish):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -461,18 +443,10 @@ class VideoAdminSite(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(VideoAdminSite, self).save_model(request, obj, form, change)
-
-    def published(self, request, queryset):
-        queryset.update(publish=True)
-    published.short_description = '公開する'
-
-    def unpublished(self, request, queryset):
-        queryset.update(publish=False)
-    unpublished.short_description = '非公開にする'
 manage_site.register(Video, VideoAdminSite)
 
 
-class LiveAdminSite(admin.ModelAdmin):
+class LiveAdminSite(admin.ModelAdmin, Publish):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -495,18 +469,10 @@ class LiveAdminSite(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(LiveAdminSite, self).save_model(request, obj, form, change)
-
-    def published(self, request, queryset):
-        queryset.update(publish=True)
-    published.short_description = '公開する'
-
-    def unpublished(self, request, queryset):
-        queryset.update(publish=False)
-    unpublished.short_description = '非公開にする'
 manage_site.register(Live, LiveAdminSite)
 
 
-class MusicAdminSite(admin.ModelAdmin):
+class MusicAdminSite(admin.ModelAdmin, Publish):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'download', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -529,18 +495,10 @@ class MusicAdminSite(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(MusicAdminSite, self).save_model(request, obj, form, change)
-
-    def published(self, request, queryset):
-        queryset.update(publish=True)
-    published.short_description = '公開する'
-
-    def unpublished(self, request, queryset):
-        queryset.update(publish=False)
-    unpublished.short_description = '非公開にする'
 manage_site.register(Music, MusicAdminSite)
 
 
-class PictureAdminSite(admin.ModelAdmin):
+class PictureAdminSite(admin.ModelAdmin, Publish):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -563,18 +521,10 @@ class PictureAdminSite(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(PictureAdminSite, self).save_model(request, obj, form, change)
-
-    def published(self, request, queryset):
-        queryset.update(publish=True)
-    published.short_description = '公開する'
-
-    def unpublished(self, request, queryset):
-        queryset.update(publish=False)
-    unpublished.short_description = '非公開にする'
 manage_site.register(Picture, PictureAdminSite)
 
 
-class BlogAdminSite(admin.ModelAdmin):
+class BlogAdminSite(admin.ModelAdmin, Publish):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -597,18 +547,10 @@ class BlogAdminSite(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(BlogAdminSite, self).save_model(request, obj, form, change)
-
-    def published(self, request, queryset):
-        queryset.update(publish=True)
-    published.short_description = '公開する'
-
-    def unpublished(self, request, queryset):
-        queryset.update(publish=False)
-    unpublished.short_description = '非公開にする'
 manage_site.register(Blog, BlogAdminSite)
 
 
-class ChatAdminSite(admin.ModelAdmin):
+class ChatAdminSite(admin.ModelAdmin, Publish):
     list_display = ('id', 'title', 'read', 'total_like', 'thread', 'joined', 'period', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -631,18 +573,10 @@ class ChatAdminSite(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(ChatAdminSite, self).save_model(request, obj, form, change)
-
-    def published(self, request, queryset):
-        queryset.update(publish=True)
-    published.short_description = '公開する'
-
-    def unpublished(self, request, queryset):
-        queryset.update(publish=False)
-    unpublished.short_description = '非公開にする'
 manage_site.register(Chat, ChatAdminSite)
 
 
-class CollaboAdminSite(admin.ModelAdmin):
+class CollaboAdminSite(admin.ModelAdmin, Publish):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -665,14 +599,6 @@ class CollaboAdminSite(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.author = request.user
         super(CollaboAdminSite, self).save_model(request, obj, form, change)
-
-    def published(self, request, queryset):
-        queryset.update(publish=True)
-    published.short_description = '公開する'
-
-    def unpublished(self, request, queryset):
-        queryset.update(publish=False)
-    unpublished.short_description = '非公開にする'
 manage_site.register(Collabo, CollaboAdminSite)
 
 
@@ -778,7 +704,7 @@ class NotificationAdminSite(admin.ModelAdmin):
 manage_site.register(Notification, NotificationAdminSite)
 
 
-class AdvertiseAdminSite(admin.ModelAdmin):
+class AdvertiseAdminSite(admin.ModelAdmin, Publish):
     list_display = ('id', 'title', 'url', 'read', 'period', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'created')
@@ -812,12 +738,4 @@ class AdvertiseAdminSite(admin.ModelAdmin):
         if author.mypage.plan != PlanType.free:
             return True
         return False
-
-    def published(self, request, queryset):
-        queryset.update(publish=True)
-    published.short_description = '公開する'
-
-    def unpublished(self, request, queryset):
-        queryset.update(publish=False)
-    unpublished.short_description = '非公開にする'
 manage_site.register(Advertise, AdvertiseAdminSite)
