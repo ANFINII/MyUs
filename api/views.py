@@ -829,7 +829,7 @@ class VideoDetail(DetailView):
     template_name = 'video/video_detail.html'
 
     def get(self, request, *args, **kwargs):
-        return get_detail(self)
+        return get_detail(self, request)
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, VideoDetail, **kwargs)
@@ -871,7 +871,7 @@ class LiveDetail(DetailView):
     template_name = 'live/live_detail.html'
 
     def get(self, request, *args, **kwargs):
-        return get_detail(self)
+        return get_detail(self, request)
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, LiveDetail, **kwargs)
@@ -913,7 +913,7 @@ class MusicDetail(DetailView):
     template_name = 'music/music_detail.html'
 
     def get(self, request, *args, **kwargs):
-        return get_detail(self)
+        return get_detail(self, request)
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, MusicDetail, **kwargs)
@@ -955,7 +955,7 @@ class PictureDetail(DetailView):
     template_name = 'picture/picture_detail.html'
 
     def get(self, request, *args, **kwargs):
-        return get_detail(self)
+        return get_detail(self, request)
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, PictureDetail, **kwargs)
@@ -997,7 +997,7 @@ class BlogDetail(DetailView):
     template_name = 'blog/blog_detail.html'
 
     def get(self, request, *args, **kwargs):
-        return get_detail(self)
+        return get_detail(self, request)
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, BlogDetail, **kwargs)
@@ -1039,7 +1039,7 @@ class ChatDetail(DetailView):
     template_name = 'chat/chat_detail.html'
 
     def get(self, request, *args, **kwargs):
-        return get_detail(self)
+        return get_detail(self, request)
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, ChatDetail, **kwargs)
@@ -1125,7 +1125,7 @@ class CollaboDetail(DetailView):
     template_name = 'collabo/collabo_detail.html'
 
     def get(self, request, *args, **kwargs):
-        return get_detail(self)
+        return get_detail(self, request)
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, CollaboDetail, **kwargs)

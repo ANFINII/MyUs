@@ -73,14 +73,14 @@ class UserAdmin(ImportExportModelAdmin):
 
 @admin.register(AccessLog)
 class AccessLogAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'ip_address', 'type_name', 'created', 'updated')
-    search_fields = ('ip_address', 'type_name')
-    ordering = ('id', 'type_name')
-    readonly_fields = ('ip_address', 'type_name', 'created', 'updated')
+    list_display = ('id', 'ip_address', 'type', 'type_id', 'created', 'updated')
+    search_fields = ('ip_address', 'type', 'type_id')
+    ordering = ('id', 'type', 'type_id')
+    readonly_fields = ('ip_address', 'type', 'created', 'updated')
 
     # 詳細画面
     fieldsets = [
-        ('確認項目', {'fields': ('ip_address', 'type_name', 'created', 'updated')})
+        ('確認項目', {'fields': ('ip_address', 'type', 'created', 'updated')})
     ]
 
 
