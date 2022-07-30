@@ -410,7 +410,7 @@ class HashTagAdminSite(admin.ModelAdmin):
 manage_site.register(HashTag, HashTagAdminSite)
 
 
-class Publish:
+class PublishMixin:
     def published(self, request, queryset):
         queryset.update(publish=True)
     published.short_description = '公開する'
@@ -420,7 +420,7 @@ class Publish:
     unpublished.short_description = '非公開にする'
 
 
-class VideoAdminSite(admin.ModelAdmin, Publish):
+class VideoAdminSite(admin.ModelAdmin, PublishMixin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -446,7 +446,7 @@ class VideoAdminSite(admin.ModelAdmin, Publish):
 manage_site.register(Video, VideoAdminSite)
 
 
-class LiveAdminSite(admin.ModelAdmin, Publish):
+class LiveAdminSite(admin.ModelAdmin, PublishMixin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -472,7 +472,7 @@ class LiveAdminSite(admin.ModelAdmin, Publish):
 manage_site.register(Live, LiveAdminSite)
 
 
-class MusicAdminSite(admin.ModelAdmin, Publish):
+class MusicAdminSite(admin.ModelAdmin, PublishMixin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'download', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -498,7 +498,7 @@ class MusicAdminSite(admin.ModelAdmin, Publish):
 manage_site.register(Music, MusicAdminSite)
 
 
-class PictureAdminSite(admin.ModelAdmin, Publish):
+class PictureAdminSite(admin.ModelAdmin, PublishMixin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -524,7 +524,7 @@ class PictureAdminSite(admin.ModelAdmin, Publish):
 manage_site.register(Picture, PictureAdminSite)
 
 
-class BlogAdminSite(admin.ModelAdmin, Publish):
+class BlogAdminSite(admin.ModelAdmin, PublishMixin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -550,7 +550,7 @@ class BlogAdminSite(admin.ModelAdmin, Publish):
 manage_site.register(Blog, BlogAdminSite)
 
 
-class ChatAdminSite(admin.ModelAdmin, Publish):
+class ChatAdminSite(admin.ModelAdmin, PublishMixin):
     list_display = ('id', 'title', 'read', 'total_like', 'thread', 'joined', 'period', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -576,7 +576,7 @@ class ChatAdminSite(admin.ModelAdmin, Publish):
 manage_site.register(Chat, ChatAdminSite)
 
 
-class CollaboAdminSite(admin.ModelAdmin, Publish):
+class CollaboAdminSite(admin.ModelAdmin, PublishMixin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
@@ -704,7 +704,7 @@ class NotificationAdminSite(admin.ModelAdmin):
 manage_site.register(Notification, NotificationAdminSite)
 
 
-class AdvertiseAdminSite(admin.ModelAdmin, Publish):
+class AdvertiseAdminSite(admin.ModelAdmin, PublishMixin):
     list_display = ('id', 'title', 'url', 'read', 'period', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'created')
