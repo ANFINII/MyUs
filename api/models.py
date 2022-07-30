@@ -224,15 +224,15 @@ def create_notification_setting(sender, **kwargs):
         NotificationSetting.objects.get_or_create(user=kwargs['instance'])
 
 
-class IpAccessLog(models.Model):
+class AccessLog(models.Model):
     ip_address = models.CharField(max_length=15)
     type_name  = models.CharField(max_length=7, blank=True, null=True)
     created    = models.DateTimeField(auto_now_add=True)
     updated    = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'ip_access_log'
-        verbose_name_plural = '002 アクセスログ'
+        db_table = 'access_log'
+        verbose_name_plural = '002 Access Log'
         indexes = [
             models.Index(fields=['ip_address', 'type_name'], name='ip_address_type_idx'),
         ]
@@ -266,7 +266,7 @@ class HashTag(models.Model):
         verbose_name_plural = '10 ハッシュタグ'
 
 
-class MediaModel(object):
+class MediaModel:
     def __str__(self):
         return self.title
 
@@ -280,6 +280,7 @@ class MediaModel(object):
     def comment_count(self):
         return self.comment_num
     comment_count.short_description = 'comment'
+
 
 class MediaManager(object):
     def search(self, query=None):
