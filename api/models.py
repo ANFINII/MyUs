@@ -225,9 +225,9 @@ def create_notification_setting(sender, **kwargs):
 
 
 class AccessLog(models.Model):
-    ip_address = models.CharField(max_length=15)
+    ip_address = models.GenericIPAddressField()
     type       = models.CharField(max_length=7, blank=True, null=True)
-    type_id    = models.IntegerField(blank=True, null=True)
+    type_id    = models.BigIntegerField(blank=True, null=True)
     created    = models.DateTimeField(auto_now_add=True)
     updated    = models.DateTimeField(auto_now=True)
 
