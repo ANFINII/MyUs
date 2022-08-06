@@ -79,7 +79,6 @@ def thread_1080p(video_file):
     print(f'thread_1080p: {video_file}')
 
 def convert_360p_mp4(video_file, path_dir):
-    # mp4の作成 (input.mp4 -> video_360p.mp4)
     file_name = Path(video_file).stem
     video = ffmpeg_streaming.input(f'{path_dir}/{file_name}_360p.m3u8')
     stream = video.stream2file(Formats.h264())
@@ -87,7 +86,6 @@ def convert_360p_mp4(video_file, path_dir):
     print(f'convert_360p_mp4: {video_file}')
 
 def convert_480p_mp4(video_file, path_dir):
-    # mp4の作成 (input.mp4 -> video_480p.mp4)
     file_name = Path(video_file).stem
     video = ffmpeg_streaming.input(f'{path_dir}/{file_name}_480p.m3u8')
     stream = video.stream2file(Formats.h264())
