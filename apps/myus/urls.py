@@ -1,20 +1,20 @@
 from django.urls import path
-from api.views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
-from api.views import Profile, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle
-from api.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
-from api.views import NotificationSettingView, notification_setting, notification_confirmed, notification_deleted
-from api.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
-from api.views import VideoList, VideoCreate, VideoDetail
-from api.views import LiveList, LiveCreate, LiveDetail
-from api.views import MusicList, MusicCreate, MusicDetail
-from api.views import PictureList, PictureCreate, PictureDetail
-from api.views import BlogList, BlogCreate, BlogDetail
-from api.views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
-from api.views import CollaboList, CollaboCreate, CollaboDetail
-from api.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
-from api.views import searchtag_create, advertise_read, like_form, like_form_comment
-from api.views import comment_form, reply_form, comment_update, comment_delete, reply_delete
-from api.views import pjax, signup_form, login_form, logout_form, Withdrawal
+from apps.myus.views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
+from apps.myus.views import Profile, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle
+from apps.myus.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
+from apps.myus.views import NotificationSettingView, notification_setting, notification_confirmed, notification_deleted
+from apps.myus.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
+from apps.myus.views import VideoList, VideoCreate, VideoDetail
+from apps.myus.views import LiveList, LiveCreate, LiveDetail
+from apps.myus.views import MusicList, MusicCreate, MusicDetail
+from apps.myus.views import PictureList, PictureCreate, PictureDetail
+from apps.myus.views import BlogList, BlogCreate, BlogDetail
+from apps.myus.views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
+from apps.myus.views import CollaboList, CollaboCreate, CollaboDetail
+from apps.myus.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
+from apps.myus.views import searchtag_create, advertise_read, like_form, like_form_comment
+from apps.myus.views import comment_form, reply_form, comment_update, comment_delete, reply_delete
+from apps.myus.views import pjax, signup_form, login_form, logout_form, Withdrawal
 
 app_name = 'myus'
 

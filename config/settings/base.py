@@ -63,7 +63,7 @@ INSTALLED_APPS = [
 
 # Add Application
 INSTALLED_APPS += [
-    'api.apps.ApiConfig',
+    'apps.myus.apps.ApiConfig',
     'rest_framework',
     'corsheaders',
     'channels',
@@ -89,11 +89,11 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-    ),
+    ],
 }
 
 TEMPLATES = [{
@@ -124,8 +124,8 @@ CHANNEL_LAYERS = {
     },
 }
 
-AUTH_USER_MODEL = 'api.User'
-AUTHENTICATION_BACKENDS = ['api.backends.MyBackend']
+AUTH_USER_MODEL = 'myus.User'
+AUTHENTICATION_BACKENDS = ['apps.myus.backends.MyBackend']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # humanize カンマ区切り値
@@ -185,12 +185,3 @@ CKEDITOR_CONFIGS = {
         'extraPlugins': 'justify,liststyle,indent',
    },
 }
-
-# Celery
-CELERY_BROKER_URL = 'redis://localhost:6379/1'
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_CACHE_BACKEND = 'django-cache'
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_SERIALIZER = 'pickle'
-CELERY_ACCEPT_CONTENT = ['json', 'pickle']
-os.environ.setdefault('C_FORCE_ROOT', 'true')

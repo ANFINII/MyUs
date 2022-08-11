@@ -4,9 +4,9 @@ from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
-from api.views import ChatDetail, ChatThread
-from api.models import Chat, Comment, Notification
-from api.modules.contains import NotificationTypeNo
+from apps.myus.views import ChatDetail, ChatThread
+from apps.myus.models import Chat, Comment, Notification
+from apps.myus.modules.contains import NotificationTypeNo
 
 User = get_user_model()
 

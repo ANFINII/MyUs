@@ -3,11 +3,11 @@ from django.contrib.auth import get_user_model
 from django.db.models import F, Count
 from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
-from api.forms import BlogForm
-from api.models import MyPage, NotificationSetting, Follow
-from api.models import Video, Live, Music, Picture, Blog, Chat, Todo, Advertise
-from api.modules.contains import models_pjax, models_create_pjax
-from api.modules.search import SearchData
+from apps.myus.forms import BlogForm
+from apps.myus.models import MyPage, NotificationSetting, Follow
+from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Todo, Advertise
+from apps.myus.modules.contains import models_pjax, models_create_pjax
+from apps.myus.modules.search import SearchData
 
 User = get_user_model()
 

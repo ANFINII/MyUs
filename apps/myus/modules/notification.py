@@ -1,6 +1,6 @@
 from django.db.models import Exists, OuterRef
-from api.models import NotificationSetting, Notification, Follow
-from api.modules.contains import NotificationTypeNo, notification_type_dict
+from apps.myus.models import NotificationSetting, Notification, Follow
+from apps.myus.modules.contains import NotificationTypeNo, notification_type_dict
 
 
 def notification_data(self):

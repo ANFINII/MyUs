@@ -1,4 +1,4 @@
-from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 
 
 models_dict = {

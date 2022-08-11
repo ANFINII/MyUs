@@ -5,8 +5,8 @@ from operator import and_
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, F, Count
-from api.models import Video, Live, Music, Picture, Blog, Chat
-from api.modules.filter_data import DeferData
+from apps.myus.models import Video, Live, Music, Picture, Blog, Chat
+from apps.myus.modules.filter_data import DeferData
 
 User = get_user_model()
 

@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from rest_framework import authentication, permissions, views
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
-from api.serializers import UserSerializer
+from apps.myus.api.serializers import UserSerializer
 
 # Create your views here.
 

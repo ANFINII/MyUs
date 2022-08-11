@@ -1,6 +1,6 @@
 from datetime import datetime, timezone, timedelta
-from api.models import Notification, AccessLog
-from api.modules.contains import NotificationTypeNo, models_dict
+from apps.myus.models import Notification, AccessLog
+from apps.myus.modules.contains import NotificationTypeNo, models_dict
 
 
 def get_client_ip(request):

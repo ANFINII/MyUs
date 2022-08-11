@@ -1,7 +1,7 @@
 from ckeditor.fields import RichTextFormField
 from django import forms
 from django.contrib.auth import get_user_model
-from api.models import SearchTag, Blog
+from apps.myus.models import SearchTag, Blog
 
 User = get_user_model()
 

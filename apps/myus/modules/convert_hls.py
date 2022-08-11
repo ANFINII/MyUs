@@ -4,7 +4,7 @@ import ffmpeg_streaming
 from ffmpeg_streaming import FFProbe, Formats, Bitrate, Representation, Size
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
-from api.modules.master_m3u8 import Masterm3u8
+from apps.myus.modules.master_m3u8 import Masterm3u8
 
 # from ffmpeg_streaming import  S3, CloudManager
 # s3 = S3(aws_access_key_id='YOUR_KEY_ID', aws_secret_access_key='YOUR_KEY_SECRET', region_name='YOUR_REGION')

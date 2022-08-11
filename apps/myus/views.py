@@ -1,4 +1,3 @@
-import time
 import datetime
 import logging
 import json
@@ -22,19 +21,19 @@ from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from api.forms import SearchTagForm
-from api.models import MyPage, NotificationSetting, Notification, SearchTag, Follow, Comment
-from api.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
-from api.modules.contains import NotificationTypeNo, models_like_dict, models_comment_dict
-from api.modules.context_data import ContextData
-from api.modules.get_form import get_detail
-from api.modules.pjax import pjax_context
-from api.modules.notification import notification_data, notification_setting_update
-from api.modules.search import Search
-from api.modules.success_url import success_url
-from api.modules.convert_hls import convert_hls
-from api.modules.follow import follow_update_data
-from api.modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
+from apps.myus.forms import SearchTagForm
+from apps.myus.models import MyPage, NotificationSetting, Notification, SearchTag, Follow, Comment
+from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from apps.myus.modules.contains import NotificationTypeNo, models_like_dict, models_comment_dict
+from apps.myus.modules.context_data import ContextData
+from apps.myus.modules.get_form import get_detail
+from apps.myus.modules.pjax import pjax_context
+from apps.myus.modules.notification import notification_data, notification_setting_update
+from apps.myus.modules.search import Search
+from apps.myus.modules.success_url import success_url
+from apps.myus.modules.convert_hls import convert_hls
+from apps.myus.modules.follow import follow_update_data
+from apps.myus.modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
 
 
 # Create your views here.
@@ -406,7 +405,7 @@ class ChangePlan(TemplateView):
         return ContextData.context_data(self, ChangePlan, **kwargs)
 
 def create_checkout_session(request):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
+    stripe.myus_key = settings.STRIPE_SECRET_KEY
     post_data = json.loads(request.body.decode('utf-8'))
     try:
         checkout_session = stripe.checkout.Session.create(
