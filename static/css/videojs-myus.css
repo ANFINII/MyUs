@@ -368,9 +368,9 @@
   display: none;
 }
 
-/* .video-js .vjs-picture-in-picture-control {
+.video-js .vjs-picture-in-picture-control {
   display: none;
-} */
+}
 
 .skip {
   display: none;
