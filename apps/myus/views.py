@@ -22,8 +22,9 @@ from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from apps.myus.forms import SearchTagForm
-from apps.myus.models import MyPage, NotificationSetting, Notification, SearchTag, Follow, Comment
-from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from apps.myus.models import MyPage, SearchTag, NotificationSetting
+from apps.myus.models import Notification, Follow, Comment, Advertise
+from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 from apps.myus.modules.contains import NotificationTypeNo, models_like_dict, models_comment_dict
 from apps.myus.modules.context_data import ContextData
 from apps.myus.modules.get_form import get_detail

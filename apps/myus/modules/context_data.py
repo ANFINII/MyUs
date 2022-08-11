@@ -2,7 +2,7 @@ import datetime
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
-from apps.myus.models import MyPage, NotificationSetting, SearchTag, Follow, Comment
+from apps.myus.models import MyPage, SearchTag, NotificationSetting, Follow, Comment
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 from apps.myus.modules.contains import PlanType
 from apps.myus.modules.notification import notification_data

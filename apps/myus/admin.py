@@ -4,8 +4,9 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
-from apps.myus.models import User, MyPage, SearchTag, HashTag, NotificationSetting, Notification, AccessLog, Comment, Follow
-from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from apps.myus.models import User, MyPage, SearchTag, HashTag, NotificationSetting
+from apps.myus.models import Notification, AccessLog, Comment, Follow, Advertise
+from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 from apps.myus.modules.contains import PlanType
 
 
