@@ -1,6 +1,6 @@
 from django.urls import path
 from apps.myus.views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
-from apps.myus.views import Profile, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle
+from apps.myus.views import ProfileView, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle
 from apps.myus.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
 from apps.myus.views import NotificationSettingView, notification_setting, notification_confirmed, notification_deleted
 from apps.myus.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
@@ -25,7 +25,7 @@ urlpatterns = [
     path('userpage/information/<str:nickname>', UserPageInfo.as_view(), name='userpage_info'),
     path('userpage/advertise/<str:nickname>', UserPageAdvertise.as_view(), name='userpage_advertise'),
 
-    path('profile', Profile.as_view(), name='profile'),
+    path('profile', ProfileView.as_view(), name='profile'),
     path('profile/update', ProfileUpdate.as_view(), name='profile_update'),
     path('mypage', MyPageView.as_view(), name='mypage'),
     path('mypage/update', MyPageUpdate.as_view(), name='mypage_update'),

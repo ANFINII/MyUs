@@ -22,7 +22,7 @@ from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from apps.myus.forms import SearchTagForm
-from apps.myus.models import MyPage, SearchTag, NotificationSetting
+from apps.myus.models import Profile, MyPage, SearchTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 from apps.myus.modules.contains import NotificationTypeNo, models_like_dict, models_comment_dict
@@ -234,18 +234,18 @@ class Withdrawal(View):
 
 
 # Profile
-class Profile(TemplateView):
+class ProfileView(TemplateView):
     """Profile"""
-    model = User
+    model = Profile
     template_name = 'registration/profile.html'
 
     def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, Profile, **kwargs)
+        return ContextData.context_data(self, ProfileView, **kwargs)
 
 class ProfileUpdate(UpdateView):
     """アカウント更新"""
-    model = User
-    fields = ('image', 'username', 'email', 'nickname', 'last_name', 'first_name', 'gender', 'phone', 'location', 'introduction')
+    model = Profile
+    fields = ('image', 'last_name', 'first_name', 'gender', 'phone', 'postal_code', 'country_code', 'prefecture', 'city', 'address', 'building', 'introduction')
     template_name = 'registration/profile_update.html'
     success_url = reverse_lazy('myus:profile')
 
@@ -255,25 +255,26 @@ class ProfileUpdate(UpdateView):
     def form_valid(self, form):
         """バリデーションに成功した時"""
         try:
-            profile = form.save(commit=False)
-            profile.user = self.request.user
-            if has_username(self.request.user.username):
+            user = self.request.user
+            profile_obj = form.save(commit=False)
+            profile_obj = Profile.objects.get(user=user)
+            if has_username(user.username):
                 messages.error(self.request, 'ユーザー名は半角英数字のみ入力できます!')
                 return super().form_invalid(form)
 
-            if has_email(self.request.user.email):
+            if has_email(user.email):
                 messages.error(self.request, 'メールアドレスの形式が違います!')
                 return super().form_invalid(form)
 
-            if has_number(self.request.user.last_name):
+            if has_number(profile_obj.last_name):
                 messages.error(self.request, '姓に数字が含まれております!')
                 return super().form_invalid(form)
 
-            if has_number(self.request.user.first_name):
+            if has_number(profile_obj.first_name):
                 messages.error(self.request, '名に数字が含まれております!')
                 return super().form_invalid(form)
 
-            if has_phone(self.request.user.phone):
+            if has_phone(profile_obj.phone):
                 messages.error(self.request, '電話番号の形式が違います!')
                 return super().form_invalid(form)
 
@@ -281,9 +282,9 @@ class ProfileUpdate(UpdateView):
             month = self.request.POST['month']
             day = self.request.POST['day']
             birthday = datetime.date(year=int(year), month=int(month), day=int(day))
-            profile.birthday = birthday.isoformat()
+            profile_obj.birthday = birthday.isoformat()
 
-            profile.save()
+            profile_obj.save()
             return super(ProfileUpdate, self).form_valid(form)
         except ValueError:
             messages.error(self.request, f'{year}年{month}月{day}日は存在しない日付です!')
@@ -291,13 +292,15 @@ class ProfileUpdate(UpdateView):
 
     def form_invalid(self, form):
         """バリデーションに失敗した時"""
-        if has_phone(self.request.user.phone):
+        user = self.request.user
+        profile_obj = Profile.objects.get(user=user)
+        if has_phone(profile_obj.phone):
             messages.error(self.request, '電話番号の形式が違います!!')
             return super().form_invalid(form)
-        if has_username(self.request.user.username):
+        if has_username(profile_obj.username):
             messages.error(self.request, 'ユーザー名は半角英数字のみ入力できます!')
             return super().form_invalid(form)
-        if has_email(self.request.user.email):
+        if has_email(profile_obj.email):
             messages.error(self.request, 'メールアドレスの形式が違います!')
             return super().form_invalid(form)
         else:
