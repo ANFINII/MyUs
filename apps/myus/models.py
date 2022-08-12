@@ -108,11 +108,6 @@ class ProfileManager(models.Manager):
 def user_icon(instance, filename):
     return f'users/images_user/user_{instance.id}/{filename}'
 
-@property
-def image_url(self):
-    if self.image and hasattr(self.image, 'url'):
-        return self.image.url
-
 class Profile(models.Model):
     img          = '../frontend/static/img/user_icon.png'
     gender_type  = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
@@ -177,11 +172,6 @@ class MyPageManager(models.Manager):
 
 def mypage_banner(instance, filename):
     return f'users/images_mypage/user_{instance.id}/{filename}'
-
-@property
-def banner_url(self):
-    if self.banner and hasattr(self.banner, 'url'):
-        return self.banner.url
 
 class MyPage(models.Model):
     img           = '../frontend/static/img/MyUs_banner.png'
