@@ -62,34 +62,65 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
-    def get_username(self):
-        return self.nickname
-
-    def get_fullname(self):
+    def fullname(self):
         return self.profile.last_name + ' ' + self.profile.first_name
-    get_fullname.short_description = 'name'
+    fullname.short_description = 'name'
 
-    def get_age(self):
+    def image(self):
+        image = self.profile.image
+        if image and hasattr(image, 'url'):
+            return image.url
+
+    def banner(self):
+        banner = self.mypage.banner
+        if banner and hasattr(banner, 'url'):
+            return banner.url
+
+    def year(self):
+        if self.birthday is not None:
+            return self.profile.birthday.year
+
+    def month(self):
+        if self.birthday is not None:
+            return self.profile.birthday.month
+
+    def day(self):
+        if self.birthday is not None:
+            return self.profile.birthday.day
+
+    def age(self):
         birthday = self.profile.birthday
         if birthday is not None:
             DAYS_IN_YEAR = 365.2425
             return int((date.today() - birthday).days / DAYS_IN_YEAR)
-    get_age.short_description = 'age'
+    age.short_description = 'age'
 
-    def get_gender(self):
-        return self.gender.birthday
-    get_gender.short_description = 'gender'
+    def gender(self):
+        return self.profile.gender
+    gender.short_description = 'gender'
 
-    def get_birthday(self):
+    def birthday(self):
         return self.profile.birthday
-    get_birthday.short_description = 'birthday'
+    birthday.short_description = 'birthday'
 
-    def get_plan(self):
+    def prefecture(self):
+        return self.profile.prefecture
+
+    def city(self):
+        return self.profile.city
+
+    def address(self):
+        return self.profile.address
+
+    def building(self):
+        return self.profile.building
+
+    def plan(self):
         plan_dict = {'0': 'Free', '1': 'Basic', '2': 'Standard', '3': 'Premium'}
         for paln_key, paln_value in plan_dict.items():
             if self.mypage.plan in paln_key:
                 return paln_value
-    get_plan.short_description = 'plan'
+    plan.short_description = 'plan'
 
     class Meta:
         db_table = 'user'
@@ -132,18 +163,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.nickname
-
-    def get_year(self):
-        if self.birthday is not None:
-            return self.birthday.year
-
-    def get_month(self):
-        if self.birthday is not None:
-            return self.birthday.month
-
-    def get_day(self):
-        if self.birthday is not None:
-            return self.birthday.day
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -191,13 +210,13 @@ class MyPage(models.Model):
     def __str__(self):
         return self.user.nickname
 
-    def get_follower_count(self):
-        self.follower_num = Follow.objects.filter(following=User).count()
-        return self.follower_num
+    # def get_follower_count(self):
+    #     self.follower_num = Follow.objects.filter(following=User).count()
+    #     return self.follower_num
 
-    def get_following_count(self):
-        self.following_num = Follow.objects.filter(follower=User).count()
-        return self.following_num
+    # def get_following_count(self):
+    #     self.following_num = Follow.objects.filter(follower=User).count()
+    #     return self.following_num
 
     def save(self, *args, **kwargs):
         if self.id is None:
