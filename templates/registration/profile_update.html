@@ -44,8 +44,8 @@
           <tr><td class="td-color">名前</td>
             <td>
               <div class="td-name">
-                <input type="text" name="last_name" value="{{ user.last_name }}" id="last_name" placeholder="姓" maxlength="30" class="form-control">
-                <input type="text" name="first_name" value="{{ user.first_name }}" id="first_name" placeholder="名" maxlength="30" class="form-control">
+                <input type="text" name="last_name" value="{{ user.profile.last_name }}" id="last_name" placeholder="姓" maxlength="30" class="form-control">
+                <input type="text" name="first_name" value="{{ user.profile.first_name }}" id="first_name" placeholder="名" maxlength="30" class="form-control">
               </div>
             </td>
           </tr>
@@ -53,32 +53,40 @@
             <td>
               <div class="td-birthday">
                 <select name="year" id="year" class="form-control">
-                  <option value="{{ user.get_year }}" style="display:none;">{{ user.get_year }}</option>
+                  <option value="{{ user.year }}" style="display:none;">{{ user.year }}</option>
                 </select>
                 <select name="month" id="month" class="form-control">
-                  <option value="{{ user.get_month }}" style="display:none;">{{ user.get_month }}</option>
+                  <option value="{{ user.month }}" style="display:none;">{{ user.month }}</option>
                 </select>
                 <select name="day" id="day" class="form-control">
-                  <option value="{{ user.get_day }}" style="display:none;">{{ user.get_day }}</option>
+                  <option value="{{ user.day }}" style="display:none;">{{ user.day }}</option>
                 </select>
               </div>
             </td>
           </tr>
-          <tr><td class="td-color">年齢</td><td class="td-indent">{{ user.get_age }}歳</td></tr>
+          <tr><td class="td-color">年齢</td><td class="td-indent">{{ user.age }}歳</td></tr>
           <tr>
             <td class="td-color">性別</td>
             <td class="td-gender">
               {% for key, gender in gender.items %}
               <div class="form-check-inline">
-                <input type="radio" name="gender" value="{{ key }}" id="gender_{{ key }}" class="custom-control-input" {% if user.gender == key %} checked {% endif %}>
+                <input type="radio" name="gender" value="{{ key }}" id="gender_{{ key }}" class="custom-control-input" {% if user.profile.gender == key %} checked {% endif %}>
                 <label for="gender_{{ key }}" class="custom-control-label">{{ gender }}</label>
               </div>
               {% endfor %}
             </td>
           </tr>
-          <tr><td class="td-color">電話</td><td><input type="tel" name="phone" value="{{ user.phone }}" maxlength="15" class="form-control" required></td></tr>
-          <tr><td class="td-color">住所</td><td><input type="text" name="location" value="{{ user.location }}" maxlength="255" class="form-control"></td></tr>
-          <tr><td class="td-color">自己紹介</td><td><textarea name="introduction" rows="1" class="form-control textarea">{{ user.introduction }}</textarea></td></tr>
+          <tr><td class="td-color">電話</td><td><input type="tel" name="phone" value="{{ user.profile.phone }}" maxlength="15" class="form-control" required></td></tr>
+          <tr><td class="td-color">郵便番号</td><td><input type="tel" name="postal_code" value="{{ user.profile.postal_code }}" maxlength="8" class="form-control" required></td></tr>
+          <tr><td class="td-color">住所</td>
+            <td class="td-location">
+              <input type="text" name="prefecture" value="{{ user.prefecture }}" placeholder="都道府県" maxlength="4" class="form-control location1">
+              <input type="text" name="city" value="{{ user.city }}" placeholder="市区町村" maxlength="255" class="form-control location2">
+              <input type="text" name="address" value="{{ user.address }}" placeholder="番地" maxlength="255" class="form-control location3">
+              <input type="text" name="building" value="{{ user.building }}" placeholder="建物名" maxlength="255" class="form-control location4">
+            </td>
+          </tr>
+          <tr><td class="td-color">自己紹介</td><td><textarea name="introduction" rows="1" class="form-control textarea">{{ user.profile.introduction }}</textarea></td></tr>
         </tbody>
       </table>
 
