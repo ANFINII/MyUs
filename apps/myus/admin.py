@@ -4,7 +4,7 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
-from apps.myus.models import User, MyPage, SearchTag, HashTag, NotificationSetting
+from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, AccessLog, Comment, Follow, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 from apps.myus.modules.contains import PlanType
@@ -16,6 +16,15 @@ admin.site.site_header = 'MyUs管理者画面'
 admin.site.index_title = 'メニュー'
 admin.site.unregister(Group)
 admin.site.disable_action('delete_selected')
+
+
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    readonly_fields = ('last_name', 'first_name', 'gender', 'phone', 'country_code', 'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction')
+    verbose_name = 'プロファイル情報'
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 class MyPageInline(admin.StackedInline):
@@ -57,17 +66,16 @@ class CommentInlineAdmin(GenericTabularInline):
 
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'email', 'username', 'nickname', 'get_fullname', 'birthday', 'get_age', 'gender', 'plan')
-    list_filter = ('birthday', 'gender')
-    search_fields = ('email', 'username', 'nickname', 'last_name', 'first_name', 'phone')
+    list_display = ('id', 'email', 'username', 'nickname', 'get_fullname', 'get_birthday', 'get_age', 'get_gender', 'get_plan')
+    search_fields = ('email', 'username', 'nickname', 'get_fullname', 'get_age', 'get_gender', 'get_plan')
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
-    readonly_fields = ('birthday', 'get_age', 'date_joined', 'last_login')
-    inlines = [MyPageInline, NotificationSettingInline, SearchTagInline]
+    readonly_fields = ('get_birthday', 'get_age', 'date_joined', 'last_login')
+    inlines = [ProfileInline, MyPageInline, NotificationSettingInline, SearchTagInline]
 
     # 詳細画面
     fieldsets = [
-        ('アカウント情報', {'fields': ('image', 'email', 'username', 'nickname', 'last_name', 'first_name', 'birthday', 'get_age', 'gender', 'phone', 'location', 'introduction')}),
+        ('アカウント情報', {'fields': ('image', 'email', 'username', 'nickname', 'get_birthday', 'get_age')}),
         ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
     ]
 

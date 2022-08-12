@@ -1,4 +1,4 @@
-import datetime
+from datetime import date
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import post_save
@@ -36,28 +36,11 @@ class UserManager(BaseUserManager):
     def get_queryset(self):
         return super(UserManager,self).get_queryset().select_related('mypage')
 
-def user_icon(instance, filename):
-    return f'users/images_user/user_{instance.id}/{filename}'
-
 class User(AbstractBaseUser, PermissionsMixin):
     """User"""
-    img          = '../frontend/static/img/user_icon.png'
-    image        = models.ImageField(upload_to=user_icon, default=img, blank=True, null=True)
     email        = models.EmailField(max_length=255, unique=True)
     username     = models.CharField(max_length=20, unique=True)
     nickname     = models.CharField(max_length=80, unique=True)
-    last_name    = models.CharField(max_length=40, blank=True)
-    first_name   = models.CharField(max_length=40, blank=True)
-
-    gender_type  = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
-    message      = '電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます'
-    birthday     = models.DateField(blank=True, null=True)
-    gender       = models.CharField(choices=gender_type, max_length=1, default='2')
-    phone_no     = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message=message)
-    phone        = models.CharField(validators=[phone_no], max_length=15, blank=True, null=True)
-    location     = models.CharField(max_length=255, blank=True)
-    introduction = models.TextField(blank=True)
-
     is_active    = models.BooleanField(default=True)
     is_staff     = models.BooleanField(default=False)
     is_admin     = models.BooleanField(default=False)
@@ -83,8 +66,77 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.nickname
 
     def get_fullname(self):
-        return self.last_name + ' ' + self.first_name
+        return self.profile.last_name + ' ' + self.profile.first_name
     get_fullname.short_description = 'name'
+
+    def get_age(self):
+        birthday = self.profile.birthday
+        if birthday is not None:
+            DAYS_IN_YEAR = 365.2425
+            return int((date.today() - birthday).days / DAYS_IN_YEAR)
+    get_age.short_description = 'age'
+
+    def get_gender(self):
+        return self.gender.birthday
+    get_gender.short_description = 'gender'
+
+    def get_birthday(self):
+        return self.profile.birthday
+    get_birthday.short_description = 'birthday'
+
+    def get_plan(self):
+        plan_dict = {'0': 'Free', '1': 'Basic', '2': 'Standard', '3': 'Premium'}
+        for paln_key, paln_value in plan_dict.items():
+            if self.mypage.plan in paln_key:
+                return paln_value
+    get_plan.short_description = 'plan'
+
+    class Meta:
+        db_table = 'user'
+        verbose_name_plural = '001 User'
+        indexes = [
+            models.Index(fields=['email'], name='email_idx'),
+            models.Index(fields=['username'], name='username_idx'),
+            models.Index(fields=['nickname'], name='nickname_idx'),
+        ]
+
+
+class ProfileManager(models.Manager):
+    def get_queryset(self):
+        return super(ProfileManager,self).get_queryset().select_related('user')
+
+def user_icon(instance, filename):
+    return f'users/images_user/user_{instance.id}/{filename}'
+
+@property
+def image_url(self):
+    if self.image and hasattr(self.image, 'url'):
+        return self.image.url
+
+class Profile(models.Model):
+    img          = '../frontend/static/img/user_icon.png'
+    gender_type  = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
+    message      = '電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます'
+    user         = models.OneToOneField(User, on_delete=models.CASCADE)
+    image        = models.ImageField(upload_to=user_icon, default=img, blank=True, null=True)
+    last_name    = models.CharField(max_length=50, blank=True)
+    first_name   = models.CharField(max_length=50, blank=True)
+    birthday     = models.DateField(blank=True, null=True)
+    gender       = models.CharField(choices=gender_type, max_length=1, default='2')
+    phone_no     = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message=message)
+    phone        = models.CharField(validators=[phone_no], max_length=15, blank=True, null=True)
+    country_code = models.CharField(max_length=255, blank=True, null=True)
+    postal_code  = models.CharField(max_length=255, blank=True, null=True)
+    prefecture   = models.CharField(max_length=255, blank=True, null=True)
+    city         = models.CharField(max_length=255, blank=True, null=True)
+    address      = models.CharField(max_length=255, blank=True, null=True)
+    building     = models.CharField(max_length=255, blank=True, null=True)
+    introduction = models.TextField(blank=True)
+
+    objects = ProfileManager()
+
+    def __str__(self):
+        return self.user.nickname
 
     def get_year(self):
         if self.birthday is not None:
@@ -98,19 +150,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.birthday is not None:
             return self.birthday.day
 
-    def get_age(self):
-        if self.birthday is not None:
-            DAYS_IN_YEAR = 365.2425
-            return int((datetime.date.today() - self.birthday).days / DAYS_IN_YEAR)
-    get_age.short_description = 'age'
-
-    def plan(self):
-        plan_dict = {'0': 'Free', '1': 'Basic', '2': 'Standard', '3': 'Premium'}
-        for paln_key, paln_value in plan_dict.items():
-            if self.mypage.plan in paln_key:
-                return paln_value
-    plan.short_description = 'plan'
-
     def save(self, *args, **kwargs):
         if self.id is None:
             image = self.image
@@ -122,18 +161,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'user'
-        verbose_name_plural = '001 User'
-        indexes = [
-            models.Index(fields=['email'], name='email_idx'),
-            models.Index(fields=['username'], name='username_idx'),
-            models.Index(fields=['nickname'], name='nickname_idx'),
-        ]
+        db_table = 'profile'
+        verbose_name_plural = '001 profile'
 
-@property
-def image_url(self):
-    if self.image and hasattr(self.image, 'url'):
-        return self.image.url
+@receiver(post_save, sender=User)
+def create_profile(sender, **kwargs):
+    """ユーザー作成時に空のProfileも作成する"""
+    if kwargs['created']:
+        Profile.objects.get_or_create(user=kwargs['instance'])
 
 
 class MyPageManager(models.Manager):
@@ -142,6 +177,11 @@ class MyPageManager(models.Manager):
 
 def mypage_banner(instance, filename):
     return f'users/images_mypage/user_{instance.id}/{filename}'
+
+@property
+def banner_url(self):
+    if self.banner and hasattr(self.banner, 'url'):
+        return self.banner.url
 
 class MyPage(models.Model):
     img           = '../frontend/static/img/MyUs_banner.png'
@@ -182,11 +222,6 @@ class MyPage(models.Model):
     class Meta:
         db_table = 'mypage'
         verbose_name_plural = '001 MyPage'
-
-@property
-def mypage_banner(self):
-    if self.banner and hasattr(self.banner, 'url'):
-        return self.banner.url
 
 @receiver(post_save, sender=User)
 def create_mypage(sender, **kwargs):
