@@ -1,5 +1,5 @@
 <object class="author_image_space">
   <a href="{% url 'myus:userpage' item.author.nickname %}" data="{{ item.author.nickname }}" class="pjax_button_userpage">
-    <img src="{{ item.author.image.url }}" title="{{ item.author.nickname }}" class="profile_image">
+    <img src="{{ item.author.image }}" title="{{ item.author.nickname }}" class="profile_image">
   </a>
 </object>

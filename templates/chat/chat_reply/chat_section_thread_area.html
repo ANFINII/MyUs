@@ -2,7 +2,7 @@
   <div id="comment_aria_list_cross_{{ comment.id }}" class="comment_aria_list">
     <input type="hidden" value="{{ comment_id }}" id="parent_id">
     <a href="{% url 'myus:userpage' comment.author.nickname %}" data="{{ comment.author.nickname }}" class="pjax_button_userpage">
-      <img src="{{ comment.author.image.url }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
+      <img src="{{ comment.author.image }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
     </a>
     <div class="comment_aria_list_1">
       <p>{{ comment.author.nickname }}</p>

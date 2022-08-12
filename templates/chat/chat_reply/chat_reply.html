@@ -3,7 +3,7 @@
 {% for reply in reply_list %}
   <div id="comment_aria_list_{{ reply.id }}" class="comment_aria_list">
     <a href="{% url 'myus:userpage' reply.author.nickname %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
-      <img src="{{ reply.author.image.url }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+      <img src="{{ reply.author.image }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
     </a>
     <div class="comment_aria_list_1">
       <p>{{ reply.author.nickname }}</p>

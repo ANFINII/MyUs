@@ -16,8 +16,8 @@
         <td>
           <label for="account_image_input" class="mypage_image">
             {% if user.mypage.banner %}
-            <a href="{{ user.mypage.banner.url }}" data-lightbox="group">
-              <img src="{{ user.mypage.banner.url }}" title="{{ user.nickname }}" width="270px" height="56xp" data-lightbox="group">
+            <a href="{{ user.banner }}" data-lightbox="group">
+              <img src="{{ user.banner }}" title="{{ user.nickname }}" width="270px" height="56xp" data-lightbox="group">
             </a>
             {% endif %}
           </label>

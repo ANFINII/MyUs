@@ -1,12 +1,12 @@
 {% for author in user_list %}
   <figure class="userpage_banner">
-    <img src="{{ author.mypage.banner.url }}" title="{{ author.nickname }}">
+    <img src="{{ author.banner }}" title="{{ author.nickname }}">
   </figure>
 
   <object class="userpage_author">
     <object class="author_space">
       <figure>
-        <img src="{{ author.image.url }}" title="{{ author.nickname }}" class="userpage_image">
+        <img src="{{ author.image }}" title="{{ author.nickname }}" class="userpage_image">
       </figure>
     </object>
     <span title="{{ author.nickname }}" class="userpage_content_1">{{ author.nickname }}</span>

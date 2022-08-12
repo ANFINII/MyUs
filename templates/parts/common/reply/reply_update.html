@@ -1,6 +1,6 @@
 <form method="POST" action="" comment-id="{{ reply.id }}" csrf="{{ csrf_token }}" class="edit_update">
   <a href="{% url 'myus:userpage' reply.author.nickname %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
-    <img src="{{ reply.author.image.url }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
+    <img src="{{ reply.author.image }}" title="{{ reply.author.nickname }}" class="profile_image_reply">
   </a>
   <div class="comment_input_update">
     <textarea name="update_text" rows="1" placeholder="コメント入力" id="comment_form_update_{{ reply.id }}" class="textarea_br update_form_area">{{ reply.text }}</textarea>
