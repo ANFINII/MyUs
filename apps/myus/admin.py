@@ -20,7 +20,7 @@ admin.site.disable_action('delete_selected')
 
 class ProfileInline(admin.StackedInline):
     model = Profile
-    readonly_fields = ('last_name', 'first_name', 'gender', 'phone', 'country_code', 'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction')
+    readonly_fields = ('image', 'country_code')
     verbose_name = 'プロファイル情報'
 
     def has_delete_permission(self, request, obj=None):
@@ -66,16 +66,16 @@ class CommentInlineAdmin(GenericTabularInline):
 
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'email', 'username', 'nickname', 'get_fullname', 'get_birthday', 'get_age', 'get_gender', 'get_plan')
-    search_fields = ('email', 'username', 'nickname', 'get_fullname', 'get_age', 'get_gender', 'get_plan')
+    list_display = ('id', 'email', 'username', 'nickname', 'fullname', 'birthday', 'age', 'gender', 'plan')
+    search_fields = ('email', 'username', 'nickname', 'fullname', 'age', 'gender', 'plan')
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
-    readonly_fields = ('get_birthday', 'get_age', 'date_joined', 'last_login')
+    readonly_fields = ('date_joined', 'last_login')
     inlines = [ProfileInline, MyPageInline, NotificationSettingInline, SearchTagInline]
 
     # 詳細画面
     fieldsets = [
-        ('アカウント情報', {'fields': ('image', 'email', 'username', 'nickname', 'get_birthday', 'get_age')}),
+        ('アカウント情報', {'fields': ('email', 'username', 'nickname')}),
         ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
     ]
 
