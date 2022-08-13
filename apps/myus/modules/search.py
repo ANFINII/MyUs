@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from functools import reduce
 from itertools import chain
 from operator import and_
@@ -122,7 +122,7 @@ class Search:
     def search_recommend(self):
         search = self.request.GET.get('search')
         if search:
-            aggregation_date = datetime.datetime.today() - datetime.timedelta(days=200)
+            aggregation_date = datetime.today() - timedelta(days=200)
             result = SearchData.search_recommend(aggregation_date, search)
             self.count = len(result)
             return result

@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count
 from django.template.loader import render_to_string
@@ -31,7 +31,7 @@ def pjax_context(request, href):
                 'chat_list': Chat.objects.filter(publish=True).order_by('-created')[:8],
             }, request=request)
     if href == 'recommend':
-        aggregation_date = datetime.datetime.today() - datetime.timedelta(days=200)
+        aggregation_date = datetime.today() - timedelta(days=200)
         if search:
             result = SearchData.search_recommend(aggregation_date, search)
             context['html'] = render_to_string('index_list.html', {

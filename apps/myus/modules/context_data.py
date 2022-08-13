@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta, date
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
@@ -45,7 +45,7 @@ class ContextData:
             # 急上昇はcreatedが1日以内かつscoreが100000以上の上位8レコード
             # テストはcreatedが100日以内かつscoreが50以上の上位8レコード
             # socre = (read + like*10) + read * like/(read+1)*20
-            aggregation_date = datetime.datetime.today() - datetime.timedelta(days=200)
+            aggregation_date = datetime.today() - timedelta(days=200)
             context['Recommend'] = 'Recommend'
             context.update({
                 'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
@@ -90,7 +90,7 @@ class ContextData:
             if obj.like.filter(id=user.id).exists():
                 liked = True
         if 'ChatDetail' in str(models.__name__):
-            if obj.period < datetime.date.today():
+            if obj.period < date.today():
                 is_period = True
             else:
                 is_period = False
@@ -144,7 +144,7 @@ class ContextData:
             context.update(chat_list=Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'CollaboDetail' in str(models.__name__):
-            if obj.period < datetime.date.today():
+            if obj.period < date.today():
                 is_period = True
             else:
                 is_period = False
