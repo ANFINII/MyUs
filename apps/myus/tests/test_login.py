@@ -13,8 +13,6 @@ class LoginTest(TestCase):
             username='usernametest',
             nickname='nicknametest',
             password='passwordtest',
-            last_name='苗字テスト',
-            first_name='名前テスト',
             is_active=True,
         )
 

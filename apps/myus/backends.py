@@ -14,8 +14,6 @@ class MyBackend:
             user = User.objects.get(email=username)
             if user.check_password(password):
                 return user
-        except User.DoesNotExist:
-            return None
 
         if getattr(user, 'is_active') and user.check_password(password):
             return user
