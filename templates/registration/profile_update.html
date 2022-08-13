@@ -70,7 +70,7 @@
             <td class="td-gender">
               {% for key, gender in gender.items %}
               <div class="form-check-inline">
-                <input type="radio" name="gender" value="{{ key }}" id="gender_{{ key }}" class="custom-control-input" {% if user.profile.gender == key %} checked {% endif %}>
+                <input type="radio" name="gender" value="{{ key }}" id="gender_{{ key }}" class="custom-control-input" {% if user.gender == key %} checked {% endif %}>
                 <label for="gender_{{ key }}" class="custom-control-label">{{ gender }}</label>
               </div>
               {% endfor %}
