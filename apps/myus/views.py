@@ -339,13 +339,7 @@ class MyPageUpdate(UpdateView):
                 messages.error(self.request, 'メールアドレスの形式が違います!')
                 return super().form_invalid(form)
             return super(MyPageUpdate, self).form_valid(form)
-        except ValueError:
-            messages.error(self.request, '更新できませんでした!')
-            return super().form_invalid(form)
-        except TypeError:
-            messages.error(self.request, '更新できませんでした!')
-            return super().form_invalid(form)
-        except IntegrityError:
+        except (ValueError, TypeError, IntegrityError) as e:
             messages.error(self.request, '更新できませんでした!')
             return super().form_invalid(form)
 
@@ -471,9 +465,7 @@ def searchtag_create(request):
                 form = form.save(commit=False)
                 form.author = request.user
                 form.save()
-                context = {
-                    'searchtag': form.name,
-                }
+                context = {'searchtag': form.name}
                 return JsonResponse(context)
             else:
                 form = SearchTagForm()
