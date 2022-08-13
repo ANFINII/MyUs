@@ -17,6 +17,11 @@ def has_phone(text):
         return False
     return True
 
+def has_postal_code(text):
+    if re.fullmatch('\d{3,3}-?\d{4,4}', text) is not None:
+        return False
+    return True
+
 def has_alphabet(text):
     if re.search('[a-zA-Z]', text) is not None:
         return True
