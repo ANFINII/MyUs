@@ -33,8 +33,8 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def get_queryset(self):
-        return super(UserManager,self).get_queryset().select_related('mypage')
+    # def get_queryset(self):
+    #     return super(UserManager,self).get_queryset().select_related('profile', 'mypage')
 
 class User(AbstractBaseUser, PermissionsMixin):
     """User"""
@@ -143,20 +143,20 @@ class Profile(models.Model):
     img          = '../frontend/static/img/user_icon.png'
     gender_type  = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
     message      = '電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます'
+    phone_no     = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message=message)
     user         = models.OneToOneField(User, on_delete=models.CASCADE)
     image        = models.ImageField(upload_to=user_icon, default=img, blank=True, null=True)
-    last_name    = models.CharField(max_length=50, blank=True)
-    first_name   = models.CharField(max_length=50, blank=True)
+    last_name    = models.CharField(max_length=50)
+    first_name   = models.CharField(max_length=50)
     birthday     = models.DateField(blank=True, null=True)
     gender       = models.CharField(choices=gender_type, max_length=1, default='2')
-    phone_no     = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message=message)
-    phone        = models.CharField(validators=[phone_no], max_length=15, blank=True, null=True)
-    country_code = models.CharField(max_length=255, blank=True, null=True)
-    postal_code  = models.CharField(max_length=255, blank=True, null=True)
-    prefecture   = models.CharField(max_length=255, blank=True, null=True)
-    city         = models.CharField(max_length=255, blank=True, null=True)
-    address      = models.CharField(max_length=255, blank=True, null=True)
-    building     = models.CharField(max_length=255, blank=True, null=True)
+    phone        = models.CharField(validators=[phone_no], max_length=15, blank=True)
+    country_code = models.CharField(max_length=255, default='JP')
+    postal_code  = models.CharField(max_length=255, blank=True)
+    prefecture   = models.CharField(max_length=255, blank=True)
+    city         = models.CharField(max_length=255, blank=True)
+    address      = models.CharField(max_length=255, blank=True)
+    building     = models.CharField(max_length=255, blank=True)
     introduction = models.TextField(blank=True)
 
     objects = ProfileManager()
@@ -197,10 +197,10 @@ class MyPage(models.Model):
     plan_type     = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
     user          = models.OneToOneField(User, on_delete=models.CASCADE)
     banner        = models.ImageField(upload_to=mypage_banner, default=img, blank=True, null=True)
-    email         = models.EmailField(max_length=255, blank=True, null=True, default='abc@gmail.com')
+    email         = models.EmailField(max_length=255, blank=True, default='abc@gmail.com')
     content       = models.TextField(blank=True)
-    follower_num  = models.IntegerField(verbose_name='follower', blank=True, null=True, default=0)
-    following_num = models.IntegerField(verbose_name='follow', blank=True, null=True, default=0)
+    follower_num  = models.IntegerField(verbose_name='follower', default=0)
+    following_num = models.IntegerField(verbose_name='follow', default=0)
     plan          = models.CharField(choices=plan_type, max_length=1, default='0')
     plan_date     = models.DateTimeField(blank=True, null=True)
     is_advertise  = models.BooleanField(default=True)
@@ -209,14 +209,6 @@ class MyPage(models.Model):
 
     def __str__(self):
         return self.user.nickname
-
-    # def get_follower_count(self):
-    #     self.follower_num = Follow.objects.filter(following=User).count()
-    #     return self.follower_num
-
-    # def get_following_count(self):
-    #     self.following_num = Follow.objects.filter(follower=User).count()
-    #     return self.following_num
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -287,7 +279,7 @@ class SearchTag(models.Model):
     """SearchTag"""
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     sequence = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=20)
-    name     = models.CharField(max_length=30, null=True)
+    name     = models.CharField(max_length=30)
     created  = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -300,8 +292,8 @@ class SearchTag(models.Model):
 
 class HashTag(models.Model):
     """HashTag"""
-    jp_name = models.CharField(max_length=30, null=True)
-    en_name = models.CharField(max_length=60, null=True)
+    jp_name = models.CharField(max_length=30)
+    en_name = models.CharField(max_length=60)
 
     def __str__(self):
         return self.jp_name
@@ -366,8 +358,8 @@ class Video(models.Model, MediaModel):
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
     like        = models.ManyToManyField(User, related_name='video_like', blank=True)
-    read        = models.IntegerField(blank=True, null=True, default=0)
-    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    read        = models.IntegerField(default=0)
+    comment_num = models.IntegerField(default=0)
     publish     = models.BooleanField(default=True)
     created     = models.DateTimeField(auto_now_add=True)
     updated     = models.DateTimeField(auto_now=True)
@@ -429,8 +421,8 @@ class Live(models.Model, MediaModel):
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
     like        = models.ManyToManyField(User, related_name='live_like', blank=True)
-    read        = models.IntegerField(blank=True, null=True, default=0)
-    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    read        = models.IntegerField(default=0)
+    comment_num = models.IntegerField(default=0)
     publish     = models.BooleanField(default=True)
     created     = models.DateTimeField(auto_now_add=True)
     updated     = models.DateTimeField(auto_now=True)
@@ -481,13 +473,13 @@ class Music(models.Model, MediaModel):
     author      = models.ForeignKey(User, on_delete=models.CASCADE)
     title       = models.CharField(max_length=100)
     content     = models.TextField()
-    lyric       = models.TextField(blank=True, null=True)
+    lyric       = models.TextField(blank=True)
     music       = models.FileField(upload_to=musics_upload)
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
     like        = models.ManyToManyField(User, related_name='music_like', blank=True)
-    read        = models.IntegerField(blank=True, null=True, default=0)
-    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    read        = models.IntegerField(default=0)
+    comment_num = models.IntegerField(default=0)
     download    = models.BooleanField(default=True)
     publish     = models.BooleanField(default=True)
     created     = models.DateTimeField(auto_now_add=True)
@@ -539,8 +531,8 @@ class Picture(models.Model, MediaModel):
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
     like        = models.ManyToManyField(User, related_name='picture_like', blank=True)
-    read        = models.IntegerField(blank=True, null=True, default=0)
-    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    read        = models.IntegerField(default=0)
+    comment_num = models.IntegerField(default=0)
     publish     = models.BooleanField(default=True)
     created     = models.DateTimeField(auto_now_add=True)
     updated     = models.DateTimeField(auto_now=True)
@@ -589,12 +581,12 @@ class Blog(models.Model, MediaModel):
     title       = models.CharField(max_length=100)
     content     = models.TextField()
     image       = models.ImageField(upload_to=images_blog_upload)
-    richtext    = RichTextUploadingField(blank=True, null=True)
+    richtext    = RichTextUploadingField(blank=True)
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
     like        = models.ManyToManyField(User, related_name='blog_like', blank=True)
-    read        = models.IntegerField(blank=True, null=True, default=0)
-    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    read        = models.IntegerField(default=0)
+    comment_num = models.IntegerField(default=0)
     publish     = models.BooleanField(default=True)
     created     = models.DateTimeField(auto_now_add=True)
     updated     = models.DateTimeField(auto_now=True)
@@ -641,9 +633,9 @@ class Chat(models.Model, MediaModel):
     comment = GenericRelation('Comment')
     hashtag = models.ManyToManyField(HashTag, blank=True)
     like    = models.ManyToManyField(User, related_name='chat_like', blank=True)
-    read    = models.IntegerField(blank=True, null=True, default=0)
-    thread  = models.IntegerField(blank=True, null=True, default=0)
-    joined  = models.IntegerField(blank=True, null=True, default=0)
+    read    = models.IntegerField(default=0)
+    thread  = models.IntegerField(default=0)
+    joined  = models.IntegerField(default=0)
     period  = models.DateField()
     publish = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -664,8 +656,8 @@ class Collabo(models.Model, MediaModel):
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
     like        = models.ManyToManyField(User, related_name='collabo_like', blank=True)
-    read        = models.IntegerField(blank=True, null=True, default=0)
-    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    read        = models.IntegerField(default=0)
+    comment_num = models.IntegerField(default=0)
     period      = models.DateField()
     publish     = models.BooleanField(default=True)
     created     = models.DateTimeField(auto_now_add=True)
@@ -686,7 +678,7 @@ class Todo(models.Model):
     priority    = models.CharField(max_length=10, choices=priority_type, default='success')
     progress    = models.CharField(max_length=10, choices=progress_type, default='0')
     comment     = GenericRelation('Comment')
-    comment_num = models.IntegerField(blank=True, null=True, default=0)
+    comment_num = models.IntegerField(default=0)
     duedate     = models.DateField()
     created     = models.DateTimeField(auto_now_add=True)
     updated     = models.DateTimeField(auto_now=True)
@@ -729,7 +721,7 @@ class Notification(models.Model):
     user_from      = models.ForeignKey(User, related_name='user_from', on_delete=models.CASCADE)
     user_to        = models.ForeignKey(User, related_name='user_to', on_delete=models.CASCADE, blank=True, null=True)
     type_no        = models.IntegerField(default=0)
-    type_name      = models.CharField(max_length=7, blank=True, null=True)
+    type_name      = models.CharField(max_length=7, blank=True)
     content_type   = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id      = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
@@ -776,7 +768,7 @@ class Advertise(models.Model):
     content = models.TextField()
     image   = models.ImageField(upload_to=images_adver_upload)
     video   = models.FileField(upload_to=videos_adver_upload)
-    read    = models.IntegerField(blank=True, null=True, default=0)
+    read    = models.IntegerField(default=0)
     type    = models.CharField(choices=choice, max_length=2, default='1')
     period  = models.DateField()
     publish = models.BooleanField(default=True)
@@ -810,7 +802,7 @@ class Comment(models.Model):
     parent         = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)
     text           = models.TextField()
     like           = models.ManyToManyField(User, related_name='comment_like', blank=True)
-    reply_num      = models.IntegerField(blank=True, null=True, default=0)
+    reply_num      = models.IntegerField(default=0)
     content_type   = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id      = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
