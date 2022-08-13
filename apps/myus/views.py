@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
+from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -34,7 +35,7 @@ from apps.myus.modules.search import Search
 from apps.myus.modules.success_url import success_url
 from apps.myus.modules.convert_hls import convert_hls
 from apps.myus.modules.follow import follow_update_data
-from apps.myus.modules.validation import has_username, has_email, has_phone, has_alphabet, has_number
+from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 
 
 # Create your views here.
@@ -245,70 +246,68 @@ class ProfileView(TemplateView):
 class ProfileUpdate(UpdateView):
     """アカウント更新"""
     model = Profile
-    fields = ('image', 'last_name', 'first_name', 'gender', 'phone', 'postal_code', 'country_code', 'prefecture', 'city', 'address', 'building', 'introduction')
+    fields = ('image', 'last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction')
     template_name = 'registration/profile_update.html'
     success_url = reverse_lazy('myus:profile')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, ProfileUpdate, **kwargs)
 
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+
     def form_valid(self, form):
         """バリデーションに成功した時"""
         try:
             user = self.request.user
-            profile_obj = form.save(commit=False)
-            profile_obj = Profile.objects.get(user=user)
-            if has_username(user.username):
-                messages.error(self.request, 'ユーザー名は半角英数字のみ入力できます!')
-                return super().form_invalid(form)
+            user.email = self.request.POST['email']
+            user.username = self.request.POST['username']
+            user.nickname = self.request.POST['nickname']
 
             if has_email(user.email):
                 messages.error(self.request, 'メールアドレスの形式が違います!')
                 return super().form_invalid(form)
 
-            if has_number(profile_obj.last_name):
+            if has_username(user.username):
+                messages.error(self.request, 'ユーザー名は半角英数字のみ入力できます!')
+                return super().form_invalid(form)
+
+            if has_number(self.request.POST['last_name']):
                 messages.error(self.request, '姓に数字が含まれております!')
                 return super().form_invalid(form)
 
-            if has_number(profile_obj.first_name):
+            if has_number(self.request.POST['first_name']):
                 messages.error(self.request, '名に数字が含まれております!')
                 return super().form_invalid(form)
 
-            if has_phone(profile_obj.phone):
+            if has_phone(self.request.POST['phone']):
                 messages.error(self.request, '電話番号の形式が違います!')
                 return super().form_invalid(form)
 
+            if has_postal_code(self.request.POST['postal_code']):
+                messages.error(self.request, '郵便番号の形式が違います!')
+                return super().form_invalid(form)
+
+            profile_obj = form.save(commit=False)
             year = self.request.POST['year']
             month = self.request.POST['month']
             day = self.request.POST['day']
             birthday = datetime.date(year=int(year), month=int(month), day=int(day))
             profile_obj.birthday = birthday.isoformat()
 
-            profile_obj.save()
+            user.save()
             return super(ProfileUpdate, self).form_valid(form)
         except ValueError:
             messages.error(self.request, f'{year}年{month}月{day}日は存在しない日付です!')
             return super().form_invalid(form)
+        except IntegrityError:
+            messages.error(self.request, '更新できませんでした!')
+            return super().form_invalid(form)
 
     def form_invalid(self, form):
         """バリデーションに失敗した時"""
-        user = self.request.user
-        profile_obj = Profile.objects.get(user=user)
-        if has_phone(profile_obj.phone):
-            messages.error(self.request, '電話番号の形式が違います!!')
-            return super().form_invalid(form)
-        if has_username(profile_obj.username):
-            messages.error(self.request, 'ユーザー名は半角英数字のみ入力できます!')
-            return super().form_invalid(form)
-        if has_email(profile_obj.email):
-            messages.error(self.request, 'メールアドレスの形式が違います!')
-            return super().form_invalid(form)
-        else:
-            messages.error(self.request, 'ユーザー名またはメールアドレス、投稿者名は既に登録済みです!')
-            return super().form_invalid(form)
-
-    def get_object(self):
-        return self.request.user
+        messages.error(self.request, 'ユーザー名またはメールアドレス、投稿者名は既に登録済みです!')
+        return super().form_invalid(form)
 
 
 # MyPage
@@ -330,17 +329,15 @@ class MyPageUpdate(UpdateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, MyPageUpdate, **kwargs)
 
+    def get_object(self):
+        return MyPage.objects.get(user=self.request.user)
+
     def form_valid(self, form):
         """バリデーションに成功した時"""
         try:
-            user = self.request.user
-            mypage_obj = form.save(commit=False)
-            mypage_obj = MyPage.objects.get(user=user)
-
-            if has_email(mypage_obj.email):
+            if has_email(self.request.POST['email']):
                 messages.error(self.request, 'メールアドレスの形式が違います!')
                 return super().form_invalid(form)
-            mypage_obj.save()
             return super(MyPageUpdate, self).form_valid(form)
         except ValueError:
             messages.error(self.request, '更新できませんでした!')
@@ -348,20 +345,14 @@ class MyPageUpdate(UpdateView):
         except TypeError:
             messages.error(self.request, '更新できませんでした!')
             return super().form_invalid(form)
+        except IntegrityError:
+            messages.error(self.request, '更新できませんでした!')
+            return super().form_invalid(form)
 
     def form_invalid(self, form):
         """バリデーションに失敗した時"""
-        user = self.request.user
-        mypage_obj = MyPage.objects.get(user=user)
-        if has_email(mypage_obj.email):
-            messages.error(self.request, 'メールアドレスの形式が違います!')
-            return super().form_invalid(form)
-        else:
-            messages.error(self.request, 'メールアドレスの形式が違います!')
-            return super().form_invalid(form)
-
-    def get_object(self):
-        return MyPage.objects.get(user=self.request.user)
+        messages.error(self.request, 'メールアドレスの形式が違います!')
+        return super().form_invalid(form)
 
 def mypage_toggle(request):
     """mypage_toggle"""
