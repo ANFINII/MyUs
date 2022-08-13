@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.myus.models import User, MyPage, SearchTag, HashTag, NotificationSetting
+from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 
@@ -8,8 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'password', 'image', 'email', 'username', 'nickname', 'last_name', 'first_name',
-            'birthday', 'gender', 'phone', 'location', 'introduction',
+            'id', 'password', 'email', 'username', 'nickname',
             'is_active', 'is_staff', 'is_admin', 'last_login', 'date_joined',
         )
         read_only_field = ['is_staff', 'is_admin', 'last_login', 'date_joined']
@@ -21,6 +20,15 @@ class UserSerializer(serializers.ModelSerializer):
                 'style': {'input_type': 'password'}
             }
         }
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = (
+            'id', 'user', 'image', 'last_name', 'first_name', 'birthday', 'gender', 'phone',
+            'country_code', 'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction',
+        )
 
 
 class MyPageSerializer(serializers.ModelSerializer):
