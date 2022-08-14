@@ -80,7 +80,10 @@
           <tr><td class="td-color">郵便番号</td><td><input type="tel" name="postal_code" value="{{ user.profile.postal_code }}" maxlength="8" class="form-control" required></td></tr>
           <tr><td class="td-color">住所</td>
             <td class="td-location">
-              <input type="text" name="prefecture" value="{{ user.prefecture }}" placeholder="都道府県" maxlength="4" class="form-control location1">
+              <select name="prefecture" id="prefecture" class="form-control location1">
+                <option value="">都道府県</option>
+                <option value="{{ user.prefecture }}" style="display:none;" selected>{{ user.prefecture }}</option>
+              </select>
               <input type="text" name="city" value="{{ user.city }}" placeholder="市区町村" maxlength="255" class="form-control location2">
               <input type="text" name="address" value="{{ user.address }}" placeholder="丁番地" maxlength="255" class="form-control location3">
               <input type="text" name="building" value="{{ user.building }}" placeholder="建物名" maxlength="255" class="form-control location4">
@@ -98,4 +101,5 @@
 
 {% block extrajs %}
 <script src="{% static 'js/date.js' %}"></script>
+<script src="{% static 'js/prefecture.js' %}"></script>
 {% endblock extrajs %}
