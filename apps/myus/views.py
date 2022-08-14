@@ -573,7 +573,7 @@ def reply_form(request):
             content_object=obj,
             text=text,
             author=user,
-            parent=Comment.objects.get(id=comment_id)
+            parent=Comment.objects.get(id=comment_id),
         )
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
