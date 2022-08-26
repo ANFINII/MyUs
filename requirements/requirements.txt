@@ -25,6 +25,7 @@ django-import-export==2.8.0
 django-js-asset==2.0.0
 django-markdownx==3.0.1
 django-pandas==0.6.6
+django-quill-editor==0.1.40
 djangorestframework==3.13.1
 djangorestframework-jwt==1.11.0
 et-xmlfile==1.1.0
