@@ -16,7 +16,7 @@ import environ
 BASE_DIR = environ.Path(__file__) - 3
 
 env = environ.Env(DEBUG=(bool, False))
-env.read_env(os.path.join(BASE_DIR, 'envs/.django'))
+env.read_env(os.path.join(BASE_DIR, '../envs/.django'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/ja/4.0/howto/deployment/checklist/
