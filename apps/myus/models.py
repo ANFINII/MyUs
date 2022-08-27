@@ -9,7 +9,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from django.utils import timezone
-from ckeditor_uploader.fields import RichTextUploadingField
+from django_quill.fields import QuillField
 
 # Create your models here.
 
@@ -194,7 +194,7 @@ class MyPage(models.Model):
     plan_type     = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
     user          = models.OneToOneField(User, on_delete=models.CASCADE)
     banner        = models.ImageField(upload_to=mypage_banner, default=img, blank=True, null=True)
-    email         = models.EmailField(max_length=255, blank=True, default='abc@gmail.com')
+    email         = models.EmailField(max_length=255, blank=True)
     content       = models.TextField(blank=True)
     follower_num  = models.IntegerField(verbose_name='follower', default=0)
     following_num = models.IntegerField(verbose_name='follow', default=0)
@@ -578,7 +578,7 @@ class Blog(models.Model, MediaModel):
     title       = models.CharField(max_length=100)
     content     = models.TextField()
     image       = models.ImageField(upload_to=images_blog_upload)
-    richtext    = RichTextUploadingField(blank=True)
+    richtext    = QuillField(blank=True)
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
     like        = models.ManyToManyField(User, related_name='blog_like', blank=True)
@@ -797,7 +797,7 @@ class Comment(models.Model):
     """Comment"""
     author         = models.ForeignKey(User, on_delete=models.CASCADE)
     parent         = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)
-    text           = models.TextField()
+    text           = QuillField()
     like           = models.ManyToManyField(User, related_name='comment_like', blank=True)
     reply_num      = models.IntegerField(default=0)
     content_type   = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -807,7 +807,7 @@ class Comment(models.Model):
     updated        = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.text
+        return self.author.nickname
 
     def total_like(self):
         return self.like.count()
