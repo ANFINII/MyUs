@@ -12,7 +12,7 @@
       <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
     </div>
 
-    <div id="comment_aria_list_2_{{ reply.id }}" class="reply_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
+    <div id="comment_aria_list_2_{{ reply.id }}" class="reply_aria_list_2">{{ reply.text.html|safe }}</div>
 
     <div class="reply_aria_list_3">
       {% if user.is_authenticated %}

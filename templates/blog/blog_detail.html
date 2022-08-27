@@ -8,10 +8,9 @@
   <article class="article_detail">
     {% if object.publish %}
     <div class="main-image-blog">
-      <p>{{ object.richtext|safe }}</p>
+      <p>{{ object.richtext.html|safe }}</p>
     </div>
     <hr>
-
     <div class="article_detail_section_side">
       <div class="article_detail_section_1">
         {% include 'parts/common/common.html' %}

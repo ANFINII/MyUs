@@ -7,12 +7,13 @@
     </button>
   </div>
   {% elif user.is_authenticated %}
-  <textarea name="reply" rows="1" placeholder="スレッド返信" id="reply_form_area" class="textarea_br"></textarea>
+  <div id="reply_form_area"></div>
   <div class="comment_input_chat">
     <button type="submit" title="送信" id="reply_form_button" class="btn btn-primary btn-sm form_button" disabled>
       <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
     </button>
   </div>
+  <input type="text" name="reply_editor_input" id="reply_editor_input" hidden>
   {% else %}
   <textarea name="reply" rows="1" placeholder="チャットするにはログインが必要です!" class="textarea_br" disabled="disabled"></textarea>
   <div class="comment_input_chat">

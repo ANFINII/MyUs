@@ -6,7 +6,6 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
-from ckeditor_uploader import views
 from apps.myus.admin import manage_site
 
 urlpatterns = [
@@ -18,8 +17,6 @@ urlpatterns = [
     path('api-token-auth/', obtain_jwt_token),
     path('api-token-refresh/', refresh_jwt_token),
     path('api-token-verify/', verify_jwt_token),
-    path('upload/', login_required(views.upload), name='ckeditor_upload'),
-    path('browse/', never_cache(login_required(views.browse)), name='ckeditor_browse'),
 ]
 
 if settings.DEBUG:

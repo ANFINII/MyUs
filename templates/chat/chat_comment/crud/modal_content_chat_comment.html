@@ -15,7 +15,7 @@
           <p>{{ comment.author.nickname }}</p>
           <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
         </div>
-        <div class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
+        <div class="comment_aria_list_2">{{ comment.text.html|safe }}</div>
       </div>
     </div>
 

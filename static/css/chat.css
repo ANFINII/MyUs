@@ -482,7 +482,7 @@ hr {
   border-radius: 5px;
 }
 
-.textarea_br {
+/* .textarea_br {
   grid-column: 1/-1;
   grid-row: 1/2;
   width: 100%;
@@ -500,15 +500,15 @@ hr {
   overflow-y: auto;
   overflow-x: hidden;
   overflow-wrap: break-word;
-}
+} */
 
-.textarea_br:focus {
+/* .textarea_br:focus {
   border-bottom: 0px solid rgb(100, 100, 100);
-}
+} */
 
-.chat_frame_color {
+/* .chat_frame_color {
   background: rgba(239, 239, 239, 0.4);
-}
+} */
 
 .comment_input_chat {
   display: grid;
@@ -516,16 +516,59 @@ hr {
   grid-template-rows: 38px;
   grid-column: 1/-1;
   grid-row: 2/3;
-  border: 1px solid rgb(100, 100, 100);
-  border-top: 1px solid rgb(220, 220, 220);
+  border: 1px solid rgb(200, 200, 200);
+  border-top: none;
   border-radius: 0 0 5px 5px;
-  background: rgb(255, 255, 255);
 }
 
-.textarea_br:focus ~ .comment_input_chat {
+/* .textarea_br:focus ~ .comment_input_chat {
   background: rgb(235, 240, 255);
 }
 
 .bi-caret-right-fill::before {
   line-height: 1.2;
+} */
+
+
+/* HTML editor */
+.ql-toolbar {
+  border-radius: 5px 5px 0 0;
+  background: rgb(240, 240, 240);
+}
+
+.ql-editor {
+  padding: 10px 12px 10px 12px;
+  font-size: 14px;
+  border-bottom: none !important;
+}
+
+.ql-snow {
+  font-size: 14px;
+  border-bottom: none !important;
+}
+
+.ql-syntax {
+  padding: 5px 10px;
+  margin: 5px 0;
+  color: #212529;
+  font-size: 14px;
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 3px;
+  background: rgb(240, 240, 240);
+}
+
+.ql-editor ol li:not(.ql-direction-rtl), .ql-editor ul li:not(.ql-direction-rtl) {
+  padding-left: 0em;
+  color: #212529;
+}
+
+.ql-snow .ql-editor pre.ql-syntax {
+  font-size: 14px;
+  color: #212529;
+  border: 1px solid rgb(200, 200, 200);
+  background: rgb(240, 240, 240);
+}
+
+.ql-container {
+  height: auto;
 }

@@ -1,0 +1,48 @@
+.ql-formats {
+  margin-right: 10px;
+}
+
+.ql-toolbar {
+  border-radius: 5px 5px 0 0;
+}
+
+.ql-container {
+  border-radius: 0 0 5px 5px;
+}
+
+.ql-editor {
+  min-height: 300px;
+  padding: 10px 12px 10px 12px;
+  font-size: 16px;
+}
+
+.ql-editor.l-blank,
+.ql-clipboard {
+  border-radius: 5px !important;
+}
+
+.ql-snow {
+  font-size: 14px;
+}
+
+.ql-syntax {
+  padding: 5px 10px;
+  margin: 5px 0;
+  color: #212529;
+  font-size: 14px;
+  /* border: 1px solid rgb(200, 200, 200); */
+  /* border-radius: 3px; */
+  background: rgb(240, 240, 240);
+}
+
+.ql-editor ol li:not(.ql-direction-rtl), .ql-editor ul li:not(.ql-direction-rtl) {
+  padding-left: 0em;
+  color: #212529;
+}
+
+.ql-snow .ql-editor pre.ql-syntax {
+  font-size: 14px;
+  color: #212529;
+  /* border: 1px solid rgb(200, 200, 200); */
+  background: rgb(240, 240, 240);
+}

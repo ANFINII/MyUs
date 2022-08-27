@@ -143,7 +143,7 @@ chatSocket.onclose = function (event) {
 $('#comment_form').submit(function (event) {
   event.preventDefault();
   const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
-  const message = $('form [name=text]').val().replace(/\n+$/g, '');
+  const message = $('form [name=text]').val();
   $('#comment_form')[0].reset();
   document.getElementById('comment_form_area').style.height = '40px';
   document.getElementById('comment_form_button').setAttribute('disabled', true);

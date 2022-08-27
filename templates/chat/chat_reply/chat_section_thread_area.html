@@ -8,7 +8,7 @@
       <p>{{ comment.author.nickname }}</p>
       <time>{{ comment.created|date:'Y/m/d H:i' }}</time>
     </div>
-    <div id="comment_aria_list_thread_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text|linebreaksbr|urlize }}</div>
+    <div id="comment_aria_list_thread_{{ comment.id }}" class="comment_aria_list_2">{{ comment.text.html|safe }}</div>
   </div>
 {% endfor %}
 

@@ -67,8 +67,7 @@ INSTALLED_APPS += [
     'rest_framework',
     'corsheaders',
     'channels',
-    'ckeditor',
-    'ckeditor_uploader',
+    'django_quill',
     'django_cleanup',
     'import_export',
 ]
@@ -160,28 +159,19 @@ LOGIN_URL = 'myus:login'
 LOGIN_REDIRECT_URL = 'myus:index'
 LOGOUT_REDIRECT_URL = 'myus:login'
 
-# CKEDITOR
-CKEDITOR_UPLOAD_PATH = 'images/upload_images'
-CKEDITOR_IMAGE_BACKEND = 'pillow'
-CKEDITOR_RESTRICT_BY_USER = True
-CKEDITOR_RESTRICT_BY_DATE = False
-CKEDITOR_BROWSE_SHOW_DIRS = True
-CKEDITOR_ALLOW_NONIMAGE_FILES = False
-CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
-CKEDITOR_CONFIGS = {
-   'default': {
-       'toolbar_Full': [
-            ['Font', 'FontSize'],
-            ['TextColor', 'BGColor'],
-            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
-            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Unlink'],
-            ['Image', 'Table', 'HorizontalRule'],
-            ['Source'],
-            ['Undo', 'Redo'],
-            ['Maximize'],
-        ],
-        'width': '100%',
-        'extraPlugins': 'justify,liststyle,indent',
-   },
+# QUILL
+QUILL_CONFIGS = {
+    'default': {
+        'theme': 'snow',
+        'modules': {
+            'syntax': True,
+            'toolbar': [
+                [{'header': [1, 2, 3, 4, 5]}], [{'font': []}],
+                [{'color': []}, {'background': []}, {'align': []}],
+                [{'indent': '+1'}, {'indent': '-1'}, {'list': 'ordered'}, {'list': 'bullet'}],
+                ['bold', 'underline', 'strike', 'formula', {'script': 'super'}, {'script': 'sub'}],
+                ['code-block', 'blockquote', 'link', 'image'],
+            ]
+        }
+    }
 }
