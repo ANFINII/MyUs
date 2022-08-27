@@ -2,24 +2,28 @@ version: '3'
 
 services:
   backend:
-    container_name: django
+    container_name: backend
     build:
       context: ./api
       dockerfile: Dockerfile
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     ports:
       - "8000:8000"
     links:
       - mysql:mysql
       - redis:redis
     env_file:
+      - envs/.aws
       - envs/.djnago
+      - envs/.mysql
+      - envs/.redis
     depends_on:
       - mysql
       - redis
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    # command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 | python manage.py runserver 0.0.0.0:8000"
 
   frontend:
-    container_name: react
+    container_name: frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -44,14 +48,16 @@ services:
     env_file:
       - envs/.mysql
     ports:
-      - "3307:3306"
+      - "3305:3306"
 
   redis:
     container_name: redis:latest
     image: redis:5.0
-    command: redis-server --requirepass A5656gu3y!redis
+    env_file:
+      - envs/.redis
     ports:
       - "6380:6379"
+    command: redis-server --requirepass A5656gu3y!redis
 
 depends_on:
   backend
