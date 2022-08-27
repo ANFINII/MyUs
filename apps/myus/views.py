@@ -26,6 +26,7 @@ from apps.myus.forms import SearchTagForm
 from apps.myus.models import Profile, MyPage, SearchTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.convert.convert_hls import convert_hls
 from apps.myus.modules.contains import NotificationTypeNo, models_like_dict, models_comment_dict
 from apps.myus.modules.context_data import ContextData
 from apps.myus.modules.get_form import get_detail
@@ -33,7 +34,6 @@ from apps.myus.modules.pjax import pjax_context
 from apps.myus.modules.notification import notification_data, notification_setting_update
 from apps.myus.modules.search import Search
 from apps.myus.modules.success_url import success_url
-from apps.myus.modules.convert_hls import convert_hls
 from apps.myus.modules.follow import follow_update_data
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 
