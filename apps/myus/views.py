@@ -780,7 +780,7 @@ class VideoCreate(CreateView):
         video_file = os.path.join(video_path, os.path.basename(f'{form.instance.convert}'))
 
         file_path = convert_hls(video_file, video_path, media_root)
-        form.instance.convert = file_path['path_mp4']
+        form.instance.convert = file_path['mp4_path']
         form.instance.video = file_path['hls_file_path']
         return super(VideoCreate, self).form_valid(form)
 

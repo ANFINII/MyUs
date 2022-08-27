@@ -128,9 +128,9 @@ def convert_hls(video_file, path_dir, start_dir):
 
     hls_file = os.path.join(path_dir, f'{file_name}.m3u8')
     hls_file_path = os.path.relpath(hls_file, os.path.abspath(start_dir))
-    file_mp4 = os.path.join(path_dir, f'{file_name}.mp4')
-    path_mp4 = os.path.relpath(file_mp4, os.path.abspath(start_dir))
+    mp4_file = os.path.join(path_dir, f'{file_name}.mp4')
+    mp4_path = os.path.relpath(mp4_file, os.path.abspath(start_dir))
     f = open(hls_file, 'w')
     f.write(master)
     f.close()
-    return {'hls_file_path': hls_file_path, 'path_mp4': path_mp4 }
+    return {'hls_file_path': hls_file_path, 'mp4_path': mp4_path}
