@@ -26,7 +26,7 @@ from apps.myus.forms import SearchTagForm
 from apps.myus.models import Profile, MyPage, SearchTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
-from apps.myus.convert.convert_hls import convert_hls
+from apps.myus.convert.convert_hls import get_convert
 from apps.myus.modules.contains import NotificationTypeNo, models_like_dict, models_comment_dict
 from apps.myus.modules.context_data import ContextData
 from apps.myus.modules.get_form import get_detail
@@ -779,9 +779,9 @@ class VideoCreate(CreateView):
         video_path = os.path.join(media_root, 'videos', 'videos_video', user_id, obj_id)
         video_file = os.path.join(video_path, os.path.basename(f'{form.instance.convert}'))
 
-        file_path = convert_hls(video_file, video_path, media_root)
+        file_path = get_convert(video_file, video_path, media_root)
         form.instance.convert = file_path['mp4_path']
-        form.instance.video = file_path['hls_file_path']
+        form.instance.video = file_path['hls_path']
         return super(VideoCreate, self).form_valid(form)
 
     def get_success_url(self):
