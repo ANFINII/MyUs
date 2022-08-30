@@ -26,7 +26,7 @@ from apps.myus.forms import SearchTagForm
 from apps.myus.models import Profile, MyPage, SearchTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
-from apps.myus.convert.convert_hls import get_convert
+from apps.myus.convert.convert_hls import convert_exe
 from apps.myus.modules.contains import NotificationTypeNo, models_like_dict, models_comment_dict
 from apps.myus.modules.context_data import ContextData
 from apps.myus.modules.get_form import get_detail
@@ -355,10 +355,7 @@ def mypage_toggle(request):
         user = request.user
         is_advertise = request.POST.get('is_advertise')
         myapge_obj = MyPage.objects.get(user=user)
-        if is_advertise == 'True':
-            myapge_obj.is_advertise = False
-        if is_advertise == 'False':
-            myapge_obj.is_advertise = True
+        myapge_obj.is_advertise = True if is_advertise == 'False' else False
         myapge_obj.save(update_fields=['is_advertise'])
         context['toggle_mypage'] = render_to_string('registration/mypage_advertise.html', {
             'mypage_list': MyPage.objects.filter(user=user),
@@ -494,15 +491,12 @@ def like_form(request):
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
         obj = [get_object_or_404(models, id=obj_id) for detail, models in models_like_dict.items() if detail in obj_path][0]
-        liked = False
         if obj.like.filter(id=user.id).exists():
-            liked = False
             obj.like.remove(user)
         else:
-            liked = True
             obj.like.add(user)
         context = {
-            'liked': liked,
+            'liked': obj.like.filter(id=user.id).exists(),
             'total_like': obj.total_like(),
         }
         return JsonResponse(context)
@@ -514,13 +508,10 @@ def like_form_comment(request):
         comment_id = request.POST.get('comment_id')
         obj = get_object_or_404(Comment, id=comment_id)
         author = obj.author
-        comment_liked = False
         if obj.like.filter(id=user.id).exists():
-            comment_liked = False
             Notification.objects.filter(type_no=NotificationTypeNo.like, object_id=obj.id).delete()
             obj.like.remove(user)
         else:
-            comment_liked = True
             obj.like.add(user)
             if user != author and author.notificationsetting.is_like:
                 Notification.objects.create(
@@ -531,7 +522,7 @@ def like_form_comment(request):
                     content_object=obj,
                 )
         context = {
-            'comment_liked': comment_liked,
+            'comment_liked': obj.like.filter(id=user.id).exists(),
             'total_like': obj.total_like(),
         }
         return JsonResponse(context)
@@ -779,7 +770,7 @@ class VideoCreate(CreateView):
         video_path = os.path.join(media_root, 'videos', 'videos_video', user_id, obj_id)
         video_file = os.path.join(video_path, os.path.basename(f'{form.instance.convert}'))
 
-        file_path = get_convert(video_file, video_path, media_root)
+        file_path = convert_exe(video_file, video_path, media_root)
         form.instance.convert = file_path['mp4_path']
         form.instance.video = file_path['hls_path']
         return super(VideoCreate, self).form_valid(form)
