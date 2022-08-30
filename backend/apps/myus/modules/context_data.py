@@ -18,6 +18,7 @@ class ContextData:
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
             context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
+
         if hasattr(self, 'count'):
             context['count'] = self.count or 0
             context['query'] = self.request.GET.get('search')
@@ -59,10 +60,7 @@ class ContextData:
         if ('UserPage' or 'UserPageInfo' or 'UserPageAdvertise') in str(models.__name__):
             author = get_object_or_404(User, nickname=self.kwargs['nickname'])
             follow = Follow.objects.filter(follower=user.id, following=author)
-            followed = False
-            if follow.exists():
-                followed = True
-            context['followed'] = followed
+            context['followed'] = True if follow.exists() else False
             context['author_name'] = author.nickname
             context.update({
                 'user_list': User.objects.filter(id=author.id),
@@ -81,21 +79,9 @@ class ContextData:
         obj = self.object
         user = self.request.user
         author = obj.author
-        liked = False
-        followed = False
         follow = Follow.objects.filter(follower=user.id, following=author)
-        if follow.exists():
-            followed = True
         if 'TodoDetail' not in str(models.__name__):
-            if obj.like.filter(id=user.id).exists():
-                liked = True
-        if 'ChatDetail' in str(models.__name__):
-            if obj.period < date.today():
-                is_period = True
-            else:
-                is_period = False
-            context['is_period'] = is_period
-            context['comment_list'] = obj.comment.filter(parent__isnull=True).select_related('author')
+            context['liked'] = True if obj.like.filter(id=user.id).exists() else False
         else:
             filter_kwargs = {'id': OuterRef('pk'), 'like': user.id}
             subquery = Comment.objects.filter(**filter_kwargs)
@@ -112,8 +98,7 @@ class ContextData:
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:3])
         if author.mypage.plan == PlanType.premium:
             context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:4])
-        context['liked'] = liked
-        context['followed'] = followed
+        context['followed'] = True if follow.exists() else False
         context['user_id'] = user.id
         context['obj_id'] = obj.id
         context['obj_path'] = self.request.path
@@ -134,6 +119,8 @@ class ContextData:
             context.update(blog_list=Blog.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'ChatDetail' in str(models.__name__):
+            context['is_period'] = obj.period < date.today()
+            context['comment_list'] = obj.comment.filter(parent__isnull=True).select_related('author')
             context.update(chat_list=Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'ChatThread' in str(models.__name__):
@@ -144,11 +131,7 @@ class ContextData:
             context.update(chat_list=Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'CollaboDetail' in str(models.__name__):
-            if obj.period < date.today():
-                is_period = True
-            else:
-                is_period = False
-            context['is_period'] = is_period
+            context['is_period'] = obj.period < date.today()
             context.update(collabo_list=Collabo.objects.filter(publish=True).exclude(id=obj.id).select_related('author').order_by('-created')[:50])
 
         if 'TodoDetail' in str(models.__name__):
