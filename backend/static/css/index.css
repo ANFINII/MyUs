@@ -100,6 +100,7 @@ header {
 .head_nav {
   display: grid;
   grid-template-columns: 4.5em 7.5em minmax(9.5em, 1fr) 3em 3em 3em 3em;
+  grid-template-rows: 2.5em;
   align-items: center;
   text-align: center;
   padding: 8px 0;
