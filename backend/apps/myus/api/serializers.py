@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
-from apps.myus.models import Notification, Follow, Comment, Advertise
+from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 
 
@@ -9,9 +9,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'id', 'password', 'email', 'username', 'nickname',
-            'is_active', 'is_admin', 'last_login', 'date_joined',
+            'is_active', 'is_staff', 'last_login', 'date_joined',
         )
-        read_only_field = ['is_admin', 'last_login', 'date_joined']
+        read_only_field = ['is_staff', 'last_login', 'date_joined']
         extra_kwargs = {
             'password':{
                 'write_only': True,
@@ -126,8 +126,8 @@ class ChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chat
         fields = (
-            'id', 'author', 'title', 'content', 'comment', 'hashtag',
-            'like', 'read', 'joined', 'period', 'publish', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'hashtag', 'like', 'read',
+            'joined', 'period', 'publish', 'created', 'updated',
         )
         read_only_field = ['created', 'updated']
 
@@ -173,7 +173,16 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = (
-            'id', 'author', 'parent', 'text', 'like', 'content_type',
-            'object_id', 'content_object', 'created', 'updated',
+            'id', 'author', 'parent', 'text', 'like', 'reply_num',
+            'content_type', 'object_id', 'content_object', 'created', 'updated',
         )
-        read_only_field = ['created', 'updated']
+        read_only_field = ['reply_num', 'created', 'updated']
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = (
+            'id', 'author', 'chat', 'parent', 'content', 'reply_num', 'created', 'updated',
+        )
+        read_only_field = ['reply_num', 'created', 'updated']
