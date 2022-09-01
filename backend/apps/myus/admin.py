@@ -5,7 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
 from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
-from apps.myus.models import Notification, AccessLog, Comment, Follow, Advertise
+from apps.myus.models import Notification, AccessLog, Comment, Message, Follow, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 from apps.myus.modules.contains import PlanType
 
@@ -55,6 +55,7 @@ class CommentInlineAdmin(GenericTabularInline):
     model = Comment
     extra = 0
     max_num = 100
+    exclude = ('like', 'reply_num')
     fields = ('author', 'parent', 'text', 'total_like')
     readonly_fields = ('total_like',)
     verbose_name_plural = 'コメント'
@@ -62,6 +63,15 @@ class CommentInlineAdmin(GenericTabularInline):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'いいね数'
+
+
+class MessageInlineAdmin(admin.TabularInline):
+    model = Message
+    extra = 0
+    max_num = 100
+    exclude = ('reply_num',)
+    fields = ('author', 'parent', 'content')
+    verbose_name_plural = 'メッセージ'
 
 
 @admin.register(User)
@@ -76,7 +86,7 @@ class UserAdmin(ImportExportModelAdmin):
     # 詳細画面
     fieldsets = [
         ('アカウント情報', {'fields': ('email', 'username', 'nickname')}),
-        ('権限情報', {'fields': ('is_active', 'is_admin', 'is_superuser', 'last_login', 'date_joined')}),
+        ('権限情報', {'fields': ('is_active', 'is_staff', 'is_superuser', 'last_login', 'date_joined')}),
     ]
 
 
@@ -223,7 +233,7 @@ class ChatAdmin(ImportExportModelAdmin):
     ordering = ('author', '-created')
     filter_horizontal = ('hashtag', 'like')
     readonly_fields = ('total_like', 'thread', 'joined', 'created', 'updated')
-    inlines = [CommentInlineAdmin]
+    inlines = [MessageInlineAdmin]
 
     # 詳細画面
     fieldsets = [
@@ -318,7 +328,7 @@ class AdvertiseAdmin(ImportExportModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'content_type', 'object_id', 'author', 'text', 'parent_id', 'total_like', 'reply_count', 'created', 'updated')
+    list_display = ('id', 'content_type', 'object_id', 'author', 'parent', 'text', 'total_like', 'reply_count', 'created', 'updated')
     list_select_related = ('author', 'parent', 'content_type')
     search_fields = ('text', 'author__nickname', 'created', 'updated')
     ordering = ('created',)
@@ -337,6 +347,24 @@ class CommentAdmin(ImportExportModelAdmin):
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'like'
+
+
+@admin.register(Message)
+class MessageAdmin(ImportExportModelAdmin):
+    list_display = ('id', 'author', 'chat', 'parent', 'content_html', 'reply_count', 'created', 'updated')
+    list_select_related = ('author', 'chat', 'parent')
+    search_fields = ('content_html', 'author__nickname', 'created', 'updated')
+    ordering = ('created',)
+    readonly_fields = ('reply_count', 'created', 'updated')
+
+    # 詳細画面
+    fieldsets = [
+        ('編集項目', {'fields': ('author', 'chat', 'parent', 'content')}),
+        ('確認項目', {'fields': ('reply_count', 'created', 'updated')})
+    ]
+
+    def get_queryset(self, request):
+        return super().get_queryset(request)
 
 
 # MyPgage用の管理画面
@@ -360,13 +388,28 @@ class CommentInline(GenericTabularInline):
     model = Comment
     extra = 0
     max_num = 100
-    exclude = ('like',)
+    exclude = ('like', 'reply_num')
     readonly_fields = ('author', 'parent', 'text', 'total_like')
     verbose_name_plural = 'コメント'
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
     def total_like(self, obj):
         return obj.like.count()
     total_like.short_description = 'いいね数'
+
+
+class MessageInline(admin.TabularInline):
+    model = Message
+    extra = 0
+    max_num = 100
+    exclude = ('content', 'reply_num')
+    readonly_fields = ('author', 'parent', 'content_html')
+    verbose_name_plural = 'メッセージ'
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 class SearchTagAdminSite(admin.ModelAdmin):
@@ -567,7 +610,7 @@ class ChatAdminSite(admin.ModelAdmin, PublishMixin):
     actions = ('published', 'unpublished')
     filter_horizontal = ('hashtag',)
     readonly_fields = ('read', 'total_like', 'thread', 'joined', 'created', 'updated')
-    inlines = [CommentInline]
+    inlines = [MessageInline]
 
     # 詳細画面
     fieldsets = [
