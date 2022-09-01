@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, username, nickname, password):
         user = self.create_user(email, username, nickname, password)
-        user.is_admin = True
+        user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
         return user
@@ -39,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username    = models.CharField(max_length=20, unique=True)
     nickname    = models.CharField(max_length=80, unique=True)
     is_active   = models.BooleanField(default=True)
-    is_admin    = models.BooleanField(default=False)
+    is_staff    = models.BooleanField(default=False)
     last_login  = models.DateTimeField(auto_now_add=True)
     date_joined = models.DateTimeField(default=timezone.now)
 
@@ -57,9 +57,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def has_module_perms(self, app_label):
         return True
-
-    def is_staff(self):
-        return self.is_admin
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
@@ -268,6 +265,9 @@ class AccessLog(models.Model):
     type_id    = models.BigIntegerField(blank=True, null=True)
     created    = models.DateTimeField(auto_now_add=True)
     updated    = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.ip_address)
 
     class Meta:
         db_table = 'access_log'
@@ -627,7 +627,7 @@ class ChatManager(models.Manager, MediaManager):
     def get_queryset(self):
         return ChatQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
-class Chat(models.Model, MediaModel):
+class Chat(models.Model):
     """Chat"""
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
@@ -643,6 +643,16 @@ class Chat(models.Model, MediaModel):
     updated = models.DateTimeField(auto_now=True)
 
     objects = ChatManager()
+
+    def __str__(self):
+        return self.title
+
+    def score(self):
+        return self.read + self.like.count()*10 + self.read*self.like.count()/(self.read+1)*20
+
+    def total_like(self):
+        return self.like.count()
+    total_like.short_description = 'like'
 
     class Meta:
         db_table = 'chat'
@@ -811,7 +821,7 @@ class Comment(models.Model):
     updated        = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.author.nickname
+        return str(self.id)
 
     def total_like(self):
         return self.like.count()
@@ -819,10 +829,6 @@ class Comment(models.Model):
     def reply_count(self):
         return self.reply_num
     reply_count.short_description = 'reply'
-
-    def comment_count(self):
-        return self.comment_num
-    comment_count.short_description = 'comment'
 
     class Meta:
         db_table = 'comment'
@@ -835,12 +841,23 @@ class Comment(models.Model):
 class Message(models.Model):
     """Message"""
     author    = models.ForeignKey(User, on_delete=models.CASCADE)
+    chat      = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='chat')
     parent    = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)
     content   = QuillField()
     reply_num = models.IntegerField(default=0)
-    chat      = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='chat')
     created   = models.DateTimeField(auto_now_add=True)
     updated   = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)
+
+    def content_html(self):
+        return self.content.html
+    content_html.short_description = 'content'
+
+    def reply_count(self):
+        return self.reply_num
+    reply_count.short_description = 'reply'
 
     class Meta:
         db_table = 'message'
@@ -866,6 +883,9 @@ class Price(models.Model):
     product         = models.ForeignKey(Product, on_delete=models.CASCADE)
     stripe_price_id = models.CharField(max_length=100)
     price           = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.stripe_price_id
 
     def get_display_price(self):
         return '{0:.2f}'.format(self.price / 100)
