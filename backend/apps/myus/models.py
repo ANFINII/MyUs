@@ -11,23 +11,23 @@ from django.core.validators import RegexValidator, MaxValueValidator, MinValueVa
 from django.utils import timezone
 from django_quill.fields import QuillField
 
-# Create your models here.
 
 class UserManager(BaseUserManager):
     """UserManager"""
-    def create_user(self, username, email, password=None, **extra_fields):
-        if not username:
-            raise ValueError('Users must have an username')
-        elif not email:
+    def create_user(self, email, username, nickname, password=None):
+        if not email:
             raise ValueError('Users must have an email')
-        user = self.model(username=username, email=self.normalize_email(email), **extra_fields)
+        elif not username:
+            raise ValueError('Users must have an username')
+        elif not nickname:
+            raise ValueError('Users must have an nickname')
+        user = self.model(email=self.normalize_email(email), username=username, nickname=nickname)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, nickname, email, password, **extra_fields):
-        user = self.create_user(username, nickname=nickname, email=self.normalize_email(email), password=password)
-        user.is_staff = True
+    def create_superuser(self, email, username, nickname, password):
+        user = self.create_user(email, username, nickname, password)
         user.is_admin = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -35,20 +35,22 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """User"""
-    email        = models.EmailField(max_length=255, unique=True)
-    username     = models.CharField(max_length=20, unique=True)
-    nickname     = models.CharField(max_length=80, unique=True)
-    is_active    = models.BooleanField(default=True)
-    is_staff     = models.BooleanField(default=False)
-    is_admin     = models.BooleanField(default=False)
-    last_login   = models.DateTimeField(auto_now_add=True)
-    date_joined  = models.DateTimeField(default=timezone.now)
+    email       = models.EmailField(max_length=255, unique=True)
+    username    = models.CharField(max_length=20, unique=True)
+    nickname    = models.CharField(max_length=80, unique=True)
+    is_active   = models.BooleanField(default=True)
+    is_admin    = models.BooleanField(default=False)
+    last_login  = models.DateTimeField(auto_now_add=True)
+    date_joined = models.DateTimeField(default=timezone.now)
 
     objects = UserManager()
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'nickname'
-    REQUIRED_FIELDS = ['username', 'email']
+    REQUIRED_FIELDS = ['email', 'username']
+
+    def __str__(self):
+        return self.nickname
 
     def has_perm(self, perm, obj=None):
         return True
@@ -56,22 +58,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         return True
 
+    def is_staff(self):
+        return self.is_admin
+
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def fullname(self):
         return self.profile.last_name + ' ' + self.profile.first_name
     fullname.short_description = 'name'
-
-    def image(self):
-        image = self.profile.image
-        if image and hasattr(image, 'url'):
-            return image.url
-
-    def banner(self):
-        banner = self.mypage.banner
-        if banner and hasattr(banner, 'url'):
-            return banner.url
 
     def year(self):
         if self.birthday is not None:
@@ -111,6 +106,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def building(self):
         return self.profile.building
+
+    def image(self):
+        image = self.profile.image
+        if image and hasattr(image, 'url'):
+            return image.url
+
+    def banner(self):
+        banner = self.mypage.banner
+        if banner and hasattr(banner, 'url'):
+            return banner.url
 
     def plan(self):
         plan_dict = {'0': 'Free', '1': 'Basic', '2': 'Standard', '3': 'Premium'}
@@ -627,7 +632,6 @@ class Chat(models.Model, MediaModel):
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
     content = models.TextField()
-    comment = GenericRelation('Comment')
     hashtag = models.ManyToManyField(HashTag, blank=True)
     like    = models.ManyToManyField(User, related_name='chat_like', blank=True)
     read    = models.IntegerField(default=0)
@@ -797,7 +801,7 @@ class Comment(models.Model):
     """Comment"""
     author         = models.ForeignKey(User, on_delete=models.CASCADE)
     parent         = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)
-    text           = QuillField()
+    text           = models.TextField()
     like           = models.ManyToManyField(User, related_name='comment_like', blank=True)
     reply_num      = models.IntegerField(default=0)
     content_type   = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -825,6 +829,24 @@ class Comment(models.Model):
         verbose_name_plural = '14 コメント'
         indexes = [
             models.Index(fields=['parent'], name='comment_parent_idx'),
+        ]
+
+
+class Message(models.Model):
+    """Message"""
+    author    = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent    = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)
+    content   = QuillField()
+    reply_num = models.IntegerField(default=0)
+    chat      = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='chat')
+    created   = models.DateTimeField(auto_now_add=True)
+    updated   = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'message'
+        verbose_name_plural = '15 メッセージ'
+        indexes = [
+            models.Index(fields=['parent'], name='message_parent_idx'),
         ]
 
 

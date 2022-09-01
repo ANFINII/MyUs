@@ -70,13 +70,13 @@ class UserAdmin(ImportExportModelAdmin):
     search_fields = ('email', 'username', 'nickname', 'fullname', 'age', 'gender', 'plan')
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
-    readonly_fields = ('date_joined', 'last_login')
+    readonly_fields = ('last_login', 'date_joined')
     inlines = [ProfileInline, MyPageInline, NotificationSettingInline, SearchTagInline]
 
     # 詳細画面
     fieldsets = [
         ('アカウント情報', {'fields': ('email', 'username', 'nickname')}),
-        ('権限情報', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'date_joined', 'last_login')}),
+        ('権限情報', {'fields': ('is_active', 'is_admin', 'is_superuser', 'last_login', 'date_joined')}),
     ]
 
 
