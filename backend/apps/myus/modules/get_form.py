@@ -4,12 +4,9 @@ from apps.myus.modules.contains import NotificationTypeNo, models_dict
 
 
 def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+    X_FORWARDED_FOR = request.META.get('HTTP_X_FORWARDED_FOR')
+    REMOTE_ADDR = request.META.get('REMOTE_ADDR')
+    return X_FORWARDED_FOR.split(',')[0] if X_FORWARDED_FOR else REMOTE_ADDR
 
 
 def get_detail(self, request):
