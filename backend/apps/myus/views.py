@@ -118,8 +118,7 @@ def signup_form(request):
                 return render(request, 'registration/signup.html')
             except User.DoesNotExist:
                 if password1==password2:
-                    user = User.objects.create_user(username, email, password1)
-                    user.nickname = nickname
+                    user = User.objects.create_user(email, username, nickname, password1)
                     user.last_name = last_name
                     user.first_name = first_name
                     user.gender = gender
@@ -142,7 +141,7 @@ def login_form(request):
         try:
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                if user.is_active or user.is_admin:
+                if user.is_active or user.is_staff:
                     login(request, user)
                     return redirect('myus:index')
                 else:

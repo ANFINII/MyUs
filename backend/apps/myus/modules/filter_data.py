@@ -5,7 +5,7 @@ class DeferData:
         'user__username',
         'user__is_superuser',
         'user__is_active',
-        'user__is_admin',
+        'user__is_staff',
         'user__last_login',
         'user__date_joined',
     ]
@@ -16,7 +16,7 @@ class DeferData:
         'author__username',
         'author__is_superuser',
         'author__is_active',
-        'author__is_admin',
+        'author__is_staff',
         'author__last_login',
         'author__date_joined',
     ]
@@ -27,7 +27,7 @@ class DeferData:
         'follower__username',
         'follower__is_superuser',
         'follower__is_active',
-        'follower__is_admin',
+        'follower__is_staff',
         'follower__last_login',
         'follower__date_joined',
     ]

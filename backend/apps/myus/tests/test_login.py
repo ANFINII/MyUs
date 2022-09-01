@@ -26,7 +26,7 @@ class LoginTest(TestCase):
         try:
             user = authenticate(username=username, password=password)
             if user is not None:
-                if user.is_active or user.is_admin:
+                if user.is_active or user.is_staff:
                     login = client.login(username=username, password=password)
                     self.assertTrue(login, 'ログイン成功')
                     response = client.get('/')
