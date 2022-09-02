@@ -1,6 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+// import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'styles/bootstrap.css'
 import 'styles/globals.css'
+import 'styles/index.css'
+import 'styles/profile.css'
+import 'styles/userpolicy.css'
 import type { AppProps } from 'next/app'
 import Layout from 'components/layout/layout'
 
