@@ -446,7 +446,7 @@
   margin: 0;
 }
 
-.fill-color-nav {
+.color_sidebar {
   color: gray;
   align-items: center;
   text-align: center;
@@ -455,7 +455,7 @@
   padding: 4px 0;
 }
 
-.fill-color-nav:hover {
+.color_sidebar:hover {
   color: rgb(255, 255, 255);
 }
 
@@ -984,7 +984,7 @@ div.field > button {
   width: 50%;
 }
 
-.main-image {
+.main_image {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -992,15 +992,15 @@ div.field > button {
   margin: 0 auto;
 }
 
-.main-image img {
+.main_image img {
   width: 100%;
 }
 
-.main-image-color {
+.main_image_color {
   background: rgb(220, 220, 220);
 }
 
-.main-image-blog {
+.main_image_blog {
   background: rgb(255, 255, 255);
   height: auto;
 }
@@ -1027,7 +1027,7 @@ div.field > button {
   border-radius: 5px;
 }
 
-.form-range {
+.form_range {
   width: 200px;
   padding: 13px 8px 0 8px;
 }
@@ -1155,7 +1155,7 @@ div.field > button {
   color: rgb(255, 220, 0);
 }
 
-.icon-font {
+.icon_font {
   font-size: 16px;
   width: 16px;
   margin: 0 4px 0 0;

@@ -8,24 +8,24 @@
 
   <div class="article_detail_aria_2">
     <div class="read">
-      <i class="bi bi-caret-right-square icon-font" title="閲覧数"></i>
+      <i class="bi bi-caret-right-square icon_font" title="閲覧数"></i>
       <span>{{ object.read|intcomma }}</span>
     </div>
     {% if user.is_authenticated %}
     <form method="POST" action="" obj-id="{{ object.id }}" path="{{ request.path }}" csrf="{{ csrf_token }}">
       {% if liked %}
       <button type="submit" name="like" class="like_form like_fill">
-        <i class="bi bi-hand-thumbs-up-fill icon-font like_color" title="いいね"></i>
+        <i class="bi bi-hand-thumbs-up-fill icon_font like_color" title="いいね"></i>
       </button>
       {% else %}
       <button type="submit" name="like" class="like_form like_no">
-        <i class="bi bi-hand-thumbs-up icon-font like_color" title="いいね"></i>
+        <i class="bi bi-hand-thumbs-up icon_font like_color" title="いいね"></i>
       </button>
       {% endif %}
       <span id="like_count_object_{{ object.id }}" class="like_count">{{ object.total_like|intcomma }}</span>
     </form>
     {% else %}
-    <i class="bi bi-hand-thumbs-up icon-font" title="いいね"></i>
+    <i class="bi bi-hand-thumbs-up icon_font" title="いいね"></i>
     <span>{{ object.total_like|intcomma }}</span>
     {% endif %}
   </div>

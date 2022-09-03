@@ -19,16 +19,16 @@
       <form method="POST" action="" comment-id="{{ reply.id }}" csrf="{{ csrf_token }}" class="like_form_aria">
         {% if reply.comment_liked %}
         <button type="submit" name="like" class="like_form_comment like_fill">
-          <i class="bi bi-hand-thumbs-up-fill icon-font like_color_{{ reply.id }}" title="いいね"></i>
+          <i class="bi bi-hand-thumbs-up-fill icon_font like_color_{{ reply.id }}" title="いいね"></i>
         </button>
         {% else %}
         <button type="submit" name="like" class="like_form_comment like_no">
-          <i class="bi bi-hand-thumbs-up icon-font like_color_{{ reply.id }}" title="いいね"></i>
+          <i class="bi bi-hand-thumbs-up icon_font like_color_{{ reply.id }}" title="いいね"></i>
         </button>
         {% endif %}
       </form>
       {% else %}
-      <i class="bi bi-hand-thumbs-up icon-font rgb100" title="いいね"></i>
+      <i class="bi bi-hand-thumbs-up icon_font rgb100" title="いいね"></i>
       {% endif %}
       <span id="like_count_{{ reply.id }}" class="like_count rgb100">{{ reply.total_like|intcomma }}</span>
     </div>

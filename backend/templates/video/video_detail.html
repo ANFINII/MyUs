@@ -7,8 +7,8 @@
 <main class="main">
   <article class="article_detail">
   {% if object.publish %}
-    <div class="main-image-color">
-      <div class="main-image">
+    <div class="main_image_color">
+      <div class="main_image">
         <video-js id="video" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" poster="{{ object.image.url }}" data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 2]}'>
           <source src="{{ object.video.url }}" type="application/x-mpegURL">
           <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>
