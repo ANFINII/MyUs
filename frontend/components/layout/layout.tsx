@@ -1,14 +1,14 @@
 import Head from 'next/head'
 import Header from 'components/layout/header'
 import SideBar from 'components/layout/sidebar'
-import SerchTag from 'components/layout/serchtag'
+import SearchTag from 'components/layout/searchtag'
 type Props = {children: React.ReactNode;}
 
 export default function Layout({ children }: Props) {
   return (
-    <>
+    <div className="layout">
       <Head>
-        <meta charset="UTF-8"/>
+        <meta charSet="UTF-8"/>
         <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <meta name="description" content="MyUsとはMy Idea Know Usが名前の由来です。総合メディアサイトであり、アイディア想像サイトになります!!!"/>
@@ -31,12 +31,12 @@ export default function Layout({ children }: Props) {
         <link rel="apple-touch-icon" href="{'img/MyUs.png'}"/>
         <title>MyUs</title>
       </Head>
-      <Header />
-      <SideBar />
-      <SerchTag />
-      <main className="main_contents">
+      <Header/>
+      <SideBar/>
+      <SearchTag/>
+      <main className="main">
         { children }
       </main>
-    </>
+    </div>
   )
 }

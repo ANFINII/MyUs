@@ -2,9 +2,9 @@ import Link from 'next/link'
 
 export default function Header() {
   return (
-    <header>
-      <nav className="head_nav">
-        <div className="head_nav_1">
+    <header className="header">
+      <nav className="header_nav">
+        <div className="header_nav_1">
           <input type="checkbox" id="burger_menu" className="side_menu" />
           <label htmlFor="burger_menu" className="side_open">
             <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="1.7em" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
@@ -89,14 +89,14 @@ export default function Header() {
           </aside>
         </div>
 
-        <div className="head_nav_2 fill-color-header-MyUs">
+        <div className="header_nav_2 fill-color-header-MyUs">
           <div><h1>MyUs</h1></div>
           <Link href="/">
             <a className="icon_link" role="button" aria-disabled="true"></a>
           </Link>
         </div>
 
-        <div className="head_nav_3 fill-color-header">
+        <div className="header_nav_3 fill-color-header">
           <div className="search-container">
             <div className="d-flex justify-content-center">
               <div className="searchbar">
@@ -109,7 +109,7 @@ export default function Header() {
           </div>
         </div>
 
-        <div className="head_nav_4 fill-color-header">
+        <div className="header_nav_4 fill-color-header">
           <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
             <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
           </svg>
@@ -118,7 +118,7 @@ export default function Header() {
           </Link>
         </div>
 
-        <div className="head_nav_5 fill-color-header">
+        <div className="header_nav_5 fill-color-header">
           <input type="checkbox" id="drop_menu_cloud" className="dropdown_menu_cloud" />
           <label htmlFor="drop_menu_cloud" className="drop_open_cloud">
             <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-cloud-fill" viewBox="0 0 16 16">
@@ -203,7 +203,7 @@ export default function Header() {
           </nav>
         </div>
 
-        <div className="head_nav_6 fill-color-header">
+        <div className="header_nav_6 fill-color-header">
           <input type="checkbox" id="drop_menu_notice" className="dropdown_menu_notice" />
           <label htmlFor="drop_menu_notice" className="drop_open_notice">
             {/* if (notification_count) {
@@ -238,7 +238,7 @@ export default function Header() {
           </nav>
         </div>
 
-        <div className="head_nav_7 fill-color-header">
+        <div className="header_nav_7 fill-color-header">
           <input type="checkbox" id="drop_menu_profile" className="dropdown_menu_profile" />
           <label htmlFor="drop_menu_profile" className="drop_open_profile">
             {/* if (user.is_authenticated) { */}

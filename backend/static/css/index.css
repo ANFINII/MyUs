@@ -79,14 +79,15 @@
 }
 
 /* 全体のデザイン */
-body {
+.layout {
   display: grid;
   grid-template-columns: 4.5em 7.5em minmax(9.5em, 1fr) 3em 3em 3em 3em;
   grid-template-rows: 3.5em 25px auto;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
-header {
+.header {
   grid-column: 1/-1;
   grid-row: 1/2;
   position: fixed;
@@ -97,7 +98,7 @@ header {
   color: rgb(255, 255, 255);
 }
 
-.head_nav {
+.header_nav {
   display: grid;
   grid-template-columns: 4.5em 7.5em minmax(9.5em, 1fr) 3em 3em 3em 3em;
   grid-template-rows: 2.5em;
@@ -456,8 +457,8 @@ header {
   color: rgb(0, 100, 255);
 }
 
-/* メインナビゲーション */
-.main_aside {
+/* サイドバー */
+.sidebar {
   grid-column: 1/2;
   grid-row: 1/-1;
   position: fixed;
@@ -468,7 +469,7 @@ header {
   background: rgb(0, 0, 80);
 }
 
-.main_aside::-webkit-scrollbar {
+.sidebar::-webkit-scrollbar {
   width: 0;
 }
 
@@ -535,8 +536,8 @@ header {
   color: rgb(255, 255, 255);
 }
 
-/* タグナビゲーション */
-.tag_nav {
+/* サーチタグ */
+.searchtag {
   position: fixed;
   z-index: 50;
   top: 3.5em;
@@ -545,7 +546,7 @@ header {
   background: rgb(240, 240, 240);
 }
 
-.tag_nav_grid {
+.searchtag_grid {
   display: grid;
   grid-template-columns: 4.5em 3em 12.125em 3em auto;
   grid-template-rows: auto;
@@ -555,7 +556,7 @@ header {
   display: none; /* チェックボックスは非表示に */
 }
 
-.main_tag_1 {
+.searchtag_1 {
   display: block;
   grid-column: 2/3;
   grid-row: 1/2;
@@ -569,24 +570,24 @@ header {
   background: rgb(0, 170, 130);
 }
 
-.main_tag_1:hover {
+.searchtag_1:hover {
   cursor: pointer;
   background: rgb(0, 190, 150);
 }
 
-.main_tag_1:active {
+.searchtag_1:active {
   background: rgb(0, 215, 170);
 }
 
-.tag_menu:checked ~ .main_tag_1 {
+.tag_menu:checked ~ .searchtag_1 {
   display: none;
 }
 
-.main_tag_2 {
+.searchtag_2 {
   display: none;
 }
 
-.tag_menu:checked ~ .main_tag_2 {
+.tag_menu:checked ~ .searchtag_2 {
   display: block;
   grid-column: 2/3;
   grid-row: 1/2;
@@ -600,20 +601,20 @@ header {
   background: rgb(200, 0, 140);
 }
 
-.tag_menu:checked ~ .main_tag_2:hover {
+.tag_menu:checked ~ .searchtag_2:hover {
   cursor: pointer;
   background: rgb(240, 0, 150);
 }
 
-.tag_menu:checked ~ .main_tag_2:active {
+.tag_menu:checked ~ .searchtag_2:active {
   background: rgb(255, 100, 200);
 }
 
-.main_tag_3 {
+.searchtag_3 {
   display: none;
 }
 
-.tag_menu:checked ~ .main_tag_3 {
+.tag_menu:checked ~ .searchtag_3 {
   display: block;
   grid-column: 3/4;
   grid-row: 1/2;
@@ -625,22 +626,22 @@ header {
   border: 1px solid rgb(206, 212, 218);
 }
 
-.tag_menu:checked ~ .main_tag_3::placeholder {
+.tag_menu:checked ~ .searchtag_3::placeholder {
   font-size: 14px;
   color: rgb(150, 150, 150);
 }
 
-.tag_menu:checked ~ .main_tag_3:focus {
+.tag_menu:checked ~ .searchtag_3:focus {
   border-radius: 4px;
   border: 1px solid rgb(80, 170, 255);
   box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
 }
 
-.main_tag_4 {
+.searchtag_4 {
   display: none;
 }
 
-.tag_menu:checked ~ .main_tag_4 {
+.tag_menu:checked ~ .searchtag_4 {
   display: block;
   grid-column: 4/5;
   grid-row: 1/2;
@@ -653,21 +654,21 @@ header {
   background: rgb(0, 140, 175);
 }
 
-.tag_menu:checked ~ .main_tag_4:hover {
+.tag_menu:checked ~ .searchtag_4:hover {
   cursor: pointer;
   background: rgb(0, 160, 190);
 }
 
-.tag_menu:checked ~ .main_tag_4:active {
+.tag_menu:checked ~ .searchtag_4:active {
   background: rgb(0, 180, 220);
 }
 
-.main_tag_center {
+.searchtag_center {
   display: inline-block;
   margin: 1px 0 0 0;
 }
 
-.main_tag_n {
+.searchtag_n {
   grid-column: 3/4;
   grid-row: 1/2;
   width: calc(100vw - 166px);
@@ -675,27 +676,27 @@ header {
   white-space: nowrap;
 }
 
-.main_tag_n::-webkit-scrollbar {
+.searchtag_n::-webkit-scrollbar {
   height: 0;
 }
 
-.tag_menu:checked ~ .main_tag_n {
+.tag_menu:checked ~ .searchtag_n {
   grid-column: 5/6;
   width: calc(100vw - 408px);
 }
 
-.tag_n_list {
+.searchtag_n_list {
   display: inline;
   margin: 0 0 0 4.3px;
 }
 
-.tag_n_list a {
+.searchtag_n_list a {
   text-decoration: none;
   font-size: 14px;
   color: rgb(100, 100, 100);
 }
 
-.main_tag_left {
+.searchtag_left {
   position: fixed;
   right: 18px;
   padding: 0 0 2px 0;
@@ -704,7 +705,7 @@ header {
   background: rgb(240, 240, 240);
 }
 
-.main_tag_right {
+.searchtag_right {
   position: fixed;
   right: 0;
   padding: 0 0 2px 0;
@@ -713,14 +714,14 @@ header {
   background: rgb(240, 240, 240);
 }
 
-.main_tag_left:hover,
-.main_tag_right:hover {
+.searchtag_left:hover,
+.searchtag_right:hover {
   color: rgb(35, 150, 255);
   background: rgb(210, 210, 210);
 }
 
-.main_tag_left:active,
-.main_tag_right:active {
+.searchtag_left:active,
+.searchtag_right:active {
   color: rgb(0, 130, 255);
   background: rgb(200, 200, 200);
 }
@@ -740,7 +741,7 @@ header {
   color: rgb(100, 100, 100);
 }
 
-.tag_n_list a:hover,
+.searchtag_n_list a:hover,
 .hashtag_list a:hover {
   color: rgb(0, 130, 255);
 }
@@ -761,20 +762,20 @@ header {
 }
 
 /* メインコンテンツ */
-.main_contents {
+.main {
   grid-column: 2/-1;
   grid-row: 3/-1;
   margin: 0 15px 5px 15px;
 }
 
-.main_contents h1 {
+.main h1 {
   display: flex;
   height: 30px;
   margin: 10px 0;
   font-size: 24px;
 }
 
-.main_contents h1 span {
+.main h1 span {
   font-size: 18px;
   margin: 6px 0 0 10px;
 }
@@ -788,11 +789,11 @@ header {
   color: rgb(33, 37, 41);
 }
 
-.main_contents label {
+.main label {
   margin: 0;
 }
 
-.main_contents div.field > input,
+.main div.field > input,
 div.field > textarea,
 div.field > select,
 div.field > button {
@@ -808,7 +809,7 @@ div.field > button {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.main_contents p textarea {
+.main p textarea {
   height: 38px;
 }
 
@@ -2302,7 +2303,7 @@ input::placeholder {
 /* 668pxまでの幅の場合に適応される  */
 @media screen and (max-width: 668px) {
   body,
-  .head_nav {
+  .header_nav {
     grid-template-columns: 4.5em 5.5em minmax(9.5em, 1fr) 2.5em 2.5em 2.5em 2.5em;
   }
 
