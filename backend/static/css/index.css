@@ -243,16 +243,16 @@
   text-align: start;
 }
 
-.side-fill-color-bi {
+.color-side-nemu-bi {
   color: rgb(0, 70, 175);
 }
 
-.side-fill-color {
+.color_side_menu {
   margin: 0;
   padding: 12px 0;
 }
 
-.side-fill-color:hover {
+.color_side_menu:hover {
   color: rgb(0, 100, 255);
   background: rgb(200, 230, 255);
 }
