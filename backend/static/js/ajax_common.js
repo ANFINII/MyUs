@@ -1,10 +1,10 @@
 // 検索タグの作成ボタンの処理
-$(document).on('click', '.main_tag_2', function (event) {
+$(document).on('click', '.searchtag_2', function (event) {
   event.preventDefault();
   const searchtag = $('form [name=searchtag]').val();
   const csrf = $(this).attr('csrf');
   $('#tag_form')[0].reset();
-  document.querySelector('.main_tag_2').setAttribute('disabled', true);
+  document.querySelector('.searchtag_2').setAttribute('disabled', true);
   $.ajax({
     url: '/searchtag/create',
     type: 'POST',
@@ -13,10 +13,10 @@ $(document).on('click', '.main_tag_2', function (event) {
     timeout: 10000,
   })
     .done(function (response) {
-      document.querySelector('.main_tag_2').setAttribute('disabled', true);
+      document.querySelector('.searchtag_2').setAttribute('disabled', true);
       let searchtag_add =
         '<a href="?search=' + response.searchtag + '" search="' + response.searchtag + '" class="tag_n_add pjax_search">' + response.searchtag + '</a>'
-      $('.tag_n_list').append(searchtag_add);
+      $('.searchtag_n_list').append(searchtag_add);
     })
     .fail(function (response) {
       console.log(response);
@@ -24,17 +24,17 @@ $(document).on('click', '.main_tag_2', function (event) {
 });
 
 // 検索タグスクロールボタンを押した時の処理 右に0.2秒かけて500px移動
-$(document).on('click', '.main_tag_right', function () {
-  $('.main_tag_n').animate({
-    scrollLeft: $('.main_tag_n').scrollLeft() + 300,
+$(document).on('click', '.searchtag_right', function () {
+  $('.searchtag_n').animate({
+    scrollLeft: $('.searchtag_n').scrollLeft() + 300,
   }, 200);
   return false;
 });
 
 // 検索タグスクロールボタンを押した時の処理 左に0.2秒かけて500px移動
-$(document).on('click', '.main_tag_left', function () {
-  $('.main_tag_n').animate({
-    scrollLeft: $('.main_tag_n').scrollLeft() - 300,
+$(document).on('click', '.searchtag_left', function () {
+  $('.searchtag_n').animate({
+    scrollLeft: $('.searchtag_n').scrollLeft() - 300,
   }, 200);
   return false;
 });

@@ -115,43 +115,43 @@
   height: 100%;
 }
 
-.head_nav_1 {
+.header_nav_1 {
   grid-column: 1/2;
   position: relative;
 }
 
-.head_nav_2 {
+.header_nav_2 {
   grid-column: 2/3;
   position: relative;
   justify-self: start;
 }
 
-.head_nav_2 h1 {
+.header_nav_2 h1 {
   font-family: "Libre Caslon Display", serif;
   font-size: 2.1em;
   margin: auto;
 }
 
-.head_nav_3 {
+.header_nav_3 {
   grid-column: 3/4;
 }
 
-.head_nav_4 {
+.header_nav_4 {
   grid-column: 4/5;
   position: relative;
 }
 
-.head_nav_5 {
+.header_nav_5 {
   grid-column: 5/6;
   position: relative;
 }
 
-.head_nav_6 {
+.header_nav_6 {
   grid-column: 6/7;
   position: relative;
 }
 
-.head_nav_7 {
+.header_nav_7 {
   grid-column: 7/8;
   position: relative;
 }
@@ -224,7 +224,7 @@
 }
 
 /* チェックボックスは非表示に */
-.head_nav1 [type="checkbox"] {
+.header_nav1 [type="checkbox"] {
   display: none;
 }
 
@@ -473,47 +473,47 @@
   width: 0;
 }
 
-.main_nav {
+.sidebar_nav {
   display: grid;
   grid-template-rows: 3.5em repeat(7, 1fr);
 }
 
-.main_nav_1 {
+.sidebar_nav_1 {
   grid-row: 1/2;
   position: relative;
 }
 
-.main_nav_2 {
+.sidebar_nav_2 {
   grid-row: 2/3;
   position: relative;
 }
 
-.main_nav_3 {
+.sidebar_nav_3 {
   grid-row: 3/4;
   position: relative;
 }
 
-.main_nav_4 {
+.sidebar_nav_4 {
   grid-row: 4/5;
   position: relative;
 }
 
-.main_nav_5 {
+.sidebar_nav_5 {
   grid-row: 5/6;
   position: relative;
 }
 
-.main_nav_6 {
+.sidebar_nav_6 {
   grid-row: 6/7;
   position: relative;
 }
 
-.main_nav_7 {
+.sidebar_nav_7 {
   grid-row: 7/8;
   position: relative;
 }
 
-.main_nav_8 {
+.sidebar_nav_8 {
   grid-row: 8/9;
   position: relative;
 }

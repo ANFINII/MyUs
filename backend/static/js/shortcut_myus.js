@@ -1,7 +1,7 @@
 // textareaのdisabled判定
 
 // 検索タグショートカット
-$(document).on('focus', '.main_tag_3', function (event) {
+$(document).on('focus', '.searchtag_3', function (event) {
   event.preventDefault();
 
   // focus時にそれ以外のtextareaを無効化する
@@ -15,25 +15,25 @@ $(document).on('focus', '.main_tag_3', function (event) {
   const text = $(this).val();
   if (text || text.match(/\S/g)) {
     // disabled属性を削除
-    document.querySelector('.main_tag_2').removeAttribute('disabled');
+    document.querySelector('.searchtag_2').removeAttribute('disabled');
   }
 
-  $(document).on('input', '.main_tag_3', function (event) {
+  $(document).on('input', '.searchtag_3', function (event) {
     event.preventDefault();
     const text = $(this).val();
     if (!text || !text.match(/\S/g)) {
       // disabled属性を設定
-      document.querySelector('.main_tag_2').setAttribute('disabled', true);
+      document.querySelector('.searchtag_2').setAttribute('disabled', true);
     } else {
       // disabled属性を削除
-      document.querySelector('.main_tag_2').removeAttribute('disabled');
+      document.querySelector('.searchtag_2').removeAttribute('disabled');
 
       // ショートカット
       shortcut.add('Ctrl+Enter', function () {
-        $('.main_tag_2').click();
+        $('.searchtag_2').click();
       });
       shortcut.add('meta+Enter', function () {
-        $('.main_tag_2').click();
+        $('.searchtag_2').click();
       });
     }
   });

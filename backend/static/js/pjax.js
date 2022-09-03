@@ -5,11 +5,11 @@ history.replaceState(null, null, location.href);
 window.addEventListener('popstate', e => {
   const back_url = location.pathname;
   const back_obj = object_dict[back_url];
-  $('.main_contents').html(back_obj);
+  $('.main').html(back_obj);
 });
 
 function pjax_dict(href) {
-  const obj = document.querySelector('.main_contents').innerHTML;
+  const obj = document.querySelector('.main').innerHTML;
   object_dict[href] = obj;
   history.pushState(null, null, href);
 }
@@ -22,7 +22,7 @@ function ajax_data(href, data) {
     dataType: 'json',
   })
     .done(function (response) {
-      $('.main_contents').html(response.html);
+      $('.main').html(response.html);
       if (document.querySelector('.chat_remove') != null) {
         document.querySelector('.chat_remove').remove();
       }
@@ -45,7 +45,7 @@ $(document).on('click', '.pjax_button', function (event) {
     dataType: 'json',
   })
     .done(function (response) {
-      $('.main_contents').html(response.html);
+      $('.main').html(response.html);
       document.querySelector('.side_menu').checked = false;
       document.querySelector('.dropdown_menu_cloud').checked = false;
       document.querySelector('.dropdown_menu_notice').checked = false;

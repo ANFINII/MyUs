@@ -1,23 +1,23 @@
 /* ユーザーポリシー */
-.main_userpolicy {
+.article_userpolicy {
   display: block;
   max-height: 100vh;
   margin: 14px 0 0 0;
 }
 
-.main_userpolicy h1 {
+.article_userpolicy h1 {
   display: block;
   font-size: 24px;
   max-height: 2em;
   margin: -4px 0 16px 0;
 }
 
-.main_userpolicy h2 {
+.article_userpolicy h2 {
   font-size: 16px;
   margin: 0 0 14px 0;
 }
 
-.main_userpolicy p {
+.article_userpolicy p {
   font-size: 14px;
   color: rgb(80, 80, 80);
   margin: 0 0 12px 0;
