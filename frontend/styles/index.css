@@ -120,7 +120,7 @@
   margin: 0 12px 0 16px;
 }
 
-.side_footer {
+.side_menu_footer {
   height: 300px;
   margin-top: auto;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
@@ -136,7 +136,7 @@
 }
 
 /* 閉じる用のカバー */
-.side_back {
+.side_nemu_back {
   display: none;
   position: fixed;
   z-index: 90;
@@ -157,16 +157,16 @@
   box-shadow: 6px 0 25px rgba(0, 100, 255, 0.2);
 }
 
-#burger_menu:checked ~ .side_back {
+#burger_menu:checked ~ .side_nemu_back {
   display: block;
   background: rgba(0, 0, 0, 0.3);
 }
 
-.side_indent {
+.side_nemu_indent {
   text-align: start;
 }
 
-.scolor-side-nemu-bi {
+.color_side_nemu_bi {
   color: rgb(0, 70, 175);
 }
 
@@ -184,7 +184,7 @@
   position: relative;
 }
 
-.side_menu_footer {
+.side_menu_footer_item {
   display: flex;
   position: relative;
   font-size: 0.9rem;
