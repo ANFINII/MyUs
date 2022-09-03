@@ -7,7 +7,7 @@
   margin: 14px 0 22px 0;
 }
 
-.main_knowledge {
+.article_knowledge {
   display: grid;
   grid-gap: 3px;
   grid-template-columns: repeat(2, 1fr);
@@ -16,7 +16,7 @@
 }
 
 .main_profile h1,
-.main_knowledge h1 {
+.article_knowledge h1 {
   display: flex;
   font-size: 24px;
   max-height: 2em;
