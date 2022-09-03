@@ -203,12 +203,12 @@
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.fill-color-header:hover,
+.color_header:hover,
 .side_open:hover {
   color: rgb(255, 220, 0);
 }
 
-.fill-color-header-MyUs:hover {
+.color_header_MyUs:hover {
   color: rgb(0, 239, 239);
 }
 
