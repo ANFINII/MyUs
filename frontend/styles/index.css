@@ -204,9 +204,9 @@
   transition: all 0.01s;
 }
 
-.dropdown_menu_cloud,
-.dropdown_menu_notice,
-.dropdown_menu_profile {
+.drop_menu_cloud,
+.drop_menu_notice,
+.drop_menu_profile {
   position: fixed;
   z-index: 80; /* サイドメニューよりかは小さい */
   top: 3.5em;
@@ -236,9 +236,9 @@
 }
 
 /* チェックが入ったら表示 */
-#drop_menu_cloud:checked ~ .dropdown_menu_cloud,
-#drop_menu_notice:checked ~ .dropdown_menu_notice,
-#drop_menu_profile:checked ~ .dropdown_menu_profile {
+#drop_menu_cloud:checked ~ .drop_menu_cloud,
+#drop_menu_notice:checked ~ .drop_menu_notice,
+#drop_menu_profile:checked ~ .drop_menu_profile {
   right: 0;
   border: 1px solid rgb(255, 230, 200);
   border-style: hidden hidden solid solid;
@@ -250,9 +250,9 @@
   display: block;
 }
 
-.dropdown_menu_cloud .bi,
-.dropdown_menu_notice .bi,
-.dropdown_menu_profile .bi {
+.drop_menu_cloud .bi,
+.drop_menu_notice .bi,
+.drop_menu_profile .bi {
   float: left;
   margin: 0 16px;
 }
@@ -266,20 +266,20 @@
   box-shadow: 0 0 0 1.5px rgba(255, 221, 0, 0.9);
 }
 
-.dropdown_menu_item {
+.drop_menu_item {
   position: relative;
 }
 
-.drop-fill-color-bi {
+.color_drop_menu_bi {
   color: rgb(240, 130, 0);
 }
 
-.drop-fill-color {
+.color_drop_menu {
   margin: 0;
   padding: 12px 0;
 }
 
-.drop-fill-color:hover {
+.color_drop_menu:hover {
   color: rgb(250, 130, 0);
   background: rgb(255, 230, 200);
 }
@@ -2193,7 +2193,7 @@ input::placeholder {
   outline: none;
 }
 
-.search-container {
+.search_container {
   padding: 0;
 }
 

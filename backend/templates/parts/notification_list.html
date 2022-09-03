@@ -1,5 +1,5 @@
 {% for notification in notification_list %}
-<div id="notification_aria_link_{{ notification.id }}" class="dropdown_menu_item side_nemu_indent">
+<div id="notification_aria_link_{{ notification.id }}" class="drop_menu_item side_nemu_indent">
   <object notification-id="{{ notification.id }}" csrf="{{ csrf_token }}" class="notification_aria_list">
     <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" class="pjax_button_userpage">
       <img src="{{ notification.user_from.image }}" title="{{ notification.user_from.nickname }}" class="profile_image">

@@ -47,9 +47,9 @@ $(document).on('click', '.pjax_button', function (event) {
     .done(function (response) {
       $('.main').html(response.html);
       document.querySelector('.side_menu').checked = false;
-      document.querySelector('.dropdown_menu_cloud').checked = false;
-      document.querySelector('.dropdown_menu_notice').checked = false;
-      document.querySelector('.dropdown_menu_profile').checked = false;
+      document.querySelector('.drop_menu_cloud').checked = false;
+      document.querySelector('.drop_menu_notice').checked = false;
+      document.querySelector('.drop_menu_profile').checked = false;
       if (document.querySelector('.chat_remove') != null) {
         document.querySelector('.chat_remove').remove();
       }
