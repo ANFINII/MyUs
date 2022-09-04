@@ -50,7 +50,7 @@ export default function Header() {
                   <path fill-rule="evenodd" d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
                 </svg>
                 <div>フォロー</div>
-                <Link href="/follow">
+                <Link href="/follow/follow" as="/follow">
                   <a className="icon_link" role="button" aria-disabled="true"></a>
                 </Link>
               </div>
