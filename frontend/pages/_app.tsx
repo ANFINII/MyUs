@@ -6,7 +6,7 @@ import 'styles/index.css'
 import 'styles/profile.css'
 import 'styles/userpolicy.css'
 import type { AppProps } from 'next/app'
-import Layout from 'components/layout/layout'
+import Layout from 'components/layouts/layout'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
