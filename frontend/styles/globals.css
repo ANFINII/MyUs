@@ -79,3 +79,9 @@
 .rgb100 {
   color: rgb(100, 100, 100);
 }
+
+/* ログイン必須 */
+.login_required {
+  font-size: 16px;
+  color: rgb(255, 0, 0);
+}
