@@ -6,9 +6,9 @@ export default function DropMenuProfile() {
       <input type="checkbox" id="drop_menu_profile" className="drop_menu_profile"/>
       <label htmlFor="drop_menu_profile" className="drop_open_profile">
         {/* if (user.is_authenticated) { */}
-          {/* <img src="img/user.image" title="{{ user.nickname }}" width="32px" height="32xp"/> */}
+          {/* <img src="/img/user.image" title="{{ user.nickname }}" width="32px" height="32xp"/> */}
         {/* } else { */}
-          <img src="img/user_icon.png" title="匿名" width="32px" height="32xp"/>
+          <img src="/img/user_icon.png" title="匿名" width="32px" height="32xp"/>
         {/* } */}
       </label>
       <label htmlFor="drop_menu_profile" className="drop_back_profile"></label>
