@@ -1,6 +1,12 @@
+import Head from 'next/head'
+
 export default function CollaboCreate() {
   return (
     <>
+      <Head>
+        <title>MyUsコラボ</title>
+      </Head>
+
       <h1>Collabo</h1>
       {/* {% if user.is_authenticated %} */}
       <form method="POST" action="" enctype="multipart/form-data">

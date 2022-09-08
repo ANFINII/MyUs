@@ -7,6 +7,7 @@ export default function Knowledge() {
       <Head>
         <title>MyUsナレッジ</title>
       </Head>
+
       <article className="article_knowledge">
         <h1>Knowledge Base</h1>
         <table>

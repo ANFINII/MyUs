@@ -1,9 +1,14 @@
+import Head from 'next/head'
 import AuthorSpace from 'components/elements/author_space'
 import ContentTitle from 'components/elements/content_title'
 
 export default function Music() {
   return (
     <>
+      <Head>
+        <title>MyUsミュージック</title>
+      </Head>
+
       <h1>Music
         {/* {% if query %}
         <section className="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>

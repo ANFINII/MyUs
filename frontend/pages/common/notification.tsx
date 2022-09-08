@@ -7,6 +7,7 @@ export default function Notification() {
       <Head>
         <title>MyUs通知</title>
       </Head>
+
       <article className="article_profile">
         <h1>通知設定</h1>
         {/* {% if user.is_authenticated %}

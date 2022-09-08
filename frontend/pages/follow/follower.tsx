@@ -7,6 +7,7 @@ export default function Follow() {
       <Head>
         <title>MyUsフォロワー</title>
       </Head>
+
       <h1>フォロワー
         {/* {% if query %}
         <section className="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>

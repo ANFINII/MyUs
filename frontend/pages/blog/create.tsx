@@ -1,6 +1,12 @@
+import Head from 'next/head'
+
 export default function BlogCreate() {
   return (
     <>
+      <Head>
+        <title>MyUsブログ</title>
+      </Head>
+
       <h1>Blog</h1>
       {/* {% if user.is_authenticated %} */}
       <form method="POST" action="" encType="multipart/form-data">

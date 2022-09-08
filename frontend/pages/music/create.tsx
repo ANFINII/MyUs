@@ -1,6 +1,12 @@
+import Head from 'next/head'
+
 export default function MusicCreate() {
   return (
     <>
+      <Head>
+        <title>MyUsミュージック</title>
+      </Head>
+
       <h1>Music</h1>
       {/* {% if user.is_authenticated %} */}
       <form method="POST" action="" enctype="multipart/form-data">

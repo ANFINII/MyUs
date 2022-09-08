@@ -7,6 +7,7 @@ export default function UserPolicy() {
       <Head>
         <title>MyUs利用規約</title>
       </Head>
+
       <article className="article_userpolicy">
         <h1>利用規約</h1>
         <p>利用規約を読み同意した上で、本サービスを利用するものとする。</p>

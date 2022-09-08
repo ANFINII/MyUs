@@ -1,3 +1,12 @@
+import Head from 'next/head'
+
 export default function PictureCreate() {
-  return <h1>PictureCreate</h1>
+  return (
+    <>
+      <Head>
+        <title>MyUsピクチャー</title>
+      </Head>
+
+    </>
+  )
 }
