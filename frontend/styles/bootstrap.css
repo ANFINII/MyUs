@@ -1,6 +1,9 @@
 /* form-control */
-.form-control:focus {
+.form-control {
   border-radius: 4px;
+}
+
+.form-control:focus {
   border: 1px solid rgba(80, 170, 255, 0.3);
   box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
 }
