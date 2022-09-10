@@ -1,7 +1,5 @@
 import Head from 'next/head'
-import Link from 'next/link'
-import AuthorSpace from 'components/elements/author_space'
-import ContentTitle from 'components/elements/content_title'
+import MusicArticle from 'components/elements/article/music'
 
 export default function Music() {
   return (
@@ -16,24 +14,7 @@ export default function Music() {
         {% endif %} */}
       </h1>
 
-      <article className="main_article">
-        {/* {% for item in music_list %} */}
-        <section className="main_content_music">
-          <div className="main_decolation">
-            <audio controls controlslist="nodownload" preload="none" className="audio_auto">
-              <source src="{{ item.music.url }}"/>
-              <p>ブラウザがaudioに対応しておりません</p>
-            </audio>
-            <Link href="/music/detail/[id][title]">
-            <a className="author_space">
-              <AuthorSpace/>
-              <ContentTitle/>
-            </a>
-            </Link>
-          </div>
-        </section>
-        {/* {% endfor %} */}
-      </article>
+      <MusicArticle/>
     </>
   )
 }

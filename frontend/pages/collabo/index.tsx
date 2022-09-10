@@ -1,7 +1,5 @@
 import Head from 'next/head'
-import Link from 'next/link'
-import AuthorSpace from 'components/elements/author_space'
-import ContentTitle from 'components/elements/content_title'
+import CollaboArticle from 'components/elements/article/collabo'
 
 export default function Collabo() {
   return (
@@ -16,20 +14,7 @@ export default function Collabo() {
         {/* {% endif %} */}
       </h1>
 
-      <article className="main_article">
-        {/* {% for item in collabo_list %} */}
-        <section className="main_content_other">
-          <div className="main_decolation">
-            <Link href="/collabo/detail/[id][title]">
-              <a href="{% url 'myus:collabo_detail' item.pk item.title %}" className="author_space">
-                <AuthorSpace/>
-                <ContentTitle/>
-              </a>
-            </Link>
-          </div>
-        </section>
-        {/* {% endfor %} */}
-      </article>
+      <CollaboArticle/>
     </>
   )
 }
