@@ -19,7 +19,7 @@ export default function BlogCreate() {
 
         <p><label htmlFor="custom_file_1">サムネイル</label></p>
         <p>
-          <input type="file" name="image" accept="image/*" id="custom_file_1" className="form-control" style={{display: 'none'}} required/>
+          <input type="file" name="image" accept="image/*" id="custom_file_1" className="form-control" style={{display:'none'}} required/>
           <div className="input-group">
             {/* <input type="text" id="file_1" className="form-control" placeholder="ファイル選択..." onclick={$('input[id=custom_file_1]').click()}/> */}
           </div>

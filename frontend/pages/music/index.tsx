@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import AuthorSpace from 'components/elements/author_space'
 import ContentTitle from 'components/elements/content_title'
 
@@ -23,10 +24,12 @@ export default function Music() {
               <source src="{{ item.music.url }}"/>
               <p>ブラウザがaudioに対応しておりません</p>
             </audio>
-            <a href="{% url 'myus:music_detail' item.pk item.title %}" className="author_space">
+            <Link href="/music/detail/[id][title]">
+            <a className="author_space">
               <AuthorSpace/>
               <ContentTitle/>
             </a>
+            </Link>
           </div>
         </section>
         {/* {% endfor %} */}

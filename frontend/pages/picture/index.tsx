@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import AuthorSpace from 'components/elements/author_space'
 import ContentTitle from 'components/elements/content_title'
 
@@ -19,13 +20,15 @@ export default function Picture() {
         {/* {% for item in picture_list %} */}
         <section className="main_content">
           <figure className="main_decolation">
-            <a href="{% url 'myus:picture_detail' item.pk item.title %}">
-              <img src="{{ item.image.url }}" width="272" height="153"/>
-            </a>
-            <a href="{% url 'myus:picture_detail' item.pk item.title %}" className="author_space">
+            <Link href="/picture/detail/[id][title]">
+            <a><img src="{{ item.image.url }}" width="272" height="153"/></a>
+            </Link>
+            <Link href="/picture/detail/[id][title]">
+            <a className="author_space">
               <AuthorSpace/>
               <ContentTitle/>
             </a>
+            </Link>
           </figure>
         </section>
         {/* {% endfor %} */}

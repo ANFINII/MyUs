@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import AuthorSpace from 'components/elements/author_space'
 import ContentTitle from 'components/elements/content_title'
 
@@ -19,10 +20,12 @@ export default function Collabo() {
         {/* {% for item in collabo_list %} */}
         <section className="main_content_other">
           <div className="main_decolation">
-            <a href="{% url 'myus:collabo_detail' item.pk item.title %}" className="author_space">
-              <AuthorSpace/>
-              <ContentTitle/>
-            </a>
+            <Link href="/collabo/detail/[id][title]">
+              <a href="{% url 'myus:collabo_detail' item.pk item.title %}" className="author_space">
+                <AuthorSpace/>
+                <ContentTitle/>
+              </a>
+            </Link>
           </div>
         </section>
         {/* {% endfor %} */}

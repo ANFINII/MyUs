@@ -9,7 +9,7 @@ export default function MusicCreate() {
 
       <h1>Music</h1>
       {/* {% if user.is_authenticated %} */}
-      <form method="POST" action="" enctype="multipart/form-data">
+      <form method="POST" action="" encType="multipart/form-data">
         {/* {% csrf_token %} */}
         <p><label htmlFor="title">タイトル</label></p>
         <p><input type="text" name="title" id="title" className="form-control" required/></p>
@@ -25,10 +25,10 @@ export default function MusicCreate() {
           <label htmlFor="download" className="form-check-label">ダウンロード許可</label>
           <input type="checkbox" name="download" id="download" className="form-check-input" checked/>
         </div>
-        <p><input type="file" name="music" accept="audio/*" id="custom_file_1" className="form-control" style={{display: 'none'}} required/></p>
+        <p><input type="file" name="music" accept="audio/*" id="custom_file_1" className="form-control" style={{display:'none'}} required/></p>
         <p>
           <div className="input-group">
-            <input type="text" id="file_1" className="form-control" placeholder="ファイル選択..." onClick="{{$('input[id=custom_file_1]').click();}}"/>
+            <input type="text" id="file_1" className="form-control" placeholder="ファイル選択..." onclick="{{$('input[id=custom_file_1]').click();}}"/>
           </div>
         </p>
         <br/>

@@ -26,19 +26,21 @@ export default function Follow() {
         {/* {% for item in follow_list %} */}
         <section className="main_content_follow">
           <div className="main_decolation">
-            <a href="{% url 'myus:userpage' item.following.nickname %}" data="{{ item.following.nickname }}" className="author_follows pjax_button_userpage">
-              <object className="author_space">
-                <a href="{% url 'myus:userpage' item.following.nickname %}" data="{{ item.following.nickname }}" className="pjax_button_userpage">
-                  {/* <img src="{{ item.following.image }}" title="{{ item.following.nickname }}" className="follow_image"> */}
-                </a>
-              </object>
-              {/* <span title="{{ item.following.nickname }}" className="follow_content_1">{{ item.following.nickname }}</span>
-              <span className="follow_content_2">フォロワー数：{{ item.following.mypage.follower_num }}</span>
-              <span className="follow_content_3">フォロー数　：{{ item.following.mypage.following_num }}</span> */}
-              <object title="{{ item.following.introduction }}" className="follow_content_4">
-                {/* {{ item.following.introduction|linebreaksbr|urlize }} */}
-              </object>
-            </a>
+            <Link href="/userpage/[nickname]">
+              <a data="{{ item.following.nickname }}" className="author_follows pjax_button_userpage">
+                <object className="author_space">
+                  <a data="{{ item.following.nickname }}" className="pjax_button_userpage">
+                    {/* <img src="{{ item.following.image }}" title="{{ item.following.nickname }}" className="follow_image"> */}
+                  </a>
+                </object>
+                {/* <span title="{{ item.following.nickname }}" className="follow_content_1">{{ item.following.nickname }}</span>
+                <span className="follow_content_2">フォロワー数：{{ item.following.mypage.follower_num }}</span>
+                <span className="follow_content_3">フォロー数　：{{ item.following.mypage.following_num }}</span> */}
+                <object title="{{ item.following.introduction }}" className="follow_content_4">
+                  {/* {{ item.following.introduction|linebreaksbr|urlize }} */}
+                </object>
+              </a>
+            </Link>
           </div>
         </section>
         {/* {% endfor %} */}

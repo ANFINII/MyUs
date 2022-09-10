@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import AuthorSpace from 'components/elements/author_space'
 import ContentTitle from 'components/elements/content_title'
 
@@ -19,13 +20,15 @@ export default function Blog(props) {
         {/* {% for props in blog_list %} */}
         <section className="main_content">
           <figure className="main_decolation">
-            <a href="{% url 'myus:blog_detail' props.pk props.title %}">
-              <img src="{{ props.image.url }}" width="272" height="153"/>
-            </a>
-            <a href="{% url 'myus:blog_detail' props.pk props.title %}" className="author_space">
-              <AuthorSpace/>
-              <ContentTitle/>
-            </a>
+            <Link href="/blog/detail/[id][title]">
+              <a><img src="{{ props.image.url }}" width="272" height="153"/></a>
+            </Link>
+            <Link href="/blog/detail/[id][title]">
+              <a className="author_space">
+                <AuthorSpace/>
+                <ContentTitle/>
+              </a>
+            </Link>
           </figure>
         </section>
         {/* {% endfor %} */}
