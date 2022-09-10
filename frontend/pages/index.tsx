@@ -13,7 +13,7 @@ const Home: NextPage = () => {
         <title>MyUsホームページ</title>
       </Head>
 
-      <h1>Recommend
+      <h1>Home
         {/* {% if Recommend %}{{ Recommend }}{% else %}Home{% endif %} */}
         {/* {% if query %} */}
         {/* <section className="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section> */}

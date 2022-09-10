@@ -24,7 +24,7 @@ export default function DropMenuNotice() {
       <label htmlFor="drop_menu_notice" className="drop_back_notice"></label>
 
       <nav className="drop_menu_notice">
-        <div className="drop_menu_item side_nemu_indent color_drop_menu">
+        <div className="drop_menu_item color_drop_menu">
           <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-bell-fill color_drop_menu_bi" viewBox="0 0 16 16">
             <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
           </svg>
@@ -35,7 +35,7 @@ export default function DropMenuNotice() {
         </div>
 
         {/* {% for notification in notification_list %} */}
-        <div id="notification_aria_link_{{ notification.id }}" className="drop_menu_item side_nemu_indent">
+        <div id="notification_aria_link_{{ notification.id }}" className="drop_menu_item">
           <object notification-id="{{ notification.id }}" csrf="{{ csrf_token }}" className="notification_aria_list">
             <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}">
               <img src="{{ notification.user_from.image }}" title="{{ notification.user_from.nickname }}" className="profile_image"/>

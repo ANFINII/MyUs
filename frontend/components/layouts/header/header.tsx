@@ -49,7 +49,7 @@ export default function Header() {
           <DropMenuNotice/>
         </div>
 
-        <div className="header_nav_7 color_header">
+        <div className="header_nav_7">
           <DropMenuProfile/>
         </div>
       </nav>
