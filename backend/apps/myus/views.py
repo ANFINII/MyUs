@@ -47,7 +47,7 @@ def signup_form(request):
     """サインアップ処理"""
     if request.method == 'POST':
         username = request.POST['username']
-        if User.objects.filter(username=username).count():
+        if User.objects.filter(username=username).exists():
             messages.error(request, 'このユーザー名は既に登録されております!')
             return render(request, 'registration/signup.html')
 
@@ -56,12 +56,12 @@ def signup_form(request):
             return render(request, 'registration/signup.html')
 
         nickname = request.POST['nickname']
-        if User.objects.filter(nickname=nickname).count():
+        if User.objects.filter(nickname=nickname).exists():
             messages.error(request, 'この投稿者名は既に登録されております!')
             return render(request, 'registration/signup.html')
 
         email = request.POST['email']
-        if User.objects.filter(email=email).count():
+        if User.objects.filter(email=email).exists():
             messages.error(request, 'このメールアドレスは既に登録されております!')
             return render(request, 'registration/signup.html')
 
@@ -117,7 +117,7 @@ def signup_form(request):
                 messages.error(request, 'このアカウントは既に登録されております!')
                 return render(request, 'registration/signup.html')
             except User.DoesNotExist:
-                if password1==password2:
+                if password1 == password2:
                     user = User.objects.create_user(email, username, nickname, password1)
                     user.last_name = last_name
                     user.first_name = first_name

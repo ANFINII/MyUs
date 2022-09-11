@@ -4,6 +4,20 @@ from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 
 
+class SignUpSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField()
+    nickname = serializers.CharField()
+    password1 = serializers.CharField()
+    password2 = serializers.CharField()
+    last_name = serializers.CharField()
+    first_name = serializers.CharField()
+    year = serializers.CharField()
+    month = serializers.CharField()
+    day = serializers.CharField()
+    gender = serializers.IntegerField()
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -11,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'password', 'email', 'username', 'nickname',
             'is_active', 'is_staff', 'last_login', 'date_joined',
         )
-        read_only_field = ['is_staff', 'last_login', 'date_joined']
+        read_only_field = ['is_active', 'is_staff', 'last_login', 'date_joined']
         extra_kwargs = {
             'password':{
                 'write_only': True,

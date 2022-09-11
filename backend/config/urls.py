@@ -3,18 +3,20 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenVerifyView
 from apps.myus.admin import manage_site
 
 urlpatterns = [
     path('', include('apps.myus.urls')),
+    path('', include('apps.myus.api.urls')),
     path('', include('django.contrib.auth.urls')),
     path('myus-admin/', admin.site.urls),
     path('myus-manage/', manage_site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('api/auth/',include('djoser.urls')),
+    path('api/auth/',include('djoser.urls.jwt')),
+    path('login/', TokenObtainPairView.as_view()),
+    path('verify/', TokenVerifyView.as_view()),
 ]
 
 if settings.DEBUG:
