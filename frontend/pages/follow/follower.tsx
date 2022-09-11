@@ -27,11 +27,13 @@ export default function Follow() {
         <section className="main_content_follow">
           <div className="main_decolation">
             <Link href="/userpage/[nickname]">
-              <a href="{% url 'myus:userpage' item.follower.nickname %}" data="{{ item.follower.nickname }}" className="author_follows pjax_button_userpage">
+              <a data-name="{{ item.follower.nickname }}" className="author_follows pjax_button_userpage">
                 <object className="author_space">
-                  <a href="{% url 'myus:userpage' item.follower.nickname %}" data="{{ item.follower.nickname }}" className="pjax_button_userpage">
-                    {/* <img src="{{ item.follower.image }}" title="{{ item.follower.nickname }}" className="follow_image"> */}
-                  </a>
+                  <Link href="/userpage/[nickname]">
+                    <a data-name="{{ item.follower.nickname }}" className="pjax_button_userpage">
+                      {/* <img src="{{ item.follower.image }}" title="{{ item.follower.nickname }}" className="follow_image"> */}
+                    </a>
+                  </Link>
                 </object>
                 {/* <span title="{{ item.follower.nickname }}" className="follow_content_1">{{ item.follower.nickname }}</span>
                 <span className="follow_content_2">フォロワー数：{{ item.follower.mypage.follower_num }}</span>
