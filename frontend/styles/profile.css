@@ -23,8 +23,8 @@
   margin: -4px 0 0 0;
 }
 
-.article_profile .login_required,
-.main_pass .login_required {
+.article_pass .login_required,
+.article_profile .login_required {
   grid-column: 1/-1;
   grid-row: 2/3;
   font-size: 16px;
@@ -211,7 +211,7 @@ td.td-color {
 }
 
 /* パスワード変更 */
-.main_pass {
+.article_pass {
   display: grid;
   grid-gap: 3px;
   grid-template-columns: 1fr;
@@ -219,7 +219,7 @@ td.td-color {
   margin: 14px 0 0 0;
 }
 
-.main_pass h1 {
+.article_pass h1 {
   grid-column: 1/2;
   grid-row: 1/2;
   font-size: 24px;
