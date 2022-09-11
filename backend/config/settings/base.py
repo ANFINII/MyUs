@@ -70,6 +70,7 @@ INSTALLED_APPS += [
     'channels',
     # 'django_quill',
     'django_cleanup',
+    'djoser',
     'import_export',
 ]
 
@@ -86,14 +87,17 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+}
+
+SIMPLE_JWT = {
+    'JWT_VERIFY_EXPIRATION': False,
+    'AUTH_HEADER_TYPES': 'JWT',
+    'AUTH_TOKEN_CLASSES': 'rest_framework_simplejwt.tokens.AccessToken'
 }
 
 TEMPLATES = [{
