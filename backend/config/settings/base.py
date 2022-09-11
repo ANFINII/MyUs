@@ -65,9 +65,10 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     'apps.myus.apps.ApiConfig',
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
     'channels',
-    'django_quill',
+    # 'django_quill',
     'django_cleanup',
     'import_export',
 ]
@@ -89,9 +90,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
 
