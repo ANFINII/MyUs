@@ -105,14 +105,19 @@ class SignUpAPIView(CreateAPIView):
                     {'error': f'{year}年{month}月{day}日は存在しない日付です!'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-        user = User.objects.create_user(email, username, nickname, password1)
-        profile = Profile.objects.filter(user=user).first()
-        profile.last_name = last_name
-        profile.first_name = first_name
-        profile.gender = gender
-        profile.birthday = birthday
-        profile.save()
-        return Response({'succss': 'アカウント登録が完了しました!!'}, status=status.HTTP_201_CREATED)
+        try:
+            user = User.objects.create_user(email, username, nickname, password1)
+            profile = Profile.objects.filter(user=user).first()
+            profile.last_name = last_name
+            profile.first_name = first_name
+            profile.gender = gender
+            profile.birthday = birthday
+            profile.save()
+            return Response({'succss': 'アカウント登録が完了しました!!'}, status=status.HTTP_201_CREATED)
+        except Exception:
+            return Response(
+                {'error': 'アカウント登録に失敗しました!!'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class LoginAPIView(APIView):
