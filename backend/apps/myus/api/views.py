@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView, View
 from rest_framework.viewsets import ModelViewSet
 
-from apps.myus.api.serializers import UserSerializer, SignUpSerializer
+from apps.myus.api.serializers import UserSerializer, SignUpSerializer, LoginSerializer
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
@@ -18,7 +18,7 @@ from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, T
 User = get_user_model()
 
 
-class SignUpAPIView(CreateAPIView):
+class SignUpAPI(CreateAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = SignUpSerializer
 
@@ -120,11 +120,55 @@ class SignUpAPIView(CreateAPIView):
             )
 
 
-class LoginAPIView(APIView):
-    pass
+class LoginAPI(APIView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        data = request.data
+        username = data['username']
+        password = data['password']
+        try:
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                if user.is_active or user.is_staff:
+                    if user.is_active or user.is_staff:
+                        login(request, user)
+                        return Response({'succss': 'ログインに成功しました!!'}, status=status.HTTP_200_OK)
+                    else:
+                        return Response({'error': 'ID又はパスワードが違います!!'}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response({'error': 'ID又はパスワードが違います!!'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'ID又はパスワードが違います!!'}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({'error': 'ID又はパスワードが違います!!'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserView(ListAPIView):
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+
+class CustomAuthToken(ObtainAuthToken):
+    permission_classes = (permissions.AllowAny,)
+    # serializer_class = LoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(
+            data=request.data, context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.id,
+            'email': user.email
+        })
+
+
+
+class UserAPI(ListAPIView):
     def get(self, request):
         try:
             user = request.user

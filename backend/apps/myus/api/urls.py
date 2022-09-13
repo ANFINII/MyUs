@@ -1,11 +1,12 @@
 from django.urls import path
-from apps.myus.api.views import UserView
-from apps.myus.api.views import LoginAPIView, SignUpAPIView
+from apps.myus.api.views import UserAPI
+from apps.myus.api.views import LoginAPI, SignUpAPI, CustomAuthToken
 
 app_name = 'myus'
 
 urlpatterns = [
-    path('user', UserView.as_view(), name='user'),
-    path('signupview', SignUpAPIView.as_view(), name='signupview'),
-    path('login', LoginAPIView.as_view(), name='login'),
+    path('user', UserAPI.as_view(), name='user'),
+    path('signupapi', SignUpAPI.as_view(), name='signupapi'),
+    path('loginapi', LoginAPI.as_view(), name='loginapi'),
+    path('auth/login', CustomAuthToken.as_view()),
 ]

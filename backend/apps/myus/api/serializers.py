@@ -2,6 +2,23 @@ from rest_framework import serializers
 from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth.hashers import make_password
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token['username'] = user.username
+        token['password'] = user.password
+
+        return token
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 
 class SignUpSerializer(serializers.Serializer):
@@ -16,6 +33,16 @@ class SignUpSerializer(serializers.Serializer):
     month = serializers.CharField()
     day = serializers.CharField()
     gender = serializers.IntegerField()
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('email', 'username', 'password')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -34,6 +61,12 @@ class UserSerializer(serializers.ModelSerializer):
                 'style': {'input_type': 'password'}
             }
         }
+
+    def validate_password(self,value:str) ->str:
+        """
+        ハッシュ値に変換する
+        """
+        return make_password(value)
 
 
 class ProfileSerializer(serializers.ModelSerializer):
