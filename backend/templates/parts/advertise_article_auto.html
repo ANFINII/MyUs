@@ -2,7 +2,7 @@
 {% load humanize %}
 
 {% for item in advertise_auto_list %}
-<section class="section">
+<section class="section_list">
   <div class="main_decolation">
     {% if user.mypage.is_advertise %}
     <video id="auto" class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" autoplay width="272" height="153" poster="{{ item.image.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
