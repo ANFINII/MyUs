@@ -9,13 +9,13 @@ export default function PictureArticle() {
       <section className="main_content">
         <figure className="main_decolation">
           <Link href="/picture/detail/[id][title]">
-          <a><img src="{{ item.image.url }}" width="272" height="153"/></a>
+            <a><img src="{{ item.image.url }}" width="272" height="153"/></a>
           </Link>
           <Link href="/picture/detail/[id][title]">
-          <a className="author_space">
-            <AuthorSpace/>
-            <ContentTitle/>
-          </a>
+            <a className="author_space">
+              <AuthorSpace/>
+              <ContentTitle/>
+            </a>
           </Link>
         </figure>
       </section>

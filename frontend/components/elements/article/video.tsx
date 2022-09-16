@@ -19,10 +19,12 @@ export default function VideoArtile(props) {
                 {/* </video> */}
               </a>
             </Link>
-            <a href="{% url 'myus:video_detail' item.pk item.title %}" className="author_space">
-              <AuthorSpace/>
-              <ContentTitle/>
-            </a>
+            <Link href="/video/detail/[id][title]">
+              <a className="author_space">
+                <AuthorSpace/>
+                <ContentTitle/>
+              </a>
+            </Link>
           </div>
         </div>
       </section>

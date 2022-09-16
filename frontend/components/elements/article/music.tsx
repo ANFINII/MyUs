@@ -13,10 +13,10 @@ export default function MusicArticle() {
             <p>ブラウザがaudioに対応しておりません</p>
           </audio>
           <Link href="/music/detail/[id][title]">
-          <a className="author_space">
-            <AuthorSpace/>
-            <ContentTitle/>
-          </a>
+            <a className="author_space">
+              <AuthorSpace/>
+              <ContentTitle/>
+            </a>
           </Link>
         </div>
       </section>
