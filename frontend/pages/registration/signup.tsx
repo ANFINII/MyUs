@@ -9,7 +9,7 @@ export default function SignUp() {
         <title>MyUsサインアップ </title>
       </Head>
 
-      <form method="POST" action="" className="form-signup">
+      <form method="POST" action="" className="form_signup">
         {/* {% csrf_token %} */}
         <h1 className="signup_h1">アカウント登録</h1>
 

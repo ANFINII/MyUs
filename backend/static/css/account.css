@@ -183,13 +183,13 @@ ul,
   margin: -17px 0 -4px 0;
 }
 
-.form-signup {
+.form_signup {
   width: 100%;
   max-width: 380px;
   padding: 15px;
   margin: auto;
 }
 
-.form-signup .checkbox {
+.form_signup .checkbox {
   font-weight: 400;
 }

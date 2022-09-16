@@ -131,18 +131,18 @@ ul,
   margin: -17px 0 -4px 0;
 }
 
-.form-signup {
+.form_signup {
   width: 100%;
   max-width: 380px;
   padding: 15px;
   margin: 0 0 30px 0;
 }
 
-.form-signup .checkbox {
+.form_signup .checkbox {
   font-weight: 400;
 }
 
-.form-signup .form-control {
+.form_signup .form-control {
   position: relative;
   box-sizing: border-box;
   height: auto;
