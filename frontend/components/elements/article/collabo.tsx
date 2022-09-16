@@ -6,7 +6,7 @@ export default function CollaboArticle() {
   return (
     <article className="article_list">
       {/* {% for item in collabo_list %} */}
-      <section className="main_content_other">
+      <section className="section_other">
         <div className="main_decolation">
           <Link href="/collabo/detail/[id][title]">
             <a href="{% url 'myus:collabo_detail' item.pk item.title %}" className="author_space">

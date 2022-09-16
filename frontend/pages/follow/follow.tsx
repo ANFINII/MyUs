@@ -24,12 +24,12 @@ export default function Follow() {
 
       <article className="article_list">
         {/* {% for item in follow_list %} */}
-        <section className="main_content_follow">
+        <section className="section_follow">
           <div className="main_decolation">
             <Link href="/userpage/[nickname]">
-              <a data="{{ item.following.nickname }}" className="author_follows pjax_button_userpage">
+              <a data-name="{{ item.following.nickname }}" className="author_follows pjax_button_userpage">
                 <object className="author_space">
-                  <a data="{{ item.following.nickname }}" className="pjax_button_userpage">
+                  <a data-name="{{ item.following.nickname }}" className="pjax_button_userpage">
                     {/* <img src="{{ item.following.image }}" title="{{ item.following.nickname }}" className="follow_image"> */}
                   </a>
                 </object>

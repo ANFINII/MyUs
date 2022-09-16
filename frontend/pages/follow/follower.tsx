@@ -24,7 +24,7 @@ export default function Follow() {
 
       <article className="article_list">
         {/* {% for item in follower_list %} */}
-        <section className="main_content_follow">
+        <section className="section_follow">
           <div className="main_decolation">
             <Link href="/userpage/[nickname]">
               <a data-name="{{ item.follower.nickname }}" className="author_follows pjax_button_userpage">

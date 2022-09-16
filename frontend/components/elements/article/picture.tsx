@@ -6,7 +6,7 @@ export default function PictureArticle() {
   return (
     <article className="article_list">
       {/* {% for item in picture_list %} */}
-      <section className="main_content">
+      <section className="section_list">
         <figure className="main_decolation">
           <Link href="/picture/detail/[id][title]">
             <a><img src="{{ item.image.url }}" width="272" height="153"/></a>

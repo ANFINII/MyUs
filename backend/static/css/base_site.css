@@ -90,9 +90,7 @@ select:focus,
   outline: auto rgb(0, 185, 200);
 }
 
-h1,
-h2,
-.required {
+h1, h2, .required {
   font-weight: normal;
   color: rgb(50, 50, 50);
 }

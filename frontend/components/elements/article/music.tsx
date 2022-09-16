@@ -6,7 +6,7 @@ export default function MusicArticle() {
   return (
     <article className="article_list">
       {/* {% for item in music_list %} */}
-      <section className="main_content_music">
+      <section className="section_music">
         <div className="main_decolation">
           <audio controls controlsList="nodownload" preload="none" className="audio_auto">
             <source src="{{ item.music.url }}"/>

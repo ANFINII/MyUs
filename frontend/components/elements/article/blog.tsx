@@ -6,7 +6,7 @@ export default function BlogArticle() {
   return (
     <article className="article_list">
       {/* {% for props in blog_list %} */}
-      <section className="main_content">
+      <section className="section_list">
         <figure className="main_decolation">
           <Link href="/blog/detail/[id][title]">
             <a><img src="{{ props.image.url }}" width="272" height="153"/></a>

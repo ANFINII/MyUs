@@ -6,7 +6,7 @@ export default function ChatArticle() {
   return (
     <article className="article_list">
       {/* {% for item in chat_list %} */}
-      <section className="main_content_other">
+      <section className="section_other">
         <div className="main_decolation">
           <Link href="/chat/detail/[id]">
             <a className="author_space">

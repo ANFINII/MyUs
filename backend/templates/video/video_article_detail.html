@@ -1,7 +1,7 @@
 {% load static %}
 
 {% for item in video_list %}
-<section class="main_content_detail">
+<section class="section_detail">
   <div class="main_decolation">
     <div class="video video_auto content_side">
       <a href="{% url 'myus:video_detail' item.pk item.title %}">

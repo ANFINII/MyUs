@@ -2,7 +2,7 @@
 {% load humanize %}
 
 {% for item in advertise_list %}
-<section class="main_content">
+<section class="section">
   <div class="main_decolation">
     <video class="video-js vjs-big-play-centered vjs-16-9" controls controlsList="nodownload" oncontextmenu="return false;" width="272" height="153" poster="{{ item.image.url }}" data-setup='{"controlBar": {"pictureInPictureToggle": false}}'>
       <source src="{{ item.video.url }}" type="video/mp4">

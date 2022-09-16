@@ -10,7 +10,7 @@ export default function UserPolicy() {
       <h1>料金プラン</h1>
       {/* {% if user.is_authenticated %} */}
       <article className="article_list">
-        <section className="main_content_plan">
+        <section className="section_plan">
           <div className="main_decolation_payment">
             <div className="payment_img">
               <img src="/img/MyUs.png" width="40px" height="40px" className="myus_img"/>
@@ -28,7 +28,7 @@ export default function UserPolicy() {
           <button value="price_1K9VSxCHdDAlRliqOZnYuctl" data-csrf="{{ csrf_token }}" className="btn btn-primary btn-sm checkout-button">購入する</button>
         </section>
 
-        <section className="main_content_plan">
+        <section className="section_plan">
           <div className="main_decolation_payment">
             <div className="payment_img">
               <img src="/img/MyUs.png" width="40px" height="40px" className="myus_img"/>
@@ -46,7 +46,7 @@ export default function UserPolicy() {
           <button value="price_1K9VTbCHdDAlRliq3YNA768b" data-csrf="{{ csrf_token }}" className="btn btn-primary btn-sm checkout-button">購入する</button>
         </section>
 
-        <section className="main_content_plan">
+        <section className="section_plan">
           <div className="main_decolation_payment">
             <div className="payment_img">
               <img src="/img/MyUs.png" width="40px" height="40px" className="myus_img"/>
@@ -66,7 +66,7 @@ export default function UserPolicy() {
           <button value="price_1K9VU9CHdDAlRliqXsIS6GC4" data-csrf="{{ csrf_token }}" id="test" className="btn btn-primary btn-sm checkout-button">購入する</button>
         </section>
 
-        <section className="main_content_plan">
+        <section className="section_plan">
           <div className="main_decolation_payment">
             <div className="payment_img">
               <img src="/img/MyUs.png" width="40px" height="40px" className="myus_img"/>
@@ -80,7 +80,7 @@ export default function UserPolicy() {
           <a href="{% url 'myus:chage_plan" role="button" className="btn btn-success btn-sm">変更する</a>
         </section>
 
-        <section className="main_content_plan">
+        <section className="section_plan">
           <div className="main_decolation_payment">
             <div className="payment_img">
               <img src="/img/MyUs.png" width="40px" height="40px" className="myus_img"/>

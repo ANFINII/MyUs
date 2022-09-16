@@ -1,7 +1,7 @@
 {% load static %}
 
 {% for item in picture_list %}
-<section class="main_content_detail">
+<section class="section_detail">
   <figure class="main_decolation content_side">
     <a href="{% url 'myus:picture_detail' item.pk item.title %}">
       <img src="{{ item.image.url }}" width="192" height="108">

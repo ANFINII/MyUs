@@ -851,27 +851,27 @@ div.field > button {
   grid-gap: 15px;
 }
 
-.main_content {
+.section_list {
   max-width: 272px;
   height: 265px;
 }
 
-.main_content_music {
+.section_music {
   max-width: 272px;
   height: 155px;
 }
 
-.main_content_other {
+.section_other {
   max-width: 272px;
   height: 150px;
 }
 
-.main_content_follow {
+.section_follow {
   max-width: 272px;
   height: 250px;
 }
 
-.main_content_plan {
+.section_plan {
   max-width: 272px;
   height: 230px;
 }
@@ -900,7 +900,7 @@ div.field > button {
   margin: 0 6px 0 10px;
 }
 
-.main_content_plan .content_title {
+.section_plan .content_title {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
@@ -997,7 +997,7 @@ div.field > button {
 }
 
 /* リストデザイン詳細用 */
-.main_content_detail {
+.section_detail {
   width: auto;
   height: 118px;
 }
@@ -1054,9 +1054,9 @@ div.field > button {
   margin: 12px 0 0 20px;
 }
 
-.article_detail_section_2 .main_content,
-.article_detail_section_2 .main_content_other,
-.article_detail_section_2 .main_content_todo {
+.article_detail_section_2 .section_list,
+.article_detail_section_2 .section_other,
+.article_detail_section_2 .section_todo {
   margin: 0 0 12px 0;
 }
 
@@ -2133,7 +2133,7 @@ div.field > button {
   margin: 0 0 0 5px;
 }
 
-.main_content_todo .author_space_todo {
+.section_todo .author_space_todo {
   text-decoration: none;
   color: rgb(0, 0, 0);
 }

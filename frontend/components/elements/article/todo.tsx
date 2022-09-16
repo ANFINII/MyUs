@@ -4,7 +4,7 @@ export default function TodoArticle() {
   return (
     <article className="article_list">
       {/* {% for item in todo_list %} */}
-      <section className="main_content_todo">
+      <section className="section_todo">
         {/* {% if item.progress == '2' %} */}
         {/* <div className="main_decolation_todo alert-dark" role="alert"> */}
         {/* {% else %} */}

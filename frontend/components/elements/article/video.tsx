@@ -6,7 +6,7 @@ export default function VideoArtile(props) {
   return (
     <article className="article_list">
       {/* {% for item in video_list %} */}
-      <section className="main_content">
+      <section className="section_list">
         <div className="main_decolation">
           <div className="video video_auto">
             <Link href="/video/detail/[id][title]">

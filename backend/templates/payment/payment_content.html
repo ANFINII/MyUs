@@ -3,7 +3,7 @@
 <h1>料金プラン</h1>
 {% if user.is_authenticated %}
 <article class="article_list">
-  <section class="main_content_plan">
+  <section class="section_plan">
     <div class="main_decolation_payment">
       <div class="payment_img">
         <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
@@ -19,7 +19,7 @@
     <button value="price_1K9VSxCHdDAlRliqOZnYuctl" csrf="{{ csrf_token }}" class="btn btn-primary btn-sm checkout-button">購入する</button>
   </section>
 
-  <section class="main_content_plan">
+  <section class="section_plan">
     <div class="main_decolation_payment">
       <div class="payment_img">
         <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
@@ -35,7 +35,7 @@
     <button value="price_1K9VTbCHdDAlRliq3YNA768b" csrf="{{ csrf_token }}" class="btn btn-primary btn-sm checkout-button">購入する</button>
   </section>
 
-  <section class="main_content_plan">
+  <section class="section_plan">
     <div class="main_decolation_payment">
       <div class="payment_img">
         <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
@@ -52,7 +52,7 @@
     <button value="price_1K9VU9CHdDAlRliqXsIS6GC4" csrf="{{ csrf_token }}" id="test" class="btn btn-primary btn-sm checkout-button">購入する</button>
   </section>
 
-  <section class="main_content_plan">
+  <section class="section_plan">
     <div class="main_decolation_payment">
       <div class="payment_img">
         <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
@@ -66,7 +66,7 @@
     <a href="{% url 'myus:chage_plan' %}" role="button" class="btn btn-success btn-sm">変更する</a>
   </section>
 
-  <section class="main_content_plan">
+  <section class="section_plan">
     <div class="main_decolation_payment">
       <div class="payment_img">
         <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
