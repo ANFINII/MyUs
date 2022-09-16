@@ -823,7 +823,7 @@ div.field > button {
 }
 
 /* メインリストデザイン index用 */
-.main_article_index {
+.article_index {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(auto, 272px));
   grid-template-rows: 25px auto;
@@ -831,7 +831,7 @@ div.field > button {
   grid-gap: 15px;
 }
 
-.main_article_index h2 {
+.article_index h2 {
   display: inline;
   grid-column: 1/-1;
   grid-row: 1/2;
@@ -2317,7 +2317,7 @@ input::placeholder {
   }
 
   .main_article,
-  .main_article_index {
+  .article_index {
     place-content: center;
   }
 

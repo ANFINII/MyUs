@@ -2,7 +2,7 @@
 
 {% include 'userpage/userpage_common.html' %}
 
-<article class="main_article_index">
+<article class="article_index">
   <h2>Video
     {% if query %}
     <section class="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section>
@@ -18,7 +18,7 @@
 </article>
 <hr>
 
-<article class="main_article_index">
+<article class="article_index">
   <h2>Live</h2>
   {% if query %}
     {% include 'search/search_live.html' %}
@@ -30,7 +30,7 @@
 </article>
 <hr>
 
-<article class="main_article_index">
+<article class="article_index">
   <h2>Music</h2>
   {% if query %}
     {% include 'search/search_music.html' %}
@@ -42,7 +42,7 @@
 </article>
 <hr>
 
-<article class="main_article_index">
+<article class="article_index">
   <h2>Picture</h2>
   {% if query %}
     {% include 'search/search_picture.html' %}
@@ -54,7 +54,7 @@
 </article>
 <hr>
 
-<article class="main_article_index">
+<article class="article_index">
   <h2>Blog</h2>
   {% if query %}
     {% include 'search/search_blog.html' %}
@@ -66,7 +66,7 @@
 </article>
 <hr>
 
-<article class="main_article_index">
+<article class="article_index">
   <h2>Chat</h2>
   {% if query %}
     {% include 'search/search_chat.html' %}

@@ -21,7 +21,7 @@ const Home: NextPage = () => {
       </h1>
       <hr/>
 
-      <article className="main_article_index">
+      <article className="article_index">
         <h2>Video</h2>
         {/* {% if query %} */}
           {/* {% include 'search/search_video.html' %} */}
@@ -33,7 +33,7 @@ const Home: NextPage = () => {
       </article>
       <hr/>
 
-      <article className="main_article_index">
+      <article className="article_index">
         <h2>Live</h2>
         {/* {% if query %}
           {% include 'search/search_live.html' %}
@@ -45,7 +45,7 @@ const Home: NextPage = () => {
       </article>
       <hr/>
 
-      <article className="main_article_index">
+      <article className="article_index">
         <h2>Music</h2>
         {/* {% if query %} */}
           {/* {% include 'search/search_music.html' %} */}
@@ -57,7 +57,7 @@ const Home: NextPage = () => {
       </article>
       <hr/>
 
-      <article className="main_article_index">
+      <article className="article_index">
         <h2>Picture</h2>
         {/* {% if query %} */}
           {/* {% include 'search/search_picture.html' %} */}
@@ -69,7 +69,7 @@ const Home: NextPage = () => {
       </article>
       <hr/>
 
-      <article className="main_article_index">
+      <article className="article_index">
         <h2>Blog</h2>
         {/* {% if query %} */}
           {/* {% include 'search/search_blog.html' %} */}
@@ -81,7 +81,7 @@ const Home: NextPage = () => {
       </article>
       <hr/>
 
-      <article className="main_article_index">
+      <article className="article_index">
         <h2>Chat</h2>
         {/* {% if query %} */}
           {/* {% include 'search/search_chat.html' %} */}
