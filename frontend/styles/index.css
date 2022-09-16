@@ -712,15 +712,6 @@
   margin: 6px 0 0 10px;
 }
 
-.messages_search {
-  display: inline;
-  list-style: none;
-  padding: 0;
-  margin: 8px 0 0 8px;
-  font-size: 14px;
-  color: rgb(33, 37, 41);
-}
-
 .main label {
   margin: 0;
 }
@@ -2198,6 +2189,15 @@ input::placeholder {
 
 .search_container {
   padding: 0;
+}
+
+.search_message {
+  display: inline;
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0 8px;
+  font-size: 14px;
+  color: rgb(33, 37, 41);
 }
 
 /* メディアクエリ */

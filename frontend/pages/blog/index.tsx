@@ -10,7 +10,7 @@ export default function Blog(props) {
 
       <h1>Blog
         {/* if (props.query) { */}
-        <section className="messages_search">「{ props.query }」の検索結果「{ props.count }」件</section>
+        <section className="search_message">「{ props.query }」の検索結果「{ props.count }」件</section>
         {/* } */}
       </h1>
 

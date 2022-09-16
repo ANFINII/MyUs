@@ -10,7 +10,7 @@ export default function Video(props) {
 
       <h1>Video
         {/* {% if query %} */}
-        <section className="messages_search">
+        <section className="search_message">
           {/* 「{{ props.query }}」の検索結果「{{ props.count }}」件 */}
         </section>
         {/* {% endif %} */}

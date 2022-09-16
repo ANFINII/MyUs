@@ -11,7 +11,7 @@ export default function Chat(props) {
 
       <h1>Chat
         {/* {% if query %} */}
-        {/* <section className="messages_search">「{{ query }}」の検索結果「{{ count }}」件</section> */}
+        {/* <section className="search_message">「{{ query }}」の検索結果「{{ count }}」件</section> */}
         {/* {% endif %} */}
       </h1>
 
