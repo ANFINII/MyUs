@@ -4,7 +4,7 @@ import Footer from 'components/layouts/footer'
 
 export default function Login() {
   return (
-    <>
+    <article className="article_account">
       <Head>
         <title>MyUsログイン</title>
       </Head>
@@ -38,6 +38,6 @@ export default function Login() {
         </Link>
       </form>
       <Footer/>
-    </>
+    </article>
   )
 }

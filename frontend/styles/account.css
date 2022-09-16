@@ -1,31 +1,10 @@
-/* body::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
+/* registration */
+.article_account {
+  display: flex;
+  justify-content: center;
 }
 
-body::-webkit-scrollbar-track {
-  background: rgb(255, 255, 255);
-}
-
-body::-webkit-scrollbar-track:hover {
-  background: rgb(225, 225, 225);
-}
-
-body::-webkit-scrollbar-thumb {
-  background: rgb(180, 180, 180);
-  border-radius: 10px;
-}
-
-body::-webkit-scrollbar-thumb:hover {
-  background: rgb(150, 150, 150);
-}
-
-body::-webkit-scrollbar-thumb:active {
-  background: rgb(120, 120, 120);
-} */
-
-
-.main h1.myus_h1 {
+.article_account .myus_h1 {
   font-family: "Libre Caslon Display", serif;
   font-size: 28px;
   color: rgb(50, 50, 50);
@@ -47,8 +26,6 @@ body::-webkit-scrollbar-thumb:active {
   font-size: 14px;
   text-decoration: none;
 }
-
-
 
 .col-auto.last_name,
 .col-auto.first_name {
@@ -158,10 +135,17 @@ ul,
   width: 100%;
   max-width: 380px;
   padding: 15px;
-  /* margin: auto; */
-  margin: 30px 30px 50px 30px;
+  margin: 0 0 30px 0;
 }
 
 .form-signup .checkbox {
   font-weight: 400;
+}
+
+.form-signup .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 6px;
+  font-size: 16px;
 }

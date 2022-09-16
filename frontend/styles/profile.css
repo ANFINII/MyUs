@@ -232,22 +232,6 @@ form ul {
   margin: 0 0 10px 0;
 }
 
-.form-signup {
-  grid-row: 3/4;
-  width: 100%;
-  max-width: 380px;
-  padding: 0 15px;
-  margin: auto;
-}
-
-.form-signup .form-control {
-  position: relative;
-  box-sizing: border-box;
-  height: auto;
-  padding: 6px;
-  font-size: 16px;
-}
-
 .password_done {
   padding: 50px 15px;
 }

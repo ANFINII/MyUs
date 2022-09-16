@@ -4,7 +4,7 @@ import Footer from 'components/layouts/footer'
 
 export default function SignUp() {
   return (
-    <>
+    <article className="article_account">
       <Head>
         <title>MyUsサインアップ </title>
       </Head>
@@ -87,6 +87,6 @@ export default function SignUp() {
         </p>
       </form>
       <Footer/>
-    </>
+    </article>
   )
 }
