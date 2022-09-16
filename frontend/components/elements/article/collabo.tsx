@@ -4,7 +4,7 @@ import ContentTitle from 'components/elements/common/content_title'
 
 export default function CollaboArticle() {
   return (
-    <article className="main_article">
+    <article className="article_list">
       {/* {% for item in collabo_list %} */}
       <section className="main_content_other">
         <div className="main_decolation">

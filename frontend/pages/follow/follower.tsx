@@ -22,7 +22,7 @@ export default function Follow() {
         {/* <span>フォロワー数：{{ user.mypage.follower_num }}</span> */}
       </div>
 
-      <article className="main_article">
+      <article className="article_list">
         {/* {% for item in follower_list %} */}
         <section className="main_content_follow">
           <div className="main_decolation">

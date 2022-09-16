@@ -4,7 +4,7 @@ import ContentTitle from 'components/elements/common/content_title'
 
 export default function PictureArticle() {
   return (
-    <article className="main_article">
+    <article className="article_list">
       {/* {% for item in picture_list %} */}
       <section className="main_content">
         <figure className="main_decolation">

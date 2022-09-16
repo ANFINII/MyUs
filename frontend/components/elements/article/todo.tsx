@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function TodoArticle() {
   return (
-    <article className="main_article">
+    <article className="article_list">
       {/* {% for item in todo_list %} */}
       <section className="main_content_todo">
         {/* {% if item.progress == '2' %} */}

@@ -9,7 +9,7 @@ export default function UserPolicy() {
 
       <h1>料金プラン</h1>
       {/* {% if user.is_authenticated %} */}
-      <article className="main_article">
+      <article className="article_list">
         <section className="main_content_plan">
           <div className="main_decolation_payment">
             <div className="payment_img">

@@ -4,7 +4,7 @@ import ContentTitle from 'components/elements/common/content_title'
 
 export default function VideoArtile(props) {
   return (
-    <article className="main_article">
+    <article className="article_list">
       {/* {% for item in video_list %} */}
       <section className="main_content">
         <div className="main_decolation">
