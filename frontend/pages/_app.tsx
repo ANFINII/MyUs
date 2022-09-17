@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'styles/bootstrap.css'
 import 'styles/globals.css'
 import 'styles/index.css'
+import 'styles/main.css'
 import 'styles/account.css'
 import 'styles/profile.css'
 import 'styles/userpolicy.css'
