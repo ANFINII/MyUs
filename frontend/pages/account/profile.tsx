@@ -8,7 +8,7 @@ export default function Profile() {
         <title>MyUsアカウント設定</title>
       </Head>
 
-      <article className="article_profile">
+      <article className="article_account">
         <h1>アカウント設定</h1>
         {/* {% if user.is_authenticated %} */}
         <div className="btn-column">

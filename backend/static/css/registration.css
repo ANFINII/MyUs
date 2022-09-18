@@ -1,0 +1,186 @@
+/* スクロールバー */
+body::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+body::-webkit-scrollbar-track {
+  background: rgb(255, 255, 255);
+}
+
+body::-webkit-scrollbar-track:hover {
+  background: rgb(225, 225, 225);
+}
+
+body::-webkit-scrollbar-thumb {
+  background: rgb(180, 180, 180);
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: rgb(150, 150, 150);
+}
+
+body::-webkit-scrollbar-thumb:active {
+  background: rgb(120, 120, 120);
+}
+
+body {
+  position: relative;
+  min-height: 100%;
+  margin: 0 0 5em 0;
+}
+
+header {
+  position: sticky;
+  z-index: 100;
+  top: 0;
+  width: 100%;
+  height: 5em;
+  background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+  color: rgb(255, 255, 255);
+  margin: 0 0 16px 0;
+}
+
+header h1 {
+  font-family: "Libre Caslon Display", serif;
+  text-align: end;
+  align-items: center;
+  width: 25%;
+  margin: 0;
+  padding: 20px 0;
+}
+
+footer {
+  position: fixed;
+  z-index: 100;
+  bottom: 0;
+  width: 100%;
+  height: 5em;
+  text-align: center;
+  background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+  color: rgb(255, 255, 255);
+}
+
+footer small {
+  vertical-align: -10px;
+}
+
+#myus_h1 {
+  padding: 0 0 16px 0;
+}
+
+.password_reset {
+  margin: 0 0 40px 0;
+}
+
+.password_reset a {
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.col-auto.last_name,
+.col-auto.first_name {
+  padding: 0 0 0 12px;
+}
+
+.col-auto.year {
+  padding: 0 0 0 8px;
+}
+
+.col-auto.month, .col-auto.day {
+  padding: 0 0 0 13px;
+}
+
+#last_name, #first_name {
+  width: 169px;
+  margin: 0;
+}
+
+#year, #month, #day {
+  width: 108px;
+  margin: 0;
+}
+
+.email_reset {
+  margin: 0px 0 50px 0;
+}
+
+.messages_password_form {
+  font-size: 14px;
+  color: rgb(255, 0, 0);
+  margin: -26px 0 5px 0;
+}
+
+.messages_password_done {
+  font-size: 14px;
+  color: rgb(255, 0, 0);
+  margin: 0 0 8px 0;
+}
+
+ul, .messages_password_reset {
+  list-style: none;
+  font-size: 14px;
+  color: rgb(255, 0, 0);
+  padding: 0;
+  margin: 29px 0 -25px 0;
+}
+
+.messages_password_mukou {
+  font-size: 14px;
+  color: rgb(255, 0, 0);
+}
+
+.pass_confirm1 {
+  margin: 35px 0 0 0;
+}
+
+.pass_confirm2 {
+  margin: 0 0 50px 0;
+}
+
+.gender {
+  margin: 0 0 40px 0;
+}
+
+#login, #submit {
+  margin: 0 0 24px 0;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.messages {
+  list-style: none;
+  font-size: 14px;
+  color: rgb(255, 0, 0);
+  padding: 0;
+}
+
+.messages_login {
+  list-style: none;
+  font-size: 14px;
+  color: rgb(255, 0, 0);
+  padding: 0;
+  margin: -26px 0 5px 0;
+}
+
+.messages_signup {
+  list-style: none;
+  font-size: 14px;
+  color: rgb(255, 0, 0);
+  padding: 0;
+  margin: -17px 0 -4px 0;
+}
+
+.form_signup {
+  width: 100%;
+  max-width: 380px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form_signup .checkbox {
+  font-weight: 400;
+}

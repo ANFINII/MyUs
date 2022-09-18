@@ -4,14 +4,14 @@ import Footer from 'components/layouts/footer'
 
 export default function Login() {
   return (
-    <article className="article_account">
+    <article className="article_registration">
       <Head>
         <title>MyUsログイン</title>
       </Head>
 
       <form method="POST" action="" className="form_signup">
         {/* {% csrf_token %} */}
-        <h1 className="myus_h1">MyUsへようこそ</h1>
+        <h1 className="login_h1">MyUsへようこそ</h1>
 
         {/* {% if messages %}
         <ul className="messages_login">
