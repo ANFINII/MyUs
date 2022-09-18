@@ -12,11 +12,11 @@ export default function Notification() {
         <h1>通知設定</h1>
         {/* {% if user.is_authenticated %}
         {% for notification in notification_setting_list %} */}
-        <table id="notification_table" csrf="{{ csrf_token }}">
+        <table id="notification_table" data-csrf="{{ csrf_token }}">
           <tbody>
             <tr><td className="td-color">通知設定</td><td className="td-indent">フォローしているユーザの投稿通知などを設定</td></tr>
             <tr><td className="td-color">Video通知</td><td className="td-indent">
-              <form method="POST" action="" notification="{{ notification.is_video }}" notification-type="video">
+              <form method="POST" action="" data-notification="{{ notification.is_video }}" notification-type="video">
                 {/* {% if notification.is_video %} */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
                   <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -29,7 +29,7 @@ export default function Notification() {
               </form>
             </td></tr>
             <tr><td className="td-color">Live通知</td><td className="td-indent">
-              <form method="POST" action="" notification="{{ notification.is_live }}" notification-type="live">
+              <form method="POST" action="" data-notification="{{ notification.is_live }}" notification-type="live">
                 {/* {% if notification.is_live %} */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
                   <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -42,7 +42,7 @@ export default function Notification() {
               </form>
             </td></tr>
             <tr><td className="td-color">Music通知</td><td className="td-indent">
-              <form method="POST" action="" notification="{{ notification.is_music }}" notification-type="music">
+              <form method="POST" action="" data-notification="{{ notification.is_music }}" notification-type="music">
                 {/* {% if notification.is_music %} */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
                   <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -55,7 +55,7 @@ export default function Notification() {
               </form>
             </td></tr>
             <tr><td className="td-color">Picture通知</td><td className="td-indent">
-              <form method="POST" action="" notification="{{ notification.is_picture }}"  notification-type="picture">
+              <form method="POST" action="" data-notification="{{ notification.is_picture }}"  notification-type="picture">
                 {/* {% if notification.is_picture %} */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
                   <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -68,7 +68,7 @@ export default function Notification() {
               </form>
             </td></tr>
             <tr><td className="td-color">Blog通知</td><td className="td-indent">
-              <form method="POST" action="" notification="{{ notification.is_blog }}" notification-type="blog">
+              <form method="POST" action="" data-notification="{{ notification.is_blog }}" notification-type="blog">
                 {/* {% if notification.is_blog %} */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
                   <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -81,7 +81,7 @@ export default function Notification() {
               </form>
             </td></tr>
             <tr><td className="td-color">Chat通知</td><td className="td-indent">
-              <form method="POST" action="" notification="{{ notification.is_chat }}" notification-type="chat">
+              <form method="POST" action="" data-notification="{{ notification.is_chat }}" notification-type="chat">
                 {/* {% if notification.is_chat %} */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
                   <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -94,7 +94,7 @@ export default function Notification() {
               </form>
             </td></tr>
             <tr><td className="td-color">Collabo通知</td><td className="td-indent">
-              <form method="POST" action="" notification="{{ notification.is_collabo }}" notification-type="collabo">
+              <form method="POST" action="" data-notification="{{ notification.is_collabo }}" notification-type="collabo">
                 {/* {% if notification.is_collabo %} */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
                   <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -107,7 +107,7 @@ export default function Notification() {
               </form>
             </td></tr>
             <tr><td className="td-color">フォロー通知</td><td className="td-indent">
-              <form method="POST" action="" notification="{{ notification.is_follow }}" notification-type="follow">
+              <form method="POST" action="" data-notification="{{ notification.is_follow }}" notification-type="follow">
                 {/* {% if notification.is_follow %} */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
                   <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -120,7 +120,7 @@ export default function Notification() {
               </form>
             </td></tr>
             <tr><td className="td-color">返信通知</td><td className="td-indent">
-              <form method="POST" action="" notification="{{ notification.is_reply }}" notification-type="reply">
+              <form method="POST" action="" data-notification="{{ notification.is_reply }}" notification-type="reply">
                 {/* {% if notification.is_reply %} */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
                   <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -133,7 +133,7 @@ export default function Notification() {
               </form>
             </td></tr>
             <tr><td className="td-color">いいね通知</td><td className="td-indent">
-              <form method="POST" action="" notification="{{ notification.is_like }}" notification-type="like">
+              <form method="POST" action="" data-notification="{{ notification.is_like }}" notification-type="like">
                 {/* {% if notification.is_like %} */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
                   <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -146,7 +146,7 @@ export default function Notification() {
               </form>
             </td></tr>
             <tr><td className="td-color">閲覧数通知</td><td className="td-indent">
-              <form method="POST" action="" notification="{{ notification.is_views }}" notification-type="views">
+              <form method="POST" action="" data-notification="{{ notification.is_views }}" notification-type="views">
                 {/* {% if notification.is_views %} */}
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
                   <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
