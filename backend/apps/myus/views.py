@@ -6,6 +6,7 @@ import random
 import string
 import stripe
 
+from django.db import IntegrityError
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
@@ -13,7 +14,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
-from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -22,11 +22,11 @@ from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from apps.myus.convert.convert_hls import convert_exe
 from apps.myus.forms import SearchTagForm
 from apps.myus.models import Profile, MyPage, SearchTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
-from apps.myus.convert.convert_hls import convert_exe
 from apps.myus.modules.contains import NotificationTypeNo, models_like_dict, models_comment_dict
 from apps.myus.modules.context_data import ContextData
 from apps.myus.modules.get_form import get_detail
@@ -38,9 +38,8 @@ from apps.myus.modules.follow import follow_update_data
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 
 
-# Create your views here.
-
 User = get_user_model()
+
 
 # Signup
 def signup_form(request):
@@ -242,6 +241,7 @@ class ProfileView(TemplateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, ProfileView, **kwargs)
 
+
 class ProfileUpdate(UpdateView):
     """アカウント更新"""
     model = Profile
@@ -318,6 +318,7 @@ class MyPageView(TemplateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, MyPageView, **kwargs)
 
+
 class MyPageUpdate(UpdateView):
     """Myページ更新"""
     model = MyPage
@@ -347,6 +348,7 @@ class MyPageUpdate(UpdateView):
         messages.error(self.request, 'メールアドレスの形式が違います!')
         return super().form_invalid(form)
 
+
 def mypage_toggle(request):
     """mypage_toggle"""
     context = {}
@@ -370,11 +372,13 @@ class Payment(TemplateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, Payment, **kwargs)
 
+
 class PaymentSuccess(TemplateView):
     template_name = 'payment/success.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, PaymentSuccess, **kwargs)
+
 
 class PaymentCancel(TemplateView):
     template_name = 'payment/cancel.html'
@@ -382,12 +386,14 @@ class PaymentCancel(TemplateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, PaymentCancel, **kwargs)
 
+
 class ChangePlan(TemplateView):
     model = User
     template_name = 'payment/change_plan.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, ChangePlan, **kwargs)
+
 
 def create_checkout_session(request):
     stripe.myus_key = settings.STRIPE_SECRET_KEY
@@ -414,6 +420,7 @@ class NotificationSettingView(TemplateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, NotificationSettingView, **kwargs)
 
+
 def notification_setting(request):
     """notification_setting"""
     context = {}
@@ -428,6 +435,7 @@ def notification_setting(request):
     }, request=request)
     return JsonResponse(context)
 
+
 def notification_confirmed(request):
     """notification_confirmed"""
     user = request.user
@@ -435,6 +443,7 @@ def notification_confirmed(request):
     notification_obj = get_object_or_404(Notification, id=notification_id)
     notification_obj.confirmed.add(user)
     return JsonResponse()
+
 
 def notification_deleted(request):
     """notification_deleted"""
@@ -500,6 +509,7 @@ def like_form(request):
         }
         return JsonResponse(context)
 
+
 def like_form_comment(request):
     """like_form_comment"""
     if request.method == 'POST':
@@ -549,6 +559,7 @@ def comment_form(request):
         }, request=request)
         return JsonResponse(context)
 
+
 def reply_form(request):
     """reply_form"""
     context = {}
@@ -590,6 +601,7 @@ def reply_form(request):
         }, request=request)
         return JsonResponse(context)
 
+
 def comment_update(request, comment_id):
     """comment_update"""
     if request.method == 'POST':
@@ -599,6 +611,7 @@ def comment_update(request, comment_id):
         comment_obj.save(update_fields=['text', 'updated'])
         context = {'text': urlize_impl(linebreaksbr(comment_obj.text))}
         return JsonResponse(context)
+
 
 def comment_delete(request, comment_id):
     """comment_delete"""
@@ -612,6 +625,7 @@ def comment_delete(request, comment_id):
         obj.save(update_fields=['comment_num'])
         context = {'comment_num': obj.comment_num}
         return JsonResponse(context)
+
 
 def reply_delete(request, comment_id):
     """reply_delete"""
@@ -648,6 +662,7 @@ class Index(ListView):
     def get_queryset(self):
         return Search.search_index(self)
 
+
 class Recommend(ListView):
     """急上昇機能、すべてのメディアmodelを表示"""
     model = SearchTag
@@ -672,6 +687,7 @@ class UserPage(ListView):
     def get_queryset(self):
         return Search.search_userpage(self)
 
+
 class UserPageInfo(ListView):
     """UserPageInfo"""
     model = User
@@ -679,6 +695,7 @@ class UserPageInfo(ListView):
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, UserPageInfo, **kwargs)
+
 
 class UserPageAdvertise(ListView):
     """UserPageAdvertise"""
@@ -706,6 +723,7 @@ class FollowList(ListView):
     def get_queryset(self, **kwargs):
         return Search.search_follow(self, Follow)
 
+
 class FollowerList(ListView):
     """FollowerList"""
     model = Follow
@@ -717,6 +735,7 @@ class FollowerList(ListView):
 
     def get_queryset(self, **kwargs):
         return Search.search_follow(self, Follow)
+
 
 def follow_create(request, nickname):
     """follow_create"""
@@ -780,6 +799,7 @@ class VideoCreate(CreateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, VideoCreate, **kwargs)
 
+
 class VideoList(ListView):
     """VideoList"""
     model = Video
@@ -792,6 +812,7 @@ class VideoList(ListView):
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, Video)
+
 
 class VideoDetail(DetailView):
     """VideoDetail"""
@@ -822,6 +843,7 @@ class LiveCreate(CreateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, LiveCreate, **kwargs)
 
+
 class LiveList(ListView):
     """LiveList"""
     model = Live
@@ -834,6 +856,7 @@ class LiveList(ListView):
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, Live)
+
 
 class LiveDetail(DetailView):
     """LiveDetail"""
@@ -864,6 +887,7 @@ class MusicCreate(CreateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, MusicCreate, **kwargs)
 
+
 class MusicList(ListView):
     """MusicList"""
     model = Music
@@ -876,6 +900,7 @@ class MusicList(ListView):
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, Music)
+
 
 class MusicDetail(DetailView):
     """MusicDetail"""
@@ -906,6 +931,7 @@ class PictureCreate(CreateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, PictureCreate, **kwargs)
 
+
 class PictureList(ListView):
     """PictureList"""
     model = Picture
@@ -918,6 +944,7 @@ class PictureList(ListView):
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, Picture)
+
 
 class PictureDetail(DetailView):
     """PictureDetail"""
@@ -948,6 +975,7 @@ class BlogCreate(CreateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, BlogCreate, **kwargs)
 
+
 class BlogList(ListView):
     """BlogList"""
     model = Blog
@@ -960,6 +988,7 @@ class BlogList(ListView):
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, Blog)
+
 
 class BlogDetail(DetailView):
     """BlogDetail"""
@@ -990,6 +1019,7 @@ class ChatCreate(CreateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, ChatCreate, **kwargs)
 
+
 class ChatList(ListView):
     """ChatList"""
     model = Chat
@@ -1002,6 +1032,7 @@ class ChatList(ListView):
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, Chat)
+
 
 class ChatDetail(DetailView):
     """ChatDetail"""
@@ -1023,6 +1054,7 @@ class ChatDetail(DetailView):
         }
         return context
 
+
 class ChatThread(DetailView):
     """ChatDetailThread"""
     model = Chat
@@ -1039,6 +1071,7 @@ class ChatThread(DetailView):
             'reply_obj': obj.comment.filter(id=comment_obj.id).select_related('author'),
         }
         return context
+
 
 def chat_thread_button(request):
     context = {}
@@ -1076,6 +1109,7 @@ class CollaboCreate(CreateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, CollaboCreate, **kwargs)
 
+
 class CollaboList(ListView):
     """CollaboList"""
     model = Collabo
@@ -1088,6 +1122,7 @@ class CollaboList(ListView):
 
     def get_queryset(self, **kwargs):
         return Search.search_models(self, Collabo)
+
 
 class CollaboDetail(DetailView):
     """CollaboDetail"""
@@ -1118,6 +1153,7 @@ class TodoCreate(CreateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, TodoCreate, **kwargs)
 
+
 class TodoList(ListView):
     """TodoList"""
     model = Todo
@@ -1130,6 +1166,7 @@ class TodoList(ListView):
 
     def get_queryset(self, **kwargs):
         return Search.search_todo(self, Todo)
+
 
 class TodoDetail(DetailView):
     """TodoDetail"""
@@ -1148,6 +1185,7 @@ class TodoDetail(DetailView):
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, TodoDetail, **kwargs)
 
+
 class TodoUpdate(UpdateView):
     """TodoUpdate"""
     model = Todo
@@ -1156,6 +1194,7 @@ class TodoUpdate(UpdateView):
 
     def get_success_url(self):
         return reverse('myus:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+
 
 class TodoDelete(DeleteView):
     """TodoUpdate"""
