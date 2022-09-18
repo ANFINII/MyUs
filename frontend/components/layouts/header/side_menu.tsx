@@ -6,7 +6,7 @@ export default function SideMenu() {
   return (
     <>
       <input type="checkbox" id="burger_menu" className="side_menu"/>
-      <label htmlFor="burger_menu" className="side_open">
+      <label htmlFor="burger_menu" className="side_menu_open">
         <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="1.7em" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
         </svg>
@@ -14,7 +14,7 @@ export default function SideMenu() {
       <label htmlFor="burger_menu" className="side_nemu_back"></label>
 
       <aside className="side_menu">
-        <label htmlFor="burger_menu" className="side_close color_side_menu">
+        <label htmlFor="burger_menu" className="side_menu_close color_side_menu">
           <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-arrow-left color_side_menu_bi" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
           </svg>

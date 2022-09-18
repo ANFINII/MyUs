@@ -104,14 +104,14 @@
   transition: all 0.2s;
 }
 
-.side_open {
+.side_menu_open {
   display: block;
   margin: 0;
   cursor: pointer;
   transition: all 0.01s;
 }
 
-.side_close {
+.side_menu_close {
   display: block;
   height: 3.5em;
   margin: 16px 0 0 0;
@@ -139,7 +139,7 @@
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.side_open:hover,
+.side_menu_open:hover,
 .color_header:hover {
   color: rgb(255, 220, 0);
 }
