@@ -1,10 +1,9 @@
-"""config URL Configuration"""
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from apps.myus.admin import manage_site
+
 
 urlpatterns = [
     path('', include('apps.myus.urls')),
@@ -12,13 +11,7 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('myus-admin/', admin.site.urls),
     path('myus-manage/', manage_site.urls),
-    path('api-auth/', include('rest_framework.urls')),
-    path('api/auth/',include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
-    # path('api/auth/',include('djoser.urls.jwt')),
-    # path('api/login/', TokenObtainPairView.as_view()),
-    # path('api/refresh/', TokenRefreshView.as_view()),
-    # path('api/verify/', TokenVerifyView.as_view()),
+    path('api/auth/', include('rest_framework.urls')),
 ]
 
 if settings.DEBUG:
