@@ -11,6 +11,7 @@ https://docs.djangoproject.com/ja/4.0/ref/settings/
 
 import os
 import environ
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = environ.Path(__file__) - 3
@@ -65,13 +66,11 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     'apps.myus.apps.ApiConfig',
     'rest_framework',
-    'rest_framework.authtoken',
-    # 'rest_framework_simplejwt',
+    'rest_framework_simplejwt',
     'corsheaders',
     'channels',
     # 'django_quill',
     'django_cleanup',
-    'djoser',
     'import_export',
 ]
 
@@ -91,22 +90,17 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
 
-# SIMPLE_JWT = {
-#     'JWT_VERIFY_EXPIRATION': False,
-#     'AUTH_HEADER_TYPES': 'JWT',
-# }
-
-DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    # 'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'SERIALIZERS': {},
+SIMPLE_JWT = {
+    # 'JWT_VERIFY_EXPIRATION': False,
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'AUTH_HEADER_TYPES': ('JWT',)
 }
 
 TEMPLATES = [{
