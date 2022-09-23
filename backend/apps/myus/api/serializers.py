@@ -1,24 +1,12 @@
+from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
+from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
-from django.contrib.auth.hashers import make_password
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        token['username'] = user.username
-        token['password'] = user.password
-
-        return token
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+User = get_user_model()
 
 
 class SignUpSerializer(serializers.Serializer):
