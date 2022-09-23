@@ -74,7 +74,7 @@ class SignUpAPI(CreateAPIView):
 
         try:
             user = User.objects.create_user(email, username, nickname, password1)
-            profile = Profile.objects.filter(user=user).first()
+            profile = Profile.objects.get(user=user)
             profile.last_name = last_name
             profile.first_name = first_name
             profile.gender = gender
