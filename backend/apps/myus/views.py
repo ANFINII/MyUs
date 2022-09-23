@@ -45,89 +45,74 @@ User = get_user_model()
 def signup_form(request):
     """サインアップ処理"""
     if request.method == 'POST':
-        username = request.POST['username']
-        if User.objects.filter(username=username).exists():
-            messages.error(request, 'このユーザー名は既に登録されております!')
-            return render(request, 'registration/signup.html')
-
-        if has_username(username):
-            messages.error(request, 'ユーザー名は半角英数字のみ入力できます!')
-            return render(request, 'registration/signup.html')
-
-        nickname = request.POST['nickname']
-        if User.objects.filter(nickname=nickname).exists():
-            messages.error(request, 'この投稿者名は既に登録されております!')
-            return render(request, 'registration/signup.html')
-
         email = request.POST['email']
-        if User.objects.filter(email=email).exists():
-            messages.error(request, 'このメールアドレスは既に登録されております!')
-            return render(request, 'registration/signup.html')
+        username = request.POST['username']
+        nickname = request.POST['nickname']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+        last_name = request.POST['last_name']
+        first_name = request.POST['first_name']
+        gender = request.POST['gender']
+        year = request.POST['year']
+        month = request.POST['month']
+        day = request.POST['day']
 
         if has_email(email):
             messages.error(request, 'メールアドレスの形式が違います!')
             return render(request, 'registration/signup.html')
-
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        if not has_alphabet(password1):
-            messages.error(request, 'パスワードは8文字以上で数字とアルファベットが含まれる必要があります!')
+        if has_username(username):
+            messages.error(request, 'ユーザー名は半角英数字になります!')
             return render(request, 'registration/signup.html')
-
-        elif not has_number(password1):
-            messages.error(request, 'パスワードは8文字以上で数字とアルファベットが含まれる必要があります!')
+        if password1 != password2:
+            messages.error(request, 'パスワードが一致していません!')
             return render(request, 'registration/signup.html')
-
-        last_name = request.POST['last_name']
+        if not has_number(password1) and not has_alphabet(password1):
+            messages.error(request, 'パスワードは半角8文字以上で英数字を含む必要があります!')
+            return render(request, 'registration/signup.html')
         if has_number(last_name):
-            messages.error(request, '姓に数字が含まれております!')
+            messages.error(request, '姓に数字が含まれています!')
             return render(request, 'registration/signup.html')
-
-        first_name = request.POST['first_name']
         if has_number(first_name):
-            messages.error(request, '名に数字が含まれております!')
+            messages.error(request, '名に数字が含まれています!')
             return render(request, 'registration/signup.html')
-
-        gender = request.POST['gender']
-
-        year = request.POST['year']
         if not has_number(year):
             messages.error(request, '生年月日の年を入力してください!')
             return render(request, 'registration/signup.html')
-
-        month = request.POST['month']
         if not has_number(month):
             messages.error(request, '生年月日の月を入力してください!')
             return render(request, 'registration/signup.html')
-
-        day = request.POST['day']
         if not has_number(day):
             messages.error(request, '生年月日の日を入力してください!')
             return render(request, 'registration/signup.html')
-
         if year and month and day:
             try:
                 birthday = datetime.date(year=int(year), month=int(month), day=int(day)).isoformat()
             except ValueError:
                 messages.error(request, f'{year}年{month}月{day}日は存在しない日付です!')
                 return render(request, 'registration/signup.html')
-            try:
-                User.objects.get(username=username)
-                messages.error(request, 'このアカウントは既に登録されております!')
-                return render(request, 'registration/signup.html')
-            except User.DoesNotExist:
-                if password1 == password2:
-                    user = User.objects.create_user(email, username, nickname, password1)
-                    user.last_name = last_name
-                    user.first_name = first_name
-                    user.gender = gender
-                    user.birthday = birthday
-                    user.save()
-                    messages.success(request, '登録が完了しました!')
-                    return redirect('myus:login')
-                else:
-                    messages.error(request, 'パスワードが一致していません!')
-                    return render(request, 'registration/signup.html')
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'メールアドレスは既に登録されています!')
+            return render(request, 'registration/signup.html')
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'ユーザー名は既に登録されています!')
+            return render(request, 'registration/signup.html')
+        if User.objects.filter(nickname=nickname).exists():
+            messages.error(request, '投稿者名は既に登録されています!')
+            return render(request, 'registration/signup.html')
+
+        try:
+            user = User.objects.create_user(email, username, nickname, password1)
+            profile = Profile.objects.filter(user=user).first()
+            profile.last_name = last_name
+            profile.first_name = first_name
+            profile.gender = gender
+            profile.birthday = birthday
+            profile.save()
+            messages.success(request, 'アカウント登録が完了しました!')
+            return redirect('myus:login')
+        except Exception:
+            messages.error(request, 'アカウント登録に失敗しました!')
+            return render(request, 'registration/signup.html')
     return render(request, 'registration/signup.html')
 
 
