@@ -139,14 +139,9 @@ def login_form(request):
         password = request.POST['password']
         try:
             user = authenticate(request, username=username, password=password)
-            if user is not None:
-                if user.is_active or user.is_staff:
-                    login(request, user)
-                    return redirect('myus:index')
-                else:
-                    messages.error(request, 'ID又はパスワードが違います!')
-                    # messages.error(request, '無効なユーザーです!')
-                    return redirect('myus:login')
+            if not user and (user.is_active or user.is_staff):
+                login(request, user)
+                return redirect('myus:index')
             else:
                 messages.error(request, 'ID又はパスワードが違います!')
                 # messages.error(request, 'パスワードが違います!')
