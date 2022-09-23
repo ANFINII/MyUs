@@ -1,16 +1,22 @@
+import jwt
 from datetime import date
 
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.http import JsonResponse
-from rest_framework import authentication, permissions, status
+
+from rest_framework import authentication, permissions
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
 from rest_framework.views import APIView, View
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt import views
+from rest_framework_simplejwt import exceptions
 
 from apps.myus.api.serializers import UserSerializer, SignUpSerializer, LoginSerializer
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
-from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
+from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
 
@@ -24,7 +30,6 @@ class SignUpAPI(CreateAPIView):
 
     def post(self, request):
         data = request.data
-
         email = data['email']
         username = data['username']
         nickname = data['nickname']
@@ -38,73 +43,35 @@ class SignUpAPI(CreateAPIView):
         gender = data['gender']
 
         if has_email(email):
-            return Response(
-                {'error': 'メールアドレスの形式が違います!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({'error': 'メールアドレスの形式が違います!'}, status=HTTP_400_BAD_REQUEST)
         if has_username(username):
-            return Response(
-                {'error': 'ユーザー名は半角英数字のみ入力できます!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({'error': 'ユーザー名は半角英数字になります!'}, status=HTTP_400_BAD_REQUEST)
         if has_number(last_name):
-            return Response(
-                {'error': '姓に数字が含まれております!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({'error': '姓に数字が含まれています!'}, status=HTTP_400_BAD_REQUEST)
         if has_number(first_name):
-            return Response(
-                {'error': '名に数字が含まれております!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if not has_number(year):
-            return Response(
-                {'error': '生年月日の年を入力してください!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if not has_number(month):
-            return Response(
-                {'error': '生年月日の月を入力してください!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if not has_number(day):
-            return Response(
-                {'error': '生年月日の日を入力してください!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if not has_alphabet(password1) or not has_number(password1):
-            return Response(
-                {'error': 'パスワードは8文字以上で数字とアルファベットが含まれる必要があります!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({'error': '名に数字が含まれています!'}, status=HTTP_400_BAD_REQUEST)
         if password1 != password2:
-            return Response(
-                {'error': 'パスワードが一致していません!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if User.objects.filter(email=email).exists():
-            return Response(
-                {'error': 'メールアドレスは既に登録されております!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if User.objects.filter(username=username).exists():
-            return Response(
-                {'error': 'ユーザー名は既に登録されております!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if User.objects.filter(nickname=nickname).exists():
-            return Response(
-                {'error': '投稿者名は既に登録されております!!'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({'error': 'パスワードが一致していません!'}, status=HTTP_400_BAD_REQUEST)
+        if not has_number(password1) and not has_alphabet(password1):
+            return Response({'error': 'パスワードは半角8文字以上で英数字を含む必要があります!'}, status=HTTP_400_BAD_REQUEST)
+        if not has_number(year):
+            return Response({'error': '生年月日の年を入力してください!'}, status=HTTP_400_BAD_REQUEST)
+        if not has_number(month):
+            return Response({'error': '生年月日の月を入力してください!'}, status=HTTP_400_BAD_REQUEST)
+        if not has_number(day):
+            return Response({'error': '生年月日の日を入力してください!'}, status=HTTP_400_BAD_REQUEST)
         if year and month and day:
             try:
                 birthday = date(year=int(year), month=int(month), day=int(day)).isoformat()
             except ValueError:
-                return Response(
-                    {'error': f'{year}年{month}月{day}日は存在しない日付です!'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+                return Response({'error': f'{year}年{month}月{day}日は存在しない日付です!'}, status=HTTP_400_BAD_REQUEST)
+        if User.objects.filter(email=email).exists():
+            return Response({'error': 'メールアドレスは既に登録されています!'}, status=HTTP_400_BAD_REQUEST)
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'ユーザー名は既に登録されています!'}, status=HTTP_400_BAD_REQUEST)
+        if User.objects.filter(nickname=nickname).exists():
+            return Response({'error': '投稿者名は既に登録されています!'}, status=HTTP_400_BAD_REQUEST)
+
         try:
             user = User.objects.create_user(email, username, nickname, password1)
             profile = Profile.objects.filter(user=user).first()
@@ -113,73 +80,126 @@ class SignUpAPI(CreateAPIView):
             profile.gender = gender
             profile.birthday = birthday
             profile.save()
-            return Response({'succss': 'アカウント登録が完了しました!!'}, status=status.HTTP_201_CREATED)
+            return Response({'succss': 'アカウント登録が完了しました!'}, status=HTTP_201_CREATED)
         except Exception:
-            return Response(
-                {'error': 'アカウント登録に失敗しました!!'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return Response({'error': 'アカウント登録に失敗しました!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class LoginAPI(APIView):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = LoginSerializer
-
-    def post(self, request):
+# JWT Token Auth
+class LoginView(views.TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
         data = request.data
         username = data['username']
         password = data['password']
+        user = authenticate(request, username=username, password=password)
+        if not user:
+            return Response({'error': 'ID又はパスワードが違います!!'}, status=HTTP_400_BAD_REQUEST)
+
+        if not user.is_active:
+            return Response({'error': '退会済みのユーザーです!!'}, status=HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(data=data)
         try:
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                if user.is_active or user.is_staff:
-                    if user.is_active or user.is_staff:
-                        login(request, user)
-                        return Response({'succss': 'ログインに成功しました!!'}, status=status.HTTP_200_OK)
-                    else:
-                        return Response({'error': 'ID又はパスワードが違います!!'}, status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    return Response({'error': 'ID又はパスワードが違います!!'}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response({'error': 'ID又はパスワードが違います!!'}, status=status.HTTP_400_BAD_REQUEST)
-        except User.DoesNotExist:
-            return Response({'error': 'ID又はパスワードが違います!!'}, status=status.HTTP_400_BAD_REQUEST)
+            serializer.is_valid(raise_exception=True)
+        except exceptions.TokenError as e:
+            raise exceptions.InvalidToken(e.args[0])
+
+        res = Response(serializer.validated_data, status=HTTP_200_OK)
+        try:
+            res.delete_cookie('user_token')
+        except Exception:
+            return Response({'error': 'not user_token'}, status=HTTP_400_BAD_REQUEST)
+
+        access = serializer.validated_data['access']
+        refresh = serializer.validated_data['refresh']
+        res.set_cookie('user_token', access, max_age=60 * 60 * 24 * 10, httponly=True)
+        res.set_cookie('refresh_token', refresh, max_age=60 * 60 * 24 * 30, httponly=True)
+        return res
 
 
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
-
-class CustomAuthToken(ObtainAuthToken):
-    permission_classes = (permissions.AllowAny,)
-    # serializer_class = LoginSerializer
+class LogoutView(views.TokenObtainPairView):
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
-            data=request.data, context={'request': request}
-        )
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({
-            'token': token.key,
-            'user_id': user.id,
-            'email': user.email
-        })
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except exceptions.TokenError as e:
+            raise exceptions.InvalidToken(e.args[0])
+
+        res = Response(serializer.validated_data, status=HTTP_200_OK)
+        try:
+            res.delete_cookie('access_token')
+            res.delete_cookie('refresh_token')
+        except Exception:
+            return Response({'error': 'error'}, status=HTTP_400_BAD_REQUEST)
+        return Response({'success': 'logout'}, status=HTTP_200_OK)
 
 
+class UserAPIView(APIView):
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (permissions.AllowAny,)
 
-class UserAPI(ListAPIView):
+    def get_object(self, user_token):
+        key = settings.SECRET_KEY
+        try:
+            payload = jwt.decode(jwt=user_token, key=key, algorithms=['HS256'])
+            # DBにアクセスせずuser_idだけの方がjwtの強みが生きるかも, その場合 return payload['user_id']
+            return User.objects.get(id=payload['user_id'])
+        except jwt.ExpiredSignatureError:
+            return 'Activations link expired'
+        except jwt.exceptions.DecodeError:
+            return 'Invalid Token'
+        except User.DoesNotExist:
+            return 'User does not exists'
+
+    def get(self, request, format=None):
+        user_token = request.COOKIES.get('user_token')
+        if not user_token:
+            return Response({'error': 'No token'}, status=HTTP_400_BAD_REQUEST)
+
+        # エラーならstringで帰ってくるので、型で判定 ここイケてないな
+        user = self.get_object(user_token)
+        if type(user) == str:
+            return Response({'error': user}, status=HTTP_400_BAD_REQUEST)
+
+        if user.is_active:
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        return Response({'error': 'user is not active'}, status=HTTP_400_BAD_REQUEST)
+
+
+def refresh_get(request):
+    try:
+        refresh_token = request.COOKIES['refresh_token']
+        return JsonResponse({'refresh': refresh_token}, safe=False)
+    except Exception:
+        return Response({'error': 'Token refresh failure'}, status=HTTP_400_BAD_REQUEST)
+
+
+class TokenRefresh(views.TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except exceptions.TokenError as e:
+            raise exceptions.InvalidToken(e.args[0])
+
+        access = serializer.validated_data['access']
+        res = Response(serializer.validated_data, status=HTTP_200_OK)
+        res.delete_cookie('user_token')
+        res.set_cookie('user_token', access, max_age=60 * 24 * 24 * 30, httponly=True)
+        return res
+
+
+class UserAPI(APIView):
     def get(self, request):
         try:
             user = request.user
             user = UserSerializer(user)
-            return Response({'user': user.data}, status=status.HTTP_200_OK)
+            return Response({'user': user.data}, status=HTTP_200_OK)
         except Exception:
-            return Response(
-                {'error': 'ユーザーの取得に失敗しました!!'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
+            return Response({'error': 'ユーザーの取得に失敗しました!!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class Index(APIView):
@@ -191,7 +211,6 @@ class Index(APIView):
         return Response(nicknames)
 
     def post(self, request):
-        # 普通こんなことはしないが..
-        users = [User(username=username) for username in request.POST.getlist('username')]
+        usernames = request.POST.getlist('username')
+        users = [User(username=username) for username in usernames]
         User.objects.bulk_create(users)
-        return Response({'succeeded': True})
