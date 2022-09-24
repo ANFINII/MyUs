@@ -82,15 +82,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         if birthday is not None:
             DAYS_IN_YEAR = 365.2425
             return int((date.today() - birthday).days / DAYS_IN_YEAR)
-    age.short_description = 'age'
 
     def gender(self):
         return self.profile.gender
-    gender.short_description = 'gender'
 
     def birthday(self):
         return self.profile.birthday
-    birthday.short_description = 'birthday'
 
     def prefecture(self):
         return self.profile.prefecture
@@ -115,11 +112,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             return banner.url
 
     def plan(self):
-        plan_dict = {'0': 'Free', '1': 'Basic', '2': 'Standard', '3': 'Premium'}
-        for paln_key, paln_value in plan_dict.items():
-            if self.mypage.plan in paln_key:
-                return paln_value
-    plan.short_description = 'plan'
+        plan_dict = {'free': 'Free', 'basic': 'Basic', 'standard': 'Standard', 'premium': 'Premium'}
+        return [value for key, value in plan_dict.items() if self.mypage.plan in key]
 
     class Meta:
         db_table = 'user'
@@ -148,7 +142,7 @@ class Profile(models.Model):
     last_name    = models.CharField(max_length=50)
     first_name   = models.CharField(max_length=50)
     birthday     = models.DateField(blank=True, null=True)
-    gender       = models.CharField(choices=gender_type, max_length=1, default='2')
+    gender       = models.CharField(choices=gender_type, max_length=1)
     phone        = models.CharField(validators=[phone_no], max_length=15, blank=True)
     country_code = models.CharField(max_length=255, default='JP')
     postal_code  = models.CharField(max_length=255, blank=True)
@@ -193,14 +187,14 @@ def mypage_banner(instance, filename):
 
 class MyPage(models.Model):
     img           = '../frontend/static/img/MyUs_banner.png'
-    plan_type     = (('0', 'Free'), ('1', 'Basic'), ('2', 'Standard'), ('3', 'Premium'))
+    plan_type     = (('free', 'Free'), ('basic', 'Basic'), ('standard', 'Standard'), ('premium', 'Premium'))
     user          = models.OneToOneField(User, on_delete=models.CASCADE)
     banner        = models.ImageField(upload_to=mypage_banner, default=img, blank=True, null=True)
     email         = models.EmailField(max_length=255, blank=True)
     content       = models.TextField(blank=True)
     follower_num  = models.IntegerField(verbose_name='follower', default=0)
     following_num = models.IntegerField(verbose_name='follow', default=0)
-    plan          = models.CharField(choices=plan_type, max_length=1, default='0')
+    plan          = models.CharField(choices=plan_type, max_length=10, default='free')
     plan_date     = models.DateTimeField(blank=True, null=True)
     is_advertise  = models.BooleanField(default=True)
 
@@ -261,7 +255,7 @@ def create_notification_setting(sender, **kwargs):
 
 class AccessLog(models.Model):
     ip_address = models.GenericIPAddressField()
-    type       = models.CharField(max_length=7, blank=True, null=True)
+    type       = models.CharField(max_length=7, blank=True)
     type_id    = models.BigIntegerField(blank=True, null=True)
     created    = models.DateTimeField(auto_now_add=True)
     updated    = models.DateTimeField(auto_now=True)
@@ -686,8 +680,8 @@ class Todo(models.Model):
     author      = models.ForeignKey(User, on_delete=models.CASCADE)
     title       = models.CharField(max_length=100)
     content     = models.TextField()
-    priority    = models.CharField(max_length=10, choices=priority_type, default='success')
-    progress    = models.CharField(max_length=10, choices=progress_type, default='0')
+    priority    = models.CharField(max_length=10, choices=priority_type)
+    progress    = models.CharField(max_length=10, choices=progress_type)
     comment     = GenericRelation('Comment')
     comment_num = models.IntegerField(default=0)
     duedate     = models.DateField()
@@ -731,7 +725,7 @@ class Notification(models.Model):
     # 'collabo': 7, 'follow': 8, 'like': 9, 'reply': 10, 'views': 11
     user_from      = models.ForeignKey(User, related_name='user_from', on_delete=models.CASCADE)
     user_to        = models.ForeignKey(User, related_name='user_to', on_delete=models.CASCADE, blank=True, null=True)
-    type_no        = models.IntegerField(default=0)
+    type_no        = models.IntegerField()
     type_name      = models.CharField(max_length=7, blank=True)
     content_type   = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id      = models.PositiveIntegerField()
@@ -772,7 +766,7 @@ def videos_adver_upload(instance, filename):
 
 class Advertise(models.Model):
     """Advertise"""
-    choice  = (('0', '全体'), ('1', '個別'))
+    choice  = (('all', '全体'), ('one', '個別'))
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
     url     = models.URLField()
@@ -780,7 +774,7 @@ class Advertise(models.Model):
     image   = models.ImageField(upload_to=images_adver_upload)
     video   = models.FileField(upload_to=videos_adver_upload)
     read    = models.IntegerField(default=0)
-    type    = models.CharField(choices=choice, max_length=2, default='1')
+    type    = models.CharField(choices=choice, max_length=3)
     period  = models.DateField()
     publish = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -882,7 +876,7 @@ class Product(models.Model):
 class Price(models.Model):
     product         = models.ForeignKey(Product, on_delete=models.CASCADE)
     stripe_price_id = models.CharField(max_length=100)
-    price           = models.IntegerField(default=0)
+    price           = models.IntegerField()
 
     def __str__(self):
         return self.stripe_price_id

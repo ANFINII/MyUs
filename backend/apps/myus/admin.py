@@ -7,7 +7,6 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, AccessLog, Comment, Message, Follow, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
-from apps.myus.modules.contains import PlanType
 
 
 # Admin用の管理画面
@@ -781,13 +780,13 @@ class AdvertiseAdminSite(admin.ModelAdmin, PublishMixin):
 
     def has_add_permission(self, request):
         author = request.user
-        if author.mypage.plan != PlanType.free:
+        if author.mypage.plan != 'free':
             return True
         return False
 
     def has_change_permission(self, request, obj=None):
         author = request.user
-        if author.mypage.plan != PlanType.free:
+        if author.mypage.plan != 'free':
             return True
         return False
 manage_site.register(Advertise, AdvertiseAdminSite)

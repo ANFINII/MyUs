@@ -124,7 +124,7 @@ def login_form(request):
         password = request.POST['password']
         try:
             user = authenticate(request, username=username, password=password)
-            if not user and (user.is_active or user.is_staff):
+            if user and user.is_active:
                 login(request, user)
                 return redirect('myus:index')
             else:

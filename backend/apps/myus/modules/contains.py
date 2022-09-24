@@ -78,9 +78,3 @@ class NotificationTypeNo:
     like    = 9
     reply   = 10
     views   = 11
-
-class PlanType:
-    free     = '0'
-    basic    = '1'
-    standard = '2'
-    premium  = '3'
