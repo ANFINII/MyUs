@@ -86,7 +86,7 @@ class SignUpAPI(CreateAPIView):
 
 
 # JWT Token Auth
-class LoginView(views.TokenObtainPairView):
+class LoginAPI(views.TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         data = request.data
         username = data['username']
@@ -188,7 +188,7 @@ class UserAPI(APIView):
         return Response(serializer.data)
 
 
-class Index(APIView):
+class IndexAPI(APIView):
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAdminUser,)
 
