@@ -93,10 +93,10 @@ class LoginView(views.TokenObtainPairView):
         password = data['password']
         user = authenticate(request, username=username, password=password)
         if not user:
-            return Response({'error': 'ID又はパスワードが違います!!'}, status=HTTP_400_BAD_REQUEST)
+            return Response({'error': 'ID又はパスワードが違います!'}, status=HTTP_400_BAD_REQUEST)
 
         if not user.is_active:
-            return Response({'error': '退会済みのユーザーです!!'}, status=HTTP_400_BAD_REQUEST)
+            return Response({'error': '退会済みのユーザーです!'}, status=HTTP_400_BAD_REQUEST)
 
         serializer = self.get_serializer(data=data)
         try:
@@ -117,7 +117,7 @@ class LoginView(views.TokenObtainPairView):
         return res
 
 
-class LogoutView(views.TokenObtainPairView):
+class LogoutAPI(views.TokenObtainPairView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
@@ -134,39 +134,6 @@ class LogoutView(views.TokenObtainPairView):
         except Exception:
             return Response({'error': 'error'}, status=HTTP_400_BAD_REQUEST)
         return Response({'success': 'logout'}, status=HTTP_200_OK)
-
-
-class UserAPIView(APIView):
-    authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.AllowAny,)
-
-    def get_object(self, user_token):
-        key = settings.SECRET_KEY
-        try:
-            payload = jwt.decode(jwt=user_token, key=key, algorithms=['HS256'])
-            # DBにアクセスせずuser_idだけの方がjwtの強みが生きるかも, その場合 return payload['user_id']
-            return User.objects.get(id=payload['user_id'])
-        except jwt.ExpiredSignatureError:
-            return 'Activations link expired'
-        except jwt.exceptions.DecodeError:
-            return 'Invalid Token'
-        except User.DoesNotExist:
-            return 'User does not exists'
-
-    def get(self, request, format=None):
-        user_token = request.COOKIES.get('user_token')
-        if not user_token:
-            return Response({'error': 'No token'}, status=HTTP_400_BAD_REQUEST)
-
-        # エラーならstringで帰ってくるので、型で判定 ここイケてないな
-        user = self.get_object(user_token)
-        if type(user) == str:
-            return Response({'error': user}, status=HTTP_400_BAD_REQUEST)
-
-        if user.is_active:
-            serializer = UserSerializer(user)
-            return Response(serializer.data)
-        return Response({'error': 'user is not active'}, status=HTTP_400_BAD_REQUEST)
 
 
 def refresh_get(request):
@@ -193,13 +160,32 @@ class TokenRefresh(views.TokenRefreshView):
 
 
 class UserAPI(APIView):
-    def get(self, request):
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (permissions.AllowAny,)
+
+    def get_object(self, user_token):
+        key = settings.SECRET_KEY
         try:
-            user = request.user
-            user = UserSerializer(user)
-            return Response({'user': user.data}, status=HTTP_200_OK)
-        except Exception:
-            return Response({'error': 'ユーザーの取得に失敗しました!!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+            payload = jwt.decode(jwt=user_token, key=key, algorithms=['HS256'])
+            return payload['user_id']
+        except jwt.ExpiredSignatureError:
+            return 'Activations link expired'
+        except jwt.exceptions.DecodeError:
+            return 'Invalid Token'
+
+    def get(self, request, format=None):
+        user_token = request.COOKIES.get('user_token')
+        if not user_token:
+            return Response({'error': 'tokenがありません!'}, status=HTTP_400_BAD_REQUEST)
+
+        user_id = self.get_object(user_token)
+        user = User.objects.filter(id=user_id).first()
+        if not user:
+            return Response({'error': '存在しないユーザーです!'}, status=HTTP_400_BAD_REQUEST)
+        if not user.is_active:
+            return Response({'error': '退会済みのユーザーです!'}, status=HTTP_400_BAD_REQUEST)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
 
 class Index(APIView):
