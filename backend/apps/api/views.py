@@ -5,7 +5,8 @@ from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.http import JsonResponse
 
-from rest_framework import authentication, permissions
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
@@ -14,7 +15,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt import views
 from rest_framework_simplejwt import exceptions
 
-from apps.myus.api.serializers import UserSerializer, SignUpSerializer, LoginSerializer
+from apps.api.serializers import UserSerializer, SignUpSerializer, LoginSerializer
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
@@ -25,7 +26,7 @@ User = get_user_model()
 
 
 class SignUpAPI(CreateAPIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (AllowAny,)
     serializer_class = SignUpSerializer
 
     def post(self, request):
@@ -118,7 +119,7 @@ class LoginAPI(views.TokenObtainPairView):
 
 
 class LogoutAPI(views.TokenObtainPairView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -160,11 +161,12 @@ class TokenRefresh(views.TokenRefreshView):
 
 
 class UserAPI(APIView):
-    authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (AllowAny,)
 
     def get_object(self, user_token):
         key = settings.SECRET_KEY
+        print(key)
         try:
             payload = jwt.decode(jwt=user_token, key=key, algorithms=['HS256'])
             return payload['user_id']
@@ -174,6 +176,7 @@ class UserAPI(APIView):
             return 'Invalid Token'
 
     def get(self, request, format=None):
+        print(request.user)
         user_token = request.COOKIES.get('user_token')
         if not user_token:
             return Response({'error': 'tokenがありません!'}, status=HTTP_400_BAD_REQUEST)
@@ -189,8 +192,8 @@ class UserAPI(APIView):
 
 
 class IndexAPI(APIView):
-    authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.IsAdminUser,)
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (AllowAny,)
 
     def get(self, request, format=None):
         nicknames = [user.nickname for user in User.objects.all()]

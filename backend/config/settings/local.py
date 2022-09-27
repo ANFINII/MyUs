@@ -15,13 +15,14 @@ MIDDLEWARE += [
 
 # Cors headers
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-    "http://127.0.0.1",
-    "http://localhost",
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'https://localhost:3000',
+    'https://127.0.0.1:3000',
 ]
 
 CORS_ALLOW_HEADERS = (
@@ -35,6 +36,8 @@ CORS_ALLOW_HEADERS = (
     'x-csrftoken',
     'x-requested-with',
 )
+CSRF_TRUSTED_ORIGINS = ['https://localhost:3000', 'https://127.0.0.1']
+
 
 # Sqlite3
 # DATABASES = {
