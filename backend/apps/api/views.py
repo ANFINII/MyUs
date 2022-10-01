@@ -15,7 +15,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt import views
 from rest_framework_simplejwt import exceptions
 
-from apps.api.serializers import UserSerializer, SignUpSerializer, LoginSerializer
+from apps.api.serializers import SignUpSerializer, LoginSerializer
+from apps.api.serializers import UserSerializer, ProfileSerializer, MyPageSerializer
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
@@ -86,13 +87,17 @@ class SignUpAPI(CreateAPIView):
             return Response({'error': 'アカウント登録に失敗しました!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# JWT Token Auth
+# Auth
 class LoginAPI(views.TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         data = request.data
         username = data['username']
         password = data['password']
-        user = authenticate(request, username=username, password=password)
+
+        user = authenticate(username=username, password=password)
+        if not user:
+            user = authenticate(email=username, password=password)
+
         if not user:
             return Response({'error': 'ID又はパスワードが違います!'}, status=HTTP_400_BAD_REQUEST)
 
@@ -137,15 +142,7 @@ class LogoutAPI(views.TokenObtainPairView):
         return Response({'success': 'logout'}, status=HTTP_200_OK)
 
 
-def refresh_get(request):
-    try:
-        refresh_token = request.COOKIES['refresh_token']
-        return JsonResponse({'refresh': refresh_token}, safe=False)
-    except Exception:
-        return Response({'error': 'Token refresh failure'}, status=HTTP_400_BAD_REQUEST)
-
-
-class TokenRefresh(views.TokenRefreshView):
+class RefreshAPI(views.TokenRefreshView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         try:
@@ -160,13 +157,11 @@ class TokenRefresh(views.TokenRefreshView):
         return res
 
 
-class UserAPI(APIView):
-    authentication_classes = (TokenAuthentication,)
+class VerifyAPI(APIView):
     permission_classes = (AllowAny,)
 
     def get_object(self, user_token):
         key = settings.SECRET_KEY
-        print(key)
         try:
             payload = jwt.decode(jwt=user_token, key=key, algorithms=['HS256'])
             return payload['user_id']
@@ -176,7 +171,6 @@ class UserAPI(APIView):
             return 'Invalid Token'
 
     def get(self, request, format=None):
-        print(request.user)
         user_token = request.COOKIES.get('user_token')
         if not user_token:
             return Response({'error': 'tokenがありません!'}, status=HTTP_400_BAD_REQUEST)
@@ -187,14 +181,37 @@ class UserAPI(APIView):
             return Response({'error': '存在しないユーザーです!'}, status=HTTP_400_BAD_REQUEST)
         if not user.is_active:
             return Response({'error': '退会済みのユーザーです!'}, status=HTTP_400_BAD_REQUEST)
-        serializer = UserSerializer(user)
+        return Response({'success': '有効なユーザーです!'}, status=HTTP_200_OK)
+
+
+class UserAPI(APIView):
+    # permission_classes = (AllowAny,)
+
+    def get(self, request):
+        token = request.COOKIES.get('user_token')
+        key = settings.SECRET_KEY
+        payload = jwt.decode(jwt=token, key=key, algorithms=['HS256'])
+        user = User.objects.filter(id=payload['user_id']).first()
+        profile = Profile.objects.filter(user=payload['user_id']).first()
+        user_serializer = UserSerializer(user)
+        profile_serializer = ProfileSerializer(profile)
+        context = {'user': user_serializer.data, 'profile': profile_serializer.data}
+        return Response(context)
+
+
+class MyPageAPI(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        token = request.COOKIES.get('user_token')
+        key = settings.SECRET_KEY
+        payload = jwt.decode(jwt=token, key=key, algorithms=['HS256'])
+        mypage = MyPage.objects.filter(user=payload['user_id']).first()
+        serializer = MyPageSerializer(mypage)
         return Response(serializer.data)
 
 
 class IndexAPI(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (AllowAny,)
-
     def get(self, request, format=None):
         nicknames = [user.nickname for user in User.objects.all()]
         return Response(nicknames)

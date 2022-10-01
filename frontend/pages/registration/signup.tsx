@@ -86,6 +86,7 @@ export default function SignUp() {
           </Link>
         </p>
       </form>
+
       <Footer/>
     </article>
   )
