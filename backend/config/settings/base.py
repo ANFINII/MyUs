@@ -9,6 +9,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/ja/4.0/ref/settings/
 """
 
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/ja/4.0/howto/deployment/checklist/
+
 import os
 import environ
 from datetime import timedelta
@@ -19,14 +22,12 @@ BASE_DIR = environ.Path(__file__) - 3
 env = environ.Env(DEBUG=(bool, False))
 env.read_env(os.path.join(BASE_DIR, '../envs/.django'))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/ja/4.0/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
+
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Stripe API keys
@@ -100,13 +101,8 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('JWT',),
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',)
 }
-
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'None'
 
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -122,11 +118,16 @@ TEMPLATES = [{
     },
 }]
 
-ROOT_URLCONF = 'config.urls'
-WSGI_APPLICATION = 'config.wsgi.application'
+# Password validation
+# https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+]
 
 # Channels
-ASGI_APPLICATION = 'config.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -136,21 +137,19 @@ CHANNEL_LAYERS = {
     },
 }
 
+ASGI_APPLICATION = 'config.asgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
+ROOT_URLCONF = 'config.urls'
+
 AUTH_USER_MODEL = 'myus.User'
 AUTHENTICATION_BACKENDS = ['apps.myus.backends.MyBackend']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'None'
+
 # humanize カンマ区切り値
 NUMBER_GROUPING = 3
-
-# Password validation
-# https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
-]
 
 # Internationalization
 # https://docs.djangoproject.com/ja/4.0/topics/i18n/
