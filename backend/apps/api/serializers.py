@@ -24,13 +24,12 @@ class SignUpSerializer(serializers.Serializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'password')
+        fields = ('username', 'password')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -38,7 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'id', 'password', 'email', 'username', 'nickname',
-            'is_active', 'is_staff', 'last_login', 'date_joined',
+            'is_active', 'is_staff', 'last_login', 'date_joined'
         )
         read_only_field = ['is_active', 'is_staff', 'last_login', 'date_joined']
         extra_kwargs = {
@@ -50,19 +49,13 @@ class UserSerializer(serializers.ModelSerializer):
             }
         }
 
-    def validate_password(self,value:str) ->str:
-        """
-        ハッシュ値に変換する
-        """
-        return make_password(value)
-
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            'id', 'user', 'image', 'last_name', 'first_name', 'birthday', 'gender', 'phone',
-            'country_code', 'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction',
+            'image', 'last_name', 'first_name', 'birthday', 'gender', 'phone', 'country_code',
+            'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction',
         )
 
 
@@ -70,7 +63,7 @@ class MyPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyPage
         fields = (
-            'id', 'user', 'banner', 'email', 'content', 'follower_num', 'following_num',
+            'banner', 'email', 'content', 'follower_num', 'following_num',
             'plan', 'plan_date', 'is_advertise',
         )
 
@@ -79,8 +72,8 @@ class NotificationSettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotificationSetting
         fields = (
-            'id', 'user', 'is_video', 'is_live', 'is_music', 'is_picture', 'is_blog',
-            'is_chat', 'is_collabo', 'is_follow', 'is_reply', 'is_like', 'is_views',
+            'is_video', 'is_live', 'is_music', 'is_picture', 'is_blog', 'is_chat',
+            'is_collabo', 'is_follow', 'is_reply', 'is_like', 'is_views',
         )
 
 
