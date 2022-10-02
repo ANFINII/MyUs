@@ -1,10 +1,8 @@
-from jinja2 import pass_environment
 import jwt
 from datetime import date
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.http import JsonResponse
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -41,7 +39,7 @@ class AuthAPI(APIView):
         except jwt.exceptions.DecodeError:
             return 'Invalid Token'
 
-    def get(self, request, format=None):
+    def get(self, request):
         user_token = request.COOKIES.get('user_token')
         if not user_token:
             return Response({'error': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
@@ -117,7 +115,7 @@ class SignUpAPI(CreateAPIView):
 
 
 class LoginAPI(views.TokenObtainPairView):
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         data = request.data
         username = data['username']
         password = data['password']
@@ -138,40 +136,40 @@ class LoginAPI(views.TokenObtainPairView):
         except exceptions.TokenError as e:
             raise exceptions.InvalidToken(e.args[0])
 
-        res = Response(serializer.validated_data, status=HTTP_200_OK)
+        response = Response(serializer.validated_data, status=HTTP_200_OK)
         try:
-            res.delete_cookie('user_token')
+            response.delete_cookie('user_token')
         except Exception:
             return Response({'error': 'not user_token'}, status=HTTP_400_BAD_REQUEST)
 
         access = serializer.validated_data['access']
         refresh = serializer.validated_data['refresh']
-        res.set_cookie('user_token', access, max_age=60 * 60 * 24 * 10, httponly=True)
-        res.set_cookie('refresh_token', refresh, max_age=60 * 60 * 24 * 30, httponly=True)
-        return res
+        response.set_cookie('user_token', access, max_age=60 * 60 * 24 * 10, httponly=True)
+        response.set_cookie('refresh_token', refresh, max_age=60 * 60 * 24 * 30, httponly=True)
+        return response
 
 
 class LogoutAPI(views.TokenObtainPairView):
     permission_classes = (IsAuthenticated,)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
         except exceptions.TokenError as e:
             raise exceptions.InvalidToken(e.args[0])
 
-        res = Response(serializer.validated_data, status=HTTP_200_OK)
+        response = Response(serializer.validated_data, status=HTTP_200_OK)
         try:
-            res.delete_cookie('access_token')
-            res.delete_cookie('refresh_token')
+            response.delete_cookie('access_token')
+            response.delete_cookie('refresh_token')
         except Exception:
             return Response({'error': 'error'}, status=HTTP_400_BAD_REQUEST)
         return Response({'success': 'logout'}, status=HTTP_200_OK)
 
 
 class RefreshAPI(views.TokenRefreshView):
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
@@ -179,10 +177,10 @@ class RefreshAPI(views.TokenRefreshView):
             raise exceptions.InvalidToken(e.args[0])
 
         access = serializer.validated_data['access']
-        res = Response(serializer.validated_data, status=HTTP_200_OK)
-        res.delete_cookie('user_token')
-        res.set_cookie('user_token', access, max_age=60 * 24 * 24 * 30, httponly=True)
-        return res
+        response = Response(serializer.validated_data, status=HTTP_200_OK)
+        response.delete_cookie('user_token')
+        response.set_cookie('user_token', access, max_age=60 * 24 * 24 * 30, httponly=True)
+        return response
 
 
 class ProfileAPI(APIView):
@@ -214,7 +212,7 @@ class ProfileAPI(APIView):
             'building': user.profile.building,
             'introduction': user.profile.introduction,
         }
-        return Response(context)
+        return Response(context, status=HTTP_200_OK)
 
     def post(self, request):
         pass
