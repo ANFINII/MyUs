@@ -193,6 +193,8 @@ class ProfileAPI(APIView):
         key = settings.SECRET_KEY
         payload = jwt.decode(jwt=token, key=key, algorithms=['HS256'])
         user = User.objects.filter(id=payload['user_id']).select_related('profile').first()
+        gender = {'0':'男性', '1':'女性', '2':'秘密'}
+
         context = {
             'image': user.image(),
             'email': user.email,
@@ -203,7 +205,7 @@ class ProfileAPI(APIView):
             'month': user.month(),
             'day': user.day(),
             'age': user.age(),
-            'gender': user.gender(),
+            'gender': gender[user.gender()],
             'phone': user.profile.phone,
             'country_code': user.profile.country_code,
             'postal_code': user.profile.postal_code,
