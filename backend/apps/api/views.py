@@ -229,7 +229,7 @@ class MyPageAPI(APIView):
         user = User.objects.filter(id=payload['user_id']).select_related('mypage').defer(*DeferData.mypage).first()
 
         context = {
-            'image': user.banner(),
+            'banner': user.banner(),
             'nickname': user.nickname,
             'email': user.mypage.email,
             'content': user.mypage.content,

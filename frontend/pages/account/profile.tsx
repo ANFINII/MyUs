@@ -3,10 +3,10 @@ import Footer from 'components/layouts/footer'
 import Link from 'next/link'
 import axios from 'lib/api/axios'
 import { useState, useEffect } from 'react'
-import { userType, UserType } from 'lib/utils/type'
+import { profileType, ProfileType } from 'lib/utils/type'
 
 export default function Profile() {
-  const [user, setUser] = useState<UserType>(userType)
+  const [user, setUser] = useState<ProfileType>(profileType)
   const auth = 200
   const url = process.env.NEXT_PUBLIC_API_URL
   const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY1MDQ2NjA1LCJqdGkiOiIwNzI5ZjIwZjkwMGM0MzU3YmEwOWYxNzA5Y2QwZDMwNSIsInVzZXJfaWQiOjF9.QKL4zB8Grig3M8_gC1Sgh9NseZOYICy3q0jOBcpJCwU'
@@ -30,12 +30,14 @@ export default function Profile() {
           <h1>アカウント設定</h1>
           <div className="btn-column">
             <div className="btn-column1">
-              <Link href="/registration/profile/update" as="/profile_update">
+              <Link href="/registration/profile/update" as="/profile/update">
                 <a className="btn btn-success btn-sm" role="button">編集</a>
               </Link>
             </div>
             <div className="btn-column2">
-              <a href="{% url 'password_change' %}" className="btn btn-success btn-sm" role="button">パスワード変更</a>
+              <Link href="/registration/password/change" as="/password/change">
+                <a className="btn btn-success btn-sm" role="button">パスワード変更</a>
+              </Link>
             </div>
           </div>
 
