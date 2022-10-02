@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Header from 'components/layouts/header/header'
 import SideBar from 'components/layouts/sidebar'
 import SearchTag from 'components/layouts/searchtag'
+
 type Props = {children: React.ReactNode;}
 
 export default function Layout({ children }: Props) {
@@ -35,6 +36,7 @@ export default function Layout({ children }: Props) {
         <link rel="manifest" href="/favicon/site.webmanifest"/>
         <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#000000"/>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"/>
+        <base href="/"></base>
         <title>MyUs</title>
       </Head>
       <Header/>

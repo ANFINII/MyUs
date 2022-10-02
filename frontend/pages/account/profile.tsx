@@ -1,29 +1,25 @@
 import Head from 'next/head'
 import Footer from 'components/layouts/footer'
 import Link from 'next/link'
+import axios from 'lib/api/axios'
+import { useState, useEffect } from 'react'
+import { userType, UserType } from 'lib/utils/type'
 
-type User = {
-  image: string
-  email: string
-  username: string
-  nickname: string
-  fullname: string
-  year: number
-  month: number
-  day: number
-  age: number
-  gender: string
-  phone: string
-  postal_code: string
-  prefecture: string
-  city: string
-  address: string
-  building: string
-  introduction: string
-}
+export default function Profile() {
+  const [user, setUser] = useState<UserType>(userType)
+  const auth = 200
+  const url = process.env.NEXT_PUBLIC_API_URL
+  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY1MDQ2NjA1LCJqdGkiOiIwNzI5ZjIwZjkwMGM0MzU3YmEwOWYxNzA5Y2QwZDMwNSIsInVzZXJfaWQiOjF9.QKL4zB8Grig3M8_gC1Sgh9NseZOYICy3q0jOBcpJCwU'
 
-export default function Profile(auth: number, user: User) {
-  if (auth !== 200) {
+  useEffect(() => {
+    axios.get(url + '/api/profile', {headers: {'Authorization': 'JWT ' + token}})
+    .then(res => {setUser(res.data)})
+    .catch(e => {
+      console.log(e)
+    })
+  },[])
+
+  if (auth == 200) {
     return (
       <>
         <Head>
@@ -32,7 +28,6 @@ export default function Profile(auth: number, user: User) {
 
         <article className="article_account">
           <h1>アカウント設定</h1>
-
           <div className="btn-column">
             <div className="btn-column1">
               <Link href="/registration/profile/update" as="/profile_update">
@@ -79,10 +74,11 @@ export default function Profile(auth: number, user: User) {
         <Head>
           <title>MyUsアカウント設定</title>
         </Head>
+
         <article className="article_account">
           <h1>アカウント設定</h1>
           <h2 className="login_required">ログインしてください</h2>
-          </article>
+        </article>
       </>
     )
   }
