@@ -4,7 +4,7 @@
   grid-gap: 3px;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 42px auto;
-  margin: 14px 0 22px 0;
+  margin: 14px 0 20px 0;
 }
 
 .article_knowledge {
@@ -12,7 +12,7 @@
   grid-gap: 3px;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 30px auto;
-  margin: 14px 0 22px 0;
+  margin: 14px 0 20px 0;
 }
 
 .article_account h1,

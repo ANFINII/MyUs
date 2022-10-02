@@ -2,14 +2,15 @@
 .article_userpolicy {
   display: block;
   max-height: 100vh;
-  margin: 14px 0 0 0;
+  margin: 14px 0 20px 0;
+  overflow-y: hidden;
 }
 
 .article_userpolicy h1 {
   display: block;
   font-size: 24px;
   max-height: 2em;
-  margin: -4px 0 16px 0;
+  margin: 0 0 12px 0;
 }
 
 .article_userpolicy h2 {
