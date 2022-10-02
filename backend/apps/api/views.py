@@ -16,6 +16,7 @@ from rest_framework_simplejwt import exceptions
 
 from apps.api.serializers import SignUpSerializer, LoginSerializer
 from apps.api.serializers import UserSerializer, ProfileSerializer, MyPageSerializer
+from apps.myus.modules.filter_data import DeferData
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
@@ -190,7 +191,7 @@ class ProfileAPI(APIView):
         token = request.COOKIES.get('user_token')
         key = settings.SECRET_KEY
         payload = jwt.decode(jwt=token, key=key, algorithms=['HS256'])
-        user = User.objects.filter(id=payload['user_id']).select_related('profile').first()
+        user = User.objects.filter(id=payload['user_id']).select_related('profile').defer(*DeferData.profile).first()
         gender = {'0':'男性', '1':'女性', '2':'秘密'}
 
         context = {
@@ -225,9 +226,20 @@ class MyPageAPI(APIView):
         token = request.COOKIES.get('user_token')
         key = settings.SECRET_KEY
         payload = jwt.decode(jwt=token, key=key, algorithms=['HS256'])
-        mypage = MyPage.objects.filter(user=payload['user_id']).first()
-        serializer = MyPageSerializer(mypage)
-        return Response(serializer.data)
+        user = User.objects.filter(id=payload['user_id']).select_related('mypage').defer(*DeferData.mypage).first()
+
+        context = {
+            'image': user.banner(),
+            'nickname': user.nickname,
+            'email': user.mypage.email,
+            'content': user.mypage.content,
+            'follower_num': user.mypage.follower_num,
+            'following_num': user.mypage.following_num,
+            'plan': user.mypage.plan,
+            'plan_date': user.mypage.plan_date,
+            'is_advertise': user.mypage.is_advertise,
+        }
+        return Response(context, status=HTTP_200_OK)
 
     def post(self, request):
         pass

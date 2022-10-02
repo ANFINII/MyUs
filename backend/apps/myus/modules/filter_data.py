@@ -21,6 +21,28 @@ class DeferData:
         'author__date_joined',
     ]
 
+    profile = [
+        'password',
+        'is_superuser',
+        'is_active',
+        'is_staff',
+        'last_login',
+        'date_joined',
+        'profile__user_id',
+    ]
+
+    mypage = [
+        'password',
+        'email',
+        'username',
+        'is_superuser',
+        'is_active',
+        'is_staff',
+        'last_login',
+        'date_joined',
+        'mypage__user_id',
+    ]
+
     follow = [
         'follower__password',
         'follower__email',
