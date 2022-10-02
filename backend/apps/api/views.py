@@ -1,3 +1,4 @@
+from jinja2 import pass_environment
 import jwt
 from datetime import date
 
@@ -24,6 +25,34 @@ from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, T
 
 
 User = get_user_model()
+
+
+# Auth
+class AuthAPI(APIView):
+    permission_classes = (AllowAny,)
+
+    def get_object(self, user_token):
+        key = settings.SECRET_KEY
+        try:
+            payload = jwt.decode(jwt=user_token, key=key, algorithms=['HS256'])
+            return payload['user_id']
+        except jwt.ExpiredSignatureError:
+            return 'Activations link expired'
+        except jwt.exceptions.DecodeError:
+            return 'Invalid Token'
+
+    def get(self, request, format=None):
+        user_token = request.COOKIES.get('user_token')
+        if not user_token:
+            return Response({'error': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+
+        user_id = self.get_object(user_token)
+        user = User.objects.filter(id=user_id).first()
+        if not user:
+            return Response({'error': '未登録です!'}, status=HTTP_400_BAD_REQUEST)
+        if not user.is_active:
+            return Response({'error': '退会済みです!'}, status=HTTP_400_BAD_REQUEST)
+        return Response({'success': '認証済みです!'}, status=HTTP_200_OK)
 
 
 class SignUpAPI(CreateAPIView):
@@ -87,7 +116,6 @@ class SignUpAPI(CreateAPIView):
             return Response({'error': 'アカウント登録に失敗しました!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# Auth
 class LoginAPI(views.TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         data = request.data
@@ -157,46 +185,37 @@ class RefreshAPI(views.TokenRefreshView):
         return res
 
 
-class VerifyAPI(APIView):
+class ProfileAPI(APIView):
     permission_classes = (AllowAny,)
-
-    def get_object(self, user_token):
-        key = settings.SECRET_KEY
-        try:
-            payload = jwt.decode(jwt=user_token, key=key, algorithms=['HS256'])
-            return payload['user_id']
-        except jwt.ExpiredSignatureError:
-            return 'Activations link expired'
-        except jwt.exceptions.DecodeError:
-            return 'Invalid Token'
-
-    def get(self, request, format=None):
-        user_token = request.COOKIES.get('user_token')
-        if not user_token:
-            return Response({'error': 'tokenがありません!'}, status=HTTP_400_BAD_REQUEST)
-
-        user_id = self.get_object(user_token)
-        user = User.objects.filter(id=user_id).first()
-        if not user:
-            return Response({'error': '存在しないユーザーです!'}, status=HTTP_400_BAD_REQUEST)
-        if not user.is_active:
-            return Response({'error': '退会済みのユーザーです!'}, status=HTTP_400_BAD_REQUEST)
-        return Response({'success': '有効なユーザーです!'}, status=HTTP_200_OK)
-
-
-class UserAPI(APIView):
-    # permission_classes = (AllowAny,)
 
     def get(self, request):
         token = request.COOKIES.get('user_token')
         key = settings.SECRET_KEY
         payload = jwt.decode(jwt=token, key=key, algorithms=['HS256'])
-        user = User.objects.filter(id=payload['user_id']).first()
-        profile = Profile.objects.filter(user=payload['user_id']).first()
-        user_serializer = UserSerializer(user)
-        profile_serializer = ProfileSerializer(profile)
-        context = {'user': user_serializer.data, 'profile': profile_serializer.data}
+        user = User.objects.filter(id=payload['user_id']).select_related('profile').first()
+        context = {
+            'image': user.image(),
+            'email': user.email,
+            'username': user.username,
+            'nickname': user.nickname,
+            'fullname': user.fullname(),
+            'year': user.year(),
+            'month': user.month(),
+            'day': user.day(),
+            'age': user.age(),
+            'gender': user.gender(),
+            'phone': user.profile.phone,
+            'country_code': user.profile.country_code,
+            'postal_code': user.profile.postal_code,
+            'city': user.profile.city,
+            'address': user.profile.address,
+            'building': user.profile.building,
+            'introduction': user.profile.introduction,
+        }
         return Response(context)
+
+    def post(self, request):
+        pass
 
 
 class MyPageAPI(APIView):
@@ -209,6 +228,9 @@ class MyPageAPI(APIView):
         mypage = MyPage.objects.filter(user=payload['user_id']).first()
         serializer = MyPageSerializer(mypage)
         return Response(serializer.data)
+
+    def post(self, request):
+        pass
 
 
 class IndexAPI(APIView):
