@@ -7,17 +7,18 @@ import { profileType, ProfileType } from 'lib/utils/type'
 
 export default function Profile() {
   const [user, setUser] = useState<ProfileType>(profileType)
-  const auth = 200
+  const [status, setStatus] = useState(400)
+  console.log(status)
 
   useEffect(() => {
     axios.get('/api/profile')
-    .then(res => {setUser(res.data)})
+    .then(res => {setUser(res.data), setStatus(res.status)})
     .catch(e => {
       console.log(e)
     })
   },[])
 
-  if (auth == 200) {
+  if (status == 200) {
     return (
       <>
         <Head>

@@ -55,14 +55,14 @@ export default function Login() {
         <p><input type="password" name="password" id="password" className="form-control" placeholder="パスワード" minLength={8} maxLength={16} required/></p>
 
         <div className="password_reset">
-          <Link href="/registration/password_reset" as="/password_reset">
+          <Link href="/registration/password_reset">
             <a>パスワードをリセット</a>
           </Link>
         </div>
 
         <p><button type="button" id="login" onClick={loginClicked} className="btn btn-lg btn-primary btn-block">ログイン</button></p>
 
-        <Link href="/registration/signup" as="/signup">
+        <Link href="/registration/signup">
           <a className="btn btn-lg btn-success btn-block" role="button">アカウント登録</a>
         </Link>
       </form>

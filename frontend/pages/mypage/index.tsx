@@ -7,17 +7,17 @@ import { mypageType, MypageType } from 'lib/utils/type'
 
 export default function MyPage() {
   const [user, setUser] = useState<MypageType>(mypageType)
-  const auth = 200
+  const [status, setStatus] = useState(400)
 
   useEffect(() => {
     axios.get('/api/mypage')
-    .then(res => {setUser(res.data)})
+    .then(res => {setUser(res.data), setStatus(res.status)})
     .catch(e => {
       console.log(e)
     })
   },[])
 
-  if (auth == 200) {
+  if (status == 200) {
     return (
       <>
         <Head>
