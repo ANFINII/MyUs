@@ -8,11 +8,9 @@ import { mypageType, MypageType } from 'lib/utils/type'
 export default function MyPage() {
   const [user, setUser] = useState<MypageType>(mypageType)
   const auth = 200
-  const url = process.env.NEXT_PUBLIC_API_URL
-  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY1MDQ2NjA1LCJqdGkiOiIwNzI5ZjIwZjkwMGM0MzU3YmEwOWYxNzA5Y2QwZDMwNSIsInVzZXJfaWQiOjF9.QKL4zB8Grig3M8_gC1Sgh9NseZOYICy3q0jOBcpJCwU'
 
   useEffect(() => {
-    axios.get(url + '/api/mypage', {headers: {'Authorization': 'JWT ' + token}})
+    axios.get('/api/mypage')
     .then(res => {setUser(res.data)})
     .catch(e => {
       console.log(e)
@@ -30,12 +28,12 @@ export default function MyPage() {
           <h1>Myページ設定</h1>
           <div className="btn-column">
             <div className="btn-column1">
-              <Link href="/registration/mypage/update" as="/mypage/update">
+              <Link href="/mypage/update">
                 <a className="btn btn-success btn-sm" role="button">編集</a>
               </Link>
             </div>
             <div className="btn-column2">
-              <Link href="/registration/userpage/{user.nickname}" as="/userpage/{user.nickname}">
+              <Link href="/userpage/{user.nickname}">
                 <a data-nickname="{ user.nickname }" className="btn btn-success btn-sm pjax_button_userpage" role="button">ユーザページ</a>
               </Link>
             </div>
@@ -45,7 +43,7 @@ export default function MyPage() {
             <tbody>
               <tr><td className="td-color">バナー画像</td>
                 <td>
-                  <label for="account_image_input" className="mypage_image">
+                  <label htmlFor="account_image_input" className="mypage_image">
                     {/* {% if user.banner %} */}
                     <a href="{ user.banner }" data-lightbox="group">
                       <img src="{ user.banner }" title="{ user.nickname }" width="270px" height="56xp" data-lightbox="group"/>

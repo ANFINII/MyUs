@@ -8,11 +8,9 @@ import { profileType, ProfileType } from 'lib/utils/type'
 export default function Profile() {
   const [user, setUser] = useState<ProfileType>(profileType)
   const auth = 200
-  const url = process.env.NEXT_PUBLIC_API_URL
-  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY1MDQ2NjA1LCJqdGkiOiIwNzI5ZjIwZjkwMGM0MzU3YmEwOWYxNzA5Y2QwZDMwNSIsInVzZXJfaWQiOjF9.QKL4zB8Grig3M8_gC1Sgh9NseZOYICy3q0jOBcpJCwU'
 
   useEffect(() => {
-    axios.get(url + '/api/profile', {headers: {'Authorization': 'JWT ' + token}})
+    axios.get('/api/profile')
     .then(res => {setUser(res.data)})
     .catch(e => {
       console.log(e)
@@ -30,12 +28,12 @@ export default function Profile() {
           <h1>アカウント設定</h1>
           <div className="btn-column">
             <div className="btn-column1">
-              <Link href="/registration/profile/update" as="/profile/update">
+              <Link href="/profile/update">
                 <a className="btn btn-success btn-sm" role="button">編集</a>
               </Link>
             </div>
             <div className="btn-column2">
-              <Link href="/registration/password/change" as="/password/change">
+              <Link href="/registration/password/change">
                 <a className="btn btn-success btn-sm" role="button">パスワード変更</a>
               </Link>
             </div>

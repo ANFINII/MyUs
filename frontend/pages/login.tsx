@@ -1,8 +1,37 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Footer from 'components/layouts/footer'
+import axios from 'lib/api/axios'
+import { useRouter } from "next/router";
+import { useEffect, useState } from 'react'
+
 
 export default function Login() {
+  const router = useRouter();
+  const url = process.env.NEXT_PUBLIC_API_URL
+  const token = process.env.TOKEN
+  // const [token, setToken] = useState([])
+  const [clicked, setClicked] = useState(false)
+
+  const loginClicked = () => {
+    setClicked(!clicked)
+  }
+  // useEffect(() => {
+
+  // },[])
+
+  axios.post(url + '/api/login', {
+    headers: {
+      'Content-Type': 'application/json'
+  }
+  })
+  .then(res => {
+    console.log(res.data)
+  })
+  .catch(e => {
+    console.log(e)
+  })
+
   return (
     <article className="article_registration">
       <Head>
@@ -27,16 +56,17 @@ export default function Login() {
 
         <div className="password_reset">
           <Link href="/registration/password_reset" as="/password_reset">
-            <a href="{% url 'password_reset' %}">パスワードをリセット</a>
+            <a>パスワードをリセット</a>
           </Link>
         </div>
 
-        <p><input type="submit" value="ログイン" id="login" className="btn btn-lg btn-primary btn-block"/></p>
+        <p><button type="button" id="login" onClick={loginClicked} className="btn btn-lg btn-primary btn-block">ログイン</button></p>
 
         <Link href="/registration/signup" as="/signup">
           <a className="btn btn-lg btn-success btn-block" role="button">アカウント登録</a>
         </Link>
       </form>
+
       <Footer/>
     </article>
   )

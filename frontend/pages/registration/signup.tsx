@@ -81,7 +81,7 @@ export default function SignUp() {
         <p><input type="submit" value="アカウント登録" id="submit" className="btn btn-lg btn-success btn-block"/></p>
 
         <p>
-          <Link href="/registration/login" as="/login">
+          <Link href="/login">
             <a className="btn btn-lg btn-primary btn-block" role="button">戻る</a>
           </Link>
         </p>

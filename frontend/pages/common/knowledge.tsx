@@ -27,6 +27,7 @@ export default function Knowledge() {
             <tr><td className="td-color">投稿管理</td><td className="td-indent">投稿した作品などを編集、非公開、削除ができます。タグ付けもこちらで出来ます。</td></tr>
           </tbody>
         </table>
+
         <Footer/>
       </article>
     </>

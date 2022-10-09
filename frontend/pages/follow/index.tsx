@@ -16,7 +16,7 @@ export default function Follow() {
 
       {/* {% if user.is_authenticated %} */}
       <div className="follow_button">
-        <Link href="/follow/follower" as="/follower">
+        <Link href="/follower">
           <a className="btn btn-primary btn-sm pjax_button" role="button">フォロワー</a>
         </Link>
         {/* <span>フォロー数：{{ user.mypage.following_num }}</span> */}

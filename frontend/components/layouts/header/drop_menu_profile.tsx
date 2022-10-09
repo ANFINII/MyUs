@@ -104,7 +104,7 @@ export default function DropMenuProfile() {
               <a className="icon_link" role="button" aria-disabled="true"></a>
             </Link>
           } else { */}
-            <Link href="/registration/login" as="/login">
+            <Link href="login">
               <a className="icon_link" role="button" aria-disabled="true"></a>
             </Link>
           {/* } */}
