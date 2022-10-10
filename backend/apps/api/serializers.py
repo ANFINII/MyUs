@@ -104,7 +104,7 @@ class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
         fields = (
-            'id', 'author', 'title', 'content', 'image', 'video', 'convert', 'comment',
+            'id', 'author', 'title', 'content', 'image', 'video', 'convert',
             'hashtag', 'like', 'read', 'publish', 'created', 'updated',
         )
         read_only_field = ['created', 'updated']
@@ -114,8 +114,8 @@ class LiveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Live
         fields = (
-            'id', 'author', 'title', 'content', 'image', 'live', 'comment',
-            'hashtag', 'like', 'read', 'publish', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'image', 'live', 'hashtag',
+            'like', 'read', 'publish', 'created', 'updated',
         )
         read_only_field = ['created', 'updated']
 
@@ -124,8 +124,8 @@ class MusicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Music
         fields = (
-            'id', 'author', 'title', 'content', 'lyric', 'music', 'comment',
-            'hashtag', 'like', 'read', 'download', 'publish', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'lyric', 'music', 'hashtag',
+            'like', 'read', 'download', 'publish', 'created', 'updated',
         )
         read_only_field = ['created', 'updated']
 
@@ -134,8 +134,8 @@ class PictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Picture
         fields = (
-            'id', 'author', 'title', 'content', 'image', 'comment',
-            'hashtag', 'like', 'read', 'publish', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'image', 'hashtag',
+            'like', 'read', 'publish', 'created', 'updated',
         )
         read_only_field = ['created', 'updated']
 
@@ -144,7 +144,7 @@ class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = (
-            'id', 'author', 'title', 'content', 'image', 'richtext', 'comment',
+            'id', 'author', 'title', 'content', 'image', 'richtext',
             'hashtag', 'like', 'read', 'publish', 'created', 'updated',
         )
         read_only_field = ['created', 'updated']
@@ -164,8 +164,8 @@ class CollaboSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collabo
         fields = (
-            'id', 'author', 'title', 'content', 'comment', 'hashtag',
-            'like', 'read', 'period', 'publish', 'created', 'updated',
+            'id', 'author', 'title', 'content', 'hashtag', 'like',
+            'read', 'period', 'publish', 'created', 'updated',
         )
         read_only_field = ['created', 'updated']
 
@@ -175,7 +175,7 @@ class TodoSerializer(serializers.ModelSerializer):
         model = Todo
         fields = (
             'id', 'author', 'title', 'content', 'priority', 'progress',
-            'comment', 'duedate', 'created', 'updated',
+         'duedate', 'created', 'updated',
         )
         read_only_field = ['created', 'updated']
 
