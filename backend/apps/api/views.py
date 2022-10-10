@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, get_user_model, login, logout
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
 from rest_framework.views import APIView, View
@@ -16,6 +16,8 @@ from rest_framework_simplejwt import exceptions
 
 from apps.api.serializers import SignUpSerializer, LoginSerializer
 from apps.api.serializers import UserSerializer, ProfileSerializer, MyPageSerializer
+from apps.api.serializers import VideoSerializer, LiveSerializer, MusicSerializer, PictureSerializer
+from apps.api.serializers import BlogSerializer, ChatSerializer, CollaboSerializer
 from apps.myus.modules.filter_data import DeferData
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
@@ -28,8 +30,6 @@ User = get_user_model()
 
 # Auth
 class AuthAPI(APIView):
-    permission_classes = (AllowAny,)
-
     def get_object(self, user_token):
         key = settings.SECRET_KEY
         try:
@@ -55,7 +55,6 @@ class AuthAPI(APIView):
 
 
 class SignUpAPI(CreateAPIView):
-    permission_classes = (AllowAny,)
     serializer_class = SignUpSerializer
 
     def post(self, request):
@@ -151,7 +150,7 @@ class LoginAPI(views.TokenObtainPairView):
 
 
 class LogoutAPI(views.TokenObtainPairView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -185,7 +184,7 @@ class RefreshAPI(views.TokenRefreshView):
 
 
 class ProfileAPI(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         token = request.COOKIES.get('user_token')
@@ -200,6 +199,8 @@ class ProfileAPI(APIView):
             'username': user.username,
             'nickname': user.nickname,
             'fullname': user.fullname(),
+            'lastname': user.profile.last_name,
+            'firstname': user.profile.first_name,
             'year': user.year(),
             'month': user.month(),
             'day': user.day(),
@@ -220,7 +221,7 @@ class ProfileAPI(APIView):
 
 
 class MyPageAPI(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         token = request.COOKIES.get('user_token')
@@ -245,12 +246,111 @@ class MyPageAPI(APIView):
         pass
 
 
-class IndexAPI(APIView):
-    def get(self, request, format=None):
-        nicknames = [user.nickname for user in User.objects.all()]
-        return Response(nicknames)
+# Index
+class IndexAPI(ListAPIView):
 
-    def post(self, request):
-        usernames = request.POST.getlist('username')
-        users = [User(username=username) for username in usernames]
-        User.objects.bulk_create(users)
+    def get(self, request):
+        queryset = Video.objects.all()
+        serializer_class = VideoSerializer
+
+        context = {
+            'video': VideoSerializer(video).data,
+        }
+
+        return Response(context)
+
+
+# Video
+class VideoListAPI(ListAPIView):
+    # queryset = Video.objects.select_related('author').all()
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
+
+
+class VideoCreateAPI(CreateAPIView):
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
+
+
+class VideoDetailAPI(RetrieveAPIView):
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
+
+
+# Music
+class MusicListAPI(ListAPIView):
+    queryset = Music.objects.all()
+    serializer_class = MusicSerializer
+
+
+class MusicCreateAPI(CreateAPIView):
+    queryset = Music.objects.all()
+    serializer_class = MusicSerializer
+
+
+class MusicDetailAPI(RetrieveAPIView):
+    queryset = Music.objects.all()
+    serializer_class = MusicSerializer
+
+
+# Picture
+class PictureListAPI(ListAPIView):
+    queryset = Picture.objects.all()
+    serializer_class = PictureSerializer
+
+
+class PictureCreateAPI(CreateAPIView):
+    queryset = Picture.objects.all()
+    serializer_class = PictureSerializer
+
+
+class PictureDetailAPI(RetrieveAPIView):
+    queryset = Picture.objects.all()
+    serializer_class = PictureSerializer
+
+
+# Blog
+class BlogListAPI(ListAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+
+
+class BlogCreateAPI(CreateAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+
+
+class BlogDetailAPI(RetrieveAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+
+
+# Chat
+class ChatListAPI(ListAPIView):
+    queryset = Chat.objects.all()
+    serializer_class = ChatSerializer
+
+
+class ChatCreateAPI(CreateAPIView):
+    queryset = Chat.objects.all()
+    serializer_class = ChatSerializer
+
+
+class ChatDetailAPI(RetrieveAPIView):
+    queryset = Chat.objects.all()
+    serializer_class = ChatSerializer
+
+# Collabo
+class CollaboListAPI(ListAPIView):
+    queryset = Collabo.objects.all()
+    serializer_class = CollaboSerializer
+
+
+class CollaboCreateAPI(CreateAPIView):
+    queryset = Collabo.objects.all()
+    serializer_class = CollaboSerializer
+
+
+class CollaboDetailAPI(RetrieveAPIView):
+    queryset = Collabo.objects.all()
+    serializer_class = CollaboSerializer
