@@ -26,25 +26,25 @@ urlpatterns = [
 
     path('video', VideoListAPI.as_view()),
     path('video/create', VideoCreateAPI.as_view()),
-    path('video/detail/<int:pk>', VideoDetailAPI.as_view()),
+    path('video/detail/<int:id>', VideoDetailAPI.as_view()),
 
     path('MusicL', MusicListAPI.as_view()),
     path('MusicL/create', MusicCreateAPI.as_view()),
-    path('MusicL/detail/<int:pk>', MusicDetailAPI.as_view()),
+    path('MusicL/detail/<int:id>', MusicDetailAPI.as_view()),
 
     path('picture', PictureListAPI.as_view()),
     path('picture/create', PictureCreateAPI.as_view()),
-    path('picture/detail/<int:pk>', PictureDetailAPI.as_view()),
+    path('picture/detail/<int:id>', PictureDetailAPI.as_view()),
 
     path('blog', BlogListAPI.as_view()),
     path('blog/create', BlogCreateAPI.as_view()),
-    path('blog/detail/<int:pk>', BlogDetailAPI.as_view()),
+    path('blog/detail/<int:id>', BlogDetailAPI.as_view()),
 
     path('chat', ChatListAPI.as_view()),
     path('chat/create', ChatCreateAPI.as_view()),
-    path('chat/detail/<int:pk>', ChatDetailAPI.as_view()),
+    path('chat/detail/<int:id>', ChatDetailAPI.as_view()),
 
     path('collabo', CollaboListAPI.as_view()),
     path('collabo/create', CollaboCreateAPI.as_view()),
-    path('collabo/detail/<int:pk>', CollaboDetailAPI.as_view()),
+    path('collabo/detail/<int:id>', CollaboDetailAPI.as_view()),
 ]

@@ -335,7 +335,7 @@ class VideoQuerySet(models.QuerySet):
 
 class VideoManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return VideoQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
+        return VideoQuerySet(self.model, using=self._db).select_related('author').prefetch_related('hashtag', 'like', 'author__profile')
 
 def images_video_upload(instance, filename):
     return f'images/images_video/user_{instance.author_id}/object_{instance.id}/{filename}'
@@ -801,6 +801,10 @@ class Advertise(models.Model):
         verbose_name_plural = '13 広告設定'
 
 
+class CommentManager(models.Manager):
+    def get_queryset(self):
+        return super(CommentManager,self).get_queryset().select_related('author', 'parent', 'content_type').prefetch_related('like', 'author__profile')
+
 class Comment(models.Model):
     """Comment"""
     author         = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -813,6 +817,8 @@ class Comment(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     created        = models.DateTimeField(auto_now_add=True)
     updated        = models.DateTimeField(auto_now=True)
+
+    objects = CommentManager()
 
     def __str__(self):
         return str(self.id)

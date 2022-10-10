@@ -1,6 +1,7 @@
 import jwt
 from datetime import date
 
+from django.db.models import F, Count, Exists, OuterRef
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
 
@@ -261,10 +262,30 @@ class IndexAPI(ListAPIView):
 
 
 # Video
-class VideoListAPI(ListAPIView):
-    # queryset = Video.objects.select_related('author').all()
-    queryset = Video.objects.all()
-    serializer_class = VideoSerializer
+class VideoListAPI(APIView):
+    def get(self, request):
+        video_list = Video.objects.filter(publish=True).order_by('-created')[:50]
+
+        videos = [{
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'image': obj.image.url,
+            'video': obj.video.url,
+            'convert': obj.convert.url,
+            'like': obj.total_like(),
+            'read': obj.read,
+            'comment_num': obj.comment_num,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        } for obj in video_list]
+        return Response(videos)
 
 
 class VideoCreateAPI(CreateAPIView):
@@ -273,8 +294,43 @@ class VideoCreateAPI(CreateAPIView):
 
 
 class VideoDetailAPI(RetrieveAPIView):
-    queryset = Video.objects.all()
-    serializer_class = VideoSerializer
+    def get(self, request, id):
+        obj = Video.objects.filter(id=id, publish=True).first()
+        user_id = obj.author.id
+        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        subquery = obj.comment.filter(**filter_kwargs)
+        comment_list = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery))
+
+        context = {
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'image': obj.image.url,
+            'video': obj.video.url,
+            'convert': obj.convert.url,
+            'comment': [{
+                'id': comment.id,
+                'text': comment.text,
+                'created': comment.created,
+                'reply_num': comment.reply_num,
+                'author': comment.author.id,
+                'image': comment.author.image(),
+                'nickname': comment.author.nickname
+            } for comment in comment_list],
+            'hashtag': [{'hashtag': hashtag.jp_name} for hashtag in obj.hashtag.all()],
+            'like': obj.total_like(),
+            'read': obj.read,
+            'comment_num': obj.comment_num,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        }
+        return Response(context)
 
 
 # Music
