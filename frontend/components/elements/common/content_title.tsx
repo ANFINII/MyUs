@@ -1,23 +1,23 @@
-export default function ContentTitle() {
+export default function ContentTitle(item: any) {
   return (
     <>
       <span className="view_good">
         <div className="view_good_font content_nickname">
-          {/* {{ item.author.nickname }} */}
+          { item.author.nickname }
         </div>
 
         <div className="view_good_font view_good_inline">
           <i title="閲覧数" className="bi bi-caret-right-square view_good_space"></i>
-          {/* {{ item.read|intcomma }} */}
+          { item.read }
         </div>
 
         <div className="view_good_font view_good_inline">
           <i title="いいね数" className="bi bi-hand-thumbs-up"></i>
-          {/* {{ item.total_like|intcomma }} */}
+          { item.total_like }
         </div>
 
         <div className="view_good_font">
-          {/* <time>{{ item.created|naturaltime }}</time> */}
+          <time>{ item.created }</time>
         </div>
       </span>
     </>
