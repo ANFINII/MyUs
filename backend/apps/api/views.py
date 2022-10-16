@@ -194,7 +194,7 @@ class ProfileAPI(APIView):
         user = User.objects.filter(id=payload['user_id']).select_related('profile').defer(*DeferData.profile).first()
         gender = {'0':'男性', '1':'女性', '2':'秘密'}
 
-        context = {
+        data = {
             'image': user.image(),
             'email': user.email,
             'username': user.username,
@@ -215,7 +215,7 @@ class ProfileAPI(APIView):
             'building': user.profile.building,
             'introduction': user.profile.introduction,
         }
-        return Response(context, status=HTTP_200_OK)
+        return Response(data, status=HTTP_200_OK)
 
     def post(self, request):
         pass
@@ -230,7 +230,7 @@ class MyPageAPI(APIView):
         payload = jwt.decode(jwt=token, key=key, algorithms=['HS256'])
         user = User.objects.filter(id=payload['user_id']).select_related('mypage').defer(*DeferData.mypage).first()
 
-        context = {
+        data = {
             'banner': user.banner(),
             'nickname': user.nickname,
             'email': user.mypage.email,
@@ -241,7 +241,7 @@ class MyPageAPI(APIView):
             'plan_date': user.mypage.plan_date,
             'is_advertise': user.mypage.is_advertise,
         }
-        return Response(context, status=HTTP_200_OK)
+        return Response(data, status=HTTP_200_OK)
 
     def post(self, request):
         pass
@@ -254,19 +254,19 @@ class IndexAPI(ListAPIView):
         queryset = Video.objects.all()
         serializer_class = VideoSerializer
 
-        context = {
+        data = {
             'video': VideoSerializer(video).data,
         }
 
-        return Response(context)
+        return Response(data)
 
 
 # Video
 class VideoListAPI(APIView):
     def get(self, request):
-        video_list = Video.objects.filter(publish=True).order_by('-created')[:50]
+        obj_list = Video.objects.filter(publish=True).order_by('-created')[:50]
 
-        videos = [{
+        data = [{
             'id': obj.id,
             'title': obj.title,
             'content': obj.content,
@@ -284,8 +284,8 @@ class VideoListAPI(APIView):
                 'nickname': obj.author.nickname,
                 'image': obj.author.image(),
             }
-        } for obj in video_list]
-        return Response(videos)
+        } for obj in obj_list]
+        return Response(data, status=HTTP_200_OK)
 
 
 class VideoCreateAPI(CreateAPIView):
@@ -301,7 +301,7 @@ class VideoDetailAPI(RetrieveAPIView):
         subquery = obj.comment.filter(**filter_kwargs)
         comment_list = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery))
 
-        context = {
+        data = {
             'id': obj.id,
             'title': obj.title,
             'content': obj.content,
@@ -311,13 +311,13 @@ class VideoDetailAPI(RetrieveAPIView):
             'comment': [{
                 'id': comment.id,
                 'text': comment.text,
-                'created': comment.created,
                 'reply_num': comment.reply_num,
+                'created': comment.created,
                 'author': comment.author.id,
                 'image': comment.author.image(),
                 'nickname': comment.author.nickname
             } for comment in comment_list],
-            'hashtag': [{'hashtag': hashtag.jp_name} for hashtag in obj.hashtag.all()],
+            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
             'comment_num': obj.comment_num,
@@ -330,13 +330,34 @@ class VideoDetailAPI(RetrieveAPIView):
                 'image': obj.author.image(),
             }
         }
-        return Response(context)
+        return Response(data, status=HTTP_200_OK)
 
 
 # Music
-class MusicListAPI(ListAPIView):
-    queryset = Music.objects.all()
-    serializer_class = MusicSerializer
+class MusicListAPI(APIView):
+    def get(self, request):
+        obj_list = Music.objects.filter(publish=True).order_by('-created')[:50]
+
+        data = [{
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'lyric': obj.lyric,
+            'music': obj.music.url,
+            'like': obj.total_like(),
+            'read': obj.read,
+            'comment_num': obj.comment_num,
+            'download': obj.download,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        } for obj in obj_list]
+        return Response(data, status=HTTP_200_OK)
 
 
 class MusicCreateAPI(CreateAPIView):
@@ -345,14 +366,67 @@ class MusicCreateAPI(CreateAPIView):
 
 
 class MusicDetailAPI(RetrieveAPIView):
-    queryset = Music.objects.all()
-    serializer_class = MusicSerializer
+    def get(self, request, id):
+        obj = Music.objects.filter(id=id, publish=True).first()
+        user_id = obj.author.id
+        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        subquery = obj.comment.filter(**filter_kwargs)
+        comment_list = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery))
+
+        data = {
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'lyric': obj.lyric,
+            'music': obj.music.url,
+            'comment': [{
+                'id': comment.id,
+                'text': comment.text,
+                'reply_num': comment.reply_num,
+                'created': comment.created,
+                'author': comment.author.id,
+                'image': comment.author.image(),
+                'nickname': comment.author.nickname
+            } for comment in comment_list],
+            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
+            'like': obj.total_like(),
+            'read': obj.read,
+            'comment_num': obj.comment_num,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        }
+        return Response(data, status=HTTP_200_OK)
 
 
 # Picture
-class PictureListAPI(ListAPIView):
-    queryset = Picture.objects.all()
-    serializer_class = PictureSerializer
+class PictureListAPI(APIView):
+    def get(self, request):
+            obj_list = Picture.objects.filter(publish=True).order_by('-created')[:50]
+
+            data = [{
+                'id': obj.id,
+                'title': obj.title,
+                'content': obj.content,
+                'image': obj.image.url,
+                'like': obj.total_like(),
+                'read': obj.read,
+                'comment_num': obj.comment_num,
+                'publish': obj.publish,
+                'created': obj.created,
+                'updated': obj.updated,
+                'author': {
+                    'id': obj.author.id,
+                    'nickname': obj.author.nickname,
+                    'image': obj.author.image(),
+                }
+            } for obj in obj_list]
+            return Response(data, status=HTTP_200_OK)
 
 
 class PictureCreateAPI(CreateAPIView):
@@ -361,14 +435,68 @@ class PictureCreateAPI(CreateAPIView):
 
 
 class PictureDetailAPI(RetrieveAPIView):
-    queryset = Picture.objects.all()
-    serializer_class = PictureSerializer
+    def get(self, request, id):
+        obj = Picture.objects.filter(id=id, publish=True).first()
+        user_id = obj.author.id
+        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        subquery = obj.comment.filter(**filter_kwargs)
+        comment_list = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery))
+
+        data = {
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'image': obj.image.url,
+            'comment': [{
+                'id': comment.id,
+                'text': comment.text,
+                'reply_num': comment.reply_num,
+                'created': comment.created,
+                'author': comment.author.id,
+                'image': comment.author.image(),
+                'nickname': comment.author.nickname
+            } for comment in comment_list],
+            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
+            'like': obj.total_like(),
+            'read': obj.read,
+            'comment_num': obj.comment_num,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        }
+        return Response(data, status=HTTP_200_OK)
 
 
 # Blog
-class BlogListAPI(ListAPIView):
-    queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
+class BlogListAPI(APIView):
+    def get(self, request):
+        obj_list = Blog.objects.filter(publish=True).order_by('-created')[:50]
+
+        data = [{
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'image': obj.image.url,
+            'richtext': obj.richtext.html,
+            'like': obj.total_like(),
+            'read': obj.read,
+            'comment_num': obj.comment_num,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        } for obj in obj_list]
+        return Response(data, status=HTTP_200_OK)
+
 
 
 class BlogCreateAPI(CreateAPIView):
@@ -377,14 +505,68 @@ class BlogCreateAPI(CreateAPIView):
 
 
 class BlogDetailAPI(RetrieveAPIView):
-    queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
+    def get(self, request, id):
+        obj = Blog.objects.filter(id=id, publish=True).first()
+        user_id = obj.author.id
+        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        subquery = obj.comment.filter(**filter_kwargs)
+        comment_list = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery))
+
+        data = {
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'image': obj.image.url,
+            'richtext': obj.richtext.html,
+            'comment': [{
+                'id': comment.id,
+                'text': comment.text,
+                'reply_num': comment.reply_num,
+                'created': comment.created,
+                'author': comment.author.id,
+                'image': comment.author.image(),
+                'nickname': comment.author.nickname
+            } for comment in comment_list],
+            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
+            'like': obj.total_like(),
+            'read': obj.read,
+            'comment_num': obj.comment_num,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        }
+        return Response(data, status=HTTP_200_OK)
 
 
 # Chat
-class ChatListAPI(ListAPIView):
-    queryset = Chat.objects.all()
-    serializer_class = ChatSerializer
+class ChatListAPI(APIView):
+    def get(self, request):
+        obj_list = Chat.objects.filter(publish=True).order_by('-created')[:50]
+
+        data = [{
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'like': obj.total_like(),
+            'read': obj.read,
+            'thread': obj.thread,
+            'joined': obj.joined,
+            'period': obj.period,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        } for obj in obj_list]
+        return Response(data, status=HTTP_200_OK)
 
 
 class ChatCreateAPI(CreateAPIView):
@@ -393,13 +575,63 @@ class ChatCreateAPI(CreateAPIView):
 
 
 class ChatDetailAPI(RetrieveAPIView):
-    queryset = Chat.objects.all()
-    serializer_class = ChatSerializer
+    def get(self, request, id):
+        obj = Chat.objects.filter(id=id, publish=True).first()
+        message_list = obj.message.filter(parent__isnull=True).select_related('author')
+
+        data = {
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'message': [{
+                'id': message.id,
+                'text': message.text,
+                'reply_num': message.reply_num,
+                'created': message.created,
+                'author': message.author.id,
+                'image': message.author.image(),
+                'nickname': message.author.nickname
+            } for message in message_list],
+            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
+            'like': obj.total_like(),
+            'read': obj.read,
+            'thread': obj.thread,
+            'joined': obj.joined,
+            'period': obj.period,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        }
+        return Response(data, status=HTTP_200_OK)
+
+
 
 # Collabo
-class CollaboListAPI(ListAPIView):
-    queryset = Collabo.objects.all()
-    serializer_class = CollaboSerializer
+class CollaboListAPI(APIView):
+    def get(self, request):
+        obj_list = Collabo.objects.filter(publish=True).order_by('-created')[:50]
+
+        data = [{
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'like': obj.total_like(),
+            'read': obj.read,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        } for obj in obj_list]
+        return Response(data, status=HTTP_200_OK)
 
 
 class CollaboCreateAPI(CreateAPIView):
@@ -408,5 +640,37 @@ class CollaboCreateAPI(CreateAPIView):
 
 
 class CollaboDetailAPI(RetrieveAPIView):
-    queryset = Collabo.objects.all()
-    serializer_class = CollaboSerializer
+    def get(self, request, id):
+        obj = Collabo.objects.filter(id=id, publish=True).first()
+        user_id = obj.author.id
+        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        subquery = obj.comment.filter(**filter_kwargs)
+        comment_list = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery))
+
+        data = {
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'comment': [{
+                'id': comment.id,
+                'text': comment.text,
+                'reply_num': comment.reply_num,
+                'created': comment.created,
+                'author': comment.author.id,
+                'image': comment.author.image(),
+                'nickname': comment.author.nickname
+            } for comment in comment_list],
+            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
+            'like': obj.total_like(),
+            'read': obj.read,
+            'comment_num': obj.comment_num,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        }
+        return Response(data, status=HTTP_200_OK)

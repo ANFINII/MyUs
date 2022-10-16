@@ -459,7 +459,7 @@ class MusicQuerySet(models.QuerySet):
 
 class MusicManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return MusicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
+        return MusicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('hashtag', 'like', 'author__profile')
 
 def musics_upload(instance, filename):
     return f'musics/user_{instance.author_id}/object_{instance.id}/{filename}'
@@ -841,7 +841,7 @@ class Comment(models.Model):
 class Message(models.Model):
     """Message"""
     author    = models.ForeignKey(User, on_delete=models.CASCADE)
-    chat      = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='chat')
+    chat      = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='message')
     parent    = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)
     content   = QuillField()
     reply_num = models.IntegerField(default=0)

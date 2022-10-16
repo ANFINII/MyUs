@@ -28,9 +28,9 @@ urlpatterns = [
     path('video/create', VideoCreateAPI.as_view()),
     path('video/detail/<int:id>', VideoDetailAPI.as_view()),
 
-    path('MusicL', MusicListAPI.as_view()),
-    path('MusicL/create', MusicCreateAPI.as_view()),
-    path('MusicL/detail/<int:id>', MusicDetailAPI.as_view()),
+    path('music', MusicListAPI.as_view()),
+    path('music/create', MusicCreateAPI.as_view()),
+    path('music/detail/<int:id>', MusicDetailAPI.as_view()),
 
     path('picture', PictureListAPI.as_view()),
     path('picture/create', PictureCreateAPI.as_view()),

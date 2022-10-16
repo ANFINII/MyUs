@@ -119,14 +119,14 @@ class ContextData:
 
         if 'ChatDetail' in str(models.__name__):
             context['is_period'] = obj.period < date.today()
-            context['comment_list'] = obj.comment.filter(parent__isnull=True).select_related('author')
+            context['comment_list'] = obj.message.filter(parent__isnull=True).select_related('author')
             context.update(chat_list=Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'ChatThread' in str(models.__name__):
             comment_id = self.kwargs['comment_id']
             context['comment_id'] = comment_id
-            context['comment_parent'] = obj.comment.filter(id=comment_id)
-            context['reply_list'] = obj.comment.filter(parent_id=comment_id).select_related('author')
+            context['comment_parent'] = obj.message.filter(id=comment_id)
+            context['reply_list'] = obj.message.filter(parent_id=comment_id).select_related('author')
             context.update(chat_list=Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'CollaboDetail' in str(models.__name__):
