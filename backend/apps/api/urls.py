@@ -8,6 +8,7 @@ from apps.api.views import PictureListAPI, PictureCreateAPI, PictureDetailAPI
 from apps.api.views import BlogListAPI, BlogCreateAPI, BlogDetailAPI
 from apps.api.views import ChatListAPI, ChatCreateAPI, ChatDetailAPI
 from apps.api.views import CollaboListAPI, CollaboCreateAPI, CollaboDetailAPI
+from apps.api.views import TodoListAPI, TodoCreateAPI, TodoDetailAPI
 
 
 app_name = 'api'
@@ -47,4 +48,8 @@ urlpatterns = [
     path('collabo', CollaboListAPI.as_view()),
     path('collabo/create', CollaboCreateAPI.as_view()),
     path('collabo/detail/<int:id>', CollaboDetailAPI.as_view()),
+
+    path('todo', TodoListAPI.as_view()),
+    path('todo/create', TodoCreateAPI.as_view()),
+    path('todo/detail/<int:id>', TodoDetailAPI.as_view()),
 ]

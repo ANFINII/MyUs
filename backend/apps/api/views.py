@@ -18,7 +18,7 @@ from rest_framework_simplejwt import exceptions
 from apps.api.serializers import SignUpSerializer, LoginSerializer
 from apps.api.serializers import UserSerializer, ProfileSerializer, MyPageSerializer
 from apps.api.serializers import VideoSerializer, LiveSerializer, MusicSerializer, PictureSerializer
-from apps.api.serializers import BlogSerializer, ChatSerializer, CollaboSerializer
+from apps.api.serializers import BlogSerializer, ChatSerializer, CollaboSerializer, TodoSerializer
 from apps.myus.modules.filter_data import DeferData
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
@@ -296,6 +296,9 @@ class VideoCreateAPI(CreateAPIView):
 class VideoDetailAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Video.objects.filter(id=id, publish=True).first()
+        if not obj:
+            return Response('not objects', status=HTTP_400_BAD_REQUEST)
+
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
@@ -368,6 +371,9 @@ class MusicCreateAPI(CreateAPIView):
 class MusicDetailAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Music.objects.filter(id=id, publish=True).first()
+        if not obj:
+            return Response('not objects', status=HTTP_400_BAD_REQUEST)
+
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
@@ -437,6 +443,9 @@ class PictureCreateAPI(CreateAPIView):
 class PictureDetailAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Picture.objects.filter(id=id, publish=True).first()
+        if not obj:
+            return Response('not objects', status=HTTP_400_BAD_REQUEST)
+
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
@@ -507,6 +516,9 @@ class BlogCreateAPI(CreateAPIView):
 class BlogDetailAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Blog.objects.filter(id=id, publish=True).first()
+        if not obj:
+            return Response('not objects', status=HTTP_400_BAD_REQUEST)
+
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
@@ -577,6 +589,9 @@ class ChatCreateAPI(CreateAPIView):
 class ChatDetailAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Chat.objects.filter(id=id, publish=True).first()
+        if not obj:
+            return Response('not objects', status=HTTP_400_BAD_REQUEST)
+
         message_list = obj.message.filter(parent__isnull=True).select_related('author')
 
         data = {
@@ -642,6 +657,9 @@ class CollaboCreateAPI(CreateAPIView):
 class CollaboDetailAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Collabo.objects.filter(id=id, publish=True).first()
+        if not obj:
+            return Response('not objects', status=HTTP_400_BAD_REQUEST)
+
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
@@ -665,6 +683,77 @@ class CollaboDetailAPI(RetrieveAPIView):
             'read': obj.read,
             'comment_num': obj.comment_num,
             'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        }
+        return Response(data, status=HTTP_200_OK)
+
+
+# Todo
+class TodoListAPI(APIView):
+    def get(self, request):
+        obj_list = Todo.objects.filter(publish=True).order_by('-created')[:50]
+
+        data = [{
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'like': obj.total_like(),
+            'read': obj.read,
+            'period': obj.period,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        } for obj in obj_list]
+        return Response(data, status=HTTP_200_OK)
+
+
+class TodoCreateAPI(CreateAPIView):
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+
+
+class TodoDetailAPI(RetrieveAPIView):
+    def get(self, request, id):
+        obj = Todo.objects.filter(id=id, publish=True).first()
+        if not obj:
+            return Response('not objects', status=HTTP_400_BAD_REQUEST)
+
+        user_id = obj.author.id
+        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        subquery = obj.comment.filter(**filter_kwargs)
+        comment_list = obj.comment.all().annotate(comment_liked=Exists(subquery))
+
+        data = {
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'priority': obj.priority,
+            'progress': obj.progress,
+            'comment': [{
+                'id': comment.id,
+                'text': comment.text,
+                'reply_num': comment.reply_num,
+                'created': comment.created,
+                'author': comment.author.id,
+                'image': comment.author.image(),
+                'nickname': comment.author.nickname
+            } for comment in comment_list],
+            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
+            'like': obj.total_like(),
+            'read': obj.read,
+            'comment_num': obj.comment_num,
+            'duedate': obj.duedate,
             'created': obj.created,
             'updated': obj.updated,
             'author': {
