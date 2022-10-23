@@ -28,7 +28,7 @@ export default function MusicCreate() {
         <p><input type="file" name="music" accept="audio/*" id="custom_file_1" className="form-control" style={{display:'none'}} required/></p>
         <p>
           <div className="input-group">
-            <input type="text" id="file_1" className="form-control" placeholder="ファイル選択..." onclick="{{$('input[id=custom_file_1]').click();}}"/>
+            <input type="text" id="file_1" className="form-control" placeholder="ファイル選択..." onlick="{{$('input[id=custom_file_1]').click()}}"/>
           </div>
         </p>
         <br/>

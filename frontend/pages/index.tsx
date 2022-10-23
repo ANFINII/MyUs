@@ -109,7 +109,7 @@ const Home: NextPage = (data: any) => {
 
       <script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>
       <script src='/pages/api/video_auto.js'></script>
-      {/* <script>$(function() { $('audio').audioPlayer(); });</script> */}
+      {/* <script>$(function() { $('audio').audioPlayer() })</script> */}
     </>
   )
 }
