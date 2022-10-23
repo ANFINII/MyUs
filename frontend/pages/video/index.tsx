@@ -2,6 +2,7 @@ import Head from 'next/head'
 import VideoArticle from 'components/elements/article/video'
 import { GetServerSideProps } from 'next'
 
+
 export async function getVideoList() {
   const BASEURL = process.env.NEXT_PUBLIC_API_URL
   const res = await fetch(BASEURL + '/api/video')
@@ -13,7 +14,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const data = await getVideoList()
   return {
     props: { data },
-  };
+  }
 }
 
 export default function Video(data: any) {
