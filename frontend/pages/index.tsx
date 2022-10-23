@@ -1,12 +1,27 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
 import VideoArticle from 'components/elements/article/video'
 import MusicArticle from 'components/elements/article/music'
 import PictureArticle from 'components/elements/article/picture'
 import BlogArticle from 'components/elements/article/blog'
 import ChatArticle from 'components/elements/article/chat'
+import type { NextPage, GetServerSideProps } from 'next'
 
-const Home: NextPage = () => {
+
+export async function getVideoList() {
+  const BASEURL = process.env.NEXT_PUBLIC_API_URL
+  const res = await fetch(BASEURL + '/api/video')
+  const data = await res.json()
+  return data
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const data = await getVideoList()
+  return {
+    props: { data },
+  }
+}
+
+const Home: NextPage = (data: any) => {
   return (
     <>
       <Head>
@@ -27,7 +42,7 @@ const Home: NextPage = () => {
           {/* {% include 'search/search_video.html' %} */}
         {/* {% else %} */}
           {/* {% for item in video_list %} */}
-            <VideoArticle/>
+            <VideoArticle datas={data} />
           {/* {% endfor %} */}
         {/* {% endif %} */}
       </article>

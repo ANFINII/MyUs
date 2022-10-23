@@ -11,7 +11,7 @@ export default function PictureArticle({ datas }: { datas: any }) {
           <section className="section_list" key={data.id}>
             <div className="main_decolation">
               <div className="video video_auto">
-                <Link href={`/video/detail/${data.id}`}>
+                <Link href={`/video/${data.id}`}>
                   <a>
                     <video className="video-js vjs-16-9" muted width="272" height="153" controlsList="nodownload"
                       // onContextMenu={'return': false}
@@ -23,7 +23,7 @@ export default function PictureArticle({ datas }: { datas: any }) {
                     </video>
                   </a>
                 </Link>
-                <Link href={`/video/detail/${data.id}`}>
+                <Link href={`/video/${data.id}`}>
                   <a className="author_space">
                     <AuthorSpace data={data.author} />
                     <ContentTitle data={data.author} />

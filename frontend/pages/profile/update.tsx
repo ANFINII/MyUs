@@ -2,22 +2,23 @@ import Head from 'next/head'
 import Footer from 'components/layouts/footer'
 import Link from 'next/link'
 import axios from 'lib/api/axios'
-import { useState, useEffect } from 'react'
-import { profileType, ProfileType } from 'lib/utils/type'
+import { GetServerSideProps } from 'next'
+import { ProfileType } from 'lib/utils/type'
 
-export default function Profile() {
-  const [user, setUser] = useState<ProfileType>(profileType)
-  const auth = 200
 
-  useEffect(() => {
-    axios.get('/api/profile')
-    .then(res => {setUser(res.data)})
-    .catch(e => {
-      console.log(e)
-    })
-  },[])
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookie = context.req?.headers.cookie
+  const res = await axios.get('/api/profile', {
+    headers: { cookie: cookie! }
+  })
+  const data: any = res.data
+  return {
+    props: { user: data }
+  }
+}
 
-  if (auth == 200) {
+export default function ProfileUpdate({ user }: { user: ProfileType }) {
+  if (user) {
     return (
       <>
         <Head>
@@ -36,7 +37,7 @@ export default function Profile() {
 
           <div className="btn-column">
             <div className="btn-column1">
-              <input type="submit" value="登録" id="submit" className="btn btn-success btn-sm"/>
+              <input type="submit" value="登録" className="btn btn-success btn-sm"/>
             </div>
             <div className="btn-column2">
               <Link href="/profile">
@@ -64,8 +65,8 @@ export default function Profile() {
               <tr><td className="td-color">名前</td>
                 <td>
                   <div className="td-name">
-                    <input type="text" name="last_name" value={ user.last_name } id="last_name" placeholder="姓" maxLength={30} className="form-control"/>
-                    <input type="text" name="first_name" value={ user.first_name } id="first_name" placeholder="名" maxLength={30} className="form-control"/>
+                    <input type="text" name="last_name" value={ user.lastname } id="last_name" placeholder="姓" maxLength={30} className="form-control"/>
+                    <input type="text" name="first_name" value={ user.firstname } id="first_name" placeholder="名" maxLength={30} className="form-control"/>
                   </div>
                 </td>
               </tr>
@@ -88,12 +89,12 @@ export default function Profile() {
               <tr>
                 <td className="td-color">性別</td>
                 <td className="td-gender">
-                  {/* {% for key, gender in gender.items %}
                   <div className="form-check-inline">
-                    <input type="radio" name="gender" value={ key } id="gender_"{ key } className="custom-control-input" {% if user.gender == key %} checked {% endif %}/>
-                    <label htmlFor="gender_"{ key } className="custom-control-label">{ gender }</label>
+                    <input type="radio" name="gender" value={ user.key } id={`gender_${ user.key }`} className="custom-control-input"
+                    // {user.gender === user.key && defaultChecked="checked" }
+                    />
+                    <label htmlFor={`gender_${ user.key }`} className="custom-control-label">{ user.gender }</label>
                   </div>
-                  {% endfor %} */}
                 </td>
               </tr>
               <tr><td className="td-color">電話番号</td><td><input type="tel" name="phone" value={ user.phone } maxLength={15} className="form-control" required/></td></tr>
