@@ -185,7 +185,6 @@ class RefreshAPI(views.TokenRefreshView):
 
 
 class ProfileAPI(APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         token = request.COOKIES.get('user_token')
@@ -222,7 +221,6 @@ class ProfileAPI(APIView):
 
 
 class MyPageAPI(APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         token = request.COOKIES.get('user_token')
