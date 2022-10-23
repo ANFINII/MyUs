@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const res = await axios.get('/api/profile', {
     headers: { cookie: cookie! }
   })
-  const data: any = res.data
+  const data: ProfileType = res.data
   return {
     props: { user: data }
   }

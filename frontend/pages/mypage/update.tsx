@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const res = await axios.get('/api/mypage', {
     headers: { cookie: cookie! }
   })
-  const data: any = res.data
+  const data: MypageType = res.data
   return {
     props: { mypage: data }
   }
