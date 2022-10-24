@@ -133,7 +133,7 @@ def user_icon(instance, filename):
     return f'users/images_user/user_{instance.id}/{filename}'
 
 class Profile(models.Model):
-    img          = '../frontend/static/img/user_icon.png'
+    img          = '../static/img/user_icon.png'
     gender_type  = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
     message      = '電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます'
     phone_no     = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message=message)
@@ -186,7 +186,7 @@ def mypage_banner(instance, filename):
     return f'users/images_mypage/user_{instance.id}/{filename}'
 
 class MyPage(models.Model):
-    img           = '../frontend/static/img/MyUs_banner.png'
+    img           = '../static/img/MyUs_banner.png'
     plan_type     = (('free', 'Free'), ('basic', 'Basic'), ('standard', 'Standard'), ('premium', 'Premium'))
     user          = models.OneToOneField(User, on_delete=models.CASCADE)
     banner        = models.ImageField(upload_to=mypage_banner, default=img, blank=True, null=True)

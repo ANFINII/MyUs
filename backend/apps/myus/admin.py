@@ -19,7 +19,7 @@ admin.site.disable_action('delete_selected')
 
 class ProfileInline(admin.StackedInline):
     model = Profile
-    readonly_fields = ('image', 'country_code')
+    readonly_fields = ('country_code',)
     verbose_name = 'プロファイル情報'
 
     def has_delete_permission(self, request, obj=None):
@@ -28,7 +28,7 @@ class ProfileInline(admin.StackedInline):
 
 class MyPageInline(admin.StackedInline):
     model = MyPage
-    readonly_fields = ('banner', 'follower_num', 'following_num', 'plan', 'plan_date', 'is_advertise')
+    readonly_fields = ('follower_num', 'following_num', 'plan', 'plan_date', 'is_advertise')
     verbose_name = 'Myページ情報'
 
     def has_delete_permission(self, request, obj=None):
