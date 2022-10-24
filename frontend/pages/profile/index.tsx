@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Image from 'next/image'
 import Footer from 'components/layouts/footer'
 import axios from 'lib/api/axios'
 import { GetServerSideProps } from 'next'
@@ -18,13 +19,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 export default function Profile({ user }: { user: ProfileType }) {
-  if (user) {
-    return (
-      <>
-        <Head>
-          <title>MyUsアカウント設定</title>
-        </Head>
-
+  return (
+    <>
+      <Head>
+        <title>MyUsアカウント設定</title>
+      </Head>
+      {user ?
         <article className="article_account">
           <h1>アカウント設定</h1>
           <div className="btn-column">
@@ -45,8 +45,8 @@ export default function Profile({ user }: { user: ProfileType }) {
               <tr><td className="td-color td-header">アカウント画像</td>
                 <td>
                   <label htmlFor="account_image_input" className="account_image">
-                    <a href={ user.image } data-lightbox="group">
-                      <img src={ user.image } title={ user.nickname } width="56px" height="56xp" data-lightbox="group"/>
+                    <a href={`${ process.env.NEXT_PUBLIC_API_URL }${ user.image }`} data-lightbox="group">
+                      <img src={`${ process.env.NEXT_PUBLIC_API_URL }${ user.image }`} title={ user.nickname } width="56px" height="56xp" data-lightbox="group"/>
                     </a>
                   </label>
                 </td>
@@ -67,20 +67,12 @@ export default function Profile({ user }: { user: ProfileType }) {
 
           <Footer/>
         </article>
-      </>
-    )
-  } else {
-    return (
-      <>
-        <Head>
-          <title>MyUsアカウント設定</title>
-        </Head>
-
+      :
         <article className="article_account">
           <h1>アカウント設定</h1>
           <h2 className="login_required">ログインしてください</h2>
         </article>
-      </>
-    )
-  }
+      }
+    </>
+  )
 }

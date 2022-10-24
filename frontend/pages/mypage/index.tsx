@@ -18,13 +18,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 export default function MyPage({ mypage }: { mypage: MypageType }) {
-  if (mypage) {
-    return (
-      <>
-        <Head>
-          <title>MyUsマイページ設定</title>
-        </Head>
+  return (
+    <>
+      <Head>
+        <title>MyUsマイページ設定</title>
+      </Head>
 
+      {mypage ?
         <article className="article_account">
           <h1>Myページ設定</h1>
           <div className="btn-column">
@@ -45,11 +45,9 @@ export default function MyPage({ mypage }: { mypage: MypageType }) {
               <tr><td className="td-color">バナー画像</td>
                 <td>
                   <label htmlFor="account_image_input" className="mypage_image">
-                    {mypage.banner &&
-                      <a href={ mypage.banner } data-lightbox="group">
-                        <img src={ mypage.banner } title={ mypage.nickname } width="270px" height="56xp" data-lightbox="group"/>
-                      </a>
-                    }
+                    <a href={`${ process.env.NEXT_PUBLIC_API_URL }${ mypage.banner }`} data-lightbox="group">
+                      <img src={`${ process.env.NEXT_PUBLIC_API_URL }${ mypage.banner }`} title={ mypage.nickname } width="270px" height="56xp" data-lightbox="group"/>
+                    </a>
                   </label>
                 </td>
               </tr>
@@ -82,20 +80,12 @@ export default function MyPage({ mypage }: { mypage: MypageType }) {
 
           <Footer/>
         </article>
-      </>
-    )
-  } else {
-    return (
-      <>
-        <Head>
-          <title>MyUsマイページ設定</title>
-        </Head>
-
+      :
         <article className="article_account">
           <h1>Myページ設定</h1>
           <h2 className="login_required">ログインしてください</h2>
         </article>
-      </>
-    )
-  }
+      }
+    </>
+  )
 }
