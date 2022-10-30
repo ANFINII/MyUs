@@ -19,12 +19,12 @@ from apps.api.serializers import SignUpSerializer, LoginSerializer
 from apps.api.serializers import UserSerializer, ProfileSerializer, MyPageSerializer
 from apps.api.serializers import VideoSerializer, LiveSerializer, MusicSerializer, PictureSerializer
 from apps.api.serializers import BlogSerializer, ChatSerializer, CollaboSerializer, TodoSerializer
+from apps.api.utils import get_user_id
 from apps.myus.modules.filter_data import DeferData
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
-
 
 User = get_user_model()
 
@@ -184,13 +184,26 @@ class RefreshAPI(views.TokenRefreshView):
         return response
 
 
+class UserAPI(APIView):
+
+    def get(self, request):
+        user_id = get_user_id(request)
+        if not user_id:
+            return Response({'error': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+
+        user = User.objects.filter(id=user_id).defer(*DeferData.user).first()
+        data = {'image': user.image(), 'nickname': user.nickname, 'is_staff': user.is_staff}
+        return Response(data, status=HTTP_200_OK)
+
+
 class ProfileAPI(APIView):
 
     def get(self, request):
-        token = request.COOKIES.get('user_token')
-        key = settings.SECRET_KEY
-        payload = jwt.decode(jwt=token, key=key, algorithms=['HS256'])
-        user = User.objects.filter(id=payload['user_id']).select_related('profile').defer(*DeferData.profile).first()
+        user_id = get_user_id(request)
+        if not user_id:
+            return Response({'error': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+
+        user = User.objects.filter(id=user_id).select_related('profile').defer(*DeferData.profile).first()
         gender = {'0':'男性', '1':'女性', '2':'秘密'}
 
         data = {
@@ -223,10 +236,11 @@ class ProfileAPI(APIView):
 class MyPageAPI(APIView):
 
     def get(self, request):
-        token = request.COOKIES.get('user_token')
-        key = settings.SECRET_KEY
-        payload = jwt.decode(jwt=token, key=key, algorithms=['HS256'])
-        user = User.objects.filter(id=payload['user_id']).select_related('mypage').defer(*DeferData.mypage).first()
+        user_id = get_user_id(request)
+        if not user_id:
+            return Response({'error': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+
+        user = User.objects.filter(id=user_id).select_related('mypage').defer(*DeferData.mypage).first()
 
         data = {
             'banner': user.banner(),

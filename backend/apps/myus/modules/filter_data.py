@@ -1,13 +1,12 @@
 class DeferData:
     user = [
-        'user__password',
-        'user__email',
-        'user__username',
-        'user__is_superuser',
-        'user__is_active',
-        'user__is_staff',
-        'user__last_login',
-        'user__date_joined',
+        'password',
+        'email',
+        'username',
+        'is_superuser',
+        'is_active',
+        'last_login',
+        'date_joined',
     ]
 
     author = [
