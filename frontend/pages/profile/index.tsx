@@ -19,11 +19,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 export default function Profile({ user }: { user: ProfileType }) {
+  const avatar_url = process.env.NEXT_PUBLIC_API_URL + user.avatar
   return (
     <>
       <Head>
         <title>MyUsアカウント設定</title>
       </Head>
+
       {user ?
         <article className="article_account">
           <h1>アカウント設定</h1>
@@ -45,8 +47,8 @@ export default function Profile({ user }: { user: ProfileType }) {
               <tr><td className="td-color td-header">アカウント画像</td>
                 <td>
                   <label htmlFor="account_image_input" className="account_image">
-                    <a href={`${ process.env.NEXT_PUBLIC_API_URL }${ user.image }`} data-lightbox="group">
-                      <img src={`${ process.env.NEXT_PUBLIC_API_URL }${ user.image }`} title={ user.nickname } width="56px" height="56xp" data-lightbox="group"/>
+                    <a href={ avatar_url } data-lightbox="group">
+                      <img src={ avatar_url } title={ user.nickname } width="56px" height="56xp" data-lightbox="group"/>
                     </a>
                   </label>
                 </td>

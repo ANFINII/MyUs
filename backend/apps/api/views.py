@@ -192,7 +192,7 @@ class UserAPI(APIView):
             return Response({'error': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
 
         user = User.objects.filter(id=user_id).defer(*DeferData.user).first()
-        data = {'image': user.image(), 'nickname': user.nickname, 'is_staff': user.is_staff}
+        data = {'avatar': user.image(), 'nickname': user.nickname, 'is_staff': user.is_staff}
         return Response(data, status=HTTP_200_OK)
 
 
@@ -207,7 +207,7 @@ class ProfileAPI(APIView):
         gender = {'0':'男性', '1':'女性', '2':'秘密'}
 
         data = {
-            'image': user.image(),
+            'avatar': user.image(),
             'email': user.email,
             'username': user.username,
             'nickname': user.nickname,
