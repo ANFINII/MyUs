@@ -225,7 +225,7 @@ class ProfileView(TemplateView):
 class ProfileUpdate(UpdateView):
     """アカウント更新"""
     model = Profile
-    fields = ('image', 'last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction')
+    fields = ('last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction')
     template_name = 'registration/profile_update.html'
     success_url = reverse_lazy('myus:profile')
 
@@ -238,10 +238,15 @@ class ProfileUpdate(UpdateView):
     def form_valid(self, form):
         """バリデーションに成功した時"""
         try:
+            data = self.request.POST
+            file = self.request.FILES
             user = self.request.user
-            user.email = self.request.POST['email']
-            user.username = self.request.POST['username']
-            user.nickname = self.request.POST['nickname']
+            user.email = data['email']
+            user.username = data['username']
+            user.nickname = data['nickname']
+
+            if file:
+                user.avatar = file['avatar']
 
             if has_email(user.email):
                 messages.error(self.request, 'メールアドレスの形式が違います!')
@@ -251,26 +256,26 @@ class ProfileUpdate(UpdateView):
                 messages.error(self.request, 'ユーザー名は半角英数字のみ入力できます!')
                 return super().form_invalid(form)
 
-            if has_number(self.request.POST['last_name']):
+            if has_number(data['last_name']):
                 messages.error(self.request, '姓に数字が含まれております!')
                 return super().form_invalid(form)
 
-            if has_number(self.request.POST['first_name']):
+            if has_number(data['first_name']):
                 messages.error(self.request, '名に数字が含まれております!')
                 return super().form_invalid(form)
 
-            if has_phone(self.request.POST['phone']):
+            if has_phone(data['phone']):
                 messages.error(self.request, '電話番号の形式が違います!')
                 return super().form_invalid(form)
 
-            if has_postal_code(self.request.POST['postal_code']):
+            if has_postal_code(data['postal_code']):
                 messages.error(self.request, '郵便番号の形式が違います!')
                 return super().form_invalid(form)
 
             profile_obj = form.save(commit=False)
-            year = self.request.POST['year']
-            month = self.request.POST['month']
-            day = self.request.POST['day']
+            year = data['year']
+            month = data['month']
+            day = data['day']
             birthday = datetime.date(year=int(year), month=int(month), day=int(day))
             profile_obj.birthday = birthday.isoformat()
 

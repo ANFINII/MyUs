@@ -84,7 +84,7 @@ class UserAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('アカウント情報', {'fields': ('email', 'username', 'nickname')}),
+        ('アカウント情報', {'fields': ('avatar', 'email', 'username', 'nickname')}),
         ('権限情報', {'fields': ('is_active', 'is_staff', 'is_superuser', 'last_login', 'date_joined')}),
     ]
 

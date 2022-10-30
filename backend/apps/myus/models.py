@@ -33,8 +33,13 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+def user_icon(instance, filename):
+    return f'users/images_user/user_{instance.id}/{filename}'
+
 class User(AbstractBaseUser, PermissionsMixin):
     """User"""
+    img         = '../static/img/user_icon.png'
+    avatar      = models.ImageField(upload_to=user_icon, default=img, blank=True, null=True)
     email       = models.EmailField(max_length=255, unique=True)
     username    = models.CharField(max_length=20, unique=True)
     nickname    = models.CharField(max_length=80, unique=True)
@@ -66,20 +71,20 @@ class User(AbstractBaseUser, PermissionsMixin):
     fullname.short_description = 'name'
 
     def year(self):
-        if self.birthday is not None:
+        if self.birthday:
             return self.profile.birthday.year
 
     def month(self):
-        if self.birthday is not None:
+        if self.birthday:
             return self.profile.birthday.month
 
     def day(self):
-        if self.birthday is not None:
+        if self.birthday:
             return self.profile.birthday.day
 
     def age(self):
-        birthday = self.profile.birthday
-        if birthday is not None:
+        if self.profile:
+            birthday = self.profile.birthday
             DAYS_IN_YEAR = 365.2425
             return int((date.today() - birthday).days / DAYS_IN_YEAR)
 
@@ -102,18 +107,26 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.profile.building
 
     def image(self):
-        image = self.profile.image
-        if image and hasattr(image, 'url'):
-            return image.url
+        if self.avatar:
+            return self.avatar.url
 
     def banner(self):
-        banner = self.mypage.banner
-        if banner and hasattr(banner, 'url'):
-            return banner.url
+        if self.mypage.banner:
+            return self.mypage.banner.url
 
     def plan(self):
         plan_dict = {'free': 'Free', 'basic': 'Basic', 'standard': 'Standard', 'premium': 'Premium'}
         return [value for key, value in plan_dict.items() if self.mypage.plan in key]
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            avatar = self.avatar
+            self.avatar = None
+            super().save(*args, **kwargs)
+            self.avatar = avatar
+            if 'force_insert' in kwargs:
+                kwargs.pop('force_insert')
+        super().save(*args, **kwargs)
 
     class Meta:
         db_table = 'user'
@@ -129,16 +142,11 @@ class ProfileManager(models.Manager):
     def get_queryset(self):
         return super(ProfileManager,self).get_queryset().select_related('user')
 
-def user_icon(instance, filename):
-    return f'users/images_user/user_{instance.id}/{filename}'
-
 class Profile(models.Model):
-    img          = '../static/img/user_icon.png'
     gender_type  = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
     message      = '電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます'
     phone_no     = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message=message)
     user         = models.OneToOneField(User, on_delete=models.CASCADE)
-    image        = models.ImageField(upload_to=user_icon, default=img, blank=True, null=True)
     last_name    = models.CharField(max_length=50)
     first_name   = models.CharField(max_length=50)
     birthday     = models.DateField(blank=True, null=True)
@@ -156,16 +164,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.nickname
-
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            image = self.image
-            self.image = None
-            super().save(*args, **kwargs)
-            self.image = image
-            if 'force_insert' in kwargs:
-                kwargs.pop('force_insert')
-        super().save(*args, **kwargs)
 
     class Meta:
         db_table = 'profile'
