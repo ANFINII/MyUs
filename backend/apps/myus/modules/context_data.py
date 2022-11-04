@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
 from apps.myus.models import MyPage, SearchTag, NotificationSetting, Follow, Comment
 from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from apps.myus.modules.contains import model_dict
 from apps.myus.modules.notification import notification_data
 
 User = get_user_model()
@@ -23,110 +24,108 @@ class ContextData:
             context['query'] = self.request.GET.get('search')
 
         if 'NotificationSettingView' in str(models.__name__):
-            context.update(notification_setting_list=NotificationSetting.objects.filter(user=user.id))
+            context['notification_setting_list'] = NotificationSetting.objects.filter(user=user.id)
 
         if 'ProfileUpdate' in str(models.__name__):
             context['gender'] = {'0':'男性', '1':'女性', '2':'秘密'}
 
         if 'MyPageView' in str(models.__name__):
-            context.update(mypage_list=MyPage.objects.filter(user=user.id))
+            context['mypage_list'] = MyPage.objects.filter(user=user.id)
 
         if 'Index' in str(models.__name__):
             context.update({
-                'video_list': Video.objects.filter(publish=True).order_by('-created')[:8],
-                'music_list': Music.objects.filter(publish=True).order_by('-created')[:8],
-                'picture_list': Picture.objects.filter(publish=True).order_by('-created')[:8],
-                'blog_list': Blog.objects.filter(publish=True).order_by('-created')[:8],
-                'chat_list': Chat.objects.filter(publish=True).order_by('-created')[:8],
+                f'{value}_list': model.objects.filter(publish=True).order_by('-created')[:8]
+                for model, value in model_dict.items()
             })
 
         if 'Recommend' in str(models.__name__):
             # 急上昇はcreatedが1日以内かつscoreが100000以上の上位8レコード
             # テストはcreatedが100日以内かつscoreが50以上の上位8レコード
             # socre = (read + like*10) + read * like/(read+1)*20
-            aggregation_date = datetime.today() - timedelta(days=200)
+            aggregation_date = datetime.today() - timedelta(days=500)
+            score = F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20
             context['Recommend'] = 'Recommend'
             context.update({
-                'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
-                'music_list': Music.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
-                'picture_list': Picture.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
-                'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
-                'chat_list': Chat.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
+                f'{value}_list': model.objects.annotate(score=score).filter(publish=True, created__gte=aggregation_date, score__gte=50).order_by('-score')[:8]
+                for model, value in model_dict.items()
             })
 
         if ('UserPage' or 'UserPageInfo' or 'UserPageAdvertise') in str(models.__name__):
             author = get_object_or_404(User, nickname=self.kwargs['nickname'])
             follow = Follow.objects.filter(follower=user.id, following=author)
-            context['followed'] = True if follow.exists() else False
+            context['is_follow'] = follow.exists()
             context['author_name'] = author.nickname
+            context['user_list'] = User.objects.filter(id=author.id)
             context.update({
-                'user_list': User.objects.filter(id=author.id),
-                'video_list': Video.objects.filter(author=author, publish=True).order_by('-created'),
-                'music_list': Music.objects.filter(author=author, publish=True).order_by('-created'),
-                'picture_list': Picture.objects.filter(author=author, publish=True).order_by('-created'),
-                'blog_list': Blog.objects.filter(author=author, publish=True).order_by('-created'),
-                'chat_list': Chat.objects.filter(author=author, publish=True).order_by('-created'),
+                f'{value}_list': model.objects.filter(author=author, publish=True).order_by('-created')
+                for model, value in model_dict.items()
             })
         return context
 
 
     def models_context_data(self, models, **kwargs):
         context = super(models, self).get_context_data(**kwargs)
-        obj = self.object
         user = self.request.user
+        obj = self.object
         author = obj.author
         follow = Follow.objects.filter(follower=user.id, following=author)
-        if 'TodoDetail' not in str(models.__name__):
-            context['liked'] = True if obj.like.filter(id=user.id).exists() else False
-        else:
-            filter_kwargs = {'id': OuterRef('pk'), 'like': user.id}
-            subquery = Comment.objects.filter(**filter_kwargs)
-            context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery)).select_related('author').prefetch_related('like')
-            context['reply_list'] = obj.comment.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent').prefetch_related('like')
+        context['user_id'] = user.id
+        context['obj_id'] = obj.id
+        context['obj_path'] = self.request.path
+        context['is_follow'] = follow.exists()
+
+        filter_kwargs = {'id': OuterRef('pk'), 'like': user.id}
+        subquery = Comment.objects.filter(**filter_kwargs)
+        comment = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+        context['comment_list'] = comment.select_related('author').prefetch_related('like')
+        context['reply_list'] = comment.select_related('author', 'parent').prefetch_related('like')
+
         if user.id:
             notification_list = notification_data(self)
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
             context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
-        if author.mypage.plan == 'basic':
-            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:1])
-        if author.mypage.plan == 'standard':
-            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:3])
-        if author.mypage.plan == 'premium':
-            context.update(advertise_list=Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')[:4])
-        context['followed'] = True if follow.exists() else False
-        context['user_id'] = user.id
-        context['obj_id'] = obj.id
-        context['obj_path'] = self.request.path
+
         context['advertise_auto_list'] = Advertise.objects.filter(publish=True, type=0).order_by('?')[:1]
+        advertise = Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')
+        if author.mypage.plan == 'basic':
+            context['advertise_list'] = advertise[:1]
+        if author.mypage.plan == 'standard':
+            context['advertise_list'] = advertise[:3]
+        if author.mypage.plan == 'premium':
+            context['advertise_list'] = advertise[:4]
+
         if 'VideoDetail' in str(models.__name__):
-            context.update(video_list=Video.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context['video_list'] = Video.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
         if 'MusicDetail' in str(models.__name__):
-            context.update(music_list=Music.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context['music_list'] = Music.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
         if 'PictureDetail' in str(models.__name__):
-            context.update(picture_list=Picture.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context['picture_list'] = Picture.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
         if 'BlogDetail' in str(models.__name__):
-            context.update(blog_list=Blog.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context['blog_list'] = Blog.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
         if 'ChatDetail' in str(models.__name__):
             context['is_period'] = obj.period < date.today()
             context['comment_list'] = obj.message.filter(parent__isnull=True).select_related('author')
-            context.update(chat_list=Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context['chat_list'] = Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
         if 'ChatThread' in str(models.__name__):
             comment_id = self.kwargs['comment_id']
             context['comment_id'] = comment_id
             context['comment_parent'] = obj.message.filter(id=comment_id)
             context['reply_list'] = obj.message.filter(parent_id=comment_id).select_related('author')
-            context.update(chat_list=Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
+            context['chat_list'] = Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
         if 'CollaboDetail' in str(models.__name__):
             context['is_period'] = obj.period < date.today()
-            context.update(collabo_list=Collabo.objects.filter(publish=True).exclude(id=obj.id).select_related('author').order_by('-created')[:50])
+            context['collabo_list'] = Collabo.objects.filter(publish=True).exclude(id=obj.id).select_related('author').order_by('-created')[:50]
 
         if 'TodoDetail' in str(models.__name__):
-            context.update(todo_list=Todo.objects.filter(author=user).exclude(id=obj.id)[:50])
+            context['todo_list'] = Todo.objects.filter(author=user).exclude(id=obj.id)[:50]
+
+        if 'TodoDetail' not in str(models.__name__):
+            context['liked'] = obj.like.filter(id=user.id).exists()
         return context
