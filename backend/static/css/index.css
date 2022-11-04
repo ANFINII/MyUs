@@ -218,13 +218,21 @@
   top: 3.5em;
   right: -250px;
   width: 250px;
-  height: 289px;
   padding: 0;
   background: rgb(255, 250, 245);
   color: rgb(50, 50, 50);
   transition: all 0.2s;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.drop_menu_cloud {
+  height: 289px;
+}
+
+.drop_menu_notice,
+.drop_menu_profile {
+  height: 337px;
 }
 
 /* 閉じる用のカバー */
