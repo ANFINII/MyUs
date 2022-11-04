@@ -1,6 +1,6 @@
 export default function ContentTitle(datas: any) {
-  const author = datas.data.author
   const data = datas.data
+  const author = data.author
   return (
     <>
       <div title={ data.title } className="content_title">{ data.title }</div>
