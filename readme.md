@@ -6,7 +6,6 @@
 
 ### 主な機能
 - Video投稿
-- Live投稿 (開発中)
 - Music投稿
 - Picture投稿
 - Blog投稿
