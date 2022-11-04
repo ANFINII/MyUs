@@ -165,7 +165,7 @@ class Withdrawal(View):
     def get_random_chars(self, char_num=30):
         return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(char_num)])
 
-    def get(self, request, token=None, *args, **kwargs):
+    def get(self, request, token=None):
         user = self.request.user
         context = {}
         notification_list = notification_data(self)
@@ -1108,11 +1108,9 @@ class TodoDetail(DetailView):
 
     def get_queryset(self):
         user = self.request.user
-        # スーパーユーザの場合、リストにすべてを表示する。
         if user.is_superuser:
             return Todo.objects.all()
         else:
-            # 一般ユーザは自分のレコードのみ表示する。
             return Todo.objects.filter(author=user)
 
     def get_context_data(self, **kwargs):
