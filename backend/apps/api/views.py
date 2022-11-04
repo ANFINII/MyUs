@@ -17,14 +17,14 @@ from rest_framework_simplejwt import exceptions
 
 from apps.api.serializers import SignUpSerializer, LoginSerializer
 from apps.api.serializers import UserSerializer, ProfileSerializer, MyPageSerializer
-from apps.api.serializers import VideoSerializer, LiveSerializer, MusicSerializer, PictureSerializer
+from apps.api.serializers import VideoSerializer, MusicSerializer, PictureSerializer
 from apps.api.serializers import BlogSerializer, ChatSerializer, CollaboSerializer, TodoSerializer
 from apps.api.utils import get_user_id
 from apps.myus.modules.filter_data import DeferData
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
-from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
 
 User = get_user_model()
 

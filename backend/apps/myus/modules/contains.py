@@ -1,9 +1,8 @@
-from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
 
 
 models_dict = {
     Video  : 'video',
-    Live   : 'live',
     Music  : 'music',
     Picture: 'picture',
     Blog   : 'blog',
@@ -13,7 +12,6 @@ models_dict = {
 
 models_like_dict = {
     'video/detail'  : Video,
-    'live/detail'   : Live,
     'music/detail'  : Music,
     'picture/detail': Picture,
     'blog/detail'   : Blog,
@@ -23,7 +21,6 @@ models_like_dict = {
 
 models_comment_dict = {
     'video/detail'  : Video,
-    'live/detail'   : Live,
     'music/detail'  : Music,
     'picture/detail': Picture,
     'blog/detail'   : Blog,
@@ -33,7 +30,6 @@ models_comment_dict = {
 
 models_pjax = {
     'video'  : Video,
-    'live'   : Live,
     'music'  : Music,
     'picture': Picture,
     'blog'   : Blog,
@@ -43,7 +39,6 @@ models_pjax = {
 
 models_create_pjax = (
     'video/create',
-    'live/create',
     'music/create',
     'picture/create',
     'blog/create',
@@ -54,7 +49,6 @@ models_create_pjax = (
 
 notification_type_dict = {
     'video'  : 'is_video',
-    'live'   : 'is_live',
     'music'  : 'is_music',
     'picture': 'is_picture',
     'blog'   : 'is_blog',
@@ -68,13 +62,12 @@ notification_type_dict = {
 
 class NotificationTypeNo:
     video   = 1
-    live    = 2
-    music   = 3
-    picture = 4
-    blog    = 5
-    chat    = 6
-    collabo = 7
-    follow  = 8
-    like    = 9
-    reply   = 10
-    views   = 11
+    music   = 2
+    picture = 3
+    blog    = 4
+    chat    = 5
+    collabo = 6
+    follow  = 7
+    like    = 8
+    reply   = 9
+    views   = 10

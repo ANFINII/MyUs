@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
-from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
 
 
 User = get_user_model()
@@ -72,7 +72,7 @@ class NotificationSettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotificationSetting
         fields = (
-            'is_video', 'is_live', 'is_music', 'is_picture', 'is_blog', 'is_chat',
+            'is_video', 'is_music', 'is_picture', 'is_blog', 'is_chat',
             'is_collabo', 'is_follow', 'is_reply', 'is_like', 'is_views',
         )
 
@@ -106,16 +106,6 @@ class VideoSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'author', 'title', 'content', 'image', 'video', 'convert',
             'hashtag', 'like', 'read', 'publish', 'created', 'updated',
-        )
-        read_only_field = ['created', 'updated']
-
-
-class LiveSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Live
-        fields = (
-            'id', 'author', 'title', 'content', 'image', 'live', 'hashtag',
-            'like', 'read', 'publish', 'created', 'updated',
         )
         read_only_field = ['created', 'updated']
 

@@ -226,7 +226,6 @@ class NotificationSetting(models.Model):
     """NotificationSetting"""
     user       = models.OneToOneField(User, on_delete=models.CASCADE)
     is_video   = models.BooleanField(default=False)
-    is_live    = models.BooleanField(default=False)
     is_music   = models.BooleanField(default=False)
     is_picture = models.BooleanField(default=False)
     is_blog    = models.BooleanField(default=False)
@@ -281,7 +280,7 @@ class SearchTag(models.Model):
 
     class Meta:
         db_table = 'searchtag'
-        verbose_name_plural = '09 検索タグ'
+        verbose_name_plural = '08 検索タグ'
 
 
 class HashTag(models.Model):
@@ -294,7 +293,7 @@ class HashTag(models.Model):
 
     class Meta:
         db_table = 'hashtag'
-        verbose_name_plural = '10 ハッシュタグ'
+        verbose_name_plural = '09 ハッシュタグ'
 
 
 class MediaModel:
@@ -381,66 +380,6 @@ class Video(models.Model, MediaModel):
         verbose_name_plural = '01 Video'
 
 
-class LiveQuerySet(models.QuerySet):
-    def search(self, query=None):
-        qs = self
-        if query:
-            or_lookup = (
-                Q(title__icontains=query) |
-                Q(hashtag__jp_name__icontains=query) |
-                Q(author__nickname__icontains=query) |
-                Q(content__icontains=query)
-            )
-            qs = qs.filter(or_lookup).distinct()
-        return qs
-
-class LiveManager(models.Manager, MediaManager):
-    def get_queryset(self):
-        return LiveQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
-
-def images_live_upload(instance, filename):
-    return f'images/images_live/user_{instance.author_id}/object_{instance.id}/{filename}'
-
-def videos_live_upload(instance, filename):
-    return f'videos/videos_live/user_{instance.author_id}/object_{instance.id}/{filename}'
-
-class Live(models.Model, MediaModel):
-    """Live"""
-    author      = models.ForeignKey(User, on_delete=models.CASCADE)
-    title       = models.CharField(max_length=100)
-    content     = models.TextField()
-    image       = models.ImageField(upload_to=images_live_upload)
-    live        = models.FileField(upload_to=videos_live_upload)
-    convert     = models.FileField(upload_to=videos_live_upload)
-    comment     = GenericRelation('Comment')
-    hashtag     = models.ManyToManyField(HashTag, blank=True)
-    like        = models.ManyToManyField(User, related_name='live_like', blank=True)
-    read        = models.IntegerField(default=0)
-    comment_num = models.IntegerField(default=0)
-    publish     = models.BooleanField(default=True)
-    created     = models.DateTimeField(auto_now_add=True)
-    updated     = models.DateTimeField(auto_now=True)
-
-    objects = LiveManager()
-
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            image = self.image
-            live = self.live
-            self.image = None
-            self.live = None
-            super().save(*args, **kwargs)
-            self.image = image
-            self.live = live
-            if 'force_insert' in kwargs:
-                kwargs.pop('force_insert')
-        super().save(*args, **kwargs)
-
-    class Meta:
-        db_table = 'live'
-        verbose_name_plural = '02 Live'
-
-
 class MusicQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
@@ -493,7 +432,7 @@ class Music(models.Model, MediaModel):
 
     class Meta:
         db_table = 'music'
-        verbose_name_plural = '03 Music'
+        verbose_name_plural = '02 Music'
 
 
 class PictureQuerySet(models.QuerySet):
@@ -545,7 +484,7 @@ class Picture(models.Model, MediaModel):
 
     class Meta:
         db_table = 'picture'
-        verbose_name_plural = '04 Picture'
+        verbose_name_plural = '03 Picture'
 
 
 class BlogQuerySet(models.QuerySet):
@@ -599,7 +538,7 @@ class Blog(models.Model, MediaModel):
 
     class Meta:
         db_table = 'blog'
-        verbose_name_plural = '05 Blog'
+        verbose_name_plural = '04 Blog'
 
 
 class ChatQuerySet(models.QuerySet):
@@ -648,7 +587,7 @@ class Chat(models.Model):
 
     class Meta:
         db_table = 'chat'
-        verbose_name_plural = '06 Chat'
+        verbose_name_plural = '05 Chat'
 
 
 class Collabo(models.Model, MediaModel):
@@ -668,7 +607,7 @@ class Collabo(models.Model, MediaModel):
 
     class Meta:
         db_table = 'collabo'
-        verbose_name_plural = '07 Collabo'
+        verbose_name_plural = '06 Collabo'
 
 
 class Todo(models.Model):
@@ -695,7 +634,7 @@ class Todo(models.Model):
 
     class Meta:
         db_table = 'todo'
-        verbose_name_plural = '08 ToDo'
+        verbose_name_plural = '07 ToDo'
 
 
 class Follow(models.Model):
@@ -709,7 +648,7 @@ class Follow(models.Model):
 
     class Meta:
         db_table = 'follow'
-        verbose_name_plural = '11 フォロー'
+        verbose_name_plural = '10 フォロー'
         indexes = [
             models.Index(fields=['follower'], name='follower_idx'),
             models.Index(fields=['following'], name='following_idx'),
@@ -719,8 +658,8 @@ class Follow(models.Model):
 
 class Notification(models.Model):
     """Notification"""
-    # 'video': 1, 'live': 2, 'music': 3, 'picture': 4, 'blog': 5, 'chat': 6
-    # 'collabo': 7, 'follow': 8, 'like': 9, 'reply': 10, 'views': 11
+    # 'video': 1, 'music': 2, 'picture': 3, 'blog': 4, 'chat': 5
+    # 'collabo': 6, 'follow': 7, 'like': 8, 'reply': 9, 'views': 10
     user_from      = models.ForeignKey(User, related_name='user_from', on_delete=models.CASCADE)
     user_to        = models.ForeignKey(User, related_name='user_to', on_delete=models.CASCADE, blank=True, null=True)
     type_no        = models.IntegerField()
@@ -749,7 +688,7 @@ class Notification(models.Model):
 
     class Meta:
         db_table = 'notification'
-        verbose_name_plural = '12 通知確認'
+        verbose_name_plural = '11 通知確認'
         indexes = [
             models.Index(fields=['user_from', 'user_to'], name='notification_from_to_idx'),
             models.Index(fields=['type_no', 'object_id'], name='notification_type_object_idx'),
@@ -796,7 +735,7 @@ class Advertise(models.Model):
 
     class Meta:
         db_table = 'advertise'
-        verbose_name_plural = '13 広告設定'
+        verbose_name_plural = '12 広告設定'
 
 
 class CommentManager(models.Manager):
@@ -830,7 +769,7 @@ class Comment(models.Model):
 
     class Meta:
         db_table = 'comment'
-        verbose_name_plural = '14 コメント'
+        verbose_name_plural = '13 コメント'
         indexes = [
             models.Index(fields=['parent'], name='comment_parent_idx'),
         ]
@@ -859,7 +798,7 @@ class Message(models.Model):
 
     class Meta:
         db_table = 'message'
-        verbose_name_plural = '15 メッセージ'
+        verbose_name_plural = '14 メッセージ'
         indexes = [
             models.Index(fields=['parent'], name='message_parent_idx'),
         ]

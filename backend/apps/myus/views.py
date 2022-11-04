@@ -26,7 +26,7 @@ from apps.myus.convert.convert_hls import convert_exe
 from apps.myus.forms import SearchTagForm
 from apps.myus.models import Profile, MyPage, SearchTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Advertise
-from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
 from apps.myus.modules.contains import NotificationTypeNo, models_like_dict, models_comment_dict
 from apps.myus.modules.context_data import ContextData
 from apps.myus.modules.get_form import get_detail
@@ -809,50 +809,6 @@ class VideoDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, VideoDetail, **kwargs)
-
-
-# Live
-class LiveCreate(CreateView):
-    """LiveCreate"""
-    model = Live
-    fields = ('title', 'content', 'image', 'convert')
-    template_name = 'live/live_create.html'
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super(LiveCreate, self).form_valid(form)
-
-    def get_success_url(self):
-        return success_url(self, 'myus:live_detail', NotificationTypeNo.live, 'live')
-
-    def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, LiveCreate, **kwargs)
-
-
-class LiveList(ListView):
-    """LiveList"""
-    model = Live
-    template_name = 'live/live.html'
-    context_object_name = 'live_list'
-    ordering = ['-created']
-
-    def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, LiveList, **kwargs)
-
-    def get_queryset(self, **kwargs):
-        return Search.search_models(self, Live)
-
-
-class LiveDetail(DetailView):
-    """LiveDetail"""
-    model = Live
-    template_name = 'live/live_detail.html'
-
-    def get(self, request, *args, **kwargs):
-        return get_detail(self, request)
-
-    def get_context_data(self, **kwargs):
-        return ContextData.models_context_data(self, LiveDetail, **kwargs)
 
 
 # Music

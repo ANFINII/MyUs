@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
 from apps.myus.forms import QuillForm
 from apps.myus.models import MyPage, NotificationSetting, Follow
-from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Todo, Advertise
+from apps.myus.models import Video, Music, Picture, Blog, Chat, Todo, Advertise
 from apps.myus.modules.contains import models_pjax, models_create_pjax
 from apps.myus.modules.search import SearchData
 
@@ -24,7 +24,6 @@ def pjax_context(request, href):
         else:
             context['html'] = render_to_string('index_list.html', {
                 'video_list': Video.objects.filter(publish=True).order_by('-created')[:8],
-                'live_list': Live.objects.filter(publish=True).order_by('-created')[:8],
                 'music_list': Music.objects.filter(publish=True).order_by('-created')[:8],
                 'picture_list': Picture.objects.filter(publish=True).order_by('-created')[:8],
                 'blog_list': Blog.objects.filter(publish=True).order_by('-created')[:8],
@@ -41,7 +40,6 @@ def pjax_context(request, href):
             context['html'] = render_to_string('index_list.html', {
                 'Recommend': 'Recommend',
                 'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
-                'live_list': Live.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
                 'music_list': Music.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
                 'picture_list': Picture.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
                 'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
@@ -66,7 +64,6 @@ def pjax_context(request, href):
                 context['html'] = render_to_string('userpage/userpage_list.html', {
                     'followed': followed, 'author_name': nickname, 'user_list': user_list,
                     'video_list': Video.objects.filter(author=author, publish=True).order_by('-created'),
-                    'live_list': Live.objects.filter(author=author, publish=True).order_by('-created'),
                     'music_list': Music.objects.filter(author=author, publish=True).order_by('-created'),
                     'picture_list': Picture.objects.filter(author=author, publish=True).order_by('-created'),
                     'blog_list': Blog.objects.filter(author=author, publish=True).order_by('-created'),

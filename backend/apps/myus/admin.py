@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
 from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, AccessLog, Comment, Message, Follow, Advertise
-from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
 
 
 # Admin用の管理画面
@@ -152,23 +152,6 @@ class VideoAdmin(ImportExportModelAdmin):
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'video', 'convert', 'hashtag', 'like', 'read', 'publish')}),
-        ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
-    ]
-
-
-@admin.register(Live)
-class LiveAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
-    list_select_related = ('author',)
-    search_fields = ('title', 'author__nickname', 'created')
-    ordering = ('author', '-created')
-    filter_horizontal = ('hashtag', 'like')
-    readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
-    inlines = [CommentInlineAdmin]
-
-    # 詳細画面
-    fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'live', 'hashtag', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -495,32 +478,6 @@ class VideoAdminSite(admin.ModelAdmin, PublishMixin):
         obj.author = request.user
         super(VideoAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Video, VideoAdminSite)
-
-
-class LiveAdminSite(admin.ModelAdmin, PublishMixin):
-    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
-    list_editable = ('title',)
-    search_fields = ('title', 'created')
-    ordering = ('-created',)
-    actions = ('published', 'unpublished')
-    filter_horizontal = ('hashtag',)
-    readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
-    inlines = [CommentInline]
-
-    # 詳細画面
-    fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'image', 'live', 'hashtag', 'publish')}),
-        ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
-    ]
-
-    def get_queryset(self, request):
-        qs = super(LiveAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
-        return qs.filter(author=request.user)
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(LiveAdminSite, self).save_model(request, obj, form, change)
-manage_site.register(Live, LiveAdminSite)
 
 
 class MusicAdminSite(admin.ModelAdmin, PublishMixin):

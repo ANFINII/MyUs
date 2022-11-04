@@ -5,7 +5,6 @@ from apps.myus.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, 
 from apps.myus.views import NotificationSettingView, notification_setting, notification_confirmed, notification_deleted
 from apps.myus.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
 from apps.myus.views import VideoList, VideoCreate, VideoDetail
-from apps.myus.views import LiveList, LiveCreate, LiveDetail
 from apps.myus.views import MusicList, MusicCreate, MusicDetail
 from apps.myus.views import PictureList, PictureCreate, PictureDetail
 from apps.myus.views import BlogList, BlogCreate, BlogDetail
@@ -51,10 +50,6 @@ urlpatterns = [
     path('video', VideoList.as_view(), name='video_list'),
     path('video/create', VideoCreate.as_view(), name='video_create'),
     path('video/detail/<int:pk>/<str:title>', VideoDetail.as_view(), name='video_detail'),
-
-    path('live', LiveList.as_view(), name='live_list'),
-    path('live/create', LiveCreate.as_view(), name='live_create'),
-    path('live/detail/<int:pk>/<str:title>', LiveDetail.as_view(), name='live_detail'),
 
     path('music', MusicList.as_view(), name='music_list'),
     path('music/create', MusicCreate.as_view(), name='music_create'),

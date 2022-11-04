@@ -14,8 +14,6 @@ def notification_data(self):
 
     if notification_setting_obj.is_video:
         notification_type_list_1 += [NotificationTypeNo.video]
-    if notification_setting_obj.is_live:
-        notification_type_list_1 += [NotificationTypeNo.live]
     if notification_setting_obj.is_music:
         notification_type_list_1 += [NotificationTypeNo.music]
     if notification_setting_obj.is_picture:
@@ -59,7 +57,6 @@ def notification_data(self):
 def notification_setting_update(is_notification, notification_type, notification_obj):
     is_bool = True if is_notification == 'False' else False
     if notification_type == 'video': notification_obj.is_video = is_bool
-    if notification_type == 'live': notification_obj.is_live = is_bool
     if notification_type == 'music': notification_obj.is_music = is_bool
     if notification_type == 'picture': notification_obj.is_picture = is_bool
     if notification_type == 'blog': notification_obj.is_blog = is_bool

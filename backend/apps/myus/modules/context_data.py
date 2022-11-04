@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
 from apps.myus.models import MyPage, SearchTag, NotificationSetting, Follow, Comment
-from apps.myus.models import Video, Live, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
 from apps.myus.modules.notification import notification_data
 
 User = get_user_model()
@@ -34,7 +34,6 @@ class ContextData:
         if 'Index' in str(models.__name__):
             context.update({
                 'video_list': Video.objects.filter(publish=True).order_by('-created')[:8],
-                'live_list': Live.objects.filter(publish=True).order_by('-created')[:8],
                 'music_list': Music.objects.filter(publish=True).order_by('-created')[:8],
                 'picture_list': Picture.objects.filter(publish=True).order_by('-created')[:8],
                 'blog_list': Blog.objects.filter(publish=True).order_by('-created')[:8],
@@ -49,7 +48,6 @@ class ContextData:
             context['Recommend'] = 'Recommend'
             context.update({
                 'video_list': Video.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
-                'live_list': Live.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
                 'music_list': Music.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
                 'picture_list': Picture.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
                 'blog_list': Blog.objects.filter(publish=True).filter(created__gte=aggregation_date).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(score__gte=50).order_by('-score')[:8],
@@ -64,7 +62,6 @@ class ContextData:
             context.update({
                 'user_list': User.objects.filter(id=author.id),
                 'video_list': Video.objects.filter(author=author, publish=True).order_by('-created'),
-                'live_list': Live.objects.filter(author=author, publish=True).order_by('-created'),
                 'music_list': Music.objects.filter(author=author, publish=True).order_by('-created'),
                 'picture_list': Picture.objects.filter(author=author, publish=True).order_by('-created'),
                 'blog_list': Blog.objects.filter(author=author, publish=True).order_by('-created'),
@@ -104,9 +101,6 @@ class ContextData:
         context['advertise_auto_list'] = Advertise.objects.filter(publish=True, type=0).order_by('?')[:1]
         if 'VideoDetail' in str(models.__name__):
             context.update(video_list=Video.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
-
-        if 'LiveDetail' in str(models.__name__):
-            context.update(live_list=Live.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
 
         if 'MusicDetail' in str(models.__name__):
             context.update(music_list=Music.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50])
