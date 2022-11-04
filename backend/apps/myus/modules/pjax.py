@@ -12,19 +12,17 @@ from apps.myus.modules.search import SearchData
 User = get_user_model()
 
 def pjax_context(request, href):
-    template = ''
+    template = 'index_list.html'
     context = {}
     user = request.user
     search = request.GET.get('search')
     if href == '':
-        template = 'index_list.html'
         if search:
             result = SearchData.search_index(search)
             context = {'object_list': result, 'query': search, 'count': len(result)}
         else:
             context = {f'{value}_list': model.objects.filter(publish=True).order_by('-created')[:8] for model, value in model_dict.items()}
     if href == 'recommend':
-        template = 'index_list.html'
         aggregation_date = datetime.today() - timedelta(days=500)
         if search:
             result = SearchData.search_recommend(aggregation_date, search)
