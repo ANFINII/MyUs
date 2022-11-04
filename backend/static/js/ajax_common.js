@@ -52,7 +52,7 @@ $(document).on('click', '.follow_form', function (event) {
     dataType: 'json',
   })
     .done(function (response) {
-      if (response['followed']) {
+      if (response['is_follow']) {
         $('.follow_change').removeClass('btn-success');
         $('.follow_change').addClass('btn-danger');
         $('.btn-danger').html('解除する');
@@ -115,7 +115,7 @@ $(document).on('click', '.like_form_comment', function (event) {
     dataType: 'json',
   })
     .done(function (response) {
-      if (response['comment_liked']) {
+      if (response['is_comment_like']) {
         $('.like_color_' + comment_id).removeClass('bi-hand-thumbs-up');
         $('.like_color_' + comment_id).parent().removeClass('like_no');
         $('.like_color_' + comment_id).addClass('bi-hand-thumbs-up-fill');

@@ -24,26 +24,26 @@
     <a href="{% url 'myus:chat_detail' notification.content_object.id %}" class="notification_aria_anker">
     {% elif notification.type_name == 'collabo' %}
     <a href="{% url 'myus:collabo_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
-    {% elif notification.type_no >= 8 and notification.type_no <= 10 %}
+    {% elif notification.type_no >= 7 and notification.type_no <= 9 %}
     <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" class="notification_aria_anker pjax_button_userpage">
     {% endif %}
-      {% if notification.type_no >= 1 and notification.type_no <= 7 %}
+      {% if notification.type_no >= 1 and notification.type_no <= 6 %}
       <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんが{{ notification.content_object.title }}を投稿しました">
         {{ notification.content_object.title }}
       </div>
-      {% elif notification.type_no == 8 %}
+      {% elif notification.type_no == 7 %}
       <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんにフォローされました">
         {{ notification.user_from.nickname }}さんにフォローされました
       </div>
-      {% elif notification.type_no == 9 %}
+      {% elif notification.type_no == 8 %}
       <div class="notification_aria_list_1" title="{{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました">
         {{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました
       </div>
-      {% elif notification.type_no == 10 %}
+      {% elif notification.type_no == 9 %}
       <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんから返信がありました {{ notification.content_object.text }}">
         {{ notification.content_object.text }}
       </div>
-      {% elif notification.type_no == 11 %}
+      {% elif notification.type_no == 10 %}
         {% if  notification.content_object.read >= 1000000000 %}
         <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10億回閲覧されました">
           {{ notification.content_object.title }}が10億回閲覧されました

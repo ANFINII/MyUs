@@ -19,7 +19,7 @@
       <button class="btn btn-secondary btn" disabled>フォローする</button>
       {% elif user.is_authenticated %}
       <form method="POST" action="" value="{{ author.nickname }}" csrf="{{ csrf_token }}" class="follow_form">
-        {% if followed %}
+        {% if is_follow %}
         <button type="submit" name="following_id" class="btn btn-danger follow_change">解除する</button>
         {% else %}
         <button type="submit" name="following_id" class="btn btn-success follow_change">フォローする</button>
