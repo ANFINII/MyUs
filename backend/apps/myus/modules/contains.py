@@ -1,7 +1,17 @@
 from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
 
 
-models_dict = {
+model_list = [Video, Music, Picture, Blog, Chat]
+
+model_dict = {
+    Video  : 'video',
+    Music  : 'music',
+    Picture: 'picture',
+    Blog   : 'blog',
+    Chat   : 'chat',
+}
+
+model_dict_type = {
     Video  : 'video',
     Music  : 'music',
     Picture: 'picture',
@@ -10,7 +20,7 @@ models_dict = {
     Collabo: 'collabo',
 }
 
-models_like_dict = {
+model_like_dict = {
     'video/detail'  : Video,
     'music/detail'  : Music,
     'picture/detail': Picture,
@@ -19,7 +29,7 @@ models_like_dict = {
     'collabo/detail': Collabo,
 }
 
-models_comment_dict = {
+model_comment_dict = {
     'video/detail'  : Video,
     'music/detail'  : Music,
     'picture/detail': Picture,
@@ -28,7 +38,7 @@ models_comment_dict = {
     'todo/detail'   : Todo,
 }
 
-models_pjax = {
+model_pjax = {
     'video'  : Video,
     'music'  : Music,
     'picture': Picture,
@@ -37,7 +47,7 @@ models_pjax = {
     'collabo': Collabo,
 }
 
-models_create_pjax = (
+model_create_pjax = (
     'video/create',
     'music/create',
     'picture/create',
