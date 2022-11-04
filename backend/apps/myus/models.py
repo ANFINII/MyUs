@@ -321,7 +321,7 @@ class MediaManager:
 class VideoQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
-        if query is not None:
+        if query:
             or_lookup = (
                 Q(title__icontains=query) |
                 Q(hashtag__jp_name__icontains=query) |
@@ -384,7 +384,7 @@ class Video(models.Model, MediaModel):
 class LiveQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
-        if query is not None:
+        if query:
             or_lookup = (
                 Q(title__icontains=query) |
                 Q(hashtag__jp_name__icontains=query) |
@@ -444,7 +444,7 @@ class Live(models.Model, MediaModel):
 class MusicQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
-        if query is not None:
+        if query:
             or_lookup = (
                 Q(title__icontains=query) |
                 Q(hashtag__jp_name__icontains=query) |
@@ -499,7 +499,7 @@ class Music(models.Model, MediaModel):
 class PictureQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
-        if query is not None:
+        if query:
             or_lookup = (
                 Q(title__icontains=query) |
                 Q(hashtag__jp_name__icontains=query) |
@@ -551,7 +551,7 @@ class Picture(models.Model, MediaModel):
 class BlogQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
-        if query is not None:
+        if query:
             or_lookup = (
                 Q(title__icontains=query) |
                 Q(hashtag__jp_name__icontains=query) |
@@ -605,7 +605,7 @@ class Blog(models.Model, MediaModel):
 class ChatQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
-        if query is not None:
+        if query:
             or_lookup = (
                 Q(title__icontains=query) |
                 Q(hashtag__jp_name__icontains=query) |

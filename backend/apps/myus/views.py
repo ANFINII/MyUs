@@ -169,7 +169,7 @@ class Withdrawal(View):
         user = self.request.user
         context = {}
         notification_list = notification_data(self)
-        if user.id is not None:
+        if user.id:
             context = {
                 'expired_seconds': self.EXPIRED_SECONDS,
                 'notification_list': notification_list['notification_list'],

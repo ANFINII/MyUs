@@ -12,7 +12,7 @@ class ContextData:
     def context_data(self, models, **kwargs):
         context = super(models, self).get_context_data(**kwargs)
         user = self.request.user
-        if user.id is not None:
+        if user.id:
             notification_list = notification_data(self)
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
@@ -86,7 +86,7 @@ class ContextData:
             subquery = Comment.objects.filter(**filter_kwargs)
             context['comment_list'] = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery)).select_related('author').prefetch_related('like')
             context['reply_list'] = obj.comment.filter(parent__isnull=False).annotate(comment_liked=Exists(subquery)).select_related('author', 'parent').prefetch_related('like')
-        if user.id is not None:
+        if user.id:
             notification_list = notification_data(self)
             context['notification_list'] = notification_list['notification_list']
             context['notification_count'] = notification_list['notification_count']
