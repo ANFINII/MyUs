@@ -50,8 +50,6 @@ export default function DropMenuNotice() {
 
             {/* {% if notification.type_name == 'video' %} */}
             <a href="{% url 'myus:video_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker">
-            {/* {% elif notification.type_name == 'live' %} */}
-            {/* <a href="{% url 'myus:live_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker"> */}
             {/* {% elif notification.type_name == 'music' %} */}
             {/* <a href="{% url 'myus:music_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker"> */}
             {/* {% elif notification.type_name == 'picture' %} */}

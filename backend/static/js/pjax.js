@@ -100,7 +100,6 @@ $(document).on('click', '.pjax_hash_search', function (event) {
   event.preventDefault();
   let href = location.pathname;
   if (href.match('/video'))   { href = 'video' }
-  if (href.match('/live'))    { href = 'live' }
   if (href.match('/music'))   { href = 'music' }
   if (href.match('/picture')) { href = 'picture' }
   if (href.match('/blog'))    { href = 'blog' }

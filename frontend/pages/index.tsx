@@ -4,24 +4,24 @@ import MusicArticle from 'components/elements/article/music'
 import PictureArticle from 'components/elements/article/picture'
 import BlogArticle from 'components/elements/article/blog'
 import ChatArticle from 'components/elements/article/chat'
-import type { NextPage, GetServerSideProps } from 'next'
+import axios from 'lib/api/axios'
+import { NextPage, GetServerSideProps } from 'next'
 
-
-export async function getVideoList() {
-  const BASEURL = process.env.NEXT_PUBLIC_API_URL
-  const res = await fetch(BASEURL + '/api/video')
-  const data = await res.json()
-  return data
-}
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const data = await getVideoList()
+  const res_video = await axios.get('/api/video')
+  const video: any = res_video.data
+  const res_music = await axios.get('/api/music')
+  const music: any = res_music.data
   return {
-    props: { data },
+    props: { video, music }
   }
 }
 
-const Home: NextPage = (data: any) => {
+const Home: NextPage = (
+  video: any,
+  music: any,
+) => {
   return (
     <>
       <Head>
@@ -42,21 +42,9 @@ const Home: NextPage = (data: any) => {
           {/* {% include 'search/search_video.html' %} */}
         {/* {% else %} */}
           {/* {% for item in video_list %} */}
-            <VideoArticle datas={data} />
+            <VideoArticle datas={video} />
           {/* {% endfor %} */}
         {/* {% endif %} */}
-      </article>
-      <hr/>
-
-      <article className="article_index">
-        <h2>Live</h2>
-        {/* {% if query %}
-          {% include 'search/search_live.html' %}
-        {% else %}
-          {% for item in live_list %}
-            <LiveArticle/>
-          {% endfor %}
-        {% endif %} */}
       </article>
       <hr/>
 
@@ -66,7 +54,7 @@ const Home: NextPage = (data: any) => {
           {/* {% include 'search/search_music.html' %} */}
         {/* {% else %} */}
           {/* {% for item in music_list %} */}
-            <MusicArticle/>
+            <MusicArticle datas={music} />
           {/* {% endfor %} */}
         {/* {% endif %} */}
       </article>

@@ -218,7 +218,7 @@
   top: 3.5em;
   right: -250px;
   width: 250px;
-  height: 337px;
+  height: 289px;
   padding: 0;
   background: rgb(255, 250, 245);
   color: rgb(50, 50, 50);
@@ -440,11 +440,6 @@
 
 .sidebar_nav_7 {
   grid-row: 7/8;
-  position: relative;
-}
-
-.sidebar_nav_8 {
-  grid-row: 8/9;
   position: relative;
 }
 
