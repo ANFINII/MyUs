@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from apps.myus.models import Notification
 
+
 User = get_user_model()
 
 def success_url(self, myus_detail, type_no, type_name):

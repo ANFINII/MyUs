@@ -1,6 +1,6 @@
 from datetime import datetime, timezone, timedelta
 from apps.myus.models import Notification, AccessLog
-from apps.myus.modules.contains import NotificationTypeNo, models_dict
+from apps.myus.modules.contains import NotificationTypeNo, model_dict_type
 
 
 def get_client_ip(request):
@@ -30,7 +30,7 @@ def get_detail(self, request):
     context = self.get_context_data(object=obj)
     if obj.read == 10000:
         if author.notificationsetting.is_views:
-            type_name = [value for key, value in models_dict.items() if obj_class == key][0]
+            type_name = [value for key, value in model_dict_type.items() if obj_class == key][0]
             Notification.objects.create(
                 user_from=author,
                 user_to=author,

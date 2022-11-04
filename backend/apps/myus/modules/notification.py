@@ -33,18 +33,19 @@ def notification_data(self):
     if notification_setting_obj.is_views:
         notification_type_list_2 += [NotificationTypeNo.views]
 
-    notification_qs= Notification.objects.none()
-    notification_qs_1 = Notification.objects.none()
+    none_obj = Notification.objects.none()
+    notification_qs, notification_qs_1 = none_obj, none_obj
     notification_confirmed_list = []
     confirmed_kwargs = {'id': OuterRef('pk'), 'confirmed': user}
     subquery = Notification.objects.filter(**confirmed_kwargs)
     following_list = Follow.objects.filter(follower=user).values_list('following_id', 'created')
 
     for id, dates in following_list:
-        notification_qs_1 = Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).select_related('user_from').prefetch_related('content_object')
+        notification = Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).annotate(user_confirmed=Exists(subquery)).exclude(deleted=user)
+        notification_qs_1 = notification.select_related('user_from').prefetch_related('content_object')
         notification_qs = notification_qs.union(notification_qs_1)
-        notification_confirmed_list += Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_type_list_1, created__gt=dates).exclude(deleted=user).exclude(confirmed=user).annotate(user_confirmed=Exists(subquery))
-    notification_qs_2 = Notification.objects.filter(user_to=user, type_no__in=notification_type_list_2).exclude(deleted=user).annotate(user_confirmed=Exists(subquery)).select_related('user_from').prefetch_related('content_object')
+        notification_confirmed_list += notification.exclude(confirmed=user)
+    notification_qs_2 = Notification.objects.filter(user_to=user, type_no__in=notification_type_list_2).annotate(user_confirmed=Exists(subquery)).exclude(deleted=user).select_related('user_from').prefetch_related('content_object')
     notification_list = notification_qs.union(notification_qs_2).order_by('-created')
 
     context = {
@@ -55,7 +56,7 @@ def notification_data(self):
 
 
 def notification_setting_update(is_notification, notification_type, notification_obj):
-    is_bool = True if is_notification == 'False' else False
+    is_bool = is_notification == 'False'
     if notification_type == 'video': notification_obj.is_video = is_bool
     if notification_type == 'music': notification_obj.is_music = is_bool
     if notification_type == 'picture': notification_obj.is_picture = is_bool
