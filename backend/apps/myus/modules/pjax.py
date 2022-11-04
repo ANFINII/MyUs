@@ -12,33 +12,30 @@ from apps.myus.modules.search import SearchData
 User = get_user_model()
 
 def pjax_context(request, href):
+    template = ''
     context = {}
     user = request.user
     search = request.GET.get('search')
     if href == '':
+        template = 'index_list.html'
         if search:
             result = SearchData.search_index(search)
-            context['html'] = render_to_string('index_list.html', {
-                'object_list': result, 'query': search, 'count': len(result)
-            }, request=request)
+            context = {'object_list': result, 'query': search, 'count': len(result)}
         else:
-            data = {f'{value}_list': model.objects.filter(publish=True).order_by('-created')[:8] for model, value in model_dict.items()}
-            context['html'] = render_to_string('index_list.html', data, request=request)
+            context = {f'{value}_list': model.objects.filter(publish=True).order_by('-created')[:8] for model, value in model_dict.items()}
     if href == 'recommend':
+        template = 'index_list.html'
         aggregation_date = datetime.today() - timedelta(days=500)
         if search:
             result = SearchData.search_recommend(aggregation_date, search)
-            context['html'] = render_to_string('index_list.html', {
-                'object_list': result, 'query': search, 'count': len(result)
-            }, request=request)
+            context = {'object_list': result, 'query': search, 'count': len(result)}
         else:
             score = F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20
-            data = {'Recommend': 'Recommend'}
-            data.update({
+            context = {'Recommend': 'Recommend'}
+            context.update({
                 f'{value}_list': model.objects.annotate(score=score).filter(publish=True, created__gte=aggregation_date, score__gte=50).order_by('-score')[:8]
                 for model, value in model_dict.items()
             })
-            context['html'] = render_to_string('index_list.html', data, request=request)
     if 'userpage/post' in href or 'userpage/information' in href or 'userpage/advertise' in href:
         nickname = request.GET.get('nickname')
         author = get_object_or_404(User, nickname=nickname)
@@ -46,89 +43,78 @@ def pjax_context(request, href):
         follow = Follow.objects.filter(follower=user.id, following=author)
         is_follow = follow.exists()
         if 'userpage/post' in href:
+            template = 'userpage/userpage_list.html'
             if search:
                 result = SearchData.search_userpage(author, search)
-                context['html'] = render_to_string('userpage/userpage_list.html', {
+                context = {
                     'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list,
                     'object_list': result, 'query': search, 'count': len(result)
-                }, request=request)
+                }
             else:
-                data = {'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list}
-                data.update({
+                context = {'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list}
+                context.update({
                     f'{value}_list': model.objects.filter(author=author, publish=True).order_by('-created')
                     for model, value in model_dict.items()
                 })
-                context['html'] = render_to_string('userpage/userpage_list.html', data, request=request)
         if 'userpage/information' in href:
-            context['html'] = render_to_string('userpage/userpage_information_content.html', {
-                'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list
-            }, request=request)
+            template = 'userpage/userpage_information_content.html'
+            context = {'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list}
         if 'userpage/advertise' in href:
+            template = 'userpage/userpage_advertise_list.html'
             if search:
                 result = SearchData.search_advertise(Advertise, author, search)
-                context['html'] = render_to_string('userpage/userpage_advertise_list.html', {
+                context = {
                     'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list,
                     'advertise_list': result, 'query': search, 'count': len(result)
-                }, request=request)
+                }
             else:
                 advertise = Advertise.objects.filter(author=author, publish=True)
-                context['html'] = render_to_string('userpage/userpage_advertise_list.html', {
-                    'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list, 'advertise_list': advertise
-                }, request=request)
+                context = {'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list, 'advertise_list': advertise}
     if href in model_pjax:
+        template = f'{href}/{href}_list.html'
         if search:
             result = SearchData.search_models(model_pjax[href], search)
-            context['html'] = render_to_string(f'{href}/{href}_list.html', {
-                f'{href}_list': result[:100], 'query': search, 'count': result.count()
-            }, request=request)
+            context = {f'{href}_list': result[:100], 'query': search, 'count': result.count()}
         else:
-            context['html'] = render_to_string(f'{href}/{href}_list.html', {
-                f'{href}_list': model_pjax[href].objects.filter(publish=True).order_by('-created')[:100]
-            }, request=request)
+            context = {f'{href}_list': model_pjax[href].objects.filter(publish=True).order_by('-created')[:100]}
     if href == 'todo':
+        template = 'todo/todo_list.html'
         if search:
             result = SearchData.search_todo(Todo, user, search)
-            context['html'] = render_to_string('todo/todo_list.html', {
-                'todo_list': result[:100], 'query': search, 'count': result.count()
-            }, request=request)
+            context = {'todo_list': result[:100], 'query': search, 'count': result.count()}
         else:
-            context['html'] = render_to_string('todo/todo_list.html', {
-                'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100]
-            }, request=request)
+            context = {'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100]}
     if href in ('follow', 'follower'):
         if search:
+            template = f'follow/{href}_list.html'
             result = SearchData.search_follow(Follow, href, user, search)
-            context['html'] = render_to_string(f'follow/{href}_list.html', {
-                f'{href}_list': result[:100], 'query': search, 'count': result.count()
-            }, request=request)
+            context = {f'{href}_list': result[:100], 'query': search, 'count': result.count()}
         elif href == 'follow':
-            context['html'] = render_to_string('follow/follow_list.html', {
-                'follow_list': Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100]
-            }, request=request)
+            template = 'follow/follow_list.html'
+            context = {'follow_list': Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100]}
         elif href == 'follower':
-            context['html'] = render_to_string('follow/follower_list.html', {
-                'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100]
-            }, request=request)
+            template = 'follow/follower_list.html'
+            context = {'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100]}
     if href in model_create_pjax:
         model = href.replace('/create', '')
+        template = f'{model}/{model}_create_content.html'
         if model == 'blog':
-            context['html'] = render_to_string(f'{model}/{model}_create_content.html', {'form': QuillForm()}, request=request)
-        else:
-            context['html'] = render_to_string(f'{model}/{model}_create_content.html', request=request)
+            context = {'form': QuillForm()}
     if href == 'notification':
-        context['html'] = render_to_string('common/notification_content.html', {
-            'notification_setting_list': NotificationSetting.objects.filter(user=user.id)
-        }, request=request)
+        template = 'common/notification_content.html'
+        context = {'notification_setting_list': NotificationSetting.objects.filter(user=user.id)}
     if href == 'userpolicy':
-        context['html'] = render_to_string('common/userpolicy_content.html', request=request)
+        template = 'common/userpolicy_content.html'
     if href == 'knowledge':
-        context['html'] = render_to_string('common/knowledge_content.html', request=request)
+        template = 'common/knowledge_content.html'
     if href == 'payment':
-        context['html'] = render_to_string('payment/payment_content.html', request=request)
+        template = 'payment/payment_content.html'
     if href == 'profile':
-        context['html'] = render_to_string('registration/profile_content.html', request=request)
+        template = 'registration/profile_content.html'
     if href == 'mypage':
-        context['html'] = render_to_string('registration/mypage_content.html', {'mypage_list': MyPage.objects.filter(user=user.id)}, request=request)
+        template = 'registration/mypage_content.html'
+        context = {'mypage_list': MyPage.objects.filter(user=user.id)}
     if href == 'withdrawal':
-        context['html'] = render_to_string('registration/withdrawal_content.html', {'expired_seconds': 60}, request=request)
-    return context
+        template = 'registration/withdrawal_content.html'
+        context = {'expired_seconds': 60}
+    return {'html': render_to_string(template, context, request)}
