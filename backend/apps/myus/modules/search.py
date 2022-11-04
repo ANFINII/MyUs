@@ -5,7 +5,8 @@ from operator import and_
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, F, Count
-from apps.myus.models import Video, Music, Picture, Blog, Chat
+from apps.myus.models import Video, Music
+from apps.myus.modules.contains import model_list
 from apps.myus.modules.filter_data import DeferData
 
 User = get_user_model()
@@ -25,30 +26,19 @@ def get_q_list(search):
 
 class SearchData:
     def search_index(search):
-        result1 = Video.objects.search(search)[:8]
-        result2 = Music.objects.search(search)[:8]
-        result3 = Picture.objects.search(search)[:8]
-        result4 = Blog.objects.search(search)[:8]
-        result5 = Chat.objects.search(search)[:8]
-        queryset_chain = chain(result1, result2, result3, result4, result5)
+        result = [model.objects.search(search)[:8] for model in model_list]
+        queryset_chain = chain(*result)
         return sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
 
     def search_recommend(aggregation_date, search):
-        result1 = Video.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(scr__gte=50).search(search)[:8]
-        result2 = Music.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(scr__gte=50).search(search)[:8]
-        result3 = Picture.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(scr__gte=50).search(search)[:8]
-        result4 = Blog.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(scr__gte=50).search(search)[:8]
-        result5 = Chat.objects.filter(created__gte=aggregation_date).annotate(scr=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).filter(scr__gte=50).search(search)[:8]
-        queryset_chain = chain(result1, result2, result3, result4, result5)
+        score = F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20
+        result = [model.objects.filter(created__gte=aggregation_date).annotate(scr=score).filter(scr__gte=50).search(search)[:8] for model in model_list]
+        queryset_chain = chain(*result)
         return sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
 
     def search_userpage(author, search):
-        result1 = Video.objects.filter(author=author, publish=True).search(search)
-        result2 = Music.objects.filter(author=author, publish=True).search(search)
-        result3 = Picture.objects.filter(author=author, publish=True).search(search)
-        result4 = Blog.objects.filter(author=author, publish=True).search(search)
-        result5 = Chat.objects.filter(author=author, publish=True).search(search)
-        queryset_chain = chain(result1, result2, result3, result4, result5)
+        result = [model.objects.filter(author=author, publish=True).search(search) for model in model_list]
+        queryset_chain = chain(*result)
         return sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
 
     def search_follow(model, path, user, search):
