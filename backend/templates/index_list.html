@@ -20,18 +20,6 @@
 <hr>
 
 <article class="article_index">
-  <h2>Live</h2>
-  {% if query %}
-    {% include 'search/search_live.html' %}
-  {% else %}
-    {% for item in live_list %}
-      {% include 'live/live_article.html' %}
-    {% endfor %}
-  {% endif %}
-</article>
-<hr>
-
-<article class="article_index">
   <h2>Music</h2>
   {% if query %}
     {% include 'search/search_music.html' %}
