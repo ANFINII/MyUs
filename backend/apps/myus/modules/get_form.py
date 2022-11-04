@@ -14,9 +14,11 @@ def get_detail(self, request):
     obj = self.object
     obj_class = obj.__class__
     obj_name = obj_class.__name__
+    author = obj.author
+
     ip = get_client_ip(request)
-    access_log = AccessLog.objects.filter(ip_address=ip, type=obj_name, type_id=obj.id).first()
     JST = timezone(timedelta(hours=9), 'JST')
+    access_log = AccessLog.objects.filter(ip_address=ip, type=obj_name, type_id=obj.id).first()
     if access_log:
         if datetime.now(JST) - access_log.updated > timedelta(hours=2):
             obj.read += 1
@@ -26,8 +28,7 @@ def get_detail(self, request):
         AccessLog.objects.create(ip_address=ip, type=obj_name, type_id=obj.id)
         obj.read += 1
         obj.save(update_fields=['read'])
-    author = obj.author
-    context = self.get_context_data(object=obj)
+
     if obj.read == 10000:
         if author.notificationsetting.is_views:
             type_name = [value for key, value in model_dict_type.items() if obj_class == key][0]
@@ -38,6 +39,7 @@ def get_detail(self, request):
                 type_name=type_name,
                 content_object=obj,
             )
+
     if obj.read in (100000, 1000000, 10000000, 100000000, 1000000000):
         notification_obj = Notification.objects.get_or_create(
             user_from=author,
@@ -50,4 +52,6 @@ def get_detail(self, request):
             notification_obj.confirmed.remove(author)
         if notification_obj.deleted.filter(id=author.id).exists():
             notification_obj.deleted.remove(author)
+
+    context = self.get_context_data(object=obj)
     return self.render_to_response(context)
