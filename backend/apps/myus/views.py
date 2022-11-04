@@ -27,7 +27,7 @@ from apps.myus.forms import SearchTagForm
 from apps.myus.models import Profile, MyPage, SearchTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Advertise
 from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
-from apps.myus.modules.contains import NotificationTypeNo, models_like_dict, models_comment_dict
+from apps.myus.modules.contains import NotificationTypeNo, model_like_dict, model_comment_dict
 from apps.myus.modules.context_data import ContextData
 from apps.myus.modules.get_form import get_detail
 from apps.myus.modules.pjax import pjax_context
@@ -483,15 +483,10 @@ def like_form(request):
         user = request.user
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        obj = [get_object_or_404(models, id=obj_id) for detail, models in models_like_dict.items() if detail in obj_path][0]
-        if obj.like.filter(id=user.id).exists():
-            obj.like.remove(user)
-        else:
-            obj.like.add(user)
-        context = {
-            'liked': obj.like.filter(id=user.id).exists(),
-            'total_like': obj.total_like(),
-        }
+        obj = [get_object_or_404(models, id=obj_id) for detail, models in model_like_dict.items() if detail in obj_path][0]
+        is_like = obj.like.filter(id=user.id).exists()
+        obj.like.remove(user) if is_like else obj.like.add(user)
+        context = {'is_like': is_like, 'total_like': obj.total_like()}
         return JsonResponse(context)
 
 
@@ -500,44 +495,41 @@ def like_form_comment(request):
     if request.method == 'POST':
         user = request.user
         comment_id = request.POST.get('comment_id')
-        obj = get_object_or_404(Comment, id=comment_id)
-        author = obj.author
-        if obj.like.filter(id=user.id).exists():
-            Notification.objects.filter(type_no=NotificationTypeNo.like, object_id=obj.id).delete()
-            obj.like.remove(user)
+        comment = get_object_or_404(Comment, id=comment_id)
+        author = comment.author
+        is_comment_like = comment.like.filter(id=user.id).exists()
+        if is_comment_like:
+            Notification.objects.filter(type_no=NotificationTypeNo.like, object_id=comment.id).delete()
+            comment.like.remove(user)
         else:
-            obj.like.add(user)
+            comment.like.add(user)
             if user != author and author.notificationsetting.is_like:
                 Notification.objects.create(
                     user_from=user,
                     user_to=author,
                     type_no=NotificationTypeNo.like,
                     type_name='like',
-                    content_object=obj,
+                    content_object=comment,
                 )
-        context = {
-            'comment_liked': obj.like.filter(id=user.id).exists(),
-            'total_like': obj.total_like(),
-        }
+        context = {'is_comment_like': is_comment_like, 'total_like': comment.total_like()}
         return JsonResponse(context)
 
 
 # CommentForm & ReplyForm
 def comment_form(request):
     """comment_form"""
-    context = {}
     if request.method == 'POST':
         user = request.user
         text = request.POST.get('text')
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        obj = [models.objects.get(id=obj_id) for detail, models in models_comment_dict.items() if detail in obj_path][0]
-        comment_obj = Comment.objects.create(content_object=obj, text=text, author=user)
+        obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
+        comment = Comment.objects.create(content_object=obj, text=text, author=user)
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
-        context['comment_num'] = obj.comment_num
+        context = {'comment_num': obj.comment_num}
         context['comment_lists'] = render_to_string('parts/common/comment/comment.html', {
-            'comment_list': obj.comment.filter(id=comment_obj.id).select_related('author').prefetch_related('like'),
+            'comment_list': obj.comment.filter(id=comment.id).select_related('author').prefetch_related('like'),
             'user_id': user.id,
             'obj_id': obj_id,
             'obj_path': obj_path,
@@ -554,7 +546,7 @@ def reply_form(request):
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
-        obj = [models.objects.get(id=obj_id) for detail, models in models_comment_dict.items() if detail in obj_path][0]
+        obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
         comment_obj = Comment.objects.create(
             content_object=obj,
             text=text,
@@ -604,7 +596,7 @@ def comment_delete(request, comment_id):
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
-        obj = [models.objects.get(id=obj_id) for detail, models in models_comment_dict.items() if detail in obj_path][0]
+        obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
         Comment.objects.get(id=comment_id).delete()
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
@@ -624,7 +616,7 @@ def reply_delete(request, comment_id):
         parent_obj = Comment.objects.get(id=parent_id)
         parent_obj.reply_num = Comment.objects.filter(parent=parent_id).count()
         parent_obj.save(update_fields=['reply_num'])
-        obj = [models.objects.get(id=obj_id) for detail, models in models_comment_dict.items() if detail in obj_path][0]
+        obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
         context = {
@@ -730,7 +722,7 @@ def follow_create(request, nickname):
         follow_obj = Follow.objects.filter(follower=follower.user, following=following.user)
         follow_data = follow_update_data(follower, following, follow_obj)
         context = {
-            'followed': follow_data['followed'],
+            'is_follow': follow_data['is_follow'],
             'follower_count': follow_data['follower_count'],
         }
         return JsonResponse(context)

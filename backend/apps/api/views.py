@@ -314,7 +314,7 @@ class VideoDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery))
+        comment_list = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
@@ -389,7 +389,7 @@ class MusicDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery))
+        comment_list = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
@@ -461,7 +461,7 @@ class PictureDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery))
+        comment_list = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
@@ -534,7 +534,7 @@ class BlogDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery))
+        comment_list = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
@@ -675,7 +675,7 @@ class CollaboDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.filter(parent__isnull=True).annotate(comment_liked=Exists(subquery))
+        comment_list = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
@@ -744,7 +744,7 @@ class TodoDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.all().annotate(comment_liked=Exists(subquery))
+        comment_list = obj.comment.all().annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
