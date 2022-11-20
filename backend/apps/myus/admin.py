@@ -202,7 +202,7 @@ class BlogAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'richtext', 'hashtag', 'like', 'read', 'publish')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'delta', 'image', 'hashtag', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -544,7 +544,7 @@ class BlogAdminSite(admin.ModelAdmin, PublishMixin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'image', 'richtext', 'hashtag', 'publish')}),
+        ('編集項目', {'fields': ('title', 'content', 'delta', 'image', 'hashtag', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 

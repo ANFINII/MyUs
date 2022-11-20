@@ -70,7 +70,7 @@ INSTALLED_APPS += [
     'rest_framework_simplejwt',
     'corsheaders',
     'channels',
-    # 'django_quill',
+    'django_quill',
     'django_cleanup',
     'import_export',
 ]

@@ -19,7 +19,9 @@
   </p>
 
   <p>本文</p>
-  <p>{{ form.media }}{{ form.richtext }}</p>
+  <div id="quill_blog"></div>
+  <textarea id="delta" name="delta" hidden></textarea>
+  <textarea id="richtext" name="richtext" hidden></textarea>
   <br>
 
   <p><input type="submit" value="作成する" class="btn btn-success btn-sm"></p>
@@ -29,5 +31,6 @@
 {% endif %}
 
 {% block extrajs %}
+<script src="{% static 'js/quill_blog.js' %}"></script>
 <script src="{% static 'js/attachment_name.js' %}"></script>
 {% endblock extrajs %}

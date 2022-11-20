@@ -892,6 +892,10 @@ class PictureDetail(DetailView):
 
 
 # Blog
+def get_delta(delta, html):
+    quill = json.dumps({'delta': delta, 'html': html})
+    return quill
+
 class BlogCreate(CreateView):
     """BlogCreate"""
     model = Blog
@@ -900,6 +904,9 @@ class BlogCreate(CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        delta = self.request.POST['delta']
+        html = self.request.POST['richtext']
+        form.instance.delta = get_delta(delta, html)
         return super(BlogCreate, self).form_valid(form)
 
     def get_success_url(self):
