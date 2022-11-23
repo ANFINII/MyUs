@@ -1,3 +1,4 @@
+import json
 from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
 from django.contrib.admin import AdminSite
@@ -205,6 +206,10 @@ class BlogAdmin(ImportExportModelAdmin):
         ('編集項目', {'fields': ('author', 'title', 'content', 'delta', 'image', 'hashtag', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
+
+    def save_model(self, request, obj, form, change):
+        obj.richtext = json.loads(request.POST.dict()['delta'])['html']
+        super(BlogAdmin, self).save_model(request, obj, form, change)
 
 
 @admin.register(Chat)
@@ -554,6 +559,7 @@ class BlogAdminSite(admin.ModelAdmin, PublishMixin):
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
+        obj.richtext = json.loads(request.POST.dict()['delta'])['html']
         super(BlogAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Blog, BlogAdminSite)
 
