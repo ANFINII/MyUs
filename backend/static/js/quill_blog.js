@@ -1,4 +1,4 @@
-var quill = new Quill('#quill_blog', {
+var quill_blog = new Quill('#quill_blog', {
   modules: {
     toolbar: [
       [{'header': [1, 2, 3, 4, 5]}, {'font': []}],
@@ -13,7 +13,7 @@ var quill = new Quill('#quill_blog', {
   theme: 'snow'
 });
 
-quill.on('text-change', function() {
-  $('#delta').val(JSON.stringify(quill.getContents()));
-  $('#richtext').val(quill.root.innerHTML);
+quill_blog.on('text-change', function() {
+  $('#delta').val(JSON.stringify(quill_blog.getContents()));
+  $('#richtext').val(quill_blog.root.innerHTML);
 });
