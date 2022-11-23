@@ -12,7 +12,7 @@
   <article class="article_detail_chat">
   {% if object.publish %}
     <div class="chat_section">
-      <input type="checkbox" class="comment_aria_check">
+      <input type="checkbox" class="message_aria_check">
       {% include 'chat/chat_section/chat_section_header.html' %}
       {% include 'chat/chat_section/chat_section_main.html' %}
       {% include 'chat/chat_section/chat_section_thread.html' %}
@@ -27,5 +27,6 @@
 {% block extrajs %}
 <script src="{% static 'js/reconnecting-websocket.js' %}"></script>
 <script src="{% static 'js/websocket_chat.js' %}"></script>
+<script src="{% static 'js/quill_chat.js' %}"></script>
 <script src="{% static 'js/chat_input.js' %}"></script>
 {% endblock extrajs %}

@@ -1,5 +1,5 @@
 {% if reply.author_id == user_id %}
-<div id="edit_button_{{ reply.id }}" comment-id="{{ reply.id }}" class="edit_button">
+<div id="edit_button_{{ reply.id }}" message-id="{{ reply.id }}" class="edit_button">
   <a type="button" name="update" class="edit_button_update">編集</a>
   <a type="button" name="delete" class="edit_button_delete">削除</a>
   <div id="modal_content_{{ reply.id }}" class="modal_content">
@@ -7,15 +7,15 @@
 
     <span class="modal_content_body_span">このメッセージを削除しますか？</span>
     <div class="modal_content_body">
-      <div class="comment_aria_list">
+      <div class="message_aria_list">
         <a href="{% url 'myus:userpage' reply.author.nickname %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
-          <img src="{{ reply.author.image }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+          <img src="{{ reply.author.image }}" title="{{ reply.author.nickname }}" class="profile_image_message">
         </a>
-        <div class="comment_aria_list_1">
+        <div class="message_aria_list_1">
           <p>{{ reply.author.nickname }}</p>
           <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
         </div>
-        <div class="comment_aria_list_2">{{ reply.text.html|safe }}</div>
+        <div class="message_aria_list_2">{{ reply.text.html|safe }}</div>
       </div>
     </div>
 

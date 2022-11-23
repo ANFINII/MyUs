@@ -1,0 +1,28 @@
+<form method="POST" action="" id="message_form">
+  {% if is_period %}
+  <div id="quill_chat" placeholder="チャット期間が過ぎています!" class="textarea_br" disabled="disabled"></div>
+  <div class="message_input_chat">
+    <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
+      <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
+    </button>
+  </div>
+  {% elif user.is_authenticated %}
+  <div id="quill_chat" class="textarea_br"></div>
+  <div id="message_form_area"></div>
+  <div class="message_input_chat">
+    <button type="submit" title="送信" id="message_form_button" class="btn btn-primary btn-sm form_button" disabled>
+      <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
+    </button>
+  </div>
+  {% else %}
+  <div id="quill_chat" placeholder="チャットするにはログインが必要です!" class="textarea_br" disabled="disabled"></div>
+  <div class="message_input_chat">
+    <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
+      <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
+    </button>
+  </div>
+  {% endif %}
+  <textarea id="delta" name="delta" hidden></textarea>
+  <textarea id="text" name="text" hidden></textarea>
+  <input type="text" name="text" id="editor_input" hidden>
+</form>

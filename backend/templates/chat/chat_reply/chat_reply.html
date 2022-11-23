@@ -1,15 +1,15 @@
 {% load humanize %}
 
 {% for reply in reply_list %}
-  <div id="comment_aria_list_{{ reply.id }}" class="comment_aria_list">
+  <div id="message_aria_list_{{ reply.id }}" class="message_aria_list">
     <a href="{% url 'myus:userpage' reply.author.nickname %}" data="{{ reply.author.nickname }}" class="pjax_button_userpage">
-      <img src="{{ reply.author.image }}" title="{{ reply.author.nickname }}" class="profile_image_comment">
+      <img src="{{ reply.author.image }}" title="{{ reply.author.nickname }}" class="profile_image_message">
     </a>
-    <div class="comment_aria_list_1">
+    <div class="message_aria_list_1">
       <p>{{ reply.author.nickname }}</p>
       <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
     </div>
-    <div id="comment_aria_list_2_{{ reply.id }}" class="comment_aria_list_2">{{ reply.text.html|safe }}</div>
+    <div id="message_aria_list_2_{{ reply.id }}" class="message_aria_list_2">{{ reply.text.html|safe }}</div>
     {% include 'chat/chat_reply/crud/modal_content_caht_reply.html' %}
   </div>
   <div id="edit_update_main_{{ reply.id }}" class="edit_update_main_chat">
