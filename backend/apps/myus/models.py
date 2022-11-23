@@ -514,7 +514,7 @@ class Blog(models.Model, MediaModel):
     title       = models.CharField(max_length=100)
     content     = models.TextField()
     richtext    = models.TextField()
-    delta       = QuillField(null=True)
+    delta       = QuillField()
     image       = models.ImageField(upload_to=images_blog_upload)
     comment     = GenericRelation('Comment')
     hashtag     = models.ManyToManyField(HashTag, blank=True)
@@ -781,17 +781,14 @@ class Message(models.Model):
     author    = models.ForeignKey(User, on_delete=models.CASCADE)
     chat      = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='message')
     parent    = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply', blank=True, null=True)
-    content   = QuillField()
+    text      = models.TextField()
+    delta     = QuillField()
     reply_num = models.IntegerField(default=0)
     created   = models.DateTimeField(auto_now_add=True)
     updated   = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.id)
-
-    def content_html(self):
-        return self.content.html
-    content_html.short_description = 'content'
 
     def reply_count(self):
         return self.reply_num
