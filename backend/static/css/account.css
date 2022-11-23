@@ -216,15 +216,14 @@ td.td-color {
   margin: 0;
 }
 
-form ul {
+.messages_password_change {
   grid-column: 1/2;
   grid-row: 2/3;
   list-style: none;
   font-size: 14px;
   color: rgb(255, 0, 0);
   height: 0.8em;
-  padding: 0;
-  margin: 0 0 40px 0;
+  padding: 0 0 50px 0;
 }
 
 .messages_password_done {
@@ -247,4 +246,15 @@ form ul {
 
 .withdrawal {
   margin: 0 0 24px 0;
+}
+
+.form_signup {
+  width: 100%;
+  max-width: 380px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form_signup .checkbox {
+  font-weight: 400;
 }
