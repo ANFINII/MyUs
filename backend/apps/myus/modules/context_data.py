@@ -130,5 +130,5 @@ class ContextData:
             context['todo_list'] = Todo.objects.filter(author=user).exclude(id=obj.id)[:50]
 
         if class_name not in 'TodoDetail':
-            context['liked'] = obj.like.filter(id=user.id).exists()
+            context['is_like'] = obj.like.filter(id=user.id).exists()
         return context

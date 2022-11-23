@@ -83,7 +83,7 @@ $(document).on('click', '.like_form', function (event) {
     dataType: 'json',
   })
     .done(function (response) {
-      if (response['liked']) {
+      if (response['is_like']) {
         $('.like_color').removeClass('bi-hand-thumbs-up');
         $('.like_color').parent().removeClass('like_no');
         $('.like_color').addClass('bi-hand-thumbs-up-fill');

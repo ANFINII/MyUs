@@ -21,7 +21,7 @@
 
     {% if user.is_authenticated %}
     <form method="POST" action="" obj-id="{{ object.id }}" path="{{ request.path }}" csrf="{{ csrf_token }}" class="view_good_inline">
-      {% if liked %}
+      {% if is_like %}
       <button type="submit" name="like" class="like_form like_fill">
         <i title="いいね" class="bi bi-hand-thumbs-up-fill like_color"></i>
       </button>

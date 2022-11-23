@@ -486,7 +486,7 @@ def like_form(request):
         obj = [get_object_or_404(models, id=obj_id) for detail, models in model_like_dict.items() if detail in obj_path][0]
         is_like = obj.like.filter(id=user.id).exists()
         obj.like.remove(user) if is_like else obj.like.add(user)
-        context = {'is_like': is_like, 'total_like': obj.total_like()}
+        context = {'is_like': obj.like.filter(id=user.id).exists(), 'total_like': obj.total_like()}
         return JsonResponse(context)
 
 
@@ -511,7 +511,10 @@ def like_form_comment(request):
                     type_name='like',
                     content_object=comment,
                 )
-        context = {'is_comment_like': is_comment_like, 'total_like': comment.total_like()}
+        context = {
+            'is_comment_like': comment.like.filter(id=user.id).exists(),
+            'total_like': comment.total_like()
+        }
         return JsonResponse(context)
 
 

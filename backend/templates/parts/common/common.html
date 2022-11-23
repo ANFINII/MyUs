@@ -13,7 +13,7 @@
     </div>
     {% if user.is_authenticated %}
     <form method="POST" action="" obj-id="{{ object.id }}" path="{{ request.path }}" csrf="{{ csrf_token }}">
-      {% if liked %}
+      {% if is_like %}
       <button type="submit" name="like" class="like_form like_fill">
         <i class="bi bi-hand-thumbs-up-fill icon_font like_color" title="いいね"></i>
       </button>
