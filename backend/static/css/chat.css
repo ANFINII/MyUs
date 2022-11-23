@@ -482,10 +482,6 @@ hr {
   border-radius: 5px;
 }
 
-/* .chat_frame_color {
-  background: rgba(239, 239, 239, 0.4);
-} */
-
 .message_input_chat {
   display: grid;
   grid-template-columns: auto;
