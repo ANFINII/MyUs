@@ -1,4 +1,3 @@
-// let editorInput = document.getElementById('editor_input');
 var quillChat = new Quill('#quill_chat', {
   modules: {
     toolbar: [
@@ -11,25 +10,41 @@ var quillChat = new Quill('#quill_chat', {
   theme: 'snow'
 });
 
+// messageショートカット
 quillChat.on('text-change', function() {
-  $('#delta').val(JSON.stringify(quillChat.getContents()));
-  $('#text').val(quillChat.root.innerHTML);
-  let editorHtml = editor.querySelector('.ql-editor').innerHTML;
-  const text = editorHtml.replace(/<p><br><\/p>/g, '')
-  // editorInput.value = editorHtml;
-  if (!text || !text.match(/\S/g)) {
-    // disabled属性を設定
-    document.getElementById('message_form_button').setAttribute('disabled', true);
-  } else {
+  // const text = editorHtml.replace(/<p><br><\/p>/g, '')
+  const message = $('#text').val(quillChat.root.innerHTML);
+  console.log(message)
+
+  // focus時にそれ以外のtextareaを無効化する
+  const targetElem = document.querySelectorAll('.form_button');
+  const targetCount = targetElem.length;
+  if (targetElem) {
+    for (let i = 0; i < targetCount; i++)
+      targetElem[i].setAttribute('disabled', true);
+  }
+
+  if (message) {
     // disabled属性を削除
     document.getElementById('message_form_button').removeAttribute('disabled');
   }
-  // ショートカット
-  shortcut.add('Ctrl+Enter', function () {
-    $('#message_form_button').click();
-  });
-  shortcut.add('meta+Enter', function () {
-    $('#message_form_button').click();
+
+  $(document).on('input', message, function (event) {
+    event.preventDefault();
+    if (!message) {
+      // disabled属性を設定
+      document.getElementById('message_form_button').setAttribute('disabled', true);
+    } else {
+      // disabled属性を削除
+      document.getElementById('message_form_button').removeAttribute('disabled');
+      // ショートカット
+      shortcut.add('Ctrl+Enter', function () {
+        $('#message_form_button').click();
+      });
+      shortcut.add('meta+Enter', function () {
+        $('#message_form_button').click();
+      });
+    }
   });
 });
 
@@ -48,8 +63,6 @@ let quillChatReply = new Quill('reply_form_area', {
 });
 
 quillChatReply.on('text-change', function() {
-  $('#delta').val(JSON.stringify(quillChatReply.getContents()));
-  $('#text').val(quillChatReply.root.innerHTML);
   let editorHtml = editor.querySelector('.ql-editor').innerHTML;
   const text = editorHtml.replace(/<p><br><\/p>/g, '')
   replyEditorInput.value = editorHtml;
