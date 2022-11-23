@@ -70,7 +70,7 @@ class MessageInlineAdmin(admin.TabularInline):
     extra = 0
     max_num = 100
     exclude = ('reply_num',)
-    fields = ('author', 'parent', 'content')
+    fields = ('author', 'parent', 'text')
     verbose_name_plural = 'メッセージ'
 
 
@@ -338,9 +338,9 @@ class CommentAdmin(ImportExportModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'chat', 'parent', 'content_html', 'reply_count', 'created', 'updated')
+    list_display = ('id', 'author', 'chat', 'parent', 'text', 'reply_count', 'created', 'updated')
     list_select_related = ('author', 'chat', 'parent')
-    search_fields = ('content_html', 'author__nickname', 'created', 'updated')
+    search_fields = ('text', 'author__nickname', 'created', 'updated')
     ordering = ('created',)
     readonly_fields = ('reply_count', 'created', 'updated')
 
@@ -392,7 +392,7 @@ class MessageInline(admin.TabularInline):
     extra = 0
     max_num = 100
     exclude = ('content', 'reply_num')
-    readonly_fields = ('author', 'parent', 'content_html')
+    readonly_fields = ('author', 'parent', 'text')
     verbose_name_plural = 'メッセージ'
 
     def has_add_permission(self, request, obj=None):

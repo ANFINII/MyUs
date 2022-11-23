@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.db.models import F, Count
 from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
-from apps.myus.forms import QuillForm
 from apps.myus.models import MyPage, NotificationSetting, Follow, Advertise, Todo
 from apps.myus.modules.contains import model_dict, model_pjax, model_create_pjax
 from apps.myus.modules.search import SearchData
@@ -96,8 +95,6 @@ def pjax_context(request, href):
     if href in model_create_pjax:
         model = href.replace('/create', '')
         template = f'{model}/{model}_create_content.html'
-        if model == 'blog':
-            context = {'form': QuillForm()}
     if href == 'notification':
         template = 'common/notification_content.html'
         context = {'notification_setting_list': NotificationSetting.objects.filter(user=user.id)}
