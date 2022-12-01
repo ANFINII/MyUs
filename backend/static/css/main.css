@@ -971,10 +971,6 @@ div.field > button {
   grid-gap: 0 10px;
 }
 
-/* .comment_aria_list:hover {
-  background: rgb(240, 245, 255);
-} */
-
 .comment_aria_list.active,
 .reply_aria_list.active {
   display: none;
