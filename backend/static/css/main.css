@@ -244,7 +244,7 @@ div.field > button {
   width: 100%;
 }
 
-/* コンテンツ詳細セクション分 */
+/* コンテンツ詳細セクション */
 .article_detail {
   padding: 0;
   margin: 16px 0;
@@ -289,7 +289,12 @@ div.field > button {
   width: 50%;
 }
 
-.main_image {
+.article_detail_video,
+.article_detail_picture {
+  background: rgb(220, 220, 220);
+}
+
+.article_detail_contents {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -297,15 +302,11 @@ div.field > button {
   margin: 0 auto;
 }
 
-.main_image img {
+.article_detail_contents img {
   width: 100%;
 }
 
-.main_image_color {
-  background: rgb(220, 220, 220);
-}
-
-.main_image_blog {
+.article_detail_blog {
   background: rgb(255, 255, 255);
   height: auto;
 }
@@ -314,7 +315,7 @@ div.field > button {
   margin: 0 0 16px 0;
 }
 
-.article_detail .bi-download {
+.article_detail_music .bi-download {
   margin: 12px 0 0 0;
 }
 
@@ -786,8 +787,8 @@ div.field > button {
   height: 40px;
 }
 
-.profile_image_message,
-.profile_image_comment {
+.profile_image_comment,
+.profile_image_message {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -971,13 +972,13 @@ div.field > button {
   grid-gap: 0 10px;
 }
 
+.comment_aria_list a {
+  text-decoration: none;
+}
+
 .comment_aria_list.active,
 .reply_aria_list.active {
   display: none;
-}
-
-.comment_aria_list a {
-  text-decoration: none;
 }
 
 .comment_aria_list .profile_image {

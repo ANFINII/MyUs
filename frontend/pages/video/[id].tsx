@@ -21,8 +21,8 @@ export default function VideoCreate({ data }: any) {
 
       {data.publish ?
         <article className="article_detail">
-          <div className="main_image_color">
-            <div className="main_image">
+          <div className="article_detail_picture">
+            <div className="article_detail_contents">
               <video id="video" className="video vjs-fluid vjs-big-play-centered vjs-16-9" controls controlsList="nodownload"
               // onContextMenu="return false"
               poster={ image_url } data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 2]}'>

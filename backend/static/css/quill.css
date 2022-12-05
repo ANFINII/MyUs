@@ -22,12 +22,14 @@
 }
 
 /*  リンクデザイン */
-.ql-snow .ql-editor a {
+.ql-snow .ql-editor a,
+.article_detail_blog a {
   text-decoration: none;
 }
 
 /*  クォートデザイン */
-.ql-snow .ql-editor pre.ql-syntax {
+.ql-snow .ql-editor pre.ql-syntax,
+.article_detail_blog pre.ql-syntax {
   margin-top: 0;
   font-size: 16px;
   color: #212529;
@@ -35,9 +37,16 @@
 }
 
 /*  コードブロックデザイン */
-.ql-snow .ql-editor blockquote {
+.ql-snow .ql-editor blockquote,
+.article_detail_blog blockquote {
   padding-left: 16px;
   margin-top: 0;
   margin-bottom: 5px;
   border-left: 4px solid #ccc;
+}
+
+/*  画像デザイン */
+.ql-snow .ql-editor img,
+.article_detail_blog img {
+  max-width: 480px;
 }
