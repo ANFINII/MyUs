@@ -9,7 +9,7 @@
       <p>{{ message.author.nickname }}</p>
       <time>{{ message.created|date:'Y/m/d H:i' }}</time>
     </div>
-    <div id="message_aria_list_2_{{ message.id }}" class="message_aria_list_2">{{ message.text.html|safe }}</div>
+    <div id="message_aria_list_2_{{ message.id }}" class="message_aria_list_2">{{ message.text|safe }}</div>
     <a href="{% url 'myus:chat_thread' obj_id message.id %}" thread="{% url 'myus:chat_thread_button' %}" message-id="{{ message.id }}" class="message_aria_thread">
       スレッド表示
       <span id="reply_num_{{ message.id }}">返信 {{ message.reply_num|intcomma }} 件</span>

@@ -8,7 +8,7 @@
       <p>{{ message.author.nickname }}</p>
       <time>{{ message.created|date:'Y/m/d H:i' }}</time>
     </div>
-    <div id="message_aria_list_thread_{{ message.id }}" class="message_aria_list_2">{{ message.text.html|safe }}</div>
+    <div id="message_aria_list_thread_{{ message.id }}" class="message_aria_list_2">{{ message.text|safe }}</div>
   </div>
 {% endfor %}
 

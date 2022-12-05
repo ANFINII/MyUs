@@ -1,6 +1,6 @@
 <form method="POST" action="" id="message_form">
   {% if is_period %}
-  <div id="quill_chat" placeholder="チャット期間が過ぎています!" disabled="disabled"></div>
+  <div id="quill_chat" placeholder="チャット期間が過ぎています!" disabled></div>
   <div class="message_input_chat">
     <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
       <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
@@ -13,14 +13,14 @@
       <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
     </button>
   </div>
+  <textarea id="text" name="text" hidden></textarea>
+  <textarea id="delta" name="delta" hidden></textarea>
   {% else %}
-  <div id="quill_chat" placeholder="チャットするにはログインが必要です!" disabled="disabled"></div>
+  <div id="quill_chat" placeholder="チャットするにはログインが必要です!" disabled></div>
   <div class="message_input_chat">
     <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
       <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
     </button>
   </div>
   {% endif %}
-  <textarea id="delta" name="delta" hidden></textarea>
-  <textarea id="text" name="text" hidden></textarea>
 </form>
