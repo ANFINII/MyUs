@@ -988,12 +988,12 @@ class ChatDetail(DetailView):
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, ChatDetail, **kwargs)
 
-    def get_message_data(self, comment_obj):
-        obj = get_object_or_404(Chat, id=comment_obj.object_id)
+    def get_message_data(self, message):
+        chat = get_object_or_404(Chat, id=message.chat_id)
         context = {
-            'joined': obj.joined,
-            'thread': obj.thread,
-            'comment_obj': obj.comment.filter(id=comment_obj.id).select_related('author'),
+            'joined': chat.joined,
+            'thread': chat.thread,
+            'message': chat.message.filter(id=message.id).select_related('author'),
         }
         return context
 
@@ -1006,12 +1006,12 @@ class ChatThread(DetailView):
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, ChatThread, **kwargs)
 
-    def get_reply_data(self, comment_obj):
-        obj = get_object_or_404(Chat, id=comment_obj.object_id)
+    def get_reply_data(self, message):
+        chat = get_object_or_404(Chat, id=message.chat_id)
         context = {
-            'joined': obj.joined,
-            'reply_num': comment_obj.parent.reply_num,
-            'reply_obj': obj.comment.filter(id=comment_obj.id).select_related('author'),
+            'joined': chat.joined,
+            'reply_num': message.parent.reply_num,
+            'reply': chat.message.filter(id=message.id).select_related('author'),
         }
         return context
 
@@ -1021,16 +1021,16 @@ def chat_thread_button(request):
     if request.method == 'GET':
         user = request.user
         obj_id = request.GET.get('obj_id')
-        comment_id = request.GET.get('comment_id')
-        obj = Chat.objects.get(id=obj_id)
+        message_id = request.GET.get('message_id')
+        chat = Chat.objects.get(id=obj_id)
         context['obj_id'] = obj_id
-        context['comment_id'] = comment_id
+        context['message_id'] = message_id
         context['thread'] = render_to_string('chat/chat_reply/chat_section_thread_area.html', {
-            'comment_parent': obj.comment.filter(id=comment_id),
-            'reply_list': obj.comment.filter(parent_id=comment_id).select_related('author'),
+            'message_parent': chat.message.filter(id=message_id),
+            'reply_list': chat.message.filter(parent_id=message_id).select_related('author'),
             'user_id': user.id,
             'obj_id': obj_id,
-            'comment_id': comment_id,
+            'message_id': message_id,
         }, request=request)
         return JsonResponse(context)
 
