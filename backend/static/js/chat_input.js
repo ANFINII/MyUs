@@ -40,19 +40,19 @@ quill.on('text-change', function() {
 
 let replyEditor = document.getElementById('reply_form_area');
 let replyEditorInput = document.getElementById('reply_editor_input');
-// let replyQuill = new Quill(replyEditor, {
-//   modules: {
-//     toolbar: [
-//       [
-//         'bold',
-//         'blockquote',
-//         'code-block'
-//       ],
-//     ]
-//   },
-//   placeholder: '',
-//   theme: 'snow'
-// });
+let replyQuill = new Quill(replyEditor, {
+  modules: {
+    toolbar: [
+      [
+        'bold',
+        'blockquote',
+        'code-block'
+      ],
+    ]
+  },
+  placeholder: '',
+  theme: 'snow'
+});
 
 replyQuill.on('text-change', function() {
   let editorHtml = editor.querySelector('.ql-editor').innerHTML;

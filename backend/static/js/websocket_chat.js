@@ -1,7 +1,7 @@
 // WebSocketオブジェクト
 let ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
-const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
-const chatSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + '/ws/chat/detail/' + obj_id);
+const chat_id = JSON.parse(document.getElementById('obj_id').textContent);
+const chatSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + '/ws/chat/detail/' + chat_id);
 
 // Pjax処理
 let thread_dict = {};
@@ -38,7 +38,7 @@ $(document).on('click', '.message_aria_thread', function (event) {
   $.ajax({
     url: url,
     type: 'GET',
-    data: { 'obj_id': obj_id, 'message_id': message_id },
+    data: { 'chat_id': chat_id, 'message_id': message_id },
     dataType: 'json',
   })
     .done(function (response) {
@@ -76,7 +76,7 @@ chatSocket.onmessage = function (event) {
     obj.scrollTop = obj.scrollHeight;
   } else if (data['command'] === 'create_reply_message') {
     const response = data['message'];
-    if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === location.pathname) {
+    if ('/chat/detail/' + chat_id + '/thread/' + response.parent_id === location.pathname) {
       document.getElementById('reply_form_button').setAttribute('disabled', true);
       $('#joined').html(response.joined);
       $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件');
@@ -115,7 +115,7 @@ chatSocket.onmessage = function (event) {
   } else if (data['command'] === 'delete_reply_message') {
     const response = data['message'];
     const url = location.pathname;
-    if ('/chat/detail/' + obj_id + '/thread/' + response.parent_id === url) {
+    if ('/chat/detail/' + chat_id + '/thread/' + response.parent_id === url) {
       $('#message_aria_list_' + response.message_id).remove();
       $('#joined').html(response.joined);
       $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件');
@@ -139,34 +139,148 @@ chatSocket.onclose = function (event) {
   console.log('close', event);
 }
 
+
+
+var quillChat = new Quill('#quill_chat', {
+  modules: {
+    toolbar: [
+      ['bold', 'underline', 'strike'],
+      [{'list': 'ordered'}, {'list': 'bullet'}],
+      ['code-block', 'blockquote', 'link', 'image'],
+    ]
+  },
+  placeholder: '',
+  theme: 'snow'
+});
+
+const target = document.getElementById('message_form_button');
+console.log('target', target)
+
+// messageショートカット
+quillChat.on('text-change', function() {
+  // const text = editorHtml.replace(/<p><br><\/p>/g, '')
+
+  // focus時にそれ以外のtextareaを無効化する
+  const targetElem = document.querySelectorAll('.form_button');
+  const targetCount = targetElem.length;
+  if (targetElem) {
+    for (let i = 0; i < targetCount; i++)
+      targetElem[i].setAttribute('disabled', true);
+  }
+
+  const message = $('#text').val(quillChat.root.innerHTML);
+  if (message) {
+    // disabled属性を削除
+    document.getElementById('message_form_button').removeAttribute('disabled');
+    console.log()
+  } else if ((message === '<p><br></p>')) {
+    document.getElementById('message_form_button').setAttribute('disabled', true);
+  }
+
+  $(document).on('textarea', message, function (event) {
+    event.preventDefault();
+    if (!message || message === '<p><br></p>') {
+      // disabled属性を設定
+      document.getElementById('message_form_button').setAttribute('disabled', true);
+    } else {
+      // disabled属性を削除
+      document.getElementById('message_form_button').removeAttribute('disabled');
+      // ショートカット
+      shortcut.add('Ctrl+Enter', function () {
+        $('#message_form_button').click();
+      });
+      shortcut.add('meta+Enter', function () {
+        $('#message_form_button').click();
+      });
+    }
+  });
+});
+
+
+
 // メッセージ作成
 $('#message_form').submit(function (event) {
   event.preventDefault();
-  const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
-  const message = $('form [name=text]').val();
+  const chat_id = JSON.parse(document.getElementById('obj_id').textContent);
+  // const message = $('form [name=text]').val();
+  const message = $('#text').val(quillChat.root.innerHTML);
+  const delta = $('#delta').val(JSON.stringify(quillChat.getContents()));
+  // const csrf = $(this).attr('csrf');
+
+  // console.log('csrf', csrf)
+  console.log('message', message)
+  console.log('delta', delta)
+
   $('#message_form')[0].reset();
-  document.getElementById('message_form_area').style.height = '40px';
+  // document.getElementById('message_form_area').style.height = '40px';
   document.getElementById('message_form_button').setAttribute('disabled', true);
+
+
+
   chatSocket.send(JSON.stringify({
     'command': 'create_message',
-    'obj_id': obj_id,
+    'chat_id': chat_id,
     'message': message,
+    'delta': delta,
+    // 'csrfmiddlewaretoken': csrf,
   }));
 });
+
+
+
+
+// let replyEditorInput = document.getElementById('reply_editor_input');
+let quillChatReply = new Quill('reply_form_area', {
+  modules: {
+    toolbar: [
+      ['bold', 'underline', 'strike'],
+      [{'list': 'ordered'}, {'list': 'bullet'}],
+      ['code-block', 'blockquote', 'link', 'image'],
+    ]
+  },
+  placeholder: '',
+  theme: 'snow'
+});
+
+quillChatReply.on('text-change', function() {
+  let editorHtml = editor.querySelector('.ql-editor').innerHTML;
+  const text = editorHtml.replace(/<p><br><\/p>/g, '')
+  // replyEditorInput.value = editorHtml;
+  if (!text || !text.match(/\S/g)) {
+    // disabled属性を設定
+    document.getElementById('reply_form_button').setAttribute('disabled', true);
+  } else {
+    // disabled属性を削除
+    document.getElementById('reply_form_button').removeAttribute('disabled');
+  }
+  // ショートカット
+  shortcut.add('Ctrl+Enter', function () {
+    $('#reply_form_button').click();
+  });
+  shortcut.add('meta+Enter', function () {
+    $('#reply_form_button').click();
+  });
+});
+
+
+
 
 // リプライ作成
 $('#reply_form').submit(function (event) {
   event.preventDefault();
-  const obj_id = JSON.parse(document.getElementById('obj_id').textContent);
+  const chat_id = JSON.parse(document.getElementById('obj_id').textContent);
   const parent_id = document.getElementById('parent_id').getAttribute('value');
-  const message = $('form [name=reply]').val().replace(/\n+$/g, '');
+  // const message = $('form [name=reply]').val().replace(/\n+$/g, '');
+  const message = $('#text').val(quillChat.root.innerHTML);
+  const delta = $('#delta').val(JSON.stringify(quillChat.getContents()));
   $('#reply_form')[0].reset();
   document.getElementById('reply_form_area').style.height = '40px';
   document.getElementById('reply_form_button').setAttribute('disabled', true);
   chatSocket.send(JSON.stringify({
     'command': 'create_reply_message',
-    'obj_id': obj_id,
+    'chat_id': chat_id,
     'message': message,
+    'delta': delta,
     'parent_id': parent_id,
   }));
 });

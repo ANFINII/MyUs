@@ -14,6 +14,6 @@ var quillBlog = new Quill('#quill_blog', {
 });
 
 quillBlog.on('text-change', function() {
-  $('#delta').val(JSON.stringify(quillBlog.getContents()));
   $('#richtext').val(quillBlog.root.innerHTML);
+  $('#delta').val(JSON.stringify(quillBlog.getContents()));
 });
