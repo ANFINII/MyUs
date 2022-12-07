@@ -1020,16 +1020,16 @@ def chat_thread_button(request):
     context = {}
     if request.method == 'GET':
         user = request.user
-        obj_id = request.GET.get('obj_id')
+        chat_id = request.GET.get('chat_id')
         message_id = request.GET.get('message_id')
-        chat = Chat.objects.get(id=obj_id)
-        context['obj_id'] = obj_id
+        chat = Chat.objects.get(id=chat_id)
+        context['obj_id'] = chat_id
         context['message_id'] = message_id
         context['thread'] = render_to_string('chat/chat_reply/chat_section_thread_area.html', {
             'message_parent': chat.message.filter(id=message_id),
             'reply_list': chat.message.filter(parent_id=message_id).select_related('author'),
             'user_id': user.id,
-            'obj_id': obj_id,
+            'obj_id': chat_id,
             'message_id': message_id,
         }, request=request)
         return JsonResponse(context)

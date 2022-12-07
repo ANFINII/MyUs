@@ -15,9 +15,6 @@ class ChatConsumer(WebsocketConsumer):
         chat = Chat.objects.get(id=data['chat_id'])
         delta = data['delta']
         html = data['message']
-        print('delta+++++++', delta)
-        print('html=========', html)
-        print('get_delta++======', get_delta(delta, html))
         message = Message.objects.create(
             chat=chat,
             author=self.scope['user'],
@@ -101,7 +98,7 @@ class ChatConsumer(WebsocketConsumer):
             'thread': message_data['thread'],
             'message_lists': render_to_string('chat/chat_message/chat_message.html', {
                 'user_id': self.scope['user'].id,
-                'chat_id': message.chat_id,
+                'obj_id': message.chat_id,
                 'message_id': message.id,
                 'message_list': message_data['message'],
             })
@@ -118,7 +115,7 @@ class ChatConsumer(WebsocketConsumer):
             'reply_num': reply_data['reply_num'],
             'reply_lists': render_to_string('chat/chat_reply/chat_reply.html', {
                 'user_id': self.scope['user'].id,
-                'chat_id': message.chat_id,
+                'obj_id': message.chat_id,
                 'reply_list': reply_data['reply'],
             })
         }
@@ -159,17 +156,6 @@ class ChatConsumer(WebsocketConsumer):
         }
         return context
 
-
-
-    def send_chat_message(self, message):
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name, {'type': 'chat_message', 'message': message}
-        )
-
-    def chat_message(self, event):
-        message = event['message']
-        self.send(text_data=json.dumps(message))
-
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['pk']
         self.room_group_name = 'chat_detail_%s' % self.room_name
@@ -184,6 +170,15 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+
+    def send_chat_message(self, message):
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name, {'type': 'chat_message', 'message': message}
+        )
+
+    def chat_message(self, event):
+        message = event['message']
+        self.send(text_data=json.dumps(message))
 
     def receive(self, text_data):
         data = json.loads(text_data)
