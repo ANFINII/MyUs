@@ -62,7 +62,7 @@ $(document).on('click', '.bi-x', function () {
 chatSocket.onmessage = function (event) {
   let data = JSON.parse(event.data);
   if (data['command'] === 'create_message') {
-    document.getElementById('message_form_button').setAttribute('disabled', true);
+    document.getElementById('message_form_button').setAttribute('disabled');
     const response = data['message'];
     $('#chat_section_main_area').append(response.message_lists);
     $('#joined').html(response.joined);
@@ -77,7 +77,7 @@ chatSocket.onmessage = function (event) {
   } else if (data['command'] === 'create_reply_message') {
     const response = data['message'];
     if ('/chat/detail/' + chat_id + '/thread/' + response.parent_id === location.pathname) {
-      document.getElementById('reply_form_button').setAttribute('disabled', true);
+      document.getElementById('reply_form_button').setAttribute('disabled');
       $('#joined').html(response.joined);
       $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件');
       $('#chat_section_thread_area_' + response.parent_id).append(response.reply_lists);
@@ -141,6 +141,7 @@ chatSocket.onclose = function (event) {
 
 
 
+
 var quillChat = new Quill('#quill_chat', {
   modules: {
     toolbar: [
@@ -152,47 +153,36 @@ var quillChat = new Quill('#quill_chat', {
   placeholder: '',
   theme: 'snow'
 });
-
-const target = document.getElementById('message_form_button');
-console.log('target', target)
+// 無効
+// quillChat.enable(false);
 
 // messageショートカット
 quillChat.on('text-change', function() {
-  // const text = editorHtml.replace(/<p><br><\/p>/g, '')
-
-  // focus時にそれ以外のtextareaを無効化する
-  const targetElem = document.querySelectorAll('.form_button');
-  const targetCount = targetElem.length;
-  if (targetElem) {
-    for (let i = 0; i < targetCount; i++)
-      targetElem[i].setAttribute('disabled', true);
-  }
-
-  const message = $('#text').val(quillChat.root.innerHTML);
-  if (message) {
-    // disabled属性を削除
-    document.getElementById('message_form_button').removeAttribute('disabled');
-    console.log()
-  } else if ((message === '<p><br></p>')) {
-    document.getElementById('message_form_button').setAttribute('disabled', true);
-  }
-
-  $(document).on('textarea', message, function (event) {
-    event.preventDefault();
-    if (!message || message === '<p><br></p>') {
-      // disabled属性を設定
-      document.getElementById('message_form_button').setAttribute('disabled', true);
-    } else {
-      // disabled属性を削除
-      document.getElementById('message_form_button').removeAttribute('disabled');
-      // ショートカット
-      shortcut.add('Ctrl+Enter', function () {
-        $('#message_form_button').click();
-      });
-      shortcut.add('meta+Enter', function () {
-        $('#message_form_button').click();
-      });
+  // focus時にそれ以外のQuillを無効化する
+  const hasFocus = quillChat.hasFocus();
+  if (hasFocus) {
+    const targetElem = document.querySelectorAll('.form_button');
+    const targetCount = targetElem.length;
+    if (targetElem) {
+      for (let i = 0; i < targetCount; i++) {
+        targetElem[i].setAttribute('disabled', true);
+      }
     }
+  }
+
+  const quillText = quillChat.getText()
+  if (quillText.match(/\S/g)) {
+    document.getElementById('message_form_button').removeAttribute('disabled');
+  } else {
+    document.getElementById('message_form_button').setAttribute('disabled');
+  }
+
+  // ショートカット
+  shortcut.add('Ctrl+Enter', function () {
+    $('#message_form_button').click();
+  });
+  shortcut.add('meta+Enter', function () {
+    $('#message_form_button').click();
   });
 });
 
@@ -203,34 +193,23 @@ $('#message_form').submit(function (event) {
   event.preventDefault();
   const chat_id = JSON.parse(document.getElementById('obj_id').textContent);
   // const message = $('form [name=text]').val();
-  const message = $('#text').val(quillChat.root.innerHTML);
-  const delta = $('#delta').val(JSON.stringify(quillChat.getContents()));
-  // const csrf = $(this).attr('csrf');
+  const message = quillChat.root.innerHTML;
+  const delta = JSON.stringify(quillChat.getContents());
 
-  // console.log('csrf', csrf)
-  console.log('message', message)
-  console.log('delta', delta)
-
-  $('#message_form')[0].reset();
+  quillChat.deleteText();
   // document.getElementById('message_form_area').style.height = '40px';
-  document.getElementById('message_form_button').setAttribute('disabled', true);
-
-
+  document.getElementById('message_form_button').setAttribute('disabled');
 
   chatSocket.send(JSON.stringify({
     'command': 'create_message',
     'chat_id': chat_id,
     'message': message,
     'delta': delta,
-    // 'csrfmiddlewaretoken': csrf,
   }));
 });
 
 
-
-
-// let replyEditorInput = document.getElementById('reply_editor_input');
-let quillChatReply = new Quill('reply_form_area', {
+var quillReply = new Quill('#quill_reply', {
   modules: {
     toolbar: [
       ['bold', 'underline', 'strike'],
@@ -242,17 +221,26 @@ let quillChatReply = new Quill('reply_form_area', {
   theme: 'snow'
 });
 
-quillChatReply.on('text-change', function() {
-  let editorHtml = editor.querySelector('.ql-editor').innerHTML;
-  const text = editorHtml.replace(/<p><br><\/p>/g, '')
-  // replyEditorInput.value = editorHtml;
-  if (!text || !text.match(/\S/g)) {
-    // disabled属性を設定
-    document.getElementById('reply_form_button').setAttribute('disabled', true);
-  } else {
-    // disabled属性を削除
-    document.getElementById('reply_form_button').removeAttribute('disabled');
+quillReply.on('text-change', function() {
+  // focus時にそれ以外のQuillを無効化する
+  const hasFocus = quillReply.hasFocus();
+  if (hasFocus) {
+    const targetElem = document.querySelectorAll('.form_button');
+    const targetCount = targetElem.length;
+    if (targetElem) {
+      for (let i = 0; i < targetCount; i++) {
+        targetElem[i].setAttribute('disabled', true);
+      }
+    }
   }
+
+  const quillText = quillReply.getText()
+  if (quillText.match(/\S/g)) {
+    document.getElementById('reply_form_button').removeAttribute('disabled');
+  } else {
+    document.getElementById('reply_form_button').setAttribute('disabled');
+  }
+
   // ショートカット
   shortcut.add('Ctrl+Enter', function () {
     $('#reply_form_button').click();
@@ -261,9 +249,6 @@ quillChatReply.on('text-change', function() {
     $('#reply_form_button').click();
   });
 });
-
-
-
 
 // リプライ作成
 $('#reply_form').submit(function (event) {
@@ -274,8 +259,8 @@ $('#reply_form').submit(function (event) {
   const message = $('#text').val(quillChat.root.innerHTML);
   const delta = $('#delta').val(JSON.stringify(quillChat.getContents()));
   $('#reply_form')[0].reset();
-  document.getElementById('reply_form_area').style.height = '40px';
-  document.getElementById('reply_form_button').setAttribute('disabled', true);
+  document.getElementById('quill_reply').style.height = '40px';
+  document.getElementById('reply_form_button').setAttribute('disabled');
   chatSocket.send(JSON.stringify({
     'command': 'create_reply_message',
     'chat_id': chat_id,
@@ -306,7 +291,7 @@ $(document).on('click', '.edit_update_button', function (event) {
   const message = $('#message_form_update_' + message_id).val().replace(/\n+$/g, '');
   document.getElementById('edit_update_main_' + message_id).classList.remove('active');
   document.getElementById('message_aria_list_' + message_id).classList.remove('active');
-  document.getElementById('update_form_button_' + message_id).setAttribute('disabled', true);
+  document.getElementById('update_form_button_' + message_id).setAttribute('disabled');
   // 更新時のアニメーション
   const highlight = document.querySelector('#message_aria_list_' + message_id);
   highlight.style.setProperty('background-color', 'rgb(235, 255, 245)', 'important');
@@ -360,7 +345,7 @@ $(document).on('click', '.edit_delete_reply', function (event) {
 });
 
 // replyショートカット
-$(document).on('focus', '#reply_form_area', function (event) {
+$(document).on('focus', '#quill_reply', function (event) {
   event.preventDefault();
 
   // focus時にそれ以外のtextareaを無効化する
@@ -377,12 +362,12 @@ $(document).on('focus', '#reply_form_area', function (event) {
     document.getElementById('reply_form_button').removeAttribute('disabled');
   }
 
-  $(document).on('input', '#reply_form_area', function (event) {
+  $(document).on('input', '#quill_reply', function (event) {
     event.preventDefault();
     const text = $(this).val();
     if (!text || !text.match(/\S/g)) {
       // disabled属性を設定
-      document.getElementById('reply_form_button').setAttribute('disabled', true);
+      document.getElementById('reply_form_button').setAttribute('disabled');
     } else {
       // disabled属性を削除
       document.getElementById('reply_form_button').removeAttribute('disabled');

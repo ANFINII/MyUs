@@ -1,22 +1,21 @@
 <form method="POST" action="" id="reply_form">
   {% if is_period %}
-  <textarea name="reply" rows="1" placeholder="チャット期間が過ぎています!" class="textarea_br" disabled="disabled"></textarea>
-  <div class="message_input_chat">
+  <div id="quill_reply" placeholder="チャット期間が過ぎています!" class="chat_disabled"></div>
+  <div class="message_input_chat chat_disabled">
     <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
       <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
     </button>
   </div>
   {% elif user.is_authenticated %}
-  <div id="reply_form_area"></div>
+  <div id="quill_reply"></div>
   <div class="message_input_chat">
     <button type="submit" title="送信" id="reply_form_button" class="btn btn-primary btn-sm form_button" disabled>
       <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
     </button>
   </div>
-  <input type="text" name="reply_editor_input" id="reply_editor_input" hidden>
   {% else %}
-  <textarea name="reply" rows="1" placeholder="チャットするにはログインが必要です!" class="textarea_br" disabled="disabled"></textarea>
-  <div class="message_input_chat">
+  <div id="quill_reply" placeholder="チャットするにはログインが必要です!" class="chat_disabled"></div>
+  <div class="message_input_chat chat_disabled">
     <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
       <i class="bi bi-caret-right-fill" style="font-size: 1.2em;"></i>
     </button>

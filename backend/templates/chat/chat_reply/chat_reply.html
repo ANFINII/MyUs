@@ -9,7 +9,7 @@
       <p>{{ reply.author.nickname }}</p>
       <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
     </div>
-    <div id="message_aria_list_2_{{ reply.id }}" class="message_aria_list_2">{{ reply.text.html|safe }}</div>
+    <div id="message_aria_list_2_{{ reply.id }}" class="message_aria_list_2">{{ reply.text|safe }}</div>
     {% include 'chat/chat_reply/crud/modal_content_caht_reply.html' %}
   </div>
   <div id="edit_update_main_{{ reply.id }}" class="edit_update_main_chat">
