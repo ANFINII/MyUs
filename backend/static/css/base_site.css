@@ -110,11 +110,11 @@ a:focus {
   overflow-y: hidden;
 }
 
-/* Quill */
-.ql-formats {
-  margin-right: 10px;
+.hljs-attribute {
+  color: #404040;
 }
 
+/* Quill全体  */
 .ql-toolbar {
   border-radius: 5px 5px 0 0;
 }
@@ -123,34 +123,47 @@ a:focus {
   border-radius: 0 0 5px 5px;
 }
 
-.ql-editor {
-  min-height: 300px;
-  padding: 10px 12px 10px 12px;
-  font-size: 16px;
+.ql-formats {
+  margin-right: 10px;
 }
 
-.ql-editor.l-blank,
-.ql-clipboard {
+.ql-editor .ql-clipboard {
   border-radius: 5px !important;
 }
 
+.ql-editor {
+  min-height: 300px;
+  padding: 10px 12px 10px 12px;
+  font-size: 14px;
+}
+
 /*  リンクデザイン */
-.ql-snow .ql-editor a {
-  text-decoration: none;
+.ql-snow .ql-editor a,
+.article_detail_blog a {
+  text-decoration: none !important;
 }
 
 /*  クォートデザイン */
 .ql-snow .ql-editor pre.ql-syntax {
-  margin-top: 0;
-  font-size: 16px;
-  color: #212529;
-  background: rgb(240, 240, 240);
+  padding: 4px 8px;
+  margin: 2px 0;
+  font-size: 12px;
+  color: #404040 !important;
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 3px;
+  background: rgb(235, 235, 235) !important;
 }
 
 /*  コードブロックデザイン */
 .ql-snow .ql-editor blockquote {
-  padding-left: 16px;
+  padding-left: 14px;
   margin-top: 0;
   margin-bottom: 5px;
+  color: #404040 !important;
   border-left: 4px solid #ccc;
+}
+
+/*  画像デザイン */
+.ql-snow .ql-editor img {
+  max-width: 480px !important;
 }

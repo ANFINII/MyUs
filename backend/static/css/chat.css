@@ -527,10 +527,14 @@ hr {
   border-radius: 5px;
 }
 
+.chat_disabled {
+  background: rgb(240, 240, 240);
+}
+
 .message_input_chat {
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: 38px;
+  grid-template-rows: 34px;
   grid-column: 1/-1;
   border: 1px solid rgb(200, 200, 200);
   border-top: none;
@@ -540,16 +544,17 @@ hr {
 /* Quill */
 .ql-toolbar {
   border-radius: 5px 5px 0 0;
+  border-bottom: none !important;
   background: rgb(225, 240, 255);
+}
+
+.ql-container {
+  height: auto;
+  border-bottom: none !important;
 }
 
 .ql-editor {
   max-height: 320px;
   padding: 10px 12px 10px 12px;
-  font-size: 16px;
-  border-bottom: none !important;
-}
-
-.ql-snow {
-  border-bottom: none !important;
+  font-size: 14px;
 }
