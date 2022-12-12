@@ -339,7 +339,7 @@ hr {
 
 .chat_section_nav_label:hover,
 .chat_section_nav_list:hover {
-  background: rgb(240, 245, 255);
+  background: rgb(240, 245, 255, 0.8);
 }
 
 .chat_section_nav_list a {

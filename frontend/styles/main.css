@@ -1060,10 +1060,6 @@ div.field > button {
   padding: 5px 5px 0 5px;
 }
 
-/* .reply_aria_list:hover {
-  background: rgb(220, 235, 255);
-} */
-
 .reply_aria_list .profile_image {
   grid-column: 2/3;
   grid-row: 1/2;
