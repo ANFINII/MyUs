@@ -33,10 +33,13 @@ class ChatConsumer(WebsocketConsumer):
     def create_reply_message(self, data):
         user = self.scope['user']
         chat = Chat.objects.get(id=data['chat_id'])
+        delta = data['delta']
+        html = data['message']
         message = Message.objects.create(
             chat=chat,
             author=user,
-            text=data['message'],
+            text=html,
+            delta=get_delta(delta, html),
             parent_id=data['parent_id'],
         )
         author = message.parent.author
