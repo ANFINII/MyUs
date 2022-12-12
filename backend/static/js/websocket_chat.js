@@ -1,28 +1,28 @@
 // WebSocketオブジェクト
 let ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
-const chat_id = JSON.parse(document.getElementById('obj_id').textContent);
-const chatSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + '/ws/chat/detail/' + chat_id);
+const chatId = JSON.parse(document.getElementById('obj_id').textContent);
+const chatSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + '/ws/chat/detail/' + chatId);
 
 // Pjax処理
 let thread_dict = {};
 history.replaceState(null, null, location.href);
 
 function pjax_thread_dict(href) {
-  const thread_obj = document.querySelector('.chat_section_thread_area').innerHTML;
-  thread_dict[href] = thread_obj;
+  const threadObj = document.querySelector('.chat_section_thread_area').innerHTML;
+  thread_dict[href] = threadObj;
   history.pushState(null, null, href);
 }
 
 window.addEventListener('popstate', e => {
-  const back_url = location.pathname;
-  const back_obj = thread_dict[back_url];
-  if (back_url.indexOf('thread') !== -1) {
-    $('.chat_section_thread_area').html(back_obj);
+  const backUrl = location.pathname;
+  const backObj = thread_dict[backUrl];
+  if (backUrl.indexOf('thread') !== -1) {
+    $('.chat_section_thread_area').html(backObj);
     if (document.querySelector('.message_aria_check') != null) {
       document.querySelector('.message_aria_check').checked = true;
     }
   } else {
-    $('.chat_section_thread_area').html(back_obj);
+    $('.chat_section_thread_area').html(backObj);
     if (document.querySelector('.message_aria_check') != null) {
       document.querySelector('.message_aria_check').checked = false;
     }
@@ -34,11 +34,11 @@ $(document).on('click', '.message_aria_thread', function (event) {
   event.preventDefault();
   const href = $(this).attr('href');
   const url = $(this).attr('thread');
-  const message_id = $(this).attr('message-id');
+  const messageId = $(this).attr('message-id');
   $.ajax({
     url: url,
     type: 'GET',
-    data: { 'chat_id': chat_id, 'message_id': message_id },
+    data: { 'chat_I': chat_I, 'message_id': messageId },
     dataType: 'json',
   })
     .done(function (response) {
@@ -62,7 +62,7 @@ $(document).on('click', '.bi-x', function () {
 chatSocket.onmessage = function (event) {
   let data = JSON.parse(event.data);
   if (data['command'] === 'create_message') {
-    document.getElementById('message_form_button').setAttribute('disabled');
+    document.getElementById('message_form_button').setAttribute('disabled', true);
     const response = data['message'];
     $('#chat_section_main_area').append(response.message_lists);
     $('#joined').html(response.joined);
@@ -72,12 +72,12 @@ chatSocket.onmessage = function (event) {
       $('#edit_button_' + response.message_id).remove();
       $('#edit_update_main_' + response.message_id).remove();
     }
-    const obj = document.getElementById('chat_section_main_area');
-    obj.scrollTop = obj.scrollHeight;
+    // const obj = document.getElementById('chat_section_main_area');
+    // obj.scrollTop = obj.scrollHeight;
   } else if (data['command'] === 'create_reply_message') {
     const response = data['message'];
-    if ('/chat/detail/' + chat_id + '/thread/' + response.parent_id === location.pathname) {
-      document.getElementById('reply_form_button').setAttribute('disabled');
+    if ('/chat/detail/' + chatId + '/thread/' + response.parent_id === location.pathname) {
+      document.getElementById('reply_form_button').setAttribute('disabled', true);
       $('#joined').html(response.joined);
       $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件');
       $('#chat_section_thread_area_' + response.parent_id).append(response.reply_lists);
@@ -86,8 +86,8 @@ chatSocket.onmessage = function (event) {
         $('#edit_button_' + response.message_id).remove();
         $('#edit_update_main_' + response.message_id).remove();
       }
-      const obj = document.querySelector('.chat_section_thread');
-      obj.scrollTop = obj.scrollHeight;
+      // const obj = document.querySelector('.chat_section_thread');
+      // obj.scrollTop = obj.scrollHeight;
       pjax_thread_dict(location.pathname)
     } else {
       $('#joined').html(response.joined);
@@ -115,7 +115,7 @@ chatSocket.onmessage = function (event) {
   } else if (data['command'] === 'delete_reply_message') {
     const response = data['message'];
     const url = location.pathname;
-    if ('/chat/detail/' + chat_id + '/thread/' + response.parent_id === url) {
+    if ('/chat/detail/' + chatId + '/thread/' + response.parent_id === url) {
       $('#message_aria_list_' + response.message_id).remove();
       $('#joined').html(response.joined);
       $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件');
@@ -140,8 +140,7 @@ chatSocket.onclose = function (event) {
 }
 
 
-
-
+// メッセージ作成
 var quillChat = new Quill('#quill_chat', {
   modules: {
     toolbar: [
@@ -156,7 +155,6 @@ var quillChat = new Quill('#quill_chat', {
 // 無効
 // quillChat.enable(false);
 
-// messageショートカット
 quillChat.on('text-change', function() {
   // focus時にそれ以外のQuillを無効化する
   const hasFocus = quillChat.hasFocus();
@@ -174,7 +172,7 @@ quillChat.on('text-change', function() {
   if (quillText.match(/\S/g)) {
     document.getElementById('message_form_button').removeAttribute('disabled');
   } else {
-    document.getElementById('message_form_button').setAttribute('disabled');
+    document.getElementById('message_form_button').setAttribute('disabled', true);
   }
 
   // ショートカット
@@ -186,29 +184,24 @@ quillChat.on('text-change', function() {
   });
 });
 
-
-
-// メッセージ作成
 $('#message_form').submit(function (event) {
   event.preventDefault();
-  const chat_id = JSON.parse(document.getElementById('obj_id').textContent);
-  // const message = $('form [name=text]').val();
+  const chatId = JSON.parse(document.getElementById('obj_id').textContent);
   const message = quillChat.root.innerHTML;
   const delta = JSON.stringify(quillChat.getContents());
-
-  quillChat.deleteText();
-  // document.getElementById('message_form_area').style.height = '40px';
-  document.getElementById('message_form_button').setAttribute('disabled');
-
+  const length = quillChat.getLength();
+  quillChat.deleteText(0, length);
+  document.getElementById('message_form_button').setAttribute('disabled', true);
   chatSocket.send(JSON.stringify({
     'command': 'create_message',
-    'chat_id': chat_id,
+    'chat_id': chatId,
     'message': message,
     'delta': delta,
   }));
 });
 
 
+// リプライ作成
 var quillReply = new Quill('#quill_reply', {
   modules: {
     toolbar: [
@@ -238,7 +231,7 @@ quillReply.on('text-change', function() {
   if (quillText.match(/\S/g)) {
     document.getElementById('reply_form_button').removeAttribute('disabled');
   } else {
-    document.getElementById('reply_form_button').setAttribute('disabled');
+    document.getElementById('reply_form_button').setAttribute('disabled', true);
   }
 
   // ショートカット
@@ -250,135 +243,143 @@ quillReply.on('text-change', function() {
   });
 });
 
-// リプライ作成
 $('#reply_form').submit(function (event) {
   event.preventDefault();
-  const chat_id = JSON.parse(document.getElementById('obj_id').textContent);
-  const parent_id = document.getElementById('parent_id').getAttribute('value');
-  // const message = $('form [name=reply]').val().replace(/\n+$/g, '');
-  const message = $('#text').val(quillChat.root.innerHTML);
-  const delta = $('#delta').val(JSON.stringify(quillChat.getContents()));
-  $('#reply_form')[0].reset();
-  document.getElementById('quill_reply').style.height = '40px';
-  document.getElementById('reply_form_button').setAttribute('disabled');
+  const chatId = JSON.parse(document.getElementById('obj_id').textContent);
+  const parentId = document.getElementById('parent_id').getAttribute('value');
+  const message = quillReply.root.innerHTML;
+  const delta = JSON.stringify(quillReply.getContents());
+  const length = quillReply.getLength();
+  quillReply.deleteText(0, length);
+  document.getElementById('reply_form_button').setAttribute('disabled', true);
   chatSocket.send(JSON.stringify({
     'command': 'create_reply_message',
-    'chat_id': chat_id,
+    'chat_id': chatId,
     'message': message,
     'delta': delta,
-    'parent_id': parent_id,
+    'parent_id': parentId,
   }));
 });
+
 
 // メッセージ編集
 $(document).on('click', '.edit_button_update', function () {
-  const message_id = $(this).parent().attr('message-id');
-  document.getElementById('edit_update_main_' + message_id).classList.add('active');
-  document.getElementById('message_aria_list_' + message_id).classList.add('active');
-  document.getElementById('message_form_update_' + message_id).style.height = '40px';
-  $('#message_form_update_' + message_id).textareaAutoHeight();
+  const messageId = $(this).parent().attr('message-id');
+  document.getElementById('edit_update_main_' + messageId).classList.add('active');
+  document.getElementById('message_aria_list_' + messageId).classList.add('active');
+
+  var quillUpdate = new Quill(`#quill_update_${messageId}`, {
+    modules: {
+      toolbar: [
+        ['bold', 'underline', 'strike'],
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        ['code-block', 'blockquote', 'link', 'image'],
+      ]
+    },
+    placeholder: '',
+    theme: 'snow'
+  });
+
+  quillUpdate.on('text-change', function() {
+    // focus時にそれ以外のQuillを無効化する
+    const hasFocus = quillUpdate.hasFocus();
+    if (hasFocus) {
+      const targetElem = document.querySelectorAll('.form_button');
+      const targetCount = targetElem.length;
+      if (targetElem) {
+        for (let i = 0; i < targetCount; i++) {
+          targetElem[i].setAttribute('disabled', true);
+        }
+      }
+    }
+
+    const quillText = quillUpdate.getText()
+    if (quillText.match(/\S/g)) {
+      document.getElementById('edit_update_button').removeAttribute('disabled');
+    } else {
+      document.getElementById('edit_update_button').setAttribute('disabled', true);
+    }
+
+    // ショートカット
+    shortcut.add('Ctrl+Enter', function () {
+      $('#edit_update_button').click();
+    });
+    shortcut.add('meta+Enter', function () {
+      $('#edit_update_button').click();
+    });
+  });
+
+  $(document).on('click', '.edit_update_cancel', function () {
+    const messageId = $(this).closest('form').attr('message-id');
+    document.getElementById('edit_update_main_' + messageId).classList.remove('active');
+    document.getElementById('message_aria_list_' + messageId).classList.remove('active');
+  });
+
+  $(document).on('click', '.edit_update_button', function (event) {
+    event.preventDefault();
+    const messageId = $(this).closest('form').attr('message-id');
+    document.getElementById('edit_update_main_' + messageId).classList.remove('active');
+    document.getElementById('message_aria_list_' + messageId).classList.remove('active');
+    document.getElementById('update_form_button_' + messageId).setAttribute('disabled', true);
+
+    const message = quillUpdate.root.innerHTML;
+    const delta = JSON.stringify(quillUpdate.getContents());
+    const length = quillUpdate.getLength();
+    quillUpdate.deleteText(0, length);
+    document.getElementById('edit_update_button').setAttribute('disabled', true);
+
+    // 更新時のアニメーション
+    const highlight = document.querySelector('#message_aria_list_' + messageId);
+    highlight.style.setProperty('background-color', 'rgb(235, 255, 245)', 'important');
+    chatSocket.send(JSON.stringify({
+      'command': 'update_message',
+      'message_id': messageId,
+      'message': message,
+      'delta': delta,
+    }));
+  });
 });
 
-$(document).on('click', '.edit_update_cancel', function () {
-  const message_id = $(this).closest('form').attr('message-id');
-  document.getElementById('edit_update_main_' + message_id).classList.remove('active');
-  document.getElementById('message_aria_list_' + message_id).classList.remove('active');
-});
-
-$(document).on('click', '.edit_update_button', function (event) {
-  event.preventDefault();
-  const message_id = $(this).closest('form').attr('message-id');
-  const message = $('#message_form_update_' + message_id).val().replace(/\n+$/g, '');
-  document.getElementById('edit_update_main_' + message_id).classList.remove('active');
-  document.getElementById('message_aria_list_' + message_id).classList.remove('active');
-  document.getElementById('update_form_button_' + message_id).setAttribute('disabled');
-  // 更新時のアニメーション
-  const highlight = document.querySelector('#message_aria_list_' + message_id);
-  highlight.style.setProperty('background-color', 'rgb(235, 255, 245)', 'important');
-  chatSocket.send(JSON.stringify({
-    'command': 'update_message',
-    'message_id': message_id,
-    'message': message,
-  }));
-});
 
 // メッセージ削除
 $(document).on('click', '.edit_button_delete', function () {
-  const message_id = $(this).parent().attr('message-id');
-  document.getElementById('modal_content_' + message_id).classList.add('active');
-  document.getElementById('mask_' + message_id).classList.add('active');
+  const messageId = $(this).parent().attr('message-id');
+  document.getElementById('modal_content_' + messageId).classList.add('active');
+  document.getElementById('mask_' + messageId).classList.add('active');
 });
 
 $(document).on('click', '.modal_cancel', function () {
-  const message_id = $(this).closest('.edit_button').attr('message-id');
-  document.getElementById('modal_content_' + message_id).classList.remove('active');
-  document.getElementById('mask_' + message_id).classList.remove('active');
+  const messageId = $(this).closest('.edit_button').attr('message-id');
+  document.getElementById('modal_content_' + messageId).classList.remove('active');
+  document.getElementById('mask_' + messageId).classList.remove('active');
 });
 
 $(document).on('click', '.edit_delete_message', function (event) {
   event.preventDefault();
-  const message_id = $(this).closest('.edit_button').attr('message-id');
-  document.getElementById('modal_content_' + message_id).classList.remove('active');
-  document.getElementById('mask_' + message_id).classList.remove('active');
+  const messageId = $(this).closest('.edit_button').attr('message-id');
+  document.getElementById('modal_content_' + messageId).classList.remove('active');
+  document.getElementById('mask_' + messageId).classList.remove('active');
   // 削除時のアニメーション
-  const highlight = document.querySelector('#message_aria_list_' + message_id);
+  const highlight = document.querySelector('#message_aria_list_' + messageId);
   highlight.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important');
   chatSocket.send(JSON.stringify({
     'command': 'delete_message',
-    'message_id': message_id,
+    'message_id': messageId,
   }));
 });
+
 
 // リプライ削除
 $(document).on('click', '.edit_delete_reply', function (event) {
   event.preventDefault();
-  const message_id = $(this).closest('.edit_button').attr('message-id');
-  document.getElementById('modal_content_' + message_id).classList.remove('active');
-  document.getElementById('mask_' + message_id).classList.remove('active');
+  const messageId = $(this).closest('.edit_button').attr('message-id');
+  document.getElementById('modal_content_' + messageId).classList.remove('active');
+  document.getElementById('mask_' + messageId).classList.remove('active');
   // 削除時のアニメーション
-  const highlight = document.querySelector('#message_aria_list_' + message_id);
+  const highlight = document.querySelector('#message_aria_list_' + messageId);
   highlight.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important');
   chatSocket.send(JSON.stringify({
     'command': 'delete_reply_message',
-    'message_id': message_id,
+    'message_id': messageId,
   }));
-});
-
-// replyショートカット
-$(document).on('focus', '#quill_reply', function (event) {
-  event.preventDefault();
-
-  // focus時にそれ以外のtextareaを無効化する
-  const targetElem = document.querySelectorAll('.form_button');
-  const targetCount = targetElem.length;
-  if (targetElem) {
-    for (let i = 0; i < targetCount; i++)
-      targetElem[i].setAttribute('disabled', true);
-  }
-
-  const text = $(this).val();
-  if (text || text.match(/\S/g)) {
-    // disabled属性を削除
-    document.getElementById('reply_form_button').removeAttribute('disabled');
-  }
-
-  $(document).on('input', '#quill_reply', function (event) {
-    event.preventDefault();
-    const text = $(this).val();
-    if (!text || !text.match(/\S/g)) {
-      // disabled属性を設定
-      document.getElementById('reply_form_button').setAttribute('disabled');
-    } else {
-      // disabled属性を削除
-      document.getElementById('reply_form_button').removeAttribute('disabled');
-
-      // ショートカット
-      shortcut.add('Ctrl+Enter', function () {
-        $('#reply_form_button').click();
-      });
-      shortcut.add('meta+Enter', function () {
-        $('#reply_form_button').click();
-      });
-    }
-  });
 });
