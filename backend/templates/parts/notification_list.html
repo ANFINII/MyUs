@@ -40,8 +40,8 @@
         {{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました
       </div>
       {% elif notification.type_no == 9 %}
-      <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんから返信がありました {{ notification.content_object.text }}">
-        {{ notification.content_object.text }}
+      <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんから返信がありました {{ notification.content_object.text|safe }}">
+        {{ notification.content_object.text|safe }}
       </div>
       {% elif notification.type_no == 10 %}
         {% if  notification.content_object.read >= 1000000000 %}

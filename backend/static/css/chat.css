@@ -524,7 +524,7 @@ hr {
 .chat_footer_main .btn-sm,
 .chat_footer_thread .btn-sm {
   justify-self: end;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 .chat_disabled {
