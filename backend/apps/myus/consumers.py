@@ -63,9 +63,12 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
 
     def update_message(self, data):
+        delta = data['delta']
+        html = data['message']
         message = Message.objects.get(id=data['message_id'])
-        message.text = data['message']
-        message.save(update_fields=['text', 'updated'])
+        message.text = html
+        message.delta = get_delta(delta, html)
+        message.save(update_fields=['text', 'delta', 'updated'])
         content = {
             'command': 'update_message',
             'message': self.update_message_to_json(message)
@@ -145,16 +148,17 @@ class ChatConsumer(WebsocketConsumer):
 
     def delete_reply_message_to_json(self, message):
         Notification.objects.filter(type_no=NotificationTypeNo.reply, object_id=message.id).delete()
-        message.delete()
-        chat = Chat.objects.get(id=message.id)
+        chat = Chat.objects.get(id=message.chat_id)
         chat.joined = chat.message.values_list('author').distinct().count()
         chat.save(update_fields=['joined'])
-        message = Message.objects.get(id=message.parent_id)
-        message.reply_num = Message.objects.filter(parent=message.parent_id).count()
+        parent_id = message.parent_id
+        message.delete()
+        message = Message.objects.get(id=parent_id)
+        message.reply_num = Message.objects.filter(parent=parent_id).count()
         message.save(update_fields=['reply_num'])
         context = {
             'joined': chat.joined,
-            'parent_id': message.parent_id,
+            'parent_id': parent_id,
             'reply_num': message.reply_num,
         }
         return context

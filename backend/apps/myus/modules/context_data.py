@@ -85,9 +85,9 @@ class ContextData:
         if class_name not in ['ChatDetail', 'ChatThread']:
             filter_kwargs = {'id': OuterRef('pk'), 'like': user.id}
             subquery = Comment.objects.filter(**filter_kwargs)
-            comment = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
-            context['comment_list'] = comment.select_related('author').prefetch_related('like')
-            context['reply_list'] = comment.select_related('author', 'parent').prefetch_related('like')
+            comment = obj.comment.annotate(is_comment_like=Exists(subquery))
+            context['comment_list'] = comment.filter(parent__isnull=True)
+            context['reply_list'] = comment.filter(parent__isnull=False)
 
         context['advertise_auto_list'] = Advertise.objects.filter(publish=True, type=0).order_by('?')[:1]
         advertise = Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')
