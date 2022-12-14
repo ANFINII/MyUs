@@ -532,7 +532,7 @@ def comment_form(request):
         obj.save(update_fields=['comment_num'])
         context = {'comment_num': obj.comment_num}
         context['comment_lists'] = render_to_string('parts/common/comment/comment.html', {
-            'comment_list': obj.comment.filter(id=comment.id).select_related('author').prefetch_related('like'),
+            'comment_list': obj.comment.filter(id=comment.id),
             'user_id': user.id,
             'obj_id': obj_id,
             'obj_path': obj_path,
@@ -573,7 +573,7 @@ def reply_form(request):
         context['comment_num'] = obj.comment_num
         context['reply_num'] = parent_obj.reply_num
         context['reply_lists'] = render_to_string('parts/common/reply/reply.html', {
-            'reply_list': obj.comment.filter(id=comment_obj.id).select_related('author', 'parent').prefetch_related('like'),
+            'reply_list': obj.comment.filter(id=comment_obj.id),
             'user_id': user.id,
             'obj_id': obj_id,
             'obj_path': obj_path,
@@ -989,7 +989,7 @@ class ChatDetail(DetailView):
         return ContextData.models_context_data(self, ChatDetail, **kwargs)
 
     def get_message_data(self, message):
-        chat = get_object_or_404(Chat, id=message.chat_id)
+        chat = Chat.objects.get(id=message.chat_id)
         context = {
             'joined': chat.joined,
             'thread': chat.thread,
@@ -1007,7 +1007,7 @@ class ChatThread(DetailView):
         return ContextData.models_context_data(self, ChatThread, **kwargs)
 
     def get_reply_data(self, message):
-        chat = get_object_or_404(Chat, id=message.chat_id)
+        chat = Chat.objects.get(id=message.chat_id)
         context = {
             'joined': chat.joined,
             'reply_num': message.parent.reply_num,

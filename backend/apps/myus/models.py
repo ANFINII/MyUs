@@ -741,7 +741,7 @@ class Advertise(models.Model):
 
 class CommentManager(models.Manager):
     def get_queryset(self):
-        return super(CommentManager,self).get_queryset().select_related('author', 'parent', 'content_type').prefetch_related('like', 'author__profile')
+        return super(CommentManager,self).get_queryset().select_related('author', 'parent').prefetch_related('like')
 
 class Comment(models.Model):
     """Comment"""
