@@ -1,4 +1,5 @@
 import json
+from datetime import date
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth import get_user_model
@@ -105,6 +106,7 @@ class ChatConsumer(WebsocketConsumer):
             'message_lists': render_to_string('chat/chat_message/chat_message.html', {
                 'user_id': self.scope['user'].id,
                 'obj_id': message.chat_id,
+                'is_period': message.chat.period < date.today(),
                 'message_id': message.id,
                 'message_list': message_data['message'],
             })
@@ -122,6 +124,7 @@ class ChatConsumer(WebsocketConsumer):
             'reply_lists': render_to_string('chat/chat_reply/chat_reply.html', {
                 'user_id': self.scope['user'].id,
                 'obj_id': message.chat_id,
+                'is_period': message.chat.period < date.today(),
                 'reply_list': reply_data['reply'],
             })
         }

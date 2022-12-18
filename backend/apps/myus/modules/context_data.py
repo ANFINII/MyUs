@@ -119,6 +119,7 @@ class ContextData:
             message_id = self.kwargs['message_id']
             context['message_id'] = message_id
             context['message_parent'] = obj.message.filter(id=message_id)
+            context['is_period'] = obj.period < date.today()
             context['message_list'] = obj.message.filter(parent__isnull=True).select_related('author')
             context['reply_list'] = obj.message.filter(parent_id=message_id).select_related('author')
             context['chat_list'] = Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
