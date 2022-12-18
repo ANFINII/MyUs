@@ -2,20 +2,22 @@
 let ws_scheme = window.location.protocol == 'https:' ? 'wss' : 'ws';
 const chatId = JSON.parse(document.getElementById('obj_id').textContent);
 const chatSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + '/ws/chat/detail/' + chatId);
+const isPeriod = JSON.parse(document.getElementById('is_period').textContent);
+const isAuthenticated = JSON.parse(document.getElementById('is_authenticated').textContent);
 
 // Pjax処理
-let thread_dict = {};
+let threadDict = {};
 history.replaceState(null, null, location.href);
 
 function pjaxThread(href) {
   const threadObj = document.querySelector('.chat_section_thread_area').innerHTML;
-  thread_dict[href] = threadObj;
+  threadDict[href] = threadObj;
   history.pushState(null, null, href);
 }
 
 window.addEventListener('popstate', e => {
   const backUrl = location.pathname;
-  const backObj = thread_dict[backUrl];
+  const backObj = threadDict[backUrl];
   if (backUrl.indexOf('thread') !== -1) {
     $('.chat_section_thread_area').html(backObj);
     if (document.querySelector('.message_aria_check') != null) {
@@ -43,8 +45,10 @@ chatSocket.onmessage = function (event) {
     $('#chat_section_main_area').append(response.message_lists);
     $('#joined').html(response.joined);
     $('#thread').html(response.thread);
-    const login_user_id = document.getElementById('user_id').textContent;
-    if (login_user_id != response.user_id) {
+    const loginUserId = document.getElementById('user_id').textContent;
+    console.log(loginUserId)
+    console.log(response.user_id)
+    if (loginUserId != response.user_id && !response.is_period) {
       $('#edit_button_' + response.message_id).remove();
       $('#edit_update_main_' + response.message_id).remove();
     }
@@ -57,8 +61,8 @@ chatSocket.onmessage = function (event) {
       $('#joined').html(response.joined);
       $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件');
       $('#chat_section_thread_area_' + response.parent_id).append(response.reply_lists);
-      const login_user_id = document.getElementById('user_id').textContent;
-      if (login_user_id != response.user_id) {
+      const loginUserId = document.getElementById('user_id').textContent;
+      if (loginUserId != response.user_id && !response.is_period) {
         $('#edit_button_' + response.message_id).remove();
         $('#edit_update_main_' + response.message_id).remove();
       }
@@ -151,6 +155,15 @@ $(document).on('click', '.bi-x', function () {
 
 
 // メッセージ作成
+let placeholder = ''
+if (isPeriod) {
+  placeholder = 'チャット期間が過ぎています!'
+} else if (!isAuthenticated) {
+  placeholder = 'チャットするにはログインが必要です!'
+} else {
+  editor = document.getElementById('quill_chat')
+}
+
 const quillChat = new Quill('#quill_chat', {
   modules: {
     toolbar: [
@@ -159,11 +172,13 @@ const quillChat = new Quill('#quill_chat', {
       ['code-block', 'blockquote', 'link', 'image'],
     ]
   },
-  placeholder: '',
+  placeholder: placeholder,
   theme: 'snow'
 });
-// 無効
-// quillChat.enable(false);
+
+if (isPeriod || !isAuthenticated) {
+  quillChat.enable(false);
+}
 
 quillChat.on('text-change', function() {
   // focus時にそれ以外のQuillを無効化する
@@ -220,9 +235,13 @@ const quillReply = new Quill('#quill_reply', {
       ['code-block', 'blockquote', 'link', 'image'],
     ]
   },
-  placeholder: '',
+  placeholder: placeholder,
   theme: 'snow'
 });
+
+if (isPeriod || !isAuthenticated) {
+  quillReply.enable(false);
+}
 
 quillReply.on('text-change', function() {
   // focus時にそれ以外のQuillを無効化する
@@ -293,6 +312,10 @@ $(document).on('click', '.edit_button_update', function (event) {
       placeholder: '',
       theme: 'snow'
     });
+
+    if (isPeriod || !isAuthenticated) {
+      quillUpdate.enable(false);
+    }
 
     quillUpdate.on('text-change', function() {
       // focus時にそれ以外のQuillを無効化する
