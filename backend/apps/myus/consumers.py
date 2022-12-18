@@ -4,7 +4,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
-from apps.myus.views import ChatDetail, ChatThread, get_delta
+from apps.myus.views import get_delta
 from apps.myus.models import Chat, Message, Notification
 from apps.myus.modules.contains import NotificationTypeNo
 
@@ -47,7 +47,7 @@ class ChatConsumer(WebsocketConsumer):
         chat.joined = chat.message.values_list('author').distinct().count()
         chat.save(update_fields=['joined'])
         parent = Message.objects.get(id=data['parent_id'])
-        parent.reply_num = Message.objects.filter(parent=data['parent_id']).count()
+        parent.reply_num = parent.reply.count()
         parent.save(update_fields=['reply_num'])
         if user != author and author.notificationsetting.is_reply:
             Notification.objects.create(
@@ -97,35 +97,35 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
 
     def create_message_to_json(self, message):
-        message_data = ChatDetail.get_message_data(self, message)
+        chat = Chat.objects.get(id=message.chat_id)
         context = {
             'user_id': self.scope['user'].id,
             'message_id': message.id,
-            'joined': message_data['joined'],
-            'thread': message_data['thread'],
+            'joined': chat.joined,
+            'thread': chat.thread,
             'message_lists': render_to_string('chat/chat_message/chat_message.html', {
                 'user_id': self.scope['user'].id,
-                'obj_id': message.chat_id,
-                'is_period': message.chat.period < date.today(),
+                'obj_id': chat.id,
+                'is_period': chat.period < date.today(),
                 'message_id': message.id,
-                'message_list': message_data['message'],
+                'message_list': chat.message.filter(id=message.id).select_related('author'),
             })
         }
         return context
 
     def create_reply_message_to_json(self, message):
-        reply_data = ChatThread.get_reply_data(self, message)
+        chat = Chat.objects.get(id=message.chat_id)
         context = {
             'user_id': self.scope['user'].id,
             'message_id': message.id,
             'parent_id': message.parent.id,
-            'joined': reply_data['joined'],
-            'reply_num': reply_data['reply_num'],
+            'joined': chat.joined,
+            'reply_num': Message.objects.filter(parent=message.parent).count(),
             'reply_lists': render_to_string('chat/chat_reply/chat_reply.html', {
                 'user_id': self.scope['user'].id,
-                'obj_id': message.chat_id,
-                'is_period': message.chat.period < date.today(),
-                'reply_list': reply_data['reply'],
+                'obj_id': chat.id,
+                'is_period': chat.period < date.today(),
+                'reply_list': chat.message.filter(id=message.id).select_related('author'),
             })
         }
         return context
@@ -154,14 +154,14 @@ class ChatConsumer(WebsocketConsumer):
         chat = Chat.objects.get(id=message.chat_id)
         chat.joined = chat.message.values_list('author').distinct().count()
         chat.save(update_fields=['joined'])
-        parent_id = message.parent_id
+        parent = message.parent
         message.delete()
-        message = Message.objects.get(id=parent_id)
-        message.reply_num = Message.objects.filter(parent=parent_id).count()
+        message = Message.objects.get(id=parent.id)
+        message.reply_num = Message.objects.filter(parent=parent).count()
         message.save(update_fields=['reply_num'])
         context = {
             'joined': chat.joined,
-            'parent_id': parent_id,
+            'parent_id': parent.id,
             'reply_num': message.reply_num,
         }
         return context

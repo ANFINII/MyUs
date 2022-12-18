@@ -988,15 +988,6 @@ class ChatDetail(DetailView):
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, ChatDetail, **kwargs)
 
-    def get_message_data(self, message):
-        chat = Chat.objects.get(id=message.chat_id)
-        context = {
-            'joined': chat.joined,
-            'thread': chat.thread,
-            'message': chat.message.filter(id=message.id).select_related('author'),
-        }
-        return context
-
 
 class ChatThread(DetailView):
     """ChatDetailThread"""
@@ -1005,15 +996,6 @@ class ChatThread(DetailView):
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, ChatThread, **kwargs)
-
-    def get_reply_data(self, message):
-        chat = Chat.objects.get(id=message.chat_id)
-        context = {
-            'joined': chat.joined,
-            'reply_num': message.parent.reply_num,
-            'reply': chat.message.filter(id=message.id).select_related('author'),
-        }
-        return context
 
 
 def chat_thread_button(request):
