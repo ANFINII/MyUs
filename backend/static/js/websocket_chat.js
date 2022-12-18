@@ -46,8 +46,6 @@ chatSocket.onmessage = function (event) {
     $('#joined').html(response.joined);
     $('#thread').html(response.thread);
     const loginUserId = document.getElementById('user_id').textContent;
-    console.log(loginUserId)
-    console.log(response.user_id)
     if (loginUserId != response.user_id && !response.is_period) {
       $('#edit_button_' + response.message_id).remove();
       $('#edit_update_main_' + response.message_id).remove();
