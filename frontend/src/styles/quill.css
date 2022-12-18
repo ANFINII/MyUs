@@ -1,0 +1,43 @@
+.ql-formats {
+  margin-right: 10px;
+}
+
+.ql-toolbar {
+  border-radius: 5px 5px 0 0;
+}
+
+#quill_blog.ql-container {
+  border-radius: 0 0 5px 5px;
+}
+
+#quill_blog .ql-editor {
+  min-height: 300px;
+  padding: 10px 12px 10px 12px;
+  font-size: 16px;
+}
+
+.ql-editor.l-blank,
+.ql-clipboard {
+  border-radius: 5px !important;
+}
+
+/*  リンクデザイン */
+.ql-snow .ql-editor a {
+  text-decoration: none;
+}
+
+/*  クォートデザイン */
+.ql-snow .ql-editor pre.ql-syntax {
+  margin-top: 0;
+  font-size: 16px;
+  color: #212529;
+  background: rgb(240, 240, 240);
+}
+
+/*  コードブロックデザイン */
+.ql-snow .ql-editor blockquote {
+  padding-left: 16px;
+  margin-top: 0;
+  margin-bottom: 5px;
+  border-left: 4px solid #ccc;
+}
