@@ -139,7 +139,7 @@ hr {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: rgb(120, 120, 120);
+  color: rgb(100, 100, 100);
   white-space: nowrap;
 }
 
@@ -166,7 +166,7 @@ hr {
 .chat_content_label h1 {
   pointer-events: auto;
   font-weight: 600;
-  color: rgb(120, 120, 120);
+  color: rgb(100, 100, 100);
 }
 
 .bi-x:hover,
@@ -245,7 +245,7 @@ hr {
   grid-column: 2/3;
   grid-row: 2/3;
   font-size: 14px;
-  color: rgb(100, 100, 100);
+  color: rgb(120, 120, 120);
 }
 
 .chat_content_area_3 {
@@ -445,7 +445,7 @@ hr {
   grid-row: 1/2;
   font-size: 14px;
   font-weight: 600;
-  color: rgb(120, 120, 120);
+  color: rgb(100, 100, 100);
   white-space: nowrap;
 }
 
