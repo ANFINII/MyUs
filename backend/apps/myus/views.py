@@ -336,16 +336,17 @@ class MyPageUpdate(UpdateView):
 
 def mypage_toggle(request):
     """mypage_toggle"""
-    context = {}
     if request.method == 'POST':
         user = request.user
         is_advertise = request.POST.get('is_advertise')
         myapge_obj = MyPage.objects.get(user=user)
         myapge_obj.is_advertise = True if is_advertise == 'False' else False
         myapge_obj.save(update_fields=['is_advertise'])
-        context['toggle_mypage'] = render_to_string('registration/mypage_advertise.html', {
-            'mypage_list': MyPage.objects.filter(user=user),
-        }, request=request)
+        context = {
+            'toggle_mypage': render_to_string('registration/mypage_advertise.html', {
+                'mypage_list': MyPage.objects.filter(user=user),
+            }, request=request)
+        }
         return JsonResponse(context)
 
 
@@ -408,16 +409,17 @@ class NotificationSettingView(TemplateView):
 
 def notification_setting(request):
     """notification_setting"""
-    context = {}
     if request.method == 'POST':
         user = request.user
         is_notification = request.POST.get('notification')
         notification_type = request.POST.get('notification_type')
         notification_obj = NotificationSetting.objects.get(user=user)
         notification_setting_update(is_notification, notification_type, notification_obj)
-    context['notification_setting_lists'] = render_to_string('parts/notification_setting.html', {
-        'notification_setting_list': NotificationSetting.objects.filter(user=user),
-    }, request=request)
+    context = {
+        'notification_setting_lists': render_to_string('parts/notification_setting.html', {
+            'notification_setting_list': NotificationSetting.objects.filter(user=user),
+        }, request=request)
+    }
     return JsonResponse(context)
 
 
@@ -440,7 +442,7 @@ def notification_deleted(request):
         notification_obj.deleted.add(user)
         following_id_list = list(Follow.objects.filter(follower=user).values_list('following_id', flat=True))
         context = {
-            'notification_count': Notification.objects.filter(user_from__in=following_id_list, user_to=user).exclude(confirmed=user).count(),
+            'notification_count': Notification.objects.filter(user_from__in=following_id_list, user_to=user).exclude(confirmed=user).count()
         }
         return JsonResponse(context)
 
@@ -530,19 +532,20 @@ def comment_form(request):
         comment = Comment.objects.create(content_object=obj, text=text, author=user)
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
-        context = {'comment_num': obj.comment_num}
-        context['comment_lists'] = render_to_string('parts/common/comment/comment.html', {
-            'comment_list': obj.comment.filter(id=comment.id),
-            'user_id': user.id,
-            'obj_id': obj_id,
-            'obj_path': obj_path,
-        }, request=request)
+        context = {
+            'comment_num': obj.comment_num,
+            'comment_lists': render_to_string('parts/common/comment/comment.html', {
+                'comment_list': obj.comment.filter(id=comment.id),
+                'user_id': user.id,
+                'obj_id': obj_id,
+                'obj_path': obj_path,
+            }, request=request)
+        }
         return JsonResponse(context)
 
 
 def reply_form(request):
     """reply_form"""
-    context = {}
     if request.method == 'POST':
         user = request.user
         text = request.POST.get('text')
@@ -570,15 +573,17 @@ def reply_form(request):
                 type_name='reply',
                 content_object=comment_obj,
             )
-        context['comment_num'] = obj.comment_num
-        context['reply_num'] = parent_obj.reply_num
-        context['reply_lists'] = render_to_string('parts/common/reply/reply.html', {
-            'reply_list': obj.comment.filter(id=comment_obj.id),
-            'user_id': user.id,
-            'obj_id': obj_id,
-            'obj_path': obj_path,
-            'comment_id': comment_id,
-        }, request=request)
+        context = {
+            'comment_num': obj.comment_num,
+            'reply_num': parent_obj.reply_num,
+            'reply_lists': render_to_string('parts/common/reply/reply.html', {
+                'reply_list': obj.comment.filter(id=comment_obj.id),
+                'user_id': user.id,
+                'obj_id': obj_id,
+                'obj_path': obj_path,
+                'comment_id': comment_id,
+            }, request=request)
+        }
         return JsonResponse(context)
 
 
@@ -999,21 +1004,22 @@ class ChatThread(DetailView):
 
 
 def chat_thread_button(request):
-    context = {}
     if request.method == 'GET':
         user = request.user
         chat_id = request.GET.get('chat_id')
         message_id = request.GET.get('message_id')
         chat = Chat.objects.get(id=chat_id)
-        context['obj_id'] = chat_id
-        context['message_id'] = message_id
-        context['thread'] = render_to_string('chat/chat_reply/chat_section_thread_area.html', {
-            'message_parent': chat.message.filter(id=message_id),
-            'reply_list': chat.message.filter(parent_id=message_id).select_related('author'),
-            'user_id': user.id,
+        context = {
             'obj_id': chat_id,
             'message_id': message_id,
-        }, request=request)
+            'thread': render_to_string('chat/chat_reply/chat_section_thread_area.html', {
+                'message_parent': chat.message.filter(id=message_id),
+                'reply_list': chat.message.filter(parent_id=message_id).select_related('author'),
+                'user_id': user.id,
+                'obj_id': chat_id,
+                'message_id': message_id,
+            }, request=request)
+        }
         return JsonResponse(context)
 
 
