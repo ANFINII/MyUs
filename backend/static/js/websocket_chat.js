@@ -64,7 +64,7 @@ chatSocket.onmessage = function (event) {
         $('#edit_button_' + response.message_id).remove();
         $('#edit_update_main_' + response.message_id).remove();
       }
-      const obj = document.querySelector('.chat_section_thread');
+      const obj = document.querySelector('.chat_section_thread_area');
       obj.scrollTop = obj.scrollHeight;
       pjaxThread(location.pathname)
     } else {
