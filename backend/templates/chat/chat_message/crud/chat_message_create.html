@@ -1,5 +1,5 @@
 <form method="POST" action="" id="message_form">
-  {% if is_period or user.is_authenticated is false %}
+  {% if is_period or not user.is_authenticated %}
   <div id="quill_chat" class="chat_disabled"></div>
   <div class="message_input_chat chat_disabled">
     <button type="submit" title="送信" class="btn btn-secondary btn-sm" disabled>
