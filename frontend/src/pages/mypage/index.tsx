@@ -43,9 +43,9 @@ export default function MyPage({ mypage }: { mypage: MypageType }) {
               <tr><td className="td-color">バナー画像</td>
                 <td>
                   <label htmlFor="account_image_input" className="mypage_image">
-                    <a href={`${ process.env.NEXT_PUBLIC_API_URL }${ mypage.banner }`} data-lightbox="group">
+                    {/* <a href={`${ process.env.NEXT_PUBLIC_API_URL }${ mypage.banner }`} data-lightbox="group">
                       <img src={`${ process.env.NEXT_PUBLIC_API_URL }${ mypage.banner }`} title={ mypage.nickname } width="270px" height="56xp" data-lightbox="group"/>
-                    </a>
+                    </a> */}
                   </label>
                 </td>
               </tr>

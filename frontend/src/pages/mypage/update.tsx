@@ -30,12 +30,12 @@ export default function MyPageUpdate({ mypage }: { mypage: MypageType }) {
           <div className="btn-column">
             <div className="btn-column1">
               <Link href="/mypage/update">
-                <a className="btn btn-success btn-sm" role="button">編集</a>
+                {/* <a className="btn btn-success btn-sm" role="button">編集</a> */}
               </Link>
             </div>
             <div className="btn-column2">
               <Link href="/userpage/{user.nickname}">
-                <a data-nickname={ mypage.nickname } className="btn btn-success btn-sm pjax_button_userpage" role="button">ユーザページ</a>
+                {/* <a data-nickname={ mypage.nickname } className="btn btn-success btn-sm pjax_button_userpage" role="button">ユーザページ</a> */}
               </Link>
             </div>
           </div>
@@ -44,13 +44,13 @@ export default function MyPageUpdate({ mypage }: { mypage: MypageType }) {
             <tbody>
               <tr><td className="td-color">バナー画像</td>
                 <td>
-                  <label htmlFor="account_image_input" className="mypage_image">
+                  {/* <label htmlFor="account_image_input" className="mypage_image">
                     {mypage.banner &&
                       <a href={ mypage.banner } data-lightbox="group">
                         <img src={ mypage.banner } title={ mypage.nickname } width="270px" height="56xp" data-lightbox="group"/>
                       </a>
                     }
-                  </label>
+                  </label> */}
                 </td>
               </tr>
               <tr><td className="td-color">投稿者名</td><td className="td-indent">{ mypage.nickname }</td></tr>

@@ -35,9 +35,9 @@ export default function DropMenuNotice() {
         {/* {% for notification in notification_list %} */}
         <div id="notification_aria_link_{{ notification.id }}" className="drop_menu_item">
           <object notification-id="{{ notification.id }}" data-csrf="{{ csrf_token }}" className="notification_aria_list">
-            <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data-notification="{{ notification.user_from.nickname }}">
+            {/* <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data-notification="{{ notification.user_from.nickname }}">
               <img src="{{ notification.user_from.image }}" title="{{ notification.user_from.nickname }}" className="profile_image"/>
-            </a>
+            </a> */}
             {/* {% if notification.user_confirmed %} */}
             <span></span>
             {/* {% else %} */}
@@ -47,7 +47,7 @@ export default function DropMenuNotice() {
             {/* {% endif %} */}
 
             {/* {% if notification.type_name == 'video' %} */}
-            <a href="{% url 'myus:video_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker">
+            {/* <a href="{% url 'myus:video_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker"> */}
             {/* {% elif notification.type_name == 'music' %} */}
             {/* <a href="{% url 'myus:music_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker"> */}
             {/* {% elif notification.type_name == 'picture' %} */}
@@ -104,7 +104,7 @@ export default function DropMenuNotice() {
                 </div>
                 {/* {% endif %} */}
               {/* {% endif %} */}
-            </a>
+            {/* </a> */}
 
             <form method="POST" action="">
               {/* <i title="閉じる" className="bi bi-x notification_aria_list_2" style={{font-size: '1.41em';}}></i> */}

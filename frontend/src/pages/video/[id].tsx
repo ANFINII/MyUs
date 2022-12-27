@@ -31,7 +31,7 @@ export default function VideoCreate({ data }: any) {
                 {/* <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
                 <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English"> */}
                 <p className="vjs-no-js">この動画を見るには、JavaScriptを有効にしてください!
-                  <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                  {/* <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> */}
                 </p>
               </video>
             </div>

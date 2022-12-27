@@ -28,7 +28,7 @@ export default function SideMenu() {
             </svg>
             <div>ホーム</div>
             <Link href="/">
-              <a className="icon_link" role="button" aria-disabled="true"></a>
+              {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
             </Link>
           </div>
 
@@ -38,7 +38,7 @@ export default function SideMenu() {
             </svg>
             <div>急上昇</div>
             <Link href="/recommend">
-              <a className="icon_link" role="button" aria-disabled="true"></a>
+              {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
             </Link>
           </div>
 
@@ -49,7 +49,7 @@ export default function SideMenu() {
             </svg>
             <div>フォロー</div>
             <Link href="/follow">
-              <a className="icon_link" role="button" aria-disabled="true"></a>
+              {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
             </Link>
           </div>
         </nav>
@@ -63,7 +63,7 @@ export default function SideMenu() {
               </svg>
               <div>利用規約</div>
               <Link href="/common/userpolicy">
-                <a className="icon_link" role="button" aria-disabled="true"></a>
+                {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
               </Link>
             </div>
 
@@ -73,7 +73,7 @@ export default function SideMenu() {
               </svg>
               <div>Knowledge Base</div>
               <Link href="/common/knowledge">
-                <a className="icon_link" role="button" aria-disabled="true"></a>
+                {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
               </Link>
             </div>
 
@@ -81,7 +81,7 @@ export default function SideMenu() {
               <img src="/img/MyUs.png" width="24px" height="24px" className="myus_img"/>
               <div className="side_menu_footer_item">© {year} MyUs Co.,Ltd</div>
               <Link href="/">
-                <a className="icon_link" role="button" aria-disabled="true"></a>
+                {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
               </Link>
             </div>
           </nav>

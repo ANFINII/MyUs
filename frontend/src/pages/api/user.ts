@@ -1,21 +1,3 @@
-import axios from 'pages/api/axios'
-// import fetch from 'node-fetch'
-
-
-// export async function getProfile() {
-//   // return await axios.get('/api/profile')
-//   return axios.get('/api/profile')
-//   .then(res => {
-//     let data = res.data;
-//     console.log(data)
-//     return data;
-//   })
-//   .catch(err => {
-//     console.log(err)
-//   })
-// }
-
-
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNTE3NzM0LCJpYXQiOjE2NzEwODU3MzQsImp0aSI6IjVlMDM1MjE4OGJiODQzN2Q5YmI2YjcyMzc2NWMxNDI2IiwidXNlcl9pZCI6NX0.CCZuy0GARxK68Tr5u2dY9mbzhItm4vsFU-DcdZkfJTc'
 const BASEURL = process.env.NEXT_PUBLIC_API_URL
 
@@ -31,8 +13,8 @@ export async function getProfile() {
   return fetch(BASEURL + '/api/profile', parameter)
   .then((res) => {
     console.log(res)
-    return res.json();
-  });
+    return res.json()
+  })
 }
 
 // export async function getVideoList() {

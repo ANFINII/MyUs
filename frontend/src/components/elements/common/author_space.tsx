@@ -1,12 +1,17 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
-export default function AuthorSpace(data: any) {
-  const author = data.author
-  const image_url = process.env.NEXT_PUBLIC_API_URL + author.image
+interface Props {
+  imageUrl: string
+  nickname?: string
+}
+
+export default function AuthorSpace(props: Props) {
+  const {imageUrl, nickname} = props
   return (
     <object className="author_image_space">
-      <Link href={`/userpage/${author.nickname}`} data-nickname={ author.nickname } className="pjax_button_userpage">
-        <img src={ image_url } title={ author.nickname } className="profile_image"/>
+      <Link href={`/userpage/${nickname}`} data-nickname={nickname} className="pjax_button_userpage">
+        <Image src={imageUrl} title={nickname} className="profile_image" width={32} height={32} alt="" />
       </Link>
     </object>
   )

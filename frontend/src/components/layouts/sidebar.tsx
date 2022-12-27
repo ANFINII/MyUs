@@ -11,7 +11,7 @@ export default function SideBar() {
           </svg>
           <p className="text_size">Video</p>
           <Link href="/video">
-            <a className="icon_link" role="button" aria-disabled="true"></a>
+            {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
           </Link>
         </div>
 
@@ -21,7 +21,7 @@ export default function SideBar() {
           </svg>
           <p className="text_size">Music</p>
           <Link href="/music">
-            <a className="icon_link" role="button" aria-disabled="true"></a>
+            {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
           </Link>
         </div>
 
@@ -32,7 +32,7 @@ export default function SideBar() {
           </svg>
           <p className="text_size">Picture</p>
           <Link href="/picture">
-            <a className="icon_link" role="button" aria-disabled="true"></a>
+            {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
           </Link>
         </div>
 
@@ -43,7 +43,7 @@ export default function SideBar() {
           </svg>
           <p className="text_size">Blog</p>
           <Link href="/blog">
-            <a className="icon_link" role="button" aria-disabled="true"></a>
+            {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
           </Link>
         </div>
 
@@ -54,7 +54,7 @@ export default function SideBar() {
           </svg>
           <p className="text_size">Chat</p>
           <Link href="/chat">
-            <a className="icon_link" role="button" aria-disabled="true"></a>
+            {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
           </Link>
         </div>
 
@@ -64,7 +64,7 @@ export default function SideBar() {
           </svg>
           <p className="text_size">Collabo</p>
           <Link href="/collabo">
-            <a className="icon_link" role="button" aria-disabled="true"></a>
+            {/* <a className="icon_link" role="button" aria-disabled="true"></a> */}
           </Link>
         </div>
       </nav>

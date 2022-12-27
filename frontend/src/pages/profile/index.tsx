@@ -43,9 +43,9 @@ export default function Profile({ user }: { user: ProfileType }) {
               <tr><td className="td-color td-header">アカウント画像</td>
                 <td>
                   <label htmlFor="account_image_input" className="account_image">
-                    <a href={ avatar_url } data-lightbox="group">
+                    {/* <a href={ avatar_url } data-lightbox="group">
                       <img src={ avatar_url } title={ user.nickname } width="56px" height="56xp" data-lightbox="group"/>
-                    </a>
+                    </a> */}
                   </label>
                 </td>
               </tr>

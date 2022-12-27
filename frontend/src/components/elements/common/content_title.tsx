@@ -1,27 +1,35 @@
-export default function ContentTitle(datas: any) {
-  const data = datas.data
-  const author = data.author
+interface Props {
+  title?: string
+  author?: string
+  nickname?: string
+  read?: string
+  totalLike?: string
+  created?: string
+}
+
+export default function ContentTitle(props: Props) {
+  const {title, nickname, read, totalLike, created} = props
   return (
     <>
-      <div title={ data.title } className="content_title">{ data.title }</div>
+      <div title={title} className="content_title">{title}</div>
 
       <span className="view_good">
         <div className="view_good_font content_nickname">
-          { author.nickname }
+          {nickname}
         </div>
 
         <div className="view_good_font view_good_inline">
           <i title="閲覧数" className="bi bi-caret-right-square view_good_space"></i>
-          { data.read }
+          {read}
         </div>
 
         <div className="view_good_font view_good_inline">
           <i title="いいね数" className="bi bi-hand-thumbs-up"></i>
-          { data.total_like }
+          {totalLike}
         </div>
 
         <div className="view_good_font">
-          <time>{ data.created }</time>
+          <time>{created}</time>
         </div>
       </span>
     </>

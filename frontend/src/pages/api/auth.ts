@@ -42,20 +42,127 @@
 //   introduction: '',
 // })
 
-// export default function profileAPI() {
-//   const url = process.env.NEXT_PUBLIC_API_URL
-//   const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY1MDQ2NjA1LCJqdGkiOiIwNzI5ZjIwZjkwMGM0MzU3YmEwOWYxNzA5Y2QwZDMwNSIsInVzZXJfaWQiOjF9.QKL4zB8Grig3M8_gC1Sgh9NseZOYICy3q0jOBcpJCwU'
-//   axios.get(url + '/api/profile', {headers: {'Authorization': 'JWT ' + token}})
-//   .then(res => {
-//     setUser(res.data)
-//     console.log(res)
 
-//     return {user.map(data => <Profile {...data}/>)}
-//   })
-//   .catch(e => {
-//     console.log(e)
-//   })
-// }
+import {apiBase} from 'pages/api/api'
+import {config} from '@/api/config'
+import {userLoginState, userCreateState} from '@/utils/types/state'
+import {userCreateReponse, userResponse, usersResponse} from '@/utils/types/response'
 
-// useEffect(() => {
-// },[])
+
+
+export const authMe = async (): Promise<userResponse | undefined> => {
+  const params = {
+    path: '/api/user/v1/me/admin',
+    method: 'GET',
+    headers: {
+      'x-recustomer-api-key': config().authKey,
+      Authorization: 'Bearer ' + config().authToken
+    }
+  }
+  const response = await apiBase(params)
+  return response.json()
+}
+
+
+export const loginForm = async (state: userLoginState): Promise<Response> => {
+  const url = `${config().baseUrl}/api/auth/v1/login/admin`
+  const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-recustomer-api-key': config().authKey
+    },
+    body: JSON.stringify({
+      email: state.mailAddress,
+      password: state.password
+    })
+  })
+  return response
+}
+
+export const logoutForm = async (): Promise<Response> => {
+  const url = `${config().baseUrl}/api/auth/v1/logout`
+  const response = await fetch(url, {
+    method: 'GET',
+    credentials: 'include'
+  })
+  return response
+}
+
+export const userCreate = async (
+  state: userCreateState
+): Promise<userCreateReponse> => {
+  const url = `${config().baseUrl}/api/user/v1/add`
+  const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-recustomer-api-key': config().authKey
+    },
+    body: JSON.stringify({
+      first_name: state.firstName,
+      last_name: state.lastName,
+      email: state.primaryUserEmail,
+      password: ''
+    })
+  })
+  return response.json()
+}
+
+export const merchantUserCreate = async (
+  userId: number,
+  merchantId: number
+): Promise<Response> => {
+  const url = `${config().baseUrl}/api/user/v1/merchant`
+  const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-recustomer-api-key': config().authKey
+    },
+    body: JSON.stringify({
+      user_id: userId,
+      merchant_id: merchantId,
+      is_primary: true
+    })
+  })
+  return response
+}
+
+export const merchantUserGet = async (
+  merchantId: string
+): Promise<usersResponse> => {
+  const url = `${config().baseUrl}/api/user/v1/merchant/${merchantId}`
+  const response = await fetch(url, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'x-recustomer-api-key': config().authKey,
+      Authorization: 'Bearer ' + config().authToken
+    }
+  })
+  return response.json()
+}
+
+export const merchantUserUpdate = async (
+  merchantUserId: number,
+  isPrimary: boolean
+): Promise<Response> => {
+  const url = `${config().baseUrl}/api/user/v1/merchant/${merchantUserId}`
+  const response = await fetch(url, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-recustomer-api-key': config().authKey,
+      Authorization: 'Bearer ' + config().authToken
+    },
+    body: JSON.stringify({
+      is_primary: isPrimary
+    })
+  })
+  return response
+}
