@@ -8,7 +8,7 @@
   <article class="article_detail">
     {% if object.publish %}
     <div class="article_detail_music">
-      <audio controls controlslist="nodownload">
+      <audio preload controls controlslist="nodownload">
         <source src="{{ object.music.url }}">
         <p>ブラウザがaudioに対応しておりません</p>
       </audio>

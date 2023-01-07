@@ -556,7 +556,7 @@ div.field > button {
 .userpage_author {
   display: grid;
   grid-template-columns: 80px auto auto;
-  grid-template-rows: 36px 22px 22px;
+  grid-template-rows: 80px 22px 22px;
   margin: 16px 30px;
 }
 
@@ -608,11 +608,13 @@ div.field > button {
   display: grid;
   grid-column: 3/-1;
   grid-row: 1/2;
+  padding: 2px 2px 0 0;
   justify-content: end;
 }
 
 .userpage_content_5 button {
   width: 122px;
+  height: 36px;
   font-size: 16px;
 }
 

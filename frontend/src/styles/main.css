@@ -556,7 +556,7 @@ div.field > button {
 .userpage_author {
   display: grid;
   grid-template-columns: 80px auto auto;
-  grid-template-rows: 36px 22px 22px;
+  grid-template-rows: 80px 22px 22px;
   margin: 16px 30px;
 }
 
@@ -608,11 +608,13 @@ div.field > button {
   display: grid;
   grid-column: 3/-1;
   grid-row: 1/2;
+  padding: 2px 2px 0 0;
   justify-content: end;
 }
 
 .userpage_content_5 button {
   width: 122px;
+  height: 36px;
   font-size: 16px;
 }
 
@@ -1125,6 +1127,13 @@ div.field > button {
   -webkit-appearance: none;
 }
 
+.message_aria_list:hover ,
+.message_aria_list:hover {
+  background: rgb(240, 245, 255, 0.8);
+}
+
+.message_aria_list:hover .edit_button_reply .edit_button_update,
+.message_aria_list:hover .edit_button_reply .edit_button_delete,
 .comment_aria_list:hover .edit_button_reply .edit_button_update,
 .comment_aria_list:hover .edit_button_reply .edit_button_delete {
   display: none;
@@ -1135,6 +1144,8 @@ div.field > button {
   display: block;
 }
 
+.message_aria_list:hover .edit_button_update,
+.message_aria_list:hover .edit_button_delete,
 .comment_aria_list:hover .edit_button_update,
 .comment_aria_list:hover .edit_button_delete {
   display: inline-block;
@@ -1145,6 +1156,8 @@ div.field > button {
   transition: background 0.1s;
 }
 
+.message_aria_list:hover .edit_button_update:hover,
+.message_aria_list:hover .edit_button_delete:hover,
 .comment_aria_list:hover .edit_button_update:hover,
 .comment_aria_list:hover .edit_button_delete:hover {
   display: block;
@@ -1202,7 +1215,7 @@ div.field > button {
   grid-template-rows: auto;
   grid-gap: 0 10px;
   padding: 8px 8px 8px 16px;
-  background: rgb(255, 240, 230);
+  background: rgb(255, 240, 230, 0.8);
 }
 
 .edit_update_chat .profile_image_comment {
