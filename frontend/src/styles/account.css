@@ -59,14 +59,16 @@
 }
 
 /* table */
-table {
+.table {
   display: block;
   grid-column: 1/-1;
   grid-row: 3/4;
+  border-spacing: 0px;
+  border-collapse: collapse;
   overflow-y: auto;
 }
 
-table td {
+.table td {
   height: 2.5em;
   width: 100%;
   min-width: 125px;
