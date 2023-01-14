@@ -98,6 +98,7 @@
   width: 250px;
   height: 100%;
   padding: 0;
+  margin: 0;
   background: rgb(255, 255, 255);
   color: rgb(50, 50, 50);
   transition: all 0.2s;
@@ -219,6 +220,7 @@
   right: -250px;
   width: 250px;
   padding: 0;
+  margin: 0;
   background: rgb(255, 250, 245);
   color: rgb(50, 50, 50);
   transition: all 0.2s;

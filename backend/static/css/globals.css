@@ -75,6 +75,10 @@
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+}
+
 /* color */
 .rgb100 {
   color: rgb(100, 100, 100);
