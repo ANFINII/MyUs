@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import TodoArticle from 'components/elements/article/todo'
+import TodoArticle from 'components/elements/Article/Todo'
 
 export default function Todo() {
   return (

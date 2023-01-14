@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import CollaboArticle from 'components/elements/article/collabo'
+import CollaboArticle from 'components/elements/Article/Collabo'
 
 export default function Collabo() {
   return (

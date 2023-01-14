@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import AuthorSpace from 'components/elements/common/author_space'
-import ContentTitle from 'components/elements/common/content_title'
+import AuthorSpace from 'components/elements/Common/AuthorSpace'
+import ContentTitle from 'components/elements/Common/ContentTitle'
 
 interface Props {imageUrl: string}
 
@@ -13,7 +13,7 @@ export default function PictureArticle(props: Props) {
       <section className="section_list">
         <figure className="main_decolation">
           <Link href="/picture/detail/[id][title]">
-            <a><Image src={imageUrl} width={272} height={153} alt="" /></a>
+            <Image src={imageUrl} width={272} height={153} alt="" />
           </Link>
           <Link href="/picture/detail/[id][title]" className="author_space">
             <AuthorSpace imageUrl={imageUrl} />

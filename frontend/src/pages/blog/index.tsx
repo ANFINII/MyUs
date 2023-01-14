@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import BlogArticle from 'components/elements/article/blog'
+import BlogArticle from 'components/elements/Article/Blog'
 
 export default function Blog() {
   return (

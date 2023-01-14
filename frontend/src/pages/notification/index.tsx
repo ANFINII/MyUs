@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Footer from 'components/layouts/footer'
+import Footer from 'components/layouts/Footer'
 
 export default function Notification() {
   return (
@@ -12,7 +12,7 @@ export default function Notification() {
         <h1>通知設定</h1>
         {/* {% if user.is_authenticated %}
         {% for notification in notification_setting_list %} */}
-        <table id="notification_table" data-csrf="{{ csrf_token }}">
+        <table id="notification_table" data-csrf="{{ csrf_token }}" className="table">
           <tbody>
             <tr><td className="td-color">通知設定</td><td className="td-indent">フォローしているユーザの投稿通知などを設定</td></tr>
             <tr><td className="td-color">Video通知</td><td className="td-indent">

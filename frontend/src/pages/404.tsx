@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Footer from 'components/layouts/footer'
+import Footer from 'components/layouts/Footer'
 
 export default function Custom404() {
   return (

@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Footer from 'components/layouts/footer'
+import Footer from 'components/layouts/Footer'
 
 export default function Knowledge() {
   return (
@@ -10,7 +10,7 @@ export default function Knowledge() {
 
       <article className="article_knowledge">
         <h1>Knowledge Base</h1>
-        <table>
+        <table className="table">
           <tbody>
             <tr><td className="td-color">MyUs</td><td className="td-indent">MyUsは総合SNS投稿サイトです。是非いろいろなアイディアを投稿して楽しみましょう!</td></tr>
             <tr><td className="td-color">Video</td><td className="td-indent">動画コンテンツを投稿できる機能です。</td></tr>

@@ -1,15 +1,25 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
-export default function DropMenuProfile() {
+interface Props {
+  nickname?: string
+  is_active?: boolean
+  is_staff?: boolean
+  is_authenticated?: boolean
+}
+
+export default function DropMenuProfile(props: Props) {
+  const {nickname, is_active, is_staff, is_authenticated} = props
+
   return (
     <>
-      <input type="checkbox" id="drop_menu_profile" className="drop_menu_profile"/>
+      <input type="checkbox" id="drop_menu_profile" className="drop_menu_profile" />
       <label htmlFor="drop_menu_profile" className="drop_open_profile">
-        {/* if (user.is_authenticated) { */}
-          {/* <img src="/img/user.image" title="{{ user.nickname }}" width="32px" height="32xp"/> */}
-        {/* } else { */}
-          {/* <img src="/img/user_icon.png" title="匿名" width="32px" height="32xp"/> */}
-        {/* } */}
+        {is_authenticated ?
+          <Image src="/img/user.image" title={nickname} width={32} height={32} alt="" />
+        :
+          <Image src="/img/user_icon.png" title="Anonymous" width={32} height={32} alt="" />
+        }
       </label>
       <label htmlFor="drop_menu_profile" className="drop_back_profile"></label>
 
@@ -37,17 +47,13 @@ export default function DropMenuProfile() {
             <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
           </svg>
           <div>投稿管理</div>
-          {/* if (user.is_staff) {
-            <Link href="/">
-              <a className="icon_link" role="button" aria-disabled="true"></a>
-            </Link>
-          } elif (user.is_active) {
-            <Link href="/">
-              <a className="icon_link" role="button" aria-disabled="true"></a>
-            </Link>
-          } else { */}
+          {is_staff ?
+            <Link href="/" className="icon_link"></Link>
+          :is_active ?
+            <Link href="/" className="icon_link"></Link>
+          :
             <Link href="/login"></Link>
-          {/* } */}
+          }
         </div>
 
         <div className="drop_menu_item color_drop_menu">
@@ -74,11 +80,7 @@ export default function DropMenuProfile() {
             <path fillRule="evenodd" d="M12.146 5.146a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
           </svg>
           <div>退会処理</div>
-          {/* if (user.is_staff) {
-            <a className="icon_link" role="button" aria-disabled="true"></a>
-          } else { */}
-            <Link href="/withdrawal" className="icon_link"></Link>
-          {/* } */}
+          {!is_staff && <Link href="/withdrawal" className="icon_link"></Link>}
         </div>
 
         <div className="drop_menu_item color_drop_menu">
@@ -87,13 +89,11 @@ export default function DropMenuProfile() {
             <path fillRule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
           </svg>
           <div>ログアウト</div>
-          {/* if (user.is_authenticated) {
-            <Link href="/logout">
-              <a className="icon_link" role="button" aria-disabled="true"></a>
-            </Link>
-          } else { */}
+          {is_authenticated ?
+            <Link href="/logout" className="icon_link"></Link>
+          :
             <Link href="login" className="icon_link"></Link>
-          {/* } */}
+          }
         </div>
       </nav>
     </>

@@ -1,6 +1,11 @@
 import Link from 'next/link'
-import AuthorSpace from 'components/elements/common/author_space'
-import ContentTitle from 'components/elements/common/content_title'
+import AuthorSpace from 'components/elements/Common/AuthorSpace'
+import ContentTitle from 'components/elements/Common/ContentTitle'
+
+interface Props {
+  imageUrl: string
+  nickname: string
+}
 
 export default function ChatArticle() {
   return (

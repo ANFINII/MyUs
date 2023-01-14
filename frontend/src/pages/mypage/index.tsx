@@ -1,9 +1,9 @@
 import Head from 'next/head'
-import Footer from 'components/layouts/footer'
+import Footer from 'components/layouts/Footer'
 import Link from 'next/link'
-import axios from 'pages/api/axios'
+import axios from 'api/axios'
 import { GetServerSideProps } from 'next'
-import { MypageType } from 'utils/type'
+import { MypageResponse } from 'utils/type'
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -11,13 +11,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const res = await axios.get('/api/mypage', {
     headers: { cookie: cookie! }
   })
-  const data: MypageType = res.data
+  const data: MypageResponse = res.data
   return {
     props: { mypage: data }
   }
 }
 
-export default function MyPage({ mypage }: { mypage: MypageType }) {
+export default function MyPage({ mypage }: { mypage: MypageResponse }) {
   return (
     <>
       <Head>
@@ -38,7 +38,7 @@ export default function MyPage({ mypage }: { mypage: MypageType }) {
             </div>
           </div>
 
-          <table>
+          <table className="table">
             <tbody>
               <tr><td className="td-color">バナー画像</td>
                 <td>

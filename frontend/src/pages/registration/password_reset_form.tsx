@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import Footer from 'components/layouts/footer'
-import axios from 'pages/api/axios'
+import Footer from 'components/layouts/Footer'
+import axios from 'api/axios'
 
 
 export default function PasswordResetForm() {

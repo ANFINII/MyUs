@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import Footer from 'components/layouts/footer'
+import Footer from 'components/layouts/Footer'
 // import axios from 'pages/api/axios'
 import { useRouter } from "next/router"
 import { useState } from 'react'

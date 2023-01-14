@@ -1,27 +1,25 @@
 import { NextPage, GetServerSideProps } from 'next'
 import Head from 'next/head'
 import Script from 'next/script'
-import axios from 'pages/api/axios'
-import VideoArticle from 'components/elements/article/video'
-import MusicArticle from 'components/elements/article/music'
-import PictureArticle from 'components/elements/article/picture'
-import BlogArticle from 'components/elements/article/blog'
-import ChatArticle from 'components/elements/article/chat'
+// import axios from 'pages/api/axios'
+import VideoArticle from 'components/elements/Article/Video'
+import MusicArticle from 'components/elements/Article/Music'
+import PictureArticle from 'components/elements/Article/Picture'
+import BlogArticle from 'components/elements/Article/Blog'
+import ChatArticle from 'components/elements/Article/Chat'
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const res_video = await axios.get('/api/video')
-  const video: any = res_video.data
-  const res_music = await axios.get('/api/music')
-  const music: any = res_music.data
-  return {
-    props: { video, music }
-  }
-}
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const res_video = await axios.get('/api/video')
+//   const video: any = res_video.data
+//   const res_music = await axios.get('/api/music')
+//   const music: any = res_music.data
+//   return {
+//     props: { video, music }
+//   }
+// }
 
-const Home: NextPage = (
-  video: any,
-  music: any,
-) => {
+const Home: NextPage = (video: any, music: any) => {
+
   return (
     <>
       <Head>
@@ -42,7 +40,7 @@ const Home: NextPage = (
           {/* {% include 'search/search_video.html' %} */}
         {/* {% else %} */}
           {/* {% for item in video_list %} */}
-            <VideoArticle datas={video} />
+            {/* <VideoArticle video={video} /> */}
           {/* {% endfor %} */}
         {/* {% endif %} */}
       </article>
@@ -54,7 +52,7 @@ const Home: NextPage = (
           {/* {% include 'search/search_music.html' %} */}
         {/* {% else %} */}
           {/* {% for item in music_list %} */}
-            <MusicArticle datas={music} />
+            {/* <MusicArticle imageUrl={music} /> */}
           {/* {% endfor %} */}
         {/* {% endif %} */}
       </article>
@@ -66,7 +64,7 @@ const Home: NextPage = (
           {/* {% include 'search/search_picture.html' %} */}
         {/* {% else %} */}
           {/* {% for item in picture_list %} */}
-            <PictureArticle/>
+            <PictureArticle imageUrl='/user_icon.png' />
           {/* {% endfor %} */}
         {/* {% endif %} */}
       </article>
@@ -78,7 +76,7 @@ const Home: NextPage = (
           {/* {% include 'search/search_blog.html' %} */}
         {/* {% else %} */}
           {/* {% for item in blog_list %} */}
-            <BlogArticle/>
+            <BlogArticle imageUrl='/user_icon.png' />
           {/* {% endfor %} */}
         {/* {% endif %} */}
       </article>

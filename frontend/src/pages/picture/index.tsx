@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import PictureArticle from 'components/elements/article/picture'
+import PictureArticle from 'components/elements/Article/Picture'
 
 
 export default function Picture() {

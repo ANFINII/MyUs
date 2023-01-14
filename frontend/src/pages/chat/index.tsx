@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import ChatArticle from 'components/elements/article/chat'
+import ChatArticle from 'components/elements/Article/Chat'
 
 
 export default function Chat() {

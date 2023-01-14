@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import Footer from 'components/layouts/footer'
+import Footer from 'components/layouts/Footer'
 
 export default function SignUp() {
   return (

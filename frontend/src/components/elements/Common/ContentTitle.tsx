@@ -1,10 +1,9 @@
 interface Props {
-  title?: string
-  author?: string
-  nickname?: string
-  read?: string
-  totalLike?: string
-  created?: string
+  title: string
+  nickname: string
+  read: number
+  totalLike: number
+  created: string
 }
 
 export default function ContentTitle(props: Props) {

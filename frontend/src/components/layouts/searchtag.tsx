@@ -1,20 +1,36 @@
-export default function SearchTag() {
+import Link from 'next/link'
+
+interface searchtag {
+  name: string
+}
+
+interface Props {
+  isAuthenticated: boolean
+  csrfToken?: string
+  searchtag: Array<searchtag>
+}
+
+export default function SearchTag(props: Props) {
+  const {isAuthenticated, csrfToken, searchtag} = props
+
   return (
     <nav className="searchtag">
       <form method="POST" action="" id="tag_form" className="searchtag_grid">
         <input type="checkbox" id="searchtag_add" className="searchtag_menu"/>
         <label htmlFor="searchtag_add" className="searchtag_1"><span className="searchtag_center">タグ</span></label>
-        <input type="submit" className="searchtag_2 form_button" value="追加" data-csrf="{{ csrf_token }}"/>
-        {/* if (user.is_authenticated) { */}
+        <input type="submit" className="searchtag_2 form_button" value="追加" data-csrf={csrfToken}/>
+        {isAuthenticated ?
           <input type="text" name="searchtag" className="searchtag_3" maxLength={30} placeholder="タグ名"/>
-        {/* // } else { */}
-        {/* //   <input type="text" name="searchtag" className="searchtag_3" maxLength={30} placeholder="タグ名" disabled/> */}
-        {/* // } */}
+        :
+          <input type="text" name="searchtag" className="searchtag_3" maxLength={30} placeholder="タグ名" disabled/>
+        }
         <div className="searchtag_n">
           <div className="searchtag_n_list">
-          {/* for (searchtag in searchtag_list) {
-            <a href="?search={{ searchtag.name }}" search={{ searchtag.name }}>{{ searchtag.name }}</a>
-          } */}
+          {searchtag.map((tag: searchtag, index) => {
+            return (
+              <Link href={`?search=${tag.name}`} data-search={tag.name} key={index}>{tag.name}</Link>
+            )
+          })}
           </div>
         </div>
         <label htmlFor="searchtag_add" className="searchtag_4"><span className="searchtag_center">完了</span></label>

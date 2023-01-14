@@ -1,11 +1,20 @@
 import Head from 'next/head'
-import Header from 'components/layouts/header/header'
-import SideBar from 'components/layouts/sidebar'
-import SearchTag from 'components/layouts/searchtag'
+import Header from 'components/layouts/Header'
+import SideBar from 'components/layouts/SideBar'
+import SearchTag from 'components/layouts/SearchTag'
 
-interface Props { children: React.ReactNode }
+interface Props {children: React.ReactNode}
+interface searchtag {
+  name: string
+}
 
-export default function Layout({ children }: Props) {
+export default function Layout(props: Props) {
+  const {children} = props
+  const searchtagData: Array<searchtag> = [
+    {name: "初音ミク"},
+    {name: "VOCALOID"},
+    {name: "宇宙"}
+  ]
   return (
     <div className="layout">
       <Head>
@@ -39,9 +48,9 @@ export default function Layout({ children }: Props) {
         <base href="/"></base>
         <title>MyUs</title>
       </Head>
-      <Header/>
-      <SideBar/>
-      <SearchTag/>
+      <Header />
+      <SideBar />
+      <SearchTag searchtag={searchtagData} isAuthenticated={true} />
       <main className="main">
         { children }
       </main>
