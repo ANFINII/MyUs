@@ -10,11 +10,13 @@ interface searchtag {
 
 export default function Layout(props: Props) {
   const {children} = props
+
   const searchtagData: Array<searchtag> = [
     {name: "初音ミク"},
     {name: "VOCALOID"},
     {name: "宇宙"}
   ]
+
   return (
     <div className="layout">
       <Head>

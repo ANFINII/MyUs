@@ -1,23 +1,36 @@
+import {GetServerSideProps} from 'next'
 import Head from 'next/head'
-import Footer from 'components/layouts/Footer'
 import Link from 'next/link'
-import axios from 'api/axios'
-import { GetServerSideProps } from 'next'
-import { MypageResponse } from 'utils/type'
+import Image from 'next/image'
+import config from 'api/config'
+import {MypageResponse} from 'utils/type'
+import Footer from 'components/layouts/Footer'
 
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const cookie = context.req?.headers.cookie
+//   const res = await axios.get('/api/mypage', {
+//     headers: { cookie: cookie! }
+//   })
+//   const data: MypageResponse = res.data
+//   return {
+//     props: { mypage: data }
+//   }
+// }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const cookie = context.req?.headers.cookie
-  const res = await axios.get('/api/mypage', {
-    headers: { cookie: cookie! }
-  })
-  const data: MypageResponse = res.data
-  return {
-    props: { mypage: data }
+export default function MyPage() {
+  const mypage: MypageResponse = {
+    "banner": "/media/users/images_mypage/user_5/MyUs_banner.png",
+    "nickname": "アン",
+    "email": "abc@gmail.com",
+    "content": "MyUs開発者です。",
+    "follower_num": 0,
+    "following_num": 1,
+    "plan": "free",
+    "plan_date": "2021-12-31T15:00:00Z",
+    "is_advertise": true
   }
-}
 
-export default function MyPage({ mypage }: { mypage: MypageResponse }) {
+  const bannerUrl = config.baseUrl + mypage.banner
   return (
     <>
       <Head>
@@ -43,9 +56,9 @@ export default function MyPage({ mypage }: { mypage: MypageResponse }) {
               <tr><td className="td-color">バナー画像</td>
                 <td>
                   <label htmlFor="account_image_input" className="mypage_image">
-                    {/* <a href={`${ process.env.NEXT_PUBLIC_API_URL }${ mypage.banner }`} data-lightbox="group">
-                      <img src={`${ process.env.NEXT_PUBLIC_API_URL }${ mypage.banner }`} title={ mypage.nickname } width="270px" height="56xp" data-lightbox="group"/>
-                    </a> */}
+                    <a href={bannerUrl} data-lightbox="group">
+                      <Image src={bannerUrl} title={ mypage.nickname } width={270} height={56} alt="" data-lightbox="group"/>
+                    </a>
                   </label>
                 </td>
               </tr>

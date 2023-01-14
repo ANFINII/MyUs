@@ -1,12 +1,10 @@
+import {GetServerSideProps} from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
-import Footer from 'components/layouts/Footer'
-// import axios from 'pages/api/axios'
-import {GetServerSideProps} from 'next'
-import {ProfileResponse} from 'utils/type'
 import config from 'api/config'
-
+import {ProfileResponse} from 'utils/type'
+import Footer from 'components/layouts/Footer'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   const cookie = context.req?.headers.cookie
@@ -20,7 +18,7 @@ import config from 'api/config'
 // }
 
 export default function Profile() {
-  const user = {
+  const user: ProfileResponse = {
     "avatar": "/media/users/images_user/user_5/MyUs_Profile_01.jpg",
     "email": "anfinii56@gmail.com",
     "username": "anfinii56",
@@ -68,9 +66,7 @@ export default function Profile() {
                 <td>
                   <label htmlFor="account_image_input" className="account_image">
                     <a href={avatarUrl} data-lightbox="group">
-                      <picture>
-                        <img src={avatarUrl} title={user.nickname} width={56} height={56} alt="" data-lightbox="group" />
-                      </picture>
+                      <Image src={avatarUrl} title={user.nickname} width={56} height={56} alt="" data-lightbox="group" />
                     </a>
                   </label>
                 </td>
