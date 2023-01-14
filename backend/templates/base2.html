@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.quilljs.com/1.3.6/quill.snow.css">
 <link rel="stylesheet" type="text/css" href="{% static 'css/globals.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/layout.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/account.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/userpolicy.css' %}">
@@ -219,7 +219,7 @@
         {% if user.is_authenticated %}
         <img src="{{ user.image }}" title="{{ user.nickname }}" width="32px" height="32xp">
         {% else %}
-        <img src="{% static 'img/user_icon.png' %}" title="匿名" width="32px" height="32xp">
+        <img src="{% static 'img/user_icon.png' %}" title="Anonymous" width="32px" height="32xp">
         {% endif %}
       </label>
       <label for="drop_menu_profile" class="drop_back_profile"></label>

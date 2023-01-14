@@ -12,7 +12,7 @@
       <button type="button" name="reply_form" id="reply_form_button_{{ comment.id }}" class="btn btn-primary btn-xs reply_form form_button" disabled>コメント</button>
     </div>
     {% else %}
-    <img src="{% static 'img/user_icon.png' %}" title="匿名" class="profile_image_reply">
+    <img src="{% static 'img/user_icon.png' %}" title="Anonymous" class="profile_image_reply">
     <textarea name="reply" rows="1" placeholder="返信コメントするにはログインが必要です!" class="textarea_br" disabled></textarea>
     <div class="reply_button_group">
       <button type="button" name="cancel" class="btn btn-light btn-xs reply_cancel_button">キャンセル</button>
