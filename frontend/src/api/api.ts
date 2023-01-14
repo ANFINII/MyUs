@@ -1,4 +1,4 @@
-import config from 'pages/api/config'
+import config from 'api/config'
 
 interface Params {
   path: string
