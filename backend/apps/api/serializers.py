@@ -55,17 +55,14 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = (
             'last_name', 'first_name', 'birthday', 'gender', 'phone', 'country_code',
-            'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction',
+            'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction'
         )
 
 
 class MyPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyPage
-        fields = (
-            'banner', 'email', 'content', 'follower_num', 'following_num',
-            'plan', 'plan_date', 'is_advertise',
-        )
+        fields = ('banner', 'email', 'content', 'follower_num', 'following_num', 'plan', 'plan_date', 'is_advertise')
 
 
 class NotificationSettingSerializer(serializers.ModelSerializer):
@@ -73,7 +70,7 @@ class NotificationSettingSerializer(serializers.ModelSerializer):
         model = NotificationSetting
         fields = (
             'is_video', 'is_music', 'is_picture', 'is_blog', 'is_chat',
-            'is_collabo', 'is_follow', 'is_reply', 'is_like', 'is_views',
+            'is_collabo', 'is_follow', 'is_reply', 'is_like', 'is_views'
         )
 
 
@@ -82,7 +79,7 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = Notification
         fields = (
             'id', 'user_from', 'user_to', 'type_no', 'type_name', 'content_type',
-            'object_id', 'content_object', 'confirmed', 'deleted', 'created',
+            'object_id', 'content_object', 'confirmed', 'deleted', 'created'
         )
         read_only_field = ['created',]
 
@@ -90,14 +87,14 @@ class NotificationSerializer(serializers.ModelSerializer):
 class SearchTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = SearchTag
-        fields = ('id', 'author', 'sequence', 'name', 'created',)
+        fields = ('id', 'author', 'sequence', 'name', 'created')
         read_only_field = ['created',]
 
 
 class HashTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = HashTag
-        fields = ('id', 'author', 'jp_name', 'en_name',)
+        fields = ('id', 'author', 'jp_name', 'en_name')
 
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -105,7 +102,7 @@ class VideoSerializer(serializers.ModelSerializer):
         model = Video
         fields = (
             'id', 'author', 'title', 'content', 'image', 'video', 'convert',
-            'hashtag', 'like', 'read', 'publish', 'created', 'updated',
+            'hashtag', 'like', 'read', 'publish', 'created', 'updated'
         )
         read_only_field = ['created', 'updated']
 
@@ -115,7 +112,7 @@ class MusicSerializer(serializers.ModelSerializer):
         model = Music
         fields = (
             'id', 'author', 'title', 'content', 'lyric', 'music', 'hashtag',
-            'like', 'read', 'download', 'publish', 'created', 'updated',
+            'like', 'read', 'download', 'publish', 'created', 'updated'
         )
         read_only_field = ['created', 'updated']
 
@@ -125,7 +122,7 @@ class PictureSerializer(serializers.ModelSerializer):
         model = Picture
         fields = (
             'id', 'author', 'title', 'content', 'image', 'hashtag',
-            'like', 'read', 'publish', 'created', 'updated',
+            'like', 'read', 'publish', 'created', 'updated'
         )
         read_only_field = ['created', 'updated']
 
@@ -135,7 +132,7 @@ class BlogSerializer(serializers.ModelSerializer):
         model = Blog
         fields = (
             'id', 'author', 'title', 'content', 'richtext', 'image',
-            'hashtag', 'like', 'read', 'publish', 'created', 'updated',
+            'hashtag', 'like', 'read', 'publish', 'created', 'updated'
         )
         read_only_field = ['created', 'updated']
 
@@ -145,7 +142,7 @@ class ChatSerializer(serializers.ModelSerializer):
         model = Chat
         fields = (
             'id', 'author', 'title', 'content', 'hashtag', 'like', 'read',
-            'joined', 'period', 'publish', 'created', 'updated',
+            'joined', 'period', 'publish', 'created', 'updated'
         )
         read_only_field = ['created', 'updated']
 
@@ -155,7 +152,7 @@ class CollaboSerializer(serializers.ModelSerializer):
         model = Collabo
         fields = (
             'id', 'author', 'title', 'content', 'hashtag', 'like',
-            'read', 'period', 'publish', 'created', 'updated',
+            'read', 'period', 'publish', 'created', 'updated'
         )
         read_only_field = ['created', 'updated']
 
@@ -163,10 +160,7 @@ class CollaboSerializer(serializers.ModelSerializer):
 class TodoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Todo
-        fields = (
-            'id', 'author', 'title', 'content', 'priority', 'progress',
-         'duedate', 'created', 'updated',
-        )
+        fields = ('id', 'author', 'title', 'content', 'priority', 'progress', 'duedate', 'created', 'updated')
         read_only_field = ['created', 'updated']
 
 
@@ -175,7 +169,7 @@ class AdvertiseSerializer(serializers.ModelSerializer):
         model = Advertise
         fields = (
             'id', 'author', 'title', 'url', 'content', 'image', 'video',
-            'read', 'type', 'period', 'publish', 'created', 'updated',
+            'read', 'type', 'period', 'publish', 'created', 'updated'
         )
         read_only_field = ['created', 'updated']
 
@@ -192,7 +186,7 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = (
             'id', 'author', 'parent', 'text', 'like', 'reply_num',
-            'content_type', 'object_id', 'content_object', 'created', 'updated',
+            'content_type', 'object_id', 'content_object', 'created', 'updated'
         )
         read_only_field = ['reply_num', 'created', 'updated']
 
@@ -200,7 +194,5 @@ class CommentSerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = (
-            'id', 'author', 'chat', 'parent', 'content', 'reply_num', 'created', 'updated',
-        )
+        fields = ('id', 'author', 'chat', 'parent', 'content', 'reply_num', 'created', 'updated')
         read_only_field = ['reply_num', 'created', 'updated']
