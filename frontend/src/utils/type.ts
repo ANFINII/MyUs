@@ -1,4 +1,4 @@
-export type ProfileType = {
+export interface ProfileResponse {
   avatar: string
   email: string
   username: string
@@ -10,7 +10,6 @@ export type ProfileType = {
   month: number
   day: number
   age: number
-  key: number
   gender: string
   phone: string
   postal_code: string
@@ -19,9 +18,10 @@ export type ProfileType = {
   address: string
   building: string
   introduction: string
+  [key: number]: number
 }
 
-export type MypageType = {
+export interface MypageResponse {
   banner: string
   nickname: string
   email: string
@@ -33,27 +33,33 @@ export type MypageType = {
   content: string
 }
 
-export type MediaType = {
-  id: number | null
+export interface author {
+  id: number
+  title: string
+  nickname: string
+  image: string
+}
+
+export interface MediaResponse {
+  id: number
   title: string
   content: string
-  hashtag: string
-  like: string
-  read: number | null
+  like: number
+  read: number
   publish: boolean
   created: string
   updated: string
-  author: {
-    id: number | null
-    title: string
-    nickname: string
-    image: string
-  }
-  data: any
+  author: author
 }
 
-export type VideoType = MediaType & {
+export interface VideoResponse extends MediaResponse {
   image: string
   video: string
   convert: string
+}
+
+export interface MusicResponse extends MediaResponse {
+  music: string
+  lyric: string
+  download: boolean
 }
