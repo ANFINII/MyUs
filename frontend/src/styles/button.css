@@ -1,0 +1,128 @@
+.button_base {
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: rgb(255, 255, 255);
+  border: 1px solid rgb(220, 220, 220);
+  border-radius: 5px;
+  background: rgb(200, 200, 200);
+}
+
+.button_base:active {
+  background: rgb(150, 150, 150);
+}
+
+.button_base.blue {
+  border: 1px solid #0d6efd;
+  background: #0d6efd;
+}
+
+.button_base.blue {
+  border: 1px solid #0d6efd;
+  background: #0d6efd;
+}
+
+.button_base.blue.xm {
+  font-size: 16px;
+  border: 1px solid #0d6efd;
+  background: #0d6efd;
+}
+
+.button_base.blue.xl {
+  font-size: 18px;
+  border: 1px solid #0d6efd;
+  background: #0d6efd;
+}
+
+.button_base.blue:active {
+  background: #0b5ed7;
+}
+
+.button_base.purple {
+  border: 1px solid #6633FF;
+  background: #6633FF;
+}
+
+.button_base.purple {
+  border: 1px solid #6633FF;
+  background: #6633FF;
+}
+
+.button_base.purple.xm {
+  font-size: 16px;
+  border: 1px solid #6633FF;
+  background: #6633FF;
+}
+
+.button_base.purple.xl {
+  font-size: 18px;
+  border: 1px solid #6633FF;
+  background: #6633FF;
+}
+
+.button_base.purple:active {
+  background: #582cdd;
+}
+
+.button_base.red {
+  border: 1px solid #dc3545;
+  background: #dc3545;
+}
+
+.button_base.red.xm {
+  font-size: 16px;
+  border: 1px solid #dc3545;
+  background: #dc3545;
+}
+
+.button_base.red.xl {
+  font-size: 18px;
+  border: 1px solid #dc3545;
+  background: #dc3545;
+}
+
+.button_base.red:active {
+  background: #bb2d3b;
+}
+
+.button_base.green {
+  border: 1px solid #198754;
+  background: #198754;
+}
+
+.button_base.green.xm {
+  font-size: 16px;
+  border: 1px solid #198754;
+  background: #198754;
+}
+
+.button_base.green.xl {
+  font-size: 18px;
+  border: 1px solid #198754;
+  background: #198754;
+}
+
+.button_base.green:active {
+  background: #157347;
+}
+
+.button_base.light {
+  color: rgb(0, 0, 0);
+  background: #f8f9fa;
+}
+
+.button_base.light.xm {
+  font-size: 16px;
+  color: rgb(0, 0, 0);
+  background: #f8f9fa;
+}
+
+.button_base.light.xl {
+  font-size: 18px;
+  color: rgb(0, 0, 0);
+  background: #f8f9fa;
+}
+
+.button_base.light:active {
+  background: #d3d4d5;
+}
