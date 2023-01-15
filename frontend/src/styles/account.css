@@ -89,9 +89,10 @@ td.td-color {
 }
 
 .account_image {
+  display: block;
   width: 56px;
-  margin: 0;
-  background: rgb(230, 230, 230);
+  height: 64px;
+  padding: 4px;
   border-radius: 15px;
 }
 
