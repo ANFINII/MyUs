@@ -6,7 +6,7 @@ import ContentTitle from 'components/elements/Common/ContentTitle'
 
 interface Props {datas: Array<VideoResponse>}
 
-export default function VideoArticle(props: Props) {
+export default function ArticleVideo(props: Props) {
   const {datas} = props
   return (
     <article className="article_list">

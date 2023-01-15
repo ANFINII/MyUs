@@ -7,7 +7,7 @@ interface Props {
   nickname?: string
 }
 
-export default function CollaboArticle(Props: Props) {
+export default function ArticleCollabo(Props: Props) {
   const {imageUrl, nickname} = Props
   return (
     <article className="article_list">

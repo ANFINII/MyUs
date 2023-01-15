@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import ChatArticle from 'components/elements/Article/Chat'
+import ArticleChat from 'components/elements/Article/Chat'
 
 
 export default function Chat() {
@@ -15,7 +15,7 @@ export default function Chat() {
         {/* {% endif %} */}
       </h1>
 
-      <ChatArticle/>
+      <ArticleChat />
     </>
   )
 }

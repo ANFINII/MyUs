@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import BlogArticle from 'components/elements/Article/Blog'
+import ArticleBlog from 'components/elements/Article/Blog'
 
 export default function Blog() {
   return (
@@ -14,7 +14,7 @@ export default function Blog() {
         {/* } */}
       </h1>
 
-      <BlogArticle/>
+      <ArticleBlog />
     </>
   )
 }

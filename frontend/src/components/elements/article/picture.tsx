@@ -5,7 +5,7 @@ import ContentTitle from 'components/elements/Common/ContentTitle'
 
 interface Props {imageUrl: string}
 
-export default function PictureArticle(props: Props) {
+export default function ArticlePicture(props: Props) {
   const {imageUrl} = props
   return (
     <article className="article_list">

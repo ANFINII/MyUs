@@ -6,7 +6,7 @@ import ContentTitle from 'components/elements/Common/ContentTitle'
 
 interface Props {datas: Array<MusicResponse>}
 
-export default function MusicArticle(props: Props) {
+export default function ArticleMusic(props: Props) {
   const{datas} = props
   return (
     <article className="article_list">

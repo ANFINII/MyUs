@@ -7,7 +7,7 @@ interface Props {
   nickname: string
 }
 
-export default function ChatArticle() {
+export default function ArticleChat() {
   return (
     <article className="article_list">
       {/* {% for item in chat_list %} */}

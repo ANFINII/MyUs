@@ -1,6 +1,6 @@
 import {GetServerSideProps} from 'next'
 import Head from 'next/head'
-import VideoArticle from 'components/elements/Article/Video'
+import ArticleVideo from 'components/elements/Article/Video'
 
 
 interface author {
@@ -164,7 +164,7 @@ export default function Video(props: Props) {
         }
       </h1>
 
-      <VideoArticle videos={datas} />
+      <ArticleVideo videos={datas} />
 
       {/* {% block extrajs %}
       <script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>

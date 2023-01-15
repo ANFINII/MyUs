@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import TodoArticle from 'components/elements/Article/Todo'
+import ArticleTodo from 'components/elements/Article/Todo'
 
 export default function Todo() {
   return (
@@ -20,7 +20,7 @@ export default function Todo() {
         <Link href="/todo/create" className="btn btn-primary btn-sm">ToDo作成</Link>
       </div>
 
-      <TodoArticle/>
+      <ArticleTodo />
 
       {/* {% else %} */}
       {/* <h2 className="login_required">ログインしてください</h2> */}

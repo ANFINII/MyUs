@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export default function TodoArticle() {
+export default function ArticleTodo() {
   return (
     <article className="article_list">
       {/* {% for item in todo_list %} */}

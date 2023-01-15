@@ -8,7 +8,7 @@ interface Props {
   nickname: string
 }
 
-export default function BlogArticle(props: Props) {
+export default function ArticleBlog(props: Props) {
   const {imageUrl, nickname} = props
   return (
     <article className="article_list">
