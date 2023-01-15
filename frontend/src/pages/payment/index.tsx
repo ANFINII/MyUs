@@ -1,7 +1,8 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Button from 'components/parts/Button'
 
-export default function UserPolicy() {
+export default function Payment() {
   return (
     <>
       <Head>
@@ -26,7 +27,7 @@ export default function UserPolicy() {
             <br/>
             ・全体広告OFF
           </div>
-          <button value="price_1K9VSxCHdDAlRliqOZnYuctl" data-csrf="{{ csrf_token }}" className="btn btn-primary btn-sm checkout-button">購入する</button>
+          <Button purple type="submit" className="xl checkout-button" value='price_1K9VSxCHdDAlRliqOZnYuctl' name="購入する" />
         </section>
 
         <section className="section_plan">
@@ -44,7 +45,7 @@ export default function UserPolicy() {
             <br/>
             ・全体広告OFF
           </div>
-          <button value="price_1K9VTbCHdDAlRliq3YNA768b" data-csrf="{{ csrf_token }}" className="btn btn-primary btn-sm checkout-button">購入する</button>
+          <Button purple type="submit" className="xl checkout-button" value='price_1K9VTbCHdDAlRliq3YNA768b' name="購入する" />
         </section>
 
         <section className="section_plan">
@@ -64,15 +65,15 @@ export default function UserPolicy() {
             <br/>
             ・楽曲ダウンロード
           </div>
-          <button value="price_1K9VU9CHdDAlRliqXsIS6GC4" data-csrf="{{ csrf_token }}" id="test" className="btn btn-primary btn-sm checkout-button">購入する</button>
+          <Button purple type="submit" className="xl checkout-button" value='price_1K9VU9CHdDAlRliqXsIS6GC4' name="購入する" />
         </section>
 
         <section className="section_plan">
           <div className="main_decolation_payment">
             <div className="payment_img">
-              <img src="/img/MyUs.png" width="40px" height="40px" className="myus_img"/>
-              プラン変更
-            </div>
+            <img src="/img/MyUs.png" width="40px" height="40px" className="myus_img"/>
+            プラン変更
+          </div>
           </div>
           <div className="content_title">【料金】</div>
           <div className="content_description">
