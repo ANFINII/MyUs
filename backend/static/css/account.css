@@ -87,7 +87,6 @@ td.td-color {
 
 .account_image {
   display: block;
-  width: 56px;
   height: 64px;
   padding: 4px;
   border-radius: 15px;
@@ -115,6 +114,12 @@ td.td-color {
 
 .update_account_image input {
   display: none;
+}
+
+.mypage_image {
+  display: block;
+  height: 64px;
+  padding: 4px;
 }
 
 .mypage_image img {
