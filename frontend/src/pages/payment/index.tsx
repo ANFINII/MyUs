@@ -27,7 +27,7 @@ export default function Payment() {
             <br/>
             ・全体広告OFF
           </div>
-          <Button purple type="submit" className="xl checkout-button" value='price_1K9VSxCHdDAlRliqOZnYuctl' name="購入する" />
+          <Button purple type="submit" className="checkout-button" value="price_1K9VSxCHdDAlRliqOZnYuctl">購入する</Button>
         </section>
 
         <section className="section_plan">
@@ -45,7 +45,7 @@ export default function Payment() {
             <br/>
             ・全体広告OFF
           </div>
-          <Button purple type="submit" className="xl checkout-button" value='price_1K9VTbCHdDAlRliq3YNA768b' name="購入する" />
+          <Button purple type="submit" className="checkout-button" value="price_1K9VTbCHdDAlRliq3YNA768b">購入する</Button>
         </section>
 
         <section className="section_plan">
@@ -65,7 +65,7 @@ export default function Payment() {
             <br/>
             ・楽曲ダウンロード
           </div>
-          <Button purple type="submit" className="xl checkout-button" value='price_1K9VU9CHdDAlRliqXsIS6GC4' name="購入する" />
+          <Button purple type="submit" className="checkout-button" value="price_1K9VU9CHdDAlRliqXsIS6GC4">購入する</Button>
         </section>
 
         <section className="section_plan">
@@ -79,7 +79,7 @@ export default function Payment() {
           <div className="content_description">
             現在のプランを変更
           </div>
-          <Link href="{% url 'myus:chage_plan" role="button" className="btn btn-success btn-sm">変更する</Link>
+          <Link href="/chage_plan"><Button green>購入する</Button></Link>
         </section>
 
         <section className="section_plan">
@@ -95,9 +95,10 @@ export default function Payment() {
             <br/>
             ・今月お支払いした料金は返金されません
           </div>
-          <button className="btn btn-success btn-sm">変更する</button>
+          <Button green type="submit">変更する</Button>
         </section>
       </article>
+
       {/* {% else %}
       <h2 className="login_required">ログインしてください</h2>
       {% endif %} */}
