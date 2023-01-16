@@ -3,7 +3,6 @@
 import {GetServerSideProps} from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
-import Image from 'next/image'
 import {ProfileResponse} from 'utils/type'
 import Footer from 'components/layouts/Footer'
 import Button from 'components/parts/Button'
@@ -48,6 +47,7 @@ export default function ProfileUpdate() {
       <Head>
         <title>MyUsアカウント設定</title>
       </Head>
+
       {user ?
         <article className="article_account">
           <h1>アカウント設定</h1>
@@ -60,9 +60,11 @@ export default function ProfileUpdate() {
           {% endif %} */}
 
           <div className="btn-column">
-            <div className="btn-column1"><Button purple type="submit" name="登録" /></div>
+            <div className="btn-column1">
+              <Button purple size="xs" type="submit">登録</Button>
+            </div>
             <div className="btn-column2">
-              <Link href="/profile"><Button blue name="戻る" /></Link>
+              <Link href="/profile"><Button blue size="xs">戻る</Button></Link>
             </div>
           </div>
 
@@ -130,7 +132,9 @@ export default function ProfileUpdate() {
                   <input type="text" name="building" value={user.building} placeholder="建物名" maxLength={255} className="form-control location4"/>
                 </td>
               </tr>
-              <tr><td className="td-color">自己紹介</td><td><textarea name="introduction" rows={1} className="form-control textarea">{user.introduction}</textarea></td></tr>
+              <tr><td className="td-color">自己紹介</td><td>
+                <textarea name="introduction" rows={1} className="form-control textarea">{user.introduction}</textarea>
+              </td></tr>
             </tbody>
           </table>
 

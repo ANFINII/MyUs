@@ -54,10 +54,10 @@ export default function Profile() {
           <h1>アカウント設定</h1>
           <div className="btn-column">
             <div className="btn-column1">
-              <Link href="/profile/update"><Button blue name="編集" /></Link>
+              <Link href="/profile/update"><Button blue size='xs'>編集</Button></Link>
             </div>
             <div className="btn-column2">
-              <Link href="/registration/password/change"><Button blue name="パスワード変更" /></Link>
+              <Link href="/registration/password/change"><Button blue size='xs'>パスワード変更</Button></Link>
             </div>
           </div>
 
