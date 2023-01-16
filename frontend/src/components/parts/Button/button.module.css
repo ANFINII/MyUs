@@ -1,9 +1,9 @@
 .button_base {
-  padding: 4px 8px;
+  padding: 6px 12px;
+  font-size: 14px;
   cursor: pointer;
-  font-size: 13px;
   color: rgb(255, 255, 255);
-  border: 1px solid rgb(220, 220, 220);
+  border: 1px solid rgb(180, 180, 180);
   border-radius: 5px;
   background: rgb(200, 200, 200);
 }
@@ -13,55 +13,49 @@
 }
 
 .button_base.blue {
-  border: 1px solid #0d6efd;
-  background: #0d6efd;
+  border: 1px solid #3d7af2;
+  background: #3d7af2;
 }
 
-.button_base.blue {
-  border: 1px solid #0d6efd;
-  background: #0d6efd;
-}
-
-.button_base.blue.xm {
-  font-size: 16px;
-  border: 1px solid #0d6efd;
-  background: #0d6efd;
+.button_base.blue.xs {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #3d7af2;
+  background: #3d7af2;
 }
 
 .button_base.blue.xl {
+  padding: 8px 16px;
   font-size: 18px;
-  border: 1px solid #0d6efd;
-  background: #0d6efd;
+  border: 1px solid #3d7af2;
+  background: #3d7af2;
 }
 
 .button_base.blue:active {
-  background: #0b5ed7;
+  background: #3365ca;
 }
 
 .button_base.purple {
-  border: 1px solid #6633FF;
-  background: #6633FF;
+  border: 1px solid #9020ff;
+  background: #9020ff;
 }
 
-.button_base.purple {
-  border: 1px solid #6633FF;
-  background: #6633FF;
-}
-
-.button_base.purple.xm {
-  font-size: 16px;
-  border: 1px solid #6633FF;
-  background: #6633FF;
+.button_base.purple.xs {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #9020ff;
+  background: #9020ff;
 }
 
 .button_base.purple.xl {
+  padding: 8px 16px;
   font-size: 18px;
-  border: 1px solid #6633FF;
-  background: #6633FF;
+  border: 1px solid #9020ff;
+  background: #9020ff;
 }
 
 .button_base.purple:active {
-  background: #582cdd;
+  background: #781ad5;
 }
 
 .button_base.red {
@@ -69,13 +63,15 @@
   background: #dc3545;
 }
 
-.button_base.red.xm {
-  font-size: 16px;
+.button_base.red.xs {
+  padding: 4px 8px;
+  font-size: 12px;
   border: 1px solid #dc3545;
   background: #dc3545;
 }
 
 .button_base.red.xl {
+  padding: 8px 16px;
   font-size: 18px;
   border: 1px solid #dc3545;
   background: #dc3545;
@@ -86,43 +82,47 @@
 }
 
 .button_base.green {
-  border: 1px solid #198754;
-  background: #198754;
+  border: 1px solid #008060;
+  background: #008060;
 }
 
-.button_base.green.xm {
-  font-size: 16px;
-  border: 1px solid #198754;
-  background: #198754;
+.button_base.green.xs {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #008060;
+  background: #008060;
 }
 
 .button_base.green.xl {
+  padding: 8px 16px;
   font-size: 18px;
-  border: 1px solid #198754;
-  background: #198754;
+  border: 1px solid #008060;
+  background: #008060;
 }
 
 .button_base.green:active {
-  background: #157347;
+  background: #006e52;
 }
 
 .button_base.light {
-  color: rgb(0, 0, 0);
-  background: #f8f9fa;
+  color: rgb(30, 30, 30);
+  background: #ffffff;
 }
 
-.button_base.light.xm {
-  font-size: 16px;
-  color: rgb(0, 0, 0);
-  background: #f8f9fa;
+.button_base.light.xs {
+  padding: 4px 8px;
+  font-size: 12px;
+  color: rgb(30, 30, 30);
+  background: #ffffff;
 }
 
 .button_base.light.xl {
+  padding: 8px 16px;
   font-size: 18px;
-  color: rgb(0, 0, 0);
-  background: #f8f9fa;
+  color: rgb(30, 30, 30);
+  background: #ffffff;
 }
 
 .button_base.light:active {
-  background: #d3d4d5;
+  background: #e5e5e5;
 }
