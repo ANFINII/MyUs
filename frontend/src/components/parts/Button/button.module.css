@@ -1,4 +1,4 @@
-.button_base {
+.button {
   padding: 6px 12px;
   font-size: 14px;
   cursor: pointer;
@@ -8,121 +8,125 @@
   background: rgb(200, 200, 200);
 }
 
-.button_base:active {
+.button:active {
   background: rgb(150, 150, 150);
 }
 
-.button_base.blue {
+.button.blue {
+  font-weight: 600;
   border: 1px solid #3d7af2;
   background: #3d7af2;
 }
 
-.button_base.blue.xs {
+.button.blue.xs {
   padding: 4px 8px;
   font-size: 12px;
   border: 1px solid #3d7af2;
   background: #3d7af2;
 }
 
-.button_base.blue.xl {
+.button.blue.xl {
   padding: 8px 16px;
   font-size: 18px;
   border: 1px solid #3d7af2;
   background: #3d7af2;
 }
 
-.button_base.blue:active {
+.button.blue:active {
   background: #3365ca;
 }
 
-.button_base.purple {
+.button.purple {
+  font-weight: 600;
   border: 1px solid #9020ff;
   background: #9020ff;
 }
 
-.button_base.purple.xs {
+.button.purple.xs {
   padding: 4px 8px;
   font-size: 12px;
   border: 1px solid #9020ff;
   background: #9020ff;
 }
 
-.button_base.purple.xl {
+.button.purple.xl {
   padding: 8px 16px;
   font-size: 18px;
   border: 1px solid #9020ff;
   background: #9020ff;
 }
 
-.button_base.purple:active {
+.button.purple:active {
   background: #781ad5;
 }
 
-.button_base.red {
+.button.red {
+  font-weight: 600;
   border: 1px solid #dc3545;
   background: #dc3545;
 }
 
-.button_base.red.xs {
+.button.red.xs {
   padding: 4px 8px;
   font-size: 12px;
   border: 1px solid #dc3545;
   background: #dc3545;
 }
 
-.button_base.red.xl {
+.button.red.xl {
   padding: 8px 16px;
   font-size: 18px;
   border: 1px solid #dc3545;
   background: #dc3545;
 }
 
-.button_base.red:active {
+.button.red:active {
   background: #bb2d3b;
 }
 
-.button_base.green {
+.button.green {
+  font-weight: 600;
   border: 1px solid #008060;
   background: #008060;
 }
 
-.button_base.green.xs {
+.button.green.xs {
   padding: 4px 8px;
   font-size: 12px;
   border: 1px solid #008060;
   background: #008060;
 }
 
-.button_base.green.xl {
+.button.green.xl {
   padding: 8px 16px;
   font-size: 18px;
   border: 1px solid #008060;
   background: #008060;
 }
 
-.button_base.green:active {
+.button.green:active {
   background: #006e52;
 }
 
-.button_base.light {
+.button.light {
   color: rgb(30, 30, 30);
   background: #ffffff;
 }
 
-.button_base.light.xs {
+.button.light.xs {
   padding: 4px 8px;
   font-size: 12px;
   color: rgb(30, 30, 30);
   background: #ffffff;
 }
 
-.button_base.light.xl {
+.button.light.xl {
   padding: 8px 16px;
   font-size: 18px;
   color: rgb(30, 30, 30);
   background: #ffffff;
 }
 
-.button_base.light:active {
+.button.light:active {
   background: #e5e5e5;
 }

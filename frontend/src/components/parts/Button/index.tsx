@@ -1,4 +1,4 @@
-import style from 'components/parts/Button/button.module.css'
+import style from 'components/parts/Button/Button.module.css'
 
 interface Color {
   blue?: boolean
@@ -25,7 +25,7 @@ export default function Button(props: Props) {
     <>
       {blue ?
         <button type={type} value={value} onClick={onClick}
-        className={`${style.button_base} ${style.blue} `
+        className={`${style.button} ${style.blue} `
           + (size === 'xl' ? `${style.xl} ` : '')
           + (size === 'xs' ? `${style.xs} ` : '')
           + (className ? className : '' )
@@ -34,7 +34,7 @@ export default function Button(props: Props) {
         </button>
       :purple ?
         <button type={type} value={value} onClick={onClick}
-          className={`${style.button_base} ${style.purple} `
+          className={`${style.button} ${style.purple} `
             + (size === 'xl' ? `${style.xl} ` : '')
             + (size === 'xs' ? `${style.xs} ` : '')
             + (className ? className : '' )
@@ -43,7 +43,7 @@ export default function Button(props: Props) {
         </button>
       :red ?
         <button type={type} value={value} onClick={onClick}
-          className={`${style.button_base} ${style.red} `
+          className={`${style.button} ${style.red} `
             + (size === 'xl' ? `${style.xl} ` : '')
             + (size === 'xs' ? `${style.xs} ` : '')
             + (className ? className : '' )
@@ -52,7 +52,7 @@ export default function Button(props: Props) {
         </button>
       :green ?
         <button type={type} value={value} onClick={onClick}
-          className={`${style.button_base} ${style.green} `
+          className={`${style.button} ${style.green} `
             + (size === 'xl' ? `${style.xl} ` : '')
             + (size === 'xs' ? `${style.xs} ` : '')
             + (className ? className : '' )
@@ -61,7 +61,7 @@ export default function Button(props: Props) {
         </button>
       :light ?
         <button type={type} value={value} onClick={onClick}
-          className={`${style.button_base} ${style.light} `
+          className={`${style.button} ${style.light} `
             + (size === 'xl' ? `${style.xl} ` : '')
             + (size === 'xs' ? `${style.xs} ` : '')
             + (className ? className : '' )
@@ -70,7 +70,7 @@ export default function Button(props: Props) {
         </button>
       :
         <button type={type} value={value} onClick={onClick}
-          className={`${style.button_base} `
+          className={`${style.button} `
             + (size === 'xl' ? `${style.xl} ` : '')
             + (size === 'xs' ? `${style.xs} ` : '')
             + (className ? className : '' )
