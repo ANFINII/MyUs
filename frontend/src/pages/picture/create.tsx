@@ -1,4 +1,6 @@
 import Head from 'next/head'
+import Input from 'components/parts/Input'
+import Textarea from 'components/parts/Input/Textarea'
 
 export default function PictureCreate() {
   return (
@@ -12,10 +14,10 @@ export default function PictureCreate() {
       <form method="POST" action="" encType="multipart/form-data">
         {/* {% csrf_token %} */}
         <p><label htmlFor="title">タイトル</label></p>
-        <p><input type="text" name="title" id="title" className="form-control" required/></p>
+        <Input name="title" id="title" required />
 
         <p><label htmlFor="content">内容</label></p>
-        <p><textarea name="content" cols={100} rows={1} id="content" className="form-control textarea" required></textarea></p>
+        <Textarea name="content" id="content" required />
 
         <p><label htmlFor="custom_file_1">画像</label></p>
         <p>

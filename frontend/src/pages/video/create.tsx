@@ -1,4 +1,6 @@
 import Head from 'next/head'
+import Input from 'components/parts/Input'
+import Textarea from 'components/parts/Input/Textarea'
 
 export default function VideoCreate() {
   return (
@@ -12,16 +14,16 @@ export default function VideoCreate() {
       <form method="POST" action="" encType="multipart/form-data">
         {/* {% csrf_token %} */}
         <p><label htmlFor="title">タイトル</label></p>
-        <p><input type="text" name="title" id="title" className="form-control" required/></p>
+        <Input name="title" id="title" required />
 
         <p><label htmlFor="content">内容</label></p>
-        <p><textarea name="content" cols={100} rows={1} id="content" className="form-control textarea" required></textarea></p>
+        <Textarea name="content" id="content" required />
 
         <p><label htmlFor="custom_file_1">サムネイル</label></p>
         <p>
           <input type="file" name="image" accept="image/*" id="custom_file_1" className="form-control" style={{display:'none'}} required/>
           <div className="input-group">
-            <input type="text" id="file_1" className="form-control" placeholder="ファイル選択..." onclick="$('input[id=custom_file_1]').click()"/>
+            <input type="text" id="file_1" className="form-control" placeholder="ファイル選択..." onClick="$('input[id=custom_file_1]').click()"/>
           </div>
         </p>
 
@@ -29,7 +31,7 @@ export default function VideoCreate() {
         <p>
           <input type="file" name="convert" accept="video/*" id="custom_file_2" className="form-control" style={{display:'none'}} required/>
           <div className="input-group">
-            <input type="text" id="file_2" className="form-control" placeholder="ファイル選択..." onclick="$('input[id=custom_file_2]').click()"/>
+            <input type="text" id="file_2" className="form-control" placeholder="ファイル選択..." onClick="$('input[id=custom_file_2]').click()"/>
           </div>
         </p>
         <br/>
