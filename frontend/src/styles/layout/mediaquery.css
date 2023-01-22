@@ -1,0 +1,78 @@
+/* メディアクエリ */
+
+/* 1376pxまでの幅の場合に適応される  */
+@media screen and (max-width: 1376px) {
+  .search_input {
+    width: 500px;
+    transition: width 0.1s linear;
+  }
+}
+
+/* 1024pxまでの幅の場合に適応される  */
+@media screen and (max-width: 1024px) {
+  .search_input {
+    width: 330px;
+    transition: width 0.1s linear;
+  }
+}
+
+/* 768pxまでの幅の場合に適応される  */
+@media screen and (max-width: 768px) {
+  .search_input {
+    width: 230px;
+    transition: width 0.01s linear;
+  }
+}
+
+/* 668pxまでの幅の場合に適応される  */
+@media screen and (max-width: 668px) {
+  body,
+  .header_nav {
+    grid-template-columns: 4.5em 5.5em minmax(9.5em, 1fr) 2.5em 2.5em 2.5em 2.5em;
+  }
+
+  .article_list,
+  .article_index {
+    place-content: center;
+  }
+
+  .search_input {
+    width: 200px;
+    transition: width 0.01s linear;
+  }
+
+  .bi-exclamation-lg.active {
+    margin: -43px 0 0 21px;
+  }
+}
+
+/* 560pxまでの幅の場合に適応される  */
+@media screen and (max-width: 560px) {
+  .search_input {
+    width: 120px;
+    transition: width 0.01s linear;
+  }
+}
+
+/* 480pxまでの幅の場合はヘッダーには検索バーのみ表示させる仕様にする  */
+/* 480pxまでの幅の場合に適応される  */
+@media screen and (max-width: 480px) {
+  .search_input {
+    width: 0;
+    transition: width 0.01s linear;
+  }
+
+  .search_icon {
+    margin: 0;
+  }
+
+  .searchbar:hover > .search_input {
+    width: 100px;
+    transition: width 0.1s linear;
+  }
+
+  .searchbar:hover > .search_icon {
+    background: rgb(30, 75, 165);
+    color: rgb(255, 255, 255);
+  }
+}

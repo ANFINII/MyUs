@@ -17,8 +17,21 @@
   margin: 6px 0 0 10px;
 }
 
-.main label {
-  margin: 0;
+.main .margin {
+  margin: 16px 0;
+}
+
+.main .margin_top {
+  margin: 16px 0 0 0;
+}
+
+.main .margin_bottom {
+  margin: 16px 0 0 0;
+}
+
+.main .button_margin {
+  display: block;
+  margin-top: 32px;
 }
 
 .main div.field > input,
