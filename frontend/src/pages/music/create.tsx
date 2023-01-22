@@ -1,8 +1,12 @@
 import Head from 'next/head'
+import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
+import CheckBox from 'components/parts/Input/CheckBox'
 
 export default function MusicCreate() {
+  const is_authenticated = true
+
   return (
     <>
       <Head>
@@ -10,36 +14,28 @@ export default function MusicCreate() {
       </Head>
 
       <h1>Music</h1>
-      {/* {% if user.is_authenticated %} */}
-      <form method="POST" action="" encType="multipart/form-data">
-        {/* {% csrf_token %} */}
-        <p><label htmlFor="title">タイトル</label></p>
-        <Input name="title" id="title" required />
+      {is_authenticated ?
+        <form method="POST" action="" encType="multipart/form-data">
+          {/* {% csrf_token %} */}
+          <p className="margin">タイトル</p>
+          <Input name="title" id="title" required />
 
-        <p><label htmlFor="content">内容</label></p>
-        <Textarea name="content" id="content" required />
+          <p className="margin">内容</p>
+          <Textarea name="content" id="content" required />
 
-        <p><label htmlFor="lyric">歌詞</label></p>
-        <Textarea name="lyric" id="lyric" required />
+          <p className="margin">歌詞</p>
+          <Textarea name="lyric" id="lyric" required />
 
-        <p><label htmlFor="custom_file_1">音楽</label></p>
-        <div className="form-check">
-          <label htmlFor="download" className="form-check-label">ダウンロード許可</label>
-          <input type="checkbox" name="download" id="download" className="form-check-input" checked/>
-        </div>
-        <p><input type="file" name="music" accept="audio/*" id="custom_file_1" className="form-control" style={{display:'none'}} required/></p>
-        <p>
-          <div className="input-group">
-            <input type="text" id="file_1" className="form-control" placeholder="ファイル選択..." onlick="{{$('input[id=custom_file_1]').click()}}"/>
-          </div>
-        </p>
-        <br/>
+          <p className="margin_top">音楽</p>
+          <CheckBox name="download" id="download" checked>ダウンロード許可</CheckBox>
+          <input type="file" name="music" accept="audio/*" id="custom_file_1" className="form-control" style={{display:'none'}} required/>
+          <input type="text" id="file_1" className="form-control" placeholder="ファイル選択..." onlick="{{$('input[id=custom_file_1]').click()}}"/>
 
-        <p><input type="submit" value="作成する" className="btn btn-success btn-sm"/></p>
-      </form>
-      {/* {% else %} */}
-      {/* <h2 className="login_required">ログインしてください</h2> */}
-      {/* {% endif %} */}
+          <Button green type="submit" className="button_margin">作成する</Button>
+        </form>
+      :
+        <h2 className="login_required">ログインしてください</h2>
+      }
 
       {/* {% block extrajs %} */}
       <script src="/js/attachment_name.js"></script>
