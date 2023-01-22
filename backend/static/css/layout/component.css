@@ -1,0 +1,190 @@
+/* button */
+.button {
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  border: 1px solid rgb(180, 180, 180);
+  border-radius: 5px;
+  background: rgb(200, 200, 200);
+}
+
+.button:active {
+  background: rgb(150, 150, 150);
+}
+
+.button.blue {
+  font-weight: 600;
+  border: 1px solid #3d7af2;
+  background: #3d7af2;
+}
+
+.button.blue.xs {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #3d7af2;
+  background: #3d7af2;
+}
+
+.button.blue.xl {
+  padding: 8px 16px;
+  font-size: 18px;
+  border: 1px solid #3d7af2;
+  background: #3d7af2;
+}
+
+.button.blue:active {
+  background: #3365ca;
+}
+
+.button.purple {
+  font-weight: 600;
+  border: 1px solid #9020ff;
+  background: #9020ff;
+}
+
+.button.purple.xs {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #9020ff;
+  background: #9020ff;
+}
+
+.button.purple.xl {
+  padding: 8px 16px;
+  font-size: 18px;
+  border: 1px solid #9020ff;
+  background: #9020ff;
+}
+
+.button.purple:active {
+  background: #781ad5;
+}
+
+.button.red {
+  font-weight: 600;
+  border: 1px solid #dc3545;
+  background: #dc3545;
+}
+
+.button.red.xs {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #dc3545;
+  background: #dc3545;
+}
+
+.button.red.xl {
+  padding: 8px 16px;
+  font-size: 18px;
+  border: 1px solid #dc3545;
+  background: #dc3545;
+}
+
+.button.red:active {
+  background: #bb2d3b;
+}
+
+.button.green {
+  font-weight: 600;
+  border: 1px solid #008060;
+  background: #008060;
+}
+
+.button.green.xs {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #008060;
+  background: #008060;
+}
+
+.button.green.xl {
+  padding: 8px 16px;
+  font-size: 18px;
+  border: 1px solid #008060;
+  background: #008060;
+}
+
+.button.green:active {
+  background: #006e52;
+}
+
+.button.light {
+  color: rgb(30, 30, 30);
+  background: #ffffff;
+}
+
+.button.light.xs {
+  padding: 4px 8px;
+  font-size: 12px;
+  color: rgb(30, 30, 30);
+  background: #ffffff;
+}
+
+.button.light.xl {
+  padding: 8px 16px;
+  font-size: 18px;
+  color: rgb(30, 30, 30);
+  background: #ffffff;
+}
+
+.button.light:active {
+  background: #e5e5e5;
+}
+
+/* Input */
+.input {
+  width: 100%;
+  height: 36px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 5px;
+  background: rgb(255, 255, 255);
+}
+
+.input:focus-visible {
+  outline: 1px auto rgb(40, 130, 250);
+}
+
+.input.disabled {
+  background: rgb(240, 240, 240);
+}
+
+/* checkbox */
+.checkbox[type=checkbox] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 4px;
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 5px;
+  background-color: rgb(255, 255, 255);
+  background-image: var(--bs-form-check-bg-image);
+  cursor: pointer;
+}
+
+.check_group {
+  display: block;
+  min-height: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.check_group .checkbox {
+  float: left;
+}
+
+.check_group label {
+  margin: 0 0 0 5px;
+  cursor: pointer;
+}
+
+.checkbox:checked[type=checkbox] {
+  border: 1px solid rgb(40, 130, 250);
+  background-color: rgb(40, 130, 250);
+  --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+}
+
+.checkbox:checked[type=radio] {
+  --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
+}
