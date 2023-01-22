@@ -4,29 +4,24 @@
 {% if user.is_authenticated %}
 <form method="POST" action="" enctype="multipart/form-data">
   {% csrf_token %}
-  <p><label for="title">タイトル</label></p>
-  <p><input type="text" name="title" id="title" class="form-control" required></p>
+  <p class="margin">タイトル</p>
+  <input type="text" name="title" id="title" class="input" required>
 
-  <p><label for="content">内容</label></p>
-  <p><textarea name="content" cols="100" rows="1" id="content" class="form-control textarea" required></textarea></p>
+  <p class="margin">内容</p>
+  <textarea name="content" rows="1" id="content" class="input textarea" required></textarea>
 
-  <p><label for="lyric">歌詞</label></p>
-  <p><textarea name="lyric" cols="100" rows="1" id="lyric" class="form-control textarea"></textarea></p>
+  <p class="margin">歌詞</p>
+  <textarea name="lyric" rows="1" id="lyric" class="input textarea"></textarea>
 
-  <p><label for="custom_file_1">音楽</label></p>
-  <div class="form-check">
-    <label for="download" class="form-check-label">ダウンロード許可</label>
-    <input type="checkbox" name="download" id="download" class="form-check-input" checked>
+  <p class="margin_top">音楽</p>
+  <div class="check_group">
+    <input type="checkbox" name="download" id="download" class="checkbox" checked>
+    <label for="download">ダウンロード許可</label>
   </div>
-  <p>
-    <input type="file" name="music" accept="audio/*" id="custom_file_1" class="form-control" style="display:none" required>
-    <div class="input-group">
-      <input type="text" id="file_1" class="form-control" placeholder="ファイル選択..." onclick="$('input[id=custom_file_1]').click();">
-    </div>
-  </p>
-  <br>
+  <input type="file" name="music" accept="audio/*" id="custom_file_1" class="input" style="display:none" required>
+  <input type="text" id="file_1" class="input" placeholder="ファイル選択..." onclick="$('input[id=custom_file_1]').click();">
 
-  <p><input type="submit" value="作成する" class="btn btn-success btn-sm"></p>
+  <button type="submit" class="button green button_margin">作成する</button>
 </form>
 {% else %}
 <h2 class="login_required">ログインしてください</h2>
