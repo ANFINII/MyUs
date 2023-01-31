@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
+import InputFile from 'components/parts/Input/File'
 
 export default function BlogCreate() {
   const is_authenticated = true
@@ -23,8 +24,7 @@ export default function BlogCreate() {
           <Textarea name="content" id="content" required />
 
           <p className="margin">サムネイル</p>
-          <input type="file" name="image" accept="image/*" id="custom_file_1" className="form-control" style={{display:'none'}} required/>
-          <input type="text" id="file_1" className="form-control" placeholder="ファイル選択..." onlick="{{$('input[id=custom_file_1]').click()}}"/>
+          <InputFile id="file_1" accept="image/*" />
 
           <p className="margin">本文</p>
           {/* <p>{{ form.media }}{{ form.richtext }}</p> */}

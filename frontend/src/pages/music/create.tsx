@@ -3,6 +3,7 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 import CheckBox from 'components/parts/Input/CheckBox'
+import InputFile from 'components/parts/Input/File'
 
 export default function MusicCreate() {
   const is_authenticated = true
@@ -28,18 +29,13 @@ export default function MusicCreate() {
 
           <p className="margin_top">音楽</p>
           <CheckBox name="download" id="download" checked>ダウンロード許可</CheckBox>
-          <input type="file" name="music" accept="audio/*" id="custom_file_1" className="form-control" style={{display:'none'}} required/>
-          <input type="text" id="file_1" className="form-control" placeholder="ファイル選択..." onlick="{{$('input[id=custom_file_1]').click()}}"/>
+          <InputFile id="file_1" accept="audio/*" />
 
           <Button green type="submit" className="button_margin">作成する</Button>
         </form>
       :
         <h2 className="login_required">ログインしてください</h2>
       }
-
-      {/* {% block extrajs %} */}
-      <script src="/js/attachment_name.js"></script>
-      {/* {% endblock extrajs %} */}
     </>
   )
 }
