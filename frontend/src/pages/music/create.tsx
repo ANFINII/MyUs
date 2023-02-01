@@ -28,7 +28,7 @@ export default function MusicCreate() {
           <Textarea name="lyric" id="lyric" required />
 
           <p className="margin_top">音楽</p>
-          <CheckBox name="download" id="download" checked>ダウンロード許可</CheckBox>
+          <CheckBox name="download" id="download" className="check_margin" checked>ダウンロード許可</CheckBox>
           <InputFile id="file_1" accept="audio/*" />
 
           <Button green type="submit" className="button_margin">作成する</Button>
