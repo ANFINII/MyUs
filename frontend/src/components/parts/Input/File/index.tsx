@@ -13,15 +13,15 @@ export default function InputFile(props: Props) {
   const [fileName, setFileName] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileName((e.target.value.replace('C:\\fakepath\\', '')))
+    setFileName((e.target.value.replace("C:\\fakepath\\", "")))
   }
-  const handleClick = () => inputEl.current.click()
+  const handleClick = () => inputEl.current?.click()
 
   return (
     <>
       <input type="file" id={id} accept={accept} ref={inputEl} onChange={handleChange} required hidden />
       <input placeholder="ファイル選択..." value={fileName} onClick={handleClick}
-        className={`${style.input} ` + (className ? className : '' )}
+        className={`${style.input} ` + (className ? className : "" )}
       />
     </>
   )

@@ -17,15 +17,15 @@ export default function CheckBox(props: Props) {
   return (
     <>
       {checkValue ?
-        <div className={style.check_group}>
+        <div className={`${style.check_group} ` + (className ? className : "" )}>
           <input type="checkbox" name={name} id={id} onClick={handleChange}
-            className={`${style.checkbox} ` + (className ? className : '' )} checked />
+            className={style.checkbox} checked />
           <label htmlFor={id}>{children}</label>
         </div>
       :
-        <div className={style.check_group}>
+        <div className={`${style.check_group} ` + (className ? className : "" )}>
           <input type="checkbox" name={name} id={id} onClick={handleChange}
-            className={`${style.checkbox} ` + (className ? className : '' )} />
+            className={style.checkbox} />
           <label htmlFor={id}>{children}</label>
         </div>
       }
