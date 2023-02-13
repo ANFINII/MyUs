@@ -20,7 +20,7 @@ from datetime import timedelta
 BASE_DIR = environ.Path(__file__) - 3
 
 env = environ.Env(DEBUG=(bool, False))
-env.read_env(os.path.join(BASE_DIR, '../envs/.django'))
+env.read_env(os.path.join(BASE_DIR, '../envs/django.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
@@ -43,12 +43,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # MySQL
 DATABASES = {
     'default': {
-        'ENGINE': env('DB_ENGINE'),
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT'),
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
+        'ENGINE': env('MYSQL_ENGINE'),
+        'NAME': env('MYSQL_DATABASE'),
+        'HOST': env('MYSQL_HOST'),
+        'PORT': env('MYSQL_PORT'),
+        'USER': env('MYSQL_USER'),
+        'PASSWORD': env('MYSQL_PASSWORD'),
     }
 }
 
