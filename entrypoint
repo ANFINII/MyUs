@@ -1,0 +1,56 @@
+#!/bin/bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+export DATABASE_URL="${MYSQL_URL}"
+
+# check connect resource
+python << END
+import sys
+import redis
+import time
+import MySQLdb
+
+MYSQL_CONNECT_STATUS = False
+REDIS_CONNECT_STATUS = False
+OK = 0
+WARNING = 1
+
+countdown = 60
+
+for _ in range(countdown):
+    if MYSQL_CONNECT_STATUS and REDIS_CONNECT_STATUS:
+        sys.exit(OK)
+    if not MYSQL_CONNECT_STATUS:
+        try:
+            conn = MySQLdb.connect(
+                host=${MYSQL_HOST},
+                port=${MYSQL_PORT},
+                user=${MYSQL_USER},
+                passwd=${MYSQL_PASSWORD},
+                db=${MYSQL_DATABASE},
+                use_unicode=True, charset='utf8'
+            )
+            MYSQL_CONNECT_STATUS = True
+            print("MYSQL is available")
+
+        except Exception:
+            print("Waiting for MYSQL available...")
+
+    if not REDIS_CONNECT_STATUS:
+        try:
+            redis_conn = redis.Redis(host="${REDIS_HOST}", port="${REDIS_PORT}", db="${REDIS_DB}", password="${REDIS_PASSWORD}")
+            redis_conn.ping()
+            print("REDIS is available")
+            REDIS_CONNECT_STATUS = True
+        except Exception:
+            print("Waiting for REDIS available...")
+
+    time.sleep(1)
+
+print("Can't connect resource")
+sys.exit(WARNING)
+END
+
+exec "$@"
