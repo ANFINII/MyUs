@@ -2,14 +2,14 @@ from apps.myus.models import Follow, Notification
 from apps.myus.modules.contains import NotificationTypeNo
 
 
-def follow_update_data(follower, following, follow_obj):
+def follow_update_data(follower, following, follow):
     if follower == following:
         # '自分はフォローできません'
         pass
-    elif follow_obj.exists():
-        notification_obj = Notification.objects.filter(type_no=NotificationTypeNo.follow, object_id=follow_obj[0].id)
-        notification_obj.delete()
-        follow_obj.delete()
+    elif follow.exists():
+        notification = Notification.objects.filter(type_no=NotificationTypeNo.follow, object_id=follow.first().id)
+        notification.delete()
+        follow.delete()
         is_follow = False
         #ログインユーザーのフォロー数
         following_count = Follow.objects.filter(follower=follower.user).count()
@@ -21,7 +21,7 @@ def follow_update_data(follower, following, follow_obj):
         following.save(update_fields=['follower_num'])
         # 'フォローを外しました'
     else:
-        follow_obj = Follow.objects.create(follower=follower.user, following=following.user)
+        follow = Follow.objects.create(follower=follower.user, following=following.user)
         is_follow = True
         #ログインユーザーのフォロー数
         following_count = Follow.objects.filter(follower=follower.user).count()
@@ -38,6 +38,6 @@ def follow_update_data(follower, following, follow_obj):
                 user_to=following.user,
                 type_no=NotificationTypeNo.follow,
                 type_name='follow',
-                content_object=follow_obj,
+                content_object=follow,
             )
     return {'is_follow': is_follow, 'follower_count': follower_count}
