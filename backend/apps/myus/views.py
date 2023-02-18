@@ -166,14 +166,14 @@ class Withdrawal(View):
         return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(char_num)])
 
     def get(self, request, token=None):
-        user = self.request.user
         context = {}
-        notification_list = notification_data(self)
+        user = request.user
         if user.id:
+            notification = notification_data(user)
             context = {
                 'expired_seconds': self.EXPIRED_SECONDS,
-                'notification_list': notification_list['notification_list'],
-                'notification_count': notification_list['notification_count'],
+                'notification_list': notification['notification_list'],
+                'notification_count': notification['notification_count'],
             }
         if token:
             try:
@@ -187,21 +187,21 @@ class Withdrawal(View):
         return render(request, self.template_name, context)
 
     def post(self, request):
+        user = request.user
         if self.request.method == 'POST':
             password = self.request.POST.get('password')
             password2 = self.request.POST.get('password2')
-            if self.request.user.check_password(password):
+            if user.check_password(password):
                 token = self.get_random_chars()
-                notification_list = notification_data(self)
+                notification = notification_data(user)
                 context = {
                     'token_signed': self.timestamp_signer.sign(token),
                     'expired_seconds': self.EXPIRED_SECONDS,
-                    'notification_list': notification_list['notification_list'],
-                    'notification_count': notification_list['notification_count'],
+                    'notification_list': notification['notification_list'],
+                    'notification_count': notification['notification_count'],
                 }
                 return render(request, self.template_name, context)
-            elif self.request.user.check_password(password2):
-                user = self.request.user
+            elif user.check_password(password2):
                 user.is_active = False
                 user.save(update_fields=['is_active'])
                 logout(self.request)
@@ -553,7 +553,7 @@ def reply_form(request):
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
         obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
-        comment_obj = Comment.objects.create(
+        comment = Comment.objects.create(
             content_object=obj,
             text=text,
             author=user,
@@ -564,20 +564,20 @@ def reply_form(request):
         parent_obj = Comment.objects.get(id=comment_id)
         parent_obj.reply_num = Comment.objects.filter(parent=comment_id).count()
         parent_obj.save(update_fields=['reply_num'])
-        author = comment_obj.parent.author
+        author = comment.parent.author
         if user != author and author.notificationsetting.is_reply:
             Notification.objects.create(
                 user_from=user,
                 user_to=author,
                 type_no=NotificationTypeNo.reply,
                 type_name='reply',
-                content_object=comment_obj,
+                content_object=comment,
             )
         context = {
             'comment_num': obj.comment_num,
             'reply_num': parent_obj.reply_num,
             'reply_lists': render_to_string('parts/common/reply/reply.html', {
-                'reply_list': obj.comment.filter(id=comment_obj.id),
+                'reply_list': obj.comment.filter(id=comment.id),
                 'user_id': user.id,
                 'obj_id': obj_id,
                 'obj_path': obj_path,
@@ -591,10 +591,10 @@ def comment_update(request, comment_id):
     """comment_update"""
     if request.method == 'POST':
         text = request.POST.get('text')
-        comment_obj = Comment.objects.get(id=comment_id)
-        comment_obj.text = text
-        comment_obj.save(update_fields=['text', 'updated'])
-        context = {'text': urlize_impl(linebreaksbr(comment_obj.text))}
+        comment = Comment.objects.get(id=comment_id)
+        comment.text = text
+        comment.save(update_fields=['text', 'updated'])
+        context = {'text': urlize_impl(linebreaksbr(comment.text))}
         return JsonResponse(context)
 
 
@@ -621,16 +621,16 @@ def reply_delete(request, comment_id):
         parent_id = request.POST.get('parent_id')
         Notification.objects.filter(type_no=NotificationTypeNo.reply, object_id=comment_id).delete()
         Comment.objects.get(id=comment_id).delete()
-        parent_obj = Comment.objects.get(id=parent_id)
-        parent_obj.reply_num = Comment.objects.filter(parent=parent_id).count()
-        parent_obj.save(update_fields=['reply_num'])
+        comment_parent = Comment.objects.get(id=parent_id)
+        comment_parent.reply_num = Comment.objects.filter(parent=parent_id).count()
+        comment_parent.save(update_fields=['reply_num'])
         obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
         context = {
             'comment_num': obj.comment_num,
             'parent_id': parent_id,
-            'reply_num': parent_obj.reply_num,
+            'reply_num': comment_parent.reply_num,
         }
         return JsonResponse(context)
 

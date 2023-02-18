@@ -3,11 +3,7 @@ from apps.myus.models import NotificationSetting, Notification, Follow
 from apps.myus.modules.contains import notification_type_no
 
 
-def notification_data(self):
-    user = self.request.user
-    if not user.id:
-        return {}
-
+def notification_data(user):
     fields_1 = ['is_video', 'is_music', 'is_picture', 'is_blog', 'is_chat', 'is_collabo']
     fields_2 = ['is_follow', 'is_like', 'is_reply', 'is_views']
 
