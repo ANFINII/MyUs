@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta, date
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from django.db.models import F, Count, Exists, OuterRef
 from apps.myus.models import MyPage, SearchTag, NotificationSetting, Follow, Comment
 from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo, Advertise

@@ -2,13 +2,13 @@ from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count
 from django.template.loader import render_to_string
-from django.shortcuts import get_object_or_404
 from apps.myus.models import MyPage, NotificationSetting, Follow, Advertise, Todo
 from apps.myus.modules.contains import model_dict, model_pjax, model_create_pjax
 from apps.myus.modules.search import SearchData
 
 
 User = get_user_model()
+
 
 def pjax_context(request, href):
     template = 'index_list.html'

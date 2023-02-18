@@ -15,7 +15,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.http import JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.template.defaultfilters import linebreaksbr
 from django.urls import reverse, reverse_lazy
@@ -339,9 +339,9 @@ def mypage_toggle(request):
     if request.method == 'POST':
         user = request.user
         is_advertise = request.POST.get('is_advertise')
-        myapge_obj = MyPage.objects.get(user=user)
-        myapge_obj.is_advertise = True if is_advertise == 'False' else False
-        myapge_obj.save(update_fields=['is_advertise'])
+        myapge = MyPage.objects.get(user=user)
+        myapge.is_advertise = True if is_advertise == 'False' else False
+        myapge.save(update_fields=['is_advertise'])
         context = {
             'toggle_mypage': render_to_string('registration/mypage_advertise.html', {
                 'mypage_list': MyPage.objects.filter(user=user),
@@ -411,10 +411,10 @@ def notification_setting(request):
     """notification_setting"""
     if request.method == 'POST':
         user = request.user
-        is_notification = request.POST.get('notification')
-        notification_type = request.POST.get('notification_type')
-        notification_obj = NotificationSetting.objects.get(user=user)
-        notification_setting_update(is_notification, notification_type, notification_obj)
+        is_notification = request.POST['notification']
+        notification_type = request.POST['notification_type']
+        notification_setting = NotificationSetting.objects.get(user=user)
+        notification_setting_update(is_notification, notification_type, notification_setting)
     context = {
         'notification_setting_lists': render_to_string('parts/notification_setting.html', {
             'notification_setting_list': NotificationSetting.objects.filter(user=user),
@@ -427,8 +427,11 @@ def notification_confirmed(request):
     """notification_confirmed"""
     user = request.user
     notification_id = request.POST.get('notification_id')
-    notification_obj = get_object_or_404(Notification, id=notification_id)
-    notification_obj.confirmed.add(user)
+    notification = Notification.objects.filter(id=notification_id).first()
+    if not notification:
+        return JsonResponse()
+
+    notification.confirmed.add(user)
     return JsonResponse()
 
 
@@ -437,9 +440,12 @@ def notification_deleted(request):
     if request.method == 'POST':
         user = request.user
         notification_id = request.POST.get('notification_id')
-        notification_obj = get_object_or_404(Notification, id=notification_id)
-        notification_obj.confirmed.add(user)
-        notification_obj.deleted.add(user)
+        notification = Notification.objects.filter(id=notification_id).first()
+        if not notification:
+            return JsonResponse({})
+
+        notification.confirmed.add(user)
+        notification.deleted.add(user)
         following_id_list = list(Follow.objects.filter(follower=user).values_list('following_id', flat=True))
         context = {
             'notification_count': Notification.objects.filter(user_from__in=following_id_list, user_to=user).exclude(confirmed=user).count()
@@ -471,10 +477,10 @@ def advertise_read(request):
     """advertise_read"""
     if request.method == 'POST':
         advertise_id = request.POST.get('advertise_id')
-        advertise_obj = Advertise.objects.get(id=advertise_id)
-        advertise_obj.read += 1
-        advertise_obj.save(update_fields=['read'])
-        context = {'read': advertise_obj.read}
+        advertise = Advertise.objects.get(id=advertise_id)
+        advertise.read += 1
+        advertise.save(update_fields=['read'])
+        context = {'read': advertise.read}
         return JsonResponse(context)
 
 
@@ -485,7 +491,7 @@ def like_form(request):
         user = request.user
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
-        obj = [get_object_or_404(models, id=obj_id) for detail, models in model_like_dict.items() if detail in obj_path][0]
+        obj = [models.objects.get(id=obj_id) for detail, models in model_like_dict.items() if detail in obj_path][0]
         is_like = obj.like.filter(id=user.id).exists()
         obj.like.remove(user) if is_like else obj.like.add(user)
         context = {'is_like': obj.like.filter(id=user.id).exists(), 'total_like': obj.total_like()}
@@ -496,8 +502,8 @@ def like_form_comment(request):
     """like_form_comment"""
     if request.method == 'POST':
         user = request.user
-        comment_id = request.POST.get('comment_id')
-        comment = get_object_or_404(Comment, id=comment_id)
+        comment_id = request.POST['comment_id']
+        comment = Comment.objects.get(id=comment_id)
         author = comment.author
         is_comment_like = comment.like.filter(id=user.id).exists()
         if is_comment_like:
@@ -561,9 +567,9 @@ def reply_form(request):
         )
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
-        parent_obj = Comment.objects.get(id=comment_id)
-        parent_obj.reply_num = Comment.objects.filter(parent=comment_id).count()
-        parent_obj.save(update_fields=['reply_num'])
+        comment = Comment.objects.get(id=comment_id)
+        comment.reply_num = Comment.objects.filter(parent=comment_id).count()
+        comment.save(update_fields=['reply_num'])
         author = comment.parent.author
         if user != author and author.notificationsetting.is_reply:
             Notification.objects.create(
@@ -575,7 +581,7 @@ def reply_form(request):
             )
         context = {
             'comment_num': obj.comment_num,
-            'reply_num': parent_obj.reply_num,
+            'reply_num': comment.reply_num,
             'reply_lists': render_to_string('parts/common/reply/reply.html', {
                 'reply_list': obj.comment.filter(id=comment.id),
                 'user_id': user.id,
@@ -727,8 +733,8 @@ def follow_create(request, nickname):
     if request.method == 'POST':
         follower = MyPage.objects.get(user=request.user)
         following = MyPage.objects.get(user__nickname=nickname)
-        follow_obj = Follow.objects.filter(follower=follower.user, following=following.user)
-        follow_data = follow_update_data(follower, following, follow_obj)
+        follow = Follow.objects.filter(follower=follower.user, following=following.user)
+        follow_data = follow_update_data(follower, following, follow)
         context = {
             'is_follow': follow_data['is_follow'],
             'follower_count': follow_data['follower_count'],

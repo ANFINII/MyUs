@@ -3,13 +3,14 @@ from functools import reduce
 from itertools import chain
 from operator import and_
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from django.db.models import Q, F, Count
 from apps.myus.models import Video, Music
 from apps.myus.modules.contains import model_list
 from apps.myus.modules.filter_data import DeferData
 
+
 User = get_user_model()
+
 
 def get_q_list(search):
     """除外リストを作成"""
@@ -118,7 +119,7 @@ class Search:
     def search_userpage(self):
         search = self.request.GET.get('search')
         if search:
-            author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+            author = User.objects.get(nickname=self.kwargs['nickname'])
             result = SearchData.search_userpage(author, search)
             self.count = len(result)
             return result
@@ -155,7 +156,7 @@ class Search:
         return model.objects.filter(author=user.id).defer(*DeferData.defer_list)
 
     def search_advertise(self, model):
-        author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+        author = User.objects.get(nickname=self.kwargs['nickname'])
         search = self.request.GET.get('search')
         if search:
             result = SearchData.search_advertise(model, author, search)
