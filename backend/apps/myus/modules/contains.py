@@ -57,17 +57,17 @@ model_create_pjax = (
     'todo/create',
 )
 
-notification_type_dict = {
-    'video'  : 'is_video',
-    'music'  : 'is_music',
-    'picture': 'is_picture',
-    'blog'   : 'is_blog',
-    'chat'   : 'is_chat',
-    'collabo': 'is_collabo',
-    'follow' : 'is_follow',
-    'like'   : 'is_like',
-    'reply'  : 'is_reply',
-    'views'  : 'is_views',
+notification_type_no = {
+    'is_video'  : 1,
+    'is_music'  : 2,
+    'is_picture': 3,
+    'is_blog'   : 4,
+    'is_chat'   : 5,
+    'is_collabo': 6,
+    'is_follow' : 7,
+    'is_like'   : 8,
+    'is_reply'  : 9,
+    'is_views'  : 10,
 }
 
 class NotificationTypeNo:
