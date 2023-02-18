@@ -2,12 +2,8 @@
   <img src="{{ author.banner }}" title="{{ author.nickname }}">
 </figure>
 
-<object class="userpage_author">
-  <object class="author_space">
-    <figure>
-      <img src="{{ author.image }}" title="{{ author.nickname }}" class="userpage_image">
-    </figure>
-  </object>
+<div class="userpage_author">
+  <img src="{{ author.image }}" title="{{ author.nickname }}" class="userpage_image">
   <span title="{{ author.nickname }}" class="userpage_content_1">{{ author.nickname }}</span>
   <span class="userpage_content_2">フォロワー数
     <span class="follower_count">{{ author.mypage.follower_num }}</span>
@@ -28,7 +24,7 @@
     <button class="btn btn-secondary btn" disabled>フォローする</button>
     {% endif %}
   </span>
-</object>
+</div>
 
 <div class="userpage_button_list">
   <a href="{% url 'myus:userpage' author.nickname %}" data="{{ author.nickname }}" class="userpage_button_list_1 pjax_button_userpage">投稿</a>
