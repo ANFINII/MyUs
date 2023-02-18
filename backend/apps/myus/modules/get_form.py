@@ -19,11 +19,10 @@ def get_detail(self, request):
     ip = get_client_ip(request)
     JST = timezone(timedelta(hours=9), 'JST')
     access_log = AccessLog.objects.filter(ip_address=ip, type=obj_name, type_id=obj.id).first()
-    if access_log:
-        if datetime.now(JST) - access_log.updated > timedelta(hours=2):
-            obj.read += 1
-            obj.save(update_fields=['read'])
-            access_log.save(update_fields=['updated'])
+    if access_log and datetime.now(JST) - access_log.updated > timedelta(hours=2):
+        obj.read += 1
+        obj.save(update_fields=['read'])
+        access_log.save(update_fields=['updated'])
     else:
         AccessLog.objects.create(ip_address=ip, type=obj_name, type_id=obj.id)
         obj.read += 1

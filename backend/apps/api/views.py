@@ -26,6 +26,7 @@ from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSe
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
 
+
 User = get_user_model()
 
 
@@ -518,7 +519,6 @@ class BlogListAPI(APIView):
             }
         } for obj in obj_list]
         return Response(data, status=HTTP_200_OK)
-
 
 
 class BlogCreateAPI(CreateAPIView):

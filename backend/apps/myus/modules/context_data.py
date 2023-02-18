@@ -20,11 +20,11 @@ class ContextData:
             context['notification_count'] = notification['notification_count']
             context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
 
-        class_name = str(class_name.__name__)
         if hasattr(self, 'count'):
             context['count'] = self.count or 0
             context['query'] = self.request.GET.get('search')
 
+        class_name = str(class_name.__name__)
         if class_name in 'NotificationSettingView':
             context['notification_setting_list'] = NotificationSetting.objects.filter(user=user.id)
 
@@ -66,7 +66,6 @@ class ContextData:
 
     def models_context_data(self, class_name, **kwargs):
         context = super(class_name, self).get_context_data(**kwargs)
-        class_name = str(class_name.__name__)
         user = self.request.user
         obj = self.object
         author = obj.author
@@ -82,13 +81,6 @@ class ContextData:
             context['notification_count'] = notification['notification_count']
             context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
 
-        if class_name not in ['ChatDetail', 'ChatThread']:
-            filter_kwargs = {'id': OuterRef('pk'), 'like': user.id}
-            subquery = Comment.objects.filter(**filter_kwargs)
-            comment = obj.comment.annotate(is_comment_like=Exists(subquery))
-            context['comment_list'] = comment.filter(parent__isnull=True)
-            context['reply_list'] = comment.filter(parent__isnull=False)
-
         context['advertise_auto_list'] = Advertise.objects.filter(publish=True, type=0).order_by('?')[:1]
         advertise = Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')
         if author.mypage.plan == 'basic':
@@ -97,6 +89,14 @@ class ContextData:
             context['advertise_list'] = advertise[:3]
         if author.mypage.plan == 'premium':
             context['advertise_list'] = advertise[:4]
+
+        class_name = str(class_name.__name__)
+        if class_name not in ['ChatDetail', 'ChatThread']:
+            filter_kwargs = {'id': OuterRef('pk'), 'like': user.id}
+            subquery = Comment.objects.filter(**filter_kwargs)
+            comment = obj.comment.annotate(is_comment_like=Exists(subquery))
+            context['comment_list'] = comment.filter(parent__isnull=True)
+            context['reply_list'] = comment.filter(parent__isnull=False)
 
         if class_name in 'VideoDetail':
             context['video_list'] = Video.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
