@@ -1,41 +1,39 @@
-{% for author in user_list %}
-  <figure class="userpage_banner">
-    <img src="{{ author.banner }}" title="{{ author.nickname }}">
-  </figure>
+<figure class="userpage_banner">
+  <img src="{{ author.banner }}" title="{{ author.nickname }}">
+</figure>
 
-  <object class="userpage_author">
-    <object class="author_space">
-      <figure>
-        <img src="{{ author.image }}" title="{{ author.nickname }}" class="userpage_image">
-      </figure>
-    </object>
-    <span title="{{ author.nickname }}" class="userpage_content_1">{{ author.nickname }}</span>
-    <span class="userpage_content_2">フォロワー数
-      <span class="follower_count">{{ author.mypage.follower_num }}</span>
-    </span>
-    <span class="userpage_content_3">フォロー数 {{ author.mypage.following_num }}</span>
-    <span class="userpage_content_5">
-      {% if user.nickname == author.nickname %}
-      <button class="btn btn-secondary btn" disabled>フォローする</button>
-      {% elif user.is_authenticated %}
-      <form method="POST" action="" value="{{ author.nickname }}" csrf="{{ csrf_token }}" class="follow_form">
-        {% if is_follow %}
-        <button type="submit" name="following_id" class="btn btn-danger follow_change">解除する</button>
-        {% else %}
-        <button type="submit" name="following_id" class="btn btn-success follow_change">フォローする</button>
-        {% endif %}
-      </form>
-      {% else %}
-      <button class="btn btn-secondary btn" disabled>フォローする</button>
-      {% endif %}
-    </span>
+<object class="userpage_author">
+  <object class="author_space">
+    <figure>
+      <img src="{{ author.image }}" title="{{ author.nickname }}" class="userpage_image">
+    </figure>
   </object>
+  <span title="{{ author.nickname }}" class="userpage_content_1">{{ author.nickname }}</span>
+  <span class="userpage_content_2">フォロワー数
+    <span class="follower_count">{{ author.mypage.follower_num }}</span>
+  </span>
+  <span class="userpage_content_3">フォロー数 {{ author.mypage.following_num }}</span>
+  <span class="userpage_content_5">
+    {% if user.nickname == author.nickname %}
+    <button class="btn btn-secondary btn" disabled>フォローする</button>
+    {% elif user.is_authenticated %}
+    <form method="POST" action="" value="{{ author.nickname }}" csrf="{{ csrf_token }}" class="follow_form">
+      {% if is_follow %}
+      <button type="submit" name="following_id" class="btn btn-danger follow_change">解除する</button>
+      {% else %}
+      <button type="submit" name="following_id" class="btn btn-success follow_change">フォローする</button>
+      {% endif %}
+    </form>
+    {% else %}
+    <button class="btn btn-secondary btn" disabled>フォローする</button>
+    {% endif %}
+  </span>
+</object>
 
-  <div class="userpage_button_list">
-    <a href="{% url 'myus:userpage' author.nickname %}" data="{{ author.nickname }}" class="userpage_button_list_1 pjax_button_userpage">投稿</a>
-    <a href="{% url 'myus:userpage_info' author.nickname %}" data="{{ author.nickname }}" class="userpage_button_list_2 pjax_button_userpage">情報</a>
-    <a href="{% url 'myus:userpage_advertise' author.nickname %}" data="{{ author.nickname }}" class="userpage_button_list_3 pjax_button_userpage">広告</a>
-  </div>
-{% endfor %}
+<div class="userpage_button_list">
+  <a href="{% url 'myus:userpage' author.nickname %}" data="{{ author.nickname }}" class="userpage_button_list_1 pjax_button_userpage">投稿</a>
+  <a href="{% url 'myus:userpage_info' author.nickname %}" data="{{ author.nickname }}" class="userpage_button_list_2 pjax_button_userpage">情報</a>
+  <a href="{% url 'myus:userpage_advertise' author.nickname %}" data="{{ author.nickname }}" class="userpage_button_list_3 pjax_button_userpage">広告</a>
+</div>
 
 <hr class="userpage_hr">

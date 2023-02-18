@@ -7,19 +7,21 @@ from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo, A
 from apps.myus.modules.contains import model_dict
 from apps.myus.modules.notification import notification_data
 
+
 User = get_user_model()
+
 
 class ContextData:
     def context_data(self, class_name, **kwargs):
         context = super(class_name, self).get_context_data(**kwargs)
-        class_name = str(class_name.__name__)
         user = self.request.user
         if user.id:
-            notification_list = notification_data(self)
-            context['notification_list'] = notification_list['notification_list']
-            context['notification_count'] = notification_list['notification_count']
+            notification = notification_data(user)
+            context['notification_list'] = notification['notification_list']
+            context['notification_count'] = notification['notification_count']
             context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
 
+        class_name = str(class_name.__name__)
         if hasattr(self, 'count'):
             context['count'] = self.count or 0
             context['query'] = self.request.GET.get('search')
@@ -52,11 +54,10 @@ class ContextData:
             })
 
         if class_name in ['UserPage' or 'UserPageInfo' or 'UserPageAdvertise']:
-            author = get_object_or_404(User, nickname=self.kwargs['nickname'])
+            author = User.objects.get(nickname=self.kwargs['nickname'])
             follow = Follow.objects.filter(follower=user.id, following=author)
             context['is_follow'] = follow.exists()
-            context['author_name'] = author.nickname
-            context['user_list'] = User.objects.filter(id=author.id)
+            context['author'] = author
             context.update({
                 f'{value}_list': model.objects.filter(author=author, publish=True).order_by('-created')
                 for model, value in model_dict.items()
@@ -77,9 +78,9 @@ class ContextData:
         context['is_follow'] = follow.exists()
 
         if user.id:
-            notification_list = notification_data(self)
-            context['notification_list'] = notification_list['notification_list']
-            context['notification_count'] = notification_list['notification_count']
+            notification = notification_data(user)
+            context['notification_list'] = notification['notification_list']
+            context['notification_count'] = notification['notification_count']
             context['searchtag_list'] = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
 
         if class_name not in ['ChatDetail', 'ChatThread']:

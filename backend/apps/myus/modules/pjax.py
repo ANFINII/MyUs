@@ -35,8 +35,7 @@ def pjax_context(request, href):
             })
     if 'userpage/post' in href or 'userpage/information' in href or 'userpage/advertise' in href:
         nickname = request.GET.get('nickname')
-        author = get_object_or_404(User, nickname=nickname)
-        user_list = User.objects.filter(id=author.id)
+        author = User.objects.get(nickname=nickname)
         follow = Follow.objects.filter(follower=user.id, following=author)
         is_follow = follow.exists()
         if 'userpage/post' in href:
@@ -44,29 +43,29 @@ def pjax_context(request, href):
             if search:
                 result = SearchData.search_userpage(author, search)
                 context = {
-                    'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list,
-                    'object_list': result, 'query': search, 'count': len(result)
+                    'is_follow': is_follow, 'author': author, 'object_list': result,
+                    'query': search, 'count': len(result)
                 }
             else:
-                context = {'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list}
+                context = {'is_follow': is_follow, 'author': author}
                 context.update({
                     f'{value}_list': model.objects.filter(author=author, publish=True).order_by('-created')
                     for model, value in model_dict.items()
                 })
         if 'userpage/information' in href:
             template = 'userpage/userpage_information_content.html'
-            context = {'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list}
+            context = {'is_follow': is_follow, 'author': author}
         if 'userpage/advertise' in href:
             template = 'userpage/userpage_advertise_list.html'
             if search:
                 result = SearchData.search_advertise(Advertise, author, search)
                 context = {
-                    'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list,
-                    'advertise_list': result, 'query': search, 'count': len(result)
+                    'is_follow': is_follow, 'author': author, 'advertise_list': result,
+                    'query': search, 'count': len(result)
                 }
             else:
                 advertise = Advertise.objects.filter(author=author, publish=True)
-                context = {'is_follow': is_follow, 'author_name': nickname, 'user_list': user_list, 'advertise_list': advertise}
+                context = {'is_follow': is_follow, 'author': author, 'advertise_list': advertise}
     if href in model_pjax:
         template = f'{href}/{href}_list.html'
         if search:
