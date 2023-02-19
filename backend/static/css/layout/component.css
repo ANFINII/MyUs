@@ -14,7 +14,6 @@
 }
 
 .button.blue {
-  font-weight: 600;
   border: 1px solid #3d7af2;
   background: #3d7af2;
 }
@@ -38,7 +37,6 @@
 }
 
 .button.purple {
-  font-weight: 600;
   border: 1px solid #9020ff;
   background: #9020ff;
 }
@@ -62,7 +60,6 @@
 }
 
 .button.red {
-  font-weight: 600;
   border: 1px solid #dc3545;
   background: #dc3545;
 }
@@ -86,7 +83,6 @@
 }
 
 .button.green {
-  font-weight: 600;
   border: 1px solid #008060;
   background: #008060;
 }
