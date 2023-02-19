@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Footer from 'components/layouts/Footer'
-import axios from 'api/axios'
 
 
 export default function PasswordResetForm() {
@@ -13,7 +12,7 @@ export default function PasswordResetForm() {
 
       <form method="POST" action="" className="form_signup">
         {/* {% csrf_token %} */}
-        <h1 id="myus_h1" className="h4 mb-3 font-weight-normal">パスワードをリセット</h1>
+        <h1 className="myus_h1 h4 mb-3 font-weight-normal">パスワードをリセット</h1>
         {/* {% if errors %} */}
         {/* <p className="messages_password_form">{{ form.email.errors }}</p> */}
         {/* {% endif %} */}

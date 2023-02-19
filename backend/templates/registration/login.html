@@ -7,10 +7,10 @@
 {% endblock customcss %}
 
 {% block content %}
-<main>
+<main class="main">
   <form method="POST" action="" class="form_signup">
     {% csrf_token %}
-    <h1 id="myus_h1" class="h3 mb-3 font-weight-normal">MyUsへようこそ</h1>
+    <h1 class="myus_h1">MyUsへようこそ</h1>
 
     {% if messages %}
     <ul class="messages_login">
@@ -20,17 +20,15 @@
     </ul>
     {% endif %}
 
-    <p><input type="username" name="username" id="username" class="form-control" placeholder="ユーザー名 or メールアドレス" required autofocus></p>
-
-    <p><input type="password" name="password" id="password" class="form-control" placeholder="パスワード" minlength="8" maxlength="16" required></p>
+    <input type="username" name="username" class="input margin" placeholder="ユーザー名 or メールアドレス" required autofocus>
+    <input type="password" name="password" class="input margin" placeholder="パスワード" minlength="8" maxlength="16" required>
 
     <div class="password_reset">
       <a href="{% url 'password_reset' %}">パスワードをリセット</a>
     </div>
 
-    <p><input type="submit" value="ログイン" id="login" class="btn btn-lg btn-primary btn-block"></p>
-
-    <a href="{% url 'myus:signup' %}" class="btn btn-lg btn-success btn-block" role="button">アカウント登録</a>
+    <button type="submit" class="button blue xl margin">ログイン</button>
+    <button type="button" onclick="location.href='{% url 'myus:signup' %}'" class="button green xl margin">アカウント登録</button>
   </form>
 </main>
 {% endblock content %}

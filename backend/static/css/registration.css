@@ -25,13 +25,13 @@ body::-webkit-scrollbar-thumb:active {
   background: rgb(120, 120, 120);
 }
 
-body {
+.layout {
   position: relative;
   min-height: 100%;
   margin: 0 0 5em 0;
 }
 
-header {
+.header {
   position: sticky;
   z-index: 100;
   top: 0;
@@ -42,16 +42,17 @@ header {
   margin: 0 0 16px 0;
 }
 
-header h1 {
+.header h1 {
   font-family: "Libre Caslon Display", serif;
   text-align: end;
   align-items: center;
   width: 25%;
   margin: 0;
   padding: 20px 0;
+  font-size: 30px;
 }
 
-footer {
+.footer {
   position: fixed;
   z-index: 100;
   bottom: 0;
@@ -62,12 +63,14 @@ footer {
   color: rgb(255, 255, 255);
 }
 
-footer small {
+.footer small {
   vertical-align: -10px;
 }
 
-#myus_h1 {
-  padding: 0 0 16px 0;
+.myus_h1 {
+  font-family: "Libre Caslon Display", serif;
+  font-size: 26px;
+  margin: 0 0 24px 0;
 }
 
 .password_reset {
@@ -92,7 +95,7 @@ footer small {
   padding: 0 0 0 13px;
 }
 
-#last_name, #first_name {
+.last_name, .first_name {
   width: 169px;
   margin: 0;
 }
@@ -183,4 +186,14 @@ ul, .messages_password_reset {
 
 .form_signup .checkbox {
   font-weight: 400;
+}
+
+.input.margin {
+  display: block;
+  margin: 0 0 16px 0;
+}
+
+.button.margin {
+  width: 100%;
+  margin: 0 0 24px 0;
 }
