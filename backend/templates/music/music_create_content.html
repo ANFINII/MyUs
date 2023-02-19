@@ -8,10 +8,10 @@
   <input type="text" name="title" id="title" class="input" required>
 
   <p class="margin">内容</p>
-  <textarea name="content" rows="1" id="content" class="input textarea" required></textarea>
+  <textarea name="content" id="content" class="input textarea" required></textarea>
 
   <p class="margin">歌詞</p>
-  <textarea name="lyric" rows="1" id="lyric" class="input textarea"></textarea>
+  <textarea name="lyric" id="lyric" class="input textarea"></textarea>
 
   <p class="margin_top">音楽</p>
   <div class="check_group check_margin">
@@ -28,5 +28,6 @@
 {% endif %}
 
 {% block extrajs %}
+<script src="{% static 'js/textarea.js' %}"></script>
 <script src="{% static 'js/attachment_name.js' %}"></script>
 {% endblock extrajs %}

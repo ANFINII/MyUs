@@ -11,7 +11,7 @@ $(function () {
 $(function () {
   const $textarea = $('.textarea');
   const lineHeight = parseInt($textarea.css('lineHeight'));
-  $textarea.on('input', function (evt) {
+  $textarea.on('input', function () {
     const lines = ($(this).val() + '\n').match(/\n/g).length;
     $(this).height(lineHeight * lines);
   });
@@ -30,7 +30,7 @@ $(function () {
 $(function () {
   const $textarea = $('.textarea_br');
   const lineHeight = parseInt($textarea.css('lineHeight'));
-  $textarea.on('input', function (evt) {
+  $textarea.on('input', function () {
     const lines = ($(this).val() + '\n').match(/\n/g).length;
     $(this).height(lineHeight * lines);
   });
