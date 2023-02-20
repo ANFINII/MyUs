@@ -15,7 +15,7 @@
   font-family: "Libre Caslon Display", serif;
   font-size: 28px;
   color: rgb(50, 50, 50);
-  margin: 40px 0;
+  margin:  26px 0 40px 0;
 }
 
 .form_signup .signup_h1 {
@@ -139,4 +139,18 @@ ul, .messages_password_reset {
   color: rgb(255, 0, 0);
   padding: 0;
   margin: -17px 0 -4px 0;
+}
+
+.inpput_margin {
+  display: block;
+  margin: 0 0 16px 0;
+}
+
+.article_registration .button_margin {
+  width: 100%;
+  margin: 0 0 24px 0;
+}
+
+.article_registration a {
+  text-decoration: none;
 }

@@ -46,7 +46,7 @@ export default function MyPage() {
               <Link href="/mypage/update"><Button blue size='xs'>編集</Button></Link>
             </div>
             <div className="btn-column2">
-              <Link href={`/userpage/${mypage.nickname}`}><Button blue size='xs'>ユーザページ</Button></Link>
+              <Link href={`/userpage/${mypage.nickname}`}><Button purple size='xs'>ユーザページ</Button></Link>
             </div>
           </div>
 

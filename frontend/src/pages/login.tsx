@@ -1,13 +1,14 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import Footer from 'components/layouts/Footer'
-// import axios from 'pages/api/axios'
 import { useRouter } from "next/router"
 import { useState } from 'react'
+import Footer from 'components/layouts/Footer'
+import Input from 'components/parts/Input'
+import Button from 'components/parts/Button'
 
 
 export default function Login() {
-  const router = useRouter();
+  const router = useRouter()
   const url = process.env.NEXT_PUBLIC_API_URL
   const token = process.env.TOKEN
   // const [token, setToken] = useState([])
@@ -16,18 +17,6 @@ export default function Login() {
   const loginClicked = () => {
     setClicked(!clicked)
   }
-
-  // axios.post(url + '/api/login', {
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  // }
-  // })
-  // .then(res => {
-  //   console.log(res.data)
-  // })
-  // .catch(e => {
-  //   console.log(e)
-  // })
 
   return (
     <article className="article_registration">
@@ -47,20 +36,20 @@ export default function Login() {
         </ul>
         {% endif %} */}
 
-        <p><input type="username" name="username" id="username" className="form-control" placeholder="ユーザー名 or メールアドレス" required autoFocus/></p>
-
-        <p><input type="password" name="password" id="password" className="form-control" placeholder="パスワード" minLength={8} maxLength={16} required/></p>
+        <Input type="username" name="username" className="inpput_margin" placeholder="ユーザー名 or メールアドレス" required autoFocus />
+        <Input type="password" name="password" className="inpput_margin" placeholder="パスワード" minLength={8} maxLength={16} required />
 
         <div className="password_reset">
           <Link href="/registration/password_reset">パスワードをリセット</Link>
         </div>
 
-        <p><button type="button" id="login" onClick={loginClicked} className="btn btn-lg btn-primary btn-block">ログイン</button></p>
-
-        <Link href="/registration/signup" className="btn btn-lg btn-success btn-block">アカウント登録</Link>
+        <Button blue size="xl" type="submit" onClick={loginClicked} className="button_margin">ログイン</Button>
+        <Link href="/registration/signup">
+          <Button green size="xl" className="button_margin">アカウント登録</Button>
+        </Link>
       </form>
 
-      <Footer/>
+      <Footer />
     </article>
   )
 }
