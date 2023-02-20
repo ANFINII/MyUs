@@ -188,12 +188,12 @@ ul, .messages_password_reset {
   font-weight: 400;
 }
 
-.input.margin {
+.input_margin {
   display: block;
   margin: 0 0 16px 0;
 }
 
-.button.margin {
+.button_margin {
   width: 100%;
   margin: 0 0 24px 0;
 }

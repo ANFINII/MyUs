@@ -20,15 +20,15 @@
     </ul>
     {% endif %}
 
-    <input type="username" name="username" class="input margin" placeholder="ユーザー名 or メールアドレス" required autofocus>
-    <input type="password" name="password" class="input margin" placeholder="パスワード" minlength="8" maxlength="16" required>
+    <input type="username" name="username" class="input input_margin" placeholder="ユーザー名 or メールアドレス" required autofocus>
+    <input type="password" name="password" class="input input_margin" placeholder="パスワード" minlength="8" maxlength="16" required>
 
     <div class="password_reset">
       <a href="{% url 'password_reset' %}">パスワードをリセット</a>
     </div>
 
-    <button type="submit" class="button blue xl margin">ログイン</button>
-    <button type="button" onclick="location.href='{% url 'myus:signup' %}'" class="button green xl margin">アカウント登録</button>
+    <button type="submit" class="button blue xl button_margin">ログイン</button>
+    <button type="button" onclick="location.href='{% url 'myus:signup' %}'" class="button green xl button_margin">アカウント登録</button>
   </form>
 </main>
 {% endblock content %}
