@@ -12,23 +12,13 @@ interface Props {
 export default function CheckBox(props: Props) {
   const {checked, name, id, className, children} = props
   const [checkValue, setCheckValue] = useState(checked)
-  const handleChange = () => {setCheckValue(false)}
+  const handleChange = () => {setCheckValue(!checkValue)}
 
   return (
-    <>
-      {checkValue ?
-        <div className={`${style.check_group} ` + (className ? className : "" )}>
-          <input type="checkbox" name={name} id={id} onClick={handleChange}
-            className={style.checkbox} checked />
-          <label htmlFor={id}>{children}</label>
-        </div>
-      :
-        <div className={`${style.check_group} ` + (className ? className : "" )}>
-          <input type="checkbox" name={name} id={id} onClick={handleChange}
-            className={style.checkbox} />
-          <label htmlFor={id}>{children}</label>
-        </div>
-      }
-    </>
+    <div className={`${style.check_group} ` + (className ? className : "" )}>
+      <input type="checkbox" name={name} id={id} onClick={handleChange}
+        className={style.checkbox} checked={checkValue} />
+      <label htmlFor={id}>{children}</label>
+    </div>
   )
 }

@@ -2,13 +2,13 @@ import Link from 'next/link'
 import {useRouter} from 'next/router'
 
 interface Props {
-  children: React.ReactNode
   href: string
+  children: React.ReactNode
 }
 
 export default function ActiveLink(props: Props) {
   const router = useRouter()
-  const {children, href} = props
+  const {href, children} = props
 
   return (
     <Link href={href} className={router.pathname == href ? 'active' : ''}>

@@ -9,17 +9,17 @@ interface Color {
 }
 
 interface Props extends Color {
-  children?: string | string[]
-  className?: string
+  type?: 'submit' | 'reset' | 'button'
   value?: string
   size?: 'xl' | 'xs'
-  type?: 'submit' | 'reset' | 'button'
+  className?: string
+  children?: string | string[]
   onClick?(): void
 }
 
 export default function Button(props: Props) {
   const {blue, purple, red, green, light} = props
-  const {children, className, type, value, size, onClick} = props
+  const {type, value, size, className, children, onClick} = props
 
   return (
     <button type={type} value={value} onClick={onClick}

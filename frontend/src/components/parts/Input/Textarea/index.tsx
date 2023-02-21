@@ -21,20 +21,10 @@ export default function Textarea(props: Props) {
   }
 
   return (
-    <>
-      {required ?
-        <textarea id={id} name={name} value={value} placeholder={placeholder}
-          rows={rows} onChange={handleChange} disabled={disabled} required
-          className={`${style.textarea} ` + (className ? className : '' )}
-        >
-        </textarea>
-      :
-        <textarea id={id} name={name} value={value} placeholder={placeholder}
-          rows={rows} onChange={handleChange} disabled={disabled}
-          className={`${style.textarea} ` + (className ? className : '' )}
-        >
-        </textarea>
-      }
-    </>
+    <textarea id={id} name={name} value={value} placeholder={placeholder}
+      rows={rows} onChange={handleChange} required={required} disabled={disabled}
+      className={`${style.textarea} ` + (className ? className : '' )}
+    >
+    </textarea>
   )
 }

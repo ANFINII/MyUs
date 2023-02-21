@@ -5,10 +5,11 @@ interface Props {
   id?: string
   className?: string
   accept?: string
+  required?: boolean
 }
 
 export default function InputFile(props: Props) {
-  const {id, className, accept} = props
+  const {id, className, accept, required} = props
   const inputEl = useRef<HTMLInputElement>(null)
   const [fileName, setFileName] = useState("")
 
@@ -19,8 +20,8 @@ export default function InputFile(props: Props) {
 
   return (
     <>
-      <input type="file" id={id} accept={accept} ref={inputEl} onChange={handleChange} required hidden />
-      <input placeholder="ファイル選択..." value={fileName} onClick={handleClick}
+      <input type="file" id={id} accept={accept} ref={inputEl} onChange={handleChange} hidden />
+      <input placeholder="ファイル選択..." value={fileName} required={required} onClick={handleClick}
         className={`${style.input} ` + (className ? className : "" )}
       />
     </>
