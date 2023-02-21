@@ -24,10 +24,10 @@ export default function VideoCreate() {
           <Textarea name="content" id="content" required />
 
           <p className="margin">サムネイル</p>
-          <InputFile id="file_1" accept="image/*" />
+          <InputFile id="file_1" accept="image/*" required />
 
           <p className="margin">動画</p>
-          <InputFile id="file_2" accept="video/*" />
+          <InputFile id="file_2" accept="video/*" required />
 
           <Button green type="submit" className="button_margin">作成する</Button>
         </form>

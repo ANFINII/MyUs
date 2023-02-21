@@ -24,7 +24,7 @@ export default function PictureCreate() {
           <Textarea name="content" required />
 
           <p className="margin">画像</p>
-          <InputFile id="file_1" accept="image/*" />
+          <InputFile id="file_1" accept="image/*" required />
 
           <Button green type="submit" className="button_margin">作成する</Button>
         </form>

@@ -24,7 +24,7 @@ export default function BlogCreate() {
           <Textarea name="content" id="content" required />
 
           <p className="margin">サムネイル</p>
-          <InputFile id="file_1" accept="image/*" />
+          <InputFile id="file_1" accept="image/*" required />
 
           <p className="margin">本文</p>
           {/* <p>{{ form.media }}{{ form.richtext }}</p> */}
