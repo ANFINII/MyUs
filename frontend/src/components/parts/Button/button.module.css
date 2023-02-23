@@ -8,6 +8,10 @@
   background: rgb(200, 200, 200);
 }
 
+.button:hover {
+  background: rgb(180, 180, 180);
+}
+
 .button:active {
   background: rgb(150, 150, 150);
 }
@@ -17,22 +21,22 @@
   background: #3d7af2;
 }
 
+.button.blue:hover {
+  background: #3870de;
+}
+
+.button.blue:active {
+  background: #3365ca;
+}
+
 .button.blue.xs {
   padding: 4px 8px;
   font-size: 12px;
-  border: 1px solid #3d7af2;
-  background: #3d7af2;
 }
 
 .button.blue.xl {
   padding: 8px 16px;
   font-size: 18px;
-  border: 1px solid #3d7af2;
-  background: #3d7af2;
-}
-
-.button.blue:active {
-  background: #3365ca;
 }
 
 .button.purple {
@@ -40,22 +44,22 @@
   background: #9020ff;
 }
 
+.button.purple:hover {
+  background: #851eeb;
+}
+
+.button.purple:active {
+  background: #751ad0;
+}
+
 .button.purple.xs {
   padding: 4px 8px;
   font-size: 12px;
-  border: 1px solid #9020ff;
-  background: #9020ff;
 }
 
 .button.purple.xl {
   padding: 8px 16px;
   font-size: 18px;
-  border: 1px solid #9020ff;
-  background: #9020ff;
-}
-
-.button.purple:active {
-  background: #781ad5;
 }
 
 .button.red {
@@ -63,45 +67,45 @@
   background: #dc3545;
 }
 
+.button.red:hover {
+  background: #cd3141;
+}
+
+.button.red:active {
+  background: #bc2d3b;
+}
+
 .button.red.xs {
   padding: 4px 8px;
   font-size: 12px;
-  border: 1px solid #dc3545;
-  background: #dc3545;
 }
 
 .button.red.xl {
   padding: 8px 16px;
   font-size: 18px;
-  border: 1px solid #dc3545;
-  background: #dc3545;
-}
-
-.button.red:active {
-  background: #bb2d3b;
 }
 
 .button.green {
-  border: 1px solid #008060;
-  background: #008060;
+  border: 1px solid #00936e;
+  background: #00936e;
+}
+
+.button.green:hover {
+  background: #008967;
+}
+
+.button.green:active {
+  background: #00795b;
 }
 
 .button.green.xs {
   padding: 4px 8px;
   font-size: 12px;
-  border: 1px solid #008060;
-  background: #008060;
 }
 
 .button.green.xl {
   padding: 8px 16px;
   font-size: 18px;
-  border: 1px solid #008060;
-  background: #008060;
-}
-
-.button.green:active {
-  background: #006e52;
 }
 
 .button.light {
@@ -109,20 +113,20 @@
   background: #ffffff;
 }
 
+.button.light:hover {
+  background: #f7f7f7;
+}
+
+.button.light:active {
+  background: #eeeeee;
+}
+
 .button.light.xs {
   padding: 4px 8px;
   font-size: 12px;
-  color: rgb(30, 30, 30);
-  background: #ffffff;
 }
 
 .button.light.xl {
   padding: 8px 16px;
   font-size: 18px;
-  color: rgb(30, 30, 30);
-  background: #ffffff;
-}
-
-.button.light:active {
-  background: #e5e5e5;
 }
