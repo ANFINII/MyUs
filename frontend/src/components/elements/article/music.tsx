@@ -11,8 +11,8 @@ export default function ArticleMusic(props: Props) {
   return (
     <article className="article_list">
       {datas.map((data) => {
-        const imageUrl = config.baseUrl + data.author.image
         const musicUrl = config.baseUrl + data.music
+        const imageUrl = config.baseUrl + data.author.image
         const nickname = data.author.nickname
         return (
           <section className="section_music" key={data.id}>
