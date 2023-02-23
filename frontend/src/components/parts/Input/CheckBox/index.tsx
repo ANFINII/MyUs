@@ -15,9 +15,10 @@ export default function CheckBox(props: Props) {
   const handleChange = () => {setCheckValue(!checkValue)}
 
   return (
-    <div className={`${style.check_group} ` + (className ? className : "" )}>
+    <div className={`${style.check_group} ` + (className ? className : '' )}>
       <input type="checkbox" name={name} id={id} onClick={handleChange}
-        className={style.checkbox} checked={checkValue} />
+        className={style.checkbox} checked={checkValue}
+      />
       <label htmlFor={id}>{children}</label>
     </div>
   )

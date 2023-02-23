@@ -11,7 +11,7 @@ export default function AuthorSpace(props: Props) {
   return (
     <object className="author_image_space">
       <Link href={`/userpage/${nickname}`} className="pjax_button_userpage">
-        <img src={imageUrl} title={nickname} className="profile_image" width={32} height={32} alt="" />
+        <Image src={imageUrl} title={nickname} className="profile_image" width={32} height={32} alt="" />
       </Link>
     </object>
   )
