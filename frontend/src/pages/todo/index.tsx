@@ -20,7 +20,7 @@ export default function Todo() {
         <Link href="/todo/create" className="btn btn-primary btn-sm">ToDo作成</Link>
       </div>
 
-      <ArticleTodo />
+      <ArticleTodo datas={datas} />
 
       {/* {% else %} */}
       {/* <h2 className="login_required">ログインしてください</h2> */}

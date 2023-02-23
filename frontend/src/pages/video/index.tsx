@@ -1,34 +1,35 @@
 import {GetServerSideProps} from 'next'
 import Head from 'next/head'
+import {VideoResponse} from 'utils/type'
 import ArticleVideo from 'components/elements/Article/Video'
 
 
-interface author {
-  id: number
-  nickname: string
-  image: string
-}
+// interface author {
+//   id: number
+//   nickname: string
+//   image: string
+// }
 
-export interface MediaResponse {
-  id: number
-  title: string
-  content: string
-  // hashtag: string
-  like: number
-  read: number
-  comment_num: number
-  publish: boolean
-  created: string
-  updated: string
-  // totalLike: number
-  author: author
-}
+// export interface MediaResponse {
+//   id: number
+//   title: string
+//   content: string
+//   // hashtag: string
+//   like: number
+//   read: number
+//   comment_num: number
+//   publish: boolean
+//   created: string
+//   updated: string
+//   // totalLike: number
+//   author: author
+// }
 
-export interface VideoResponse extends MediaResponse {
-  image: string
-  video: string
-  convert: string
-}
+// export interface VideoResponse extends MediaResponse {
+//   image: string
+//   video: string
+//   convert: string
+// }
 
 interface Props {
   query: string
@@ -67,9 +68,9 @@ export default function Video(props: Props) {
       "created": "2022-01-01T00:00:00Z",
       "updated": "2022-01-01T00:00:00Z",
       "author": {
-          "id": 1,
-          "nickname": "アンさん",
-          "image": "/media/users/images_user/user_1/An_Okina.jpg"
+        "id": 1,
+        "nickname": "アンさん",
+        "image": "/media/users/images_user/user_1/An_Okina.jpg"
       }
     },
     {
@@ -105,9 +106,9 @@ export default function Video(props: Props) {
       "created": "2022-01-01T00:00:00Z",
       "updated": "2022-01-01T00:00:00Z",
       "author": {
-          "id": 3,
-          "nickname": "ソウヒ",
-          "image": "/media/users/images_user/user_3/MyUs_Profile_03.jpg"
+        "id": 3,
+        "nickname": "ソウヒ",
+        "image": "/media/users/images_user/user_3/MyUs_Profile_03.jpg"
       }
     },
     {
@@ -124,9 +125,9 @@ export default function Video(props: Props) {
       "created": "2022-01-01T00:00:00Z",
       "updated": "2022-01-01T00:00:00Z",
       "author": {
-          "id": 4,
-          "nickname": "ケイマ",
-          "image": "/media/users/images_user/user_4/MyUs_Profile_04.jpg"
+        "id": 4,
+        "nickname": "ケイマ",
+        "image": "/media/users/images_user/user_4/MyUs_Profile_04.jpg"
       }
     },
     {
@@ -143,9 +144,9 @@ export default function Video(props: Props) {
       "created": "2022-01-01T00:00:00Z",
       "updated": "2022-01-01T00:00:00Z",
       "author": {
-          "id": 5,
-          "nickname": "アン",
-          "image": "/media/users/images_user/user_5/MyUs_Profile_01.jpg"
+        "id": 5,
+        "nickname": "アン",
+        "image": "/media/users/images_user/user_5/MyUs_Profile_01.jpg"
       }
     }
   ]
@@ -164,7 +165,7 @@ export default function Video(props: Props) {
         }
       </h1>
 
-      <ArticleVideo videos={datas} />
+      <ArticleVideo datas={datas} />
 
       {/* {% block extrajs %}
       <script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>
