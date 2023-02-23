@@ -35,7 +35,6 @@ export interface MypageResponse {
 
 export interface author {
   id: number
-  title: string
   nickname: string
   image: string
 }
@@ -46,6 +45,7 @@ export interface MediaResponse {
   content: string
   like: number
   read: number
+  comment_num: number
   publish: boolean
   created: string
   updated: string
@@ -62,4 +62,14 @@ export interface MusicResponse extends MediaResponse {
   music: string
   lyric: string
   download: boolean
+}
+
+export interface ImageResponse extends MediaResponse {
+  image: string
+}
+
+export interface ChatResponse extends MediaResponse {
+  read: number
+  joined: number
+  thread: number
 }
