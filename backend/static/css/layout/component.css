@@ -152,7 +152,6 @@
 }
 
 .button_square.emerald {
-  border: 0px solid rgb(0, 175, 170);
   background: rgb(0, 175, 170);
 }
 
@@ -165,7 +164,6 @@
 }
 
 .button_square.sakura {
-  border: 0px solid rgb(230, 0, 140);
   background: rgb(230, 0, 140);
 }
 

@@ -79,6 +79,7 @@ body::-webkit-scrollbar-thumb:active {
 
 .password_reset a {
   font-size: 14px;
+  color: rgb(0, 130, 255);
   text-decoration: none;
 }
 
