@@ -1,7 +1,9 @@
 import Head from 'next/head'
+import {ImageResponse} from 'utils/type'
 import ArticleBlog from 'components/elements/Article/Blog'
 
 export default function Blog() {
+  const datas: Array<ImageResponse> = []
   return (
     <>
       <Head>
@@ -14,7 +16,7 @@ export default function Blog() {
         {/* } */}
       </h1>
 
-      <ArticleBlog />
+      <ArticleBlog datas={datas} />
     </>
   )
 }

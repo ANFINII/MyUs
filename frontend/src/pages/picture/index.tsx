@@ -1,8 +1,10 @@
 import Head from 'next/head'
+import {ImageResponse} from 'utils/type'
 import PictureArticle from 'components/elements/Article/Picture'
 
 
 export default function Picture() {
+  const datas: Array<ImageResponse> = []
   return (
     <>
       <Head>
@@ -15,7 +17,7 @@ export default function Picture() {
         {/* {% endif %} */}
       </h1>
 
-      <PictureArticle/>
+      <PictureArticle datas={datas} />
     </>
   )
 }

@@ -1,7 +1,9 @@
 import Head from 'next/head'
+import {MediaResponse} from 'utils/type'
 import CollaboArticle from 'components/elements/Article/Collabo'
 
 export default function Collabo() {
+  const datas: Array<MediaResponse> = []
   return (
     <>
       <Head>
@@ -14,7 +16,7 @@ export default function Collabo() {
         {/* {% endif %} */}
       </h1>
 
-      <CollaboArticle/>
+      <CollaboArticle datas={datas} />
     </>
   )
 }
