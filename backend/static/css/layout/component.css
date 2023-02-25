@@ -1,4 +1,4 @@
-/* button */
+/* Button */
 .button {
   padding: 6px 12px;
   font-size: 14px;
@@ -10,24 +10,24 @@
 }
 
 .button:hover {
-  background: rgb(180, 180, 180);
+  background: rgb(190, 190, 190);
 }
 
 .button:active {
-  background: rgb(150, 150, 150);
+  background: rgb(160, 160, 160);
 }
 
 .button.blue {
-  border: 1px solid #3d7af2;
-  background: #3d7af2;
+  border: 1px solid rgb(60, 120, 240);
+  background: rgb(60, 120, 240);
 }
 
 .button.blue:hover {
-  background: #3870de;
+  background: rgb(60, 110, 230);
 }
 
 .button.blue:active {
-  background: #3365ca;
+  background: rgb(60, 100, 210);
 }
 
 .button.blue.xs {
@@ -41,16 +41,16 @@
 }
 
 .button.purple {
-  border: 1px solid #9020ff;
-  background: #9020ff;
+  border: 1px solid rgb(145, 30, 255);
+  background: rgb(145, 30, 255);
 }
 
 .button.purple:hover {
-  background: #851eeb;
+  background: rgb(135, 30, 235);
 }
 
 .button.purple:active {
-  background: #751ad0;
+  background: rgb(115, 30, 205);
 }
 
 .button.purple.xs {
@@ -64,16 +64,16 @@
 }
 
 .button.red {
-  border: 1px solid #dc3545;
-  background: #dc3545;
+  border: 1px solid rgb(220, 55, 70);
+  background: rgb(220, 55, 70);
 }
 
 .button.red:hover {
-  background: #cd3141;
+  background: rgb(210, 55, 60);
 }
 
 .button.red:active {
-  background: #bc2d3b;
+  background: rgb(190, 55, 40);
 }
 
 .button.red.xs {
@@ -87,16 +87,16 @@
 }
 
 .button.green {
-  border: 1px solid #009771;
-  background: #009771;
+  border: 1px solid rgb(0, 150, 120);
+  background: rgb(0, 150, 120);
 }
 
 .button.green:hover {
-  background: #008967;
+  background: rgb(0, 140, 110);
 }
 
 .button.green:active {
-  background: #00795b;
+  background: rgb(0, 120, 90);
 }
 
 .button.green.xs {
@@ -111,15 +111,15 @@
 
 .button.light {
   color: rgb(30, 30, 30);
-  background: #ffffff;
+  background: rgb(255, 255, 255);
 }
 
 .button.light:hover {
-  background: #f7f7f7;
+  background: rgb(245, 245, 245);
 }
 
 .button.light:active {
-  background: #eeeeee;
+  background: rgb(235, 235, 235);
 }
 
 .button.light.xs {
@@ -130,6 +130,51 @@
 .button.light.xl {
   padding: 8px 16px;
   font-size: 18px;
+}
+
+/* Button Square  */
+.button_square {
+  height: 26px;
+  padding: 3px 0;
+  font-size: 14px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  border: 0px solid rgb(200, 200, 200);
+  background: rgb(200, 200, 200);
+}
+
+.button_square:hover {
+  background: rgb(190, 190, 190);
+}
+
+.button_square:active {
+  background: rgb(160, 160, 160);
+}
+
+.button_square.emerald {
+  border: 0px solid rgb(0, 175, 170);
+  background: rgb(0, 175, 170);
+}
+
+.button_square.emerald:hover {
+  background: rgb(0, 165, 160);
+}
+
+.button_square.emerald:active {
+  background: rgb(0, 145, 140);
+}
+
+.button_square.sakura {
+  border: 0px solid rgb(230, 0, 140);
+  background: rgb(230, 0, 140);
+}
+
+.button_square.sakura:hover {
+  background: rgb(220, 0, 130);
+}
+
+.button_square.sakura:active {
+  background: rgb(190, 0, 110);
 }
 
 /* Input */
@@ -151,7 +196,7 @@
   background: rgb(240, 240, 240);
 }
 
-/* checkbox */
+/* Checkbox */
 .checkbox {
   appearance: none;
   width: 16px;

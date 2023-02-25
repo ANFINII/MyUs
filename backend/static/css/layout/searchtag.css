@@ -22,26 +22,10 @@
   display: block;
   grid-column: 2/3;
   grid-row: 1/2;
-  font-size: 1em;
-  height: 26px;
-  min-width: 3em;
-  margin: 0;
   text-align: center;
-  outline: none;
-  color: rgb(255, 255, 255);
-  background: rgb(0, 170, 130);
 }
 
-.searchtag_1:hover {
-  cursor: pointer;
-  background: rgb(0, 190, 150);
-}
-
-.searchtag_1:active {
-  background: rgb(0, 215, 170);
-}
-
-.searchtag_menu:checked ~ .searchtag_1 {
+.searchtag_1.active {
   display: none;
 }
 
@@ -49,34 +33,18 @@
   display: none;
 }
 
-.searchtag_menu:checked ~ .searchtag_2 {
+.searchtag_2.active {
   display: block;
   grid-column: 2/3;
   grid-row: 1/2;
-  font-size: 1em;
-  height: 26px;
-  width: 3em;
   text-align: center;
-  outline: none;
-  border-style: none;
-  color: rgb(255, 255, 255);
-  background: rgb(200, 0, 140);
-}
-
-.searchtag_menu:checked ~ .searchtag_2:hover {
-  cursor: pointer;
-  background: rgb(240, 0, 150);
-}
-
-.searchtag_menu:checked ~ .searchtag_2:active {
-  background: rgb(255, 100, 200);
 }
 
 .searchtag_3 {
   display: none;
 }
 
-.searchtag_menu:checked ~ .searchtag_3 {
+.searchtag_3.active {
   display: block;
   grid-column: 3/4;
   grid-row: 1/2;
@@ -88,12 +56,12 @@
   border: 1px solid rgb(206, 212, 218);
 }
 
-.searchtag_menu:checked ~ .searchtag_3::placeholder {
+.searchtag_3.active::placeholder {
   font-size: 14px;
   color: rgb(150, 150, 150);
 }
 
-.searchtag_menu:checked ~ .searchtag_3:focus {
+.searchtag_3.active:focus {
   border-radius: 4px;
   border: 1px solid rgb(80, 170, 255);
   box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
@@ -103,31 +71,11 @@
   display: none;
 }
 
-.searchtag_menu:checked ~ .searchtag_4 {
+.searchtag_4.active {
   display: block;
   grid-column: 4/5;
   grid-row: 1/2;
-  font-size: 1em;
-  height: 26px;
-  width: 3em;
-  margin: 0;
   text-align: center;
-  color: rgb(255, 255, 255);
-  background: rgb(0, 140, 175);
-}
-
-.searchtag_menu:checked ~ .searchtag_4:hover {
-  cursor: pointer;
-  background: rgb(0, 160, 190);
-}
-
-.searchtag_menu:checked ~ .searchtag_4:active {
-  background: rgb(0, 180, 220);
-}
-
-.searchtag_center {
-  display: inline-block;
-  margin: 1px 0 0 0;
 }
 
 .searchtag_n {
@@ -142,7 +90,7 @@
   height: 0;
 }
 
-.searchtag_menu:checked ~ .searchtag_n {
+.searchtag_n.active {
   grid-column: 5/6;
   width: calc(100vw - 408px);
 }

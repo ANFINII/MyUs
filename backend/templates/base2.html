@@ -371,13 +371,11 @@
 {% block tagnav %}
 <nav class="searchtag">
   <form method="POST" action="" id="tag_form" class="searchtag_grid">
-    <input type="checkbox" id="searchtag_add" class="tag_menu">
-    <label for="searchtag_add" class="searchtag_1"><span class="searchtag_center">タグ</span></label>
-    <input type="submit" class="searchtag_2 form_button" value="追加" csrf="{{ csrf_token }}">
-    {% if user.is_authenticated %}
-    <input type="text" name="searchtag" class="searchtag_3" maxlength="30" placeholder="タグ名">
-    {% else %}
-    <input type="text" name="searchtag" class="searchtag_3" maxlength="30" placeholder="タグ名" disabled>
+    <button type="button" class="searchtag_1 button_square emerald" onClick="handleSearchtag()">タグ</button>
+    <button class="searchtag_2 button_square sakura">追加</button>
+    <input type="text" name="searchtag" class="searchtag_3" maxlength="30" placeholder="タグ名"
+      {% if user.is_authenticated is false %}disabled{% else %}
+    >
     {% endif %}
     <div class="searchtag_n">
       <div class="searchtag_n_list">
@@ -386,7 +384,7 @@
       {% endfor %}
       </div>
     </div>
-    <label for="searchtag_add" class="searchtag_4"><span class="searchtag_center">完了</span></label>
+    <button type="button" class="searchtag_4 button_square emerald" onClick="handleSearchtag()">完了</button>
     <botton class="searchtag_left">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
@@ -410,14 +408,14 @@
 {% block customjs %}
 <!-- audio-js -->
 <script src="{% static 'js/audioplayer.js' %}"></script>
-<script>$(function() { $('audio').audioPlayer(); });</script>
+<script>$(function() { $('audio').audioPlayer() })</script>
 
 <!-- video-js -->
 <script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>
 <script src="//unpkg.com/videojs-record/dist/videojs.record.min.js"></script>
 <script src="{% static 'js/videojs-contrib-quality-levels.min.js' %}"></script>
 <script src="{% static 'js/videojs-hls-quality-selector.min.js' %}"></script>
-<script>let player = videojs('video'); player.hlsQualitySelector();</script>
+<script>let player = videojs('video'); player.hlsQualitySelector()</script>
 <script src="{% static 'js/video_volume.js' %}"></script>
 <script src="{% static 'js/video_auto.js' %}"></script>
 
@@ -427,6 +425,7 @@
 <script src="{% static 'js/attachment_name.js' %}"></script>
 <script src="{% static 'js/shortcut.js' %}"></script>
 <script src="{% static 'js/shortcut_myus.js' %}"></script>
+<script src="{% static 'js/searchtag.js' %}"></script>
 <script src="{% static 'js/textarea.js' %}"></script>
 <script src="{% static 'js/textarea-auto-height.js' %}"></script>
 {% endblock customjs %}
