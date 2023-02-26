@@ -5,6 +5,7 @@ import DropMenuNotice from 'components/layouts/Header/DropMenuNotice'
 import DropMenuProfile from 'components/layouts/Header/DropMenuProfile'
 
 export default function Header() {
+  const search = ""
   return (
     <header className="header">
       <nav className="header_nav">
@@ -13,7 +14,7 @@ export default function Header() {
         </div>
 
         <div className="header_nav_2 color_header_MyUs">
-          <div><h1>MyUs</h1></div>
+          <h1>MyUs</h1>
           <Link href="/" className="icon_link"></Link>
         </div>
 
@@ -22,7 +23,7 @@ export default function Header() {
             <div className="d-flex justify-content-center">
               <div className="searchbar">
                 <form method="GET" action="">
-                  <input type="search" name="search" value="{{ request.GET.search }}" placeholder="検索..." className="search_input" />
+                  <input type="search" name="search" value={search} placeholder="検索..." className="search_input" />
                   <button type="submit" className="search_icon"><i className="fas fa-search"></i></button>
                 </form>
               </div>
@@ -46,7 +47,7 @@ export default function Header() {
         </div>
 
         <div className="header_nav_7">
-          <DropMenuProfile nickname='' is_active={true} is_staff={false} />
+          <DropMenuProfile nickname="" is_active={true} is_staff={false} />
         </div>
       </nav>
     </header>
