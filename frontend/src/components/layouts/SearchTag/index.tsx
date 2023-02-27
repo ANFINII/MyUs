@@ -20,14 +20,14 @@ export default function SearchTag(props: Props) {
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const [scrollPosition, setScrollPosition] = useState(0)
-  const scrollLeft = () => {
+  const handleLeft = () => {
     let scrollContainer = scrollRef.current
     if (scrollContainer) {
       scrollContainer.scrollLeft -= 200
       setScrollPosition(scrollPosition)
     }
   }
-  const scrollRight = () => {
+  const handleRight = () => {
     let scrollContainer = scrollRef.current
     if (scrollContainer) {
       scrollContainer.scrollLeft += 200
@@ -51,12 +51,12 @@ export default function SearchTag(props: Props) {
 
         <ButtonSquare emerald type="button" className={isSearchtag ? 'searchtag_4 active' : 'searchtag_4'} onClick={handleSearchtag} data-csrf={csrfToken}>完了</ButtonSquare>
 
-        <div className="searchtag_left" onClick={scrollLeft}>
+        <div className="searchtag_left" onClick={handleLeft}>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" fill="currentColor" className="bi bi-chevron-left" viewBox="0 0 16 16">
             <path fillRule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
           </svg>
         </div>
-        <div className="searchtag_right" onClick={scrollRight}>
+        <div className="searchtag_right" onClick={handleRight}>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" fill="currentColor" className="bi bi-chevron-right" viewBox="0 0 16 16">
             <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
           </svg>

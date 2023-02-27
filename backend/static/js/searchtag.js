@@ -1,3 +1,4 @@
+// タグボタンを押した時の処理
 function handleSearchtag() {
   const searchtag_n = document.querySelector('.searchtag_n')
   const searchtag_1 = document.querySelector('.searchtag_1')
@@ -17,4 +18,20 @@ function handleSearchtag() {
     searchtag_3.classList.add("active")
     searchtag_4.classList.add("active")
   }
+}
+
+// 検索タグスクロールボタンを押した時の処理 左に0.2秒かけて500px移動
+function handleLeft() {
+  $('.searchtag_n').animate({
+    scrollLeft: $('.searchtag_n').scrollLeft() - 300,
+  }, 200)
+  return false
+}
+
+// 検索タグスクロールボタンを押した時の処理 右に0.2秒かけて500px移動
+function handleRight() {
+  $('.searchtag_n').animate({
+    scrollLeft: $('.searchtag_n').scrollLeft() + 300,
+  }, 200)
+  return false
 }
