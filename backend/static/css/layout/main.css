@@ -481,27 +481,27 @@ div.field > button {
 }
 
 /* follow関連画面 */
-.author_follows {
+.follow_box {
   display: grid;
-  grid-template-columns: 64px 208px;
+  grid-template-columns: 68px 208px;
   grid-template-rows: 24px 20px 20px 184px;
   border: 1px solid rgba(0, 130, 255, 0.5);
   border-radius: 10px;
 }
 
-.author_follows:hover {
+.follow_box:hover {
   background: rgba(200, 230, 255, 0.1);
 }
 
-.author_follows .author_space {
+.author_follow {
   grid-column: 1/2;
-  grid-row: 1/4;
-  padding: 4px;
+  grid-row: 1/5;
+  padding: 6px;
 }
 
 .follow_image {
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   background: rgb(200, 200, 200);
   border-radius: 50%;
   -webkit-border-radius: 50%;
@@ -514,6 +514,7 @@ div.field > button {
   grid-column: 2/3;
   grid-row: 1/2;
   font-size: 12px;
+  font-weight: 600;
   vertical-align: bottom;
   padding: 6px 0 0 4px;
 }
