@@ -3,10 +3,10 @@
   {% if user.is_authenticated %}
   <div class="btn-column">
     <div class="btn-column1">
-      <a href="{% url 'myus:mypage_update' %}" class="btn btn-success btn-sm" role="button">編集</a>
+      <a href="{% url 'myus:mypage_update' %}" class="btn btn-success btn-sm">編集</a>
     </div>
     <div class="btn-column2">
-      <a href="{% url 'myus:userpage' user.nickname %}" data="{{ user.nickname }}" class="btn btn-success btn-sm pjax_button_userpage" role="button">ユーザページ</a>
+      <a href="{% url 'myus:userpage' user.nickname %}" data="{{ user.nickname }}" class="btn btn-success btn-sm pjax_button_userpage">ユーザページ</a>
     </div>
   </div>
 
