@@ -17,6 +17,11 @@
   background: rgb(160, 160, 160);
 }
 
+.button:disabled {
+  background: rgb(160, 160, 160);
+  cursor: initial;
+}
+
 .button.blue {
   border: 1px solid rgb(20, 120, 250);
   background: rgb(20, 120, 250);
@@ -28,6 +33,12 @@
 
 .button.blue:active {
   background: rgb(20, 90, 220);
+}
+
+.button.blue:disabled {
+  border: 1px solid rgb(150, 200, 255);
+  background: rgb(150, 200, 255);
+  cursor: initial;
 }
 
 .button.blue.xs {
@@ -53,6 +64,12 @@
   background: rgb(115, 30, 205);
 }
 
+.button.purple:disabled {
+  border: 1px solid rgb(200, 150, 255);
+  background: rgb(200, 150, 255);
+  cursor: initial;
+}
+
 .button.purple.xs {
   padding: 4px 8px;
   font-size: 12px;
@@ -76,6 +93,13 @@
   background: rgb(190, 55, 40);
 }
 
+
+.button.red:disabled {
+  border: 1px solid rgb(255, 170, 180);
+  background: rgb(255, 170, 180);
+  cursor: initial;
+}
+
 .button.red.xs {
   padding: 4px 8px;
   font-size: 12px;
@@ -97,6 +121,12 @@
 
 .button.green:active {
   background: rgb(20, 120, 80);
+}
+
+.button.green:disabled {
+  border: 1px solid rgb(150, 240, 210);
+  background: rgb(150, 240, 210);
+  cursor: initial;
 }
 
 .button.green.xs {
