@@ -3,10 +3,10 @@
   {% if user.is_authenticated %}
   <div class="btn-column">
     <div class="btn-column1">
-      <a href="{% url 'myus:profile_update' %}" class="btn btn-success btn-sm" role="button">編集</a>
+      <button onclick="location.href='{% url 'myus:profile_update' %}'" class="button green xs">編集</button>
     </div>
     <div class="btn-column2">
-      <a href="{% url 'password_change' %}" class="btn btn-success btn-sm" role="button">パスワード変更</a>
+      <button onclick="location.href='{% url 'password_change' %}'" class="button green xs">パスワード変更</button>
     </div>
   </div>
 

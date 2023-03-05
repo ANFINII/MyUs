@@ -74,6 +74,7 @@
   min-width: 125px;
   font-weight: normal;
   border: 1px solid rgb(0, 125, 0);
+  vertical-align: middle;
 }
 
 td.td-color {
@@ -90,6 +91,7 @@ td.td-color {
 
 .account_image {
   display: block;
+  width: 64px;
   height: 64px;
   padding: 4px;
   border-radius: 15px;
