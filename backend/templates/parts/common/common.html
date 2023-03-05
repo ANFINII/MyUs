@@ -53,17 +53,17 @@
 
     <div class="content_detail_p2">
       {% if user.nickname == object.author.nickname %}
-      <button class="btn btn-secondary" disabled>フォローする</button>
+      <button class="button" disabled>フォローする</button>
       {% elif user.is_authenticated %}
       <form method="POST" action="" value="{{ object.author.nickname }}" csrf="{{ csrf_token }}" class="follow_form">
         {% if is_follow %}
-        <button type="submit" name="following_id" class="btn btn-danger follow_change">解除する</button>
+        <button type="button" name="following_id" class="button red follow_change">解除する</button>
         {% else %}
-        <button type="submit" name="following_id" class="btn btn-success follow_change">フォローする</button>
+        <button type="button" name="following_id" class="button green follow_change">フォローする</button>
         {% endif %}
       </form>
       {% else %}
-      <button class="btn btn-secondary" disabled>フォローする</button>
+      <button class="button" disabled>フォローする</button>
       {% endif %}
     </div>
   </div>

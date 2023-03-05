@@ -36,14 +36,14 @@ $(document).on('click', '.follow_form', function (event) {
   })
     .done(function (response) {
       if (response['is_follow']) {
-        $('.follow_change').removeClass('btn-success')
-        $('.follow_change').addClass('btn-danger')
-        $('.btn-danger').html('解除する')
+        $('.follow_change').removeClass('green')
+        $('.follow_change').addClass('red')
+        $('.red').html('解除する')
         $('.follower_count').html(response['follower_count'])
       } else {
-        $('.follow_change').removeClass('btn-danger')
-        $('.follow_change').addClass('btn-success')
-        $('.btn-success').html('フォローする')
+        $('.follow_change').removeClass('red')
+        $('.follow_change').addClass('green')
+        $('.green').html('フォローする')
         $('.follower_count').html(response['follower_count'])
       }
     })
