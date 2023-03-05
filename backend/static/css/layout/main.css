@@ -846,7 +846,7 @@ div.field > button {
   border-bottom: 2px solid rgb(80, 170, 255);
 }
 
-.comment_input .btn-sm {
+.comment_input .button {
   grid-column: 1/-1;
   grid-row: 3/4;
   justify-self: end;
