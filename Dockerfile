@@ -15,9 +15,9 @@ RUN apt-get update \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
-COPY /backend/requirements /backend/requirements
+COPY /backend/requirements /code/requirements
 RUN pip install --upgrade pip
-RUN pip install -r /backend/requirements/dev.txt
+RUN pip install -r /code/requirements/dev.txt
 
 ADD . /code/
 EXPOSE 8056
