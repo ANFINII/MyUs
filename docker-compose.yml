@@ -8,17 +8,15 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./backend:/backend
-      - ../log/dev/myus:/var/log/dev/
+      - ./backend:/code
     env_file:
       - ./envs/django.env
     depends_on:
-      - myus_mysql
+      - mysql
       - myus_redis
     ports:
       - "8056:8000"
-    command: sh -c 'python manage.py runserver 0.0.0.0:8056 --settings config.settings.local'
-    # command: uwsgi --socket :8056 --module app.wsgi --py-autoreload 1
+    command: sh -c 'python manage.py runserver 0.0.0.0:8000 --settings config.settings.local'
 
   # myus_frontend:
   #   container_name: myus_frontend
@@ -42,18 +40,19 @@ services:
   #     - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params
   #     - ./static:/static
 
-  myus_mysql:
+  mysql:
     container_name: myus_mysql
-    image: mysql/mysql-server:latest
-    platform: linux/amd64
-    # restart: always
+    image: mysql:latest
+    platform: linux/arm64/v8
+    restart: always
     volumes:
       - ./mysql/data:/var/lib/mysql
-      # - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/db/my.cnf:/etc/mysql/conf.d/my.cnf
     env_file:
       - ./envs/mysql.env
     ports:
       - "3356:3306"
+    command: mysqld --default-authentication-plugin=mysql_native_password --innodb_use_native_aio=0 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   myus_redis:
     container_name: myus_redis

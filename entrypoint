@@ -3,7 +3,7 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-export DATABASE_URL="${MYSQL_URL}"
+export DATABASE_URL="${DATABASE_URL}"
 
 # check connect resource
 python << END
@@ -17,7 +17,7 @@ REDIS_CONNECT_STATUS = False
 OK = 0
 WARNING = 1
 
-countdown = 60
+countdown = 20
 
 for _ in range(countdown):
     if MYSQL_CONNECT_STATUS and REDIS_CONNECT_STATUS:
@@ -47,7 +47,7 @@ for _ in range(countdown):
         except Exception:
             print("Waiting for REDIS available...")
 
-    time.sleep(1)
+    time.sleep(2)
 
 print("Can't connect resource")
 sys.exit(WARNING)
