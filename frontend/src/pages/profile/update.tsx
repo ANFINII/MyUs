@@ -83,27 +83,27 @@ export default function ProfileUpdate() {
                   </label>
                 </td>
               </tr>
-              <tr><td className="td-color">メールアドレス</td><td><Input type="text" name="email" value={user.email} maxLength={120} className="table_margin"/></td></tr>
-              <tr><td className="td-color">ユーザー名</td><td><Input type="text" name="username" value={user.username} maxLength={30} placeholder="英数字" className="table_margin"/></td></tr>
-              <tr><td className="td-color">投稿者名</td><td><Input type="text" name="nickname" value={user.nickname} maxLength={60} className="table_margin"/></td></tr>
+              <tr><td className="td-color">メールアドレス</td><td><Input type="text" name="email" value={user.email} maxLength={120}/></td></tr>
+              <tr><td className="td-color">ユーザー名</td><td><Input type="text" name="username" value={user.username} maxLength={30} placeholder="英数字"/></td></tr>
+              <tr><td className="td-color">投稿者名</td><td><Input type="text" name="nickname" value={user.nickname} maxLength={60}/></td></tr>
               <tr><td className="td-color">名前</td>
                 <td>
                   <div className="td-name">
-                    <input type="text" name="last_name" value={user.lastname} id="last_name" placeholder="姓" maxLength={30} className="table_margin"/>
-                    <input type="text" name="first_name" value={user.firstname} id="first_name" placeholder="名" maxLength={30} className="table_margin"/>
+                    <Input type="text" name="last_name" value={user.lastname} id="last_name" placeholder="姓" maxLength={30}/>
+                    <Input type="text" name="first_name" value={user.firstname} id="first_name" placeholder="名" maxLength={30}/>
                   </div>
                 </td>
               </tr>
               <tr><td className="td-color">生年月日</td>
                 <td>
                   <div className="td-birthday">
-                    <select name="year" id="year" className="table_margin">
+                    <select name="year" id="year">
                       <option value={user.year} style={{display: 'none'}}>{user.year}</option>
                     </select>
-                    <select name="month" id="month" className="table_margin">
+                    <select name="month" id="month">
                       <option value={user.month} style={{display: 'none'}}>{user.month}</option>
                     </select>
-                    <select name="day" id="day" className="table_margin">
+                    <select name="day" id="day">
                       <option value={user.day} style={{display: 'none'}}>{user.day}</option>
                     </select>
                   </div>
@@ -114,29 +114,29 @@ export default function ProfileUpdate() {
                 <td className="td-color">性別</td>
                 <td className="td-gender">
                   <div className="form-check-inline">
-                    <input type="radio" name="gender" value={user.key} id={`gender_${user.key}`} className="custom-control-input"
+                    <input type="radio" name="gender" value={user.key} id={`gender_${user.key}`} className=""
                     // {user.gender === user.key && defaultChecked="checked" }
                     />
                     <label htmlFor={`gender_${user.key}`} className="custom-control-label">{user.gender}</label>
                   </div>
                 </td>
               </tr>
-              <tr><td className="td-color">電話番号</td><td><input type="tel" name="phone" value={user.phone} maxLength={15} className="table_margin" required/></td></tr>
-              <tr><td className="td-color">郵便番号</td><td><input type="tel" name="postal_code" value={user.postal_code} maxLength={8} className="table_margin" required/></td></tr>
+              <tr><td className="td-color">電話番号</td><td><Input type="tel" name="phone" value={user.phone} maxLength={15} required/></td></tr>
+              <tr><td className="td-color">郵便番号</td><td><Input type="tel" name="postal_code" value={user.postal_code} maxLength={8} required/></td></tr>
               <tr><td className="td-color">住所</td>
                 <td className="td-location">
-                  <select name="prefecture" id="prefecture" className=" location1">
+                  <select name="prefecture" id="prefecture" className="location1">
                     <option value="">都道府県</option>
                     <option value={user.prefecture} style={{display: 'none'}} selected>{user.prefecture }</option>
                   </select>
-                  <input type="text" name="city" value={user.city} placeholder="市区町村" maxLength={255} className="table_margin location2"/>
-                  <input type="text" name="address" value={user.address} placeholder="丁番地" maxLength={255} className="table_margin location3"/>
-                  <input type="text" name="building" value={user.building} placeholder="建物名" maxLength={255} className="table_margin location4"/>
+                  <Input type="text" name="city" value={user.city} placeholder="市区町村" maxLength={255} className="location2"/>
+                  <Input type="text" name="address" value={user.address} placeholder="丁番地" maxLength={255} className="location3"/>
+                  <Input type="text" name="building" value={user.building} placeholder="建物名" maxLength={255} className="location4"/>
                 </td>
               </tr>
               <tr>
                 <td className="td-color">自己紹介</td>
-                <td><Textarea name="introduction" className="">{user.introduction}</Textarea></td>
+                <td><Textarea name="introduction">{user.introduction}</Textarea></td>
               </tr>
             </tbody>
           </table>

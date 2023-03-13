@@ -38,27 +38,27 @@
               </label>
             </td>
           </tr>
-          <tr><td class="td-color">メールアドレス</td><td><input type="text" name="email" value="{{ user.email }}" maxlength="120" class="form-control"></td></tr>
-          <tr><td class="td-color">ユーザー名</td><td><input type="text" name="username" value="{{ user.username }}" maxlength="30" placeholder="英数字" class="form-control"></td></tr>
-          <tr><td class="td-color">投稿者名</td><td><input type="text" name="nickname" value="{{ user.nickname }}" maxlength="60" class="form-control"></td></tr>
+          <tr><td class="td-color">メールアドレス</td><td><input type="text" name="email" value="{{ user.email }}" maxlength="120" class="input"></td></tr>
+          <tr><td class="td-color">ユーザー名</td><td><input type="text" name="username" value="{{ user.username }}" maxlength="30" placeholder="英数字" class="input"></td></tr>
+          <tr><td class="td-color">投稿者名</td><td><input type="text" name="nickname" value="{{ user.nickname }}" maxlength="60" class="input"></td></tr>
           <tr><td class="td-color">名前</td>
             <td>
               <div class="td-name">
-                <input type="text" name="last_name" value="{{ user.profile.last_name }}" id="last_name" placeholder="姓" maxlength="30" class="form-control">
-                <input type="text" name="first_name" value="{{ user.profile.first_name }}" id="first_name" placeholder="名" maxlength="30" class="form-control">
+                <input type="text" name="last_name" value="{{ user.profile.last_name }}" id="last_name" placeholder="姓" maxlength="30" class="input">
+                <input type="text" name="first_name" value="{{ user.profile.first_name }}" id="first_name" placeholder="名" maxlength="30" class="input">
               </div>
             </td>
           </tr>
           <tr><td class="td-color">生年月日</td>
             <td>
               <div class="td-birthday">
-                <select name="year" id="year" class="form-control">
+                <select name="year" id="year" class="input">
                   <option value="{{ user.year }}" style="display:none;">{{ user.year }}</option>
                 </select>
-                <select name="month" id="month" class="form-control">
+                <select name="month" id="month" class="input">
                   <option value="{{ user.month }}" style="display:none;">{{ user.month }}</option>
                 </select>
-                <select name="day" id="day" class="form-control">
+                <select name="day" id="day" class="input">
                   <option value="{{ user.day }}" style="display:none;">{{ user.day }}</option>
                 </select>
               </div>
@@ -76,20 +76,20 @@
               {% endfor %}
             </td>
           </tr>
-          <tr><td class="td-color">電話番号</td><td><input type="tel" name="phone" value="{{ user.profile.phone }}" maxlength="15" class="form-control" required></td></tr>
-          <tr><td class="td-color">郵便番号</td><td><input type="tel" name="postal_code" value="{{ user.profile.postal_code }}" maxlength="8" class="form-control" required></td></tr>
+          <tr><td class="td-color">電話番号</td><td><input type="tel" name="phone" value="{{ user.profile.phone }}" maxlength="15" class="input" required></td></tr>
+          <tr><td class="td-color">郵便番号</td><td><input type="tel" name="postal_code" value="{{ user.profile.postal_code }}" maxlength="8" class="input" required></td></tr>
           <tr><td class="td-color">住所</td>
             <td class="td-location">
-              <select name="prefecture" id="prefecture" class="form-control location1">
+              <select name="prefecture" id="prefecture" class="input location1">
                 <option value="">都道府県</option>
                 <option value="{{ user.prefecture }}" style="display:none;" selected>{{ user.prefecture }}</option>
               </select>
-              <input type="text" name="city" value="{{ user.city }}" placeholder="市区町村" maxlength="255" class="form-control location2">
-              <input type="text" name="address" value="{{ user.address }}" placeholder="丁番地" maxlength="255" class="form-control location3">
-              <input type="text" name="building" value="{{ user.building }}" placeholder="建物名" maxlength="255" class="form-control location4">
+              <input type="text" name="city" value="{{ user.city }}" placeholder="市区町村" maxlength="255" class="input location2">
+              <input type="text" name="address" value="{{ user.address }}" placeholder="丁番地" maxlength="255" class="input location3">
+              <input type="text" name="building" value="{{ user.building }}" placeholder="建物名" maxlength="255" class="input location4">
             </td>
           </tr>
-          <tr><td class="td-color">自己紹介</td><td><textarea name="introduction" rows="1" class="form-control textarea">{{ user.profile.introduction }}</textarea></td></tr>
+          <tr><td class="td-color">自己紹介</td><td><textarea name="introduction" rows="1" class="input textarea">{{ user.profile.introduction }}</textarea></td></tr>
         </tbody>
       </table>
 

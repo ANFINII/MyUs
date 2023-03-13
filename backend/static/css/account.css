@@ -69,6 +69,10 @@
   overflow-y: auto;
 }
 
+.table>:not(caption)>*>* {
+  padding: 0.5rem 0.5rem;
+}
+
 .table td {
   height: 2.5em;
   width: 100%;
