@@ -21,14 +21,14 @@ export default function BlogCreate() {
           <Input name="title" id="title" required />
 
           <p className="margin">内容</p>
-          <Textarea name="content" id="content" required />
+          <Textarea name="content" id="content" required></Textarea>
 
           <p className="margin">サムネイル</p>
           <InputFile id="file_1" accept="image/*" required />
 
           <p className="margin">本文</p>
           {/* <p>{{ form.media }}{{ form.richtext }}</p> */}
-          <Textarea name="content" id="content" required />
+          <Textarea name="content" id="content" required></Textarea>
 
           <Button green type="submit" className="button_margin">作成する</Button>
         </form>

@@ -9,10 +9,11 @@ interface Props {
   placeholder?: string
   required?: boolean
   disabled?: boolean
+  children?: React.ReactNode
 }
 
 export default function Textarea(props: Props) {
-  const {id, className, name, value, placeholder, required, disabled} = props
+  const {id, className, name, value, placeholder, required, disabled, children} = props
 
   const [rows, serRows] = useState(1)
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -24,7 +25,7 @@ export default function Textarea(props: Props) {
     <textarea id={id} name={name} value={value} placeholder={placeholder}
       rows={rows} onChange={handleChange} required={required} disabled={disabled}
       className={`${style.textarea} ` + (className ? className : '' )}
-    >
+    >{children}
     </textarea>
   )
 }

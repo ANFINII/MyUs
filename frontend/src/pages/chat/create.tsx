@@ -24,7 +24,7 @@ export default function ChatCreate(props: Props) {
           <Input name="title" id="title" required />
 
           <p className="margin">内容</p>
-          <Textarea name="content" id="content" required />
+          <Textarea name="content" id="content" required></Textarea>
 
           <p className="margin">期間</p>
           <Input name="period" placeholder="2021-12-31" id="id_period" required />

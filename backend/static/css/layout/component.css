@@ -224,6 +224,26 @@
   background: rgb(240, 240, 240);
 }
 
+.textarea {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 5px;
+  background: rgb(255, 255, 255);
+  resize: none;
+  overflow-y: hidden;
+}
+
+.textarea:focus-visible {
+  outline: 1px auto rgb(40, 130, 250);
+}
+
+.textarea.disabled {
+  background: rgb(240, 240, 240);
+}
+
 /* Checkbox */
 .checkbox {
   appearance: none;

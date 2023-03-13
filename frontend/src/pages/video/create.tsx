@@ -21,7 +21,7 @@ export default function VideoCreate() {
           <Input name="title" id="title" required />
 
           <p className="margin">内容</p>
-          <Textarea name="content" id="content" required />
+          <Textarea name="content" id="content" required></Textarea>
 
           <p className="margin">サムネイル</p>
           <InputFile id="file_1" accept="image/*" required />

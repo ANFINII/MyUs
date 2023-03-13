@@ -21,7 +21,7 @@ export default function PictureCreate() {
           <Input name="title" required />
 
           <p className="margin">内容</p>
-          <Textarea name="content" required />
+          <Textarea name="content" required></Textarea>
 
           <p className="margin">画像</p>
           <InputFile id="file_1" accept="image/*" required />

@@ -22,10 +22,10 @@ export default function MusicCreate() {
           <Input name="title" id="title" required />
 
           <p className="margin">内容</p>
-          <Textarea name="content" id="content" required />
+          <Textarea name="content" id="content" required></Textarea>
 
           <p className="margin">歌詞</p>
-          <Textarea name="lyric" id="lyric" required />
+          <Textarea name="lyric" id="lyric" required></Textarea>
 
           <p className="margin_top">音楽</p>
           <CheckBox name="download" id="download" className="check_margin" checked>ダウンロード許可</CheckBox>

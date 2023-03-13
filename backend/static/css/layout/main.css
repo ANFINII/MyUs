@@ -824,10 +824,6 @@ div.field > button {
   grid-row: 2/3;
 }
 
-.textarea {
-  resize: none;
-}
-
 .comment_input .textarea_br,
 .comment_input_update .textarea_br {
   width: 100%;
