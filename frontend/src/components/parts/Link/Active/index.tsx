@@ -6,7 +6,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function ActiveLink(props: Props) {
+export default function LinkActive(props: Props) {
   const router = useRouter()
   const {href, children} = props
 
