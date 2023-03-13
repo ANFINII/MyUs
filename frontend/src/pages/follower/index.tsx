@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Button from 'components/parts/Button'
 
 export default function Follow() {
   return (
@@ -16,7 +17,7 @@ export default function Follow() {
 
       {/* {% if user.is_authenticated %} */}
       <div className="follow_button">
-        <Link href="/follow" className="btn btn-primary btn-sm pjax_button">フォロー</Link>
+        <Link href="/follow"><Button blue size='xs'>フォロー</Button></Link>
         {/* <span>フォロワー数：{{ user.mypage.follower_num }}</span> */}
       </div>
 
