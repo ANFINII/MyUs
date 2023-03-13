@@ -6,6 +6,8 @@ import config from 'api/config'
 import {MypageResponse} from 'utils/type'
 import Footer from 'components/layouts/Footer'
 import Button from 'components/parts/Button'
+import Input from 'components/parts/Input'
+import Textarea from 'components/parts/Input/Textarea'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   const cookie = context.req?.headers.cookie
@@ -44,7 +46,7 @@ export default function MyPageUpdate() {
           <h1>Myページ設定</h1>
           <div className="btn-column">
             <div className="btn-column1">
-              <Button purple size="xs" type="submit">登録</Button>
+              <Button green size="xs" type="submit">登録</Button>
             </div>
             <div className="btn-column2">
               <Link href="/mypage"><Button blue size="xs">戻る</Button></Link>
@@ -65,7 +67,7 @@ export default function MyPageUpdate() {
                 </td>
               </tr>
               <tr><td className="td-color">投稿者名</td><td className="td-indent">{mypage.nickname}</td></tr>
-              <tr><td className="td-color">メールアドレス</td><td className="td-indent"><input type="text" name="email" value={mypage.email} maxLength={120} className="form-control"/></td></tr>
+              <tr><td className="td-color">メールアドレス</td><td className="td-indent"><Input type="text" name="email" value={mypage.email} maxLength={120} className="table_margin"/></td></tr>
               <tr><td className="td-color">フォロー数</td><td className="td-indent">{mypage.following_num}</td></tr>
               <tr><td className="td-color">フォロワー数</td><td className="td-indent">{mypage.follower_num}</td></tr>
               <tr><td className="td-color">料金プラン</td><td className="td-indent">{mypage.plan}</td></tr>
@@ -86,9 +88,10 @@ export default function MyPageUpdate() {
                   }
                 </form>
               </td></tr>
-              <tr><td className="td-color">概要</td><td>
-                <textarea name="introduction" rows={1} className="form-control textarea">{mypage.content}</textarea>
-              </td></tr>
+              <tr>
+                <td className="td-color">概要</td>
+                <td><Textarea name="introduction" className="">{mypage.content}</Textarea></td>
+              </tr>
             </tbody>
           </table>
 

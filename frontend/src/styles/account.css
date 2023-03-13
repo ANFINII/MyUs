@@ -89,6 +89,10 @@ td.td-color {
   white-space: nowrap;
 }
 
+.table_margin {
+  margin: 4px 0 4px -4px;
+}
+
 .account_image {
   display: block;
   width: 64px;

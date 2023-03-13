@@ -6,6 +6,8 @@ import Link from 'next/link'
 import {ProfileResponse} from 'utils/type'
 import Footer from 'components/layouts/Footer'
 import Button from 'components/parts/Button'
+import Input from 'components/parts/Input'
+import Textarea from 'components/parts/Input/Textarea'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //  const cookie = context.req?.headers.cookie
@@ -61,7 +63,7 @@ export default function ProfileUpdate() {
 
           <div className="btn-column">
             <div className="btn-column1">
-              <Button purple size="xs" type="submit">登録</Button>
+              <Button green size="xs" type="submit">登録</Button>
             </div>
             <div className="btn-column2">
               <Link href="/profile"><Button blue size="xs">戻る</Button></Link>
@@ -81,27 +83,27 @@ export default function ProfileUpdate() {
                   </label>
                 </td>
               </tr>
-              <tr><td className="td-color">メールアドレス</td><td><input type="text" name="email" value={user.email} maxLength={120} className="form-control"/></td></tr>
-              <tr><td className="td-color">ユーザー名</td><td><input type="text" name="username" value={user.username} maxLength={30} placeholder="英数字" className="form-control"/></td></tr>
-              <tr><td className="td-color">投稿者名</td><td><input type="text" name="nickname" value={user.nickname} maxLength={60} className="form-control"/></td></tr>
+              <tr><td className="td-color">メールアドレス</td><td><Input type="text" name="email" value={user.email} maxLength={120} className="table_margin"/></td></tr>
+              <tr><td className="td-color">ユーザー名</td><td><Input type="text" name="username" value={user.username} maxLength={30} placeholder="英数字" className="table_margin"/></td></tr>
+              <tr><td className="td-color">投稿者名</td><td><Input type="text" name="nickname" value={user.nickname} maxLength={60} className="table_margin"/></td></tr>
               <tr><td className="td-color">名前</td>
                 <td>
                   <div className="td-name">
-                    <input type="text" name="last_name" value={user.lastname} id="last_name" placeholder="姓" maxLength={30} className="form-control"/>
-                    <input type="text" name="first_name" value={user.firstname} id="first_name" placeholder="名" maxLength={30} className="form-control"/>
+                    <input type="text" name="last_name" value={user.lastname} id="last_name" placeholder="姓" maxLength={30} className="table_margin"/>
+                    <input type="text" name="first_name" value={user.firstname} id="first_name" placeholder="名" maxLength={30} className="table_margin"/>
                   </div>
                 </td>
               </tr>
               <tr><td className="td-color">生年月日</td>
                 <td>
                   <div className="td-birthday">
-                    <select name="year" id="year" className="form-control">
+                    <select name="year" id="year" className="table_margin">
                       <option value={user.year} style={{display: 'none'}}>{user.year}</option>
                     </select>
-                    <select name="month" id="month" className="form-control">
+                    <select name="month" id="month" className="table_margin">
                       <option value={user.month} style={{display: 'none'}}>{user.month}</option>
                     </select>
-                    <select name="day" id="day" className="form-control">
+                    <select name="day" id="day" className="table_margin">
                       <option value={user.day} style={{display: 'none'}}>{user.day}</option>
                     </select>
                   </div>
@@ -119,22 +121,23 @@ export default function ProfileUpdate() {
                   </div>
                 </td>
               </tr>
-              <tr><td className="td-color">電話番号</td><td><input type="tel" name="phone" value={user.phone} maxLength={15} className="form-control" required/></td></tr>
-              <tr><td className="td-color">郵便番号</td><td><input type="tel" name="postal_code" value={user.postal_code} maxLength={8} className="form-control" required/></td></tr>
+              <tr><td className="td-color">電話番号</td><td><input type="tel" name="phone" value={user.phone} maxLength={15} className="table_margin" required/></td></tr>
+              <tr><td className="td-color">郵便番号</td><td><input type="tel" name="postal_code" value={user.postal_code} maxLength={8} className="table_margin" required/></td></tr>
               <tr><td className="td-color">住所</td>
                 <td className="td-location">
-                  <select name="prefecture" id="prefecture" className="form-control location1">
+                  <select name="prefecture" id="prefecture" className=" location1">
                     <option value="">都道府県</option>
                     <option value={user.prefecture} style={{display: 'none'}} selected>{user.prefecture }</option>
                   </select>
-                  <input type="text" name="city" value={user.city} placeholder="市区町村" maxLength={255} className="form-control location2"/>
-                  <input type="text" name="address" value={user.address} placeholder="丁番地" maxLength={255} className="form-control location3"/>
-                  <input type="text" name="building" value={user.building} placeholder="建物名" maxLength={255} className="form-control location4"/>
+                  <input type="text" name="city" value={user.city} placeholder="市区町村" maxLength={255} className="table_margin location2"/>
+                  <input type="text" name="address" value={user.address} placeholder="丁番地" maxLength={255} className="table_margin location3"/>
+                  <input type="text" name="building" value={user.building} placeholder="建物名" maxLength={255} className="table_margin location4"/>
                 </td>
               </tr>
-              <tr><td className="td-color">自己紹介</td><td>
-                <textarea name="introduction" rows={1} className="form-control textarea">{user.introduction}</textarea>
-              </td></tr>
+              <tr>
+                <td className="td-color">自己紹介</td>
+                <td><Textarea name="introduction" className="">{user.introduction}</Textarea></td>
+              </tr>
             </tbody>
           </table>
 
