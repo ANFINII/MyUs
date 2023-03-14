@@ -60,11 +60,6 @@
   padding: 0 0 0 13px;
 }
 
-#last_name, #first_name {
-  width: 169px;
-  margin: 0;
-}
-
 #year, #month, #day {
   width: 108px;
   margin: 0;

@@ -136,7 +136,7 @@ export default function ProfileUpdate() {
               </tr>
               <tr>
                 <td className="td-color">自己紹介</td>
-                <td><Textarea name="introduction">{user.introduction}</Textarea></td>
+                <td><Textarea name="introduction" className="textarea_margin">{user.introduction}</Textarea></td>
               </tr>
             </tbody>
           </table>

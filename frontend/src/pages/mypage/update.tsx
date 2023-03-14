@@ -66,7 +66,7 @@ export default function MyPageUpdate() {
                 </td>
               </tr>
               <tr><td className="td-color">投稿者名</td><td className="td-indent">{mypage.nickname}</td></tr>
-              <tr><td className="td-color">メールアドレス</td><td className="td-indent"><Input type="text" name="email" value={mypage.email} maxLength={120} className="table_margin"/></td></tr>
+              <tr><td className="td-color">メールアドレス</td><td><Input type="text" name="email" value={mypage.email} maxLength={120} className="table_margin"/></td></tr>
               <tr><td className="td-color">フォロー数</td><td className="td-indent">{mypage.following_num}</td></tr>
               <tr><td className="td-color">フォロワー数</td><td className="td-indent">{mypage.follower_num}</td></tr>
               <tr><td className="td-color">料金プラン</td><td className="td-indent">{mypage.plan}</td></tr>
@@ -89,7 +89,7 @@ export default function MyPageUpdate() {
               </td></tr>
               <tr>
                 <td className="td-color">概要</td>
-                <td><Textarea name="introduction" className="">{mypage.content}</Textarea></td>
+                <td><Textarea name="introduction" className="textarea_margin">{mypage.content}</Textarea></td>
               </tr>
             </tbody>
           </table>

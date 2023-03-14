@@ -26,7 +26,7 @@ export default function MyPage() {
     "content": "MyUs開発者です。",
     "follower_num": 0,
     "following_num": 1,
-    "plan": "free",
+    "plan": "Free",
     "plan_date": "2021-12-31T15:00:00Z",
     "is_advertise": true
   }
