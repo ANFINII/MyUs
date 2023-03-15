@@ -1,8 +1,8 @@
 {% for notification in notification_setting_list %}
 <table id="notification_table" csrf="{{ csrf_token }}" class="table">
   <tbody>
-    <tr><td class="td-color">通知設定</td><td class="td-indent">フォローしているユーザの投稿通知などを設定</td></tr>
-    <tr><td class="td-color">Video通知</td><td class="td-indent">
+    <tr><td class="td_color">通知設定</td><td class="td-indent">フォローしているユーザの投稿通知などを設定</td></tr>
+    <tr><td class="td_color">Video通知</td><td class="td-indent">
       <form method="POST" action="" notification="{{ notification.is_video }}" notification-type="video">
         {% if notification.is_video %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
@@ -15,7 +15,7 @@
         {% endif %}
       </form>
     </td></tr>
-    <tr><td class="td-color">Music通知</td><td class="td-indent">
+    <tr><td class="td_color">Music通知</td><td class="td-indent">
       <form method="POST" action="" notification="{{ notification.is_music }}" notification-type="music">
         {% if notification.is_music %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
@@ -28,7 +28,7 @@
         {% endif %}
       </form>
     </td></tr>
-    <tr><td class="td-color">Picture通知</td><td class="td-indent">
+    <tr><td class="td_color">Picture通知</td><td class="td-indent">
       <form method="POST" action="" notification="{{ notification.is_picture }}"  notification-type="picture">
         {% if notification.is_picture %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
@@ -41,7 +41,7 @@
         {% endif %}
       </form>
     </td></tr>
-    <tr><td class="td-color">Blog通知</td><td class="td-indent">
+    <tr><td class="td_color">Blog通知</td><td class="td-indent">
       <form method="POST" action="" notification="{{ notification.is_blog }}" notification-type="blog">
         {% if notification.is_blog %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
@@ -54,7 +54,7 @@
         {% endif %}
       </form>
     </td></tr>
-    <tr><td class="td-color">Chat通知</td><td class="td-indent">
+    <tr><td class="td_color">Chat通知</td><td class="td-indent">
       <form method="POST" action="" notification="{{ notification.is_chat }}" notification-type="chat">
         {% if notification.is_chat %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
@@ -67,7 +67,7 @@
         {% endif %}
       </form>
     </td></tr>
-    <tr><td class="td-color">Collabo通知</td><td class="td-indent">
+    <tr><td class="td_color">Collabo通知</td><td class="td-indent">
       <form method="POST" action="" notification="{{ notification.is_collabo }}" notification-type="collabo">
         {% if notification.is_collabo %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
@@ -80,7 +80,7 @@
         {% endif %}
       </form>
     </td></tr>
-    <tr><td class="td-color">フォロー通知</td><td class="td-indent">
+    <tr><td class="td_color">フォロー通知</td><td class="td-indent">
       <form method="POST" action="" notification="{{ notification.is_follow }}" notification-type="follow">
         {% if notification.is_follow %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
@@ -93,7 +93,7 @@
         {% endif %}
       </form>
     </td></tr>
-    <tr><td class="td-color">返信通知</td><td class="td-indent">
+    <tr><td class="td_color">返信通知</td><td class="td-indent">
       <form method="POST" action="" notification="{{ notification.is_reply }}" notification-type="reply">
         {% if notification.is_reply %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
@@ -106,7 +106,7 @@
         {% endif %}
       </form>
     </td></tr>
-    <tr><td class="td-color">いいね通知</td><td class="td-indent">
+    <tr><td class="td_color">いいね通知</td><td class="td-indent">
       <form method="POST" action="" notification="{{ notification.is_like }}" notification-type="like">
         {% if notification.is_like %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">
@@ -119,7 +119,7 @@
         {% endif %}
       </form>
     </td></tr>
-    <tr><td class="td-color">閲覧数通知</td><td class="td-indent">
+    <tr><td class="td_color">閲覧数通知</td><td class="td-indent">
       <form method="POST" action="" notification="{{ notification.is_views }}" notification-type="views">
         {% if notification.is_views %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-on toggle_button" viewBox="0 0 16 16">

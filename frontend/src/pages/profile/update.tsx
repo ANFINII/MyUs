@@ -74,7 +74,7 @@ export default function ProfileUpdate() {
 
           <table className="table">
             <tbody>
-              <tr className="table_header"><td className="td-color">アカウント画像</td>
+              <tr className="table_header"><td className="td_color">アカウント画像</td>
                 <td valign="baseline">
                   <label htmlFor="account_image_input" className="update_account_image">
                     <svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" fill="currentColor" className="bi bi-person-square" viewBox="0 0 16 16">
@@ -85,10 +85,10 @@ export default function ProfileUpdate() {
                   </label>
                 </td>
               </tr>
-              <tr><td className="td-color">メールアドレス</td><td><Input type="text" name="email" value={user.email} maxLength={120}/></td></tr>
-              <tr><td className="td-color">ユーザー名</td><td><Input type="text" name="username" value={user.username} maxLength={30} placeholder="英数字"/></td></tr>
-              <tr><td className="td-color">投稿者名</td><td><Input type="text" name="nickname" value={user.nickname} maxLength={60}/></td></tr>
-              <tr><td className="td-color">名前</td>
+              <tr><td className="td_color">メールアドレス</td><td><Input type="text" name="email" value={user.email} maxLength={120}/></td></tr>
+              <tr><td className="td_color">ユーザー名</td><td><Input type="text" name="username" value={user.username} maxLength={30} placeholder="英数字"/></td></tr>
+              <tr><td className="td_color">投稿者名</td><td><Input type="text" name="nickname" value={user.nickname} maxLength={60}/></td></tr>
+              <tr><td className="td_color">名前</td>
                 <td>
                   <div className="td_name">
                     <Input type="text" name="last_name" value={user.lastname} placeholder="姓" maxLength={30}/>
@@ -96,7 +96,7 @@ export default function ProfileUpdate() {
                   </div>
                 </td>
               </tr>
-              <tr><td className="td-color">生年月日</td>
+              <tr><td className="td_color">生年月日</td>
                 <td>
                   <div className="td_birthday">
                     <select name="year"><option value={user.year}>{user.year}</option></select>
@@ -105,9 +105,9 @@ export default function ProfileUpdate() {
                   </div>
                 </td>
               </tr>
-              <tr><td className="td-color">年齢</td><td className="td-indent">{user.age}歳</td></tr>
+              <tr><td className="td_color">年齢</td><td className="td-indent">{user.age}歳</td></tr>
               <tr>
-                <td className="td-color">性別</td>
+                <td className="td_color">性別</td>
                 <td className="td_gender">
                   <div className="gender">
                     <input type="radio" name="gender" value={user.key} id={`gender_${user.key}`} className=""
@@ -117,9 +117,9 @@ export default function ProfileUpdate() {
                   </div>
                 </td>
               </tr>
-              <tr><td className="td-color">電話番号</td><td><Input type="tel" name="phone" value={user.phone} maxLength={15} required/></td></tr>
-              <tr><td className="td-color">郵便番号</td><td><Input type="tel" name="postal_code" value={user.postal_code} maxLength={8} required/></td></tr>
-              <tr><td className="td-color">住所</td>
+              <tr><td className="td_color">電話番号</td><td><Input type="tel" name="phone" value={user.phone} maxLength={15} required/></td></tr>
+              <tr><td className="td_color">郵便番号</td><td><Input type="tel" name="postal_code" value={user.postal_code} maxLength={8} required/></td></tr>
+              <tr><td className="td_color">住所</td>
                 <td className="td_location">
                   <select name="prefecture" id="prefecture" className="location">
                     <option value="">都道府県</option>
@@ -131,7 +131,7 @@ export default function ProfileUpdate() {
                 </td>
               </tr>
               <tr>
-                <td className="td-color">自己紹介</td>
+                <td className="td_color">自己紹介</td>
                 <td><Textarea name="introduction" className="textarea_margin">{user.introduction}</Textarea></td>
               </tr>
             </tbody>

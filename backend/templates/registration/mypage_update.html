@@ -26,7 +26,7 @@
 
       <table class="table">
         <tbody>
-          <tr class="table_header"><td class="td-color td-header">バナー画像</td>
+          <tr class="table_header"><td class="td_color td-header">バナー画像</td>
             <td valign="baseline">
               <label for="account_image_input" class="update_account_image">
                 <svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
@@ -37,12 +37,12 @@
               </label>
             </td>
           </tr>
-          <tr><td class="td-color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
-          <tr><td class="td-color">メールアドレス</td><td><input type="text" name="email" value="{{ user.mypage.email }}" placeholder="公開用メールアドレス" maxlength="120" class="input"></td></tr>
-          <tr><td class="td-color">フォロー数</td><td class="td-indent">{{ user.mypage.following_num }}</td></tr>
-          <tr><td class="td-color">フォロワー数</td><td class="td-indent">{{ user.mypage.follower_num }}</td></tr>
-          <tr><td class="td-color">料金プラン</td><td class="td-indent">{{ user.mypage.get_plan_display }}</td></tr>
-          <tr><td class="td-color">全体広告</td><td class="td-indent">
+          <tr><td class="td_color">投稿者名</td><td class="td-indent">{{ user.nickname }}</td></tr>
+          <tr><td class="td_color">メールアドレス</td><td><input type="text" name="email" value="{{ user.mypage.email }}" placeholder="公開用メールアドレス" maxlength="120" class="input"></td></tr>
+          <tr><td class="td_color">フォロー数</td><td class="td-indent">{{ user.mypage.following_num }}</td></tr>
+          <tr><td class="td_color">フォロワー数</td><td class="td-indent">{{ user.mypage.follower_num }}</td></tr>
+          <tr><td class="td_color">料金プラン</td><td class="td-indent">{{ user.mypage.get_plan_display }}</td></tr>
+          <tr><td class="td_color">全体広告</td><td class="td-indent">
             <form method="POST" action="{% url 'myus:mypage_toggle' %}" advertise="{{ user.mypage.is_advertise }}">
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-toggle-disable" viewBox="0 0 16 16">
                 {% if user.mypage.is_advertise %}
@@ -54,7 +54,7 @@
             </form>
           </td></tr>
           <tr>
-            <td class="td-color">概要</td>
+            <td class="td_color">概要</td>
             <td><textarea name="content" rows="1" placeholder="ユーザページ概要" class="textarea margin">{{ user.mypage.content }}</textarea></td>
           </tr>
         </tbody>

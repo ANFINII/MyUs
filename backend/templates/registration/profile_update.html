@@ -27,7 +27,7 @@
 
       <table class="table">
         <tbody>
-          <tr class="table_header"><td class="td-color">アカウント画像</td>
+          <tr class="table_header"><td class="td_color">アカウント画像</td>
             <td valign="baseline">
               <label for="account_image_input" class="update_account_image">
                 <svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
@@ -38,10 +38,10 @@
               </label>
             </td>
           </tr>
-          <tr><td class="td-color">メールアドレス</td><td><input type="text" name="email" value="{{ user.email }}" maxlength="120" class="input"></td></tr>
-          <tr><td class="td-color">ユーザー名</td><td><input type="text" name="username" value="{{ user.username }}" maxlength="30" placeholder="英数字" class="input"></td></tr>
-          <tr><td class="td-color">投稿者名</td><td><input type="text" name="nickname" value="{{ user.nickname }}" maxlength="60" class="input"></td></tr>
-          <tr><td class="td-color">名前</td>
+          <tr><td class="td_color">メールアドレス</td><td><input type="text" name="email" value="{{ user.email }}" maxlength="120" class="input"></td></tr>
+          <tr><td class="td_color">ユーザー名</td><td><input type="text" name="username" value="{{ user.username }}" maxlength="30" placeholder="英数字" class="input"></td></tr>
+          <tr><td class="td_color">投稿者名</td><td><input type="text" name="nickname" value="{{ user.nickname }}" maxlength="60" class="input"></td></tr>
+          <tr><td class="td_color">名前</td>
             <td>
               <div class="td_name">
                 <input type="text" name="last_name" value="{{ user.profile.last_name }}" placeholder="姓" maxlength="30" class="input">
@@ -49,7 +49,7 @@
               </div>
             </td>
           </tr>
-          <tr><td class="td-color">生年月日</td>
+          <tr><td class="td_color">生年月日</td>
             <td>
               <div class="td_birthday">
                 <select name="year" id="year" class="input"><option value="{{ user.year }}">{{ user.year }}</option></select>
@@ -58,9 +58,9 @@
               </div>
             </td>
           </tr>
-          <tr><td class="td-color">年齢</td><td class="td-indent">{{ user.age }}歳</td></tr>
+          <tr><td class="td_color">年齢</td><td class="td-indent">{{ user.age }}歳</td></tr>
           <tr>
-            <td class="td-color">性別</td>
+            <td class="td_color">性別</td>
             <td class="td_gender">
               {% for key, gender in gender.items %}
               <div class="gender">
@@ -70,9 +70,9 @@
               {% endfor %}
             </td>
           </tr>
-          <tr><td class="td-color">電話番号</td><td><input type="tel" name="phone" value="{{ user.profile.phone }}" maxlength="15" class="input" required></td></tr>
-          <tr><td class="td-color">郵便番号</td><td><input type="tel" name="postal_code" value="{{ user.profile.postal_code }}" maxlength="8" class="input" required></td></tr>
-          <tr><td class="td-color">住所</td>
+          <tr><td class="td_color">電話番号</td><td><input type="tel" name="phone" value="{{ user.profile.phone }}" maxlength="15" class="input" required></td></tr>
+          <tr><td class="td_color">郵便番号</td><td><input type="tel" name="postal_code" value="{{ user.profile.postal_code }}" maxlength="8" class="input" required></td></tr>
+          <tr><td class="td_color">住所</td>
             <td class="td_location">
               <select name="prefecture" id="prefecture" class="input location">
                 <option value="">都道府県</option>
@@ -83,7 +83,7 @@
               <input type="text" name="building" value="{{ user.building }}" placeholder="建物名" maxlength="255" class="input">
             </td>
           </tr>
-          <tr><td class="td-color">自己紹介</td><td><textarea name="introduction" rows="1" class="textarea margin">{{ user.profile.introduction }}</textarea></td></tr>
+          <tr><td class="td_color">自己紹介</td><td><textarea name="introduction" rows="1" class="textarea margin">{{ user.profile.introduction }}</textarea></td></tr>
         </tbody>
       </table>
 
