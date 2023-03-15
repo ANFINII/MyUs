@@ -3,6 +3,7 @@
 import {GetServerSideProps} from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
+import Router from 'next/router'
 import {ProfileResponse} from 'utils/type'
 import Footer from 'components/layouts/Footer'
 import Button from 'components/parts/Button'
@@ -43,6 +44,7 @@ export default function ProfileUpdate() {
     "building": "MyUsビル 56F",
     "introduction": "MyUs開発者、ユーザー用"
   }
+  const handleClick = () => Router.push('/profile')
 
   return (
     <>
@@ -66,13 +68,13 @@ export default function ProfileUpdate() {
               <Button green size="xs" type="submit">登録</Button>
             </div>
             <div className="btn-column2">
-              <Link href="/profile"><Button blue size="xs">戻る</Button></Link>
+              <Button blue size="xs" onClick={handleClick}>戻る</Button>
             </div>
           </div>
 
           <table className="table">
             <tbody>
-              <tr><td className="td-color">アカウント画像</td>
+              <tr className="table_header"><td className="td-color">アカウント画像</td>
                 <td valign="baseline">
                   <label htmlFor="account_image_input" className="update_account_image">
                     <svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" fill="currentColor" className="bi bi-person-square" viewBox="0 0 16 16">
@@ -113,7 +115,7 @@ export default function ProfileUpdate() {
               <tr>
                 <td className="td-color">性別</td>
                 <td className="td-gender">
-                  <div className="form-check-inline">
+                  <div className="td_gender">
                     <input type="radio" name="gender" value={user.key} id={`gender_${user.key}`} className=""
                     // {user.gender === user.key && defaultChecked="checked" }
                     />

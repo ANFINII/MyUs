@@ -2,6 +2,7 @@ import {GetServerSideProps} from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
+import Router from 'next/router'
 import config from 'api/config'
 import {MypageResponse} from 'utils/type'
 import Footer from 'components/layouts/Footer'
@@ -30,8 +31,10 @@ export default function MyPage() {
     "plan_date": "2021-12-31T15:00:00Z",
     "is_advertise": true
   }
-
   const bannerUrl = config.baseUrl + mypage.banner
+  const handleUpdate = () => Router.push('/mypage/update')
+  const handleUserPage = () => Router.push(`/userpage/${mypage.nickname}`)
+
   return (
     <>
       <Head>
@@ -43,10 +46,10 @@ export default function MyPage() {
           <h1>Myページ設定</h1>
           <div className="btn-column">
             <div className="btn-column1">
-              <Link href="/mypage/update"><Button blue size='xs'>編集</Button></Link>
+              <Button blue size='xs' onClick={handleUpdate}>編集</Button>
             </div>
             <div className="btn-column2">
-              <Link href={`/userpage/${mypage.nickname}`}><Button purple size='xs'>ユーザページ</Button></Link>
+              <Button purple size='xs' onClick={handleUserPage}>ユーザページ</Button>
             </div>
           </div>
 

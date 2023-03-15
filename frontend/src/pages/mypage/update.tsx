@@ -2,6 +2,7 @@ import {GetServerSideProps} from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
+import Router from 'next/router'
 import config from 'api/config'
 import {MypageResponse} from 'utils/type'
 import Footer from 'components/layouts/Footer'
@@ -34,6 +35,8 @@ export default function MyPageUpdate() {
     "is_advertise": true
   }
 
+  const handleClick = () => Router.push('/mypage')
+
   return (
     <>
       <Head>
@@ -48,13 +51,13 @@ export default function MyPageUpdate() {
               <Button green size="xs" type="submit">登録</Button>
             </div>
             <div className="btn-column2">
-              <Link href="/mypage"><Button blue size="xs">戻る</Button></Link>
+              <Button blue size="xs" onClick={handleClick}>戻る</Button>
             </div>
           </div>
 
           <table className="table">
             <tbody>
-              <tr><td className="td-color">バナー画像</td>
+              <tr className="table_header"><td className="td-color">バナー画像</td>
                 <td>
                   <label htmlFor="account_image_input" className="update_account_image">
                     <svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" fill="currentColor" className="bi bi-image" viewBox="0 0 16 16">

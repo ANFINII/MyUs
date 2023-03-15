@@ -2,6 +2,7 @@ import {GetServerSideProps} from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
+import Router from 'next/router'
 import config from 'api/config'
 import {ProfileResponse} from 'utils/type'
 import Footer from 'components/layouts/Footer'
@@ -41,8 +42,10 @@ export default function Profile() {
     "building": "MyUsビル 56F",
     "introduction": "MyUs開発者、ユーザー用"
   }
-
   const avatarUrl = config.baseUrl + user.avatar
+  const handleUpdate = () => Router.push('/profile/update')
+  const handlePassword = () => Router.push('/registration/password/change')
+
   return (
     <>
       <Head>
@@ -54,10 +57,10 @@ export default function Profile() {
           <h1>アカウント設定</h1>
           <div className="btn-column">
             <div className="btn-column1">
-              <Link href="/profile/update"><Button blue size='xs'>編集</Button></Link>
+              <Button blue size='xs' onClick={handleUpdate}>編集</Button>
             </div>
             <div className="btn-column2">
-              <Link href="/registration/password/change"><Button blue size='xs'>パスワード変更</Button></Link>
+              <Button blue size='xs' onClick={handlePassword}>パスワード変更</Button>
             </div>
           </div>
 

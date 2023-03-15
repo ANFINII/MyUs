@@ -27,7 +27,7 @@
 
       <table class="table">
         <tbody>
-          <tr><td class="td-color">アカウント画像</td>
+          <tr class="table_header"><td class="td-color">アカウント画像</td>
             <td valign="baseline">
               <label for="account_image_input" class="update_account_image">
                 <svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
@@ -69,7 +69,7 @@
             <td class="td-color">性別</td>
             <td class="td-gender">
               {% for key, gender in gender.items %}
-              <div class="form-check-inline">
+              <div class="td_gender">
                 <input type="radio" name="gender" value="{{ key }}" id="gender_{{ key }}" class="custom-control-input" {% if user.gender == key %} checked {% endif %}>
                 <label for="gender_{{ key }}" class="custom-control-label">{{ gender }}</label>
               </div>

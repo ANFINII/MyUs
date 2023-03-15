@@ -71,10 +71,9 @@
 }
 
 .table td {
-  height: 2.5em;
+  height: 39px;
   width: 100%;
   min-width: 125px;
-  font-weight: normal;
   border: 1px solid rgb(0, 125, 0);
   vertical-align: middle;
 }
@@ -89,6 +88,18 @@ td.td-color {
 .td-indent {
   padding: 0 0 0 8px;
   white-space: nowrap;
+}
+
+.table_header {
+  height: 59px;
+}
+
+.td_gender {
+  display: inline;
+}
+
+.td_address {
+  height: 80px;
 }
 
 .account_image {
@@ -183,7 +194,7 @@ td.td-color {
   display: grid;
   grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr);
   grid-template-rows: 38px 38px;
-  height: 81px;
+  min-height: 78px;
   padding: 3px 4px 0 0;
   border: none;
   border-right: 1px solid green
