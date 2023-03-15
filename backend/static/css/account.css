@@ -84,7 +84,7 @@ td.td_color {
   background: rgb(190, 250, 210);
 }
 
-.td-indent {
+.td_indent {
   padding: 0 0 0 8px;
   white-space: nowrap;
 }

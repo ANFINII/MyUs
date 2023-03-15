@@ -75,17 +75,17 @@ export default function Profile() {
                   </label>
                 </td>
               </tr>
-              <tr><td className="td_color">メールアドレス</td><td className="td-indent">{user.email}</td></tr>
-              <tr><td className="td_color">ユーザー名</td><td className="td-indent">{user.username}</td></tr>
-              <tr><td className="td_color">投稿者名</td><td className="td-indent">{user.nickname}</td></tr>
-              <tr><td className="td_color">名前</td><td className="td-indent">{user.fullname}</td></tr>
-              <tr><td className="td_color">生年月日</td><td className="td-indent">{user.year}年{user.month}月{user.day}日</td></tr>
-              <tr><td className="td_color">年齢</td><td className="td-indent">{user.age}歳</td></tr>
-              <tr><td className="td_color">性別</td><td className="td-indent">{user.gender}</td></tr>
-              <tr><td className="td_color">電話番号</td><td className="td-indent">{user.phone}</td></tr>
-              <tr><td className="td_color">郵便番号</td><td className="td-indent">{user.postal_code}</td></tr>
-              <tr><td className="td_color">住所</td><td className="td-indent">{user.prefecture}{user.city}{user.address}{user.building}</td></tr>
-              <tr><td className="td_color">自己紹介</td><td className="td-indent">{user.introduction}</td></tr>
+              <tr><td className="td_color">メールアドレス</td><td className="td_indent">{user.email}</td></tr>
+              <tr><td className="td_color">ユーザー名</td><td className="td_indent">{user.username}</td></tr>
+              <tr><td className="td_color">投稿者名</td><td className="td_indent">{user.nickname}</td></tr>
+              <tr><td className="td_color">名前</td><td className="td_indent">{user.fullname}</td></tr>
+              <tr><td className="td_color">生年月日</td><td className="td_indent">{user.year}年{user.month}月{user.day}日</td></tr>
+              <tr><td className="td_color">年齢</td><td className="td_indent">{user.age}歳</td></tr>
+              <tr><td className="td_color">性別</td><td className="td_indent">{user.gender}</td></tr>
+              <tr><td className="td_color">電話番号</td><td className="td_indent">{user.phone}</td></tr>
+              <tr><td className="td_color">郵便番号</td><td className="td_indent">{user.postal_code}</td></tr>
+              <tr><td className="td_color">住所</td><td className="td_indent">{user.prefecture}{user.city}{user.address}{user.building}</td></tr>
+              <tr><td className="td_color">自己紹介</td><td className="td_indent">{user.introduction}</td></tr>
             </tbody>
           </table>
 

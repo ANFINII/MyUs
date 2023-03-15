@@ -105,7 +105,7 @@ export default function ProfileUpdate() {
                   </div>
                 </td>
               </tr>
-              <tr><td className="td_color">年齢</td><td className="td-indent">{user.age}歳</td></tr>
+              <tr><td className="td_color">年齢</td><td className="td_indent">{user.age}歳</td></tr>
               <tr>
                 <td className="td_color">性別</td>
                 <td className="td_gender">
