@@ -114,8 +114,8 @@ export default function ProfileUpdate() {
               <tr><td className="td-color">年齢</td><td className="td-indent">{user.age}歳</td></tr>
               <tr>
                 <td className="td-color">性別</td>
-                <td className="td-gender">
-                  <div className="td_gender">
+                <td className="td_gender">
+                  <div className="gender">
                     <input type="radio" name="gender" value={user.key} id={`gender_${user.key}`} className=""
                     // {user.gender === user.key && defaultChecked="checked" }
                     />
@@ -126,14 +126,14 @@ export default function ProfileUpdate() {
               <tr><td className="td-color">電話番号</td><td><Input type="tel" name="phone" value={user.phone} maxLength={15} required/></td></tr>
               <tr><td className="td-color">郵便番号</td><td><Input type="tel" name="postal_code" value={user.postal_code} maxLength={8} required/></td></tr>
               <tr><td className="td-color">住所</td>
-                <td className="td-location">
-                  <select name="prefecture" id="prefecture" className="location1">
+                <td className="td_location">
+                  <select name="prefecture" id="prefecture" className="location">
                     <option value="">都道府県</option>
                     <option value={user.prefecture} style={{display: 'none'}} selected>{user.prefecture }</option>
                   </select>
-                  <Input type="text" name="city" value={user.city} placeholder="市区町村" maxLength={255} className="location2"/>
-                  <Input type="text" name="address" value={user.address} placeholder="丁番地" maxLength={255} className="location3"/>
-                  <Input type="text" name="building" value={user.building} placeholder="建物名" maxLength={255} className="location4"/>
+                  <Input type="text" name="city" value={user.city} placeholder="市区町村" maxLength={255} />
+                  <Input type="text" name="address" value={user.address} placeholder="丁番地" maxLength={255} />
+                  <Input type="text" name="building" value={user.building} placeholder="建物名" maxLength={255} />
                 </td>
               </tr>
               <tr>

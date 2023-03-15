@@ -67,9 +67,9 @@
           <tr><td class="td-color">年齢</td><td class="td-indent">{{ user.age }}歳</td></tr>
           <tr>
             <td class="td-color">性別</td>
-            <td class="td-gender">
+            <td class="td_gender">
               {% for key, gender in gender.items %}
-              <div class="td_gender">
+              <div class="gender">
                 <input type="radio" name="gender" value="{{ key }}" id="gender_{{ key }}" class="custom-control-input" {% if user.gender == key %} checked {% endif %}>
                 <label for="gender_{{ key }}" class="custom-control-label">{{ gender }}</label>
               </div>
@@ -79,14 +79,14 @@
           <tr><td class="td-color">電話番号</td><td><input type="tel" name="phone" value="{{ user.profile.phone }}" maxlength="15" class="input" required></td></tr>
           <tr><td class="td-color">郵便番号</td><td><input type="tel" name="postal_code" value="{{ user.profile.postal_code }}" maxlength="8" class="input" required></td></tr>
           <tr><td class="td-color">住所</td>
-            <td class="td-location">
-              <select name="prefecture" id="prefecture" class="input location1">
+            <td class="td_location">
+              <select name="prefecture" id="prefecture" class="input location">
                 <option value="">都道府県</option>
                 <option value="{{ user.prefecture }}" style="display:none;" selected>{{ user.prefecture }}</option>
               </select>
-              <input type="text" name="city" value="{{ user.city }}" placeholder="市区町村" maxlength="255" class="input location2">
-              <input type="text" name="address" value="{{ user.address }}" placeholder="丁番地" maxlength="255" class="input location3">
-              <input type="text" name="building" value="{{ user.building }}" placeholder="建物名" maxlength="255" class="input location4">
+              <input type="text" name="city" value="{{ user.city }}" placeholder="市区町村" maxlength="255" class="input">
+              <input type="text" name="address" value="{{ user.address }}" placeholder="丁番地" maxlength="255" class="input">
+              <input type="text" name="building" value="{{ user.building }}" placeholder="建物名" maxlength="255" class="input">
             </td>
           </tr>
           <tr><td class="td-color">自己紹介</td><td><textarea name="introduction" rows="1" class="textarea margin">{{ user.profile.introduction }}</textarea></td></tr>
