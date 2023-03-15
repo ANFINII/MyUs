@@ -110,10 +110,6 @@ ul, .messages_password_reset {
   margin: 0 0 24px 0;
 }
 
-.btn-block {
-  width: 100%;
-}
-
 .messages {
   list-style: none;
   font-size: 14px;
