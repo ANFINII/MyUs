@@ -55,11 +55,11 @@ export default function Profile() {
       {user ?
         <article className="article_account">
           <h1>アカウント設定</h1>
-          <div className="btn-column">
-            <div className="btn-column1">
+          <div className="btn_column">
+            <div className="btn_column1">
               <Button blue size='xs' onClick={handleUpdate}>編集</Button>
             </div>
-            <div className="btn-column2">
+            <div className="btn_column2">
               <Button blue size='xs' onClick={handlePassword}>パスワード変更</Button>
             </div>
           </div>

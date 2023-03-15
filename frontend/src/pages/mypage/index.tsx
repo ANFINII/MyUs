@@ -44,11 +44,11 @@ export default function MyPage() {
       {mypage ?
         <article className="article_account">
           <h1>Myページ設定</h1>
-          <div className="btn-column">
-            <div className="btn-column1">
+          <div className="btn_column">
+            <div className="btn_column1">
               <Button blue size='xs' onClick={handleUpdate}>編集</Button>
             </div>
-            <div className="btn-column2">
+            <div className="btn_column2">
               <Button purple size='xs' onClick={handleUserPage}>ユーザページ</Button>
             </div>
           </div>
