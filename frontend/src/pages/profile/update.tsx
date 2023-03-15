@@ -90,24 +90,18 @@ export default function ProfileUpdate() {
               <tr><td className="td-color">投稿者名</td><td><Input type="text" name="nickname" value={user.nickname} maxLength={60}/></td></tr>
               <tr><td className="td-color">名前</td>
                 <td>
-                  <div className="td-name">
-                    <Input type="text" name="last_name" value={user.lastname} id="last_name" placeholder="姓" maxLength={30}/>
-                    <Input type="text" name="first_name" value={user.firstname} id="first_name" placeholder="名" maxLength={30}/>
+                  <div className="td_name">
+                    <Input type="text" name="last_name" value={user.lastname} placeholder="姓" maxLength={30}/>
+                    <Input type="text" name="first_name" value={user.firstname} placeholder="名" maxLength={30}/>
                   </div>
                 </td>
               </tr>
               <tr><td className="td-color">生年月日</td>
                 <td>
-                  <div className="td-birthday">
-                    <select name="year" id="year">
-                      <option value={user.year} style={{display: 'none'}}>{user.year}</option>
-                    </select>
-                    <select name="month" id="month">
-                      <option value={user.month} style={{display: 'none'}}>{user.month}</option>
-                    </select>
-                    <select name="day" id="day">
-                      <option value={user.day} style={{display: 'none'}}>{user.day}</option>
-                    </select>
+                  <div className="td_birthday">
+                    <select name="year"><option value={user.year}>{user.year}</option></select>
+                    <select name="month"><option value={user.month}>{user.month}</option></select>
+                    <select name="day"><option value={user.day}>{user.day}</option></select>
                   </div>
                 </td>
               </tr>

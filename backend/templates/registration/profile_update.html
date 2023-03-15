@@ -43,24 +43,18 @@
           <tr><td class="td-color">投稿者名</td><td><input type="text" name="nickname" value="{{ user.nickname }}" maxlength="60" class="input"></td></tr>
           <tr><td class="td-color">名前</td>
             <td>
-              <div class="td-name">
-                <input type="text" name="last_name" value="{{ user.profile.last_name }}" id="last_name" placeholder="姓" maxlength="30" class="input">
-                <input type="text" name="first_name" value="{{ user.profile.first_name }}" id="first_name" placeholder="名" maxlength="30" class="input">
+              <div class="td_name">
+                <input type="text" name="last_name" value="{{ user.profile.last_name }}" placeholder="姓" maxlength="30" class="input">
+                <input type="text" name="first_name" value="{{ user.profile.first_name }}" placeholder="名" maxlength="30" class="input">
               </div>
             </td>
           </tr>
           <tr><td class="td-color">生年月日</td>
             <td>
-              <div class="td-birthday">
-                <select name="year" id="year" class="input">
-                  <option value="{{ user.year }}" style="display:none;">{{ user.year }}</option>
-                </select>
-                <select name="month" id="month" class="input">
-                  <option value="{{ user.month }}" style="display:none;">{{ user.month }}</option>
-                </select>
-                <select name="day" id="day" class="input">
-                  <option value="{{ user.day }}" style="display:none;">{{ user.day }}</option>
-                </select>
+              <div class="td_birthday">
+                <select name="year" id="year" class="input"><option value="{{ user.year }}">{{ user.year }}</option></select>
+                <select name="month" id="month" class="input"><option value="{{ user.month }}">{{ user.month }}</option></select>
+                <select name="day" id="day" class="input"><option value="{{ user.day }}">{{ user.day }}</option></select>
               </div>
             </td>
           </tr>
@@ -70,8 +64,8 @@
             <td class="td_gender">
               {% for key, gender in gender.items %}
               <div class="gender">
-                <input type="radio" name="gender" value="{{ key }}" id="gender_{{ key }}" class="custom-control-input" {% if user.gender == key %} checked {% endif %}>
-                <label for="gender_{{ key }}" class="custom-control-label">{{ gender }}</label>
+                <input type="radio" name="gender" value="{{ key }}" id="gender_{{ key }}" {% if user.gender == key %} checked {% endif %}>
+                <label for="gender_{{ key }}">{{ gender }}</label>
               </div>
               {% endfor %}
             </td>
