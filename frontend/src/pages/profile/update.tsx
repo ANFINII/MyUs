@@ -2,12 +2,13 @@
 
 import {GetServerSideProps} from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
 import Router from 'next/router'
+import {useState, useRef} from 'react'
 import {ProfileResponse} from 'utils/type'
 import Footer from 'components/layouts/Footer'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -44,8 +45,30 @@ export default function ProfileUpdate() {
     "building": "MyUsビル 56F",
     "introduction": "MyUs開発者、ユーザー用"
   }
-  const handleClick = () => Router.push('/profile')
+  // const [year, setYear] = useState(1900)
 
+  // const time = new Date();
+  // // const years = time.getFullYear();
+
+  // for (let i = year; i >= 1900; i--) {
+  //   createOptionElements(i, 'year');
+  // }
+
+  // for (let i = 1; i <= 12; i++) {
+  //   createOptionElements(i, 'month');
+  // }
+
+  // for (let i = 1; i <= 31; i++) {
+  //   createOptionElements(i, 'day');
+  // }
+
+
+  // function createOptionElements(num: number, parentId: string) {
+  //   const doc = document.createElement('option');
+  //   setYear(num)
+  //   doc.value = year;
+  //   document.getElementById(parentId).appendChild(doc);
+  // }
   return (
     <>
       <Head>
@@ -63,13 +86,9 @@ export default function ProfileUpdate() {
           </ul>
           {% endif %} */}
 
-          <div className="btn_column">
-            <div className="btn_column1">
-              <Button green size="xs" type="submit">登録</Button>
-            </div>
-            <div className="btn_column2">
-              <Button blue size="xs" onClick={handleClick}>戻る</Button>
-            </div>
+          <div className="button_group">
+            <Button green size="xs" type="submit" className="margin">登録</Button>
+            <Button blue size="xs" onClick={() => Router.push('/profile')}>戻る</Button>
           </div>
 
           <table className="table">
@@ -99,9 +118,9 @@ export default function ProfileUpdate() {
               <tr><td className="td_color">生年月日</td>
                 <td>
                   <div className="td_birthday">
-                    <select name="year"><option value={user.year}>{user.year}</option></select>
-                    <select name="month"><option value={user.month}>{user.month}</option></select>
-                    <select name="day"><option value={user.day}>{user.day}</option></select>
+                    <Select name="year" value={user.year}>{user.year}</Select>
+                    <Select name="month"><option value={user.month}>{user.month}</option></Select>
+                    <Select name="day"><option value={user.day}>{user.day}</option></Select>
                   </div>
                 </td>
               </tr>

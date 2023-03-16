@@ -1,6 +1,5 @@
 import {GetServerSideProps} from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
 import Image from 'next/image'
 import Router from 'next/router'
 import config from 'api/config'
@@ -32,8 +31,6 @@ export default function MyPage() {
     "is_advertise": true
   }
   const bannerUrl = config.baseUrl + mypage.banner
-  const handleUpdate = () => Router.push('/mypage/update')
-  const handleUserPage = () => Router.push(`/userpage/${mypage.nickname}`)
 
   return (
     <>
@@ -44,13 +41,9 @@ export default function MyPage() {
       {mypage ?
         <article className="article_account">
           <h1>Myページ設定</h1>
-          <div className="btn_column">
-            <div className="btn_column1">
-              <Button blue size='xs' onClick={handleUpdate}>編集</Button>
-            </div>
-            <div className="btn_column2">
-              <Button purple size='xs' onClick={handleUserPage}>ユーザページ</Button>
-            </div>
+          <div className="button_group">
+            <Button blue size='xs' className="margin" onClick={() => Router.push('/mypage/update')}>編集</Button>
+            <Button purple size='xs' onClick={() => Router.push(`/userpage/${mypage.nickname}`)}>ユーザページ</Button>
           </div>
 
           <table className="table">

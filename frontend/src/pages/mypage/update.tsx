@@ -1,5 +1,4 @@
 import {GetServerSideProps} from 'next'
-import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
 import Router from 'next/router'
@@ -35,8 +34,6 @@ export default function MyPageUpdate() {
     "is_advertise": true
   }
 
-  const handleClick = () => Router.push('/mypage')
-
   return (
     <>
       <Head>
@@ -46,13 +43,9 @@ export default function MyPageUpdate() {
       {mypage ?
         <article className="article_account">
           <h1>Myページ設定</h1>
-          <div className="btn_column">
-            <div className="btn_column1">
-              <Button green size="xs" type="submit">登録</Button>
-            </div>
-            <div className="btn_column2">
-              <Button blue size="xs" onClick={handleClick}>戻る</Button>
-            </div>
+          <div className="button_group">
+            <Button green size="xs" type="submit" className="margin">登録</Button>
+            <Button blue size="xs" onClick={() => Router.push('/mypage')}>戻る</Button>
           </div>
 
           <table className="table">

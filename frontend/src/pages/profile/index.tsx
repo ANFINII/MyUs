@@ -1,6 +1,5 @@
 import {GetServerSideProps} from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
 import Image from 'next/image'
 import Router from 'next/router'
 import config from 'api/config'
@@ -43,8 +42,6 @@ export default function Profile() {
     "introduction": "MyUs開発者、ユーザー用"
   }
   const avatarUrl = config.baseUrl + user.avatar
-  const handleUpdate = () => Router.push('/profile/update')
-  const handlePassword = () => Router.push('/registration/password/change')
 
   return (
     <>
@@ -55,13 +52,9 @@ export default function Profile() {
       {user ?
         <article className="article_account">
           <h1>アカウント設定</h1>
-          <div className="btn_column">
-            <div className="btn_column1">
-              <Button blue size='xs' onClick={handleUpdate}>編集</Button>
-            </div>
-            <div className="btn_column2">
-              <Button blue size='xs' onClick={handlePassword}>パスワード変更</Button>
-            </div>
+          <div className="button_group">
+            <Button blue size='xs' className="margin" onClick={() => Router.push('/profile/update')}>編集</Button>
+            <Button blue size='xs' onClick={() => Router.push('/registration/password/change')}>パスワード変更</Button>
           </div>
 
           <table className="table">
