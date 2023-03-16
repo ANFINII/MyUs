@@ -16,13 +16,9 @@
       </ul>
       {% endif %}
 
-      <div class="btn_column">
-        <div class="btn_column1">
-          <button type="submit" class="button green xs">登録</button>
-        </div>
-        <div class="btn_column2">
-          <button type="button" href="{% url 'myus:profile' %}" class="button blue xs pjax_button">戻る</button>
-        </div>
+      <div class="button_group">
+        <button type="submit" class="button green xs">登録</button>
+        <button type="button" href="{% url 'myus:profile' %}" class="button blue xs pjax_button">戻る</button>
       </div>
 
       <table class="table">
@@ -52,7 +48,7 @@
           <tr><td class="td_color">生年月日</td>
             <td>
               <div class="td_birthday">
-                <select name="year" id="year" class="input"><option value="{{ user.year }}">{{ user.year }}</option></select>
+                <select name="year" id="year" class="input"><option value="{{ user.year }}" style="display: none">{{ user.year }}</option></select>
                 <select name="month" id="month" class="input"><option value="{{ user.month }}">{{ user.month }}</option></select>
                 <select name="day" id="day" class="input"><option value="{{ user.day }}">{{ user.day }}</option></select>
               </div>
@@ -76,7 +72,7 @@
             <td class="td_location">
               <select name="prefecture" id="prefecture" class="input location">
                 <option value="">都道府県</option>
-                <option value="{{ user.prefecture }}" style="display:none;" selected>{{ user.prefecture }}</option>
+                <option value="{{ user.prefecture }}" selected>{{ user.prefecture }}</option>
               </select>
               <input type="text" name="city" value="{{ user.city }}" placeholder="市区町村" maxlength="255" class="input">
               <input type="text" name="address" value="{{ user.address }}" placeholder="丁番地" maxlength="255" class="input">

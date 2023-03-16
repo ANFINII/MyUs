@@ -12,6 +12,7 @@ export interface ProfileResponse {
   age: number
   gender: string
   phone: string
+  country_code: string
   postal_code: string
   prefecture: string
   city: string

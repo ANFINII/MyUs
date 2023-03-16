@@ -44,19 +44,9 @@
   margin: -18px 0 0 0;
 }
 
-.btn_column {
+.button_group {
   grid-column: 2/3;
   justify-self: end;
-  margin: 0;
-}
-
-.btn_column1,
-.btn_column2 {
-  display: inline;
-}
-
-.btn_column1 {
-  margin: 0 1px 0 0;
 }
 
 /* table */

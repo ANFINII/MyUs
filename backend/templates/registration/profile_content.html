@@ -1,13 +1,9 @@
 <article class="article_account">
   <h1>アカウント設定</h1>
   {% if user.is_authenticated %}
-  <div class="btn_column">
-    <div class="btn_column1">
-      <button onclick="location.href='{% url 'myus:profile_update' %}'" class="button blue xs">編集</button>
-    </div>
-    <div class="btn_column2">
-      <button onclick="location.href='{% url 'password_change' %}'" class="button blue xs">パスワード変更</button>
-    </div>
+  <div class="button_group">
+    <button onclick="location.href='{% url 'myus:profile_update' %}'" class="button blue xs">編集</button>
+    <button onclick="location.href='{% url 'password_change' %}'" class="button blue xs">パスワード変更</button>
   </div>
 
   <table class="table">
