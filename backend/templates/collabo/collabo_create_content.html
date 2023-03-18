@@ -5,13 +5,13 @@
 <form method="POST" action="" enctype="multipart/form-data">
   {% csrf_token %}
   <p class="margin">タイトル</p>
-  <input type="text" name="title" id="title" class="input" required>
+  <input name="title" class="input" required>
 
   <p class="margin">内容</p>
-  <textarea name="content" rows="1" id="content" class="textarea" required></textarea>
+  <textarea name="content" rows="1" class="textarea" required></textarea>
 
   <p class="margin">期間</p>
-  <input type="text" name="period" id="id_period" class="input" placeholder="2021-12-31" required>
+  <input name="period" class="input" placeholder="2021-12-31" required>
 
   <button type="submit" class="button green button_margin">作成する</button>
 </form>

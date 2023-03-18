@@ -371,9 +371,9 @@
 {% block tagnav %}
 <nav class="searchtag">
   <form method="POST" action="" id="tag_form" class="searchtag_grid">
-    <button type="button" class="searchtag_1 button_square emerald" onClick="handleSearchtag()">タグ</button>
+    <button type="button" class="searchtag_1 button_square emerald" onclick="handleSearchtag()">タグ</button>
     <button class="searchtag_2 button_square sakura">追加</button>
-    <input type="text" name="searchtag" class="searchtag_3" maxlength="30" placeholder="タグ名"
+    <input name="searchtag" class="searchtag_3" maxlength="30" placeholder="タグ名"
       {% if user.is_authenticated is false %}disabled{% else %}
     >
     {% endif %}
@@ -384,14 +384,14 @@
       {% endfor %}
       </div>
     </div>
-    <button type="button" class="searchtag_4 button_square emerald" onClick="handleSearchtag()">完了</button>
+    <button type="button" class="searchtag_4 button_square emerald" onclick="handleSearchtag()">完了</button>
 
-    <botton class="searchtag_left" onClick="handleLeft()">
+    <botton class="searchtag_left" onclick="handleLeft()">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
       </svg>
     </botton>
-    <botton class="searchtag_right" onClick="handleRight()">
+    <botton class="searchtag_right" onclick="handleRight()">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
       </svg>
