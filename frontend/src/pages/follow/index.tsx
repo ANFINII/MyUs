@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Router from 'next/router'
 import Button from 'components/parts/Button'
 
 export default function Follow() {
@@ -17,7 +18,7 @@ export default function Follow() {
 
       {/* {% if user.is_authenticated %} */}
       <div className="follow_button">
-        <Link href="/follower"><Button blue size='xs'>フォロワー</Button></Link>
+        <Button blue size="xs" onClick={() => Router.push('/follower')}>フォロー</Button>
         {/* <span>フォロー数：{{ user.mypage.following_num }}</span> */}
       </div>
 

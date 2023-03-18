@@ -1,8 +1,12 @@
 import Head from 'next/head'
-import Link from 'next/link'
+import Router from 'next/router'
+import Button from 'components/parts/Button'
 import ArticleTodo from 'components/elements/Article/Todo'
+import {MediaResponse} from 'utils/type'
+
 
 export default function Todo() {
+  const datas: Array<MediaResponse> = []
   return (
     <>
       <Head>
@@ -17,7 +21,7 @@ export default function Todo() {
 
       {/* {% if user.is_authenticated %} */}
       <div className="todo_create">
-        <Link href="/todo/create" className="btn btn-primary btn-sm">ToDo作成</Link>
+        <Button blue size="xs" onClick={() => Router.push('/todo/create')}>ToDo作成</Button>
       </div>
 
       <ArticleTodo datas={datas} />
