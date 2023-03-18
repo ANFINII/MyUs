@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import {MediaResponse} from 'utils/type'
-import CollaboArticle from 'components/elements/Article/Collabo'
+import CollaboArticle from 'components/elements/Article_/Collabo'
 
 export default function Collabo() {
   const datas: Array<MediaResponse> = []

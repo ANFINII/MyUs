@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import {MusicResponse} from 'utils/type'
-import MusicArticle from 'components/elements/Article/Music'
+import MusicArticle from 'components/elements/Article_/Music'
 
 export default function Music() {
   const datas: Array<MusicResponse> = [

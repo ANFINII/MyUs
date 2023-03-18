@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import {ImageResponse} from 'utils/type'
-import ArticleBlog from 'components/elements/Article/Blog'
+import ArticleBlog from 'components/elements/Article_/Blog'
 
 export default function Blog() {
   const datas: Array<ImageResponse> = []
