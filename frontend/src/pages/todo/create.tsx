@@ -1,6 +1,11 @@
 import Head from 'next/head'
+import Button from 'components/parts/Button'
+import Input from 'components/parts/Input'
+import Textarea from 'components/parts/Input/Textarea'
 
 export default function TodoCreate() {
+  const is_authenticated = true
+
   return (
     <>
       <Head>
@@ -8,44 +13,40 @@ export default function TodoCreate() {
       </Head>
 
       <h1>ToDo作成</h1>
-      {/* {% if user.is_authenticated %} */}
-      <form method="POST" action="">
-        {/* {% csrf_token %} */}
-        <p><label htmlFor="title">タイトル</label></p>
-        <p><input type="text" name="title" id="title" className="form-control" required/></p>
+      {is_authenticated ?
+        <form method="POST" action="">
+          {/* {% csrf_token %} */}
+          <p className="margin">タイトル</p>
+          <Input name="title" required />
 
-        <p><label htmlFor="content">内容</label></p>
-        <p><textarea name="content" cols={100} rows={1} id="content" className="form-control textarea" required></textarea></p>
+          <p className="margin">内容</p>
+          <Textarea name="content" required></Textarea>
 
-        <p><label htmlFor="id_priority">優先度</label></p>
-        <p>
+          <p className="margin">優先度</p>
           <select name="priority" id="id_priority" className="form-control" required>
             <option value="" selected>--------</option>
             <option value="danger">高</option>
             <option value="success">普通</option>
             <option value="info">低</option>
           </select>
-        </p>
 
-        <p><label htmlFor="id_progress">進捗度</label></p>
-        <p>
+          <p className="margin">進捗度</p>
           <select name="progress" id="id_progress" className="form-control" required>
             <option value="" selected>--------</option>
             <option value="0">未着手</option>
             <option value="1">進行中</option>
             <option value="2">完了</option>
           </select>
-        </p>
 
-        <p><label htmlFor="id_duedate">期日</label></p>
-        <p><input type="text" name="duedate" placeholder="2021-12-31" id="id_duedate" className="form-control" required/></p>
-        <br/>
+          <p>期日</p>
+          <Input name="duedate" placeholder="2021-12-31" id="id_duedate" required />
+          <br/>
 
-        <p><input type="submit" value="作成する" className="btn btn-success btn-sm"/></p>
-      </form>
-      {/* {% else %} */}
-      {/* <h2 className="login_required">ログインしてください</h2> */}
-      {/* {% endif %} */}
+          <Button green type="submit" className="button_margin">作成する</Button>
+        </form>
+      :
+        <h2 className="login_required">ログインしてください</h2>
+      }
     </>
   )
 }
