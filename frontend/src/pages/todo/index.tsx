@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Router from 'next/router'
 import Button from 'components/parts/Button'
-import ArticleTodo from 'components/elements/Article_/Todo'
+import ArticleTodo from 'components/elements/Article/Todo'
 import {MediaResponse} from 'utils/type'
 
 

@@ -1,7 +1,7 @@
 import {GetServerSideProps} from 'next'
 import Head from 'next/head'
 import {VideoResponse} from 'utils/type'
-import ArticleVideo from 'components/elements/Article_/Video'
+import ArticleVideo from 'components/elements/Article/Video'
 
 
 // interface author {

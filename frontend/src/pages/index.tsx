@@ -2,11 +2,11 @@ import { NextPage, GetServerSideProps } from 'next'
 import Head from 'next/head'
 import Script from 'next/script'
 // import axios from 'pages/api/axios'
-import ArticleVideo from 'components/elements/Article_/Video'
-import ArticleMusic from 'components/elements/Article_/Music'
-import ArticlePicture from 'components/elements/Article_/Picture'
-import ArticleBlog from 'components/elements/Article_/Blog'
-import ArticleChat from 'components/elements/Article_/Chat'
+import ArticleVideo from 'components/elements/Article/Video'
+import ArticleMusic from 'components/elements/Article/Music'
+import ArticlePicture from 'components/elements/Article/Picture'
+import ArticleBlog from 'components/elements/Article/Blog'
+import ArticleChat from 'components/elements/Article/Chat'
 
 // export const getServerSideProps: GetServerSideProps = async () => {
 //   const res_video = await axios.get('/api/video')

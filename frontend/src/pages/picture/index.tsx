@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import {ImageResponse} from 'utils/type'
-import PictureArticle from 'components/elements/Article_/Picture'
+import PictureArticle from 'components/elements/Article/Picture'
 
 
 export default function Picture() {

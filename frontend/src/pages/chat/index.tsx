@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import {ChatResponse} from 'utils/type'
-import ArticleChat from 'components/elements/Article_/Chat'
+import ArticleChat from 'components/elements/Article/Chat'
 
 
 export default function Chat() {
