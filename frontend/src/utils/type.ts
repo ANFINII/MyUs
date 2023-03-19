@@ -40,6 +40,11 @@ export interface author {
   image: string
 }
 
+export interface Query {
+  name: string
+  count: number
+}
+
 export interface MediaResponse {
   id: number
   title: string
@@ -73,4 +78,17 @@ export interface ChatResponse extends MediaResponse {
   read: number
   joined: number
   thread: number
+}
+
+export interface FollowResponse {
+  id: number
+  title: string
+  content: string
+  like: number
+  read: number
+  comment_num: number
+  publish: boolean
+  created: string
+  mypage: MypageResponse
+  author: author
 }
