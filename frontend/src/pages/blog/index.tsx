@@ -1,22 +1,13 @@
-import Head from 'next/head'
-import {ImageResponse} from 'utils/type'
-import ArticleBlog from 'components/elements/Article/Blog'
+import {Query, ImageResponse} from 'utils/type'
+import BlogList from 'components/pages/Media/Blog/List'
 
-export default function Blog() {
+export default function BlogListPage() {
+  const query: Query = {
+    name: "test",
+    count: 0,
+  }
   const datas: Array<ImageResponse> = []
   return (
-    <>
-      <Head>
-        <title>MyUsブログ</title>
-      </Head>
-
-      <h1>Blog
-        {/* if (props.query) { */}
-        {/* <section className="search_message">「{ props.query }」の検索結果「{ props.count }」件</section> */}
-        {/* } */}
-      </h1>
-
-      <ArticleBlog datas={datas} />
-    </>
+    <BlogList query={query} datas={datas} />
   )
 }

@@ -1,40 +1,6 @@
 import {GetServerSideProps} from 'next'
-import Head from 'next/head'
-import {VideoResponse} from 'utils/type'
-import ArticleVideo from 'components/elements/Article/Video'
-
-
-// interface author {
-//   id: number
-//   nickname: string
-//   image: string
-// }
-
-// export interface MediaResponse {
-//   id: number
-//   title: string
-//   content: string
-//   // hashtag: string
-//   like: number
-//   read: number
-//   comment_num: number
-//   publish: boolean
-//   created: string
-//   updated: string
-//   // totalLike: number
-//   author: author
-// }
-
-// export interface VideoResponse extends MediaResponse {
-//   image: string
-//   video: string
-//   convert: string
-// }
-
-interface Props {
-  query: string
-  count: number
-}
+import {Query, VideoResponse} from 'utils/type'
+import VideoList from 'components/pages/Media/Video/List'
 
 export async function getVideoList() {
   const BASEURL = process.env.NEXT_PUBLIC_API_URL
@@ -50,9 +16,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-export default function Video(props: Props) {
-  const {query, count} = props
-
+export default function VideoListPage() {
+  const query: Query = {
+    name: "test",
+    count: 0,
+  }
   const datas: Array<VideoResponse> = [
     {
       "id": 1,
@@ -150,27 +118,7 @@ export default function Video(props: Props) {
       }
     }
   ]
-
   return (
-    <>
-      <Head>
-        <title>MyUsビデオ</title>
-      </Head>
-
-      <h1>Video
-        {query &&
-          <section className="search_message">
-            「{query}」の検索結果「{count}」件
-          </section>
-        }
-      </h1>
-
-      <ArticleVideo datas={datas} />
-
-      {/* {% block extrajs %}
-      <script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>
-      <script src="{% static 'js/video_auto.js' %}"></script>
-      {% endblock extrajs %}     */}
-    </>
+    <VideoList query={query} datas={datas} />
   )
 }

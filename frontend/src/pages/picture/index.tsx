@@ -1,23 +1,13 @@
-import Head from 'next/head'
-import {ImageResponse} from 'utils/type'
-import PictureArticle from 'components/elements/Article/Picture'
+import {Query, ImageResponse} from 'utils/type'
+import PictureList from 'components/pages/Media/Picture/List'
 
-
-export default function Picture() {
+export default function PictureListPage() {
+  const query: Query = {
+    name: "test",
+    count: 0,
+  }
   const datas: Array<ImageResponse> = []
   return (
-    <>
-      <Head>
-        <title>MyUsピクチャー</title>
-      </Head>
-
-      <h1>Picture
-        {/* {% if query %} */}
-        {/* <section className="search_message">「{{ query }}」の検索結果「{{ count }}」件</section> */}
-        {/* {% endif %} */}
-      </h1>
-
-      <PictureArticle datas={datas} />
-    </>
+    <PictureList query={query} datas={datas} />
   )
 }

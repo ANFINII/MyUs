@@ -1,34 +1,13 @@
-import Head from 'next/head'
-import Router from 'next/router'
-import Button from 'components/parts/Button'
-import ArticleTodo from 'components/elements/Article/Todo'
-import {MediaResponse} from 'utils/type'
+import {Query, MediaResponse} from 'utils/type'
+import TodoList from 'components/pages/Media/Todo/List'
 
-
-export default function Todo() {
+export default function TodoListPage() {
+  const query: Query = {
+    name: "test",
+    count: 0,
+  }
   const datas: Array<MediaResponse> = []
   return (
-    <>
-      <Head>
-        <title>MyUsToDo</title>
-      </Head>
-
-      <h1>ToDo
-        {/* {% if query %} */}
-        {/* <section className="search_message">「{{ query }}」の検索結果「{{ count }}」件</section> */}
-        {/* {% endif %} */}
-      </h1>
-
-      {/* {% if user.is_authenticated %} */}
-      <div className="todo_create">
-        <Button blue size="xs" onClick={() => Router.push('/todo/create')}>ToDo作成</Button>
-      </div>
-
-      <ArticleTodo datas={datas} />
-
-      {/* {% else %} */}
-      {/* <h2 className="login_required">ログインしてください</h2> */}
-      {/* {% endif %} */}
-    </>
+    <TodoList query={query} datas={datas} />
   )
 }

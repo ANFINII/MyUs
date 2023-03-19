@@ -1,8 +1,11 @@
-import Head from 'next/head'
-import {MusicResponse} from 'utils/type'
-import MusicArticle from 'components/elements/Article/Music'
+import {Query, MusicResponse} from 'utils/type'
+import MusicList from 'components/pages/Media/Music/List'
 
-export default function Music() {
+export default function MusicListPage() {
+  const query: Query = {
+    name: "test",
+    count: 0,
+  }
   const datas: Array<MusicResponse> = [
     {
         "id": 1,
@@ -99,20 +102,8 @@ export default function Music() {
             "image": "/media/users/images_user/user_5/MyUs_Profile_01.jpg"
         }
     }
-]
+  ]
   return (
-    <>
-      <Head>
-        <title>MyUsミュージック</title>
-      </Head>
-
-      <h1>Music
-        {/* {% if query %}
-        <section className="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
-        {% endif %} */}
-      </h1>
-
-      <MusicArticle datas={datas} />
-    </>
+    <MusicList query={query} datas={datas} />
   )
 }
