@@ -1,5 +1,5 @@
+import {VideoResponse} from 'utils/type'
 import config from 'api/config'
-import { VideoResponse } from 'utils/type'
 
 const parameter = {
   method: 'GET',

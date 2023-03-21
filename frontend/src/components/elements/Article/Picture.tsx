@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import config from 'api/config'
 import {ImageResponse} from 'utils/type'
+import config from 'api/config'
 import AuthorSpace from 'components/elements/Common/AuthorSpace'
 import ContentTitle from 'components/elements/Common/ContentTitle'
 

@@ -2,7 +2,6 @@ import {GetServerSideProps} from 'next'
 import Head from 'next/head'
 import config from 'api/config'
 
-
 interface Props {
   image: string
   video: string
