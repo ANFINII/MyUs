@@ -11,7 +11,7 @@ export default function Custom500() {
       <h1>500 Server Error</h1>
       <h2 className="login_required">このページは動作しませんでした!</h2>
 
-      <Footer/>
+      <Footer />
     </article>
   )
 }

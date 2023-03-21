@@ -155,8 +155,7 @@ export default function ProfileUpdate() {
               </tr>
             </tbody>
           </table>
-
-          <Footer/>
+          <Footer />
         </article>
       :
         <article className="article_account">

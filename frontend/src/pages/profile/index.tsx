@@ -81,8 +81,7 @@ export default function Profile() {
               <tr><td className="td_color">自己紹介</td><td className="td_indent">{user.introduction}</td></tr>
             </tbody>
           </table>
-
-          <Footer/>
+          <Footer />
         </article>
       :
         <article className="article_account">

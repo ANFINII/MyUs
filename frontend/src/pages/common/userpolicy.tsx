@@ -31,8 +31,7 @@ export default function UserPolicy() {
         <p>暴力的、残虐的な表現のあるコンテンツのアップロードを禁止します。</p>
         <p>特定個人や非特定多数の人に誹謗中傷することを禁止します。</p>
         <br/>
-
-        <Footer/>
+        <Footer />
       </article>
     </>
   )

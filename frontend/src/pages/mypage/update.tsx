@@ -86,8 +86,7 @@ export default function MyPageUpdate() {
               </tr>
             </tbody>
           </table>
-
-          <Footer/>
+          <Footer />
         </article>
       :
         <article className="article_account">

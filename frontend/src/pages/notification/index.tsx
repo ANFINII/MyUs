@@ -148,8 +148,7 @@ export default function Notification() {
           </tbody>
         </table>
         {/* {% endfor %} */}
-
-        <Footer/>
+        <Footer />
         {/* {% else %}
         <h2 className="login_required">ログインしてください</h2>
         {% endif %} */}

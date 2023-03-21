@@ -84,8 +84,7 @@ export default function MyPage() {
               <tr><td className="td_color">概要</td><td className="td_indent">{mypage.content}</td></tr>
             </tbody>
           </table>
-
-          <Footer/>
+          <Footer />
         </article>
       :
         <article className="article_account">

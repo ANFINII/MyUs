@@ -25,8 +25,7 @@ export default function PasswordResetForm() {
           <Link href="/login" className="btn btn-lg btn-primary btn-block">戻る</Link>
         </p>
       </form>
-
-      <Footer/>
+      <Footer />
     </article>
   )
 }

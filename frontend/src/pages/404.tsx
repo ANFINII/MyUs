@@ -11,7 +11,7 @@ export default function Custom404() {
       <h1>404 Not Found</h1>
       <h2 className="login_required">ページが見つかりませんでした!</h2>
 
-      <Footer/>
+      <Footer />
     </article>
   )
 }
