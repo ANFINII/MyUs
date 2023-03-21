@@ -1,0 +1,17 @@
+{% for message in message_parent %}
+  <div id="message_aria_list_cross_{{ message.id }}" class="message_aria_list">
+    <input type="hidden" value="{{ message_id }}" id="parent_id">
+    <a href="{% url 'myus:userpage' message.author.nickname %}" data="{{ message.author.nickname }}" class="pjax_button_userpage">
+      <img src="{{ message.author.image }}" title="{{ message.author.nickname }}" class="profile_image_message">
+    </a>
+    <div class="message_aria_list_1">
+      <p>{{ message.author.nickname }}</p>
+      <time>{{ message.created|date:'Y/m/d H:i' }}</time>
+    </div>
+    <div id="message_aria_list_thread_{{ message.id }}" class="message_aria_list_2">{{ message.text|safe }}</div>
+  </div>
+{% endfor %}
+
+<div id="chat_section_thread_area_{{ message_id }}">
+  {% include 'medias/chat/chat_reply/chat_reply.html' %}
+</div>

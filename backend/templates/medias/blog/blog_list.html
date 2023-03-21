@@ -1,0 +1,11 @@
+<h1>Blog
+  {% if query %}
+  <section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
+  {% endif %}
+</h1>
+
+<article class="article_list">
+{% for item in blog_list %}
+  {% include 'medias/blog/blog_article.html' %}
+{% endfor %}
+</article>

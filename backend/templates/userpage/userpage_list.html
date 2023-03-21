@@ -12,7 +12,7 @@
     {% include 'search/search_video.html' %}
   {% else %}
     {% for item in video_list %}
-      {% include 'video/video_article.html' %}
+      {% include 'medias/video/video_article.html' %}
     {% endfor %}
   {% endif %}
 </article>
@@ -24,7 +24,7 @@
     {% include 'search/search_music.html' %}
   {% else %}
     {% for item in music_list %}
-      {% include 'music/music_article.html' %}
+      {% include 'medias/music/music_article.html' %}
     {% endfor %}
   {% endif %}
 </article>
@@ -36,7 +36,7 @@
     {% include 'search/search_picture.html' %}
   {% else %}
     {% for item in picture_list %}
-      {% include 'picture/picture_article.html' %}
+      {% include 'medias/picture/picture_article.html' %}
     {% endfor %}
   {% endif %}
 </article>
@@ -48,7 +48,7 @@
     {% include 'search/search_blog.html' %}
   {% else %}
     {% for item in blog_list %}
-      {% include 'blog/blog_article.html' %}
+      {% include 'medias/blog/blog_article.html' %}
     {% endfor %}
   {% endif %}
 </article>
@@ -60,7 +60,7 @@
     {% include 'search/search_chat.html' %}
   {% else %}
     {% for item in chat_list %}
-      {% include 'chat/chat_article.html' %}
+      {% include 'medias/chat/chat_article.html' %}
     {% endfor %}
   {% endif %}
 </article>

@@ -1,0 +1,9 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsToDo</title>{% endblock title %}
+{% load humanize %}
+
+{% block content %}
+<main class="main">
+  {% include 'medias/todo/todo_list.html' %}
+</main>
+{% endblock content %}

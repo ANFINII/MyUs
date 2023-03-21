@@ -5,7 +5,7 @@
 {% for item in object_list %}
   {% with item|class_name as model_name %}
     {% if model_name == 'Music' %}
-      {% include 'music/music_article.html' %}
+      {% include 'medias/music/music_article.html' %}
     {% endif %}
   {% endwith %}
 {% endfor %}
