@@ -76,7 +76,7 @@ export default function ProfileUpdate() {
       </Head>
 
       {user ?
-        <article className="article_account">
+        <article className="article_table">
           <h1>アカウント設定</h1>
           {/* {% if messages %}
           <ul className="messages_profile">
@@ -158,7 +158,7 @@ export default function ProfileUpdate() {
           <Footer />
         </article>
       :
-        <article className="article_account">
+        <article className="article_table">
           <h1>アカウント設定</h1>
           <h2 className="login_required">ログインしてください</h2>
         </article>

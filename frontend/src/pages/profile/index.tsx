@@ -50,7 +50,7 @@ export default function Profile() {
       </Head>
 
       {user ?
-        <article className="article_account">
+        <article className="article_table">
           <h1>アカウント設定</h1>
           <div className="button_group">
             <Button blue size='xs' className="margin" onClick={() => Router.push('/profile/update')}>編集</Button>
@@ -84,7 +84,7 @@ export default function Profile() {
           <Footer />
         </article>
       :
-        <article className="article_account">
+        <article className="article_table">
           <h1>アカウント設定</h1>
           <h2 className="login_required">ログインしてください</h2>
         </article>

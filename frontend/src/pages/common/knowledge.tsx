@@ -7,8 +7,8 @@ export default function Knowledge() {
   return (
     <>
       <Meta title="MyUsナレッジ" />
-      <Main title="Knowledge Base">
-        <article className="article_knowledge">
+      <Main>
+        <article className="article_table">
           <h1>Knowledge Base</h1>
           <table className="table">
             <tbody>

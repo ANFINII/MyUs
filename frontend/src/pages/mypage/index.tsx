@@ -39,7 +39,7 @@ export default function MyPage() {
       </Head>
 
       {mypage ?
-        <article className="article_account">
+        <article className="article_table">
           <h1>Myページ設定</h1>
           <div className="button_group">
             <Button blue size='xs' className="margin" onClick={() => Router.push('/mypage/update')}>編集</Button>
@@ -87,7 +87,7 @@ export default function MyPage() {
           <Footer />
         </article>
       :
-        <article className="article_account">
+        <article className="article_table">
           <h1>Myページ設定</h1>
           <h2 className="login_required">ログインしてください</h2>
         </article>

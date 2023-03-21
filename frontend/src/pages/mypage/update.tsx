@@ -38,7 +38,7 @@ export default function MyPageUpdate() {
       </Head>
 
       {mypage ?
-        <article className="article_account">
+        <article className="article_table">
           <h1>Myページ設定</h1>
           <div className="button_group">
             <Button green size="xs" type="submit" className="margin">登録</Button>
@@ -89,7 +89,7 @@ export default function MyPageUpdate() {
           <Footer />
         </article>
       :
-        <article className="article_account">
+        <article className="article_table">
           <h1>Myページ設定</h1>
           <h2 className="login_required">ログインしてください</h2>
         </article>

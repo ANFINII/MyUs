@@ -8,7 +8,7 @@ export default function Notification() {
         <title>MyUs通知</title>
       </Head>
 
-      <article className="article_account">
+      <article className="article_table">
         <h1>通知設定</h1>
         {/* {% if user.is_authenticated %}
         {% for notification in notification_setting_list %} */}

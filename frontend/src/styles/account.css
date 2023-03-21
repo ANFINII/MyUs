@@ -1,5 +1,5 @@
 /* プロフィール */
-.article_account {
+.article_table {
   display: grid;
   grid-gap: 3px;
   grid-template-columns: repeat(2, 1fr);
@@ -7,23 +7,14 @@
   margin: 14px 0 20px 0;
 }
 
-.article_knowledge {
-  display: grid;
-  grid-gap: 3px;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: 30px auto;
-  margin: 14px 0 20px 0;
-}
-
-.article_account h1,
-.article_knowledge h1 {
+.article_table h1 {
   display: flex;
   font-size: 24px;
   max-height: 2em;
   margin: 0;
 }
 
-.article_account .login_required,
+.article_table .login_required,
 .article_pass .login_required {
   grid-column: 1/-1;
   grid-row: 2/3;
