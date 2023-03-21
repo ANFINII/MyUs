@@ -84,6 +84,7 @@ export interface FollowResponse {
   id: number
   title: string
   content: string
+  introduction: string
   like: number
   read: number
   comment_num: number
