@@ -19,7 +19,7 @@ export default function ArticleBlog(props: Props) {
           <section className="section_list" key={data.id}>
             <figure className="main_decolation">
               <Link href="/blog/detail/[id][title]">
-                <Image src={pictureUrl} width={272} height={153} alt='' />
+                <Image src={pictureUrl} width={272} height={153} alt="" />
               </Link>
               <Link href="/blog/detail/[id][title]" className="author_space">
                 <AuthorSpace imageUrl={imageUrl} nickname={nickname} />

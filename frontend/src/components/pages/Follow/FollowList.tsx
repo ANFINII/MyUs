@@ -39,7 +39,7 @@ export default function FollowList(props: Props) {
                       <Link href="/userpage/[nickname]" data-name={nickname} className="follow_box pjax_button_userpage">
                         <object className="author_follow">
                           <Link href="" data-name={nickname} className="pjax_button_userpage">
-                            <Image src={imageUrl} title={nickname} className="follow_image" alt='' />
+                            <Image src={imageUrl} title={nickname} className="follow_image" alt="" />
                           </Link>
                         </object>
                         <span title="{{nickname}}" className="follow_content_1">{nickname}</span>
