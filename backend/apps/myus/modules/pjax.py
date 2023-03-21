@@ -67,14 +67,14 @@ def pjax_context(request, href):
                 advertise = Advertise.objects.filter(author=author, publish=True)
                 context = {'is_follow': is_follow, 'author': author, 'advertise_list': advertise}
     if href in model_pjax:
-        template = f'{href}/{href}_list.html'
+        template = f'medias/{href}/{href}_list.html'
         if search:
             result = SearchData.search_models(model_pjax[href], search)
             context = {f'{href}_list': result[:100], 'query': search, 'count': result.count()}
         else:
             context = {f'{href}_list': model_pjax[href].objects.filter(publish=True).order_by('-created')[:100]}
     if href == 'todo':
-        template = 'todo/todo_list.html'
+        template = 'medias/todo/todo_list.html'
         if search:
             result = SearchData.search_todo(Todo, user, search)
             context = {'todo_list': result[:100], 'query': search, 'count': result.count()}
@@ -93,7 +93,7 @@ def pjax_context(request, href):
             context = {'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100]}
     if href in model_create_pjax:
         model = href.replace('/create', '')
-        template = f'{model}/{model}_create_content.html'
+        template = f'medias/{model}/{model}_create_content.html'
     if href == 'notification':
         template = 'common/notification_content.html'
         context = {'notification_setting_list': NotificationSetting.objects.filter(user=user.id)}
