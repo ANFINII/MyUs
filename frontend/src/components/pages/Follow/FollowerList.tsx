@@ -42,7 +42,7 @@ export default function FollowerList(props: Props) {
                             <Image src={imageUrl} title={nickname} className="follow_image" alt="" />
                           </Link>
                         </object>
-                        <span title="{{nickname}}" className="follow_content_1">{nickname}</span>
+                        <span title={nickname} className="follow_content_1">{nickname}</span>
                         <span className="follow_content_2">フォロワー数：{data.mypage.follower_num}</span>
                         <span className="follow_content_3">フォロー数　：{data.mypage.following_num}</span>
                         <object title={data.introduction} className="follow_content_4">
