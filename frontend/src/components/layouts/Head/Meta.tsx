@@ -6,6 +6,7 @@ export default function Meta(props: Props) {
   const {title} = props
   return (
     <Head>
+      <title>{title ? title : 'MyUs'}</title>
       <meta charSet="UTF-8"/>
       <meta httpEquiv="X-UA-Compatible" content="ie=edge"/>
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -34,7 +35,6 @@ export default function Meta(props: Props) {
       <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#000000"/>
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"/>
       <base href="/"></base>
-      <title>{title ? title : 'MyUs'}</title>
     </Head>
   )
 }

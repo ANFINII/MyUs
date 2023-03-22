@@ -1,14 +1,23 @@
+import {Query} from 'utils/type'
+import Meta from 'components/layouts/Head/Meta'
+
 interface Props {
   title?: string
+  hero?: string
+  query?: Query
   children: React.ReactNode
 }
 
 export default function Main(props: Props) {
-  const {title, children} = props
+  const {title, hero, query, children} = props
   return (
-    <main className='main'>
-      {title && <h1 className='main_title'>{title}</h1>}
-      {children}
-    </main>
+    <>
+      <Meta title={title} />
+      <main className='main'>
+        {hero && <h1>{hero}</h1>}
+        {query && <section className="search_message">「{query.name}」の検索結果「{query.count}」件</section>}
+        {children}
+      </main>
+    </>
   )
 }

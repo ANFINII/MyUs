@@ -1,4 +1,3 @@
-import Meta from 'components/layouts/Meta'
 import Header from 'components/layouts/Header'
 import SideBar from 'components/layouts/SideBar'
 import SearchTag from 'components/layouts/SearchTag'
@@ -19,7 +18,6 @@ export default function Layout(props: Props) {
 
   return (
     <div className="layout">
-      <Meta />
       <Header />
       <SideBar />
       <SearchTag searchtag={searchtagData} isAuthenticated={true} />
