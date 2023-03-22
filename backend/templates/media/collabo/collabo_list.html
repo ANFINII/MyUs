@@ -1,0 +1,10 @@
+<h1>Collabo</h1>
+{% if query %}
+<section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
+{% endif %}
+
+<article class="article_list">
+{% for item in collabo_list %}
+  {% include 'media/collabo/collabo_article.html' %}
+{% endfor %}
+</article>

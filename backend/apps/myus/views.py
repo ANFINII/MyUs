@@ -767,7 +767,7 @@ class VideoCreate(CreateView):
     """VideoCreate"""
     model = Video
     fields = ('title', 'content', 'image', 'convert')
-    template_name = 'medias/video/video_create.html'
+    template_name = 'media/video/video_create.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -794,7 +794,7 @@ class VideoCreate(CreateView):
 class VideoList(ListView):
     """VideoList"""
     model = Video
-    template_name = 'medias/video/video.html'
+    template_name = 'media/video/video.html'
     context_object_name = 'video_list'
     ordering = ['-created']
 
@@ -808,7 +808,7 @@ class VideoList(ListView):
 class VideoDetail(DetailView):
     """VideoDetail"""
     model = Video
-    template_name = 'medias/video/video_detail.html'
+    template_name = 'media/video/video_detail.html'
 
     def get(self, request, *args, **kwargs):
         return get_detail(self, request)
@@ -822,7 +822,7 @@ class MusicCreate(CreateView):
     """MusicCreate"""
     model = Music
     fields = ('title', 'content', 'lyric', 'music', 'download')
-    template_name = 'medias/music/music_create.html'
+    template_name = 'media/music/music_create.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -838,7 +838,7 @@ class MusicCreate(CreateView):
 class MusicList(ListView):
     """MusicList"""
     model = Music
-    template_name = 'medias/music/music.html'
+    template_name = 'media/music/music.html'
     context_object_name = 'music_list'
     ordering = ['-created']
 
@@ -852,7 +852,7 @@ class MusicList(ListView):
 class MusicDetail(DetailView):
     """MusicDetail"""
     model = Music
-    template_name = 'medias/music/music_detail.html'
+    template_name = 'media/music/music_detail.html'
 
     def get(self, request, *args, **kwargs):
         return get_detail(self, request)
@@ -866,7 +866,7 @@ class PictureCreate(CreateView):
     """PictureCreate"""
     model = Picture
     fields = ('title', 'content', 'image')
-    template_name = 'medias/picture/picture_create.html'
+    template_name = 'media/picture/picture_create.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -882,7 +882,7 @@ class PictureCreate(CreateView):
 class PictureList(ListView):
     """PictureList"""
     model = Picture
-    template_name = 'medias/picture/picture.html'
+    template_name = 'media/picture/picture.html'
     context_object_name = 'picture_list'
     ordering = ['-created']
 
@@ -896,7 +896,7 @@ class PictureList(ListView):
 class PictureDetail(DetailView):
     """PictureDetail"""
     model = Picture
-    template_name = 'medias/picture/picture_detail.html'
+    template_name = 'media/picture/picture_detail.html'
 
     def get(self, request, *args, **kwargs):
         return get_detail(self, request)
@@ -914,7 +914,7 @@ class BlogCreate(CreateView):
     """BlogCreate"""
     model = Blog
     fields = ('title', 'content', 'image', 'richtext')
-    template_name = 'medias/blog/blog_create.html'
+    template_name = 'media/blog/blog_create.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -933,7 +933,7 @@ class BlogCreate(CreateView):
 class BlogList(ListView):
     """BlogList"""
     model = Blog
-    template_name = 'medias/blog/blog.html'
+    template_name = 'media/blog/blog.html'
     context_object_name = 'blog_list'
     ordering = ['-created']
 
@@ -947,7 +947,7 @@ class BlogList(ListView):
 class BlogDetail(DetailView):
     """BlogDetail"""
     model = Blog
-    template_name = 'medias/blog/blog_detail.html'
+    template_name = 'media/blog/blog_detail.html'
 
     def get(self, request, *args, **kwargs):
         return get_detail(self, request)
@@ -961,7 +961,7 @@ class ChatCreate(CreateView):
     """ChatCreate"""
     model = Chat
     fields = ('title', 'content', 'period')
-    template_name = 'medias/chat/chat_create.html'
+    template_name = 'media/chat/chat_create.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -977,7 +977,7 @@ class ChatCreate(CreateView):
 class ChatList(ListView):
     """ChatList"""
     model = Chat
-    template_name = 'medias/chat/chat.html'
+    template_name = 'media/chat/chat.html'
     context_object_name = 'chat_list'
     ordering = ['-created']
 
@@ -991,7 +991,7 @@ class ChatList(ListView):
 class ChatDetail(DetailView):
     """ChatDetail"""
     model = Chat
-    template_name = 'medias/chat/chat_detail.html'
+    template_name = 'media/chat/chat_detail.html'
 
     def get(self, request, *args, **kwargs):
         return get_detail(self, request)
@@ -1003,7 +1003,7 @@ class ChatDetail(DetailView):
 class ChatThread(DetailView):
     """ChatDetailThread"""
     model = Chat
-    template_name = 'medias/chat/chat_thread.html'
+    template_name = 'media/chat/chat_thread.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.models_context_data(self, ChatThread, **kwargs)
@@ -1018,7 +1018,7 @@ def chat_thread_button(request):
         context = {
             'obj_id': chat_id,
             'message_id': message_id,
-            'thread': render_to_string('medias/chat/chat_reply/chat_section_thread_area.html', {
+            'thread': render_to_string('media/chat/chat_reply/chat_section_thread_area.html', {
                 'message_parent': chat.message.filter(id=message_id),
                 'reply_list': chat.message.filter(parent_id=message_id).select_related('author'),
                 'user_id': user.id,
@@ -1034,7 +1034,7 @@ class CollaboCreate(CreateView):
     """CollaboCreate"""
     model = Collabo
     fields = ('title', 'content', 'period')
-    template_name = 'medias/collabo/collabo_create.html'
+    template_name = 'media/collabo/collabo_create.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -1050,7 +1050,7 @@ class CollaboCreate(CreateView):
 class CollaboList(ListView):
     """CollaboList"""
     model = Collabo
-    template_name = 'medias/collabo/collabo.html'
+    template_name = 'media/collabo/collabo.html'
     context_object_name = 'collabo_list'
     ordering = ['-created']
 
@@ -1064,7 +1064,7 @@ class CollaboList(ListView):
 class CollaboDetail(DetailView):
     """CollaboDetail"""
     model = Collabo
-    template_name = 'medias/collabo/collabo_detail.html'
+    template_name = 'media/collabo/collabo_detail.html'
 
     def get(self, request, *args, **kwargs):
         return get_detail(self, request)
@@ -1078,7 +1078,7 @@ class TodoCreate(CreateView):
     """TodoCreate"""
     model = Todo
     fields = ('title', 'content', 'priority', 'duedate')
-    template_name = 'medias/todo/todo_create.html'
+    template_name = 'media/todo/todo_create.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -1094,7 +1094,7 @@ class TodoCreate(CreateView):
 class TodoList(ListView):
     """TodoList"""
     model = Todo
-    template_name = 'medias/todo/todo.html'
+    template_name = 'media/todo/todo.html'
     context_object_name = 'todo_list'
     ordering = ['-duedate']
 
@@ -1108,7 +1108,7 @@ class TodoList(ListView):
 class TodoDetail(DetailView):
     """TodoDetail"""
     model = Todo
-    template_name = 'medias/todo/todo_detail.html'
+    template_name = 'media/todo/todo_detail.html'
 
     def get_queryset(self):
         user = self.request.user
@@ -1125,7 +1125,7 @@ class TodoUpdate(UpdateView):
     """TodoUpdate"""
     model = Todo
     fields = ('title', 'content', 'priority', 'progress', 'duedate')
-    template_name = 'medias/todo/todo_update.html'
+    template_name = 'media/todo/todo_update.html'
 
     def get_success_url(self):
         return reverse('myus:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
@@ -1134,5 +1134,5 @@ class TodoUpdate(UpdateView):
 class TodoDelete(DeleteView):
     """TodoUpdate"""
     model = Todo
-    template_name = 'medias/todo/todo_delete.html'
+    template_name = 'media/todo/todo_delete.html'
     success_url = reverse_lazy('myus:todo_list')

@@ -1,0 +1,16 @@
+{% load static %}
+
+<h1>Music</h1>
+{% if query %}
+<section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
+{% endif %}
+
+<article class="article_list">
+{% for item in music_list %}
+  {% include 'media/music/music_article.html' %}
+{% endfor %}
+</article>
+
+{% block extrajs %}
+<script>$(function() { $('audio').audioPlayer(); });</script>
+{% endblock extrajs %}

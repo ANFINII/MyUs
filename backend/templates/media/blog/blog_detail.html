@@ -1,0 +1,31 @@
+{% extends 'base2.html' %}
+{% block title %}<title>MyUsブログ</title>{% endblock title %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<main class="main">
+  <article class="article_detail">
+    {% if object.publish %}
+    <div class="article_detail_blog">
+      <p>{{ object.richtext|safe }}</p>
+    </div>
+    <hr>
+    <div class="article_detail_section_side">
+      <div class="article_detail_section_1">
+        {% include 'parts/common/common.html' %}
+      </div>
+      <div class="article_detail_section_2">
+        {% include 'media/blog/blog_article_detail.html' %}
+      </div>
+    </div>
+    {% else %}
+    <h2 class="unpublished">非公開に設定されてます!</h2>
+    {% endif %}
+  </article>
+</main>
+{% endblock content %}
+
+{% block extrajs %}
+<script src="{% static 'js/ajax_comment.js' %}"></script>
+{% endblock extrajs %}
