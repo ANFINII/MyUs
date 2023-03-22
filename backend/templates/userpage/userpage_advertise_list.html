@@ -2,11 +2,10 @@
 
 {% include 'userpage/userpage_common.html' %}
 
-<h1>広告
-  {% if query %}
-  <section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
-  {% endif %}
-</h1>
+<h1>広告</h1>
+{% if query %}
+<section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
+{% endif %}
 
 <article class="article_list">
   {% include 'parts/advertise_article.html' %}

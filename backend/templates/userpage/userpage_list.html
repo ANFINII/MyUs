@@ -3,11 +3,10 @@
 {% include 'userpage/userpage_common.html' %}
 
 <article class="article_index">
-  <h2>Video
-    {% if query %}
-    <section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
-    {% endif %}
-  </h2>
+  <h2>Video</h2>
+  {% if query %}
+  <section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
+  {% endif %}
   {% if query %}
     {% include 'search/search_video.html' %}
   {% else %}

@@ -1,10 +1,9 @@
 {% load static %}
 
-<h1>{% if Recommend %}{{ Recommend }}{% else %}Home{% endif %}
-  {% if query %}
-  <section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
-  {% endif %}
-</h1>
+<h1>{% if Recommend %}{{ Recommend }}{% else %}Home{% endif %}</h1>
+{% if query %}
+<section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
+{% endif %}
 <hr>
 
 <article class="article_index">

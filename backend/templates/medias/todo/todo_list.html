@@ -1,8 +1,7 @@
-<h1>ToDo
-  {% if query %}
-  <section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
-  {% endif %}
-</h1>
+<h1>ToDo</h1>
+{% if query %}
+<section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
+{% endif %}
 
 {% if user.is_authenticated %}
 <div class="todo_create">

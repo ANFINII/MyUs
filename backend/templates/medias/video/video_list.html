@@ -1,10 +1,9 @@
 {% load static %}
 
-<h1>Video
-  {% if query %}
-  <section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
-  {% endif %}
-</h1>
+<h1>Video</h1>
+{% if query %}
+<section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
+{% endif %}
 
 <article class="article_list">
 {% for item in video_list %}
