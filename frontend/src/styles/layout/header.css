@@ -437,7 +437,7 @@ input::placeholder {
   display: inline;
   list-style: none;
   padding: 0;
-  margin: 8px 0 0 8px;
+  margin: 0 0 0 8px;
   font-size: 14px;
   color: rgb(33, 37, 41);
 }

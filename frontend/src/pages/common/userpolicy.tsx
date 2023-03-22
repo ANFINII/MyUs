@@ -1,13 +1,9 @@
-import Head from 'next/head'
+import Main from 'components/layouts/Main'
 import Footer from 'components/layouts/Footer'
 
 export default function UserPolicy() {
   return (
-    <>
-      <Head>
-        <title>MyUs利用規約</title>
-      </Head>
-
+    <Main title="MyUs利用規約">
       <article className="article_userpolicy">
         <h1>利用規約</h1>
         <p>利用規約を読み同意した上で、本サービスを利用するものとする。</p>
@@ -33,6 +29,6 @@ export default function UserPolicy() {
         <br/>
         <Footer />
       </article>
-    </>
+    </Main>
   )
 }

@@ -6,7 +6,7 @@
 }
 
 .main h1 {
-  display: flex;
+  display: inline-block;
   height: 30px;
   margin: 10px 0;
   font-size: 24px;
@@ -71,6 +71,12 @@ div.field > button {
   max-height: 25px;
   margin: 0;
   overflow-y: auto;
+}
+
+.article_index .search_message {
+  grid-column: 1/-1;
+  grid-row: 1/2;
+  margin: 0px 0 0 50px;
 }
 
 /* メインリストデザイン */
