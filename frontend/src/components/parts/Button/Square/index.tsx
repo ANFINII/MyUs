@@ -25,7 +25,7 @@ export default function ButtonSquare(props: Props) {
         + (emerald ? `${style.emerald} ` : '')
         + (sakura ? `${style.sakura} ` : '')
         + (red ? `${style.red} ` : '')
-        + (className ? className : '' )
+        + (className ? className : '')
       }
     >{children}
     </button>

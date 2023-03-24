@@ -24,7 +24,7 @@ export default function Textarea(props: Props) {
   return (
     <textarea id={id} name={name} value={value} placeholder={placeholder}
       rows={rows} onChange={handleChange} required={required} disabled={disabled}
-      className={`${style.textarea} ` + (className ? className : '' )}
+      className={`${style.textarea} ` + (className ? className : '')}
     >{children}
     </textarea>
   )

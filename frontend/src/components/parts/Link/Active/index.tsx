@@ -11,7 +11,7 @@ export default function LinkActive(props: Props) {
   const {href, children} = props
 
   return (
-    <Link href={href} className={router.pathname == href ? 'active' : ''}>
+    <Link href={href} className={router.pathname === href ? 'active' : ''}>
       {children}
     </Link>
   )

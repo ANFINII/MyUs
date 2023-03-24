@@ -65,18 +65,18 @@ export default function ProfileUpdate(props: Props) {
                       <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                       <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
                     </svg>
-                    <input type="file" name="image" accept="image/*" id="account_image_input" className="custom-file-input"/>
+                    <input type="file" name="image" accept="image/*" id="account_image_input" className="custom-file-input" />
                   </label>
                 </td>
               </tr>
-              <tr><td className="td_color">メールアドレス</td><td><Input type="text" name="email" value={user.email} maxLength={120}/></td></tr>
-              <tr><td className="td_color">ユーザー名</td><td><Input type="text" name="username" value={user.username} maxLength={30} placeholder="英数字"/></td></tr>
-              <tr><td className="td_color">投稿者名</td><td><Input type="text" name="nickname" value={user.nickname} maxLength={60}/></td></tr>
+              <tr><td className="td_color">メールアドレス</td><td><Input type="text" name="email" value={user.email} maxLength={120} /></td></tr>
+              <tr><td className="td_color">ユーザー名</td><td><Input type="text" name="username" value={user.username} maxLength={30} placeholder="英数字" /></td></tr>
+              <tr><td className="td_color">投稿者名</td><td><Input type="text" name="nickname" value={user.nickname} maxLength={60} /></td></tr>
               <tr><td className="td_color">名前</td>
                 <td>
                   <div className="td_name">
-                    <Input type="text" name="last_name" value={user.lastname} placeholder="姓" maxLength={30}/>
-                    <Input type="text" name="first_name" value={user.firstname} placeholder="名" maxLength={30}/>
+                    <Input type="text" name="last_name" value={user.lastname} placeholder="姓" maxLength={30} />
+                    <Input type="text" name="first_name" value={user.firstname} placeholder="名" maxLength={30} />
                   </div>
                 </td>
               </tr>
@@ -101,8 +101,8 @@ export default function ProfileUpdate(props: Props) {
                   </div>
                 </td>
               </tr>
-              <tr><td className="td_color">電話番号</td><td><Input type="tel" name="phone" value={user.phone} maxLength={15} required/></td></tr>
-              <tr><td className="td_color">郵便番号</td><td><Input type="tel" name="postal_code" value={user.postal_code} maxLength={8} required/></td></tr>
+              <tr><td className="td_color">電話番号</td><td><Input type="tel" name="phone" value={user.phone} maxLength={15} required /></td></tr>
+              <tr><td className="td_color">郵便番号</td><td><Input type="tel" name="postal_code" value={user.postal_code} maxLength={8} required /></td></tr>
               <tr><td className="td_color">住所</td>
                 <td className="td_location">
                   <select name="prefecture" id="prefecture" className="location">

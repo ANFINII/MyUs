@@ -13,7 +13,7 @@ export default function Select(props: Props) {
   const {id, className, name, value, children} = props
 
   return (
-    <select name={name} id={id} className={`${style.input} ` + (className ? className : '' )}>
+    <select name={name} id={id} className={`${style.input} ` + (className ? className : '')}>
       <option value="">{children}</option>
       <option value={value} selected>{value}</option>
     </select>

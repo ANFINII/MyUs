@@ -26,7 +26,7 @@ export default function Input(props: Props) {
     <input type={type} name={name} value={value} placeholder={placeholder}
       minLength={minLength} maxLength={maxLength} required={required} disabled={disabled}
       onChange={onChange} onClick={onClick} ref={autoFocus ? inputFocus : undefined}
-      id={id} className={`${style.input} ` + (className ? className : '' )}
+      id={id} className={`${style.input} ` + (className ? className : '')}
     />
   )
 }

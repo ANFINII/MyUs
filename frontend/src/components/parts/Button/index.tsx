@@ -32,7 +32,7 @@ export default function Button(props: Props) {
         + (light ? `${style.light} ` : '')
         + (size === 'xl' ? `${style.xl} ` : '')
         + (size === 'xs' ? `${style.xs} ` : '')
-        + (className ? className : '' )
+        + (className ? className : '')
       }
     >{children}
     </button>
