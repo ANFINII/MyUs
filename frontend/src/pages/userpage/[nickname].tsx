@@ -7,8 +7,6 @@ export default function UserPage() {
       <Head>
         <title>MyUsユーザーページ</title>
       </Head>
-
-
     </>
   )
 }

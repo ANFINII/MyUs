@@ -6,7 +6,6 @@ import Footer from 'components/layouts/Footer'
 import Input from 'components/parts/Input'
 import Button from 'components/parts/Button'
 
-
 export default function Login() {
   const router = useRouter()
   const url = process.env.NEXT_PUBLIC_API_URL
