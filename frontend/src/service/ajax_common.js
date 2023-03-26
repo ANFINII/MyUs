@@ -46,7 +46,7 @@ $(document).on('click', '.follow_form', function (event) {
   const nickname = $(this).attr('value');
   const csrf = $(this).attr('csrf');
   $.ajax({
-    url: `/follow/create/${nickname}`,
+    url: `/menu/follow/create/${nickname}`,
     type: 'POST',
     data: { 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
@@ -187,7 +187,7 @@ $(document).on('click', '.toggle_button', function (event) {
   const notification_type = $(this).parent().attr('notification-type');
   const csrf = $(this).closest('#notification_table').attr('csrf');
   $.ajax({
-    url: '/notification/setting',
+    url: '/setting/notification/update',
     type: 'POST',
     data: { 'notification': notification, 'notification_type': notification_type, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
@@ -208,7 +208,7 @@ $(document).on('click', '.toggle_mypage', function (event) {
   const is_advertise = $(this).parent().attr('advertise');
   const csrf = $(this).parent().attr('csrf');
   $.ajax({
-    url: '/mypage/toggle',
+    url: '/setting/mypage/toggle',
     type: 'POST',
     data: { 'is_advertise': is_advertise, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',

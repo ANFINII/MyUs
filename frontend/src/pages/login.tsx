@@ -39,7 +39,7 @@ export default function Login() {
         <Input type="password" name="password" className="inpput_margin" placeholder="パスワード" minLength={8} maxLength={16} required />
 
         <div className="password_reset">
-          <Link href="/registration/password_reset">パスワードをリセット</Link>
+          <Link href="/setting/password_reset">パスワードをリセット</Link>
         </div>
 
         <Button blue size="xl" type="submit" onClick={loginClicked} className="button_margin">ログイン</Button>

@@ -26,7 +26,7 @@ export default function DropMenuProfile(props: Props) {
             <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
           </svg>
           <span>アカウント</span>
-          <Link href="/profile" className="icon_link"></Link>
+          <Link href="/setting/profile" className="icon_link"></Link>
         </div>
 
         <div className="drop_menu_item color_drop_menu">
@@ -35,7 +35,7 @@ export default function DropMenuProfile(props: Props) {
             <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
           </svg>
           <span>Myページ</span>
-          <Link href="/mypage" className="icon_link"></Link>
+          <Link href="/setting/mypage" className="icon_link"></Link>
         </div>
 
         <div className="drop_menu_item color_drop_menu">
@@ -61,7 +61,7 @@ export default function DropMenuProfile(props: Props) {
             <path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/>
           </svg>
           <span>料金プラン</span>
-          <Link href="/payment" className="icon_link"></Link>
+          <Link href="/setting/payment" className="icon_link"></Link>
         </div>
 
         <div className="drop_menu_item color_drop_menu">
@@ -70,7 +70,7 @@ export default function DropMenuProfile(props: Props) {
             <path fillRule="evenodd" d="M12.146 5.146a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
           </svg>
           <span>退会処理</span>
-          {!is_staff && <Link href="/withdrawal" className="icon_link"></Link>}
+          {!is_staff && <Link href="/setting/withdrawal" className="icon_link"></Link>}
         </div>
 
         <div className="drop_menu_item color_drop_menu">

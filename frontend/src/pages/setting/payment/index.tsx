@@ -27,7 +27,7 @@ export default function Payment() {
             <br/>
             ・全体広告OFF
           </div>
-          <Button purple type="submit" className="checkout-button" value="price_1K9VSxCHdDAlRliqOZnYuctl">購入する</Button>
+          <Button purple type="submit" className="checkout_button" value="price_1K9VSxCHdDAlRliqOZnYuctl">購入する</Button>
         </section>
 
         <section className="section_plan">
@@ -45,7 +45,7 @@ export default function Payment() {
             <br/>
             ・全体広告OFF
           </div>
-          <Button purple type="submit" className="checkout-button" value="price_1K9VTbCHdDAlRliq3YNA768b">購入する</Button>
+          <Button purple type="submit" className="checkout_button" value="price_1K9VTbCHdDAlRliq3YNA768b">購入する</Button>
         </section>
 
         <section className="section_plan">
@@ -65,7 +65,7 @@ export default function Payment() {
             <br/>
             ・楽曲ダウンロード
           </div>
-          <Button purple type="submit" className="checkout-button" value="price_1K9VU9CHdDAlRliqXsIS6GC4">購入する</Button>
+          <Button purple type="submit" className="checkout_button" value="price_1K9VU9CHdDAlRliqXsIS6GC4">購入する</Button>
         </section>
 
         <section className="section_plan">

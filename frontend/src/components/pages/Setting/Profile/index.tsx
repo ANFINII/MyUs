@@ -17,8 +17,8 @@ export default function Profile(props: Props) {
         <article className="article_table">
           <h1>アカウント設定</h1>
           <div className="button_group">
-            <Button blue size='xs' className="margin" onClick={() => Router.push('/profile/update')}>編集</Button>
-            <Button blue size='xs' onClick={() => Router.push('/registration/password/change')}>パスワード変更</Button>
+            <Button blue size='xs' className="margin" onClick={() => Router.push('/setting/profile/update')}>編集</Button>
+            <Button blue size='xs' onClick={() => Router.push('/setting/password/change')}>パスワード変更</Button>
           </div>
 
           <table className="table">

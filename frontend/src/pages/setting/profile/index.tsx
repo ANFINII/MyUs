@@ -1,17 +1,15 @@
-
-
 import {GetServerSideProps} from 'next'
 import {ProfileResponse} from 'utils/type'
-import ProfileUpdate from 'components/pages/Account/Profile/Update'
+import Profile from 'components/pages/Setting/Profile'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //  const cookie = context.req?.headers.cookie
 //  const res = await axios.get('/api/profile', {
-//   headers: {cookie: cookie!}
+//   headers: { cookie: cookie! }
 //  })
 //  const data: ProfileResponse = res.data
 //  return {
-//   props: {user: data}
+//   props: { user: data }
 //  }
 // }
 
@@ -38,8 +36,8 @@ const user: ProfileResponse = {
   "introduction": "MyUs開発者、ユーザー用"
 }
 
-export default function ProfileUpdatePage() {
+export default function ProfilePage() {
   return (
-    <ProfileUpdate user={user} />
+    <Profile user={user} />
   )
 }

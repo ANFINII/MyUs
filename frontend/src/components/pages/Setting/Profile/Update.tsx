@@ -53,7 +53,7 @@ export default function ProfileUpdate(props: Props) {
 
           <div className="button_group">
             <Button green size="xs" type="submit" className="margin">登録</Button>
-            <Button blue size="xs" onClick={() => Router.push('/profile')}>戻る</Button>
+            <Button blue size="xs" onClick={() => Router.push('/setting/profile')}>戻る</Button>
           </div>
 
           <table className="table">
