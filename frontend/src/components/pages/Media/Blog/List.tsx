@@ -11,7 +11,11 @@ export default function BlogList(props: Props) {
   const {query, datas} = props
   return (
     <Main title="MyUsブログ" hero="Blog" query={query}>
-      <ArticleBlog datas={datas} />
+      <article className="article_list">
+        {datas.map((data) => (
+          <ArticleBlog data={data} key={data.id} />
+        ))}
+      </article>
     </Main>
   )
 }

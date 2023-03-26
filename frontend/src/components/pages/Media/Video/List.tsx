@@ -11,7 +11,11 @@ export default function VideoList(props: Props) {
   const {query, datas} = props
   return (
     <Main title="MyUsビデオ" hero="Video" query={query}>
-      <ArticleVideo datas={datas} />
+      <article className="article_list">
+        {datas.map((data) => (
+          <ArticleVideo data={data} key={data.id} />
+        ))}
+      </article>
     </Main>
   )
 }

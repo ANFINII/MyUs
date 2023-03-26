@@ -19,11 +19,17 @@ export default function HomeList(props: Props) {
 
       <article className="article_index">
         <h2>Video</h2>
-        {/* {% if query %} */}
-          {/* {% include 'search/search_video.html' %} */}
-        {/* {% else %} */}
+        {/* {query ??
+          {% for item in object_list %}
+            {% with item|class_name as model_name %}
+              {% if model_name == 'Video' %}
+                {% include 'media/video/video_article.html' %}
+              {% endif %}
+            {% endwith %}
+          {% endfor %}
+        :
           <ArticleVideo datas={datas} />
-        {/* {% endif %} */}
+        } */}
       </article>
       <hr/>
 

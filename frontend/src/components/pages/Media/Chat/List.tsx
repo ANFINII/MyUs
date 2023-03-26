@@ -11,7 +11,11 @@ export default function ChatList(props: Props) {
   const {query, datas} = props
   return (
     <Main title="MyUsチャット" hero="Chat" query={query}>
-      <ArticleChat datas={datas} />
+      <article className="article_list">
+        {datas.map((data) => (
+          <ArticleChat data={data} key={data.id} />
+        ))}
+      </article>
     </Main>
   )
 }

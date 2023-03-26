@@ -11,7 +11,11 @@ export default function CollaboList(props: Props) {
   const {query, datas} = props
   return (
     <Main title="MyUsコラボ" hero="Collabo" query={query}>
-      <ArticleCollabo datas={datas} />
+      <article className="article_list">
+        {datas.map((data) => (
+          <ArticleCollabo data={data} key={data.id} />
+        ))}
+      </article>
     </Main>
   )
 }

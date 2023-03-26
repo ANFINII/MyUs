@@ -11,7 +11,11 @@ export default function TodoList(props: Props) {
   const {query, datas} = props
   return (
     <Main title="MyUs Todo" hero="Todo" query={query}>
-      <ArticleTodo datas={datas} />
+      <article className="article_list">
+        {datas.map((data) => (
+          <ArticleTodo data={data} key={data.id} />
+        ))}
+      </article>
     </Main>
   )
 }
