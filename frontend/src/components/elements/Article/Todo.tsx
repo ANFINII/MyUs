@@ -9,7 +9,7 @@ interface Props {data: MediaResponse}
 export default function ArticleTodo(props: Props) {
   const {data} = props
   return (
-    <section className="section_todo" key={data.id}>
+    <section className="section_todo">
       {/* {% if item.progress == '2' %} */}
       {/* <div className="main_decolation_todo alert-dark" role="alert"> */}
       {/* {% else %} */}

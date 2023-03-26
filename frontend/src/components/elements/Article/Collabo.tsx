@@ -11,7 +11,7 @@ export default function ArticleCollabo(props: Props) {
   const imageUrl = config.baseUrl + data.author.image
   const nickname = data.author.nickname
   return (
-    <section className="section_other" key={data.id}>
+    <section className="section_other">
       <div className="main_decolation">
         <Link href="/collabo/detail/[id][title]" className="author_space">
           <AuthorSpace imageUrl={imageUrl} nickname={nickname} />

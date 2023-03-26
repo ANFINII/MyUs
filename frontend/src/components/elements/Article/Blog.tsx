@@ -13,7 +13,7 @@ export default function ArticleBlog(props: Props) {
   const imageUrl = config.baseUrl + data.author.image
   const nickname = data.author.nickname
   return (
-    <section className="section_list" key={data.id}>
+    <section className="section_list">
       <figure className="main_decolation">
         <Link href="/blog/detail/[id][title]">
           <Image src={pictureUrl} width={272} height={153} alt="" />
