@@ -1,4 +1,5 @@
 import jwt
+import json
 from datetime import date
 
 from django.db.models import F, Count, Exists, OuterRef
@@ -25,6 +26,8 @@ from apps.myus.modules.validation import has_username, has_email, has_phone, has
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.modules.search import Search
+from apps.myus.modules.contains import model_dict
 
 
 User = get_user_model()
@@ -264,20 +267,37 @@ class MyPageAPI(APIView):
 class IndexAPI(ListAPIView):
 
     def get(self, request):
-        queryset = Video.objects.all()
-        serializer_class = VideoSerializer
-
-        data = {
-            'video': VideoSerializer(video).data,
+        datas = {
+            'videos': VideoListAPI.get(self, request, 'Index').data,
+            'musics': MusicListAPI.get(self, request, 'Index').data,
+            'pictures': PictureListAPI.get(self, request, 'Index').data,
+            # 'blogs': BlogListAPI.get(self, request, 'Index').data,
+            'chats': ChatListAPI.get(self, request, 'Index').data,
         }
+        return Response(datas)
 
-        return Response(data)
+
+# Recommend
+class RecommendAPI(ListAPIView):
+
+    def get(self, request):
+        datas = {
+            'videos': VideoListAPI.get(self, request, 'Recommend').data,
+            'musics': MusicListAPI.get(self, request, 'Recommend').data,
+            'pictures': PictureListAPI.get(self, request, 'Recommend').data,
+            # 'blogs': BlogListAPI.get(self, request, 'Recommend').data,
+            'chats': ChatListAPI.get(self, request, 'Recommend').data,
+        }
+        return Response(datas)
 
 
 # Video
 class VideoListAPI(APIView):
-    def get(self, request):
-        obj_list = Video.objects.filter(publish=True).order_by('-created')[:50]
+    def get(self, request, api=''):
+        count = 50
+        if api == 'index':
+            count = 8
+        objs = Video.objects.filter(publish=True).order_by('-created')[:count]
 
         data = [{
             'id': obj.id,
@@ -297,8 +317,11 @@ class VideoListAPI(APIView):
                 'nickname': obj.author.nickname,
                 'image': obj.author.image(),
             }
-        } for obj in obj_list]
+        } for obj in objs]
         return Response(data, status=HTTP_200_OK)
+
+    def get_queryset(self):
+        return Search.search_models(self, Video)
 
 
 class VideoCreateAPI(CreateAPIView):
@@ -315,7 +338,7 @@ class VideoDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
@@ -332,7 +355,7 @@ class VideoDetailAPI(RetrieveAPIView):
                 'author': comment.author.id,
                 'image': comment.author.image(),
                 'nickname': comment.author.nickname
-            } for comment in comment_list],
+            } for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -352,7 +375,7 @@ class VideoDetailAPI(RetrieveAPIView):
 # Music
 class MusicListAPI(APIView):
     def get(self, request):
-        obj_list = Music.objects.filter(publish=True).order_by('-created')[:50]
+        objs = Music.objects.filter(publish=True).order_by('-created')[:50]
 
         data = [{
             'id': obj.id,
@@ -372,7 +395,7 @@ class MusicListAPI(APIView):
                 'nickname': obj.author.nickname,
                 'image': obj.author.image(),
             }
-        } for obj in obj_list]
+        } for obj in objs]
         return Response(data, status=HTTP_200_OK)
 
 
@@ -390,7 +413,7 @@ class MusicDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
@@ -406,7 +429,7 @@ class MusicDetailAPI(RetrieveAPIView):
                 'author': comment.author.id,
                 'image': comment.author.image(),
                 'nickname': comment.author.nickname
-            } for comment in comment_list],
+            } for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -426,7 +449,7 @@ class MusicDetailAPI(RetrieveAPIView):
 # Picture
 class PictureListAPI(APIView):
     def get(self, request):
-            obj_list = Picture.objects.filter(publish=True).order_by('-created')[:50]
+            objs = Picture.objects.filter(publish=True).order_by('-created')[:50]
 
             data = [{
                 'id': obj.id,
@@ -444,7 +467,7 @@ class PictureListAPI(APIView):
                     'nickname': obj.author.nickname,
                     'image': obj.author.image(),
                 }
-            } for obj in obj_list]
+            } for obj in objs]
             return Response(data, status=HTTP_200_OK)
 
 
@@ -462,7 +485,7 @@ class PictureDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
@@ -477,7 +500,7 @@ class PictureDetailAPI(RetrieveAPIView):
                 'author': comment.author.id,
                 'image': comment.author.image(),
                 'nickname': comment.author.nickname
-            } for comment in comment_list],
+            } for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -497,7 +520,7 @@ class PictureDetailAPI(RetrieveAPIView):
 # Blog
 class BlogListAPI(APIView):
     def get(self, request):
-        obj_list = Blog.objects.filter(publish=True).order_by('-created')[:50]
+        objs = Blog.objects.filter(publish=True).order_by('-created')[:50]
 
         data = [{
             'id': obj.id,
@@ -517,7 +540,7 @@ class BlogListAPI(APIView):
                 'nickname': obj.author.nickname,
                 'image': obj.author.image(),
             }
-        } for obj in obj_list]
+        } for obj in objs]
         return Response(data, status=HTTP_200_OK)
 
 
@@ -535,7 +558,7 @@ class BlogDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
@@ -552,7 +575,7 @@ class BlogDetailAPI(RetrieveAPIView):
                 'author': comment.author.id,
                 'image': comment.author.image(),
                 'nickname': comment.author.nickname
-            } for comment in comment_list],
+            } for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -572,7 +595,7 @@ class BlogDetailAPI(RetrieveAPIView):
 # Chat
 class ChatListAPI(APIView):
     def get(self, request):
-        obj_list = Chat.objects.filter(publish=True).order_by('-created')[:50]
+        objs = Chat.objects.filter(publish=True).order_by('-created')[:50]
 
         data = [{
             'id': obj.id,
@@ -591,7 +614,7 @@ class ChatListAPI(APIView):
                 'nickname': obj.author.nickname,
                 'image': obj.author.image(),
             }
-        } for obj in obj_list]
+        } for obj in objs]
         return Response(data, status=HTTP_200_OK)
 
 
@@ -606,7 +629,7 @@ class ChatDetailAPI(RetrieveAPIView):
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
 
-        message_list = obj.message.filter(parent__isnull=True).select_related('author')
+        messages = obj.message.filter(parent__isnull=True).select_related('author')
 
         data = {
             'id': obj.id,
@@ -620,7 +643,7 @@ class ChatDetailAPI(RetrieveAPIView):
                 'author': message.author.id,
                 'image': message.author.image(),
                 'nickname': message.author.nickname
-            } for message in message_list],
+            } for message in messages],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -643,7 +666,7 @@ class ChatDetailAPI(RetrieveAPIView):
 # Collabo
 class CollaboListAPI(APIView):
     def get(self, request):
-        obj_list = Collabo.objects.filter(publish=True).order_by('-created')[:50]
+        objs = Collabo.objects.filter(publish=True).order_by('-created')[:50]
 
         data = [{
             'id': obj.id,
@@ -659,7 +682,7 @@ class CollaboListAPI(APIView):
                 'nickname': obj.author.nickname,
                 'image': obj.author.image(),
             }
-        } for obj in obj_list]
+        } for obj in objs]
         return Response(data, status=HTTP_200_OK)
 
 
@@ -677,7 +700,7 @@ class CollaboDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
@@ -691,7 +714,7 @@ class CollaboDetailAPI(RetrieveAPIView):
                 'author': comment.author.id,
                 'image': comment.author.image(),
                 'nickname': comment.author.nickname
-            } for comment in comment_list],
+            } for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -711,7 +734,7 @@ class CollaboDetailAPI(RetrieveAPIView):
 # Todo
 class TodoListAPI(APIView):
     def get(self, request):
-        obj_list = Todo.objects.filter(publish=True).order_by('-created')[:50]
+        objs = Todo.objects.filter(publish=True).order_by('-created')[:50]
 
         data = [{
             'id': obj.id,
@@ -728,7 +751,7 @@ class TodoListAPI(APIView):
                 'nickname': obj.author.nickname,
                 'image': obj.author.image(),
             }
-        } for obj in obj_list]
+        } for obj in objs]
         return Response(data, status=HTTP_200_OK)
 
 
@@ -746,7 +769,7 @@ class TodoDetailAPI(RetrieveAPIView):
         user_id = obj.author.id
         filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
         subquery = obj.comment.filter(**filter_kwargs)
-        comment_list = obj.comment.all().annotate(is_comment_like=Exists(subquery))
+        comments = obj.comment.all().annotate(is_comment_like=Exists(subquery))
 
         data = {
             'id': obj.id,
@@ -762,7 +785,7 @@ class TodoDetailAPI(RetrieveAPIView):
                 'author': comment.author.id,
                 'image': comment.author.image(),
                 'nickname': comment.author.nickname
-            } for comment in comment_list],
+            } for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
