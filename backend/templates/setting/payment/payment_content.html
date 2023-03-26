@@ -16,7 +16,7 @@
       ・個別広告表示1つ<br>
       ・全体広告OFF
     </div>
-    <button value="price_1K9VSxCHdDAlRliqOZnYuctl" csrf="{{ csrf_token }}" class="btn btn-primary btn-sm checkout-button">購入する</button>
+    <button value="price_1K9VSxCHdDAlRliqOZnYuctl" csrf="{{ csrf_token }}" class="button purple xs checkout_button">購入する</button>
   </section>
 
   <section class="section_plan">
@@ -32,7 +32,7 @@
       ・個別広告表示3つ<br>
       ・全体広告OFF
     </div>
-    <button value="price_1K9VTbCHdDAlRliq3YNA768b" csrf="{{ csrf_token }}" class="btn btn-primary btn-sm checkout-button">購入する</button>
+    <button value="price_1K9VTbCHdDAlRliq3YNA768b" csrf="{{ csrf_token }}" class="button purple xs checkout_button">購入する</button>
   </section>
 
   <section class="section_plan">
@@ -49,7 +49,7 @@
       ・全体広告OFF<br>
       ・楽曲ダウンロード
     </div>
-    <button value="price_1K9VU9CHdDAlRliqXsIS6GC4" csrf="{{ csrf_token }}" id="test" class="btn btn-primary btn-sm checkout-button">購入する</button>
+    <button value="price_1K9VU9CHdDAlRliqXsIS6GC4" csrf="{{ csrf_token }}" id="test" class="button purple xs checkout_button">購入する</button>
   </section>
 
   <section class="section_plan">
@@ -63,7 +63,7 @@
     <div class="content_description">
       現在のプランを変更
     </div>
-    <a href="{% url 'myus:chage_plan' %}" class="btn btn-success btn-sm">変更する</a>
+    <button onclick="location.href='{% url 'myus:chage_plan' %}'" class="button purple xs">変更する</button>
   </section>
 
   <section class="section_plan">
@@ -78,7 +78,7 @@
       有料プランを解約する<br>
       ・今月お支払いした料金は返金されません
     </div>
-    <button class="btn btn-success btn-sm">変更する</button>
+    <button class="button purple xs">変更する</button>
   </section>
 </article>
 {% else %}

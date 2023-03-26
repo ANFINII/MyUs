@@ -80,35 +80,35 @@ def pjax_context(request, href):
             context = {'todo_list': result[:100], 'query': search, 'count': result.count()}
         else:
             context = {'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100]}
-    if href in ('follow', 'follower'):
+    if href in ('menu/follow', 'menu/follower'):
         if search:
-            template = f'follow/{href}_list.html'
+            template = f'menu/follow/{href}_list.html'
             result = SearchData.search_follow(Follow, href, user, search)
             context = {f'{href}_list': result[:100], 'query': search, 'count': result.count()}
-        elif href == 'follow':
-            template = 'follow/follow_list.html'
+        elif href == 'menu/follow':
+            template = 'menu/follow/follow_list.html'
             context = {'follow_list': Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100]}
-        elif href == 'follower':
-            template = 'follow/follower_list.html'
+        elif href == 'menu/follower':
+            template = 'menu/follow/follower_list.html'
             context = {'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100]}
     if href in model_create_pjax:
         model = href.replace('/create', '')
         template = f'media/{model}/{model}_create_content.html'
-    if href == 'notification':
-        template = 'common/notification_content.html'
-        context = {'notification_setting_list': NotificationSetting.objects.filter(user=user.id)}
-    if href == 'userpolicy':
-        template = 'common/userpolicy_content.html'
-    if href == 'knowledge':
-        template = 'common/knowledge_content.html'
-    if href == 'payment':
-        template = 'payment/payment_content.html'
-    if href == 'profile':
-        template = 'registration/profile_content.html'
-    if href == 'mypage':
-        template = 'registration/mypage_content.html'
+    if href == 'menu/userpolicy':
+        template = 'menu/userpolicy_content.html'
+    if href == 'menu/knowledge':
+        template = 'menu/knowledge_content.html'
+    if href == 'setting/payment':
+        template = 'setting/payment/payment_content.html'
+    if href == 'setting/profile':
+        template = 'setting/profile_content.html'
+    if href == 'setting/mypage':
+        template = 'setting/mypage_content.html'
         context = {'mypage_list': MyPage.objects.filter(user=user.id)}
-    if href == 'withdrawal':
-        template = 'registration/withdrawal_content.html'
+    if href == 'setting/withdrawal':
+        template = 'setting/withdrawal_content.html'
         context = {'expired_seconds': 60}
+    if href == 'setting/notification':
+        template = 'setting/notification_content.html'
+        context = {'notification_setting_list': NotificationSetting.objects.filter(user=user.id)}
     return {'html': render_to_string(template, context, request)}

@@ -1,8 +1,8 @@
 from django.urls import path
 from apps.myus.views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
-from apps.myus.views import ProfileView, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle
+from apps.myus.views import ProfileView, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle, Withdrawal
 from apps.myus.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
-from apps.myus.views import NotificationSettingView, notification_setting, notification_confirmed, notification_deleted
+from apps.myus.views import NotificationSettingView, notification_update, notification_confirmed, notification_deleted
 from apps.myus.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
 from apps.myus.views import VideoList, VideoCreate, VideoDetail
 from apps.myus.views import MusicList, MusicCreate, MusicDetail
@@ -13,7 +13,7 @@ from apps.myus.views import CollaboList, CollaboCreate, CollaboDetail
 from apps.myus.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 from apps.myus.views import searchtag_create, advertise_read, like_form, like_form_comment
 from apps.myus.views import comment_form, reply_form, comment_update, comment_delete, reply_delete
-from apps.myus.views import pjax, signup_form, login_form, logout_form, Withdrawal
+from apps.myus.views import pjax, signup_form, login_form, logout_form
 
 app_name = 'myus'
 
@@ -24,28 +24,30 @@ urlpatterns = [
     path('userpage/information/<str:nickname>', UserPageInfo.as_view(), name='userpage_info'),
     path('userpage/advertise/<str:nickname>', UserPageAdvertise.as_view(), name='userpage_advertise'),
 
-    path('profile', ProfileView.as_view(), name='profile'),
-    path('profile/update', ProfileUpdate.as_view(), name='profile_update'),
-    path('mypage', MyPageView.as_view(), name='mypage'),
-    path('mypage/update', MyPageUpdate.as_view(), name='mypage_update'),
-    path('mypage/toggle', mypage_toggle, name='mypage_toggle'),
+    path('setting/profile', ProfileView.as_view(), name='profile'),
+    path('setting/profile/update', ProfileUpdate.as_view(), name='profile_update'),
+    path('setting/mypage', MyPageView.as_view(), name='mypage'),
+    path('setting/mypage/update', MyPageUpdate.as_view(), name='mypage_update'),
+    path('setting/mypage/toggle', mypage_toggle, name='mypage_toggle'),
+    path('setting/withdrawal', Withdrawal.as_view(), name='withdrawal'),
+    path('setting/withdrawal/<str:token>', Withdrawal.as_view(), name='withdrawal'),
 
-    path('payment', Payment.as_view(), name='payment'),
-    path('payment/success', PaymentSuccess.as_view(), name='payment_success'),
-    path('payment/cancel', PaymentCancel.as_view(), name='payment_cancel'),
-    path('payment/chage_plan', ChangePlan.as_view(), name='chage_plan'),
-    path('payment/create_checkout_session', create_checkout_session, name='create_checkout_session'),
+    path('setting/payment', Payment.as_view(), name='payment'),
+    path('setting/payment/success', PaymentSuccess.as_view(), name='payment_success'),
+    path('setting/payment/cancel', PaymentCancel.as_view(), name='payment_cancel'),
+    path('setting/payment/chage_plan', ChangePlan.as_view(), name='chage_plan'),
+    path('setting/payment/create_checkout_session', create_checkout_session, name='create_checkout_session'),
 
-    path('notification', NotificationSettingView.as_view(), name='notification'),
-    path('notification/setting', notification_setting, name='notification_setting'),
-    path('notification/confirmed', notification_confirmed, name='notification_confirmed'),
-    path('notification/deleted', notification_deleted, name='notification_deleted'),
+    path('setting/notification', NotificationSettingView.as_view(), name='notification'),
+    path('setting/notification/update', notification_update, name='notification_update'),
+    path('setting/notification/confirmed', notification_confirmed, name='notification_confirmed'),
+    path('setting/notification/deleted', notification_deleted, name='notification_deleted'),
 
-    path('userpolicy', UserPolicy.as_view(), name='userpolicy'),
-    path('knowledge', Knowledge.as_view(), name='knowledge'),
-    path('follower', FollowerList.as_view(), name='follower_list'),
-    path('follow', FollowList.as_view(), name='follow_list'),
-    path('follow/create/<str:nickname>', follow_create, name='follow_create'),
+    path('menu/userpolicy', UserPolicy.as_view(), name='userpolicy'),
+    path('menu/knowledge', Knowledge.as_view(), name='knowledge'),
+    path('menu/follower', FollowerList.as_view(), name='follower_list'),
+    path('menu/follow', FollowList.as_view(), name='follow_list'),
+    path('menu/follow/create/<str:nickname>', follow_create, name='follow_create'),
 
     path('video', VideoList.as_view(), name='video_list'),
     path('video/create', VideoCreate.as_view(), name='video_create'),
@@ -94,6 +96,4 @@ urlpatterns = [
     path('signup', signup_form, name='signup'),
     path('login', login_form, name='login'),
     path('logout', logout_form, name='logout'),
-    path('withdrawal', Withdrawal.as_view(), name='withdrawal'),
-    path('withdrawal/<str:token>', Withdrawal.as_view(), name='withdrawal'),
 ]

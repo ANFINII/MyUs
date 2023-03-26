@@ -158,7 +158,7 @@ def pjax(request):
 class Withdrawal(View):
     """退会処理"""
     model = User
-    template_name = 'registration/withdrawal.html'
+    template_name = 'setting/withdrawal.html'
     timestamp_signer = TimestampSigner()
     EXPIRED_SECONDS = 60
 
@@ -179,7 +179,7 @@ class Withdrawal(View):
             try:
                 self.timestamp_signer.unsign(token, max_age=datetime.timedelta(seconds=self.EXPIRED_SECONDS))
                 context['message'] = '有効なURLです'
-                return render(request, 'registration/withdrawal_confirm.html', context)
+                return render(request, 'setting/withdrawal_confirm.html', context)
             except SignatureExpired:
                 context['message'] = 'URLは期限切れです'
             except BadSignature:
@@ -216,7 +216,7 @@ class Withdrawal(View):
 class ProfileView(TemplateView):
     """Profile"""
     model = Profile
-    template_name = 'registration/profile.html'
+    template_name = 'setting/profile.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, ProfileView, **kwargs)
@@ -226,7 +226,7 @@ class ProfileUpdate(UpdateView):
     """アカウント更新"""
     model = Profile
     fields = ('last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction')
-    template_name = 'registration/profile_update.html'
+    template_name = 'setting/profile_update.html'
     success_url = reverse_lazy('myus:profile')
 
     def get_context_data(self, **kwargs):
@@ -298,7 +298,7 @@ class ProfileUpdate(UpdateView):
 class MyPageView(TemplateView):
     """Myページ遷移"""
     model = MyPage
-    template_name = 'registration/mypage.html'
+    template_name = 'setting/mypage.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, MyPageView, **kwargs)
@@ -308,7 +308,7 @@ class MyPageUpdate(UpdateView):
     """Myページ更新"""
     model = MyPage
     fields = ('banner', 'email', 'content')
-    template_name = 'registration/mypage_update.html'
+    template_name = 'setting/mypage_update.html'
     success_url = reverse_lazy('myus:mypage')
 
     def get_context_data(self, **kwargs):
@@ -343,7 +343,7 @@ def mypage_toggle(request):
         myapge.is_advertise = True if is_advertise == 'False' else False
         myapge.save(update_fields=['is_advertise'])
         context = {
-            'toggle_mypage': render_to_string('registration/mypage_advertise.html', {
+            'toggle_mypage': render_to_string('setting/mypage_advertise.html', {
                 'mypage_list': MyPage.objects.filter(user=user),
             }, request=request)
         }
@@ -353,21 +353,21 @@ def mypage_toggle(request):
 # 決済システム
 class Payment(TemplateView):
     model = User
-    template_name = 'payment/payment.html'
+    template_name = 'setting/payment/payment.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, Payment, **kwargs)
 
 
 class PaymentSuccess(TemplateView):
-    template_name = 'payment/success.html'
+    template_name = 'setting/payment/success.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, PaymentSuccess, **kwargs)
 
 
 class PaymentCancel(TemplateView):
-    template_name = 'payment/cancel.html'
+    template_name = 'setting/payment/cancel.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, PaymentCancel, **kwargs)
@@ -375,14 +375,14 @@ class PaymentCancel(TemplateView):
 
 class ChangePlan(TemplateView):
     model = User
-    template_name = 'payment/change_plan.html'
+    template_name = 'setting/payment/change_plan.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, ChangePlan, **kwargs)
 
 
 def create_checkout_session(request):
-    stripe.myus_key = settings.STRIPE_SECRET_KEY
+    stripe.api_key = settings.STRIPE_SECRET_KEY
     post_data = json.loads(request.body.decode('utf-8'))
     try:
         checkout_session = stripe.checkout.Session.create(
@@ -394,21 +394,21 @@ def create_checkout_session(request):
         )
         return JsonResponse({'id': checkout_session.id, 'publicKey': settings.STRIPE_PUBLIC_KEY})
     except Exception as e:
-        return JsonResponse({'error':str(e)})
+        return JsonResponse({'error': str(e)})
 
 
 # 通知設定
 class NotificationSettingView(TemplateView):
     """NotificationSettingView"""
     model = NotificationSetting
-    template_name = 'common/notification.html'
+    template_name = 'setting/notification.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, NotificationSettingView, **kwargs)
 
 
-def notification_setting(request):
-    """notification_setting"""
+def notification_update(request):
+    """notification_update"""
     if request.method == 'POST':
         user = request.user
         is_notification = request.POST['notification']
@@ -705,7 +705,7 @@ class UserPageAdvertise(ListView):
 class FollowList(ListView):
     """FollowList"""
     model = Follow
-    template_name = 'follow/follow.html'
+    template_name = 'menu/follow/follow.html'
     context_object_name = 'follow_list'
 
     def get_context_data(self, **kwargs):
@@ -718,7 +718,7 @@ class FollowList(ListView):
 class FollowerList(ListView):
     """FollowerList"""
     model = Follow
-    template_name = 'follow/follower.html'
+    template_name = 'menu/follow/follower.html'
     context_object_name = 'follower_list'
 
     def get_context_data(self, **kwargs):
@@ -746,7 +746,7 @@ def follow_create(request, nickname):
 class UserPolicy(TemplateView):
     """UserPolicy"""
     model = Notification
-    template_name = 'common/userpolicy.html'
+    template_name = 'menu/userpolicy.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, UserPolicy, **kwargs)
@@ -756,7 +756,7 @@ class UserPolicy(TemplateView):
 class Knowledge(TemplateView):
     """Knowledge"""
     model = Notification
-    template_name = 'common/knowledge.html'
+    template_name = 'menu/knowledge.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, Knowledge, **kwargs)

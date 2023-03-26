@@ -1,16 +1,16 @@
-<h1>Follow</h1>
+<h1>Follower</h1>
 {% if query %}
 <section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
 {% endif %}
 
 {% if user.is_authenticated %}
 <div class="follow_button">
-  <button type="button" href="{% url 'myus:follower_list' %}" class="button blue xs pjax_button">フォロワー</button>
-  <span>フォロー数：{{ user.mypage.following_num }}</span>
+  <button type="button" href="{% url 'myus:follow_list' %}" class="button blue xs pjax_button">フォロー</button>
+  <span>フォロワー数：{{ user.mypage.follower_num }}</span>
 </div>
 
 <article class="article_list">
-  {% include 'follow/follow_article.html' %}
+  {% include 'menu/follow/follower_article.html' %}
 </article>
 {% else %}
 <h2 class="login_required">ログインしてください</h2>
