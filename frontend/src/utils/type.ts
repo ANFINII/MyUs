@@ -56,6 +56,7 @@ export interface MediaResponse {
   created: string
   updated: string
   author: author
+  model_name: string
 }
 
 export interface VideoResponse extends MediaResponse {

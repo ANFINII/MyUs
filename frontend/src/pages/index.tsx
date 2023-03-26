@@ -36,8 +36,9 @@ const datas: Array<VideoResponse> = [
     "author": {
       "id": 1,
       "nickname": "アンさん",
-      "image": "/media/users/images_user/user_1/An_Okina.jpg"
-    }
+      "image": "/media/users/images_user/user_1/An_Okina.jpg",
+    },
+    "model_name": "video",
   },
   {
     "id": 2,
@@ -56,7 +57,8 @@ const datas: Array<VideoResponse> = [
       "id": 2,
       "nickname": "ショウエン",
       "image": "/media/users/images_user/user_2/MyUs_Profile_02.jpg"
-    }
+    },
+    "model_name": "video",
   },
   {
     "id": 3,
@@ -75,7 +77,8 @@ const datas: Array<VideoResponse> = [
       "id": 3,
       "nickname": "ソウヒ",
       "image": "/media/users/images_user/user_3/MyUs_Profile_03.jpg"
-    }
+    },
+    "model_name": "video",
   },
   {
     "id": 4,
@@ -94,7 +97,8 @@ const datas: Array<VideoResponse> = [
       "id": 4,
       "nickname": "ケイマ",
       "image": "/media/users/images_user/user_4/MyUs_Profile_04.jpg"
-    }
+    },
+    "model_name": "video",
   },
   {
     "id": 5,
@@ -113,18 +117,19 @@ const datas: Array<VideoResponse> = [
       "id": 5,
       "nickname": "アン",
       "image": "/media/users/images_user/user_5/MyUs_Profile_01.jpg"
-    }
+    },
+    "model_name": "video",
   }
 ]
 
 const HomePage: NextPage = () => {
   return (
     <>
-      <HomeList query={query} datas={datas} />
+      <HomeList query={query} datas={datas} videos={datas} />
       {/* <Script src="https://vjs.zencdn.net/7.19.2/video.min.js"></Script>
       <Script src='/pages/api/video_auto.js'></Script>
       <script>$(function() { $('audio').audioPlayer() })</cript> */}
     </>
   )
 }
-export default HomePage;
+export default HomePage

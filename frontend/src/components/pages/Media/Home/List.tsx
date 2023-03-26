@@ -8,29 +8,26 @@ import ArticleChat from 'components/elements/Article/Chat'
 
 interface Props {
   query?: Query
-  datas: Array<VideoResponse>
+  videos: Array<VideoResponse>
+  datas?: Array<VideoResponse>
+  // datas: Array<VideoResponse>
+  // datas: Array<VideoResponse>
+  // datas: Array<VideoResponse>
+  // datas: Array<VideoResponse>
 }
 
 export default function HomeList(props: Props) {
-  const {query, datas} = props
+  const {query, datas, videos} = props
   return (
     <Main title="MyUsホームページ" hero="Home" query={query}>
       <hr/>
 
       <article className="article_index">
         <h2>Video</h2>
-        {/* {query ??
-          {% for item in object_list %}
-            {% with item|class_name as model_name %}
-              {% if model_name == 'Video' %}
-                {% include 'media/video/video_article.html' %}
-              {% endif %}
-            {% endwith %}
-          {% endfor %}
-        :
-          <ArticleVideo datas={datas} />
-        } */}
-      </article>
+        {videos.map((data) => (
+          <ArticleVideo data={data} key={data.id} />
+        ))}
+        </article>
       <hr/>
 
       <article className="article_index">
