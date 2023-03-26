@@ -6,7 +6,7 @@ from apps.myus.admin import manage_site
 
 
 urlpatterns = [
-    path('', include('django.contrib.auth.urls')),
+    path('setting/', include('django.contrib.auth.urls')),
     path('', include('apps.myus.urls')),
     path('api/', include('apps.api.urls')),
     path('api/auth/', include('rest_framework.urls')),
