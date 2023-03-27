@@ -1,6 +1,6 @@
 import PasswordChangeForm from 'components/pages/Setting/PasswordChangeForm'
 
-export default function NotificationPage() {
+export default function PasswordChangeFormPage() {
   return (
     <PasswordChangeForm />
   )

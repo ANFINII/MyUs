@@ -1,7 +1,7 @@
 import Main from 'components/layouts/Main'
 import Footer from 'components/layouts/Footer'
 
-export default function Notification() {
+export default function PasswordChangeDone() {
   return (
     <Main title="パスワード変更">
       <article className="article_pass">
