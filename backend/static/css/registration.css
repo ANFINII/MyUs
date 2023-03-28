@@ -122,7 +122,7 @@ body::-webkit-scrollbar-thumb:active {
   margin: 0 0 8px 0;
 }
 
-ul, .messages_password_reset {
+.messages_password_reset {
   list-style: none;
   font-size: 14px;
   color: rgb(255, 0, 0);

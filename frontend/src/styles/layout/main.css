@@ -34,6 +34,15 @@
   margin-top: 32px;
 }
 
+.form_signup .button_margin {
+  width: 100%;
+}
+
+.form_signup .input_margin {
+  width: 100%;
+  margin: 0 0 16px 0;
+}
+
 .main div.field > input,
 div.field > textarea,
 div.field > select,
