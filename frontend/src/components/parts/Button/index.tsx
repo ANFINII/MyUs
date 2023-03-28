@@ -13,16 +13,17 @@ interface Props extends Color {
   type?: 'submit' | 'reset' | 'button'
   value?: string
   className?: string
+  disabled?: boolean
   children?: string | string[]
   onClick?(): void
 }
 
 export default function Button(props: Props) {
   const {blue, purple, red, green, light} = props
-  const {size, type, value, className, children, onClick} = props
+  const {size, type, value, className, disabled, children, onClick} = props
 
   return (
-    <button type={type} value={value} onClick={onClick}
+    <button type={type} value={value} onClick={onClick} disabled={disabled}
       className={
         `${style.button} `
         + (blue ? `${style.blue} ` : '')

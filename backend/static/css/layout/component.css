@@ -93,7 +93,6 @@
   background: rgb(190, 55, 40);
 }
 
-
 .button.red:disabled {
   border: 1px solid rgb(255, 170, 180);
   background: rgb(255, 170, 180);

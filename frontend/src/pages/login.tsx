@@ -1,13 +1,12 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { useRouter } from "next/router"
-import { useState } from 'react'
+import Router from 'next/router'
+import {useState} from 'react'
 import Footer from 'components/layouts/Footer'
 import Input from 'components/parts/Input'
 import Button from 'components/parts/Button'
 
 export default function Login() {
-  const router = useRouter()
   const url = process.env.NEXT_PUBLIC_API_URL
   const token = process.env.TOKEN
   // const [token, setToken] = useState([])
@@ -43,9 +42,7 @@ export default function Login() {
         </div>
 
         <Button blue size="xl" type="submit" onClick={loginClicked} className="button_margin">ログイン</Button>
-        <Link href="/registration/signup">
-          <Button green size="xl" className="button_margin">アカウント登録</Button>
-        </Link>
+        <Button green size="xl" className="button_margin" onClick={() => Router.push('/registration/signup')}>アカウント登録</Button>
       </form>
 
       <Footer />
