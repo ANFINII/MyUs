@@ -1,5 +1,7 @@
+import Router from 'next/router'
 import Main from 'components/layouts/Main'
 import Footer from 'components/layouts/Footer'
+import Button from 'components/parts/Button'
 
 export default function PasswordChangeDone() {
   return (
@@ -9,7 +11,7 @@ export default function PasswordChangeDone() {
         <form method="POST" action="" className="form_signup password_done">
           {/* {% csrf_token %} */}
           <p className="messages_password_done">パスワードの変更が完了しました!</p>
-          <p><a href="{% url 'myus:profile' %}" className="btn btn-lg btn-primary btn-block pjax_button">戻る</a></p>
+          <Button blue size="xl" onClick={() => Router.push('/setting/profile')} className="button_margin">戻る</Button>
         </form>
         <Footer />
       </article>
