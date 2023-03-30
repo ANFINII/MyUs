@@ -4,7 +4,7 @@
   <form method="POST" action="{% url 'myus:withdrawal' %}" class="form_signup">
     {% csrf_token %}
     {% if messages %}
-    <ul class="messages_login">
+    <ul class="messages_password_change">
       {% for message in messages %}
       <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
       {% endfor %}
@@ -12,21 +12,22 @@
     {% endif %}
 
     <p>{{ expired_seconds }}秒有効なURLを生成します</p>
+    <br>
 
-    <p><input type="password" name="password" placeholder="パスワード" minlength="8" maxlength="16" class="form-control" required></p>
+    <input type="password" name="password" placeholder="パスワード" minlength="8" maxlength="16" class="input input_margin" required>
 
-    <p><input type="submit" value="退会URL生成" id="submit" class="btn btn-lg btn-success btn-block submit"></p>
+    <button class="button green xl button_margin">退会URL生成</button>
 
     <p class="withdrawal">
     {% if token_signed %}
-      <a href="{% url 'myus:withdrawal' token_signed %}" class="btn btn-lg btn-danger btn-block">退会する</a>
+      <button onclick="location.href='{% url 'myus:withdrawal' token_signed %}'" class="button red xl button_margin">退会する</button>
     {% endif %}
     {% if message %}
-      <button class="btn btn-lg btn-danger btn-block">{{ message }}</button>
+      <button class="button red xl button_margin">{{ message }}</button>
     {% endif %}
     </p>
 
-    <p><a href="{% url 'myus:index' %}" class="btn btn-lg btn-primary btn-block pjax_button">ホーム</a></p>
+    <button href="{% url 'myus:index' %}" class="button blue xl button_margin pjax_button">ホーム</button>
   </form>
   {% include 'parts/footer-myus.html' %}
   {% else %}
