@@ -19,11 +19,11 @@ export default function TodoDelete() {
 
       <p>内容：{{ todo.content }}</p> */}
 
-      <br/>
+      <br />
 
       <form method="POST" action="">
         {/* {% csrf_token %} */}
-        <p><input type="submit" value="削除する" className="btn btn-danger btn-sm"/></p>
+        <input type="submit" value="削除する" className="btn btn-danger btn-sm" />
       </form>
       {/* {% else %} */}
       <h2 className="login_required">ログインしてください</h2>

@@ -11,10 +11,10 @@ interface Props {
 export default function InputFile(props: Props) {
   const {id, className, accept, required} = props
   const inputEl = useRef<HTMLInputElement>(null)
-  const [fileName, setFileName] = useState("")
+  const [fileName, setFileName] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileName((e.target.value.replace("C:\\fakepath\\", "")))
+    setFileName(e.target.value.replace('C:\\fakepath\\', ''))
   }
   const handleClick = () => inputEl.current?.click()
 

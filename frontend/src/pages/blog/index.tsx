@@ -2,13 +2,11 @@ import {Query, ImageResponse} from 'utils/type'
 import BlogList from 'components/pages/Media/Blog/List'
 
 const query: Query = {
-  name: "test",
+  name: 'test',
   count: 0,
 }
 const datas: Array<ImageResponse> = []
 
 export default function BlogListPage() {
-  return (
-    <BlogList query={query} datas={datas} />
-  )
+  return <BlogList query={query} datas={datas} />
 }
