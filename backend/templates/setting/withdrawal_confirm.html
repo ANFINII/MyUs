@@ -3,16 +3,17 @@
 
 {% block content %}
 <main class="main">
+  <h1>MyUs退会</h1>
   <article class="article_pass">
-    <h1>MyUs退会</h1>
     {% if user.is_authenticated %}
     <form method="POST" action="{% url 'myus:withdrawal' %}" class="form_signup">
       {% csrf_token %}
       <p style="color: red;">本当に退会しますか？</p>
+      <br>
 
       <input type="password" name="password2" placeholder="パスワード" minlength="8" maxlength="16" class="input input_margin" required>
 
-      <p><input type="submit" value="退会する" id="submit" class="btn btn-lg btn-danger btn-block submit"></p>
+      <button class="button red xl button_margin">退会する</button>
 
       <button href="{% url 'myus:withdrawal' %}" class="button blue xl button_margin pjax_button">戻る</button>
     </form>

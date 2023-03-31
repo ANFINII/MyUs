@@ -7,8 +7,8 @@ import Button from 'components/parts/Button'
 export default function PasswordChange() {
   return (
     <Main title="パスワード変更">
+      <h1>パスワード変更</h1>
       <article className="article_pass">
-        <h1>パスワード変更</h1>
         <form method="POST" action="" className="form_signup">
           {/* {% csrf_token %} */}
           <ul className="messages_password_change">
