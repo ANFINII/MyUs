@@ -9,18 +9,18 @@
 
 .article_table h1 {
   display: flex;
-  font-size: 24px;
   max-height: 2em;
   margin: 0;
+  font-size: 24px;
 }
 
 .article_table .login_required,
 .article_pass .login_required {
   grid-column: 1/-1;
   grid-row: 2/3;
-  font-size: 16px;
-  color: rgb(255, 0, 0);
   margin: -9px 0 0 0;
+  color: rgb(255, 0, 0);
+  font-size: 16px;
 }
 
 .messages_profile {
