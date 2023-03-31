@@ -10,7 +10,7 @@
   height: 30px;
   margin: 14px 0;
   font-size: 24px;
-  color: rgb(50, 80, 150);
+  color: rgb(50, 70, 140);
 }
 
 .main h1 span {
@@ -586,8 +586,8 @@ div.field > button {
 .userpage_author {
   display: grid;
   grid-template-columns: 80px auto auto;
-  grid-template-rows: 80px 22px 22px;
-  margin: 16px 30px;
+  grid-template-rows: 36px 22px 22px;
+  margin: 15px 30px;
 }
 
 .userpage_image {
