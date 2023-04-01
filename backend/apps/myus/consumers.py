@@ -103,7 +103,7 @@ class ChatConsumer(WebsocketConsumer):
             'message_id': message.id,
             'joined': chat.joined,
             'thread': chat.thread,
-            'message_lists': render_to_string('chat/chat_message/chat_message.html', {
+            'message_lists': render_to_string('media/chat/chat_message/chat_message.html', {
                 'user_id': self.scope['user'].id,
                 'obj_id': chat.id,
                 'is_period': chat.period < date.today(),
@@ -121,7 +121,7 @@ class ChatConsumer(WebsocketConsumer):
             'parent_id': message.parent.id,
             'joined': chat.joined,
             'reply_num': Message.objects.filter(parent=message.parent).count(),
-            'reply_lists': render_to_string('chat/chat_reply/chat_reply.html', {
+            'reply_lists': render_to_string('media/chat/chat_reply/chat_reply.html', {
                 'user_id': self.scope['user'].id,
                 'obj_id': chat.id,
                 'is_period': chat.period < date.today(),
