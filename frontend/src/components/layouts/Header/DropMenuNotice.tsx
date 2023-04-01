@@ -107,7 +107,7 @@ export default function DropMenuNotice() {
             {/* </a> */}
 
             <form method="POST" action="">
-              {/* <i title="閉じる" className="bi bi-x notification_aria_list_2" style={{font-size: '1.41em';}}></i> */}
+              {/* <i title="閉じる" className="bi-x notification_aria_list_2" style={{font-size: '1.41em';}}></i> */}
             </form>
           </object>
         </div>

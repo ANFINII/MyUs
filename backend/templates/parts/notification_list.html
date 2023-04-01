@@ -44,27 +44,27 @@
         {{ notification.content_object.text|safe }}
       </div>
       {% elif notification.type_no == 10 %}
-        {% if  notification.content_object.read >= 1000000000 %}
+        {% if notification.content_object.read >= 1000000000 %}
         <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10億回閲覧されました">
           {{ notification.content_object.title }}が10億回閲覧されました
         </div>
-        {% elif  notification.content_object.read >= 100000000 %}
+        {% elif notification.content_object.read >= 100000000 %}
         <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1億回閲覧されました">
           {{ notification.content_object.title }}が1億回閲覧されました
         </div>
-        {% elif  notification.content_object.read >= 10000000 %}
+        {% elif notification.content_object.read >= 10000000 %}
         <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1000万回閲覧されました">
           {{ notification.content_object.title }}が1000万回閲覧されました
         </div>
-        {% elif  notification.content_object.read >= 1000000 %}
+        {% elif notification.content_object.read >= 1000000 %}
         <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が100万回閲覧されました">
           {{ notification.content_object.title }}が100万回閲覧されました
         </div>
-        {% elif  notification.content_object.read >= 100000 %}
+        {% elif notification.content_object.read >= 100000 %}
         <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10万回閲覧されました">
           {{ notification.content_object.title }}が10万回閲覧されました
         </div>
-        {% elif  notification.content_object.read >= 10000 %}
+        {% elif notification.content_object.read >= 10000 %}
         <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1万回閲覧されました">
           {{ notification.content_object.title }}が1万回閲覧されました
         </div>
@@ -73,7 +73,7 @@
     </a>
 
     <form method="POST" action="">
-      <i title="閉じる" class="bi bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
+      <i title="閉じる" class="bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
     </form>
   </object>
 </div>

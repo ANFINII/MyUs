@@ -4,7 +4,12 @@
   <div class="chat_section_content">
     <input type="checkbox" id="chat_content_check_id" class="chat_content_check">
     <label for="chat_content_check_id" title="内容" class="chat_content_label">
-      <i title="内容" class="bi bi-file-text"></i>
+      <span title="内容">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi-file-text" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"/>
+          <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/>
+        </svg>
+      </span>
       <h1 title="{{ object.title }}">{{ object.title }}</h1>
     </label>
 
@@ -97,7 +102,9 @@
 
 <div class="chat_section_nav">
   <label for="chat_section_nav_check_id" class="chat_section_nav_label">
-    <i title="開閉" class="bi bi-arrow-left-right"></i>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi-arrow-left-right" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+    </svg>
   </label>
   <div  class="chat_section_nav_area">
     {% for item in chat_list %}

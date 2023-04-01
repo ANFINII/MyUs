@@ -110,9 +110,12 @@ hr {
 
 .chat_section_header h1 {
   display: inline;
-  font-size: 16px;
   height: fit-content;
   margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgb(100, 100, 100);
+  pointer-events: auto;
 }
 
 .article_detail_aria_2 time {
@@ -137,15 +140,15 @@ hr {
 .chat_section_header_cross h2 {
   height: fit-content;
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: rgb(100, 100, 100);
   white-space: nowrap;
 }
 
-.chat_section_header_cross i {
+.chat_section_header_cross .bi-x {
   position: fixed;
-  top: 72px;
+  top: 82px;
   right: 0;
   max-width: 30px;
   color: rgb(100, 100, 100);
@@ -153,7 +156,7 @@ hr {
 
 /* 390pxまでの幅の場合に適応される  */
 @media screen and (max-width: 390px) {
-  .chat_section_header_cross i {
+  .chat_section_header_cross .bi-x {
     display: none;
   }
 }
@@ -161,12 +164,6 @@ hr {
 .chat_content_label .bi {
   margin: 0 2px 0 0;
   pointer-events: none;
-}
-
-.chat_content_label h1 {
-  pointer-events: auto;
-  font-weight: 600;
-  color: rgb(100, 100, 100);
 }
 
 .bi-x:hover,
@@ -210,7 +207,8 @@ hr {
 
 .bi-file-text {
   display: inline;
-  margin: 0;
+  width: 0.9rem;
+  margin: 0 0 5px 0;
 }
 
 .chat_content_area {
@@ -333,10 +331,6 @@ hr {
   overflow-y: scroll;
 }
 
-.bi-arrow-left-right {
-  margin: 0 18px;
-}
-
 .chat_section_nav_label {
   grid-column: 1/-1;
   grid-row: 1/2;
@@ -378,6 +372,10 @@ hr {
   margin: 0;
   overflow: hidden;
   word-break: break-all;
+}
+
+.bi-arrow-left-right {
+  margin: 0 18px;
 }
 
 /* chat_section_main */
@@ -564,6 +562,13 @@ hr {
   border: 1px solid rgb(200, 200, 200);
   border-top: none;
   border-radius: 0 0 5px 5px;
+}
+
+.chat_button {
+  width: 32px;
+  padding: 0 0 2px 2px;
+  font-size: 18px;
+  justify-self: end;
 }
 
 /* Quill */

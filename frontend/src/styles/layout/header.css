@@ -112,8 +112,8 @@
   margin: 0 16px;
 }
 
-.bi-arrow-left {
-  margin: 0 12px 0 16px;
+.side_menu .bi-arrow-left {
+  margin: 3px 16px 0 16px;
 }
 
 .side_menu_footer {
