@@ -28,11 +28,11 @@
 }
 
 .button.blue:hover {
-  background: rgb(20, 110, 240);
+  background: rgb(20, 110, 230);
 }
 
 .button.blue:active {
-  background: rgb(20, 90, 220);
+  background: rgb(20, 90, 210);
 }
 
 .button.blue:disabled {
@@ -61,7 +61,7 @@
 }
 
 .button.purple:active {
-  background: rgb(115, 30, 205);
+  background: rgb(115, 30, 215);
 }
 
 .button.purple:disabled {
@@ -81,8 +81,8 @@
 }
 
 .button.red {
-  border: 1px solid rgb(220, 55, 70);
-  background: rgb(220, 55, 70);
+  border: 1px solid rgb(230, 55, 70);
+  background: rgb(230, 55, 70);
 }
 
 .button.red:hover {
@@ -110,21 +110,21 @@
 }
 
 .button.green {
-  border: 1px solid rgb(20, 150, 110);
-  background: rgb(20, 150, 110);
+  border: 1px solid rgb(40, 160, 100);
+  background: rgb(40, 160, 100);
 }
 
 .button.green:hover {
-  background: rgb(20, 140, 100);
+  background: rgb(40, 140, 90);
 }
 
 .button.green:active {
-  background: rgb(20, 120, 80);
+  background: rgb(40, 120, 80);
 }
 
 .button.green:disabled {
-  border: 1px solid rgb(150, 240, 210);
-  background: rgb(150, 240, 210);
+  border: 1px solid rgb(150, 220, 210);
+  background: rgb(150, 220, 210);
   cursor: initial;
 }
 
@@ -139,7 +139,7 @@
 }
 
 .button.light {
-  color: rgb(30, 30, 30);
+  color: rgb(50, 50, 50);
   background: rgb(255, 255, 255);
 }
 
