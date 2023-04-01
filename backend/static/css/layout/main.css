@@ -954,10 +954,6 @@ div.field > button {
   margin: 0 5px 0 0;
 }
 
-.reply_input .bi-caret-right-fill {
-  margin: 0 0 2px 0;
-}
-
 /* コメントエリア */
 .comment_aria {
   height: 500px;
