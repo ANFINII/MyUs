@@ -4,42 +4,37 @@
 {% if user.is_authenticated %}
 <form method="POST" action="">
   {% csrf_token %}
-  <p><label for="title">タイトル</label></p>
-  <p><input type="text" name="title" id="title" class="form-control" required></p>
+  <p class="margin">タイトル</p>
+  <input name="title" class="input" required>
 
-  <p><label for="content">内容</label></p>
-  <p><textarea name="content" cols="100" rows="1" id="content" class="form-control textarea" required></textarea></p>
+  <p class="margin">内容</p>
+  <textarea name="content" rows="1" class="textarea" required></textarea>
 
-  <p><label for="id_priority">優先度</label></p>
-  <p>
-    <select name="priority" id="id_priority" class="form-control" required>
-      <option value="" selected>--------</option>
+  <p class="margin">優先度</p>
+  <label class="select">
+    <select name="priority" id="id_priority" required>
       <option value="danger">高</option>
-      <option value="success">普通</option>
+      <option value="success" selected>普通</option>
       <option value="info">低</option>
     </select>
-  </p>
+  </label>
 
-  <p><label for="id_progress">進捗度</label></p>
-  <p>
-    <select name="progress" id="id_progress" class="form-control" required>
-      <option value="" selected>--------</option>
+  <p class="margin">進捗度</p>
+  <label class="select">
+    <select name="progress" id="id_progress" required>
       <option value="0">未着手</option>
       <option value="1">進行中</option>
       <option value="2">完了</option>
     </select>
-  </p>
+  </label>
 
-  <p><label for="id_duedate">期日</label></p>
-  <p><input type="text" name="duedate" placeholder="2021-12-31" id="id_duedate" class="form-control" required></p>
-  <br>
+  <p class="margin">期日</p>
+  <input name="duedate" placeholder="{% now 'Y' %}-12-31" id="id_duedate" class="input" required>
 
-  <p><input type="submit" value="作成する" class="btn btn-success btn-sm"></p>
+  <button type="submit" class="button green button_margin">作成する</button>
 </form>
 {% else %}
 <h2 class="login_required">ログインしてください</h2>
-{% endif %}
-
-{% block extrajs %}
+{% endif %} {% block extrajs %}
 <script src="{% static 'js/textarea.js' %}"></script>
 {% endblock extrajs %}
