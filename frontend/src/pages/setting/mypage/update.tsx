@@ -20,7 +20,7 @@ const mypage: MypageResponse = {
   follower_num: 0,
   following_num: 1,
   plan: 'Free',
-  plan_date: '2021-12-31T15:00:00Z',
+  plan_date: '2023-12-31T15:00:00Z',
   is_advertise: true,
 }
 

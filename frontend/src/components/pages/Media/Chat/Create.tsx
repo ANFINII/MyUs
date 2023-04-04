@@ -4,6 +4,8 @@ import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 
 interface Props {is_authenticated?: boolean}
+const now = new Date()
+const year = now.getFullYear()
 
 export default function ChatCreate(props: Props) {
   const {is_authenticated} = props
@@ -19,7 +21,7 @@ export default function ChatCreate(props: Props) {
           <Textarea name="content" id="content" required></Textarea>
 
           <p className="margin">期間</p>
-          <Input name="period" placeholder="2021-12-31" id="id_period" required />
+          <Input name="period" placeholder={`${year}-12-31`} id="id_period" required />
 
           <Button green type="submit" className="button_margin">作成する</Button>
         </form>

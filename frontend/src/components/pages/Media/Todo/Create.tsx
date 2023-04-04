@@ -4,6 +4,8 @@ import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 
 interface Props {is_authenticated?: boolean}
+const now = new Date()
+const year = now.getFullYear()
 
 export default function TodoCreate(props: Props) {
   const {is_authenticated} = props
@@ -35,7 +37,7 @@ export default function TodoCreate(props: Props) {
           </select>
 
           <p>期日</p>
-          <Input name="duedate" placeholder="2021-12-31" id="id_duedate" required />
+          <Input name="duedate" placeholder={`${year}-12-31`} id="id_duedate" required />
           <br/>
 
           <Button green type="submit" className="button_margin">作成する</Button>

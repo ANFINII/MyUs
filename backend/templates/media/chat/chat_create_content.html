@@ -11,7 +11,7 @@
   <textarea name="content" rows="1" class="textarea" required></textarea>
 
   <p class="margin">期間</p>
-  <input name="period" placeholder="2021-12-31" class="input" required>
+  <input name="period" placeholder="{% now 'Y' %}-12-31" class="input" required>
 
   <button type="submit" class="button green button_margin">作成する</button>
 </form>
