@@ -55,11 +55,11 @@
 }
 
 .text_size {
-  font-size: 0.9em;
   margin: 0;
+  font-size: 0.9em;
 }
 
-.color_sidebar {
+.sidebar_color {
   color: gray;
   align-items: center;
   text-align: center;
@@ -68,6 +68,7 @@
   padding: 4px 0;
 }
 
-.color_sidebar:hover {
+.sidebar_color:hover,
+.sidebar_color.active {
   color: rgb(255, 255, 255);
 }
