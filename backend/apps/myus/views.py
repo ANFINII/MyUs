@@ -567,9 +567,9 @@ def reply_form(request):
         )
         obj.comment_num = obj.comment.all().count()
         obj.save(update_fields=['comment_num'])
-        comment = Comment.objects.get(id=comment_id)
-        comment.reply_num = Comment.objects.filter(parent=comment_id).count()
-        comment.save(update_fields=['reply_num'])
+        parent = Comment.objects.get(id=comment_id)
+        parent.reply_num = Comment.objects.filter(parent=comment_id).count()
+        parent.save(update_fields=['reply_num'])
         author = comment.parent.author
         if user != author and author.notificationsetting.is_reply:
             Notification.objects.create(
@@ -581,7 +581,7 @@ def reply_form(request):
             )
         context = {
             'comment_num': obj.comment_num,
-            'reply_num': comment.reply_num,
+            'reply_num': parent.reply_num,
             'reply_lists': render_to_string('parts/common/reply/reply.html', {
                 'reply_list': obj.comment.filter(id=comment.id),
                 'user_id': user.id,
