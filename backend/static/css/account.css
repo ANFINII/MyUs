@@ -39,6 +39,10 @@
   justify-self: end;
 }
 
+.button_group button {
+  margin: 0 0 0 3px;
+}
+
 /* table */
 .table {
   display: block;
