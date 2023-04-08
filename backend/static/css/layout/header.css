@@ -59,6 +59,7 @@
 .header_nav_7 {
   grid-column: 7/8;
   position: relative;
+  justify-self: center;
 }
 
 .icon_link {
@@ -123,11 +124,11 @@
 }
 
 .side_menu_open:hover,
-.color_header:hover {
+.header_color:hover {
   color: rgb(255, 220, 0);
 }
 
-.color_header_MyUs:hover {
+.header_color_MyUs:hover {
   color: rgb(0, 239, 239);
 }
 
