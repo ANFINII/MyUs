@@ -159,17 +159,17 @@
   background: rgba(0, 0, 0, 0.3);
 }
 
-.color_side_menu {
+.side_menu_color {
   margin: 0;
   padding: 12px 0;
 }
 
-.color_side_menu:hover {
+.side_menu_color:hover {
   color: rgb(0, 100, 255);
   background: rgb(200, 230, 255);
 }
 
-.color_side_menu_bi {
+.side_menu_color_bi {
   color: rgb(0, 70, 175);
 }
 

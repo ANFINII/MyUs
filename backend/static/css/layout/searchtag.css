@@ -97,11 +97,12 @@
 
 .searchtag_n_list {
   display: inline;
-  margin: 0 0 0 4px;
+  margin: 0 0 0 2px;
 }
 
 .searchtag_n_list a {
   font-size: 14px;
+  margin: 0 0 0 5px;
   color: rgb(100, 100, 100);
   text-decoration: none;
 }
