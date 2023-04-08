@@ -46,11 +46,11 @@ const prefecture = [
   {label:'宮崎県'},
   {label:'鹿児島県'},
   {label:'沖縄県'}
-];
+]
 
-for(let i=0; i<prefecture.length; i++){
-  const op = document.createElement('option');
-  op.value = prefecture[i].label;
-  op.text = prefecture[i].label;
-  document.getElementById('prefecture').appendChild(op);
-};
+for(let i = 0; i<prefecture.length; i++){
+  const op = document.createElement('option')
+  op.value = prefecture[i].label
+  op.text = prefecture[i].label
+  document.getElementById('prefecture').appendChild(op)
+}

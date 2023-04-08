@@ -2,7 +2,6 @@
 let checkoutButtons = document.querySelectorAll('.checkout_button')
 
 checkoutButtons.forEach(function (checkoutButton) {
-  console.log(checkoutButton)
   checkoutButton.addEventListener('click', function () {
   const csrf = $(this).attr('csrf')
   fetch('/setting/payment/create_checkout_session', {

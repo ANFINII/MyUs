@@ -11,9 +11,9 @@ var quillBlog = new Quill('#quill_blog', {
   syntax: true,
   placeholder: '',
   theme: 'snow'
-});
+})
 
 quillBlog.on('text-change', function() {
-  $('#richtext').val(quillBlog.root.innerHTML);
-  $('#delta').val(JSON.stringify(quillBlog.getContents()));
-});
+  $('#richtext').val(quillBlog.root.innerHTML)
+  $('#delta').val(JSON.stringify(quillBlog.getContents()))
+})
