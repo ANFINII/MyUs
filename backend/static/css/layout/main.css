@@ -74,7 +74,7 @@ div.field > button {
 }
 
 .article_index h2 {
-  display: inline-block;
+  display: inline;
   grid-column: 1/-1;
   grid-row: 1/2;
   font-size: 16px;
@@ -271,6 +271,10 @@ div.field > button {
 .content_side {
   display: flex;
   width: 100%;
+}
+
+.content_size a {
+  width: 192px;
 }
 
 /* コンテンツ詳細セクション */
@@ -530,7 +534,7 @@ div.field > button {
   grid-column: 2/3;
   grid-row: 1/2;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   vertical-align: bottom;
   padding: 6px 0 0 4px;
 }
@@ -605,7 +609,7 @@ div.field > button {
   grid-column: 2/3;
   grid-row: 1/2;
   padding: 0 0 0 15px;
-  font-size: 24px;
+  font-size: 22px;
   vertical-align: bottom;
   white-space: nowrap;
 }
@@ -645,7 +649,6 @@ div.field > button {
 .userpage_content_5 button {
   width: 122px;
   height: 36px;
-  font-size: 16px;
 }
 
 .userpage_button_list {
@@ -932,9 +935,8 @@ div.field > button {
 }
 
 .reply_button_group {
-  display: grid;
+  display: flex;
   grid-column: 2/-1;
-  margin: 0 3px 0 0;
   justify-content: end;
 }
 
@@ -1139,6 +1141,10 @@ div.field > button {
   margin: 0;
   font-size: 12px;
   justify-content: end;
+}
+
+.edit_button a {
+  cursor: pointer;
 }
 
 .edit_button_update,
@@ -1381,15 +1387,31 @@ div.field > button {
 }
 
 .main_decolation_todo {
-  padding: 0;
-  margin: 0;
-  border-radius: 5px;
+  padding: 8px 14px;
+  font-size: 13px;
+  border: 1px solid rgb(150, 150, 150);
+  border-radius: 4px;
+}
+
+.main_decolation_todo.success {
+  border: 1px solid rgb(120, 200, 150);
+  background: rgb(220, 252, 230);
+}
+
+.main_decolation_todo.info {
+  border: 1px solid rgb(120, 200, 200);
+  background: rgb(220, 255, 255);
+}
+
+.main_decolation_todo.danger {
+  border: 1px solid rgb(220, 120, 130);
+  background: rgb(255, 220, 230);
 }
 
 .author_space_todo {
   display: grid;
   grid-template-columns: 100px auto;
-  grid-template-rows: 76px 18px 18px 18px 48px;
+  grid-template-rows: 76px 18px 18px 18px auto;
 }
 
 .author_space_todo .content_title {
@@ -1399,7 +1421,7 @@ div.field > button {
   grid-column: 1/-1;
   grid-row: 1/2;
   height: 4.5em;
-  margin: 8px 4px 8px 10px;
+  margin: 0;
   font-size: 14px;
   overflow: hidden;
   word-break: break-all;
@@ -1409,36 +1431,36 @@ div.field > button {
   position: relative;
   grid-column: 1/-1;
   grid-row: 2/3;
-  margin: 0 10px;
-  font-size: 13px;
 }
 
 .author_space_todo .progress_myus {
   position: relative;
   grid-column: 1/-1;
   grid-row: 3/4;
-  margin: 0 10px;
-  font-size: 13px;
 }
 
 .todo_time {
   position: relative;
   grid-column: 1/-1;
   grid-row: 4/5;
-  margin: 0 10px;
-  font-size: 13px;
 }
 
 .todo_link {
-  display: inline;
+  display: flex;
   grid-column: 1/-1;
   grid-row: 5/6;
-  font-size: 13px;
-  margin: 8px 0px 8px 10px;
+  margin: 8px 0 0 0;
+  z-index: 100;
+}
+
+.todo_link a {
+  margin: 0px 6px 0 0;
+  color: rgb(255, 255, 255);
+  text-decoration: none;
 }
 
 .todo_link_detail {
   display: inline;
-  font-size: 13px;
   margin: 0;
+  font-size: 13px;
 }
