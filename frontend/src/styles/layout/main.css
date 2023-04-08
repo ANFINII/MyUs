@@ -273,6 +273,10 @@ div.field > button {
   width: 100%;
 }
 
+.content_size a {
+  width: 192px;
+}
+
 /* コンテンツ詳細セクション */
 .article_detail {
   padding: 0;

@@ -2,9 +2,9 @@
 
 {% for item in blog_list %}
 <section class="section_detail">
-  <figure class="main_decolation content_side">
+  <figure class="main_decolation content_side content_size">
     <a href="{% url 'myus:blog_detail' item.pk item.title %}">
-      <img src="{{ item.image.url }}" width="192" height="108">
+      <img src="{{ item.image.url }}">
     </a>
     <a href="{% url 'myus:blog_detail' item.pk item.title %}" class="author_space_side">
       {% include 'parts/content_title.html' %}
