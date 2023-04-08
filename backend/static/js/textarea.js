@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', function () {
+$(function () {
   const target = $('.textarea')
   const rawTarget = target.get(0)
   let lineHeight = Number(target.attr('rows'))
@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 })
 
-window.addEventListener('DOMContentLoaded', function () {
+$(function () {
   const $textarea = $('.textarea')
   const lineHeight = parseInt($textarea.css('lineHeight'))
   $textarea.on('input', function () {
@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', function () {
   })
 })
 
-window.addEventListener('DOMContentLoaded', function () {
+$(function () {
   const target = $('.textarea_br')
   const rawTarget = target.get(0)
   let lineHeight = Number(target.attr('rows'))
@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 })
 
-window.addEventListener('DOMContentLoaded', function () {
+$(function () {
   const $textarea = $('.textarea_br')
   const lineHeight = parseInt($textarea.css('lineHeight'))
   $textarea.on('input', function () {

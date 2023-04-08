@@ -936,9 +936,8 @@ div.field > button {
 }
 
 .reply_button_group {
-  display: grid;
+  display: flex;
   grid-column: 2/-1;
-  margin: 0 3px 0 0;
   justify-content: end;
 }
 
@@ -1143,6 +1142,10 @@ div.field > button {
   margin: 0;
   font-size: 12px;
   justify-content: end;
+}
+
+.edit_button a {
+  cursor: pointer;
 }
 
 .edit_button_update,

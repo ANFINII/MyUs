@@ -365,6 +365,7 @@ hr {
   grid-column: 2/3;
   grid-row: 1/2;
   font-size: 14px;
+  font-weight: 400;
   color: rgb(50, 50, 50);
   height: 40px;
   padding: 3px 0;
@@ -461,7 +462,6 @@ hr {
 
 .message_aria_list_2 p {
   margin: 0;
-  font-weight: 300;
 }
 
 .message_aria_thread {
