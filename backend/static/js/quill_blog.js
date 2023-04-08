@@ -1,7 +1,7 @@
 var quillBlog = new Quill('#quill_blog', {
   modules: {
     toolbar: [
-      [{'font': []}, {'size': []}],
+      [{'size': []}],
       [{'color': []}, {'background': []}, {'align': []}],
       [{'indent': '+1'}, {'indent': '-1'}, {'list': 'ordered'}, {'list': 'bullet'}],
       ['bold', 'underline', 'strike', 'formula', {'script': 'super'}, {'script': 'sub'}],
