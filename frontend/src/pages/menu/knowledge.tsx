@@ -16,7 +16,7 @@ export default function Knowledge() {
             <tr><td className="td_color">Chat</td><td className="td_indent">世界中の方とお話できる機能です。掲示板のように使用することもできます!</td></tr>
             <tr><td className="td_color">Collabo</td><td className="td_indent">世界中の方とコラボができる機能です。MyUs内でコラボをして創作活動の幅を広げてみましょう!きっと世界が広がります!</td></tr>
             <tr><td className="td_color">ToDo</td><td className="td_indent">ToDoを管理できる機能です。メモ替りに使用する事もできます。</td></tr>
-            <tr><td className="td_color">Myページ</td><td className="td_indent">自分のページを充実させてフォロワーを増やしてみましょう。</td></tr>
+            <tr><td className="td_color">マイページ</td><td className="td_indent">自分のページを充実させてフォロワーを増やしてみましょう。</td></tr>
             <tr><td className="td_color">フォロー</td><td className="td_indent">フォローしている人やフォロワーさんを確認できる機能です。</td></tr>
             <tr><td className="td_color">検索タグ</td><td className="td_indent">良く検索するワードを20件まで表示できます。投稿管理で表示順序を変更できます。</td></tr>
             <tr><td className="td_color">投稿管理</td><td className="td_indent">投稿した作品などを編集、非公開、削除ができます。タグ付けもこちらで出来ます。</td></tr>

@@ -30,7 +30,7 @@ class ProfileInline(admin.StackedInline):
 class MyPageInline(admin.StackedInline):
     model = MyPage
     readonly_fields = ('follower_num', 'following_num', 'plan', 'plan_date', 'is_advertise')
-    verbose_name = 'Myページ情報'
+    verbose_name = 'マイページ情報'
 
     def has_delete_permission(self, request, obj=None):
         return False

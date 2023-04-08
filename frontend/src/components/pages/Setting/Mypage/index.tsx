@@ -16,7 +16,7 @@ export default function MyPage(props: Props) {
     <Main title="MyUsマイページ設定">
       {mypage ?
         <article className="article_table">
-          <h1>Myページ設定</h1>
+          <h1>マイページ設定</h1>
           <div className="button_group">
             <Button blue size='xs' className="margin" onClick={() => Router.push('/setting/mypage/update')}>編集</Button>
             <Button purple size='xs' onClick={() => Router.push(`/userpage/${mypage.nickname}`)}>ユーザページ</Button>
@@ -64,7 +64,7 @@ export default function MyPage(props: Props) {
         </article>
       :
         <article className="article_table">
-          <h1>Myページ設定</h1>
+          <h1>マイページ設定</h1>
           <h2 className="login_required">ログインしてください</h2>
         </article>
       }

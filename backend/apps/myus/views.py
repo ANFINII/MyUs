@@ -296,7 +296,7 @@ class ProfileUpdate(UpdateView):
 
 # MyPage
 class MyPageView(TemplateView):
-    """Myページ遷移"""
+    """マイページ遷移"""
     model = MyPage
     template_name = 'setting/mypage.html'
 
@@ -305,7 +305,7 @@ class MyPageView(TemplateView):
 
 
 class MyPageUpdate(UpdateView):
-    """Myページ更新"""
+    """マイページ更新"""
     model = MyPage
     fields = ('banner', 'email', 'content')
     template_name = 'setting/mypage_update.html'

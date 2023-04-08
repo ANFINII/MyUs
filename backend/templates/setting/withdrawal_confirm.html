@@ -3,7 +3,7 @@
 
 {% block content %}
 <main class="main">
-  <h1>MyUs退会</h1>
+  <h1>退会処理</h1>
   <article class="article_pass">
     {% if user.is_authenticated %}
     <form method="POST" action="{% url 'myus:withdrawal' %}" class="form_signup">

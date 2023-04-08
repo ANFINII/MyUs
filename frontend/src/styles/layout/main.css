@@ -609,7 +609,7 @@ div.field > button {
   grid-column: 2/3;
   grid-row: 1/2;
   padding: 0 0 0 15px;
-  font-size: 24px;
+  font-size: 22px;
   vertical-align: bottom;
   white-space: nowrap;
 }
@@ -649,7 +649,6 @@ div.field > button {
 .userpage_content_5 button {
   width: 122px;
   height: 36px;
-  font-size: 16px;
 }
 
 .userpage_button_list {

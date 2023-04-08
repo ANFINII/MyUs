@@ -1,5 +1,5 @@
 <article class="article_table">
-  <h1>Myページ設定</h1>
+  <h1>マイページ設定</h1>
   {% if user.is_authenticated %}
   <div class="button_group">
     <button onclick="location.href='{% url 'myus:mypage_update' %}'" class="button blue xs">編集</button>

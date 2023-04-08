@@ -8,7 +8,7 @@ export default function WithdrawalConfirm() {
   const isAuthenticated = true
 
   return (
-    <Main title="MyUs退会処理" hero="MyUs退会">
+    <Main title="MyUs退会処理" hero="退会処理">
       <article className="article_pass">
         {isAuthenticated ?
           <form method="POST" action="" className="form_signup">
