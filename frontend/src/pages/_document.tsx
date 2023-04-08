@@ -36,7 +36,7 @@ class MyDocument extends Document {
           <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"/>
           <link rel="manifest" href="/favicon/site.webmanifest"/>
           <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#000000"/>
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;200;300;400;500;600;700&display=swap"/>
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap"/>
           <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Roboto&display=swap"/>
           <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"/>
           <base href="/"></base>

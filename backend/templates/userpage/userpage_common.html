@@ -11,7 +11,7 @@
   <span class="userpage_content_3">フォロー数 {{ author.mypage.following_num }}</span>
   <span class="userpage_content_5">
     {% if user.nickname == author.nickname %}
-    <button class="button" disabled>フォローする</button>
+    <button class="button green" disabled>フォローする</button>
     {% elif user.is_authenticated %}
     <form method="POST" action="" value="{{ author.nickname }}" csrf="{{ csrf_token }}" class="follow_form">
       {% if is_follow %}
@@ -21,7 +21,7 @@
       {% endif %}
     </form>
     {% else %}
-    <button class="button" disabled>フォローする</button>
+    <button class="button green" disabled>フォローする</button>
     {% endif %}
   </span>
 </div>

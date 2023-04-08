@@ -53,7 +53,7 @@
 
     <div class="content_detail_p2">
       {% if user.nickname == object.author.nickname %}
-      <button class="button" disabled>フォローする</button>
+      <button class="button green" disabled>フォローする</button>
       {% elif user.is_authenticated %}
       <form method="POST" action="" value="{{ object.author.nickname }}" csrf="{{ csrf_token }}" class="follow_form">
         {% if is_follow %}
@@ -63,7 +63,7 @@
         {% endif %}
       </form>
       {% else %}
-      <button class="button" disabled>フォローする</button>
+      <button class="button green" disabled>フォローする</button>
       {% endif %}
     </div>
   </div>
