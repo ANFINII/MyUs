@@ -11,20 +11,40 @@
   border-radius: 5px !important;
 }
 
+.ql-tooltip.ql-editing {
+  transform: translate(140px, 10px) !important;
+}
+
+/* ヘッダーデザイン */
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6,
+.quill_content h1,
+.quill_content h2,
+.quill_content h3,
+.quill_content h4,
+.quill_content h5,
+.quill_content h6 {
+  color: rgb(33, 37, 41);
+  font-weight: 400;
+}
+
 /*  リンクデザイン */
 .ql-snow .ql-editor a,
-.article_detail_blog a {
+.quill_content a {
   text-decoration: none;
 }
 
 /*  クォートデザイン */
 .ql-snow .ql-editor pre.ql-syntax,
-.article_detail_chat pre.ql-syntax,
-.article_detail_blog pre.ql-syntax {
+.quill_content pre.ql-syntax {
   padding: 4px 8px;
   margin: 2px 0;
   font-size: 12px;
-  color: #404040;
+  color: rgb(65, 65, 65);
   border: 1px solid rgb(200, 200, 200);
   border-radius: 3px;
   background: rgb(235, 235, 235);
@@ -32,8 +52,7 @@
 
 /*  コードブロックデザイン */
 .ql-snow .ql-editor blockquote,
-.article_detail_chat blockquote,
-.article_detail_blog blockquote {
+.quill_content blockquote {
   padding-left: 14px;
   margin-top: 0;
   margin-bottom: 5px;
@@ -42,8 +61,7 @@
 
 /*  画像デザイン */
 .ql-snow .ql-editor img,
-.article_detail_chat img,
-.article_detail_blog img {
+.quill_content img {
   max-width: 480px;
 }
 

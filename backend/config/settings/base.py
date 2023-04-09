@@ -183,7 +183,7 @@ QUILL_CONFIGS = {
         'modules': {
             'syntax': True,
             'toolbar': [
-                [{'header': [1, 2, 3, 4, 5]}],
+                [{'header': [1, 2, 3, 4, 5, 6, False]}],
                 [{'color': []}, {'background': []}, {'align': []}],
                 [{'indent': '+1'}, {'indent': '-1'}, {'list': 'ordered'}, {'list': 'bullet'}],
                 ['bold', 'underline', 'strike', 'formula', {'script': 'super'}, {'script': 'sub'}],

@@ -137,10 +137,29 @@ a:focus {
   font-size: 14px;
 }
 
+.ql-tooltip.ql-editing {
+  transform: translate(140px, 10px) !important;
+}
+
 /*  リンクデザイン */
 .ql-snow .ql-editor a,
 .article_detail_blog a {
   text-decoration: none !important;
+}
+
+/* ヘッダーデザイン */
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6 {
+  color: rgb(33, 37, 41);
+  font-weight: 400;
+}
+
+.module .ql-editor h2 {
+  background: #ffffff;
 }
 
 /*  クォートデザイン */

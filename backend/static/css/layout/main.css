@@ -340,8 +340,8 @@ div.field > button {
 }
 
 .article_detail_blog {
-  background: rgb(255, 255, 255);
   height: auto;
+  background: rgb(255, 255, 255);
 }
 
 .article_detail_music {
