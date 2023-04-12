@@ -114,9 +114,29 @@ a:focus {
   color: #404040;
 }
 
+.colM .aligned .vLargeTextField {
+  width: 840px !important;
+}
+
+.colM .aligned .vLargeTextField.django-quill-widget-container {
+  width: 855px !important;
+}
+
+.vCheckboxLabel {
+  padding: 2px 0 0 6px !important;
+}
+
+.aligned p.file-upload {
+  margin: 0 !important;
+}
+
 /* Quill全体  */
 .ql-toolbar {
   border-radius: 5px 5px 0 0;
+}
+
+.ql-container.ql-snow {
+  height: calc(100% - 45px);
 }
 
 .ql-container {

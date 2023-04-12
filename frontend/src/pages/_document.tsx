@@ -1,9 +1,9 @@
-import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document'
+import Document, {Html, Head, Main, NextScript, DocumentContext} from 'next/document'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const initialProps = await Document.getInitialProps(ctx)
-    return { ...initialProps }
+    return {...initialProps}
   }
 
   render() {
@@ -28,8 +28,8 @@ class MyDocument extends Document {
           <meta property="og:type" content="website"/>
           <meta property="og:image" content="/img/My_Idea_Know_Us.png"/>
           <meta property="og:description" content="MyUsとはMy Idea Know Usが名前の由来です。総合メディアサイトであり、アイディア想像サイトになります!!!"/>
-          <meta name="theme-color" content="#ffffff"/>
-          <meta name="msapplication-TileColor" content="#ffffff"/>
+          <meta name="theme-color" content="#32468c"/>
+          <meta name="msapplication-TileColor" content="#32468c"/>
           <meta name="msapplication-config" content="/favicon/browserconfig.xml"/>
           <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"/>
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"/>

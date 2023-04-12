@@ -3,6 +3,7 @@ import SideBar from 'components/layouts/SideBar'
 import SearchTag from 'components/layouts/SearchTag'
 
 interface Props {children: React.ReactNode}
+
 interface searchtag {
   name: string
 }
@@ -10,11 +11,7 @@ interface searchtag {
 export default function Layout(props: Props) {
   const {children} = props
 
-  const searchtagData: Array<searchtag> = [
-    {name: "初音ミク"},
-    {name: "VOCALOID"},
-    {name: "宇宙"}
-  ]
+  const searchtagData: Array<searchtag> = [{name: '初音ミク'}, {name: 'VOCALOID'}, {name: '宇宙'}]
 
   return (
     <div className="layout">

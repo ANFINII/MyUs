@@ -22,7 +22,7 @@ export default function InputFile(props: Props) {
     <>
       <input type="file" id={id} accept={accept} ref={inputEl} onChange={handleChange} hidden />
       <input placeholder="ファイル選択..." value={fileName} required={required} onClick={handleClick}
-        className={`${style.input} ` + (className ? className : '')}
+        className={style.input + (className ? ' ' + className : '')}
       />
     </>
   )

@@ -153,10 +153,6 @@ td.td_location {
   border-right: 1px solid rgb(0, 125, 0);
 }
 
-.location {
-  height: 36px;
-}
-
 td .textarea_margin {
   margin: 0 0 -5.5px 0;
 }

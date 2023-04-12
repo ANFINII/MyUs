@@ -22,18 +22,26 @@ export default function Button(props: Props) {
   const {blue, purple, red, green, light} = props
   const {size, type, value, className, disabled, children, onClick} = props
 
+  const colorCheck = (isColor: boolean | undefined, name: string) => {
+    return isColor ? ' ' + style[name] : ''
+  }
+
+  const sizeCheck = (name: string) => {
+    return size ===  name ? ' ' + style[name] : ''
+  }
+
   return (
     <button type={type} value={value} onClick={onClick} disabled={disabled}
       className={
-        `${style.button} `
-        + (blue ? `${style.blue} ` : '')
-        + (purple ? `${style.purple} ` : '')
-        + (red ? `${style.red} ` : '')
-        + (green ? `${style.green} ` : '')
-        + (light ? `${style.light} ` : '')
-        + (size === 'xl' ? `${style.xl} ` : '')
-        + (size === 'xs' ? `${style.xs} ` : '')
-        + (className ? className : '')
+        style.button +
+        colorCheck(blue, 'blue') +
+        colorCheck(purple, 'purple') +
+        colorCheck(red, 'red') +
+        colorCheck(green, 'green') +
+        colorCheck(light, 'light') +
+        sizeCheck('xl') +
+        sizeCheck('xs') +
+        (className ? ' ' + className : '')
       }
     >{children}
     </button>
