@@ -2,8 +2,8 @@
 
 import Router from 'next/router'
 import {ProfileResponse} from 'utils/type'
-import SelectDate from 'utils/lib/SelectDate'
-import useSelectDate from 'utils/lib/SelectPrefecture'
+import {prefectures} from 'utils/lib/constants'
+import selectDate from 'utils/lib/selectDate'
 import Main from 'components/layouts/Main'
 import Footer from 'components/layouts/Footer'
 import Button from 'components/parts/Button'
@@ -15,8 +15,7 @@ interface Props {user: ProfileResponse}
 
 export default function ProfileUpdate(props: Props) {
   const {user} = props
-  const {years, months, days} = SelectDate()
-  const prefectures = useSelectDate()
+  const {years, months, days} = selectDate()
 
   return (
     <Main title="MyUsアカウント設定">
