@@ -48,9 +48,15 @@
           <tr><td class="td_color">生年月日</td>
             <td>
               <div class="td_birthday">
-                <select name="year" id="year" class="input"><option value="{{ user.year }}" style="display: none">{{ user.year }}</option></select>
-                <select name="month" id="month" class="input"><option value="{{ user.month }}">{{ user.month }}</option></select>
-                <select name="day" id="day" class="input"><option value="{{ user.day }}">{{ user.day }}</option></select>
+                <label class="select">
+                  <select name="year" id="year"><option value="{{ user.year }}" style="display: none">{{ user.year }}</option></select>
+                </label>
+                <label class="select">
+                  <select name="month" id="month"><option value="{{ user.month }}">{{ user.month }}</option></select>
+                </label>
+                <label class="select">
+                  <select name="day" id="day"><option value="{{ user.day }}">{{ user.day }}</option></select>
+                </label>
               </div>
             </td>
           </tr>
@@ -70,10 +76,12 @@
           <tr><td class="td_color">郵便番号</td><td><input type="tel" name="postal_code" value="{{ user.profile.postal_code }}" maxlength="8" class="input" required></td></tr>
           <tr><td class="td_color">住所</td>
             <td class="td_location">
-              <select name="prefecture" id="prefecture" class="input location">
-                <option value="">都道府県</option>
-                <option value="{{ user.prefecture }}" selected>{{ user.prefecture }}</option>
-              </select>
+              <label class="select">
+                <select name="prefecture" id="prefecture" required>
+                  <option value="">都道府県</option>
+                  <option value="{{ user.prefecture }}" selected>{{ user.prefecture }}</option>
+                </select>
+              </label>
               <input type="text" name="city" value="{{ user.city }}" placeholder="市区町村" maxlength="255" class="input">
               <input type="text" name="address" value="{{ user.address }}" placeholder="丁番地" maxlength="255" class="input">
               <input type="text" name="building" value="{{ user.building }}" placeholder="建物名" maxlength="255" class="input">

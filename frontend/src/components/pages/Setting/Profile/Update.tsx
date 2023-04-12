@@ -1,8 +1,9 @@
 
 
 import Router from 'next/router'
-import {useState, useRef} from 'react'
 import {ProfileResponse} from 'utils/type'
+import SelectDate from 'utils/lib/SelectDate'
+import useSelectDate from 'utils/lib/SelectPrefecture'
 import Main from 'components/layouts/Main'
 import Footer from 'components/layouts/Footer'
 import Button from 'components/parts/Button'
@@ -14,30 +15,9 @@ interface Props {user: ProfileResponse}
 
 export default function ProfileUpdate(props: Props) {
   const {user} = props
-  // const [year, setYear] = useState(1900)
+  const {years, months, days} = SelectDate()
+  const prefectures = useSelectDate()
 
-  // const time = new Date();
-  // // const years = time.getFullYear();
-
-  // for (let i = year; i >= 1900; i--) {
-  //   createOptionElements(i, 'year');
-  // }
-
-  // for (let i = 1; i <= 12; i++) {
-  //   createOptionElements(i, 'month');
-  // }
-
-  // for (let i = 1; i <= 31; i++) {
-  //   createOptionElements(i, 'day');
-  // }
-
-
-  // function createOptionElements(num: number, parentId: string) {
-  //   const doc = document.createElement('option');
-  //   setYear(num)
-  //   doc.value = year;
-  //   document.getElementById(parentId).appendChild(doc);
-  // }
   return (
     <Main title="MyUsアカウント設定">
       {user ?
@@ -83,9 +63,9 @@ export default function ProfileUpdate(props: Props) {
               <tr><td className="td_color">生年月日</td>
                 <td>
                   <div className="td_birthday">
-                    <Select name="year" value={user.year}>{user.year}</Select>
-                    <Select name="month"><option value={user.month}>{user.month}</option></Select>
-                    <Select name="day"><option value={user.day}>{user.day}</option></Select>
+                    <Select name="year" value={user.year} options={years} placeholder="年" />
+                    <Select name="month" value={user.month} options={months} placeholder="月" />
+                    <Select name="day" value={user.day} options={days} placeholder="日" />
                   </div>
                 </td>
               </tr>
@@ -105,10 +85,7 @@ export default function ProfileUpdate(props: Props) {
               <tr><td className="td_color">郵便番号</td><td><Input type="tel" name="postal_code" value={user.postal_code} maxLength={8} required /></td></tr>
               <tr><td className="td_color">住所</td>
                 <td className="td_location">
-                  <select name="prefecture" id="prefecture" className="location">
-                    <option value="">都道府県</option>
-                    <option value={user.prefecture} style={{display: 'none'}} selected>{user.prefecture }</option>
-                  </select>
+                  <Select name="year" value={user.prefecture} options={prefectures} placeholder="都道府県" />
                   <Input type="text" name="city" value={user.city} placeholder="市区町村" maxLength={255} />
                   <Input type="text" name="address" value={user.address} placeholder="丁番地" maxLength={255} />
                   <Input type="text" name="building" value={user.building} placeholder="建物名" maxLength={255} />

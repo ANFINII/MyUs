@@ -41,7 +41,7 @@ export default function Profile(props: Props) {
               <tr><td className="td_color">性別</td><td className="td_indent">{user.gender}</td></tr>
               <tr><td className="td_color">電話番号</td><td className="td_indent">{user.phone}</td></tr>
               <tr><td className="td_color">郵便番号</td><td className="td_indent">{user.postal_code}</td></tr>
-              <tr><td className="td_color">住所</td><td className="td_indent">{user.prefecture}{user.city}{user.address}{user.building}</td></tr>
+              <tr><td className="td_color">住所</td><td className="td_indent">{user.prefecture} {user.city}{user.address} {user.building}</td></tr>
               <tr><td className="td_color">自己紹介</td><td className="td_indent">{user.introduction}</td></tr>
             </tbody>
           </table>

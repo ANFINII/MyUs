@@ -1,21 +1,33 @@
-import style from 'components/parts/Input/Input.module.css'
+import {useState} from 'react'
+import style from 'components/parts/Input/Select/Select.module.css'
+
+interface Option {
+  label: string
+  value: string | number
+}
 
 interface Props {
-  id?: string
   className?: string
   name?: string
   value?: string | number
+  options?: Option[]
   placeholder?: string
-  children?: React.ReactNode
 }
 
 export default function Select(props: Props) {
-  const {id, className, name, value, children} = props
+  const { className, name, value, placeholder, options = [] } = props
+
+  const [changeValue, setChangeValue] = useState(value)
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setChangeValue(e.target.value)
+  }
 
   return (
-    <select name={name} id={id} className={`${style.input} ` + (className ? className : '')}>
-      <option value="">{children}</option>
-      <option value={value} selected>{value}</option>
-    </select>
+    <label className={style.select + (className ? ' ' + className : '')}>
+      <select name={name} value={changeValue} onChange={handleChange}>
+        {placeholder && <option value="" disabled selected hidden>{placeholder}</option>}
+        {options.map(({ label, value }) => <option key={value} value={value}>{label}</option>)}
+      </select>
+    </label>
   )
 }
