@@ -26,8 +26,8 @@ export interface MypageResponse {
   banner: string
   nickname: string
   email: string
-  follower_num: number
-  following_num: number
+  follower_count: number
+  following_count: number
   plan: string
   plan_date: string
   is_advertise: boolean
@@ -51,7 +51,7 @@ export interface MediaResponse {
   content: string
   like: number
   read: number
-  comment_num: number
+  comment_count: number
   publish: boolean
   created: string
   updated: string
@@ -88,7 +88,7 @@ export interface FollowResponse {
   introduction: string
   like: number
   read: number
-  comment_num: number
+  comment_count: number
   publish: boolean
   created: string
   mypage: MypageResponse

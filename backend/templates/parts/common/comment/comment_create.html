@@ -4,7 +4,7 @@
 <form method="POST" action="" id="comment_form" obj-id="{{ obj_id }}" path="{{ request.path }}" csrf="{{ csrf_token }}">
   <div class="comment_input">
     <p>コメント総数
-      <span id="comment_num">{{ object.comment_num|intcomma }}</span>
+      <span id="comment_count">{{ object.comment_count|intcomma }}</span>
     </p>
     {% if user.is_authenticated %}
     <a href="{% url 'myus:userpage' user.nickname %}" data="{{ user.nickname }}" class="pjax_button_userpage">

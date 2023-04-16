@@ -536,10 +536,9 @@ def comment_form(request):
         obj_path = request.POST.get('path')
         obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
         comment = Comment.objects.create(content_object=obj, text=text, author=user)
-        obj.comment_num = obj.comment.all().count()
-        obj.save(update_fields=['comment_num'])
+        obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
         context = {
-            'comment_num': obj.comment_num,
+            'comment_count': obj.comment_count() + 1,
             'comment_lists': render_to_string('parts/common/comment/comment.html', {
                 'comment_list': obj.comment.filter(id=comment.id),
                 'user_id': user.id,
@@ -565,11 +564,6 @@ def reply_form(request):
             author=user,
             parent=Comment.objects.get(id=comment_id),
         )
-        obj.comment_num = obj.comment.all().count()
-        obj.save(update_fields=['comment_num'])
-        parent = Comment.objects.get(id=comment_id)
-        parent.reply_num = Comment.objects.filter(parent=comment_id).count()
-        parent.save(update_fields=['reply_num'])
         author = comment.parent.author
         if user != author and author.notificationsetting.is_reply:
             Notification.objects.create(
@@ -580,8 +574,8 @@ def reply_form(request):
                 content_object=comment,
             )
         context = {
-            'comment_num': obj.comment_num,
-            'reply_num': parent.reply_num,
+            'comment_count': obj.comment_count() + 1,
+            'reply_count': Comment.objects.filter(parent=comment_id).count(),
             'reply_lists': render_to_string('parts/common/reply/reply.html', {
                 'reply_list': obj.comment.filter(id=comment.id),
                 'user_id': user.id,
@@ -610,11 +604,9 @@ def comment_delete(request, comment_id):
         obj_id = request.POST.get('id')
         obj_path = request.POST.get('path')
         comment_id = request.POST.get('comment_id')
-        obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
         Comment.objects.get(id=comment_id).delete()
-        obj.comment_num = obj.comment.all().count()
-        obj.save(update_fields=['comment_num'])
-        context = {'comment_num': obj.comment_num}
+        obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
+        context = {'comment_count': obj.comment_count()}
         return JsonResponse(context)
 
 
@@ -627,16 +619,11 @@ def reply_delete(request, comment_id):
         parent_id = request.POST.get('parent_id')
         Notification.objects.filter(type_no=NotificationTypeNo.reply, object_id=comment_id).delete()
         Comment.objects.get(id=comment_id).delete()
-        comment_parent = Comment.objects.get(id=parent_id)
-        comment_parent.reply_num = Comment.objects.filter(parent=parent_id).count()
-        comment_parent.save(update_fields=['reply_num'])
         obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
-        obj.comment_num = obj.comment.all().count()
-        obj.save(update_fields=['comment_num'])
         context = {
-            'comment_num': obj.comment_num,
             'parent_id': parent_id,
-            'reply_num': comment_parent.reply_num,
+            'comment_count': obj.comment_count(),
+            'reply_count': Comment.objects.filter(parent=parent_id).count(),
         }
         return JsonResponse(context)
 
@@ -733,7 +720,7 @@ def follow_create(request, nickname):
     if request.method == 'POST':
         follower = MyPage.objects.get(user=request.user)
         following = MyPage.objects.get(user__nickname=nickname)
-        follow = Follow.objects.filter(follower=follower.user, following=following.user)
+        follow = Follow.objects.filter(follower=follower.user, following=following.user).first()
         follow_data = follow_update_data(follower, following, follow)
         context = {
             'is_follow': follow_data['is_follow'],

@@ -1,5 +1,6 @@
 import json
 from import_export.admin import ImportExportModelAdmin
+from django.db.models import Count
 from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
@@ -29,7 +30,7 @@ class ProfileInline(admin.StackedInline):
 
 class MyPageInline(admin.StackedInline):
     model = MyPage
-    readonly_fields = ('follower_num', 'following_num', 'plan', 'plan_date', 'is_advertise')
+    readonly_fields = ('follower_count', 'following_count', 'plan', 'plan_date', 'is_advertise')
     verbose_name = 'マイページ情報'
 
     def has_delete_permission(self, request, obj=None):
@@ -55,7 +56,7 @@ class CommentInlineAdmin(GenericTabularInline):
     model = Comment
     extra = 0
     max_num = 100
-    exclude = ('like', 'reply_num')
+    exclude = ('like', 'reply_count')
     fields = ('author', 'parent', 'text', 'total_like')
     readonly_fields = ('total_like',)
     verbose_name_plural = 'コメント'
@@ -69,7 +70,7 @@ class MessageInlineAdmin(admin.TabularInline):
     model = Message
     extra = 0
     max_num = 100
-    exclude = ('reply_num',)
+    exclude = ('reply_count',)
     fields = ('author', 'parent', 'text')
     verbose_name_plural = 'メッセージ'
 
@@ -142,7 +143,7 @@ class HashTagAdmin(ImportExportModelAdmin):
 
 @admin.register(Video)
 class VideoAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'score', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -214,18 +215,18 @@ class BlogAdmin(ImportExportModelAdmin):
 
 @admin.register(Chat)
 class ChatAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'read', 'total_like', 'thread', 'joined', 'period', 'publish', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'thread_count', 'joined_count', 'period', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
     filter_horizontal = ('hashtag', 'like')
-    readonly_fields = ('total_like', 'thread', 'joined', 'created', 'updated')
+    readonly_fields = ('total_like', 'thread_count', 'joined_count', 'created', 'updated')
     inlines = [MessageInlineAdmin]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'hashtag', 'like', 'read', 'period', 'publish')}),
-        ('確認項目', {'fields': ('total_like', 'thread', 'joined', 'created', 'updated')})
+        ('確認項目', {'fields': ('total_like', 'thread_count', 'joined_count', 'created', 'updated')})
     ]
 
 
@@ -316,7 +317,7 @@ class AdvertiseAdmin(ImportExportModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(ImportExportModelAdmin):
     list_display = ('id', 'content_type', 'object_id', 'author', 'parent', 'text', 'total_like', 'reply_count', 'created', 'updated')
-    list_select_related = ('author', 'parent', 'content_type')
+    list_select_related = ('author', 'parent')
     search_fields = ('text', 'author__nickname', 'created', 'updated')
     ordering = ('created',)
     filter_horizontal = ('like',)
@@ -329,11 +330,7 @@ class CommentAdmin(ImportExportModelAdmin):
     ]
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('like')
-
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = 'like'
+        return super().get_queryset(request).annotate(reply_count=Count('reply')).select_related('content_type')
 
 
 @admin.register(Message)
@@ -351,7 +348,7 @@ class MessageAdmin(ImportExportModelAdmin):
     ]
 
     def get_queryset(self, request):
-        return super().get_queryset(request)
+        return super().get_queryset(request).annotate(reply_count=Count('reply'))
 
 
 # MyPgage用の管理画面
@@ -375,7 +372,7 @@ class CommentInline(GenericTabularInline):
     model = Comment
     extra = 0
     max_num = 100
-    exclude = ('like', 'reply_num')
+    exclude = ('like', 'reply_count')
     readonly_fields = ('author', 'parent', 'text', 'total_like')
     verbose_name_plural = 'コメント'
 
@@ -391,7 +388,7 @@ class MessageInline(admin.TabularInline):
     model = Message
     extra = 0
     max_num = 100
-    exclude = ('content', 'reply_num')
+    exclude = ('content', 'reply_count')
     readonly_fields = ('author', 'parent', 'text')
     verbose_name_plural = 'メッセージ'
 
@@ -565,19 +562,19 @@ manage_site.register(Blog, BlogAdminSite)
 
 
 class ChatAdminSite(admin.ModelAdmin, PublishMixin):
-    list_display = ('id', 'title', 'read', 'total_like', 'thread', 'joined', 'period', 'publish', 'created', 'updated')
+    list_display = ('id', 'title', 'read', 'total_like', 'thread_count', 'joined_count', 'period', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
     actions = ('published', 'unpublished')
     filter_horizontal = ('hashtag',)
-    readonly_fields = ('read', 'total_like', 'thread', 'joined', 'created', 'updated')
+    readonly_fields = ('read', 'total_like', 'thread_count', 'joined_count', 'created', 'updated')
     inlines = [MessageInline]
 
     # 詳細画面
     fieldsets = [
         ('編集項目', {'fields': ('title', 'content', 'hashtag', 'period', 'publish')}),
-        ('確認項目', {'fields': ('read', 'total_like', 'thread', 'joined', 'created', 'updated')})
+        ('確認項目', {'fields': ('read', 'total_like', 'thread_count', 'joined_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):

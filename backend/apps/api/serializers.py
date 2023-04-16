@@ -62,7 +62,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class MyPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyPage
-        fields = ('banner', 'email', 'content', 'follower_num', 'following_num', 'plan', 'plan_date', 'is_advertise')
+        fields = ('banner', 'email', 'content', 'follower_count', 'following_count', 'plan', 'plan_date', 'is_advertise')
 
 
 class NotificationSettingSerializer(serializers.ModelSerializer):
@@ -185,14 +185,14 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = (
-            'id', 'author', 'parent', 'text', 'like', 'reply_num',
+            'id', 'author', 'parent', 'text', 'like', 'reply_count',
             'content_type', 'object_id', 'content_object', 'created', 'updated'
         )
-        read_only_field = ['reply_num', 'created', 'updated']
+        read_only_field = ['reply_count', 'created', 'updated']
 
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ('id', 'author', 'chat', 'parent', 'content', 'reply_num', 'created', 'updated')
-        read_only_field = ['reply_num', 'created', 'updated']
+        fields = ('id', 'author', 'chat', 'parent', 'content', 'reply_count', 'created', 'updated')
+        read_only_field = ['reply_count', 'created', 'updated']
