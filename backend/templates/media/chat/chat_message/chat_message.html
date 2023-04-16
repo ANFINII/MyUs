@@ -12,7 +12,7 @@
     <div id="message_aria_list_2_{{ message.id }}" class="message_aria_list_2">{{ message.text|safe }}</div>
     <a href="{% url 'myus:chat_thread' obj_id message.id %}" thread="{% url 'myus:chat_thread_button' %}" message-id="{{ message.id }}" class="message_aria_thread">
       スレッド表示
-      <span id="reply_num_{{ message.id }}">返信 {{ message.reply_num|intcomma }} 件</span>
+      <span id="reply_count_{{ message.id }}">返信 {{ message.reply_count|intcomma }} 件</span>
     </a>
     {% include 'media/chat/chat_message/crud/modal_content_chat_message.html' %}
   </div>

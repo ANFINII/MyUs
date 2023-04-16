@@ -22,9 +22,6 @@ class ChatConsumer(WebsocketConsumer):
             text=html,
             delta=get_delta(delta, html),
         )
-        chat.thread = chat.message.filter(parent__isnull=True).count()
-        chat.joined = chat.message.values_list('author').distinct().count()
-        chat.save(update_fields=['thread', 'joined'])
         content = {
             'command': 'create_message',
             'message': self.create_message_to_json(message)
@@ -44,11 +41,6 @@ class ChatConsumer(WebsocketConsumer):
             parent_id=data['parent_id'],
         )
         author = message.parent.author
-        chat.joined = chat.message.values_list('author').distinct().count()
-        chat.save(update_fields=['joined'])
-        parent = Message.objects.get(id=data['parent_id'])
-        parent.reply_num = parent.reply.count()
-        parent.save(update_fields=['reply_num'])
         if user != author and author.notificationsetting.is_reply:
             Notification.objects.create(
                 user_from=user,
@@ -101,8 +93,8 @@ class ChatConsumer(WebsocketConsumer):
         context = {
             'user_id': self.scope['user'].id,
             'message_id': message.id,
-            'joined': chat.joined,
-            'thread': chat.thread,
+            'joined': chat.joined_count(),
+            'thread': chat.thread_count(),
             'message_lists': render_to_string('media/chat/chat_message/chat_message.html', {
                 'user_id': self.scope['user'].id,
                 'obj_id': chat.id,
@@ -119,8 +111,8 @@ class ChatConsumer(WebsocketConsumer):
             'user_id': self.scope['user'].id,
             'message_id': message.id,
             'parent_id': message.parent.id,
-            'joined': chat.joined,
-            'reply_num': Message.objects.filter(parent=message.parent).count(),
+            'joined': chat.joined_count(),
+            'reply_count': Message.objects.filter(parent=message.parent).count(),
             'reply_lists': render_to_string('media/chat/chat_reply/chat_reply.html', {
                 'user_id': self.scope['user'].id,
                 'obj_id': chat.id,
@@ -140,29 +132,21 @@ class ChatConsumer(WebsocketConsumer):
     def delete_message_to_json(self, message):
         message.delete()
         chat = Chat.objects.get(id=message.chat_id)
-        chat.thread = chat.message.filter(parent__isnull=True).count()
-        chat.joined = chat.message.values_list('author').distinct().count()
-        chat.save(update_fields=['thread', 'joined'])
         context = {
-            'joined': chat.joined,
-            'thread': chat.thread,
+            'joined': chat.message.values_list('author').distinct().count(),
+            'thread': chat.message.filter(parent__isnull=True).count(),
         }
         return context
 
     def delete_reply_message_to_json(self, message):
         Notification.objects.filter(type_no=NotificationTypeNo.reply, object_id=message.id).delete()
         chat = Chat.objects.get(id=message.chat_id)
-        chat.joined = chat.message.values_list('author').distinct().count()
-        chat.save(update_fields=['joined'])
         parent = message.parent
         message.delete()
-        message = Message.objects.get(id=parent.id)
-        message.reply_num = Message.objects.filter(parent=parent).count()
-        message.save(update_fields=['reply_num'])
         context = {
-            'joined': chat.joined,
+            'joined': chat.message.values_list('author').distinct().count(),
             'parent_id': parent.id,
-            'reply_num': message.reply_num,
+            'reply_count': Message.objects.filter(parent=parent).count(),
         }
         return context
 

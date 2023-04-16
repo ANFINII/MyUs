@@ -56,7 +56,7 @@ chatSocket.onmessage = function (event) {
     if ('/chat/detail/' + chatId + '/thread/' + response.parent_id === location.pathname) {
       document.getElementById('reply_form_button').setAttribute('disabled', true)
       $('#joined').html(response.joined)
-      $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件')
+      $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件')
       $('#chat_section_thread_area_' + response.parent_id).append(response.reply_lists)
       const loginUserId = document.getElementById('user_id').textContent
       if (loginUserId != response.user_id && !response.is_period) {
@@ -68,7 +68,7 @@ chatSocket.onmessage = function (event) {
       pjaxThread(location.pathname)
     } else {
       $('#joined').html(response.joined)
-      $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件')
+      $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件')
     }
   } else if (data['command'] === 'update_message') {
     const response = data['message']
@@ -98,11 +98,11 @@ chatSocket.onmessage = function (event) {
     if ('/chat/detail/' + chatId + '/thread/' + response.parent_id === url) {
       $('#message_aria_list_' + response.message_id).remove()
       $('#joined').html(response.joined)
-      $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件')
+      $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件')
       pjaxThread(location.pathname)
     } else {
       $('#joined').html(response.joined)
-      $('#reply_num_' + response.parent_id).html('返信 ' + response.reply_num + ' 件')
+      $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件')
     }
   }
 }

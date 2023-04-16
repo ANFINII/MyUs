@@ -23,7 +23,7 @@
           <time>{{ object.created|date:'Y/m/d H:i' }}</time>
         </div>
         <div class="chat_content_area_2">登録者数
-          <span class="follower_count">{{ object.author.mypage.follower_num }}</span>
+          <span class="follower_count">{{ object.author.mypage.follower_count }}</span>
         </div>
         <div class="chat_content_area_3">
           {% if user.nickname == object.author.nickname %}
@@ -64,12 +64,12 @@
 
     <div class="view_good_inline">
       <i title="参加数" class="bi bi-person"></i>
-      <span id="joined">{{ object.joined|intcomma }}</span>
+      <span id="joined">{{ object.joined_count|intcomma }}</span>
     </div>
 
     <div class="view_good_inline">
       <i title="スレッド数" class="bi bi-chat-dots"></i>
-      <span id="thread">{{ object.thread|intcomma }}</span>
+      <span id="thread">{{ object.thread_count|intcomma }}</span>
     </div>
 
     {% if user.is_authenticated %}
