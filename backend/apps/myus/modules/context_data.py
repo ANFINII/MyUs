@@ -34,6 +34,12 @@ class ContextData:
         if class_name in 'MyPageView':
             context['mypage_list'] = MyPage.objects.filter(user=user.id)
 
+        if class_name in 'FollowList':
+            context['follow_list'] = Follow.objects.filter(follower=user.id).select_related('following').order_by('created')[:100]
+
+        if class_name in 'FollowerList':
+            context['follower_list'] = Follow.objects.filter(following=user.id).select_related('follower').order_by('created')[:100]
+
         if class_name in 'Index':
             context.update({
                 f'{value}_list': model.objects.filter(publish=True).order_by('-created')[:8]
@@ -83,11 +89,12 @@ class ContextData:
 
         context['advertise_auto_list'] = Advertise.objects.filter(publish=True, type=0).order_by('?')[:1]
         advertise = Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')
-        if author.mypage.plan == 'basic':
+        plan = author.mypage.plan
+        if plan == 'basic':
             context['advertise_list'] = advertise[:1]
-        if author.mypage.plan == 'standard':
+        if plan == 'standard':
             context['advertise_list'] = advertise[:3]
-        if author.mypage.plan == 'premium':
+        if plan == 'premium':
             context['advertise_list'] = advertise[:4]
 
         class_name = str(class_name.__name__)
