@@ -21,7 +21,7 @@ export default function FollowerList(props: Props) {
         <>
           <div className="follow_button">
             <Button blue size="xs" onClick={() => Router.push('/menu/follow')}>フォロー</Button>
-            <span>フォロワー数：{mypage? mypage.follower_num : 0}</span>
+            <span>フォロワー数：{mypage? mypage.follower_count : 0}</span>
           </div>
           <article className="article_list">
             {datas.map((data) => {
@@ -37,8 +37,8 @@ export default function FollowerList(props: Props) {
                         </Link>
                       </object>
                       <span title={nickname} className="follow_content_1">{nickname}</span>
-                      <span className="follow_content_2">フォロワー数：{data.mypage.follower_num}</span>
-                      <span className="follow_content_3">フォロー数　：{data.mypage.following_num}</span>
+                      <span className="follow_content_2">フォロワー数：{data.mypage.follower_count}</span>
+                      <span className="follow_content_3">フォロー数　：{data.mypage.following_count}</span>
                       <object title={data.introduction} className="follow_content_4">
                         {data.introduction}
                       </object>

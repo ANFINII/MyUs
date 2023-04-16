@@ -6,31 +6,31 @@ def follow_update_data(follower, following, follow):
     if follower == following:
         # '自分はフォローできません'
         pass
-    elif follow.exists():
-        notification = Notification.objects.filter(type_no=NotificationTypeNo.follow, object_id=follow.first().id)
+    elif follow:
+        notification = Notification.objects.filter(type_no=NotificationTypeNo.follow, object_id=follow.id)
         notification.delete()
+        # 'フォローを外しました'
         follow.delete()
         is_follow = False
         #ログインユーザーのフォロー数
         following_count = Follow.objects.filter(follower=follower.user).count()
-        follower.following_num = following_count
-        follower.save(update_fields=['following_num'])
+        follower.following_count = following_count
+        follower.save(update_fields=['following_count'])
         #フォローユーザーのフォロワー数
         follower_count = Follow.objects.filter(following=following.user).count()
-        following.follower_num = follower_count
-        following.save(update_fields=['follower_num'])
-        # 'フォローを外しました'
+        following.follower_count = follower_count
+        following.save(update_fields=['follower_count'])
     else:
         follow = Follow.objects.create(follower=follower.user, following=following.user)
         is_follow = True
         #ログインユーザーのフォロー数
         following_count = Follow.objects.filter(follower=follower.user).count()
-        follower.following_num = following_count
-        follower.save(update_fields=['following_num'])
+        follower.following_count = following_count
+        follower.save(update_fields=['following_count'])
         #フォローユーザーのフォロワー数
         follower_count = Follow.objects.filter(following=following.user).count()
-        following.follower_num = follower_count
-        following.save(update_fields=['follower_num'])
+        following.follower_count = follower_count
+        following.save(update_fields=['follower_count'])
         # 'フォローしました'
         if following.user.notificationsetting.is_follow:
             Notification.objects.create(

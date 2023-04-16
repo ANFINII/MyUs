@@ -35,8 +35,8 @@ export default function MyPageUpdate(props: Props) {
               </tr>
               <tr><td className="td_color">投稿者名</td><td className="td_indent">{mypage.nickname}</td></tr>
               <tr><td className="td_color">メールアドレス</td><td><Input type="text" name="email" value={mypage.email} maxLength={120} className="table_margin" /></td></tr>
-              <tr><td className="td_color">フォロー数</td><td className="td_indent">{mypage.following_num}</td></tr>
-              <tr><td className="td_color">フォロワー数</td><td className="td_indent">{mypage.follower_num}</td></tr>
+              <tr><td className="td_color">フォロー数</td><td className="td_indent">{mypage.following_count}</td></tr>
+              <tr><td className="td_color">フォロワー数</td><td className="td_indent">{mypage.follower_count}</td></tr>
               <tr><td className="td_color">料金プラン</td><td className="td_indent">{mypage.plan}</td></tr>
               <tr><td className="td_color">全体広告</td><td className="td_indent" id="toggle_mypage">
                 <form method="POST" action="" data-advertise="{{is_advertise}}" ddata-csrf="{{csrf_token}}">

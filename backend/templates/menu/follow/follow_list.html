@@ -6,7 +6,7 @@
 {% if user.is_authenticated %}
 <div class="follow_button">
   <button type="button" href="{% url 'myus:follower_list' %}" class="button blue xs pjax_button">フォロワー</button>
-  <span>フォロー数：{{ user.mypage.following_num }}</span>
+  <span>フォロー数：{{ user.mypage.following_count }}</span>
 </div>
 
 <article class="article_list">

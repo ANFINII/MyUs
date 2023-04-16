@@ -37,8 +37,8 @@ export default function MyPage(props: Props) {
               </tr>
               <tr><td className="td_color">投稿者名</td><td className="td_indent">{mypage.nickname}</td></tr>
               <tr><td className="td_color">メールアドレス</td><td className="td_indent">{mypage.email}</td></tr>
-              <tr><td className="td_color">フォロー数</td><td className="td_indent">{mypage.following_num}</td></tr>
-              <tr><td className="td_color">フォロワー数</td><td className="td_indent">{mypage.follower_num}</td></tr>
+              <tr><td className="td_color">フォロー数</td><td className="td_indent">{mypage.following_count}</td></tr>
+              <tr><td className="td_color">フォロワー数</td><td className="td_indent">{mypage.follower_count}</td></tr>
               <tr><td className="td_color">料金プラン</td><td className="td_indent">{mypage.plan}</td></tr>
               <tr><td className="td_color">全体広告</td><td className="td_indent" id="toggle_mypage">
                 <form method="POST" action="" data-advertise="{{ mypage.is_advertise }}" data-csrf="{{ csrf_token }}">

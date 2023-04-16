@@ -21,8 +21,8 @@
       </tr>
       <tr><td class="td_color">投稿者名</td><td class="td_indent">{{ user.nickname }}</td></tr>
       <tr><td class="td_color">メールアドレス</td><td class="td_indent">{{ user.mypage.email }}</td></tr>
-      <tr><td class="td_color">フォロー数</td><td class="td_indent">{{ user.mypage.following_num }}</td></tr>
-      <tr><td class="td_color">フォロワー数</td><td class="td_indent">{{ user.mypage.follower_num }}</td></tr>
+      <tr><td class="td_color">フォロー数</td><td class="td_indent">{{ user.mypage.following_count }}</td></tr>
+      <tr><td class="td_color">フォロワー数</td><td class="td_indent">{{ user.mypage.follower_count }}</td></tr>
       <tr><td class="td_color">料金プラン</td><td class="td_indent">{{ user.mypage.get_plan_display }}</td></tr>
       <tr><td class="td_color">全体広告</td><td class="td_indent" id="toggle_mypage">{% include 'setting/mypage_advertise.html' %}</td></tr>
       <tr><td class="td_color">概要</td><td class="td_indent">{{ user.mypage.content|linebreaksbr|urlize }}</td></tr>
