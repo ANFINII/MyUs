@@ -1,4 +1,4 @@
-import Notification from 'components/pages/Setting/Notification'
+import Notification from 'components/templates/Setting/Notification'
 
 export default function NotificationPage() {
   return <Notification />

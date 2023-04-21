@@ -1,4 +1,4 @@
-import Payment from 'components/pages/Setting/Payment'
+import Payment from 'components/templates/Setting/Payment'
 
 export default function PaymentPage() {
   return <Payment />

@@ -1,5 +1,5 @@
 import {Query, ChatResponse} from 'utils/type'
-import Chatist from 'components/pages/Media/Chat/List'
+import Chatist from 'components/templates/Media/Chat/List'
 
 const query: Query = {
   name: 'test',

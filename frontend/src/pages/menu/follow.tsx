@@ -1,5 +1,5 @@
 import {Query, FollowResponse} from 'utils/type'
-import FollowList from 'components/pages/Follow/FollowList'
+import FollowList from 'components/templates/Follow/FollowList'
 
 const query: Query = {
   name: 'test',

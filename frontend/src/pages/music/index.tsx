@@ -1,5 +1,5 @@
 import {Query, MusicResponse} from 'utils/type'
-import MusicList from 'components/pages/Media/Music/List'
+import MusicList from 'components/templates/Media/Music/List'
 
 const query: Query = {
   name: 'test',

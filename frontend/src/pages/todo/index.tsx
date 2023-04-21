@@ -1,5 +1,5 @@
 import {Query, MediaResponse} from 'utils/type'
-import TodoList from 'components/pages/Media/Todo/List'
+import TodoList from 'components/templates/Media/Todo/List'
 
 const query: Query = {
   name: 'test',

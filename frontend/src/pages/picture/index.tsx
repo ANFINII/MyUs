@@ -1,5 +1,5 @@
 import {Query, ImageResponse} from 'utils/type'
-import PictureList from 'components/pages/Media/Picture/List'
+import PictureList from 'components/templates/Media/Picture/List'
 
 const query: Query = {
   name: 'test',

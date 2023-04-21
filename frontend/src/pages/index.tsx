@@ -2,7 +2,7 @@ import {NextPage, GetServerSideProps} from 'next'
 import Script from 'next/script'
 // import axios from 'pages/api/axios'
 import {Query, VideoResponse} from 'utils/type'
-import HomeList from 'components/pages/Media/Home/List'
+import HomeList from 'components/templates/Media/Home/List'
 
 // export const getServerSideProps: GetServerSideProps = async () => {
 //   const res_video = await axios.get('/api/video')

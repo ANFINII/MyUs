@@ -1,5 +1,5 @@
 import {Query, MediaResponse} from 'utils/type'
-import CollaboList from 'components/pages/Media/Collabo/List'
+import CollaboList from 'components/templates/Media/Collabo/List'
 
 const query: Query = {
   name: 'test',

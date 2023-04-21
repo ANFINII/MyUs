@@ -1,6 +1,6 @@
 import {GetServerSideProps} from 'next'
 import {ProfileResponse} from 'utils/type'
-import ProfileUpdate from 'components/pages/Setting/Profile/Update'
+import ProfileUpdate from 'components/templates/Setting/Profile/Update'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //  const cookie = context.req?.headers.cookie

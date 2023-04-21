@@ -1,6 +1,6 @@
 import {GetServerSideProps} from 'next'
 import {Query, VideoResponse} from 'utils/type'
-import VideoList from 'components/pages/Media/Video/List'
+import VideoList from 'components/templates/Media/Video/List'
 
 export async function getVideoList() {
   const BASEURL = process.env.NEXT_PUBLIC_API_URL
