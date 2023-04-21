@@ -35,10 +35,10 @@ class ContextData:
             context['mypage_list'] = MyPage.objects.filter(user=user.id)
 
         if class_name in 'FollowList':
-            context['follow_list'] = Follow.objects.filter(follower=user.id).select_related('following').order_by('created')[:100]
+            context['follow_list'] = Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100]
 
         if class_name in 'FollowerList':
-            context['follower_list'] = Follow.objects.filter(following=user.id).select_related('follower').order_by('created')[:100]
+            context['follower_list'] = Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100]
 
         if class_name in 'Index':
             context.update({
