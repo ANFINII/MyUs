@@ -1,8 +1,11 @@
 // 検索タグの作成ボタンの処理
 $(document).on('click', '.searchtag_2', function (event) {
   event.preventDefault()
+  if(!$('#tag_form')[0].reportValidity()) {
+    return false;
+  }
   const searchtag = $('form [name=searchtag]').val()
-  const csrf = $(this).attr('csrf')
+  const csrf = $(this).closest('form').attr('csrf')
   $('#tag_form')[0].reset()
   document.querySelector('.searchtag_2').setAttribute('disabled', true)
   $.ajax({
@@ -14,7 +17,7 @@ $(document).on('click', '.searchtag_2', function (event) {
   })
     .done(function (response) {
       document.querySelector('.searchtag_2').setAttribute('disabled', true)
-      let searchtag_add =
+      const searchtag_add =
         '<a href="?search=' + response.searchtag + '" search="' + response.searchtag + '" class="tag_n_add pjax_search">' + response.searchtag + '</a>'
       $('.searchtag_n_list').append(searchtag_add)
     })

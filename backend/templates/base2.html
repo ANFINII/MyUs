@@ -370,10 +370,10 @@
 
 {% block tagnav %}
 <nav class="searchtag">
-  <form method="POST" action="" id="tag_form" class="searchtag_grid">
+  <form method="POST" action="" id="tag_form" class="searchtag_grid" csrf="{{ csrf_token }}">
     <button type="button" class="searchtag_1 button_square emerald" onclick="handleSearchtag()">タグ</button>
-    <button class="searchtag_2 button_square sakura">追加</button>
-    <input name="searchtag" class="searchtag_3" maxlength="30" placeholder="タグ名" {% if user.is_authenticated is false %}disabled{% endif %}>
+    <button type="submit" class="searchtag_2 button_square sakura">追加</button>
+    <input name="searchtag" class="searchtag_3" maxlength="30" placeholder="タグ名" required {% if user.is_authenticated is false %}disabled{% endif %}>
     <div class="searchtag_n">
       <div class="searchtag_n_list">
       {% for searchtag in searchtag_list %}
