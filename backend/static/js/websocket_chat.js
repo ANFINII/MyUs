@@ -37,7 +37,7 @@ function sleep(waitMsec) {
 
 // chatSocket の websocket 処理
 chatSocket.onmessage = function (event) {
-  let data = JSON.parse(event.data)
+  const data = JSON.parse(event.data)
   if (data['command'] === 'create_message') {
     document.getElementById('message_form_button').setAttribute('disabled', true)
     const response = data['message']
@@ -289,7 +289,7 @@ $('#reply_form').submit(function (event) {
 
 
 // メッセージ編集
-$(document).on('click', '.edit_button_update', function (event) {
+$(document).on('click', '.edit_button_update', function () {
   const messageId = $(this).parent().attr('message-id')
   document.getElementById('edit_update_main_' + messageId).classList.add('active')
   document.getElementById('message_aria_list_' + messageId).classList.add('active')

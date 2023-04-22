@@ -17,9 +17,9 @@ $(document).on('click', '.searchtag_2', function (event) {
   })
     .done(function (response) {
       document.querySelector('.searchtag_2').setAttribute('disabled', true)
-      const searchtag_add =
+      const searchtagAdd =
         '<a href="?search=' + response.searchtag + '" search="' + response.searchtag + '" class="tag_n_add pjax_search">' + response.searchtag + '</a>'
-      $('.searchtag_n_list').append(searchtag_add)
+      $('.searchtag_n_list').append(searchtagAdd)
     })
     .fail(function (response) {
       console.log(response)
@@ -92,27 +92,27 @@ $(document).on('click', '.like_form', function (event) {
 // コメントいいねボタンクリック時の処理
 $(document).on('click', '.like_form_comment', function (event) {
   event.preventDefault()
-  const comment_id = $(this).parent().attr('comment-id')
+  const commentId = $(this).parent().attr('comment-id')
   const csrf = $(this).parent().attr('csrf')
   $.ajax({
     url: '/like/form/comment',
     type: 'POST',
-    data: { 'comment_id': comment_id, 'csrfmiddlewaretoken': csrf },
+    data: { 'comment_id': commentId, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
   })
     .done(function (response) {
       if (response['is_comment_like']) {
-        $('.like_color_' + comment_id).removeClass('bi-hand-thumbs-up')
-        $('.like_color_' + comment_id).parent().removeClass('like_no')
-        $('.like_color_' + comment_id).addClass('bi-hand-thumbs-up-fill')
-        $('.like_color_' + comment_id).parent().addClass('like_fill')
-        $('#like_count_' + comment_id).html(response['total_like'])
+        $('.like_color_' + commentId).removeClass('bi-hand-thumbs-up')
+        $('.like_color_' + commentId).parent().removeClass('like_no')
+        $('.like_color_' + commentId).addClass('bi-hand-thumbs-up-fill')
+        $('.like_color_' + commentId).parent().addClass('like_fill')
+        $('#like_count_' + commentId).html(response['total_like'])
       } else {
-        $('.like_color_' + comment_id).removeClass('bi-hand-thumbs-up-fill')
-        $('.like_color_' + comment_id).parent().removeClass('like_fill')
-        $('.like_color_' + comment_id).addClass('bi-hand-thumbs-up')
-        $('.like_color_' + comment_id).parent().addClass('like_no')
-        $('#like_count_' + comment_id).html(response['total_like'])
+        $('.like_color_' + commentId).removeClass('bi-hand-thumbs-up-fill')
+        $('.like_color_' + commentId).parent().removeClass('like_fill')
+        $('.like_color_' + commentId).addClass('bi-hand-thumbs-up')
+        $('.like_color_' + commentId).parent().addClass('like_no')
+        $('#like_count_' + commentId).html(response['total_like'])
       }
     })
     .fail(function (response) {
@@ -123,12 +123,12 @@ $(document).on('click', '.like_form_comment', function (event) {
 
 // 通知リンクをクリックした時の処理
 $(document).on('click', '.notification_aria_anker', function () {
-  const notification_id = $(this).closest('object').attr('notification-id')
+  const notificationId = $(this).closest('object').attr('notification-id')
   const csrf = $(this).closest('object').attr('csrf')
   $.ajax({
     url: '/setting/notification/confirmed',
     type: 'POST',
-    data: { 'notification_id': notification_id, 'csrfmiddlewaretoken': csrf },
+    data: { 'notification_id': notificationId, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
@@ -144,17 +144,17 @@ $(document).on('click', '.notification_aria_anker', function () {
 // 通知のバツボタンをクリックした時の処理
 $(document).on('click', '.notification_aria_list_2', function (event) {
   event.preventDefault()
-  const notification_id = $(this).closest('object').attr('notification-id')
+  const notificationId = $(this).closest('object').attr('notification-id')
   const csrf = $(this).closest('object').attr('csrf')
   $.ajax({
     url: '/setting/notification/deleted',
     type: 'POST',
-    data: { 'notification_id': notification_id, 'csrfmiddlewaretoken': csrf },
+    data: { 'notification_id': notificationId, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
     .done(function (response) {
-      document.getElementById('notification_aria_link_' + notification_id).remove()
+      document.getElementById('notification_aria_link_' + notificationId).remove()
       if (response.notification_count === 0) {
         $('.bi-bell-fill').removeClass('active')
         $('.bi-exclamation-lg').removeClass('active')
@@ -170,12 +170,12 @@ $(document).on('click', '.notification_aria_list_2', function (event) {
 $(document).on('click', '.toggle_button', function (event) {
   event.preventDefault()
   const notification = $(this).parent().attr('notification')
-  const notification_type = $(this).parent().attr('notification-type')
+  const notificationType = $(this).parent().attr('notification-type')
   const csrf = $(this).closest('#notification_table').attr('csrf')
   $.ajax({
     url: '/setting/notification/update',
     type: 'POST',
-    data: { 'notification': notification, 'notification_type': notification_type, 'csrfmiddlewaretoken': csrf },
+    data: { 'notification': notification, 'notification_type': notificationType, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
@@ -191,12 +191,12 @@ $(document).on('click', '.toggle_button', function (event) {
 // MyPageの全体広告のトグルボタンをクリックした時の処理
 $(document).on('click', '.toggle_mypage', function (event) {
   event.preventDefault()
-  const is_advertise = $(this).parent().attr('advertise')
+  const isAdvertise = $(this).parent().attr('advertise')
   const csrf = $(this).parent().attr('csrf')
   $.ajax({
     url: '/setting/mypage/toggle',
     type: 'POST',
-    data: { 'is_advertise': is_advertise, 'csrfmiddlewaretoken': csrf },
+    data: { 'is_advertise': isAdvertise, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
@@ -211,12 +211,12 @@ $(document).on('click', '.toggle_mypage', function (event) {
 
 // 広告のリンクをクリックした時の処理
 $(document).on('click', '.advertise_anker', function () {
-  const advertise_id = $(this).parent().attr('advertise-id')
+  const advertiseId = $(this).parent().attr('advertise-id')
   const csrf = $(this).parent().attr('csrf')
   $.ajax({
     url: '/url/read',
     type: 'POST',
-    data: { 'advertise_id': advertise_id, 'csrfmiddlewaretoken': csrf },
+    data: { 'advertise_id': advertiseId, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })

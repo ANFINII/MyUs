@@ -1,20 +1,20 @@
 // Pjax処理
-let object_dict = {}
+let objectDict = {}
 history.replaceState(null, null, location.href)
 
 window.addEventListener('popstate', e => {
-  const back_url = location.pathname
-  const back_obj = object_dict[back_url]
-  $('.main').html(back_obj)
+  const backUrl = location.pathname
+  const backObj = objectDict[backUrl]
+  $('.main').html(backObj)
 })
 
-function pjax_dict(href) {
+function pjaxDict(href) {
   const obj = document.querySelector('.main').innerHTML
-  object_dict[href] = obj
+  objectDict[href] = obj
   history.pushState(null, null, href)
 }
 
-function ajax_data(href, data) {
+function ajaxData(href, data) {
   $.ajax({
     url: '/pjax',
     type: 'GET',
@@ -26,7 +26,7 @@ function ajax_data(href, data) {
     if (document.querySelector('.chat_remove') != null) {
       document.querySelector('.chat_remove').remove()
     }
-    pjax_dict(href)
+    pjaxDict(href)
   })
   .fail(function (response) {
     console.log(response)
@@ -55,7 +55,7 @@ $(document).on('click', '.pjax_button', function (event) {
     if (document.querySelector('.chat_remove') != null) {
       document.querySelector('.chat_remove').remove()
     }
-    pjax_dict(href)
+    pjaxDict(href)
   })
   .fail(function (response) {
     console.log(response)
@@ -69,7 +69,7 @@ $(document).on('click', '.pjax_button_userpage', function (event) {
   const href = $(this).attr('href')
   const nickname = $(this).attr('data')
   data = { 'href': href, 'nickname': nickname }
-  ajax_data(href, data)
+  ajaxData(href, data)
 })
 
 
@@ -81,7 +81,7 @@ $(document).on('click', '.search_icon', function (event) {
   const url = `${href}?search=${search}`
   const nickname = $('.userpage_image').attr('title')
   data = { 'href': href, 'search': search, 'nickname': nickname }
-  ajax_data(url, data)
+  ajaxData(url, data)
 })
 
 
@@ -93,7 +93,7 @@ $(document).on('click', '.pjax_search', function (event) {
   const url = `${href}?search=${search}`
   const nickname = $('.userpage_image').attr('title')
   data = { 'href': href, 'search': search, 'nickname': nickname }
-  ajax_data(url, data)
+  ajaxData(url, data)
 })
 
 
@@ -111,5 +111,5 @@ $(document).on('click', '.pjax_hash_search', function (event) {
   const url = `/${href}?search=${search}`
   const nickname = $('.userpage_image').attr('title')
   data = { 'href': href, 'search': search, 'nickname': nickname }
-  ajax_data(url, data)
+  ajaxData(url, data)
 })

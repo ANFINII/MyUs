@@ -83,7 +83,7 @@ $(document).on('focus', '#comment_form_area', function (event) {
 // updateショートカット
 $(document).on('focus', '.update_form_area', function (event) {
   event.preventDefault()
-  const comment_id = $(this).closest('form').attr('comment-id')
+  const commentId = $(this).closest('form').attr('comment-id')
 
   // focus時にそれ以外のtextareaを無効化する
   const targetElem = document.querySelectorAll('.form_button')
@@ -96,33 +96,33 @@ $(document).on('focus', '.update_form_area', function (event) {
   const text = $(this).val()
   if (text || text.match(/\S/g)) {
     // disabled属性を削除
-    document.getElementById('update_form_button_' + comment_id).removeAttribute('disabled')
+    document.getElementById('update_form_button_' + commentId).removeAttribute('disabled')
   }
 
   // ショートカット
   shortcut.add('Ctrl+Enter', function () {
-    $('#update_form_button_' + comment_id).click()
+    $('#update_form_button_' + commentId).click()
   })
   shortcut.add('meta+Enter', function () {
-    $('#update_form_button_' + comment_id).click()
+    $('#update_form_button_' + commentId).click()
   })
 
-  $(document).on('input', '#comment_form_update_' + comment_id, function (event) {
+  $(document).on('input', '#comment_form_update_' + commentId, function (event) {
     event.preventDefault()
     const text = $(this).val()
     if (!text || !text.match(/\S/g)) {
       // disabled属性を設定
-      document.getElementById('update_form_button_' + comment_id).setAttribute('disabled', true)
+      document.getElementById('update_form_button_' + commentId).setAttribute('disabled', true)
     } else {
       // disabled属性を削除
-      document.getElementById('update_form_button_' + comment_id).removeAttribute('disabled')
+      document.getElementById('update_form_button_' + commentId).removeAttribute('disabled')
 
       // ショートカット
       shortcut.add('Ctrl+Enter', function () {
-        $('#update_form_button_' + comment_id).click()
+        $('#update_form_button_' + commentId).click()
       })
       shortcut.add('meta+Enter', function () {
-        $('#update_form_button_' + comment_id).click()
+        $('#update_form_button_' + commentId).click()
       })
     }
   })

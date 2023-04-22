@@ -26,39 +26,39 @@ $('#comment_form').submit(function (event) {
 
 // 返信コメント表示, 非表示
 $(document).on('click', '.reply_button', function () {
-  const comment_id = $(this).parent().attr('comment-id')
-  document.getElementById('comment_aria_list_reply_' + comment_id).classList.add('active')
-  document.getElementById('reply_button_' + comment_id).classList.add('vanish')
-  document.getElementById('reply_button_cancel_' + comment_id).classList.remove('vanish')
-  $('#reply_' + comment_id).textareaAutoHeight()
+  const commentId = $(this).parent().attr('comment-id')
+  document.getElementById('comment_aria_list_reply_' + commentId).classList.add('active')
+  document.getElementById('reply_button_' + commentId).classList.add('vanish')
+  document.getElementById('reply_button_cancel_' + commentId).classList.remove('vanish')
+  $('#reply_' + commentId).textareaAutoHeight()
 })
 
 $(document).on('click', '.reply_button_cancel', function () {
-  const comment_id = $(this).parent().attr('comment-id')
-  document.getElementById('comment_aria_list_reply_' + comment_id).classList.remove('active')
-  document.getElementById('reply_button_' + comment_id).classList.remove('vanish')
-  document.getElementById('reply_button_cancel_' + comment_id).classList.add('vanish')
+  const commentId = $(this).parent().attr('comment-id')
+  document.getElementById('comment_aria_list_reply_' + commentId).classList.remove('active')
+  document.getElementById('reply_button_' + commentId).classList.remove('vanish')
+  document.getElementById('reply_button_cancel_' + commentId).classList.add('vanish')
 })
 
 $(document).on('click', '.reply_list_button', function () {
-  const comment_id = $(this).parent().attr('comment-id')
-  document.getElementById('reply_aria_list_' + comment_id).classList.add('active')
-  document.getElementById('reply_list_button_' + comment_id).classList.add('vanish')
-  document.getElementById('reply_list_button_cancel_' + comment_id).classList.remove('vanish')
+  const commentId = $(this).parent().attr('comment-id')
+  document.getElementById('reply_aria_list_' + commentId).classList.add('active')
+  document.getElementById('reply_list_button_' + commentId).classList.add('vanish')
+  document.getElementById('reply_list_button_cancel_' + commentId).classList.remove('vanish')
 })
 
 $(document).on('click', '.reply_list_button_cancel', function () {
-  const comment_id = $(this).parent().attr('comment-id')
-  document.getElementById('reply_aria_list_' + comment_id).classList.remove('active')
-  document.getElementById('reply_list_button_' + comment_id).classList.remove('vanish')
-  document.getElementById('reply_list_button_cancel_' + comment_id).classList.add('vanish')
+  const commentId = $(this).parent().attr('comment-id')
+  document.getElementById('reply_aria_list_' + commentId).classList.remove('active')
+  document.getElementById('reply_list_button_' + commentId).classList.remove('vanish')
+  document.getElementById('reply_list_button_cancel_' + commentId).classList.add('vanish')
 })
 
 $(document).on('click', '.reply_cancel_button', function () {
-  const comment_id = $(this).closest('form').attr('comment-id')
-  document.getElementById('comment_aria_list_reply_' + comment_id).classList.remove('active')
-  document.getElementById('reply_button_' + comment_id).classList.remove('vanish')
-  document.getElementById('reply_button_cancel_' + comment_id).classList.add('vanish')
+  const commentId = $(this).closest('form').attr('comment-id')
+  document.getElementById('comment_aria_list_reply_' + commentId).classList.remove('active')
+  document.getElementById('reply_button_' + commentId).classList.remove('vanish')
+  document.getElementById('reply_button_cancel_' + commentId).classList.add('vanish')
 })
 
 // コメントリプライ
@@ -67,23 +67,23 @@ $(document).on('click', '.reply_form', function (event) {
   const id = $(this).closest('form').attr('obj-id')
   const path = $(this).closest('form').attr('path')
   const csrf = $(this).closest('form').attr('csrf')
-  const comment_id = $(this).closest('form').attr('comment-id')
-  const text = $('#reply_' + comment_id).val().replace(/\n+$/g, '')
-  $('#comment_aria_list_reply_' + comment_id)[0].reset()
-  document.getElementById('reply_' + comment_id).style.height = '39px'
-  document.getElementById('reply_form_button_' + comment_id).setAttribute('disabled', true)
+  const commentId = $(this).closest('form').attr('comment-id')
+  const text = $('#reply_' + commentId).val().replace(/\n+$/g, '')
+  $('#comment_aria_list_reply_' + commentId)[0].reset()
+  document.getElementById('reply_' + commentId).style.height = '39px'
+  document.getElementById('reply_form_button_' + commentId).setAttribute('disabled', true)
   $.ajax({
     url: '/reply/form',
     type: 'POST',
-    data: { 'id': id, 'path': path, 'comment_id': comment_id, 'text': text, 'csrfmiddlewaretoken': csrf },
+    data: { 'id': id, 'path': path, 'comment_id': commentId, 'text': text, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
     .done(function (response) {
       $('#comment_count').html(response.comment_count)
-      $('#reply_count_open_' + comment_id).html('▼ スレッド ' + response.reply_count + ' 件')
-      $('#reply_count_close_' + comment_id).html('▲ スレッド ' + response.reply_count + ' 件')
-      $('#reply_aria_list_' + comment_id).prepend(response.reply_lists)
+      $('#reply_count_open_' + commentId).html('▼ スレッド ' + response.reply_count + ' 件')
+      $('#reply_count_close_' + commentId).html('▲ スレッド ' + response.reply_count + ' 件')
+      $('#reply_aria_list_' + commentId).prepend(response.reply_lists)
     })
     .fail(function (response) {
       console.log(response)
@@ -92,41 +92,41 @@ $(document).on('click', '.reply_form', function (event) {
 
 // メッセージ編集
 $(document).on('click', '.edit_button_update', function () {
-  const comment_id = $(this).parent().attr('comment-id')
-  document.getElementById('edit_update_main_' + comment_id).classList.add('active')
-  document.getElementById('comment_aria_list_' + comment_id).classList.add('active')
-  document.getElementById('comment_form_update_' + comment_id).style.height = '31px'
-  $('#comment_form_update_' + comment_id).textareaAutoHeight()
+  const commentId = $(this).parent().attr('comment-id')
+  document.getElementById('edit_update_main_' + commentId).classList.add('active')
+  document.getElementById('comment_aria_list_' + commentId).classList.add('active')
+  document.getElementById('comment_form_update_' + commentId).style.height = '31px'
+  $('#comment_form_update_' + commentId).textareaAutoHeight()
 })
 
 $(document).on('click', '.edit_update_cancel', function () {
-  const comment_id = $(this).closest('form').attr('comment-id')
-  document.getElementById('edit_update_main_' + comment_id).classList.remove('active')
-  document.getElementById('comment_aria_list_' + comment_id).classList.remove('active')
+  const commentId = $(this).closest('form').attr('comment-id')
+  document.getElementById('edit_update_main_' + commentId).classList.remove('active')
+  document.getElementById('comment_aria_list_' + commentId).classList.remove('active')
 })
 
 $(document).on('click', '.edit_update_button', function (event) {
   event.preventDefault()
   const csrf = $(this).closest('form').attr('csrf')
-  const comment_id = $(this).closest('form').attr('comment-id')
-  const text = $('#comment_form_update_' + comment_id).val().replace(/\n+$/g, '')
-  document.getElementById('edit_update_main_' + comment_id).classList.remove('active')
-  document.getElementById('comment_aria_list_' + comment_id).classList.remove('active')
-  document.getElementById('update_form_button_' + comment_id).setAttribute('disabled', true)
+  const commentId = $(this).closest('form').attr('comment-id')
+  const text = $('#comment_form_update_' + commentId).val().replace(/\n+$/g, '')
+  document.getElementById('edit_update_main_' + commentId).classList.remove('active')
+  document.getElementById('comment_aria_list_' + commentId).classList.remove('active')
+  document.getElementById('update_form_button_' + commentId).setAttribute('disabled', true)
   // 更新時のアニメーション
-  const highlight = document.querySelector('#comment_aria_list_' + comment_id)
+  const highlight = document.querySelector('#comment_aria_list_' + commentId)
   highlight.style.setProperty('background-color', 'rgb(235, 255, 245)', 'important')
   $.ajax({
-    url: `/comment/update/${comment_id}`,
+    url: `/comment/update/${commentId}`,
     type: 'POST',
-    data: { 'comment_id': comment_id, 'text': text, 'csrfmiddlewaretoken': csrf },
+    data: { 'comment_id': commentId, 'text': text, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
     .done(function (response) {
       // 成功した時、背景色を戻す
       highlight.style.removeProperty('background-color')
-      $('#comment_aria_list_2_' + comment_id).html(response.text)
+      $('#comment_aria_list_2_' + commentId).html(response.text)
     })
     .fail(function (response) {
       // 失敗した時、背景色を戻す
@@ -137,15 +137,15 @@ $(document).on('click', '.edit_update_button', function (event) {
 
 // メッセージ削除
 $(document).on('click', '.edit_button_delete', function () {
-  const comment_id = $(this).parent().attr('comment-id')
-  document.getElementById('modal_content_' + comment_id).classList.add('active')
-  document.getElementById('mask_' + comment_id).classList.add('active')
+  const commentId = $(this).parent().attr('comment-id')
+  document.getElementById('modal_content_' + commentId).classList.add('active')
+  document.getElementById('mask_' + commentId).classList.add('active')
 })
 
 $(document).on('click', '.modal_cancel', function () {
-  const comment_id = $(this).parent().attr('comment-id')
-  document.getElementById('modal_content_' + comment_id).classList.remove('active')
-  document.getElementById('mask_' + comment_id).classList.remove('active')
+  const commentId = $(this).parent().attr('comment-id')
+  document.getElementById('modal_content_' + commentId).classList.remove('active')
+  document.getElementById('mask_' + commentId).classList.remove('active')
 })
 
 $(document).on('click', '.edit_delete', function (event) {
@@ -153,29 +153,29 @@ $(document).on('click', '.edit_delete', function (event) {
   const id = $(this).parent().attr('obj-id')
   const path = $(this).parent().attr('path')
   const csrf = $(this).parent().attr('csrf')
-  const comment_id = $(this).parent().attr('comment-id')
-  const parent_id = $(this).parent().attr('parent-id')
-  let url = `/comment/delete/${comment_id}`
-  if (parent_id !== '') {
-    url = `/reply/delete/${comment_id}`
+  const commentId = $(this).parent().attr('comment-id')
+  const parentId = $(this).parent().attr('parent-id')
+  let url = `/comment/delete/${commentId}`
+  if (parentId !== '') {
+    url = `/reply/delete/${commentId}`
   }
-  document.getElementById('modal_content_' + comment_id).classList.remove('active')
-  document.getElementById('mask_' + comment_id).classList.remove('active')
+  document.getElementById('modal_content_' + commentId).classList.remove('active')
+  document.getElementById('mask_' + commentId).classList.remove('active')
   // 削除時のアニメーション
-  const highlight = document.querySelector('#comment_aria_list_' + comment_id)
+  const highlight = document.querySelector('#comment_aria_list_' + commentId)
   highlight.style.setProperty('background-color', 'rgb(255, 235, 240)', 'important')
   $.ajax({
     url: url,
     type: 'POST',
-    data: { 'id': id, 'path': path, 'comment_id': comment_id, 'parent_id': parent_id, 'csrfmiddlewaretoken': csrf },
+    data: { 'id': id, 'path': path, 'comment_id': commentId, 'parent_id': parentId, 'csrfmiddlewaretoken': csrf },
     dataType: 'json',
     timeout: 10000,
   })
     .done(function (response) {
-      $('#comment_aria_list_' + comment_id).remove()
+      $('#comment_aria_list_' + commentId).remove()
       $('#comment_count').html(response.comment_count)
-      $('#reply_count_open_' + response.parent_id).html('▼ スレッド ' + response.reply_count + ' 件')
-      $('#reply_count_close_' + response.parent_id).html('▲ スレッド ' + response.reply_count + ' 件')
+      $('#reply_count_open_' + response.parentId).html('▼ スレッド ' + response.reply_count + ' 件')
+      $('#reply_count_close_' + response.parentId).html('▲ スレッド ' + response.reply_count + ' 件')
     })
     .fail(function (response) {
       // 失敗した時、背景色を戻す
@@ -187,7 +187,7 @@ $(document).on('click', '.edit_delete', function (event) {
 // replyショートカット
 $(document).on('focus', '.reply_form_area', function (event) {
   event.preventDefault()
-  const comment_id = $(this).closest('form').attr('comment-id')
+  const commentId = $(this).closest('form').attr('comment-id')
 
   // focus時にそれ以外のtextareaを無効化する
   const targetElem = document.querySelectorAll('.form_button')
@@ -200,25 +200,25 @@ $(document).on('focus', '.reply_form_area', function (event) {
   const text = $(this).val()
   if (text || text.match(/\S/g)) {
     // disabled属性を削除
-    document.getElementById('reply_form_button_' + comment_id).removeAttribute('disabled')
+    document.getElementById('reply_form_button_' + commentId).removeAttribute('disabled')
   }
 
-  $(document).on('input', '#reply_' + comment_id, function (event) {
+  $(document).on('input', '#reply_' + commentId, function (event) {
     event.preventDefault()
     const text = $(this).val()
     if (!text || !text.match(/\S/g)) {
       // disabled属性を設定
-      document.getElementById('reply_form_button_' + comment_id).setAttribute('disabled', true)
+      document.getElementById('reply_form_button_' + commentId).setAttribute('disabled', true)
     } else {
       // disabled属性を削除
-      document.getElementById('reply_form_button_' + comment_id).removeAttribute('disabled')
+      document.getElementById('reply_form_button_' + commentId).removeAttribute('disabled')
 
       // ショートカット
       shortcut.add('Ctrl+Enter', function () {
-        $('#reply_form_button_' + comment_id).click()
+        $('#reply_form_button_' + commentId).click()
       })
       shortcut.add('meta+Enter', function () {
-        $('#reply_form_button_' + comment_id).click()
+        $('#reply_form_button_' + commentId).click()
       })
     }
   })
