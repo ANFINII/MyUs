@@ -23,7 +23,6 @@ from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from apps.myus.convert.convert_hls import convert_exe
-from apps.myus.forms import SearchTagForm
 from apps.myus.models import Profile, MyPage, SearchTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Advertise
 from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
@@ -457,19 +456,8 @@ def notification_deleted(request):
 def searchtag_create(request):
     """searchtag_create"""
     if request.method == 'POST':
-        form = SearchTagForm(request.POST)
-        try:
-            if form.is_valid():
-                form = form.save(commit=False)
-                form.author = request.user
-                form.save()
-                context = {'searchtag': form.name}
-                return JsonResponse(context)
-            else:
-                form = SearchTagForm()
-            logging.info({'info': str(e)})
-        except Exception as e:
-            return logging.error({'error': str(e)})
+        searchtag = SearchTag.objects.create(author=request.user, name=request.POST['name'])
+        return JsonResponse({'searchtag': searchtag.name})
 
 
 # advertise_read
