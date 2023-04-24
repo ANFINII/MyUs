@@ -8,9 +8,10 @@
 
 {% block content %}
 <main class="main">
-  <form method="POST" action="" class="form_signup">
+  <form method="POST" action="" class="form_account">
     {% csrf_token %}
-    <h1 class="myus_h1">MyUsへようこそ</h1>
+    <h1 class="login_h1">MyUsへようこそ</h1>
+    <!-- <h1 class="myus_h1">MyUsへようこそ</h1> -->
 
     {% if messages %}
     <ul class="messages_login">
@@ -20,8 +21,8 @@
     </ul>
     {% endif %}
 
-    <input type="username" name="username" class="input input_margin" placeholder="ユーザー名 or メールアドレス" required autofocus>
-    <input type="password" name="password" class="input input_margin" placeholder="パスワード" minlength="8" maxlength="16" required>
+    <input type="text" name="username" placeholder="ユーザー名 or メールアドレス" class="input input_margin" required autofocus>
+    <input type="password" name="password" placeholder="パスワード" minlength="8" maxlength="16" class="input input_margin" required>
 
     <div class="password_reset">
       <a href="{% url 'password_reset' %}">パスワードをリセット</a>

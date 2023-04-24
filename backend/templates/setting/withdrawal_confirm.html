@@ -6,7 +6,7 @@
   <h1>退会処理</h1>
   <article class="article_pass">
     {% if user.is_authenticated %}
-    <form method="POST" action="{% url 'myus:withdrawal' %}" class="form_signup">
+    <form method="POST" action="{% url 'myus:withdrawal' %}" class="form_account">
       {% csrf_token %}
       <p style="color: red;">本当に退会しますか？</p>
       <br>

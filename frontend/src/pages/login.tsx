@@ -22,7 +22,7 @@ export default function Login() {
         <title>MyUsログイン</title>
       </Head>
 
-      <form method="POST" action="" className="form_signup">
+      <form method="POST" action="" className="form_account">
         {/* {% csrf_token %} */}
         <h1 className="login_h1">MyUsへようこそ</h1>
 

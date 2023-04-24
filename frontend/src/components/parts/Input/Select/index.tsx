@@ -10,12 +10,12 @@ interface Props {
   className?: string
   name?: string
   value?: string | number
-  options?: Option[]
+  options: Option[]
   placeholder?: string
 }
 
 export default function Select(props: Props) {
-  const { className, name, value, placeholder, options = [] } = props
+  const { className, name, value, placeholder, options } = props
 
   const [changeValue, setChangeValue] = useState(value)
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -26,7 +26,7 @@ export default function Select(props: Props) {
     <label className={style.select + (className ? ' ' + className : '')}>
       <select name={name} value={changeValue} onChange={handleChange}>
         {placeholder && <option value="" disabled selected hidden>{placeholder}</option>}
-        {options.map(({ label, value }) => <option key={value} value={value}>{label}</option>)}
+        {options.map(({label, value}) => <option key={value} value={value}>{label}</option>)}
       </select>
     </label>
   )

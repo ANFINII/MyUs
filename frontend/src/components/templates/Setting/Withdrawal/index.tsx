@@ -15,8 +15,8 @@ export default function Withdrawal() {
     <Main title="MyUs退会処理" hero="退会処理">
       <article className="article_pass">
         {isAuthenticated ?
-          <form method="POST" action="" className="form_signup">
-          {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_signup"> */}
+          <form method="POST" action="" className="form_account">
+          {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}
             {/* {% csrf_token %} */}
             {messages &&
               <ul className="messages_password_change">

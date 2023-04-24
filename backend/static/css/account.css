@@ -198,13 +198,13 @@ td .textarea.margin {
   margin: 0 0 24px 0;
 }
 
-.form_signup {
+.form_account {
   width: 100%;
   max-width: 380px;
   padding: 15px;
   margin: auto;
 }
 
-.form_signup .checkbox {
+.form_account .checkbox {
   font-weight: 400;
 }

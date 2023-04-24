@@ -9,7 +9,7 @@ export default function PasswordChange() {
     <Main title="パスワード変更">
       <h1>パスワード変更</h1>
       <article className="article_pass">
-        <form method="POST" action="" className="form_signup">
+        <form method="POST" action="" className="form_account">
           {/* {% csrf_token %} */}
           <ul className="messages_password_change">
             <li>
@@ -21,7 +21,6 @@ export default function PasswordChange() {
           </ul>
 
           <Input type="password" name="old_password" className="input_margin" minLength={8} maxLength={16} placeholder="現在パスワード" required />
-          {/* <Input type="password" name="old_password" className="input_margin" minLength={8} maxLength={16} placeholder="現在パスワード" required autofocus /> */}
 
           <Input type="password" name="new_password1" className="input_margin" minLength={8} maxLength={16} placeholder="新規パスワード(英数字8~16文字)" required />
 
