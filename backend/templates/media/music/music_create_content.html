@@ -18,8 +18,8 @@
     <input type="checkbox" name="download" id="download" class="checkbox" checked>
     <label for="download">ダウンロード許可</label>
   </div>
-  <input type="file" name="music" accept="audio/*" id="custom_file_1" class="input" style="display:none" required>
-  <input id="file_1" class="input" placeholder="ファイル選択..." onclick="$('input[id=custom_file_1]').click()">
+  <input type="file" name="music" accept="audio/*" class="input file_1" hidden required>
+  <input placeholder="ファイル選択..." id="file_1" class="input" onclick="$('input.file_1').click()">
 
   <button type="submit" class="button green button_margin">作成する</button>
 </form>
@@ -30,5 +30,5 @@
 {% block extrajs %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/textarea.js' %}"></script>
-<script src="{% static 'js/attachment_name.js' %}"></script>
+<script src="{% static 'js/filename.js' %}"></script>
 {% endblock extrajs %}

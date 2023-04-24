@@ -11,8 +11,8 @@
   <textarea name="content" rows="1" class="textarea" required></textarea>
 
   <p class="margin">画像</p>
-  <input type="file" name="image" accept="image/*" id="custom_file_1" class="input" style="display:none" required>
-  <input id="file_1" class="input" placeholder="ファイル選択..." onclick="$('input[id=custom_file_1]').click()">
+  <input type="file" name="image" accept="image/*" class="input file_1" hidden required>
+  <input placeholder="ファイル選択..." id="file_1" class="input" onclick="$('input.file_1').click()">
 
   <button type="submit" class="button green button_margin">作成する</button>
 </form>
@@ -23,5 +23,5 @@
 {% block extrajs %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/textarea.js' %}"></script>
-<script src="{% static 'js/attachment_name.js' %}"></script>
+<script src="{% static 'js/filename.js' %}"></script>
 {% endblock extrajs %}
