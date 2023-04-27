@@ -18,30 +18,8 @@
   margin: 6px 0 0 10px;
 }
 
-.main .margin {
-  margin: 16px 0;
-}
-
-.main .margin_top {
-  margin: 16px 0 0 0;
-}
-
 .main .check_margin {
   margin: 2px 0 6px 0;
-}
-
-.main .button_margin {
-  display: block;
-  margin-top: 32px;
-}
-
-.form_account .button_margin {
-  width: 100%;
-}
-
-.form_account .input_margin {
-  width: 100%;
-  margin: 0 0 16px 0;
 }
 
 .main div.field > input,
