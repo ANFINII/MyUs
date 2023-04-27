@@ -7,13 +7,13 @@
   {% if user.is_authenticated %}
   <form method="POST" action="">
     {% csrf_token %}
-    <p class="margin">タイトル</p>
+    <p class="vertical_16">タイトル</p>
     <input name="title" value="{{ todo.title }}" class="input" required>
 
-    <p class="margin">内容</p>
+    <p class="vertical_16">内容</p>
     <textarea name="content" rows="1" class="textarea" required>{{ todo.content }}</textarea>
 
-    <p class="margin">優先度</p>
+    <p class="vertical_16">優先度</p>
     <label class="select">
       <select name="priority" required>
         <option value="danger" {% if object.priority == 'danger' %}selected{% endif %}>高</option>
@@ -22,7 +22,7 @@
       </select>
     </label>
 
-    <p class="margin">進捗度</p>
+    <p class="vertical_16">進捗度</p>
     <label class="select">
       <select name="progress" required>
         <option value="0" {% if object.progress == '0' %}selected{% endif %}>未着手</option>
@@ -31,10 +31,10 @@
       </select>
     </label>
 
-    <p class="margin">期日</p>
+    <p class="vertical_16">期日</p>
     <input name="duedate" value="{{ todo.duedate|date:'Y-m-j' }}" placeholder="{% now 'Y' %}-12-31" class="input" required>
 
-    <button type="submit" class="button green button_margin">完了する</button>
+    <button type="submit" class="button green top_32">完了する</button>
   </form>
   {% else %}
   <h2 class="login_required">ログインしてください</h2>

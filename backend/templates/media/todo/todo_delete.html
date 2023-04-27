@@ -15,11 +15,9 @@
 
   <p>内容：{{ todo.content }}</p>
 
-  <br>
-
   <form method="POST" action="">
     {% csrf_token %}
-    <button type="submit" class="button red button_margin">削除する</button>
+    <button type="submit" class="button red top_32">削除する</button>
   </form>
   {% else %}
   <h2 class="login_required">ログインしてください</h2>

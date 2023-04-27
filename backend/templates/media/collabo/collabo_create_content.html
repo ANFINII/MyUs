@@ -4,16 +4,16 @@
 {% if user.is_authenticated %}
 <form method="POST" action="" enctype="multipart/form-data">
   {% csrf_token %}
-  <p class="margin">タイトル</p>
+  <p class="vertical_16">タイトル</p>
   <input name="title" class="input" required>
 
-  <p class="margin">内容</p>
+  <p class="vertical_16">内容</p>
   <textarea name="content" rows="1" class="textarea" required></textarea>
 
-  <p class="margin">期間</p>
+  <p class="vertical_16">期間</p>
   <input name="period" class="input" placeholder="{% now 'Y' %}-12-31" required>
 
-  <button type="submit" class="button green button_margin">作成する</button>
+  <button type="submit" class="button green top_32">作成する</button>
 </form>
 {% else %}
 <h2 class="login_required">ログインしてください</h2>
