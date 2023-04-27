@@ -14,14 +14,13 @@ export default function WithdrawalConfirm() {
           <form method="POST" action="" className="form_account">
           {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}
             {/* {% csrf_token %} */}
-            {/* <p style="{color: red;}">本当に退会しますか？</p> */}
-            <br />
+            <p className="red bottom_24">本当に退会しますか？</p>
 
-            <Input type="password" name="password2" placeholder="パスワード" minLength={8} maxLength={16} className="input_margin" required />
+            <Input type="password" name="password2" placeholder="パスワード" minLength={8} maxLength={16} className="bottom_16" required />
 
-            <Button red size="xl" className="button_margin">退会する</Button>
+            <Button red size="xl" className="full vertical_24">退会する</Button>
 
-            <Button blue size="xl" onClick={() => Router.push('/setting/withdrawal')} className="button_margin">戻る</Button>
+            <Button blue size="xl" onClick={() => Router.push('/setting/withdrawal')} className="full bottom_24">戻る</Button>
           </form>
         :
           <h2 className="login_required">ログインしてください</h2>
