@@ -8,14 +8,13 @@
     {% if user.is_authenticated %}
     <form method="POST" action="{% url 'myus:withdrawal' %}" class="form_account">
       {% csrf_token %}
-      <p style="color: red;">本当に退会しますか？</p>
-      <br>
+      <p class="red bottom_24">本当に退会しますか？</p>
 
-      <input type="password" name="password2" placeholder="パスワード" minlength="8" maxlength="16" class="input input_margin" required>
+      <input type="password" name="password2" placeholder="パスワード" minlength="8" maxlength="16" class="input bottom_16" required>
 
-      <button class="button red xl button_margin">退会する</button>
+      <button class="button red xl full vertical_24">退会する</button>
 
-      <button href="{% url 'myus:withdrawal' %}" class="button blue xl button_margin pjax_button">戻る</button>
+      <button href="{% url 'myus:withdrawal' %}" class="button blue xl full bottom_24 pjax_button">戻る</button>
     </form>
     {% include 'parts/footer-myus.html' %}
     {% else %}

@@ -9,9 +9,9 @@
 
 {% block content %}
 <main>
-  <form method="POST" action="" class="form_signup">
+  <form method="POST" action="" class="form_account">
     {% csrf_token %}
-    <h1 class="h4 mb-3 font-weight-normal">アカウント登録</h1>
+    <h1 class="signup_h1">アカウント登録</h1>
 
     {% if messages %}
     <ul class="messages_signup">
@@ -21,66 +21,49 @@
     </ul>
     {% endif %}
 
-    <p><label for="last_name">名前</label></p>
-    <p>
-      <div class="row">
-        <div class="col-auto last_name">
-          <input type="text" name="last_name" placeholder="姓" maxlength="30" id="last_name" class="form-control">
-        </div>
-        <div class="col-auto first_name">
-          <input type="text" name="first_name" placeholder="名" maxlength="30" id="first_name" class="form-control">
-        </div>
-      </div>
-    </p>
+    <p class="margin">名前</p>
+    <div class="name_group bottom_16">
+      <input type="text" name="last_name" placeholder="姓" maxlength="30" class="input name">
+      <input type="text" name="first_name" placeholder="名" maxlength="30" class="input name">
+    </div>
 
-    <p><input type="text" name="username" placeholder="ユーザー名(英数字)" maxlength="20" class="form-control" required></p>
+    <input type="text" name="username" placeholder="ユーザー名(英数字)" maxlength="20" class="input bottom_16" required>
 
-    <p><input type="text" name="nickname" placeholder="投稿者名" maxlength="80" class="form-control" required></p>
+    <input type="text" name="nickname" placeholder="投稿者名" maxlength="80" class="input bottom_16" required>
 
-    <p><input type="email" name="email" placeholder="メールアドレス" maxlength="255" class="form-control" required></p>
+    <input type="email" name="email" placeholder="メールアドレス" maxlength="255" class="input bottom_16" required>
 
-    <p><input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minlength="8" maxlength="16" class="form-control" required></p>
+    <input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minlength="8" maxlength="16" class="input bottom_16" required>
 
-    <p><input type="password" name="password2" placeholder="パスワード(確認用)" minlength="8" maxlength="16" class="form-control" required></p>
+    <input type="password" name="password2" placeholder="パスワード(確認用)" minlength="8" maxlength="16" class="input bottom_16" required>
 
-    <p><label for="year">生年月日</label></p>
-    <p>
-      <div id="birthday" class="row g-3">
-        <div class="col-auto year">
-          <select name="year" id="year" class="form-control">
-            <option style="display:none;">年</option>
-          </select>
-        </div>
-        <div class="col-auto month">
-          <select name="month" id="month" class="form-control">
-            <option style="display:none;">月</option>
-          </select>
-        </div>
-        <div class="col-auto day">
-          <select name="day" id="day" class="form-control">
-            <option style="display:none;">日</option>
-          </select>
-        </div>
-      </div>
-    </p>
+    <p class="margin">生年月日</p>
+    <div class="birthday_group">
+      <label class="select birthday">
+        <select name="year" id="year"><option>年</option></select>
+      </label>
+      <label class="select birthday">
+        <select name="month" id="month"><option>月</option></select>
+      </label>
+      <label class="select birthday">
+        <select name="day" id="day"><option>日</option></select>
+      </label>
+    </div>
 
-    <p><label for="secret">性別</label><br></p>
-    <div class="form-check-inline">
+    <p class="margin">性別</p>
+    <div class="bottom_24">
       <input type="radio" name="gender" value="0" id="male">
       <label for="male">男性</label>
-    </div>
-    <div class="form-check form-check-inline">
+
       <input type="radio" name="gender" value="1" id="female">
       <label for="female">女性</label>
-    </div>
-    <div class="form-check form-check-inline gender">
+
       <input type="radio" name="gender" value="2" id="secret" checked>
       <label for="secret">秘密</label>
     </div>
 
-    <p><input type="submit" value="アカウント登録" id="submit" class="btn btn-lg btn-success btn-block"></p>
-
-    <p><a href="{% url 'myus:login' %}" class="btn btn-lg btn-primary btn-block">戻る</a></p>
+    <button type="submit" class="button green xl full vertical_24">アカウント登録</button>
+    <button type="button" onclick="location.href='{% url 'myus:login' %}'" class="button blue xl full bottom_24">戻る</button>
   </form>
 </main>
 {% endblock content %}

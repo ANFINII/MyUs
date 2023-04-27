@@ -4,37 +4,39 @@
   justify-content: center;
 }
 
-.form_signup {
+.form_account {
   width: 100%;
   max-width: 380px;
   padding: 15px;
   margin: 0 0 30px 0;
 }
 
-.form_signup .login_h1 {
+.form_account .login_h1 {
   font-family: "Libre Caslon Display", serif;
   font-size: 28px;
   color: rgb(50, 50, 50);
   margin:  26px 0 40px 0;
 }
 
-.form_signup .signup_h1 {
+.myus_h1 {
+  font-family: "Libre Caslon Display", serif;
+  font-size: 26px;
+  margin: 0 0 24px 0;
+}
+
+.form_account .signup_h1 {
   font-family: "Libre Caslon Display", serif;
   font-size: 28px;
   color: rgb(50, 50, 50);
   margin: 20px 0 20px 0;
 }
 
-.form_signup .checkbox {
-  font-weight: 400;
+.form_account .margin {
+  margin: 8px 0;
 }
 
-.form_signup .form-control {
-  position: relative;
-  box-sizing: border-box;
-  height: auto;
-  padding: 6px;
-  font-size: 16px;
+.form_account .checkbox {
+  font-weight: 400;
 }
 
 .password_reset {
@@ -45,24 +47,6 @@
   font-size: 14px;
   color: rgb(0, 130, 255);
   text-decoration: none;
-}
-
-.col-auto.last_name,
-.col-auto.first_name {
-  padding: 0 0 0 12px;
-}
-
-.col-auto.year {
-  padding: 0 0 0 8px;
-}
-
-.col-auto.month, .col-auto.day {
-  padding: 0 0 0 13px;
-}
-
-#year, #month, #day {
-  width: 108px;
-  margin: 0;
 }
 
 .email_reset {
@@ -92,14 +76,6 @@
 .messages_password_mukou {
   font-size: 14px;
   color: rgb(255, 0, 0);
-}
-
-.pass_confirm1 {
-  margin: 35px 0 0 0;
-}
-
-.pass_confirm2 {
-  margin: 0 0 50px 0;
 }
 
 .gender {
@@ -138,11 +114,21 @@
   margin: 0 0 16px 0;
 }
 
-.article_registration .button_margin {
-  width: 100%;
-  margin: 0 0 24px 0;
-}
-
 .article_registration a {
   text-decoration: none;
+}
+
+.name_group,
+.birthday_group {
+  display: flex;
+  margin: 0 0 16px 0;
+  justify-content: space-between;
+}
+
+.name_group .name {
+  width: 174px;
+}
+
+.birthday {
+  width: 115px;
 }
