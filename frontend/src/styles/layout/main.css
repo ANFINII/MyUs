@@ -113,16 +113,16 @@ div.field > button {
   border: 2px solid rgb(0, 70, 175);
 }
 
-.main_decolation_payment div {
-  margin: 8px 0 0 0;
-}
-
 .payment_img {
+  display: flex;
+  padding: 8px 0;
   font-size: 20px;
   color: rgb(0, 70, 175);
+  align-items: center;
 }
 
 .payment_img .myus_img {
+  display: inline-block;
   margin: 0 6px 0 10px;
 }
 

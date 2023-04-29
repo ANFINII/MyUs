@@ -413,8 +413,7 @@ hr {
   position: relative;
   grid-gap: 0 10px;
   height: fit-content;
-  padding: 8px 8px 8px 16px;
-  margin: 0;
+  padding: 8px;
   overflow: hidden;
 }
 

@@ -113,16 +113,16 @@ div.field > button {
   border: 2px solid rgb(0, 70, 175);
 }
 
-.main_decolation_payment div {
-  margin: 8px 0 0 0;
-}
-
 .payment_img {
+  display: flex;
+  padding: 8px 0;
   font-size: 20px;
   color: rgb(0, 70, 175);
+  align-items: center;
 }
 
 .payment_img .myus_img {
+  display: inline-block;
   margin: 0 6px 0 10px;
 }
 
@@ -852,8 +852,7 @@ div.field > button {
   grid-template-rows: auto auto;
   grid-gap: 8px;
   grid-column: 2/-1;
-  margin: 3px 0 5px 0;
-  padding: 5px 0 0 5px;
+  padding: 5px 5px 5px 0;
 }
 
 .reply_input p {
@@ -937,6 +936,7 @@ div.field > button {
 /* コメントエリア */
 .comment_aria {
   height: 500px;
+  padding: 8px 0 0 0;
   overflow-y: scroll;
 }
 
@@ -974,6 +974,7 @@ div.field > button {
   grid-template-rows: 20px minmax(20px, auto) auto auto auto;
   position: relative;
   grid-gap: 0 10px;
+  padding: 5px 0;
 }
 
 .comment_aria_list a {
@@ -1060,8 +1061,7 @@ div.field > button {
   grid-template-rows: 20px minmax(20px, auto) auto auto;
   position: relative;
   grid-gap: 0 10px;
-  margin: 0 0 5px 0;
-  padding: 5px 5px 0 5px;
+  padding: 5px 5px 5px 0;
 }
 
 .reply_aria_list .profile_image {
