@@ -1348,11 +1348,7 @@ div.field > button {
 /* ToDoデザイン */
 .todo_create,
 .follow_button {
-  margin: 0 0 10px 0;
-}
-
-.follow_button a {
-  width: 88px;
+  margin: 0 0 16px 0;
 }
 
 .follow_button span {
