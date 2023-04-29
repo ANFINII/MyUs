@@ -456,8 +456,12 @@ def notification_deleted(request):
 def searchtag_create(request):
     """searchtag_create"""
     if request.method == 'POST':
-        searchtag = SearchTag.objects.create(author=request.user, name=request.POST['name'])
-        return JsonResponse({'searchtag': searchtag.name})
+        author = request.user
+        name = request.POST['name']
+        searchtag = SearchTag.objects.filter(author=author, name=name)
+        if not searchtag:
+            searchtag = SearchTag.objects.create(author=author, name=name)
+            return JsonResponse({'searchtag': searchtag.name})
 
 
 # advertise_read
