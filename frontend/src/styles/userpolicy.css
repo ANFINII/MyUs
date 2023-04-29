@@ -2,8 +2,7 @@
 .article_userpolicy {
   display: block;
   max-height: 100vh;
-  margin: 14px 0 20px 0;
-  overflow-y: hidden;
+  margin: 14px 0 0 0;
 }
 
 .article_userpolicy h1 {
@@ -21,8 +20,4 @@
   font-size: 14px;
   color: rgb(80, 80, 80);
   margin: 0 0 12px 0;
-}
-
-hr {
-  margin: 12px 0;
 }
