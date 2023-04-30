@@ -22,6 +22,10 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="{% static 'img/My_Idea_Know_Us.png' %}">
   <meta property="og:description" content="MyUsとはMy Idea Know Usが名前の由来です。総合メディアサイトであり、アイディア想像サイトになります!!!">
+
+  <!-- Google Analytics-->
+  <script src="{% static 'js/google_tag_manager.js' %}"></script>
+
   <link rel="shortcut icon" href="{% static 'img/MyUs.png' %}">
   <link rel="icon" type="image/png" href="{% static 'img/MyUs.png' %}">
   <link rel="apple-touch-icon" href="{% static 'img/MyUs.png' %}">
@@ -45,6 +49,9 @@
 </head>
 
 <body class="layout">
+  <!-- Google Analytics-->
+  <script src="{% static 'js/google_tag.js' %}"></script>
+
   {% block header %}
   <header class="header">
     <h1>MyUs</h1>
@@ -78,7 +85,5 @@
 
   {% block extrajs %}
   {% endblock extrajs %}
-
-  <!-- Google Analytics-->
 </body>
 </html>
