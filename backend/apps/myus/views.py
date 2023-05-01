@@ -306,7 +306,7 @@ class MyPageView(TemplateView):
 class MyPageUpdate(UpdateView):
     """マイページ更新"""
     model = MyPage
-    fields = ('banner', 'email', 'content')
+    fields = ('banner', 'email', 'content', 'tag_manager_id')
     template_name = 'setting/mypage_update.html'
     success_url = reverse_lazy('myus:mypage')
 

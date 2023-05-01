@@ -37,6 +37,10 @@
           <tr><td class="td_color">メールアドレス</td><td><input type="text" name="email" value="{{ user.mypage.email }}" placeholder="公開用メールアドレス" maxlength="120" class="input"></td></tr>
           <tr><td class="td_color">フォロー数</td><td class="td_indent">{{ user.mypage.following_count }}</td></tr>
           <tr><td class="td_color">フォロワー数</td><td class="td_indent">{{ user.mypage.follower_count }}</td></tr>
+          <tr>
+            <td class="td_color">タグID</td>
+            <td><input type="text" name="tag_manager_id" value="{{ user.mypage.tag_manager_id }}" placeholder="タグマネージャーID" maxlength="10" class="input"></td>
+          </tr>
           <tr><td class="td_color">料金プラン</td><td class="td_indent">{{ user.mypage.get_plan_display }}</td></tr>
           <tr><td class="td_color">全体広告</td><td class="td_indent">
             <form method="POST" action="{% url 'myus:mypage_toggle' %}" advertise="{{ user.mypage.is_advertise }}">

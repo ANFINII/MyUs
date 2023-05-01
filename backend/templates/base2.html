@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block google_tag %}
+{% if user.mypage.tag_manager_id %}
+  <!-- Google Analytics User -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-{{ user.mypage.tag_manager_id }}');</script>
+{% endif %}
+{% endblock google_tag %}
+
 {% block customcss %}
 <link rel="stylesheet" href="https://vjs.zencdn.net/7.19.2/video-js.css">
 <link rel="stylesheet" href="https://unpkg.com/videojs-record/dist/css/videojs.record.min.css">
@@ -19,6 +30,14 @@
 <link rel="stylesheet" href="{% static 'css/audio.css' %}">
 <link rel="stylesheet" href="{% static 'css/videojs-myus.css' %}">
 {% endblock customcss %}
+
+{% block google_tag_noscript %}
+{% if user.mypage.tag_manager_id %}
+  <!-- Google Analytics User -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-{{ user.mypage.tag_manager_id }}"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+{% endif %}
+{% endblock google_tag_noscript %}
 
 {% block header %}
 <header class="header">

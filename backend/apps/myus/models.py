@@ -195,6 +195,7 @@ class MyPage(models.Model):
     content         = models.TextField(blank=True)
     follower_count  = models.IntegerField(verbose_name='follower', default=0)
     following_count = models.IntegerField(verbose_name='follow', default=0)
+    tag_manager_id  = models.CharField(max_length=10, blank=True)
     plan            = models.CharField(choices=plan_type, max_length=10, default='free')
     plan_date       = models.DateTimeField(blank=True, null=True)
     is_advertise    = models.BooleanField(default=True)
