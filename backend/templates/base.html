@@ -25,6 +25,7 @@
 
   <!-- Google Analytics MyUs -->
   <script src="{% static 'js/google_tag_manager.js' %}"></script>
+
   {% block google_tag %}
   {% endblock google_tag %}
 
@@ -51,7 +52,9 @@
 
 <body class="layout">
   <!-- Google Analytics MyUs -->
-  {% include 'google_tag.html' %}
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5F3M5PR"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
   {% block google_tag_noscript %}
   {% endblock google_tag_noscript %}
 

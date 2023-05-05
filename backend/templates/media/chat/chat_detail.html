@@ -2,6 +2,8 @@
 {% block title %}<title>MyUsチャット</title>{% endblock title %}
 {% load static %}
 
+{% include 'parts/google_tag_user.html' %}
+
 {% block extracss %}
 <link rel="stylesheet" href="{% static 'css/chat.css' %}" class="chat_remove">
 {% endblock extracss %}
