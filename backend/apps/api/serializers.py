@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
+from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting, PlanMaster, UserPlan
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
 
@@ -62,7 +61,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class MyPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyPage
-        fields = ('banner', 'email', 'content', 'follower_count', 'following_count', 'plan', 'plan_date', 'is_advertise')
+        fields = ('banner', 'email', 'content', 'follower_count', 'following_count', 'tag_manager_id', 'is_advertise')
 
 
 class NotificationSettingSerializer(serializers.ModelSerializer):
@@ -82,6 +81,18 @@ class NotificationSerializer(serializers.ModelSerializer):
             'object_id', 'content_object', 'confirmed', 'deleted', 'created'
         )
         read_only_field = ['created',]
+
+
+class PlanMasterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlanMaster
+        fields = ('id', 'name', 'stripe_api_id', 'price', 'max_advertise', 'description')
+
+
+class UserPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserPlan
+        fields = ('id', 'plan', 'start_date', 'end_date', 'is_free')
 
 
 class SearchTagSerializer(serializers.ModelSerializer):
