@@ -1,5 +1,5 @@
 // 発行可能なAPIキーでStripeオブジェクトのインスタンスを作成します
-let checkoutButtons = document.querySelectorAll('.checkout_button')
+const checkoutButtons = document.querySelectorAll('.checkout_button')
 
 checkoutButtons.forEach(function (checkoutButton) {
   checkoutButton.addEventListener('click', function () {

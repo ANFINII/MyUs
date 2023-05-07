@@ -188,7 +188,6 @@ def mypage_banner(instance, filename):
 
 class MyPage(models.Model):
     img             = '../static/img/MyUs_banner.png'
-    plan_type       = (('free', 'Free'), ('basic', 'Basic'), ('standard', 'Standard'), ('premium', 'Premium'))
     user            = models.OneToOneField(User, on_delete=models.CASCADE)
     banner          = models.ImageField(upload_to=mypage_banner, default=img, blank=True, null=True)
     email           = models.EmailField(max_length=255, blank=True)
@@ -196,8 +195,6 @@ class MyPage(models.Model):
     follower_count  = models.IntegerField(verbose_name='follower', default=0)
     following_count = models.IntegerField(verbose_name='follow', default=0)
     tag_manager_id  = models.CharField(max_length=10, blank=True)
-    plan            = models.CharField(choices=plan_type, max_length=10, default='free')
-    plan_date       = models.DateTimeField(blank=True, null=True)
     is_advertise    = models.BooleanField(default=True)
 
     objects = MyPageManager()
@@ -252,6 +249,42 @@ def create_notification_setting(sender, **kwargs):
     """ユーザー作成時に空のnotification_settingも作成する"""
     if kwargs['created']:
         NotificationSetting.objects.get_or_create(user=kwargs['instance'])
+
+
+class PlanMaster(models.Model):
+    name          = models.CharField(max_length=30)
+    stripe_api_id = models.CharField(max_length=30, unique=True)
+    price         = models.IntegerField(default=0)
+    max_advertise = models.IntegerField(default=0)
+    description   = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'plan_master'
+        verbose_name_plural = '001 PlanMaster'
+
+
+class UserPlan(models.Model):
+    user       = models.OneToOneField(User, on_delete=models.CASCADE)
+    plan       = models.ForeignKey(PlanMaster, on_delete=models.CASCADE, default=1)
+    start_date = models.DateTimeField(null=True)
+    end_date   = models.DateTimeField(null=True)
+    is_free    = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.plan.name
+
+    class Meta:
+        db_table = 'user_plan'
+        verbose_name_plural = '001 UserPlan'
+
+@receiver(post_save, sender=User)
+def create_user_plan(sender, **kwargs):
+    """ユーザー作成時に空のMyPageも作成する"""
+    if kwargs['created']:
+        UserPlan.objects.get_or_create(user=kwargs['instance'])
 
 
 class AccessLog(models.Model):
