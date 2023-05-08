@@ -253,7 +253,7 @@ def create_notification_setting(sender, **kwargs):
 
 class PlanMaster(models.Model):
     name          = models.CharField(max_length=30)
-    stripe_api_id = models.CharField(max_length=30, unique=True)
+    stripe_api_id = models.CharField(max_length=30)
     price         = models.IntegerField(default=0)
     max_advertise = models.IntegerField(default=0)
     description   = models.TextField(blank=True)
@@ -264,13 +264,14 @@ class PlanMaster(models.Model):
     class Meta:
         db_table = 'plan_master'
         verbose_name_plural = '001 PlanMaster'
+        indexes = [models.Index(fields=['stripe_api_id'], name='stripe_api_idx')]
 
 
 class UserPlan(models.Model):
     user       = models.OneToOneField(User, on_delete=models.CASCADE)
     plan       = models.ForeignKey(PlanMaster, on_delete=models.CASCADE, default=1)
-    start_date = models.DateTimeField(null=True)
-    end_date   = models.DateTimeField(null=True)
+    start_date = models.DateTimeField(blank=True, null=True)
+    end_date   = models.DateTimeField(blank=True, null=True)
     is_free    = models.BooleanField(default=True)
 
     def __str__(self):
