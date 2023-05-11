@@ -4,7 +4,7 @@
   grid-gap: 3px;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 42px auto;
-  margin: 14px 0 22px 0;
+  margin: 14px 0 26px 0;
 }
 
 .article_table h1 {
@@ -75,10 +75,6 @@ td.td_color {
 
 .table_header {
   height: 59px;
-}
-
-.td_address {
-  height: 80px;
 }
 
 .account_image {

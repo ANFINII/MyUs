@@ -1,13 +1,13 @@
 /* ヘッダー */
 .header {
+  position: fixed;
   grid-column: 1/-1;
   grid-row: 1/2;
-  position: fixed;
-  z-index: 70; /* side-menuよりは小さく */
   top: 0;
   width: 100%;
-  background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
   color: rgb(255, 255, 255);
+  background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+  z-index: 70; /* side-menuよりは小さく */
 }
 
 .header_nav {

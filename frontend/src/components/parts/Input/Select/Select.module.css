@@ -24,3 +24,7 @@
   border: 1px solid rgb(200, 200, 200);
   border-radius: 5px;
 }
+
+.select select:focus-visible {
+  outline: 1px auto rgb(40, 130, 250);
+}
