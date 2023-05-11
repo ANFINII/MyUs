@@ -30,6 +30,11 @@
   margin-bottom: 24px;
 }
 
+/* color */
+.rgb100 {
+  color: rgb(100, 100, 100);
+}
+
 .red {
   color: red;
 }

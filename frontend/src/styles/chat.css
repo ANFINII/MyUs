@@ -187,8 +187,8 @@ hr {
 }
 
 .chat_content_check:checked ~ .chat_section_content_area {
-  display: block;
   position: fixed;
+  display: block;
   top: 135px;
   left: 72px;
   width: calc(100vw - 72px);
@@ -207,10 +207,10 @@ hr {
 }
 
 .chat_content_area {
+  position: relative;
   display: grid;
   grid-template-columns: 40px auto auto;
   grid-template-rows: 20px 20px;
-  position: relative;
   grid-gap: 0 10px;
   padding: 5px 0 0 5px;
   color: rgb(33, 37, 41);
@@ -355,8 +355,6 @@ hr {
 
 .chat_section_nav_list h3 {
   display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
   grid-column: 2/3;
   grid-row: 1/2;
   font-size: 14px;
@@ -367,6 +365,8 @@ hr {
   margin: 0;
   overflow: hidden;
   word-break: break-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .bi-arrow-left-right {
@@ -401,10 +401,10 @@ hr {
 }
 
 .message_aria_list {
+  position: relative;
   display: grid;
   grid-template-columns: 40px minmax(40px, auto) auto;
   grid-template-rows: 20px minmax(20px, auto) auto auto auto;
-  position: relative;
   grid-gap: 0 10px;
   height: fit-content;
   padding: 8px;
@@ -518,8 +518,8 @@ hr {
   width: 100%;
   margin: 0;
   padding: 0 16px 5px 16px;
-  z-index: 50;
   background: rgba(255, 255, 255, 0);
+  z-index: 50;
 }
 
 .message_aria_check:checked ~ .chat_footer_main {
@@ -532,8 +532,8 @@ hr {
   width: 100%;
   margin: 0;
   padding: 0 16px 5px 16px;
-  z-index: 50;
   background: rgba(255, 255, 255, 0);
+  z-index: 50;
 }
 
 .chat_footer_main .btn-sm,

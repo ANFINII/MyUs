@@ -72,7 +72,7 @@
   }
 
   .searchbar:hover > .search_icon {
-    background: rgb(30, 75, 165);
     color: rgb(255, 255, 255);
+    background: rgb(30, 75, 165);
   }
 }
