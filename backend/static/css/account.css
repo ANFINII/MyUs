@@ -160,9 +160,9 @@ td .textarea.margin {
 /* パスワード変更 */
 .article_pass {
   display: grid;
-  grid-gap: 3px;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto 1fr;
+  grid-gap: 3px;
   margin: 14px 0 0 0;
 }
 

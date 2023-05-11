@@ -44,10 +44,10 @@ div.field > button {
 
 /* メインリストデザイン index用 */
 .article_index {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(auto, 272px));
   grid-template-rows: 25px auto;
-  position: relative;
   grid-gap: 15px;
 }
 
@@ -70,10 +70,10 @@ div.field > button {
 /* メインリストデザイン */
 .article_list,
 .article_list_adver {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(auto, 272px));
   grid-template-rows: auto;
-  position: relative;
   grid-gap: 15px;
 }
 
@@ -103,8 +103,8 @@ div.field > button {
 }
 
 .main_decolation a {
-  text-decoration: none;
   color: rgb(0, 0, 0);
+  text-decoration: none;
 }
 
 .main_decolation_payment {
@@ -339,9 +339,9 @@ div.field > button {
   color: rgb(255, 255, 255);
   font-size: 13px;
   text-shadow: 1px 1px 0 rgb(0, 0, 0);
-  background: rgb(0, 135, 180);
   border: 1px solid rgb(0, 135, 180);
   border-radius: 5px;
+  background: rgb(0, 135, 180);
 }
 
 .form_range {
@@ -350,8 +350,8 @@ div.field > button {
 }
 
 .music_download {
-  text-decoration: none;
   color: rgb(120, 120, 120);
+  text-decoration: none;
 }
 
 .music_download:hover {
@@ -513,8 +513,8 @@ div.field > button {
   grid-row: 1/2;
   font-size: 12px;
   font-weight: 500;
-  vertical-align: bottom;
   padding: 6px 0 0 4px;
+  vertical-align: bottom;
 }
 
 .follow_content_2 {
@@ -555,9 +555,9 @@ div.field > button {
 /* UserPage */
 .userpage_banner {
   display: flex;
-  justify-content: center;
-  align-items: center;
   margin: 0 auto;
+  align-items: center;
+  justify-content: center;
 }
 
 .userpage_banner img {
@@ -852,8 +852,7 @@ div.field > button {
   grid-template-rows: auto auto;
   grid-gap: 8px;
   grid-column: 2/-1;
-  margin: 3px 0 5px 0;
-  padding: 5px 0 0 5px;
+  padding: 5px 5px 5px 0;
 }
 
 .reply_input p {
@@ -969,10 +968,10 @@ div.field > button {
 }
 
 .comment_aria_list {
+  position: relative;
   display: grid;
   grid-template-columns: 40px minmax(40px, auto) auto;
   grid-template-rows: 20px minmax(20px, auto) auto auto auto;
-  position: relative;
   grid-gap: 0 10px;
 }
 
@@ -991,8 +990,8 @@ div.field > button {
 }
 
 .comment_aria_list_1 {
-  margin: -3px 0 0 0;
   min-height: 20px;
+  margin: -3px 0 0 0;
   white-space: nowrap;
 }
 
@@ -1055,13 +1054,12 @@ div.field > button {
 }
 
 .reply_aria_list {
+  position: relative;
   display: grid;
   grid-template-columns: 40px minmax(40px, auto) auto;
   grid-template-rows: 20px minmax(20px, auto) auto auto;
-  position: relative;
   grid-gap: 0 10px;
-  margin: 0 0 5px 0;
-  padding: 5px 5px 0 5px;
+  padding: 5px 5px 5px 0;
 }
 
 .reply_aria_list .profile_image {
@@ -1070,8 +1068,8 @@ div.field > button {
 }
 
 .reply_aria_list_1 {
-  margin: -3px 0 0 0;
   min-height: 20px;
+  margin: -3px 0 0 0;
   white-space: nowrap;
 }
 
@@ -1245,11 +1243,10 @@ div.field > button {
 
 /* メッセージ削除ダイアログ */
 .modal_content {
+  position: fixed;
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: 40px 40px auto 55px;
-  position: fixed;
-  z-index: 100;
   top: 50%;
   left: 50%;
   width: calc(100% - 36px);
@@ -1262,6 +1259,7 @@ div.field > button {
   background: rgb(255, 255, 255);
   transform: translate(-50%, -50%) scale(0.9);
   transition: 0.3s;
+  z-index: 100;
 }
 
 .modal_content.active {
@@ -1271,9 +1269,9 @@ div.field > button {
 }
 
 .modal_content_header {
+  display: flex;
   grid-column: 1/-1;
   grid-row: 1/2;
-  display: flex;
   margin: 0;
   font-size: 22px;
   font-weight: bold;
@@ -1283,9 +1281,9 @@ div.field > button {
 }
 
 .modal_content_body_span {
+  display: flex;
   grid-column: 1/-1;
   grid-row: 2/3;
-  display: flex;
   font-size: 14px;
   align-items: center;
   overflow: hidden;
@@ -1321,13 +1319,13 @@ div.field > button {
 /* 閉じる用のカバー */
 .mask {
   position: fixed;
-  z-index: 90;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   visibility: hidden;
   transition: 0.3s;
+  z-index: 90;
 }
 
 .mask.active {
@@ -1356,8 +1354,8 @@ div.field > button {
 }
 
 .section_todo .author_space_todo {
-  text-decoration: none;
   color: rgb(0, 0, 0);
+  text-decoration: none;
 }
 
 .main_decolation_todo {

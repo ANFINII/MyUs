@@ -122,11 +122,6 @@ svg {
   color: rgb(255, 0, 0);
 }
 
-/* color */
-.rgb100 {
-  color: rgb(100, 100, 100);
-}
-
 /* 通知設定 */
 .bi-toggle-on {
   color: rgb(0, 120, 220);

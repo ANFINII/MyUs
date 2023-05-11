@@ -43,19 +43,18 @@
 .module h2,
 .module caption,
 .inline-group .h2 {
-  background: rgb(0, 185, 200);
-  color: rgb(255, 255, 255);
   font-size: 14px;
+  color: rgb(255, 255, 255);
+  background: rgb(0, 185, 200);
 }
 
 #content-related .module h2 {
-  background: none;
   padding: 6px 16px !important;
   margin-bottom: 16px;
   border-bottom: 1px solid #eaeaea;
   font-size: 14px !important;
-  background: rgb(0, 185, 200);
   color: rgb(255, 255, 255);
+  background: rgb(0, 185, 200);
 }
 
 #content-related h3 {
@@ -69,8 +68,8 @@ div .breadcrumbs {
   padding: 10px 40px;
   text-align: left;
   font-size: 14px;
-  background: rgb(0, 185, 200);
   color: rgb(210, 240, 250);
+  background: rgb(0, 185, 200);
 }
 
 #nav-sidebar .current-app .section:link,
