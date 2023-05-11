@@ -20,13 +20,13 @@
 }
 
 .header_nav_1 {
-  grid-column: 1/2;
   position: relative;
+  grid-column: 1/2;
 }
 
 .header_nav_2 {
-  grid-column: 2/3;
   position: relative;
+  grid-column: 2/3;
   justify-self: start;
 }
 
@@ -42,29 +42,29 @@
 }
 
 .header_nav_4 {
-  grid-column: 4/5;
   position: relative;
+  grid-column: 4/5;
 }
 
 .header_nav_5 {
-  grid-column: 5/6;
   position: relative;
+  grid-column: 5/6;
 }
 
 .header_nav_6 {
-  grid-column: 6/7;
   position: relative;
+  grid-column: 6/7;
 }
 
 .header_nav_7 {
-  grid-column: 7/8;
   position: relative;
+  grid-column: 7/8;
   justify-self: center;
 }
 
 .icon_link {
-  display: block;
   position: absolute;
+  display: block;
   top: 0;
   width: 100%;
   height: 100%;
@@ -75,7 +75,6 @@
 /* サイドメニュー */
 .side_menu {
   position: fixed;
-  z-index: 100; /* 最前面 */
   overflow-y: auto;
   top: 0;
   left: -250px;
@@ -86,6 +85,7 @@
   background: rgb(255, 255, 255);
   color: rgb(50, 50, 50);
   transition: all 0.2s;
+  z-index: 100; /* 最前面 */
 }
 
 .side_menu_open {
@@ -134,13 +134,13 @@
 
 /* 閉じる用のカバー */
 .side_nemu_back {
-  display: none;
   position: fixed;
-  z-index: 90;
+  display: none;
   top: 0;
   width: 100%;
   height: 100%;
   transition: all 0.2s;
+  z-index: 90;
 }
 
 /* チェックボックスは非表示に */
@@ -160,8 +160,8 @@
 }
 
 .side_menu_color {
-  margin: 0;
   padding: 12px 0;
+  margin: 0;
 }
 
 .side_menu_color:hover {
@@ -179,8 +179,8 @@
 }
 
 .side_menu_footer_item {
-  display: flex;
   position: relative;
+  display: flex;
   text-align: start;
   font-size: 0.9rem;
 }
@@ -199,7 +199,6 @@
 .drop_menu_notice,
 .drop_menu_profile {
   position: fixed;
-  z-index: 80; /* サイドメニューよりかは小さい */
   top: 3.5em;
   right: -250px;
   width: 250px;
@@ -210,6 +209,7 @@
   transition: all 0.2s;
   overflow-y: auto;
   overflow-x: hidden;
+  z-index: 80; /* サイドメニューよりかは小さい */
 }
 
 .drop_menu_cloud {
@@ -225,14 +225,14 @@
 .drop_back_cloud,
 .drop_back_notice,
 .drop_back_profile {
-  display: none;
   position: fixed;
-  z-index: 80;
+  display: none;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   transition: all 0.2s;
+  z-index: 80;
 }
 
 /* チェックが入ったら表示 */
@@ -272,8 +272,8 @@
 }
 
 .color_drop_menu {
-  margin: 0;
   padding: 12px 0;
+  margin: 0;
 }
 
 .color_drop_menu:hover {
@@ -302,11 +302,11 @@
 }
 
 .notification_aria_list {
+  position: relative;
   display: grid;
   grid-template-columns: 36px 9px auto 22.5px;
   grid-template-rows: 48px;
   grid-gap: 0 2px;
-  position: relative;
   padding: 0 0 0 11px;
 }
 
@@ -316,14 +316,14 @@
 }
 
 .notification_aria_list a {
-  text-decoration: none;
   color: rgb(33, 37, 41);
+  text-decoration: none;
 }
 
 .notification_aria_list .profile_image {
+  position: absolute;
   grid-column: 1/2;
   grid-row: 1/2;
-  position: absolute;
   top: 50%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
@@ -346,14 +346,14 @@
 
 .notification_aria_list_1 {
   display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
   grid-column: 3/5;
   grid-row: 1/2;
+  padding: 1px 0;
   font-size: 12px;
   overflow: hidden;
   word-break: break-all;
-  padding: 1px 0;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .notification_aria_list_2 {
@@ -371,8 +371,8 @@
   grid-row: 1/3;
   justify-self: end;
   width: 23px;
-  margin: 0;
   padding: 7px 0;
+  margin: 0;
   color: rgb(120, 120, 120);
 }
 
@@ -383,23 +383,23 @@
 
 /* サーチバー */
 .searchbar {
-  margin-bottom: auto;
   margin-top: auto;
+  margin-bottom: auto;
   height: 32px;
-  background: rgb(255, 255, 255);
-  border-radius: 32px;
   font-size: 16px;
+  border-radius: 32px;
+  background: rgb(255, 255, 255);
 }
 
 .search_input {
-  color: rgb(3, 3, 3);
-  border: 0;
-  outline: 0;
-  background: none;
   width: 700px;
   padding: 0;
   text-indent: 10px;
   line-height: 32px;
+  border: 0;
+  outline: 0;
+  color: rgb(3, 3, 3);
+  background: none;
   transition: width 0.1s linear;
 }
 
@@ -408,11 +408,11 @@ input::placeholder {
 }
 
 .search_icon {
+  display: flex;
   width: 32px;
   height: 32px;
   margin: 0 -2px 0 0;
   float: right;
-  display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
