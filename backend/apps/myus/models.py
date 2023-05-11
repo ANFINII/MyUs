@@ -13,7 +13,6 @@ from django_quill.fields import QuillField
 
 
 class UserManager(BaseUserManager):
-    """UserManager"""
     def create_user(self, email, username, nickname, password=None):
         if not email:
             raise ValueError('Users must have an email')
@@ -118,8 +117,13 @@ class User(AbstractBaseUser, PermissionsMixin):
             return self.mypage.banner.url
 
     def plan(self):
-        plan_dict = {'free': 'Free', 'basic': 'Basic', 'standard': 'Standard', 'premium': 'Premium'}
-        return [value for key, value in plan_dict.items() if self.mypage.plan in key]
+        return self.user_plan.plan.name
+
+    def plan_start_date(self):
+        return self.user_plan.start_date
+
+    def plan_end_date(self):
+        return self.user_plan.end_date
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -146,6 +150,7 @@ class ProfileManager(models.Manager):
         return super(ProfileManager,self).get_queryset().select_related('user')
 
 class Profile(models.Model):
+    """Profile"""
     gender_type  = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
     message      = '電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます'
     phone_no     = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message=message)
@@ -187,6 +192,7 @@ def mypage_banner(instance, filename):
     return f'users/images_mypage/user_{instance.id}/{filename}'
 
 class MyPage(models.Model):
+    """MyPage"""
     img             = '../static/img/MyUs_banner.png'
     user            = models.OneToOneField(User, on_delete=models.CASCADE)
     banner          = models.ImageField(upload_to=mypage_banner, default=img, blank=True, null=True)
@@ -252,6 +258,7 @@ def create_notification_setting(sender, **kwargs):
 
 
 class PlanMaster(models.Model):
+    """PlanMaster"""
     name          = models.CharField(max_length=30)
     stripe_api_id = models.CharField(max_length=30)
     price         = models.IntegerField(default=0)
@@ -268,11 +275,12 @@ class PlanMaster(models.Model):
 
 
 class UserPlan(models.Model):
-    user       = models.OneToOneField(User, on_delete=models.CASCADE)
+    """UserPlan"""
+    user       = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_plan')
     plan       = models.ForeignKey(PlanMaster, on_delete=models.CASCADE, default=1)
     start_date = models.DateTimeField(blank=True, null=True)
     end_date   = models.DateTimeField(blank=True, null=True)
-    is_free    = models.BooleanField(default=True)
+    is_paid    = models.BooleanField(default=False)
 
     def __str__(self):
         return self.plan.name
@@ -289,6 +297,7 @@ def create_user_plan(sender, **kwargs):
 
 
 class AccessLog(models.Model):
+    """AccessLog"""
     ip_address = models.GenericIPAddressField()
     type       = models.CharField(max_length=7, blank=True)
     type_id    = models.BigIntegerField(blank=True, null=True)
@@ -849,25 +858,13 @@ class Message(models.Model):
 class Product(models.Model):
     name              = models.CharField(max_length=100)
     stripe_product_id = models.CharField(max_length=100)
+    price             = models.IntegerField()
     description       = models.TextField(blank=True)
+    created           = models.DateTimeField(auto_now_add=True)
+    updated           = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
     class Meta:
         db_table = 'product'
-
-
-class Price(models.Model):
-    product         = models.ForeignKey(Product, on_delete=models.CASCADE)
-    stripe_price_id = models.CharField(max_length=100)
-    price           = models.IntegerField()
-
-    def __str__(self):
-        return self.stripe_price_id
-
-    def get_display_price(self):
-        return '{0:.2f}'.format(self.price / 100)
-
-    class Meta:
-        db_table = 'price'
