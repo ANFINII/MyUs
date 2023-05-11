@@ -89,12 +89,14 @@ class ContextData:
 
         context['advertise_auto_list'] = Advertise.objects.filter(publish=True, type=0).order_by('?')[:1]
         advertise = Advertise.objects.filter(publish=True, type=1, author=author).order_by('?')
-        plan = author.mypage.plan
-        if plan == 'basic':
+        plan = author.plan()
+        if plan == 'Basic':
             context['advertise_list'] = advertise[:1]
-        if plan == 'standard':
+        if plan == 'Standard':
+            context['advertise_list'] = advertise[:2]
+        if plan == 'Premium':
             context['advertise_list'] = advertise[:3]
-        if plan == 'premium':
+        if plan == 'Ultimate':
             context['advertise_list'] = advertise[:4]
 
         class_name = str(class_name.__name__)

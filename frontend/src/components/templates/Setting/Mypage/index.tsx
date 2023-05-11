@@ -42,7 +42,7 @@ export default function MyPage(props: Props) {
               <tr><td className="td_color">料金プラン</td><td className="td_indent">{mypage.plan}</td></tr>
               <tr><td className="td_color">全体広告</td><td className="td_indent" id="toggle_mypage">
                 <form method="POST" action="" data-advertise="{{ mypage.is_advertise }}" data-csrf="{{ csrf_token }}">
-                  {mypage.plan === '0' ?
+                  {mypage.plan === 'Free' ?
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi-toggle-disable" viewBox="0 0 16 16">
                       <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
                     </svg>

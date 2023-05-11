@@ -27,7 +27,7 @@
         <td class="td_color">タグID</td>
         <td class="td_indent">GTM{% if user.mypage.tag_manager_id %}-{{ user.mypage.tag_manager_id }}{% endif %}</td>
       </tr>
-      <tr><td class="td_color">料金プラン</td><td class="td_indent">{{ user.mypage.get_plan_display }}</td></tr>
+      <tr><td class="td_color">料金プラン</td><td class="td_indent">{{ user.plan }}</td></tr>
       <tr><td class="td_color">全体広告</td><td class="td_indent" id="toggle_mypage">{% include 'setting/mypage_advertise.html' %}</td></tr>
       <tr><td class="td_color">概要</td><td class="td_indent">{{ user.mypage.content|linebreaksbr|urlize }}</td></tr>
     </tbody>

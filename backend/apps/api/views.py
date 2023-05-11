@@ -253,8 +253,9 @@ class MyPageAPI(APIView):
             'content': user.mypage.content,
             'follower_count': user.mypage.follower_count(),
             'following_count': user.mypage.following_count(),
-            'plan': user.mypage.plan,
-            'plan_date': user.mypage.plan_date,
+            'plan': user.plan(),
+            'plan_start_date': user.plan_start_date(),
+            'plan_end_date': user.plan_end_date(),
             'is_advertise': user.mypage.is_advertise,
         }
         return Response(data, status=HTTP_200_OK)

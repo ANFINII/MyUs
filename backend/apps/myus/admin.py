@@ -739,14 +739,8 @@ class AdvertiseAdminSite(admin.ModelAdmin, PublishMixin):
         super(AdvertiseAdminSite, self).save_model(request, obj, form, change)
 
     def has_add_permission(self, request):
-        author = request.user
-        if author.mypage.plan != 'free':
-            return True
-        return False
+        return request.user.plan() != 'Free'
 
     def has_change_permission(self, request, obj=None):
-        author = request.user
-        if author.mypage.plan != 'free':
-            return True
-        return False
+        return request.user.plan() != 'Free'
 manage_site.register(Advertise, AdvertiseAdminSite)
