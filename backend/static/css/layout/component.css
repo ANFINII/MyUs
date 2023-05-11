@@ -271,6 +271,10 @@
   background: rgb(255, 255, 255);
 }
 
+.select select:focus-visible {
+  outline: 1px auto rgb(40, 130, 250);
+}
+
 /* Checkbox */
 .checkbox {
   appearance: none;
