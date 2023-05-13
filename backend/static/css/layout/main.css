@@ -110,6 +110,7 @@ div.field > button {
 .main_decolation_payment {
   width: 272px;
   height: 60px;
+  border-radius: 5px;
   border: 2px solid rgb(0, 70, 175);
 }
 
