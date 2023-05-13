@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count
 from django.template.loader import render_to_string
-from apps.myus.models import MyPage, NotificationSetting, Follow, Advertise, Todo
+from apps.myus.models import PlanMaster, MyPage, NotificationSetting, Follow, Advertise, Todo
 from apps.myus.modules.contains import model_dict, model_pjax, model_create_pjax
 from apps.myus.modules.search import SearchData
 
@@ -100,6 +100,7 @@ def pjax_context(request, href):
         template = 'menu/knowledge_content.html'
     if href == 'setting/payment':
         template = 'setting/payment/payment_content.html'
+        context = {'payment_list': PlanMaster.objects.all().order_by('-id')}
     if href == 'setting/profile':
         template = 'setting/profile_content.html'
     if href == 'setting/mypage':
