@@ -5,7 +5,7 @@
 {% block content %}
 <main class="main">
   <h1>料金プラン</h1>
-  <p>購入がキャンセルされました!</p>
-  <a href="{% url 'myus:payment' %}" class="btn btn-primary btn-sm pjax_button">戻る</a>
+  <p class="red bottom_24">購入がキャンセルされました!</p>
+  <button href="{% url 'myus:payment' %}" class="button blue xs pjax_button">戻る</button>
 </main>
 {% endblock content %}
