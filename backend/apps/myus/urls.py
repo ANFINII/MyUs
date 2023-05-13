@@ -6,10 +6,10 @@ from apps.myus.views import NotificationSettingView, notification_update, notifi
 from apps.myus.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
 from apps.myus.views import VideoList, VideoCreate, VideoDetail
 from apps.myus.views import MusicList, MusicCreate, MusicDetail
+from apps.myus.views import ComicList, ComicCreate, ComicDetail
 from apps.myus.views import PictureList, PictureCreate, PictureDetail
 from apps.myus.views import BlogList, BlogCreate, BlogDetail
 from apps.myus.views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
-from apps.myus.views import CollaboList, CollaboCreate, CollaboDetail
 from apps.myus.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 from apps.myus.views import searchtag_create, advertise_read, like_form, like_form_comment
 from apps.myus.views import comment_form, reply_form, comment_update, comment_delete, reply_delete
@@ -57,6 +57,10 @@ urlpatterns = [
     path('music/create', MusicCreate.as_view(), name='music_create'),
     path('music/detail/<int:pk>/<str:title>', MusicDetail.as_view(), name='music_detail'),
 
+    path('comic', ComicList.as_view(), name='comic_list'),
+    path('comic/create', ComicCreate.as_view(), name='comic_create'),
+    path('comic/detail/<int:pk>/<str:title>', ComicDetail.as_view(), name='comic_detail'),
+
     path('picture', PictureList.as_view(), name='picture_list'),
     path('picture/create', PictureCreate.as_view(), name='picture_create'),
     path('picture/detail/<int:pk>/<str:title>', PictureDetail.as_view(), name='picture_detail'),
@@ -70,10 +74,6 @@ urlpatterns = [
     path('chat/detail/<int:pk>', ChatDetail.as_view(), name='chat_detail'),
     path('chat/detail/<int:pk>/thread/<int:message_id>', ChatThread.as_view(), name='chat_thread'),
     path('chat/detail/thread', chat_thread_button, name='chat_thread_button'),
-
-    path('collabo', CollaboList.as_view(), name='collabo_list'),
-    path('collabo/create', CollaboCreate.as_view(), name='collabo_create'),
-    path('collabo/detail/<int:pk>/<str:title>', CollaboDetail.as_view(), name='collabo_detail'),
 
     path('todo', TodoList.as_view(), name='todo_list'),
     path('todo/create', TodoCreate.as_view(), name='todo_create'),

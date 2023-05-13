@@ -18,14 +18,14 @@ from rest_framework_simplejwt import exceptions
 
 from apps.api.serializers import SignUpSerializer, LoginSerializer
 from apps.api.serializers import UserSerializer, ProfileSerializer, MyPageSerializer
-from apps.api.serializers import VideoSerializer, MusicSerializer, PictureSerializer
-from apps.api.serializers import BlogSerializer, ChatSerializer, CollaboSerializer, TodoSerializer
+from apps.api.serializers import VideoSerializer, MusicSerializer, ComicSerializer
+from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializer, TodoSerializer
 from apps.api.utils import get_user_id
 from apps.myus.modules.filter_data import DeferData
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
-from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 from apps.myus.modules.search import Search
 from apps.myus.modules.contains import model_dict
 
@@ -447,6 +447,74 @@ class MusicDetailAPI(RetrieveAPIView):
         return Response(data, status=HTTP_200_OK)
 
 
+# Comic
+class ComicListAPI(APIView):
+    def get(self, request):
+        objs = Comic.objects.filter(publish=True).order_by('-created')[:50]
+
+        data = [{
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'like': obj.total_like(),
+            'read': obj.read,
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        } for obj in objs]
+        return Response(data, status=HTTP_200_OK)
+
+
+class ComicCreateAPI(CreateAPIView):
+    queryset = Comic.objects.all()
+    serializer_class = ComicSerializer
+
+
+class ComicDetailAPI(RetrieveAPIView):
+    def get(self, request, id):
+        obj = Comic.objects.filter(id=id, publish=True).first()
+        if not obj:
+            return Response('not objects', status=HTTP_400_BAD_REQUEST)
+
+        user_id = obj.author.id
+        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        subquery = obj.comment.filter(**filter_kwargs)
+        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+
+        data = {
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'comment': [{
+                'id': comment.id,
+                'text': comment.text,
+                'reply_count': comment.reply_count(),
+                'created': comment.created,
+                'author': comment.author.id,
+                'image': comment.author.image(),
+                'nickname': comment.author.nickname
+            } for comment in comments],
+            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
+            'like': obj.total_like(),
+            'read': obj.read,
+            'comment_count': obj.comment_count(),
+            'pubsh': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        }
+        return Response(data, status=HTTP_200_OK)
+
+
 # Picture
 class PictureListAPI(APIView):
     def get(self, request):
@@ -652,75 +720,6 @@ class ChatDetailAPI(RetrieveAPIView):
             'joined': obj.joined,
             'period': obj.period,
             'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
-        }
-        return Response(data, status=HTTP_200_OK)
-
-
-
-# Collabo
-class CollaboListAPI(APIView):
-    def get(self, request):
-        objs = Collabo.objects.filter(publish=True).order_by('-created')[:50]
-
-        data = [{
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'like': obj.total_like(),
-            'read': obj.read,
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
-        } for obj in objs]
-        return Response(data, status=HTTP_200_OK)
-
-
-class CollaboCreateAPI(CreateAPIView):
-    queryset = Collabo.objects.all()
-    serializer_class = CollaboSerializer
-
-
-class CollaboDetailAPI(RetrieveAPIView):
-    def get(self, request, id):
-        obj = Collabo.objects.filter(id=id, publish=True).first()
-        if not obj:
-            return Response('not objects', status=HTTP_400_BAD_REQUEST)
-
-        user_id = obj.author.id
-        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
-        subquery = obj.comment.filter(**filter_kwargs)
-        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
-
-        data = {
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'comment': [{
-                'id': comment.id,
-                'text': comment.text,
-                'reply_count': comment.reply_count(),
-                'created': comment.created,
-                'author': comment.author.id,
-                'image': comment.author.image(),
-                'nickname': comment.author.nickname
-            } for comment in comments],
-            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            'like': obj.total_like(),
-            'read': obj.read,
-            'comment_count': obj.comment_count(),
-            'pubsh': obj.publish,
             'created': obj.created,
             'updated': obj.updated,
             'author': {

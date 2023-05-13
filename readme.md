@@ -7,10 +7,10 @@
 ### 主な機能
 - Video投稿
 - Music投稿
+- Comic投稿 (開発中)
 - Picture投稿
 - Blog投稿
 - Chat投稿
-- Collabo投稿 (開発中)
 - Todo管理
 - 投稿管理 (CRUD)
 

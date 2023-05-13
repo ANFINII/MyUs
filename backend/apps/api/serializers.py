@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting, PlanMaster, UserPlan
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
-from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 
 
 User = get_user_model()
@@ -68,8 +68,8 @@ class NotificationSettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotificationSetting
         fields = (
-            'is_video', 'is_music', 'is_picture', 'is_blog', 'is_chat',
-            'is_collabo', 'is_follow', 'is_reply', 'is_like', 'is_views'
+            'is_video', 'is_music', 'is_comic', 'is_picture', 'is_blog',
+            'is_chat', 'is_follow', 'is_reply', 'is_like', 'is_views'
         )
 
 
@@ -128,6 +128,16 @@ class MusicSerializer(serializers.ModelSerializer):
         read_only_field = ['created', 'updated']
 
 
+class ComicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comic
+        fields = (
+            'id', 'author', 'title', 'content', 'hashtag', 'like',
+            'read', 'period', 'publish', 'created', 'updated'
+        )
+        read_only_field = ['created', 'updated']
+
+
 class PictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Picture
@@ -154,16 +164,6 @@ class ChatSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'author', 'title', 'content', 'hashtag', 'like', 'read',
             'joined', 'period', 'publish', 'created', 'updated'
-        )
-        read_only_field = ['created', 'updated']
-
-
-class CollaboSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Collabo
-        fields = (
-            'id', 'author', 'title', 'content', 'hashtag', 'like',
-            'read', 'period', 'publish', 'created', 'updated'
         )
         read_only_field = ['created', 'updated']
 

@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, date
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count, Exists, OuterRef
 from apps.myus.models import PlanMaster, MyPage, SearchTag, NotificationSetting, Follow, Comment
-from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo, Advertise
+from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo, Advertise
 from apps.myus.modules.contains import model_dict
 from apps.myus.modules.notification import notification_data
 
@@ -116,6 +116,9 @@ class ContextData:
         if class_name in 'MusicDetail':
             context['music_list'] = Music.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
+        if class_name in 'ComicDetail':
+            context['comic_list'] = Comic.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
+
         if class_name in 'PictureDetail':
             context['picture_list'] = Picture.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
@@ -135,10 +138,6 @@ class ContextData:
             context['message_list'] = obj.message.filter(parent__isnull=True).select_related('author')
             context['reply_list'] = obj.message.filter(parent_id=message_id).select_related('author')
             context['chat_list'] = Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
-
-        if class_name in 'CollaboDetail':
-            context['is_period'] = obj.period < date.today()
-            context['collabo_list'] = Collabo.objects.filter(publish=True).exclude(id=obj.id).select_related('author').order_by('-created')[:50]
 
         if class_name in 'TodoDetail':
             context['todo_list'] = Todo.objects.filter(author=user).exclude(id=obj.id)[:50]

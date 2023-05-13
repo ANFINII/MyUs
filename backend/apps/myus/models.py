@@ -234,10 +234,10 @@ class NotificationSetting(models.Model):
     user       = models.OneToOneField(User, on_delete=models.CASCADE)
     is_video   = models.BooleanField(default=False)
     is_music   = models.BooleanField(default=False)
+    is_comic   = models.BooleanField(default=False)
     is_picture = models.BooleanField(default=False)
     is_blog    = models.BooleanField(default=False)
     is_chat    = models.BooleanField(default=False)
-    is_collabo = models.BooleanField(default=False)
     is_follow  = models.BooleanField(default=True)
     is_reply   = models.BooleanField(default=True)
     is_like    = models.BooleanField(default=True)
@@ -479,6 +479,57 @@ class Music(models.Model, MediaModel):
         verbose_name_plural = '02 Music'
 
 
+class ComicQuerySet(models.QuerySet):
+    def search(self, query=None):
+        qs = self
+        if query:
+            or_lookup = (
+                Q(title__icontains=query) |
+                Q(hashtag__jp_name__icontains=query) |
+                Q(author__nickname__icontains=query) |
+                Q(content__icontains=query)
+            )
+            qs = qs.filter(or_lookup).distinct()
+        return qs
+
+class ComicManager(models.Manager, MediaManager):
+    def get_queryset(self):
+        return ComicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like', 'comment')
+
+def images_comic_upload(instance, filename):
+    return f'images/images_comic/user_{instance.author_id}/object_{instance.id}/{filename}'
+
+class Comic(models.Model, MediaModel):
+    """Comic"""
+    author  = models.ForeignKey(User, on_delete=models.CASCADE)
+    title   = models.CharField(max_length=100)
+    content = models.TextField()
+    image   = models.ImageField(upload_to=images_comic_upload)
+    comment = GenericRelation('Comment')
+    hashtag = models.ManyToManyField(HashTag, blank=True)
+    like    = models.ManyToManyField(User, related_name='comic_like', blank=True)
+    read    = models.IntegerField(default=0)
+    publish = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    objects = ComicManager()
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            image = self.image
+            self.image = None
+            super().save(*args, **kwargs)
+            self.image = image
+            if 'force_insert' in kwargs:
+                kwargs.pop('force_insert')
+        super().save(*args, **kwargs)
+
+    class Meta:
+        db_table = 'Comic'
+        verbose_name_plural = '03 Comic'
+
+
 class PictureQuerySet(models.QuerySet):
     def search(self, query=None):
         qs = self
@@ -527,7 +578,7 @@ class Picture(models.Model, MediaModel):
 
     class Meta:
         db_table = 'picture'
-        verbose_name_plural = '03 Picture'
+        verbose_name_plural = '04 Picture'
 
 
 class BlogQuerySet(models.QuerySet):
@@ -581,7 +632,7 @@ class Blog(models.Model, MediaModel):
 
     class Meta:
         db_table = 'blog'
-        verbose_name_plural = '04 Blog'
+        verbose_name_plural = '05 Blog'
 
 
 class ChatQuerySet(models.QuerySet):
@@ -636,26 +687,7 @@ class Chat(models.Model):
 
     class Meta:
         db_table = 'chat'
-        verbose_name_plural = '05 Chat'
-
-
-class Collabo(models.Model, MediaModel):
-    """Collabo"""
-    author  = models.ForeignKey(User, on_delete=models.CASCADE)
-    title   = models.CharField(max_length=100)
-    content = models.TextField()
-    comment = GenericRelation('Comment')
-    hashtag = models.ManyToManyField(HashTag, blank=True)
-    like    = models.ManyToManyField(User, related_name='collabo_like', blank=True)
-    read    = models.IntegerField(default=0)
-    period  = models.DateField()
-    publish = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'collabo'
-        verbose_name_plural = '06 Collabo'
+        verbose_name_plural = '06 Chat'
 
 
 class Todo(models.Model):
@@ -705,8 +737,8 @@ class Follow(models.Model):
 
 class Notification(models.Model):
     """Notification"""
-    # 'video': 1, 'music': 2, 'picture': 3, 'blog': 4, 'chat': 5
-    # 'collabo': 6, 'follow': 7, 'like': 8, 'reply': 9, 'views': 10
+    # 'video': 1, 'music': 2, 'comic': 3, 'picture': 4, 'blog': 5,
+    # 'chat': 6, 'follow': 7, 'like': 8, 'reply': 9, 'views': 10
     user_from      = models.ForeignKey(User, related_name='user_from', on_delete=models.CASCADE)
     user_to        = models.ForeignKey(User, related_name='user_to', on_delete=models.CASCADE, blank=True, null=True)
     type_no        = models.IntegerField()

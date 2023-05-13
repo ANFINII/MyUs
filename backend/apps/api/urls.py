@@ -4,10 +4,10 @@ from apps.api.views import UserAPI, ProfileAPI, MyPageAPI
 from apps.api.views import IndexAPI
 from apps.api.views import VideoListAPI, VideoCreateAPI, VideoDetailAPI
 from apps.api.views import MusicListAPI, MusicCreateAPI, MusicDetailAPI
+from apps.api.views import ComicListAPI, ComicCreateAPI, ComicDetailAPI
 from apps.api.views import PictureListAPI, PictureCreateAPI, PictureDetailAPI
 from apps.api.views import BlogListAPI, BlogCreateAPI, BlogDetailAPI
 from apps.api.views import ChatListAPI, ChatCreateAPI, ChatDetailAPI
-from apps.api.views import CollaboListAPI, CollaboCreateAPI, CollaboDetailAPI
 from apps.api.views import TodoListAPI, TodoCreateAPI, TodoDetailAPI
 
 
@@ -34,6 +34,10 @@ urlpatterns = [
     path('music/create', MusicCreateAPI.as_view()),
     path('music/detail/<int:id>', MusicDetailAPI.as_view()),
 
+    path('comic', ComicListAPI.as_view()),
+    path('comic/create', ComicCreateAPI.as_view()),
+    path('comic/detail/<int:id>', ComicDetailAPI.as_view()),
+
     path('picture', PictureListAPI.as_view()),
     path('picture/create', PictureCreateAPI.as_view()),
     path('picture/detail/<int:id>', PictureDetailAPI.as_view()),
@@ -45,10 +49,6 @@ urlpatterns = [
     path('chat', ChatListAPI.as_view()),
     path('chat/create', ChatCreateAPI.as_view()),
     path('chat/detail/<int:id>', ChatDetailAPI.as_view()),
-
-    path('collabo', CollaboListAPI.as_view()),
-    path('collabo/create', CollaboCreateAPI.as_view()),
-    path('collabo/detail/<int:id>', CollaboDetailAPI.as_view()),
 
     path('todo', TodoListAPI.as_view()),
     path('todo/create', TodoCreateAPI.as_view()),

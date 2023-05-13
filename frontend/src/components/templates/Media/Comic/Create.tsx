@@ -7,10 +7,10 @@ interface Props {is_authenticated?: boolean}
 const now = new Date()
 const year = now.getFullYear()
 
-export default function CollaboCreate(props: Props) {
+export default function ComicCreate(props: Props) {
   const {is_authenticated} = props
   return (
-    <Main title="MyUsコラボ" hero="Collabo">
+    <Main title="MyUsコラボ" hero="Comic">
       {is_authenticated ?
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}

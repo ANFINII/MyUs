@@ -8,7 +8,7 @@ from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
 from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, AccessLog, Comment, Message, Follow, Advertise
-from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 
 
 # Admin用の管理画面
@@ -175,6 +175,23 @@ class MusicAdmin(ImportExportModelAdmin):
     ]
 
 
+@admin.register(Comic)
+class ComicAdmin(ImportExportModelAdmin):
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
+    list_select_related = ('author',)
+    search_fields = ('title', 'author__nickname', 'created')
+    ordering = ('author', '-created')
+    filter_horizontal = ('hashtag', 'like')
+    readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
+    inlines = [CommentInlineAdmin]
+
+    # 詳細画面
+    fieldsets = [
+        ('編集項目', {'fields': ('author', 'title', 'content', 'hashtag', 'like', 'read', 'period', 'publish')}),
+        ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
+    ]
+
+
 @admin.register(Picture)
 class PictureAdmin(ImportExportModelAdmin):
     list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
@@ -227,23 +244,6 @@ class ChatAdmin(ImportExportModelAdmin):
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'hashtag', 'like', 'read', 'period', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'thread_count', 'joined_count', 'created', 'updated')})
-    ]
-
-
-@admin.register(Collabo)
-class CollaboAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
-    list_select_related = ('author',)
-    search_fields = ('title', 'author__nickname', 'created')
-    ordering = ('author', '-created')
-    filter_horizontal = ('hashtag', 'like')
-    readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
-    inlines = [CommentInlineAdmin]
-
-    # 詳細画面
-    fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'hashtag', 'like', 'read', 'period', 'publish')}),
-        ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
 
@@ -508,6 +508,32 @@ class MusicAdminSite(admin.ModelAdmin, PublishMixin):
 manage_site.register(Music, MusicAdminSite)
 
 
+class ComicAdminSite(admin.ModelAdmin, PublishMixin):
+    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
+    list_editable = ('title',)
+    search_fields = ('title', 'created')
+    ordering = ('-created',)
+    actions = ('published', 'unpublished')
+    filter_horizontal = ('hashtag',)
+    readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
+    inlines = [CommentInline]
+
+    # 詳細画面
+    fieldsets = [
+        ('編集項目', {'fields': ('title', 'content', 'hashtag', 'period', 'publish')}),
+        ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
+    ]
+
+    def get_queryset(self, request):
+        qs = super(ComicAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
+        return qs.filter(author=request.user)
+
+    def save_model(self, request, obj, form, change):
+        obj.author = request.user
+        super(ComicAdminSite, self).save_model(request, obj, form, change)
+manage_site.register(Comic, ComicAdminSite)
+
+
 class PictureAdminSite(admin.ModelAdmin, PublishMixin):
     list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
@@ -585,32 +611,6 @@ class ChatAdminSite(admin.ModelAdmin, PublishMixin):
         obj.author = request.user
         super(ChatAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Chat, ChatAdminSite)
-
-
-class CollaboAdminSite(admin.ModelAdmin, PublishMixin):
-    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
-    list_editable = ('title',)
-    search_fields = ('title', 'created')
-    ordering = ('-created',)
-    actions = ('published', 'unpublished')
-    filter_horizontal = ('hashtag',)
-    readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
-    inlines = [CommentInline]
-
-    # 詳細画面
-    fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'hashtag', 'period', 'publish')}),
-        ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
-    ]
-
-    def get_queryset(self, request):
-        qs = super(CollaboAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
-        return qs.filter(author=request.user)
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(CollaboAdminSite, self).save_model(request, obj, form, change)
-manage_site.register(Collabo, CollaboAdminSite)
 
 
 class TodoAdminSite(admin.ModelAdmin):

@@ -25,7 +25,7 @@ from django.views.generic import View, TemplateView, ListView, DetailView, Creat
 from apps.myus.convert.convert_hls import convert_exe
 from apps.myus.models import Profile, MyPage, SearchTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Advertise
-from apps.myus.models import Video, Music, Picture, Blog, Chat, Collabo, Todo
+from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 from apps.myus.modules.contains import NotificationTypeNo, model_like_dict, model_comment_dict
 from apps.myus.modules.context_data import ContextData
 from apps.myus.modules.get_form import get_detail
@@ -357,6 +357,13 @@ class Payment(TemplateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, Payment, **kwargs)
 
+
+class ChangePlan(TemplateView):
+    model = User
+    template_name = 'setting/payment/change_plan.html'
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, ChangePlan, **kwargs)
 
 class PaymentSuccess(TemplateView):
     template_name = 'setting/payment/success.html'
@@ -840,6 +847,50 @@ class MusicDetail(DetailView):
         return ContextData.models_context_data(self, MusicDetail, **kwargs)
 
 
+# Comic
+class ComicCreate(CreateView):
+    """ComicCreate"""
+    model = Comic
+    fields = ('title', 'content', 'period')
+    template_name = 'media/comic/comic_create.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super(ComicCreate, self).form_valid(form)
+
+    def get_success_url(self):
+        return success_url(self, 'myus:comic_detail', NotificationTypeNo.comic, 'comic')
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, ComicCreate, **kwargs)
+
+
+class ComicList(ListView):
+    """ComicList"""
+    model = Comic
+    template_name = 'media/comic/comic.html'
+    context_object_name = 'comic_list'
+    ordering = ['-created']
+
+    def get_context_data(self, **kwargs):
+        return ContextData.context_data(self, ComicList, **kwargs)
+
+    def get_queryset(self, **kwargs):
+        return Search.search_models(self, Comic)
+
+
+class ComicDetail(DetailView):
+    """ComicDetail"""
+    model = Comic
+    template_name = 'media/comic/comic_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        return get_detail(self, request)
+
+    def get_context_data(self, **kwargs):
+        return ContextData.models_context_data(self, ComicDetail, **kwargs)
+
+
 # Picture
 class PictureCreate(CreateView):
     """PictureCreate"""
@@ -1006,50 +1057,6 @@ def chat_thread_button(request):
             }, request=request)
         }
         return JsonResponse(context)
-
-
-# Collabo
-class CollaboCreate(CreateView):
-    """CollaboCreate"""
-    model = Collabo
-    fields = ('title', 'content', 'period')
-    template_name = 'media/collabo/collabo_create.html'
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super(CollaboCreate, self).form_valid(form)
-
-    def get_success_url(self):
-        return success_url(self, 'myus:collabo_detail', NotificationTypeNo.collabo, 'collabo')
-
-    def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, CollaboCreate, **kwargs)
-
-
-class CollaboList(ListView):
-    """CollaboList"""
-    model = Collabo
-    template_name = 'media/collabo/collabo.html'
-    context_object_name = 'collabo_list'
-    ordering = ['-created']
-
-    def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, CollaboList, **kwargs)
-
-    def get_queryset(self, **kwargs):
-        return Search.search_models(self, Collabo)
-
-
-class CollaboDetail(DetailView):
-    """CollaboDetail"""
-    model = Collabo
-    template_name = 'media/collabo/collabo_detail.html'
-
-    def get(self, request, *args, **kwargs):
-        return get_detail(self, request)
-
-    def get_context_data(self, **kwargs):
-        return ContextData.models_context_data(self, CollaboDetail, **kwargs)
 
 
 # Todo

@@ -1,10 +1,10 @@
-<h1>Collabo</h1>
+<h1>Comic</h1>
 {% if query %}
 <section class="search_message">「{{ query }}」の検索結果「{{ count }}」件</section>
 {% endif %}
 
 <article class="article_list">
-{% for item in collabo_list %}
-  {% include 'media/collabo/collabo_article.html' %}
+{% for item in comic_list %}
+  {% include 'media/comic/comic_article.html' %}
 {% endfor %}
 </article>

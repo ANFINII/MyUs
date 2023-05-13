@@ -50,14 +50,14 @@ export default function DropMenuNotice() {
             {/* <a href="{% url 'myus:video_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker"> */}
             {/* {% elif notification.type_name == 'music' %} */}
             {/* <a href="{% url 'myus:music_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker"> */}
+            {/* {% elif notification.type_name == 'comic' %} */}
+            {/* <a href="{% url 'myus:comic_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker"> */}
             {/* {% elif notification.type_name == 'picture' %} */}
             {/* <a href="{% url 'myus:picture_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker"> */}
             {/* {% elif notification.type_name == 'blog' %} */}
             {/* <a href="{% url 'myus:blog_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker"> */}
             {/* {% elif notification.type_name == 'chat' %} */}
             {/* <a href="{% url 'myus:chat_detail' notification.content_object.id %}" className="notification_aria_anker"> */}
-            {/* {% elif notification.type_name == 'collabo' %} */}
-            {/* <a href="{% url 'myus:collabo_detail' notification.content_object.id notification.content_object.title %}" className="notification_aria_anker"> */}
             {/* {% elif notification.type_no >= 8 and notification.type_no <= 10 %} */}
             {/* <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" className="notification_aria_anker pjax_button_userpage"> */}
             {/* {% endif %} */}
