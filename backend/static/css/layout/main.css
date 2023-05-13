@@ -140,6 +140,8 @@ div.field > button {
   height: 1.5em;
   margin: 7px 0 5px 6px;
   font-size: 14px;
+  font-weight: 500;
+  color: rgb(0, 70, 175);
   overflow: hidden;
   word-break: break-all;
 }
