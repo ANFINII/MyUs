@@ -1,62 +1,30 @@
 {% load static %}
+{% load humanize %}
 
 <h1>料金プラン</h1>
 {% if user.is_authenticated %}
 <article class="article_list">
+  {% for payment in payment_list %}
   <section class="section_plan">
     <div class="main_decolation_payment">
       <div class="payment_img">
         <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
-        Basic
+        <span class="payment_title">{{ payment.name }}</span>
       </div>
     </div>
-    <div class="content_title">【料金】550円</div>
+    <div class="content_title">【料金】{{ payment.price|intcomma }}円</div>
     <div class="content_description">
-      Basicプランに変更<br>
-      ・個別広告表示1つ<br>
-      ・全体広告OFF
+      {{ payment.description|linebreaksbr }}
     </div>
-    <button value="price_1K9VSxCHdDAlRliqOZnYuctl" csrf="{{ csrf_token }}" class="button purple xs checkout_button">購入する</button>
+    <button value="{{ payment.stripe_api_id }}" csrf="{{ csrf_token }}" class="button purple xs checkout_button">購入する</button>
   </section>
+  {% endfor %}
 
   <section class="section_plan">
     <div class="main_decolation_payment">
       <div class="payment_img">
         <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
-        Standard
-      </div>
-    </div>
-    <div class="content_title">【料金】880円</div>
-    <div class="content_description">
-      Standardプランに変更<br>
-      ・個別広告表示3つ<br>
-      ・全体広告OFF
-    </div>
-    <button value="price_1K9VTbCHdDAlRliq3YNA768b" csrf="{{ csrf_token }}" class="button purple xs checkout_button">購入する</button>
-  </section>
-
-  <section class="section_plan">
-    <div class="main_decolation_payment">
-      <div class="payment_img">
-        <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
-        Premium
-      </div>
-    </div>
-    <div class="content_title">【料金】1,200円</div>
-    <div class="content_description">
-      Premiumプランに変更<br>
-      ・個別広告表示4つ<br>
-      ・全体広告OFF<br>
-      ・楽曲ダウンロード
-    </div>
-    <button value="price_1K9VU9CHdDAlRliqXsIS6GC4" csrf="{{ csrf_token }}" id="test" class="button purple xs checkout_button">購入する</button>
-  </section>
-
-  <section class="section_plan">
-    <div class="main_decolation_payment">
-      <div class="payment_img">
-        <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
-        プラン変更
+        <span class="payment_title">プラン変更</span>
       </div>
     </div>
     <div class="content_title">【料金】</div>
@@ -65,22 +33,8 @@
     </div>
     <button onclick="location.href='{% url 'myus:chage_plan' %}'" class="button purple xs">変更する</button>
   </section>
-
-  <section class="section_plan">
-    <div class="main_decolation_payment">
-      <div class="payment_img">
-        <img src="{% static 'img/MyUs.png' %}" width="40px" height="40px" class="myus_img">
-        Free
-      </div>
-    </div>
-    <div class="content_title">【料金】0円</div>
-    <div class="content_description">
-      有料プランを解約する<br>
-      ・今月お支払いした料金は返金されません
-    </div>
-    <button class="button purple xs">変更する</button>
-  </section>
 </article>
+
 {% else %}
 <h2 class="login_required">ログインしてください</h2>
 {% endif %}
