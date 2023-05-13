@@ -177,7 +177,7 @@ class MusicAdmin(ImportExportModelAdmin):
 
 @admin.register(Comic)
 class ComicAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
+    list_display = ('id', 'author', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_select_related = ('author',)
     search_fields = ('title', 'author__nickname', 'created')
     ordering = ('author', '-created')
@@ -187,7 +187,7 @@ class ComicAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'hashtag', 'like', 'read', 'period', 'publish')}),
+        ('編集項目', {'fields': ('author', 'title', 'content', 'image', 'hashtag', 'like', 'read', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'comment_count', 'created', 'updated')})
     ]
 
@@ -509,7 +509,7 @@ manage_site.register(Music, MusicAdminSite)
 
 
 class ComicAdminSite(admin.ModelAdmin, PublishMixin):
-    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'period', 'publish', 'created', 'updated')
+    list_display = ('id', 'title', 'read', 'total_like', 'comment_count', 'publish', 'created', 'updated')
     list_editable = ('title',)
     search_fields = ('title', 'created')
     ordering = ('-created',)
@@ -520,17 +520,17 @@ class ComicAdminSite(admin.ModelAdmin, PublishMixin):
 
     # 詳細画面
     fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'hashtag', 'period', 'publish')}),
+        ('編集項目', {'fields': ('title', 'content', 'image', 'hashtag', 'publish')}),
         ('確認項目', {'fields': ('read', 'total_like', 'comment_count', 'created', 'updated')})
     ]
 
     def get_queryset(self, request):
-        qs = super(ComicAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
+        qs = super(PictureAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
-        super(ComicAdminSite, self).save_model(request, obj, form, change)
+        super(PictureAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Comic, ComicAdminSite)
 
 

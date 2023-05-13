@@ -1,0 +1,11 @@
+{% load static %}
+{% load humanize %}
+{% load class_name %}
+
+{% for item in object_list %}
+  {% with item|class_name as model_name %}
+    {% if model_name == 'Comic' %}
+      {% include 'media/comic/comic_article.html' %}
+    {% endif %}
+  {% endwith %}
+{% endfor %}

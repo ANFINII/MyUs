@@ -2,6 +2,7 @@ import {Query, VideoResponse} from 'utils/type'
 import Main from 'components/layouts/Main'
 import ArticleVideo from 'components/elements/Article/Video'
 import ArticleMusic from 'components/elements/Article/Music'
+import ArticleComic from 'components/elements/Article/Comic'
 import ArticlePicture from 'components/elements/Article/Picture'
 import ArticleBlog from 'components/elements/Article/Blog'
 import ArticleChat from 'components/elements/Article/Chat'
@@ -39,6 +40,18 @@ export default function HomeList(props: Props) {
             {/* <ArticleMusic imageUrl={music} /> */}
           {/* {% endfor %} */}
         {/* {% endif %} */}
+      </article>
+      <hr/>
+
+      <article className="article_index">
+        <h2>Comic</h2>
+        {/* {% if query %}
+          {% include 'search/search_picture.html' %}
+        {% else %}
+          {% for item in comic_list %}
+            {% include 'media/comic/comic_article.html' %}
+          {% endfor %}
+        {% endif %} */}
       </article>
       <hr/>
 
