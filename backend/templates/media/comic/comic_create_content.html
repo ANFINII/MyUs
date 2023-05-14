@@ -10,8 +10,13 @@
   <p class="vertical_16">内容</p>
   <textarea name="content" rows="1" class="textarea" required></textarea>
 
-  <p class="vertical_16">期間</p>
-  <input name="period" class="input" placeholder="{% now 'Y' %}-12-31" required>
+  <p class="vertical_16">サムネイル</p>
+  <input type="file" name="image" accept="image/*" class="input file_1" hidden required>
+  <input placeholder="ファイル選択..." id="file_1" class="input" onclick="$('input.file_1').click()">
+
+  <p class="vertical_16">ページ画像</p>
+  <input type="file" name="convert" accept="video/*" class="input file_2" hidden required>
+  <input placeholder="ファイル選択..." id="file_2" class="input" onclick="$('input.file_2').click()">
 
   <button type="submit" class="button green top_32">作成する</button>
 </form>

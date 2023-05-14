@@ -851,7 +851,7 @@ class MusicDetail(DetailView):
 class ComicCreate(CreateView):
     """ComicCreate"""
     model = Comic
-    fields = ('title', 'content', 'period')
+    fields = ('title', 'content', 'image')
     template_name = 'media/comic/comic_create.html'
 
     def form_valid(self, form):

@@ -515,6 +515,19 @@ class Comic(models.Model, MediaModel):
 
     objects = ComicManager()
 
+    class Meta:
+        db_table = 'Comic'
+        verbose_name_plural = '03 Comic'
+
+def comic_page_upload(comic, filename):
+    return f'comics/user_{comic.author_id}/object_{comic.id}/{filename}'
+
+class ComicPage(models.Model):
+    """ComicPage"""
+    comic = models.ForeignKey(Comic, on_delete=models.CASCADE, related_name='comic')
+    image = models.ImageField(upload_to=comic_page_upload)
+    sequence = models.IntegerField()
+
     def save(self, *args, **kwargs):
         if self.id is None:
             image = self.image
@@ -526,8 +539,10 @@ class Comic(models.Model, MediaModel):
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'Comic'
-        verbose_name_plural = '03 Comic'
+        constraints = [
+            models.UniqueConstraint(fields=["comic", "sequence"], name="lesson_unique")
+        ]
+
 
 
 class PictureQuerySet(models.QuerySet):
