@@ -308,8 +308,48 @@ div.field > button {
 }
 
 .article_detail_video,
+.article_detail_comic,
 .article_detail_picture {
-  background: rgb(220, 220, 220);
+  user-select: none;
+  background: rgb(50, 50, 50);
+}
+
+.article_detail_comic {
+  display: flex;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto;
+  width: 100%;
+}
+
+.article_detail_contents_comic {
+  grid-column: 2/3;
+  height: auto;
+}
+
+.article_detail_comic .right,
+.article_detail_comic .left {
+  display: grid;
+  color: rgb(120, 120, 120);
+  width: 25%;
+  min-width: 60px;
+  align-content: center;
+}
+
+.article_detail_comic .right {
+  grid-column: 1/2;
+  padding: 0 10px 0 0;
+  justify-content: end;
+}
+
+.article_detail_comic .left {
+  grid-column: 3/4;
+  padding: 0 0 0 10px;
+  justify-content: start;
+}
+
+.article_detail_comic .right:hover,
+.article_detail_comic .left:hover {
+  color: rgb(255, 255, 255);
 }
 
 .article_detail_contents {
