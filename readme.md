@@ -7,7 +7,7 @@
 ### 主な機能
 - Video投稿
 - Music投稿
-- Comic投稿 (開発中)
+- Comic投稿
 - Picture投稿
 - Blog投稿
 - Chat投稿
