@@ -10,7 +10,7 @@ const year = now.getFullYear()
 export default function ComicCreate(props: Props) {
   const {is_authenticated} = props
   return (
-    <Main title="MyUsコラボ" hero="Comic">
+    <Main title="MyUsコミック" hero="Comic">
       {is_authenticated ?
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}

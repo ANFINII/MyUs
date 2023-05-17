@@ -11,7 +11,7 @@ export default function ArticleComic(props: Props) {
   const imageUrl = config.baseUrl + data.author.image
   const nickname = data.author.nickname
   return (
-    <section className="section_other">
+    <section className="section_list">
       <div className="main_decolation">
         <Link href="/comic/detail/[id][title]" className="author_space">
           <AuthorSpace imageUrl={imageUrl} nickname={nickname} />

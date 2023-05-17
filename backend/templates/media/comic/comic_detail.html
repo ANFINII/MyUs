@@ -1,5 +1,5 @@
 {% extends 'base2.html' %}
-{% block title %}<title>MyUsコラボ</title>{% endblock title %}
+{% block title %}<title>MyUsコミック</title>{% endblock title %}
 {% load static %}
 {% load humanize %}
 
@@ -9,6 +9,19 @@
 <main class="main">
   <article class="article_detail">
     {% if object.publish %}
+    <div class="article_detail_picture">
+      {% for comic_page in object.comic.all %}
+      <a href="{{ comic_page.image.url }}">
+        <figure class="article_detail_contents">
+          <img src="{{ comic_page.image.url }}" class="comic_page">
+        </figure>
+      </a>
+      {% endfor %}
+    </div>
+
+    <button class="button light xs" id="prevButton">＜</button>
+    <button class="button light xs" id="nextButton">＞</button>
+
     <div class="article_detail_section">
       <div class="article_detail_section_1">
         {% include 'parts/common/common.html' %}
@@ -28,4 +41,5 @@
 
 {% block extrajs %}
 <script src="{% static 'js/ajax_comment.js' %}"></script>
+<script src="{% static 'js/image_paging.js' %}"></script>
 {% endblock extrajs %}

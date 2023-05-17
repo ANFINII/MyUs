@@ -1,10 +1,13 @@
 {% load static %}
 
-<section class="section_other">
-  <div class="main_decolation">
+<section class="section_list">
+  <figure class="main_decolation">
+    <a href="{% url 'myus:comic_detail' item.pk item.title %}">
+      <img src="{{ item.image.url }}" width="272" height="153">
+    </a>
     <a href="{% url 'myus:comic_detail' item.pk item.title %}" class="author_space">
       {% include 'parts/author_space.html' %}
       {% include 'parts/content_title.html' %}
     </a>
-  </div>
+  </figure>
 </section>

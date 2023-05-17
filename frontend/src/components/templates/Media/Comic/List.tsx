@@ -10,7 +10,7 @@ interface Props {
 export default function ComicList(props: Props) {
   const {query, datas} = props
   return (
-    <Main title="MyUsコラボ" hero="Comic" query={query}>
+    <Main title="MyUsコミック" hero="Comic" query={query}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticleComic data={data} key={data.id} />
