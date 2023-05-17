@@ -24,7 +24,7 @@ from django.views.generic import View, TemplateView, ListView, DetailView, Creat
 
 from apps.myus.convert.convert_hls import convert_exe
 from apps.myus.models import Profile, MyPage, SearchTag, NotificationSetting
-from apps.myus.models import Notification, Follow, Comment, Advertise
+from apps.myus.models import Notification, Follow, Comment, Advertise, ComicPage
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 from apps.myus.modules.contains import NotificationTypeNo, model_like_dict, model_comment_dict
 from apps.myus.modules.context_data import ContextData
@@ -856,6 +856,11 @@ class ComicCreate(CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        comic_images = self.request.FILES.getlist('comic_image')
+        self.object = form.save()
+
+        for sequence, image in enumerate(comic_images):
+            ComicPage.objects.create(comic=self.object, image=image, sequence=sequence)
         return super(ComicCreate, self).form_valid(form)
 
     def get_success_url(self):
