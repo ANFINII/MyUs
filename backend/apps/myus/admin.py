@@ -7,7 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
 from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
-from apps.myus.models import Notification, AccessLog, Comment, Message, Follow, Advertise
+from apps.myus.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 
 
@@ -73,6 +73,16 @@ class MessageInlineAdmin(admin.TabularInline):
     exclude = ('reply_count',)
     fields = ('author', 'parent', 'text')
     verbose_name_plural = 'メッセージ'
+
+
+class ComicPageInline(admin.StackedInline):
+    model = ComicPage
+    extra = 0
+    max_num = 200
+    verbose_name = 'コミックページ情報'
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(User)
@@ -183,7 +193,7 @@ class ComicAdmin(ImportExportModelAdmin):
     ordering = ('author', '-created')
     filter_horizontal = ('hashtag', 'like')
     readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
-    inlines = [CommentInlineAdmin]
+    inlines = [CommentInlineAdmin, ComicPageInline]
 
     # 詳細画面
     fieldsets = [
@@ -525,12 +535,12 @@ class ComicAdminSite(admin.ModelAdmin, PublishMixin):
     ]
 
     def get_queryset(self, request):
-        qs = super(PictureAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
+        qs = super(ComicAdminSite, self).get_queryset(request).prefetch_related('hashtag', 'like')
         return qs.filter(author=request.user)
 
     def save_model(self, request, obj, form, change):
         obj.author = request.user
-        super(PictureAdminSite, self).save_model(request, obj, form, change)
+        super(ComicAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Comic, ComicAdminSite)
 
 
