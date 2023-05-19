@@ -75,10 +75,11 @@ class MessageInlineAdmin(admin.TabularInline):
     verbose_name_plural = 'メッセージ'
 
 
-class ComicPageInline(admin.StackedInline):
+class ComicPageInlineAdmin(admin.StackedInline):
     model = ComicPage
     extra = 0
     max_num = 200
+    readonly_fields = ('image', 'sequence')
     verbose_name = 'コミックページ情報'
 
     def has_delete_permission(self, request, obj=None):
@@ -193,7 +194,7 @@ class ComicAdmin(ImportExportModelAdmin):
     ordering = ('author', '-created')
     filter_horizontal = ('hashtag', 'like')
     readonly_fields = ('total_like', 'comment_count', 'created', 'updated')
-    inlines = [CommentInlineAdmin, ComicPageInline]
+    inlines = [CommentInlineAdmin, ComicPageInlineAdmin]
 
     # 詳細画面
     fieldsets = [
@@ -406,6 +407,16 @@ class MessageInline(admin.TabularInline):
         return False
 
 
+class ComicPageInline(admin.StackedInline):
+    model = ComicPage
+    extra = 0
+    max_num = 200
+    verbose_name = 'コミックページ情報'
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 class SearchTagAdminSite(admin.ModelAdmin):
     list_display = ('id', 'sequence', 'name', 'created')
     list_editable = ('sequence', 'name')
@@ -526,7 +537,7 @@ class ComicAdminSite(admin.ModelAdmin, PublishMixin):
     actions = ('published', 'unpublished')
     filter_horizontal = ('hashtag',)
     readonly_fields = ('read', 'total_like', 'comment_count', 'created', 'updated')
-    inlines = [CommentInline]
+    inlines = [CommentInline, ComicPageInline]
 
     # 詳細画面
     fieldsets = [
