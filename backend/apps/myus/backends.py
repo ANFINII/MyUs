@@ -5,22 +5,14 @@ User = get_user_model()
 
 class MyBackend:
     """Custom authentication Backend username and email"""
-    def authenticate(self, request, username=None, password=None):
-        try:
-            user = User.objects.get(username=username)
-            if user.check_password(password):
-                return user
-        except User.DoesNotExist:
-            user = User.objects.get(email=username)
-            if user.check_password(password):
-                return user
+    def authenticate(self, request, username, password):
+        user = User.objects.filter(username=username).first()
+        if not user:
+            user = User.objects.filter(email=username).first()
 
-        if getattr(user, 'is_active') and user.check_password(password):
+        if user and check_password(password, user.password):
             return user
         return None
 
     def get_user(self, user_id):
-        try:
-            return User.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            return None
+        return User.objects.filter(id=user_id).first()

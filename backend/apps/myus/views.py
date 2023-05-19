@@ -121,18 +121,12 @@ def login_form(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        try:
-            user = authenticate(request, username=username, password=password)
-            if user and user.is_active:
-                login(request, user)
-                return redirect('myus:index')
-            else:
-                messages.error(request, 'ID又はパスワードが違います!')
-                # messages.error(request, 'パスワードが違います!')
-                return redirect('myus:login')
-        except User.DoesNotExist:
+        user = authenticate(request, username=username, password=password)
+        if user and user.is_active:
+            login(request, user)
+            return redirect('myus:index')
+        else:
             messages.error(request, 'ID又はパスワードが違います!')
-            # messages.error(request, '存在しないアカウントです!')
             return redirect('myus:login')
     return render(request, 'registration/login.html')
 
@@ -190,7 +184,7 @@ class Withdrawal(View):
         if self.request.method == 'POST':
             password = self.request.POST.get('password')
             password2 = self.request.POST.get('password2')
-            if user.check_password(password):
+            if check_password(password, user.password):
                 token = self.get_random_chars()
                 notification = notification_data(user)
                 context = {
@@ -200,7 +194,7 @@ class Withdrawal(View):
                     'notification_count': notification['notification_count'],
                 }
                 return render(request, self.template_name, context)
-            elif user.check_password(password2):
+            elif check_password(password2, user.password):
                 user.is_active = False
                 user.save(update_fields=['is_active'])
                 logout(self.request)
