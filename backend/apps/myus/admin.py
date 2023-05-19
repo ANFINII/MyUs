@@ -80,7 +80,7 @@ class ComicPageInlineAdmin(admin.StackedInline):
     extra = 0
     max_num = 200
     readonly_fields = ('image', 'sequence')
-    verbose_name = 'コミックページ情報'
+    verbose_name_plural = 'コミックページ情報'
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -411,7 +411,7 @@ class ComicPageInline(admin.StackedInline):
     model = ComicPage
     extra = 0
     max_num = 200
-    verbose_name = 'コミックページ情報'
+    verbose_name_plural = 'コミックページ情報'
 
     def has_delete_permission(self, request, obj=None):
         return False
