@@ -1,13 +1,15 @@
 {% load static %}
 
 <section class="section_list">
-  <figure class="main_decolation">
+  <div class="main_decolation">
     <a href="{% url 'myus:picture_detail' item.pk item.title %}">
-      <img src="{{ item.image.url }}" width="272" height="153">
+      <figure>
+        <img src="{{ item.image.url }}" width="272" height="153">
+      </figure>
+      <div href="{% url 'myus:picture_detail' item.pk item.title %}" class="author_space">
+        {% include 'parts/author_space.html' %}
+        {% include 'parts/content_title.html' %}
+      </div>
     </a>
-    <a href="{% url 'myus:picture_detail' item.pk item.title %}" class="author_space">
-      {% include 'parts/author_space.html' %}
-      {% include 'parts/content_title.html' %}
-    </a>
-  </figure>
+  </div>
 </section>
