@@ -16,7 +16,7 @@
         </svg>
       </div>
       {% for comic_page in object.comic.all %}
-        <figure class="article_detail_contents_comic">
+        <figure>
           <img src="{{ comic_page.image.url }}" class="comic_page">
         </figure>
       {% endfor %}
@@ -27,14 +27,12 @@
       </div>
     </div>
 
-    <div class="article_detail_section">
+    <div class="article_detail_section_side">
       <div class="article_detail_section_1">
         {% include 'parts/common/common.html' %}
       </div>
       <div class="article_detail_section_2">
-      {% for item in comic_list %}
-        {% include 'media/comic/comic_article.html' %}
-      {% endfor %}
+        {% include 'media/comic/comic_article_detail.html' %}
       </div>
     </div>
     {% else %}
