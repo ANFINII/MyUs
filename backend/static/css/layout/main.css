@@ -84,7 +84,7 @@ div.field > button {
 
 .section_music {
   max-width: 272px;
-  height: 155px;
+  height: 160px;
 }
 
 .section_other {
@@ -262,6 +262,12 @@ div.field > button {
   width: 192px;
 }
 
+.video-js,
+.content_size img,
+.main_decolation figure img {
+  border-radius: 10px;
+}
+
 /* コンテンツ詳細セクション */
 .article_detail {
   padding: 0;
@@ -270,13 +276,13 @@ div.field > button {
 
 .article_detail_section {
   display: grid;
-  grid-template-columns: minmax(400px, 7fr) minmax(292px, 292px);
+  grid-template-columns: minmax(400px, 7fr) minmax(450px, 450px);
   grid-template-rows: auto auto;
 }
 
-.article_detail_section_side {
+.article_detail_section_music {
   display: grid;
-  grid-template-columns: minmax(400px, 7fr) minmax(450px, 450px);
+  grid-template-columns: minmax(400px, 7fr) minmax(292px, 292px);
   grid-template-rows: auto auto;
 }
 

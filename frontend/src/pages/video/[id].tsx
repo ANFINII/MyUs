@@ -43,7 +43,7 @@ export default function VideoCreate(props: Props) {
             </div>
           </div>
 
-          <div className="article_detail_section_side">
+          <div className="article_detail_section_music">
             <div className="article_detail_section_1">
               {/* {% include 'parts/common/common.html' %} */}
             </div>
