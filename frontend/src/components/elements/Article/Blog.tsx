@@ -9,20 +9,20 @@ interface Props {data: ImageResponse}
 
 export default function ArticleBlog(props: Props) {
   const {data} = props
-  const pictureUrl = config.baseUrl + data.image
-  const imageUrl = config.baseUrl + data.author.image
+  const imageUrl = config.baseUrl + data.image
+  const authorUrl = config.baseUrl + data.author.image
   const nickname = data.author.nickname
   return (
     <section className="section_list">
-      <figure className="main_decolation">
-        <Link href="/blog/detail/[id][title]">
-          <Image src={pictureUrl} width={272} height={153} alt="" />
-        </Link>
-        <Link href="/blog/detail/[id][title]" className="author_space">
-          <AuthorSpace imageUrl={imageUrl} nickname={nickname} />
+      <Link href="/blog/detail/[id][title]">
+        <figure className="main_decolation">
+          <Image src={imageUrl} width={272} height={153} alt="" />
+        </figure>
+        <div className="author_space">
+          <AuthorSpace imageUrl={authorUrl} nickname={nickname} />
           <ContentTitle title={data.title} nickname={nickname} read={data.read} totalLike={data.like} created={data.created} />
-        </Link>
-      </figure>
+        </div>
+      </Link>
     </section>
   )
 }

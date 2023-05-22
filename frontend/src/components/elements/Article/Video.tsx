@@ -24,10 +24,10 @@ export default function ArticleVideo(props: Props) {
               <track kind="captions" src="/vtt/captions.ja.vtt" srcLang="en" label="English" />
               <track kind="subtitles" src="/vtt/captions.ja.vtt" srcLang="en" label="English" />
             </video>
-          </Link>
-          <Link href={`/video/${data.id}`} className="author_space">
-            <AuthorSpace imageUrl={imageUrl} nickname={nickname} />
-            <ContentTitle title={data.title} nickname={nickname} read={data.read} totalLike={data.like} created={data.created} />
+            <div className="author_space">
+              <AuthorSpace imageUrl={imageUrl} nickname={nickname} />
+              <ContentTitle title={data.title} nickname={nickname} read={data.read} totalLike={data.like} created={data.created} />
+            </div>
           </Link>
         </div>
       </div>
