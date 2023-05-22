@@ -258,8 +258,11 @@ div.field > button {
   width: 100%;
 }
 
-.content_size a {
-  width: 192px;
+.video-js,
+.content_size img,
+.content_size video {
+  min-width: 192px;
+  max-height: 108px;
 }
 
 .video-js,

@@ -2,13 +2,15 @@
 
 {% for item in comic_list %}
 <section class="section_detail">
-  <figure class="main_decolation content_side content_size">
-    <a href="{% url 'myus:comic_detail' item.pk item.title %}">
-      <img src="{{ item.image.url }}" width="192" height="108">
+  <div class="main_decolation">
+    <a href="{% url 'myus:comic_detail' item.pk item.title %}" class="content_side">
+      <figure class="content_size">
+        <img src="{{ item.image.url }}">
+      </figure>
+      <div class="author_space_side">
+        {% include 'parts/content_title.html' %}
+      </div>
     </a>
-    <a href="{% url 'myus:comic_detail' item.pk item.title %}" class="author_space_side">
-      {% include 'parts/content_title.html' %}
-    </a>
-  </figure>
+  </div>
 </section>
 {% endfor %}
