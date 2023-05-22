@@ -5,7 +5,7 @@
   <div class="main_decolation">
     <a href="{% url 'myus:blog_detail' item.pk item.title %}" class="content_side">
       <figure class="content_size">
-        <img src="{{ item.image.url }}">
+        <img src="{{ item.image.url }}" class="radius_10">
       </figure>
       <div class="author_space_side">
         {% include 'parts/content_title.html' %}

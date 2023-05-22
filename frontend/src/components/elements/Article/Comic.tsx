@@ -16,7 +16,7 @@ export default function ArticleComic(props: Props) {
     <section className="section_list">
       <Link href="/comic/detail/[id][title]">
         <figure className="main_decolation">
-          <Image src={imageUrl} width={272} height={153} alt="" />
+          <Image src={imageUrl} width={272} height={153} alt="" className="radius_10" />
         </figure>
         <div className="author_space">
           <AuthorSpace imageUrl={authorUrl} nickname={nickname} />

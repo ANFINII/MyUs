@@ -266,8 +266,7 @@ div.field > button {
 }
 
 .video-js,
-.content_size img,
-.main_decolation figure img {
+.radius_10 {
   border-radius: 10px;
 }
 
