@@ -265,6 +265,7 @@ div.field > button {
   max-height: 108px;
 }
 
+.advertise .video-js,
 .video_auto .video-js {
   border-radius: 10px;
 }
