@@ -122,6 +122,12 @@ svg {
   color: rgb(255, 0, 0);
 }
 
+/* biアイコンの高さ */
+[class^="bi-"]::before,
+[class*=" bi-"]::before {
+  line-height: 1.3 !important;
+}
+
 /* 通知設定 */
 .bi-toggle-on {
   color: rgb(0, 120, 220);
