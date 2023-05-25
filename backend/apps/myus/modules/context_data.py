@@ -25,31 +25,31 @@ class ContextData:
             context['query'] = self.request.GET.get('search')
 
         class_name = str(class_name.__name__)
-        if class_name in 'NotificationSettingView':
+        if class_name == 'NotificationSettingView':
             context['notification_setting_list'] = NotificationSetting.objects.filter(user=user.id)
 
-        if class_name in 'ProfileUpdate':
+        if class_name == 'ProfileUpdate':
             context['gender'] = {'0':'男性', '1':'女性', '2':'秘密'}
 
-        if class_name in 'MyPageView':
+        if class_name == 'MyPageView':
             context['mypage_list'] = MyPage.objects.filter(user=user.id)
 
-        if class_name in 'Payment':
+        if class_name == 'Payment':
             context['payment_list'] = PlanMaster.objects.all().order_by('-id')
 
-        if class_name in 'FollowList':
+        if class_name == 'FollowList':
             context['follow_list'] = Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100]
 
-        if class_name in 'FollowerList':
+        if class_name == 'FollowerList':
             context['follower_list'] = Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100]
 
-        if class_name in 'Index':
+        if class_name == 'Index':
             context.update({
                 f'{value}_list': model.objects.filter(publish=True).order_by('-created')[:8]
                 for model, value in model_dict.items()
             })
 
-        if class_name in 'Recommend':
+        if class_name == 'Recommend':
             # 急上昇はcreatedが1日以内かつscoreが100000以上の上位8レコード
             # テストはcreatedが100日以内かつscoreが50以上の上位8レコード
             # socre = (read + like*10) + read * like/(read+1)*20
@@ -61,7 +61,7 @@ class ContextData:
                 for model, value in model_dict.items()
             })
 
-        if class_name in ['UserPage' or 'UserPageInfo' or 'UserPageAdvertise']:
+        if class_name in ['UserPage', 'UserPageInfo', 'UserPageAdvertise']:
             author = User.objects.get(nickname=self.kwargs['nickname'])
             follow = Follow.objects.filter(follower=user.id, following=author)
             context['is_follow'] = follow.exists()
@@ -110,27 +110,27 @@ class ContextData:
             context['comment_list'] = comment.filter(parent__isnull=True)
             context['reply_list'] = comment.filter(parent__isnull=False)
 
-        if class_name in 'VideoDetail':
+        if class_name == 'VideoDetail':
             context['video_list'] = Video.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
-        if class_name in 'MusicDetail':
+        if class_name == 'MusicDetail':
             context['music_list'] = Music.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
-        if class_name in 'ComicDetail':
+        if class_name == 'ComicDetail':
             context['comic_list'] = Comic.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
-        if class_name in 'PictureDetail':
+        if class_name == 'PictureDetail':
             context['picture_list'] = Picture.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
-        if class_name in 'BlogDetail':
+        if class_name == 'BlogDetail':
             context['blog_list'] = Blog.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
-        if class_name in 'ChatDetail':
+        if class_name == 'ChatDetail':
             context['is_period'] = obj.period < date.today()
             context['message_list'] = obj.message.filter(parent__isnull=True).select_related('author')
             context['chat_list'] = Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
-        if class_name in 'ChatThread':
+        if class_name == 'ChatThread':
             message_id = self.kwargs['message_id']
             context['message_id'] = message_id
             context['message_parent'] = obj.message.filter(id=message_id)
@@ -139,9 +139,9 @@ class ContextData:
             context['reply_list'] = obj.message.filter(parent_id=message_id).select_related('author')
             context['chat_list'] = Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
-        if class_name in 'TodoDetail':
+        if class_name == 'TodoDetail':
             context['todo_list'] = Todo.objects.filter(author=user).exclude(id=obj.id)[:50]
 
-        if class_name not in 'TodoDetail':
+        if class_name != 'TodoDetail':
             context['is_like'] = obj.like.filter(id=user.id).exists()
         return context
