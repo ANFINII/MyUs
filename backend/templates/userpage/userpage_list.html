@@ -30,6 +30,18 @@
 <hr>
 
 <article class="article_index">
+  <h2>Comic</h2>
+  {% if query %}
+    {% include 'search/search_comic.html' %}
+  {% else %}
+    {% for item in comic_list %}
+      {% include 'media/comic/comic_article.html' %}
+    {% endfor %}
+  {% endif %}
+</article>
+<hr>
+
+<article class="article_index">
   <h2>Picture</h2>
   {% if query %}
     {% include 'search/search_picture.html' %}
