@@ -176,6 +176,13 @@ LOGIN_URL = 'myus:login'
 LOGIN_REDIRECT_URL = 'myus:index'
 LOGOUT_REDIRECT_URL = 'myus:login'
 
+# Email
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+
 # QUILL
 QUILL_CONFIGS = {
     'default': {
