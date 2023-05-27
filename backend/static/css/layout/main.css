@@ -318,7 +318,9 @@ div.field > button {
 .article_detail_video,
 .article_detail_comic,
 .article_detail_picture {
+  display: flex;
   user-select: none;
+  justify-content: center;
   background: rgb(50, 50, 50);
 }
 
