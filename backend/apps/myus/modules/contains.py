@@ -12,24 +12,6 @@ model_dict = {
     Chat   : 'chat',
 }
 
-model_like_dict = {
-    'video/detail'  : Video,
-    'music/detail'  : Music,
-    'comic/detail'  : Comic,
-    'picture/detail': Picture,
-    'blog/detail'   : Blog,
-    'chat/detail'   : Chat,
-}
-
-model_comment_dict = {
-    'video/detail'  : Video,
-    'music/detail'  : Music,
-    'comic/detail'  : Comic,
-    'picture/detail': Picture,
-    'blog/detail'   : Blog,
-    'todo/detail'   : Todo,
-}
-
 model_pjax = {
     'video'  : Video,
     'music'  : Music,
@@ -48,6 +30,24 @@ model_create_pjax = (
     'chat/create',
     'todo/create',
 )
+
+model_like_dict = {
+    'video/detail'  : Video,
+    'music/detail'  : Music,
+    'comic/detail'  : Comic,
+    'picture/detail': Picture,
+    'blog/detail'   : Blog,
+    'chat/detail'   : Chat,
+}
+
+model_comment_dict = {
+    'video/detail'  : Video,
+    'music/detail'  : Music,
+    'comic/detail'  : Comic,
+    'picture/detail': Picture,
+    'blog/detail'   : Blog,
+    'todo/detail'   : Todo,
+}
 
 notification_type_no = {
     'is_video'  : 1,
