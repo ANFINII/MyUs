@@ -34,6 +34,10 @@
   margin-bottom: 24px;
 }
 
+.font_14 {
+  font-size: 14px;
+}
+
 /* color */
 .rgb100 {
   color: rgb(100, 100, 100);

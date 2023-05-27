@@ -10,6 +10,10 @@
   margin: 24px 0;
 }
 
+.horizontal_8 {
+  margin: 0 8px;
+}
+
 .top_16 {
   margin-top: 16px;
 }
@@ -28,6 +32,10 @@
 
 .bottom_24 {
   margin-bottom: 24px;
+}
+
+.font_14 {
+  font-size: 14px;
 }
 
 /* color */

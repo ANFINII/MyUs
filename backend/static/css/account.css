@@ -176,12 +176,6 @@ td .textarea.margin {
   padding: 0 0 50px 0;
 }
 
-.messages_password_done {
-  font-size: 14px;
-  color: rgb(255, 0, 0);
-  margin: 0 0 10px 0;
-}
-
 .password_done {
   padding: 50px 15px;
 }
