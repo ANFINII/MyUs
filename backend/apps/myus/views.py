@@ -12,6 +12,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.signing import TimestampSigner,BadSignature, SignatureExpired, loads, dumps
@@ -155,6 +156,30 @@ class SignupComplete(TemplateView):
         user.is_active = True
         user.save()
         return super().get(request, **kwargs)
+
+
+class PasswordReset(PasswordResetView):
+    """PasswordReset"""
+    subject_template_name = 'registration/email/reset/subject.txt'
+    email_template_name = 'registration/email/reset/message.txt'
+    template_name = 'registration/password_reset_form.html'
+    success_url = reverse_lazy('myus:password_reset_done')
+
+
+class PasswordResetDone(PasswordResetDoneView):
+    """PasswordResetDone"""
+    template_name = 'registration/password_reset_done.html'
+
+
+class PasswordResetConfirm(PasswordResetConfirmView):
+    """PasswordResetConfirm"""
+    success_url = reverse_lazy('myus:password_reset_complete')
+    template_name = 'registration/password_reset_confirm.html'
+
+
+class PasswordResetComplete(PasswordResetCompleteView):
+    """PasswordResetComplete"""
+    template_name = 'registration/password_reset_complete.html'
 
 
 # Login

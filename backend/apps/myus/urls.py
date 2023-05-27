@@ -1,4 +1,6 @@
 from django.urls import path
+from apps.myus.views import pjax, login_form, logout_form, signup_form, SignupComplete
+from apps.myus.views import PasswordReset, PasswordResetDone, PasswordResetConfirm, PasswordResetComplete
 from apps.myus.views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
 from apps.myus.views import ProfileView, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle, Withdrawal
 from apps.myus.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
@@ -13,7 +15,6 @@ from apps.myus.views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_t
 from apps.myus.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 from apps.myus.views import searchtag_create, advertise_read, like_form, like_form_comment
 from apps.myus.views import comment_form, comment_update, comment_delete, reply_form, reply_delete
-from apps.myus.views import pjax, login_form, logout_form, signup_form, SignupComplete
 
 app_name = 'myus'
 
@@ -23,6 +24,11 @@ urlpatterns = [
     path('logout', logout_form, name='logout'),
     path('signup', signup_form, name='signup'),
     path('signup/complete/<token>/', SignupComplete.as_view(), name='signup_complete'),
+
+    path('password_reset/', PasswordReset.as_view(), name='password_reset'),
+    path('password_reset/done/', PasswordResetDone.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', PasswordResetConfirm.as_view(), name='password_reset_confirm'),
+    path('reset/done/', PasswordResetComplete.as_view(), name='password_reset_complete'),
 
     path('', Index.as_view(), name='index'),
     path('recommend', Recommend.as_view(), name='recommend'),
