@@ -1,0 +1,10 @@
+{{ user.nickname }} 様
+
+下記URLリンクよりサイトにアクセスの上、新しいパスワードを再設定してください。
+
+再設定用URL
+{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uid token %}
+
+パスワードリセットに関するリクエストを行っていない場合、このメールを無視してください。
+
+MyUs
