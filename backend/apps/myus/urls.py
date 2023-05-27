@@ -12,12 +12,18 @@ from apps.myus.views import BlogList, BlogCreate, BlogDetail
 from apps.myus.views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
 from apps.myus.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 from apps.myus.views import searchtag_create, advertise_read, like_form, like_form_comment
-from apps.myus.views import comment_form, reply_form, comment_update, comment_delete, reply_delete
-from apps.myus.views import pjax, signup_form, login_form, logout_form
+from apps.myus.views import comment_form, comment_update, comment_delete, reply_form, reply_delete
+from apps.myus.views import pjax, login_form, logout_form, signup_form, SignupComplete
 
 app_name = 'myus'
 
 urlpatterns = [
+    path('pjax', pjax, name='pjax'),
+    path('login', login_form, name='login'),
+    path('logout', logout_form, name='logout'),
+    path('signup', signup_form, name='signup'),
+    path('signup/complete/<token>/', SignupComplete.as_view(), name='signup_complete'),
+
     path('', Index.as_view(), name='index'),
     path('recommend', Recommend.as_view(), name='recommend'),
     path('userpage/post/<str:nickname>', UserPage.as_view(), name='userpage'),
@@ -87,13 +93,8 @@ urlpatterns = [
     path('like/form/comment', like_form_comment, name='like_form_comment'),
 
     path('comment/form', comment_form, name='comment_form'),
-    path('reply/form', reply_form, name='reply_form'),
     path('comment/update/<int:comment_id>', comment_update, name='comment_update'),
     path('comment/delete/<int:comment_id>', comment_delete, name='comment_delete'),
+    path('reply/form', reply_form, name='reply_form'),
     path('reply/delete/<int:comment_id>', reply_delete, name='reply_delete'),
-
-    path('pjax', pjax, name='pjax'),
-    path('signup', signup_form, name='signup'),
-    path('login', login_form, name='login'),
-    path('logout', logout_form, name='logout'),
 ]

@@ -13,7 +13,8 @@ from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.humanize.templatetags.humanize import naturaltime
-from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.signing import TimestampSigner,BadSignature, SignatureExpired, loads, dumps
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
@@ -37,6 +38,7 @@ from apps.myus.modules.follow import follow_update_data
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 
 
+logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
@@ -107,12 +109,52 @@ def signup_form(request):
             profile.gender = gender
             profile.birthday = birthday
             profile.save()
-            messages.success(request, 'アカウント登録が完了しました!')
+
+            current_site = get_current_site(request)
+            context = {
+                'protocol': request.scheme,
+                'domain': current_site.domain,
+                'token': dumps(user.pk),
+                'user': user
+            }
+            subject = render_to_string('registration/email/account/subject.txt', context)
+            message = render_to_string('registration/email/account/message.txt', context)
+            user.email_user(subject, message)
+            messages.success(request, '本アカウント登録用のメールを送信しました!')
             return redirect('myus:login')
         except Exception:
             messages.error(request, 'アカウント登録に失敗しました!')
+            logger.exception('アカウント登録に失敗しました!')
             return render(request, 'registration/signup.html')
     return render(request, 'registration/signup.html')
+
+
+class SignupComplete(TemplateView):
+    """SignupComplete"""
+    template_name = 'registration/signup_complete.html'
+    timeout_seconds = getattr(settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)
+
+    def get(self, request, **kwargs):
+        token = kwargs.get('token')
+        try:
+            user_id = loads(token, max_age=self.timeout_seconds)
+            user = User.objects.filter(id=user_id).first()
+            if user.is_active:
+                messages.success(request, '既に本アカウント登録が完了しています!')
+                return redirect('myus:login')
+
+        except SignatureExpired:
+            messages.error(request, '本登録の期限が切れております!')
+            logger.exception('SignatureExpired Exception')
+            return redirect('myus:login')
+        except BadSignature:
+            messages.error(request, '登録用のURLが間違っています!')
+            logger.exception('BadSignature Exception')
+            return redirect('myus:login')
+
+        user.is_active = True
+        user.save()
+        return super().get(request, **kwargs)
 
 
 # Login

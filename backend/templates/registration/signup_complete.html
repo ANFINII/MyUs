@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}<title>MyUsアカウント登録</title>{% endblock title %}
+{% load static %}
+
+{% block customcss %}
+<link rel="stylesheet" href="{% static 'css/registration.css' %}">
+{% endblock customcss %}
+
+{% block content %}
+<main class="main">
+  <form method="POST" action="" class="form_account">
+    {% csrf_token %}
+    <h1 class="myus_h1 red">本登録が完了しました</h1>
+    <p>MyUsへようこそ!</p>
+    <p>登録された情報でログインしてください</p>
+    <button type="button" onclick="location.href='{% url 'myus:login' %}'" class="button blue xl full top_24">ログイン画面</button>
+  </form>
+</main>
+{% endblock content %}
