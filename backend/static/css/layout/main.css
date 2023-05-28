@@ -389,9 +389,9 @@ div.field > button {
 
 .music_speed {
   display: inline-block;
-  width: 295px;
+  width: 320px;
   height: 40px;
-  padding: 0px 10px;
+  padding: 0 16px;
   margin: 16px 16px 0 0;
   color: rgb(255, 255, 255);
   font-size: 13px;
@@ -402,8 +402,12 @@ div.field > button {
 }
 
 .form_range {
+  appearance: none;
   width: 200px;
-  padding: 13px 8px 0 8px;
+  height: 9px;
+  margin: 14px 8px;
+  border-radius: 20px;
+  background: rgb(225, 238, 255);
 }
 
 .music_download {
