@@ -140,7 +140,7 @@
 }
 
 .audioplayer-bar-loaded {
-  background: rgb(225, 225, 235);
+  background: rgb(225, 240, 255);
   border-radius: 10px;
   z-index: 1;
 }
