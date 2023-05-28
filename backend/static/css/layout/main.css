@@ -1075,10 +1075,6 @@ div.field > button {
   overflow-wrap: break-word;
 }
 
-.comment_aria_list_2 p {
-  margin: 0;
-}
-
 .comment_aria_list_3 {
   grid-column: 2/-1;
   grid-row: 3/4;
@@ -1190,7 +1186,6 @@ div.field > button {
   -webkit-appearance: none;
 }
 
-.message_aria_list:hover ,
 .message_aria_list:hover {
   background: rgb(240, 245, 255, 0.8);
 }
@@ -1358,6 +1353,10 @@ div.field > button {
 
 .modal_content_body .comment_aria_list {
   padding: 8px;
+}
+
+.modal_content_body .comment_aria_list:hover {
+  background: rgb(240, 245, 255, 0.8);
 }
 
 .modal_content_footer {
