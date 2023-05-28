@@ -598,7 +598,7 @@ def comment_form(request):
         comment = Comment.objects.create(content_object=obj, text=text, author=user)
         obj = [models.objects.get(id=obj_id) for detail, models in model_comment_dict.items() if detail in obj_path][0]
         context = {
-            'comment_count': obj.comment_count() + 1,
+            'comment_count': obj.comment_count(),
             'comment_lists': render_to_string('parts/common/comment/comment.html', {
                 'comment_list': obj.comment.filter(id=comment.id),
                 'user_id': user.id,
