@@ -78,6 +78,7 @@ chatSocket.onmessage = function (event) {
     highlight.style.removeProperty('background-color')
     $('#message_aria_list_2_' + response.message_id).html(response.text)
     $('#message_aria_list_thread_' + response.message_id).html(response.text)
+    $('#modal_message_' + response.message_id).html(response.text)
     pjaxThread(location.pathname)
   } else if (data['command'] === 'delete_message') {
     const response = data['message']

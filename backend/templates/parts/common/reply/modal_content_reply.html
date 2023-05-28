@@ -17,7 +17,7 @@
             <p>{{ reply.author.nickname }}</p>
             <time>{{ reply.created|date:'Y/m/d H:i' }}</time>
           </div>
-          <div class="comment_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
+          <div id="modal_comment_{{ reply.id }}" class="comment_aria_list_2">{{ reply.text|linebreaksbr|urlize }}</div>
         </div>
       </div>
 

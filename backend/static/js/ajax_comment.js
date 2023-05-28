@@ -127,6 +127,7 @@ $(document).on('click', '.edit_update_button', function (event) {
       // 成功した時、背景色を戻す
       highlight.style.removeProperty('background-color')
       $('#comment_aria_list_2_' + commentId).html(response.text)
+      $('#modal_comment_' + commentId).html(response.text)
     })
     .fail(function (response) {
       // 失敗した時、背景色を戻す
