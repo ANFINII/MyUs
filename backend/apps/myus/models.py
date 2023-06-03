@@ -277,11 +277,13 @@ class PlanMaster(models.Model):
 
 class UserPlan(models.Model):
     """UserPlan"""
-    user       = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_plan')
-    plan       = models.ForeignKey(PlanMaster, on_delete=models.CASCADE, default=1)
-    start_date = models.DateTimeField(blank=True, null=True)
-    end_date   = models.DateTimeField(blank=True, null=True)
-    is_paid    = models.BooleanField(default=False)
+    user         = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_plan')
+    plan         = models.ForeignKey(PlanMaster, on_delete=models.CASCADE, default=1)
+    customer_id  = models.CharField(max_length=255)
+    subscription = models.CharField(max_length=255)
+    is_paid      = models.BooleanField(default=False)
+    start_date   = models.DateTimeField(blank=True, null=True)
+    end_date     = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.plan.name
