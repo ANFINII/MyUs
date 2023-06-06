@@ -12,21 +12,21 @@
     </ul>
     {% endif %}
 
-    <p class="bottom_24">{{ expired_seconds }}秒有効なURLを生成します</p>
+    <p class="mb_24">{{ expired_seconds }}秒有効なURLを生成します</p>
 
-    <input type="password" name="password" placeholder="パスワード" minlength="8" maxlength="16" class="input bottom_16" required>
+    <input type="password" name="password" placeholder="パスワード" minlength="8" maxlength="16" class="input mb_16" required>
 
-    <button class="button green xl full vertical_24">退会URL生成</button>
+    <button class="button green xl full mv_24">退会URL生成</button>
 
     {% if token_signed %}
-    <button onclick="location.href='{% url 'myus:withdrawal' token_signed %}'" class="button red xl full bottom_24">退会する</button>
+    <button onclick="location.href='{% url 'myus:withdrawal' token_signed %}'" class="button red xl full mb_24">退会する</button>
     {% endif %}
 
     {% if message %}
-    <button class="button red xl full bottom_24">{{ message }}</button>
+    <button class="button red xl full mb_24">{{ message }}</button>
     {% endif %}
 
-    <button href="{% url 'myus:index' %}" class="button blue xl full bottom_24 pjax_button">ホーム</button>
+    <button href="{% url 'myus:index' %}" class="button blue xl full mb_24 pjax_button">ホーム</button>
   </form>
   {% include 'parts/footer-myus.html' %}
   {% else %}

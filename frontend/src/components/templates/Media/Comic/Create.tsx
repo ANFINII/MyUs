@@ -14,16 +14,16 @@ export default function ComicCreate(props: Props) {
       {is_authenticated ?
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}
-          <p className="vertical_16">タイトル</p>
+          <p className="mv_16">タイトル</p>
           <Input name="title" id="title" required />
 
-          <p className="vertical_16">内容</p>
+          <p className="mv_16">内容</p>
           <Textarea name="content" id="content" required></Textarea>
 
-          <p className="vertical_16">期間</p>
+          <p className="mv_16">期間</p>
           <Input name="period" placeholder={`${year}-12-31`} id="id_period" required />
 
-          <Button green type="submit" className="top_32">作成する</Button>
+          <Button green type="submit" className="mt_32">作成する</Button>
         </form>
       :
         <h2 className="login_required">ログインしてください</h2>

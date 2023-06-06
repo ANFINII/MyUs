@@ -4,17 +4,17 @@
 {% if user.is_authenticated %}
 <form method="POST" action="" enctype="multipart/form-data">
   {% csrf_token %}
-  <p class="vertical_16">タイトル</p>
+  <p class="mv_16">タイトル</p>
   <input name="title" class="input" required>
 
-  <p class="vertical_16">内容</p>
+  <p class="mv_16">内容</p>
   <textarea name="content" rows="1" class="textarea" required></textarea>
 
-  <p class="vertical_16">画像</p>
+  <p class="mv_16">画像</p>
   <input type="file" name="image" accept="image/*" class="input file_1" hidden required>
   <input placeholder="ファイル選択..." id="file_1" class="input" onclick="$('input.file_1').click()">
 
-  <button type="submit" class="button green top_32">作成する</button>
+  <button type="submit" class="button green mt_32">作成する</button>
 </form>
 {% else %}
 <h2 class="login_required">ログインしてください</h2>

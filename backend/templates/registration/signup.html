@@ -22,20 +22,20 @@
     {% endif %}
 
     <p class="margin">名前</p>
-    <div class="name_group bottom_16">
+    <div class="name_group mb_16">
       <input type="text" name="last_name" placeholder="姓" maxlength="30" class="input name">
       <input type="text" name="first_name" placeholder="名" maxlength="30" class="input name">
     </div>
 
-    <input type="text" name="username" placeholder="ユーザー名(英数字)" maxlength="20" class="input bottom_16" required>
+    <input type="text" name="username" placeholder="ユーザー名(英数字)" maxlength="20" class="input mb_16" required>
 
-    <input type="text" name="nickname" placeholder="投稿者名" maxlength="80" class="input bottom_16" required>
+    <input type="text" name="nickname" placeholder="投稿者名" maxlength="80" class="input mb_16" required>
 
-    <input type="email" name="email" placeholder="メールアドレス" maxlength="255" class="input bottom_16" required>
+    <input type="email" name="email" placeholder="メールアドレス" maxlength="255" class="input mb_16" required>
 
-    <input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minlength="8" maxlength="16" class="input bottom_16" required>
+    <input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minlength="8" maxlength="16" class="input mb_16" required>
 
-    <input type="password" name="password2" placeholder="パスワード(確認用)" minlength="8" maxlength="16" class="input bottom_16" required>
+    <input type="password" name="password2" placeholder="パスワード(確認用)" minlength="8" maxlength="16" class="input mb_16" required>
 
     <p class="margin">生年月日</p>
     <div class="birthday_group">
@@ -51,7 +51,7 @@
     </div>
 
     <p class="margin">性別</p>
-    <div class="bottom_24">
+    <div class="mb_24">
       <input type="radio" name="gender" value="0" id="male">
       <label for="male">男性</label>
 
@@ -62,8 +62,8 @@
       <label for="secret">秘密</label>
     </div>
 
-    <button type="submit" class="button green xl full vertical_24">アカウント登録</button>
-    <button type="button" onclick="location.href='{% url 'myus:login' %}'" class="button blue xl full bottom_24">戻る</button>
+    <button type="submit" class="button green xl full mv_24">アカウント登録</button>
+    <button type="button" onclick="location.href='{% url 'myus:login' %}'" class="button blue xl full mb_24">戻る</button>
   </form>
 </main>
 {% endblock content %}

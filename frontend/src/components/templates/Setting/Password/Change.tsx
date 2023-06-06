@@ -20,15 +20,15 @@ export default function PasswordChange() {
             </li>
           </ul>
 
-          <Input type="password" name="old_password" className="bottom_16" minLength={8} maxLength={16} placeholder="現在パスワード" required />
+          <Input type="password" name="old_password" className="mb_16" minLength={8} maxLength={16} placeholder="現在パスワード" required />
 
-          <Input type="password" name="new_password1" className="bottom_16" minLength={8} maxLength={16} placeholder="新規パスワード(英数字8~16文字)" required />
+          <Input type="password" name="new_password1" className="mb_16" minLength={8} maxLength={16} placeholder="新規パスワード(英数字8~16文字)" required />
 
-          <Input type="password" name="new_password2" className="bottom_16" minLength={8} maxLength={16} placeholder="新規パスワード(確認用)" required />
+          <Input type="password" name="new_password2" className="mb_16" minLength={8} maxLength={16} placeholder="新規パスワード(確認用)" required />
 
-          <Button green size="xl" type="submit" className="full vertical_24">変更する</Button>
+          <Button green size="xl" type="submit" className="full mv_24">変更する</Button>
 
-          <Button blue size="xl" onClick={() => Router.push('/setting/profile')} className="full bottom_24">戻る</Button>
+          <Button blue size="xl" onClick={() => Router.push('/setting/profile')} className="full mb_24">戻る</Button>
         </form>
         <Footer />
       </article>

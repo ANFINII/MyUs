@@ -36,15 +36,15 @@ export default function Login() {
           </ul>
           {% endif %} */}
 
-          <Input type="text" name="username" placeholder="ユーザー名 or メールアドレス" className="bottom_16" required autoFocus />
-          <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} className="bottom_16" required />
+          <Input type="text" name="username" placeholder="ユーザー名 or メールアドレス" className="mb_16" required autoFocus />
+          <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} className="mb_16" required />
 
           <div className="password_reset">
             <Link href="/setting/password_reset">パスワードをリセット</Link>
           </div>
 
-          <Button blue size="xl" type="submit" onClick={loginClicked} className="full bottom_24">ログイン</Button>
-          <Button green size="xl" className="full bottom_24" onClick={() => Router.push('/registration/signup')}>アカウント登録</Button>
+          <Button blue size="xl" type="submit" onClick={loginClicked} className="full mb_24">ログイン</Button>
+          <Button green size="xl" className="full mb_24" onClick={() => Router.push('/registration/signup')}>アカウント登録</Button>
         </form>
 
         <Footer />

@@ -2,35 +2,35 @@
   width: 100%;
 }
 
-.vertical_16 {
+.mv_16 {
   margin: 16px 0;
 }
 
-.vertical_24 {
+.mv_24 {
   margin: 24px 0;
 }
 
-.horizontal_8 {
+.mh_8 {
   margin: 0 8px;
 }
 
-.top_16 {
+.mt_16 {
   margin-top: 16px;
 }
 
-.top_24 {
+.mt_24 {
   margin-top: 24px;
 }
 
-.top_32 {
+.mt_32 {
   margin-top: 32px;
 }
 
-.bottom_16 {
+.mb_16 {
   margin-bottom: 16px;
 }
 
-.bottom_24 {
+.mb_24 {
   margin-bottom: 24px;
 }
 

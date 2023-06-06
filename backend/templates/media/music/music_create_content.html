@@ -4,16 +4,16 @@
 {% if user.is_authenticated %}
 <form method="POST" action="" enctype="multipart/form-data">
   {% csrf_token %}
-  <p class="vertical_16">タイトル</p>
+  <p class="mv_16">タイトル</p>
   <input name="title" class="input" required>
 
-  <p class="vertical_16">内容</p>
+  <p class="mv_16">内容</p>
   <textarea name="content" rows="1" class="textarea" required></textarea>
 
-  <p class="vertical_16">歌詞</p>
+  <p class="mv_16">歌詞</p>
   <textarea name="lyric" rows="1" class="textarea"></textarea>
 
-  <p class="top_16">音楽</p>
+  <p class="mt_16">音楽</p>
   <div class="check_group check_margin">
     <input type="checkbox" name="download" id="download" class="checkbox" checked>
     <label for="download">ダウンロード許可</label>
@@ -21,7 +21,7 @@
   <input type="file" name="music" accept="audio/*" class="input file_1" hidden required>
   <input placeholder="ファイル選択..." id="file_1" class="input" onclick="$('input.file_1').click()">
 
-  <button type="submit" class="button green top_32">作成する</button>
+  <button type="submit" class="button green mt_32">作成する</button>
 </form>
 {% else %}
 <h2 class="login_required">ログインしてください</h2>

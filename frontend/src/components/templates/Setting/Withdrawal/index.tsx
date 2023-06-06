@@ -26,18 +26,18 @@ export default function Withdrawal() {
               </ul>
             }
 
-            <p className="bottom_24">{expired_seconds}秒有効なURLを生成します</p>
+            <p className="mb_24">{expired_seconds}秒有効なURLを生成します</p>
 
-            <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} className="bottom_16" required />
+            <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} className="mb_16" required />
 
-            <Button green size="xl" className="full vertical_24">退会URL生成</Button>
+            <Button green size="xl" className="full mv_24">退会URL生成</Button>
 
             {token_signed &&
-              <Button red size="xl" onClick={() => Router.push('/setting/withdrawal/confirm')} className="full bottom_24">退会する</Button>
+              <Button red size="xl" onClick={() => Router.push('/setting/withdrawal/confirm')} className="full mb_24">退会する</Button>
             }
-            {message && <Button red size="xl" className="full bottom_24">{message}</Button>}
+            {message && <Button red size="xl" className="full mb_24">{message}</Button>}
 
-            <Button blue size="xl" onClick={() => Router.push('/')} className="full bottom_24">ホーム</Button>
+            <Button blue size="xl" onClick={() => Router.push('/')} className="full mb_24">ホーム</Button>
           </form>
         :
           <h2 className="login_required">ログインしてください</h2>

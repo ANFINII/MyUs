@@ -13,19 +13,19 @@ export default function VideoCreate(props: Props) {
       {is_authenticated ?
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}
-          <p className="vertical_16">タイトル</p>
+          <p className="mv_16">タイトル</p>
           <Input name="title" id="title" required />
 
-          <p className="vertical_16">内容</p>
+          <p className="mv_16">内容</p>
           <Textarea name="content" id="content" required></Textarea>
 
-          <p className="vertical_16">サムネイル</p>
+          <p className="mv_16">サムネイル</p>
           <InputFile id="file_1" accept="image/*" required />
 
-          <p className="vertical_16">動画</p>
+          <p className="mv_16">動画</p>
           <InputFile id="file_2" accept="video/*" required />
 
-          <Button green type="submit" className="top_32">作成する</Button>
+          <Button green type="submit" className="mt_32">作成する</Button>
         </form>
       :
         <h2 className="login_required">ログインしてください</h2>
