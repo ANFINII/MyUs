@@ -71,7 +71,7 @@ $(document).on('click', '.reply_form', function (event) {
   const text = $('#reply_' + commentId).val().replace(/\n+$/g, '')
   $('#comment_aria_list_reply_' + commentId)[0].reset()
   document.getElementById('reply_' + commentId).style.height = '39px'
-  document.getElementById('reply_form_button_' + commentId).setAttribute('disabled', true)
+  document.getElementById('reply_button_' + commentId).setAttribute('disabled', true)
   $.ajax({
     url: '/reply/form',
     type: 'POST',
@@ -201,7 +201,7 @@ $(document).on('focus', '.reply_form_area', function (event) {
   const text = $(this).val()
   if (text || text.match(/\S/g)) {
     // disabled属性を削除
-    document.getElementById('reply_form_button_' + commentId).removeAttribute('disabled')
+    document.getElementById('reply_button_' + commentId).removeAttribute('disabled')
   }
 
   $(document).on('input', '#reply_' + commentId, function (event) {
@@ -209,17 +209,17 @@ $(document).on('focus', '.reply_form_area', function (event) {
     const text = $(this).val()
     if (!text || !text.match(/\S/g)) {
       // disabled属性を設定
-      document.getElementById('reply_form_button_' + commentId).setAttribute('disabled', true)
+      document.getElementById('reply_button_' + commentId).setAttribute('disabled', true)
     } else {
       // disabled属性を削除
-      document.getElementById('reply_form_button_' + commentId).removeAttribute('disabled')
+      document.getElementById('reply_button_' + commentId).removeAttribute('disabled')
 
       // ショートカット
       shortcut.add('Ctrl+Enter', function () {
-        $('#reply_form_button_' + commentId).click()
+        $('#reply_button_' + commentId).click()
       })
       shortcut.add('meta+Enter', function () {
-        $('#reply_form_button_' + commentId).click()
+        $('#reply_button_' + commentId).click()
       })
     }
   })
