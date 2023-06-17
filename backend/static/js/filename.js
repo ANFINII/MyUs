@@ -8,5 +8,5 @@ function handleInputFileChange(inputSelector, displaySelector) {
   })
 }
 
-handleInputFileChange('.file_1', '#file_1');
-handleInputFileChange('.file_2', '#file_2');
+handleInputFileChange('.file_1', '#file_1')
+handleInputFileChange('.file_2', '#file_2')
