@@ -1,27 +1,41 @@
 .button {
   padding: 6px 12px;
   font-size: 14px;
-  cursor: pointer;
-  color: rgb(255, 255, 255);
+  font-weight: 500;
+  color: rgb(50, 50, 50);
   border: 1px solid rgb(180, 180, 180);
   border-radius: 5px;
-  background: rgb(200, 200, 200);
+  background: rgb(255, 255, 255);
+  cursor: pointer;
 }
 
 .button:hover {
-  background: rgb(190, 190, 190);
+  background: rgb(245, 245, 245);
 }
 
 .button:active {
-  background: rgb(160, 160, 160);
+  background: rgb(235, 235, 235);
 }
 
 .button:disabled {
-  background: rgb(160, 160, 160);
+  border: 1px solid rgb(240, 240, 240);
+  background: rgb(240, 240, 240);
+  color: rgb(140, 145, 150);
   cursor: initial;
 }
 
+.button.xs {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.button.xl {
+  padding: 8px 16px;
+  font-size: 18px;
+}
+
 .button.blue {
+  color: rgb(255, 255, 255);
   border: 1px solid rgb(20, 120, 250);
   background: rgb(20, 120, 250);
 }
@@ -51,6 +65,7 @@
 }
 
 .button.purple {
+  color: rgb(255, 255, 255);
   border: 1px solid rgb(145, 30, 255);
   background: rgb(145, 30, 255);
 }
@@ -80,6 +95,7 @@
 }
 
 .button.red {
+  color: rgb(255, 255, 255);
   border: 1px solid rgb(230, 55, 70);
   background: rgb(230, 55, 70);
 }
@@ -109,6 +125,7 @@
 }
 
 .button.green {
+  color: rgb(255, 255, 255);
   border: 1px solid rgb(40, 160, 100);
   background: rgb(40, 160, 100);
 }
@@ -133,29 +150,6 @@
 }
 
 .button.green.xl {
-  padding: 8px 16px;
-  font-size: 18px;
-}
-
-.button.light {
-  color: rgb(50, 50, 50);
-  background: rgb(255, 255, 255);
-}
-
-.button.light:hover {
-  background: rgb(245, 245, 245);
-}
-
-.button.light:active {
-  background: rgb(235, 235, 235);
-}
-
-.button.light.xs {
-  padding: 4px 8px;
-  font-size: 12px;
-}
-
-.button.light.xl {
   padding: 8px 16px;
   font-size: 18px;
 }

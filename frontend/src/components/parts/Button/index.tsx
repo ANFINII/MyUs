@@ -5,7 +5,6 @@ interface Color {
   purple?: boolean
   red?: boolean
   green?: boolean
-  light?: boolean
 }
 
 interface Props extends Color {
@@ -19,7 +18,7 @@ interface Props extends Color {
 }
 
 export default function Button(props: Props) {
-  const {blue, purple, red, green, light} = props
+  const {blue, purple, red, green} = props
   const {size, type, value, className, disabled, children, onClick} = props
 
   const colorCheck = (isColor: boolean | undefined, name: string) => {
@@ -38,7 +37,6 @@ export default function Button(props: Props) {
         colorCheck(purple, 'purple') +
         colorCheck(red, 'red') +
         colorCheck(green, 'green') +
-        colorCheck(light, 'light') +
         sizeCheck('xl') +
         sizeCheck('xs') +
         (className ? ' ' + className : '')
