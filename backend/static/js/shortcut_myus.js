@@ -107,7 +107,7 @@ $(document).on('focus', '.update_area', function (event) {
     $('#update_button_' + commentId).click()
   })
 
-  $(document).on('input', '#comment_form_update_' + commentId, function (event) {
+  $(document).on('input', '#comment_update_' + commentId, function (event) {
     event.preventDefault()
     const text = $(this).val()
     if (!text || !text.match(/\S/g)) {

@@ -95,8 +95,8 @@ $(document).on('click', '.edit_button_update', function () {
   const commentId = $(this).parent().attr('comment-id')
   document.getElementById('edit_update_main_' + commentId).classList.add('active')
   document.getElementById('comment_aria_list_' + commentId).classList.add('active')
-  document.getElementById('comment_form_update_' + commentId).style.height = '31px'
-  $('#comment_form_update_' + commentId).textareaAutoHeight()
+  document.getElementById('comment_update_' + commentId).style.height = '31px'
+  $('#comment_update_' + commentId).textareaAutoHeight()
 })
 
 $(document).on('click', '.edit_update_cancel', function () {
@@ -109,7 +109,7 @@ $(document).on('click', '.edit_update_button', function (event) {
   event.preventDefault()
   const csrf = $(this).closest('form').attr('csrf')
   const commentId = $(this).closest('form').attr('comment-id')
-  const text = $('#comment_form_update_' + commentId).val().replace(/\n+$/g, '')
+  const text = $('#comment_update_' + commentId).val().replace(/\n+$/g, '')
   document.getElementById('edit_update_main_' + commentId).classList.remove('active')
   document.getElementById('comment_aria_list_' + commentId).classList.remove('active')
   document.getElementById('update_button_' + commentId).setAttribute('disabled', true)
