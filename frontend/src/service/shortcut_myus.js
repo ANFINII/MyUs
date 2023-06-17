@@ -96,15 +96,15 @@ $(document).on('focus', '.update_form_area', function (event) {
   const text = $(this).val();
   if (text || text.match(/\S/g)) {
     // disabled属性を削除
-    document.getElementById('update_form_button_' + comment_id).removeAttribute('disabled');
+    document.getElementById('update_button_' + comment_id).removeAttribute('disabled');
   }
 
   // ショートカット
   shortcut.add('Ctrl+Enter', function () {
-    $('#update_form_button_' + comment_id).click();
+    $('#update_button_' + comment_id).click();
   });
   shortcut.add('meta+Enter', function () {
-    $('#update_form_button_' + comment_id).click();
+    $('#update_button_' + comment_id).click();
   });
 
   $(document).on('input', '#comment_form_update_' + comment_id, function (event) {
@@ -112,17 +112,17 @@ $(document).on('focus', '.update_form_area', function (event) {
     const text = $(this).val();
     if (!text || !text.match(/\S/g)) {
       // disabled属性を設定
-      document.getElementById('update_form_button_' + comment_id).setAttribute('disabled', true);
+      document.getElementById('update_button_' + comment_id).setAttribute('disabled', true);
     } else {
       // disabled属性を削除
-      document.getElementById('update_form_button_' + comment_id).removeAttribute('disabled');
+      document.getElementById('update_button_' + comment_id).removeAttribute('disabled');
 
       // ショートカット
       shortcut.add('Ctrl+Enter', function () {
-        $('#update_form_button_' + comment_id).click();
+        $('#update_button_' + comment_id).click();
       });
       shortcut.add('meta+Enter', function () {
-        $('#update_form_button_' + comment_id).click();
+        $('#update_button_' + comment_id).click();
       });
     }
   });

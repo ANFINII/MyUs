@@ -330,17 +330,17 @@ $(document).on('click', '.edit_button_update', function () {
 
       const quillText = quillUpdate.getText()
       if (quillText.match(/\S/g)) {
-        document.getElementById('update_form_button_' + messageId).removeAttribute('disabled')
+        document.getElementById('update_button_' + messageId).removeAttribute('disabled')
       } else {
-        document.getElementById('update_form_button_' + messageId).setAttribute('disabled', true)
+        document.getElementById('update_button_' + messageId).setAttribute('disabled', true)
       }
 
       // ショートカット
       shortcut.add('Ctrl+Enter', function () {
-        $('#update_form_button_' + messageId).click()
+        $('#update_button_' + messageId).click()
       })
       shortcut.add('meta+Enter', function () {
-        $('#update_form_button_' + messageId).click()
+        $('#update_button_' + messageId).click()
       })
     })
 
@@ -350,7 +350,7 @@ $(document).on('click', '.edit_button_update', function () {
       document.getElementById('message_aria_list_' + messageId).classList.remove('active')
     })
 
-    $(document).on('click', '#update_form_button_' + messageId, function (event) {
+    $(document).on('click', '#update_button_' + messageId, function (event) {
       event.preventDefault()
       const messageId = $(this).closest('form').attr('message-id')
       const message = quillUpdate.root.innerHTML
@@ -358,7 +358,7 @@ $(document).on('click', '.edit_button_update', function () {
 
       document.getElementById('edit_update_main_' + messageId).classList.remove('active')
       document.getElementById('message_aria_list_' + messageId).classList.remove('active')
-      document.getElementById('update_form_button_' + messageId).setAttribute('disabled', true)
+      document.getElementById('update_button_' + messageId).setAttribute('disabled', true)
 
       // 更新時のアニメーション
       const highlight = document.querySelector('#message_aria_list_' + messageId)

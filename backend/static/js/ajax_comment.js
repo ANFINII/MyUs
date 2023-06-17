@@ -112,7 +112,7 @@ $(document).on('click', '.edit_update_button', function (event) {
   const text = $('#comment_form_update_' + commentId).val().replace(/\n+$/g, '')
   document.getElementById('edit_update_main_' + commentId).classList.remove('active')
   document.getElementById('comment_aria_list_' + commentId).classList.remove('active')
-  document.getElementById('update_form_button_' + commentId).setAttribute('disabled', true)
+  document.getElementById('update_button_' + commentId).setAttribute('disabled', true)
   // 更新時のアニメーション
   const highlight = document.querySelector('#comment_aria_list_' + commentId)
   highlight.style.setProperty('background-color', 'rgb(235, 255, 245)', 'important')
