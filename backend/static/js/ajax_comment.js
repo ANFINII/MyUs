@@ -7,7 +7,7 @@ $('#comment_form').submit(function (event) {
   const text = $('form [name=text]').val().replace(/\n+$/g, '')
   $('#comment_form')[0].reset()
   document.getElementById('comment_form_area').style.height = '39px'
-  document.getElementById('comment_form_button').setAttribute('disabled', true)
+  document.getElementById('comment_button').setAttribute('disabled', true)
   $.ajax({
     url: '/comment/form',
     type: 'POST',

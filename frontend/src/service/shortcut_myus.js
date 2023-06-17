@@ -55,7 +55,7 @@ $(document).on('focus', '#comment_form_area', function (event) {
   const text = $(this).val();
   if (text || text.match(/\S/g)) {
     // disabled属性を削除
-    document.getElementById('comment_form_button').removeAttribute('disabled');
+    document.getElementById('comment_button').removeAttribute('disabled');
   }
 
   $(document).on('input', '#comment_form_area', function (event) {
@@ -63,17 +63,17 @@ $(document).on('focus', '#comment_form_area', function (event) {
     const text = $(this).val();
     if (!text || !text.match(/\S/g)) {
       // disabled属性を設定
-      document.getElementById('comment_form_button').setAttribute('disabled', true);
+      document.getElementById('comment_button').setAttribute('disabled', true);
     } else {
       // disabled属性を削除
-      document.getElementById('comment_form_button').removeAttribute('disabled');
+      document.getElementById('comment_button').removeAttribute('disabled');
 
       // ショートカット
       shortcut.add('Ctrl+Enter', function () {
-        $('#comment_form_button').click();
+        $('#comment_button').click();
       });
       shortcut.add('meta+Enter', function () {
-        $('#comment_form_button').click();
+        $('#comment_button').click();
       });
     }
   });

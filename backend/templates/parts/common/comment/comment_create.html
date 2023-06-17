@@ -11,7 +11,7 @@
       <img src="{{ user.image }}" title="{{ user.nickname }}" class="profile_image_comment">
     </a>
     <textarea name="text" rows="1" placeholder="コメント入力" id="comment_form_area" class="textarea_br"></textarea>
-    <button type="submit" title="送信" id="comment_form_button" class="button blue xs form_button" disabled>コメント</button>
+    <button type="submit" title="送信" id="comment_button" class="button blue xs form_button" disabled>コメント</button>
     {% else %}
     <img src="{% static 'img/user_icon.png' %}" title="Anonymous" class="profile_image_comment">
     <textarea name="text" rows="1" placeholder="コメントするにはログインが必要です!" class="textarea_br" disabled></textarea>
