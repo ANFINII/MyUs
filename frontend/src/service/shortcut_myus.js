@@ -41,7 +41,7 @@ $(document).on('focus', '.searchtag_3', function (event) {
 
 
 // commentショートカット
-$(document).on('focus', '#comment_form_area', function (event) {
+$(document).on('focus', '#comment_area', function (event) {
   event.preventDefault();
 
   // focus時にそれ以外のtextareaを無効化する
@@ -58,7 +58,7 @@ $(document).on('focus', '#comment_form_area', function (event) {
     document.getElementById('comment_button').removeAttribute('disabled');
   }
 
-  $(document).on('input', '#comment_form_area', function (event) {
+  $(document).on('input', '#comment_area', function (event) {
     event.preventDefault();
     const text = $(this).val();
     if (!text || !text.match(/\S/g)) {

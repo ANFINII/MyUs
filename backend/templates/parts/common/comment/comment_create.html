@@ -10,7 +10,7 @@
     <a href="{% url 'myus:userpage' user.nickname %}" data="{{ user.nickname }}" class="pjax_button_userpage">
       <img src="{{ user.image }}" title="{{ user.nickname }}" class="profile_image_comment">
     </a>
-    <textarea name="text" rows="1" placeholder="コメント入力" id="comment_form_area" class="textarea_br"></textarea>
+    <textarea name="text" rows="1" placeholder="コメント入力" id="comment_area" class="textarea_br"></textarea>
     <button type="submit" title="送信" id="comment_button" class="button blue xs form_button" disabled>コメント</button>
     {% else %}
     <img src="{% static 'img/user_icon.png' %}" title="Anonymous" class="profile_image_comment">
