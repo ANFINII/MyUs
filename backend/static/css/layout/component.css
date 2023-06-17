@@ -160,10 +160,10 @@
   height: 26px;
   padding: 0 0 1px 0;
   font-size: 14px;
-  cursor: pointer;
   color: rgb(255, 255, 255);
   border: 0px solid rgb(200, 200, 200);
   background: rgb(200, 200, 200);
+  cursor: pointer;
 }
 
 .button_square:hover {
