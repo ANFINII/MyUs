@@ -39,7 +39,7 @@ function sleep(waitMsec) {
 chatSocket.onmessage = function (event) {
   const data = JSON.parse(event.data)
   if (data['command'] === 'create_message') {
-    document.getElementById('message_form_button').setAttribute('disabled', true)
+    document.getElementById('message_button').setAttribute('disabled', true)
     const response = data['message']
     $('#chat_section_main_area').append(response.message_lists)
     $('#joined').html(response.joined)
@@ -193,17 +193,17 @@ quillChat.on('text-change', function() {
 
   const quillText = quillChat.getText()
   if (quillText.match(/\S/g)) {
-    document.getElementById('message_form_button').removeAttribute('disabled')
+    document.getElementById('message_button').removeAttribute('disabled')
   } else {
-    document.getElementById('message_form_button').setAttribute('disabled', true)
+    document.getElementById('message_button').setAttribute('disabled', true)
   }
 
   // ショートカット
   shortcut.add('Ctrl+Enter', function () {
-    $('#message_form_button').click()
+    $('#message_button').click()
   })
   shortcut.add('meta+Enter', function () {
-    $('#message_form_button').click()
+    $('#message_button').click()
   })
 })
 
@@ -214,7 +214,7 @@ $('#message_form').submit(function (event) {
   const delta = JSON.stringify(quillChat.getContents())
   const length = quillChat.getLength()
   quillChat.deleteText(0, length)
-  document.getElementById('message_form_button').setAttribute('disabled', true)
+  document.getElementById('message_button').setAttribute('disabled', true)
   chatSocket.send(JSON.stringify({
     'command': 'create_message',
     'chat_id': chatId,
