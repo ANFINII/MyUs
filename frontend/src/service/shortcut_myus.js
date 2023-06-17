@@ -81,7 +81,7 @@ $(document).on('focus', '#comment_area', function (event) {
 
 
 // updateショートカット
-$(document).on('focus', '.update_form_area', function (event) {
+$(document).on('focus', '.update_area', function (event) {
   event.preventDefault();
   const comment_id = $(this).closest('form').attr('comment-id');
 

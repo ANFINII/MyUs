@@ -3,7 +3,7 @@
     <img src="{{ comment.author.image }}" title="{{ comment.author.nickname }}" class="profile_image_comment">
   </a>
   <div class="comment_input_update">
-    <textarea name="update_text" rows="1" placeholder="コメント入力" id="comment_form_update_{{ comment.id }}" class="textarea_br update_form_area">{{ comment.text }}</textarea>
+    <textarea name="update_text" rows="1" placeholder="コメント入力" id="comment_form_update_{{ comment.id }}" class="textarea_br update_area">{{ comment.text }}</textarea>
     <div class="edit_update_footer">
       <button type="button" name="cancel" class="button xs edit_update_cancel">キャンセル</button>
       <button type="button" name="update" id="update_button_{{ comment.id }}" class="button green xs edit_update_button form_button" disabled>更新</button>
