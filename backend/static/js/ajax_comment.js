@@ -186,7 +186,7 @@ $(document).on('click', '.edit_delete', function (event) {
 })
 
 // replyショートカット
-$(document).on('focus', '.reply_form_area', function (event) {
+$(document).on('focus', '.reply_area', function (event) {
   event.preventDefault()
   const commentId = $(this).closest('form').attr('comment-id')
 

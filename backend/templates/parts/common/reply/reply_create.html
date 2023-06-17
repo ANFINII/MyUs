@@ -6,7 +6,7 @@
     <a href="{% url 'myus:userpage' user.nickname %}" data="{{ user.nickname }}" class="pjax_button_userpage">
       <img src="{{ user.image }}" title="{{ user.nickname }}" class="profile_image_reply">
     </a>
-    <textarea name="reply" rows="1" placeholder="返信コメント入力" id="reply_{{ comment.id }}" class="textarea_br reply_form_area"></textarea>
+    <textarea name="reply" rows="1" placeholder="返信コメント入力" id="reply_{{ comment.id }}" class="textarea_br reply_area"></textarea>
     <div class="reply_button_group">
       <button type="button" name="cancel" class="button xs reply_cancel_button">キャンセル</button>
       <button type="button" name="reply_form" id="reply_button_{{ comment.id }}" class="button blue xs reply_form form_button" disabled>コメント</button>
