@@ -907,6 +907,11 @@ div.field > button {
   border-bottom: 2px solid rgb(80, 170, 255);
 }
 
+.vanish {
+  display: none;
+  margin: 0;
+}
+
 .reply_button_open,
 .reply_button_close {
   padding: 0 6px 0 0;
@@ -924,11 +929,6 @@ div.field > button {
 .reply_list_button_close:hover {
   color: rgb(0, 100, 255);
   cursor: pointer;
-}
-
-.vanish {
-  display: none;
-  margin: 0;
 }
 
 .reply_button_group {
