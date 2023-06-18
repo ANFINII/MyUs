@@ -25,10 +25,10 @@ $('#comment_form').submit(function (event) {
 })
 
 // 返信コメント表示, 非表示
-$(document).on('click', '.reply_button', function () {
+$(document).on('click', '.reply_button_open', function () {
   const commentId = $(this).parent().attr('comment-id')
   document.getElementById('comment_aria_list_reply_' + commentId).classList.add('active')
-  document.getElementById('reply_button_' + commentId).classList.add('vanish')
+  document.getElementById('reply_button_open_' + commentId).classList.add('vanish')
   document.getElementById('reply_button_close_' + commentId).classList.remove('vanish')
   $('#reply_' + commentId).textareaAutoHeight()
 })
@@ -36,28 +36,28 @@ $(document).on('click', '.reply_button', function () {
 $(document).on('click', '.reply_button_close', function () {
   const commentId = $(this).parent().attr('comment-id')
   document.getElementById('comment_aria_list_reply_' + commentId).classList.remove('active')
-  document.getElementById('reply_button_' + commentId).classList.remove('vanish')
+  document.getElementById('reply_button_open_' + commentId).classList.remove('vanish')
   document.getElementById('reply_button_close_' + commentId).classList.add('vanish')
 })
 
-$(document).on('click', '.reply_list_button', function () {
+$(document).on('click', '.reply_list_button_open', function () {
   const commentId = $(this).parent().attr('comment-id')
   document.getElementById('reply_aria_list_' + commentId).classList.add('active')
-  document.getElementById('reply_list_button_' + commentId).classList.add('vanish')
-  document.getElementById('reply_list_button_cancel_' + commentId).classList.remove('vanish')
+  document.getElementById('reply_list_button_open_' + commentId).classList.add('vanish')
+  document.getElementById('reply_list_button_close_' + commentId).classList.remove('vanish')
 })
 
-$(document).on('click', '.reply_list_button_cancel', function () {
+$(document).on('click', '.reply_list_button_close', function () {
   const commentId = $(this).parent().attr('comment-id')
   document.getElementById('reply_aria_list_' + commentId).classList.remove('active')
-  document.getElementById('reply_list_button_' + commentId).classList.remove('vanish')
-  document.getElementById('reply_list_button_cancel_' + commentId).classList.add('vanish')
+  document.getElementById('reply_list_button_open_' + commentId).classList.remove('vanish')
+  document.getElementById('reply_list_button_close_' + commentId).classList.add('vanish')
 })
 
 $(document).on('click', '.reply_cancel_button', function () {
   const commentId = $(this).closest('form').attr('comment-id')
   document.getElementById('comment_aria_list_reply_' + commentId).classList.remove('active')
-  document.getElementById('reply_button_' + commentId).classList.remove('vanish')
+  document.getElementById('reply_button_open_' + commentId).classList.remove('vanish')
   document.getElementById('reply_button_close_' + commentId).classList.add('vanish')
 })
 
@@ -71,7 +71,7 @@ $(document).on('click', '.reply_form', function (event) {
   const text = $('#reply_' + commentId).val().replace(/\n+$/g, '')
   $('#comment_aria_list_reply_' + commentId)[0].reset()
   document.getElementById('reply_' + commentId).style.height = '39px'
-  document.getElementById('reply_button_' + commentId).setAttribute('disabled', true)
+  document.getElementById('reply_form_button_' + commentId).setAttribute('disabled', true)
   $.ajax({
     url: '/reply/form',
     type: 'POST',
@@ -201,7 +201,7 @@ $(document).on('focus', '.reply_area', function (event) {
   const text = $(this).val()
   if (text || text.match(/\S/g)) {
     // disabled属性を削除
-    document.getElementById('reply_button_' + commentId).removeAttribute('disabled')
+    document.getElementById('reply_form_button_' + commentId).removeAttribute('disabled')
   }
 
   $(document).on('input', '#reply_' + commentId, function (event) {
@@ -209,17 +209,17 @@ $(document).on('focus', '.reply_area', function (event) {
     const text = $(this).val()
     if (!text || !text.match(/\S/g)) {
       // disabled属性を設定
-      document.getElementById('reply_button_' + commentId).setAttribute('disabled', true)
+      document.getElementById('reply_form_button_' + commentId).setAttribute('disabled', true)
     } else {
       // disabled属性を削除
-      document.getElementById('reply_button_' + commentId).removeAttribute('disabled')
+      document.getElementById('reply_form_button_' + commentId).removeAttribute('disabled')
 
       // ショートカット
       shortcut.add('Ctrl+Enter', function () {
-        $('#reply_button_' + commentId).click()
+        $('#reply_form_button_' + commentId).click()
       })
       shortcut.add('meta+Enter', function () {
-        $('#reply_button_' + commentId).click()
+        $('#reply_form_button_' + commentId).click()
       })
     }
   })

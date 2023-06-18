@@ -54,7 +54,7 @@ chatSocket.onmessage = function (event) {
   } else if (data['command'] === 'create_reply_message') {
     const response = data['message']
     if ('/chat/detail/' + chatId + '/thread/' + response.parent_id === location.pathname) {
-      document.getElementById('reply_button').setAttribute('disabled', true)
+      document.getElementById('reply_form_button').setAttribute('disabled', true)
       $('#joined').html(response.joined)
       $('#reply_count_' + response.parent_id).html('返信 ' + response.reply_count + ' 件')
       $('#chat_section_thread_area_' + response.parent_id).append(response.reply_lists)
@@ -256,17 +256,17 @@ quillReply.on('text-change', function() {
 
   const quillText = quillReply.getText()
   if (quillText.match(/\S/g)) {
-    document.getElementById('reply_button').removeAttribute('disabled')
+    document.getElementById('reply_form_button').removeAttribute('disabled')
   } else {
-    document.getElementById('reply_button').setAttribute('disabled', true)
+    document.getElementById('reply_form_button').setAttribute('disabled', true)
   }
 
   // ショートカット
   shortcut.add('Ctrl+Enter', function () {
-    $('#reply_button').click()
+    $('#reply_form_button').click()
   })
   shortcut.add('meta+Enter', function () {
-    $('#reply_button').click()
+    $('#reply_form_button').click()
   })
 })
 
@@ -278,7 +278,7 @@ $('#reply_form').submit(function (event) {
   const delta = JSON.stringify(quillReply.getContents())
   const length = quillReply.getLength()
   quillReply.deleteText(0, length)
-  document.getElementById('reply_button').setAttribute('disabled', true)
+  document.getElementById('reply_form_button').setAttribute('disabled', true)
   chatSocket.send(JSON.stringify({
     'command': 'create_reply_message',
     'chat_id': chatId,

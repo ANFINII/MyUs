@@ -907,21 +907,21 @@ div.field > button {
   border-bottom: 2px solid rgb(80, 170, 255);
 }
 
-.reply_button,
+.reply_button_open,
 .reply_button_close {
   padding: 0 6px 0 0;
   color: rgb(100, 100, 100);
 }
 
-.reply_list_button,
-.reply_list_button_cancel {
+.reply_list_button_open,
+.reply_list_button_close {
   color: rgb(100, 100, 100);
 }
 
-.reply_button:hover,
+.reply_button_open:hover,
 .reply_button_close:hover,
-.reply_list_button:hover,
-.reply_list_button_cancel:hover {
+.reply_list_button_open:hover,
+.reply_list_button_close:hover {
   color: rgb(0, 100, 255);
   cursor: pointer;
 }

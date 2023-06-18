@@ -32,14 +32,14 @@
     {% endif %}
     <span id="like_count_{{ comment.id }}" class="like_count rgb100">{{ comment.total_like|intcomma }}</span>
 
-    <label id="reply_button_{{ comment.id }}" class="reply_button">▼ 返信</label>
+    <label id="reply_button_open_{{ comment.id }}" class="reply_button_open">▼ 返信</label>
     <label id="reply_button_close_{{ comment.id }}" class="reply_button_close vanish">▲ 返信</label>
 
-    <label id="reply_list_button_{{ comment.id }}" class="reply_list_button">
+    <label id="reply_list_button_open_{{ comment.id }}" class="reply_list_button_open">
       <span id="reply_count_open_{{ comment.id }}" class="reply_count">▼ スレッド {{ comment.reply_count|intcomma }} 件</span>
       <span>表示</span>
     </label>
-    <label id="reply_list_button_cancel_{{ comment.id }}" class="reply_list_button_cancel vanish">
+    <label id="reply_list_button_close_{{ comment.id }}" class="reply_list_button_close vanish">
       <span id="reply_count_close_{{ comment.id }}" class="reply_count">▲ スレッド {{ comment.reply_count|intcomma }} 件</span>
       <span>非表示</span>
     </label>
