@@ -29,15 +29,15 @@ $(document).on('click', '.reply_button', function () {
   const commentId = $(this).parent().attr('comment-id')
   document.getElementById('comment_aria_list_reply_' + commentId).classList.add('active')
   document.getElementById('reply_button_' + commentId).classList.add('vanish')
-  document.getElementById('reply_button_cancel_' + commentId).classList.remove('vanish')
+  document.getElementById('reply_button_close_' + commentId).classList.remove('vanish')
   $('#reply_' + commentId).textareaAutoHeight()
 })
 
-$(document).on('click', '.reply_button_cancel', function () {
+$(document).on('click', '.reply_button_close', function () {
   const commentId = $(this).parent().attr('comment-id')
   document.getElementById('comment_aria_list_reply_' + commentId).classList.remove('active')
   document.getElementById('reply_button_' + commentId).classList.remove('vanish')
-  document.getElementById('reply_button_cancel_' + commentId).classList.add('vanish')
+  document.getElementById('reply_button_close_' + commentId).classList.add('vanish')
 })
 
 $(document).on('click', '.reply_list_button', function () {
@@ -58,7 +58,7 @@ $(document).on('click', '.reply_cancel_button', function () {
   const commentId = $(this).closest('form').attr('comment-id')
   document.getElementById('comment_aria_list_reply_' + commentId).classList.remove('active')
   document.getElementById('reply_button_' + commentId).classList.remove('vanish')
-  document.getElementById('reply_button_cancel_' + commentId).classList.add('vanish')
+  document.getElementById('reply_button_close_' + commentId).classList.add('vanish')
 })
 
 // コメントリプライ

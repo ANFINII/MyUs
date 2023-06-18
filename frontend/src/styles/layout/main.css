@@ -908,7 +908,7 @@ div.field > button {
 }
 
 .reply_button,
-.reply_button_cancel {
+.reply_button_close {
   padding: 0 6px 0 0;
   color: rgb(100, 100, 100);
 }
@@ -919,7 +919,7 @@ div.field > button {
 }
 
 .reply_button:hover,
-.reply_button_cancel:hover,
+.reply_button_close:hover,
 .reply_list_button:hover,
 .reply_list_button_cancel:hover {
   color: rgb(0, 100, 255);
