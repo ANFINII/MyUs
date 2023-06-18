@@ -1267,10 +1267,10 @@ div.field > button {
   width: calc(100% - 36px);
   max-width: 580px;
   height: 330px;
-  padding: 18px;
+  padding: 20px;
   opacity: 0;
   visibility: hidden;
-  border-radius: 8px;
+  border-radius: 10px;
   background: rgb(255, 255, 255);
   transform: translate(-50%, -50%) scale(0.9);
   transition: 0.3s;
