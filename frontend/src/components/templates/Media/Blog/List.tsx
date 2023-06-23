@@ -4,7 +4,7 @@ import ArticleBlog from 'components/elements/Article/Blog'
 
 interface Props {
   query?: Query
-  datas: Array<ImageResponse>
+  datas: ImageResponse[]
 }
 
 export default function BlogList(props: Props) {

@@ -5,7 +5,7 @@ const query: Query = {
   name: 'test',
   count: 0,
 }
-const datas: Array<MediaResponse> = []
+const datas: MediaResponse[] = []
 
 export default function TodoListPage() {
   return <TodoList query={query} datas={datas} />

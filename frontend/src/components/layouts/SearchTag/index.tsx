@@ -9,7 +9,7 @@ interface searchtag {
 interface Props {
   isAuthenticated: boolean
   csrfToken?: string
-  searchtag: Array<searchtag>
+  searchtag: searchtag[]
 }
 
 export default function SearchTag(props: Props) {

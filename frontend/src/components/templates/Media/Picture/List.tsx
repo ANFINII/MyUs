@@ -4,7 +4,7 @@ import ArticlePicture from 'components/elements/Article/Picture'
 
 interface Props {
   query?: Query
-  datas: Array<ImageResponse>
+  datas: ImageResponse[]
 }
 
 export default function PictureList(props: Props) {

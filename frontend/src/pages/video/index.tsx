@@ -21,7 +21,7 @@ const query: Query = {
   count: 0,
 }
 
-const datas: Array<VideoResponse> = [
+const datas: VideoResponse[] = [
   {
     id: 1,
     title: '動画テスト1',

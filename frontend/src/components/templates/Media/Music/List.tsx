@@ -4,7 +4,7 @@ import ArticleMusic from 'components/elements/Article/Music'
 
 interface Props {
   query?: Query
-  datas: Array<MusicResponse>
+  datas: MusicResponse[]
 }
 
 export default function MusicList(props: Props) {

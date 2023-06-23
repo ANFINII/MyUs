@@ -5,7 +5,7 @@ const query: Query = {
   name: 'test',
   count: 0,
 }
-const datas: Array<FollowResponse> = []
+const datas: FollowResponse[] = []
 
 export default function FollowerListPage() {
   return <FollowerList is_authenticated={true} query={query} datas={datas} />

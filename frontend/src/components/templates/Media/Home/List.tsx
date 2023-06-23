@@ -9,12 +9,12 @@ import ArticleChat from 'components/elements/Article/Chat'
 
 interface Props {
   query?: Query
-  videos: Array<VideoResponse>
-  datas?: Array<VideoResponse>
-  // datas: Array<VideoResponse>
-  // datas: Array<VideoResponse>
-  // datas: Array<VideoResponse>
-  // datas: Array<VideoResponse>
+  videos: VideoResponse[]
+  datas?: VideoResponse[]
+  // datas: VideoResponse[]
+  // datas: VideoResponse[]
+  // datas: VideoResponse[]
+  // datas: VideoResponse[]
 }
 
 export default function HomeList(props: Props) {

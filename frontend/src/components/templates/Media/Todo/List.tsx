@@ -4,7 +4,7 @@ import ArticleTodo from 'components/elements/Article/Todo'
 
 interface Props {
   query?: Query
-  datas: Array<MediaResponse>
+  datas: MediaResponse[]
 }
 
 export default function TodoList(props: Props) {

@@ -10,7 +10,7 @@ interface Props {
   is_authenticated: boolean
   query?: Query
   mypage?: MypageResponse
-  datas: Array<FollowResponse>
+  datas: FollowResponse[]
 }
 
 export default function FollowList(props: Props) {

@@ -4,7 +4,7 @@ import ArticleVideo from 'components/elements/Article/Video'
 
 interface Props {
   query?: Query
-  datas: Array<VideoResponse>
+  datas: VideoResponse[]
 }
 
 export default function VideoList(props: Props) {

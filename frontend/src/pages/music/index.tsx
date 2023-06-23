@@ -6,7 +6,7 @@ const query: Query = {
   count: 0,
 }
 
-const datas: Array<MusicResponse> = [
+const datas: MusicResponse[] = [
   {
     id: 1,
     title: '音楽テスト1',
