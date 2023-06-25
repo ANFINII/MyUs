@@ -1,6 +1,6 @@
 import {Query, MediaResponse} from 'utils/type'
 import Main from 'components/layouts/Main'
-import ArticleComic from 'components/elements/Article/Comic'
+import ArticleComic from 'components/wigets/Article/Comic'
 
 interface Props {
   query?: Query

@@ -1,6 +1,6 @@
 import {Query, VideoResponse} from 'utils/type'
 import Main from 'components/layouts/Main'
-import ArticleVideo from 'components/elements/Article/Video'
+import ArticleVideo from 'components/wigets/Article/Video'
 
 interface Props {
   query?: Query

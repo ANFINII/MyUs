@@ -1,11 +1,11 @@
 import {Query, VideoResponse} from 'utils/type'
 import Main from 'components/layouts/Main'
-import ArticleVideo from 'components/elements/Article/Video'
-import ArticleMusic from 'components/elements/Article/Music'
-import ArticleComic from 'components/elements/Article/Comic'
-import ArticlePicture from 'components/elements/Article/Picture'
-import ArticleBlog from 'components/elements/Article/Blog'
-import ArticleChat from 'components/elements/Article/Chat'
+import ArticleVideo from 'components/wigets/Article/Video'
+import ArticleMusic from 'components/wigets/Article/Music'
+import ArticleComic from 'components/wigets/Article/Comic'
+import ArticlePicture from 'components/wigets/Article/Picture'
+import ArticleBlog from 'components/wigets/Article/Blog'
+import ArticleChat from 'components/wigets/Article/Chat'
 
 interface Props {
   query?: Query

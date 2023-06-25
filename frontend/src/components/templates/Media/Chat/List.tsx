@@ -1,6 +1,6 @@
 import {Query, ChatResponse} from 'utils/type'
 import Main from 'components/layouts/Main'
-import ArticleChat from 'components/elements/Article/Chat'
+import ArticleChat from 'components/wigets/Article/Chat'
 
 interface Props {
   query?: Query

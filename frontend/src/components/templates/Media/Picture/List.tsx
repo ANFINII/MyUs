@@ -1,6 +1,6 @@
 import {Query, ImageResponse} from 'utils/type'
 import Main from 'components/layouts/Main'
-import ArticlePicture from 'components/elements/Article/Picture'
+import ArticlePicture from 'components/wigets/Article/Picture'
 
 interface Props {
   query?: Query

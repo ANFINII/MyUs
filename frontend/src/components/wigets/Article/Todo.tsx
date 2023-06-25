@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import config from 'api/config'
 import {MediaResponse} from 'utils/type'
-import AuthorSpace from 'components/elements/Common/AuthorSpace'
-import ContentTitle from 'components/elements/Common/ContentTitle'
+import AuthorSpace from 'components/wigets/Common/AuthorSpace'
+import ContentTitle from 'components/wigets/Common/ContentTitle'
 
 interface Props {data: MediaResponse}
 
