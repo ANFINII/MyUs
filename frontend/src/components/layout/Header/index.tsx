@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import SideMenu from 'components/layouts/Header/SideMenu'
-import DropMenuCloud from 'components/layouts/Header/DropMenuCloud'
-import DropMenuNotice from 'components/layouts/Header/DropMenuNotice'
-import DropMenuProfile from 'components/layouts/Header/DropMenuProfile'
+import SideMenu from 'components/layout/Header/SideMenu'
+import DropMenuCloud from 'components/layout/Header/DropMenuCloud'
+import DropMenuNotice from 'components/layout/Header/DropMenuNotice'
+import DropMenuProfile from 'components/layout/Header/DropMenuProfile'
 
 export default function Header() {
   const search = ""

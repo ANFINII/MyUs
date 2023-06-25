@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Router from 'next/router'
 import {Query, MypageResponse, FollowResponse} from 'utils/type'
 import config from 'api/config'
-import Main from 'components/layouts/Main'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
 interface Props {

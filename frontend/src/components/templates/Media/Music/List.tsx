@@ -1,5 +1,5 @@
 import {Query, MusicResponse} from 'utils/type'
-import Main from 'components/layouts/Main'
+import Main from 'components/layout/Main'
 import ArticleMusic from 'components/wigets/Article/Music'
 
 interface Props {

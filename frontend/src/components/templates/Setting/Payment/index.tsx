@@ -1,4 +1,4 @@
-import Main from 'components/layouts/Main'
+import Main from 'components/layout/Main'
 import Link from 'next/link'
 import Button from 'components/parts/Button'
 

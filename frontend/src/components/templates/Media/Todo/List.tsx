@@ -1,5 +1,5 @@
 import {Query, MediaResponse} from 'utils/type'
-import Main from 'components/layouts/Main'
+import Main from 'components/layout/Main'
 import ArticleTodo from 'components/wigets/Article/Todo'
 
 interface Props {

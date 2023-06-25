@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import Footer from 'components/layouts/Footer'
+import Footer from 'components/layout/Footer'
 
 
 export default function PasswordResetForm() {

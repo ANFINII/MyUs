@@ -1,4 +1,4 @@
-import Main from 'components/layouts/Main'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'

@@ -1,5 +1,5 @@
 import {Query, ImageResponse} from 'utils/type'
-import Main from 'components/layouts/Main'
+import Main from 'components/layout/Main'
 import ArticleBlog from 'components/wigets/Article/Blog'
 
 interface Props {

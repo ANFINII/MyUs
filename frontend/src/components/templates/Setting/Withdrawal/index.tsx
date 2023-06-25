@@ -1,6 +1,6 @@
 import Router from 'next/router'
-import Main from 'components/layouts/Main'
-import Footer from 'components/layouts/Footer'
+import Main from 'components/layout/Main'
+import Footer from 'components/layout/Footer'
 import Input from 'components/parts/Input'
 import Button from 'components/parts/Button'
 

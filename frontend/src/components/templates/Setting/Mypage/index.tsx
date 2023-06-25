@@ -3,8 +3,8 @@ import Image from 'next/image'
 import Router from 'next/router'
 import config from 'api/config'
 import {MypageResponse} from 'utils/type'
-import Main from 'components/layouts/Main'
-import Footer from 'components/layouts/Footer'
+import Main from 'components/layout/Main'
+import Footer from 'components/layout/Footer'
 import Button from 'components/parts/Button'
 
 interface Props {mypage: MypageResponse}

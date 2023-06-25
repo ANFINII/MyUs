@@ -1,5 +1,5 @@
-import Main from 'components/layouts/Main'
-import Footer from 'components/layouts/Footer'
+import Main from 'components/layout/Main'
+import Footer from 'components/layout/Footer'
 
 export default function Notification() {
   return (

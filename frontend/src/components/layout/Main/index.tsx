@@ -1,5 +1,5 @@
 import {Query} from 'utils/type'
-import Meta from 'components/layouts/Head/Meta'
+import Meta from 'components/layout/Head/Meta'
 
 interface Props {
   title?: string

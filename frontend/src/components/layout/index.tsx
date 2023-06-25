@@ -1,6 +1,6 @@
-import Header from 'components/layouts/Header'
-import SideBar from 'components/layouts/SideBar'
-import SearchTag from 'components/layouts/SearchTag'
+import Header from 'components/layout/Header'
+import SideBar from 'components/layout/SideBar'
+import SearchTag from 'components/layout/SearchTag'
 
 interface Props {children: React.ReactNode}
 

@@ -1,5 +1,5 @@
 import {Query, VideoResponse} from 'utils/type'
-import Main from 'components/layouts/Main'
+import Main from 'components/layout/Main'
 import ArticleVideo from 'components/wigets/Article/Video'
 import ArticleMusic from 'components/wigets/Article/Music'
 import ArticleComic from 'components/wigets/Article/Comic'
