@@ -432,21 +432,11 @@ class PaymentSuccess(TemplateView):
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, PaymentSuccess, **kwargs)
 
-
 class PaymentCancel(TemplateView):
     template_name = 'setting/payment/cancel.html'
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, PaymentCancel, **kwargs)
-
-
-class ChangePlan(TemplateView):
-    model = User
-    template_name = 'setting/payment/change_plan.html'
-
-    def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, ChangePlan, **kwargs)
-
 
 def create_checkout_session(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -462,6 +452,13 @@ def create_checkout_session(request):
         return JsonResponse({'id': checkout_session.id, 'publicKey': settings.STRIPE_PUBLIC_KEY})
     except Exception as e:
         return JsonResponse({'error': str(e)})
+
+
+def get_subscription(stripe_customer_id):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    customer = stripe.Customer.retrieve(stripe_customer_id)
+    subscription = customer.subscriptions.data[0]
+    return subscription.id
 
 
 # 通知設定
@@ -483,8 +480,8 @@ def notification_update(request):
         notification_setting = NotificationSetting.objects.get(user=user)
         notification_setting_update(is_notification, notification_type, notification_setting)
     context = {
-        'notification_setting_lists': render_to_string('parts/notification_setting.html', {
-            'notification_setting_list': NotificationSetting.objects.filter(user=user),
+        'notification_setting_html': render_to_string('parts/notification_setting.html', {
+            'notification_setting': NotificationSetting.objects.filter(user=user).first(),
         }, request=request)
     }
     return JsonResponse(context)

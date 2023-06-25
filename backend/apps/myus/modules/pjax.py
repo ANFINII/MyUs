@@ -111,5 +111,5 @@ def pjax_context(request, href):
         context = {'expired_seconds': 60}
     if href == 'setting/notification':
         template = 'setting/notification_content.html'
-        context = {'notification_setting_list': NotificationSetting.objects.filter(user=user.id)}
+        context = {'notification_setting': NotificationSetting.objects.filter(user=user.id).first()}
     return {'html': render_to_string(template, context, request)}

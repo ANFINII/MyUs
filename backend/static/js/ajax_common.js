@@ -180,7 +180,7 @@ $(document).on('click', '.toggle_button', function (event) {
     timeout: 10000,
   })
     .done(function (response) {
-      $('#notification_table').html(response.notification_setting_lists)
+      $('#notification_table').html(response.notification_setting_html)
     })
     .fail(function (response) {
       console.log(response)
