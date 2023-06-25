@@ -1,3 +1,4 @@
+import { user } from 'types/type'
 import Main from 'components/layout/Main'
 import Footer from 'components/layout/Footer'
 
@@ -26,7 +27,7 @@ export default function Notification(props: Props) {
     <Main title="MyUs通知">
       <article className="article_table">
         <h1>通知設定</h1>
-        {user.is_authenticated ? (
+        {user.isAuthenticated ? (
           <>
             <table id="notification_table" className="table">
               <tbody>
