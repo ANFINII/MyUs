@@ -1,7 +1,7 @@
-import {Query, MediaResponse} from 'utils/type'
+import { SearchQuery, MediaResponse } from 'types/media'
 import TodoList from 'components/templates/Media/Todo/List'
 
-const query: Query = {
+const query: SearchQuery = {
   name: 'test',
   count: 0,
 }

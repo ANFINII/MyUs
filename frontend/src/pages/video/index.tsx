@@ -1,5 +1,5 @@
-import {GetServerSideProps} from 'next'
-import {Query, VideoResponse} from 'utils/type'
+import { GetServerSideProps } from 'next'
+import { SearchQuery, VideoResponse } from 'types/media'
 import VideoList from 'components/templates/Media/Video/List'
 
 export async function getVideoList() {
@@ -12,11 +12,11 @@ export async function getVideoList() {
 export const getServerSideProps: GetServerSideProps = async () => {
   const data = await getVideoList()
   return {
-    props: {data},
+    props: { data },
   }
 }
 
-const query: Query = {
+const query: SearchQuery = {
   name: 'test',
   count: 0,
 }
@@ -40,7 +40,7 @@ const datas: VideoResponse[] = [
       nickname: 'アンさん',
       image: '/media/users/images_user/user_1/An_Okina.jpg',
     },
-    model_name: 'video'
+    modelName: 'video',
   },
   {
     id: 2,
@@ -60,7 +60,7 @@ const datas: VideoResponse[] = [
       nickname: 'ショウエン',
       image: '/media/users/images_user/user_2/MyUs_Profile_02.jpg',
     },
-    model_name: 'video'
+    modelName: 'video',
   },
   {
     id: 3,
@@ -80,7 +80,7 @@ const datas: VideoResponse[] = [
       nickname: 'ソウヒ',
       image: '/media/users/images_user/user_3/MyUs_Profile_03.jpg',
     },
-    model_name: 'video'
+    modelName: 'video',
   },
   {
     id: 4,
@@ -100,7 +100,7 @@ const datas: VideoResponse[] = [
       nickname: 'ケイマ',
       image: '/media/users/images_user/user_4/MyUs_Profile_04.jpg',
     },
-    model_name: 'video'
+    modelName: 'video',
   },
   {
     id: 5,
@@ -120,7 +120,7 @@ const datas: VideoResponse[] = [
       nickname: 'アン',
       image: '/media/users/images_user/user_5/MyUs_Profile_01.jpg',
     },
-    model_name: 'video'
+    modelName: 'video',
   },
 ]
 

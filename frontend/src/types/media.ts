@@ -1,46 +1,12 @@
-export interface ProfileResponse {
-  avatar: string
-  email: string
-  username: string
-  nickname: string
-  fullname: string
-  lastname: string
-  firstname: string
-  year: number
-  month: number
-  day: number
-  age: number
-  gender: string
-  phone: string
-  country_code: string
-  postal_code: string
-  prefecture: string
-  city: string
-  address: string
-  building: string
-  introduction: string
-  [key: number]: number
-}
+import { Mypage } from 'types/auth'
 
-export interface MypageResponse {
-  banner: string
-  nickname: string
-  email: string
-  follower_count: number
-  following_count: number
-  plan: string
-  plan_date: string
-  is_advertise: boolean
-  content: string
-}
-
-export interface author {
+export interface Author {
   id: number
   nickname: string
   image: string
 }
 
-export interface Query {
+export interface SearchQuery {
   name: string
   count: number
 }
@@ -55,8 +21,8 @@ export interface MediaResponse {
   publish: boolean
   created: string
   updated: string
-  author: author
-  model_name: string
+  author: Author
+  modelName: string
 }
 
 export interface VideoResponse extends MediaResponse {
@@ -91,6 +57,6 @@ export interface FollowResponse {
   comment_count: number
   publish: boolean
   created: string
-  mypage: MypageResponse
-  author: author
+  mypage: Mypage
+  author: Author
 }

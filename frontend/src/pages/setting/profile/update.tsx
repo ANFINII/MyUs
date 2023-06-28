@@ -1,5 +1,5 @@
-import {GetServerSideProps} from 'next'
-import {ProfileResponse} from 'utils/type'
+import { GetServerSideProps } from 'next'
+import { Profile } from 'types/auth'
 import ProfileUpdate from 'components/templates/Setting/Profile/Update'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -7,13 +7,14 @@ import ProfileUpdate from 'components/templates/Setting/Profile/Update'
 //  const res = await axios.get('/api/profile', {
 //   headers: {cookie: cookie!}
 //  })
-//  const data: ProfileResponse = res.data
+//  const data: profile = res.data
 //  return {
 //   props: {user: data}
 //  }
 // }
 
-const user: ProfileResponse = {
+const user: Profile = {
+  id: 1,
   avatar: '/media/users/images_user/user_5/MyUs_Profile_01.jpg',
   email: 'anfinii56@gmail.com',
   username: 'anfinii56',
