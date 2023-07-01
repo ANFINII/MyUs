@@ -1,10 +1,10 @@
-import { SearchQuery } from 'types/media'
+import { Query } from 'types/media'
 import Meta from 'components/layout/Head/Meta'
 
 interface Props {
   title?: string
   hero?: string
-  query?: SearchQuery
+  query?: Query
   children: React.ReactNode
 }
 

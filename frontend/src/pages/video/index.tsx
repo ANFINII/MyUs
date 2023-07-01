@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { SearchQuery, VideoResponse } from 'types/media'
+import { Query, VideoResponse } from 'types/media'
 import VideoList from 'components/templates/Media/Video/List'
 
 export async function getVideoList() {
@@ -16,7 +16,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-const query: SearchQuery = {
+const query: Query = {
   name: 'test',
   count: 0,
 }
