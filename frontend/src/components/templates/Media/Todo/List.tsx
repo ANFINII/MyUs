@@ -1,4 +1,4 @@
-import {Query, MediaResponse} from 'utils/type'
+import {Query, MediaResponse} from 'types/media'
 import Main from 'components/layout/Main'
 import ArticleTodo from 'components/wigets/Article/Todo'
 

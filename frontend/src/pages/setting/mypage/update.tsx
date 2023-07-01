@@ -1,4 +1,4 @@
-import {MypageResponse} from 'utils/type'
+import {MypageResponse} from 'types/media'
 import MypageUpdate from 'components/templates/Setting/Mypage/Update'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {

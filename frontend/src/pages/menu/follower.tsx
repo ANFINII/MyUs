@@ -1,4 +1,4 @@
-import {Query, FollowResponse} from 'utils/type'
+import {Query, FollowResponse} from 'types/media'
 import FollowerList from 'components/templates/Follow/FollowerList'
 
 const query: Query = {

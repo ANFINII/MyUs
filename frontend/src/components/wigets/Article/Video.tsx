@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import {VideoResponse} from 'utils/type'
+import {VideoResponse} from 'types/media'
 import config from 'api/config'
 import AuthorSpace from 'components/wigets/Common/AuthorSpace'
 import ContentTitle from 'components/wigets/Common/ContentTitle'

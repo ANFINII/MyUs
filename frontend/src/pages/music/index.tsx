@@ -1,4 +1,4 @@
-import {Query, MusicResponse} from 'utils/type'
+import {Query, MusicResponse} from 'types/media'
 import MusicList from 'components/templates/Media/Music/List'
 
 const query: Query = {

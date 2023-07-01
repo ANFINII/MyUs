@@ -1,7 +1,7 @@
 
 
 import Router from 'next/router'
-import {ProfileResponse} from 'utils/type'
+import {ProfileResponse} from 'types/media'
 import {prefectures} from 'utils/lib/constants'
 import selectDate from 'utils/lib/selectDate'
 import Main from 'components/layout/Main'

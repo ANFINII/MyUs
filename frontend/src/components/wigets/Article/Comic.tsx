@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import {ImageResponse} from 'utils/type'
+import {ImageResponse} from 'types/media'
 import config from 'api/config'
 import AuthorSpace from 'components/wigets/Common/AuthorSpace'
 import ContentTitle from 'components/wigets/Common/ContentTitle'

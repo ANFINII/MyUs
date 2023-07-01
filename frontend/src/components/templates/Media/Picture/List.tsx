@@ -1,4 +1,4 @@
-import {Query, ImageResponse} from 'utils/type'
+import {Query, ImageResponse} from 'types/media'
 import Main from 'components/layout/Main'
 import ArticlePicture from 'components/wigets/Article/Picture'
 

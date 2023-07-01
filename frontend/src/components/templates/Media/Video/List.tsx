@@ -1,4 +1,4 @@
-import {Query, VideoResponse} from 'utils/type'
+import {Query, VideoResponse} from 'types/media'
 import Main from 'components/layout/Main'
 import ArticleVideo from 'components/wigets/Article/Video'
 

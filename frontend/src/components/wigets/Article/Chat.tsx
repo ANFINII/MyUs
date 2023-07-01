@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import config from 'api/config'
-import {ChatResponse} from 'utils/type'
+import {ChatResponse} from 'types/media'
 import AuthorSpace from 'components/wigets/Common/AuthorSpace'
 
 interface Props {data: ChatResponse}

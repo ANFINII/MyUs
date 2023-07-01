@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import config from 'api/config'
-import {MediaResponse} from 'utils/type'
+import {MediaResponse} from 'types/media'
 import AuthorSpace from 'components/wigets/Common/AuthorSpace'
 import ContentTitle from 'components/wigets/Common/ContentTitle'
 

@@ -1,4 +1,4 @@
-import {Query, ChatResponse} from 'utils/type'
+import {Query, ChatResponse} from 'types/media'
 import Main from 'components/layout/Main'
 import ArticleChat from 'components/wigets/Article/Chat'
 

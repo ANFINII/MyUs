@@ -1,4 +1,4 @@
-import {Query, ImageResponse} from 'utils/type'
+import {Query, ImageResponse} from 'types/media'
 import PictureList from 'components/templates/Media/Picture/List'
 
 const query: Query = {

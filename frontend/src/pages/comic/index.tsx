@@ -1,4 +1,4 @@
-import {Query, MediaResponse} from 'utils/type'
+import {Query, MediaResponse} from 'types/media'
 import ComicList from 'components/templates/Media/Comic/List'
 
 const query: Query = {

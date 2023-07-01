@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import Router from 'next/router'
-import {Query, MypageResponse, FollowResponse} from 'utils/type'
+import {Query, MypageResponse, FollowResponse} from 'types/media'
 import config from 'api/config'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'

@@ -1,5 +1,5 @@
 import {GetServerSideProps} from 'next'
-import {MypageResponse} from 'utils/type'
+import {MypageResponse} from 'types/media'
 import Mypage from 'components/templates/Setting/Mypage'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
