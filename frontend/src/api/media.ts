@@ -1,4 +1,4 @@
-import {VideoResponse} from 'utils/type'
+import {VideoResponse} from 'types/media'
 import config from 'api/config'
 
 const parameter = {
