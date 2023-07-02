@@ -1,4 +1,4 @@
-import {Query, ImageResponse} from 'types/media'
+import { Query, ImageResponse } from 'types/media'
 import BlogList from 'components/templates/Media/Blog/List'
 
 const query: Query = {

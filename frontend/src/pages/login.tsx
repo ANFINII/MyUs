@@ -1,7 +1,7 @@
+import { useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import Router from 'next/router'
-import {useState} from 'react'
 import Main from 'components/layout/Main'
 import Footer from 'components/layout/Footer'
 import Input from 'components/parts/Input'
@@ -43,8 +43,8 @@ export default function Login() {
             <Link href="/setting/password_reset">パスワードをリセット</Link>
           </div>
 
-          <Button blue size="xl" type="submit" onClick={loginClicked} className="full mb_24">ログイン</Button>
-          <Button green size="xl" className="full mb_24" onClick={() => Router.push('/registration/signup')}>アカウント登録</Button>
+          <Button blue size="xl" type="submit" name="ログイン" className="full mb_24" onClick={loginClicked}  />
+          <Button green size="xl" name="アカウント登録" className="full mb_24" onClick={() => Router.push('/registration/signup')} />
         </form>
 
         <Footer />

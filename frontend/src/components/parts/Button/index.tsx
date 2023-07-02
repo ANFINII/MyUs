@@ -10,38 +10,39 @@ interface Color {
 interface Props extends Color {
   size?: 'xl' | 'xs'
   type?: 'submit' | 'reset' | 'button'
+  name: string
   value?: string
   className?: string
   disabled?: boolean
-  children?: string | string[]
   onClick?(): void
 }
 
-export default function Button(props: Props) {
-  const {blue, purple, red, green} = props
-  const {size, type, value, className, disabled, children, onClick} = props
+export default function Button(props: Props): JSX.Element {
+  const { blue, purple, red, green } = props
+  const { size, type, name, value, className, disabled, onClick } = props
 
-  const colorCheck = (isColor: boolean | undefined, name: string) => {
+  const colorCheck = (name: string, isColor?: boolean): string => {
     return isColor ? ' ' + style[name] : ''
   }
 
-  const sizeCheck = (name: string) => {
-    return size ===  name ? ' ' + style[name] : ''
+  const sizeCheck = (name: string): string => {
+    return size === name ? ' ' + style[name] : ''
   }
 
   return (
     <button type={type} value={value} onClick={onClick} disabled={disabled}
       className={
         style.button +
-        colorCheck(blue, 'blue') +
-        colorCheck(purple, 'purple') +
-        colorCheck(red, 'red') +
-        colorCheck(green, 'green') +
+        colorCheck('blue', blue) +
+        colorCheck('purple', purple) +
+        colorCheck('red', red) +
+        colorCheck('green', green) +
         sizeCheck('xl') +
         sizeCheck('xs') +
         (className ? ' ' + className : '')
       }
-    >{children}
+    >
+      {name}
     </button>
   )
 }

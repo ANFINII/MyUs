@@ -1,0 +1,8 @@
+.radio {
+  fill: rgb(0, 40, 80);
+  cursor: pointer;
+}
+
+.radio.active {
+  fill: rgb(0, 120, 220);
+}
