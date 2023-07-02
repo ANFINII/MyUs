@@ -1,6 +1,8 @@
-import { user } from 'types/type'
+import { useState } from 'react'
+import { User } from 'types/auth'
 import Main from 'components/layout/Main'
 import Footer from 'components/layout/Footer'
+import Toggle from 'components/parts/Input/Toggle'
 
 interface notificationSetting {
   isVideo: boolean
@@ -16,12 +18,45 @@ interface notificationSetting {
 }
 
 interface Props {
-  user: user
+  user: User
   notificationSetting: notificationSetting
 }
 
+const user = {
+  id: 1,
+  nickname: "anfinii",
+  image: "string",
+  isAuthenticated: true
+}
+
+const notificationSetting = {
+  isVideo: true,
+  isMusic: true,
+  isComic: true,
+  isPicture: true,
+  isBlog: true,
+  isChat: true,
+  isFollow: true,
+  isReply: true,
+  isLike: true,
+  isViews: true,
+}
+
 export default function Notification(props: Props) {
-  const { user, notificationSetting } = props
+  // const { user, notificationSetting } = props
+
+  const [isVideo, setIsVideo] = useState(notificationSetting.isVideo)
+  const [isMusic, setIsMusic] = useState(notificationSetting.isMusic)
+  const [isComic, setIsComic] = useState(notificationSetting.isComic)
+  const [isPicture, setIsPicture] = useState(notificationSetting.isPicture)
+  const [isBlog, setIsBlog] = useState(notificationSetting.isBlog)
+  const [isChat, setIsChat] = useState(notificationSetting.isChat)
+  const [isFollow, setIsFollow] = useState(notificationSetting.isFollow)
+  const [isReply, setIsReply] = useState(notificationSetting.isReply)
+  const [isLike, setIsLike] = useState(notificationSetting.isViews)
+  const [isViews, setIsViews] = useState(notificationSetting.isViews)
+
+  const handleToggle = (isState: boolean, stateSetter: React.Dispatch<boolean>) => stateSetter(!isState);
 
   return (
     <Main title="MyUs通知">
@@ -38,300 +73,80 @@ export default function Notification(props: Props) {
                 <tr>
                   <td className="td_color">Video通知</td>
                   <td className="td_indent">
-                    <form method="POST" action="" data-notification="{{ notificationSetting.isVideo }}" notification-type="video">
-                      {notificationSetting.isVideo ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-on toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-off toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                        </svg>
-                      )}
+                    <form method="POST" action="" notification-type="video">
+                      <Toggle isActive={isVideo} onClick={() => handleToggle(isVideo, setIsVideo)} />
                     </form>
                   </td>
                 </tr>
                 <tr>
                   <td className="td_color">Music通知</td>
                   <td className="td_indent">
-                    <form method="POST" action="" data-notification="{{ notificationSetting.isMusic }}" notification-type="music">
-                      {notificationSetting.isMusic ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-on toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-off toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                        </svg>
-                      )}
+                    <form method="POST" action="" notification-type="music">
+                      <Toggle isActive={isMusic} onClick={() => handleToggle(isMusic, setIsMusic)} />
                     </form>
                   </td>
                 </tr>
                 <tr>
                   <td className="td_color">Comic通知</td>
                   <td className="td_indent">
-                    <form method="POST" action="" data-notification="{{ notificationSetting.isComic }}" notification-type="comic">
-                      {notificationSetting.isComic ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-on toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-off toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                        </svg>
-                      )}
+                    <form method="POST" action="" notification-type="comic">
+                      <Toggle isActive={isComic} onClick={() => handleToggle(isComic, setIsComic)} />
                     </form>
                   </td>
                 </tr>
                 <tr>
                   <td className="td_color">Picture通知</td>
                   <td className="td_indent">
-                    <form method="POST" action="" data-notification="{{ notificationSetting.isPicture }}" notification-type="picture">
-                      {notificationSetting.isPicture ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-on toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-off toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                        </svg>
-                      )}
+                    <form method="POST" action="" notification-type="picture">
+                      <Toggle isActive={isPicture} onClick={() => handleToggle(isPicture, setIsPicture)} />
                     </form>
                   </td>
                 </tr>
                 <tr>
                   <td className="td_color">Blog通知</td>
                   <td className="td_indent">
-                    <form method="POST" action="" data-notification="{{ notificationSetting.isBlog }}" notification-type="blog">
-                      {notificationSetting.isBlog ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-on toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-off toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                        </svg>
-                      )}
+                    <form method="POST" action="" notification-type="blog">
+                      <Toggle isActive={isBlog} onClick={() => handleToggle(isBlog, setIsBlog)} />
                     </form>
                   </td>
                 </tr>
                 <tr>
                   <td className="td_color">Chat通知</td>
                   <td className="td_indent">
-                    <form method="POST" action="" data-notification="{{ notificationSetting.isChat }}" notification-type="chat">
-                      {notificationSetting.isChat ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-on toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-off toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                        </svg>
-                      )}
+                    <form method="POST" action="" notification-type="chat">
+                      <Toggle isActive={isChat} onClick={() => handleToggle(isChat, setIsChat)} />
                     </form>
                   </td>
                 </tr>
                 <tr>
                   <td className="td_color">フォロー通知</td>
                   <td className="td_indent">
-                    <form method="POST" action="" data-notification="{{ notificationSetting.isFollow }}" notification-type="follow">
-                      {notificationSetting.isFollow ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-on toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-off toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                        </svg>
-                      )}
+                    <form method="POST" action="" notification-type="follow">
+                      <Toggle isActive={isFollow} onClick={() => handleToggle(isFollow, setIsFollow)} />
                     </form>
                   </td>
                 </tr>
                 <tr>
                   <td className="td_color">返信通知</td>
                   <td className="td_indent">
-                    <form method="POST" action="" data-notification="{{ notificationSetting.isReply }}" notification-type="reply">
-                      {notificationSetting.isReply ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-on toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-off toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                        </svg>
-                      )}
+                    <form method="POST" action="" notification-type="reply">
+                      <Toggle isActive={isReply} onClick={() => handleToggle(isReply, setIsReply)} />
                     </form>
                   </td>
                 </tr>
                 <tr>
                   <td className="td_color">いいね通知</td>
                   <td className="td_indent">
-                    <form method="POST" action="" data-notification="{{ notificationSetting.isLike }}" notification-type="like">
-                      {notificationSetting.isLike ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-on toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-off toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                        </svg>
-                      )}
+                    <form method="POST" action="" notification-type="like">
+                      <Toggle isActive={isLike} onClick={() => handleToggle(isLike, setIsLike)} />
                     </form>
                   </td>
                 </tr>
                 <tr>
                   <td className="td_color">閲覧数通知</td>
                   <td className="td_indent">
-                    <form method="POST" action="" data-notification="{{ notificationSetting.isViews }}" notification-type="views">
-                      {notificationSetting.isViews ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-on toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="25"
-                          height="25"
-                          fill="currentColor"
-                          className="bi-toggle-off toggle_button"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                        </svg>
-                      )}
+                    <form method="POST" action="" notification-type="views">
+                      <Toggle isActive={isViews} onClick={() => handleToggle(isViews, setIsViews)} />
                     </form>
                   </td>
                 </tr>
