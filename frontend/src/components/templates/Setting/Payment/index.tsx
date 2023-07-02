@@ -22,7 +22,7 @@ export default function Payment() {
             <br/>
             ・全体広告OFF
           </div>
-          <Button purple type="submit" className="checkout" value="price_1K9VSxCHdDAlRliqOZnYuctl">購入する</Button>
+          <Button purple type="submit" name="購入する" className="checkout" value="price_1K9VSxCHdDAlRliqOZnYuctl" />
         </section>
 
         <section className="section_plan">
@@ -40,7 +40,7 @@ export default function Payment() {
             <br/>
             ・全体広告OFF
           </div>
-          <Button purple type="submit" className="checkout" value="price_1K9VTbCHdDAlRliq3YNA768b">購入する</Button>
+          <Button purple type="submit" name="購入する" className="checkout" value="price_1K9VTbCHdDAlRliq3YNA768b" />
         </section>
 
         <section className="section_plan">
@@ -60,7 +60,7 @@ export default function Payment() {
             <br/>
             ・楽曲ダウンロード
           </div>
-          <Button purple type="submit" className="checkout" value="price_1K9VU9CHdDAlRliqXsIS6GC4">購入する</Button>
+          <Button purple type="submit" name="購入する" className="checkout" value="price_1K9VU9CHdDAlRliqXsIS6GC4" />
         </section>
 
         <section className="section_plan">
@@ -74,7 +74,7 @@ export default function Payment() {
           <div className="content_description">
             現在のプランを変更
           </div>
-          <Link href="/chage_plan"><Button green>購入する</Button></Link>
+          <Link href="/chage_plan"><Button green name="購入する" /></Link>
         </section>
 
         <section className="section_plan">
@@ -90,7 +90,7 @@ export default function Payment() {
             <br/>
             ・今月お支払いした料金は返金されません
           </div>
-          <Button green type="submit">変更する</Button>
+          <Button green type="submit" name="変更する" />
         </section>
       </article>
 

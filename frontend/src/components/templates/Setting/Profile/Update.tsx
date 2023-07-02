@@ -1,9 +1,9 @@
 
 
 import Router from 'next/router'
-import {ProfileResponse} from 'types/media'
-import {prefectures} from 'utils/lib/constants'
-import selectDate from 'utils/lib/selectDate'
+import { Profile } from 'types/auth'
+import { prefectures } from 'utils/constants/prefectures'
+import selectDate from 'utils/functins/selectDate'
 import Main from 'components/layout/Main'
 import Footer from 'components/layout/Footer'
 import Button from 'components/parts/Button'
@@ -11,7 +11,7 @@ import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
 
-interface Props {user: ProfileResponse}
+interface Props {user: Profile}
 
 export default function ProfileUpdate(props: Props) {
   const {user} = props
@@ -31,8 +31,8 @@ export default function ProfileUpdate(props: Props) {
           {% endif %} */}
 
           <div className="button_group">
-            <Button green size="xs" type="submit">登録</Button>
-            <Button blue size="xs" onClick={() => Router.push('/setting/profile')}>戻る</Button>
+            <Button green size="xs" type="submit" name="登録" />
+            <Button blue size="xs" name="戻る" onClick={() => Router.push('/setting/profile')} />
           </div>
 
           <table className="table">

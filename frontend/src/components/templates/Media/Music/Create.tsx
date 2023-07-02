@@ -27,7 +27,7 @@ export default function MusicCreate(props: Props) {
           <CheckBox name="download" id="download" className="check_margin" checked>ダウンロード許可</CheckBox>
           <InputFile id="file_1" accept="audio/*" required />
 
-          <Button green type="submit" className="mt_32">作成する</Button>
+          <Button green type="submit" name="作成する" className="mt_32" />
         </form>
       :
         <h2 className="login_required">ログインしてください</h2>

@@ -26,7 +26,7 @@ export default function BlogCreate(props: Props) {
           {/* <p>{{ form.media }}{{ form.richtext }}</p> */}
           <Textarea name="content" id="content" required></Textarea>
 
-          <Button green type="submit" className="mt_32">作成する</Button>
+          <Button green type="submit" name="作成する" className="mt_32" />
         </form>
       :
         <h2 className="login_required">ログインしてください</h2>

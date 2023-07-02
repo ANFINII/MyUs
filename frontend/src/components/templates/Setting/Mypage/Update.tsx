@@ -16,8 +16,8 @@ export default function MyPageUpdate(props: Props) {
         <article className="article_table">
           <h1>マイページ設定</h1>
           <div className="button_group">
-            <Button green size="xs" type="submit">登録</Button>
-            <Button blue size="xs" onClick={() => Router.push('/setting/mypage')}>戻る</Button>
+            <Button green size="xs" name="登録" type="submit" />
+            <Button blue size="xs" name="戻る" onClick={() => Router.push('/setting/mypage')} />
           </div>
 
           <table className="table">

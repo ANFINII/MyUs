@@ -20,7 +20,7 @@ export default function FollowList(props: Props) {
       {is_authenticated ?
         <>
           <div className="follow_button">
-            <Button blue size="xs" onClick={() => Router.push('/menu/follower')}>フォロー</Button>
+            <Button blue size="xs" name="フォロー" onClick={() => Router.push('/menu/follower')} />
             <span>フォロー数：{mypage? mypage.following_count : 0}</span>
           </div>
           <article className="article_list">

@@ -22,7 +22,7 @@ export default function PictureCreate(props: Props) {
           <p className="mv_16">画像</p>
           <InputFile id="file_1" accept="image/*" required />
 
-          <Button green type="submit" className="mt_32">作成する</Button>
+          <Button green type="submit" name="作成する" className="mt_32" />
         </form>
       :
         <h2 className="login_required">ログインしてください</h2>
