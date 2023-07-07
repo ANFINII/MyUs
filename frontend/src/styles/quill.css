@@ -42,3 +42,96 @@
   margin-bottom: 5px;
   border-left: 4px solid #ccc;
 }
+
+/* Mention */
+.ql-mention-list-container {
+  width: 250px;
+  border-radius: 4px;
+  border-radius: 10px;
+  overflow: auto;
+  border: 1px solid rgb(240, 240, 240);
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0rem 0.75rem 1.125rem -0.125rem #1f212426;
+  z-index: 50;
+}
+
+.ql-mention-loading {
+  padding: 0 20px;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.ql-mention-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.ql-mention-list-item {
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 5px;
+}
+
+.ql-mention-list-item.selected {
+  text-decoration: none;
+  color: rgba(60, 120, 240);
+  background: rgb(230, 245, 255);
+}
+
+.ql-mention-list-item.disabled {
+  cursor: auto;
+}
+
+.mention {
+  display: inline-flex;
+  margin: 0 3px 1px 3px;
+  font-size: 13px;
+  border-radius: 5px;
+  color: rgba(60, 120, 240);
+  background: rgb(230, 245, 255);
+}
+
+.mention span {
+  margin: -1px 4px 0px 4px;
+}
+
+.quill_avatar {
+  display: flex;
+  width: 100%;
+  margin: 3px 0 3px 6px;
+  font-size: 14px;
+}
+
+.quill_avatar img {
+  border-radius: 5px;
+}
+
+.quill_avatar span {
+  margin: 1px 0 0 8px;
+}
+
+/* Timeline */
+.timeline_editor {
+  margin: 0 0 0 20px;
+}
+
+.timeline_editor .ql-toolbar {
+  display: none;
+}
+
+.timeline_editor .ql-editor {
+  min-height: 52px;
+  max-height: 400px;
+  overflow-y: scroll;
+  padding: 15px;
+  font-size: 14px;
+  border: 1px solid rgb(200, 200, 200) !important;
+  border-radius: 4px 4px 0 0 !important;
+  background: rgb(255, 255, 255) !important;
+}
+
+.timeline_editor .ql-editor:focus {
+  border: 1px solid #2c6ecb !important;
+}
