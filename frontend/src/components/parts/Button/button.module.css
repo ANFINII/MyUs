@@ -53,16 +53,6 @@
   cursor: initial;
 }
 
-.button.blue.xs {
-  padding: 4px 8px;
-  font-size: 12px;
-}
-
-.button.blue.xl {
-  padding: 8px 16px;
-  font-size: 18px;
-}
-
 .button.purple {
   color: rgb(255, 255, 255);
   border: 1px solid rgb(145, 30, 255);
@@ -81,16 +71,6 @@
   border: 1px solid rgb(200, 150, 255);
   background: rgb(200, 150, 255);
   cursor: initial;
-}
-
-.button.purple.xs {
-  padding: 4px 8px;
-  font-size: 12px;
-}
-
-.button.purple.xl {
-  padding: 8px 16px;
-  font-size: 18px;
 }
 
 .button.red {
@@ -113,16 +93,6 @@
   cursor: initial;
 }
 
-.button.red.xs {
-  padding: 4px 8px;
-  font-size: 12px;
-}
-
-.button.red.xl {
-  padding: 8px 16px;
-  font-size: 18px;
-}
-
 .button.green {
   color: rgb(255, 255, 255);
   border: 1px solid rgb(40, 160, 100);
@@ -141,14 +111,4 @@
   border: 1px solid rgb(150, 220, 210);
   background: rgb(150, 220, 210);
   cursor: initial;
-}
-
-.button.green.xs {
-  padding: 4px 8px;
-  font-size: 12px;
-}
-
-.button.green.xl {
-  padding: 8px 16px;
-  font-size: 18px;
 }
