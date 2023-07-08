@@ -1,5 +1,5 @@
 import 'styles/reset.css'
-import 'styles/common.css'
+import 'styles/global.css'
 import 'styles/layout/layout.css'
 import 'styles/layout/header.css'
 import 'styles/layout/footer.css'
