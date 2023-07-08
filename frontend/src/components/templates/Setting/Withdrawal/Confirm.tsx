@@ -18,9 +18,9 @@ export default function WithdrawalConfirm() {
 
             <Input type="password" name="password2" placeholder="パスワード" minLength={8} maxLength={16} className="mb_16" required />
 
-            <Button red size="xl" name="退会する" className="full mv_24" />
+            <Button red size="xl" name="退会する" className="full_w mv_24" />
 
-            <Button blue size="xl" name="戻る" className="full mb_24" onClick={() => Router.push('/setting/withdrawal')} />
+            <Button blue size="xl" name="戻る" className="full_w mb_24" onClick={() => Router.push('/setting/withdrawal')} />
           </form>
         :
           <h2 className="login_required">ログインしてください</h2>

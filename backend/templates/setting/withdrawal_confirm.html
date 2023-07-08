@@ -12,9 +12,9 @@
 
       <input type="password" name="password2" placeholder="パスワード" minlength="8" maxlength="16" class="input mb_16" required>
 
-      <button class="button red xl full mv_24">退会する</button>
+      <button class="button red xl full_w mv_24">退会する</button>
 
-      <button href="{% url 'myus:withdrawal' %}" class="button blue xl full mb_24 pjax_button">戻る</button>
+      <button href="{% url 'myus:withdrawal' %}" class="button blue xl full_w mb_24 pjax_button">戻る</button>
     </form>
     {% include 'parts/footer-myus.html' %}
     {% else %}

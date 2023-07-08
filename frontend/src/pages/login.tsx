@@ -43,8 +43,8 @@ export default function Login() {
             <Link href="/setting/password_reset">パスワードをリセット</Link>
           </div>
 
-          <Button blue size="xl" type="submit" name="ログイン" className="full mb_24" onClick={loginClicked}  />
-          <Button green size="xl" name="アカウント登録" className="full mb_24" onClick={() => Router.push('/registration/signup')} />
+          <Button blue size="xl" type="submit" name="ログイン" className="full_w mb_24" onClick={loginClicked}  />
+          <Button green size="xl" name="アカウント登録" className="full_w mb_24" onClick={() => Router.push('/registration/signup')} />
         </form>
 
         <Footer />

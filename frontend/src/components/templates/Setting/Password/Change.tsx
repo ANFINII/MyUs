@@ -26,9 +26,9 @@ export default function PasswordChange() {
 
           <Input type="password" name="new_password2" className="mb_16" minLength={8} maxLength={16} placeholder="新規パスワード(確認用)" required />
 
-          <Button green size="xl" type="submit" name="変更する" className="full mv_24" />
+          <Button green size="xl" type="submit" name="変更する" className="full_w mv_24" />
 
-          <Button blue size="xl" name="戻る" className="full mb_24" onClick={() => Router.push('/setting/profile')} />
+          <Button blue size="xl" name="戻る" className="full_w mb_24" onClick={() => Router.push('/setting/profile')} />
         </form>
         <Footer />
       </article>
