@@ -1,74 +1,36 @@
 /* サイドバー */
 .sidebar {
   position: fixed;
-  grid-column: 1/2;
-  grid-row: 1/-1;
+  top: 56px;
   width: 4.5em;
-  height: 100%;
-  overflow-y: auto;
+  height: calc(100% - 56px);
   background: rgb(0, 0, 80);
   z-index: 60; /* headerよりは小さく */
 }
 
-.sidebar::-webkit-scrollbar {
-  width: 0;
-}
-
-.sidebar_nav {
-  display: grid;
-  grid-template-rows: 3.5em repeat(7, 1fr);
-}
-
-.sidebar_nav_1 {
-  position: relative;
-  grid-row: 1/2;
-}
-
-.sidebar_nav_2 {
-  position: relative;
-  grid-row: 2/3;
-}
-
-.sidebar_nav_3 {
-  position: relative;
-  grid-row: 3/4;
-}
-
-.sidebar_nav_4 {
-  position: relative;
-  grid-row: 4/5;
-}
-
-.sidebar_nav_5 {
-  position: relative;
-  grid-row: 5/6;
-}
-
-.sidebar_nav_6 {
-  position: relative;
-  grid-row: 6/7;
-}
-
-.sidebar_nav_7 {
-  position: relative;
-  grid-row: 7/8;
-}
-
-.sidebar_text {
+.sidebar ul {
+  padding: 0;
   margin: 0;
-  font-size: 0.9em;
+  list-style-type: none;
 }
 
-.sidebar_color {
-  color: gray;
-  align-items: center;
+.sidebar ul li {
+  display: flex;
   text-align: center;
-  height: 3.5em;
-  padding: 4px 0;
-  margin: 16px 0;
+  justify-content: center;
 }
 
-.sidebar_color:hover,
-.sidebar_color.active {
+.sidebar ul li a {
+  display: block;
+  width: 4.5em;
+  height: 52px;
+  margin: 18px 0;
+  font-size: 0.9em;
+  text-decoration: none;
+  color: rgb(125, 125, 125);
+}
+
+.sidebar_color a:hover,
+.sidebar_color.active a {
   color: rgb(255, 255, 255);
 }
