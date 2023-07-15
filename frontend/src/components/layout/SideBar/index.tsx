@@ -8,7 +8,7 @@ export default function SideBar() {
     <aside className="sidebar">
       <nav className="sidebar_nav">
         <ul>
-          <li className={'sidebar_color' + (router.pathname === '/video' && ' ' + 'active')}>
+          <li className={'sidebar_color' + (router.pathname === '/video' ? ' ' + 'active' : '')}>
             <Link href="/video" className="pjax_button">
               <svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" fill="currentColor" className="bi bi-camera-video" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556v4.35zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H2z"/>
@@ -17,7 +17,7 @@ export default function SideBar() {
             </Link>
           </li>
 
-          <li className={'sidebar_color' + (router.pathname === '/music' && ' ' + 'active')}>
+          <li className={'sidebar_color' + (router.pathname === '/music' ? ' ' + 'active' : '')}>
             <Link href="/music" className="pjax_button">
               <svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" fill="currentColor" className="bi bi-headphones" viewBox="0 0 16 16">
                 <path d="M8 3a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a6 6 0 1 1 12 0v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V8a5 5 0 0 0-5-5z"/>
@@ -26,7 +26,7 @@ export default function SideBar() {
             </Link>
           </li>
 
-          <li className={'sidebar_color' + (router.pathname === '/comic' && ' ' + 'active')}>
+          <li className={'sidebar_color' + (router.pathname === '/comic' ? ' ' + 'active' : '')}>
             <Link href="/comic" className="pjax_button">
               <svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" fill="currentColor" className="bi bi-images" viewBox="0 0 16 16">
                 <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
@@ -36,7 +36,7 @@ export default function SideBar() {
             </Link>
           </li>
 
-          <li className={'sidebar_color' + (router.pathname === '/picture' && ' ' + 'active')}>
+          <li className={'sidebar_color' + (router.pathname === '/picture' ? ' ' + 'active' : '')}>
             <Link href="/picture" className="pjax_button">
               <svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" fill="currentColor" className="bi bi-image" viewBox="0 0 16 16">
                 <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
@@ -46,7 +46,7 @@ export default function SideBar() {
             </Link>
           </li>
 
-          <li className={'sidebar_color' + (router.pathname === '/blog' && ' ' + 'active')}>
+          <li className={'sidebar_color' + (router.pathname === '/blog' ? ' ' + 'active' : '')}>
             <Link href="/blog" className="pjax_button">
               <svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" fill="currentColor" className="bi bi-file-richtext" viewBox="0 0 16 16">
                 <path d="M7 4.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0zm-.861 1.542 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V7.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V7s1.54-1.274 1.639-1.208zM5 9a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"/>
@@ -56,7 +56,7 @@ export default function SideBar() {
             </Link>
           </li>
 
-          <li className={'sidebar_color' + (router.pathname === '/chat' && ' ' + 'active')}>
+          <li className={'sidebar_color' + (router.pathname === '/chat' ? ' ' + 'active' : '')}>
             <Link href="/chat" className="pjax_button">
               <svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" fill="currentColor" className="bi bi-chat-dots" viewBox="0 0 16 16">
                 <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
