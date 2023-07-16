@@ -105,13 +105,11 @@
 
     <div class="header_nav_3 header_color">
       <div class="search_container">
-        <div class="d-flex justify-content-center">
-          <div class="searchbar">
-            <form method="GET" action="">
-              <input type="search" name="search" value="{{ request.GET.search }}" placeholder="検索..." class="search_input">
-              <button type="submit" class="search_icon"><i class="fas fa-search"></i></button>
-            </form>
-          </div>
+        <div class="searchbar">
+          <form method="GET" action="">
+            <input type="search" name="search" value="{{ request.GET.search }}" placeholder="検索..." class="search_input">
+            <button type="submit" class="search_icon"><i class="fas fa-search"></i></button>
+          </form>
         </div>
       </div>
     </div>

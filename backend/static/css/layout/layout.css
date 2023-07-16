@@ -91,14 +91,6 @@ svg {
   vertical-align: middle;
 }
 
-.justify-content-center {
-  justify-content: center! important;
-}
-
-.d-flex {
-  display: flex! important;
-}
-
 /* latin */
 @font-face {
   font-family: 'Libre Caslon Display';

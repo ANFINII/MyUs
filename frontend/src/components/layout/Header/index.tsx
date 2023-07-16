@@ -20,13 +20,11 @@ export default function Header() {
 
         <div className="header_nav_3 header_color">
           <div className="search_container">
-            <div className="d-flex justify-content-center">
-              <div className="searchbar">
-                <form method="GET" action="">
-                  <input type="search" name="search" value={search} placeholder="検索..." className="search_input" />
-                  <button type="submit" className="search_icon"><i className="fas fa-search"></i></button>
-                </form>
-              </div>
+            <div className="searchbar">
+              <form method="GET" action="">
+                <input type="search" name="search" value={search} placeholder="検索..." className="search_input" />
+                <button type="submit" className="search_icon"><i className="fas fa-search"></i></button>
+              </form>
             </div>
           </div>
         </div>
