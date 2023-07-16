@@ -132,6 +132,7 @@
 .header_color:hover,
 .side_menu_open:hover {
   color: rgb(255, 220, 0);
+  cursor: pointer;
 }
 
 .header_color_MyUs:hover {
