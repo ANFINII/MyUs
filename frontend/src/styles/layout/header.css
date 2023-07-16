@@ -88,6 +88,12 @@
   z-index: 100; /* 最前面 */
 }
 
+.side_menu ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
 .side_menu_open {
   display: block;
   margin: 0;
@@ -123,8 +129,8 @@
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.side_menu_open:hover,
-.header_color:hover {
+.header_color:hover,
+.side_menu_open:hover {
   color: rgb(255, 220, 0);
 }
 
@@ -159,6 +165,18 @@
   background: rgba(0, 0, 0, 0.3);
 }
 
+.side_menu_item {
+  position: relative;
+  text-align: start;
+}
+
+.side_menu_footer_item {
+  position: relative;
+  display: flex;
+  text-align: start;
+  font-size: 0.9rem;
+}
+
 .side_menu_color {
   padding: 12px 0;
   margin: 0;
@@ -173,26 +191,23 @@
   color: rgb(0, 70, 175);
 }
 
-.side_menu_item {
-  position: relative;
-  text-align: start;
-}
-
-.side_menu_footer_item {
-  position: relative;
-  display: flex;
-  text-align: start;
-  font-size: 0.9rem;
-}
-
 /* ドロップダウンメニュー */
-.drop_open_cloud,
-.drop_open_notice,
-.drop_open_profile {
+.drop_open {
   display: block;
   margin: 0;
   cursor: pointer;
   transition: all 0.01s;
+}
+
+.drop_menu ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.drop_menu .bi {
+  float: left;
+  margin: 0 16px;
 }
 
 .drop_menu_cloud,
@@ -212,19 +227,12 @@
   z-index: 80; /* サイドメニューよりかは小さい */
 }
 
-.drop_menu_cloud {
-  height: 289px;
-}
-
-.drop_menu_notice,
-.drop_menu_profile {
+.drop_menu_notice {
   height: 337px;
 }
 
 /* 閉じる用のカバー */
-.drop_back_cloud,
-.drop_back_notice,
-.drop_back_profile {
+.drop_back_cover {
   position: fixed;
   display: none;
   top: 0;
@@ -244,39 +252,29 @@
   border-style: hidden hidden solid solid;
 }
 
-#drop_menu_cloud:checked ~ .drop_back_cloud,
-#drop_menu_notice:checked ~ .drop_back_notice,
-#drop_menu_profile:checked ~ .drop_back_profile {
+#drop_menu_cloud:checked ~ .drop_back_cover,
+#drop_menu_notice:checked ~ .drop_back_cover,
+#drop_menu_profile:checked ~ .drop_back_cover {
   display: block;
 }
 
-.drop_menu_cloud .bi,
-.drop_menu_notice .bi,
-.drop_menu_profile .bi {
-  float: left;
-  margin: 0 16px;
-}
-
 /* ドロップダウンメニュー Profile */
-.drop_open_profile img {
+.drop_open.profile img {
   border-radius: 50%;
 }
 
-#drop_menu_profile:checked ~ .drop_open_profile img {
+#drop_menu_profile:checked ~ .drop_open.profile img {
   box-shadow: 0 0 0 1.5px rgba(255, 221, 0, 0.9);
 }
 
-.drop_menu_item {
+.drop_menu_list {
   position: relative;
+  padding: 12px 0;
+  margin: 0;
   text-align: start;
 }
 
-.color_drop_menu {
-  padding: 12px 0;
-  margin: 0;
-}
-
-.color_drop_menu:hover {
+.drop_menu_list:hover {
   color: rgb(250, 130, 0);
   background: rgb(255, 230, 200);
 }
