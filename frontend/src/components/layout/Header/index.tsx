@@ -18,7 +18,7 @@ export default function Header() {
           <h1>MyUs</h1>
         </div>
 
-        <div className="header_nav_3 header_color">
+        <div className="header_nav_3">
           <div className="search_container">
             <div className="searchbar">
               <form method="GET" action="">

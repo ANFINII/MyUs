@@ -368,6 +368,11 @@
 }
 
 /* サーチバー */
+.search_container {
+  display: flex;
+  justify-content: center;
+}
+
 .searchbar {
   margin-top: auto;
   margin-bottom: auto;
@@ -410,15 +415,11 @@ input::placeholder {
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
+  cursor: pointer;
 }
 
 .search_icon:focus {
   outline: none;
-}
-
-.search_container {
-  display: flex;
-  justify-content: center;
 }
 
 .search_message {
