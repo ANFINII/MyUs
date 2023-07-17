@@ -75,15 +75,15 @@
 /* サイドメニュー */
 .side_menu {
   position: fixed;
-  overflow-y: auto;
   top: 0;
   left: -250px;
   width: 250px;
   height: 100%;
   padding: 0;
   margin: 0;
-  background: rgb(255, 255, 255);
   color: rgb(50, 50, 50);
+  background: rgb(255, 255, 255);
+  overflow-y: auto;
   transition: all 0.2s;
   z-index: 100; /* 最前面 */
 }
@@ -220,11 +220,13 @@
   width: 250px;
   padding: 0;
   margin: 0;
-  background: rgb(255, 250, 245);
+  border: 1px solid rgb(255, 230, 200);
+  border-right: none;
   color: rgb(50, 50, 50);
-  transition: all 0.2s;
+  background: rgb(255, 250, 245);
   overflow-y: auto;
   overflow-x: hidden;
+  transition: all 0.2s;
   z-index: 80; /* サイドメニューよりかは小さい */
 }
 
@@ -249,8 +251,6 @@
 #drop_menu_notice:checked ~ .drop_menu_notice,
 #drop_menu_profile:checked ~ .drop_menu_profile {
   right: 0;
-  border: 1px solid rgb(255, 230, 200);
-  border-right: none;
 }
 
 #drop_menu_cloud:checked ~ .drop_back_cover,
