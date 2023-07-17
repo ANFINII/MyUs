@@ -250,7 +250,7 @@
 #drop_menu_profile:checked ~ .drop_menu_profile {
   right: 0;
   border: 1px solid rgb(255, 230, 200);
-  border-style: hidden hidden solid solid;
+  border-right: none;
 }
 
 #drop_menu_cloud:checked ~ .drop_back_cover,
