@@ -79,3 +79,19 @@ hr {
 .sakura {
   color: rgb(230, 0, 140);
 }
+
+.d_none {
+  display: none;
+}
+
+.d_block {
+  display: block;
+}
+
+.d_inline {
+  display: inline;
+}
+
+.d_flex {
+  display: flex;
+}
