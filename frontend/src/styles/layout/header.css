@@ -94,6 +94,21 @@
   list-style-type: none;
 }
 
+.side_menu .bi {
+  float: left;
+  margin: 0 16px;
+}
+
+.side_menu .bi-arrow-left {
+  margin: 3px 16px 0 16px;
+}
+
+/* チェックが入ったら表示 */
+#burger_menu:checked ~ .side_menu {
+  left: 0;
+  box-shadow: 6px 0 25px rgba(0, 100, 255, 0.2);
+}
+
 .side_menu_open {
   display: block;
   margin: 0;
@@ -112,15 +127,6 @@
 
 .myus_img {
   margin: 0 16px;
-}
-
-.side_menu .bi {
-  float: left;
-  margin: 0 16px;
-}
-
-.side_menu .bi-arrow-left {
-  margin: 3px 16px 0 16px;
 }
 
 .side_menu_footer {
@@ -148,17 +154,6 @@
   height: 100%;
   transition: all 0.2s;
   z-index: 90;
-}
-
-/* チェックボックスは非表示に */
-.header_nav1 [type="checkbox"] {
-  display: none;
-}
-
-/* チェックが入ったら表示 */
-#burger_menu:checked ~ .side_menu {
-  left: 0;
-  box-shadow: 6px 0 25px rgba(0, 100, 255, 0.2);
 }
 
 #burger_menu:checked ~ .side_nemu_back {

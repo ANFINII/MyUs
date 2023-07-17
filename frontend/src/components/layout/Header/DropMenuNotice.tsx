@@ -3,7 +3,7 @@ import Link from 'next/link'
 export default function DropMenuNotice() {
   return (
     <>
-      <input type="checkbox" id="drop_menu_notice" className="drop_menu_notice"/>
+      <input type="checkbox" id="drop_menu_notice" className="d_none"/>
       <label htmlFor="drop_menu_notice" className="drop_open_notice">
         {/* if (notification_count) {
           <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-bell-fill active" viewBox="0 0 16 16">
