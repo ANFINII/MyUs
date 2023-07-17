@@ -109,13 +109,6 @@
   box-shadow: 6px 0 25px rgba(0, 100, 255, 0.2);
 }
 
-.side_menu_open {
-  display: block;
-  margin: 0;
-  cursor: pointer;
-  transition: all 0.01s;
-}
-
 .side_menu_close {
   display: block;
   height: 3.5em;
@@ -135,8 +128,7 @@
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.header_color:hover,
-.side_menu_open:hover {
+.header_color:hover {
   color: rgb(255, 220, 0);
   cursor: pointer;
 }
@@ -155,8 +147,6 @@
   transition: all 0.2s;
   z-index: 90;
 }
-
-
 
 #burger_menu:checked ~ .side_nemu_back {
   display: block;
