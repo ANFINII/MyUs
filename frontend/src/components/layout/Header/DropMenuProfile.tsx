@@ -13,11 +13,11 @@ export default function DropMenuProfile(props: Props) {
 
   return (
     <>
-      <input type="checkbox" id="drop_menu_profile" className="d_none" />
+      <input type="checkbox" id="drop_menu_profile" className="drop_menu_profile" />
+      <label htmlFor="drop_menu_profile" className="drop_back_cover"></label>
       <label htmlFor="drop_menu_profile" className="drop_open_profile">
         <Image src={is_authenticated ? "/img/user.image" : "/img/user_icon.png"} title={nickname} width={32} height={32} alt="" />
       </label>
-      <label htmlFor="drop_menu_profile" className="drop_back_cover"></label>
 
       <nav className="drop_menu drop_menu_profile">
         <ul>

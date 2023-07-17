@@ -5,13 +5,13 @@ export default function SideMenu() {
   const year = today.getFullYear()
   return (
     <>
-      <input type="checkbox" id="burger_menu" className="d_none" />
+      <input type="checkbox" id="burger_menu" className="burger_menu" />
+      <label htmlFor="burger_menu" className="side_nemu_back"></label>
       <label htmlFor="burger_menu" className="side_menu_open">
         <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="1.7em" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
           <path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
         </svg>
       </label>
-      <label htmlFor="burger_menu" className="side_nemu_back"></label>
 
       <aside className="side_menu">
         <label htmlFor="burger_menu" className="side_menu_close side_menu_color">
