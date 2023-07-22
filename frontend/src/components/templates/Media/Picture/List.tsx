@@ -9,6 +9,7 @@ interface Props {
 
 export default function PictureList(props: Props) {
   const { query, datas } = props
+
   return (
     <Main title="MyUsピクチャー" hero="Picture" query={query}>
       <article className="article_list">

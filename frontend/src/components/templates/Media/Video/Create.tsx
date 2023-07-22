@@ -10,6 +10,7 @@ interface Props {
 
 export default function VideoCreate(props: Props) {
   const { isAuthenticated } = props
+
   return (
     <Main title="MyUsビデオ" hero="Video">
       {isAuthenticated ? (

@@ -1,4 +1,4 @@
-import {Query, ImageResponse} from 'types/media'
+import { Query, ImageResponse } from 'types/media'
 import Main from 'components/layout/Main'
 import ArticleBlog from 'components/widgets/Article/Blog'
 
@@ -8,7 +8,8 @@ interface Props {
 }
 
 export default function BlogList(props: Props) {
-  const {query, datas} = props
+  const { query, datas } = props
+
   return (
     <Main title="MyUsブログ" hero="Blog" query={query}>
       <article className="article_list">
