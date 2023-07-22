@@ -11,7 +11,7 @@ export default function ChatList(props: Props) {
   const { query, datas } = props
 
   return (
-    <Main title="MyUsチャット" hero="Chat" query={query}>
+    <Main title="MyUsチャット" name="Chat" query={query}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticleChat data={data} key={data.id} />

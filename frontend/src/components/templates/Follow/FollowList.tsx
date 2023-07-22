@@ -1,9 +1,9 @@
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import Router from 'next/router'
-import { Query, FollowResponse } from 'types/media'
-import { Mypage } from 'types/auth'
 import config from 'api/config'
+import { Mypage } from 'types/auth'
+import { Query, FollowResponse } from 'types/media'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
@@ -17,7 +17,7 @@ interface Props {
 export default function FollowList(props: Props) {
   const { isAuthenticated, query, mypage, datas } = props
   return (
-    <Main title="MyUsフォロー" hero="Follow" query={query}>
+    <Main title="MyUsフォロー" name="Follow" query={query}>
       {isAuthenticated ? (
         <>
           <div className="follow_button">

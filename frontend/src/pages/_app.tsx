@@ -14,13 +14,8 @@ import 'styles/quill.css'
 import 'styles/audio.css'
 import 'styles/videojs-myus.css'
 // import 'styles/chat.css'
-import type {AppProps} from 'next/app'
-import Layout from 'components/layout'
+import type { AppProps } from 'next/app'
 
-export default function MyApp({Component, pageProps}: AppProps) {
-  return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
-  )
+export default function MyApp({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />
 }

@@ -1,7 +1,5 @@
-import {NextPage, GetServerSideProps} from 'next'
-import Script from 'next/script'
 // import axios from 'pages/api/axios'
-import {Query, VideoResponse} from 'types/media'
+import { Query, VideoResponse } from 'types/media'
 import HomeList from 'components/templates/Media/Home/List'
 
 // export const getServerSideProps: GetServerSideProps = async () => {
@@ -19,7 +17,7 @@ const query: Query = {
   count: 0,
 }
 
-const datas: Array<VideoResponse> = [
+const datas: VideoResponse[] = [
   {
     id: 1,
     title: '動画テスト1',
@@ -38,7 +36,7 @@ const datas: Array<VideoResponse> = [
       nickname: 'アンさん',
       image: '/media/users/images_user/user_1/An_Okina.jpg',
     },
-    model_name: 'video',
+    modelName: 'video',
   },
   {
     id: 2,
@@ -58,7 +56,7 @@ const datas: Array<VideoResponse> = [
       nickname: 'ショウエン',
       image: '/media/users/images_user/user_2/MyUs_Profile_02.jpg',
     },
-    model_name: 'video',
+    modelName: 'video',
   },
   {
     id: 3,
@@ -78,7 +76,7 @@ const datas: Array<VideoResponse> = [
       nickname: 'ソウヒ',
       image: '/media/users/images_user/user_3/MyUs_Profile_03.jpg',
     },
-    model_name: 'video',
+    modelName: 'video',
   },
   {
     id: 4,
@@ -98,7 +96,7 @@ const datas: Array<VideoResponse> = [
       nickname: 'ケイマ',
       image: '/media/users/images_user/user_4/MyUs_Profile_04.jpg',
     },
-    model_name: 'video',
+    modelName: 'video',
   },
   {
     id: 5,
@@ -118,11 +116,11 @@ const datas: Array<VideoResponse> = [
       nickname: 'アン',
       image: '/media/users/images_user/user_5/MyUs_Profile_01.jpg',
     },
-    model_name: 'video',
+    modelName: 'video',
   },
 ]
 
-const HomePage: NextPage = () => {
+export default function HomePage() {
   return (
     <>
       <HomeList query={query} datas={datas} videos={datas} />
@@ -132,4 +130,3 @@ const HomePage: NextPage = () => {
     </>
   )
 }
-export default HomePage

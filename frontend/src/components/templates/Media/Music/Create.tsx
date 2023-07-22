@@ -1,9 +1,9 @@
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
-import Textarea from 'components/parts/Input/Textarea'
 import CheckBox from 'components/parts/Input/CheckBox'
 import InputFile from 'components/parts/Input/File'
+import Textarea from 'components/parts/Input/Textarea'
 
 interface Props {
   isAuthenticated?: boolean
@@ -13,7 +13,7 @@ export default function MusicCreate(props: Props) {
   const { isAuthenticated } = props
 
   return (
-    <Main title="MyUsミュージック" hero="Music">
+    <Main title="MyUsミュージック" name="Music">
       {isAuthenticated ? (
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}

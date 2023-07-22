@@ -11,7 +11,7 @@ export default function MusicList(props: Props) {
   const { query, datas } = props
 
   return (
-    <Main title="MyUsミュージック" hero="Music" query={query}>
+    <Main title="MyUsミュージック" name="Music" query={query}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticleMusic data={data} key={data.id} />

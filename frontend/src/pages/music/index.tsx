@@ -1,4 +1,4 @@
-import {Query, MusicResponse} from 'types/media'
+import { Query, MusicResponse } from 'types/media'
 import MusicList from 'components/templates/Media/Music/List'
 
 const query: Query = {
@@ -25,7 +25,7 @@ const datas: MusicResponse[] = [
       nickname: 'アンさん',
       image: '/media/users/images_user/user_1/An_Okina.jpg',
     },
-    model_name: 'music'
+    modelName: 'music',
   },
   {
     id: 2,
@@ -45,7 +45,7 @@ const datas: MusicResponse[] = [
       nickname: 'ショウエン',
       image: '/media/users/images_user/user_2/MyUs_Profile_02.jpg',
     },
-    model_name: 'music'
+    modelName: 'music',
   },
   {
     id: 3,
@@ -65,7 +65,7 @@ const datas: MusicResponse[] = [
       nickname: 'ソウヒ',
       image: '/media/users/images_user/user_3/MyUs_Profile_03.jpg',
     },
-    model_name: 'music'
+    modelName: 'music',
   },
   {
     id: 4,
@@ -85,7 +85,7 @@ const datas: MusicResponse[] = [
       nickname: 'ケイマ',
       image: '/media/users/images_user/user_4/MyUs_Profile_04.jpg',
     },
-    model_name: 'music'
+    modelName: 'music',
   },
   {
     id: 5,
@@ -105,7 +105,7 @@ const datas: MusicResponse[] = [
       nickname: 'アン',
       image: '/media/users/images_user/user_5/MyUs_Profile_01.jpg',
     },
-    model_name: 'music'
+    modelName: 'music',
   },
 ]
 

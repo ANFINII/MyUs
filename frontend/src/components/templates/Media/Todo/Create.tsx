@@ -25,7 +25,7 @@ export const progress = [
 export default function TodoCreate(props: Props) {
   const { isAuthenticated } = props
   return (
-    <Main title="MyUs Todo" hero="Todo">
+    <Main title="MyUs Todo" name="Todo">
       {isAuthenticated ? (
         <form method="POST" action="">
           {/* {% csrf_token %} */}

@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { useState, useRef } from 'react'
+import Link from 'next/link'
 import ButtonSquare from 'components/parts/Button/Square'
 
 interface searchtag {
@@ -9,11 +9,11 @@ interface searchtag {
 interface Props {
   isAuthenticated: boolean
   csrfToken?: string
-  searchtag: searchtag[]
+  searchtags?: searchtag[]
 }
 
 export default function SearchTag(props: Props) {
-  const { isAuthenticated, csrfToken, searchtag } = props
+  const { isAuthenticated, csrfToken, searchtags } = props
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isSearchtag, setIsSearchtag] = useState(false)
@@ -22,7 +22,7 @@ export default function SearchTag(props: Props) {
   const handleSearchtag = () => setIsSearchtag(!isSearchtag)
 
   const handleLeft = () => {
-    let scrollContainer = scrollRef.current
+    const scrollContainer = scrollRef.current
     if (scrollContainer) {
       scrollContainer.scrollLeft -= 200
       setScrollPosition(scrollPosition)
@@ -30,7 +30,7 @@ export default function SearchTag(props: Props) {
   }
 
   const handleRight = () => {
-    let scrollContainer = scrollRef.current
+    const scrollContainer = scrollRef.current
     if (scrollContainer) {
       scrollContainer.scrollLeft += 200
       setScrollPosition(scrollPosition)
@@ -47,7 +47,7 @@ export default function SearchTag(props: Props) {
         <input type="text" name="searchtag" className={isSearchtag ? 'searchtag_3 active' : 'searchtag_3'} maxLength={30} placeholder="タグ名" disabled={isAuthenticated} />
         <div className={isSearchtag ? 'searchtag_n active' : 'searchtag_n'} ref={scrollRef}>
           <div className="searchtag_n_list">
-            {searchtag.map((tag: searchtag, index) => {
+            {searchtags?.map((tag: searchtag, index) => {
               return (
                 <Link href={`?search=${tag.name}`} data-search={tag.name} key={index}>
                   {tag.name}

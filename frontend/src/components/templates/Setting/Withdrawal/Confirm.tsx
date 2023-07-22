@@ -1,14 +1,14 @@
 import Router from 'next/router'
-import Main from 'components/layout/Main'
 import Footer from 'components/layout/Footer'
-import Input from 'components/parts/Input'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import Input from 'components/parts/Input'
 
 export default function WithdrawalConfirm() {
   const isAuthenticated = true
 
   return (
-    <Main title="MyUs退会処理" hero="退会処理">
+    <Main title="MyUs退会処理" name="退会処理">
       <article className="article_pass">
         {isAuthenticated ? (
           <form method="POST" action="" className="form_account">

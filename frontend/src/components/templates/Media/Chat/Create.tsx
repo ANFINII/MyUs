@@ -13,7 +13,7 @@ export default function ChatCreate(props: Props) {
   const { isAuthenticated } = props
 
   return (
-    <Main title="MyUsチャット" hero="Chat">
+    <Main title="MyUsチャット" name="Chat">
       {isAuthenticated ? (
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}

@@ -1,8 +1,8 @@
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
-import Textarea from 'components/parts/Input/Textarea'
 import InputFile from 'components/parts/Input/File'
+import Textarea from 'components/parts/Input/Textarea'
 
 interface Props {
   isAuthenticated?: boolean
@@ -12,7 +12,7 @@ export default function PictureCreate(props: Props) {
   const { isAuthenticated } = props
 
   return (
-    <Main title="MyUsピクチャー" hero="Picture">
+    <Main title="MyUsピクチャー" name="Picture">
       {isAuthenticated ? (
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}

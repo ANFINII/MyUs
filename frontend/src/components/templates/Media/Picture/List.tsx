@@ -11,7 +11,7 @@ export default function PictureList(props: Props) {
   const { query, datas } = props
 
   return (
-    <Main title="MyUsピクチャー" hero="Picture" query={query}>
+    <Main title="MyUsピクチャー" name="Picture" query={query}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticlePicture data={data} key={data.id} />

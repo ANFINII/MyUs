@@ -1,22 +1,23 @@
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import Router from 'next/router'
-import { Query, MypageResponse, FollowResponse } from 'types/media'
 import config from 'api/config'
+import { Mypage } from 'types/auth'
+import { Query, FollowResponse } from 'types/media'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
 interface Props {
   isAuthenticated: boolean
   query?: Query
-  mypage?: MypageResponse
+  mypage?: Mypage
   datas: FollowResponse[]
 }
 
 export default function FollowerList(props: Props) {
-  const { isAuthenticatedd, query, mypage, datas } = props
+  const { isAuthenticated, query, mypage, datas } = props
   return (
-    <Main title="MyUsフォロワー" hero="Follower" query={query}>
+    <Main title="MyUsフォロワー" name="Follower" query={query}>
       {isAuthenticated ? (
         <>
           <div className="follow_button">
@@ -39,8 +40,8 @@ export default function FollowerList(props: Props) {
                       <span title={nickname} className="follow_content_1">
                         {nickname}
                       </span>
-                      <span className="follow_content_2">フォロワー数：{data.mypage.follower_count}</span>
-                      <span className="follow_content_3">フォロー数　：{data.mypage.following_count}</span>
+                      <span className="follow_content_2">フォロワー数{data.mypage.follower_count}</span>
+                      <span className="follow_content_3">フォロー数{data.mypage.following_count}</span>
                       <object title={data.introduction} className="follow_content_4">
                         {data.introduction}
                       </object>

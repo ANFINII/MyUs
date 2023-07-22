@@ -1,10 +1,10 @@
-import Main from 'components/layout/Main'
 import Link from 'next/link'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
 export default function Payment() {
   return (
-    <Main title="MyUs料金プラン" hero="料金プラン">
+    <Main title="MyUs料金プラン" name="料金プラン">
       {/* {% if user.isAuthenticated %} */}
       <article className="article_list">
         <section className="section_plan">

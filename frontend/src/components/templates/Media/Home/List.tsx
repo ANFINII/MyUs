@@ -1,11 +1,12 @@
 import { Query, VideoResponse } from 'types/media'
+import Layout from 'components/layout'
 import Main from 'components/layout/Main'
-import ArticleVideo from 'components/widgets/Article/Video'
-import ArticleMusic from 'components/widgets/Article/Music'
-import ArticleComic from 'components/widgets/Article/Comic'
-import ArticlePicture from 'components/widgets/Article/Picture'
 import ArticleBlog from 'components/widgets/Article/Blog'
 import ArticleChat from 'components/widgets/Article/Chat'
+import ArticleComic from 'components/widgets/Article/Comic'
+import ArticleMusic from 'components/widgets/Article/Music'
+import ArticlePicture from 'components/widgets/Article/Picture'
+import ArticleVideo from 'components/widgets/Article/Video'
 
 interface Props {
   query?: Query
@@ -21,7 +22,7 @@ export default function HomeList(props: Props) {
   const { query, datas, videos } = props
 
   return (
-    <Main title="MyUsホームページ" hero="Home" query={query}>
+    <Layout title="MyUsホームページ" name="Home" query={query}>
       <hr />
 
       <article className="article_index">
@@ -90,6 +91,6 @@ export default function HomeList(props: Props) {
         {/* {% endfor %} */}
         {/* {% endif %} */}
       </article>
-    </Main>
+    </Layout>
   )
 }
