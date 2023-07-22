@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import style from 'components/parts/Input/Textarea/Textarea.module.css'
 
 interface Props {
@@ -13,19 +13,28 @@ interface Props {
 }
 
 export default function Textarea(props: Props) {
-  const {id, className, name, value, placeholder, required, disabled, children} = props
+  const { id, className, name, value, placeholder, required, disabled, children } = props
 
   const [rows, serRows] = useState(1)
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const height = e.target.value.split('\n').length
     serRows(height)
   }
 
   return (
-    <textarea id={id} name={name} value={value} placeholder={placeholder}
-      rows={rows} onChange={handleChange} required={required} disabled={disabled}
+    <textarea
+      id={id}
+      name={name}
+      value={value}
+      placeholder={placeholder}
+      rows={rows}
+      onChange={handleChange}
+      required={required}
+      disabled={disabled}
       className={style.textarea + (className ? ' ' + className : '')}
-    >{children}
+    >
+      {children}
     </textarea>
   )
 }

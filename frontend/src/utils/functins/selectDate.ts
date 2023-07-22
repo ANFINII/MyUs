@@ -13,5 +13,5 @@ export default function selectDate() {
   for (let i = 1; i <= 31; i++) {
     days.push({ value: i, label: i.toString() })
   }
-  return {years, months, days}
+  return { years, months, days }
 }

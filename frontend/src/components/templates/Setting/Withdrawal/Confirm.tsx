@@ -10,9 +10,9 @@ export default function WithdrawalConfirm() {
   return (
     <Main title="MyUs退会処理" hero="退会処理">
       <article className="article_pass">
-        {isAuthenticated ?
+        {isAuthenticated ? (
           <form method="POST" action="" className="form_account">
-          {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}
+            {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}
             {/* {% csrf_token %} */}
             <p className="red mb_24">本当に退会しますか？</p>
 
@@ -22,9 +22,9 @@ export default function WithdrawalConfirm() {
 
             <Button blue size="xl" name="戻る" className="full_w mb_24" onClick={() => Router.push('/setting/withdrawal')} />
           </form>
-        :
+        ) : (
           <h2 className="login_required">ログインしてください</h2>
-        }
+        )}
         <Footer />
       </article>
     </Main>

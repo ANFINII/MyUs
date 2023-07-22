@@ -24,9 +24,9 @@ interface Props {
 
 const user = {
   id: 1,
-  nickname: "anfinii",
-  image: "string",
-  isAuthenticated: true
+  nickname: 'anfinii',
+  image: 'string',
+  isAuthenticated: true,
 }
 
 const notificationSetting = {
@@ -56,7 +56,7 @@ export default function Notification(props: Props) {
   const [isLike, setIsLike] = useState(notificationSetting.isViews)
   const [isViews, setIsViews] = useState(notificationSetting.isViews)
 
-  const handleToggle = (isState: boolean, stateSetter: React.Dispatch<boolean>) => stateSetter(!isState);
+  const handleToggle = (isState: boolean, stateSetter: React.Dispatch<boolean>) => stateSetter(!isState)
 
   return (
     <Main title="MyUs通知">

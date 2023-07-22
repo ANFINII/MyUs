@@ -1,4 +1,4 @@
-import {Query, MusicResponse} from 'types/media'
+import { Query, MusicResponse } from 'types/media'
 import Main from 'components/layout/Main'
 import ArticleMusic from 'components/wigets/Article/Music'
 
@@ -8,7 +8,8 @@ interface Props {
 }
 
 export default function MusicList(props: Props) {
-  const {query, datas} = props
+  const { query, datas } = props
+
   return (
     <Main title="MyUsミュージック" hero="Music" query={query}>
       <article className="article_list">

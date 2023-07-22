@@ -1,4 +1,4 @@
-import {Query, MediaResponse} from 'types/media'
+import { Query, MediaResponse } from 'types/media'
 import Main from 'components/layout/Main'
 import ArticleComic from 'components/wigets/Article/Comic'
 
@@ -8,7 +8,8 @@ interface Props {
 }
 
 export default function ComicList(props: Props) {
-  const {query, datas} = props
+  const { query, datas } = props
+
   return (
     <Main title="MyUsコミック" hero="Comic" query={query}>
       <article className="article_list">

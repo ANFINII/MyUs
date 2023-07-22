@@ -18,15 +18,26 @@ interface Props {
 }
 
 export default function Input(props: Props) {
-  const {type, name, value, placeholder, id, className, onChange, onClick} = props
-  const {minLength, maxLength, required, disabled, autoFocus} = props
+  const { type, name, value, placeholder, id, className, onChange, onClick } = props
+  const { minLength, maxLength, required, disabled, autoFocus } = props
+
   const inputFocus = useAutoFocus()
 
   return (
-    <input type={type} name={name} value={value} placeholder={placeholder}
-      minLength={minLength} maxLength={maxLength} required={required} disabled={disabled}
-      onChange={onChange} onClick={onClick} ref={autoFocus ? inputFocus : undefined}
-      id={id} className={style.input + (className ? ' ' + className : '')}
+    <input
+      type={type}
+      name={name}
+      value={value}
+      placeholder={placeholder}
+      id={id}
+      className={style.input + (className ? ' ' + className : '')}
+      onChange={onChange}
+      onClick={onClick}
+      minLength={minLength}
+      maxLength={maxLength}
+      required={required}
+      disabled={disabled}
+      ref={autoFocus ? inputFocus : undefined}
     />
   )
 }

@@ -1,4 +1,4 @@
-import {Query, ImageResponse} from 'types/media'
+import { Query, ImageResponse } from 'types/media'
 import Main from 'components/layout/Main'
 import ArticlePicture from 'components/wigets/Article/Picture'
 
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function PictureList(props: Props) {
-  const {query, datas} = props
+  const { query, datas } = props
   return (
     <Main title="MyUsピクチャー" hero="Picture" query={query}>
       <article className="article_list">

@@ -1,25 +1,23 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import style from 'components/parts/Input/CheckBox/CheckBox.module.css'
 
 interface Props {
-  checked?: boolean
-  name?: string
+  name: string
   id?: string
+  labelName: string
   className?: string
-  children: React.ReactNode
 }
 
 export default function CheckBox(props: Props) {
-  const {checked, name, id, className, children} = props
-  const [checkValue, setCheckValue] = useState(checked)
-  const handleChange = () => {setCheckValue(!checkValue)}
+  const { name, id, labelName, className } = props
+
+  const [checked, setChecked] = useState(true)
+  const handleChange = () => setChecked(!checked)
 
   return (
     <div className={style.check_group + (className ? ' ' + className : '')}>
-      <input type="checkbox" name={name} id={id} onClick={handleChange}
-        className={style.checkbox} checked={checkValue}
-      />
-      <label htmlFor={id}>{children}</label>
+      <input type="checkbox" name={name} id={id} onClick={handleChange} className={style.checkbox} checked={checked} />
+      <label htmlFor={id}>{labelName}</label>
     </div>
   )
 }

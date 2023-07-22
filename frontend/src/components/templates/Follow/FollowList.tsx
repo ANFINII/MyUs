@@ -1,27 +1,28 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import Router from 'next/router'
-import {Query, MypageResponse, FollowResponse} from 'types/media'
+import { Query, FollowResponse } from 'types/media'
+import { Mypage } from 'types/auth'
 import config from 'api/config'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
 interface Props {
-  is_authenticated: boolean
+  isAuthenticated: boolean
   query?: Query
-  mypage?: MypageResponse
+  mypage?: Mypage
   datas: FollowResponse[]
 }
 
 export default function FollowList(props: Props) {
-  const {is_authenticated, query, mypage, datas} = props
+  const { isAuthenticated, query, mypage, datas } = props
   return (
     <Main title="MyUsフォロー" hero="Follow" query={query}>
-      {is_authenticated ?
+      {isAuthenticated ? (
         <>
           <div className="follow_button">
             <Button blue size="xs" name="フォロー" onClick={() => Router.push('/menu/follower')} />
-            <span>フォロー数：{mypage? mypage.following_count : 0}</span>
+            <span>フォロー数：{mypage ? mypage.following_count : 0}</span>
           </div>
           <article className="article_list">
             {datas.map((data) => {
@@ -36,7 +37,9 @@ export default function FollowList(props: Props) {
                           <Image src={imageUrl} title={nickname} className="follow_image" alt="" />
                         </Link>
                       </object>
-                      <span title={nickname} className="follow_content_1">{nickname}</span>
+                      <span title={nickname} className="follow_content_1">
+                        {nickname}
+                      </span>
                       <span className="follow_content_2">フォロワー数：{data.mypage.follower_count}</span>
                       <span className="follow_content_3">フォロー数　：{data.mypage.following_count}</span>
                       <object title={data.introduction} className="follow_content_4">
@@ -49,9 +52,9 @@ export default function FollowList(props: Props) {
             })}
           </article>
         </>
-      :
+      ) : (
         <h2 className="login_required">ログインしてください</h2>
-      }
+      )}
     </Main>
   )
 }

@@ -5,13 +5,16 @@ import Textarea from 'components/parts/Input/Textarea'
 import CheckBox from 'components/parts/Input/CheckBox'
 import InputFile from 'components/parts/Input/File'
 
-interface Props {is_authenticated?: boolean}
+interface Props {
+  isAuthenticated?: boolean
+}
 
 export default function MusicCreate(props: Props) {
-  const {is_authenticated} = props
+  const { isAuthenticated } = props
+
   return (
     <Main title="MyUsミュージック" hero="Music">
-      {is_authenticated ?
+      {isAuthenticated ? (
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}
           <p className="mv_16">タイトル</p>
@@ -24,14 +27,14 @@ export default function MusicCreate(props: Props) {
           <Textarea name="lyric" id="lyric" required></Textarea>
 
           <p className="mt_16">音楽</p>
-          <CheckBox name="download" id="download" className="check_margin" checked>ダウンロード許可</CheckBox>
+          <CheckBox name="download" id="download" labelName="ダウンロード許可" className="check_margin" />
           <InputFile id="file_1" accept="audio/*" required />
 
           <Button green type="submit" name="作成する" className="mt_32" />
         </form>
-      :
+      ) : (
         <h2 className="login_required">ログインしてください</h2>
-      }
+      )}
     </Main>
   )
 }

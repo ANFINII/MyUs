@@ -19,7 +19,7 @@ interface Props extends Color {
 
 export default function Button(props: Props): JSX.Element {
   const { blue, purple, red, green } = props
-  const { size, type, name, value, className, disabled, onClick } = props
+  const { size, type = 'button', name, value, className, disabled, onClick } = props
 
   const colorCheck = (name: string, isColor?: boolean): string => {
     return isColor ? ' ' + style[name] : ''
@@ -30,7 +30,11 @@ export default function Button(props: Props): JSX.Element {
   }
 
   return (
-    <button type={type} value={value} onClick={onClick} disabled={disabled}
+    <button
+      type={type}
+      value={value}
+      onClick={onClick}
+      disabled={disabled}
       className={
         style.button +
         colorCheck('blue', blue) +

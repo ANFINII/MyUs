@@ -1,4 +1,4 @@
-import {Query, FollowResponse} from 'types/media'
+import { Query, FollowResponse } from 'types/media'
 import FollowList from 'components/templates/Follow/FollowList'
 
 const query: Query = {
@@ -8,5 +8,5 @@ const query: Query = {
 const datas: FollowResponse[] = []
 
 export default function FollowListPage() {
-  return <FollowList is_authenticated={true} query={query} datas={datas} />
+  return <FollowList isAuthenticated={true} query={query} datas={datas} />
 }

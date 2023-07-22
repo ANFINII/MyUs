@@ -8,7 +8,7 @@ export default function TodoDelete() {
       </Head>
 
       <h1>ToDo削除</h1>
-      {/* {% if user.is_authenticated %} */}
+      {/* {% if user.isAuthenticated %} */}
       {/* <p>タイトル：{{ object.title }}</p>
 
       <p>優先度：{{ object.get_priority_display }}</p>

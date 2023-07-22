@@ -5,7 +5,8 @@ import DropMenuNotice from 'components/layout/Header/DropMenuNotice'
 import DropMenuProfile from 'components/layout/Header/DropMenuProfile'
 
 export default function Header() {
-  const search = ""
+  const search = ''
+
   return (
     <header className="header">
       <nav className="header_nav">
@@ -23,7 +24,9 @@ export default function Header() {
             <div className="searchbar">
               <form method="GET" action="">
                 <input type="search" name="search" value={search} placeholder="検索..." className="search_input" />
-                <button type="submit" className="search_icon"><i className="fas fa-search"></i></button>
+                <button type="submit" className="search_icon">
+                  <i className="fas fa-search"></i>
+                </button>
               </form>
             </div>
           </div>

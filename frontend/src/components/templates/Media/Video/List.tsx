@@ -1,4 +1,4 @@
-import {Query, VideoResponse} from 'types/media'
+import { Query, VideoResponse } from 'types/media'
 import Main from 'components/layout/Main'
 import ArticleVideo from 'components/wigets/Article/Video'
 
@@ -8,7 +8,8 @@ interface Props {
 }
 
 export default function VideoList(props: Props) {
-  const {query, datas} = props
+  const { query, datas } = props
+
   return (
     <Main title="MyUsビデオ" hero="Video" query={query}>
       <article className="article_list">

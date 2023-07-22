@@ -3,7 +3,7 @@ import Link from 'next/link'
 export default function DropMenuNotice() {
   return (
     <>
-      <input type="checkbox" id="drop_menu_notice" className="drop_menu_notice"/>
+      <input type="checkbox" id="drop_menu_notice" className="drop_menu_notice" />
       <label htmlFor="drop_menu_notice" className="drop_back_cover"></label>
       <label htmlFor="drop_menu_notice" className="drop_open">
         {/* if (notification_count) {
@@ -14,10 +14,10 @@ export default function DropMenuNotice() {
             <path d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0L7.005 3.1ZM7 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"/>
           </svg>
         } else { */}
-          <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-bell-fill" viewBox="0 0 16 16">
-            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
-          </svg>
-          {/* <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor" className="bi bi-exclamation-lg" viewBox="0 0 16 16">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-bell-fill" viewBox="0 0 16 16">
+          <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
+        </svg>
+        {/* <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor" className="bi bi-exclamation-lg" viewBox="0 0 16 16">
             <path d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0L7.005 3.1ZM7 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"/>
           </svg>
         } */}
@@ -28,7 +28,7 @@ export default function DropMenuNotice() {
           <li className="drop_menu_list">
             <Link href="/setting/notification" className="icon_link"></Link>
             <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-bell-fill color_drop_menu_bi" viewBox="0 0 16 16">
-              <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+              <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
             </svg>
             <span>通知設定</span>
           </li>
@@ -62,49 +62,58 @@ export default function DropMenuNotice() {
               {/* {% elif notification.type_no >= 8 and notification.type_no <= 10 %} */}
               {/* <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" className="notification_aria_anker pjax_button_userpage"> */}
               {/* {% endif %} */}
-                {/* {% if notification.type_no >= 1 and notification.type_no <= 7 %} */}
-                <div className="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんが{{ notification.content_object.title }}を投稿しました">
-                  {/* {{ notification.content_object.title }} */}
-                </div>
-                {/* {% elif notification.type_no == 8 %} */}
-                <div className="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんにフォローされました">
-                  {/* {{ notification.user_from.nickname }}さんにフォローされました */}
-                </div>
-                {/* {% elif notification.type_no == 9 %} */}
-                <div className="notification_aria_list_1" title="{{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました">
-                  {/* {{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました */}
-                </div>
-                {/* {% elif notification.type_no == 10 %} */}
-                <div className="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんから返信がありました {{ notification.content_object.text }}">
-                  {/* {{ notification.content_object.text }} */}
-                </div>
-                {/* {% elif notification.type_no == 11 %} */}
-                  {/* {% if  notification.content_object.read >= 1000000000 %} */}
-                  <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が10億回閲覧されました">
-                    {/* {{ notification.content_object.title }}が10億回閲覧されました */}
-                  </div>
-                  {/* {% elif  notification.content_object.read >= 100000000 %} */}
-                  <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が1億回閲覧されました">
-                    {/* {{ notification.content_object.title }}が1億回閲覧されました */}
-                  </div>
-                  {/* {% elif  notification.content_object.read >= 10000000 %} */}
-                  <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が1000万回閲覧されました">
-                    {/* {{ notification.content_object.title }}が1000万回閲覧されました */}
-                  </div>
-                  {/* {% elif  notification.content_object.read >= 1000000 %} */}
-                  <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が100万回閲覧されました">
-                    {/* {{ notification.content_object.title }}が100万回閲覧されました */}
-                  </div>
-                  {/* {% elif  notification.content_object.read >= 100000 %} */}
-                  <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が10万回閲覧されました">
-                    {/* {{ notification.content_object.title }}が10万回閲覧されました */}
-                  </div>
-                  {/* {% elif  notification.content_object.read >= 10000 %} */}
-                  <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が1万回閲覧されました">
-                    {/* {{ notification.content_object.title }}が1万回閲覧されました */}
-                  </div>
-                  {/* {% endif %} */}
-                {/* {% endif %} */}
+              {/* {% if notification.type_no >= 1 and notification.type_no <= 7 %} */}
+              <div
+                className="notification_aria_list_1"
+                title="{{ notification.user_from.nickname }}さんが{{ notification.content_object.title }}を投稿しました"
+              >
+                {/* {{ notification.content_object.title }} */}
+              </div>
+              {/* {% elif notification.type_no == 8 %} */}
+              <div className="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんにフォローされました">
+                {/* {{ notification.user_from.nickname }}さんにフォローされました */}
+              </div>
+              {/* {% elif notification.type_no == 9 %} */}
+              <div
+                className="notification_aria_list_1"
+                title="{{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました"
+              >
+                {/* {{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました */}
+              </div>
+              {/* {% elif notification.type_no == 10 %} */}
+              <div
+                className="notification_aria_list_1"
+                title="{{ notification.user_from.nickname }}さんから返信がありました {{ notification.content_object.text }}"
+              >
+                {/* {{ notification.content_object.text }} */}
+              </div>
+              {/* {% elif notification.type_no == 11 %} */}
+              {/* {% if  notification.content_object.read >= 1000000000 %} */}
+              <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が10億回閲覧されました">
+                {/* {{ notification.content_object.title }}が10億回閲覧されました */}
+              </div>
+              {/* {% elif  notification.content_object.read >= 100000000 %} */}
+              <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が1億回閲覧されました">
+                {/* {{ notification.content_object.title }}が1億回閲覧されました */}
+              </div>
+              {/* {% elif  notification.content_object.read >= 10000000 %} */}
+              <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が1000万回閲覧されました">
+                {/* {{ notification.content_object.title }}が1000万回閲覧されました */}
+              </div>
+              {/* {% elif  notification.content_object.read >= 1000000 %} */}
+              <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が100万回閲覧されました">
+                {/* {{ notification.content_object.title }}が100万回閲覧されました */}
+              </div>
+              {/* {% elif  notification.content_object.read >= 100000 %} */}
+              <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が10万回閲覧されました">
+                {/* {{ notification.content_object.title }}が10万回閲覧されました */}
+              </div>
+              {/* {% elif  notification.content_object.read >= 10000 %} */}
+              <div className="notification_aria_list_1" title="{{ notification.content_object.title }}が1万回閲覧されました">
+                {/* {{ notification.content_object.title }}が1万回閲覧されました */}
+              </div>
+              {/* {% endif %} */}
+              {/* {% endif %} */}
               {/* </a> */}
 
               <form method="POST" action="">

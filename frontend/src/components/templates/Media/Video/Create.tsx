@@ -4,13 +4,15 @@ import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 import InputFile from 'components/parts/Input/File'
 
-interface Props {is_authenticated?: boolean}
+interface Props {
+  isAuthenticated?: boolean
+}
 
 export default function VideoCreate(props: Props) {
-  const {is_authenticated} = props
+  const { isAuthenticated } = props
   return (
     <Main title="MyUsビデオ" hero="Video">
-      {is_authenticated ?
+      {isAuthenticated ? (
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}
           <p className="mv_16">タイトル</p>
@@ -27,9 +29,9 @@ export default function VideoCreate(props: Props) {
 
           <Button green type="submit" name="作成する" className="mt_32" />
         </form>
-      :
+      ) : (
         <h2 className="login_required">ログインしてください</h2>
-      }
+      )}
     </Main>
   )
 }
