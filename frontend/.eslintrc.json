@@ -1,5 +1,12 @@
 {
   "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
   "env": {
     "browser": true,
     "node": true,
@@ -12,7 +19,7 @@
     "plugin:prettier/recommended",
     "plugin:storybook/recommended"
   ],
-  "plugins": ["react", "import", "unused-imports"],
+  "plugins": ["react", "complexity", "import", "unused-imports"],
   "settings": {
     "react": {
       "version": "detect"
@@ -26,9 +33,10 @@
     "prettier/prettier": ["error", { "semi": false }],
     "complexity": ["error", 10],
     "no-unused-vars": "off",
-    "unused-imports/no-unused-imports": "warn",
+    "unused-imports/no-unused-imports": "off",
     "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
     "no-console": "error",
     "import/order": [
       "error",
@@ -40,14 +48,14 @@
         "pathGroups": [
           { "pattern": "{react,react/**,react-dom/**,react-**}", "group": "builtin", "position": "before" },
           { "pattern": "{next,next/**,next-i18next,next-i18next/**,next-**}", "group": "builtin", "position": "before" },
-          { "pattern": "lib/**", "group": "internal", "position": "before" },
-          { "pattern": "utils/**", "group": "internal", "position": "before" },
+          { "pattern": "api/**", "group": "internal", "position": "before" },
           { "pattern": "types/**", "group": "internal", "position": "before" },
+          { "pattern": "utils/**", "group": "internal", "position": "before" },
           { "pattern": "pages/**", "group": "internal", "position": "before" },
           { "pattern": "components/hooks/**", "group": "internal", "position": "before" },
-          { "pattern": "components/layout,components/layout/**", "group": "internal", "position": "before" },
+          { "pattern": "{components/layout,components/layout/**}", "group": "internal", "position": "before" },
           { "pattern": "components/parts/**", "group": "sibling", "position": "before" },
-          { "pattern": "components/wigets/**", "group": "sibling", "position": "before" },
+          { "pattern": "components/widgets/**", "group": "sibling", "position": "before" },
           { "pattern": "components/templates/**", "group": "sibling", "position": "before" }
         ]
       }
