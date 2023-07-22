@@ -1,17 +1,21 @@
 import Link from 'next/link'
-import {VideoResponse} from 'types/media'
+import { VideoResponse } from 'types/media'
 import config from 'api/config'
-import AuthorSpace from 'components/wigets/Common/AuthorSpace'
-import ContentTitle from 'components/wigets/Common/ContentTitle'
+import AuthorSpace from 'components/widgets/Common/AuthorSpace'
+import ContentTitle from 'components/widgets/Common/ContentTitle'
 
-interface Props {data: VideoResponse}
+interface Props {
+  data: VideoResponse
+}
 
 export default function ArticleVideo(props: Props) {
-  const {data} = props
+  const { data } = props
+
   const pictureUrl = config.baseUrl + data.image
   const convertUrl = config.baseUrl + data.convert
   const imageUrl = config.baseUrl + data.author.image
   const nickname = data.author.nickname
+
   return (
     <section className="section_list">
       <div className="main_decolation">

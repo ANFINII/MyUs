@@ -1,6 +1,6 @@
 import { Query, MusicResponse } from 'types/media'
 import Main from 'components/layout/Main'
-import ArticleMusic from 'components/wigets/Article/Music'
+import ArticleMusic from 'components/widgets/Article/Music'
 
 interface Props {
   query?: Query

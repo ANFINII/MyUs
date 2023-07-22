@@ -2,14 +2,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ImageResponse } from 'types/media'
 import config from 'api/config'
-import AuthorSpace from 'components/wigets/Common/AuthorSpace'
-import ContentTitle from 'components/wigets/Common/ContentTitle'
+import AuthorSpace from 'components/widgets/Common/AuthorSpace'
+import ContentTitle from 'components/widgets/Common/ContentTitle'
 
 interface Props {
   data: ImageResponse
 }
 
-export default function ArticleBlog(props: Props) {
+export default function ArticleComic(props: Props) {
   const { data } = props
 
   const imageUrl = config.baseUrl + data.image
@@ -18,7 +18,7 @@ export default function ArticleBlog(props: Props) {
 
   return (
     <section className="section_list">
-      <Link href="/blog/detail/[id][title]">
+      <Link href="/comic/detail/[id][title]">
         <figure className="main_decolation">
           <Image src={imageUrl} width={272} height={153} alt="" className="radius_10" />
         </figure>
