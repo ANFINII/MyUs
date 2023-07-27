@@ -13,8 +13,8 @@ export interface Profile {
   age: number
   gender: string
   phone: string
-  country_code: string
-  postal_code: string
+  countryCode: string
+  postalCode: string
   prefecture: string
   city: string
   address: string
@@ -28,11 +28,11 @@ export interface Mypage {
   banner: string
   nickname: string
   email: string
-  follower_count: number
-  following_count: number
+  followerCount: number
+  followingCount: number
   plan: string
-  plan_date: string
-  is_advertise: boolean
+  planDate: string
+  isAdvertise: boolean
   content: string
 }
 

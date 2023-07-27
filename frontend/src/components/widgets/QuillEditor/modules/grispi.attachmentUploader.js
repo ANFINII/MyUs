@@ -9,8 +9,7 @@ class ImageUploader {
     this.options = options
     this.range = null
 
-    if (typeof this.options.upload !== 'function')
-      console.warn('[Missing config] upload function that returns a promise is required')
+    if (typeof this.options.upload !== 'function') console.warn('[Missing config] upload function that returns a promise is required')
 
     var toolbar = this.quill.getModule('toolbar')
     toolbar.addHandler('image', this.selectLocalImage.bind(this))

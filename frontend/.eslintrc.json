@@ -37,7 +37,7 @@
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "no-console": "error",
+    "no-console": "off",
     "import/order": [
       "error",
       {

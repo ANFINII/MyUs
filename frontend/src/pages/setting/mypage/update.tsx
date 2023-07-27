@@ -1,4 +1,4 @@
-import {MypageResponse} from 'types/media'
+import { Mypage } from 'types/auth'
 import MypageUpdate from 'components/templates/Setting/Mypage/Update'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -12,16 +12,17 @@ import MypageUpdate from 'components/templates/Setting/Mypage/Update'
 //   }
 // }
 
-const mypage: MypageResponse = {
+const mypage: Mypage = {
+  id: 1,
   banner: '/media/users/images_mypage/user_5/MyUs_banner.png',
   nickname: 'アン',
   email: 'abc@gmail.com',
   content: 'MyUs開発者です。',
-  follower_count: 0,
-  following_count: 1,
+  followerCount: 0,
+  followingCount: 1,
   plan: 'Free',
-  plan_date: '2023-12-31T15:00:00Z',
-  is_advertise: true,
+  planDate: '2023-12-31T15:00:00Z',
+  isAdvertise: true,
 }
 
 export default function MyPageUpdatePage() {

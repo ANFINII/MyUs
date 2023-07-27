@@ -2,8 +2,7 @@ import Image from 'next/image'
 import Router from 'next/router'
 import config from 'api/config'
 import { Mypage } from 'types/auth'
-import Main from 'components/layout/Main'
-import Footer from 'components/layout/Footer'
+import Layout from 'components/layout'
 import Button from 'components/parts/Button'
 
 interface Props {
@@ -12,9 +11,11 @@ interface Props {
 
 export default function MyPage(props: Props) {
   const { mypage } = props
+
   const bannerUrl = config.baseUrl + mypage.banner
+
   return (
-    <Main title="MyUsマイページ設定">
+    <Layout title="MyUsマイページ設定" isFooter>
       {mypage ? (
         <article className="article_table">
           <h1>マイページ設定</h1>
@@ -83,7 +84,6 @@ export default function MyPage(props: Props) {
               </tr>
             </tbody>
           </table>
-          <Footer />
         </article>
       ) : (
         <article className="article_table">
@@ -91,6 +91,6 @@ export default function MyPage(props: Props) {
           <h2 className="login_required">ログインしてください</h2>
         </article>
       )}
-    </Main>
+    </Layout>
   )
 }

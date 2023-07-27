@@ -1,7 +1,7 @@
 import Router from 'next/router'
 import { Mypage } from 'types/auth'
-import Main from 'components/layout/Main'
 import Footer from 'components/layout/Footer'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'

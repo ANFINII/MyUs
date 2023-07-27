@@ -2,10 +2,10 @@ import { useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import Router from 'next/router'
-import Main from 'components/layout/Main'
 import Footer from 'components/layout/Footer'
-import Input from 'components/parts/Input'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import Input from 'components/parts/Input'
 
 export default function Login() {
   const url = process.env.NEXT_PUBLIC_API_URL
@@ -43,7 +43,7 @@ export default function Login() {
             <Link href="/setting/password_reset">パスワードをリセット</Link>
           </div>
 
-          <Button blue size="xl" type="submit" name="ログイン" className="full_w mb_24" onClick={loginClicked}  />
+          <Button blue size="xl" type="submit" name="ログイン" className="full_w mb_24" onClick={loginClicked} />
           <Button green size="xl" name="アカウント登録" className="full_w mb_24" onClick={() => Router.push('/registration/signup')} />
         </form>
 

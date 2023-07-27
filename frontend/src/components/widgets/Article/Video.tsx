@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { VideoResponse } from 'types/media'
 import config from 'api/config'
+import { VideoResponse } from 'types/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
 

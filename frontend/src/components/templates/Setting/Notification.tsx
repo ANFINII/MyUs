@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { User } from 'types/auth'
-import Main from 'components/layout/Main'
 import Footer from 'components/layout/Footer'
+import Main from 'components/layout/Main'
 import Toggle from 'components/parts/Input/Toggle'
 
 interface notificationSetting {

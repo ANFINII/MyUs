@@ -1,6 +1,6 @@
 import Router from 'next/router'
-import Main from 'components/layout/Main'
 import Footer from 'components/layout/Footer'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
 export default function PasswordChangeDone() {

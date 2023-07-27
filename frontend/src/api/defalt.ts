@@ -4,8 +4,6 @@
 // // axios.get('localhost:8000/api/user')
 // // .then(res => {...})
 
-
-
 // export const apiURL = 'http://localhost:8000/api/v1/'
 
 // const Default = () => {

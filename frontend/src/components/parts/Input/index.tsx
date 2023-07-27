@@ -1,5 +1,5 @@
-import style from 'components/parts/Input/Input.module.css'
 import useAutoFocus from 'components/hooks/useAutoFocus'
+import style from 'components/parts/Input/Input.module.css'
 
 interface Props {
   type?: string
