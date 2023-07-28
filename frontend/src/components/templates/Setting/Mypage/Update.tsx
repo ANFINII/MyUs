@@ -49,11 +49,11 @@ export default function MyPageUpdate(props: Props) {
               </tr>
               <tr>
                 <td className="td_color">フォロー数</td>
-                <td className="td_indent">{mypage.following_count}</td>
+                <td className="td_indent">{mypage.followingCount}</td>
               </tr>
               <tr>
                 <td className="td_color">フォロワー数</td>
-                <td className="td_indent">{mypage.follower_count}</td>
+                <td className="td_indent">{mypage.followerCount}</td>
               </tr>
               <tr>
                 <td className="td_color">料金プラン</td>
@@ -67,7 +67,7 @@ export default function MyPageUpdate(props: Props) {
                       <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi-toggle-disable" viewBox="0 0 16 16">
                         <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
                       </svg>
-                    ) : mypage.is_advertise ? (
+                    ) : mypage.isAdvertise ? (
                       <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi-toggle-on toggle_mypage" viewBox="0 0 16 16">
                         <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
                       </svg>

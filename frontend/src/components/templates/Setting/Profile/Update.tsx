@@ -118,7 +118,7 @@ export default function ProfileUpdate(props: Props) {
               <tr>
                 <td className="td_color">郵便番号</td>
                 <td>
-                  <Input type="tel" name="postal_code" value={user.postal_code} maxLength={8} required />
+                  <Input type="tel" name="postal_code" value={user.postalCode} maxLength={8} required />
                 </td>
               </tr>
               <tr>

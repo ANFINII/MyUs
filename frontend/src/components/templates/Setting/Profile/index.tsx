@@ -71,7 +71,7 @@ export default function Profile(props: Props) {
               </tr>
               <tr>
                 <td className="td_color">郵便番号</td>
-                <td className="td_indent">{user.postal_code}</td>
+                <td className="td_indent">{user.postalCode}</td>
               </tr>
               <tr>
                 <td className="td_color">住所</td>
