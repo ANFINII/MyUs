@@ -34,9 +34,7 @@
 
       <aside class="side_menu">
         <label for="burger_menu" class="side_menu_close side_menu_color">
-          <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-arrow-left side_menu_color_bi" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-          </svg>
+          {% include 'icon/side_menu/left.html' %}
           <img src="{% static 'img/MyUs.png' %}" width="30em" height="30em">
         </label>
 
@@ -44,19 +42,19 @@
           <ul>
             <li class="side_menu_item side_menu_color">
               <a href="{% url 'myus:index' %}" class="icon_link pjax_button"></a>
-              {% include 'icon/home.html' %}
+              {% include 'icon/side_menu/house.html' %}
               <span>ホーム</span>
             </li>
 
             <li class="side_menu_item side_menu_color">
               <a href="{% url 'myus:recommend' %}" class="icon_link pjax_button"></a>
-              {% include 'icon/recommend.html' %}
+              {% include 'icon/side_menu/lightning.html' %}
               <span>急上昇</span>
             </li>
 
             <li class="side_menu_item side_menu_color">
               <a href="{% url 'myus:follow_list' %}" class="icon_link pjax_button"></a>
-              {% include 'icon/follow.html' %}
+              {% include 'icon/side_menu/follow.html' %}
               <span>フォロー</span>
             </li>
           </ul>
@@ -66,13 +64,13 @@
           <ul>
             <li class="side_menu_item side_menu_color">
               <a href="{% url 'myus:userpolicy' %}" class="icon_link pjax_button"></a>
-              {% include 'icon/userpolicy.html' %}
+              {% include 'icon/side_menu/userpolicy.html' %}
               <span>利用規約</span>
             </li>
 
             <li class="side_menu_item side_menu_color">
               <a href="{% url 'myus:knowledge' %}" class="icon_link pjax_button"></a>
-              {% include 'icon/knowledge.html' %}
+              {% include 'icon/side_menu/globe.html' %}
               <span>Knowledge Base</span>
             </li>
 
@@ -104,18 +102,14 @@
 
     <div class="header_nav_4 header_color">
       <a href="{% url 'myus:recommend' %}" class="icon_link pjax_button"></a>
-      <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
-        <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/>
-      </svg>
+      {% include 'icon/header/lightning.html' %}
     </div>
 
     <div class="header_nav_5 header_color">
       <input type="checkbox" id="drop_menu_cloud" class="drop_menu_cloud">
       <label for="drop_menu_cloud" class="drop_back_cover"></label>
       <label for="drop_menu_cloud" class="drop_open">
-        <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-cloud-fill" viewBox="0 0 16 16">
-          <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383z"/>
-        </svg>
+        {% include 'icon/header/cloud.html' %}
       </label>
 
       <nav class="drop_menu drop_menu_cloud">
@@ -200,9 +194,7 @@
         <ul>
           <li class="drop_menu_list">
             <a href="{% url 'myus:notification' %}" class="icon_link pjax_button"></a>
-            <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-bell-fill color_drop_menu_bi" viewBox="0 0 16 16">
-              <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
-            </svg>
+            {% include 'icon/header/bell.html' %}
             <span>通知設定</span>
           </li>
           {% include 'parts/notification_list.html' %}
