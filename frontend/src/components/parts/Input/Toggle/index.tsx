@@ -1,5 +1,5 @@
-import ToggleOff from 'components/parts/Icon/ToggleOff'
-import ToggleOn from 'components/parts/Icon/ToggleOn'
+import IconToggleOff from 'components/parts/Icon/ToggleOff'
+import IconToggleOn from 'components/parts/Icon/ToggleOn'
 import style from 'components/parts/Input/Toggle/Toggle.module.css'
 
 interface Props {
@@ -12,7 +12,7 @@ export default function Toggle(props: Props) {
 
   return (
     <div className={style.radio + (isActive ? ' ' + style.active : '')} onClick={onClick}>
-      {isActive ? <ToggleOn /> : <ToggleOff />}
+      {isActive ? <IconToggleOn /> : <IconToggleOff />}
     </div>
   )
 }
