@@ -1,10 +1,11 @@
 import Router from 'next/router'
 import { Profile } from 'types/auth'
 import { prefectures } from 'utils/constants/prefectures'
-import selectDate from 'utils/functins/selectDate'
+import { selectDate } from 'utils/functins/datetime'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
@@ -42,10 +43,7 @@ export default function ProfileUpdate(props: Props) {
                 <td className="td_color">アカウント画像</td>
                 <td valign="baseline">
                   <label htmlFor="account_image_input" className="update_account_image">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" fill="currentColor" className="bi bi-person-square" viewBox="0 0 16 16">
-                      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                      <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z" />
-                    </svg>
+                    <IconPerson />
                     <input type="file" name="image" accept="image/*" id="account_image_input" className="custom-file-input" />
                   </label>
                 </td>

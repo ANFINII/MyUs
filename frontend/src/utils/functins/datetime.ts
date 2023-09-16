@@ -1,4 +1,4 @@
-export default function selectDate() {
+export const selectDate = () => {
   const years = []
   for (let i = 1900; i <= new Date().getFullYear(); i++) {
     years.push({ value: i, label: i.toString() })
