@@ -13,22 +13,22 @@ model_dict = {
 }
 
 model_pjax = {
-    'video'  : Video,
-    'music'  : Music,
-    'comic'  : Comic,
-    'picture': Picture,
-    'blog'   : Blog,
-    'chat'   : Chat,
+    'media/video'  : Video,
+    'media/music'  : Music,
+    'media/comic'  : Comic,
+    'media/picture': Picture,
+    'media/blog'   : Blog,
+    'media/chat'   : Chat,
 }
 
 model_create_pjax = (
-    'video/create',
-    'music/create',
-    'comic/create',
-    'picture/create',
-    'blog/create',
-    'chat/create',
-    'todo/create',
+    'media/video/create',
+    'media/music/create',
+    'media/comic/create',
+    'media/picture/create',
+    'media/blog/create',
+    'media/chat/create',
+    'media/todo/create',
 )
 
 model_like_dict = {

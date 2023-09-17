@@ -26,31 +26,31 @@ urlpatterns = [
 
     path('index', IndexAPI.as_view()),
 
-    path('video', VideoListAPI.as_view()),
-    path('video/create', VideoCreateAPI.as_view()),
-    path('video/detail/<int:id>', VideoDetailAPI.as_view()),
+    path('media/video', VideoListAPI.as_view()),
+    path('media/video/create', VideoCreateAPI.as_view()),
+    path('media/video/detail/<int:id>', VideoDetailAPI.as_view()),
 
-    path('music', MusicListAPI.as_view()),
-    path('music/create', MusicCreateAPI.as_view()),
-    path('music/detail/<int:id>', MusicDetailAPI.as_view()),
+    path('media/music', MusicListAPI.as_view()),
+    path('media/music/create', MusicCreateAPI.as_view()),
+    path('media/music/detail/<int:id>', MusicDetailAPI.as_view()),
 
-    path('comic', ComicListAPI.as_view()),
-    path('comic/create', ComicCreateAPI.as_view()),
-    path('comic/detail/<int:id>', ComicDetailAPI.as_view()),
+    path('media/comic', ComicListAPI.as_view()),
+    path('media/comic/create', ComicCreateAPI.as_view()),
+    path('media/comic/detail/<int:id>', ComicDetailAPI.as_view()),
 
-    path('picture', PictureListAPI.as_view()),
-    path('picture/create', PictureCreateAPI.as_view()),
-    path('picture/detail/<int:id>', PictureDetailAPI.as_view()),
+    path('media/picture', PictureListAPI.as_view()),
+    path('media/picture/create', PictureCreateAPI.as_view()),
+    path('media/picture/detail/<int:id>', PictureDetailAPI.as_view()),
 
-    path('blog', BlogListAPI.as_view()),
-    path('blog/create', BlogCreateAPI.as_view()),
-    path('blog/detail/<int:id>', BlogDetailAPI.as_view()),
+    path('media/blog', BlogListAPI.as_view()),
+    path('media/blog/create', BlogCreateAPI.as_view()),
+    path('media/blog/detail/<int:id>', BlogDetailAPI.as_view()),
 
-    path('chat', ChatListAPI.as_view()),
-    path('chat/create', ChatCreateAPI.as_view()),
-    path('chat/detail/<int:id>', ChatDetailAPI.as_view()),
+    path('media/chat', ChatListAPI.as_view()),
+    path('media/chat/create', ChatCreateAPI.as_view()),
+    path('media/chat/detail/<int:id>', ChatDetailAPI.as_view()),
 
-    path('todo', TodoListAPI.as_view()),
-    path('todo/create', TodoCreateAPI.as_view()),
-    path('todo/detail/<int:id>', TodoDetailAPI.as_view()),
+    path('media/todo', TodoListAPI.as_view()),
+    path('media/todo/create', TodoCreateAPI.as_view()),
+    path('media/todo/detail/<int:id>', TodoDetailAPI.as_view()),
 ]

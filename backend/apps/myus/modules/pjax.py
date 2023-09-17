@@ -67,13 +67,14 @@ def pjax_context(request, href):
                 advertise = Advertise.objects.filter(author=author, publish=True)
                 context = {'is_follow': is_follow, 'author': author, 'advertise_list': advertise}
     if href in model_pjax:
-        template = f'media/{href}/{href}_list.html'
+        model = href.replace('media/', '')
+        template = f'media/{model}/{model}_list.html'
         if search:
             result = SearchData.search_models(model_pjax[href], search)
-            context = {f'{href}_list': result[:100], 'query': search, 'count': result.count()}
+            context = {f'{model}_list': result[:100], 'query': search, 'count': result.count()}
         else:
-            context = {f'{href}_list': model_pjax[href].objects.filter(publish=True).order_by('-created')[:100]}
-    if href == 'todo':
+            context = {f'{model}_list': model_pjax[href].objects.filter(publish=True).order_by('-created')[:100]}
+    if href == 'media/todo':
         template = 'media/todo/todo_list.html'
         if search:
             result = SearchData.search_todo(Todo, user, search)
@@ -92,7 +93,7 @@ def pjax_context(request, href):
             template = 'menu/follow/follower_list.html'
             context = {'follower_list': Follow.objects.filter(following=user.id).select_related('follower__mypage').order_by('created')[:100]}
     if href in model_create_pjax:
-        model = href.replace('/create', '')
+        model = href.replace('media/', '').replace('/create', '')
         template = f'media/{model}/{model}_create_content.html'
     if href == 'menu/userpolicy':
         template = 'menu/userpolicy_content.html'
