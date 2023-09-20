@@ -3,21 +3,21 @@ import Link from 'next/link'
 import Router from 'next/router'
 import config from 'api/config'
 import { Mypage } from 'types/auth'
-import { Query, FollowResponse } from 'types/media'
+import { Search, FollowResponse } from 'types/media'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
 interface Props {
   isAuthenticated: boolean
-  query?: Query
+  search?: Search
   mypage?: Mypage
   datas: FollowResponse[]
 }
 
-export default function FollowList(props: Props) {
-  const { isAuthenticated, query, mypage, datas } = props
+export default function Follows(props: Props) {
+  const { isAuthenticated, search, mypage, datas } = props
   return (
-    <Main title="MyUsフォロー" name="Follow" query={query}>
+    <Main title="Follow" search={search}>
       {isAuthenticated ? (
         <>
           <div className="follow_button">

@@ -1,12 +1,12 @@
-import { Query, ImageResponse } from 'types/media'
-import PictureList from 'components/templates/Media/Picture/List'
+import { Search, ImageResponse } from 'types/media'
+import Pictures from 'components/templates/media/picture/List'
 
-const query: Query = {
+const search: Search = {
   name: 'test',
   count: 0,
 }
 const datas: ImageResponse[] = []
 
-export default function PictureListPage() {
-  return <PictureList query={query} datas={datas} />
+export default function PicturesPage() {
+  return <Pictures search={search} datas={datas} />
 }

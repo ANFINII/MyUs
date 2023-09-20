@@ -1,22 +1,22 @@
-import { Query, ImageResponse } from 'types/media'
-import Main from 'components/layout/Main'
+import { Search, ImageResponse } from 'types/media'
+import Layout from 'components/layout'
 import ArticleBlog from 'components/widgets/Article/Blog'
 
 interface Props {
-  query?: Query
+  search?: Search
   datas: ImageResponse[]
 }
 
-export default function BlogList(props: Props) {
-  const { query, datas } = props
+export default function Blogs(props: Props) {
+  const { search, datas } = props
 
   return (
-    <Main title="MyUsブログ" name="Blog" query={query}>
+    <Layout title="Blog" search={search}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticleBlog data={data} key={data.id} />
         ))}
       </article>
-    </Main>
+    </Layout>
   )
 }

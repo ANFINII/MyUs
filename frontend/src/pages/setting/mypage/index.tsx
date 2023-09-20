@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { Mypage } from 'types/auth'
-import SettingMypage from 'components/templates/Setting/Mypage'
+import SettingMypage from 'components/templates/setting/mypage'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   const cookie = context.req?.headers.cookie

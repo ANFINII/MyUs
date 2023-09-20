@@ -1,6 +1,6 @@
-import {GetServerSideProps} from 'next'
-import {ProfileResponse} from 'types/media'
-import Profile from 'components/templates/Setting/Profile'
+import { GetServerSideProps } from 'next'
+import { Profile } from 'types/auth'
+import SettingProfile from 'components/templates/setting/profile'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //  const cookie = context.req?.headers.cookie
@@ -13,7 +13,8 @@ import Profile from 'components/templates/Setting/Profile'
 //  }
 // }
 
-const user: ProfileResponse = {
+const user: Profile = {
+  id: 1,
   avatar: '/media/users/images_user/user_5/MyUs_Profile_01.jpg',
   email: 'anfinii56@gmail.com',
   username: 'anfinii56',
@@ -27,8 +28,8 @@ const user: ProfileResponse = {
   age: 35,
   gender: '男性',
   phone: '090-9678-8552',
-  country_code: 'JP',
-  postal_code: '210-0844',
+  countryCode: 'JP',
+  postalCode: '210-0844',
   prefecture: '神奈川県',
   city: '川崎市川崎区渡田新町',
   address: '1-10-8-1',
@@ -37,5 +38,5 @@ const user: ProfileResponse = {
 }
 
 export default function ProfilePage() {
-  return <Profile user={user} />
+  return <SettingProfile user={user} />
 }

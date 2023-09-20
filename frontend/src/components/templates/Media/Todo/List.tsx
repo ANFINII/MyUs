@@ -1,17 +1,17 @@
-import { Query, MediaResponse } from 'types/media'
+import { Search, MediaResponse } from 'types/media'
 import Main from 'components/layout/Main'
 import ArticleTodo from 'components/widgets/Article/Todo'
 
 interface Props {
-  query?: Query
+  search?: Search
   datas: MediaResponse[]
 }
 
-export default function TodoList(props: Props) {
-  const { query, datas } = props
+export default function Todos(props: Props) {
+  const { search, datas } = props
 
   return (
-    <Main title="MyUs Todo" name="Todo" query={query}>
+    <Main title="Todo" search={search}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticleTodo data={data} key={data.id} />

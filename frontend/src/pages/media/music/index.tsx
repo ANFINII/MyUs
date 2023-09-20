@@ -1,7 +1,7 @@
-import { Query, MusicResponse } from 'types/media'
-import MusicList from 'components/templates/Media/Music/List'
+import { Search, MusicResponse } from 'types/media'
+import Musics from 'components/templates/media/music/List'
 
-const query: Query = {
+const search: Search = {
   name: 'test',
   count: 0,
 }
@@ -109,6 +109,6 @@ const datas: MusicResponse[] = [
   },
 ]
 
-export default function MusicListPage() {
-  return <MusicList query={query} datas={datas} />
+export default function MusicsPage() {
+  return <Musics search={search} datas={datas} />
 }

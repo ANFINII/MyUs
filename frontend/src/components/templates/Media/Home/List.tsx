@@ -1,4 +1,4 @@
-import { Query, VideoResponse } from 'types/media'
+import { Search, VideoResponse } from 'types/media'
 import Layout from 'components/layout'
 import Main from 'components/layout/Main'
 import ArticleBlog from 'components/widgets/Article/Blog'
@@ -9,7 +9,7 @@ import ArticlePicture from 'components/widgets/Article/Picture'
 import ArticleVideo from 'components/widgets/Article/Video'
 
 interface Props {
-  query?: Query
+  search?: Search
   videos: VideoResponse[]
   datas?: VideoResponse[]
   // datas: VideoResponse[]
@@ -18,11 +18,11 @@ interface Props {
   // datas: VideoResponse[]
 }
 
-export default function HomeList(props: Props) {
-  const { query, datas, videos } = props
+export default function Homes(props: Props) {
+  const { search, datas, videos } = props
 
   return (
-    <Layout title="MyUsホームページ" name="Home" query={query}>
+    <Layout title="Home" search={search}>
       <hr />
 
       <article className="article_index">
@@ -35,7 +35,7 @@ export default function HomeList(props: Props) {
 
       <article className="article_index">
         <h2>Music</h2>
-        {/* {% if query %} */}
+        {/* {% if search %} */}
         {/* {% include 'search/search_music.html' %} */}
         {/* {% else %} */}
         {/* {% for item in music_list %} */}
@@ -47,7 +47,7 @@ export default function HomeList(props: Props) {
 
       <article className="article_index">
         <h2>Comic</h2>
-        {/* {% if query %}
+        {/* {% if search %}
           {% include 'search/search_picture.html' %}
         {% else %}
           {% for item in comic_list %}
@@ -59,7 +59,7 @@ export default function HomeList(props: Props) {
 
       <article className="article_index">
         <h2>Picture</h2>
-        {/* {% if query %} */}
+        {/* {% if search %} */}
         {/* {% include 'search/search_picture.html' %} */}
         {/* {% else %} */}
         {/* {% for item in picture_list %} */}
@@ -71,7 +71,7 @@ export default function HomeList(props: Props) {
 
       <article className="article_index">
         <h2>Blog</h2>
-        {/* {% if query %} */}
+        {/* {% if search %} */}
         {/* {% include 'search/search_blog.html' %} */}
         {/* {% else %} */}
         {/* {% for item in blog_list %} */}
@@ -83,7 +83,7 @@ export default function HomeList(props: Props) {
 
       <article className="article_index">
         <h2>Chat</h2>
-        {/* {% if query %} */}
+        {/* {% if search %} */}
         {/* {% include 'search/search_chat.html' %} */}
         {/* {% else %} */}
         {/* {% for item in chat_list %} */}

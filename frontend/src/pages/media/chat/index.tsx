@@ -1,12 +1,12 @@
-import { Query, ChatResponse } from 'types/media'
-import Chatist from 'components/templates/Media/Chat/List'
+import { Search, ChatResponse } from 'types/media'
+import Chats from 'components/templates/media/chat/List'
 
-const query: Query = {
+const search: Search = {
   name: 'test',
   count: 0,
 }
 const datas: Array<ChatResponse> = []
 
-export default function ChatListPage() {
-  return <Chatist query={query} datas={datas} />
+export default function ChatsPage() {
+  return <Chats search={search} datas={datas} />
 }

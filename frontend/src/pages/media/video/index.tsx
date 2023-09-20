@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
-import { Query, VideoResponse } from 'types/media'
-import VideoList from 'components/templates/Media/Video/List'
+import { Search, VideoResponse } from 'types/media'
+import Videos from 'components/templates/media/video/List'
 
 export async function getVideoList() {
   const BASEURL = process.env.NEXT_PUBLIC_API_URL
@@ -16,7 +16,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   }
 }
 
-const query: Query = {
+const search: Search = {
   name: 'test',
   count: 0,
 }
@@ -124,6 +124,6 @@ const datas: VideoResponse[] = [
   },
 ]
 
-export default function VideoListPage() {
-  return <VideoList query={query} datas={datas} />
+export default function VideosPage() {
+  return <Videos search={search} datas={datas} />
 }

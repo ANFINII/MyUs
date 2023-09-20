@@ -1,17 +1,17 @@
-import { Query, VideoResponse } from 'types/media'
+import { Search, VideoResponse } from 'types/media'
 import Main from 'components/layout/Main'
 import ArticleVideo from 'components/widgets/Article/Video'
 
 interface Props {
-  query?: Query
+  search?: Search
   datas: VideoResponse[]
 }
 
-export default function VideoList(props: Props) {
-  const { query, datas } = props
+export default function Videos(props: Props) {
+  const { search, datas } = props
 
   return (
-    <Main title="MyUsビデオ" name="Video" query={query}>
+    <Main title="Video" search={search}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticleVideo data={data} key={data.id} />

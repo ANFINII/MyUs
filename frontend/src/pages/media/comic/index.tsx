@@ -1,12 +1,12 @@
-import { Query, MediaResponse } from 'types/media'
-import ComicList from 'components/templates/Media/Comic/List'
+import { Search, MediaResponse } from 'types/media'
+import Comics from 'components/templates/media/comic/List'
 
-const query: Query = {
+const search: Search = {
   name: 'test',
   count: 0,
 }
 const datas: Array<MediaResponse> = []
 
-export default function ComicListPage() {
-  return <ComicList query={query} datas={datas} />
+export default function ComicsPage() {
+  return <Comics search={search} datas={datas} />
 }

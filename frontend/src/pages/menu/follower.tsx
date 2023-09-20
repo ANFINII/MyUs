@@ -1,12 +1,12 @@
-import { Query, FollowResponse } from 'types/media'
-import FollowerList from 'components/templates/Follow/FollowerList'
+import { Search, FollowResponse } from 'types/media'
+import Followers from 'components/templates/follow/FollowerList'
 
-const query: Query = {
+const search: Search = {
   name: 'test',
   count: 0,
 }
 const datas: FollowResponse[] = []
 
-export default function FollowerListPage() {
-  return <FollowerList isAuthenticated={true} query={query} datas={datas} />
+export default function FollowersPage() {
+  return <Followers isAuthenticated={true} search={search} datas={datas} />
 }

@@ -6,7 +6,7 @@ export interface Author {
   image: string
 }
 
-export interface Query {
+export interface Search {
   name: string
   count: number
 }

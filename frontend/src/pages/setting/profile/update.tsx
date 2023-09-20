@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { Profile } from 'types/auth'
-import ProfileUpdate from 'components/templates/Setting/Profile/Update'
+import ProfileUpdate from 'components/templates/setting/profile/Update'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //  const cookie = context.req?.headers.cookie
@@ -28,8 +28,8 @@ const user: Profile = {
   age: 35,
   gender: '男性',
   phone: '090-9678-8552',
-  country_code: 'JP',
-  postal_code: '210-0844',
+  countryCode: 'JP',
+  postalCode: '210-0844',
   prefecture: '神奈川県',
   city: '川崎市川崎区渡田新町',
   address: '1-10-8-1',

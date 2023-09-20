@@ -1,6 +1,6 @@
 // import axios from 'pages/api/axios'
-import { Query, VideoResponse } from 'types/media'
-import HomeList from 'components/templates/Media/Home/List'
+import { Search, VideoResponse } from 'types/media'
+import Homes from 'components/templates/media/home/List'
 
 // export const getServerSideProps: GetServerSideProps = async () => {
 //   const res_video = await axios.get('/api/video')
@@ -12,7 +12,7 @@ import HomeList from 'components/templates/Media/Home/List'
 //   }
 // }
 
-const query: Query = {
+const search: Search = {
   name: 'test',
   count: 0,
 }
@@ -120,10 +120,10 @@ const datas: VideoResponse[] = [
   },
 ]
 
-export default function HomePage() {
+export default function HomesPage() {
   return (
     <>
-      <HomeList query={query} datas={datas} videos={datas} />
+      <Homes search={search} datas={datas} videos={datas} />
       {/* <Script src="https://vjs.zencdn.net/7.19.2/video.min.js"></Script>
       <Script src='/pages/api/video_auto.js'></Script>
       <script>$(function() { $('audio').audioPlayer() })</cript> */}

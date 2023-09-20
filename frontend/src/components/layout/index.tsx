@@ -1,4 +1,5 @@
-import { Query } from 'types/media'
+import { Search } from 'types/media'
+import Meta from 'components/layout/Head/Meta'
 import Header from 'components/layout/Header'
 import Main from 'components/layout/Main'
 import SearchTag from 'components/layout/SearchTag'
@@ -10,12 +11,8 @@ interface searchtag {
 }
 
 interface Props {
-  title?: string
-  name?: string
-  query?: Query
-  header?: React.ReactNode
-  sideBar?: React.ReactNode
-  searchTag?: React.ReactNode
+  title: string
+  search?: Search
   children: React.ReactNode
 }
 
@@ -26,15 +23,15 @@ const searchtags: searchtag[] = [
 ]
 
 export default function Layout(props: Props) {
-  const { title, name, query } = props
-  const { header, sideBar, searchTag, children } = props
+  const { title, search, children } = props
 
   return (
     <div className="layout">
-      {header || <Header />}
-      {sideBar || <SideBar />}
-      {searchTag || <SearchTag searchtags={searchtags} isAuthenticated={true} />}
-      <Main title={title} name={name} query={query}>
+      {<Header />}
+      {<SideBar />}
+      {<SearchTag searchtags={searchtags} isAuthenticated={true} />}
+      <Meta title={title} />
+      <Main title={title} search={search}>
         {children}
       </Main>
     </div>

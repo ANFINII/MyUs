@@ -1,4 +1,4 @@
-import Withdrawal from 'components/templates/Setting/Withdrawal'
+import Withdrawal from 'components/templates/setting/withdrawal'
 
 export default function WithdrawalPage() {
   return <Withdrawal />
