@@ -1,5 +1,5 @@
-import TodoCreate from 'components/templates/media/todo/Create'
+import TodoCreate from 'components/templates/media/todo/create'
 
 export default function TodoCreatePage() {
-  return <TodoCreate isAuthenticated={true} />
+  return <TodoCreate isAuth={true} />
 }

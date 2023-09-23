@@ -1,5 +1,5 @@
-import ComicCreate from 'components/templates/media/comic/Create'
+import ComicCreate from 'components/templates/media/comic/create'
 
 export default function ComicCreatePage() {
-  return <ComicCreate isAuthenticated={true} />
+  return <ComicCreate isAuth={true} />
 }

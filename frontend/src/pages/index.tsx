@@ -1,6 +1,6 @@
 // import axios from 'pages/api/axios'
-import { Search, VideoResponse } from 'types/media'
-import Homes from 'components/templates/media/home/List'
+import { Search, Video } from 'types/media'
+import Homes from 'components/templates/media/home/list'
 
 // export const getServerSideProps: GetServerSideProps = async () => {
 //   const res_video = await axios.get('/api/video')
@@ -17,7 +17,7 @@ const search: Search = {
   count: 0,
 }
 
-const datas: VideoResponse[] = [
+const datas: Video[] = [
   {
     id: 1,
     title: '動画テスト1',
@@ -27,7 +27,7 @@ const datas: VideoResponse[] = [
     convert: '/media/videos/videos_video/user_1/object_1/m001.mp4',
     like: 0,
     read: 101,
-    comment_count: 0,
+    commentCount: 0,
     publish: true,
     created: '2023-01-01T00:00:00Z',
     updated: '2023-01-01T00:00:00Z',
@@ -47,7 +47,7 @@ const datas: VideoResponse[] = [
     convert: '/media/videos/videos_video/user_1/object_1/m001.mp4',
     like: 0,
     read: 100,
-    comment_count: 0,
+    commentCount: 0,
     publish: true,
     created: '2023-01-01T00:00:00Z',
     updated: '2023-01-01T00:00:00Z',
@@ -67,7 +67,7 @@ const datas: VideoResponse[] = [
     convert: '/media/videos/videos_video/user_1/object_1/m001.mp4',
     like: 0,
     read: 100,
-    comment_count: 0,
+    commentCount: 0,
     publish: true,
     created: '2023-01-01T00:00:00Z',
     updated: '2023-01-01T00:00:00Z',
@@ -87,7 +87,7 @@ const datas: VideoResponse[] = [
     convert: '/media/videos/videos_video/user_1/object_1/m001.mp4',
     like: 0,
     read: 100,
-    comment_count: 0,
+    commentCount: 0,
     publish: true,
     created: '2023-01-01T00:00:00Z',
     updated: '2023-01-01T00:00:00Z',
@@ -107,7 +107,7 @@ const datas: VideoResponse[] = [
     convert: '/media/videos/videos_video/user_1/object_1/m001.mp4',
     like: 0,
     read: 100,
-    comment_count: 0,
+    commentCount: 0,
     publish: true,
     created: '2023-01-01T00:00:00Z',
     updated: '2023-01-01T00:00:00Z',

@@ -1,10 +1,10 @@
-import { Search, ImageResponse } from 'types/media'
+import { Search, Picture } from 'types/media'
 import Layout from 'components/layout'
 import ArticleBlog from 'components/widgets/Article/Blog'
 
 interface Props {
   search?: Search
-  datas: ImageResponse[]
+  datas: Picture[]
 }
 
 export default function Blogs(props: Props) {

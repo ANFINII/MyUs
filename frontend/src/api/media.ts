@@ -1,5 +1,5 @@
 import config from 'api/config'
-import { VideoResponse } from 'types/media'
+import { Video } from 'types/media'
 
 const parameter = {
   method: 'GET',
@@ -15,7 +15,7 @@ export async function getVideo() {
 export async function getVideoId() {
   const res = await fetch(config.baseUrl + '/api/video', parameter)
   const items = await res.json()
-  return items.map((video: VideoResponse) => {
+  return items.map((video: Video) => {
     return {
       params: {
         id: String(video.id),

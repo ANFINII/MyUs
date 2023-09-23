@@ -1,11 +1,11 @@
 import Router from 'next/router'
+import Layout from 'components/layout'
 import Footer from 'components/layout/Footer'
-import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
 export default function PasswordChangeDone() {
   return (
-    <Main title="パスワード変更">
+    <Layout title="パスワード変更">
       <h1>パスワード変更</h1>
       <article className="article_pass">
         <div className="form_account password_done">
@@ -14,6 +14,6 @@ export default function PasswordChangeDone() {
         </div>
         <Footer />
       </article>
-    </Main>
+    </Layout>
   )
 }

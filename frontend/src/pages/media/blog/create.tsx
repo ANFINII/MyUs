@@ -1,5 +1,5 @@
-import BlogCreate from 'components/templates/media/blog/Create'
+import BlogCreate from 'components/templates/media/blog/create'
 
 export default function BlogCreatePage() {
-  return <BlogCreate isAuthenticated={true} />
+  return <BlogCreate isAuth={true} />
 }

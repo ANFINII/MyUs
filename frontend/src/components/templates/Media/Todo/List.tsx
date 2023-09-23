@@ -1,22 +1,22 @@
-import { Search, MediaResponse } from 'types/media'
-import Main from 'components/layout/Main'
+import { Search, Media } from 'types/media'
+import Layout from 'components/layout'
 import ArticleTodo from 'components/widgets/Article/Todo'
 
 interface Props {
   search?: Search
-  datas: MediaResponse[]
+  datas: Media[]
 }
 
 export default function Todos(props: Props) {
   const { search, datas } = props
 
   return (
-    <Main title="Todo" search={search}>
+    <Layout title="Todo" search={search}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticleTodo data={data} key={data.id} />
         ))}
       </article>
-    </Main>
+    </Layout>
   )
 }

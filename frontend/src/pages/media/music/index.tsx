@@ -1,12 +1,12 @@
-import { Search, MusicResponse } from 'types/media'
-import Musics from 'components/templates/media/music/List'
+import { Search, Music } from 'types/media'
+import Musics from 'components/templates/media/music/list'
 
 const search: Search = {
   name: 'test',
   count: 0,
 }
 
-const datas: MusicResponse[] = [
+const datas: Music[] = [
   {
     id: 1,
     title: '音楽テスト1',
@@ -15,7 +15,7 @@ const datas: MusicResponse[] = [
     music: '/media/musics/user_1/object_1/02-%E6%8C%87%E8%B7%A1%E3%83%8F%E3%83%BC%E3%83%88_Instrumetal.mp3',
     like: 0,
     read: 102,
-    comment_count: 0,
+    commentCount: 0,
     download: true,
     publish: true,
     created: '2023-01-01T00:00:00Z',
@@ -35,7 +35,7 @@ const datas: MusicResponse[] = [
     music: '/media/musics/user_2/object_2/02-%E6%8C%87%E8%B7%A1%E3%83%8F%E3%83%BC%E3%83%88_Instrumetal.mp3',
     like: 1,
     read: 102,
-    comment_count: 0,
+    commentCount: 0,
     download: true,
     publish: true,
     created: '2023-01-01T00:00:00Z',
@@ -55,7 +55,7 @@ const datas: MusicResponse[] = [
     music: '/media/musics/user_3/object_3/02-%E6%8C%87%E8%B7%A1%E3%83%8F%E3%83%BC%E3%83%88_Instrumetal.mp3',
     like: 0,
     read: 101,
-    comment_count: 0,
+    commentCount: 0,
     download: true,
     publish: true,
     created: '2023-01-01T00:00:00Z',
@@ -75,7 +75,7 @@ const datas: MusicResponse[] = [
     music: '/media/musics/user_4/object_4/02-%E6%8C%87%E8%B7%A1%E3%83%8F%E3%83%BC%E3%83%88_Instrumetal.mp3',
     like: 0,
     read: 101,
-    comment_count: 0,
+    commentCount: 0,
     download: true,
     publish: true,
     created: '2023-01-01T00:00:00Z',
@@ -95,7 +95,7 @@ const datas: MusicResponse[] = [
     music: '/media/musics/user_5/object_5/02-%E6%8C%87%E8%B7%A1%E3%83%8F%E3%83%BC%E3%83%88_Instrumetal.mp3',
     like: 0,
     read: 101,
-    comment_count: 0,
+    commentCount: 0,
     download: true,
     publish: true,
     created: '2023-01-01T00:00:00Z',

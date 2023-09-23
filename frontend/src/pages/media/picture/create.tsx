@@ -1,5 +1,5 @@
-import PictureCreate from 'components/templates/media/picture/Create'
+import PictureCreate from 'components/templates/media/picture/create'
 
 export default function PictureCreatePage() {
-  return <PictureCreate isAuthenticated={true} />
+  return <PictureCreate isAuth={true} />
 }

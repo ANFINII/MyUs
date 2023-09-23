@@ -1,11 +1,11 @@
 import Link from 'next/link'
-import Main from 'components/layout/Main'
+import Layout from 'components/layout'
 import Button from 'components/parts/Button'
 
 export default function Payment() {
   return (
-    <Main title="MyUs料金プラン" name="料金プラン">
-      {/* {% if user.isAuthenticated %} */}
+    <Layout title="料金プラン">
+      {/* {% if user.isAuth %} */}
       <article className="article_list">
         <section className="section_plan">
           <div className="main_decolation_payment">
@@ -102,6 +102,6 @@ export default function Payment() {
       <script src="https://js.stripe.com/v3/"></script>
       <script src="js/payment.js"></script>
       {% endblock extrajs %} */}
-    </Main>
+    </Layout>
   )
 }

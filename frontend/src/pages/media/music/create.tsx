@@ -1,5 +1,5 @@
-import MusicCreate from 'components/templates/media/music/Create'
+import MusicCreate from 'components/templates/media/music/create'
 
 export default function MusicCreatePage() {
-  return <MusicCreate isAuthenticated={true} />
+  return <MusicCreate isAuth={true} />
 }

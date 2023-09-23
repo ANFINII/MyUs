@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import config from 'api/config'
-import { MusicResponse } from 'types/media'
+import { Music } from 'types/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
 
 interface Props {
-  data: MusicResponse
+  data: Music
 }
 
 export default function ArticleMusic(props: Props) {

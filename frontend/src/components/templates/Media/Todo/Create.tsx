@@ -1,11 +1,11 @@
-import Main from 'components/layout/Main'
+import Layout from 'components/layout'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
 
 interface Props {
-  isAuthenticated?: boolean
+  isAuth?: boolean
 }
 const now = new Date()
 const year = now.getFullYear()
@@ -23,10 +23,10 @@ export const progress = [
 ]
 
 export default function TodoCreate(props: Props) {
-  const { isAuthenticated } = props
+  const { isAuth } = props
   return (
-    <Main title="MyUs Todo" name="Todo">
-      {isAuthenticated ? (
+    <Layout title="Todo">
+      {isAuth ? (
         <form method="POST" action="">
           {/* {% csrf_token %} */}
           <p className="mv_16">タイトル</p>
@@ -49,6 +49,6 @@ export default function TodoCreate(props: Props) {
       ) : (
         <h2 className="login_required">ログインしてください</h2>
       )}
-    </Main>
+    </Layout>
   )
 }

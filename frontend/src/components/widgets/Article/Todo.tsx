@@ -1,11 +1,8 @@
 import Link from 'next/link'
-import config from 'api/config'
-import { MediaResponse } from 'types/media'
-import AuthorSpace from 'components/widgets/Common/AuthorSpace'
-import ContentTitle from 'components/widgets/Common/ContentTitle'
+import { Media } from 'types/media'
 
 interface Props {
-  data: MediaResponse
+  data: Media
 }
 
 export default function ArticleTodo(props: Props) {

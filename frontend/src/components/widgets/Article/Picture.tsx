@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import config from 'api/config'
-import { ImageResponse } from 'types/media'
+import { Picture } from 'types/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
 
 interface Props {
-  data: ImageResponse
+  data: Picture
 }
 
 export default function ArticlePicture(props: Props) {

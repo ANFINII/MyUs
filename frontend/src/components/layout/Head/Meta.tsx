@@ -1,7 +1,7 @@
 import Head from 'next/head'
 
 interface Props {
-  title: string
+  title?: string
 }
 
 export default function Meta(props: Props) {

@@ -5,18 +5,18 @@ interface Props {
   nickname?: string
   is_active?: boolean
   is_staff?: boolean
-  isAuthenticated?: boolean
+  isAuth?: boolean
 }
 
 export default function DropMenuProfile(props: Props) {
-  const { nickname, is_active, is_staff, isAuthenticated } = props
+  const { nickname, is_active, is_staff, isAuth } = props
 
   return (
     <>
       <input type="checkbox" id="drop_menu_profile" className="drop_menu_profile" />
       <label htmlFor="drop_menu_profile" className="drop_back_cover"></label>
       <label htmlFor="drop_menu_profile" className="drop_open">
-        <Image src={isAuthenticated ? '/img/user.image' : '/img/user_icon.png'} title={nickname} width={32} height={32} alt="" />
+        <Image src={isAuth ? '/img/user.image' : '/img/user_icon.png'} title={nickname} width={32} height={32} alt="" />
       </label>
 
       <nav className="drop_menu drop_menu_profile">
@@ -81,7 +81,7 @@ export default function DropMenuProfile(props: Props) {
           </li>
 
           <li className="drop_menu_list">
-            <Link href={isAuthenticated ? '/logout' : '/login'} className="icon_link"></Link>
+            <Link href={isAuth ? '/logout' : '/login'} className="icon_link"></Link>
             <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-box-arrowRight color_drop_menu_bi" viewBox="0 0 16 16">
               <path
                 fillRule="evenodd"

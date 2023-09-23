@@ -3,22 +3,22 @@ import Link from 'next/link'
 import Router from 'next/router'
 import config from 'api/config'
 import { Mypage } from 'types/auth'
-import { Search, FollowResponse } from 'types/media'
+import { Search, Follow } from 'types/media'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
 interface Props {
-  isAuthenticated: boolean
+  isAuth: boolean
   search?: Search
   mypage?: Mypage
-  datas: FollowResponse[]
+  datas: Follow[]
 }
 
 export default function Follows(props: Props) {
-  const { isAuthenticated, search, mypage, datas } = props
+  const { isAuth, search, mypage, datas } = props
   return (
     <Main title="Follow" search={search}>
-      {isAuthenticated ? (
+      {isAuth ? (
         <>
           <div className="follow_button">
             <Button blue size="xs" name="フォロー" onClick={() => Router.push('/menu/follower')} />

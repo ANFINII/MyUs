@@ -1,4 +1,4 @@
-import Main from 'components/layout/Main'
+import Layout from 'components/layout'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
@@ -6,15 +6,15 @@ import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 
 interface Props {
-  isAuthenticated?: boolean
+  isAuth?: boolean
 }
 
 export default function MusicCreate(props: Props) {
-  const { isAuthenticated } = props
+  const { isAuth } = props
 
   return (
-    <Main title="MyUsミュージック" name="Music">
-      {isAuthenticated ? (
+    <Layout title="Music">
+      {isAuth ? (
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}
           <p className="mv_16">タイトル</p>
@@ -35,6 +35,6 @@ export default function MusicCreate(props: Props) {
       ) : (
         <h2 className="login_required">ログインしてください</h2>
       )}
-    </Main>
+    </Layout>
   )
 }

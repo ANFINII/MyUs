@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import config from 'api/config'
-import { ChatResponse } from 'types/media'
+import { Chat } from 'types/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 
 interface Props {
-  data: ChatResponse
+  data: Chat
 }
 
 export default function ArticleChat(props: Props) {

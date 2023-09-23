@@ -1,22 +1,22 @@
-import { Search, MusicResponse } from 'types/media'
-import Main from 'components/layout/Main'
+import { Search, Music } from 'types/media'
+import Layout from 'components/layout'
 import ArticleMusic from 'components/widgets/Article/Music'
 
 interface Props {
   search?: Search
-  datas: MusicResponse[]
+  datas: Music[]
 }
 
 export default function Musics(props: Props) {
   const { search, datas } = props
 
   return (
-    <Main title="Music" search={search}>
+    <Layout title="Music" search={search}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticleMusic data={data} key={data.id} />
         ))}
       </article>
-    </Main>
+    </Layout>
   )
 }

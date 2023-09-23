@@ -1,7 +1,6 @@
 import Router from 'next/router'
 import { Mypage } from 'types/auth'
-import Footer from 'components/layout/Footer'
-import Main from 'components/layout/Main'
+import Layout from 'components/layout'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
@@ -14,10 +13,9 @@ export default function MyPageUpdate(props: Props) {
   const { mypage } = props
 
   return (
-    <Main title="MyUsマイページ設定">
+    <Layout title="マイページ設定" type="table" isFooter>
       {mypage ? (
-        <article className="article_table">
-          <h1>マイページ設定</h1>
+        <>
           <div className="button_group">
             <Button green size="xs" name="登録" type="submit" />
             <Button blue size="xs" name="戻る" onClick={() => Router.push('/setting/mypage')} />
@@ -89,14 +87,10 @@ export default function MyPageUpdate(props: Props) {
               </tr>
             </tbody>
           </table>
-          <Footer />
-        </article>
+        </>
       ) : (
-        <article className="article_table">
-          <h1>マイページ設定</h1>
-          <h2 className="login_required">ログインしてください</h2>
-        </article>
+        <h2 className="login_required">ログインしてください</h2>
       )}
-    </Main>
+    </Layout>
   )
 }

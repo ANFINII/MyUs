@@ -7,13 +7,13 @@ interface searchtag {
 }
 
 interface Props {
-  isAuthenticated: boolean
+  isAuth: boolean
   csrfToken?: string
   searchtags?: searchtag[]
 }
 
 export default function SearchTag(props: Props) {
-  const { isAuthenticated, csrfToken, searchtags } = props
+  const { isAuth, csrfToken, searchtags } = props
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isSearchtag, setIsSearchtag] = useState(false)
@@ -44,7 +44,7 @@ export default function SearchTag(props: Props) {
 
         <ButtonSquare sakura name="追加" className={isSearchtag ? 'searchtag_2 active' : 'searchtag_2'} data-csrf={csrfToken} />
 
-        <input type="text" name="searchtag" className={isSearchtag ? 'searchtag_3 active' : 'searchtag_3'} maxLength={30} placeholder="タグ名" disabled={isAuthenticated} />
+        <input type="text" name="searchtag" className={isSearchtag ? 'searchtag_3 active' : 'searchtag_3'} maxLength={30} placeholder="タグ名" disabled={isAuth} />
         <div className={isSearchtag ? 'searchtag_n active' : 'searchtag_n'} ref={scrollRef}>
           <div className="searchtag_n_list">
             {searchtags?.map((tag: searchtag, index) => {

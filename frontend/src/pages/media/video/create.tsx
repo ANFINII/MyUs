@@ -1,5 +1,5 @@
-import VideoCreate from 'components/templates/media/video/Create'
+import VideoCreate from 'components/templates/media/video/create'
 
 export default function VideoCreatePage() {
-  return <VideoCreate isAuthenticated={true} />
+  return <VideoCreate isAuth={true} />
 }

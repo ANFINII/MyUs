@@ -1,22 +1,22 @@
-import { Search, ChatResponse } from 'types/media'
-import Main from 'components/layout/Main'
+import { Search, Chat } from 'types/media'
+import Layout from 'components/layout'
 import ArticleChat from 'components/widgets/Article/Chat'
 
 interface Props {
   search?: Search
-  datas: ChatResponse[]
+  datas: Chat[]
 }
 
 export default function Chats(props: Props) {
   const { search, datas } = props
 
   return (
-    <Main title="Chat" search={search}>
+    <Layout title="Chat" search={search}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticleChat data={data} key={data.id} />
         ))}
       </article>
-    </Main>
+    </Layout>
   )
 }

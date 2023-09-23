@@ -1,5 +1,5 @@
-import ChatCreate from 'components/templates/media/chat/Create'
+import ChatCreate from 'components/templates/media/chat/create'
 
 export default function ChatCreatePage() {
-  return <ChatCreate isAuthenticated={true} />
+  return <ChatCreate isAuth={true} />
 }

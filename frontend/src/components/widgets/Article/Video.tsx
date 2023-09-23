@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import config from 'api/config'
-import { VideoResponse } from 'types/media'
+import { Video } from 'types/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
 
 interface Props {
-  data: VideoResponse
+  data: Video
 }
 
 export default function ArticleVideo(props: Props) {
@@ -20,7 +20,7 @@ export default function ArticleVideo(props: Props) {
     <section className="section_list">
       <div className="main_decolation">
         <div className="video video_auto">
-          <Link href={`/video/${data.id}`}>
+          <Link href={`/media/video/${data.id}`}>
             <video className="video-js" muted width={272} height={153} controlsList="nodownload" poster={pictureUrl} data-setup="">
               {/* onContextMenu="return false" */}
               <source src={convertUrl} type="video/mp4" data-label="360p" data-res="360" />

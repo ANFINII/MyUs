@@ -1,24 +1,26 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import config from 'api/config'
-import { ImageResponse } from 'types/media'
+import { Picture } from 'types/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
 
 interface Props {
-  data: ImageResponse
+  data: Picture
 }
 
 export default function ArticleComic(props: Props) {
   const { data } = props
 
+  const router = useRouter()
   const imageUrl = config.baseUrl + data.image
   const authorUrl = config.baseUrl + data.author.image
   const nickname = data.author.nickname
 
   return (
     <section className="section_list">
-      <Link href="/comic/detail/[id][title]">
+      <Link href={`/comic/detail/${router.query.id}${router.query.title}`}>
         <figure className="main_decolation">
           <Image src={imageUrl} width={272} height={153} alt="" className="radius_10" />
         </figure>

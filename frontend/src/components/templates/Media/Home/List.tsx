@@ -1,4 +1,4 @@
-import { Search, VideoResponse } from 'types/media'
+import { Search, Video } from 'types/media'
 import Layout from 'components/layout'
 import Main from 'components/layout/Main'
 import ArticleBlog from 'components/widgets/Article/Blog'
@@ -10,12 +10,12 @@ import ArticleVideo from 'components/widgets/Article/Video'
 
 interface Props {
   search?: Search
-  videos: VideoResponse[]
-  datas?: VideoResponse[]
-  // datas: VideoResponse[]
-  // datas: VideoResponse[]
-  // datas: VideoResponse[]
-  // datas: VideoResponse[]
+  videos: Video[]
+  datas?: Video[]
+  // datas: Video[]
+  // datas: Video[]
+  // datas: Video[]
+  // datas: Video[]
 }
 
 export default function Homes(props: Props) {

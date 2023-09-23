@@ -1,10 +1,6 @@
 import { useState } from 'react'
+import { Option } from 'types/other'
 import style from 'components/parts/Input/Select/Select.module.css'
-
-interface Option {
-  label: string
-  value: string | number
-}
 
 interface Props {
   className?: string
