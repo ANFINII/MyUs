@@ -11,13 +11,13 @@ export interface Search {
   count: number
 }
 
-export interface MediaResponse {
+export interface Media {
   id: number
   title: string
   content: string
   like: number
   read: number
-  comment_count: number
+  commentCount: number
   publish: boolean
   created: string
   updated: string
@@ -25,36 +25,36 @@ export interface MediaResponse {
   modelName: string
 }
 
-export interface VideoResponse extends MediaResponse {
+export interface Video extends Media {
   image: string
   video: string
   convert: string
 }
 
-export interface MusicResponse extends MediaResponse {
+export interface Music extends Media {
   music: string
   lyric: string
   download: boolean
 }
 
-export interface ImageResponse extends MediaResponse {
+export interface Picture extends Media {
   image: string
 }
 
-export interface ChatResponse extends MediaResponse {
+export interface Chat extends Media {
   read: number
   joined: number
   thread: number
 }
 
-export interface FollowResponse {
+export interface Follow {
   id: number
   title: string
   content: string
   introduction: string
   like: number
   read: number
-  comment_count: number
+  commentCount: number
   publish: boolean
   created: string
   mypage: Mypage
