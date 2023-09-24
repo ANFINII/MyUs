@@ -1,4 +1,4 @@
-import { Mypage } from 'types/auth'
+import { Mypage } from 'types/internal/auth'
 
 export interface Author {
   id: number
