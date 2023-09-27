@@ -1,5 +1,5 @@
 import Router from 'next/router'
-import { Mypage } from 'types/auth'
+import { Mypage } from 'types/internal/auth'
 import Layout from 'components/layout'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'

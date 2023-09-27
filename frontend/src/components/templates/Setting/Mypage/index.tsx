@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Router from 'next/router'
 import config from 'api/config'
-import { Mypage } from 'types/auth'
+import { Mypage } from 'types/internal/auth'
 import Layout from 'components/layout'
 import Button from 'components/parts/Button'
 
@@ -15,10 +15,9 @@ export default function MyPage(props: Props) {
   const bannerUrl = config.baseUrl + mypage.banner
 
   return (
-    <Layout title="MyUsマイページ設定" isFooter>
+    <Layout title="マイページ設定" type="table" isFooter>
       {mypage ? (
-        <article className="article_table">
-          <h1>マイページ設定</h1>
+        <>
           <div className="button_group">
             <Button blue size="xs" name="編集" onClick={() => Router.push('/setting/mypage/update')} />
             <Button purple size="xs" name="ユーザページ" onClick={() => Router.push(`/userpage/${mypage.nickname}`)} />
@@ -84,12 +83,9 @@ export default function MyPage(props: Props) {
               </tr>
             </tbody>
           </table>
-        </article>
+        </>
       ) : (
-        <article className="article_table">
-          <h1>マイページ設定</h1>
-          <h2 className="login_required">ログインしてください</h2>
-        </article>
+        <h2 className="login_required">ログインしてください</h2>
       )}
     </Layout>
   )
