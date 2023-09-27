@@ -2,8 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Router from 'next/router'
 import config from 'api/config'
-import { Mypage } from 'types/auth'
-import { Search, Follow } from 'types/media'
+import { Mypage } from 'types/internal/auth'
+import { Search, Follow } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
@@ -16,6 +16,7 @@ interface Props {
 
 export default function Followers(props: Props) {
   const { isAuth, search, mypage, datas } = props
+
   return (
     <Main title="Follower" search={search}>
       {isAuth ? (

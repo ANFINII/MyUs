@@ -1,5 +1,5 @@
 // import axios from 'pages/api/axios'
-import { Search, Video } from 'types/media'
+import { Search, Video } from 'types/internal/media'
 import Homes from 'components/templates/media/home/list'
 
 // export const getServerSideProps: GetServerSideProps = async () => {

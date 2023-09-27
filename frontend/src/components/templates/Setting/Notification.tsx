@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { User } from 'types/auth'
+import { User } from 'types/internal/auth'
 import Layout from 'components/layout'
 import Toggle from 'components/parts/Input/Toggle'
 

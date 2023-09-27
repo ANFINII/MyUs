@@ -1,4 +1,4 @@
-import { Search, Media } from 'types/media'
+import { Search, Media } from 'types/internal/media'
 import Comics from 'components/templates/media/comic/list'
 
 const search: Search = {

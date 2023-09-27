@@ -6,6 +6,7 @@ interface Props {
 
 export default function Meta(props: Props) {
   const { title } = props
+
   return (
     <Head>
       <title>{title ? `MyUs | ${title}` : 'MyUs'}</title>

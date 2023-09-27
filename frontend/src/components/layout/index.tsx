@@ -1,5 +1,5 @@
-import { Search } from 'types/media'
-import { searchtag } from 'types/other'
+import { Search } from 'types/internal/media'
+import { searchtag } from 'types/internal/other'
 import Footer from 'components/layout/Footer'
 import Meta from 'components/layout/Head/Meta'
 import Header from 'components/layout/Header'

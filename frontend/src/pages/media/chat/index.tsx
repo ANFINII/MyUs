@@ -1,4 +1,4 @@
-import { Search, Chat } from 'types/media'
+import { Search, Chat } from 'types/internal/media'
 import Chats from 'components/templates/media/chat/list'
 
 const search: Search = {

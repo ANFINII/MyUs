@@ -1,4 +1,4 @@
-import { Search, Media } from 'types/media'
+import { Search, Media } from 'types/internal/media'
 import Layout from 'components/layout'
 import ArticleTodo from 'components/widgets/Article/Todo'
 

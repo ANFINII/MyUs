@@ -1,4 +1,4 @@
-import { Search, Chat } from 'types/media'
+import { Search, Chat } from 'types/internal/media'
 import Layout from 'components/layout'
 import ArticleChat from 'components/widgets/Article/Chat'
 

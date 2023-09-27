@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { Search, Video } from 'types/media'
+import { Search, Video } from 'types/internal/media'
 import Videos from 'components/templates/media/video/list'
 
 export async function getVideoList() {

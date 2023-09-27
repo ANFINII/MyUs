@@ -1,4 +1,4 @@
-import { Search, Music } from 'types/media'
+import { Search, Music } from 'types/internal/media'
 import Layout from 'components/layout'
 import ArticleMusic from 'components/widgets/Article/Music'
 

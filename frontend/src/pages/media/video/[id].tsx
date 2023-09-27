@@ -1,6 +1,27 @@
-import {GetServerSideProps} from 'next'
-import Head from 'next/head'
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import config from 'api/config'
+import { GetStaticPathsType } from 'types/global/next'
+import { Video } from 'types/internal/media'
+import VideoDetail from 'components/templates/media/video/detail'
+
+export async function getStaticPaths(): Promise<GetStaticPathsType> {
+  const url = config.baseUrl + '/media/video'
+  const res = await fetch(config.baseUrl + url)
+  const videos: Video[] = await res.json()
+  const paths = videos.map((video) => ({
+    params: { id: String(video.id) },
+  }))
+  return { paths, fallback: 'blocking' }
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ locale, params }) => {
+  const translations = await serverSideTranslations(locale as string, ['common'])
+  const res = await fetch(config.baseUrl + `/api//media/video/detail/${params?.id}`)
+  if (res.status !== 200) throw Error
+  const data = await res.json()
+  return { props: { data, translations } }
+}
 
 interface Props {
   image: string
@@ -8,53 +29,7 @@ interface Props {
   publish: boolean
 }
 
-export const getServerSideProps: GetServerSideProps = async ({context}: any) => {
-  const {id} = context.params
-  const res = await fetch(config.baseUrl + `/api/video/detail/${id}`)
-  const data = await res.json()
-  return {props: {data}}
-}
-
-export default function VideoCreate(props: Props) {
-  const {image, video, publish} = props
-  const image_url = config.baseUrl + image
-  const video_url = config.baseUrl + video
-  return (
-    <>
-      <Head>
-        <title>MyUsビデオ</title>
-      </Head>
-
-      {publish ?
-        <article className="article_detail">
-          <div className="article_detail_picture">
-            <div className="article_detail_contents">
-              <video id="video" className="video vjs-fluid vjs-big-play-centered vjs-16-9" controls controlsList="nodownload"
-              // onContextMenu="return false"
-              poster={image_url} data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 2]}'>
-                <source src={video_url} type="application/x-mpegURL"/>
-                <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>
-                {/* <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
-                <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English"> */}
-                <p className="vjs-no-js">この動画を見るには、JavaScriptを有効にしてください!
-                  {/* <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> */}
-                </p>
-              </video>
-            </div>
-          </div>
-
-          <div className="article_detail_section_music">
-            <div className="article_detail_section_1">
-              {/* {% include 'parts/common/common.html' %} */}
-            </div>
-            <div className="article_detail_section_2">
-              {/* {% include 'video/video_article_detail.html' %} */}
-            </div>
-          </div>
-        </article>
-      :
-        <h2 className="unpublished">非公開に設定されてます!</h2>
-      }
-    </>
-  )
+export default function VideDetailPage(props: Props) {
+  const { image, video, publish } = props
+  return <VideoDetail image={image} video={video} publish={publish} />
 }

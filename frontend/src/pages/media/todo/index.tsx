@@ -1,4 +1,4 @@
-import { Search, Media } from 'types/media'
+import { Search, Media } from 'types/internal/media'
 import Todos from 'components/templates/media/todo/list'
 
 const search: Search = {

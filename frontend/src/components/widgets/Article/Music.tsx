@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import config from 'api/config'
-import { Music } from 'types/media'
+import { Music } from 'types/internal/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
 

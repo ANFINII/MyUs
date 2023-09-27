@@ -1,11 +1,5 @@
-import { Search, Video } from 'types/media'
+import { Search, Video } from 'types/internal/media'
 import Layout from 'components/layout'
-import Main from 'components/layout/Main'
-import ArticleBlog from 'components/widgets/Article/Blog'
-import ArticleChat from 'components/widgets/Article/Chat'
-import ArticleComic from 'components/widgets/Article/Comic'
-import ArticleMusic from 'components/widgets/Article/Music'
-import ArticlePicture from 'components/widgets/Article/Picture'
 import ArticleVideo from 'components/widgets/Article/Video'
 
 interface Props {

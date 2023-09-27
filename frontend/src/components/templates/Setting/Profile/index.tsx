@@ -1,9 +1,8 @@
 import Image from 'next/image'
 import Router from 'next/router'
 import config from 'api/config'
-import { Profile } from 'types/auth'
-import Footer from 'components/layout/Footer'
-import Main from 'components/layout/Main'
+import { Profile } from 'types/internal/auth'
+import Layout from 'components/layout'
 import Button from 'components/parts/Button'
 
 interface Props {
@@ -13,11 +12,11 @@ interface Props {
 export default function Profile(props: Props) {
   const { user } = props
   const avatarUrl = config.baseUrl + user.avatar
+
   return (
-    <Main title="MyUsアカウント設定">
+    <Layout title="アカウント設定" type="table" isFooter>
       {user ? (
-        <article className="article_table">
-          <h1>アカウント設定</h1>
+        <>
           <div className="button_group">
             <Button blue size="xs" name="編集" onClick={() => Router.push('/setting/profile/update')} />
             <Button blue size="xs" name="パスワード変更" onClick={() => Router.push('/setting/password/change')} />
@@ -86,14 +85,10 @@ export default function Profile(props: Props) {
               </tr>
             </tbody>
           </table>
-          <Footer />
-        </article>
+        </>
       ) : (
-        <article className="article_table">
-          <h1>アカウント設定</h1>
-          <h2 className="login_required">ログインしてください</h2>
-        </article>
+        <h2 className="login_required">ログインしてください</h2>
       )}
-    </Main>
+    </Layout>
   )
 }

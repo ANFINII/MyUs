@@ -1,4 +1,4 @@
-import { Search, Music } from 'types/media'
+import { Search, Music } from 'types/internal/media'
 import Musics from 'components/templates/media/music/list'
 
 const search: Search = {

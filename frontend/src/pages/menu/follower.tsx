@@ -1,4 +1,4 @@
-import { Search, Follow } from 'types/media'
+import { Search, Follow } from 'types/internal/media'
 import Followers from 'components/templates/follow/FollowerList'
 
 const search: Search = {

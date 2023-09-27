@@ -1,5 +1,5 @@
-import { GetServerSideProps } from 'next'
-import { Profile } from 'types/auth'
+// import { GetServerSideProps } from 'next'
+import { Profile } from 'types/internal/auth'
 import SettingProfile from 'components/templates/setting/profile'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {

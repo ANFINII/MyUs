@@ -1,4 +1,4 @@
-import { Search } from 'types/media'
+import { Search } from 'types/internal/media'
 
 interface Props {
   title?: string

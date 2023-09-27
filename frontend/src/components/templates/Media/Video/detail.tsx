@@ -1,6 +1,7 @@
 import config from 'api/config'
-import { Search } from 'types/media'
+import { Search } from 'types/internal/media'
 import Layout from 'components/layout'
+import Meta from 'components/layout/Head/Meta'
 
 interface Props {
   image: string
@@ -12,11 +13,12 @@ interface Props {
 export default function VideDetailPage(props: Props) {
   const { image, video, search, publish } = props
 
-  const image_url = config.baseUrl + image
-  const video_url = config.baseUrl + video
+  const imageUrl = config.baseUrl + image
+  const videoUrl = config.baseUrl + video
 
   return (
-    <Layout title="Video" search={search}>
+    <Layout search={search}>
+      <Meta title="Video" />
       {publish ? (
         <article className="article_detail">
           <div className="article_detail_picture">
@@ -27,10 +29,10 @@ export default function VideDetailPage(props: Props) {
                 controls
                 controlsList="nodownload"
                 // onContextMenu="return false"
-                poster={image_url}
+                poster={imageUrl}
                 data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 2]}'
               >
-                <source src={video_url} type="application/x-mpegURL" />
+                <source src={videoUrl} type="application/x-mpegURL" />
                 <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>
                 {/* <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
                 <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English"> */}

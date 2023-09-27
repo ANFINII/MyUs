@@ -1,4 +1,4 @@
-import { Search, Video } from 'types/media'
+import { Search, Video } from 'types/internal/media'
 import Layout from 'components/layout'
 import ArticleVideo from 'components/widgets/Article/Video'
 

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import config from 'api/config'
-import { Video } from 'types/media'
+import { Video } from 'types/internal/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
 

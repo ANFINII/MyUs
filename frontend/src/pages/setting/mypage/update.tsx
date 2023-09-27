@@ -1,4 +1,4 @@
-import { Mypage } from 'types/auth'
+import { Mypage } from 'types/internal/auth'
 import MypageUpdate from 'components/templates/setting/mypage/update'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {

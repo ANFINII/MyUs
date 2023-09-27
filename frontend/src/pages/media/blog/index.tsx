@@ -1,4 +1,4 @@
-import { Search, Picture } from 'types/media'
+import { Search, Picture } from 'types/internal/media'
 import Blogs from 'components/templates/media/blog/list'
 
 const search: Search = {

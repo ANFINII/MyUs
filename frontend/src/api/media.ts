@@ -1,5 +1,5 @@
 import config from 'api/config'
-import { Video } from 'types/media'
+import { Video } from 'types/internal/media'
 
 const parameter = {
   method: 'GET',

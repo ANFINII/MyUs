@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import config from 'api/config'
-import { Chat } from 'types/media'
+import { Chat } from 'types/internal/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 
 interface Props {

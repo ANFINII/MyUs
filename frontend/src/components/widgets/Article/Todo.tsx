@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Media } from 'types/media'
+import { Media } from 'types/internal/media'
 
 interface Props {
   data: Media

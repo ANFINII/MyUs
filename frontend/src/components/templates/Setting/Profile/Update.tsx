@@ -1,9 +1,8 @@
 import Router from 'next/router'
-import { Profile } from 'types/auth'
+import { Profile } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/prefectures'
 import { selectDate } from 'utils/functins/datetime'
-import Footer from 'components/layout/Footer'
-import Main from 'components/layout/Main'
+import Layout from 'components/layout'
 import Button from 'components/parts/Button'
 import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
@@ -20,10 +19,9 @@ export default function ProfileUpdate(props: Props) {
   const { years, months, days } = selectDate()
 
   return (
-    <Main title="MyUsアカウント設定">
+    <Layout title="アカウント設定" type="table" isFooter>
       {user ? (
-        <article className="article_table">
-          <h1>アカウント設定</h1>
+        <>
           {/* {% if messages %}
           <ul className="messages_profile">
             {% for message in messages %}
@@ -138,14 +136,10 @@ export default function ProfileUpdate(props: Props) {
               </tr>
             </tbody>
           </table>
-          <Footer />
-        </article>
+        </>
       ) : (
-        <article className="article_table">
-          <h1>アカウント設定</h1>
-          <h2 className="login_required">ログインしてください</h2>
-        </article>
+        <h2 className="login_required">ログインしてください</h2>
       )}
-    </Main>
+    </Layout>
   )
 }
