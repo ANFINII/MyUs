@@ -245,7 +245,7 @@ hr {
   grid-column: 3/4;
   grid-row: 1/3;
   margin: 0 4px 0 4px;
-  justify-self: start;
+  justify-self: flex-start;
 }
 
 .chat_content_area_3 button {
@@ -538,7 +538,7 @@ hr {
 
 .chat_footer_main .btn-sm,
 .chat_footer_thread .btn-sm {
-  justify-self: end;
+  justify-self: flex-end;
   border-radius: 4px;
 }
 
@@ -560,7 +560,7 @@ hr {
   width: 32px;
   padding: 0 0 2px 2px;
   font-size: 18px;
-  justify-self: end;
+  justify-self: flex-end;
 }
 
 /* Quill */
