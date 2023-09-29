@@ -12,7 +12,6 @@ class MyDocument extends Document {
         <Head>
           <meta charSet="UTF-8" />
           <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
-          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
           <meta name="description" content="MyUsとはMy Idea Know Usが名前の由来です。総合メディアサイトであり、アイディア想像サイトになります!!!" />
           <meta name="keywords" content="MyUs, My Idea Know Us, SNS" />
           <meta name="author" content="ANFINII" />

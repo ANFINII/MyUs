@@ -1,3 +1,5 @@
+import type { AppProps } from 'next/app'
+import Head from 'next/head'
 import 'styles/reset.css'
 import 'styles/global.css'
 import 'styles/layout/layout.css'
@@ -14,8 +16,14 @@ import 'styles/quill.css'
 import 'styles/audio.css'
 import 'styles/videojs-myus.css'
 // import 'styles/chat.css'
-import type { AppProps } from 'next/app'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+      </Head>
+      <Component {...pageProps} />
+    </>
+  )
 }
