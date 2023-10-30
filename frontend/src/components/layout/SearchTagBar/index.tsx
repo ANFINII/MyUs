@@ -12,7 +12,7 @@ interface Props {
   searchtags?: searchtag[]
 }
 
-export default function SearchTag(props: Props) {
+export default function SearchTagBar(props: Props) {
   const { isAuth, csrfToken, searchtags } = props
 
   const scrollRef = useRef<HTMLDivElement>(null)
