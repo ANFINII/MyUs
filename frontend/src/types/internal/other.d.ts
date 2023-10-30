@@ -1,4 +1,4 @@
-export interface searchtag {
+export interface SearchTag {
   id: number
   name: string
 }

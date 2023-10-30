@@ -1,17 +1,20 @@
+// import useSWR from 'swr'
 import { Search } from 'types/internal/media'
-import { searchtag } from 'types/internal/other'
+import { SearchTag } from 'types/internal/other'
 import Footer from 'components/layout/Footer'
 import Meta from 'components/layout/Head/Meta'
 import Header from 'components/layout/Header'
 import Main from 'components/layout/Main'
-import SearchTag from 'components/layout/SearchTag'
+import SearchTagBar from 'components/layout/SearchTagBar'
 import SideBar from 'components/layout/SideBar'
 
-const searchtags: searchtag[] = [
+const searchtags: SearchTag[] = [
   { id: 1, name: '初音ミク' },
   { id: 2, name: 'VOCALOID' },
   { id: 3, name: '宇宙' },
 ]
+
+// const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 interface Props {
   title?: string
@@ -24,11 +27,13 @@ interface Props {
 export default function Layout(props: Props) {
   const { title, search, type = 'defalt', isFooter, children } = props
 
+  // const { searchtags, error } = useSWR('/api/navigation', fetcher)
+
   return (
     <div className="layout">
       <Header />
       <SideBar />
-      <SearchTag searchtags={searchtags} isAuth={true} />
+      <SearchTagBar searchtags={searchtags} isAuth={true} />
       <Meta title={title} />
       <Main title={title} search={search} type={type}>
         {children}
