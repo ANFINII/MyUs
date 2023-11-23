@@ -3,13 +3,13 @@ import Link from 'next/link'
 
 interface Props {
   nickname?: string
-  is_active?: boolean
-  is_staff?: boolean
+  isActive?: boolean
+  isStaff?: boolean
   isAuth?: boolean
 }
 
 export default function DropMenuProfile(props: Props) {
-  const { nickname, is_active, is_staff, isAuth } = props
+  const { nickname, isActive, isStaff, isAuth } = props
 
   return (
     <>
@@ -40,7 +40,7 @@ export default function DropMenuProfile(props: Props) {
           </li>
 
           <li className="drop_menu_list">
-            <Link href={is_staff || is_active ? '/' : '/login'} className="icon_link"></Link>
+            <Link href={isStaff || isActive ? '/' : '/login'} className="icon_link"></Link>
             <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-grid color_drop_menu_bi" viewBox="0 0 16 16">
               <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
             </svg>
@@ -69,7 +69,7 @@ export default function DropMenuProfile(props: Props) {
           </li>
 
           <li className="drop_menu_list">
-            {!is_staff && <Link href="/setting/withdrawal" className="icon_link"></Link>}
+            {!isStaff && <Link href="/setting/withdrawal" className="icon_link"></Link>}
             <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-person-x color_drop_menu_bi" viewBox="0 0 16 16">
               <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
               <path

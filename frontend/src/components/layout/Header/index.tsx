@@ -48,7 +48,7 @@ export default function Header() {
         </div>
 
         <div className="header_nav_7">
-          <DropMenuProfile nickname="" is_active={true} is_staff={false} />
+          <DropMenuProfile isActive isStaff={false} />
         </div>
       </nav>
     </header>
