@@ -36,7 +36,7 @@
 
 .button_group {
   grid-column: 2/3;
-  justify-self: end;
+  justify-self: flex-end;
 }
 
 .button_group button {
