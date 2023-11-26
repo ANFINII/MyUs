@@ -265,7 +265,7 @@ class MyPageAPI(APIView):
 
 
 # Index
-class IndexAPI(ListAPIView):
+class HomeAPI(ListAPIView):
 
     def get(self, request):
         datas = {
@@ -330,7 +330,7 @@ class VideoCreateAPI(CreateAPIView):
     serializer_class = VideoSerializer
 
 
-class VideoDetailAPI(RetrieveAPIView):
+class VideoAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Video.objects.filter(id=id, publish=True).first()
         if not obj:
@@ -405,7 +405,7 @@ class MusicCreateAPI(CreateAPIView):
     serializer_class = MusicSerializer
 
 
-class MusicDetailAPI(RetrieveAPIView):
+class MusicAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Music.objects.filter(id=id, publish=True).first()
         if not obj:
@@ -475,7 +475,7 @@ class ComicCreateAPI(CreateAPIView):
     serializer_class = ComicSerializer
 
 
-class ComicDetailAPI(RetrieveAPIView):
+class ComicAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Comic.objects.filter(id=id, publish=True).first()
         if not obj:
@@ -545,7 +545,7 @@ class PictureCreateAPI(CreateAPIView):
     serializer_class = PictureSerializer
 
 
-class PictureDetailAPI(RetrieveAPIView):
+class PictureAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Picture.objects.filter(id=id, publish=True).first()
         if not obj:
@@ -618,7 +618,7 @@ class BlogCreateAPI(CreateAPIView):
     serializer_class = BlogSerializer
 
 
-class BlogDetailAPI(RetrieveAPIView):
+class BlogAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Blog.objects.filter(id=id, publish=True).first()
         if not obj:
@@ -692,7 +692,7 @@ class ChatCreateAPI(CreateAPIView):
     serializer_class = ChatSerializer
 
 
-class ChatDetailAPI(RetrieveAPIView):
+class ChatAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Chat.objects.filter(id=id, publish=True).first()
         if not obj:
@@ -760,7 +760,7 @@ class TodoCreateAPI(CreateAPIView):
     serializer_class = TodoSerializer
 
 
-class TodoDetailAPI(RetrieveAPIView):
+class TodoAPI(RetrieveAPIView):
     def get(self, request, id):
         obj = Todo.objects.filter(id=id, publish=True).first()
         if not obj:
