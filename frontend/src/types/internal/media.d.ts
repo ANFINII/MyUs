@@ -60,3 +60,12 @@ export interface Follow {
   mypage: Mypage
   author: Author
 }
+
+interface HomeMedia {
+  videos: Video[]
+  musics: Music[]
+  comics: Media[]
+  pictures: Chat[]
+  blogs: Media[]
+  chats: Video[]
+}

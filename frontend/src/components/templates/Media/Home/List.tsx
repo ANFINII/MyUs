@@ -1,19 +1,15 @@
-import { Search, Video } from 'types/internal/media'
+import { HomeMedia, Search } from 'types/internal/media'
 import Layout from 'components/layout'
 import ArticleVideo from 'components/widgets/Article/Video'
 
 interface Props {
+  homeMedia: HomeMedia
   search?: Search
-  videos: Video[]
-  datas?: Video[]
-  // datas: Video[]
-  // datas: Video[]
-  // datas: Video[]
-  // datas: Video[]
 }
 
 export default function Homes(props: Props) {
-  const { search, datas, videos } = props
+  const { search, homeMedia } = props
+  const { videos, musics, comics, pictures, blogs, chats } = homeMedia
 
   return (
     <Layout title="Home" search={search}>
@@ -21,7 +17,7 @@ export default function Homes(props: Props) {
 
       <article className="article_index">
         <h2>Video</h2>
-        {videos.map((data) => (
+        {homeMedia.videos?.map((data) => (
           <ArticleVideo data={data} key={data.id} />
         ))}
       </article>
