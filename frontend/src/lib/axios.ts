@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { API_URL } from 'lib/config'
-import { snakeCamel } from 'utils/functins/snakeCamel'
+import { snakeCamel } from 'utils/functins/convertCase'
 
 const applyResponseInterceptor = (client: AxiosInstance) => {
   client.interceptors.response.use(
