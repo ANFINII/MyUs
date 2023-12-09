@@ -12,11 +12,13 @@ const applyResponseInterceptor = (client: AxiosInstance) => {
       console.log('error:', error)
       switch (error?.response?.status) {
         case 401:
+          console.log('401 Unauthorized')
           break
         case 404:
+          console.log('404 Not Found')
           break
         default:
-          console.log('== internal server error')
+          console.log('Internal Server Error')
       }
       const message = (error.response?.data?.message || '').split(',')
       console.log('error message:', message)
