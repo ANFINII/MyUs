@@ -1,7 +1,7 @@
 // import axios from 'pages/api/axios'
 import { GetServerSideProps } from 'next'
 import { HomeMedia, Search } from 'types/internal/media'
-import Homes from 'components/templates/media/home/List'
+import Homes from 'components/templates/Media/Home/List'
 
 export const getServerSideProps: GetServerSideProps = async () => {
   // const res_video = await axios.get('/api/video')
@@ -136,6 +136,8 @@ export default function HomesPage(props: Props) {
   return <Homes {...props} />
 }
 
-{/* <Script src="https://vjs.zencdn.net/7.19.2/video.min.js"></Script>
+{
+  /* <Script src="https://vjs.zencdn.net/7.19.2/video.min.js"></Script>
 <Script src='/pages/api/video_auto.js'></Script>
-<script>$(function() { $('audio').audioPlayer() })</cript> */}
+<script>$(function() { $('audio').audioPlayer() })</cript> */
+}
