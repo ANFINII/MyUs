@@ -1,32 +1,40 @@
-import axios from 'axios'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import { API_URL } from 'lib/config'
+import { snakeCamel } from 'utils/functins/snakeCamel'
 
-const headers = {
-  'Content-Type': 'application/json',
+const applyResponseInterceptor = (client: AxiosInstance) => {
+  client.interceptors.response.use(
+    (response: AxiosResponse) => {
+      response.data = snakeCamel(response.data)
+      return response
+    },
+    (error) => {
+      console.log('error:', error)
+      switch (error?.response?.status) {
+        case 401:
+          break
+        case 404:
+          break
+        default:
+          console.log('== internal server error')
+      }
+      const message = (error.response?.data?.message || '').split(',')
+      console.log('error message:', message)
+      return Promise.reject(error)
+    },
+  )
 }
 
-// axiosの初期設定
-export const api = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
-  headers,
-})
+const createAxiosInstance = (contentType: string) => {
+  const client: AxiosInstance = axios.create({
+    baseURL: API_URL,
+    withCredentials: true,
+    headers: {
+      'Content-Type': contentType,
+    },
+  })
+  applyResponseInterceptor(client)
+  return client
+}
 
-// レスポンスのエラー判定処理
-api.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  (error) => {
-    console.log(error)
-    switch (error?.response?.status) {
-      case 401:
-        break
-      case 404:
-        break
-      default:
-        console.log('== internal server error')
-    }
-
-    const errorMessage = (error.response?.data?.message || '').split(',')
-    throw new Error(errorMessage)
-  },
-)
+export const apiClient: AxiosInstance = createAxiosInstance('application/json')
