@@ -39,4 +39,4 @@ const createAxiosInstance = (contentType: string) => {
   return client
 }
 
-export const apiClient: AxiosInstance = createAxiosInstance('application/json')
+export const apiClient = createAxiosInstance('application/json')
