@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { User } from 'types/internal/auth'
 import Layout from 'components/layout'
 import Toggle from 'components/parts/Input/Toggle'
 
@@ -14,11 +13,6 @@ interface notificationSetting {
   isReply: boolean
   isLike: boolean
   isViews: boolean
-}
-
-interface Props {
-  user: User
-  notificationSetting: notificationSetting
 }
 
 const user = {
@@ -41,7 +35,12 @@ const notificationSetting = {
   isViews: true,
 }
 
-export default function Notification(props: Props) {
+// interface Props {
+//   user: User
+//   notificationSetting: notificationSetting
+// }
+
+export default function Notification() {
   // const { user, notificationSetting } = props
 
   const [isVideo, setIsVideo] = useState(notificationSetting.isVideo)

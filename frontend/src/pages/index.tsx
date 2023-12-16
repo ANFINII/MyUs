@@ -1,7 +1,7 @@
 // import axios from 'pages/api/axios'
 import { GetServerSideProps } from 'next'
 import { HomeMedia, Search } from 'types/internal/media'
-import Homes from 'components/templates/Media/Home/List'
+import Homes from 'components/templates/media/home/list'
 
 export const getServerSideProps: GetServerSideProps = async () => {
   // const res_video = await axios.get('/api/video')

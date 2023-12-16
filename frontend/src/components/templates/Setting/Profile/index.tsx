@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import Router from 'next/router'
 import config from 'api/config'
-import { Profile } from 'types/internal/auth'
+import { UserProfile } from 'types/internal/auth'
 import Layout from 'components/layout'
 import Button from 'components/parts/Button'
 
 interface Props {
-  user: Profile
+  user: UserProfile
 }
 
 export default function Profile(props: Props) {

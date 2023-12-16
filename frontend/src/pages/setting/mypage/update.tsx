@@ -1,5 +1,5 @@
 import { Mypage } from 'types/internal/auth'
-import MypageUpdate from 'components/templates/setting/mypage/update'
+import MypageUpdate from 'components/templates/setting/mypage/Update'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   const cookie = context.req?.headers.cookie

@@ -1,5 +1,5 @@
 // import { GetServerSideProps } from 'next'
-import { Profile } from 'types/internal/auth'
+import { UserProfile } from 'types/internal/auth'
 import SettingProfile from 'components/templates/setting/profile'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -13,7 +13,7 @@ import SettingProfile from 'components/templates/setting/profile'
 //  }
 // }
 
-const user: Profile = {
+const user: UserProfile = {
   id: 1,
   avatar: '/media/users/images_user/user_5/MyUs_Profile_01.jpg',
   email: 'anfinii56@gmail.com',
@@ -22,6 +22,10 @@ const user: Profile = {
   fullname: '翁 安',
   lastname: '翁',
   firstname: '安',
+  isActive: true,
+  isStaff: true,
+  lastLogin: 'string',
+  dateJoined: 'string',
   year: 1987,
   month: 5,
   day: 6,

@@ -63,10 +63,7 @@ export default function DropMenuNotice() {
               {/* <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" className="notification_aria_anker pjax_button_userpage"> */}
               {/* {% endif %} */}
               {/* {% if notification.type_no >= 1 and notification.type_no <= 7 %} */}
-              <div
-                className="notification_aria_list_1"
-                title="{{ notification.user_from.nickname }}さんが{{ notification.content_object.title }}を投稿しました"
-              >
+              <div className="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんが{{ notification.content_object.title }}を投稿しました">
                 {/* {{ notification.content_object.title }} */}
               </div>
               {/* {% elif notification.type_no == 8 %} */}
@@ -74,17 +71,11 @@ export default function DropMenuNotice() {
                 {/* {{ notification.user_from.nickname }}さんにフォローされました */}
               </div>
               {/* {% elif notification.type_no == 9 %} */}
-              <div
-                className="notification_aria_list_1"
-                title="{{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました"
-              >
+              <div className="notification_aria_list_1" title="{{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました">
                 {/* {{ notification.content_object.text }}が{{ notification.user_from.nickname }}さんにいいねされました */}
               </div>
               {/* {% elif notification.type_no == 10 %} */}
-              <div
-                className="notification_aria_list_1"
-                title="{{ notification.user_from.nickname }}さんから返信がありました {{ notification.content_object.text }}"
-              >
+              <div className="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんから返信がありました {{ notification.content_object.text }}">
                 {/* {{ notification.content_object.text }} */}
               </div>
               {/* {% elif notification.type_no == 11 %} */}

@@ -1,9 +1,35 @@
-export interface Profile {
+export interface User {
   id: number
   avatar: string
   email: string
   username: string
   nickname: string
+  isActive: boolean
+  isStaff: boolean
+  lastLogin: string
+  dateJoined: string
+}
+
+export interface Profile {
+  id: number
+  lastname: string
+  firstname: string
+  year: number
+  month: number
+  day: number
+  age: number
+  gender: string
+  phone: string
+  countryCode: string
+  postalCode: string
+  prefecture: string
+  city: string
+  address: string
+  building: string
+  introduction: string
+}
+
+export interface UserProfile extends User {
   fullname: string
   lastname: string
   firstname: string
@@ -20,7 +46,6 @@ export interface Profile {
   address: string
   building: string
   introduction: string
-  [key: number]: number
 }
 
 export interface Mypage {
@@ -48,11 +73,4 @@ export interface NotificationSetting {
   isReply: boolean
   isLike: boolean
   isViews: boolean
-}
-
-export interface User {
-  id: number
-  nickname: string
-  image: string
-  isAuth: boolean
 }

@@ -1,26 +1,19 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import config from 'api/config'
-import { GetStaticPathsType } from 'types/global/next'
-import { Video } from 'types/internal/media'
+import { HttpStatusCode } from 'axios'
+import { apiClient } from 'lib/axios'
+import { apiVideo } from 'api/uri'
 import VideoDetail from 'components/templates/media/video/detail'
 
-export async function getStaticPaths(): Promise<GetStaticPathsType> {
-  const url = config.baseUrl + '/media/video'
-  const res = await fetch(config.baseUrl + url)
-  const videos: Video[] = await res.json()
-  const paths = videos.map((video) => ({
-    params: { id: String(video.id) },
-  }))
-  return { paths, fallback: 'blocking' }
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ locale, params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const res = await fetch(config.baseUrl + `/api//media/video/detail/${params?.id}`)
-  if (res.status !== 200) throw Error
-  const data = await res.json()
-  return { props: { data, translations } }
+  const video = async (): Promise<void> => {
+    await apiClient.get(apiVideo(Number(query.id))).then((res) => {
+      if (res.status !== HttpStatusCode.Ok) throw Error
+      res.data
+    })
+  }
+  return { props: { video, ...translations } }
 }
 
 interface Props {
@@ -30,6 +23,5 @@ interface Props {
 }
 
 export default function VideDetailPage(props: Props) {
-  const { image, video, publish } = props
-  return <VideoDetail image={image} video={video} publish={publish} />
+  return <VideoDetail {...props} />
 }

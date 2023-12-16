@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function SideMenu() {
@@ -9,7 +10,10 @@ export default function SideMenu() {
       <label htmlFor="burger_menu" className="side_nemu_back"></label>
       <label htmlFor="burger_menu" className="header_color">
         <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="1.7em" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
-          <path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+          <path
+            fillRule="evenodd"
+            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
+          />
         </svg>
       </label>
 
@@ -18,7 +22,7 @@ export default function SideMenu() {
           <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-arrow-left side_menu_color_bi" viewBox="0 0 16 16">
             <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
           </svg>
-          <img src="/img/MyUs.png" width="30em" height="30em" />
+          <Image src="/img/MyUs.png" width={30} height={30} alt="" />
         </label>
 
         <nav>
@@ -71,7 +75,7 @@ export default function SideMenu() {
 
             <li className="side_menu_footer_item side_menu_color">
               <Link href="/" className="icon_link"></Link>
-              <img src="/img/MyUs.png" width="24px" height="24px" className="myus_img" />
+              <Image src="/img/MyUs.png" width={24} height={24} alt="" className="myus_img" />
               <span className="side_menu_footer_item">© {year} MyUs Co.,Ltd</span>
             </li>
           </ul>

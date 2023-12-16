@@ -1,5 +1,5 @@
 import Router from 'next/router'
-import { Profile } from 'types/internal/auth'
+import { UserProfile } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/prefectures'
 import { selectDate } from 'utils/functions/datetime'
 import Layout from 'components/layout'
@@ -10,7 +10,7 @@ import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
 
 interface Props {
-  user: Profile
+  user: UserProfile
 }
 
 export default function ProfileUpdate(props: Props) {

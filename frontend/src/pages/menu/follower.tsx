@@ -1,5 +1,5 @@
 import { Search, Follow } from 'types/internal/media'
-import Followers from 'components/templates/follow/FollowerList'
+import Followers from 'components/templates/menu/follower'
 
 const search: Search = {
   name: 'test',

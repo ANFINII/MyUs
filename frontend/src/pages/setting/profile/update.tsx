@@ -1,13 +1,13 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { api } from 'lib/axios'
-import { Profile } from 'types/internal/auth'
+import { apiClient } from 'lib/axios'
+import { UserProfile } from 'types/internal/auth'
 import ProfileUpdate from 'components/templates/setting/profile/Update'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
   const url = '/profile'
-  const user = await api.get(url).then((res) => {
+  const user = await apiClient.get(url).then((res) => {
     if (res.status !== 200) throw Error
     return res.data
   })
@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
 }
 
 interface Props {
-  user: Profile
+  user: UserProfile
 }
 
 export default function ProfileUpdatePage(props: Props) {
