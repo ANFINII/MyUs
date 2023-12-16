@@ -38,8 +38,9 @@ STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# pkのデフォルト設定
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # MySQL
 DATABASES = {
