@@ -1,7 +1,7 @@
 import Router from 'next/router'
 import { Profile } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/prefectures'
-import { selectDate } from 'utils/functins/datetime'
+import { selectDate } from 'utils/functions/datetime'
 import Layout from 'components/layout'
 import Button from 'components/parts/Button'
 import IconPerson from 'components/parts/Icon/Person'
@@ -17,6 +17,11 @@ export default function ProfileUpdate(props: Props) {
   const { user } = props
 
   const { years, months, days } = selectDate()
+  const userGenders = [
+    { key: '男性', value: 0 },
+    { key: '女性', value: 1 },
+    { key: '秘密', value: 2 },
+  ]
 
   return (
     <Layout title="アカウント設定" type="table" isFooter>
@@ -91,17 +96,27 @@ export default function ProfileUpdate(props: Props) {
                 <td className="td_color">性別</td>
                 <td className="td_gender">
                   <div className="gender">
+                    {/* {userGenders.map((gender) => {
                     <input
                       type="radio"
                       name="gender"
-                      value={user.key}
-                      id={`gender_${user.key}`}
+                      value={gender.key}
+                      id={`gender_${gender.key}`}
                       className=""
                       // {user.gender === user.key && defaultChecked="checked" }
                     />
-                    <label htmlFor={`gender_${user.key}`} className="custom-control-label">
-                      {user.gender}
+                    <label htmlFor={`gender_${gender.key}`} className="custom-control-label">
+                      {gender.gender}
                     </label>
+})} */}
+                    {userGenders.map((gender) => (
+                      <div key={gender.key}>
+                        <input type="radio" name="gender" value={gender.key} id={`gender_${gender.key}`} className="" defaultChecked={user.gender === gender.key} />
+                        <label htmlFor={`gender_${gender.key}`} className="custom-control-label">
+                          {gender.value}
+                        </label>
+                      </div>
+                    ))}
                   </div>
                 </td>
               </tr>
