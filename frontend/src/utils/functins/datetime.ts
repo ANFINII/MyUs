@@ -1,17 +1,17 @@
 export const selectDate = () => {
-  const years = []
-  for (let i = 1900; i <= new Date().getFullYear(); i++) {
-    years.push({ value: i, label: i.toString() })
-  }
+  const years = Array.from({ length: new Date().getFullYear() - 1899 }, (_, index) => {
+    const year = 1900 + index
+    return { label: year.toString(), value: year.toString() }
+  })
 
-  const months = []
-  for (let i = 1; i <= 12; i++) {
-    months.push({ value: i, label: i.toString() })
-  }
+  const months = Array.from({ length: 12 }, (_, index) => {
+    const month = index + 1
+    return { label: month.toString(), value: month.toString() }
+  })
 
-  const days = []
-  for (let i = 1; i <= 31; i++) {
-    days.push({ value: i, label: i.toString() })
-  }
+  const days = Array.from({ length: 31 }, (_, index) => {
+    const day = index + 1
+    return { label: day.toString(), value: day.toString() }
+  })
   return { years, months, days }
 }

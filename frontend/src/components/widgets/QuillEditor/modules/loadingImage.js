@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { Quill } from 'react-quill'
 
 const InlineBlot = Quill.import('blots/block')
