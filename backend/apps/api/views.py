@@ -264,6 +264,34 @@ class MyPageAPI(APIView):
         pass
 
 
+class NotificationAPI(APIView):
+
+    def get(self, request):
+        user_id = get_user_id(request)
+        if not user_id:
+            return Response({'error': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+
+        notification_setting = NotificationSetting.objects.filter(id=user_id).first()
+
+        data = {
+            'id': notification_setting.id,
+            'is_video': notification_setting.is_video,
+            'is_music': notification_setting.is_music,
+            'is_comic': notification_setting.is_comic,
+            'is_picture': notification_setting.is_picture,
+            'is_blog': notification_setting.is_blog,
+            'is_chat': notification_setting.is_chat,
+            'is_follow': notification_setting.is_follow,
+            'is_reply': notification_setting.is_reply,
+            'is_like': notification_setting.is_like,
+            'is_views': notification_setting.is_views,
+        }
+        return Response(data, status=HTTP_200_OK)
+
+    def post(self, request):
+        pass
+
+
 # Index
 class HomeAPI(ListAPIView):
 

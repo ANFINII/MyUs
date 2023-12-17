@@ -1,6 +1,6 @@
 from django.urls import path
 from apps.api.views import AuthAPI, SignUpAPI, LoginAPI, LogoutAPI, RefreshAPI
-from apps.api.views import UserAPI, ProfileAPI, MyPageAPI
+from apps.api.views import UserAPI, ProfileAPI, MyPageAPI, NotificationAPI
 from apps.api.views import HomeAPI
 from apps.api.views import VideoListAPI, VideoCreateAPI, VideoAPI
 from apps.api.views import MusicListAPI, MusicCreateAPI, MusicAPI
@@ -23,13 +23,13 @@ urlpatterns = [
     path('user', UserAPI.as_view()),
     path('profile', ProfileAPI.as_view()),
     path('mypage', MyPageAPI.as_view()),
+    path('notification', NotificationAPI.as_view()),
 
     path('home', HomeAPI.as_view()),
 
     path('media/video', VideoListAPI.as_view()),
     path('media/video/<int:id>', VideoAPI.as_view()),
     path('media/video/create', VideoCreateAPI.as_view()),
-
 
     path('media/music', MusicListAPI.as_view()),
     path('media/music/<int:id>', MusicAPI.as_view()),
