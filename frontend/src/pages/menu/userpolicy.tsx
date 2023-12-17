@@ -1,11 +1,9 @@
-import Footer from 'components/layout/Footer'
-import Main from 'components/layout/Main'
+import Layout from 'components/layout'
 
 export default function UserPolicy() {
   return (
-    <Main title="MyUs利用規約">
+    <Layout title="MyUs利用規約" isFooter>
       <article className="article_userpolicy">
-        <h1>利用規約</h1>
         <p>利用規約を読み同意した上で、本サービスを利用するものとする。</p>
         <p>利用規約に違反している者は本サービンの利用停止、またはユーザー削除を通知なく行うものとします。</p>
         <hr />
@@ -28,9 +26,7 @@ export default function UserPolicy() {
         <p>特定個人や非特定多数の人に対する誹謗中傷することを禁止します。</p>
         <p>MyUs内のコンテンツのスクレイピングを禁止します。</p>
         <br />
-
-        <Footer />
       </article>
-    </Main>
+    </Layout>
   )
 }
