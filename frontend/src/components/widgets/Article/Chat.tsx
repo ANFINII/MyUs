@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import config from 'api/config'
 import { Chat } from 'types/internal/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 
@@ -10,7 +9,7 @@ interface Props {
 export default function ArticleChat(props: Props) {
   const { data } = props
 
-  const imageUrl = config.baseUrl + data.author.image
+  const imageUrl = data.author.image
   const nickname = data.author.nickname
 
   return (

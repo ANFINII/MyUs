@@ -1,4 +1,3 @@
-import config from 'api/config'
 import { Video } from 'types/internal/media'
 
 const parameter = {
@@ -7,13 +6,13 @@ const parameter = {
 }
 
 export async function getVideo() {
-  const res = await fetch(config.baseUrl + '/api/video', parameter)
+  const res = await fetch('/api/video', parameter)
   const items = await res.json()
   return items
 }
 
 export async function getVideoId() {
-  const res = await fetch(config.baseUrl + '/api/video', parameter)
+  const res = await fetch('/api/video', parameter)
   const items = await res.json()
   return items.map((video: Video) => {
     return {
@@ -25,7 +24,7 @@ export async function getVideoId() {
 }
 
 export async function getVideoDetail(id: number) {
-  const res = await fetch(config.baseUrl + '/api/video/' + id, parameter)
+  const res = await fetch('/api/video/' + id, parameter)
   const item = await res.json()
   return item
 }

@@ -1,4 +1,3 @@
-import config from 'api/config'
 import { Search } from 'types/internal/media'
 import Layout from 'components/layout'
 import Meta from 'components/layout/Head/Meta'
@@ -13,9 +12,6 @@ interface Props {
 export default function VideDetailPage(props: Props) {
   const { image, video, search, publish } = props
 
-  const imageUrl = config.baseUrl + image
-  const videoUrl = config.baseUrl + video
-
   return (
     <Layout search={search}>
       <Meta title="Video" />
@@ -29,10 +25,10 @@ export default function VideDetailPage(props: Props) {
                 controls
                 controlsList="nodownload"
                 // onContextMenu="return false"
-                poster={imageUrl}
+                poster={image}
                 data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 2]}'
               >
-                <source src={videoUrl} type="application/x-mpegURL" />
+                <source src={video} type="application/x-mpegURL" />
                 <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>
                 {/* <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
                 <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English"> */}

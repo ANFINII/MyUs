@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import config from 'api/config'
 import { Picture } from 'types/internal/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
@@ -14,8 +13,8 @@ export default function ArticleComic(props: Props) {
   const { data } = props
 
   const router = useRouter()
-  const imageUrl = config.baseUrl + data.image
-  const authorUrl = config.baseUrl + data.author.image
+  const imageUrl = data.image
+  const authorUrl = data.author.image
   const nickname = data.author.nickname
 
   return (

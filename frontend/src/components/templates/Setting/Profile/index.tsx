@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Router from 'next/router'
-import config from 'api/config'
 import { UserProfile } from 'types/internal/auth'
 import Layout from 'components/layout'
 import Button from 'components/parts/Button'
@@ -11,7 +10,8 @@ interface Props {
 
 export default function Profile(props: Props) {
   const { user } = props
-  const avatarUrl = config.baseUrl + user.avatar
+
+  const avatarUrl = user.avatar
 
   return (
     <Layout title="アカウント設定" type="table" isFooter>

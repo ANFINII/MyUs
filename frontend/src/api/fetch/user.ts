@@ -1,15 +1,15 @@
-import config from 'api/config'
+import { TOKEN } from 'lib/config'
 
 const parameter = {
   method: 'GET',
   headers: {
-    Authorization: 'JWT ' + config.token,
+    Authorization: 'JWT ' + TOKEN,
     'Content-Type': 'application/json',
   },
 }
 
 export async function getProfile() {
-  return fetch(config.baseUrl + '/api/profile', parameter).then((res) => {
+  return fetch('/api/profile', parameter).then((res) => {
     console.log(res)
     return res.json()
   })

@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Router from 'next/router'
-import config from 'api/config'
 import { Mypage } from 'types/internal/auth'
 import Layout from 'components/layout'
 import Button from 'components/parts/Button'
@@ -11,8 +10,6 @@ interface Props {
 
 export default function MyPage(props: Props) {
   const { mypage } = props
-
-  const bannerUrl = config.baseUrl + mypage.banner
 
   return (
     <Layout title="マイページ設定" type="table" isFooter>
@@ -30,8 +27,8 @@ export default function MyPage(props: Props) {
                 <td>
                   <label htmlFor="account_image_input" className="mypage_image">
                     {mypage.banner && (
-                      <a href={bannerUrl} data-lightbox="group">
-                        <Image src={bannerUrl} title={mypage.nickname} width={270} height={56} alt="" data-lightbox="group" />
+                      <a href={mypage.banner} data-lightbox="group">
+                        <Image src={mypage.banner} title={mypage.nickname} width={270} height={56} alt="" data-lightbox="group" />
                       </a>
                     )}
                   </label>

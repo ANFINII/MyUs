@@ -10,7 +10,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query }) 
   const video = async (): Promise<void> => {
     await apiClient.get(apiVideo(Number(query.id))).then((res) => {
       if (res.status !== HttpStatusCode.Ok) throw Error
-      res.data
+      return res.data
     })
   }
   return { props: { video, ...translations } }

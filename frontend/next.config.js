@@ -5,6 +5,13 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  basePath: '',
+  images: {
+    domains: ['www.google.com'],
+  },
+  async redirects() {
+    return [{ source: '/', destination: '/', permanent: true }]
+  },
 }
 
 const { i18n } = require('./next-i18next.config')

@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import config from 'api/config'
 import { Music } from 'types/internal/media'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
@@ -11,8 +10,8 @@ interface Props {
 export default function ArticleMusic(props: Props) {
   const { data } = props
 
-  const musicUrl = config.baseUrl + data.music
-  const imageUrl = config.baseUrl + data.author.image
+  const musicUrl = data.music
+  const imageUrl = data.author.image
   const nickname = data.author.nickname
 
   return (

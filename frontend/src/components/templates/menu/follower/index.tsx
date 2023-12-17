@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import Router from 'next/router'
-import config from 'api/config'
 import { Mypage } from 'types/internal/auth'
 import { Search, Follow } from 'types/internal/media'
 import Main from 'components/layout/Main'
@@ -27,7 +26,7 @@ export default function Followers(props: Props) {
           </div>
           <article className="article_list">
             {datas.map((data) => {
-              const imageUrl = config.baseUrl + data.author.image
+              const imageUrl = data.author.image
               const nickname = data.author.nickname
               return (
                 <section className="section_follow" key={data.id}>
