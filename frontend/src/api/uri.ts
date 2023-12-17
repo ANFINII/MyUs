@@ -11,6 +11,7 @@ export const apiRefresh = base + '/refresh'
 export const apiUser = base + '/user'
 export const apiProfile = base + '/profile'
 export const apiMypage = base + '/mypage'
+export const apiNotification = base + '/notification'
 
 // Media
 export const apiHome = base + '/home'

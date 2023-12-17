@@ -1,60 +1,22 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { NotificationSetting } from 'types/internal/auth'
 import Layout from 'components/layout'
 import Toggle from 'components/parts/Input/Toggle'
 
-interface notificationSetting {
-  isVideo: boolean
-  isMusic: boolean
-  isComic: boolean
-  isPicture: boolean
-  isBlog: boolean
-  isChat: boolean
-  isFollow: boolean
-  isReply: boolean
-  isLike: boolean
-  isViews: boolean
+interface Props {
+  // user?: boolean
+  notificationSetting: NotificationSetting
 }
 
-const user = {
-  id: 1,
-  nickname: 'anfinii',
-  image: 'string',
-  isAuth: true,
-}
+export default function Notification(props: Props) {
+  const { notificationSetting } = props
 
-const notificationSetting = {
-  isVideo: true,
-  isMusic: true,
-  isComic: true,
-  isPicture: true,
-  isBlog: true,
-  isChat: true,
-  isFollow: true,
-  isReply: true,
-  isLike: true,
-  isViews: true,
-}
+  const user = {}
 
-// interface Props {
-//   user: User
-//   notificationSetting: notificationSetting
-// }
+  const [newNotificationSetting, setNewNotificationSetting] = useState<NotificationSetting>(notificationSetting)
 
-export default function Notification() {
-  // const { user, notificationSetting } = props
-
-  const [isVideo, setIsVideo] = useState(notificationSetting.isVideo)
-  const [isMusic, setIsMusic] = useState(notificationSetting.isMusic)
-  const [isComic, setIsComic] = useState(notificationSetting.isComic)
-  const [isPicture, setIsPicture] = useState(notificationSetting.isPicture)
-  const [isBlog, setIsBlog] = useState(notificationSetting.isBlog)
-  const [isChat, setIsChat] = useState(notificationSetting.isChat)
-  const [isFollow, setIsFollow] = useState(notificationSetting.isFollow)
-  const [isReply, setIsReply] = useState(notificationSetting.isReply)
-  const [isLike, setIsLike] = useState(notificationSetting.isViews)
-  const [isViews, setIsViews] = useState(notificationSetting.isViews)
-
-  const handleToggle = (isState: boolean, stateSetter: React.Dispatch<boolean>) => stateSetter(!isState)
+  const notificationTypes: Array<keyof NotificationSetting> = ['isVideo', 'isMusic', 'isComic', 'isPicture', 'isBlog', 'isChat', 'isFollow', 'isReply', 'isLike', 'isViews']
+  const handleToggle = (type: keyof NotificationSetting) => setNewNotificationSetting((prev) => ({ ...prev, [type]: !prev[type] }))
 
   return (
     <Layout title="通知設定" type="table" isFooter>
@@ -65,86 +27,16 @@ export default function Notification() {
               <td className="td_color">通知設定</td>
               <td className="td_indent">フォローしているユーザの投稿通知などを設定</td>
             </tr>
-            <tr>
-              <td className="td_color">Video通知</td>
-              <td className="td_indent">
-                <form method="POST" action="" notification-type="video">
-                  <Toggle isActive={isVideo} onClick={() => handleToggle(isVideo, setIsVideo)} />
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td className="td_color">Music通知</td>
-              <td className="td_indent">
-                <form method="POST" action="" notification-type="music">
-                  <Toggle isActive={isMusic} onClick={() => handleToggle(isMusic, setIsMusic)} />
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td className="td_color">Comic通知</td>
-              <td className="td_indent">
-                <form method="POST" action="" notification-type="comic">
-                  <Toggle isActive={isComic} onClick={() => handleToggle(isComic, setIsComic)} />
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td className="td_color">Picture通知</td>
-              <td className="td_indent">
-                <form method="POST" action="" notification-type="picture">
-                  <Toggle isActive={isPicture} onClick={() => handleToggle(isPicture, setIsPicture)} />
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td className="td_color">Blog通知</td>
-              <td className="td_indent">
-                <form method="POST" action="" notification-type="blog">
-                  <Toggle isActive={isBlog} onClick={() => handleToggle(isBlog, setIsBlog)} />
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td className="td_color">Chat通知</td>
-              <td className="td_indent">
-                <form method="POST" action="" notification-type="chat">
-                  <Toggle isActive={isChat} onClick={() => handleToggle(isChat, setIsChat)} />
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td className="td_color">フォロー通知</td>
-              <td className="td_indent">
-                <form method="POST" action="" notification-type="follow">
-                  <Toggle isActive={isFollow} onClick={() => handleToggle(isFollow, setIsFollow)} />
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td className="td_color">返信通知</td>
-              <td className="td_indent">
-                <form method="POST" action="" notification-type="reply">
-                  <Toggle isActive={isReply} onClick={() => handleToggle(isReply, setIsReply)} />
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td className="td_color">いいね通知</td>
-              <td className="td_indent">
-                <form method="POST" action="" notification-type="like">
-                  <Toggle isActive={isLike} onClick={() => handleToggle(isLike, setIsLike)} />
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td className="td_color">閲覧数通知</td>
-              <td className="td_indent">
-                <form method="POST" action="" notification-type="views">
-                  <Toggle isActive={isViews} onClick={() => handleToggle(isViews, setIsViews)} />
-                </form>
-              </td>
-            </tr>
+            {notificationTypes.map((type) => (
+              <tr key={type}>
+                <td className="td_color">{`${type.slice(2)}通知`}</td>
+                <td className="td_indent">
+                  <form method="POST" action="" notification-type={type}>
+                    <Toggle isActive={newNotificationSetting[type]} onClick={() => handleToggle(type)} />
+                  </form>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       ) : (
