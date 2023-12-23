@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Link from 'next/link'
 import DropMenuCloud from 'components/layout/Header/DropMenuCloud'
 import DropMenuNotice from 'components/layout/Header/DropMenuNotice'
@@ -5,7 +6,18 @@ import DropMenuProfile from 'components/layout/Header/DropMenuProfile'
 import SideMenu from 'components/layout/Header/SideMenu'
 
 export default function Header() {
-  const search = ''
+  const [search, setSearch] = useState<string>('')
+  const [isOpenCloud, setIsOpenCloud] = useState<boolean>(false)
+  const [isOpenNotice, setIsOpenNotice] = useState<boolean>(false)
+  const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false)
+
+  const handleCloud = () => {
+    setIsOpenCloud(!isOpenCloud)
+    setIsOpenNotice(false)
+    setIsOpenProfile(false)
+  }
+  const handleNotice = () => setIsOpenNotice(!isOpenNotice)
+  const handleProfile = () => setIsOpenProfile(!isOpenProfile)
 
   return (
     <header className="header">
@@ -39,16 +51,16 @@ export default function Header() {
           </svg>
         </div>
 
-        <div className="header_nav_5 header_color">
-          <DropMenuCloud />
+        <div className="header_nav_5 header_color" onClick={handleCloud}>
+          <DropMenuCloud isOpen={isOpenCloud} setIsOpen={setIsOpenCloud} />
         </div>
 
-        <div className="header_nav_6 header_color">
-          <DropMenuNotice />
+        <div className="header_nav_6 header_color" onClick={handleNotice}>
+          <DropMenuNotice isOpen={isOpenNotice} setIsOpen={setIsOpenNotice} />
         </div>
 
-        <div className="header_nav_7">
-          <DropMenuProfile isActive isStaff={false} />
+        <div className="header_nav_7" onClick={handleProfile}>
+          <DropMenuProfile isActive isStaff={false} isOpen={isOpenProfile} setIsOpen={setIsOpenProfile} />
         </div>
       </nav>
     </header>
