@@ -189,7 +189,6 @@ class RefreshAPI(views.TokenRefreshView):
 
 
 class UserAPI(APIView):
-
     def get(self, request):
         user_id = get_user_id(request)
         user = User.objects.filter(id=user_id).defer(*DeferData.user).first()
@@ -198,7 +197,6 @@ class UserAPI(APIView):
 
 
 class ProfileAPI(APIView):
-
     def get(self, request):
         user_id = get_user_id(request)
         user = User.objects.filter(id=user_id).select_related('profile').defer(*DeferData.profile).first()
@@ -232,7 +230,6 @@ class ProfileAPI(APIView):
 
 
 class MyPageAPI(APIView):
-
     def get(self, request):
         user_id = get_user_id(request)
         user = User.objects.filter(id=user_id).select_related('mypage').defer(*DeferData.mypage).first()
@@ -256,13 +253,11 @@ class MyPageAPI(APIView):
 
 
 class NotificationAPI(APIView):
-
     def get(self, request):
         user_id = get_user_id(request)
         notification_setting = NotificationSetting.objects.filter(id=user_id).first()
 
         data = {
-            'id': notification_setting.id,
             'is_video': notification_setting.is_video,
             'is_music': notification_setting.is_music,
             'is_comic': notification_setting.is_comic,
@@ -282,7 +277,6 @@ class NotificationAPI(APIView):
 
 # Index
 class HomeAPI(ListAPIView):
-
     def get(self):
         datas = {
             'videos': VideoListAPI.get(self, 8).data,
@@ -296,7 +290,6 @@ class HomeAPI(ListAPIView):
 
 # Recommend
 class RecommendAPI(ListAPIView):
-
     def get(self):
         datas = {
             'videos': VideoListAPI.get(self, 8).data,

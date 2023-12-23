@@ -1,5 +1,4 @@
 export interface User {
-  id: number
   avatar: string
   email: string
   username: string
@@ -11,7 +10,6 @@ export interface User {
 }
 
 export interface Profile {
-  id: number
   lastname: string
   firstname: string
   year: number
@@ -49,7 +47,6 @@ export interface UserProfile extends User {
 }
 
 export interface Mypage {
-  id: number
   banner: string
   nickname: string
   email: string
