@@ -10,7 +10,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
 from rest_framework.views import APIView, View
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt import views
@@ -141,7 +141,7 @@ class LoginAPI(views.TokenObtainPairView):
         except exceptions.TokenError as e:
             raise exceptions.InvalidToken(e.args[0])
 
-        response = Response(serializer.validated_data, status=HTTP_200_OK)
+        response = Response(serializer.validated_data, status=HTTP_204_NO_CONTENT)
         try:
             response.delete_cookie('user_token')
         except Exception:
@@ -170,7 +170,7 @@ class LogoutAPI(views.TokenObtainPairView):
             response.delete_cookie('refresh_token')
         except Exception:
             return Response({'error': 'error'}, status=HTTP_400_BAD_REQUEST)
-        return Response({'success': 'logout'}, status=HTTP_200_OK)
+        return Response({'success': 'logout'}, status=HTTP_204_NO_CONTENT)
 
 
 class RefreshAPI(views.TokenRefreshView):
@@ -283,37 +283,34 @@ class NotificationAPI(APIView):
 # Index
 class HomeAPI(ListAPIView):
 
-    def get(self, request):
+    def get(self):
         datas = {
-            'videos': VideoListAPI.get(self, request, 'Index').data,
-            'musics': MusicListAPI.get(self, request, 'Index').data,
-            'pictures': PictureListAPI.get(self, request, 'Index').data,
-            # 'blogs': BlogListAPI.get(self, request, 'Index').data,
-            'chats': ChatListAPI.get(self, request, 'Index').data,
+            'videos': VideoListAPI.get(self, 8).data,
+            'musics': MusicListAPI.get(self, 8).data,
+            'pictures': PictureListAPI.get(self, 8).data,
+            # 'blogs': BlogListAPI.get(self, 8).data,
+            'chats': ChatListAPI.get(self, 8).data,
         }
-        return Response(datas)
+        return Response(datas, status=HTTP_200_OK)
 
 
 # Recommend
 class RecommendAPI(ListAPIView):
 
-    def get(self, request):
+    def get(self):
         datas = {
-            'videos': VideoListAPI.get(self, request, 'Recommend').data,
-            'musics': MusicListAPI.get(self, request, 'Recommend').data,
-            'pictures': PictureListAPI.get(self, request, 'Recommend').data,
-            # 'blogs': BlogListAPI.get(self, request, 'Recommend').data,
-            'chats': ChatListAPI.get(self, request, 'Recommend').data,
+            'videos': VideoListAPI.get(self, 8).data,
+            'musics': MusicListAPI.get(self, 8).data,
+            'pictures': PictureListAPI.get(self, 8).data,
+            # 'blogs': BlogListAPI.get(self, 8).data,
+            'chats': ChatListAPI.get(self, 8).data,
         }
-        return Response(datas)
+        return Response(datas, status=HTTP_200_OK)
 
 
 # Video
 class VideoListAPI(APIView):
-    def get(self, request, api=''):
-        count = 50
-        if api == 'index':
-            count = 8
+    def get(self, count=50):
         objs = Video.objects.filter(publish=True).order_by('-created')[:count]
 
         data = [{
@@ -347,7 +344,7 @@ class VideoCreateAPI(CreateAPIView):
 
 
 class VideoAPI(RetrieveAPIView):
-    def get(self, request, id):
+    def get(self, id):
         obj = Video.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -391,8 +388,8 @@ class VideoAPI(RetrieveAPIView):
 
 # Music
 class MusicListAPI(APIView):
-    def get(self, request):
-        objs = Music.objects.filter(publish=True).order_by('-created')[:50]
+    def get(self, count=50):
+        objs = Music.objects.filter(publish=True).order_by('-created')[:count]
 
         data = [{
             'id': obj.id,
@@ -422,7 +419,7 @@ class MusicCreateAPI(CreateAPIView):
 
 
 class MusicAPI(RetrieveAPIView):
-    def get(self, request, id):
+    def get(self, id):
         obj = Music.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -465,8 +462,8 @@ class MusicAPI(RetrieveAPIView):
 
 # Comic
 class ComicListAPI(APIView):
-    def get(self, request):
-        objs = Comic.objects.filter(publish=True).order_by('-created')[:50]
+    def get(self, count=50):
+        objs = Comic.objects.filter(publish=True).order_by('-created')[:count]
 
         data = [{
             'id': obj.id,
@@ -492,7 +489,7 @@ class ComicCreateAPI(CreateAPIView):
 
 
 class ComicAPI(RetrieveAPIView):
-    def get(self, request, id):
+    def get(self, id):
         obj = Comic.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -533,27 +530,27 @@ class ComicAPI(RetrieveAPIView):
 
 # Picture
 class PictureListAPI(APIView):
-    def get(self, request):
-            objs = Picture.objects.filter(publish=True).order_by('-created')[:50]
+    def get(self, count=50):
+        objs = Picture.objects.filter(publish=True).order_by('-created')[:count]
 
-            data = [{
-                'id': obj.id,
-                'title': obj.title,
-                'content': obj.content,
-                'image': obj.image.url,
-                'like': obj.total_like(),
-                'read': obj.read,
-                'comment_count': obj.comment_count(),
-                'publish': obj.publish,
-                'created': obj.created,
-                'updated': obj.updated,
-                'author': {
-                    'id': obj.author.id,
-                    'nickname': obj.author.nickname,
-                    'image': obj.author.image(),
-                }
-            } for obj in objs]
-            return Response(data, status=HTTP_200_OK)
+        data = [{
+            'id': obj.id,
+            'title': obj.title,
+            'content': obj.content,
+            'image': obj.image.url,
+            'like': obj.total_like(),
+            'read': obj.read,
+            'comment_count': obj.comment_count(),
+            'publish': obj.publish,
+            'created': obj.created,
+            'updated': obj.updated,
+            'author': {
+                'id': obj.author.id,
+                'nickname': obj.author.nickname,
+                'image': obj.author.image(),
+            }
+        } for obj in objs]
+        return Response(data, status=HTTP_200_OK)
 
 
 class PictureCreateAPI(CreateAPIView):
@@ -562,7 +559,7 @@ class PictureCreateAPI(CreateAPIView):
 
 
 class PictureAPI(RetrieveAPIView):
-    def get(self, request, id):
+    def get(self, id):
         obj = Picture.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -604,8 +601,8 @@ class PictureAPI(RetrieveAPIView):
 
 # Blog
 class BlogListAPI(APIView):
-    def get(self, request):
-        objs = Blog.objects.filter(publish=True).order_by('-created')[:50]
+    def get(self, count=50):
+        objs = Blog.objects.filter(publish=True).order_by('-created')[:count]
 
         data = [{
             'id': obj.id,
@@ -635,7 +632,7 @@ class BlogCreateAPI(CreateAPIView):
 
 
 class BlogAPI(RetrieveAPIView):
-    def get(self, request, id):
+    def get(self, id):
         obj = Blog.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -679,8 +676,8 @@ class BlogAPI(RetrieveAPIView):
 
 # Chat
 class ChatListAPI(APIView):
-    def get(self, request):
-        objs = Chat.objects.filter(publish=True).order_by('-created')[:50]
+    def get(self, count=50):
+        objs = Chat.objects.filter(publish=True).order_by('-created')[:count]
 
         data = [{
             'id': obj.id,
@@ -709,7 +706,7 @@ class ChatCreateAPI(CreateAPIView):
 
 
 class ChatAPI(RetrieveAPIView):
-    def get(self, request, id):
+    def get(self, id):
         obj = Chat.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -749,8 +746,8 @@ class ChatAPI(RetrieveAPIView):
 
 # Todo
 class TodoListAPI(APIView):
-    def get(self, request):
-        objs = Todo.objects.filter(publish=True).order_by('-created')[:50]
+    def get(self, count=50):
+        objs = Todo.objects.filter(publish=True).order_by('-created')[:count]
 
         data = [{
             'id': obj.id,
@@ -777,7 +774,7 @@ class TodoCreateAPI(CreateAPIView):
 
 
 class TodoAPI(RetrieveAPIView):
-    def get(self, request, id):
+    def get(self, id):
         obj = Todo.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
