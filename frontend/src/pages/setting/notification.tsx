@@ -8,10 +8,10 @@ import SettingNotification from 'components/templates/setting/notification'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const notificationSetting = await apiServer(req, apiClient, apiNotification).then((res) => {
+  const notification = await apiServer(req, apiClient, apiNotification).then((res) => {
     return res.data
   })
-  return { props: { notificationSetting, ...translations } }
+  return { props: { notification, ...translations } }
 }
 
 interface Props {
