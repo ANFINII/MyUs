@@ -34,6 +34,7 @@ const createAxiosInstance = (contentType: string) => {
     headers: {
       'Content-Type': contentType,
     },
+    timeout: 3000,
   })
   applyResponseInterceptor(client)
   return client

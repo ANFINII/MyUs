@@ -1,5 +1,4 @@
 import type { AppProps } from 'next/app'
-import Head from 'next/head'
 import 'styles/reset.css'
 import 'styles/global.css'
 import 'styles/layout/layout.css'
@@ -15,15 +14,20 @@ import 'styles/userpolicy.css'
 import 'styles/quill.css'
 import 'styles/audio.css'
 import 'styles/videojs-myus.css'
+import { useRouter } from 'next/router'
+import { AUTH_NO_PATHS } from 'lib/config'
+import Layout from 'components/layout'
 // import 'styles/chat.css'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter()
+  if (AUTH_NO_PATHS.includes(router.pathname)) {
+    return <Component {...pageProps} />
+  }
+
   return (
-    <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-      </Head>
+    <Layout>
       <Component {...pageProps} />
-    </>
+    </Layout>
   )
 }

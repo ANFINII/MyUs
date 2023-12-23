@@ -217,6 +217,12 @@
   z-index: 80; /* サイドメニューよりかは小さい */
 }
 
+.drop_menu_cloud.active,
+.drop_menu_notice.active,
+.drop_menu_profile.active {
+  right: 0;
+}
+
 .drop_menu_notice {
   height: 337px;
 }
@@ -231,13 +237,6 @@
   height: 100%;
   transition: all 0.2s;
   z-index: 80;
-}
-
-/* チェックが入ったら表示 */
-#drop_menu_cloud:checked ~ .drop_menu_cloud,
-#drop_menu_notice:checked ~ .drop_menu_notice,
-#drop_menu_profile:checked ~ .drop_menu_profile {
-  right: 0;
 }
 
 #drop_menu_cloud:checked ~ .drop_back_cover,
