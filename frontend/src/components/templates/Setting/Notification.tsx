@@ -1,26 +1,23 @@
 import React, { useState } from 'react'
-import { NotificationSetting } from 'types/internal/auth'
+import { Notification } from 'types/internal/auth'
 import Layout from 'components/layout'
 import Toggle from 'components/parts/Input/Toggle'
 
 interface Props {
-  // user?: boolean
-  notificationSetting: NotificationSetting
+  notification: Notification
 }
 
-export default function Notification(props: Props) {
-  const { notificationSetting } = props
+export default function SettingNotification(props: Props) {
+  const { notification } = props
 
-  const user = {}
+  const [newNotificationSetting, setNewNotificationSetting] = useState<Notification>(notification)
 
-  const [newNotificationSetting, setNewNotificationSetting] = useState<NotificationSetting>(notificationSetting)
-
-  const notificationTypes: Array<keyof NotificationSetting> = ['isVideo', 'isMusic', 'isComic', 'isPicture', 'isBlog', 'isChat', 'isFollow', 'isReply', 'isLike', 'isViews']
-  const handleToggle = (type: keyof NotificationSetting) => setNewNotificationSetting((prev) => ({ ...prev, [type]: !prev[type] }))
+  const notificationTypes: Array<keyof Notification> = ['isVideo', 'isMusic', 'isComic', 'isPicture', 'isBlog', 'isChat', 'isFollow', 'isReply', 'isLike', 'isViews']
+  const handleToggle = (type: keyof Notification) => setNewNotificationSetting((prev) => ({ ...prev, [type]: !prev[type] }))
 
   return (
     <Layout title="通知設定" type="table" isFooter>
-      {user ? (
+      {notification ? (
         <table id="notification_table" className="table">
           <tbody>
             <tr>
@@ -31,7 +28,7 @@ export default function Notification(props: Props) {
               <tr key={type}>
                 <td className="td_color">{`${type.slice(2)}通知`}</td>
                 <td className="td_indent">
-                  <form method="POST" action="" notification-type={type}>
+                  <form method="POST" action="" Notification-type={type}>
                     <Toggle isActive={newNotificationSetting[type]} onClick={() => handleToggle(type)} />
                   </form>
                 </td>
