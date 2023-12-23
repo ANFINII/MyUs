@@ -61,7 +61,7 @@ export interface Mypage {
   content: string
 }
 
-export interface NotificationSetting {
+export interface Notification {
   isVideo: boolean
   isMusic: boolean
   isComic: boolean
