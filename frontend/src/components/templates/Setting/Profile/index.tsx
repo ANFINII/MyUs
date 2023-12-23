@@ -11,8 +11,6 @@ interface Props {
 export default function Profile(props: Props) {
   const { user } = props
 
-  const avatarUrl = user.avatar
-
   return (
     <Layout title="アカウント設定" type="table" isFooter>
       {user ? (
@@ -28,8 +26,8 @@ export default function Profile(props: Props) {
                 <td className="td_color td-header">アカウント画像</td>
                 <td>
                   <label htmlFor="account_image_input" className="account_image">
-                    <a href={avatarUrl} data-lightbox="group">
-                      <Image src={avatarUrl} title={user.nickname} width={56} height={56} alt="" data-lightbox="group" />
+                    <a href={user.avatar} data-lightbox="group">
+                      <Image src={user.avatar} title={user.nickname} width={56} height={56} alt="" data-lightbox="group" />
                     </a>
                   </label>
                 </td>

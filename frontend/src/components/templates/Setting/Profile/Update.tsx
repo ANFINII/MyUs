@@ -13,7 +13,7 @@ interface Props {
   user: UserProfile
 }
 
-export default function ProfileUpdate(props: Props) {
+export default function SettingProfileUpdate(props: Props) {
   const { user } = props
 
   const { years, months, days } = selectDate()
