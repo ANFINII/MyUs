@@ -2,7 +2,7 @@ import Router from 'next/router'
 import { UserProfile } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/prefectures'
 import { selectDate } from 'utils/functions/datetime'
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
@@ -24,7 +24,7 @@ export default function SettingProfileUpdate(props: Props) {
   ]
 
   return (
-    <Layout title="アカウント設定" type="table" isFooter>
+    <Main title="アカウント設定" type="table">
       {user ? (
         <>
           {/* {% if messages %}
@@ -155,6 +155,6 @@ export default function SettingProfileUpdate(props: Props) {
       ) : (
         <h2 className="login_required">ログインしてください</h2>
       )}
-    </Layout>
+    </Main>
   )
 }

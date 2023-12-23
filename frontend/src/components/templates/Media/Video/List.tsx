@@ -1,6 +1,5 @@
 import { Search, Video } from 'types/internal/media'
-import Layout from 'components/layout'
-import ArticleVideo from 'components/widgets/Article/Video'
+import Main from 'components/layout/Main'
 
 interface Props {
   search?: Search
@@ -11,12 +10,12 @@ export default function Videos(props: Props) {
   const { search, datas } = props
 
   return (
-    <Layout title="Video" search={search}>
+    <Main title="Video" search={search}>
       <article className="article_list">
-        {datas.map((data) => (
+        {/* {datas.map((data) => (
           <ArticleVideo data={data} key={data.id} />
-        ))}
+        ))} */}
       </article>
-    </Layout>
+    </Main>
   )
 }

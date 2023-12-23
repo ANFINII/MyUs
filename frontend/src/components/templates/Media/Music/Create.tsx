@@ -1,4 +1,4 @@
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
@@ -13,7 +13,7 @@ export default function MusicCreate(props: Props) {
   const { isAuth } = props
 
   return (
-    <Layout title="Music">
+    <Main title="Music">
       {isAuth ? (
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}
@@ -35,6 +35,6 @@ export default function MusicCreate(props: Props) {
       ) : (
         <h2 className="login_required">ログインしてください</h2>
       )}
-    </Layout>
+    </Main>
   )
 }

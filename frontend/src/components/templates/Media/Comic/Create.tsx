@@ -1,4 +1,4 @@
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
@@ -13,7 +13,7 @@ export default function ComicCreate(props: Props) {
   const { isAuth } = props
 
   return (
-    <Layout title="Comic">
+    <Main title="Comic">
       {isAuth ? (
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}
@@ -31,6 +31,6 @@ export default function ComicCreate(props: Props) {
       ) : (
         <h2 className="login_required">ログインしてください</h2>
       )}
-    </Layout>
+    </Main>
   )
 }

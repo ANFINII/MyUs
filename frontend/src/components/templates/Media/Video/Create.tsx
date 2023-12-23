@@ -1,4 +1,4 @@
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
@@ -12,7 +12,7 @@ export default function VideoCreate(props: Props) {
   const { isAuth } = props
 
   return (
-    <Layout title="Video">
+    <Main title="Video">
       {isAuth ? (
         <form method="POST" action="" encType="multipart/form-data">
           {/* {% csrf_token %} */}
@@ -33,6 +33,6 @@ export default function VideoCreate(props: Props) {
       ) : (
         <h2 className="login_required">ログインしてください</h2>
       )}
-    </Layout>
+    </Main>
   )
 }

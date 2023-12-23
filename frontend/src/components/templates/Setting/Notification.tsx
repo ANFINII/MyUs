@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Notification } from 'types/internal/auth'
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import Toggle from 'components/parts/Input/Toggle'
 
 interface Props {
@@ -16,7 +16,7 @@ export default function SettingNotification(props: Props) {
   const handleToggle = (type: keyof Notification) => setNewNotificationSetting((prev) => ({ ...prev, [type]: !prev[type] }))
 
   return (
-    <Layout title="通知設定" type="table" isFooter>
+    <Main title="通知設定" type="table">
       {notification ? (
         <table id="notification_table" className="table">
           <tbody>
@@ -39,6 +39,6 @@ export default function SettingNotification(props: Props) {
       ) : (
         <h2 className="login_required">ログインしてください</h2>
       )}
-    </Layout>
+    </Main>
   )
 }

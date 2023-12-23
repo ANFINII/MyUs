@@ -1,8 +1,8 @@
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 
 export default function Knowledge() {
   return (
-    <Layout title="Knowledge Base" type="table" isFooter>
+    <Main title="Knowledge Base" type="table">
       <table className="table">
         <tbody>
           <tr>
@@ -55,6 +55,6 @@ export default function Knowledge() {
           </tr>
         </tbody>
       </table>
-    </Layout>
+    </Main>
   )
 }

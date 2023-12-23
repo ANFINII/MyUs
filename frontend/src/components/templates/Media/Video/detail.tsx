@@ -1,6 +1,6 @@
 import { Search } from 'types/internal/media'
-import Layout from 'components/layout'
 import Meta from 'components/layout/Head/Meta'
+import Main from 'components/layout/Main'
 
 interface Props {
   image: string
@@ -13,7 +13,7 @@ export default function VideDetailPage(props: Props) {
   const { image, video, search, publish } = props
 
   return (
-    <Layout search={search}>
+    <Main search={search}>
       <Meta title="Video" />
       {publish ? (
         <article className="article_detail">
@@ -48,6 +48,6 @@ export default function VideDetailPage(props: Props) {
       ) : (
         <h2 className="unpublished">非公開に設定されてます!</h2>
       )}
-    </Layout>
+    </Main>
   )
 }

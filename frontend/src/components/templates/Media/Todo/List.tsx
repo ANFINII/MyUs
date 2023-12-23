@@ -1,5 +1,5 @@
 import { Search, Media } from 'types/internal/media'
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import ArticleTodo from 'components/widgets/Article/Todo'
 
 interface Props {
@@ -11,12 +11,12 @@ export default function Todos(props: Props) {
   const { search, datas } = props
 
   return (
-    <Layout title="Todo" search={search}>
+    <Main title="Todo" search={search}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticleTodo data={data} key={data.id} />
         ))}
       </article>
-    </Layout>
+    </Main>
   )
 }

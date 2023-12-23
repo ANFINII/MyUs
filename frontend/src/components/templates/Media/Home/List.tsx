@@ -1,6 +1,5 @@
 import { HomeMedia, Search } from 'types/internal/media'
-import Layout from 'components/layout'
-import ArticleVideo from 'components/widgets/Article/Video'
+import Main from 'components/layout/Main'
 
 interface Props {
   homeMedia: HomeMedia
@@ -12,14 +11,14 @@ export default function Homes(props: Props) {
   const { videos, musics, comics, pictures, blogs, chats } = homeMedia
 
   return (
-    <Layout title="Home" search={search}>
+    <Main title="Home" search={search}>
       <hr />
 
       <article className="article_index">
         <h2>Video</h2>
-        {homeMedia.videos?.map((data) => (
+        {/* {videos?.map((data) => (
           <ArticleVideo data={data} key={data.id} />
-        ))}
+        ))} */}
       </article>
       <hr />
 
@@ -81,6 +80,6 @@ export default function Homes(props: Props) {
         {/* {% endfor %} */}
         {/* {% endif %} */}
       </article>
-    </Layout>
+    </Main>
   )
 }

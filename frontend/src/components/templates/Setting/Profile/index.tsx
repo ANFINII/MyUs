@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Router from 'next/router'
 import { UserProfile } from 'types/internal/auth'
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
 interface Props {
@@ -12,7 +12,7 @@ export default function Profile(props: Props) {
   const { user } = props
 
   return (
-    <Layout title="アカウント設定" type="table" isFooter>
+    <Main title="アカウント設定" type="table">
       {user ? (
         <>
           <div className="button_group">
@@ -87,6 +87,6 @@ export default function Profile(props: Props) {
       ) : (
         <h2 className="login_required">ログインしてください</h2>
       )}
-    </Layout>
+    </Main>
   )
 }

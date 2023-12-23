@@ -1,6 +1,6 @@
 import Router from 'next/router'
 import { Mypage } from 'types/internal/auth'
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
@@ -13,7 +13,7 @@ export default function MyPageUpdate(props: Props) {
   const { mypage } = props
 
   return (
-    <Layout title="マイページ設定" type="table" isFooter>
+    <Main title="マイページ設定" type="table">
       {mypage ? (
         <>
           <div className="button_group">
@@ -91,6 +91,6 @@ export default function MyPageUpdate(props: Props) {
       ) : (
         <h2 className="login_required">ログインしてください</h2>
       )}
-    </Layout>
+    </Main>
   )
 }

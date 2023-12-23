@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
 export default function Payment() {
   return (
-    <Layout title="料金プラン">
+    <Main title="料金プラン">
       {/* {% if user.isAuth %} */}
       <article className="article_list">
         <section className="section_plan">
@@ -103,6 +103,6 @@ export default function Payment() {
       <script src="https://js.stripe.com/v3/"></script>
       <script src="js/payment.js"></script>
       {% endblock extrajs %} */}
-    </Layout>
+    </Main>
   )
 }

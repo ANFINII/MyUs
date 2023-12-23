@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Router from 'next/router'
 import { Mypage } from 'types/internal/auth'
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 
 interface Props {
@@ -12,7 +12,7 @@ export default function MyPage(props: Props) {
   const { mypage } = props
 
   return (
-    <Layout title="マイページ設定" type="table" isFooter>
+    <Main title="マイページ設定" type="table">
       {mypage ? (
         <>
           <div className="button_group">
@@ -84,6 +84,6 @@ export default function MyPage(props: Props) {
       ) : (
         <h2 className="login_required">ログインしてください</h2>
       )}
-    </Layout>
+    </Main>
   )
 }

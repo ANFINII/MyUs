@@ -1,5 +1,5 @@
 import { Search, Picture } from 'types/internal/media'
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import ArticleComic from 'components/widgets/Article/Comic'
 
 interface Props {
@@ -11,12 +11,12 @@ export default function Comics(props: Props) {
   const { search, datas } = props
 
   return (
-    <Layout title="Comic" search={search}>
+    <Main title="Comic" search={search}>
       <article className="article_list">
         {datas.map((data) => (
           <ArticleComic data={data} key={data.id} />
         ))}
       </article>
-    </Layout>
+    </Main>
   )
 }

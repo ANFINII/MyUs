@@ -1,4 +1,6 @@
 import { Search } from 'types/internal/media'
+import Footer from 'components/layout//Footer'
+import Meta from 'components/layout/Head/Meta'
 
 interface Props {
   title?: string
@@ -12,6 +14,7 @@ export default function Main(props: Props) {
 
   return (
     <main className="main">
+      <Meta title={title} />
       {type === 'defalt' && (
         <>
           {title && <h1>{title}</h1>}
@@ -27,6 +30,7 @@ export default function Main(props: Props) {
         <article className="article_table">
           {title && <h1>{title}</h1>}
           {children}
+          <Footer />
         </article>
       )}
     </main>

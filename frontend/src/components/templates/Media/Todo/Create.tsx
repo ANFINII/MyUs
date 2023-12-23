@@ -1,4 +1,4 @@
-import Layout from 'components/layout'
+import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
@@ -25,7 +25,7 @@ export const progress = [
 export default function TodoCreate(props: Props) {
   const { isAuth } = props
   return (
-    <Layout title="Todo">
+    <Main title="Todo">
       {isAuth ? (
         <form method="POST" action="">
           {/* {% csrf_token %} */}
@@ -49,6 +49,6 @@ export default function TodoCreate(props: Props) {
       ) : (
         <h2 className="login_required">ログインしてください</h2>
       )}
-    </Layout>
+    </Main>
   )
 }
