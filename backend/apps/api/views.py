@@ -192,9 +192,6 @@ class UserAPI(APIView):
 
     def get(self, request):
         user_id = get_user_id(request)
-        if not user_id:
-            return Response({'error': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
-
         user = User.objects.filter(id=user_id).defer(*DeferData.user).first()
         data = {'avatar': user.image(), 'nickname': user.nickname, 'is_staff': user.is_staff}
         return Response(data, status=HTTP_200_OK)
@@ -204,9 +201,6 @@ class ProfileAPI(APIView):
 
     def get(self, request):
         user_id = get_user_id(request)
-        if not user_id:
-            return Response({'error': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
-
         user = User.objects.filter(id=user_id).select_related('profile').defer(*DeferData.profile).first()
         gender = {'0':'男性', '1':'女性', '2':'秘密'}
 
@@ -241,9 +235,6 @@ class MyPageAPI(APIView):
 
     def get(self, request):
         user_id = get_user_id(request)
-        if not user_id:
-            return Response({'error': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
-
         user = User.objects.filter(id=user_id).select_related('mypage').defer(*DeferData.mypage).first()
 
         data = {
@@ -268,9 +259,6 @@ class NotificationAPI(APIView):
 
     def get(self, request):
         user_id = get_user_id(request)
-        if not user_id:
-            return Response({'error': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
-
         notification_setting = NotificationSetting.objects.filter(id=user_id).first()
 
         data = {
