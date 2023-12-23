@@ -1,4 +1,3 @@
-// import useSWR from 'swr'
 import { Search } from 'types/internal/media'
 import { SearchTag } from 'types/internal/other'
 import Footer from 'components/layout/Footer'
@@ -14,8 +13,6 @@ const searchtags: SearchTag[] = [
   { id: 3, name: '宇宙' },
 ]
 
-// const fetcher = (...args) => fetch(...args).then((res) => res.json())
-
 interface Props {
   title?: string
   search?: Search
@@ -26,8 +23,6 @@ interface Props {
 
 export default function Layout(props: Props) {
   const { title, search, type = 'defalt', isFooter, children } = props
-
-  // const { searchtags, error } = useSWR('/api/navigation', fetcher)
 
   return (
     <div className="layout">

@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import { API_URL, TOKEN } from 'lib/config'
+import { API_URL } from 'lib/config'
 import { snakeCamel } from 'utils/functions/convertCase'
 
 const applyResponseInterceptor = (client: AxiosInstance) => {
@@ -33,9 +33,7 @@ const createAxiosInstance = (contentType: string) => {
     withCredentials: true,
     headers: {
       'Content-Type': contentType,
-      Authorization: 'JWT ' + TOKEN,
     },
-    timeout: 1000,
   })
   applyResponseInterceptor(client)
   return client
