@@ -7,15 +7,10 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 
-export default function Login() {
-  const url = process.env.NEXT_PUBLIC_API_URL
-  const token = process.env.TOKEN
-  // const [token, setToken] = useState([])
+export default function LoginPage() {
   const [clicked, setClicked] = useState(false)
 
-  const loginClicked = () => {
-    setClicked(!clicked)
-  }
+  const loginClicked = () => setClicked(!clicked)
 
   return (
     <Main>
