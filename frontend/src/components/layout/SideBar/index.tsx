@@ -10,50 +10,50 @@ import IconVideo from 'components/parts/Icon/Video'
 export default function SideBar() {
   const router = useRouter()
 
-  const activeCheck = (url: string) => (router.pathname === url ? ' ' + 'active' : '')
+  const activeCheck = (url: string) => router.pathname === url && ' ' + 'active'
 
   return (
     <aside className="sidebar">
       <nav className="sidebar_nav">
         <ul>
           <li className={'sidebar_color' + activeCheck('/media/video')}>
-            <Link href="/media/video" className="pjax_button">
-              <IconVideo />
+            <Link href="/media/video">
+              <IconVideo size="1.8em" />
               <p className="sidebar_text">Video</p>
             </Link>
           </li>
 
           <li className={'sidebar_color' + activeCheck('/media/music')}>
-            <Link href="/media/music" className="pjax_button">
-              <IconMusic />
+            <Link href="/media/music">
+              <IconMusic size="1.8em" />
               <p className="sidebar_text">Music</p>
             </Link>
           </li>
 
           <li className={'sidebar_color' + activeCheck('/media/comic')}>
-            <Link href="/media/comic" className="pjax_button">
-              <IconComic />
+            <Link href="/media/comic">
+              <IconComic size="1.8em" />
               <p className="sidebar_text">Comic</p>
             </Link>
           </li>
 
           <li className={'sidebar_color' + activeCheck('/media/picture')}>
-            <Link href="/media/picture" className="pjax_button">
-              <IconPicture />
+            <Link href="/media/picture">
+              <IconPicture size="1.8em" />
               <p className="sidebar_text">Picture</p>
             </Link>
           </li>
 
           <li className={'sidebar_color' + activeCheck('/media/blog')}>
-            <Link href="/media/blog" className="pjax_button">
-              <IconBlog />
+            <Link href="/media/blog">
+              <IconBlog size="1.8em" />
               <p className="sidebar_text">Blog</p>
             </Link>
           </li>
 
           <li className={'sidebar_color' + activeCheck('/media/chat')}>
-            <Link href="/media/chat" className="pjax_button">
-              <IconChat />
+            <Link href="/media/chat">
+              <IconChat size="1.8em" />
               <p className="sidebar_text">Chat</p>
             </Link>
           </li>
