@@ -46,7 +46,7 @@ export default function SettingProfileUpdate(props: Props) {
                 <td className="td_color">アカウント画像</td>
                 <td valign="baseline">
                   <label htmlFor="account_image_input" className="update_account_image">
-                    <IconPerson />
+                    <IconPerson size="3.5em" />
                     <input type="file" name="image" accept="image/*" id="account_image_input" className="custom-file-input" />
                   </label>
                 </td>

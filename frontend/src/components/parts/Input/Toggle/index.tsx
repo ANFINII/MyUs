@@ -11,8 +11,8 @@ export default function Toggle(props: Props) {
   const { isActive, onClick } = props
 
   return (
-    <div className={style.radio + (isActive ? ' ' + style.active : '')} onClick={onClick}>
-      {isActive ? <IconToggleOn /> : <IconToggleOff />}
+    <div className={style.radio + (isActive && ' ' + style.active)} onClick={onClick}>
+      {isActive ? <IconToggleOn size="25" /> : <IconToggleOff size="25" />}
     </div>
   )
 }
