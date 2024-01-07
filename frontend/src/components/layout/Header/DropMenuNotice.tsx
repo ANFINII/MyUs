@@ -1,5 +1,6 @@
-import Link from 'next/link'
 import { useRouter } from 'next/router'
+import IconBell from 'components/parts/Icon/Bell'
+import IconExclamation from 'components/parts/Icon/Exclamation'
 
 interface Props {
   isOpen: boolean
@@ -21,30 +22,21 @@ export default function DropMenuNotice(props: Props) {
       <label className="drop_back_cover"></label>
       <label className="drop_open">
         {/* if (notification_count) {
-          <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-bell-fill active" viewBox="0 0 16 16">
-            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
-          </svg>
+          <IconBell size="1.5em" className="active" />
+          <IconExclamation size="1.2em" className="active"  />
           <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor" className="bi bi-exclamation-lg active" viewBox="0 0 16 16">
             <path d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0L7.005 3.1ZM7 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"/>
           </svg>
         } else { */}
-        <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-bell-fill" viewBox="0 0 16 16">
-          <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
-        </svg>
-        {/* <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor" className="bi bi-exclamation-lg" viewBox="0 0 16 16">
-            <path d="M7.005 3.1a1 1 0 1 1 1.99 0l-.388 6.35a.61.61 0 0 1-1.214 0L7.005 3.1ZM7 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"/>
-          </svg>
-        } */}
+        <IconBell size="1.5em" />
+        <IconExclamation size="1.2em" />
       </label>
 
       {isOpen && (
         <nav className={`drop_menu drop_menu_notice ${isOpen && 'active'}`}>
           <ul>
-            <li className="drop_menu_list">
-              <Link href="/setting/notification" className="icon_link"></Link>
-              <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" className="bi bi-bell-fill color_drop_menu_bi" viewBox="0 0 16 16">
-                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
-              </svg>
+            <li className="drop_menu_list" onClick={() => handleClick('/setting/notification')}>
+              <IconBell size="1.5em" className="color_drop_menu_bi" />
               <span>通知設定</span>
             </li>
 
