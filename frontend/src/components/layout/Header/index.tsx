@@ -87,7 +87,7 @@ export default function Header(props: Props) {
 
         <button className={'header_nav_7 header_color' + isActive(isOpenProfile)} onClick={handleProfile}>
           {isAuth ? <Image src="" title={nickname} width={32} height={32} alt="" /> : <IconPerson size="1.8em" type="circle" />}
-          <DropMenuProfile isActive isStaff={false} isOpen={isOpenProfile} setIsOpen={setIsOpenProfile} />
+          <DropMenuProfile isOpen={isOpenProfile} setIsOpen={setIsOpenProfile} isActive isStaff={false} />
         </button>
       </nav>
     </header>

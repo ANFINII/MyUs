@@ -7,15 +7,15 @@ import IconPencil from 'components/parts/Icon/Pencil'
 import IconPerson from 'components/parts/Icon/Person'
 
 interface Props {
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   isActive?: boolean
   isStaff?: boolean
   isAuth?: boolean
-  isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function DropMenuProfile(props: Props) {
-  const { isStaff, isAuth, isOpen, setIsOpen } = props
+  const { isOpen, setIsOpen, isActive, isStaff, isAuth } = props
 
   const router = useRouter()
 
