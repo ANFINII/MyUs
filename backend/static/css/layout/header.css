@@ -272,9 +272,9 @@
 }
 
 /* ドロップダウンメニュー 通知 */
-.drop_open_notice .bi-bell-fill.active {
+.bi-bell-fill.active {
   position: relative;
-  margin: -25px 0 0 0;
+  margin: -27px 0 0 0;
 }
 
 .bi-exclamation-lg {
