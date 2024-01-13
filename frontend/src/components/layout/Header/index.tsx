@@ -45,7 +45,7 @@ export default function Header(props: Props) {
   return (
     <header className="header">
       <nav className="header_nav">
-        <div className={'side_nemu_back' + isActive(isOpenSideMenu)} onClick={handleSideMenuClose}></div>
+        <div className={'side_nemu_cover' + isActive(isOpenSideMenu)} onClick={handleSideMenuClose}></div>
         <div className={'drop_back_cover' + isActive(isOpenCloud || isOpenNotice || isOpenProfile)} onClick={handleCoverClose}></div>
 
         <button className="header_nav_1 header_color" onClick={handleSideMenu}>

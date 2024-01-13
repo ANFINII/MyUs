@@ -146,7 +146,7 @@ button.header_color {
 }
 
 /* 閉じる用のカバー */
-.side_nemu_back {
+.side_nemu_cover {
   position: fixed;
   display: none;
   top: 0;
@@ -156,7 +156,7 @@ button.header_color {
   z-index: 90;
 }
 
-.side_nemu_back.active {
+.side_nemu_cover.active {
   display: block;
   background: rgba(0, 0, 0, 0.3);
 }

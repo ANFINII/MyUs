@@ -138,7 +138,7 @@
 }
 
 /* 閉じる用のカバー */
-.side_nemu_back {
+.side_nemu_cover {
   position: fixed;
   display: none;
   top: 0;
@@ -148,7 +148,7 @@
   z-index: 90;
 }
 
-#burger_menu:checked ~ .side_nemu_back {
+#burger_menu:checked ~ .side_nemu_cover {
   display: block;
   background: rgba(0, 0, 0, 0.3);
 }
