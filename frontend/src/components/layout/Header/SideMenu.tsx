@@ -17,21 +17,19 @@ export default function SideMenu(props: Props) {
 
   const router = useRouter()
 
+  const date = new Date()
   const handleClose = () => setIsOpen(false)
   const handleClick = (url: string) => {
     router.push(url)
     setIsOpen(false)
   }
 
-  const date = new Date()
-  const year = date.getFullYear()
-
   return (
     <aside className={'side_menu' + (isOpen ? ' ' + 'active' : '')}>
       <nav>
         <div className="side_menu_close side_menu_color" onClick={handleClose}>
           <IconArrow size="1.5em" type="left" className="side_menu_color_bi" />
-          <Image src="/img/MyUs.png" width={30} height={30} alt="" />
+          <Image src="/image/MyUs.png" width={30} height={30} alt="" />
         </div>
 
         <ul>
@@ -63,8 +61,8 @@ export default function SideMenu(props: Props) {
           </li>
 
           <li className="side_menu_footer_item side_menu_color" onClick={() => handleClick('/')}>
-            <Image src="/img/MyUs.png" width={24} height={24} alt="" className="myus_img" />
-            <span className="side_menu_footer_item">© {year} MyUs Co.,Ltd</span>
+            <Image src="/image/MyUs.png" width={24} height={24} alt="" className="myus_img" />
+            <span className="side_menu_footer_item">© {date.getFullYear()} MyUs Co.,Ltd</span>
           </li>
         </ul>
       </nav>
