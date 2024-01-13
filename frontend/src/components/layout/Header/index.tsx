@@ -31,7 +31,7 @@ export default function Header(props: Props) {
   const handleSideMenu = () => setIsOpenSideMenu(!isOpenSideMenu)
   const handleCloud = () => setIsOpenCloud(!isOpenCloud)
   const handleNotice = () => setIsOpenNotice(!isOpenNotice)
-  const handleProfile = () => setIsOpenProfile(!isOpenNotice)
+  const handleProfile = () => setIsOpenProfile(!isOpenProfile)
   const handleSideMenuClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.target === e.currentTarget && setIsOpenSideMenu(false)
 
   const handleCoverClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
