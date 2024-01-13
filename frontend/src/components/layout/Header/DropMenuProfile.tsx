@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import IconArrowRight from 'components/parts/Icon/ArrowRight'
+import IconArrow from 'components/parts/Icon/Arrow'
 import IconCredit from 'components/parts/Icon/Credit'
 import IconGrid from 'components/parts/Icon/Grid'
 import IconPencil from 'components/parts/Icon/Pencil'
@@ -71,7 +71,7 @@ export default function DropMenuProfile(props: Props) {
 
             <li className="drop_menu_list" onClick={() => handleClick('/setting/profile')}>
               <Link href={isAuth ? '/logout' : '/login'} className="icon_link"></Link>
-              <IconArrowRight size="1.5em" className="color_drop_menu_bi" />
+              <IconArrow size="1.5em" type="box" className="color_drop_menu_bi" />
               <span>ログアウト</span>
             </li>
           </ul>
