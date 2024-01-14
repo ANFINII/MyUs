@@ -80,8 +80,8 @@ export default function Header(props: Props) {
         </button>
 
         <button className={'header_nav_6 header_color' + isActive(isOpenNotice)} onClick={handleNotice}>
-          <IconBell size="1.5em" className={isActive(notificationCount === 0)} />
-          <IconExclamation size="1.2em" className={isActive(notificationCount === 0)} />
+          <IconBell size="1.5em" className={isActive(notificationCount > 0)} />
+          <IconExclamation size="1.2em" className={isActive(notificationCount > 0)} />
           <DropMenuNotice isOpen={isOpenNotice} setIsOpen={setIsOpenNotice} />
         </button>
 
