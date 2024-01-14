@@ -27,7 +27,7 @@ from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSe
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 from apps.myus.modules.search import Search
-from apps.myus.modules.contains import model_dict
+from apps.api.services.media import get_video_list, get_music_list, get_comic_list, get_picture_list, get_blog_list, get_chat_list, get_todo_list
 
 
 User = get_user_model()
@@ -277,54 +277,34 @@ class NotificationAPI(APIView):
 
 # Index
 class HomeAPI(ListAPIView):
-    def get(self):
+    def get(self, request):
         datas = {
-            'videos': VideoListAPI.get(self, 8).data,
-            'musics': MusicListAPI.get(self, 8).data,
-            'pictures': PictureListAPI.get(self, 8).data,
-            # 'blogs': BlogListAPI.get(self, 8).data,
-            'chats': ChatListAPI.get(self, 8).data,
+            'videos': get_video_list(8),
+            'musics': get_music_list(8),
+            'pictures': get_picture_list(8),
+            'blogs': get_blog_list(8),
+            'chats': get_chat_list(8),
         }
         return Response(datas, status=HTTP_200_OK)
 
 
 # Recommend
 class RecommendAPI(ListAPIView):
-    def get(self):
+    def get(self, request):
         datas = {
-            'videos': VideoListAPI.get(self, 8).data,
-            'musics': MusicListAPI.get(self, 8).data,
-            'pictures': PictureListAPI.get(self, 8).data,
-            # 'blogs': BlogListAPI.get(self, 8).data,
-            'chats': ChatListAPI.get(self, 8).data,
+            'videos': get_video_list(8),
+            'musics': get_video_list(8),
+            'pictures': get_picture_list(8),
+            'blogs': get_blog_list(8),
+            'chats': get_picture_list(8),
         }
         return Response(datas, status=HTTP_200_OK)
 
 
 # Video
 class VideoListAPI(APIView):
-    def get(self, count=50):
-        objs = Video.objects.filter(publish=True).order_by('-created')[:count]
-
-        data = [{
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'image': obj.image.url,
-            'video': obj.video.url,
-            'convert': obj.convert.url,
-            'like': obj.total_like(),
-            'read': obj.read,
-            'comment_count': obj.comment_count(),
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
-        } for obj in objs]
+    def get(self, request):
+        data = get_video_list(50)
         return Response(data, status=HTTP_200_OK)
 
     def get_queryset(self):
@@ -381,28 +361,8 @@ class VideoAPI(RetrieveAPIView):
 
 # Music
 class MusicListAPI(APIView):
-    def get(self, count=50):
-        objs = Music.objects.filter(publish=True).order_by('-created')[:count]
-
-        data = [{
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'lyric': obj.lyric,
-            'music': obj.music.url,
-            'like': obj.total_like(),
-            'read': obj.read,
-            'comment_count': obj.comment_count(),
-            'dowoad': obj.download,
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
-        } for obj in objs]
+    def get(self, request):
+        data = get_music_list(50)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -455,24 +415,8 @@ class MusicAPI(RetrieveAPIView):
 
 # Comic
 class ComicListAPI(APIView):
-    def get(self, count=50):
-        objs = Comic.objects.filter(publish=True).order_by('-created')[:count]
-
-        data = [{
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'like': obj.total_like(),
-            'read': obj.read,
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
-        } for obj in objs]
+    def get(self, request):
+        data = get_comic_list(50)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -523,26 +467,8 @@ class ComicAPI(RetrieveAPIView):
 
 # Picture
 class PictureListAPI(APIView):
-    def get(self, count=50):
-        objs = Picture.objects.filter(publish=True).order_by('-created')[:count]
-
-        data = [{
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'image': obj.image.url,
-            'like': obj.total_like(),
-            'read': obj.read,
-            'comment_count': obj.comment_count(),
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
-        } for obj in objs]
+    def get(self, request):
+        data = get_picture_list(50)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -594,28 +520,8 @@ class PictureAPI(RetrieveAPIView):
 
 # Blog
 class BlogListAPI(APIView):
-    def get(self, count=50):
-        objs = Blog.objects.filter(publish=True).order_by('-created')[:count]
-
-        data = [{
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'richtext': obj.richtext,
-            'delta': obj.delta,
-            'image': obj.image.url,
-            'like': obj.total_like(),
-            'read': obj.read,
-            'comment_count': obj.comment_count(),
-            'pubsh': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
-        } for obj in objs]
+    def get(self, request):
+        data = get_blog_list(50)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -667,29 +573,11 @@ class BlogAPI(RetrieveAPIView):
         return Response(data, status=HTTP_200_OK)
 
 
+
 # Chat
 class ChatListAPI(APIView):
-    def get(self, count=50):
-        objs = Chat.objects.filter(publish=True).order_by('-created')[:count]
-
-        data = [{
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'like': obj.total_like(),
-            'read': obj.read,
-            'thread': obj.thread,
-            'joined': obj.joined,
-            'period': obj.period,
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
-        } for obj in objs]
+    def get(self, request):
+        data = get_chat_list(50)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -739,25 +627,8 @@ class ChatAPI(RetrieveAPIView):
 
 # Todo
 class TodoListAPI(APIView):
-    def get(self, count=50):
-        objs = Todo.objects.filter(publish=True).order_by('-created')[:count]
-
-        data = [{
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'like': obj.total_like(),
-            'read': obj.read,
-            'period': obj.period,
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
-        } for obj in objs]
+    def get(self, request, count=50):
+        data = get_todo_list(50)
         return Response(data, status=HTTP_200_OK)
 
 
