@@ -19,15 +19,17 @@ export default function ArticleComic(props: Props) {
 
   return (
     <section className="section_list">
-      <Link href={`/comic/detail/${router.query.id}${router.query.title}`}>
-        <figure className="main_decolation">
-          <Image src={imageUrl} width={272} height={153} alt="" className="radius_10" />
-        </figure>
-        <div className="author_space">
-          <AuthorSpace imageUrl={authorUrl} nickname={nickname} />
-          <ContentTitle title={data.title} nickname={nickname} read={data.read} totalLike={data.like} created={data.created} />
-        </div>
-      </Link>
+      <div className="main_decolation">
+        <Link href={`/comic/detail/${router.query.id}${router.query.title}`}>
+          <figure>
+            <Image src={imageUrl} width={272} height={153} alt="" className="radius_10" />
+          </figure>
+          <div className="author_space">
+            <AuthorSpace imageUrl={authorUrl} nickname={nickname} />
+            <ContentTitle title={data.title} nickname={nickname} read={data.read} totalLike={data.like} created={data.created} />
+          </div>
+        </Link>
+      </div>
     </section>
   )
 }

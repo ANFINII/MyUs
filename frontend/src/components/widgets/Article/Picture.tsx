@@ -14,15 +14,17 @@ export default function ArticlePicture(props: Props) {
 
   return (
     <section className="section_list">
-      <Link href="/picture/detail/[id][title]">
-        <figure className="main_decolation">
-          <Image src={image} width={272} height={153} alt="" className="radius_10" />
-        </figure>
-        <div className="author_space">
-          <AuthorSpace imageUrl={author.image} nickname={author.nickname} />
-          <ContentTitle title={title} nickname={author.nickname} read={read} totalLike={like} created={created} />
-        </div>
-      </Link>
+      <div className="main_decolation">
+        <Link href="/picture/detail/[id][title]">
+          <figure>
+            <Image src={image} width={272} height={153} alt="" className="radius_10" />
+          </figure>
+          <div className="author_space">
+            <AuthorSpace imageUrl={author.image} nickname={author.nickname} />
+            <ContentTitle title={title} nickname={author.nickname} read={read} totalLike={like} created={created} />
+          </div>
+        </Link>
+      </div>
     </section>
   )
 }
