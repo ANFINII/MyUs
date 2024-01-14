@@ -17,14 +17,18 @@ export const camelSnake = <T extends AnyObject>(obj: AnyObject): T => {
   return result as T
 }
 
-export const convertObjectKeys = <T extends AnyObject>(obj: AnyObject, convertKey: (key: string) => string): T =>
-  Object.entries(obj).reduce((result, [key, value]) => {
-    const transformedValue = typeof value === 'object' && value !== null ? convertObjectKeys(value, convertKey) : value
-    return Object.assign(result, { [convertKey(key)]: transformedValue })
-  }, {} as T)
+const camelase = (s: string) => s.replace(/([-_][a-z])/gi, ($1) => $1.toUpperCase().replace('-', '').replace('_', ''))
 
-const camelCase = (s: string): string => {
-  return s.replace(/([-_][a-z])/gi, ($1) => $1.toUpperCase().replace('-', '').replace('_', ''))
+export const snakeCamel = <T extends AnyObject>(obj: AnyObject) => {
+  const result: AnyObject = Array.isArray(obj) ? [] : {}
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      let value = obj[key]
+      if (typeof value === 'object' && value !== null) {
+        value = snakeCamel(value)
+      }
+      result[camelase(key)] = value
+    }
+  }
+  return result as T
 }
-
-export const snakeCamel = <T extends AnyObject>(obj: AnyObject): T => convertObjectKeys(obj, camelCase)
