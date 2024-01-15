@@ -3,7 +3,7 @@ import { IncomingMessage } from 'http'
 import { HttpStatusCode } from 'axios'
 import { apiServer } from 'lib/apiServer'
 import { apiClient } from 'lib/axios'
-import { apiMypage, apiProfile } from './uri'
+import { apiProfile, apiMypage } from './uri'
 
 interface Req extends IncomingMessage {
   cookies: NextApiRequestCookies
