@@ -1,5 +1,6 @@
 import { HomeMedia, Search } from 'types/internal/media'
 import Main from 'components/layout/Main'
+import ArticleVideo from 'components/widgets/Article/Video'
 
 interface Props {
   homeMedia: HomeMedia
@@ -16,9 +17,9 @@ export default function Homes(props: Props) {
 
       <article className="article_index">
         <h2>Video</h2>
-        {/* {videos?.map((data) => (
+        {videos?.map((data) => (
           <ArticleVideo data={data} key={data.id} />
-        ))} */}
+        ))}
       </article>
       <hr />
 

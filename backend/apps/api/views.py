@@ -282,7 +282,7 @@ class HomeAPI(ListAPIView):
             'videos': get_video_list(8),
             'musics': get_music_list(8),
             'pictures': get_picture_list(8),
-            'blogs': get_blog_list(8),
+            # 'blogs': get_blog_list(8),
             'chats': get_chat_list(8),
         }
         return Response(datas, status=HTTP_200_OK)
