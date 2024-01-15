@@ -6,7 +6,7 @@ import Blogs from 'components/templates/media/blog/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const datas = getPictures()
+  const datas = await getPictures()
   return { props: { datas, ...translations } }
 }
 

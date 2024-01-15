@@ -6,7 +6,7 @@ import SettingProfileUpdate from 'components/templates/setting/profile/Update'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const user = getProfile(req)
+  const user = await getProfile(req)
   return { props: { user, ...translations } }
 }
 

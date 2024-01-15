@@ -6,7 +6,7 @@ import Comics from 'components/templates/media/comic/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const datas = getComics()
+  const datas = await getComics()
   return { props: { datas, ...translations } }
 }
 

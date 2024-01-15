@@ -6,7 +6,7 @@ import SettingMypage from 'components/templates/setting/mypage'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const mypage = getMypage(req)
+  const mypage = await getMypage(req)
   return { props: { mypage, ...translations } }
 }
 

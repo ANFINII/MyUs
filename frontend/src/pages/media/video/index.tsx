@@ -6,7 +6,7 @@ import Videos from 'components/templates/media/video/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const datas = getVideos()
+  const datas = await getVideos()
   return { props: { datas, ...translations } }
 }
 

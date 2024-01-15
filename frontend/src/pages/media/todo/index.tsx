@@ -6,7 +6,7 @@ import Todos from 'components/templates/media/todo/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const datas = getTodos()
+  const datas = await getTodos()
   return { props: { datas, ...translations } }
 }
 

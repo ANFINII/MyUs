@@ -6,7 +6,7 @@ import Musics from 'components/templates/media/music/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const datas = getMusics()
+  const datas = await getMusics()
   return { props: { datas, ...translations } }
 }
 
