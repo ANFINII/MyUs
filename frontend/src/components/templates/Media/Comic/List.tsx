@@ -1,10 +1,10 @@
-import { Search, Picture } from 'types/internal/media'
+import { Comic, Search } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import ArticleComic from 'components/widgets/Article/Comic'
 
 interface Props {
   search?: Search
-  datas: Picture[]
+  datas: Comic[]
 }
 
 export default function Comics(props: Props) {

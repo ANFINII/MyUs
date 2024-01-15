@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { Media } from 'types/internal/media'
+import { ToDo } from 'types/internal/media'
 
 interface Props {
-  data: Media
+  data: ToDo
 }
 
 export default function ArticleTodo(props: Props) {
