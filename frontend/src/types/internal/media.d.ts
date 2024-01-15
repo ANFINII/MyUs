@@ -11,6 +11,19 @@ export interface Search {
   count: number
 }
 
+export interface ToDo {
+  id: number
+  title: string
+  content: string
+  like: number
+  read: number
+  period: string
+  publish: boolean
+  created: string
+  updated: string
+  author: Author
+}
+
 export interface Media {
   id: number
   title: string
@@ -22,7 +35,7 @@ export interface Media {
   created: string
   updated: string
   author: Author
-  modelName: string
+  // modelName: string
 }
 
 export interface Video extends Media {
@@ -37,7 +50,15 @@ export interface Music extends Media {
   download: boolean
 }
 
+export interface Comic extends Media {
+  image: string
+}
+
 export interface Picture extends Media {
+  image: string
+}
+
+export interface Blog extends Media {
   image: string
 }
 
