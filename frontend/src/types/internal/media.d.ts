@@ -85,8 +85,8 @@ export interface Follow {
 interface HomeMedia {
   videos: Video[]
   musics: Music[]
-  comics: Media[]
-  pictures: Chat[]
-  blogs: Media[]
-  chats: Video[]
+  comics: Comic[]
+  pictures: Picture[]
+  blogs: Blog[]
+  chats: Chat[]
 }
