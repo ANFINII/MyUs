@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function Homes(props: Props) {
-  const { search, homeMedia } = props
+  const { homeMedia, search } = props
   const { videos, musics, comics, pictures, blogs, chats } = homeMedia
 
   return (
