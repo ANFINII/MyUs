@@ -23,6 +23,10 @@ export const apiMusics = base + '/media/music'
 export const apiMusic = (musicId: number) => base + `/media/music/${musicId}`
 export const apiMusicCreate = base + '/media/music/create'
 
+export const apiComics = base + '/media/comic'
+export const apiComic = (comicId: number) => base + `/media/comic/${comicId}`
+export const apiComicCreate = base + '/media/comic/create'
+
 export const apiPictures = base + '/media/picture'
 export const apiPicture = (pictureId: number) => base + `/media/picture/${pictureId}`
 export const apiPictureCreate = base + '/media/picture/create'
