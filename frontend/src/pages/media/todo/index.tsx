@@ -1,12 +1,19 @@
-import { Search, Media } from 'types/internal/media'
+import { GetServerSideProps } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { getTodos } from 'api/media'
+import { ToDo } from 'types/internal/media'
 import Todos from 'components/templates/media/todo/list'
 
-const search: Search = {
-  name: 'test',
-  count: 0,
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  const translations = await serverSideTranslations(locale as string, ['common'])
+  const datas = getTodos()
+  return { props: { datas, ...translations } }
 }
-const datas: Media[] = []
 
-export default function TodosPage() {
-  return <Todos search={search} datas={datas} />
+interface Props {
+  datas: ToDo[]
+}
+
+export default function TodosPage(props: Props) {
+  return <Todos {...props} />
 }
