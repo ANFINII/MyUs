@@ -20,13 +20,13 @@ from apps.api.serializers import SignUpSerializer, LoginSerializer
 from apps.api.serializers import UserSerializer, ProfileSerializer, MyPageSerializer
 from apps.api.serializers import VideoSerializer, MusicSerializer, ComicSerializer
 from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializer, TodoSerializer
-from apps.api.utils import get_user_id
 from apps.myus.modules.filter_data import DeferData
 from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 from apps.myus.modules.search import Search
+from apps.api.services.user import get_user_id
 from apps.api.services.media import get_video_list, get_music_list, get_comic_list, get_picture_list, get_blog_list, get_chat_list, get_todo_list
 
 
