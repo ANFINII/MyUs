@@ -12,7 +12,7 @@ export default function Payment() {
           <section className="section_plan">
             <div className="main_decolation_payment">
               <div className="payment_img">
-                <Image src="/img/MyUs.png" width={40} height={40} alt="" className="myus_img" />
+                <Image src="/image/MyUs.png" width={40} height={40} alt="" className="myus_img" />
                 Basic
               </div>
             </div>
@@ -30,7 +30,7 @@ export default function Payment() {
           <section className="section_plan">
             <div className="main_decolation_payment">
               <div className="payment_img">
-                <Image src="/img/MyUs.png" width={40} height={40} alt="" className="myus_img" />
+                <Image src="/image/MyUs.png" width={40} height={40} alt="" className="myus_img" />
                 Standard
               </div>
             </div>
@@ -48,7 +48,7 @@ export default function Payment() {
           <section className="section_plan">
             <div className="main_decolation_payment">
               <div className="payment_img">
-                <Image src="/img/MyUs.png" width={40} height={40} alt="" className="myus_img" />
+                <Image src="/image/MyUs.png" width={40} height={40} alt="" className="myus_img" />
                 Premium
               </div>
             </div>
@@ -68,7 +68,7 @@ export default function Payment() {
           <section className="section_plan">
             <div className="main_decolation_payment">
               <div className="payment_img">
-                <Image src="/img/MyUs.png" width={40} height={40} alt="" className="myus_img" />
+                <Image src="/image/MyUs.png" width={40} height={40} alt="" className="myus_img" />
                 プラン変更
               </div>
             </div>
@@ -82,7 +82,7 @@ export default function Payment() {
           <section className="section_plan">
             <div className="main_decolation_payment">
               <div className="payment_img">
-                <Image src="/img/MyUs.png" width={40} height={40} alt="" className="myus_img" />
+                <Image src="/image/MyUs.png" width={40} height={40} alt="" className="myus_img" />
                 Free
               </div>
             </div>
