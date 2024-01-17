@@ -2,19 +2,15 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
+import LoginRequired from 'components/parts/LoginRequired'
 
-interface Props {
-  isAuth?: boolean
-}
 const now = new Date()
 const year = now.getFullYear()
 
-export default function ComicCreate(props: Props) {
-  const { isAuth } = props
-
+export default function ComicCreate() {
   return (
     <Main title="Comic">
-      {isAuth ? (
+      <LoginRequired>
         <form method="POST" action="" encType="multipart/form-data">
           <p className="mv_16">タイトル</p>
           <Input name="title" id="title" required />
@@ -27,9 +23,7 @@ export default function ComicCreate(props: Props) {
 
           <Button green type="submit" name="作成する" className="mt_32" />
         </form>
-      ) : (
-        <h2 className="login_required">ログインしてください</h2>
-      )}
+      </LoginRequired>
     </Main>
   )
 }

@@ -8,5 +8,5 @@ const search: Search = {
 const datas: Follow[] = []
 
 export default function FollowersPage() {
-  return <Followers isAuth={true} search={search} datas={datas} />
+  return <Followers search={search} datas={datas} />
 }

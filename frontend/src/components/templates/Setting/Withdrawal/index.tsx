@@ -3,6 +3,7 @@ import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import LoginRequired from 'components/parts/LoginRequired'
 
 export default function Withdrawal() {
   const isAuthenticated = true
@@ -14,7 +15,7 @@ export default function Withdrawal() {
   return (
     <Main title="退会処理">
       <article className="article_pass">
-        {isAuthenticated ? (
+        <LoginRequired>
           <form method="POST" action="" className="form_account">
             {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}
             {messages && (
@@ -36,10 +37,8 @@ export default function Withdrawal() {
 
             <Button blue size="xl" name="ホーム" className="full_w mb_24" onClick={() => Router.push('/')} />
           </form>
-        ) : (
-          <h2 className="login_required">ログインしてください</h2>
-        )}
-        <Footer />
+          <Footer />
+        </LoginRequired>
       </article>
     </Main>
   )

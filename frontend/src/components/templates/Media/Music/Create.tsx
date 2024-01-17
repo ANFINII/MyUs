@@ -4,17 +4,12 @@ import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
+import LoginRequired from 'components/parts/LoginRequired'
 
-interface Props {
-  isAuth?: boolean
-}
-
-export default function MusicCreate(props: Props) {
-  const { isAuth } = props
-
+export default function MusicCreate() {
   return (
     <Main title="Music">
-      {isAuth ? (
+      <LoginRequired>
         <form method="POST" action="" encType="multipart/form-data">
           <p className="mv_16">タイトル</p>
           <Input name="title" id="title" required />
@@ -31,9 +26,7 @@ export default function MusicCreate(props: Props) {
 
           <Button green type="submit" name="作成する" className="mt_32" />
         </form>
-      ) : (
-        <h2 className="login_required">ログインしてください</h2>
-      )}
+      </LoginRequired>
     </Main>
   )
 }

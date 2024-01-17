@@ -3,10 +3,8 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
+import LoginRequired from 'components/parts/LoginRequired'
 
-interface Props {
-  isAuth?: boolean
-}
 const now = new Date()
 const year = now.getFullYear()
 
@@ -22,11 +20,10 @@ export const progress = [
   { value: '2', label: '完了' },
 ]
 
-export default function TodoCreate(props: Props) {
-  const { isAuth } = props
+export default function TodoCreate() {
   return (
     <Main title="Todo">
-      {isAuth ? (
+      <LoginRequired>
         <form method="POST" action="">
           <p className="mv_16">タイトル</p>
           <Input name="title" required />
@@ -45,9 +42,7 @@ export default function TodoCreate(props: Props) {
 
           <Button green type="submit" name="作成する" className="mt_32" />
         </form>
-      ) : (
-        <h2 className="login_required">ログインしてください</h2>
-      )}
+      </LoginRequired>
     </Main>
   )
 }

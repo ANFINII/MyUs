@@ -3,17 +3,12 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
+import LoginRequired from 'components/parts/LoginRequired'
 
-interface Props {
-  isAuth?: boolean
-}
-
-export default function PictureCreate(props: Props) {
-  const { isAuth } = props
-
+export default function PictureCreate() {
   return (
     <Main title="Picture">
-      {isAuth ? (
+      <LoginRequired>
         <form method="POST" action="" encType="multipart/form-data">
           <p className="mv_16">タイトル</p>
           <Input name="title" required />
@@ -26,9 +21,7 @@ export default function PictureCreate(props: Props) {
 
           <Button green type="submit" name="作成する" className="mt_32" />
         </form>
-      ) : (
-        <h2 className="login_required">ログインしてください</h2>
-      )}
+      </LoginRequired>
     </Main>
   )
 }

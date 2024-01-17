@@ -1,15 +1,13 @@
-import Head from 'next/head'
+import Main from 'components/layout/Main'
+import LoginRequired from 'components/parts/LoginRequired'
 
 export default function TodoDelete() {
   return (
-    <>
-      <Head>
-        <title>MyUsToDo</title>
-      </Head>
-
-      <h1>ToDo削除</h1>
-      {/* {% if user.isAuth %} */}
-      {/* <p>タイトル：{{ object.title }}</p>
+    <Main title="Todo">
+      <LoginRequired>
+        <h1>ToDo削除</h1>
+        {/* {% if user.isAuth %} */}
+        {/* <p>タイトル：{{ object.title }}</p>
 
       <p>優先度：{{ object.get_priority_display }}</p>
 
@@ -19,14 +17,12 @@ export default function TodoDelete() {
 
       <p>内容：{{ todo.content }}</p> */}
 
-      <br />
+        <br />
 
-      <form method="POST" action="">
-        <input type="submit" value="削除する" className="btn btn-danger btn-sm" />
-      </form>
-      {/* {% else %} */}
-      <h2 className="login_required">ログインしてください</h2>
-      {/* {% endif %} */}
-    </>
+        <form method="POST" action="">
+          <input type="submit" value="削除する" className="btn btn-danger btn-sm" />
+        </form>
+      </LoginRequired>
+    </Main>
   )
 }

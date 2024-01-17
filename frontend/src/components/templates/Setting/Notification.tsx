@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Notification } from 'types/internal/auth'
 import Main from 'components/layout/Main'
 import Toggle from 'components/parts/Input/Toggle'
+import LoginRequired from 'components/parts/LoginRequired'
 
 interface Props {
   notification: Notification
@@ -17,7 +18,7 @@ export default function SettingNotification(props: Props) {
 
   return (
     <Main title="通知設定" type="table">
-      {notification ? (
+      <LoginRequired>
         <table id="notification_table" className="table">
           <tbody>
             <tr>
@@ -36,9 +37,7 @@ export default function SettingNotification(props: Props) {
             ))}
           </tbody>
         </table>
-      ) : (
-        <h2 className="login_required">ログインしてください</h2>
-      )}
+      </LoginRequired>
     </Main>
   )
 }
