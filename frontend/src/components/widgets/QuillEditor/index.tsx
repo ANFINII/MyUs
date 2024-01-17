@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server'
 import ReactQuill from 'react-quill'
 import Image from 'next/image'
 import Editor, { RenderListFunction, mentionUser } from './modules/quill-setting'
-import 'react-quill/dist/quill.snow.css'
+import 'react-quill/dist/quill.snow.scss'
 
 export async function showUsers(search: string, mentionUsers: mentionUser[]): Promise<mentionUser[]> {
   return mentionUsers.filter((user) => user.value.toLocaleLowerCase().includes(search.toLocaleLowerCase()))

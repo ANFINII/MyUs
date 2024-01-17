@@ -1,4 +1,4 @@
-import style from 'components/parts/Button/Square/Square.module.css'
+import style from 'components/parts/Button/Square/Square.module.scss'
 
 interface Color {
   emerald?: boolean

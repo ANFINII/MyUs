@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import style from 'components/parts/Input/Input.module.css'
+import style from 'components/parts/Input/Input.module.scss'
 
 interface Props {
   id?: string
