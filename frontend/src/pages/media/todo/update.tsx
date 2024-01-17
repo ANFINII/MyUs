@@ -10,7 +10,6 @@ export default function TodoUpdate() {
       <h1>ToDo編集</h1>
       {/* {% if user.isAuth %} */}
       <form method="POST" action="">
-        {/* {% csrf_token %} */}
         <p>
           <label htmlFor="title">タイトル</label>
         </p>

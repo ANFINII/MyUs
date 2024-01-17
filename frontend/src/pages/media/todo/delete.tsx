@@ -22,7 +22,6 @@ export default function TodoDelete() {
       <br />
 
       <form method="POST" action="">
-        {/* {% csrf_token %} */}
         <input type="submit" value="削除する" className="btn btn-danger btn-sm" />
       </form>
       {/* {% else %} */}

@@ -17,7 +17,6 @@ export default function Withdrawal() {
         {isAuthenticated ? (
           <form method="POST" action="" className="form_account">
             {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}
-            {/* {% csrf_token %} */}
             {messages && (
               <ul className="messages_password_change">
                 {/* {% for message in messages %}

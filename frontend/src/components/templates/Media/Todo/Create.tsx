@@ -28,7 +28,6 @@ export default function TodoCreate(props: Props) {
     <Main title="Todo">
       {isAuth ? (
         <form method="POST" action="">
-          {/* {% csrf_token %} */}
           <p className="mv_16">タイトル</p>
           <Input name="title" required />
 

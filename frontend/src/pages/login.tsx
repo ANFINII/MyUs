@@ -20,7 +20,6 @@ export default function LoginPage() {
         </Head>
 
         <form method="POST" action="" className="form_account">
-          {/* {% csrf_token %} */}
           <h1 className="login_h1">MyUsへようこそ</h1>
 
           {/* {% if messages %}

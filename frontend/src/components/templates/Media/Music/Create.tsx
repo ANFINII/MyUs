@@ -16,7 +16,6 @@ export default function MusicCreate(props: Props) {
     <Main title="Music">
       {isAuth ? (
         <form method="POST" action="" encType="multipart/form-data">
-          {/* {% csrf_token %} */}
           <p className="mv_16">タイトル</p>
           <Input name="title" id="title" required />
 

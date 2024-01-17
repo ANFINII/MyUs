@@ -10,7 +10,6 @@ export default function PasswordChange() {
       <h1>パスワード変更</h1>
       <article className="article_pass">
         <form method="POST" action="" className="form_account">
-          {/* {% csrf_token %} */}
           <ul className="messages_password_change">
             <li>{/* { form.old_password.errors } */}</li>
             <li>{/* { form.new_password2.errors } */}</li>

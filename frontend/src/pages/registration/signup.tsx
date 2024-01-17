@@ -10,7 +10,6 @@ export default function SignUp() {
       </Head>
 
       <form method="POST" action="" className="form_account">
-        {/* {% csrf_token %} */}
         <h1 className="signup_h1">アカウント登録</h1>
 
         {/* {% if messages %}

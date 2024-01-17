@@ -15,7 +15,6 @@ export default function PictureCreate(props: Props) {
     <Main title="Picture">
       {isAuth ? (
         <form method="POST" action="" encType="multipart/form-data">
-          {/* {% csrf_token %} */}
           <p className="mv_16">タイトル</p>
           <Input name="title" required />
 

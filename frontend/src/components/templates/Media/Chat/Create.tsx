@@ -16,7 +16,6 @@ export default function ChatCreate(props: Props) {
     <Main title="Chat">
       {isAuth ? (
         <form method="POST" action="" encType="multipart/form-data">
-          {/* {% csrf_token %} */}
           <p className="mv_16">タイトル</p>
           <Input name="title" id="title" required />
 

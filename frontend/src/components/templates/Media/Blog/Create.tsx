@@ -15,7 +15,6 @@ export default function BlogCreate(props: Props) {
     <Main title="Blog">
       {isAuth ? (
         <form method="POST" action="" encType="multipart/form-data">
-          {/* {% csrf_token %} */}
           <p className="mv_16">タイトル</p>
           <Input name="title" id="title" required />
 

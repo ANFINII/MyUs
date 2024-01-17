@@ -13,7 +13,6 @@ export default function WithdrawalConfirm() {
         {isAuthenticated ? (
           <form method="POST" action="" className="form_account">
             {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}
-            {/* {% csrf_token %} */}
             <p className="red mb_24">本当に退会しますか？</p>
 
             <Input type="password" name="password2" placeholder="パスワード" minLength={8} maxLength={16} className="mb_16" required />

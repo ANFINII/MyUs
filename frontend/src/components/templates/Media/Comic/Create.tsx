@@ -16,7 +16,6 @@ export default function ComicCreate(props: Props) {
     <Main title="Comic">
       {isAuth ? (
         <form method="POST" action="" encType="multipart/form-data">
-          {/* {% csrf_token %} */}
           <p className="mv_16">タイトル</p>
           <Input name="title" id="title" required />
 

@@ -11,7 +11,6 @@ export default function PasswordResetForm() {
       </Head>
 
       <form method="POST" action="" className="form_account">
-        {/* {% csrf_token %} */}
         <h1 className="myus_h1">パスワードをリセット</h1>
         {/* {% if errors %} */}
         {/* <p className="messages_password_form">{{ form.email.errors }}</p> */}
