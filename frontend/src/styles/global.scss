@@ -1,0 +1,155 @@
+$values: 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 64;
+
+@each $value in $values {
+  .m_#{$value} {
+    margin: 1px * $value;
+  }
+
+  .mt_#{$value} {
+    margin-top: 1px * $value;
+  }
+
+  .mb_#{$value} {
+    margin-bottom: 1px * $value;
+  }
+
+  .mr_#{$value} {
+    margin-right: 1px * $value;
+  }
+
+  .ml_#{$value} {
+    margin-left: 1px * $value;
+  }
+
+  .mh_#{$value} {
+    margin-left: 1px * $value;
+    margin-right: 1px * $value;
+  }
+
+  .mv_#{$value} {
+    margin-top: 1px * $value;
+    margin-bottom: 1px * $value;
+  }
+}
+
+@each $value in $values {
+  .p_#{$value} {
+    padding: 1px * $value;
+  }
+
+  .pt_#{$value} {
+    padding-top: 1px * $value;
+  }
+
+  .pb_#{$value} {
+    padding-bottom: 1px * $value;
+  }
+
+  .pr_#{$value} {
+    padding-right: 1px * $value;
+  }
+
+  .pl_#{$value} {
+    padding-left: 1px * $value;
+  }
+
+  .ph_#{$value} {
+    padding-left: 1px * $value;
+    padding-right: 1px * $value;
+  }
+
+  .pv_#{$value} {
+    padding-top: 1px * $value;
+    padding-bottom: 1px * $value;
+  }
+}
+
+@each $value in $values {
+  .fs {
+    &_#{$value} {
+      font-size: 1px * $value;
+    }
+  }
+}
+
+.fw {
+  &_400 {
+    font-weight: 400;
+  }
+
+  &_500 {
+    font-weight: 500;
+  }
+
+  &_700 {
+    font-weight: 700;
+  }
+}
+
+.d {
+  &_none {
+    display: none;
+  }
+
+  &_flex {
+    display: flex;
+  }
+
+  &_inline {
+    display: inline;
+  }
+
+  &_block {
+    display: block;
+  }
+}
+
+.flex_1 {
+  flex: 1;
+}
+
+.full_w {
+  width: 100%;
+}
+
+.radius_10 {
+  border-radius: 10px;
+}
+
+hr {
+  margin: 16px 0;
+  border: 0.5px solid rgb(200, 200, 200);
+}
+
+/* color */
+.rgb100 {
+  color: rgb(100, 100, 100);
+}
+
+.white {
+  color: rgb(255, 255, 255);
+}
+
+.red {
+  color: rgb(230, 55, 70);
+}
+
+.blue {
+  color: rgb(20, 120, 250);
+}
+
+.green {
+  color: rgb(40, 160, 100);
+}
+
+.purple {
+  color: rgb(145, 30, 255);
+}
+
+.emerald {
+  color: rgb(0, 175, 170);
+}
+
+.sakura {
+  color: rgb(230, 0, 140);
+}

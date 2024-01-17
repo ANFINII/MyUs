@@ -37,7 +37,7 @@ class MyDocument extends Document {
           <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#000000" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Roboto&display=swap" />
-          <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" />
+          <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" />
           <base href="/"></base>
         </Head>
         <body>
