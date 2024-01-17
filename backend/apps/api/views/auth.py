@@ -13,6 +13,7 @@ from rest_framework_simplejwt import views
 from rest_framework_simplejwt import exceptions
 
 from apps.api.serializers import SignUpSerializer
+from apps.myus.models import Profile
 from apps.myus.modules.validation import has_username, has_email, has_alphabet, has_number
 
 

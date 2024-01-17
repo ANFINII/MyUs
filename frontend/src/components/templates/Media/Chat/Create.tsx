@@ -7,10 +7,16 @@ import LoginRequired from 'components/parts/LoginRequired'
 const now = new Date()
 const year = now.getFullYear()
 
-export default function ChatCreate() {
+interface Props {
+  isAuth: boolean
+}
+
+export default function ChatCreate(props: Props) {
+  const { isAuth } = props
+
   return (
     <Main title="Chat">
-      <LoginRequired>
+      <LoginRequired isAuth={isAuth}>
         <form method="POST" action="" encType="multipart/form-data">
           <p className="mv_16">タイトル</p>
           <Input name="title" id="title" required />

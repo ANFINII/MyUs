@@ -15,7 +15,7 @@ export default function MyPageUpdate(props: Props) {
 
   return (
     <Main title="マイページ設定" type="table">
-      <LoginRequired>
+      <LoginRequired isAuth={!!mypage}>
         <div className="button_group">
           <Button green size="xs" name="登録" type="submit" />
           <Button blue size="xs" name="戻る" onClick={() => Router.push('/setting/mypage')} />

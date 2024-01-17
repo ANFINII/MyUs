@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { getPictures } from 'api/media'
-import { Picture } from 'types/internal/media'
+import { Blog } from 'types/internal/media'
 import Blogs from 'components/templates/media/blog/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
 }
 
 interface Props {
-  datas: Picture[]
+  datas: Blog[]
 }
 
 export default function BlogsPage(props: Props) {

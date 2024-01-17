@@ -11,7 +11,7 @@ export default function WithdrawalConfirm() {
   return (
     <Main title="退会処理">
       <article className="article_pass">
-        <LoginRequired>
+        <LoginRequired isAuth>
           <form method="POST" action="" className="form_account">
             {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}
             <p className="red mb_24">本当に退会しますか？</p>

@@ -14,7 +14,7 @@ export default function Profile(props: Props) {
 
   return (
     <Main title="アカウント設定" type="table">
-      <LoginRequired>
+      <LoginRequired isAuth={!!user}>
         <div className="button_group">
           <Button blue size="xs" name="編集" onClick={() => Router.push('/setting/profile/update')} />
           <Button blue size="xs" name="パスワード変更" onClick={() => Router.push('/setting/password/change')} />

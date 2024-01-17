@@ -18,7 +18,7 @@ export default function SettingNotification(props: Props) {
 
   return (
     <Main title="通知設定" type="table">
-      <LoginRequired>
+      <LoginRequired isAuth={!!notification}>
         <table id="notification_table" className="table">
           <tbody>
             <tr>

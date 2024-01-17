@@ -14,7 +14,7 @@ export default function MyPage(props: Props) {
 
   return (
     <Main title="マイページ設定" type="table">
-      <LoginRequired>
+      <LoginRequired isAuth={!!mypage}>
         <div className="button_group">
           <Button blue size="xs" name="編集" onClick={() => Router.push('/setting/mypage/update')} />
           <Button purple size="xs" name="ユーザページ" onClick={() => Router.push(`/userpage/${mypage.nickname}`)} />

@@ -26,7 +26,7 @@ export default function SettingProfileUpdate(props: Props) {
 
   return (
     <Main title="アカウント設定" type="table">
-      <LoginRequired>
+      <LoginRequired isAuth={!!user}>
         {/* {% if messages %}
           <ul className="messages_profile">
             {% for message in messages %}

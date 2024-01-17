@@ -6,10 +6,16 @@ import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
 
-export default function MusicCreate() {
+interface Props {
+  isAuth: boolean
+}
+
+export default function MusicCreate(props: Props) {
+  const { isAuth } = props
+
   return (
     <Main title="Music">
-      <LoginRequired>
+      <LoginRequired isAuth={isAuth}>
         <form method="POST" action="" encType="multipart/form-data">
           <p className="mv_16">タイトル</p>
           <Input name="title" id="title" required />

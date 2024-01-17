@@ -5,10 +5,16 @@ import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
 
-export default function BlogCreate() {
+interface Props {
+  isAuth: boolean
+}
+
+export default function BlogCreate(props: Props) {
+  const { isAuth } = props
+
   return (
     <Main title="Blog">
-      <LoginRequired>
+      <LoginRequired isAuth={isAuth}>
         <p className="mv_16">タイトル</p>
         <Input name="title" id="title" required />
 

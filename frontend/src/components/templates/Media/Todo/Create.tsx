@@ -20,10 +20,16 @@ export const progress = [
   { value: '2', label: '完了' },
 ]
 
-export default function TodoCreate() {
+interface Props {
+  isAuth: boolean
+}
+
+export default function TodoCreate(props: Props) {
+  const { isAuth } = props
+
   return (
     <Main title="Todo">
-      <LoginRequired>
+      <LoginRequired isAuth={isAuth}>
         <form method="POST" action="">
           <p className="mv_16">タイトル</p>
           <Input name="title" required />

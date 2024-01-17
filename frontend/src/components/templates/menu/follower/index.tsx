@@ -18,7 +18,7 @@ export default function Followers(props: Props) {
 
   return (
     <Main title="Follower" search={search}>
-      <LoginRequired>
+      <LoginRequired isAuth>
         <div className="follow_button">
           <Button blue size="xs" name="フォロー" onClick={() => Router.push('/menu/follow')} />
           <span>フォロワー数：{mypage ? mypage.followerCount : 0}</span>

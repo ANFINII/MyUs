@@ -7,10 +7,16 @@ import LoginRequired from 'components/parts/LoginRequired'
 const now = new Date()
 const year = now.getFullYear()
 
-export default function ComicCreate() {
+interface Props {
+  isAuth: boolean
+}
+
+export default function ComicCreate(props: Props) {
+  const { isAuth } = props
+
   return (
     <Main title="Comic">
-      <LoginRequired>
+      <LoginRequired isAuth={isAuth}>
         <form method="POST" action="" encType="multipart/form-data">
           <p className="mv_16">タイトル</p>
           <Input name="title" id="title" required />

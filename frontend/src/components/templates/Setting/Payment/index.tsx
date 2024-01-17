@@ -7,7 +7,7 @@ import LoginRequired from 'components/parts/LoginRequired'
 export default function Payment() {
   return (
     <Main title="料金プラン">
-      <LoginRequired>
+      <LoginRequired isAuth>
         <article className="article_list">
           <section className="section_plan">
             <div className="main_decolation_payment">

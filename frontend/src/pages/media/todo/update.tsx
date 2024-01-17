@@ -4,7 +4,7 @@ import LoginRequired from 'components/parts/LoginRequired'
 export default function TodoUpdate() {
   return (
     <Main title="ToDo削除">
-      <LoginRequired>
+      <LoginRequired isAuth>
         <form method="POST" action="">
           <p>
             <label htmlFor="title">タイトル</label>
