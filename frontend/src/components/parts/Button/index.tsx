@@ -1,4 +1,4 @@
-import style from 'components/parts/Button/Button.module.scss'
+import style from 'components/parts/Button/Button3.module.scss'
 
 interface Color {
   blue?: boolean

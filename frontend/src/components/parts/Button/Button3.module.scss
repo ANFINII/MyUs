@@ -1,0 +1,114 @@
+.button {
+  padding: 6px 12px;
+  font-size: 14px;
+  color: rgb(50, 50, 50);
+  border: 1px solid rgb(180, 180, 180);
+  border-radius: 5px;
+  background: rgb(255, 255, 255);
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(245, 245, 245);
+  }
+
+  &:active {
+    background: rgb(235, 235, 235);
+  }
+
+  &:disabled {
+    border: 1px solid rgb(240, 240, 240);
+    background: rgb(240, 240, 240);
+    color: rgb(140, 145, 150);
+    cursor: initial;
+  }
+
+  &.xs {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  &.xl {
+    padding: 8px 16px;
+    font-size: 18px;
+  }
+
+  &.blue {
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(20, 120, 250);
+    background: rgb(20, 120, 250);
+
+    &:hover {
+      background: rgb(20, 110, 230);
+    }
+
+    &:active {
+      background: rgb(20, 90, 210);
+    }
+
+    &:disabled {
+      border: 1px solid rgb(150, 200, 255);
+      background: rgb(150, 200, 255);
+      cursor: initial;
+    }
+  }
+
+  &.purple {
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(145, 30, 255);
+    background: rgb(145, 30, 255);
+
+    &:hover {
+      background: rgb(135, 30, 235);
+    }
+
+    &:active {
+      background: rgb(115, 30, 215);
+    }
+
+    &:disabled {
+      border: 1px solid rgb(200, 150, 255);
+      background: rgb(200, 150, 255);
+      cursor: initial;
+    }
+  }
+
+  &.red {
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(230, 55, 70);
+    background: rgb(230, 55, 70);
+
+    &:hover {
+      background: rgb(210, 55, 60);
+    }
+
+    &:active {
+      background: rgb(190, 55, 40);
+    }
+
+    &:disabled {
+      border: 1px solid rgb(255, 170, 180);
+      background: rgb(255, 170, 180);
+      cursor: initial;
+    }
+  }
+
+  &.green {
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(40, 160, 100);
+    background: rgb(40, 160, 100);
+
+    &:hover {
+      background: rgb(40, 140, 90);
+    }
+
+    &:active {
+      background: rgb(40, 120, 80);
+    }
+
+    &:disabled {
+      border: 1px solid rgb(150, 220, 210);
+      background: rgb(150, 220, 210);
+      cursor: initial;
+    }
+  }
+}
