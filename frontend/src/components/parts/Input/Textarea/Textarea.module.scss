@@ -8,12 +8,12 @@
   background: rgb(255, 255, 255);
   resize: none;
   overflow-y: hidden;
-}
 
-.textarea:focus-visible {
-  outline: 1px auto rgb(40, 130, 250);
-}
+  &.disabled {
+    background: rgb(240, 240, 240);
+  }
 
-.textarea.disabled {
-  background: rgb(240, 240, 240);
+  &:focus-visible {
+    outline: 1px auto rgb(40, 130, 250);
+  }
 }
