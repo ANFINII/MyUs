@@ -134,7 +134,7 @@ def get_chat_list(count):
 
 
 def get_todo_list(count):
-    objs = Todo.objects.filter(publish=True).order_by('-created')[:count]
+    objs = Todo.objects.all().order_by('-created')[:count]
     data = [{
         'id': obj.id,
         'title': obj.title,

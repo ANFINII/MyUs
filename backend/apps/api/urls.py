@@ -1,14 +1,14 @@
 from django.urls import path
-from apps.api.views import AuthAPI, SignUpAPI, LoginAPI, LogoutAPI, RefreshAPI
-from apps.api.views import UserAPI, ProfileAPI, MyPageAPI, NotificationAPI
-from apps.api.views import HomeAPI
-from apps.api.views import VideoListAPI, VideoCreateAPI, VideoAPI
-from apps.api.views import MusicListAPI, MusicCreateAPI, MusicAPI
-from apps.api.views import ComicListAPI, ComicCreateAPI, ComicAPI
-from apps.api.views import PictureListAPI, PictureCreateAPI, PictureAPI
-from apps.api.views import BlogListAPI, BlogCreateAPI, BlogAPI
-from apps.api.views import ChatListAPI, ChatCreateAPI, ChatAPI
-from apps.api.views import TodoListAPI, TodoCreateAPI, TodoAPI
+from apps.api.views.auth import AuthAPI, SignUpAPI, LoginAPI, LogoutAPI, RefreshAPI
+from apps.api.views.user import UserAPI, ProfileAPI, MyPageAPI, NotificationAPI
+from apps.api.views.media import HomeAPI
+from apps.api.views.media import VideoListAPI, VideoCreateAPI, VideoAPI
+from apps.api.views.media import MusicListAPI, MusicCreateAPI, MusicAPI
+from apps.api.views.media import ComicListAPI, ComicCreateAPI, ComicAPI
+from apps.api.views.media import PictureListAPI, PictureCreateAPI, PictureAPI
+from apps.api.views.media import BlogListAPI, BlogCreateAPI, BlogAPI
+from apps.api.views.media import ChatListAPI, ChatCreateAPI, ChatAPI
+from apps.api.views.media import TodoListAPI, TodoCreateAPI, TodoAPI
 
 
 app_name = 'api'
