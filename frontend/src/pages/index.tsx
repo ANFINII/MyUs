@@ -1,15 +1,12 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { apiClient } from 'lib/axios'
-import { apiHome } from 'api/uri'
+import { getHome } from 'api/media'
 import { HomeMedia } from 'types/internal/media'
 import Homes from 'components/templates/media/home/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const homeMedia = await apiClient.get(apiHome).then((res) => {
-    return res.data
-  })
+  const homeMedia = await getHome()
   return { props: { homeMedia, ...translations } }
 }
 
