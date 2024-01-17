@@ -6,36 +6,36 @@
   border: 0px solid rgb(200, 200, 200);
   background: rgb(200, 200, 200);
   cursor: pointer;
-}
 
-.button:hover {
-  background: rgb(190, 190, 190);
-}
+  &:hover {
+    background: rgb(190, 190, 190);
+  }
 
-.button:active {
-  background: rgb(160, 160, 160);
-}
+  &:active {
+    background: rgb(160, 160, 160);
+  }
 
-.button.emerald {
-  background: rgb(0, 175, 170);
-}
+  &.emerald {
+    background: rgb(0, 175, 170);
 
-.button.emerald:hover {
-  background: rgb(0, 165, 160);
-}
+    &:hover {
+      background: rgb(0, 165, 160);
+    }
 
-.button.emerald:active {
-  background: rgb(0, 145, 140);
-}
+    &:active {
+      background: rgb(0, 145, 140);
+    }
+  }
 
-.button.sakura {
-  background: rgb(230, 0, 140);
-}
+  &.sakura {
+    background: rgb(230, 0, 140);
 
-.button.sakura:hover {
-  background: rgb(220, 0, 130);
-}
+    &:hover {
+      background: rgb(220, 0, 130);
+    }
 
-.button.sakura:active {
-  background: rgb(190, 0, 110);
+    &:active {
+      background: rgb(190, 0, 110);
+    }
+  }
 }
