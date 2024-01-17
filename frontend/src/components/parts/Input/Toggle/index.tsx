@@ -1,5 +1,5 @@
 import IconToggle from 'components/parts/Icon/Toggle'
-import style from 'components/parts/Input/Toggle/Toggle.module.css'
+import style from 'components/parts/Input/Toggle/Toggle.module.scss'
 
 interface Props {
   isActive: boolean

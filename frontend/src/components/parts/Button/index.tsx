@@ -1,4 +1,4 @@
-import style from 'components/parts/Button/Button.module.css'
+import style from 'components/parts/Button/Button.module.scss'
 
 interface Color {
   blue?: boolean
@@ -13,16 +13,17 @@ interface Props extends Color {
   name: string
   value?: string
   className?: string
+  loading?: boolean
   disabled?: boolean
   onClick?(): void
 }
 
 export default function Button(props: Props): JSX.Element {
   const { blue, purple, red, green } = props
-  const { size, type = 'button', name, value, className, disabled, onClick } = props
+  const { size, type = 'button', name, value, className, loading, disabled, onClick } = props
 
   const colorCheck = (name: string, isColor?: boolean): string => {
-    return isColor ? ' ' + style[name] : ''
+    return isColor && !loading ? ' ' + style[name] : ''
   }
 
   const sizeCheck = (name: string): string => {
@@ -34,7 +35,7 @@ export default function Button(props: Props): JSX.Element {
       type={type}
       value={value}
       onClick={onClick}
-      disabled={disabled}
+      disabled={disabled || loading}
       className={
         style.button +
         colorCheck('blue', blue) +
@@ -46,7 +47,12 @@ export default function Button(props: Props): JSX.Element {
         (className ? ' ' + className : '')
       }
     >
-      {name}
+      {loading && (
+        <div className={style.spinner}>
+          <i className="fa-regular fa-circle-notch"></i>
+        </div>
+      )}
+      {!loading && name}
     </button>
   )
 }

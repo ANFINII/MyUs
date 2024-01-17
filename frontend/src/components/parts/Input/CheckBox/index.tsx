@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import style from 'components/parts/Input/CheckBox/CheckBox.module.css'
+import style from 'components/parts/Input/CheckBox/CheckBox.module.scss'
 
 interface Props {
   name: string

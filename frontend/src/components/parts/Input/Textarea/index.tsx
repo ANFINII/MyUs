@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import style from 'components/parts/Input/Textarea/Textarea.module.css'
+import style from 'components/parts/Input/Textarea/Textarea.module.scss'
 
 interface Props {
   id?: string

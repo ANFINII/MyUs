@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Option } from 'types/internal/other'
-import style from 'components/parts/Input/Select/Select.module.css'
+import style from 'components/parts/Input/Select/Select.module.scss'
 
 interface Props {
   className?: string
