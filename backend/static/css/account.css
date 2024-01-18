@@ -143,11 +143,11 @@ td.td_color {
   display: inline;
 }
 
-td.td_location {
+.td_location {
   display: grid;
   grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr);
   grid-template-rows: 38px 38px;
-  min-height: 76px;
+  max-height: 74px;
   column-gap: 2px;
   border: none;
   border-right: 1px solid rgb(0, 125, 0);
