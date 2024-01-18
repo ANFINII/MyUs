@@ -136,7 +136,7 @@ td.td_color {
 }
 
 .td_gender {
-  padding: 0 0 0 8px;
+  padding-left: 4px;
 
   .gender_radio {
     display: inline;
@@ -152,7 +152,7 @@ td.td_color {
   }
 }
 
-td.td_location {
+.td_location {
   display: grid;
   grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr);
   grid-template-rows: 38px 38px;
