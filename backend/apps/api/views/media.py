@@ -1,6 +1,6 @@
 from django.db.models import Exists, OuterRef
 
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import ListAPIView, APIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
@@ -53,8 +53,8 @@ class VideoCreateAPI(CreateAPIView):
     serializer_class = VideoSerializer
 
 
-class VideoAPI(RetrieveAPIView):
-    def get(self, id):
+class VideoAPI(APIView):
+    def get(self, request, id):
         obj = Video.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -108,8 +108,8 @@ class MusicCreateAPI(CreateAPIView):
     serializer_class = MusicSerializer
 
 
-class MusicAPI(RetrieveAPIView):
-    def get(self, id):
+class MusicAPI(APIView):
+    def get(self, request, id):
         obj = Music.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -162,8 +162,8 @@ class ComicCreateAPI(CreateAPIView):
     serializer_class = ComicSerializer
 
 
-class ComicAPI(RetrieveAPIView):
-    def get(self, id):
+class ComicAPI(APIView):
+    def get(self, request, id):
         obj = Comic.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -214,8 +214,8 @@ class PictureCreateAPI(CreateAPIView):
     serializer_class = PictureSerializer
 
 
-class PictureAPI(RetrieveAPIView):
-    def get(self, id):
+class PictureAPI(APIView):
+    def get(self, request, id):
         obj = Picture.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -267,8 +267,8 @@ class BlogCreateAPI(CreateAPIView):
     serializer_class = BlogSerializer
 
 
-class BlogAPI(RetrieveAPIView):
-    def get(self, id):
+class BlogAPI(APIView):
+    def get(self, request, id):
         obj = Blog.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -323,8 +323,8 @@ class ChatCreateAPI(CreateAPIView):
     serializer_class = ChatSerializer
 
 
-class ChatAPI(RetrieveAPIView):
-    def get(self, id):
+class ChatAPI(APIView):
+    def get(self, request, id):
         obj = Chat.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
@@ -364,7 +364,7 @@ class ChatAPI(RetrieveAPIView):
 
 # Todo
 class TodoListAPI(APIView):
-    def get(self, request, count=50):
+    def get(self, request):
         data = get_todo_list(50)
         return Response(data, status=HTTP_200_OK)
 
@@ -374,8 +374,8 @@ class TodoCreateAPI(CreateAPIView):
     serializer_class = TodoSerializer
 
 
-class TodoAPI(RetrieveAPIView):
-    def get(self, id):
+class TodoAPI(APIView):
+    def get(self, request, id):
         obj = Todo.objects.filter(id=id, publish=True).first()
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
