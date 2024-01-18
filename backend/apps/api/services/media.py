@@ -94,7 +94,7 @@ def get_blog_list(count):
         'title': obj.title,
         'content': obj.content,
         'richtext': obj.richtext,
-        'delta': obj.delta,
+        # 'delta': obj.delta,
         'image': obj.image.url,
         'like': obj.total_like(),
         'read': obj.read,
