@@ -12,8 +12,8 @@ import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
-import Table from 'components/widgets/Table'
-import TableRow from 'components/widgets/Table/Row'
+import Table from 'components/parts/Table'
+import TableRow from 'components/parts/Table/Row'
 
 interface Props {
   user: UserProfile

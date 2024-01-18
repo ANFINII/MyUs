@@ -1,6 +1,6 @@
 import Main from 'components/layout/Main'
-import Table from 'components/widgets/Table'
-import TableRow from 'components/widgets/Table/Row'
+import Table from 'components/parts/Table'
+import TableRow from 'components/parts/Table/Row'
 
 export default function Knowledge() {
   return (

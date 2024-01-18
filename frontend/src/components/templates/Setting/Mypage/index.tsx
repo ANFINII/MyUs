@@ -4,12 +4,13 @@ import { useRouter } from 'next/router'
 import { Mypage } from 'types/internal/auth'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import IconPicture from 'components/parts/Icon/Picture'
 import IconToggle from 'components/parts/Icon/Toggle'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
-import Table from 'components/widgets/Table'
-import TableRow from 'components/widgets/Table/Row'
+import Table from 'components/parts/Table'
+import TableRow from 'components/parts/Table/Row'
 
 interface Props {
   mypage: Mypage
@@ -46,10 +47,7 @@ export default function MyPage(props: Props) {
           <Table>
             <TableRow label="バナー画像" className="table_header">
               <label htmlFor="account_image_input" className="update_account_image">
-                <svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" fill="currentColor" className="bi bi-image" viewBox="0 0 16 16">
-                  <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                  <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
-                </svg>
+                <IconPicture size="3.5em" />
                 <input type="file" name="banner" accept="image/*" id="account_image_input" className="custom-file-input" />
               </label>
             </TableRow>
@@ -65,11 +63,14 @@ export default function MyPage(props: Props) {
             <TableRow isIndent label="フォロワー数">
               {mypage.followerCount}
             </TableRow>
+            <TableRow label="タグID">
+              <Input type="text" name="tag_manager_id" value={mypage.tagManagerId} placeholder="タグマネージャーID" maxLength={10} />
+            </TableRow>
             <TableRow isIndent label="料金プラン">
               {mypage.plan}
             </TableRow>
             <TableRow isIndent label="全体広告">
-              <form method="POST" action="" data-advertise="{{is_advertise}}" ddata-csrf="{{csrf_token}}">
+              <form method="POST" action="" data-advertise={mypage.isAdvertise}>
                 {mypage.plan === 'Free' ? <IconToggle size="25" type="disable" /> : mypage.isAdvertise ? <IconToggle size="25" type="on" /> : <IconToggle size="25" type="off" />}
               </form>
             </TableRow>
@@ -102,11 +103,14 @@ export default function MyPage(props: Props) {
             <TableRow isIndent label="フォロワー数">
               {mypage.followerCount}
             </TableRow>
+            <TableRow isIndent label="タグID">
+              GTM{mypage.tagManagerId && '-' + mypage.tagManagerId}
+            </TableRow>
             <TableRow isIndent label="料金プラン">
               {mypage.plan}
             </TableRow>
             <TableRow isIndent label="全体広告">
-              <form method="POST" action="" data-advertise="{{ mypage.is_advertise }}" data-csrf="{{ csrf_token }}">
+              <form method="POST" action="" data-advertise={mypage.isAdvertise}>
                 {mypage.plan === 'Free' ? <IconToggle size="25" type="disable" /> : mypage.isAdvertise ? <IconToggle size="25" type="on" /> : <IconToggle size="25" type="off" />}
               </form>
             </TableRow>

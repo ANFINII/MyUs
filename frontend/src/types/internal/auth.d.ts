@@ -54,6 +54,7 @@ export interface Mypage {
   email: string
   followerCount: number
   followingCount: number
+  tagManagerId: string
   plan: string
   planDate: string
   isAdvertise: boolean
