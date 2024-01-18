@@ -64,6 +64,7 @@ class MyPageAPI(APIView):
             'content': user.mypage.content,
             'follower_count': user.mypage.follower_count,
             'following_count': user.mypage.following_count,
+            'tag_manager_id': user.mypage.tag_manager_id,
             'plan': user.plan(),
             'plan_start_date': user.plan_start_date(),
             'plan_end_date': user.plan_end_date(),
