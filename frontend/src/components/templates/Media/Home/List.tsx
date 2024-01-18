@@ -3,6 +3,7 @@ import Main from 'components/layout/Main'
 import ArticleBlog from 'components/widgets/Article/Blog'
 import ArticleChat from 'components/widgets/Article/Chat'
 import ArticleComic from 'components/widgets/Article/Comic'
+import ArticleIndex from 'components/widgets/Article/Index'
 import ArticleMusic from 'components/widgets/Article/Music'
 import ArticlePicture from 'components/widgets/Article/Picture'
 import ArticleVideo from 'components/widgets/Article/Video'
@@ -20,52 +21,41 @@ export default function Homes(props: Props) {
     <Main title="Home" search={search}>
       <hr />
 
-      <article className="article_index">
-        <h2>Video</h2>
+      <ArticleIndex title="Video">
         {videos?.map((data) => (
           <ArticleVideo key={data.id} data={data} />
         ))}
-      </article>
-      <hr />
+      </ArticleIndex>
 
-      <article className="article_index">
-        <h2>Music</h2>
+      <ArticleIndex title="Music">
         {musics?.map((data) => (
           <ArticleMusic key={data.id} data={data} />
         ))}
-      </article>
-      <hr />
+      </ArticleIndex>
 
-      <article className="article_index">
-        <h2>Comic</h2>
+      <ArticleIndex title="Comic">
         {comics?.map((data) => (
           <ArticleComic key={data.id} data={data} />
         ))}
-      </article>
-      <hr />
+      </ArticleIndex>
 
-      <article className="article_index">
-        <h2>Picture</h2>
+      <ArticleIndex title="Picture">
         {pictures?.map((data) => (
           <ArticlePicture key={data.id} data={data} />
         ))}
-      </article>
-      <hr />
+      </ArticleIndex>
 
-      <article className="article_index">
-        <h2>Blog</h2>
+      <ArticleIndex title="Blog">
         {blogs?.map((data) => (
           <ArticleBlog key={data.id} data={data} />
         ))}
-      </article>
-      <hr />
+      </ArticleIndex>
 
-      <article className="article_index">
-        <h2>Chat</h2>
+      <ArticleIndex title="Chat">
         {chats?.map((data) => (
           <ArticleChat key={data.id} data={data} />
         ))}
-      </article>
+      </ArticleIndex>
     </Main>
   )
 }
