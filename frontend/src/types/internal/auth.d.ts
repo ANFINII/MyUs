@@ -1,3 +1,5 @@
+import { Gender } from 'utils/constants/enum'
+
 export interface User {
   avatar: string
   email: string
@@ -35,7 +37,7 @@ export interface UserProfile extends User {
   month: number
   day: number
   age: number
-  gender: string
+  gender: Gender
   phone: string
   countryCode: string
   postalCode: string
