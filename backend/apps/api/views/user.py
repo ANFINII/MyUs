@@ -24,7 +24,6 @@ class ProfileAPI(APIView):
     def get(self, request):
         user_id = get_user_id(request)
         user = User.objects.filter(id=user_id).select_related('profile').defer(*DeferData.profile).first()
-        gender = {'0':'男性', '1':'女性', '2':'秘密'}
 
         data = {
             'avatar': user.image(),
@@ -38,7 +37,7 @@ class ProfileAPI(APIView):
             'month': user.month(),
             'day': user.day(),
             'age': user.age(),
-            'gender': gender[user.gender()],
+            'gender': user.gender(),
             'phone': user.profile.phone,
             'country_code': user.profile.country_code,
             'postal_code': user.profile.postal_code,

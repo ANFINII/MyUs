@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Router from 'next/router'
 import { UserProfile } from 'types/internal/auth'
+import { genderMap } from 'utils/functions/user'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginRequired from 'components/parts/LoginRequired'
@@ -60,7 +61,7 @@ export default function Profile(props: Props) {
             </tr>
             <tr>
               <td className="td_color">性別</td>
-              <td className="td_indent">{user.gender}</td>
+              <td className="td_indent">{genderMap[user.gender]}</td>
             </tr>
             <tr>
               <td className="td_color">電話番号</td>

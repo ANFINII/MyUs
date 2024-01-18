@@ -1,7 +1,9 @@
-import Router from 'next/router'
+import { ChangeEvent, useState } from 'react'
+import { useRouter } from 'next/router'
 import { UserProfile } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/prefectures'
 import { selectDate } from 'utils/functions/datetime'
+import { genders } from 'utils/functions/user'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPerson from 'components/parts/Icon/Person'
@@ -17,12 +19,14 @@ interface Props {
 export default function SettingProfileUpdate(props: Props) {
   const { user } = props
 
+  const router = useRouter()
+  const [userGender, setUserGender] = useState<string>(user.gender)
   const { years, months, days } = selectDate()
-  const userGenders = [
-    { key: '男性', value: 0 },
-    { key: '女性', value: 1 },
-    { key: '秘密', value: 2 },
-  ]
+
+  const handleGender = (e: ChangeEvent<HTMLInputElement>) => setUserGender(e.target.value)
+  const handlSubmit = () => {
+    router.push('/setting/profile')
+  }
 
   return (
     <Main title="アカウント設定" type="table">
@@ -36,8 +40,8 @@ export default function SettingProfileUpdate(props: Props) {
           {% endif %} */}
 
         <div className="button_group">
-          <Button green size="xs" type="submit" name="登録" />
-          <Button blue size="xs" name="戻る" onClick={() => Router.push('/setting/profile')} />
+          <Button green size="xs" type="submit" name="登録" onClick={handlSubmit} />
+          <Button blue size="xs" name="戻る" onClick={() => router.push('/setting/profile')} />
         </div>
 
         <table className="table">
@@ -96,25 +100,10 @@ export default function SettingProfileUpdate(props: Props) {
               <td className="td_color">性別</td>
               <td className="td_gender">
                 <div className="gender">
-                  {/* {userGenders.map((gender) => {
-                    <input
-                      type="radio"
-                      name="gender"
-                      value={gender.key}
-                      id={`gender_${gender.key}`}
-                      className=""
-                      // {user.gender === user.key && defaultChecked="checked" }
-                    />
-                    <label htmlFor={`gender_${gender.key}`} className="custom-control-label">
-                      {gender.gender}
-                    </label>
-})} */}
-                  {userGenders.map((gender) => (
-                    <div key={gender.key}>
-                      <input type="radio" name="gender" value={gender.key} id={`gender_${gender.key}`} className="" defaultChecked={user.gender === gender.key} />
-                      <label htmlFor={`gender_${gender.key}`} className="custom-control-label">
-                        {gender.value}
-                      </label>
+                  {genders.map((gender) => (
+                    <div key={gender.value} className="gender">
+                      <input type="radio" name="gender" value={gender.value} checked={gender.value === userGender} id={`gender_${gender.value}`} onChange={handleGender} />
+                      <label htmlFor={`gender_${gender.value}`}>{gender.key}</label>
                     </div>
                   ))}
                 </div>
