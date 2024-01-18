@@ -10,21 +10,19 @@ interface Props {
 
 export default function ArticleBlog(props: Props) {
   const { data } = props
-
-  const imageUrl = data.image
-  const authorUrl = data.author.image
-  const nickname = data.author.nickname
+  const { author, id, title, image, read, like, created } = data
+  const { nickname } = author
 
   return (
     <section className="section_list">
       <div className="main_decolation">
-        <Link href="/blog/detail/[id][title]">
+        <Link href={`/media/blog/${id}?title=${title}`}>
           <figure>
-            <Image src={imageUrl} width={272} height={153} alt="" className="radius_10" />
+            <Image src={image} width={272} height={153} alt="" className="radius_10" />
           </figure>
           <div className="author_space">
-            <AuthorSpace imageUrl={authorUrl} nickname={nickname} />
-            <ContentTitle title={data.title} nickname={nickname} read={data.read} totalLike={data.like} created={data.created} />
+            <AuthorSpace imageUrl={author.image} nickname={nickname} />
+            <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />
           </div>
         </Link>
       </div>

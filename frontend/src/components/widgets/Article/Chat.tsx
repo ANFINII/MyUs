@@ -8,45 +8,44 @@ interface Props {
 
 export default function ArticleChat(props: Props) {
   const { data } = props
-
-  const imageUrl = data.author.image
-  const nickname = data.author.nickname
+  const { author, id, title, read, like, joined, thread, created } = data
+  const { nickname, image } = author
 
   return (
     <section className="section_other">
       <div className="main_decolation">
-        <Link href="/chat/detail/[id]" className="author_space">
-          <AuthorSpace imageUrl={imageUrl} nickname={nickname} />
-          <div title={data.title} className="content_title">
-            {data.title}
+        <Link href={`/media/chat/${id}?title=${title}`} className="author_space">
+          <AuthorSpace imageUrl={image} nickname={nickname} />
+          <div title={title} className="content_title">
+            {title}
           </div>
           <span className="view_good">
             <div className="view_good_font content_nickname">{nickname}</div>
 
             <div className="view_good_font view_good_inline">
               <i title="閲覧数" className="bi bi-caret-right-square"></i>
-              {data.read}
+              {read}
             </div>
 
             <div className="view_good_font view_good_inline">
               <i title="いいね数" className="bi bi-hand-thumbs-up"></i>
-              {data.like}
+              {like}
             </div>
             <br />
 
             <div className="view_good_font view_good_inline">
               <i title="参加数" className="bi bi-person"></i>
-              {data.joined}
+              {joined}
             </div>
 
             <div className="view_good_font view_good_inline">
               <i title="スレッド数" className="bi bi-chat-dots"></i>
-              {data.thread}
+              {thread}
             </div>
             <br />
 
             <div className="view_good_font">
-              <time>{data.created}</time>
+              <time>{created}</time>
             </div>
           </span>
         </Link>

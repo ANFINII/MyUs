@@ -9,21 +9,19 @@ interface Props {
 
 export default function ArticleMusic(props: Props) {
   const { data } = props
-
-  const musicUrl = data.music
-  const imageUrl = data.author.image
-  const nickname = data.author.nickname
+  const { author, id, title, music, read, like, created } = data
+  const { nickname, image } = author
 
   return (
     <section className="section_music">
       <div className="main_decolation">
         <audio controls controlsList="nodownload" preload="none" className="audio_auto">
-          <source src={musicUrl} />
+          <source src={music} />
           <p>ブラウザがaudioに対応しておりません</p>
         </audio>
-        <Link href="/music/detail/[id][title]" className="author_space">
-          <AuthorSpace imageUrl={imageUrl} nickname={nickname} />
-          <ContentTitle title={data.title} nickname={nickname} read={data.read} totalLike={data.like} created={data.created} />
+        <Link href={`/media/music/${id}?title=${title}`} className="author_space">
+          <AuthorSpace imageUrl={image} nickname={nickname} />
+          <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />
         </Link>
       </div>
     </section>

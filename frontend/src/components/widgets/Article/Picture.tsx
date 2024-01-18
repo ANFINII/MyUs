@@ -10,18 +10,19 @@ interface Props {
 
 export default function ArticlePicture(props: Props) {
   const { data } = props
-  const { title, image, author, read, like, created } = data
+  const { author, id, title, image, read, like, created } = data
+  const { nickname } = author
 
   return (
     <section className="section_list">
       <div className="main_decolation">
-        <Link href="/picture/detail/[id][title]">
+        <Link href={`/media/picture/${id}?title=${title}`}>
           <figure>
             <Image src={image} width={272} height={153} alt="" className="radius_10" />
           </figure>
           <div className="author_space">
-            <AuthorSpace imageUrl={author.image} nickname={author.nickname} />
-            <ContentTitle title={title} nickname={author.nickname} read={read} totalLike={like} created={created} />
+            <AuthorSpace imageUrl={author.image} nickname={nickname} />
+            <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />
           </div>
         </Link>
       </div>
