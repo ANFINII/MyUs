@@ -1,3 +1,5 @@
+import style from 'components/widgets/Table/Table.module.scss'
+
 interface Props {
   label: string
   className?: string
@@ -10,8 +12,8 @@ export default function TableRow(props: Props) {
 
   return (
     <tr className={className}>
-      <td className="td_color">{label}</td>
-      <td className={isIndent ? 'td_indent' : ''}>{children}</td>
+      <td className={style.td_color}>{label}</td>
+      <td className={isIndent ? style.td_indent : undefined}>{children}</td>
     </tr>
   )
 }

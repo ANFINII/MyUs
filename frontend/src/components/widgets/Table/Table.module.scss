@@ -1,0 +1,28 @@
+.table {
+  display: block;
+  grid-column: 1/-1;
+  grid-row: 3/4;
+  border-spacing: 0px;
+  border-collapse: collapse;
+  font-size: 15px;
+  overflow-y: auto;
+
+  td {
+    height: 39px;
+    width: 100%;
+    min-width: 125px;
+    border: 1px solid rgb(0, 125, 0);
+    vertical-align: middle;
+  }
+}
+
+td.td_color {
+  width: 125px;
+  padding: 0 0 0 8px;
+  background: rgb(190, 250, 210);
+}
+
+.td_indent {
+  padding: 0 0 0 8px;
+  white-space: nowrap;
+}
