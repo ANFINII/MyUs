@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { Mypage } from 'types/internal/auth'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import IconToggle from 'components/parts/Icon/Toggle'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
@@ -31,7 +32,7 @@ export default function MyPage(props: Props) {
       <LoginRequired isAuth={!!mypage}>
         {isEdit ? (
           <div className="button_group">
-            <Button green size="xs" name="登録" type="submit" />
+            <Button green size="xs" name="登録" type="submit" onClick={handlSubmit} />
             <Button blue size="xs" name="戻る" onClick={handleEdit} />
           </div>
         ) : (
@@ -69,19 +70,7 @@ export default function MyPage(props: Props) {
             </TableRow>
             <TableRow isIndent label="全体広告">
               <form method="POST" action="" data-advertise="{{is_advertise}}" ddata-csrf="{{csrf_token}}">
-                {mypage.plan === 'Free' ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi-toggle-disable" viewBox="0 0 16 16">
-                    <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                  </svg>
-                ) : mypage.isAdvertise ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi-toggle-on toggle_mypage" viewBox="0 0 16 16">
-                    <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi-toggle-off toggle_mypage" viewBox="0 0 16 16">
-                    <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                  </svg>
-                )}
+                {mypage.plan === 'Free' ? <IconToggle size="25" type="disable" /> : mypage.isAdvertise ? <IconToggle size="25" type="on" /> : <IconToggle size="25" type="off" />}
               </form>
             </TableRow>
             <TableRow label="概要">
@@ -118,19 +107,7 @@ export default function MyPage(props: Props) {
             </TableRow>
             <TableRow isIndent label="全体広告">
               <form method="POST" action="" data-advertise="{{ mypage.is_advertise }}" data-csrf="{{ csrf_token }}">
-                {mypage.plan === 'Free' ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi-toggle-disable" viewBox="0 0 16 16">
-                    <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                  </svg>
-                ) : mypage.isAdvertise ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi-toggle-on toggle_mypage" viewBox="0 0 16 16">
-                    <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi-toggle-off toggle_mypage" viewBox="0 0 16 16">
-                    <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z" />
-                  </svg>
-                )}
+                {mypage.plan === 'Free' ? <IconToggle size="25" type="disable" /> : mypage.isAdvertise ? <IconToggle size="25" type="on" /> : <IconToggle size="25" type="off" />}
               </form>
             </TableRow>
             <TableRow isIndent label="概要">
