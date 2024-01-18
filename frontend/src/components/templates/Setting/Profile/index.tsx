@@ -103,14 +103,12 @@ export default function Profile(props: Props) {
               <tr>
                 <td className="td_color">性別</td>
                 <td className="td_gender">
-                  <div className="gender">
-                    {genders.map((gender) => (
-                      <div key={gender.value} className="gender">
-                        <input type="radio" name="gender" value={gender.value} checked={gender.value === userGender} id={`gender_${gender.value}`} onChange={handleGender} />
-                        <label htmlFor={`gender_${gender.value}`}>{gender.key}</label>
-                      </div>
-                    ))}
-                  </div>
+                  {genders.map((gender) => (
+                    <div key={gender.value} className="gender_radio">
+                      <input type="radio" name="gender" value={gender.value} checked={gender.value === userGender} id={`gender_${gender.value}`} onChange={handleGender} />
+                      <label htmlFor={`gender_${gender.value}`}>{gender.key}</label>
+                    </div>
+                  ))}
                 </td>
               </tr>
               <tr>

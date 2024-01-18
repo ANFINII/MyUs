@@ -137,15 +137,19 @@ td.td_color {
 
 .td_gender {
   padding: 0 0 0 8px;
-}
 
-.td_gender .gender {
-  display: inline;
-}
+  .gender_radio {
+    display: inline;
 
-.gender {
-  display: inline-block;
-  padding-right: 20px;
+    &:not(:last-child) {
+      padding-right: 10px;
+    }
+
+    input {
+      display: inline-block;
+      margin-right: 6px;
+    }
+  }
 }
 
 td.td_location {
