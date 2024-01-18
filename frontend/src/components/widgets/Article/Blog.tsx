@@ -16,7 +16,7 @@ export default function ArticleBlog(props: Props) {
   return (
     <section className="section_list">
       <div className="main_decolation">
-        <Link href={`/media/blog/${id}?title=${title}`}>
+        <Link href={`/media/blog/${id}`}>
           <figure>
             <Image src={image} width={272} height={153} alt="" className="radius_10" />
           </figure>

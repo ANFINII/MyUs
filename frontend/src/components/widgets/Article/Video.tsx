@@ -16,7 +16,7 @@ export default function ArticleVideo(props: Props) {
     <section className="section_list">
       <div className="main_decolation">
         <div className="video video_auto">
-          <Link href={`/media/video/${id}?title=${title}`}>
+          <Link href={`/media/video/${id}`}>
             <video className="video-js" muted width={272} height={153} controlsList="nodownload" poster={image} data-setup="">
               {/* onContextMenu="return false" */}
               <source src={convert} type="video/mp4" data-label="360p" data-res="360" />

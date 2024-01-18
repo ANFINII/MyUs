@@ -19,7 +19,7 @@ export default function ArticleMusic(props: Props) {
           <source src={music} />
           <p>ブラウザがaudioに対応しておりません</p>
         </audio>
-        <Link href={`/media/music/${id}?title=${title}`} className="author_space">
+        <Link href={`/media/music/${id}`} className="author_space">
           <AuthorSpace imageUrl={image} nickname={nickname} />
           <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />
         </Link>

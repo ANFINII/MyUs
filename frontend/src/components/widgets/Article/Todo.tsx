@@ -23,10 +23,10 @@ export default function ArticleTodo(props: Props) {
           <p className="progress_myus">進捗度 {{ data.get_progress_display }}</p>
           <time className="todo_time">期日 {{ data.duedate }}</time> */}
           <object className="todo_link">
-            <Link href={`/media/todo/update/${id}?title=${title}`} className="btn btn-success btn-sm">
+            <Link href={`/media/todo/update/${id}`} className="btn btn-success btn-sm">
               編集
             </Link>
-            <Link href={`/media/todo/delete/${id}?title=${title}`} className="btn btn-danger btn-sm">
+            <Link href={`/media/todo/delete/${id}`} className="btn btn-danger btn-sm">
               削除
             </Link>
           </object>

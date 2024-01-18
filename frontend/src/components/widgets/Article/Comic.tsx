@@ -16,7 +16,7 @@ export default function ArticleComic(props: Props) {
   return (
     <section className="section_list">
       <div className="main_decolation">
-        <Link href={`/media/comic/${id}?title=${title}`}>
+        <Link href={`/media/comic/${id}`}>
           <figure>
             <Image src={image} width={272} height={153} alt="" className="radius_10" />
           </figure>

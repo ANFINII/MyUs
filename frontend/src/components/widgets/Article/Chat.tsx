@@ -14,7 +14,7 @@ export default function ArticleChat(props: Props) {
   return (
     <section className="section_other">
       <div className="main_decolation">
-        <Link href={`/media/chat/${id}?title=${title}`} className="author_space">
+        <Link href={`/media/chat/${id}`} className="author_space">
           <AuthorSpace imageUrl={image} nickname={nickname} />
           <div title={title} className="content_title">
             {title}
