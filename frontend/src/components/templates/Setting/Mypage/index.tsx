@@ -18,7 +18,7 @@ export default function MyPage(props: Props) {
   const { mypage } = props
 
   const router = useRouter()
-  const [isEdit, setIsEdit] = useState<boolean>(true)
+  const [isEdit, setIsEdit] = useState<boolean>(false)
 
   const handleEdit = () => setIsEdit(!isEdit)
 
