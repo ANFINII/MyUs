@@ -157,8 +157,6 @@ class LoginAPI(views.TokenObtainPairView):
 
 
 class LogoutAPI(views.TokenObtainPairView):
-    permission_classes = [IsAuthenticated]
-
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         try:
