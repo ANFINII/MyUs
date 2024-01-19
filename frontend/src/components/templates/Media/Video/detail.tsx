@@ -1,19 +1,17 @@
-import { Search } from 'types/internal/media'
+import { Video } from 'types/internal/media'
 import Meta from 'components/layout/Head/Meta'
 import Main from 'components/layout/Main'
 
 interface Props {
-  image: string
-  video: string
-  search?: Search
-  publish: boolean
+  video: Video
 }
 
 export default function VideDetailPage(props: Props) {
-  const { image, video, search, publish } = props
+  const { video } = props
+  const { image, convert, publish } = video
 
   return (
-    <Main search={search}>
+    <Main>
       <Meta title="Video" />
       {publish ? (
         <article className="article_detail">
@@ -28,7 +26,7 @@ export default function VideDetailPage(props: Props) {
                 poster={image}
                 data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 2]}'
               >
-                <source src={video} type="application/x-mpegURL" />
+                <source src={convert} type="application/x-mpegURL" />
                 <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>
                 {/* <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
                 <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English"> */}

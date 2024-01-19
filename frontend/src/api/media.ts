@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios'
 import { apiClient } from 'lib/axios'
 import { HomeMedia, Video, Music, Comic, Picture, Blog, Chat, ToDo } from 'types/internal/media'
-import { apiHome, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats, apiTodos, apiPicture, apiBlog } from './uri'
+import { apiHome, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats, apiTodos, apiPicture, apiBlog, apiVideo } from './uri'
 
 export const getHome = async () => {
   const data = await apiClient.get(apiHome).then((res) => {
@@ -15,6 +15,14 @@ export const getVideos = async () => {
   const data = await apiClient.get(apiVideos).then((res) => {
     if (res.status !== HttpStatusCode.Ok) throw Error
     return res.data as Video[]
+  })
+  return data
+}
+
+export const getVideo = async (videoId: number) => {
+  const data = await apiClient.get(apiVideo(videoId)).then((res) => {
+    if (res.status !== HttpStatusCode.Ok) throw Error
+    return res.data as Video
   })
   return data
 }
