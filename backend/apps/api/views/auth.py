@@ -28,9 +28,9 @@ class AuthAPI(APIView):
             payload = jwt.decode(jwt=user_token, key=key, algorithms=['HS256'])
             return payload['user_id']
         except jwt.ExpiredSignatureError:
-            return 'Activations link expired'
+            return Response({'error': '認証エラーが発生しました!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
         except jwt.exceptions.DecodeError:
-            return 'Invalid Token'
+            return Response({'error': '認証エラーが発生しました!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get(self, request):
         user_token = request.COOKIES.get('user_token')
