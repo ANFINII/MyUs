@@ -8,19 +8,15 @@ const applyResponseInterceptor = (client: AxiosInstance) => {
       response.data = snakeCamel(response.data)
       return response
     },
-    (error) => {
-      console.log('error:', error)
-      switch (error?.response?.status) {
-        case 401:
-          console.log('401 Unauthorized')
-          break
-        case 404:
-          console.log('404 Not Found')
-          break
-        default:
-          console.log('Internal Server Error')
+    (e) => {
+      const error = e.response
+      console.log('error status: ', error?.status)
+
+      if (error?.status >= 400) {
+        return Promise.resolve({ data: {} })
       }
-      const message = (error.response?.data?.message || '').split(',')
+
+      const message = (error?.data?.message || '').split(',')
       console.log('error message:', message)
       return Promise.reject(error)
     },
@@ -34,7 +30,7 @@ const createAxiosInstance = (contentType: string) => {
     headers: {
       'Content-Type': contentType,
     },
-    timeout: 3000,
+    timeout: 1000,
   })
   applyResponseInterceptor(client)
   return client
