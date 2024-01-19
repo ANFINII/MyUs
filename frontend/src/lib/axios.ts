@@ -10,14 +10,17 @@ const applyResponseInterceptor = (client: AxiosInstance) => {
     },
     (e) => {
       const error = e.response
-      console.log('error status: ', error?.status)
+      console.log('===== error status:', error?.status, error?.statusText, '=====')
+
+      const message = error?.data?.error
+      if (message) {
+        console.log('===== error message:', message, '=====')
+      }
 
       if (error?.status >= 400) {
         return Promise.resolve({ data: {} })
       }
 
-      const message = (error?.data?.message || '').split(',')
-      console.log('error message:', message)
       return Promise.reject(error)
     },
   )
