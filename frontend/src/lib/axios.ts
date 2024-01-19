@@ -10,9 +10,9 @@ const applyResponseInterceptor = (client: AxiosInstance) => {
     },
     (e) => {
       const error = e.response
-      console.log('===== error status:', error?.status, error?.statusText, '=====')
+      const message = error?.data?.message
 
-      const message = error?.data?.error
+      console.log('===== error status:', error?.status, error?.statusText, '=====')
       if (message) {
         console.log('===== error message:', message, '=====')
       }
