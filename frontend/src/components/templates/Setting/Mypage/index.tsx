@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Mypage } from 'types/internal/auth'
+import { isEmpty } from 'utils/constants/common'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPicture from 'components/parts/Icon/Picture'
@@ -30,7 +31,7 @@ export default function MyPage(props: Props) {
 
   return (
     <Main title="マイページ設定" type="table">
-      <LoginRequired isAuth={!!mypage}>
+      <LoginRequired isAuth={isEmpty(mypage)}>
         {isEdit ? (
           <div className="button_group">
             <Button green size="xs" name="登録" type="submit" onClick={handlSubmit} />

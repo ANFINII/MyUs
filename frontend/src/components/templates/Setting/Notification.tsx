@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Notification } from 'types/internal/auth'
+import { isEmpty } from 'utils/constants/common'
 import { notificationTypes } from 'utils/functions/user'
 import Main from 'components/layout/Main'
 import Toggle from 'components/parts/Input/Toggle'
@@ -20,7 +21,7 @@ export default function SettingNotification(props: Props) {
 
   return (
     <Main title="通知設定" type="table">
-      <LoginRequired isAuth={!!notification}>
+      <LoginRequired isAuth={isEmpty(notification)}>
         <Table>
           <TableRow isIndent label="通知設定">
             フォローしているユーザの投稿通知などを設定

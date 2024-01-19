@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { UserProfile } from 'types/internal/auth'
+import { isEmpty } from 'utils/constants/common'
 import { prefectures } from 'utils/constants/prefectures'
 import { selectDate } from 'utils/functions/datetime'
 import { genderMap, genders } from 'utils/functions/user'
@@ -36,7 +37,7 @@ export default function Profile(props: Props) {
 
   return (
     <Main title="アカウント設定" type="table">
-      <LoginRequired isAuth={!!user}>
+      <LoginRequired isAuth={isEmpty(user)}>
         {isEdit ? (
           <div className="button_group">
             <Button green size="xs" type="submit" name="登録" onClick={handlSubmit} />
