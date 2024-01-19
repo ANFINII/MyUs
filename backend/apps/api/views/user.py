@@ -14,7 +14,11 @@ User = get_user_model()
 
 class UserAPI(APIView):
     def get(self, request):
-        user_id = get_user_id(request)
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
         user = User.objects.filter(id=user_id).defer(*DeferData.user).first()
         data = {'avatar': user.image(), 'nickname': user.nickname, 'is_staff': user.is_staff}
         return Response(data, status=HTTP_200_OK)
@@ -22,7 +26,11 @@ class UserAPI(APIView):
 
 class ProfileAPI(APIView):
     def get(self, request):
-        user_id = get_user_id(request)
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
         user = User.objects.filter(id=user_id).select_related('profile').defer(*DeferData.profile).first()
 
         data = {
@@ -54,7 +62,11 @@ class ProfileAPI(APIView):
 
 class MyPageAPI(APIView):
     def get(self, request):
-        user_id = get_user_id(request)
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
         user = User.objects.filter(id=user_id).select_related('mypage').defer(*DeferData.mypage).first()
 
         data = {
@@ -78,8 +90,12 @@ class MyPageAPI(APIView):
 
 class NotificationAPI(APIView):
     def get(self, request):
-        user_id = get_user_id(request)
-        notification_setting = NotificationSetting.objects.filter(id=user_id).first()
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
+        notification_setting = NotificationSetting.objects.filter(user=user_id).first()
 
         data = {
             'is_video': notification_setting.is_video,
