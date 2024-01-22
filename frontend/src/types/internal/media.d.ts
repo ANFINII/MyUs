@@ -82,7 +82,7 @@ export interface Follow {
   author: Author
 }
 
-interface HomeMedia {
+interface MediaHome {
   videos: Video[]
   musics: Music[]
   comics: Comic[]

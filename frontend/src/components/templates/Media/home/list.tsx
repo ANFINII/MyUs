@@ -1,4 +1,4 @@
-import { HomeMedia, Search } from 'types/internal/media'
+import { MediaHome, Search } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import ArticleBlog from 'components/widgets/Article/Blog'
 import ArticleChat from 'components/widgets/Article/Chat'
@@ -9,13 +9,13 @@ import ArticlePicture from 'components/widgets/Article/Picture'
 import ArticleVideo from 'components/widgets/Article/Video'
 
 interface Props {
-  homeMedia: HomeMedia
+  mediaHome: MediaHome
   search?: Search
 }
 
 export default function Homes(props: Props) {
-  const { homeMedia, search } = props
-  const { videos, musics, comics, pictures, blogs, chats } = homeMedia
+  const { mediaHome, search } = props
+  const { videos, musics, comics, pictures, blogs, chats } = mediaHome
 
   return (
     <Main title="Home" search={search}>

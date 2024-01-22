@@ -1,17 +1,17 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { getHome } from 'api/media'
-import { HomeMedia } from 'types/internal/media'
-import Homes from 'components/templates/media/home'
+import { MediaHome } from 'types/internal/media'
+import Homes from 'components/templates/media/home/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const homeMedia = await getHome()
-  return { props: { homeMedia, ...translations } }
+  const mediaHome = await getHome()
+  return { props: { mediaHome, ...translations } }
 }
 
 interface Props {
-  homeMedia: HomeMedia
+  mediaHome: MediaHome
 }
 
 export default function HomesPage(props: Props) {

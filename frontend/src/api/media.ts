@@ -1,10 +1,10 @@
 import { apiClient } from 'lib/axios'
-import { HomeMedia, Video, Music, Comic, Picture, Blog, Chat, ToDo } from 'types/internal/media'
+import { MediaHome, Video, Music, Comic, Picture, Blog, Chat, ToDo } from 'types/internal/media'
 import { apiHome, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats, apiTodos, apiPicture, apiBlog, apiVideo } from './uri'
 
 export const getHome = async () => {
   const data = await apiClient.get(apiHome).then((res) => {
-    return res.data as HomeMedia
+    return res.data as MediaHome
   })
   return data
 }
