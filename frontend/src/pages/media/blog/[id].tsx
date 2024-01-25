@@ -6,12 +6,12 @@ import BlogDetail from 'components/templates/media/blog/detail'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, params }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const datas = await getBlog(Number(params?.id))
-  return { props: { datas, ...translations } }
+  const data = await getBlog(Number(params?.id))
+  return { props: { data, ...translations } }
 }
 
 interface Props {
-  datas: Blog
+  data: Blog
 }
 
 export default function BlogDetailPage(props: Props) {
