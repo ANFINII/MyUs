@@ -138,7 +138,7 @@ class MusicAPI(APIView):
             'like': obj.total_like(),
             'read': obj.read,
             'comment_count': obj.comment_count(),
-            'pubsh': obj.publish,
+            'publish': obj.publish,
             'created': obj.created,
             'updated': obj.updated,
             'author': {
@@ -190,7 +190,7 @@ class ComicAPI(APIView):
             'like': obj.total_like(),
             'read': obj.read,
             'comment_count': obj.comment_count(),
-            'pubsh': obj.publish,
+            'publish': obj.publish,
             'created': obj.created,
             'updated': obj.updated,
             'author': {
@@ -243,7 +243,7 @@ class PictureAPI(APIView):
             'like': obj.total_like(),
             'read': obj.read,
             'comment_count': obj.comment_count(),
-            'pubsh': obj.publish,
+            'publish': obj.publish,
             'created': obj.created,
             'updated': obj.updated,
             'author': {
@@ -298,7 +298,7 @@ class BlogAPI(APIView):
             'like': obj.total_like(),
             'read': obj.read,
             'comment_count': obj.comment_count(),
-            'pubsh': obj.publish,
+            'publish': obj.publish,
             'created': obj.created,
             'updated': obj.updated,
             'author': {
