@@ -317,6 +317,7 @@ class BlogAPI(APIView):
             data['user'] = {
                 'nickname': user.nickname,
                 'image': user.image(),
+                'is_like': obj.like.filter(id=user.id).exists()
             }
         return Response(data, status=HTTP_200_OK)
 
