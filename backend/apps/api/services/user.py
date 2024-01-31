@@ -28,3 +28,25 @@ def get_user_id(request) -> Response:
         return Response({'message': '認証エラーが発生しました!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
     except jwt.exceptions.DecodeError:
         return Response({'message': '認証エラーが発生しました!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def get_user(request) -> Response:
+    token = request.COOKIES.get('user_token')
+    if not token:
+        return None
+
+    key = settings.SECRET_KEY
+    try:
+        payload = jwt.decode(jwt=token, key=key, algorithms=['HS256'])
+        user_id = payload['user_id']
+        if not user_id:
+            return None
+
+        user = User.objects.filter(id=user_id).first()
+        if not user.is_active:
+            return None
+        return user
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.exceptions.DecodeError:
+        return None
