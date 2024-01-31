@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db.models import Exists, OuterRef
 
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
@@ -10,6 +11,10 @@ from apps.myus.modules.search import Search
 from apps.api.serializers import VideoSerializer, MusicSerializer, ComicSerializer
 from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializer, TodoSerializer
 from apps.api.services.media import get_video_list, get_music_list, get_comic_list, get_picture_list, get_blog_list, get_chat_list, get_todo_list
+from apps.api.services.user import get_user
+
+
+User = get_user_model()
 
 
 # Index
@@ -273,8 +278,9 @@ class BlogAPI(APIView):
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
 
-        user_id = obj.author.id
-        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        author = obj.author
+        user = get_user(request)
+        filter_kwargs = {'id': OuterRef('pk'), 'like': author.id}
         subquery = obj.comment.filter(**filter_kwargs)
         comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
@@ -302,11 +308,16 @@ class BlogAPI(APIView):
             'created': obj.created,
             'updated': obj.updated,
             'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
+                # 'id': obj.author.id,
+                'nickname': author.nickname,
+                'image': author.image(),
+            },
         }
+        if user:
+            data['user'] = {
+                'nickname': user.nickname,
+                'image': user.image(),
+            }
         return Response(data, status=HTTP_200_OK)
 
 
