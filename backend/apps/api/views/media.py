@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Exists, OuterRef
 
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
+# from rest_framework.generics import RetrieveAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
@@ -10,7 +11,7 @@ from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 from apps.myus.modules.search import Search
 from apps.api.serializers import VideoSerializer, MusicSerializer, ComicSerializer
 from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializer, TodoSerializer
-from apps.api.services.media import get_video_list, get_music_list, get_comic_list, get_picture_list, get_blog_list, get_chat_list, get_todo_list
+from apps.api.services.media import get_home, get_video_list, get_music_list, get_comic_list, get_picture_list, get_blog_list, get_chat_list, get_todo_list
 from apps.api.services.user import get_user
 
 
@@ -18,20 +19,14 @@ User = get_user_model()
 
 
 # Index
-class HomeAPI(ListAPIView):
+class HomeAPI(APIView):
     def get(self, request):
-        datas = {
-            'videos': get_video_list(8),
-            'musics': get_music_list(8),
-            'pictures': get_picture_list(8),
-            'blogs': get_blog_list(8),
-            'chats': get_chat_list(8),
-        }
+        datas = get_home(8)
         return Response(datas, status=HTTP_200_OK)
 
 
 # Recommend
-class RecommendAPI(ListAPIView):
+class RecommendAPI(APIView):
     def get(self, request):
         datas = {
             'videos': get_video_list(8),

@@ -1,6 +1,17 @@
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 
 
+def get_home(count: int):
+    data = {
+        'videos': get_video_list(count),
+        'musics': get_music_list(count),
+        'pictures': get_picture_list(count),
+        'blogs': get_blog_list(count),
+        'chats': get_chat_list(count),
+    }
+    return data
+
+
 def get_video_list(count: int):
     objs = Video.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
