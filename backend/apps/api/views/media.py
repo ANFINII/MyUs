@@ -297,9 +297,9 @@ class BlogAPI(APIView):
             'created': obj.created,
             'updated': obj.updated,
             'author': {
-                # 'id': obj.author.id,
                 'nickname': author.nickname,
                 'image': author.image(),
+                'follower_count': author.mypage.follower_count
             },
         }
         if user:
