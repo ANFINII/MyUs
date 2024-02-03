@@ -1,9 +1,15 @@
 import { Mypage } from 'types/internal/auth'
 
 export interface Author {
-  id: number
   nickname: string
   image: string
+  followerCount: number
+}
+
+export interface MediaUser {
+  nickname: string
+  image: string
+  isLike: boolean
 }
 
 export interface Search {
@@ -30,12 +36,13 @@ export interface Media {
   content: string
   like: number
   read: number
+  totalLike: number
   commentCount: number
   publish: boolean
   created: string
   updated: string
   author: Author
-  // modelName: string
+  user: MediaUser
 }
 
 export interface Video extends Media {
@@ -66,6 +73,21 @@ export interface Chat extends Media {
   read: number
   joined: number
   thread: number
+}
+
+export interface MediaDetail {
+  id: number
+  title: string
+  content: string
+  like: number
+  read: number
+  totalLike: number
+  commentCount: number
+  publish: boolean
+  created: string
+  updated: string
+  author: Author
+  user: MediaUser
 }
 
 export interface Follow {
