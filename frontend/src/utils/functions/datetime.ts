@@ -15,3 +15,23 @@ export const selectDate = () => {
   })
   return { years, months, days }
 }
+
+export const padZero = (num: number): string => (num < 10 ? `0${num}` : `${num}`)
+
+export const formatDatetime = (datetime: string): string => {
+  const date = new Date(datetime)
+  const year = date.getFullYear()
+  const month = padZero(date.getMonth() + 1)
+  const day = padZero(date.getDate())
+  const hours = padZero(date.getHours())
+  const minutes = padZero(date.getMinutes())
+  return `${year}/${month}/${day} ${hours}:${minutes}`
+}
+
+export const getNowDate = (): { nowYear: number; nowMonth: number; nowDay: number } => {
+  const nowDate = new Date()
+  const nowYear = nowDate.getFullYear()
+  const nowMonth = nowDate.getMonth() + 1
+  const nowDay = nowDate.getDate()
+  return { nowYear, nowMonth, nowDay }
+}
