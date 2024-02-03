@@ -11,7 +11,7 @@ from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 from apps.myus.modules.search import Search
 from apps.api.serializers import VideoSerializer, MusicSerializer, ComicSerializer
 from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializer, TodoSerializer
-from apps.api.services.media import get_home, get_video_list, get_music_list, get_comic_list, get_picture_list, get_blog_list, get_chat_list, get_todo_list
+from apps.api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
 from apps.api.services.user import get_user
 
 
@@ -21,27 +21,21 @@ User = get_user_model()
 # Index
 class HomeAPI(APIView):
     def get(self, request):
-        datas = get_home(8)
-        return Response(datas, status=HTTP_200_OK)
+        data = get_home(8)
+        return Response(data, status=HTTP_200_OK)
 
 
 # Recommend
 class RecommendAPI(APIView):
     def get(self, request):
-        datas = {
-            'videos': get_video_list(8),
-            'musics': get_music_list(8),
-            'pictures': get_picture_list(8),
-            'blogs': get_blog_list(8),
-            'chats': get_chat_list(8),
-        }
-        return Response(datas, status=HTTP_200_OK)
+        data = get_recommend(8)
+        return Response(data, status=HTTP_200_OK)
 
 
 # Video
 class VideoListAPI(APIView):
     def get(self, request):
-        data = get_video_list(50)
+        data = get_videos(50)
         return Response(data, status=HTTP_200_OK)
 
     def get_queryset(self):
@@ -99,7 +93,7 @@ class VideoAPI(APIView):
 # Music
 class MusicListAPI(APIView):
     def get(self, request):
-        data = get_music_list(50)
+        data = get_musics(50)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -153,7 +147,7 @@ class MusicAPI(APIView):
 # Comic
 class ComicListAPI(APIView):
     def get(self, request):
-        data = get_comic_list(50)
+        data = get_comics(50)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -205,7 +199,7 @@ class ComicAPI(APIView):
 # Picture
 class PictureListAPI(APIView):
     def get(self, request):
-        data = get_picture_list(50)
+        data = get_pictures(50)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -258,7 +252,7 @@ class PictureAPI(APIView):
 # Blog
 class BlogListAPI(APIView):
     def get(self, request):
-        data = get_blog_list(50)
+        data = get_blogs(50)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -321,7 +315,7 @@ class BlogAPI(APIView):
 # Chat
 class ChatListAPI(APIView):
     def get(self, request):
-        data = get_chat_list(50)
+        data = get_chats(50)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -372,7 +366,7 @@ class ChatAPI(APIView):
 # Todo
 class TodoListAPI(APIView):
     def get(self, request):
-        data = get_todo_list(50)
+        data = get_todos(50)
         return Response(data, status=HTTP_200_OK)
 
 

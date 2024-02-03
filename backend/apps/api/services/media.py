@@ -3,16 +3,27 @@ from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 
 def get_home(count: int):
     data = {
-        'videos': get_video_list(count),
-        'musics': get_music_list(count),
-        'pictures': get_picture_list(count),
-        'blogs': get_blog_list(count),
-        'chats': get_chat_list(count),
+        'videos': get_videos(count),
+        'musics': get_musics(count),
+        'pictures': get_pictures(count),
+        'blogs': get_blogs(count),
+        'chats': get_chats(count),
     }
     return data
 
 
-def get_video_list(count: int):
+def get_recommend(count: int):
+    data = {
+        'videos': get_videos(count),
+        'musics': get_musics(count),
+        'pictures': get_pictures(count),
+        'blogs': get_blogs(count),
+        'chats': get_chats(count),
+    }
+    return data
+
+
+def get_videos(count: int):
     objs = Video.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -36,7 +47,7 @@ def get_video_list(count: int):
     return data
 
 
-def get_music_list(count: int):
+def get_musics(count: int):
     objs = Music.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -60,7 +71,7 @@ def get_music_list(count: int):
     return data
 
 
-def get_comic_list(count: int):
+def get_comics(count: int):
     objs = Comic.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -80,7 +91,7 @@ def get_comic_list(count: int):
     return data
 
 
-def get_picture_list(count: int):
+def get_pictures(count: int):
     objs = Picture.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -102,7 +113,7 @@ def get_picture_list(count: int):
     return data
 
 
-def get_blog_list(count: int):
+def get_blogs(count: int):
     objs = Blog.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -126,7 +137,7 @@ def get_blog_list(count: int):
     return data
 
 
-def get_chat_list(count: int):
+def get_chats(count: int):
     objs = Chat.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -149,7 +160,7 @@ def get_chat_list(count: int):
     return data
 
 
-def get_todo_list(count: int):
+def get_todos(count: int):
     objs = Todo.objects.all().order_by('-created')[:count]
     data = [{
         'id': obj.id,
