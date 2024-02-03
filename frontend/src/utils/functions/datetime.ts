@@ -28,10 +28,10 @@ export const formatDatetime = (datetime: string): string => {
   return `${year}/${month}/${day} ${hours}:${minutes}`
 }
 
-export const getNowDate = (): { nowYear: number; nowMonth: number; nowDay: number } => {
-  const nowDate = new Date()
-  const nowYear = nowDate.getFullYear()
-  const nowMonth = nowDate.getMonth() + 1
-  const nowDay = nowDate.getDate()
-  return { nowYear, nowMonth, nowDay }
+export const getNowDate = (): { year: number; manth: number; day: number } => {
+  const date = new Date()
+  const year = date.getFullYear()
+  const manth = date.getMonth() + 1
+  const day = date.getDate()
+  return { year, manth, day }
 }
