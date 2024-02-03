@@ -1,7 +1,7 @@
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 
 
-def get_video_list(count):
+def get_video_list(count: int):
     objs = Video.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -24,7 +24,8 @@ def get_video_list(count):
     } for obj in objs]
     return data
 
-def get_music_list(count):
+
+def get_music_list(count: int):
     objs = Music.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -47,7 +48,8 @@ def get_music_list(count):
     } for obj in objs]
     return data
 
-def get_comic_list(count):
+
+def get_comic_list(count: int):
     objs = Comic.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -66,7 +68,8 @@ def get_comic_list(count):
     } for obj in objs]
     return data
 
-def get_picture_list(count):
+
+def get_picture_list(count: int):
     objs = Picture.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -87,7 +90,8 @@ def get_picture_list(count):
     } for obj in objs]
     return data
 
-def get_blog_list(count):
+
+def get_blog_list(count: int):
     objs = Blog.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -110,7 +114,8 @@ def get_blog_list(count):
     } for obj in objs]
     return data
 
-def get_chat_list(count):
+
+def get_chat_list(count: int):
     objs = Chat.objects.filter(publish=True).order_by('-created')[:count]
     data = [{
         'id': obj.id,
@@ -133,7 +138,7 @@ def get_chat_list(count):
     return data
 
 
-def get_todo_list(count):
+def get_todo_list(count: int):
     objs = Todo.objects.all().order_by('-created')[:count]
     data = [{
         'id': obj.id,
