@@ -9,31 +9,23 @@ interface Props {
   placeholder?: string
   required?: boolean
   disabled?: boolean
+  onChange?: (value: string) => void
   children?: React.ReactNode
 }
 
 export default function Textarea(props: Props) {
-  const { id, className, name, value, placeholder, required, disabled, children } = props
+  const { className, onChange, children } = props
 
-  const [rows, serRows] = useState(1)
+  const [rows, setRows] = useState(1)
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const height = e.target.value.split('\n').length
-    serRows(height)
+    setRows(height)
+    onChange && onChange(e.target.value)
   }
 
   return (
-    <textarea
-      id={id}
-      name={name}
-      value={value}
-      placeholder={placeholder}
-      rows={rows}
-      onChange={handleChange}
-      required={required}
-      disabled={disabled}
-      className={style.textarea + (className ? ' ' + className : '')}
-    >
+    <textarea {...props} rows={rows} onChange={handleChange} className={style.textarea + (className ? ' ' + className : '')}>
       {children}
     </textarea>
   )

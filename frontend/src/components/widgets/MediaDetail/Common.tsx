@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Blog } from 'types/internal/media'
 import { formatDatetime } from 'utils/functions/datetime'
 import Button from 'components/parts/Button'
+import CommentInput from '../Comment/Input'
 
 interface Props {
   data: Blog
@@ -9,10 +10,10 @@ interface Props {
 
 export default function MediaDetailCommon(props: Props) {
   const { data } = props
-  const { id, title, content, read, totalLike, created, author, user } = data
+  const { id, title, content, read, totalLike, commentCount, created, author, user } = data
   const { isLike } = user || {}
 
-  const isAuth = true
+  const isAuth = false
   const isFollow = true
 
   return (
@@ -86,7 +87,7 @@ export default function MediaDetailCommon(props: Props) {
       </div>
       <hr />
 
-      {/* {% include 'parts/common/comment/comment_create.html' %} */}
+      <CommentInput user={user} commentCount={commentCount} />
 
       <input type="checkbox" id="comment_aria_check_id" className="comment_aria_check" />
       <label htmlFor="comment_aria_check_id" className="comment_aria_check_label1">

@@ -13,7 +13,7 @@ export default function BlogDetail(props: Props) {
   const { publish } = data
 
   return (
-    <Main title="Blog">
+    <Main title="Blog" isTitle={false}>
       <MediaDetail publish={publish}>
         <div className="article_detail_blog quill_content">{/* <p>{{ object.richtext|safe }}</p> */}</div>
         <hr />
