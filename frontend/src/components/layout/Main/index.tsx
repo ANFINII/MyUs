@@ -4,20 +4,21 @@ import Meta from 'components/layout/Head/Meta'
 
 interface Props {
   title?: string
+  isTitle?: boolean
   search?: Search
   type?: 'defalt' | 'table'
   children: React.ReactNode
 }
 
 export default function Main(props: Props) {
-  const { title, search, type = 'defalt', children } = props
+  const { title, isTitle = true, search, type = 'defalt', children } = props
 
   return (
     <main className="main">
       <Meta title={title} />
       {type === 'defalt' && (
         <>
-          {title && <h1>{title}</h1>}
+          {isTitle && <h1>{title}</h1>}
           {search && (
             <section className="search_message">
               「{search.name}」の検索結果「{search.count}」件
