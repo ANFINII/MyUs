@@ -18,7 +18,7 @@ export default function ButtonSquare(props: Props) {
   const { emerald, sakura, red } = props
   const { type = 'button', value, name, className, onClick } = props
 
-  const colorCheck = (isColor: boolean | undefined, name: string) => {
+  const colorCheck = (name: string, isColor?: boolean) => {
     return isColor ? ' ' + style[name] : ''
   }
 
@@ -27,7 +27,7 @@ export default function ButtonSquare(props: Props) {
       type={type}
       value={value}
       onClick={onClick}
-      className={style.button + colorCheck(emerald, 'emerald') + colorCheck(sakura, 'sakura') + colorCheck(red, 'red') + (className ? ' ' + className : '')}
+      className={style.button + colorCheck('emerald', emerald) + colorCheck('sakura', sakura) + colorCheck('red', red) + (className ? ' ' + className : '')}
     >
       {name}
     </button>
