@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getVideos } from 'api/media'
+import { getVideos } from 'api/media/get'
 import { Video } from 'types/internal/media'
 import Videos from 'components/templates/media/video/list'
 

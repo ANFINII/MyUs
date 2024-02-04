@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getPictures } from 'api/media'
+import { getPictures } from 'api/media/get'
 import { Picture } from 'types/internal/media'
 import Pictures from 'components/templates/media/picture/list'
 

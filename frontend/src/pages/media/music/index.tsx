@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getMusics } from 'api/media'
+import { getMusics } from 'api/media/get'
 import { Music } from 'types/internal/media'
 import Musics from 'components/templates/media/music/list'
 

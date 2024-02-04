@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getHome } from 'api/media'
+import { getHome } from 'api/media/get'
 import { MediaHome } from 'types/internal/media'
 import Homes from 'components/templates/media/home/list'
 
