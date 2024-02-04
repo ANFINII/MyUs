@@ -104,11 +104,18 @@ export interface Follow {
   author: Author
 }
 
-interface MediaHome {
+export interface MediaHome {
   videos: Video[]
   musics: Music[]
   comics: Comic[]
   pictures: Picture[]
   blogs: Blog[]
   chats: Chat[]
+}
+
+// request
+export interface CreatePcture {
+  title: string
+  content: string
+  image?: File
 }
