@@ -13,13 +13,15 @@ interface Props {
   required?: boolean
   disabled?: boolean
   autoFocus?: boolean
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (value: string) => void
   onClick?: (event: React.MouseEvent<HTMLInputElement>) => void
 }
 
 export default function Input(props: Props) {
-  const { className, autoFocus } = props
-  const inputFocus = useAutoFocus()
+  const { className, autoFocus, onChange } = props
 
-  return <input {...props} ref={autoFocus ? inputFocus : undefined} className={style.input + (className ? ' ' + className : '')} />
+  const inputFocus = useAutoFocus()
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => onChange && onChange(e.target.value)
+
+  return <input {...props} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={style.input + (className ? ' ' + className : '')} />
 }
