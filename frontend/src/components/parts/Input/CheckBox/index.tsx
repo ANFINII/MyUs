@@ -2,7 +2,7 @@ import { useState } from 'react'
 import style from 'components/parts/Input/CheckBox/CheckBox.module.scss'
 
 interface Props {
-  name: string
+  name?: string
   id?: string
   labelName: string
   className?: string
