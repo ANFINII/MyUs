@@ -6,5 +6,5 @@ interface Props {
 export default function LoginRequired(props: Props) {
   const { isAuth, children } = props
 
-  return <>{!isAuth ? <h2 className="login_required">ログインしてください</h2> : <>{children}</>}</>
+  return <>{isAuth ? <>{children}</> : <h2 className="login_required">ログインしてください</h2>}</>
 }
