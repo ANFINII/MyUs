@@ -4,7 +4,7 @@ from django.db.models import Exists, OuterRef
 # from rest_framework.generics import RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
@@ -203,9 +203,19 @@ class PictureListAPI(APIView):
         return Response(data, status=HTTP_200_OK)
 
 
-class PictureCreateAPI(CreateAPIView):
-    queryset = Picture.objects.all()
-    serializer_class = PictureSerializer
+class PictureCreateAPI(APIView):
+    def post(self, request):
+        author = get_user(request)
+        if author:
+            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+
+        data = request.data
+        title = data.get('title')
+        content = data.get('content')
+        image = data.get('image')
+        picture = Picture.objects.create(author=author, title=title, content=content, image=image)
+        data = {'id': picture.id}
+        return Response(data, status=HTTP_201_CREATED)
 
 
 class PictureAPI(APIView):
