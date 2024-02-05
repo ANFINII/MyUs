@@ -1,4 +1,5 @@
-import ContentTitle from '../Common/ContentTitle'
+import Image from 'components/parts/Image'
+import ContentTitle from 'components/widgets/Common/ContentTitle'
 
 interface Props {
   imageUrl?: string
@@ -13,7 +14,7 @@ export default function MediaDetailInfo(props: Props) {
       <div className="main_decolation">
         <a href="{% url 'myus:blog_detail' item.pk item.title %}" className="content_side">
           <figure className="content_size">
-            <img src="" className="radius_8" />
+            <Image src="" alt="" className="radius_8" />
           </figure>
           <div className="author_space_side">
             <ContentTitle title="" nickname="" read={1} totalLike={1} created="" />

@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import IconBell from 'components/parts/Icon/Bell'
+// import Image from 'components/parts/Image'
 
 interface Props {
   isOpen: boolean
@@ -28,7 +29,7 @@ export default function DropMenuNotice(props: Props) {
         <li id="notification_aria_link_{{ notification.id }}" className="drop_menu_list">
           <object notification-id="{{ notification.id }}" data-csrf="{{ csrf_token }}" className="notification_aria_list">
             {/* <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data-notification="{{ notification.user_from.nickname }}">
-                <img src="{{ notification.user_from.image }}" title="{{ notification.user_from.nickname }}" className="profile_image"/>
+                <Image src="{{ notification.user_from.image }}" title="{{ notification.user_from.nickname }}" className="profile_image"/>
               </a> */}
             {/* {% if notification.user_confirmed %} */}
             <span></span>
