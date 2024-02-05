@@ -26,17 +26,17 @@ const applyResponseInterceptor = (client: AxiosInstance) => {
   )
 }
 
-const createAxiosInstance = (contentType: string) => {
+const axiosInstance = (contentType: string) => {
   const client: AxiosInstance = axios.create({
     baseURL: API_URL,
     withCredentials: true,
     headers: {
       'Content-Type': contentType,
     },
-    timeout: 1000,
+    timeout: 2000,
   })
   applyResponseInterceptor(client)
   return client
 }
 
-export const apiClient = createAxiosInstance('application/json')
+export const apiClient = axiosInstance('application/json')
