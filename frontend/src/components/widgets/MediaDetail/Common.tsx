@@ -2,8 +2,7 @@ import Link from 'next/link'
 import { Blog } from 'types/internal/media'
 import { formatDatetime } from 'utils/functions/datetime'
 import Button from 'components/parts/Button'
-import CommentInput from '../Comment/Input'
-
+import CommentInput from 'components/widgets/Comment/Input'
 interface Props {
   data: Blog
 }
