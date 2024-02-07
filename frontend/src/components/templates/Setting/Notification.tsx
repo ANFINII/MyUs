@@ -21,7 +21,7 @@ export default function SettingNotification(props: Props) {
 
   return (
     <Main title="通知設定" type="table">
-      <LoginRequired isAuth={isEmpty(notification)}>
+      <LoginRequired isAuth={!isEmpty(notification)}>
         <Table>
           <TableRow isIndent label="通知設定">
             フォローしているユーザの投稿通知などを設定

@@ -31,7 +31,7 @@ export default function MyPage(props: Props) {
 
   return (
     <Main title="マイページ設定" type="table">
-      <LoginRequired isAuth={isEmpty(mypage)}>
+      <LoginRequired isAuth={!isEmpty(mypage)}>
         {isEdit ? (
           <div className="button_group">
             <Button green size="xs" name="登録" type="submit" onClick={handlSubmit} />

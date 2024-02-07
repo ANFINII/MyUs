@@ -37,7 +37,7 @@ export default function Profile(props: Props) {
 
   return (
     <Main title="アカウント設定" type="table">
-      <LoginRequired isAuth={isEmpty(user)}>
+      <LoginRequired isAuth={!isEmpty(user)}>
         {isEdit ? (
           <div className="button_group">
             <Button green size="xs" type="submit" name="登録" onClick={handlSubmit} />
