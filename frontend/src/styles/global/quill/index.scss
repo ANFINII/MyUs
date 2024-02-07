@@ -1,0 +1,73 @@
+/*  Quillデザイン */
+.ql-formats {
+  margin-right: 10px;
+}
+
+.ql-toolbar {
+  border-radius: 5px 5px 0 0;
+}
+
+.ql-editor.l-blank,
+.ql-clipboard {
+  border-radius: 5px !important;
+}
+
+/*  リンクデザイン */
+.ql-snow .ql-editor a {
+  text-decoration: none;
+}
+
+/*  クォートデザイン */
+.ql-snow .ql-editor pre.ql-syntax {
+  margin-top: 0;
+  font-size: 16px;
+  color: #212529;
+  background: rgb(240, 240, 240);
+}
+
+/*  コードブロックデザイン */
+.ql-snow .ql-editor blockquote {
+  padding-left: 16px;
+  margin-top: 0;
+  margin-bottom: 5px;
+  border-left: 4px solid #ccc;
+}
+
+/* メンション */
+span.mention {
+  display: inline-flex;
+  width: auto;
+  font-size: 13px;
+  border-radius: 5px;
+  user-select: all;
+  color: rgba(60, 120, 240);
+  background: rgb(230, 245, 255);
+}
+
+.ql-mention-list-container {
+  width: 300px !important;
+  height: 250px;
+  overflow: auto !important;
+}
+
+.ql-mention-loading {
+  padding: 0 20px !important;
+  font-size: 13px !important;
+  vertical-align: middle !important;
+}
+
+.ql-mention-list {
+  padding: 8px !important;
+}
+
+.ql-mention-list-item {
+  padding: 0 0 0 8px !important;
+  font-size: 13px !important;
+  line-height: 2.4 !important;
+  border-radius: 5px !important;
+}
+
+.ql-mention-list-item.selected {
+  color: rgba(60, 120, 240);
+  background: rgb(230, 245, 255) !important;
+}

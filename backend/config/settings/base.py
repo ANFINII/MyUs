@@ -194,8 +194,8 @@ QUILL_CONFIGS = {
             'toolbar': [
                 [{'header': [1, 2, 3, 4, 5, 6, False]}],
                 [{'color': []}, {'background': []}, {'align': []}],
-                [{'indent': '+1'}, {'indent': '-1'}, {'list': 'ordered'}, {'list': 'bullet'}],
-                ['bold', 'underline', 'strike', 'formula', {'script': 'super'}, {'script': 'sub'}],
+                [{'indent': '-1'}, {'indent': '+1'}, {'list': 'ordered'}, {'list': 'bullet'}],
+                ['bold', 'italic', 'underline', 'strike', 'formula', {'script': 'super'}, {'script': 'sub'}],
                 ['code-block', 'blockquote', 'link', 'image'],
             ]
         }

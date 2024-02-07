@@ -14,7 +14,6 @@ export interface EmailHistory {
 export interface MentionUser {
   id: number
   value: string
-  avatar: string
 }
 
 export interface Timeline {
