@@ -40,3 +40,4 @@ const axiosInstance = (contentType: string) => {
 }
 
 export const apiClient = axiosInstance('application/json')
+export const apiFormClient = axiosInstance('multipart/form-data')
