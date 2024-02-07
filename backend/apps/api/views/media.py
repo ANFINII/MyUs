@@ -206,7 +206,7 @@ class PictureListAPI(APIView):
 class PictureCreateAPI(APIView):
     def post(self, request):
         author = get_user(request)
-        if author:
+        if not author:
             return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
 
         data = request.data

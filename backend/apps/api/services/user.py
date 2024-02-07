@@ -30,7 +30,7 @@ def get_user_id(request) -> Response:
         return Response({'message': '認証エラーが発生しました!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-def get_user(request) -> Response:
+def get_user(request):
     token = request.COOKIES.get('user_token')
     if not token:
         return None
