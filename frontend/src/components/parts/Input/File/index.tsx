@@ -3,14 +3,14 @@ import style from 'components/parts/Input/Input.module.scss'
 
 interface Props {
   id?: string
-  className?: string
   accept?: string
   onChange?: (file: File) => void
   required?: boolean
+  className?: string
 }
 
 export default function InputFile(props: Props) {
-  const { id, className, accept, onChange, required } = props
+  const { id, accept, onChange, required, className } = props
 
   const inputEl = useRef<HTMLInputElement>(null)
   const [fileName, setFileName] = useState('')
@@ -27,7 +27,7 @@ export default function InputFile(props: Props) {
 
   return (
     <>
-      <input type="file" id={id} accept={accept} ref={inputEl} onChange={handleChange} hidden />
+      <input ref={inputEl} type="file" id={id} accept={accept} onChange={handleChange} hidden />
       <input placeholder="ファイル選択..." value={fileName} required={required} onClick={handleClick} className={style.input + (className ? ' ' + className : '')} />
     </>
   )
