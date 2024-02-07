@@ -39,7 +39,7 @@ export default function PictureCreate(props: Props) {
   return (
     <Main title="Picture">
       <LoginRequired isAuth={isAuth}>
-        <form method="POST" action="" encType="multipart/form-data">
+        <form method="POST" action="">
           <p className="mv_16">タイトル</p>
           <Input name="title" value={create.title} onChange={handleTitle} required />
 

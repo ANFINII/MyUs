@@ -119,3 +119,10 @@ export interface CreatePcture {
   content: string
   image?: File
 }
+
+export interface CreateBlog {
+  title: string
+  content: string
+  image?: File
+  richtext: string
+}
