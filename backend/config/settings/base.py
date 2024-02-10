@@ -152,8 +152,8 @@ AUTH_USER_MODEL = 'myus.User'
 AUTHENTICATION_BACKENDS = ['apps.myus.backends.MyBackend']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'None'
+CORS_ALLOWED_ORIGINS = (env("CORS_ALLOWED_ORIGINS").split(","))
+CSRF_TRUSTED_ORIGINS = (env("CSRF_TRUSTED_ORIGINS").split(","))
 
 # humanize カンマ区切り値
 NUMBER_GROUPING = 3
