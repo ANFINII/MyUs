@@ -19,7 +19,7 @@ export const camelSnake = <T extends AnyObject>(obj: AnyObject): T => {
 
 const camelase = (s: string) => s.replace(/([-_][a-z])/gi, ($1) => $1.toUpperCase().replace('-', '').replace('_', ''))
 
-export const snakeCamel = <T extends AnyObject>(obj: AnyObject) => {
+export const snakeCamel = <T extends AnyObject>(obj: AnyObject): T => {
   const result: AnyObject = Array.isArray(obj) ? [] : {}
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {

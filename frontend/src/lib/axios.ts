@@ -34,6 +34,7 @@ const axiosInstance = (contentType: string) => {
       'Content-Type': contentType,
     },
     timeout: 2000,
+    paramsSerializer: { indexes: null },
   })
   applyResponseInterceptor(client)
   return client
