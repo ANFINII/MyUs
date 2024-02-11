@@ -95,6 +95,7 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -152,8 +153,21 @@ AUTH_USER_MODEL = 'myus.User'
 AUTHENTICATION_BACKENDS = ['apps.myus.backends.MyBackend']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-CORS_ALLOWED_ORIGINS = (env("CORS_ALLOWED_ORIGINS").split(","))
-CSRF_TRUSTED_ORIGINS = (env("CSRF_TRUSTED_ORIGINS").split(","))
+# CORS
+CSRF_TRUSTED_ORIGINS = (env('CSRF_TRUSTED_ORIGINS').split(','))
+CORS_ALLOWED_ORIGINS = (env('CORS_ALLOWED_ORIGINS').split(','))
+CORS_ALLOW_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS')
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'authorization',
+    'content-type',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'access-control-allow-origin',
+    'access-control-allow-credentials',
+)
 
 # humanize カンマ区切り値
 NUMBER_GROUPING = 3
