@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { postLogout } from 'api/auth'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconCredit from 'components/parts/Icon/Credit'
 import IconGrid from 'components/parts/Icon/Grid'
@@ -11,17 +11,21 @@ interface Props {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   isActive?: boolean
   isStaff?: boolean
-  isAuth?: boolean
 }
 
 export default function DropMenuProfile(props: Props) {
-  const { isOpen, setIsOpen, isActive, isStaff, isAuth } = props
+  const { isOpen, setIsOpen, isActive, isStaff } = props
 
   const router = useRouter()
 
   const handleClick = (url: string) => {
     router.push(url)
     setIsOpen(false)
+  }
+
+  const handleLogout = async () => {
+    await postLogout()
+    router.push('/login')
   }
 
   return (
@@ -60,8 +64,7 @@ export default function DropMenuProfile(props: Props) {
           </li>
         )}
 
-        <li className="drop_menu_list" onClick={() => handleClick('/setting/profile')}>
-          <Link href={isAuth ? '/logout' : '/login'} className="icon_link"></Link>
+        <li className="drop_menu_list" onClick={handleLogout}>
           <IconArrow size="1.5em" type="box" className="color_drop_menu_bi" />
           <span>ログアウト</span>
         </li>

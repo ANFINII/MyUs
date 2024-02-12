@@ -156,16 +156,10 @@ class LoginAPI(views.TokenObtainPairView):
 
 class LogoutAPI(views.TokenObtainPairView):
     def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except exceptions.TokenError as e:
-            raise exceptions.InvalidToken(e.args[0])
-
-        response = Response(serializer.validated_data, status=HTTP_200_OK)
+        response = Response({'message': 'logout'}, status=HTTP_204_NO_CONTENT)
         try:
             response.delete_cookie('access_token')
             response.delete_cookie('refresh_token')
+            return response
         except Exception:
             return Response({'message': 'message'}, status=HTTP_400_BAD_REQUEST)
-        return Response({'message': 'logout'}, status=HTTP_204_NO_CONTENT)

@@ -3,7 +3,7 @@ import { apiServer } from 'lib/apiServer'
 import { apiClient } from 'lib/axios'
 import { Req } from 'types/global/next'
 import { LoginRequest } from 'types/internal/auth'
-import { apiAuth, apiLogin } from './uri'
+import { apiAuth, apiLogin, apiLogout } from './uri'
 
 export const getAuth = async (req: Req) => {
   const data = await apiServer(req, apiClient, apiAuth).then((res) => {
@@ -19,4 +19,10 @@ export const postLogin = async (request: LoginRequest) => {
     }
   })
   return data
+}
+
+export const postLogout = async () => {
+  await apiClient.post(apiLogout).then((res) => {
+    if (res.status !== HttpStatusCode.NoContent) throw Error
+  })
 }

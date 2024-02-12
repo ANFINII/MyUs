@@ -10,8 +10,8 @@ import Input from 'components/parts/Input'
 
 export default function Login() {
   const router = useRouter()
-  const [data, setData] = useState<LoginRequest>({ username: '', password: '' })
   const [message, setMessage] = useState<string>('')
+  const [data, setData] = useState<LoginRequest>({ username: '', password: '' })
 
   const handleUsername = (username: string) => setData({ ...data, username })
   const handlePassword = (password: string) => setData({ ...data, password })
