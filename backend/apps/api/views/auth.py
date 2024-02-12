@@ -3,6 +3,7 @@ from datetime import date
 
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
+from django.middleware.csrf import get_token
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import CreateAPIView
@@ -21,10 +22,10 @@ User = get_user_model()
 
 
 class AuthAPI(APIView):
-    def get_object(self, user_token):
+    def get_object(self, access_token):
         key = settings.SECRET_KEY
         try:
-            payload = jwt.decode(jwt=user_token, key=key, algorithms=['HS256'])
+            payload = jwt.decode(jwt=access_token, key=key, algorithms=['HS256'])
             return payload['user_id']
         except jwt.ExpiredSignatureError:
             return Response({'message': '認証エラーが発生しました!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
@@ -32,11 +33,11 @@ class AuthAPI(APIView):
             return Response({'message': '認証エラーが発生しました!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get(self, request):
-        user_token = request.COOKIES.get('user_token')
-        if not user_token:
+        access_token = request.COOKIES.get('access_token')
+        if not access_token:
             return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
 
-        user_id = self.get_object(user_token)
+        user_id = self.get_object(access_token)
         user = User.objects.filter(id=user_id).first()
         if not user.is_active:
             return Response({'message': '退会済みです!'}, status=HTTP_400_BAD_REQUEST)
@@ -53,8 +54,8 @@ class RefreshAPI(views.TokenRefreshView):
 
         access = serializer.validated_data['access']
         response = Response(serializer.validated_data, status=HTTP_200_OK)
-        response.delete_cookie('user_token')
-        response.set_cookie('user_token', access, max_age=60 * 24 * 24 * 30, httponly=True)
+        response.delete_cookie('access_token')
+        response.set_cookie('access_token', access, max_age=60 * 24 * 24 * 30, httponly=True)
         return response
 
 
@@ -142,14 +143,14 @@ class LoginAPI(views.TokenObtainPairView):
 
         response = Response(serializer.validated_data, status=HTTP_204_NO_CONTENT)
         try:
-            response.delete_cookie('user_token')
+            response.delete_cookie('access_token')
         except Exception:
-            return Response({'message': 'not user_token'}, status=HTTP_400_BAD_REQUEST)
+            return Response({'message': 'not access_token'}, status=HTTP_400_BAD_REQUEST)
 
         access = serializer.validated_data['access']
         refresh = serializer.validated_data['refresh']
-        response.set_cookie('user_token', access, max_age=60 * 60 * 24 * 10, httponly=True)
-        response.set_cookie('refresh_token', refresh, max_age=60 * 60 * 24 * 30, httponly=True)
+        response.set_cookie('access_token', access, max_age=60 * 60 * 24 * 10)
+        response.set_cookie('refresh_token', refresh, max_age=60 * 60 * 24 * 30)
         return response
 
 

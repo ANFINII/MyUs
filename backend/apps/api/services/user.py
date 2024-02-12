@@ -9,7 +9,7 @@ User = get_user_model()
 
 
 def get_user_id(request) -> Response:
-    token = request.COOKIES.get('user_token')
+    token = request.COOKIES.get('access_token')
     if not token:
         return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
 
@@ -31,7 +31,7 @@ def get_user_id(request) -> Response:
 
 
 def get_user(request):
-    token = request.COOKIES.get('user_token')
+    token = request.COOKIES.get('access_token')
     if not token:
         return None
 
