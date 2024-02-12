@@ -73,3 +73,8 @@ export interface Notification {
   isLike: boolean
   isViews: boolean
 }
+
+export interface LoginRequest {
+  username: string
+  password: string
+}
