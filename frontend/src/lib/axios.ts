@@ -11,6 +11,7 @@ const applyResponseInterceptor = (client: AxiosInstance) => {
     (e) => {
       const error = e.response
       const message = error?.data?.message
+      const response = message ? { data: { message } } : { data: {} }
 
       console.log('===== error status:', error?.status, error?.statusText, '=====')
       if (message) {
@@ -18,20 +19,19 @@ const applyResponseInterceptor = (client: AxiosInstance) => {
       }
 
       if (error?.status >= 400) {
-        return Promise.resolve({ data: {} })
+        return Promise.resolve(response)
       }
-
-      return Promise.reject(error)
     },
   )
 }
 
-const axiosInstance = (contentType: string) => {
+const axiosInstance = (contentType: string, csrfToken?: string) => {
   const client: AxiosInstance = axios.create({
     baseURL: API_URL,
     withCredentials: true,
     headers: {
       'Content-Type': contentType,
+      'X-CSRFToken': csrfToken,
     },
     timeout: 2000,
     paramsSerializer: { indexes: null },
