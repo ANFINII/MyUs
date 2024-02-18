@@ -1,27 +1,25 @@
-import { useState } from 'react'
 import { Option } from 'types/internal/other'
 import style from 'components/parts/Input/Select/Select.module.scss'
 
 interface Props {
-  className?: string
   name?: string
-  value?: string | number
+  value: string | number
   options: Option[]
   placeholder?: string
+  className?: string
+  onChange: (value: string) => void
 }
 
 export default function Select(props: Props) {
-  const { className, name, value, placeholder, options } = props
-
-  const [changeValue, setChangeValue] = useState(value)
+  const { className, name, value, placeholder, options, onChange } = props
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setChangeValue(e.target.value)
+    onChange(e.target.value)
   }
 
   return (
     <label className={style.select + (className ? ' ' + className : '')}>
-      <select name={name} value={changeValue} onChange={handleChange}>
+      <select name={name} value={value} onChange={handleChange}>
         {placeholder && (
           <option value="" disabled selected hidden>
             {placeholder}
