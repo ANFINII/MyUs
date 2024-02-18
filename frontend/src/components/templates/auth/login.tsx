@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { postLogin } from 'api/auth'
+import { getUser, postLogin } from 'api/auth'
 import { LoginRequest } from 'types/internal/auth'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
@@ -19,6 +19,7 @@ export default function Login() {
   const handleSubmit = async () => {
     try {
       const resData = await postLogin(data)
+      const user = await getUser()
       console.log('resData', resData)
       resData?.message ? setMessage(resData.message) : router.push('/setting/profile')
     } catch (e) {
@@ -38,8 +39,8 @@ export default function Login() {
             </ul>
           )}
 
-          <Input type="text" onChange={handleUsername} placeholder="ユーザー名 or メールアドレス" className="mb_16" required autoFocus />
-          <Input type="password" onChange={handlePassword} placeholder="パスワード" minLength={8} maxLength={16} className="mb_16" required />
+          <Input type="text" placeholder="ユーザー名 or メールアドレス" className="mb_16" onChange={handleUsername} required autoFocus />
+          <Input type="password" placeholder="パスワード" minLength={8} maxLength={16} className="mb_16" onChange={handlePassword} required />
 
           <div className="password_reset">
             <Link href="/setting/password_reset">パスワードをリセット</Link>
