@@ -16,6 +16,7 @@ from rest_framework_simplejwt import exceptions
 from apps.api.serializers import SignUpSerializer
 from apps.myus.models import Profile
 from apps.myus.modules.validation import has_username, has_email, has_alphabet, has_number
+from apps.api.utils.functions.encrypt import create_key, encrypt, decrypt
 
 
 User = get_user_model()
@@ -124,6 +125,7 @@ class LoginAPI(views.TokenObtainPairView):
         data = request.data
         username = data['username']
         password = data['password']
+        key = create_key()
 
         user = authenticate(username=username, password=password)
         if not user:
@@ -141,7 +143,7 @@ class LoginAPI(views.TokenObtainPairView):
         except exceptions.TokenError as e:
             raise exceptions.InvalidToken(e.args[0])
 
-        response = Response(serializer.validated_data, status=HTTP_204_NO_CONTENT)
+        response = Response(serializer.validated_data, status=HTTP_200_OK)
         try:
             response.delete_cookie('access_token')
         except Exception:
@@ -151,6 +153,7 @@ class LoginAPI(views.TokenObtainPairView):
         refresh = serializer.validated_data['refresh']
         response.set_cookie('access_token', access, max_age=60 * 60 * 24 * 10)
         response.set_cookie('refresh_token', refresh, max_age=60 * 60 * 24 * 30)
+        response.data['user'] = {'id': encrypt(key, f'{user.id}'), 'avatar': user.image(), 'nickname': user.nickname, 'is_staff': user.is_staff}
         return response
 
 
