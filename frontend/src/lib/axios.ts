@@ -40,5 +40,17 @@ const axiosInstance = (contentType: string, csrfToken?: string) => {
   return client
 }
 
+const axiosAddressInstance = (contentType: string) => {
+  const client: AxiosInstance = axios.create({
+    baseURL: 'https://zipcloud.ibsnet.co.jp',
+    headers: { 'Content-Type': contentType },
+    timeout: 5000,
+    paramsSerializer: { indexes: null },
+  })
+  applyResponseInterceptor(client)
+  return client
+}
+
 export const apiClient = axiosInstance('application/json')
 export const apiFormClient = axiosInstance('multipart/form-data')
+export const apiAddressClient = axiosAddressInstance('application/json')
