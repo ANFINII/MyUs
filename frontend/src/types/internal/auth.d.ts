@@ -24,7 +24,7 @@ export interface Profile {
   postalCode: string
   prefecture: string
   city: string
-  address: string
+  street: string
   building: string
   introduction: string
 }
@@ -43,7 +43,7 @@ export interface UserProfile extends User {
   postalCode: string
   prefecture: string
   city: string
-  address: string
+  street: string
   building: string
   introduction: string
 }

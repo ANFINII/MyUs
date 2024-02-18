@@ -103,8 +103,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     def city(self):
         return self.profile.city
 
-    def address(self):
-        return self.profile.address
+    def street(self):
+        return self.profile.street
 
     def building(self):
         return self.profile.building
@@ -165,7 +165,7 @@ class Profile(models.Model):
     postal_code  = models.CharField(max_length=255, blank=True)
     prefecture   = models.CharField(max_length=255, blank=True)
     city         = models.CharField(max_length=255, blank=True)
-    address      = models.CharField(max_length=255, blank=True)
+    street       = models.CharField(max_length=255, blank=True)
     building     = models.CharField(max_length=255, blank=True)
     introduction = models.TextField(blank=True)
 

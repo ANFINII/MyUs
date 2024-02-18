@@ -54,7 +54,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = (
             'last_name', 'first_name', 'birthday', 'gender', 'phone', 'country_code',
-            'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction'
+            'postal_code', 'prefecture', 'city', 'street', 'building', 'introduction'
         )
 
 
@@ -149,13 +149,20 @@ class PictureSerializer(serializers.ModelSerializer):
 
 
 class BlogSerializer(serializers.ModelSerializer):
+    # image = serializers.FileField()
+    # image = serializers.ImageField(use_url=True)
+    image = serializers.ImageField()
     class Meta:
-        model = Blog
+        # model = Blog
+        # fields = (
+        #     'id', 'author', 'title', 'content', 'richtext', 'image',
+        #     'hashtag', 'like', 'read', 'publish', 'created', 'updated'
+        # )
         fields = (
-            'id', 'author', 'title', 'content', 'richtext', 'image',
-            'hashtag', 'like', 'read', 'publish', 'created', 'updated'
+            'title', 'content', 'richtext'
+            # 'created', 'updated'
         )
-        read_only_field = ['created', 'updated']
+        # read_only_field = ['created', 'updated']
 
 
 class ChatSerializer(serializers.ModelSerializer):

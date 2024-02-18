@@ -285,7 +285,7 @@ class ProfileView(TemplateView):
 class ProfileUpdate(UpdateView):
     """アカウント更新"""
     model = Profile
-    fields = ('last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'address', 'building', 'introduction')
+    fields = ('last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'street', 'building', 'introduction')
     template_name = 'setting/profile_update.html'
     success_url = reverse_lazy('myus:profile')
 
