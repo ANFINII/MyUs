@@ -17,7 +17,7 @@ interface Props {
   mypage: Mypage
 }
 
-export default function MyPage(props: Props) {
+export default function SttingMyPage(props: Props) {
   const { mypage } = props
 
   const router = useRouter()
