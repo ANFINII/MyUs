@@ -1,9 +1,11 @@
 import { useState, ChangeEvent } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { getAddressForm } from 'api/address'
 import { UserProfile } from 'types/internal/auth'
+import { prefectures } from 'utils/constants/address'
 import { isEmpty } from 'utils/constants/common'
-import { prefectures } from 'utils/constants/prefectures'
+import { Gender } from 'utils/constants/enum'
 import { selectDate } from 'utils/functions/datetime'
 import { genderMap, genders } from 'utils/functions/user'
 import Main from 'components/layout/Main'
@@ -20,28 +22,54 @@ interface Props {
   user: UserProfile
 }
 
-export default function Profile(props: Props) {
+export default function SettingProfile(props: Props) {
   const { user } = props
 
   const router = useRouter()
   const [isEdit, setIsEdit] = useState<boolean>(false)
-  const [userGender, setUserGender] = useState<string>(user.gender)
   const { years, months, days } = selectDate()
+  const [data, setData] = useState<UserProfile>(user)
 
+  const reset = () => setData(user)
+  const handleEmail = (email: string) => setData({ ...data, email })
+  const handleUsername = (username: string) => setData({ ...data, username })
+  const handleNickname = (nickname: string) => setData({ ...data, nickname })
+  const handleLastname = (lastname: string) => setData({ ...data, lastname })
+  const handleFirstname = (firstname: string) => setData({ ...data, firstname })
+  const handleYear = (year: string) => setData({ ...data, year: Number(year) })
+  const handleMonth = (month: string) => setData({ ...data, month: Number(month) })
+  const handleDay = (day: string) => setData({ ...data, day: Number(day) })
+  const handleGender = (e: ChangeEvent<HTMLInputElement>) => setData({ ...data, gender: e.target.value as Gender })
+  const handlePhone = (phone: string) => setData({ ...data, phone })
+  const handlePostalCode = (postalCode: string) => setData({ ...data, postalCode })
+  const handlePrefecture = (prefecture: string) => setData({ ...data, prefecture })
+  const handleCity = (city: string) => setData({ ...data, city })
+  const handleAddress = (street: string) => setData({ ...data, street })
+  const handleBuilding = (building: string) => setData({ ...data, building })
+  const handleIntroduction = (introduction: string) => setData({ ...data, introduction })
   const handleEdit = () => setIsEdit(!isEdit)
-  const handleGender = (e: ChangeEvent<HTMLInputElement>) => setUserGender(e.target.value)
 
-  const handlSubmit = () => {
+  const handleBack = () => {
+    reset()
+    handleEdit()
+  }
+
+  const handleAutoAddress = async () => {
+    const address = await getAddressForm(data.postalCode)
+    setData({ ...data, prefecture: address.address1, city: address.address2, street: address.address3, building: '' })
+  }
+
+  const handlSubmit = async () => {
     router.push('/setting/profile')
   }
 
   return (
     <Main title="アカウント設定" type="table">
-      <LoginRequired isAuth={!isEmpty(user)}>
+      <LoginRequired isAuth={!isEmpty(data)}>
         {isEdit ? (
           <div className="button_group">
             <Button green size="xs" type="submit" name="登録" onClick={handlSubmit} />
-            <Button blue size="xs" name="戻る" onClick={handleEdit} />
+            <Button blue size="xs" name="戻る" onClick={handleBack} />
           </div>
         ) : (
           <div className="button_group">
@@ -59,57 +87,60 @@ export default function Profile(props: Props) {
               </label>
             </TableRow>
             <TableRow label="メールアドレス">
-              <Input type="text" name="email" value={user.email} maxLength={120} />
+              <Input type="text" name="email" value={data.email} maxLength={120} onChange={handleEmail} />
             </TableRow>
             <TableRow label="ユーザー名">
-              <Input type="text" name="username" value={user.username} maxLength={30} placeholder="英数字" />
+              <Input type="text" name="username" value={data.username} maxLength={30} placeholder="英数字" onChange={handleUsername} />
             </TableRow>
             <TableRow label="投稿者名">
-              <Input type="text" name="nickname" value={user.nickname} maxLength={60} />
+              <Input type="text" name="nickname" value={data.nickname} maxLength={60} onChange={handleNickname} />
             </TableRow>
             <TableRow label="名前">
               <div className="td_name">
-                <Input type="text" name="last_name" value={user.lastname} placeholder="姓" maxLength={30} />
-                <Input type="text" name="first_name" value={user.firstname} placeholder="名" maxLength={30} />
+                <Input type="text" name="last_name" value={data.lastname} placeholder="姓" maxLength={30} onChange={handleLastname} />
+                <Input type="text" name="first_name" value={data.firstname} placeholder="名" maxLength={30} onChange={handleFirstname} />
               </div>
             </TableRow>
             <TableRow label="生年月日">
               <div className="td_birthday">
-                <Select name="year" value={user.year} options={years} placeholder="年" />
-                <Select name="month" value={user.month} options={months} placeholder="月" />
-                <Select name="day" value={user.day} options={days} placeholder="日" />
+                <Select name="year" value={data.year} options={years} placeholder="年" onChange={handleYear} />
+                <Select name="month" value={data.month} options={months} placeholder="月" onChange={handleMonth} />
+                <Select name="day" value={data.day} options={days} placeholder="日" onChange={handleDay} />
               </div>
             </TableRow>
             <TableRow isIndent label="年齢">
-              {user.age}歳
+              {data.age}歳
             </TableRow>
             <TableRow label="性別">
               <div className="td_gender">
                 {genders.map((gender) => (
                   <div key={gender.value} className="gender_radio">
-                    <input type="radio" name="gender" value={gender.value} checked={gender.value === userGender} id={`gender_${gender.value}`} onChange={handleGender} />
+                    <input type="radio" name="gender" value={gender.value} checked={gender.value === data.gender} id={`gender_${gender.value}`} onChange={handleGender} />
                     <label htmlFor={`gender_${gender.value}`}>{gender.key}</label>
                   </div>
                 ))}
               </div>
             </TableRow>
             <TableRow label="電話番号">
-              <Input type="tel" name="phone" value={user.phone} maxLength={15} required />
+              <Input type="tel" name="phone" value={data.phone} maxLength={15} onChange={handlePhone} required />
             </TableRow>
             <TableRow label="郵便番号">
-              <Input type="tel" name="postal_code" value={user.postalCode} maxLength={8} required />
+              <div className="d_flex">
+                <Input type="tel" name="postal_code" value={data.postalCode} maxLength={8} className="mr_2" onChange={handlePostalCode} required />
+                <Button name="住所自動入力" onClick={handleAutoAddress} />
+              </div>
             </TableRow>
             <TableRow label="住所">
               <div className="td_location">
-                <Select name="year" value={user.prefecture} options={prefectures} placeholder="都道府県" />
-                <Input type="text" name="city" value={user.city} placeholder="市区町村" maxLength={255} />
-                <Input type="text" name="address" value={user.address} placeholder="丁番地" maxLength={255} />
-                <Input type="text" name="building" value={user.building} placeholder="建物名" maxLength={255} />
+                <Select name="year" value={data.prefecture} options={prefectures} placeholder="都道府県" onChange={handlePrefecture} />
+                <Input type="text" name="city" value={data.city} placeholder="市区町村" maxLength={255} onChange={handleCity} />
+                <Input type="text" name="street" value={data.street} placeholder="町名番地" maxLength={255} onChange={handleAddress} />
+                <Input type="text" name="building" value={data.building} placeholder="建物名" maxLength={255} onChange={handleBuilding} />
               </div>
             </TableRow>
             <TableRow label="自己紹介">
-              <Textarea name="introduction" className="textarea_margin">
-                {user.introduction}
+              <Textarea name="introduction" className="textarea_margin" onChange={handleIntroduction}>
+                {data.introduction}
               </Textarea>
             </TableRow>
           </Table>
@@ -117,44 +148,44 @@ export default function Profile(props: Props) {
           <Table>
             <TableRow label="アカウント画像" className="table_header">
               <label htmlFor="account_image_input" className="account_image">
-                <a href={user.avatar} data-lightbox="group">
-                  <Image src={user.avatar} title={user.nickname} width={56} height={56} alt="" data-lightbox="group" />
+                <a href={data.avatar} data-lightbox="group">
+                  <Image src={data.avatar} title={data.nickname} width={56} height={56} alt="" data-lightbox="group" />
                 </a>
               </label>
             </TableRow>
             <TableRow isIndent label="メールアドレス">
-              {user.email}
+              {data.email}
             </TableRow>
             <TableRow isIndent label="ユーザー名">
-              {user.username}
+              {data.username}
             </TableRow>
             <TableRow isIndent label="投稿者名">
-              {user.nickname}
+              {data.nickname}
             </TableRow>
             <TableRow isIndent label="名前">
-              {user.fullname}
+              {data.fullname}
             </TableRow>
             <TableRow isIndent label="生年月日">
-              {user.year}年{user.month}月{user.day}日
+              {data.year}年{data.month}月{data.day}日
             </TableRow>
             <TableRow isIndent label="年齢">
-              {user.age}歳
+              {data.age}歳
             </TableRow>
             <TableRow isIndent label="性別">
-              {genderMap[user.gender]}
+              {genderMap[data.gender]}
             </TableRow>
             <TableRow isIndent label="電話番号">
-              {user.phone}
+              {data.phone}
             </TableRow>
             <TableRow isIndent label="郵便番号">
-              {user.postalCode}
+              {data.postalCode}
             </TableRow>
             <TableRow isIndent label="住所">
-              {user.prefecture} {user.city}
-              {user.address} {user.building}
+              {data.prefecture} {data.city}
+              {data.street} {data.building}
             </TableRow>
             <TableRow isIndent label="自己紹介">
-              {user.introduction}
+              {data.introduction}
             </TableRow>
           </Table>
         )}
