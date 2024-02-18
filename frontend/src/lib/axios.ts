@@ -45,7 +45,6 @@ const axiosAddressInstance = (contentType: string) => {
     baseURL: 'https://zipcloud.ibsnet.co.jp',
     headers: { 'Content-Type': contentType },
     timeout: 5000,
-    paramsSerializer: { indexes: null },
   })
   applyResponseInterceptor(client)
   return client
