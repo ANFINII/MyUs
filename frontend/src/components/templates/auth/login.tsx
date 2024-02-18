@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { getUser, postLogin } from 'api/auth'
+import { postLogin } from 'api/auth'
 import { LoginRequest } from 'types/internal/auth'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
@@ -19,9 +19,12 @@ export default function Login() {
   const handleSubmit = async () => {
     try {
       const resData = await postLogin(data)
-      const user = await getUser()
-      console.log('resData', resData)
-      resData?.message ? setMessage(resData.message) : router.push('/setting/profile')
+      if (resData?.message) {
+        setMessage(resData.message)
+      } else {
+        localStorage.setItem('user', JSON.stringify(resData.user))
+        router.push('/setting/profile')
+      }
     } catch (e) {
       setMessage('エラーが発生しました！')
     }
