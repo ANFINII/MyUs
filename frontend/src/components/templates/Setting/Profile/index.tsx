@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { getAddressForm } from 'api/address'
+import { postProfile } from 'api/user'
 import { UserProfile } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/address'
 import { isEmpty } from 'utils/constants/common'
@@ -28,9 +29,11 @@ export default function SettingProfile(props: Props) {
   const router = useRouter()
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const { years, months, days } = selectDate()
+  const [message, setMessage] = useState<string>('')
   const [data, setData] = useState<UserProfile>(user)
 
   const reset = () => setData(user)
+  const handleEdit = () => setIsEdit(!isEdit)
   const handleEmail = (email: string) => setData({ ...data, email })
   const handleUsername = (username: string) => setData({ ...data, username })
   const handleNickname = (nickname: string) => setData({ ...data, nickname })
@@ -44,10 +47,9 @@ export default function SettingProfile(props: Props) {
   const handlePostalCode = (postalCode: string) => setData({ ...data, postalCode })
   const handlePrefecture = (prefecture: string) => setData({ ...data, prefecture })
   const handleCity = (city: string) => setData({ ...data, city })
-  const handleAddress = (street: string) => setData({ ...data, street })
+  const handleStreet = (street: string) => setData({ ...data, street })
   const handleBuilding = (building: string) => setData({ ...data, building })
   const handleIntroduction = (introduction: string) => setData({ ...data, introduction })
-  const handleEdit = () => setIsEdit(!isEdit)
 
   const handleBack = () => {
     reset()
@@ -60,7 +62,12 @@ export default function SettingProfile(props: Props) {
   }
 
   const handlSubmit = async () => {
-    router.push('/setting/profile')
+    try {
+      const resData = await postProfile(data)
+      resData?.message ? setMessage(resData.message) : handleEdit()
+    } catch (e) {
+      setMessage('エラーが発生しました！')
+    }
   }
 
   return (
@@ -76,6 +83,12 @@ export default function SettingProfile(props: Props) {
             <Button blue size="xs" name="編集" onClick={handleEdit} />
             <Button blue size="xs" name="パスワード変更" onClick={() => router.push('/setting/password/change')} />
           </div>
+        )}
+
+        {message && (
+          <ul className="messages_profile">
+            <li>{message}</li>
+          </ul>
         )}
 
         {isEdit ? (
@@ -134,7 +147,7 @@ export default function SettingProfile(props: Props) {
               <div className="td_location">
                 <Select name="year" value={data.prefecture} options={prefectures} placeholder="都道府県" onChange={handlePrefecture} />
                 <Input type="text" name="city" value={data.city} placeholder="市区町村" maxLength={255} onChange={handleCity} />
-                <Input type="text" name="street" value={data.street} placeholder="町名番地" maxLength={255} onChange={handleAddress} />
+                <Input type="text" name="street" value={data.street} placeholder="町名番地" maxLength={255} onChange={handleStreet} />
                 <Input type="text" name="building" value={data.building} placeholder="建物名" maxLength={255} onChange={handleBuilding} />
               </div>
             </TableRow>
