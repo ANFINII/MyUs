@@ -42,3 +42,7 @@ export const apiChatCreate = base + '/media/chat/create'
 export const apiTodos = base + '/media/todo'
 export const apiTodo = (todoId: number) => base + `/media/todo/${todoId}`
 export const apiTodoCreate = base + '/media/todo/create'
+
+// 外部
+// export const apiAddress = (zipcode: string) => `/search?zipcode=${zipcode}`
+export const apiAddress = base + '/search'
