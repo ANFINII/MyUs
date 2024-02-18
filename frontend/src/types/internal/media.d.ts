@@ -126,3 +126,9 @@ export interface CreateBlog {
   image?: File
   richtext: string
 }
+
+export interface CreateChat {
+  title: string
+  content: string
+  period: string
+}
