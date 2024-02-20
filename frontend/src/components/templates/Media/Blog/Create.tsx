@@ -28,21 +28,32 @@ export default function BlogCreate(props: Props) {
 
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [create, setCreate] = useState<CreateBlog>({ title: '', content: '', richtext: '' })
+  const [data, setData] = useState<CreateBlog>({ title: '', content: '', richtext: '' })
 
-  const handleTitle = (title: string) => setCreate({ ...create, title })
-  const handleContent = (content: string) => setCreate({ ...create, content })
-  const handleFile = (image: File) => setCreate({ ...create, image })
+  const handleTitle = (title: string) => setData({ ...data, title })
+  const handleContent = (content: string) => setData({ ...data, content })
+  const handleFile = (image: File) => setData({ ...data, image })
 
   const handleChange = (richtext: string) => {
     const value = richtext.trim()
-    value !== '<p><br></p>' && setCreate({ ...create, richtext })
+    value !== '<p><br></p>' && setData({ ...data, richtext })
   }
 
   const handleForm = async () => {
     setIsLoading(true)
+    const formData = new FormData()
+    formData.append('title', data.title)
+    formData.append('content', data.content)
+    formData.append('richtext', data.richtext)
+    if (data.image) {
+      formData.append('image', data.image)
+      console.log('data.ima', data.image)
+    }
+    console.log('data', data)
+
     try {
-      const blog = await postBlogCreate(create)
+      const blog = await postBlogCreate(formData)
+      // const blogk = await postBlogCreate(data)
       router.push(`media/blog/${blog.id}`)
     } catch (error) {
       console.log(error)
@@ -51,22 +62,43 @@ export default function BlogCreate(props: Props) {
     }
   }
 
+  // const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault()
+  //   setIsLoading(true)
+  //   const formData = new FormData()
+  //   formData.append('title', data.title)
+  //   formData.append('content', data.content)
+  //   if (data?.image) {
+  //     formData.append('image', data?.image)
+  //   }
+
+  //   try {
+  //     console.log('data', formData)
+  //     const blog = await postBlogCreate(formData)
+  //     router.push(`media/blog/${blog.id}`)
+  //   } catch (error) {
+  //     console.log(error)
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
+
   return (
     <Main title="Blog">
       <LoginRequired isAuth={isAuth}>
         <form method="POST" action="">
           <p className="mv_16">タイトル</p>
-          <Input name="title" value={create.title} onChange={handleTitle} required />
+          <Input name="title" value={data.title} onChange={handleTitle} required />
 
           <p className="mv_16">内容</p>
-          <Textarea name="content" value={create.content} onChange={handleContent} required></Textarea>
+          <Textarea name="content" value={data.content} onChange={handleContent} required></Textarea>
 
           <p className="mv_16">サムネイル</p>
           <InputFile id="file_1" accept="image/*" onChange={handleFile} required />
 
           <p className="mv_16">本文</p>
           <div className="blog">
-            <QuillEditor users={users} value={create.richtext} onChange={handleChange} />
+            <QuillEditor users={users} value={data.richtext} onChange={handleChange} />
           </div>
 
           <Button green type="button" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
