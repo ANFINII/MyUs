@@ -13,9 +13,7 @@ from apps.api.serializers import VideoSerializer, MusicSerializer, ComicSerializ
 from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializer, TodoSerializer
 from apps.api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
 from apps.api.services.user import get_user
-
-
-User = get_user_model()
+from rest_framework.response import Response
 
 
 # Index
@@ -266,9 +264,21 @@ class BlogListAPI(APIView):
         return Response(data, status=HTTP_200_OK)
 
 
-class BlogCreateAPI(CreateAPIView):
-    queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
+class BlogCreateAPI(APIView):
+    def post(self, request) -> Response:
+        author = get_user(request)
+        if not author:
+            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+
+        data = request.data
+        title = data.get('title')
+        content = data.get('content')
+        image = data.get('image')
+        richtext = data.get('richtext')
+
+        picture = Picture.objects.create(author=author, title=title, content=content, image=image, richtext=richtext)
+        data = {'id': picture.id}
+        return Response(data, status=HTTP_201_CREATED)
 
 
 class BlogAPI(APIView):
@@ -330,8 +340,19 @@ class ChatListAPI(APIView):
 
 
 class ChatCreateAPI(CreateAPIView):
-    queryset = Chat.objects.all()
-    serializer_class = ChatSerializer
+    def post(self, request) -> Response:
+        author = get_user(request)
+        if not author:
+            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+
+        data = request.data
+        title = data.get('title')
+        content = data.get('content')
+        period = data.get('period')
+
+        chat = Chat.objects.create(author=author, title=title, content=content, period=period)
+        data = {'id': chat.id}
+        return Response(data, status=HTTP_201_CREATED
 
 
 class ChatAPI(APIView):
