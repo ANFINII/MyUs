@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { CreateToDo } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
@@ -27,6 +29,10 @@ interface Props {
 export default function TodoCreate(props: Props) {
   const { isAuth } = props
 
+  const [data, setData] = useState<CreateToDo>({ title: '', content: '', priority: '', progress: '' })
+  const handlePriority = (priority: string) => setData({ ...data, priority })
+  const handleProgress = (progress: string) => setData({ ...data, progress })
+
   return (
     <Main title="Todo">
       <LoginRequired isAuth={isAuth}>
@@ -38,10 +44,10 @@ export default function TodoCreate(props: Props) {
           <Textarea name="content" required></Textarea>
 
           <p className="mv_16">優先度</p>
-          <Select name="priority" options={priority} />
+          <Select name="priority" options={priority} value={data.priority} onChange={handlePriority} />
 
           <p className="mv_16">進捗度</p>
-          <Select name="progress" options={progress} />
+          <Select name="progress" options={progress} value={data.progress} onChange={handleProgress} />
 
           <p className="mv_16">期日</p>
           <Input name="duedate" placeholder={`${year}-12-31`} id="id_duedate" required />

@@ -132,3 +132,10 @@ export interface CreateChat {
   content: string
   period: string
 }
+
+interface CreateToDo {
+  title: string
+  content: string
+  priority: string
+  progress: string
+}
