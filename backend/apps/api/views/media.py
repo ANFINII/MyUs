@@ -352,7 +352,7 @@ class ChatCreateAPI(CreateAPIView):
 
         chat = Chat.objects.create(author=author, title=title, content=content, period=period)
         data = {'id': chat.id}
-        return Response(data, status=HTTP_201_CREATED
+        return Response(data, status=HTTP_201_CREATED)
 
 
 class ChatAPI(APIView):
