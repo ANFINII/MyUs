@@ -1,27 +1,16 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from apps.myus.modules.filter_data import DeferData
 from apps.myus.models import NotificationSetting
 from apps.api.services.user import get_user_id
+from apps.api.utils.functions.logger import Log
 
 
 User = get_user_model()
-
-
-class UserAPI(APIView):
-    def get(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
-
-        user_id = auth.data['user_id']
-        user = User.objects.filter(id=user_id).defer(*DeferData.user).first()
-        data = {'avatar': user.image(), 'nickname': user.nickname, 'is_staff': user.is_staff}
-        return Response(data, status=HTTP_200_OK)
 
 
 class ProfileAPI(APIView):
@@ -50,14 +39,17 @@ class ProfileAPI(APIView):
             'country_code': user.profile.country_code,
             'postal_code': user.profile.postal_code,
             'city': user.profile.city,
-            'address': user.profile.address,
+            'street': user.profile.street,
             'building': user.profile.building,
             'introduction': user.profile.introduction,
         }
         return Response(data, status=HTTP_200_OK)
 
     def post(self, request):
-        pass
+        data = request.data
+        Log.info('ProfileAPI', 'post', data)
+        return Response({'message': '保存しました!'}, status=HTTP_204_NO_CONTENT)
+
 
 
 class MyPageAPI(APIView):
