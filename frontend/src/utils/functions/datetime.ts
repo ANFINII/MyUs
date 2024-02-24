@@ -1,3 +1,13 @@
+import { NowDate } from 'types/internal/datetime'
+
+export const nowDate = (): NowDate => {
+  const date = new Date()
+  const year = date.getFullYear()
+  const manth = date.getMonth() + 1
+  const day = date.getDate()
+  return { year, manth, day }
+}
+
 export const selectDate = () => {
   const years = Array.from({ length: new Date().getFullYear() - 1899 }, (_, index) => {
     const year = 1900 + index
@@ -26,12 +36,4 @@ export const formatDatetime = (datetime: string): string => {
   const hours = padZero(date.getHours())
   const minutes = padZero(date.getMinutes())
   return `${year}/${month}/${day} ${hours}:${minutes}`
-}
-
-export const getNowDate = (): { year: number; manth: number; day: number } => {
-  const date = new Date()
-  const year = date.getFullYear()
-  const manth = date.getMonth() + 1
-  const day = date.getDate()
-  return { year, manth, day }
 }
