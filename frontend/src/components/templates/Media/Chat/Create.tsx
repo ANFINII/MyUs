@@ -2,14 +2,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { postChatCreate } from 'api/media/post'
 import { CreateChat } from 'types/internal/media'
+import { nowDate } from 'utils/functions/datetime'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
-
-const now = new Date()
-const year = now.getFullYear()
 
 interface Props {
   isAuth: boolean
@@ -18,6 +16,7 @@ interface Props {
 export default function ChatCreate(props: Props) {
   const { isAuth } = props
 
+  const { year } = nowDate()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [data, setData] = useState<CreateChat>({ title: '', content: '', period: '' })
@@ -28,11 +27,9 @@ export default function ChatCreate(props: Props) {
 
   const handleForm = async () => {
     setIsLoading(true)
-    console.log('data', data)
-
     try {
       const chat = await postChatCreate(data)
-      router.push(`media/blog/${chat.id}`)
+      router.push(`/media/chat/${chat.id}`)
     } catch (error) {
       console.log(error)
     } finally {
