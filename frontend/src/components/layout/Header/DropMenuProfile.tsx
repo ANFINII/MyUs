@@ -25,6 +25,7 @@ export default function DropMenuProfile(props: Props) {
 
   const handleLogout = async () => {
     await postLogout()
+    localStorage.removeItem('user')
     router.push('/login')
   }
 

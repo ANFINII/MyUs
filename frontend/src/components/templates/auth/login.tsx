@@ -22,6 +22,7 @@ export default function Login() {
       if (resData?.message) {
         setMessage(resData.message)
       } else {
+        localStorage.removeItem('user')
         localStorage.setItem('user', JSON.stringify(resData.user))
         router.push('/setting/profile')
       }
