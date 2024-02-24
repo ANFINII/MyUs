@@ -1,6 +1,7 @@
 import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.base_user import AbstractBaseUser
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
 
@@ -30,7 +31,7 @@ def get_user_id(request) -> Response:
         return Response({'message': '認証エラーが発生しました!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-def get_user(request):
+def get_user(request) -> AbstractBaseUser | None:
     token = request.COOKIES.get('access_token')
     if not token:
         return None
