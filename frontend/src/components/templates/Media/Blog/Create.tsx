@@ -54,7 +54,7 @@ export default function BlogCreate(props: Props) {
     try {
       const blog = await postBlogCreate(formData)
       // const blogk = await postBlogCreate(data)
-      router.push(`media/blog/${blog.id}`)
+      router.push(`/media/blog/${blog.id}`)
     } catch (error) {
       console.log(error)
     } finally {
