@@ -6,8 +6,8 @@ import Homes from 'components/templates/media/home/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const homeMedia = await getHome()
-  return { props: { homeMedia, ...translations } }
+  const mediaHome = await getHome()
+  return { props: { mediaHome, ...translations } }
 }
 
 interface Props {
