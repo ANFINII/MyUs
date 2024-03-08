@@ -1,7 +1,7 @@
 import clsx from 'clsx'
+import style from 'components/parts/Button/Button.module.scss'
 import Spinner from 'components/parts/Spinner'
 import { SpinnerColor } from 'components/parts/Spinner'
-import style from 'components/parts/Button/Button.module.scss'
 
 type ButtonColor = 'white' | 'black' | 'blue' | 'purple' | 'red' | 'green' | 'mono'
 
@@ -28,7 +28,7 @@ export default function Button(props: Props): JSX.Element {
     <button {...props} type={type} disabled={disabled || loading} className={clsx(style.button, style[color], style[size], className)}>
       <span className={style.flex}>
         {loading && <Spinner color={spinnerColor(color)} size="s" className={style.spinner} />}
-        {loading ? <span className={style.loading}>{name}</span> : name}
+        <span className={loading ? style.invisible : undefined}>{name}</span>
       </span>
     </button>
   )
