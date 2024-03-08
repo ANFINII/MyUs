@@ -27,6 +27,7 @@ export default function ChatCreate(props: Props) {
 
   const handleForm = async () => {
     setIsLoading(true)
+    // await new Promise((resolve) => setTimeout(resolve, 3000))
     try {
       const chat = await postChatCreate(data)
       router.push(`/media/chat/${chat.id}`)
@@ -50,7 +51,7 @@ export default function ChatCreate(props: Props) {
           <p className="mv_16">期間</p>
           <Input name="period" placeholder={`${year}-12-31`} onChange={handlePeriod} required />
 
-          <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
+          <Button color="green" name="作成する" loading={isLoading} onClick={handleForm} className="mt_32" />
         </form>
       </LoginRequired>
     </Main>
