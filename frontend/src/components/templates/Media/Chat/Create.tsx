@@ -50,7 +50,7 @@ export default function ChatCreate(props: Props) {
           <p className="mv_16">期間</p>
           <Input name="period" placeholder={`${year}-12-31`} onChange={handlePeriod} required />
 
-          <Button green type="button" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
+          <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
         </form>
       </LoginRequired>
     </Main>

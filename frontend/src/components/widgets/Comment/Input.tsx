@@ -23,13 +23,13 @@ export default function CommentInput(props: Props) {
           <>
             <Image src="/image/user_icon.png" alt="" title="Anonymous" className="profile_image_comment" />
             <TextareaLine name="text" placeholder="コメントするにはログインが必要です!" disabled></TextareaLine>
-            <Button blue disabled size="xs" name="コメント" type="submit" className="button" />
+            <Button color="blue" size="s" name="コメント" disabled />
           </>
         ) : (
           <>
             <Image src="{user.image}" alt="" title={user?.nickname} className="profile_image_comment" />
             <TextareaLine name="text" placeholder="コメント入力" id="comment_area" className="textarea_br"></TextareaLine>
-            <Button blue disabled={false} size="xs" name="コメント" type="submit" className="button" />
+            <Button color="blue" size="s" name="コメント" disabled={false} />
           </>
         )}
       </div>

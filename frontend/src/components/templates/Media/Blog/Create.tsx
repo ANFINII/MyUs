@@ -41,6 +41,7 @@ export default function BlogCreate(props: Props) {
 
   const handleForm = async () => {
     setIsLoading(true)
+    await new Promise((resolve) => setTimeout(resolve, 3000))
     const formData = new FormData()
     formData.append('title', data.title)
     formData.append('content', data.content)
@@ -101,7 +102,7 @@ export default function BlogCreate(props: Props) {
             <QuillEditor users={users} value={data.richtext} onChange={handleChange} />
           </div>
 
-          <Button green type="button" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
+          <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
         </form>
       </LoginRequired>
     </Main>

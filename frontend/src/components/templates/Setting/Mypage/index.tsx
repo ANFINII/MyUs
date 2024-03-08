@@ -34,13 +34,13 @@ export default function SttingMyPage(props: Props) {
       <LoginRequired isAuth={!isEmpty(mypage)}>
         {isEdit ? (
           <div className="button_group">
-            <Button green size="xs" name="登録" type="submit" onClick={handlSubmit} />
-            <Button blue size="xs" name="戻る" onClick={handleEdit} />
+            <Button color="green" size="s" name="登録" onClick={handlSubmit} />
+            <Button color="blue" size="s" name="戻る" onClick={handleEdit} />
           </div>
         ) : (
           <div className="button_group">
-            <Button blue size="xs" name="編集" onClick={handleEdit} />
-            <Button purple size="xs" name="ユーザページ" onClick={() => router.push(`/userpage/${mypage.nickname}`)} />
+            <Button color="blue" size="s" name="編集" onClick={handleEdit} />
+            <Button color="purple" size="s" name="ユーザページ" onClick={() => router.push(`/userpage/${mypage.nickname}`)} />
           </div>
         )}
 

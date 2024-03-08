@@ -28,7 +28,7 @@ export default function VideoCreate(props: Props) {
           <p className="mv_16">動画</p>
           <InputFile id="file_2" accept="video/*" required />
 
-          <Button green type="submit" name="作成する" className="mt_32" />
+          <Button color="green" name="作成する" className="mt_32" />
         </form>
       </LoginRequired>
     </Main>

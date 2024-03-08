@@ -27,7 +27,7 @@ export default function ComicCreate(props: Props) {
           <p className="mv_16">期間</p>
           <Input name="period" placeholder={`${year}-12-31`} id="id_period" required />
 
-          <Button green type="submit" name="作成する" className="mt_32" />
+          <Button color="green" name="作成する" className="mt_32" />
         </form>
       </LoginRequired>
     </Main>

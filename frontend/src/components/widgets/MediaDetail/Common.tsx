@@ -76,10 +76,10 @@ export default function MediaDetailCommon(props: Props) {
           <p className="content_detail_p1">{content}</p>
 
           <div className="content_detail_p2">
-            {user?.nickname == author.nickname || (!isAuth && <Button green disabled name="フォローする" />)}
+            {user?.nickname == author.nickname || (!isAuth && <Button color="green" name="フォローする" disabled />)}
             {isAuth && (
               <form method="POST" action="" className="follow_form">
-                {isFollow ? <Button red name="解除する" className="follow_change" /> : <Button green name="フォローする" className="follow_change" />}
+                {isFollow ? <Button color="red" name="解除する" className="follow_change" /> : <Button color="green" name="フォローする" className="follow_change" />}
               </form>
             )}
           </div>

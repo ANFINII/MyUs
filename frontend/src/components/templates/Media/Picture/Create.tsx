@@ -49,7 +49,7 @@ export default function PictureCreate(props: Props) {
           <p className="mv_16">画像</p>
           <InputFile id="file_1" accept="image/*" onChange={handleFile} required />
 
-          <Button green type="button" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
+          <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
         </form>
       </LoginRequired>
     </Main>

@@ -75,13 +75,13 @@ export default function SettingProfile(props: Props) {
       <LoginRequired isAuth={!isEmpty(data)}>
         {isEdit ? (
           <div className="button_group">
-            <Button green size="xs" type="submit" name="登録" onClick={handlSubmit} />
-            <Button blue size="xs" name="戻る" onClick={handleBack} />
+            <Button color="green" size="s" name="登録" onClick={handlSubmit} />
+            <Button color="blue" size="s" name="戻る" onClick={handleBack} />
           </div>
         ) : (
           <div className="button_group">
-            <Button blue size="xs" name="編集" onClick={handleEdit} />
-            <Button blue size="xs" name="パスワード変更" onClick={() => router.push('/setting/password/change')} />
+            <Button color="blue" size="s" name="編集" onClick={handleEdit} />
+            <Button color="blue" size="s" name="パスワード変更" onClick={() => router.push('/setting/password/change')} />
           </div>
         )}
 
