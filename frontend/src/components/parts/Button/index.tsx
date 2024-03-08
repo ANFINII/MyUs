@@ -26,8 +26,10 @@ export default function Button(props: Props): JSX.Element {
 
   return (
     <button {...props} type={type} disabled={disabled || loading} className={clsx(style.button, style[color], style[size], className)}>
-      {loading && <Spinner color={spinnerColor(color)} size="s" className={style.spinner} />}
-      {loading ? <span className={style.loading}>{name}</span> : name}
+      <span className={style.flex}>
+        {loading && <Spinner color={spinnerColor(color)} size="s" className={style.spinner} />}
+        {loading ? <span className={style.loading}>{name}</span> : name}
+      </span>
     </button>
   )
 }

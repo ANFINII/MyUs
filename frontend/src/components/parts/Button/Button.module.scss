@@ -1,9 +1,12 @@
 .button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   border-radius: 5px;
   cursor: pointer;
+
+  .flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   &.s {
     padding: 4px 8px;
