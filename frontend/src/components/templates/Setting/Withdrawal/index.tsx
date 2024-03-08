@@ -30,12 +30,12 @@ export default function Withdrawal() {
 
             <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} className="mb_16" required />
 
-            <Button green size="xl" name="退会URL生成" className="full_w mv_24" />
+            <Button green size="xl" name="退会URL生成" className="w_full mv_24" />
 
-            {tokenSigned && <Button red size="xl" name="退会する" className="full_w mb_24" onClick={() => Router.push('/setting/withdrawal/confirm')} />}
-            {message && <Button red size="xl" name={message} className="full_w mb_24" />}
+            {tokenSigned && <Button red size="xl" name="退会する" className="w_full mb_24" onClick={() => Router.push('/setting/withdrawal/confirm')} />}
+            {message && <Button red size="xl" name={message} className="w_full mb_24" />}
 
-            <Button blue size="xl" name="ホーム" className="full_w mb_24" onClick={() => Router.push('/')} />
+            <Button blue size="xl" name="ホーム" className="w_full mb_24" onClick={() => Router.push('/')} />
           </form>
           <Footer />
         </LoginRequired>

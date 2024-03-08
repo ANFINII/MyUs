@@ -10,7 +10,7 @@ export default function PasswordChangeDone() {
       <article className="article_pass">
         <div className="form_account password_done">
           <p className="fs_14">パスワードの変更が完了しました!</p>
-          <Button blue size="xl" name="戻る" className="full_w mv_24" onClick={() => Router.push('/setting/profile')} />
+          <Button blue size="xl" name="戻る" className="w_full mv_24" onClick={() => Router.push('/setting/profile')} />
         </div>
         <Footer />
       </article>
