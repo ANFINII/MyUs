@@ -5,6 +5,7 @@ interface Props {
   type?: string
   name?: string
   value?: string
+  defaultValue?: string
   placeholder?: string
   id?: string
   className?: string
@@ -18,10 +19,10 @@ interface Props {
 }
 
 export default function Input(props: Props) {
-  const { className, autoFocus, onChange } = props
+  const { className, defaultValue = '', autoFocus, onChange } = props
 
   const inputFocus = useAutoFocus()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => onChange && onChange(e.target.value)
 
-  return <input {...props} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={style.input + (className ? ' ' + className : '')} />
+  return <input {...props} defaultValue={defaultValue} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={style.input + (className ? ' ' + className : '')} />
 }
