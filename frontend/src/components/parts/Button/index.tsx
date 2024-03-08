@@ -1,58 +1,33 @@
+import clsx from 'clsx'
+import Spinner from 'components/parts/Spinner'
+import { SpinnerColor } from 'components/parts/Spinner'
 import style from 'components/parts/Button/Button.module.scss'
 
-interface Color {
-  blue?: boolean
-  purple?: boolean
-  red?: boolean
-  green?: boolean
-}
+type ButtonColor = 'white' | 'black' | 'blue' | 'purple' | 'red' | 'green' | 'mono'
 
-interface Props extends Color {
-  size?: 'xl' | 'xs'
-  type?: 'submit' | 'reset' | 'button'
+interface Props {
   name: string
+  color?: ButtonColor
+  size?: 's' | 'm' | 'l'
+  type?: 'submit' | 'reset' | 'button'
   value?: string
   className?: string
-  loading?: boolean
   disabled?: boolean
-  onClick?(): void
+  loading?: boolean
+  onClick?: () => void
 }
 
 export default function Button(props: Props): JSX.Element {
-  const { blue, purple, red, green } = props
-  const { size, type = 'button', name, value, className, loading, disabled, onClick } = props
+  const { name, color = 'white', size = 'm', type = 'button', className = '', disabled = false, loading = false } = props
 
-  const colorCheck = (name: string, isColor?: boolean): string => {
-    return isColor && !loading ? ' ' + style[name] : ''
-  }
-
-  const sizeCheck = (name: string): string => {
-    return size === name ? ' ' + style[name] : ''
+  const spinnerColor = (color: string): SpinnerColor => {
+    return color === 'white' ? 'gray' : 'white'
   }
 
   return (
-    <button
-      type={type}
-      value={value}
-      onClick={onClick}
-      disabled={disabled || loading}
-      className={
-        style.button +
-        colorCheck('blue', blue) +
-        colorCheck('purple', purple) +
-        colorCheck('red', red) +
-        colorCheck('green', green) +
-        sizeCheck('xl') +
-        sizeCheck('xs') +
-        (className ? ' ' + className : '')
-      }
-    >
-      {loading && (
-        <div className={style.spinner}>
-          <i className="fa-regular fa-circle-notch"></i>
-        </div>
-      )}
-      {!loading && name}
+    <button {...props} type={type} disabled={disabled || loading} className={clsx(style.button, style[color], style[size], className)}>
+      {loading && <Spinner color={spinnerColor(color)} size="s" className={style.spinner} />}
+      {loading ? <span className={style.loading}>{name}</span> : name}
     </button>
   )
 }
