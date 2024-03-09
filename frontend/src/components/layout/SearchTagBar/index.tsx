@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react'
 import Link from 'next/link'
+import clsx from 'clsx'
 import ButtonSquare from 'components/parts/Button/Square'
+import Input from 'components/parts/Input'
 
 interface searchtag {
   name: string
@@ -40,11 +42,11 @@ export default function SearchTagBar(props: Props) {
   return (
     <nav className="searchtag">
       <form method="POST" action="" className="searchtag_grid">
-        <ButtonSquare emerald name="タグ" className={isSearchtag ? 'searchtag_1 active' : 'searchtag_1'} onClick={handleSearchtag} />
+        <ButtonSquare color="emerald" name="タグ" className={clsx('searchtag_1', isSearchtag ? 'active' : '')} onClick={handleSearchtag} />
 
-        <ButtonSquare sakura name="追加" className={isSearchtag ? 'searchtag_2 active' : 'searchtag_2'} data-csrf={csrfToken} />
+        <ButtonSquare color="sakura" name="追加" className={clsx('searchtag_2', isSearchtag ? 'active' : '')} data-csrf={csrfToken} />
 
-        <input type="text" name="searchtag" className={isSearchtag ? 'searchtag_3 active' : 'searchtag_3'} maxLength={30} placeholder="タグ名" disabled={isAuth} />
+        <Input name="searchtag" className={clsx('searchtag_3', isSearchtag ? 'active' : '')} maxLength={30} placeholder="タグ名" disabled={isAuth} />
         <div className={isSearchtag ? 'searchtag_n active' : 'searchtag_n'} ref={scrollRef}>
           <div className="searchtag_n_list">
             {searchtags?.map((tag: searchtag, index) => {
@@ -57,7 +59,7 @@ export default function SearchTagBar(props: Props) {
           </div>
         </div>
 
-        <ButtonSquare emerald name="完了" className={isSearchtag ? 'searchtag_4 active' : 'searchtag_4'} onClick={handleSearchtag} data-csrf={csrfToken} />
+        <ButtonSquare color="emerald" name="完了" className={isSearchtag ? 'searchtag_4 active' : 'searchtag_4'} onClick={handleSearchtag} data-csrf={csrfToken} />
 
         <div className="searchtag_left" onClick={handleLeft}>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" fill="currentColor" className="bi-chevron-left" viewBox="0 0 16 16">
