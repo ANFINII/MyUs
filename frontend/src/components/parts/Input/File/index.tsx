@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
+import clsx from 'clsx'
 import style from 'components/parts/Input/Input.module.scss'
 
 interface Props {
-  id?: string
   accept?: string
   onChange?: (file: File) => void
   required?: boolean
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function InputFile(props: Props) {
-  const { id, accept, onChange, required, className } = props
+  const { accept, onChange, required, className = '' } = props
 
   const inputEl = useRef<HTMLInputElement>(null)
   const [fileName, setFileName] = useState('')
@@ -27,8 +27,8 @@ export default function InputFile(props: Props) {
 
   return (
     <>
-      <input ref={inputEl} type="file" id={id} accept={accept} onChange={handleChange} hidden />
-      <input placeholder="ファイル選択..." value={fileName} required={required} onClick={handleClick} className={style.input + (className ? ' ' + className : '')} />
+      <input ref={inputEl} type="file" accept={accept} onChange={handleChange} hidden />
+      <input placeholder="ファイル選択..." value={fileName} required={required} onClick={handleClick} className={clsx(style.input, className)} />
     </>
   )
 }

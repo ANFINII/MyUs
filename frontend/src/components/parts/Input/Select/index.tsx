@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { Option } from 'types/internal/other'
 import style from 'components/parts/Input/Select/Select.module.scss'
 
@@ -11,14 +12,14 @@ interface Props {
 }
 
 export default function Select(props: Props) {
-  const { className, name, value, placeholder, options, onChange } = props
+  const { name, value, options, placeholder, className = '', onChange } = props
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(e.target.value)
   }
 
   return (
-    <label className={style.select + (className ? ' ' + className : '')}>
+    <label className={clsx(style.select, className)}>
       <select name={name} value={value} onChange={handleChange}>
         {placeholder && (
           <option value="" disabled selected hidden>

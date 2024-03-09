@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import useAutoFocus from 'components/hooks/useAutoFocus'
 import style from 'components/parts/Input/Input.module.scss'
 
@@ -7,7 +8,6 @@ interface Props {
   value?: string
   defaultValue?: string
   placeholder?: string
-  id?: string
   className?: string
   minLength?: number
   maxLength?: number
@@ -19,10 +19,10 @@ interface Props {
 }
 
 export default function Input(props: Props) {
-  const { className, defaultValue = '', autoFocus, onChange } = props
+  const { className = '', autoFocus, onChange } = props
 
   const inputFocus = useAutoFocus()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => onChange && onChange(e.target.value)
 
-  return <input {...props} defaultValue={defaultValue} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={style.input + (className ? ' ' + className : '')} />
+  return <input {...props} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={clsx(style.input, className)} />
 }

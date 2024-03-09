@@ -1,20 +1,20 @@
 import { useState } from 'react'
+import clsx from 'clsx'
 import style from 'components/parts/Input/Textarea/Textarea.module.scss'
 
 interface Props {
-  id?: string
-  className?: string
   name?: string
   value?: string
   placeholder?: string
   required?: boolean
   disabled?: boolean
-  onChange?: (value: string) => void
+  className?: string
   children?: React.ReactNode
+  onChange?: (value: string) => void
 }
 
 export default function Textarea(props: Props) {
-  const { className, onChange, children } = props
+  const { className = '', children, onChange } = props
 
   const [rows, setRows] = useState(1)
   const [lineHeight, setLineHeight] = useState(16)
@@ -27,7 +27,7 @@ export default function Textarea(props: Props) {
   }
 
   return (
-    <textarea {...props} rows={rows} onChange={handleChange} style={{ lineHeight: `${lineHeight}px` }} className={style.line + (className ? ' ' + className : '')}>
+    <textarea {...props} rows={rows} onChange={handleChange} style={{ lineHeight: `${lineHeight}px` }} className={clsx(style.line, className)}>
       {children}
     </textarea>
   )

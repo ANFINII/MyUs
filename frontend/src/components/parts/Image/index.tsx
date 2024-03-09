@@ -6,7 +6,6 @@ interface Props {
   width?: string
   height?: string
   size?: string
-  id?: string
   className?: string
 }
 
