@@ -9,11 +9,8 @@ import { apiProfile, apiMypage, apiNotification } from './uri'
 
 export const getProfile = async (req: Req) => {
   const data = await apiServer(req, apiClient, apiProfile).then((res) => {
-    if (res.status === HttpStatusCode.Ok) {
-      return res.data as UserProfile
-    } else {
-      return {}
-    }
+    if (res.status !== HttpStatusCode.Ok) return {}
+    return res.data as UserProfile
   })
   return data
 }
@@ -29,22 +26,16 @@ export const postProfile = async (request: UserProfile) => {
 
 export const getServerMypage = async (req: Req) => {
   const data = await apiServer(req, apiClient, apiMypage).then((res) => {
-    if (res.status === HttpStatusCode.Ok) {
-      return res.data as Mypage
-    } else {
-      return {}
-    }
+    if (res.status !== HttpStatusCode.Ok) return {}
+    return res.data as Mypage
   })
   return data
 }
 
 export const getServerNotification = async (req: Req) => {
   const data = await apiServer(req, apiClient, apiNotification).then((res) => {
-    if (res.status === HttpStatusCode.Ok) {
-      return res.data as Notification
-    } else {
-      return {}
-    }
+    if (res.status !== HttpStatusCode.Ok) return {}
+    return res.data as Notification
   })
   return data
 }
