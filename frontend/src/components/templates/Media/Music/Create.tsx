@@ -18,17 +18,17 @@ export default function MusicCreate(props: Props) {
       <LoginRequired isAuth={isAuth}>
         <form method="POST" action="" encType="multipart/form-data">
           <p className="mv_16">タイトル</p>
-          <Input name="title" id="title" required />
+          <Input name="title" required />
 
           <p className="mv_16">内容</p>
-          <Textarea name="content" id="content" required></Textarea>
+          <Textarea name="content" required></Textarea>
 
           <p className="mv_16">歌詞</p>
-          <Textarea name="lyric" id="lyric" required></Textarea>
+          <Textarea name="lyric" required></Textarea>
 
           <p className="mt_16">音楽</p>
           <CheckBox name="download" id="download" labelName="ダウンロード許可" className="check_margin" />
-          <InputFile id="file_1" accept="audio/*" required />
+          <InputFile accept="audio/*" required />
 
           <Button color="green" name="作成する" className="mt_32" />
         </form>

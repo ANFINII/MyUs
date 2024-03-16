@@ -50,7 +50,7 @@ export default function TodoCreate(props: Props) {
           <Select name="progress" options={progress} value={data.progress} onChange={handleProgress} />
 
           <p className="mv_16">期日</p>
-          <Input name="duedate" placeholder={`${year}-12-31`} id="id_duedate" required />
+          <Input name="duedate" placeholder={`${year}-12-31`} required />
 
           <Button color="green" name="作成する" className="mt_32" />
         </form>

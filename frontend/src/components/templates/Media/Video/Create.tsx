@@ -17,16 +17,16 @@ export default function VideoCreate(props: Props) {
       <LoginRequired isAuth={isAuth}>
         <form method="POST" action="" encType="multipart/form-data">
           <p className="mv_16">タイトル</p>
-          <Input name="title" id="title" required />
+          <Input name="title" required />
 
           <p className="mv_16">内容</p>
-          <Textarea name="content" id="content" required></Textarea>
+          <Textarea name="content" required></Textarea>
 
           <p className="mv_16">サムネイル</p>
-          <InputFile id="file_1" accept="image/*" required />
+          <InputFile accept="image/*" required />
 
           <p className="mv_16">動画</p>
-          <InputFile id="file_2" accept="video/*" required />
+          <InputFile accept="video/*" required />
 
           <Button color="green" name="作成する" className="mt_32" />
         </form>
