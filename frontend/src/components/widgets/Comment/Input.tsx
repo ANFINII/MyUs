@@ -28,7 +28,7 @@ export default function CommentInput(props: Props) {
         ) : (
           <>
             <Image src="{user.image}" alt="" title={user?.nickname} className="profile_image_comment" />
-            <TextareaLine name="text" placeholder="コメント入力" id="comment_area" className="textarea_br"></TextareaLine>
+            <TextareaLine name="text" placeholder="コメント入力" className="textarea_br"></TextareaLine>
             <Button color="blue" size="s" name="コメント" disabled={false} />
           </>
         )}

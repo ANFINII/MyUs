@@ -59,7 +59,7 @@ export default function SearchTagBar(props: Props) {
           </div>
         </div>
 
-        <ButtonSquare color="emerald" name="完了" className={isSearchtag ? 'searchtag_4 active' : 'searchtag_4'} onClick={handleSearchtag} data-csrf={csrfToken} />
+        <ButtonSquare color="emerald" name="完了" className={clsx('searchtag_4', isSearchtag ? 'active' : '')} onClick={handleSearchtag} data-csrf={csrfToken} />
 
         <div className="searchtag_left" onClick={handleLeft}>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" fill="currentColor" className="bi-chevron-left" viewBox="0 0 16 16">
