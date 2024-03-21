@@ -211,8 +211,8 @@ class PictureCreateAPI(APIView):
         title = data.get('title')
         content = data.get('content')
         image = data.get('image')
-        picture = Picture.objects.create(author=author, title=title, content=content, image=image)
-        data = {'id': picture.id}
+        obj = Picture.objects.create(author=author, title=title, content=content, image=image)
+        data = {'id': obj.id}
         return Response(data, status=HTTP_201_CREATED)
 
 
@@ -276,8 +276,8 @@ class BlogCreateAPI(APIView):
         image = data.get('image')
         richtext = data.get('richtext')
 
-        picture = Picture.objects.create(author=author, title=title, content=content, image=image, richtext=richtext)
-        data = {'id': picture.id}
+        obj = Blog.objects.create(author=author, title=title, content=content, image=image, richtext=richtext)
+        data = {'id': obj.id}
         return Response(data, status=HTTP_201_CREATED)
 
 
@@ -350,8 +350,8 @@ class ChatCreateAPI(CreateAPIView):
         content = data.get('content')
         period = data.get('period')
 
-        chat = Chat.objects.create(author=author, title=title, content=content, period=period)
-        data = {'id': chat.id}
+        obj = Chat.objects.create(author=author, title=title, content=content, period=period)
+        data = {'id': obj.id}
         return Response(data, status=HTTP_201_CREATED)
 
 
