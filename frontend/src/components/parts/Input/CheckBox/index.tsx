@@ -17,7 +17,7 @@ export default function CheckBox(props: Props) {
 
   return (
     <div className={clsx(style.check_group, className)}>
-      <input type="checkbox" name={name} id={id} onClick={handleChange} className={style.checkbox} checked={checked} />
+      <input type="checkbox" id={id} name={name} onClick={handleChange} className={style.checkbox} checked={checked} />
       <label htmlFor={id}>{labelName}</label>
     </div>
   )

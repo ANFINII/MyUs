@@ -27,7 +27,7 @@ export default function MusicCreate(props: Props) {
           <Textarea name="lyric" required></Textarea>
 
           <p className="mt_16">音楽</p>
-          <CheckBox name="download" id="download" labelName="ダウンロード許可" className="check_margin" />
+          <CheckBox id="download" labelName="ダウンロード許可" className="mt_2 mb_6" />
           <InputFile accept="audio/*" required />
 
           <Button color="green" name="作成する" className="mt_32" />
