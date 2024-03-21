@@ -21,10 +21,10 @@ export default function MusicCreate(props: Props) {
           <Input name="title" required />
 
           <p className="mv_16">内容</p>
-          <Textarea name="content" required></Textarea>
+          <Textarea name="content" required />
 
           <p className="mv_16">歌詞</p>
-          <Textarea name="lyric" required></Textarea>
+          <Textarea name="lyric" required />
 
           <p className="mt_16">音楽</p>
           <CheckBox id="download" labelName="ダウンロード許可" className="mt_2 mb_6" />

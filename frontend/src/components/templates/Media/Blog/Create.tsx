@@ -91,7 +91,7 @@ export default function BlogCreate(props: Props) {
           <Input name="title" value={data.title} onChange={handleTitle} required />
 
           <p className="mv_16">内容</p>
-          <Textarea name="content" value={data.content} onChange={handleContent} required></Textarea>
+          <Textarea name="content" value={data.content} onChange={handleContent} required />
 
           <p className="mv_16">サムネイル</p>
           <InputFile accept="image/*" onChange={handleFile} required />

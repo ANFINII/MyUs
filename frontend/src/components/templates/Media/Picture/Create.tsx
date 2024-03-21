@@ -44,7 +44,7 @@ export default function PictureCreate(props: Props) {
           <Input name="title" value={create.title} onChange={handleTitle} required />
 
           <p className="mv_16">内容</p>
-          <Textarea name="content" value={create.content} onChange={handleContent} required></Textarea>
+          <Textarea name="content" value={create.content} onChange={handleContent} required />
 
           <p className="mv_16">画像</p>
           <InputFile accept="image/*" onChange={handleFile} required />

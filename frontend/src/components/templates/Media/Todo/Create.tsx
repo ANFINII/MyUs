@@ -41,7 +41,7 @@ export default function TodoCreate(props: Props) {
           <Input name="title" required />
 
           <p className="mv_16">内容</p>
-          <Textarea name="content" required></Textarea>
+          <Textarea name="content" required />
 
           <p className="mv_16">優先度</p>
           <Select name="priority" options={priority} value={data.priority} onChange={handlePriority} />

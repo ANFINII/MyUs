@@ -20,7 +20,7 @@ export default function VideoCreate(props: Props) {
           <Input name="title" required />
 
           <p className="mv_16">内容</p>
-          <Textarea name="content" required></Textarea>
+          <Textarea name="content" required />
 
           <p className="mv_16">サムネイル</p>
           <InputFile accept="image/*" required />

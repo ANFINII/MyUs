@@ -22,7 +22,7 @@ export default function ComicCreate(props: Props) {
           <Input name="title" required />
 
           <p className="mv_16">内容</p>
-          <Textarea name="content" required></Textarea>
+          <Textarea name="content" required />
 
           <p className="mv_16">期間</p>
           <Input name="period" placeholder={`${year}-12-31`} required />
