@@ -5,7 +5,7 @@ import { Req } from 'types/global/next'
 import { LoginRequest } from 'types/internal/auth'
 import { apiAuth, apiUser, apiLogin, apiLogout } from './uri'
 
-export const getAuth = async (req: Req) => {
+export const getAuth = async (req: Req): Promise<boolean> => {
   const data = await apiServer(req, apiClient, apiAuth).then((res) => {
     return res.status === HttpStatusCode.Ok
   })
@@ -27,7 +27,5 @@ export const postLogin = async (request: LoginRequest) => {
 }
 
 export const postLogout = async () => {
-  await apiClient.post(apiLogout).then((res) => {
-    if (res.status !== HttpStatusCode.NoContent) throw Error
-  })
+  await apiClient.post(apiLogout)
 }
