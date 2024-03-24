@@ -29,6 +29,10 @@ export default function SttingMyPage(props: Props) {
     router.push('/setting/profile')
   }
 
+  const handleUserPage = () => {
+    router.push(`/userpage/${mypage.nickname}`)
+  }
+
   return (
     <Main title="マイページ設定" type="table">
       <LoginRequired isAuth={!isEmpty(mypage)}>
@@ -40,7 +44,7 @@ export default function SttingMyPage(props: Props) {
         ) : (
           <div className="button_group">
             <Button color="blue" size="s" name="編集" onClick={handleEdit} />
-            <Button color="purple" size="s" name="ユーザページ" onClick={() => router.push(`/userpage/${mypage.nickname}`)} />
+            <Button color="purple" size="s" name="ユーザページ" onClick={handleUserPage} />
           </div>
         )}
 
