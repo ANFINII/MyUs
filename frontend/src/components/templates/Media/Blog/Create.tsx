@@ -47,13 +47,9 @@ export default function BlogCreate(props: Props) {
     formData.append('richtext', data.richtext)
     if (data.image) {
       formData.append('image', data.image)
-      console.log('data.ima', data.image)
     }
-    console.log('data', data)
-
     try {
       const blog = await postBlogCreate(formData)
-      // const blogk = await postBlogCreate(data)
       router.push(`/media/blog/${blog.id}`)
     } catch (error) {
       console.log(error)
@@ -61,27 +57,6 @@ export default function BlogCreate(props: Props) {
       setIsLoading(false)
     }
   }
-
-  // const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault()
-  //   setIsLoading(true)
-  //   const formData = new FormData()
-  //   formData.append('title', data.title)
-  //   formData.append('content', data.content)
-  //   if (data?.image) {
-  //     formData.append('image', data?.image)
-  //   }
-
-  //   try {
-  //     console.log('data', formData)
-  //     const blog = await postBlogCreate(formData)
-  //     router.push(`media/blog/${blog.id}`)
-  //   } catch (error) {
-  //     console.log(error)
-  //   } finally {
-  //     setIsLoading(false)
-  //   }
-  // }
 
   return (
     <Main title="Blog">
