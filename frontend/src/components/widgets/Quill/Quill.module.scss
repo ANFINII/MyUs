@@ -1,0 +1,18 @@
+.label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.help_text {
+  padding-top: 2px;
+  text-indent: 4px;
+  font-size: 12px;
+  color: rgb(255, 0, 0);
+}
+
+.error {
+  > div > div {
+    color: rgb(0, 0, 0);
+    background: rgb(255, 230, 230);
+  }
+}

@@ -1,19 +1,27 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import 'quill-mention'
 import 'quill-mention/dist/quill.mention.css'
+import clsx from 'clsx'
 import { MentionUser } from 'types/internal/timeline'
+import style from 'components/widgets/Quill/Quill.module.scss'
 
 interface Props {
-  reference?: React.LegacyRef<ReactQuill>
-  users?: MentionUser[]
+  label?: string
   value?: string
+  required?: boolean
+  className?: string
+  users?: MentionUser[]
   onChange?: (value: string) => void
 }
 
-export default function QuillEditor(props: Props) {
-  const { reference, users, value, onChange } = props
+export default function Quill(props: Props) {
+  const { label, value, required, className, users } = props
+
+  const ref = useRef<ReactQuill>(null)
+
+  const isRequired = required && value === ''
 
   const modules = {
     mention: {
@@ -43,5 +51,21 @@ export default function QuillEditor(props: Props) {
 
   const formats = ['header', 'color', 'background', 'align', 'indent', 'list', 'bold', 'italic', 'underline', 'strike', 'formula', 'script', 'code-block', 'blockquote', 'link', 'image', 'mention']
 
-  return <ReactQuill theme="snow" ref={reference} modules={modules} formats={formats} value={value} onChange={onChange} />
+  const handleLabel = () => {
+    if (ref.current) {
+      ref.current.focus()
+    }
+  }
+
+  return (
+    <div className={className}>
+      {label && (
+        <label htmlFor={label} className={style.label} onClick={handleLabel}>
+          {label}
+        </label>
+      )}
+      <ReactQuill {...props} theme="snow" ref={ref} modules={modules} formats={formats} className={clsx(isRequired ? style.error : undefined)} />
+      {isRequired && <p className={style.help_text}>※必須入力です！</p>}
+    </div>
+  )
 }
