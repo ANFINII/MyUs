@@ -1,8 +1,11 @@
+import React, { useState } from 'react'
 import clsx from 'clsx'
 import useAutoFocus from 'components/hooks/useAutoFocus'
 import style from 'components/parts/Input/Input.module.scss'
 
 interface Props {
+  label?: string
+  errorText?: string
   type?: string
   name?: string
   value?: string
@@ -11,6 +14,7 @@ interface Props {
   className?: string
   minLength?: number
   maxLength?: number
+  error?: boolean
   required?: boolean
   disabled?: boolean
   autoFocus?: boolean
@@ -19,10 +23,30 @@ interface Props {
 }
 
 export default function Input(props: Props) {
-  const { className = '', autoFocus, onChange } = props
+  const { label, errorText, className, error = false, required = false, autoFocus, onChange } = props
 
   const inputFocus = useAutoFocus()
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => onChange && onChange(e.target.value)
+  const [isValue, setIsValue] = useState<boolean>(false)
 
-  return <input {...props} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={clsx(style.input, className)} />
+  const isRequired = required && !isValue
+  const isErrorText = !isRequired && error
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setIsValue(value !== '')
+    onChange && onChange(value)
+  }
+
+  return (
+    <div className={className}>
+      {label && (
+        <label htmlFor={label} className={style.label}>
+          {label}
+        </label>
+      )}
+      <input id={label} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={clsx(style.input, isRequired && style.error)} />
+      {isRequired && <p className={style.error_text}>※必須入力です！</p>}
+      {isErrorText && <p className={style.error_text}>{errorText}</p>}
+    </div>
+  )
 }

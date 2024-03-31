@@ -14,4 +14,21 @@
   &:focus-visible {
     outline: 1px auto rgb(40, 130, 250);
   }
+
+  &.error {
+    color: rgb(0, 0, 0);
+    background: rgb(255, 230, 230);
+  }
+}
+
+.label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.error_text {
+  padding-top: 2px;
+  text-indent: 4px;
+  font-size: 12px;
+  color: rgb(255, 0, 0);
 }
