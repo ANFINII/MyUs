@@ -17,7 +17,7 @@ interface Props {
 }
 
 export default function Quill(props: Props) {
-  const { label, value, required, className, users } = props
+  const { label, value, required = false, className, users } = props
 
   const ref = useRef<ReactQuill>(null)
 
@@ -64,8 +64,8 @@ export default function Quill(props: Props) {
           {label}
         </label>
       )}
-      <ReactQuill {...props} theme="snow" ref={ref} modules={modules} formats={formats} className={clsx(isRequired ? style.error : undefined)} />
-      {isRequired && <p className={style.help_text}>※必須入力です！</p>}
+      <ReactQuill {...props} theme="snow" ref={ref} modules={modules} formats={formats} className={clsx(isRequired && style.error)} />
+      {isRequired && <p className={style.error_text}>※必須入力です！</p>}
     </div>
   )
 }
