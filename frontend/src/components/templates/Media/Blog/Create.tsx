@@ -11,7 +11,7 @@ import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
 
-const QuillEditor = dynamic(() => import('components/widgets/QuillEditor'), { ssr: false })
+const Quill = dynamic(() => import('components/widgets/Quill'), { ssr: false })
 
 const users: MentionUser[] = [
   { id: 1, value: 'an' },
@@ -28,26 +28,31 @@ export default function BlogCreate(props: Props) {
 
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isRequired, setIsRequired] = useState<boolean>(false)
   const [data, setData] = useState<CreateBlog>({ title: '', content: '', richtext: '' })
 
   const handleTitle = (title: string) => setData({ ...data, title })
   const handleContent = (content: string) => setData({ ...data, content })
   const handleFile = (image: File) => setData({ ...data, image })
 
-  const handleChange = (richtext: string) => {
-    const value = richtext.trim()
-    value !== '<p><br></p>' && setData({ ...data, richtext })
+  const handleQuill = (value: string) => {
+    const richtext = value.trim() === '<p><br></p>' ? '' : value.trim()
+    setData({ ...data, richtext })
   }
 
   const handleForm = async () => {
+    if (!(data.title && data.content && data.richtext && data.image)) {
+      setIsRequired(true)
+      return
+    }
+    setIsRequired(false)
     setIsLoading(true)
     const formData = new FormData()
     formData.append('title', data.title)
     formData.append('content', data.content)
     formData.append('richtext', data.richtext)
-    if (data.image) {
-      formData.append('image', data.image)
-    }
+    formData.append('image', data.image)
+
     try {
       const blog = await postBlogCreate(formData)
       router.push(`/media/blog/${blog.id}`)
@@ -62,19 +67,13 @@ export default function BlogCreate(props: Props) {
     <Main title="Blog">
       <LoginRequired isAuth={isAuth}>
         <form method="POST" action="">
-          <p className="mv_16">タイトル</p>
-          <Input name="title" value={data.title} onChange={handleTitle} required />
+          <Input label="タイトル" className="mt_16" required={isRequired} onChange={handleTitle} />
 
-          <p className="mv_16">内容</p>
-          <Textarea name="content" value={data.content} onChange={handleContent} required />
+          <Textarea label="内容" className="mt_16" required={isRequired} onChange={handleContent} />
 
-          <p className="mv_16">サムネイル</p>
-          <InputFile accept="image/*" onChange={handleFile} required />
+          <InputFile label="サムネイル" accept="image/*" className="mt_16" required={isRequired} onChange={handleFile} />
 
-          <p className="mv_16">本文</p>
-          <div className="blog">
-            <QuillEditor users={users} value={data.richtext} onChange={handleChange} />
-          </div>
+          <Quill label="本文" users={users} value={data.richtext} className="blog" required={isRequired} onChange={handleQuill} />
 
           <Button color="green" name="作成する" loading={isLoading} onClick={handleForm} className="mt_32" />
         </form>
