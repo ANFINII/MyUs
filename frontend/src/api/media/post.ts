@@ -1,8 +1,16 @@
 import { HttpStatusCode } from 'axios'
 import { apiClient, apiFormClient } from 'lib/axios'
-import { apiPictureCreate, apiBlogCreate, apiChatCreate } from 'api/uri'
-import { Picture, Blog, CreatePcture } from 'types/internal/media'
+import { apiPictureCreate, apiBlogCreate, apiChatCreate, apiComicCreate } from 'api/uri'
+import { Picture, Blog, CreatePcture, Comic } from 'types/internal/media'
 import { snakeCamel } from 'utils/functions/convertCase'
+
+export const postComicCreate = async (formData: any) => {
+  const data = await apiFormClient.post(apiComicCreate, formData).then((res) => {
+    if (res.status !== HttpStatusCode.Created) throw Error
+    return res.data as Comic
+  })
+  return data
+}
 
 export const postPictureCreate = async (request: CreatePcture) => {
   const data = await apiFormClient.post(apiPictureCreate, snakeCamel(request)).then((res) => {
