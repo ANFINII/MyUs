@@ -19,6 +19,7 @@ export default function ChatCreate(props: Props) {
   const { year } = nowDate()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isRequired, setIsRequired] = useState<boolean>(false)
   const [data, setData] = useState<CreateChat>({ title: '', content: '', period: '' })
 
   const handleTitle = (title: string) => setData({ ...data, title })
@@ -26,8 +27,11 @@ export default function ChatCreate(props: Props) {
   const handlePeriod = (period: string) => setData({ ...data, period })
 
   const handleForm = async () => {
+    if (!(data.title && data.content && data.period)) {
+      setIsRequired(true)
+      return
+    }
     setIsLoading(true)
-    // await new Promise((resolve) => setTimeout(resolve, 3000))
     try {
       const chat = await postChatCreate(data)
       router.push(`/media/chat/${chat.id}`)
@@ -42,14 +46,11 @@ export default function ChatCreate(props: Props) {
     <Main title="Chat">
       <LoginRequired isAuth={isAuth}>
         <form method="POST" action="" encType="multipart/form-data">
-          <p className="mv_16">タイトル</p>
-          <Input name="title" value={data.title} onChange={handleTitle} required />
+          <Input label="タイトル" className="mt_16" required={isRequired} onChange={handleTitle} />
 
-          <p className="mv_16">内容</p>
-          <Textarea name="content" value={data.content} onChange={handleContent} required />
+          <Textarea label="内容" className="mt_16" required={isRequired} onChange={handleContent} />
 
-          <p className="mv_16">期間</p>
-          <Input name="period" placeholder={`${year}-12-31`} onChange={handlePeriod} required />
+          <Input label="期間" className="mt_16" placeholder={`${year}-12-31`} required={isRequired} onChange={handlePeriod} />
 
           <Button color="green" name="作成する" loading={isLoading} onClick={handleForm} className="mt_32" />
         </form>

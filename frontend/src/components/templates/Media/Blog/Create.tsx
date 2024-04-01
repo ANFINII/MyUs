@@ -45,7 +45,6 @@ export default function BlogCreate(props: Props) {
       setIsRequired(true)
       return
     }
-    setIsRequired(false)
     setIsLoading(true)
     const formData = new FormData()
     formData.append('title', data.title)
