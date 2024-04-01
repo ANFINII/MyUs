@@ -13,7 +13,7 @@ interface Props {
   onChange?: (value: string) => void
 }
 
-export default function Textarea(props: Props) {
+export default function TextareaLine(props: Props) {
   const { className = '', children, onChange } = props
 
   const [rows, setRows] = useState(1)
