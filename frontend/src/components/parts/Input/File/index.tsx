@@ -18,7 +18,7 @@ export default function InputFile(props: Props) {
   const inputEl = useRef<HTMLInputElement>(null)
   const [fileName, setFileName] = useState('')
 
-  const isRequired = required && !fileName
+  const isRequired = required && fileName === ''
   const isErrorText = !isRequired && error
 
   const handleClick = () => inputEl.current?.click()
