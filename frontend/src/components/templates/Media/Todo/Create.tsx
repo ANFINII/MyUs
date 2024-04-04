@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CreateToDo } from 'types/internal/media'
+import { ToDoIn } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
@@ -29,7 +29,7 @@ interface Props {
 export default function TodoCreate(props: Props) {
   const { isAuth } = props
 
-  const [data, setData] = useState<CreateToDo>({ title: '', content: '', priority: '', progress: '' })
+  const [data, setData] = useState<ToDoIn>({ title: '', content: '', priority: '', progress: '' })
   const handlePriority = (priority: string) => setData({ ...data, priority })
   const handleProgress = (progress: string) => setData({ ...data, progress })
 

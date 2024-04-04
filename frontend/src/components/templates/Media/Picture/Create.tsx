@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { postPictureCreate } from 'api/media/post'
-import { CreatePcture } from 'types/internal/media'
+import { PctureIn } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
@@ -18,7 +18,7 @@ export default function PictureCreate(props: Props) {
 
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [create, setCreate] = useState<CreatePcture>({ title: '', content: '' })
+  const [create, setCreate] = useState<PctureIn>({ title: '', content: '' })
 
   const handleTitle = (title: string) => setCreate({ ...create, title })
   const handleContent = (content: string) => setCreate({ ...create, content })

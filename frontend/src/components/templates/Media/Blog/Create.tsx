@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { postBlogCreate } from 'api/media/post'
-import { CreateBlog } from 'types/internal/media'
+import { BlogIn } from 'types/internal/media'
 import { MentionUser } from 'types/internal/timeline'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -29,11 +29,11 @@ export default function BlogCreate(props: Props) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [data, setData] = useState<CreateBlog>({ title: '', content: '', richtext: '' })
+  const [data, setData] = useState<BlogIn>({ title: '', content: '', richtext: '' })
 
   const handleTitle = (title: string) => setData({ ...data, title })
   const handleContent = (content: string) => setData({ ...data, content })
-  const handleFile = (image: File) => setData({ ...data, image })
+  const handleFile = (files: File | File[]) => Array.isArray(files) || setData({ ...data, image: files })
 
   const handleQuill = (value: string) => {
     const richtext = value.trim() === '<p><br></p>' ? '' : value.trim()
@@ -41,20 +41,20 @@ export default function BlogCreate(props: Props) {
   }
 
   const handleForm = async () => {
-    if (!(data.title && data.content && data.richtext && data.image)) {
+    const title = data.title
+    const content = data.content
+    const richtext = data.richtext
+    const image = data.image
+    if (!(title && content && richtext && image)) {
       setIsRequired(true)
       return
     }
-    setIsLoading(true)
-    const formData = new FormData()
-    formData.append('title', data.title)
-    formData.append('content', data.content)
-    formData.append('richtext', data.richtext)
-    formData.append('image', data.image)
 
+    setIsLoading(true)
+    const request = { title, content, richtext, image }
     try {
-      const blog = await postBlogCreate(formData)
-      router.push(`/media/blog/${blog.id}`)
+      const data = await postBlogCreate(request)
+      router.push(`/media/blog/${data.id}`)
     } catch (error) {
       console.log(error)
     } finally {

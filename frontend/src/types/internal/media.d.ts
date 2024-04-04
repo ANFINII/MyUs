@@ -114,26 +114,33 @@ export interface MediaHome {
 }
 
 // request
-export interface CreatePcture {
+export interface ComicIn {
+  title: string
+  content: string
+  image?: File
+  images?: File[]
+}
+
+export interface PctureIn {
   title: string
   content: string
   image?: File
 }
 
-export interface CreateBlog {
+export interface BlogIn {
   title: string
   content: string
   image?: File
   richtext: string
 }
 
-export interface CreateChat {
+export interface ChatIn {
   title: string
   content: string
   period: string
 }
 
-interface CreateToDo {
+interface ToDoIn {
   title: string
   content: string
   priority: string

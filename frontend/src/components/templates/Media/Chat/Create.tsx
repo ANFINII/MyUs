@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { postChatCreate } from 'api/media/post'
-import { CreateChat } from 'types/internal/media'
+import { ChatIn } from 'types/internal/media'
 import { nowDate } from 'utils/functions/datetime'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -20,7 +20,7 @@ export default function ChatCreate(props: Props) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [data, setData] = useState<CreateChat>({ title: '', content: '', period: '' })
+  const [data, setData] = useState<ChatIn>({ title: '', content: '', period: '' })
 
   const handleTitle = (title: string) => setData({ ...data, title })
   const handleContent = (content: string) => setData({ ...data, content })
