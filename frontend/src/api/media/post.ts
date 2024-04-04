@@ -1,27 +1,26 @@
 import { HttpStatusCode } from 'axios'
 import { apiClient, apiFormClient } from 'lib/axios'
 import { apiPictureCreate, apiBlogCreate, apiChatCreate, apiComicCreate } from 'api/uri'
-import { Picture, Blog, CreatePcture, Comic } from 'types/internal/media'
-import { snakeCamel } from 'utils/functions/convertCase'
+import { Picture, Blog, Comic, ComicIn, PctureIn, BlogIn } from 'types/internal/media'
 
-export const postComicCreate = async (formData: any) => {
-  const data = await apiFormClient.post(apiComicCreate, formData).then((res) => {
+export const postComicCreate = async (request: ComicIn) => {
+  const data = await apiFormClient.post(apiComicCreate, request).then((res) => {
     if (res.status !== HttpStatusCode.Created) throw Error
     return res.data as Comic
   })
   return data
 }
 
-export const postPictureCreate = async (request: CreatePcture) => {
-  const data = await apiFormClient.post(apiPictureCreate, snakeCamel(request)).then((res) => {
+export const postPictureCreate = async (request: PctureIn) => {
+  const data = await apiFormClient.post(apiPictureCreate, request).then((res) => {
     if (res.status !== HttpStatusCode.Created) throw Error
     return res.data as Picture
   })
   return data
 }
 
-export const postBlogCreate = async (formData: any) => {
-  const data = await apiFormClient.post(apiBlogCreate, formData).then((res) => {
+export const postBlogCreate = async (request: BlogIn) => {
+  const data = await apiFormClient.post(apiBlogCreate, request).then((res) => {
     if (res.status !== HttpStatusCode.Created) throw Error
     return res.data as Blog
   })
