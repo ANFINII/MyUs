@@ -1,6 +1,4 @@
-import { apiServer } from 'lib/apiServer'
 import { apiClient } from 'lib/axios'
-import { Req } from 'types/global/next'
 import { MediaHome, Video, Music, Comic, Picture, Blog, Chat, ToDo } from 'types/internal/media'
 import { apiHome, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats, apiTodos, apiPicture, apiBlog, apiVideo } from '../uri'
 
@@ -56,13 +54,6 @@ export const getPicture = async (id: number) => {
 export const getBlogs = async () => {
   const data = await apiClient.get(apiBlogs).then((res) => {
     return res.data as Blog[]
-  })
-  return data
-}
-
-export const getServerBlog = async (req: Req, id: number) => {
-  const data = await apiServer(req, apiClient, apiBlog(id)).then((res) => {
-    return res.data as Blog
   })
   return data
 }
