@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from apps.myus.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Todo
 from apps.myus.modules.search import Search
 from apps.api.serializers import VideoSerializer, MusicSerializer, ComicSerializer
 from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializer, TodoSerializer
@@ -150,8 +150,23 @@ class ComicListAPI(APIView):
 
 
 class ComicCreateAPI(CreateAPIView):
-    queryset = Comic.objects.all()
-    serializer_class = ComicSerializer
+    def post(self, request) -> Response:
+        author = get_user(request)
+        if not author:
+            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+
+        data = request.data
+        title = data.get('title')
+        content = data.get('content')
+        image = data.get('image')
+        images = data.getlist('images[]')
+
+        obj = Comic.objects.create(author=author, title=title, content=content, image=image)
+        for sequence, image in enumerate(images, start=1):
+            ComicPage.objects.create(comic=obj, image=image, sequence=sequence)
+
+        data = {'id': obj.id}
+        return Response(data, status=HTTP_201_CREATED)
 
 
 class ComicAPI(APIView):
