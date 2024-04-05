@@ -6,36 +6,36 @@
   background: rgb(0, 0, 80);
   z-index: 60; /* headerよりは小さく */
 
+  .sidebar_nav {
+    height: 100%
+  }
+
+  .sidebar_color {
+    a:hover,
+    &.active a {
+      color: rgb(255, 255, 255);
+    }
+  }
+
   ul {
     padding: 0;
     margin: 0;
     list-style-type: none;
-  }
 
-  ul li {
-    display: flex;
-    text-align: center;
-    justify-content: center;
-  }
+    li {
+      display: flex;
+      text-align: center;
+      justify-content: center;
 
-  ul li a {
-    display: block;
-    width: 4.5em;
-    height: 52px;
-    margin: 18px 0;
-    font-size: 0.9em;
-    text-decoration: none;
-    color: rgb(125, 125, 125);
-  }
-}
-
-.sidebar_nav {
-  height: 100%
-}
-
-.sidebar_color {
-  a:hover,
-  &.active a {
-    color: rgb(255, 255, 255);
+      a {
+        display: block;
+        width: 4.5em;
+        height: 52px;
+        margin: 18px 0;
+        font-size: 0.9em;
+        text-decoration: none;
+        color: rgb(125, 125, 125);
+      }
+    }
   }
 }
