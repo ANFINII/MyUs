@@ -4,13 +4,12 @@
   grid-gap: 3px;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 42px auto;
-  margin: 14px 0 28px 0;
+  margin-bottom: 28px;
 }
 
 .article_table h1 {
   display: flex;
   max-height: 2em;
-  margin: 0;
   font-size: 24px;
 }
 
@@ -163,7 +162,7 @@ td .textarea.margin {
   grid-template-columns: 1fr;
   grid-template-rows: auto auto 1fr;
   grid-gap: 3px;
-  margin: 14px 0 0 0;
+  margin-top: 16px;
 }
 
 .messages_password_change {

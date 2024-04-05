@@ -2,13 +2,12 @@
 .main {
   grid-column: 2/-1;
   grid-row: 3/-1;
-  margin: 0 15px 15px 15px;
+  padding: 16px;
 }
 
 .main h1 {
   display: inline-block;
   height: 30px;
-  margin: 14px 0;
   font-size: 24px;
   color: rgb(50, 70, 140);
 }
@@ -71,6 +70,7 @@ div.field > button {
   grid-template-columns: repeat(auto-fit, minmax(auto, 272px));
   grid-template-rows: auto;
   grid-gap: 15px;
+  margin-top: 16px;
 }
 
 .section_list {
@@ -1360,11 +1360,11 @@ div.field > button {
 /* ToDoデザイン */
 .todo_create,
 .follow_button {
-  margin: 0 0 16px 0;
-}
+  margin: 16px 0;
 
-.follow_button span {
-  margin: 0 0 0 5px;
+  button {
+    margin-right: 8px;
+  }
 }
 
 .section_todo .author_space_todo {
