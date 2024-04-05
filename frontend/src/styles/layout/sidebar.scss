@@ -5,35 +5,37 @@
   height: calc(100% - 56px);
   background: rgb(0, 0, 80);
   z-index: 60; /* headerよりは小さく */
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+
+  ul li {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+  }
+
+  ul li a {
+    display: block;
+    width: 4.5em;
+    height: 52px;
+    margin: 18px 0;
+    font-size: 0.9em;
+    text-decoration: none;
+    color: rgb(125, 125, 125);
+  }
 }
 
 .sidebar_nav {
   height: 100%
 }
 
-.sidebar ul {
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-}
-
-.sidebar ul li {
-  display: flex;
-  text-align: center;
-  justify-content: center;
-}
-
-.sidebar ul li a {
-  display: block;
-  width: 4.5em;
-  height: 52px;
-  margin: 18px 0;
-  font-size: 0.9em;
-  text-decoration: none;
-  color: rgb(125, 125, 125);
-}
-
-.sidebar_color a:hover,
-.sidebar_color.active a {
-  color: rgb(255, 255, 255);
+.sidebar_color {
+  a:hover,
+  &.active a {
+    color: rgb(255, 255, 255);
+  }
 }
