@@ -114,6 +114,21 @@ export interface MediaHome {
 }
 
 // request
+export interface VideoIn {
+  title: string
+  content: string
+  image?: File
+  video?: File
+}
+
+export interface MusicIn {
+  title: string
+  content: string
+  lyric: string
+  music?: File
+  download: boolean
+}
+
 export interface ComicIn {
   title: string
   content: string
@@ -121,7 +136,7 @@ export interface ComicIn {
   images?: File[]
 }
 
-export interface PctureIn {
+export interface PictureIn {
   title: string
   content: string
   image?: File
