@@ -1,22 +1,26 @@
-import { useState } from 'react'
+import { ChangeEvent } from 'react'
 import clsx from 'clsx'
 import style from 'components/parts/Input/CheckBox/CheckBox.module.scss'
 
 interface Props {
-  name?: string
   label: string
   className?: string
+  checked?: boolean
+  onChange?: (checked: boolean) => void
 }
 
 export default function CheckBox(props: Props) {
-  const { label, className = '' } = props
+  const { label, className = '', checked, onChange } = props
 
-  const [checked, setChecked] = useState(true)
-  const handleChange = () => setChecked(!checked)
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(e.target.checked)
+    }
+  }
 
   return (
     <div className={clsx(style.check_group, className)}>
-      <input {...props} id={label} type="checkbox" onClick={handleChange} className={style.checkbox} checked={checked} />
+      <input id={label} type="checkbox" className={style.checkbox} defaultChecked={checked} onChange={handleChange} />
       <label htmlFor={label}>{label}</label>
     </div>
   )
