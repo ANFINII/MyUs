@@ -3,22 +3,21 @@ import clsx from 'clsx'
 import style from 'components/parts/Input/CheckBox/CheckBox.module.scss'
 
 interface Props {
-  id?: string
   name?: string
-  labelName: string
+  label: string
   className?: string
 }
 
 export default function CheckBox(props: Props) {
-  const { id, name, labelName, className = '' } = props
+  const { label, className = '' } = props
 
   const [checked, setChecked] = useState(true)
   const handleChange = () => setChecked(!checked)
 
   return (
     <div className={clsx(style.check_group, className)}>
-      <input type="checkbox" id={id} name={name} onClick={handleChange} className={style.checkbox} checked={checked} />
-      <label htmlFor={id}>{labelName}</label>
+      <input {...props} id={label} type="checkbox" onClick={handleChange} className={style.checkbox} checked={checked} />
+      <label htmlFor={label}>{label}</label>
     </div>
   )
 }
