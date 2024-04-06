@@ -13,6 +13,7 @@ from apps.api.serializers import VideoSerializer, MusicSerializer, ComicSerializ
 from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializer, TodoSerializer
 from apps.api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
 from apps.api.services.user import get_user
+from apps.api.utils.functions.index import is_bool
 from rest_framework.response import Response
 
 
@@ -96,8 +97,23 @@ class MusicListAPI(APIView):
 
 
 class MusicCreateAPI(CreateAPIView):
-    queryset = Music.objects.all()
-    serializer_class = MusicSerializer
+    def post(self, request) -> Response:
+        author = get_user(request)
+        if not author:
+            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+
+        data = request.data
+        field = {
+            'author': author,
+            'title': data.get('title'),
+            'content': data.get('content'),
+            'lyric': data.get('lyric'),
+            'music': data.get('music'),
+            'download': is_bool(data.get('download')),
+        }
+        obj = Music.objects.create(**field)
+        data = {'id': obj.id}
+        return Response(data, status=HTTP_201_CREATED)
 
 
 class MusicAPI(APIView):
@@ -156,14 +172,17 @@ class ComicCreateAPI(CreateAPIView):
             return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
 
         data = request.data
-        title = data.get('title')
-        content = data.get('content')
-        image = data.get('image')
         images = data.getlist('images[]')
+        field = {
+            'author': author,
+            'title': data.get('title'),
+            'content': data.get('content'),
+            'image': data.get('image'),
+        }
+        obj = Comic.objects.create(**field)
 
-        obj = Comic.objects.create(author=author, title=title, content=content, image=image)
-        for sequence, image in enumerate(images, start=1):
-            ComicPage.objects.create(comic=obj, image=image, sequence=sequence)
+        comic_pages = [ComicPage(comic=obj, image=image, sequence=sequence) for sequence, image in enumerate(images, start=1)]
+        ComicPage.objects.bulk_create(comic_pages)
 
         data = {'id': obj.id}
         return Response(data, status=HTTP_201_CREATED)
@@ -223,10 +242,13 @@ class PictureCreateAPI(APIView):
             return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
 
         data = request.data
-        title = data.get('title')
-        content = data.get('content')
-        image = data.get('image')
-        obj = Picture.objects.create(author=author, title=title, content=content, image=image)
+        field = {
+            'author': author,
+            'title': data.get('title'),
+            'content': data.get('content'),
+            'image': data.get('image'),
+        }
+        obj = Picture.objects.create(**field)
         data = {'id': obj.id}
         return Response(data, status=HTTP_201_CREATED)
 
@@ -286,12 +308,14 @@ class BlogCreateAPI(APIView):
             return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
 
         data = request.data
-        title = data.get('title')
-        content = data.get('content')
-        image = data.get('image')
-        richtext = data.get('richtext')
-
-        obj = Blog.objects.create(author=author, title=title, content=content, image=image, richtext=richtext)
+        field = {
+            'author': author,
+            'title': data.get('title'),
+            'content': data.get('content'),
+            'image': data.get('image'),
+            'richtext': data.get('richtext'),
+        }
+        obj = Blog.objects.create(**field)
         data = {'id': obj.id}
         return Response(data, status=HTTP_201_CREATED)
 
@@ -361,11 +385,13 @@ class ChatCreateAPI(CreateAPIView):
             return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
 
         data = request.data
-        title = data.get('title')
-        content = data.get('content')
-        period = data.get('period')
-
-        obj = Chat.objects.create(author=author, title=title, content=content, period=period)
+        field = {
+            'author': author,
+            'title': data.get('title'),
+            'content': data.get('content'),
+            'period': data.get('period'),
+        }
+        obj = Chat.objects.create(**field)
         data = {'id': obj.id}
         return Response(data, status=HTTP_201_CREATED)
 
