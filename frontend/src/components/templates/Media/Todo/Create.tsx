@@ -52,7 +52,7 @@ export default function TodoCreate(props: Props) {
           <p className="mv_16">期日</p>
           <Input name="duedate" placeholder={`${year}-12-31`} required />
 
-          <Button color="green" name="作成する" className="mt_32" />
+          <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
         </form>
       </LoginRequired>
     </Main>
