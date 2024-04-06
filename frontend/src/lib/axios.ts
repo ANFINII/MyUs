@@ -1,26 +1,17 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
 import { API_URL } from 'lib/config'
 import { snakeCamel } from 'utils/functions/convertCase'
 
-const applyResponseInterceptor = (client: AxiosInstance) => {
+const responseInterceptor = (client: AxiosInstance) => {
   client.interceptors.response.use(
     (response: AxiosResponse) => {
       response.data = snakeCamel(response.data)
       return response
     },
-    (e) => {
+    (e: AxiosError) => {
       const error = e.response
-      const message = error?.data?.message
-      const response = message ? { data: { message } } : { data: {} }
-
-      console.log('===== error status:', error?.status, error?.statusText, '=====')
-      if (message) {
-        console.log('===== error message:', message, '=====')
-      }
-
-      if (error?.status >= 400) {
-        return Promise.resolve(response)
-      }
+      console.log('===== error:', error, '=====')
+      return Promise.resolve(error)
     },
   )
 }
@@ -36,7 +27,7 @@ const axiosInstance = (contentType: string, csrfToken?: string) => {
     timeout: 2000,
     paramsSerializer: { indexes: null },
   })
-  applyResponseInterceptor(client)
+  responseInterceptor(client)
   return client
 }
 
@@ -46,7 +37,7 @@ const axiosAddressInstance = (contentType: string) => {
     headers: { 'Content-Type': contentType },
     timeout: 5000,
   })
-  applyResponseInterceptor(client)
+  responseInterceptor(client)
   return client
 }
 
