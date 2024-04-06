@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { postPictureCreate } from 'api/media/post'
-import { PctureIn } from 'types/internal/media'
+import { PictureIn } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
@@ -18,17 +18,27 @@ export default function PictureCreate(props: Props) {
 
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [create, setCreate] = useState<PctureIn>({ title: '', content: '' })
+  const [isRequired, setIsRequired] = useState<boolean>(false)
+  const [data, setData] = useState<PictureIn>({ title: '', content: '' })
 
-  const handleTitle = (title: string) => setCreate({ ...create, title })
-  const handleContent = (content: string) => setCreate({ ...create, content })
-  const handleFile = (image: File) => setCreate({ ...create, image })
+  const handleTitle = (title: string) => setData({ ...data, title })
+  const handleContent = (content: string) => setData({ ...data, content })
+  const handleFile = (files: File | File[]) => Array.isArray(files) || setData({ ...data, image: files })
 
   const handleForm = async () => {
+    const title = data.title
+    const content = data.content
+    const image = data.image
+    if (!(title && content && image)) {
+      setIsRequired(true)
+      return
+    }
+
     setIsLoading(true)
+    const request = { title, content, image }
     try {
-      const picture = await postPictureCreate(create)
-      router.push(`media/picture/${picture.id}`)
+      const data = await postPictureCreate(request)
+      router.push(`/media/picture/${data.id}`)
     } catch (error) {
       console.log(error)
     } finally {
@@ -40,16 +50,13 @@ export default function PictureCreate(props: Props) {
     <Main title="Picture">
       <LoginRequired isAuth={isAuth}>
         <form method="POST" action="">
-          <p className="mv_16">タイトル</p>
-          <Input name="title" value={create.title} onChange={handleTitle} required />
+          <Input label="タイトル" className="mt_16" required={isRequired} onChange={handleTitle} />
 
-          <p className="mv_16">内容</p>
-          <Textarea name="content" value={create.content} onChange={handleContent} required />
+          <Textarea label="内容" className="mt_16" required={isRequired} onChange={handleContent} />
 
-          <p className="mv_16">画像</p>
-          <InputFile accept="image/*" onChange={handleFile} required />
+          <InputFile label="画像" accept="image/*" className="mt_16" required={isRequired} onChange={handleFile} />
 
-          <Button color="green" name="作成する" loading={isLoading} onClick={handleForm} className="mt_32" />
+          <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
         </form>
       </LoginRequired>
     </Main>
