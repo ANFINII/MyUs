@@ -74,7 +74,7 @@ export default function BlogCreate(props: Props) {
 
           <Quill label="本文" users={users} value={data.richtext} className="blog" required={isRequired} onChange={handleQuill} />
 
-          <Button color="green" name="作成する" loading={isLoading} onClick={handleForm} className="mt_32" />
+          <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
         </form>
       </LoginRequired>
     </Main>

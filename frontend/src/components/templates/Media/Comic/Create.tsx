@@ -60,7 +60,7 @@ export default function ComicCreate(props: Props) {
 
           <InputFile label="ページ画像" accept="image/*" className="mt_16" required={isRequired} multiple onChange={handleMultiFile} />
 
-          <Button color="green" name="作成する" loading={isLoading} onClick={handleForm} className="mt_32" />
+          <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
         </form>
       </LoginRequired>
     </Main>
