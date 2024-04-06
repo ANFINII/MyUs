@@ -23,12 +23,12 @@ interface Props {
 }
 
 export default function Input(props: Props) {
-  const { label, errorText, className, error = false, required = false, autoFocus, onChange } = props
+  const { label, errorText, value, className, error = false, required = false, autoFocus, onChange } = props
 
   const inputFocus = useAutoFocus()
   const [isValue, setIsValue] = useState<boolean>(false)
 
-  const isRequired = required && !isValue
+  const isRequired = required && !isValue && !value
   const isErrorText = !isRequired && error
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +44,7 @@ export default function Input(props: Props) {
           {label}
         </label>
       )}
-      <input id={label} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={clsx(style.input, isRequired && style.error)} />
+      <input {...props} id={label} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={clsx(style.input, isRequired && style.error)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
       {isErrorText && <p className={style.error_text}>{errorText}</p>}
     </div>
