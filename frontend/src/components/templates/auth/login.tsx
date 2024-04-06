@@ -11,12 +11,17 @@ import Input from 'components/parts/Input'
 export default function Login() {
   const router = useRouter()
   const [message, setMessage] = useState<string>('')
+  const [isRequired, setIsRequired] = useState<boolean>(false)
   const [data, setData] = useState<LoginRequest>({ username: '', password: '' })
 
   const handleUsername = (username: string) => setData({ ...data, username })
   const handlePassword = (password: string) => setData({ ...data, password })
 
   const handleSubmit = async () => {
+    if (!(data.username && data.password)) {
+      setIsRequired(true)
+      return
+    }
     try {
       const resData = await postLogin(data)
       if (resData?.message) {
@@ -43,8 +48,8 @@ export default function Login() {
             </ul>
           )}
 
-          <Input type="text" placeholder="ユーザー名 or メールアドレス" className="mb_16" onChange={handleUsername} required autoFocus />
-          <Input type="password" placeholder="パスワード" minLength={8} maxLength={16} className="mb_16" onChange={handlePassword} required />
+          <Input type="text" placeholder="ユーザー名 or メールアドレス" className="mb_16" required={isRequired} autoFocus onChange={handleUsername} />
+          <Input type="password" placeholder="パスワード" minLength={8} maxLength={16} className="mb_16" required={isRequired} onChange={handlePassword} />
 
           <div className="password_reset">
             <Link href="/setting/password_reset">パスワードをリセット</Link>
@@ -53,7 +58,6 @@ export default function Login() {
           <Button color="blue" size="l" name="ログイン" className="w_full mb_24" onClick={handleSubmit} />
           <Button color="green" size="l" name="アカウント登録" className="w_full mb_24" onClick={() => router.push('/registration/signup')} />
         </form>
-
         <Footer />
       </article>
       <Footer />
