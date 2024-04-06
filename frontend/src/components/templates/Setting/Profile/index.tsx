@@ -28,6 +28,7 @@ export default function SettingProfile(props: Props) {
 
   const router = useRouter()
   const [isEdit, setIsEdit] = useState<boolean>(false)
+  const [isRequired, setIsRequired] = useState<boolean>(false)
   const { years, months, days } = selectDate()
   const [message, setMessage] = useState<string>('')
   const [data, setData] = useState<UserProfile>(user)
@@ -54,6 +55,7 @@ export default function SettingProfile(props: Props) {
   const handleBack = () => {
     reset()
     handleEdit()
+    setIsRequired(false)
   }
 
   const handleAutoAddress = async () => {
@@ -62,9 +64,14 @@ export default function SettingProfile(props: Props) {
   }
 
   const handlSubmit = async () => {
+    if (!(data.email && data.username && data.nickname && data.lastname && data.firstname && data.phone && data.postalCode)) {
+      setIsRequired(true)
+      return
+    }
     try {
       const resData = await postProfile(data)
       resData?.message ? setMessage(resData.message) : handleEdit()
+      setIsRequired(false)
     } catch (e) {
       setMessage('エラーが発生しました！')
     }
@@ -96,29 +103,30 @@ export default function SettingProfile(props: Props) {
             <TableRow label="アカウント画像" className="table_header">
               <label htmlFor="account_image_input" className="update_account_image">
                 <IconPerson size="3.5em" type="square" />
-                <input type="file" name="image" accept="image/*" id="account_image_input" className="custom-file-input" />
+                <input type="file" accept="image/*" id="account_image_input" className="custom-file-input" />
+                {/* <InputFile label="音楽" accept="image/*" onChange={handleFile} /> */}
               </label>
             </TableRow>
             <TableRow label="メールアドレス">
-              <Input type="text" name="email" value={data.email} maxLength={120} onChange={handleEmail} />
+              <Input value={data.email} maxLength={120} required={isRequired} onChange={handleEmail} />
             </TableRow>
             <TableRow label="ユーザー名">
-              <Input type="text" name="username" value={data.username} maxLength={30} placeholder="英数字" onChange={handleUsername} />
+              <Input value={data.username} maxLength={30} placeholder="英数字" required={isRequired} onChange={handleUsername} />
             </TableRow>
             <TableRow label="投稿者名">
-              <Input type="text" name="nickname" value={data.nickname} maxLength={60} onChange={handleNickname} />
+              <Input value={data.nickname} maxLength={60} required={isRequired} onChange={handleNickname} />
             </TableRow>
             <TableRow label="名前">
               <div className="td_name">
-                <Input type="text" name="last_name" value={data.lastname} placeholder="姓" maxLength={30} onChange={handleLastname} />
-                <Input type="text" name="first_name" value={data.firstname} placeholder="名" maxLength={30} onChange={handleFirstname} />
+                <Input value={data.lastname} placeholder="姓" maxLength={30} required={isRequired} onChange={handleLastname} />
+                <Input value={data.firstname} placeholder="名" maxLength={30} required={isRequired} onChange={handleFirstname} />
               </div>
             </TableRow>
             <TableRow label="生年月日">
               <div className="td_birthday">
-                <Select name="year" value={data.year} options={years} placeholder="年" onChange={handleYear} />
-                <Select name="month" value={data.month} options={months} placeholder="月" onChange={handleMonth} />
-                <Select name="day" value={data.day} options={days} placeholder="日" onChange={handleDay} />
+                <Select value={data.year} options={years} placeholder="年" onChange={handleYear} />
+                <Select value={data.month} options={months} placeholder="月" onChange={handleMonth} />
+                <Select value={data.day} options={days} placeholder="日" onChange={handleDay} />
               </div>
             </TableRow>
             <TableRow isIndent label="年齢">
@@ -128,31 +136,31 @@ export default function SettingProfile(props: Props) {
               <div className="td_gender">
                 {genders.map((gender) => (
                   <div key={gender.value} className="gender_radio">
-                    <input type="radio" name="gender" value={gender.value} checked={gender.value === data.gender} id={`gender_${gender.value}`} onChange={handleGender} />
+                    <input type="radio" value={gender.value} checked={gender.value === data.gender} id={`gender_${gender.value}`} onChange={handleGender} />
                     <label htmlFor={`gender_${gender.value}`}>{gender.key}</label>
                   </div>
                 ))}
               </div>
             </TableRow>
             <TableRow label="電話番号">
-              <Input type="tel" name="phone" value={data.phone} maxLength={15} onChange={handlePhone} required />
+              <Input type="tel" value={data.phone} maxLength={15} required={isRequired} onChange={handlePhone} />
             </TableRow>
             <TableRow label="郵便番号">
               <div className="d_flex">
-                <Input type="tel" name="postal_code" value={data.postalCode} maxLength={8} className="mr_2" onChange={handlePostalCode} required />
+                <Input type="tel" value={data.postalCode} maxLength={8} className="mr_2" required={isRequired} onChange={handlePostalCode} />
                 <Button name="住所自動入力" onClick={handleAutoAddress} />
               </div>
             </TableRow>
             <TableRow label="住所">
               <div className="td_location">
-                <Select name="year" value={data.prefecture} options={prefectures} placeholder="都道府県" onChange={handlePrefecture} />
-                <Input type="text" name="city" value={data.city} placeholder="市区町村" maxLength={255} onChange={handleCity} />
-                <Input type="text" name="street" value={data.street} placeholder="町名番地" maxLength={255} onChange={handleStreet} />
-                <Input type="text" name="building" value={data.building} placeholder="建物名" maxLength={255} onChange={handleBuilding} />
+                <Select value={data.prefecture} options={prefectures} placeholder="都道府県" onChange={handlePrefecture} />
+                <Input value={data.city} placeholder="市区町村" maxLength={255} onChange={handleCity} />
+                <Input value={data.street} placeholder="町名番地" maxLength={255} onChange={handleStreet} />
+                <Input value={data.building} placeholder="建物名" maxLength={255} onChange={handleBuilding} />
               </div>
             </TableRow>
             <TableRow label="自己紹介">
-              <Textarea name="introduction" className="textarea_margin" onChange={handleIntroduction}>
+              <Textarea className="textarea_margin" onChange={handleIntroduction}>
                 {data.introduction}
               </Textarea>
             </TableRow>
