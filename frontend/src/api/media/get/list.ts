@@ -1,6 +1,6 @@
 import { apiClient } from 'lib/axios'
-import { MediaHome, Video, Music, Comic, Picture, Blog, Chat, ToDo } from 'types/internal/media'
-import { apiHome, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats, apiTodos, apiPicture, apiBlog, apiVideo } from '../uri'
+import { apiHome, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats, apiTodos } from 'api/uri'
+import { MediaHome, Video, Music, Comic, Picture, Blog, Chat, Todo } from 'types/internal/media'
 
 export const getHome = async () => {
   const data = await apiClient.get(apiHome).then((res) => {
@@ -12,13 +12,6 @@ export const getHome = async () => {
 export const getVideos = async () => {
   const data = await apiClient.get(apiVideos).then((res) => {
     return res.data as Video[]
-  })
-  return data
-}
-
-export const getVideo = async (videoId: number) => {
-  const data = await apiClient.get(apiVideo(videoId)).then((res) => {
-    return res.data as Video
   })
   return data
 }
@@ -44,23 +37,9 @@ export const getPictures = async () => {
   return data
 }
 
-export const getPicture = async (id: number) => {
-  const data = await apiClient.get(apiPicture(id)).then((res) => {
-    return res.data as Picture
-  })
-  return data
-}
-
 export const getBlogs = async () => {
   const data = await apiClient.get(apiBlogs).then((res) => {
     return res.data as Blog[]
-  })
-  return data
-}
-
-export const getBlog = async (id: number) => {
-  const data = await apiClient.get(apiBlog(id)).then((res) => {
-    return res.data as Blog
   })
   return data
 }
@@ -74,7 +53,7 @@ export const getChats = async () => {
 
 export const getTodos = async () => {
   const data = await apiClient.get(apiTodos).then((res) => {
-    return res.data as ToDo[]
+    return res.data as Todo[]
   })
   return data
 }
