@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getTodos } from 'api/media/get'
-import { ToDo } from 'types/internal/media'
+import { getTodos } from 'api/media/get/list'
+import { Todo } from 'types/internal/media'
 import Todos from 'components/templates/media/todo/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
 }
 
 interface Props {
-  datas: ToDo[]
+  datas: Todo[]
 }
 
 export default function TodosPage(props: Props) {
