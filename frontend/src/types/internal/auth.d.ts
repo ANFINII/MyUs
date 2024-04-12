@@ -61,6 +61,14 @@ export interface Mypage {
   content: string
 }
 
+export interface MypageIn {
+  banner: string
+  email: string
+  tagManagerId: string
+  isAdvertise: boolean
+  content: string
+}
+
 export interface Notification {
   isVideo: boolean
   isMusic: boolean
