@@ -17,7 +17,7 @@ export interface Search {
   count: number
 }
 
-export interface ToDo {
+export interface Todo {
   id: number
   title: string
   content: string
