@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { postMypage } from 'api/user'
 import { Mypage } from 'types/internal/auth'
 import { isEmpty } from 'utils/constants/common'
 import Main from 'components/layout/Main'
@@ -22,11 +23,23 @@ export default function SttingMyPage(props: Props) {
 
   const router = useRouter()
   const [isEdit, setIsEdit] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [message, setMessage] = useState<string>('')
+  const [data, setData] = useState<Mypage>(mypage)
 
   const handleEdit = () => setIsEdit(!isEdit)
 
-  const handlSubmit = () => {
-    router.push('/setting/profile')
+  const handlSubmit = async () => {
+    setIsLoading(true)
+    try {
+      const resData = await postMypage(data)
+      resData?.message ? setMessage(resData.message) : handleEdit()
+      handleEdit()
+    } catch (e) {
+      setMessage('エラーが発生しました！')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleUserPage = () => {
@@ -38,7 +51,7 @@ export default function SttingMyPage(props: Props) {
       <LoginRequired isAuth={!isEmpty(mypage)}>
         {isEdit ? (
           <div className="button_group">
-            <Button color="green" size="s" name="登録" onClick={handlSubmit} />
+            <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
             <Button color="blue" size="s" name="戻る" onClick={handleEdit} />
           </div>
         ) : (
@@ -53,14 +66,14 @@ export default function SttingMyPage(props: Props) {
             <TableRow label="バナー画像" className="table_header">
               <label htmlFor="account_image_input" className="update_account_image">
                 <IconPicture size="3.5em" />
-                <input type="file" name="banner" accept="image/*" id="account_image_input" className="custom-file-input" />
+                <input type="file" accept="image/*" id="account_image_input" className="custom-file-input" />
               </label>
             </TableRow>
             <TableRow isIndent label="投稿者名">
               {mypage.nickname}
             </TableRow>
             <TableRow label="メールアドレス">
-              <Input type="text" name="email" value={mypage.email} maxLength={120} className="table_margin" />
+              <Input value={mypage.email} maxLength={120} className="table_margin" />
             </TableRow>
             <TableRow isIndent label="フォロー数">
               {mypage.followingCount}
@@ -69,7 +82,7 @@ export default function SttingMyPage(props: Props) {
               {mypage.followerCount}
             </TableRow>
             <TableRow label="タグID">
-              <Input type="text" name="tag_manager_id" value={mypage.tagManagerId} placeholder="タグマネージャーID" maxLength={10} />
+              <Input value={mypage.tagManagerId} placeholder="タグマネージャーID" maxLength={10} />
             </TableRow>
             <TableRow isIndent label="料金プラン">
               {mypage.plan}
@@ -80,9 +93,7 @@ export default function SttingMyPage(props: Props) {
               </form>
             </TableRow>
             <TableRow label="概要">
-              <Textarea name="introduction" className="textarea_margin">
-                {mypage.content}
-              </Textarea>
+              <Textarea className="textarea_margin">{mypage.content}</Textarea>
             </TableRow>
           </Table>
         ) : (
