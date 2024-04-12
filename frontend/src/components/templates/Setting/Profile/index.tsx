@@ -28,6 +28,7 @@ export default function SettingProfile(props: Props) {
 
   const router = useRouter()
   const [isEdit, setIsEdit] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const { years, months, days } = selectDate()
   const [message, setMessage] = useState<string>('')
@@ -68,12 +69,16 @@ export default function SettingProfile(props: Props) {
       setIsRequired(true)
       return
     }
+    setIsLoading(true)
     try {
       const resData = await postProfile(data)
       resData?.message ? setMessage(resData.message) : handleEdit()
+      handleEdit()
       setIsRequired(false)
     } catch (e) {
       setMessage('エラーが発生しました！')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -82,7 +87,7 @@ export default function SettingProfile(props: Props) {
       <LoginRequired isAuth={!isEmpty(data)}>
         {isEdit ? (
           <div className="button_group">
-            <Button color="green" size="s" name="登録" onClick={handlSubmit} />
+            <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
             <Button color="blue" size="s" name="戻る" onClick={handleBack} />
           </div>
         ) : (
