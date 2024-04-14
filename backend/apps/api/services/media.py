@@ -1,4 +1,5 @@
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from config.settings.base import DOMAIN_URL
 
 
 def get_home(count: int):
@@ -97,7 +98,7 @@ def get_pictures(count: int):
         'id': obj.id,
         'title': obj.title,
         'content': obj.content,
-        'image': obj.image.url,
+        'image': f'{DOMAIN_URL}{obj.image.url}',
         'like': obj.total_like(),
         'read': obj.read,
         'comment_count': obj.comment_count(),

@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Exists, OuterRef
 
+from config.settings.base import DOMAIN_URL
 # from rest_framework.generics import RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.response import Response
@@ -14,7 +15,6 @@ from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializ
 from apps.api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
 from apps.api.services.user import get_user
 from apps.api.utils.functions.index import is_bool
-from rest_framework.response import Response
 
 
 # Index
@@ -268,7 +268,7 @@ class PictureAPI(APIView):
             'id': obj.id,
             'title': obj.title,
             'content': obj.content,
-            'image': obj.image.url,
+            'image': f'{DOMAIN_URL}/{obj.image.url}',
             'comment': [{
                 'id': comment.id,
                 'text': comment.text,
