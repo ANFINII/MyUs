@@ -42,7 +42,7 @@ def get_videos(count: int):
         'author': {
             'id': obj.author.id,
             'nickname': obj.author.nickname,
-            'image': obj.author.image(),
+            'image': f'{DOMAIN_URL}{obj.author.image()}',
         }
     } for obj in objs]
     return data
@@ -66,7 +66,7 @@ def get_musics(count: int):
         'author': {
             'id': obj.author.id,
             'nickname': obj.author.nickname,
-            'image': obj.author.image(),
+            'image': f'{DOMAIN_URL}{obj.author.image()}',
         }
     } for obj in objs]
     return data
@@ -86,7 +86,7 @@ def get_comics(count: int):
         'author': {
             'id': obj.author.id,
             'nickname': obj.author.nickname,
-            'image': obj.author.image(),
+            'image': f'{DOMAIN_URL}{obj.author.image()}',
         }
     } for obj in objs]
     return data
@@ -108,7 +108,7 @@ def get_pictures(count: int):
         'author': {
             'id': obj.author.id,
             'nickname': obj.author.nickname,
-            'image': obj.author.image(),
+            'image': f'{DOMAIN_URL}{obj.author.image()}',
         }
     } for obj in objs]
     return data
@@ -122,7 +122,7 @@ def get_blogs(count: int):
         'content': obj.content,
         'richtext': obj.richtext,
         # 'delta': obj.delta,
-        'image': obj.image.url,
+        'image': f'{DOMAIN_URL}{obj.image.url}',
         'like': obj.total_like(),
         'read': obj.read,
         'comment_count': obj.comment_count(),
@@ -132,7 +132,7 @@ def get_blogs(count: int):
         'author': {
             'id': obj.author.id,
             'nickname': obj.author.nickname,
-            'image': obj.author.image(),
+            'image': f'{DOMAIN_URL}{obj.author.image()}',
         }
     } for obj in objs]
     return data
@@ -155,7 +155,7 @@ def get_chats(count: int):
         'author': {
             'id': obj.author.id,
             'nickname': obj.author.nickname,
-            'image': obj.author.image(),
+            'image': f'{DOMAIN_URL}{obj.author.image()}',
         }
     } for obj in objs]
     return data
@@ -176,7 +176,7 @@ def get_todos(count: int):
         'author': {
             'id': obj.author.id,
             'nickname': obj.author.nickname,
-            'image': obj.author.image(),
+            'image': f'{DOMAIN_URL}{obj.author.image()}',
         }
     } for obj in objs]
     return data
