@@ -1,10 +1,10 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import Router from 'next/router'
 import { Mypage } from 'types/internal/auth'
 import { Search, Follow } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import ExImage from 'components/parts/ExImage'
 import LoginRequired from 'components/parts/LoginRequired'
 
 interface Props {
@@ -33,7 +33,7 @@ export default function Follows(props: Props) {
                   <Link href="/userpage/[nickname]" data-name={nickname} className="follow_box pjax_button_userpage">
                     <object className="author_follow">
                       <Link href="" data-name={nickname} className="pjax_button_userpage">
-                        <Image src={imageUrl} title={nickname} className="follow_image" alt="" />
+                        <ExImage src={imageUrl} title={nickname} className="follow_image" />
                       </Link>
                     </object>
                     <span title={nickname} className="follow_content_1">

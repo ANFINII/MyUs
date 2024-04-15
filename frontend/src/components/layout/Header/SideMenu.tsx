@@ -1,5 +1,5 @@
-import Image from 'next/image'
 import { useRouter } from 'next/router'
+import ExImage from 'components/parts/ExImage'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconFile from 'components/parts/Icon/File'
 import IconGlobe from 'components/parts/Icon/Globe'
@@ -29,7 +29,7 @@ export default function SideMenu(props: Props) {
       <nav>
         <div className="side_menu_close side_menu_color" onClick={handleClose}>
           <IconArrow size="1.5em" type="left" className="side_menu_color_bi" />
-          <Image src="/image/MyUs.png" width={30} height={30} alt="" />
+          <ExImage src="/image/MyUs.png" size="30" />
         </div>
 
         <ul>
@@ -61,7 +61,7 @@ export default function SideMenu(props: Props) {
           </li>
 
           <li className="side_menu_footer_item side_menu_color" onClick={() => handleClick('/')}>
-            <Image src="/image/MyUs.png" width={24} height={24} alt="" className="myus_img" />
+            <ExImage src="/image/MyUs.png" size="24" className="myus_img" />
             <span className="side_menu_footer_item">© {date.getFullYear()} MyUs Co.,Ltd</span>
           </li>
         </ul>

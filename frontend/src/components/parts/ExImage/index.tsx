@@ -9,7 +9,7 @@ interface Props {
   className?: string
 }
 
-export default function Image(props: Props) {
+export default function ExImage(props: Props) {
   const { width, height, size } = props
 
   return <img {...props} width={width || size} height={height || size} />

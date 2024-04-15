@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Picture } from 'types/internal/media'
-import Image from 'components/parts/Image'
+import ExImage from 'components/parts/ExImage'
 import AuthorSpace from 'components/widgets/Common/AuthorSpace'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
 
@@ -18,7 +18,7 @@ export default function ArticleBlog(props: Props) {
       <div className="main_decolation">
         <Link href={`/media/blog/${id}`}>
           <figure>
-            <Image src={image} width="272" height="153" alt="" className="radius_8" />
+            <ExImage src={image} width="272" height="153" className="radius_8" />
           </figure>
           <div className="author_space">
             <AuthorSpace imageUrl={author.image} nickname={nickname} />

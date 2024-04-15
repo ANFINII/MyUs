@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Blog } from 'types/internal/media'
 import { formatDatetime } from 'utils/functions/datetime'
 import Button from 'components/parts/Button'
-import Image from 'components/parts/Image'
+import ExImage from 'components/parts/ExImage'
 import CommentInput from 'components/widgets/Comment/Input'
 interface Props {
   data: Blog
@@ -66,7 +66,7 @@ export default function MediaDetailCommon(props: Props) {
         <div className="content_detail">
           {/* <a href="{% url 'myus:userpage' object.author.nickname %}" data="{{ object.author.nickname }}" className="pjax_button_userpage"> */}
           <Link href="">
-            <Image src={author.image} alt="" title={author.nickname} className="profile_image_detail" />
+            <ExImage src={author.image} title={author.nickname} className="profile_image_detail" />
           </Link>
           <div className="username_space">{author.nickname}</div>
           <div className="registered_person">

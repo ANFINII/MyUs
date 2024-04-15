@@ -1,7 +1,7 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import ExImage from 'components/parts/ExImage'
 import LoginRequired from 'components/parts/LoginRequired'
 
 export default function Payment() {
@@ -12,7 +12,7 @@ export default function Payment() {
           <section className="section_plan">
             <div className="main_decolation_payment">
               <div className="payment_img">
-                <Image src="/image/MyUs.png" width={40} height={40} alt="" className="myus_img" />
+                <ExImage src="/image/MyUs.png" size="40" className="myus_img" />
                 Basic
               </div>
             </div>
@@ -30,7 +30,7 @@ export default function Payment() {
           <section className="section_plan">
             <div className="main_decolation_payment">
               <div className="payment_img">
-                <Image src="/image/MyUs.png" width={40} height={40} alt="" className="myus_img" />
+                <ExImage src="/image/MyUs.png" size="40" className="myus_img" />
                 Standard
               </div>
             </div>
@@ -48,7 +48,7 @@ export default function Payment() {
           <section className="section_plan">
             <div className="main_decolation_payment">
               <div className="payment_img">
-                <Image src="/image/MyUs.png" width={40} height={40} alt="" className="myus_img" />
+                <ExImage src="/image/MyUs.png" size="40" className="myus_img" />
                 Premium
               </div>
             </div>
@@ -68,7 +68,7 @@ export default function Payment() {
           <section className="section_plan">
             <div className="main_decolation_payment">
               <div className="payment_img">
-                <Image src="/image/MyUs.png" width={40} height={40} alt="" className="myus_img" />
+                <ExImage src="/image/MyUs.png" size="40" className="myus_img" />
                 プラン変更
               </div>
             </div>
@@ -82,7 +82,7 @@ export default function Payment() {
           <section className="section_plan">
             <div className="main_decolation_payment">
               <div className="payment_img">
-                <Image src="/image/MyUs.png" width={40} height={40} alt="" className="myus_img" />
+                <ExImage src="/image/MyUs.png" size="40" className="myus_img" />
                 Free
               </div>
             </div>

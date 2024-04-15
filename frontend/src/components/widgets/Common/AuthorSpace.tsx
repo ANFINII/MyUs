@@ -1,5 +1,5 @@
-import Image from 'next/image'
 import Link from 'next/link'
+import ExImage from 'components/parts/ExImage'
 
 interface Props {
   imageUrl: string
@@ -12,7 +12,7 @@ export default function AuthorSpace(props: Props) {
   return (
     <object className="author_image_space">
       <Link href={`/userpage/${nickname}`} className="pjax_button_userpage">
-        <Image src={imageUrl} title={nickname} className="profile_image" width={32} height={32} alt="" />
+        <ExImage src={imageUrl} title={nickname} className="profile_image" size="32" />
       </Link>
     </object>
   )

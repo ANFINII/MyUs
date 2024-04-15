@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import DropMenuCloud from 'components/layout/Header/DropMenuCloud'
 import DropMenuNotice from 'components/layout/Header/DropMenuNotice'
 import DropMenuProfile from 'components/layout/Header/DropMenuProfile'
 import SideMenu from 'components/layout/Header/SideMenu'
+import ExImage from 'components/parts/ExImage'
 import IconBell from 'components/parts/Icon/Bell'
 import IconCloud from 'components/parts/Icon/Cloud'
 import IconExclamation from 'components/parts/Icon/Exclamation'
@@ -86,7 +86,7 @@ export default function Header(props: Props) {
         </button>
 
         <button className={'header_nav_7 header_color' + isActive(isOpenProfile)} onClick={handleProfile}>
-          {isAuth ? <Image src="" title={nickname} width={32} height={32} alt="" /> : <IconPerson size="1.8em" type="circle" />}
+          {isAuth ? <ExImage src="" title={nickname} size="32" /> : <IconPerson size="1.8em" type="circle" />}
           <DropMenuProfile isOpen={isOpenProfile} setIsOpen={setIsOpenProfile} isActive isStaff={false} />
         </button>
       </nav>

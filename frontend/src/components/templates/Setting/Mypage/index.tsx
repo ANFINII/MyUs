@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { postMypage } from 'api/user'
 import { Mypage } from 'types/internal/auth'
 import { isEmpty } from 'utils/constants/common'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import ExImage from 'components/parts/ExImage'
 import IconPicture from 'components/parts/Icon/Picture'
 import IconToggle from 'components/parts/Icon/Toggle'
 import Input from 'components/parts/Input'
@@ -102,7 +102,7 @@ export default function SttingMyPage(props: Props) {
               <label htmlFor="account_image_input" className="mypage_image">
                 {mypage.banner && (
                   <a href={mypage.banner} data-lightbox="group">
-                    <Image src={mypage.banner} title={mypage.nickname} width={270} height={56} alt="" data-lightbox="group" />
+                    <ExImage src={mypage.banner} title={mypage.nickname} width="270" height="56" data-lightbox="group" />
                   </a>
                 )}
               </label>

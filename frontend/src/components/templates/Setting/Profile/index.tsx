@@ -1,5 +1,4 @@
 import { useState, ChangeEvent } from 'react'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { getAddressForm } from 'api/address'
 import { postProfile } from 'api/user'
@@ -11,6 +10,7 @@ import { selectDate } from 'utils/functions/datetime'
 import { genderMap, genders } from 'utils/functions/user'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import ExImage from 'components/parts/ExImage'
 import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
@@ -175,7 +175,7 @@ export default function SettingProfile(props: Props) {
             <TableRow label="アカウント画像" className="table_header">
               <label htmlFor="account_image_input" className="account_image">
                 <a href={data.avatar} data-lightbox="group">
-                  <Image src={data.avatar} title={data.nickname} width={56} height={56} alt="" data-lightbox="group" />
+                  <ExImage src={data.avatar} title={data.nickname} size="56" data-lightbox="group" />
                 </a>
               </label>
             </TableRow>
