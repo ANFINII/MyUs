@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
+import clsx from 'clsx'
 import DropMenuCloud from 'components/layout/Header/DropMenuCloud'
 import DropMenuNotice from 'components/layout/Header/DropMenuNotice'
 import DropMenuProfile from 'components/layout/Header/DropMenuProfile'
@@ -27,7 +28,7 @@ export default function Header(props: Props) {
   const [isOpenNotice, setIsOpenNotice] = useState<boolean>(false)
   const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false)
 
-  const isActive = (isbool: boolean) => (isbool ? ' ' + 'active' : '')
+  const isActive = (isbool: boolean) => (isbool ? 'active' : '')
   const handleSideMenu = () => setIsOpenSideMenu(!isOpenSideMenu)
   const handleCloud = () => setIsOpenCloud(!isOpenCloud)
   const handleNotice = () => setIsOpenNotice(!isOpenNotice)
@@ -45,8 +46,8 @@ export default function Header(props: Props) {
   return (
     <header className="header">
       <nav className="header_nav">
-        <div className={'side_nemu_cover' + isActive(isOpenSideMenu)} onClick={handleSideMenuClose}></div>
-        <div className={'drop_back_cover' + isActive(isOpenCloud || isOpenNotice || isOpenProfile)} onClick={handleCoverClose}></div>
+        <div className={clsx('side_nemu_cover', isActive(isOpenSideMenu))} onClick={handleSideMenuClose}></div>
+        <div className={clsx('drop_back_cover', isActive(isOpenCloud || isOpenNotice || isOpenProfile))} onClick={handleCoverClose}></div>
 
         <button className="header_nav_1 header_color" onClick={handleSideMenu}>
           <IconList width="2em" height="1.7em" />
@@ -74,18 +75,18 @@ export default function Header(props: Props) {
           <IconLightning size="1.5em" type="fill" />
         </button>
 
-        <button className={'header_nav_5 header_color' + isActive(isOpenCloud)} onClick={handleCloud}>
+        <button className={clsx('header_nav_5 header_color', isActive(isOpenCloud))} onClick={handleCloud}>
           <IconCloud size="1.5em" />
           <DropMenuCloud isOpen={isOpenCloud} setIsOpen={setIsOpenCloud} />
         </button>
 
-        <button className={'header_nav_6 header_color' + isActive(isOpenNotice)} onClick={handleNotice}>
+        <button className={clsx('header_nav_6 header_color', isActive(isOpenNotice))} onClick={handleNotice}>
           <IconBell size="1.5em" className={isActive(notificationCount > 0)} />
           <IconExclamation size="1.2em" className={isActive(notificationCount > 0)} />
           <DropMenuNotice isOpen={isOpenNotice} setIsOpen={setIsOpenNotice} />
         </button>
 
-        <button className={'header_nav_7 header_color' + isActive(isOpenProfile)} onClick={handleProfile}>
+        <button className={clsx('header_nav_7 header_color', isActive(isOpenProfile))} onClick={handleProfile}>
           {isAuth ? <ExImage src="" title={nickname} size="32" /> : <IconPerson size="1.8em" type="circle" />}
           <DropMenuProfile isOpen={isOpenProfile} setIsOpen={setIsOpenProfile} isActive isStaff={false} />
         </button>

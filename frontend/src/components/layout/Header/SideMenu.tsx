@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import clsx from 'clsx'
 import ExImage from 'components/parts/ExImage'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconFile from 'components/parts/Icon/File'
@@ -25,7 +26,7 @@ export default function SideMenu(props: Props) {
   }
 
   return (
-    <aside className={'side_menu' + (isOpen ? ' ' + 'active' : '')}>
+    <aside className={clsx('side_menu', isOpen ? 'active' : '')}>
       <nav>
         <div className="side_menu_close side_menu_color" onClick={handleClose}>
           <IconArrow size="1.5em" type="left" className="side_menu_color_bi" />

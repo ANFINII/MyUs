@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import clsx from 'clsx'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
@@ -23,7 +24,7 @@ export default function DropMenuCloud(props: Props) {
 
   return (
     <>
-      <nav className={'drop_menu drop_menu_cloud' + (isOpen ? ' ' + 'active' : '')}>
+      <nav className={clsx('drop_menu drop_menu_cloud', isOpen ? 'active' : '')}>
         <ul>
           <li className="drop_menu_list" onClick={() => handleClick('/media/video/create')}>
             <IconVideo size="1.5em" className="color_drop_menu_bi" />
