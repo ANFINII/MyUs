@@ -155,9 +155,10 @@ export interface ChatIn {
   period: string
 }
 
-interface ToDoIn {
+interface TodoIn {
   title: string
   content: string
   priority: string
   progress: string
+  duedate: string
 }
