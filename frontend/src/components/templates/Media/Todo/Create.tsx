@@ -1,26 +1,15 @@
 import { useState } from 'react'
-import { ToDoIn } from 'types/internal/media'
+import router from 'next/router'
+import { postTodoCreate } from 'api/media/post'
+import { TodoIn } from 'types/internal/media'
+import { priority, progress } from 'utils/constants/todo'
+import { nowDate } from 'utils/functions/datetime'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
-
-const now = new Date()
-const year = now.getFullYear()
-
-export const priority = [
-  { value: 'danger', label: '高' },
-  { value: 'success', label: '普通' },
-  { value: 'info', label: '低' },
-]
-
-export const progress = [
-  { value: '0', label: '未着手' },
-  { value: '1', label: '進行中' },
-  { value: '2', label: '完了' },
-]
 
 interface Props {
   isAuth: boolean
@@ -29,28 +18,46 @@ interface Props {
 export default function TodoCreate(props: Props) {
   const { isAuth } = props
 
-  const [data, setData] = useState<ToDoIn>({ title: '', content: '', priority: '', progress: '' })
+  const { year } = nowDate()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isRequired, setIsRequired] = useState<boolean>(false)
+  const [data, setData] = useState<TodoIn>({ title: '', content: '', priority: '', progress: '', duedate: '' })
+
+  const handleTitle = (title: string) => setData({ ...data, title })
+  const handleContent = (content: string) => setData({ ...data, content })
   const handlePriority = (priority: string) => setData({ ...data, priority })
   const handleProgress = (progress: string) => setData({ ...data, progress })
+  const handleDuedate = (duedate: string) => setData({ ...data, duedate })
+
+  const handleForm = async () => {
+    if (!(data.title && data.content && data.duedate)) {
+      setIsRequired(true)
+      return
+    }
+    setIsLoading(true)
+    try {
+      const chat = await postTodoCreate(data)
+      router.push(`/media/todo/${chat.id}`)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <Main title="Todo">
       <LoginRequired isAuth={isAuth}>
         <form method="POST" action="">
-          <p className="mv_16">タイトル</p>
-          <Input name="title" required />
+          <Input label="タイトル" className="mt_16" required={isRequired} onChange={handleTitle} />
 
-          <p className="mv_16">内容</p>
-          <Textarea name="content" required />
+          <Textarea label="内容" className="mt_16" required={isRequired} onChange={handleContent} />
 
-          <p className="mv_16">優先度</p>
-          <Select name="priority" options={priority} value={data.priority} onChange={handlePriority} />
+          <Select label="優先度" className="mt_16" options={priority} value={data.priority} onChange={handlePriority} />
 
-          <p className="mv_16">進捗度</p>
-          <Select name="progress" options={progress} value={data.progress} onChange={handleProgress} />
+          <Select label="進捗度" className="mt_16" options={progress} value={data.progress} onChange={handleProgress} />
 
-          <p className="mv_16">期日</p>
-          <Input name="duedate" placeholder={`${year}-12-31`} required />
+          <Input label="期日" className="mt_16" placeholder={`${year}-12-31`} required={isRequired} onChange={handleDuedate} />
 
           <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
         </form>

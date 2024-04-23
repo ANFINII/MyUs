@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios'
 import { apiClient, apiFormClient } from 'lib/axios'
-import { apiPictureCreate, apiBlogCreate, apiChatCreate, apiComicCreate, apiVideoCreate, apiMusicCreate } from 'api/uri'
-import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
+import { apiPictureCreate, apiBlogCreate, apiChatCreate, apiComicCreate, apiVideoCreate, apiMusicCreate, apiTodoCreate } from 'api/uri'
+import { Video, Music, Comic, Picture, Blog, Chat, Todo, TodoIn } from 'types/internal/media'
 import { VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn } from 'types/internal/media'
 
 export const postVideoCreate = async (request: VideoIn) => {
@@ -48,6 +48,14 @@ export const postChatCreate = async (request: ChatIn) => {
   const data = await apiClient.post(apiChatCreate, request).then((res) => {
     if (res.status !== HttpStatusCode.Created) throw Error
     return res.data as Chat
+  })
+  return data
+}
+
+export const postTodoCreate = async (request: TodoIn) => {
+  const data = await apiClient.post(apiTodoCreate, request).then((res) => {
+    if (res.status !== HttpStatusCode.Created) throw Error
+    return res.data as Todo
   })
   return data
 }
