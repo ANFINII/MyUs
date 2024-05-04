@@ -1,10 +1,10 @@
-import { Search, ToDo } from 'types/internal/media'
+import { Search, Todo } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import ArticleTodo from 'components/widgets/Article/Todo'
 
 interface Props {
   search?: Search
-  datas: ToDo[]
+  datas: Todo[]
 }
 
 export default function Todos(props: Props) {
