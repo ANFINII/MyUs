@@ -2,8 +2,7 @@ import { HttpStatusCode } from 'axios'
 import { apiServer } from 'lib/apiServer'
 import { apiClient } from 'lib/axios'
 import { Req } from 'types/global/next'
-import { UserProfile, Mypage, MypageIn } from 'types/internal/auth'
-import { Notification } from 'types/internal/auth'
+import { UserProfile, Mypage, MypageIn, NotificationOut, NotificationIn } from 'types/internal/auth'
 import { camelSnake } from 'utils/functions/convertCase'
 import { apiProfile, apiMypage, apiNotification } from './uri'
 
@@ -44,7 +43,11 @@ export const postMypage = async (request: MypageIn) => {
 export const getServerNotification = async (req: Req) => {
   const data = await apiServer(req, apiClient, apiNotification).then((res) => {
     if (res.status !== HttpStatusCode.Ok) return {}
-    return res.data as Notification
+    return res.data as NotificationOut
   })
   return data
+}
+
+export const postNotification = async (request: NotificationIn) => {
+  await apiClient.post(apiNotification, camelSnake(request))
 }
