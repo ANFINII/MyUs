@@ -42,7 +42,7 @@ export const postMypage = async (request: MypageIn) => {
 
 export const getServerNotification = async (req: Req) => {
   const data = await apiServer(req, apiClient, apiNotification).then((res) => {
-    if (res.status !== HttpStatusCode.Ok) return {}
+    if (res.status !== HttpStatusCode.Ok) return null
     return res.data as NotificationOut
   })
   return data

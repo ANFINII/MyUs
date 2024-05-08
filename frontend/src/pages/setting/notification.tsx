@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { getServerNotification } from 'api/user'
-import { Notification } from 'types/internal/auth'
+import { NotificationOut } from 'types/internal/auth'
 import SettingNotification from 'components/templates/setting/notification'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
 }
 
 interface Props {
-  notification: Notification
+  notification: NotificationOut
 }
 
 export default function SettingNotificationPage(props: Props) {
