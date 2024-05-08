@@ -69,7 +69,7 @@ export interface MypageIn {
   content: string
 }
 
-export interface NotificationIn {
+export interface Notification {
   isVideo: boolean
   isMusic: boolean
   isComic: boolean
@@ -82,9 +82,10 @@ export interface NotificationIn {
   isViews: boolean
 }
 
-export type NotificationOut = NotificationIn
+export type NotificationIn = Notification
+export type NotificationOut = Notification
 
-export interface LoginRequest {
+export interface LoginIn {
   username: string
   password: string
 }

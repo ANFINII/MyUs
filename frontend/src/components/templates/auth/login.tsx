@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { postLogin } from 'api/auth'
-import { LoginRequest } from 'types/internal/auth'
+import { LoginIn } from 'types/internal/auth'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -12,7 +12,7 @@ export default function Login() {
   const router = useRouter()
   const [message, setMessage] = useState<string>('')
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [data, setData] = useState<LoginRequest>({ username: '', password: '' })
+  const [data, setData] = useState<LoginIn>({ username: '', password: '' })
 
   const handleUsername = (username: string) => setData({ ...data, username })
   const handlePassword = (password: string) => setData({ ...data, password })
