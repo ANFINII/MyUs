@@ -35,7 +35,7 @@ export default function SettingNotification(props: Props) {
     }
   }
 
-  const handleCancel = async () => {
+  const handleReset = async () => {
     const data = await getNotification()
     setNewNotification(data)
   }
@@ -45,7 +45,7 @@ export default function SettingNotification(props: Props) {
       <LoginRequired isAuth={!isEmpty(notification)}>
         <div className="button_group">
           <Button color="green" size="s" name="保存" loading={isLoading} onClick={handlSubmit} />
-          <Button color="blue" size="s" name="キャンセル" onClick={handleCancel} />
+          <Button color="blue" size="s" name="リセット" onClick={handleReset} />
         </div>
 
         <Table>
