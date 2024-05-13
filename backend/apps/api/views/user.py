@@ -104,4 +104,15 @@ class NotificationAPI(APIView):
         return Response(data, status=HTTP_200_OK)
 
     def post(self, request):
-        pass
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
+        data = request.data
+        notification_setting = NotificationSetting.objects.filter(user=user_id).first()
+        if notification_setting:
+            [setattr(notification_setting, key, value) for key, value in data.items()]
+            notification_setting.save()
+
+        return Response({'message': 'success'}, status=HTTP_204_NO_CONTENT)
