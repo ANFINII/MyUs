@@ -48,6 +48,13 @@ export const getServerNotification = async (req: Req) => {
   return data
 }
 
+export const getNotification = async () => {
+  const data = await apiClient.get(apiNotification).then((res) => {
+    return res.data as NotificationOut
+  })
+  return data
+}
+
 export const postNotification = async (request: NotificationIn) => {
   await apiClient.post(apiNotification, camelSnake(request))
 }

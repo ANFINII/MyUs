@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { postNotification } from 'api/user'
+import { getNotification, postNotification } from 'api/user'
 import { Notification, NotificationOut } from 'types/internal/auth'
 import { isEmpty } from 'utils/constants/common'
 import { notificationTypes } from 'utils/functions/user'
@@ -22,17 +22,22 @@ export default function SettingNotification(props: Props) {
 
   const handleToggle = (type: keyof Notification) => setNewNotification((prev) => ({ ...prev, [type]: !prev[type] }))
 
-  const handleCancel = () => setNewNotification(notification)
-
   const handlSubmit = async () => {
     setIsLoading(true)
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     try {
       postNotification(newNotification)
     } catch (error) {
+      setNewNotification(notification)
       console.log(error)
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleCancel = async () => {
+    const data = await getNotification()
+    setNewNotification(data)
   }
 
   return (
