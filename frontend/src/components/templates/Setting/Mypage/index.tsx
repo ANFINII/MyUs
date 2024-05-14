@@ -27,8 +27,17 @@ export default function SttingMyPage(props: Props) {
   const [message, setMessage] = useState<string>('')
   const [data, setData] = useState<Mypage>(mypage)
 
+  const reset = () => setData(mypage)
   const handleEdit = () => setIsEdit(!isEdit)
-  const handleToggle = (isAdvertise: boolean) => setData((prev) => ({ ...prev, isAdvertise: !isAdvertise }))
+  const handleEmail = (email: string) => setData({ ...data, email })
+  const handleToggle = (isAdvertise: boolean) => setData({ ...data, isAdvertise: !isAdvertise })
+  const handleTagManagerId = (tagManagerId: string) => setData({ ...data, tagManagerId })
+  const handleContent = (content: string) => setData({ ...data, content })
+
+  const handleBack = () => {
+    reset()
+    handleEdit()
+  }
 
   const handlSubmit = async () => {
     setIsLoading(true)
@@ -54,7 +63,7 @@ export default function SttingMyPage(props: Props) {
         {isEdit ? (
           <div className="button_group">
             <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
-            <Button color="blue" size="s" name="戻る" onClick={handleEdit} />
+            <Button color="blue" size="s" name="戻る" onClick={handleBack} />
           </div>
         ) : (
           <div className="button_group">
@@ -72,64 +81,66 @@ export default function SttingMyPage(props: Props) {
               </label>
             </TableRow>
             <TableRow isIndent label="投稿者名">
-              {mypage.nickname}
+              {data.nickname}
             </TableRow>
             <TableRow label="メールアドレス">
-              <Input value={mypage.email} maxLength={120} className="table_margin" />
+              <Input value={data.email} maxLength={120} onChange={handleEmail} />
             </TableRow>
             <TableRow isIndent label="フォロー数">
-              {mypage.followingCount}
+              {data.followingCount}
             </TableRow>
             <TableRow isIndent label="フォロワー数">
-              {mypage.followerCount}
+              {data.followerCount}
             </TableRow>
             <TableRow isIndent label="料金プラン">
-              {mypage.plan}
+              {data.plan}
             </TableRow>
             <TableRow isIndent label="全体広告">
-              {mypage.plan === 'Free' ? <Toggle isActive={data.isAdvertise} disable /> : <Toggle isActive={data.isAdvertise} onClick={() => handleToggle(data.isAdvertise)} />}
+              {data.plan === 'Free' ? <Toggle isActive={data.isAdvertise} disable /> : <Toggle isActive={data.isAdvertise} onClick={() => handleToggle(data.isAdvertise)} />}
             </TableRow>
             <TableRow label="タグID">
-              <Input value={mypage.tagManagerId} placeholder="タグマネージャーID" maxLength={10} />
+              <Input value={data.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleTagManagerId} />
             </TableRow>
             <TableRow label="概要">
-              <Textarea className="textarea_margin">{mypage.content}</Textarea>
+              <Textarea className="textarea_margin" onChange={handleContent}>
+                {data.content}
+              </Textarea>
             </TableRow>
           </Table>
         ) : (
           <Table>
             <TableRow label="バナー画像">
               <label htmlFor="account_image_input" className="mypage_image">
-                {mypage.banner && (
-                  <a href={mypage.banner} data-lightbox="group">
-                    <ExImage src={mypage.banner} title={mypage.nickname} width="270" height="56" data-lightbox="group" />
+                {data.banner && (
+                  <a href={data.banner} data-lightbox="group">
+                    <ExImage src={data.banner} title={data.nickname} width="270" height="56" data-lightbox="group" />
                   </a>
                 )}
               </label>
             </TableRow>
             <TableRow isIndent label="投稿者名">
-              {mypage.nickname}
+              {data.nickname}
             </TableRow>
             <TableRow isIndent label="メールアドレス">
-              {mypage.email}
+              {data.email}
             </TableRow>
             <TableRow isIndent label="フォロー数">
-              {mypage.followingCount}
+              {data.followingCount}
             </TableRow>
             <TableRow isIndent label="フォロワー数">
-              {mypage.followerCount}
+              {data.followerCount}
             </TableRow>
             <TableRow isIndent label="料金プラン">
-              {mypage.plan}
+              {data.plan}
             </TableRow>
             <TableRow isIndent label="全体広告">
               <Toggle isActive={data.isAdvertise} disable />
             </TableRow>
             <TableRow isIndent label="タグID">
-              GTM{mypage.tagManagerId && '-' + mypage.tagManagerId}
+              GTM{data.tagManagerId && '-' + data.tagManagerId}
             </TableRow>
             <TableRow isIndent label="概要">
-              {mypage.content}
+              {data.content}
             </TableRow>
           </Table>
         )}
