@@ -7,9 +7,9 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import ExImage from 'components/parts/ExImage'
 import IconPicture from 'components/parts/Icon/Picture'
-import IconToggle from 'components/parts/Icon/Toggle'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
+import Toggle from 'components/parts/Input/Toggle'
 import LoginRequired from 'components/parts/LoginRequired'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
@@ -28,9 +28,11 @@ export default function SttingMyPage(props: Props) {
   const [data, setData] = useState<Mypage>(mypage)
 
   const handleEdit = () => setIsEdit(!isEdit)
+  const handleToggle = (isAdvertise: boolean) => setData((prev) => ({ ...prev, isAdvertise: !isAdvertise }))
 
   const handlSubmit = async () => {
     setIsLoading(true)
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     try {
       const resData = await postMypage(data)
       resData?.message ? setMessage(resData.message) : handleEdit()
@@ -81,16 +83,14 @@ export default function SttingMyPage(props: Props) {
             <TableRow isIndent label="フォロワー数">
               {mypage.followerCount}
             </TableRow>
-            <TableRow label="タグID">
-              <Input value={mypage.tagManagerId} placeholder="タグマネージャーID" maxLength={10} />
-            </TableRow>
             <TableRow isIndent label="料金プラン">
               {mypage.plan}
             </TableRow>
             <TableRow isIndent label="全体広告">
-              <form method="POST" action="" data-advertise={mypage.isAdvertise}>
-                {mypage.plan === 'Free' ? <IconToggle size="25" type="disable" /> : mypage.isAdvertise ? <IconToggle size="25" type="on" /> : <IconToggle size="25" type="off" />}
-              </form>
+              {mypage.plan === 'Free' ? <Toggle isActive={data.isAdvertise} disable /> : <Toggle isActive={data.isAdvertise} onClick={() => handleToggle(data.isAdvertise)} />}
+            </TableRow>
+            <TableRow label="タグID">
+              <Input value={mypage.tagManagerId} placeholder="タグマネージャーID" maxLength={10} />
             </TableRow>
             <TableRow label="概要">
               <Textarea className="textarea_margin">{mypage.content}</Textarea>
@@ -119,16 +119,14 @@ export default function SttingMyPage(props: Props) {
             <TableRow isIndent label="フォロワー数">
               {mypage.followerCount}
             </TableRow>
-            <TableRow isIndent label="タグID">
-              GTM{mypage.tagManagerId && '-' + mypage.tagManagerId}
-            </TableRow>
             <TableRow isIndent label="料金プラン">
               {mypage.plan}
             </TableRow>
             <TableRow isIndent label="全体広告">
-              <form method="POST" action="" data-advertise={mypage.isAdvertise}>
-                {mypage.plan === 'Free' ? <IconToggle size="25" type="disable" /> : mypage.isAdvertise ? <IconToggle size="25" type="on" /> : <IconToggle size="25" type="off" />}
-              </form>
+              <Toggle isActive={data.isAdvertise} disable />
+            </TableRow>
+            <TableRow isIndent label="タグID">
+              GTM{mypage.tagManagerId && '-' + mypage.tagManagerId}
             </TableRow>
             <TableRow isIndent label="概要">
               {mypage.content}
