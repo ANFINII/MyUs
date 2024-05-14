@@ -4,14 +4,15 @@ import style from 'components/parts/Input/Toggle/Toggle.module.scss'
 
 interface Props {
   isActive: boolean
-  onClick: () => void
+  disable?: boolean
+  onClick?: () => void
 }
 
 export default function Toggle(props: Props) {
-  const { isActive, onClick } = props
+  const { isActive, disable = false, onClick } = props
 
   return (
-    <div className={clsx(style.radio, isActive ? style.active : '')} onClick={onClick}>
+    <div className={clsx(style.toggle, isActive ? style.active : '', disable ? style.disable : '')} onClick={onClick}>
       {isActive ? <IconToggle size="25" type="on" /> : <IconToggle size="25" type="off" />}
     </div>
   )
