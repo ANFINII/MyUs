@@ -1,9 +1,20 @@
-.radio {
+.toggle {
   width: max-content;
-  fill: rgb(0, 40, 80);
-  cursor: pointer;
+  color: rgb(0, 40, 80);
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.disable {
+    cursor: default;
+  }
 
   &.active {
-    fill: rgb(0, 120, 220);
+    color: rgb(10, 110, 250);
+
+    &.disable {
+      color: rgb(100, 180, 250);
+    }
   }
 }
