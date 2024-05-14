@@ -102,7 +102,7 @@ export default function SttingMyPage(props: Props) {
               <Input value={data.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleTagManagerId} />
             </TableRow>
             <TableRow label="概要">
-              <Textarea className="textarea_margin" onChange={handleContent}>
+              <Textarea className="textarea_margin" value={data.content} onChange={handleContent}>
                 {data.content}
               </Textarea>
             </TableRow>
