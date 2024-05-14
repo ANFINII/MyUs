@@ -70,6 +70,7 @@ export default function SettingProfile(props: Props) {
       return
     }
     setIsLoading(true)
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     try {
       const resData = await postProfile(data)
       resData?.message ? setMessage(resData.message) : handleEdit()
