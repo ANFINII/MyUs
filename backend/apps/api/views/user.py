@@ -5,7 +5,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from apps.myus.modules.filter_data import DeferData
-from apps.myus.models import NotificationSetting
+from apps.myus.models import MyPage, NotificationSetting
 from apps.api.services.user import get_user_id
 from apps.api.utils.functions.logger import Log
 
@@ -77,7 +77,20 @@ class MyPageAPI(APIView):
         return Response(data, status=HTTP_200_OK)
 
     def post(self, request):
-        pass
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
+        mypage = MyPage.objects.filter(id=user_id).first()
+
+        data = request.data
+        update_fields = ['banner', 'email', 'is_advertise', 'tag_manager_id', 'content']
+        for field in update_fields:
+            setattr(mypage, field, data.get(field))
+        mypage.save()
+
+        return Response({'message': 'success'}, status=HTTP_204_NO_CONTENT)
 
 
 class NotificationAPI(APIView):
@@ -109,8 +122,9 @@ class NotificationAPI(APIView):
             return Response({'message': auth.data.get('message')}, status=auth.status_code)
 
         user_id = auth.data['user_id']
-        data = request.data
         notification_setting = NotificationSetting.objects.filter(user=user_id).first()
+
+        data = request.data
         if notification_setting:
             [setattr(notification_setting, key, value) for key, value in data.items()]
             notification_setting.save()

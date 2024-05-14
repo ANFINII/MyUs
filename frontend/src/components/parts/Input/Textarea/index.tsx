@@ -17,9 +17,9 @@ interface Props {
 }
 
 export default function Textarea(props: Props) {
-  const { label, errorText, className, error = false, required = false, onChange, children } = props
+  const { label, errorText, value, className, error = false, required = false, onChange, children } = props
 
-  const [rows, setRows] = useState(1)
+  const [rows, setRows] = useState(value?.split('\n').length || 1)
   const [isValue, setIsValue] = useState<boolean>(false)
 
   const isRequired = required && !isValue

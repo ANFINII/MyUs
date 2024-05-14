@@ -70,6 +70,7 @@ export default function SettingProfile(props: Props) {
       return
     }
     setIsLoading(true)
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     try {
       const resData = await postProfile(data)
       resData?.message ? setMessage(resData.message) : handleEdit()
@@ -165,7 +166,7 @@ export default function SettingProfile(props: Props) {
               </div>
             </TableRow>
             <TableRow label="自己紹介">
-              <Textarea className="textarea_margin" onChange={handleIntroduction}>
+              <Textarea className="textarea_margin" value={data.introduction} onChange={handleIntroduction}>
                 {data.introduction}
               </Textarea>
             </TableRow>
