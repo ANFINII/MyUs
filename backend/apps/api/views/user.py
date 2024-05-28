@@ -51,7 +51,6 @@ class ProfileAPI(APIView):
         return Response({'message': '保存しました!'}, status=HTTP_204_NO_CONTENT)
 
 
-
 class MyPageAPI(APIView):
     def get(self, request):
         auth = get_user_id(request)
