@@ -53,9 +53,9 @@ export default function TodoCreate(props: Props) {
 
           <Textarea label="内容" className="mt_16" required={isRequired} onChange={handleContent} />
 
-          <Select label="優先度" className="mt_16" options={priority} value={data.priority} onChange={handlePriority} />
+          <Select label="優先度" className="mt_16" options={priority} value={values.priority} onChange={handlePriority} />
 
-          <Select label="進捗度" className="mt_16" options={progress} value={data.progress} onChange={handleProgress} />
+          <Select label="進捗度" className="mt_16" options={progress} value={values.progress} onChange={handleProgress} />
 
           <Input label="期日" className="mt_16" placeholder={`${year}-12-31`} required={isRequired} onChange={handleDuedate} />
 
