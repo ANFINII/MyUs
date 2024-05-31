@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { UnprivilegedEditor } from 'react-quill'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
+import { DeltaStatic, Sources } from 'quill'
 import { postBlogCreate } from 'api/media/post'
 import { BlogIn } from 'types/internal/media'
 import { MentionUser } from 'types/internal/timeline'
@@ -29,31 +31,28 @@ export default function BlogCreate(props: Props) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [data, setData] = useState<BlogIn>({ title: '', content: '', richtext: '' })
+  const [values, setValues] = useState<BlogIn>({ title: '', content: '', richtext: '', delta: '' })
 
-  const handleTitle = (title: string) => setData({ ...data, title })
-  const handleContent = (content: string) => setData({ ...data, content })
-  const handleFile = (files: File | File[]) => Array.isArray(files) || setData({ ...data, image: files })
+  const handleTitle = (title: string) => setValues({ ...values, title })
+  const handleContent = (content: string) => setValues({ ...values, content })
+  const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
 
-  const handleQuill = (value: string) => {
+  const handleQuill = (value: string, delta: DeltaStatic, source: Sources, editor: UnprivilegedEditor) => {
     const richtext = value.trim() === '<p><br></p>' ? '' : value.trim()
-    setData({ ...data, richtext })
+    setValues({ ...values, richtext, delta: JSON.stringify(editor.getContents()) })
   }
 
   const handleForm = async () => {
-    const title = data.title
-    const content = data.content
-    const richtext = data.richtext
-    const image = data.image
+    const { title, content, richtext, image } = values
+
     if (!(title && content && richtext && image)) {
       setIsRequired(true)
       return
     }
 
     setIsLoading(true)
-    const request = { title, content, richtext, image }
     try {
-      const data = await postBlogCreate(request)
+      const data = await postBlogCreate(values)
       router.push(`/media/blog/${data.id}`)
     } catch (error) {
       console.log(error)
@@ -72,7 +71,7 @@ export default function BlogCreate(props: Props) {
 
           <InputFile label="サムネイル" accept="image/*" className="mt_16" required={isRequired} onChange={handleFile} />
 
-          <Quill label="本文" users={users} value={data.richtext} className="blog" required={isRequired} onChange={handleQuill} />
+          <Quill label="本文" users={users} value={values.richtext} className="blog" required={isRequired} onChange={handleQuill} />
 
           <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
         </form>

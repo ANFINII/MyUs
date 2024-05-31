@@ -1,9 +1,10 @@
 import React, { useCallback, useRef } from 'react'
-import ReactQuill from 'react-quill'
+import ReactQuill, { UnprivilegedEditor } from 'react-quill'
+import clsx from 'clsx'
+import { DeltaStatic, Sources } from 'quill'
 import 'react-quill/dist/quill.snow.css'
 import 'quill-mention'
 import 'quill-mention/dist/quill.mention.css'
-import clsx from 'clsx'
 import { MentionUser } from 'types/internal/timeline'
 import style from 'components/widgets/Quill/Quill.module.scss'
 
@@ -13,7 +14,7 @@ interface Props {
   required?: boolean
   className?: string
   users?: MentionUser[]
-  onChange?: (value: string) => void
+  onChange?: (value: string, delta: DeltaStatic, source: Sources, editor: UnprivilegedEditor) => void
 }
 
 export default function Quill(props: Props) {
