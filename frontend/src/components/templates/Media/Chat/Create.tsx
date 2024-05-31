@@ -20,21 +20,21 @@ export default function ChatCreate(props: Props) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [data, setData] = useState<ChatIn>({ title: '', content: '', period: '' })
+  const [values, setValues] = useState<ChatIn>({ title: '', content: '', period: '' })
 
-  const handleTitle = (title: string) => setData({ ...data, title })
-  const handleContent = (content: string) => setData({ ...data, content })
-  const handlePeriod = (period: string) => setData({ ...data, period })
+  const handleTitle = (title: string) => setValues({ ...values, title })
+  const handleContent = (content: string) => setValues({ ...values, content })
+  const handlePeriod = (period: string) => setValues({ ...values, period })
 
   const handleForm = async () => {
-    if (!(data.title && data.content && data.period)) {
+    if (!(values.title && values.content && values.period)) {
       setIsRequired(true)
       return
     }
     setIsLoading(true)
     try {
-      const chat = await postChatCreate(data)
-      router.push(`/media/chat/${chat.id}`)
+      const data = await postChatCreate(values)
+      router.push(`/media/chat/${data.id}`)
     } catch (error) {
       console.log(error)
     } finally {

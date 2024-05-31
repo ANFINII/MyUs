@@ -19,27 +19,22 @@ export default function ComicCreate(props: Props) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [data, setData] = useState<ComicIn>({ title: '', content: '' })
+  const [values, setValues] = useState<ComicIn>({ title: '', content: '' })
 
-  const handleTitle = (title: string) => setData({ ...data, title })
-  const handleContent = (content: string) => setData({ ...data, content })
-  const handleFile = (files: File | File[]) => Array.isArray(files) || setData({ ...data, image: files })
-  const handleMultiFile = (files: File | File[]) => Array.isArray(files) && setData({ ...data, images: files })
+  const handleTitle = (title: string) => setValues({ ...values, title })
+  const handleContent = (content: string) => setValues({ ...values, content })
+  const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
+  const handleMultiFile = (files: File | File[]) => Array.isArray(files) && setValues({ ...values, images: files })
 
   const handleForm = async () => {
-    const title = data.title
-    const content = data.content
-    const image = data.image
-    const images = data.images
+    const { title, content, image, images } = values
     if (!(title && content && image && images)) {
       setIsRequired(true)
       return
     }
-
     setIsLoading(true)
-    const request = { title, content, image, images }
     try {
-      const data = await postComicCreate(request)
+      const data = await postComicCreate(values)
       router.push(`/media/comic/${data.id}`)
     } catch (error) {
       console.log(error)

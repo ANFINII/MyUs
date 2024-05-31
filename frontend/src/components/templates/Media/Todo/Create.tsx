@@ -21,23 +21,23 @@ export default function TodoCreate(props: Props) {
   const { year } = nowDate()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [data, setData] = useState<TodoIn>({ title: '', content: '', priority: '', progress: '', duedate: '' })
+  const [values, setValues] = useState<TodoIn>({ title: '', content: '', priority: '', progress: '', duedate: '' })
 
-  const handleTitle = (title: string) => setData({ ...data, title })
-  const handleContent = (content: string) => setData({ ...data, content })
-  const handlePriority = (priority: string) => setData({ ...data, priority })
-  const handleProgress = (progress: string) => setData({ ...data, progress })
-  const handleDuedate = (duedate: string) => setData({ ...data, duedate })
+  const handleTitle = (title: string) => setValues({ ...values, title })
+  const handleContent = (content: string) => setValues({ ...values, content })
+  const handlePriority = (priority: string) => setValues({ ...values, priority })
+  const handleProgress = (progress: string) => setValues({ ...values, progress })
+  const handleDuedate = (duedate: string) => setValues({ ...values, duedate })
 
   const handleForm = async () => {
-    if (!(data.title && data.content && data.duedate)) {
+    if (!(values.title && values.content && values.duedate)) {
       setIsRequired(true)
       return
     }
     setIsLoading(true)
     try {
-      const chat = await postTodoCreate(data)
-      router.push(`/media/todo/${chat.id}`)
+      const data = await postTodoCreate(values)
+      router.push(`/media/todo/${data.id}`)
     } catch (error) {
       console.log(error)
     } finally {

@@ -20,29 +20,23 @@ export default function MusicCreate(props: Props) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [data, setData] = useState<MusicIn>({ title: '', content: '', lyric: '', download: true })
+  const [values, setValues] = useState<MusicIn>({ title: '', content: '', lyric: '', download: true })
 
-  const handleTitle = (title: string) => setData({ ...data, title })
-  const handleContent = (content: string) => setData({ ...data, content })
-  const handleLyric = (lyric: string) => setData({ ...data, lyric })
-  const handleFile = (files: File | File[]) => Array.isArray(files) || setData({ ...data, music: files })
-  const handleDownload = (checked: boolean) => setData({ ...data, download: checked })
+  const handleTitle = (title: string) => setValues({ ...values, title })
+  const handleContent = (content: string) => setValues({ ...values, content })
+  const handleLyric = (lyric: string) => setValues({ ...values, lyric })
+  const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, music: files })
+  const handleDownload = (checked: boolean) => setValues({ ...values, download: checked })
 
   const handleForm = async () => {
-    const title = data.title
-    const content = data.content
-    const lyric = data.lyric
-    const music = data.music
-    const download = data.download
+    const { title, content, lyric, music } = values
     if (!(title && content && lyric && music)) {
       setIsRequired(true)
       return
     }
-
     setIsLoading(true)
-    const request = { title, content, lyric, music, download }
     try {
-      const data = await postMusicCreate(request)
+      const data = await postMusicCreate(values)
       router.push(`/media/music/${data.id}`)
     } catch (error) {
       console.log(error)

@@ -19,27 +19,22 @@ export default function VideoCreate(props: Props) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [data, setData] = useState<VideoIn>({ title: '', content: '' })
+  const [values, setValues] = useState<VideoIn>({ title: '', content: '' })
 
-  const handleTitle = (title: string) => setData({ ...data, title })
-  const handleContent = (content: string) => setData({ ...data, content })
-  const handleFile = (files: File | File[]) => Array.isArray(files) || setData({ ...data, image: files })
-  const handleMovie = (files: File | File[]) => Array.isArray(files) || setData({ ...data, video: files })
+  const handleTitle = (title: string) => setValues({ ...values, title })
+  const handleContent = (content: string) => setValues({ ...values, content })
+  const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
+  const handleMovie = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, video: files })
 
   const handleForm = async () => {
-    const title = data.title
-    const content = data.content
-    const image = data.image
-    const video = data.video
+    const { title, content, image, video } = values
     if (!(title && content && image && video)) {
       setIsRequired(true)
       return
     }
-
     setIsLoading(true)
-    const request = { title, content, image, video }
     try {
-      const data = await postVideoCreate(request)
+      const data = await postVideoCreate(values)
       router.push(`/media/video/${data.id}`)
     } catch (error) {
       console.log(error)
