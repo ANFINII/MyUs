@@ -1,3 +1,6 @@
+import clsx from 'clsx'
+import style from './ExImage.module.scss'
+
 interface Props {
   src: string
   alt?: string
@@ -7,10 +10,11 @@ interface Props {
   height?: string
   size?: string
   className?: string
+  onClick?: () => void
 }
 
 export default function ExImage(props: Props) {
-  const { width, height, size } = props
+  const { width, height, size, className } = props
 
-  return <img {...props} width={width || size} height={height || size} />
+  return <img {...props} width={width || size} height={height || size} className={clsx(style.image, className)} />
 }
