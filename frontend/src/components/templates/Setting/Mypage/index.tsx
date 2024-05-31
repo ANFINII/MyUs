@@ -25,14 +25,14 @@ export default function SttingMyPage(props: Props) {
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
-  const [data, setData] = useState<Mypage>(mypage)
+  const [values, setValues] = useState<Mypage>(mypage)
 
-  const reset = () => setData(mypage)
+  const reset = () => setValues(mypage)
   const handleEdit = () => setIsEdit(!isEdit)
-  const handleEmail = (email: string) => setData({ ...data, email })
-  const handleToggle = (isAdvertise: boolean) => setData({ ...data, isAdvertise: !isAdvertise })
-  const handleTagManagerId = (tagManagerId: string) => setData({ ...data, tagManagerId })
-  const handleContent = (content: string) => setData({ ...data, content })
+  const handleEmail = (email: string) => setValues({ ...values, email })
+  const handleToggle = (isAdvertise: boolean) => setValues({ ...values, isAdvertise: !isAdvertise })
+  const handleTagManagerId = (tagManagerId: string) => setValues({ ...values, tagManagerId })
+  const handleContent = (content: string) => setValues({ ...values, content })
 
   const handleBack = () => {
     reset()
@@ -43,8 +43,8 @@ export default function SttingMyPage(props: Props) {
     setIsLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 1000))
     try {
-      const resData = await postMypage(data)
-      resData?.message ? setMessage(resData.message) : handleEdit()
+      const data = await postMypage(values)
+      data?.message ? setMessage(data.message) : handleEdit()
       handleEdit()
     } catch (e) {
       setMessage('エラーが発生しました！')
@@ -81,29 +81,29 @@ export default function SttingMyPage(props: Props) {
               </label>
             </TableRow>
             <TableRow isIndent label="投稿者名">
-              {data.nickname}
+              {values.nickname}
             </TableRow>
             <TableRow label="メールアドレス">
-              <Input value={data.email} maxLength={120} onChange={handleEmail} />
+              <Input value={values.email} maxLength={120} onChange={handleEmail} />
             </TableRow>
             <TableRow isIndent label="フォロー数">
-              {data.followingCount}
+              {values.followingCount}
             </TableRow>
             <TableRow isIndent label="フォロワー数">
-              {data.followerCount}
+              {values.followerCount}
             </TableRow>
             <TableRow isIndent label="料金プラン">
-              {data.plan}
+              {values.plan}
             </TableRow>
             <TableRow isIndent label="全体広告">
-              {data.plan === 'Free' ? <Toggle isActive={data.isAdvertise} disable /> : <Toggle isActive={data.isAdvertise} onClick={() => handleToggle(data.isAdvertise)} />}
+              {values.plan === 'Free' ? <Toggle isActive={values.isAdvertise} disable /> : <Toggle isActive={values.isAdvertise} onClick={() => handleToggle(values.isAdvertise)} />}
             </TableRow>
             <TableRow label="タグID">
-              <Input value={data.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleTagManagerId} />
+              <Input value={values.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleTagManagerId} />
             </TableRow>
             <TableRow label="概要">
-              <Textarea className="textarea_margin" value={data.content} onChange={handleContent}>
-                {data.content}
+              <Textarea className="textarea_margin" value={values.content} onChange={handleContent}>
+                {values.content}
               </Textarea>
             </TableRow>
           </Table>
@@ -111,36 +111,36 @@ export default function SttingMyPage(props: Props) {
           <Table>
             <TableRow label="バナー画像">
               <label htmlFor="account_image_input" className="mypage_image">
-                {data.banner && (
-                  <a href={data.banner} data-lightbox="group">
-                    <ExImage src={data.banner} title={data.nickname} width="270" height="56" data-lightbox="group" />
+                {values.banner && (
+                  <a href={values.banner} values-lightbox="group">
+                    <ExImage src={values.banner} title={values.nickname} width="270" height="56" values-lightbox="group" />
                   </a>
                 )}
               </label>
             </TableRow>
             <TableRow isIndent label="投稿者名">
-              {data.nickname}
+              {values.nickname}
             </TableRow>
             <TableRow isIndent label="メールアドレス">
-              {data.email}
+              {values.email}
             </TableRow>
             <TableRow isIndent label="フォロー数">
-              {data.followingCount}
+              {values.followingCount}
             </TableRow>
             <TableRow isIndent label="フォロワー数">
-              {data.followerCount}
+              {values.followerCount}
             </TableRow>
             <TableRow isIndent label="料金プラン">
-              {data.plan}
+              {values.plan}
             </TableRow>
             <TableRow isIndent label="全体広告">
-              <Toggle isActive={data.isAdvertise} disable />
+              <Toggle isActive={values.isAdvertise} disable />
             </TableRow>
             <TableRow isIndent label="タグID">
-              GTM{data.tagManagerId && '-' + data.tagManagerId}
+              GTM{values.tagManagerId && '-' + values.tagManagerId}
             </TableRow>
             <TableRow isIndent label="概要">
-              {data.content}
+              {values.content}
             </TableRow>
           </Table>
         )}
