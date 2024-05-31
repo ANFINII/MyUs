@@ -145,8 +145,9 @@ export interface PictureIn {
 export interface BlogIn {
   title: string
   content: string
-  image?: File
   richtext: string
+  delta: string
+  image?: File
 }
 
 export interface ChatIn {

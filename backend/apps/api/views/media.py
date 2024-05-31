@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.db.models import Exists, OuterRef
 
@@ -301,6 +303,12 @@ class BlogListAPI(APIView):
         return Response(data, status=HTTP_200_OK)
 
 
+# Blog
+def get_delta(delta, html):
+    quill = json.dumps({'delta': delta, 'html': html})
+    return quill
+
+
 class BlogCreateAPI(APIView):
     def post(self, request) -> Response:
         author = get_user(request)
@@ -314,6 +322,7 @@ class BlogCreateAPI(APIView):
             'content': data.get('content'),
             'image': data.get('image'),
             'richtext': data.get('richtext'),
+            'delta': get_delta(data.get('delta'), data.get('richtext')),
         }
         obj = Blog.objects.create(**field)
         data = {'id': obj.id}

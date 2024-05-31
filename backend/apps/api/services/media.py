@@ -121,7 +121,6 @@ def get_blogs(count: int):
         'title': obj.title,
         'content': obj.content,
         'richtext': obj.richtext,
-        # 'delta': obj.delta,
         'image': f'{DOMAIN_URL}{obj.image.url}',
         'like': obj.total_like(),
         'read': obj.read,
