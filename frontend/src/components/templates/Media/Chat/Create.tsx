@@ -27,7 +27,8 @@ export default function ChatCreate(props: Props) {
   const handlePeriod = (period: string) => setValues({ ...values, period })
 
   const handleForm = async () => {
-    if (!(values.title && values.content && values.period)) {
+    const { title, content, period } = values
+    if (!(title && content && period)) {
       setIsRequired(true)
       return
     }

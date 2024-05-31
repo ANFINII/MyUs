@@ -44,12 +44,10 @@ export default function BlogCreate(props: Props) {
 
   const handleForm = async () => {
     const { title, content, richtext, image } = values
-
     if (!(title && content && richtext && image)) {
       setIsRequired(true)
       return
     }
-
     setIsLoading(true)
     try {
       const data = await postBlogCreate(values)

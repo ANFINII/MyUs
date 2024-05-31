@@ -30,7 +30,8 @@ export default function TodoCreate(props: Props) {
   const handleDuedate = (duedate: string) => setValues({ ...values, duedate })
 
   const handleForm = async () => {
-    if (!(values.title && values.content && values.duedate)) {
+    const { title, content, duedate } = values
+    if (!(title && content && duedate)) {
       setIsRequired(true)
       return
     }
