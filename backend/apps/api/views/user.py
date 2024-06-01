@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 
+from config.settings.base import DOMAIN_URL
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
@@ -23,7 +24,7 @@ class ProfileAPI(APIView):
         user = User.objects.filter(id=user_id).select_related('profile').defer(*DeferData.profile).first()
 
         data = {
-            'avatar': user.image(),
+            'avatar': f'{DOMAIN_URL}{user.image()}',
             'email': user.email,
             'username': user.username,
             'nickname': user.nickname,
@@ -61,7 +62,7 @@ class MyPageAPI(APIView):
         user = User.objects.filter(id=user_id).select_related('mypage').defer(*DeferData.mypage).first()
 
         data = {
-            'banner': user.banner(),
+            'banner': f'{DOMAIN_URL}{user.banner()}',
             'nickname': user.nickname,
             'email': user.mypage.email,
             'content': user.mypage.content,
