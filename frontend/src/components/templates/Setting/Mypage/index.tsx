@@ -5,7 +5,6 @@ import { Mypage } from 'types/internal/auth'
 import { isEmpty } from 'utils/constants/common'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import ExImage from 'components/parts/ExImage'
 import IconPicture from 'components/parts/Icon/Picture'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
@@ -13,6 +12,7 @@ import Toggle from 'components/parts/Input/Toggle'
 import LoginRequired from 'components/parts/LoginRequired'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
+import LightBox from 'components/widgets/LightBox'
 
 interface Props {
   mypage: Mypage
@@ -111,11 +111,7 @@ export default function SttingMyPage(props: Props) {
           <Table>
             <TableRow label="バナー画像">
               <label htmlFor="account_image_input" className="mypage_image">
-                {values.banner && (
-                  <a href={values.banner} values-lightbox="group">
-                    <ExImage src={values.banner} title={values.nickname} width="270" height="56" values-lightbox="group" />
-                  </a>
-                )}
+                <LightBox width=" 270" height="56" src={values.banner} title={values.nickname} />
               </label>
             </TableRow>
             <TableRow isIndent label="投稿者名">

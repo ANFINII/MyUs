@@ -4,21 +4,23 @@ import IconCross from 'components/parts/Icon/Cross'
 import style from './LightBox.module.scss'
 
 interface Props {
-  size: string
+  size?: string
+  width?: string
+  height?: string
   src: string
   title?: string
 }
 
 export default function LightBox(props: Props) {
-  const { size, src, title } = props
+  const { src, title } = props
 
-  const [open, setOpen] = useState<boolean>(true)
+  const [open, setOpen] = useState<boolean>(false)
 
   const handleToggle = () => setOpen(!open)
 
   return (
     <>
-      <ExImage size={size} src={src} title={title} onClick={handleToggle} />
+      <ExImage {...props} onClick={handleToggle} />
       <div className={open ? style.light_box : 'd_none'}>
         <div className={style.image_box}>
           <ExImage src={src} title={title} />
