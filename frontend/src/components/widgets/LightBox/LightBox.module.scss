@@ -1,0 +1,36 @@
+.light_box {
+  position: fixed;
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+
+  .image_box {
+    margin-bottom: 100px;
+
+    img {
+      position: relative;
+      border: 5px solid rgb(50, 50, 50);
+      border-radius: 10px;
+      transition: all 0.5s 1s ease-in-out;
+      cursor: auto;
+    }
+
+    .cross {
+      display: flex;
+      margin-top: 8px;
+      justify-content: flex-end;
+      color: rgb(200, 200, 200);
+
+      &:hover {
+        color: rgb(255, 255, 255);
+        cursor: pointer;
+      }
+    }
+  }
+}

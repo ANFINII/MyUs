@@ -10,7 +10,6 @@ import { selectDate } from 'utils/functions/datetime'
 import { genderMap, genders } from 'utils/functions/user'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import ExImage from 'components/parts/ExImage'
 import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
@@ -18,6 +17,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
+import LightBox from 'components/widgets/LightBox'
 
 interface Props {
   user: UserProfile
@@ -176,9 +176,7 @@ export default function SettingProfile(props: Props) {
           <Table>
             <TableRow label="アカウント画像" className="table_header">
               <label htmlFor="account_image_input" className="account_image">
-                <a href={values.avatar} values-lightbox="group">
-                  <ExImage src={values.avatar} title={values.nickname} size="56" values-lightbox="group" />
-                </a>
+                <LightBox size="56" src={values.avatar} title={values.nickname} />
               </label>
             </TableRow>
             <TableRow isIndent label="メールアドレス">
