@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import ExImage from 'components/parts/ExImage'
 import IconCross from 'components/parts/Icon/Cross'
-import style from './Image.module.scss'
+import style from './LightBox.module.scss'
 
 interface Props {
   size: string
