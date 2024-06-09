@@ -5,9 +5,31 @@
   grid-row: 1/2;
   top: 0;
   width: 100%;
+  height: 56px;
   color: rgb(255, 255, 255);
   background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
   z-index: 70; /* side_menuよりは小さく */
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background: rgb(0, 60, 255);
+}
+
+@keyframes loading {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.header.loading::after {
+  animation: loading 5s forwards;
 }
 
 .header_nav {
@@ -31,7 +53,7 @@
 }
 
 .header_nav_2 h1 {
-  font-family: "Libre Caslon Display", serif;
+  font-family: 'Libre Caslon Display', serif;
   font-size: 1.8em;
   font-weight: 100;
   margin: auto;
@@ -439,7 +461,7 @@ input::placeholder {
 }
 
 /* Reset input[type="search"] */
-input[type="search"]:-webkit-autofill {
+input[type='search']:-webkit-autofill {
   box-shadow: 0 0 0 1000px rgb(255, 255, 255) inset;
   margin-bottom: auto;
   margin-top: auto;
@@ -447,11 +469,11 @@ input[type="search"]:-webkit-autofill {
   border-radius: 32px;
 }
 
-input[type="search"] {
+input[type='search'] {
   -webkit-appearance: textfield;
 }
 
-input[type="search"]:focus {
+input[type='search']:focus {
   margin-bottom: auto;
   margin-top: auto;
   height: 32px;
@@ -459,10 +481,10 @@ input[type="search"]:focus {
   font-size: 16px;
 }
 
-input[type="search"]::-webkit-search-decoration {
+input[type='search']::-webkit-search-decoration {
   display: none;
 }
 
-input[type="submit"]::-moz-focus-inner {
+input[type='submit']::-moz-focus-inner {
   border: 0px;
 }

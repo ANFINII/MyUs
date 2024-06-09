@@ -1,4 +1,5 @@
 import { SearchTag } from 'types/internal/other'
+import { useLoading } from 'components/hooks/useLoading'
 import Header from 'components/layout/Header'
 import SearchTagBar from 'components/layout/SearchTagBar'
 import SideBar from 'components/layout/SideBar'
@@ -16,9 +17,11 @@ interface Props {
 export default function Layout(props: Props) {
   const { children } = props
 
+  const { loading } = useLoading()
+
   return (
     <div className="layout">
-      <Header />
+      <Header loading={loading} />
       <SideBar />
       <SearchTagBar searchtags={searchtags} isAuth={true} />
       {children}

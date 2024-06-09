@@ -15,12 +15,13 @@ import IconPerson from 'components/parts/Icon/Person'
 
 interface Props {
   isAuth?: boolean
+  loading?: boolean
   nickname?: string
   notificationCount?: number
 }
 
 export default function Header(props: Props) {
-  const { isAuth = false, nickname, notificationCount = 0 } = props
+  const { isAuth = false, loading, nickname, notificationCount = 0 } = props
 
   const [search, setSearch] = useState<string>('')
   const [isOpenSideMenu, setIsOpenSideMenu] = useState<boolean>(false)
@@ -44,7 +45,7 @@ export default function Header(props: Props) {
   }
 
   return (
-    <header className="header">
+    <header className={clsx('header', loading ? 'loading' : '')}>
       <nav className="header_nav">
         <div className={clsx('side_nemu_cover', isActive(isOpenSideMenu))} onClick={handleSideMenuClose}></div>
         <div className={clsx('drop_back_cover', isActive(isOpenCloud || isOpenNotice || isOpenProfile))} onClick={handleCoverClose}></div>
