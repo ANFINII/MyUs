@@ -18,7 +18,7 @@ export default function Main(props: Props) {
       <Meta title={title} />
       {type === 'defalt' && (
         <>
-          {isTitle && <h1>{title}</h1>}
+          {isTitle && <h1 className="main_title">{title}</h1>}
           {search && (
             <section className="search_message">
               「{search.name}」の検索結果「{search.count}」件
@@ -29,7 +29,7 @@ export default function Main(props: Props) {
       )}
       {type === 'table' && (
         <article className="article_table">
-          {title && <h1>{title}</h1>}
+          {title && <h1 className="main_title">{title}</h1>}
           {children}
           <Footer />
         </article>
