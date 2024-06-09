@@ -3,18 +3,18 @@
   grid-column: 2/-1;
   grid-row: 3/-1;
   padding: 16px;
-}
 
-.main h1 {
-  display: inline-block;
-  height: 30px;
-  font-size: 24px;
-  color: rgb(50, 70, 140);
-}
+  .main_title {
+    display: inline-block;
+    height: 30px;
+    font-size: 24px;
+    color: rgb(50, 70, 140);
 
-.main h1 span {
-  font-size: 18px;
-  margin: 6px 0 0 10px;
+    span {
+      font-size: 18px;
+      margin: 6px 0 0 10px;
+    }
+  }
 }
 
 .main div.field > input,

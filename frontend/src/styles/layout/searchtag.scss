@@ -93,12 +93,16 @@
   grid-column: 3/4;
   grid-row: 1/2;
   width: calc(100vw - 166px);
-  overflow-x: auto;
+  overflow-x: scroll;
+  overflow-y: hidden;
   white-space: nowrap;
-}
+  scrollbar-width: none; /* Firefoxでスクロールバーを非表示 */
+  -ms-overflow-style: none; /* IEとEdgeでスクロールバーを非表示 */
 
-.searchtag_n::-webkit-scrollbar {
-  height: 0;
+  &::-webkit-scrollbar {
+    display: none;
+    height: 0;
+  }
 }
 
 .searchtag_n.active {
