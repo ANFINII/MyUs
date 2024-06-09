@@ -2,16 +2,17 @@ const base = '/api'
 
 // Auth
 export const apiAuth = base + '/auth'
-export const apiSignup = base + '/signup'
-export const apiLogin = base + '/login'
-export const apiLogout = base + '/logout'
-export const apiRefresh = base + '/refresh'
+export const apiRefresh = base + '/auth/refresh'
+export const apiSignup = base + '/auth/signup'
+export const apiLogin = base + '/auth/login'
+export const apiLogout = base + '/auth/logout'
 
 // User
 export const apiUser = base + '/user'
-export const apiProfile = base + '/profile'
-export const apiMypage = base + '/mypage'
-export const apiNotification = base + '/notification'
+export const apiProfile = base + '/user/profile'
+export const apiMypage = base + '/user/mypage'
+export const apiSearchTag = base + '/user/search_tag'
+export const apiNotification = base + '/user/notification'
 
 // Media
 export const apiHome = base + '/home'

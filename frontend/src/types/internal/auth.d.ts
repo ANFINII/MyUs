@@ -69,6 +69,11 @@ export interface MypageIn {
   content: string
 }
 
+interface SearchTagOut {
+  sequence: number
+  name: string
+}
+
 export interface Notification {
   isVideo: boolean
   isMusic: boolean
