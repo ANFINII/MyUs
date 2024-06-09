@@ -1,6 +1,6 @@
 from django.urls import path
-from apps.api.views.auth import AuthAPI, SignUpAPI, LoginAPI, LogoutAPI, RefreshAPI
-from apps.api.views.user import ProfileAPI, MyPageAPI, NotificationAPI
+from apps.api.views.auth import AuthAPI, RefreshAPI, SignUpAPI, LoginAPI, LogoutAPI
+from apps.api.views.user import ProfileAPI, MyPageAPI, SearchTagAPI, NotificationAPI
 from apps.api.views.media import HomeAPI
 from apps.api.views.media import VideoListAPI, VideoCreateAPI, VideoAPI
 from apps.api.views.media import MusicListAPI, MusicCreateAPI, MusicAPI
@@ -15,14 +15,15 @@ app_name = 'api'
 
 urlpatterns = [
     path('auth', AuthAPI.as_view()),
-    path('signup', SignUpAPI.as_view()),
-    path('login', LoginAPI.as_view()),
-    path('logout', LogoutAPI.as_view()),
-    path('refresh', RefreshAPI.as_view()),
+    path('auth/refresh', RefreshAPI.as_view()),
+    path('auth/signup', SignUpAPI.as_view()),
+    path('auth/login', LoginAPI.as_view()),
+    path('auth/logout', LogoutAPI.as_view()),
 
-    path('profile', ProfileAPI.as_view()),
-    path('mypage', MyPageAPI.as_view()),
-    path('notification', NotificationAPI.as_view()),
+    path('user/profile', ProfileAPI.as_view()),
+    path('user/mypage', MyPageAPI.as_view()),
+    path('user/search_tag', SearchTagAPI.as_view()),
+    path('user/notification', NotificationAPI.as_view()),
 
     path('home', HomeAPI.as_view()),
 

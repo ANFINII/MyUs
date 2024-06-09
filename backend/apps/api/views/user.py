@@ -6,7 +6,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from apps.myus.modules.filter_data import DeferData
-from apps.myus.models import MyPage, NotificationSetting
+from apps.myus.models import MyPage, NotificationSetting, SearchTag
 from apps.api.services.user import get_user_id
 from apps.api.utils.functions.logger import Log
 
@@ -130,3 +130,16 @@ class NotificationAPI(APIView):
             notification_setting.save()
 
         return Response({'message': 'success'}, status=HTTP_204_NO_CONTENT)
+
+
+class SearchTagAPI(APIView):
+    def get(self, request):
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
+        search_tags = SearchTag.objects.filter(author=user_id).order_by('sequence')[:20]
+
+        data = [{'sequence': tag.sequence, 'name': tag.name} for tag in search_tags]
+        return Response(data, status=HTTP_200_OK)
