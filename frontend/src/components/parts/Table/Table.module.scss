@@ -5,13 +5,20 @@
   border-spacing: 0px;
   border-collapse: collapse;
   font-size: 15px;
+  border: 1px solid rgb(0, 125, 0);
+  border-radius: 5px;
   overflow-y: hidden;
+
+  tr {
+    &:not(:first-child) {
+      border-top: 1px solid rgb(0, 125, 0);
+    }
+  }
 
   td {
     height: 39px;
     width: 100%;
     min-width: 125px;
-    border: 1px solid rgb(0, 125, 0);
     vertical-align: middle;
 
     &.td_color {
@@ -23,6 +30,10 @@
     &.td_indent {
       padding: 0 0 0 8px;
       white-space: nowrap;
+    }
+
+    &:not(:last-child) {
+      border-right: 1px solid rgb(0, 125, 0);
     }
   }
 }
