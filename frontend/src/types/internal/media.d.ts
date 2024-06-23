@@ -1,5 +1,3 @@
-import { Mypage } from 'types/internal/auth'
-
 export interface Author {
   nickname: string
   image: string
@@ -88,20 +86,6 @@ export interface MediaDetail {
   updated: string
   author: Author
   user: MediaUser
-}
-
-export interface Follow {
-  id: number
-  title: string
-  content: string
-  introduction: string
-  like: number
-  read: number
-  commentCount: number
-  publish: boolean
-  created: string
-  mypage: Mypage
-  author: Author
 }
 
 export interface MediaHome {

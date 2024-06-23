@@ -69,6 +69,14 @@ export interface MypageIn {
   content: string
 }
 
+export interface Follow {
+  avatar: string
+  nickname: string
+  introduction: string
+  followerCount: number
+  followingCount: number
+}
+
 interface SearchTagOut {
   sequence: number
   name: string
