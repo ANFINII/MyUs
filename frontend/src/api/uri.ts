@@ -13,6 +13,8 @@ export const apiProfile = base + '/user/profile'
 export const apiMypage = base + '/user/mypage'
 export const apiSearchTag = base + '/user/search_tag'
 export const apiNotification = base + '/user/notification'
+export const apiFollow = base + '/user/follow'
+export const apiFollower = base + '/user/follower'
 
 // Media
 export const apiHome = base + '/home'
