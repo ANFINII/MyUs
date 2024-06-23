@@ -6,7 +6,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from apps.myus.modules.filter_data import DeferData
-from apps.myus.models import MyPage, NotificationSetting, SearchTag
+from apps.myus.models import MyPage, Follow, NotificationSetting, SearchTag
 from apps.api.services.user import get_user_id
 from apps.api.utils.functions.logger import Log
 
@@ -93,6 +93,58 @@ class MyPageAPI(APIView):
         return Response({'message': 'success'}, status=HTTP_204_NO_CONTENT)
 
 
+class FollowAPI(APIView):
+    def get(self, request):
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
+        follows = Follow.objects.filter(follower=user_id).select_related('following__mypage').order_by('created')[:100]
+
+        data = [{
+            'avatar': f'{DOMAIN_URL}{follow.following.avatar.url}',
+            'nickname': follow.following.nickname,
+            'introduction': follow.following.profile.introduction,
+            'follower_count': follow.following.mypage.follower_count,
+            'following_count': follow.following.mypage.following_count,
+        } for follow in follows]
+
+        return Response(data, status=HTTP_200_OK)
+
+
+class FollowerAPI(APIView):
+    def get(self, request):
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
+        follows = Follow.objects.filter(following=user_id).select_related('follower__mypage').order_by('created')[:100]
+
+        data = [{
+            'avatar': f'{DOMAIN_URL}{follow.follower.avatar.url}',
+            'nickname': follow.follower.nickname,
+            'introduction': follow.follower.profile.introduction,
+            'follower_count': follow.follower.mypage.follower_count,
+            'following_count': follow.follower.mypage.following_count,
+        } for follow in follows]
+
+        return Response(data, status=HTTP_200_OK)
+
+
+class SearchTagAPI(APIView):
+    def get(self, request):
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
+        search_tags = SearchTag.objects.filter(author=user_id).order_by('sequence')[:20]
+
+        data = [{'sequence': tag.sequence, 'name': tag.name} for tag in search_tags]
+        return Response(data, status=HTTP_200_OK)
+
 class NotificationAPI(APIView):
     def get(self, request):
         auth = get_user_id(request)
@@ -130,16 +182,3 @@ class NotificationAPI(APIView):
             notification_setting.save()
 
         return Response({'message': 'success'}, status=HTTP_204_NO_CONTENT)
-
-
-class SearchTagAPI(APIView):
-    def get(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
-
-        user_id = auth.data['user_id']
-        search_tags = SearchTag.objects.filter(author=user_id).order_by('sequence')[:20]
-
-        data = [{'sequence': tag.sequence, 'name': tag.name} for tag in search_tags]
-        return Response(data, status=HTTP_200_OK)
