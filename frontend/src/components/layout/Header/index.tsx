@@ -12,6 +12,7 @@ import IconExclamation from 'components/parts/Icon/Exclamation'
 import IconLightning from 'components/parts/Icon/Lightning'
 import IconList from 'components/parts/Icon/List'
 import IconPerson from 'components/parts/Icon/Person'
+import Search from 'components/parts/Input/Search'
 
 interface Props {
   isAuth?: boolean
@@ -34,6 +35,7 @@ export default function Header(props: Props) {
   const handleCloud = () => setIsOpenCloud(!isOpenCloud)
   const handleNotice = () => setIsOpenNotice(!isOpenNotice)
   const handleProfile = () => setIsOpenProfile(!isOpenProfile)
+  const handleSearch = (value: string) => setSearch(value)
   const handleSideMenuClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.target === e.currentTarget && setIsOpenSideMenu(false)
 
   const handleCoverClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -61,14 +63,7 @@ export default function Header(props: Props) {
         </div>
 
         <div className="header_nav_3 search_container">
-          <div className="searchbar">
-            <form method="GET" action="">
-              <input type="search" name="search" value={search} placeholder="検索..." className="search_input" />
-              <button type="submit" className="search_icon">
-                <i className="fas fa-search"></i>
-              </button>
-            </form>
-          </div>
+          <Search value={search} onChange={handleSearch} />
         </div>
 
         <button className="header_nav_4 header_color">
