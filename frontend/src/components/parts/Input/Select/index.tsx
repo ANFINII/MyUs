@@ -1,5 +1,5 @@
 import { Option } from 'types/internal/other'
-import style from 'components/parts/Input/Select/Select.module.scss'
+import style from './Select.module.scss'
 
 interface Props {
   label?: string

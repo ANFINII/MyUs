@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import clsx from 'clsx'
-import style from 'components/parts/Input/Input.module.scss'
+import style from '../Input.module.scss'
 
 interface Props {
   label?: string

@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
 import clsx from 'clsx'
-import style from 'components/parts/Input/CheckBox/CheckBox.module.scss'
+import style from './CheckBox.module.scss'
 
 interface Props {
   label: string

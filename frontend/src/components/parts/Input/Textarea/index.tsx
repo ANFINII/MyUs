@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import clsx from 'clsx'
-import style from 'components/parts/Input/Textarea/Textarea.module.scss'
+import style from './Textarea.module.scss'
 
 interface Props {
   label?: string
