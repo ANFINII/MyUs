@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import IconToggle from 'components/parts/Icon/Toggle'
-import style from 'components/parts/Input/Toggle/Toggle.module.scss'
+import style from './Toggle.module.scss'
 
 interface Props {
   isActive: boolean

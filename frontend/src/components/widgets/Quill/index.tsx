@@ -6,7 +6,7 @@ import 'react-quill/dist/quill.snow.css'
 import 'quill-mention'
 import 'quill-mention/dist/quill.mention.css'
 import { MentionUser } from 'types/internal/timeline'
-import style from 'components/widgets/Quill/Quill.module.scss'
+import style from './Quill.module.scss'
 
 interface Props {
   label?: string

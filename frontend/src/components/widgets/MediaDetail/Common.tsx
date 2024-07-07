@@ -4,6 +4,7 @@ import { formatDatetime } from 'utils/functions/datetime'
 import Button from 'components/parts/Button'
 import ExImage from 'components/parts/ExImage'
 import CommentInput from 'components/widgets/Comment/Input'
+
 interface Props {
   data: Blog
 }

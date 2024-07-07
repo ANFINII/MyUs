@@ -1,7 +1,6 @@
 import clsx from 'clsx'
-import style from 'components/parts/Button/Button.module.scss'
-import Spinner from 'components/parts/Spinner'
-import { SpinnerColor } from 'components/parts/Spinner'
+import Spinner, { SpinnerColor } from 'components/parts/Spinner'
+import style from './Button.module.scss'
 
 type ButtonColor = 'white' | 'black' | 'blue' | 'purple' | 'red' | 'green' | 'mono'
 

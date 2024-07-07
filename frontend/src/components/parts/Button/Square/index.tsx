@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import style from 'components/parts/Button/Square/Square.module.scss'
+import style from './Square.module.scss'
 
 type ButtonColor = 'sakura' | 'emerald'
 

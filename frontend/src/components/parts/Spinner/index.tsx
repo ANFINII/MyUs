@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import style from 'components/parts/Spinner/Spinner.module.scss'
+import style from './Spinner.module.scss'
 
 export type SpinnerColor = 'white' | 'gray' | 'blue'
 

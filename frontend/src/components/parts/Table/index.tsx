@@ -1,4 +1,4 @@
-import style from 'components/parts/Table/Table.module.scss'
+import style from './Table.module.scss'
 
 interface Props {
   children: React.ReactNode
