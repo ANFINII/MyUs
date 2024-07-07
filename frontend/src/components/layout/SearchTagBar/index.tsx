@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { getSearchTag } from 'api/user'
 import { SearchTagOut } from 'types/internal/auth'
 import ButtonSquare from 'components/parts/Button/Square'
+import IconChevront from 'components/parts/Icon/Chevront'
 import Input from 'components/parts/Input'
 
 interface Props {
@@ -67,14 +68,11 @@ export default function SearchTagBar(props: Props) {
         <ButtonSquare color="emerald" name="完了" className={clsx('searchtag_4', isSearchtag ? 'active' : '')} onClick={handleSearchtag} data-csrf={csrfToken} />
 
         <div className="searchtag_left" onClick={handleLeft}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" fill="currentColor" className="bi-chevron-left" viewBox="0 0 16 16">
-            <path fillRule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-          </svg>
+          <IconChevront width="18" height="17" type="left" />
         </div>
+
         <div className="searchtag_right" onClick={handleRight}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" fill="currentColor" className="bi-chevron-right" viewBox="0 0 16 16">
-            <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-          </svg>
+          <IconChevront width="18" height="17" type="right" />
         </div>
       </form>
     </nav>

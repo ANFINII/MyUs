@@ -113,6 +113,16 @@
   cursor: pointer;
   color: rgb(120, 120, 120);
   background: rgb(240, 240, 240);
+
+  &:hover {
+    color: rgb(35, 150, 255);
+    background: rgb(210, 210, 210);
+  }
+
+  &:active {
+    color: rgb(0, 130, 255);
+    background: rgb(200, 200, 200);
+  }
 }
 
 .searchtag_right {
@@ -122,18 +132,16 @@
   cursor: pointer;
   color: rgb(120, 120, 120);
   background: rgb(240, 240, 240);
-}
 
-.searchtag_left:hover,
-.searchtag_right:hover {
-  color: rgb(35, 150, 255);
-  background: rgb(210, 210, 210);
-}
+  &:hover {
+    color: rgb(35, 150, 255);
+    background: rgb(210, 210, 210);
+  }
 
-.searchtag_left:active,
-.searchtag_right:active {
-  color: rgb(0, 130, 255);
-  background: rgb(200, 200, 200);
+  &:active {
+    color: rgb(0, 130, 255);
+    background: rgb(200, 200, 200);
+  }
 }
 
 .tag_n_add {
