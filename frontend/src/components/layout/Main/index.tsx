@@ -7,15 +7,22 @@ interface Props {
   isTitle?: boolean
   search?: Search
   type?: 'defalt' | 'table'
+  meta?: {
+    description?: string
+    url?: string
+    locale?: string
+    siteName?: string
+    canonical?: string
+  }
   children: React.ReactNode
 }
 
 export default function Main(props: Props) {
-  const { title, isTitle = true, search, type = 'defalt', children } = props
+  const { title, isTitle = true, search, type = 'defalt', meta, children } = props
 
   return (
     <main className="main">
-      <Meta title={title} />
+      <Meta title={title} {...meta} />
       {type === 'defalt' && (
         <>
           {isTitle && <h1 className="main_title">{title}</h1>}
