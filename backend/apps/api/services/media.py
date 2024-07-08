@@ -1,6 +1,7 @@
 from config.settings.base import DOMAIN_URL
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 from apps.api.utils.functions.search import search_models
+from apps.api.utils.functions.user import get_author
 
 
 def get_home(count: int, search: str | None):
@@ -45,11 +46,7 @@ def get_videos(count: int, search: str | None):
         'publish': obj.publish,
         'created': obj.created,
         'updated': obj.updated,
-        'author': {
-            'id': obj.author.id,
-            'nickname': obj.author.nickname,
-            'image': f'{DOMAIN_URL}{obj.author.image()}',
-        }
+        'author': get_author(obj.author)
     } for obj in objs]
     return data
 
@@ -74,11 +71,7 @@ def get_musics(count: int, search: str | None):
         'publish': obj.publish,
         'created': obj.created,
         'updated': obj.updated,
-        'author': {
-            'id': obj.author.id,
-            'nickname': obj.author.nickname,
-            'image': f'{DOMAIN_URL}{obj.author.image()}',
-        }
+        'author': get_author(obj.author)
     } for obj in objs]
     return data
 
@@ -99,11 +92,7 @@ def get_comics(count: int, search: str | None):
         'publish': obj.publish,
         'created': obj.created,
         'updated': obj.updated,
-        'author': {
-            'id': obj.author.id,
-            'nickname': obj.author.nickname,
-            'image': f'{DOMAIN_URL}{obj.author.image()}',
-        }
+        'author': get_author(obj.author)
     } for obj in objs]
     return data
 
@@ -126,11 +115,7 @@ def get_pictures(count: int, search: str | None):
         'publish': obj.publish,
         'created': obj.created,
         'updated': obj.updated,
-        'author': {
-            'id': obj.author.id,
-            'nickname': obj.author.nickname,
-            'image': f'{DOMAIN_URL}{obj.author.image()}',
-        }
+        'author': get_author(obj.author)
     } for obj in objs]
     return data
 
@@ -154,11 +139,7 @@ def get_blogs(count: int, search: str | None):
         'publish': obj.publish,
         'created': obj.created,
         'updated': obj.updated,
-        'author': {
-            'id': obj.author.id,
-            'nickname': obj.author.nickname,
-            'image': f'{DOMAIN_URL}{obj.author.image()}',
-        }
+        'author': get_author(obj.author)
     } for obj in objs]
     return data
 
@@ -182,11 +163,7 @@ def get_chats(count: int, search: str | None):
         'publish': obj.publish,
         'created': obj.created,
         'updated': obj.updated,
-        'author': {
-            'id': obj.author.id,
-            'nickname': obj.author.nickname,
-            'image': f'{DOMAIN_URL}{obj.author.image()}',
-        }
+        'author': get_author(obj.author)
     } for obj in objs]
     return data
 
@@ -208,10 +185,6 @@ def get_todos(count: int, search: str | None):
         'publish': obj.publish,
         'created': obj.created,
         'updated': obj.updated,
-        'author': {
-            'id': obj.author.id,
-            'nickname': obj.author.nickname,
-            'image': f'{DOMAIN_URL}{obj.author.image()}',
-        }
+        'author': get_author(obj.author)
     } for obj in objs]
     return data
