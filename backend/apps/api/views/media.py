@@ -22,21 +22,24 @@ from apps.api.utils.functions.index import is_bool
 # Index
 class HomeAPI(APIView):
     def get(self, request):
-        data = get_home(8)
+        search = request.query_params.get('search')
+        data = get_home(8, search)
         return Response(data, status=HTTP_200_OK)
 
 
 # Recommend
 class RecommendAPI(APIView):
     def get(self, request):
-        data = get_recommend(8)
+        search = request.query_params.get('search')
+        data = get_recommend(8, search)
         return Response(data, status=HTTP_200_OK)
 
 
 # Video
 class VideoListAPI(APIView):
     def get(self, request):
-        data = get_videos(50)
+        search = request.query_params.get('search')
+        data = get_videos(50, search)
         return Response(data, status=HTTP_200_OK)
 
     def get_queryset(self):
@@ -94,7 +97,8 @@ class VideoAPI(APIView):
 # Music
 class MusicListAPI(APIView):
     def get(self, request):
-        data = get_musics(50)
+        search = request.query_params.get('search')
+        data = get_musics(50, search)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -163,7 +167,8 @@ class MusicAPI(APIView):
 # Comic
 class ComicListAPI(APIView):
     def get(self, request):
-        data = get_comics(50)
+        search = request.query_params.get('search')
+        data = get_comics(50, search)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -233,7 +238,8 @@ class ComicAPI(APIView):
 # Picture
 class PictureListAPI(APIView):
     def get(self, request):
-        data = get_pictures(50)
+        search = request.query_params.get('search')
+        data = get_pictures(50, search)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -299,7 +305,8 @@ class PictureAPI(APIView):
 # Blog
 class BlogListAPI(APIView):
     def get(self, request):
-        data = get_blogs(50)
+        search = request.query_params.get('search')
+        data = get_blogs(50, search)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -346,7 +353,6 @@ class BlogAPI(APIView):
             'title': obj.title,
             'content': obj.content,
             'richtext': obj.richtext,
-            # 'delta': obj.delta,
             'image': obj.image.url,
             'comment': [{
                 'id': comment.id,
@@ -383,7 +389,8 @@ class BlogAPI(APIView):
 # Chat
 class ChatListAPI(APIView):
     def get(self, request):
-        data = get_chats(50)
+        search = request.query_params.get('search')
+        data = get_chats(50, search)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -447,7 +454,8 @@ class ChatAPI(APIView):
 # Todo
 class TodoListAPI(APIView):
     def get(self, request):
-        data = get_todos(50)
+        search = request.query_params.get('search')
+        data = get_todos(50, search)
         return Response(data, status=HTTP_200_OK)
 
 

@@ -1,31 +1,37 @@
-from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 from config.settings.base import DOMAIN_URL
+from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from apps.api.utils.functions.search import search_models
 
 
-def get_home(count: int):
+def get_home(count: int, search: str | None):
     data = {
-        'videos': get_videos(count),
-        'musics': get_musics(count),
-        'pictures': get_pictures(count),
-        'blogs': get_blogs(count),
-        'chats': get_chats(count),
+        'videos': get_videos(count, search),
+        'musics': get_musics(count, search),
+        'pictures': get_pictures(count, search),
+        'blogs': get_blogs(count, search),
+        'chats': get_chats(count, search),
     }
     return data
 
 
-def get_recommend(count: int):
+def get_recommend(count: int, search: str | None):
     data = {
-        'videos': get_videos(count),
-        'musics': get_musics(count),
-        'pictures': get_pictures(count),
-        'blogs': get_blogs(count),
-        'chats': get_chats(count),
+        'videos': get_videos(count, search),
+        'musics': get_musics(count, search),
+        'pictures': get_pictures(count, search),
+        'blogs': get_blogs(count, search),
+        'chats': get_chats(count, search),
     }
     return data
 
 
-def get_videos(count: int):
-    objs = Video.objects.filter(publish=True).order_by('-created')[:count]
+def get_videos(count: int, search: str | None):
+    objs = Video.objects.none
+    if search:
+        objs = search_models(Blog, search)
+    else:
+        objs = Video.objects.filter(publish=True).order_by('-created')[:count]
+
     data = [{
         'id': obj.id,
         'title': obj.title,
@@ -48,8 +54,13 @@ def get_videos(count: int):
     return data
 
 
-def get_musics(count: int):
-    objs = Music.objects.filter(publish=True).order_by('-created')[:count]
+def get_musics(count: int, search: str | None):
+    objs = Music.objects.none
+    if search:
+        objs = search_models(Blog, search)
+    else:
+        objs = Music.objects.filter(publish=True).order_by('-created')[:count]
+
     data = [{
         'id': obj.id,
         'title': obj.title,
@@ -72,8 +83,13 @@ def get_musics(count: int):
     return data
 
 
-def get_comics(count: int):
-    objs = Comic.objects.filter(publish=True).order_by('-created')[:count]
+def get_comics(count: int, search: str | None):
+    objs = Comic.objects.none
+    if search:
+        objs = search_models(Blog, search)
+    else:
+        objs = Comic.objects.filter(publish=True).order_by('-created')[:count]
+
     data = [{
         'id': obj.id,
         'title': obj.title,
@@ -92,8 +108,13 @@ def get_comics(count: int):
     return data
 
 
-def get_pictures(count: int):
-    objs = Picture.objects.filter(publish=True).order_by('-created')[:count]
+def get_pictures(count: int, search: str | None):
+    objs = Picture.objects.none
+    if search:
+        objs = search_models(Blog, search)
+    else:
+        objs = Picture.objects.filter(publish=True).order_by('-created')[:count]
+
     data = [{
         'id': obj.id,
         'title': obj.title,
@@ -114,8 +135,13 @@ def get_pictures(count: int):
     return data
 
 
-def get_blogs(count: int):
-    objs = Blog.objects.filter(publish=True).order_by('-created')[:count]
+def get_blogs(count: int, search: str | None):
+    objs = Blog.objects.none
+    if search:
+        objs = search_models(Blog, search)
+    else:
+        objs = Blog.objects.filter(publish=True).order_by('-created')[:count]
+
     data = [{
         'id': obj.id,
         'title': obj.title,
@@ -125,7 +151,7 @@ def get_blogs(count: int):
         'like': obj.total_like(),
         'read': obj.read,
         'comment_count': obj.comment_count(),
-        'pubsh': obj.publish,
+        'publish': obj.publish,
         'created': obj.created,
         'updated': obj.updated,
         'author': {
@@ -137,8 +163,13 @@ def get_blogs(count: int):
     return data
 
 
-def get_chats(count: int):
-    objs = Chat.objects.filter(publish=True).order_by('-created')[:count]
+def get_chats(count: int, search: str | None):
+    objs = Chat.objects.none
+    if search:
+        objs = search_models(Blog, search)
+    else:
+        objs = Chat.objects.filter(publish=True).order_by('-created')[:count]
+
     data = [{
         'id': obj.id,
         'title': obj.title,
@@ -160,8 +191,13 @@ def get_chats(count: int):
     return data
 
 
-def get_todos(count: int):
-    objs = Todo.objects.all().order_by('-created')[:count]
+def get_todos(count: int, search: str | None):
+    objs = Todo.objects.none
+    if search:
+        objs = search_models(Blog, search)
+    else:
+        objs = Todo.objects.all().order_by('-created')[:count]
+
     data = [{
         'id': obj.id,
         'title': obj.title,
