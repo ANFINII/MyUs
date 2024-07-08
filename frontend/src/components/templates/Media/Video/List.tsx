@@ -1,19 +1,22 @@
-import { Search, Video } from 'types/internal/media'
+import { getVideos } from 'api/media/get/list'
+import { Video } from 'types/internal/media'
+import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import ArticleVideo from 'components/widgets/Article/Video'
 
 interface Props {
-  search?: Search
   datas: Video[]
 }
 
 export default function Videos(props: Props) {
-  const { search, datas } = props
+  const { datas } = props
+
+  const { search, newDatas } = useNewDatas<Video[]>({ datas, getDatas: (search) => getVideos(search) })
 
   return (
-    <Main title="Video" search={search}>
+    <Main title="Video" search={{ name: search, count: newDatas.length }}>
       <article className="article_list">
-        {datas.map((data) => (
+        {newDatas.map((data) => (
           <ArticleVideo data={data} key={data.id} />
         ))}
       </article>

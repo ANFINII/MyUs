@@ -1,19 +1,22 @@
-import { Search, Picture } from 'types/internal/media'
+import { getBlogs } from 'api/media/get/list'
+import { Blog } from 'types/internal/media'
+import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import ArticleBlog from 'components/widgets/Article/Blog'
 
 interface Props {
-  search?: Search
-  datas: Picture[]
+  datas: Blog[]
 }
 
 export default function Blogs(props: Props) {
-  const { search, datas } = props
+  const { datas } = props
+
+  const { search, newDatas } = useNewDatas<Blog[]>({ datas, getDatas: (search) => getBlogs(search) })
 
   return (
-    <Main title="Blog" search={search}>
+    <Main title="Blog" search={{ name: search, count: newDatas.length }}>
       <article className="article_list">
-        {datas.map((data) => (
+        {newDatas.map((data) => (
           <ArticleBlog data={data} key={data.id} />
         ))}
       </article>

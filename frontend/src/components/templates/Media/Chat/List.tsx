@@ -1,19 +1,22 @@
-import { Search, Chat } from 'types/internal/media'
+import { getChats } from 'api/media/get/list'
+import { Chat } from 'types/internal/media'
+import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import ArticleChat from 'components/widgets/Article/Chat'
 
 interface Props {
-  search?: Search
   datas: Chat[]
 }
 
 export default function Chats(props: Props) {
-  const { search, datas } = props
+  const { datas } = props
+
+  const { search, newDatas } = useNewDatas<Chat[]>({ datas, getDatas: (search) => getChats(search) })
 
   return (
-    <Main title="Chat" search={search}>
+    <Main title="Chat" search={{ name: search, count: newDatas.length }}>
       <article className="article_list">
-        {datas.map((data) => (
+        {newDatas.map((data) => (
           <ArticleChat data={data} key={data.id} />
         ))}
       </article>
