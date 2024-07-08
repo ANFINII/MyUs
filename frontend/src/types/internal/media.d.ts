@@ -11,7 +11,7 @@ export interface MediaUser {
 }
 
 export interface Search {
-  name: string
+  name?: string
   count: number
 }
 

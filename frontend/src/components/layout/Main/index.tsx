@@ -26,7 +26,7 @@ export default function Main(props: Props) {
       {type === 'defalt' && (
         <>
           {isTitle && <h1 className="main_title">{title}</h1>}
-          {search && (
+          {search?.name && (
             <section className="search_message">
               「{search.name}」の検索結果「{search.count}」件
             </section>
