@@ -28,7 +28,7 @@ def get_recommend(count: int, search: str | None):
 def get_videos(count: int, search: str | None):
     objs = Video.objects.none
     if search:
-        objs = search_models(Blog, search)
+        objs = search_models(Video, search)
     else:
         objs = Video.objects.filter(publish=True).order_by('-created')[:count]
 
@@ -57,7 +57,7 @@ def get_videos(count: int, search: str | None):
 def get_musics(count: int, search: str | None):
     objs = Music.objects.none
     if search:
-        objs = search_models(Blog, search)
+        objs = search_models(Music, search)
     else:
         objs = Music.objects.filter(publish=True).order_by('-created')[:count]
 
@@ -86,7 +86,7 @@ def get_musics(count: int, search: str | None):
 def get_comics(count: int, search: str | None):
     objs = Comic.objects.none
     if search:
-        objs = search_models(Blog, search)
+        objs = search_models(Comic, search)
     else:
         objs = Comic.objects.filter(publish=True).order_by('-created')[:count]
 
@@ -111,7 +111,7 @@ def get_comics(count: int, search: str | None):
 def get_pictures(count: int, search: str | None):
     objs = Picture.objects.none
     if search:
-        objs = search_models(Blog, search)
+        objs = search_models(Picture, search)
     else:
         objs = Picture.objects.filter(publish=True).order_by('-created')[:count]
 
@@ -166,7 +166,7 @@ def get_blogs(count: int, search: str | None):
 def get_chats(count: int, search: str | None):
     objs = Chat.objects.none
     if search:
-        objs = search_models(Blog, search)
+        objs = search_models(Chat, search)
     else:
         objs = Chat.objects.filter(publish=True).order_by('-created')[:count]
 
@@ -194,7 +194,7 @@ def get_chats(count: int, search: str | None):
 def get_todos(count: int, search: str | None):
     objs = Todo.objects.none
     if search:
-        objs = search_models(Blog, search)
+        objs = search_models(Todo, search)
     else:
         objs = Todo.objects.all().order_by('-created')[:count]
 
