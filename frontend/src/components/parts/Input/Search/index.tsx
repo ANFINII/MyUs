@@ -13,27 +13,19 @@ export default function Search(props: Props) {
 
   const router = useRouter()
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    onChange && onChange(value)
-  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => onChange && onChange(e.target.value)
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleSearch()
 
-  const handleClick = () => {
-    if (value) {
-      const pathname = router.pathname
-      const query = { ...router.query, search: value }
-      router.push({ pathname, query })
-    }
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') handleClick()
+  const handleSearch = () => {
+    const { search, ...restQuery } = router.query
+    const query = value ? { ...restQuery, search: value } : restQuery
+    router.push({ pathname: router.pathname, query })
   }
 
   return (
     <div className={clsx(style.searchbar, className)}>
       <input type="search" name="search" placeholder="検索..." value={value} onChange={handleChange} onKeyDown={handleKeyDown} className={style.input} />
-      <button onClick={handleClick} className={style.icon}>
+      <button onClick={handleSearch} className={style.icon}>
         <i className="fas fa-search"></i>
       </button>
     </div>
