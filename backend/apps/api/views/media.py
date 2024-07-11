@@ -17,6 +17,8 @@ from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializ
 from apps.api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
 from apps.api.services.user import get_user
 from apps.api.utils.functions.index import is_bool
+from apps.api.utils.functions.comment import get_comment
+from apps.api.utils.functions.user import get_author
 
 
 # Index
@@ -69,15 +71,7 @@ class VideoAPI(APIView):
             'image': obj.image.url,
             'video': obj.video.url,
             'convert': obj.convert.url,
-            'comment': [{
-                'id': comment.id,
-                'text': comment.text,
-                'reply_count': comment.reply_count(),
-                'created': comment.created,
-                'author': comment.author.id,
-                'image': comment.author.image(),
-                'nickname': comment.author.nickname
-            } for comment in comments],
+            'comment': [get_comment(comment) for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -85,11 +79,7 @@ class VideoAPI(APIView):
             'publish': obj.publish,
             'created': obj.created,
             'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
+            'author': get_author(obj.author),
         }
         return Response(data, status=HTTP_200_OK)
 
@@ -139,15 +129,7 @@ class MusicAPI(APIView):
             'content': obj.content,
             'lyric': obj.lyric,
             'music': obj.music.url,
-            'comment': [{
-                'id': comment.id,
-                'text': comment.text,
-                'reply_count': comment.reply_count(),
-                'created': comment.created,
-                'author': comment.author.id,
-                'image': comment.author.image(),
-                'nickname': comment.author.nickname
-            } for comment in comments],
+            'comment': [get_comment(comment) for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -155,11 +137,7 @@ class MusicAPI(APIView):
             'publish': obj.publish,
             'created': obj.created,
             'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
+            'author': get_author(obj.author),
         }
         return Response(data, status=HTTP_200_OK)
 
@@ -210,15 +188,7 @@ class ComicAPI(APIView):
             'id': obj.id,
             'title': obj.title,
             'content': obj.content,
-            'comment': [{
-                'id': comment.id,
-                'text': comment.text,
-                'reply_count': comment.reply_count(),
-                'created': comment.created,
-                'author': comment.author.id,
-                'image': comment.author.image(),
-                'nickname': comment.author.nickname
-            } for comment in comments],
+            'comment': [get_comment(comment) for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -226,11 +196,7 @@ class ComicAPI(APIView):
             'publish': obj.publish,
             'created': obj.created,
             'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
+            'author': get_author(obj.author),
         }
         return Response(data, status=HTTP_200_OK)
 
@@ -277,15 +243,7 @@ class PictureAPI(APIView):
             'title': obj.title,
             'content': obj.content,
             'image': f'{DOMAIN_URL}/{obj.image.url}',
-            'comment': [{
-                'id': comment.id,
-                'text': comment.text,
-                'reply_count': comment.reply_count(),
-                'created': comment.created,
-                'author': comment.author.id,
-                'image': comment.author.image(),
-                'nickname': comment.author.nickname
-            } for comment in comments],
+            'comment': [get_comment(comment) for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -293,11 +251,7 @@ class PictureAPI(APIView):
             'publish': obj.publish,
             'created': obj.created,
             'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
+            'author': get_author(obj.author),
         }
         return Response(data, status=HTTP_200_OK)
 
@@ -354,15 +308,7 @@ class BlogAPI(APIView):
             'content': obj.content,
             'richtext': obj.richtext,
             'image': obj.image.url,
-            'comment': [{
-                'id': comment.id,
-                'text': comment.text,
-                'reply_count': comment.reply_count(),
-                'created': comment.created,
-                'author': comment.author.id,
-                'image': comment.author.image(),
-                'nickname': comment.author.nickname
-            } for comment in comments],
+            'comment': [get_comment(comment) for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -442,11 +388,7 @@ class ChatAPI(APIView):
             'publish': obj.publish,
             'created': obj.created,
             'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
+            'author': get_author(obj.author),
         }
         return Response(data, status=HTTP_200_OK)
 
@@ -481,15 +423,7 @@ class TodoAPI(APIView):
             'content': obj.content,
             'priority': obj.priority,
             'progress': obj.progress,
-            'comment': [{
-                'id': comment.id,
-                'text': comment.text,
-                'reply_count': comment.reply_count(),
-                'created': comment.created,
-                'author': comment.author.id,
-                'image': comment.author.image(),
-                'nickname': comment.author.nickname
-            } for comment in comments],
+            'comment': [get_comment(comment) for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -497,10 +431,6 @@ class TodoAPI(APIView):
             'duete': obj.duedate,
             'created': obj.created,
             'updated': obj.updated,
-            'author': {
-                'id': obj.author.id,
-                'nickname': obj.author.nickname,
-                'image': obj.author.image(),
-            }
+            'author': get_author(obj.author),
         }
         return Response(data, status=HTTP_200_OK)
