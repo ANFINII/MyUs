@@ -87,6 +87,7 @@ def get_comics(count: int, search: str | None):
         'id': obj.id,
         'title': obj.title,
         'content': obj.content,
+        'image': f'{DOMAIN_URL}{obj.image.url}',
         'like': obj.total_like(),
         'read': obj.read,
         'publish': obj.publish,
