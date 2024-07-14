@@ -15,8 +15,8 @@ import 'styles/internal/userpolicy.scss'
 import 'styles/internal/registration.scss'
 import 'styles/internal/audio.scss'
 import 'styles/internal/videojs-myus.scss'
-import { UserProvider } from 'components/hooks/userContext'
 import Layout from 'components/layout'
+import { UserProvider } from 'components/widgets/UserProvider'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
