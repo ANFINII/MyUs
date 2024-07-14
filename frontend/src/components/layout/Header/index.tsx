@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import clsx from 'clsx'
+import { useUser } from 'components/hooks/useUser'
 import DropMenuCloud from 'components/layout/Header/DropMenuCloud'
 import DropMenuNotice from 'components/layout/Header/DropMenuNotice'
 import DropMenuProfile from 'components/layout/Header/DropMenuProfile'
@@ -15,15 +16,15 @@ import IconPerson from 'components/parts/Icon/Person'
 import Search from 'components/parts/Input/Search'
 
 interface Props {
-  isAuth?: boolean
   loading?: boolean
   nickname?: string
   notificationCount?: number
 }
 
 export default function Header(props: Props) {
-  const { isAuth = false, loading, nickname, notificationCount = 0 } = props
+  const { loading, nickname, notificationCount = 0 } = props
 
+  const { user } = useUser()
   const [search, setSearch] = useState<string>('')
   const [isOpenSideMenu, setIsOpenSideMenu] = useState<boolean>(false)
   const [isOpenCloud, setIsOpenCloud] = useState<boolean>(false)
@@ -83,7 +84,7 @@ export default function Header(props: Props) {
         </button>
 
         <button className={clsx('header_nav_7 header_color', isActive(isOpenProfile))} onClick={handleProfile}>
-          {isAuth ? <ExImage src="" title={nickname} size="32" /> : <IconPerson size="1.8em" type="circle" />}
+          {user.avatar !== '' ? <ExImage src={user.avatar} title={nickname} size="32" className="radius_90" /> : <IconPerson size="1.8em" type="circle" />}
           <DropMenuProfile isOpen={isOpenProfile} setIsOpen={setIsOpenProfile} isActive isStaff={false} />
         </button>
       </nav>
