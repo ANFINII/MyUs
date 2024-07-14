@@ -1,5 +1,13 @@
 import { Gender } from 'utils/constants/enum'
 
+export interface UserInfo {
+  avatar: string
+  email: string
+  nickname: string
+  isActive: boolean
+  isStaff: boolean
+}
+
 export interface User {
   avatar: string
   email: string
