@@ -14,6 +14,25 @@ from apps.api.utils.functions.logger import Log
 User = get_user_model()
 
 
+class UserAPI(APIView):
+    def get(self, request):
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
+        user = User.objects.filter(id=user_id).first()
+
+        data = {
+            'avatar': f'{DOMAIN_URL}{user.image()}' if user.image() else '',
+            'email': user.email,
+            'nickname': user.nickname,
+            'is_active': user.is_active,
+            'is_staff': user.is_staff,
+        }
+        return Response(data, status=HTTP_200_OK)
+
+
 class ProfileAPI(APIView):
     def get(self, request):
         auth = get_user_id(request)
@@ -24,7 +43,7 @@ class ProfileAPI(APIView):
         user = User.objects.filter(id=user_id).select_related('profile').defer(*DeferData.profile).first()
 
         data = {
-            'avatar': f'{DOMAIN_URL}{user.image()}',
+            'avatar': f'{DOMAIN_URL}{user.image()}' if user.image() else '',
             'email': user.email,
             'username': user.username,
             'nickname': user.nickname,
@@ -62,7 +81,7 @@ class MyPageAPI(APIView):
         user = User.objects.filter(id=user_id).select_related('mypage').defer(*DeferData.mypage).first()
 
         data = {
-            'banner': f'{DOMAIN_URL}{user.banner()}',
+            'banner': f'{DOMAIN_URL}{user.banner()}' if user.banner() else '',
             'nickname': user.nickname,
             'email': user.mypage.email,
             'content': user.mypage.content,
