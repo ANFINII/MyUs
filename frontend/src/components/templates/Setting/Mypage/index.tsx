@@ -110,9 +110,15 @@ export default function SttingMyPage(props: Props) {
         ) : (
           <Table>
             <TableRow label="バナー画像">
-              <label htmlFor="account_image_input" className="mypage_image">
-                <LightBox width=" 270" height="56" src={values.banner} title={values.nickname} />
-              </label>
+              {values.banner !== '' ? (
+                <label htmlFor="account_image_input" className="mypage_image">
+                  <LightBox width=" 270" height="56" src={values.banner} title={values.nickname} />
+                </label>
+              ) : (
+                <label htmlFor="account_image_input" className="update_account_image">
+                  <IconPicture size="3.5em" />
+                </label>
+              )}
             </TableRow>
             <TableRow isIndent label="投稿者名">
               {values.nickname}

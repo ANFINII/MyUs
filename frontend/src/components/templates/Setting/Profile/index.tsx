@@ -111,7 +111,6 @@ export default function SettingProfile(props: Props) {
               <label htmlFor="account_image_input" className="update_account_image">
                 <IconPerson size="3.5em" type="square" />
                 <input type="file" accept="image/*" id="account_image_input" className="custom-file-input" />
-                {/* <InputFile label="音楽" accept="image/*" onChange={handleFile} /> */}
               </label>
             </TableRow>
             <TableRow label="メールアドレス">
@@ -175,9 +174,15 @@ export default function SettingProfile(props: Props) {
         ) : (
           <Table>
             <TableRow label="アカウント画像" className="table_header">
-              <label htmlFor="account_image_input" className="account_image">
-                <LightBox size="56" src={values.avatar} title={values.nickname} />
-              </label>
+              {values.avatar !== '' ? (
+                <label htmlFor="account_image_input" className="account_image">
+                  <LightBox size="56" src={values.avatar} title={values.nickname} />
+                </label>
+              ) : (
+                <label htmlFor="account_image_input" className="update_account_image">
+                  <IconPerson size="3.5em" type="square" />
+                </label>
+              )}
             </TableRow>
             <TableRow isIndent label="メールアドレス">
               {values.email}
