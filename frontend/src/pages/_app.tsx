@@ -15,12 +15,15 @@ import 'styles/internal/userpolicy.scss'
 import 'styles/internal/registration.scss'
 import 'styles/internal/audio.scss'
 import 'styles/internal/videojs-myus.scss'
+import { UserProvider } from 'components/hooks/userContext'
 import Layout from 'components/layout'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <UserProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </UserProvider>
   )
 }
