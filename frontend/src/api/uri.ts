@@ -8,7 +8,7 @@ export const apiLogin = base + '/auth/login'
 export const apiLogout = base + '/auth/logout'
 
 // User
-export const apiUser = base + '/user'
+export const apiUser = base + '/user/me'
 export const apiProfile = base + '/user/profile'
 export const apiMypage = base + '/user/mypage'
 export const apiSearchTag = base + '/user/search_tag'

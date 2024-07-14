@@ -2,7 +2,7 @@ import { HttpStatusCode } from 'axios'
 import { apiServer } from 'lib/apiServer'
 import { apiClient } from 'lib/axios'
 import { Req } from 'types/global/next'
-import { LoginIn } from 'types/internal/auth'
+import { LoginIn, User } from 'types/internal/auth'
 import { apiAuth, apiUser, apiLogin, apiLogout } from './uri'
 
 export const getAuth = async (req: Req): Promise<boolean> => {
@@ -12,9 +12,11 @@ export const getAuth = async (req: Req): Promise<boolean> => {
   return data
 }
 
-export const getUser = async () => {
+export const getUser = async (): Promise<User> => {
   const data = await apiClient.get(apiUser).then((res) => {
-    return res.status === HttpStatusCode.Ok
+    if (res.status !== HttpStatusCode.NoContent) {
+      return res.data
+    }
   })
   return data
 }
