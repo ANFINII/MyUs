@@ -2,7 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { getAddressForm } from 'api/address'
 import { getProfile, postProfile } from 'api/user'
-import { ProfileOut, UserProfileIn } from 'types/internal/auth'
+import { ProfileIn, ProfileOut } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/address'
 import { isEmpty } from 'utils/constants/common'
 import { Gender } from 'utils/constants/enum'
@@ -36,6 +36,7 @@ export default function SettingProfileEdit(props: Props) {
   const [values, setValues] = useState<ProfileOut>(profile)
   const { years, months, days } = selectDate()
 
+  const handleBack = () => router.push('/setting/profile')
   const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatar(files)
   const handleEmail = (email: string) => setValues({ ...values, email })
   const handleUsername = (username: string) => setValues({ ...values, username })
@@ -54,8 +55,6 @@ export default function SettingProfileEdit(props: Props) {
   const handleBuilding = (building: string) => setValues({ ...values, building })
   const handleIntroduction = (introduction: string) => setValues({ ...values, introduction })
 
-  const handleBack = () => router.push('/setting/profile')
-
   const handleAutoAddress = async () => {
     const address = await getAddressForm(values.postalCode)
     setValues({ ...values, prefecture: address.address1, city: address.address2, street: address.address3, building: '' })
@@ -69,7 +68,7 @@ export default function SettingProfileEdit(props: Props) {
     }
     setIsLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 1000))
-    const request: UserProfileIn = { ...values, avatar }
+    const request: ProfileIn = { ...values, avatar }
     try {
       const data = await postProfile(request)
       data?.message && setMessage(data.message)
