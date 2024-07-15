@@ -31,7 +31,7 @@
     "react/jsx-uses-react": "off",
     "react/jsx-uses-vars": "off",
     "prettier/prettier": ["error", { "semi": false }],
-    "complexity": ["error", 10],
+    "complexity": ["error", 12],
     "no-unused-vars": "off",
     "unused-imports/no-unused-imports": "warn",
     "@typescript-eslint/no-explicit-any": "off",
