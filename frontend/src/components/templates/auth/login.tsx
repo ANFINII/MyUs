@@ -26,7 +26,6 @@ export default function Login() {
     }
     try {
       const login = await postLogin(data)
-
       if (login?.message) {
         setMessage(login.message)
       } else {

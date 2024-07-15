@@ -1,0 +1,26 @@
+import { useRef } from 'react'
+
+interface Props {
+  id: string
+  className?: string
+  icon?: React.ReactNode
+  onChange?: (files: File | File[]) => void
+}
+
+export default function InputImage(props: Props) {
+  const { id, className = '', icon, onChange } = props
+
+  const inputEl = useRef<HTMLInputElement>(null)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files) onChange && onChange(files[0])
+  }
+
+  return (
+    <label htmlFor={id} className={className}>
+      {icon}
+      <input id={id} ref={inputEl} type="file" accept="image/*" onChange={handleChange} />
+    </label>
+  )
+}
