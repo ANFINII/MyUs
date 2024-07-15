@@ -20,9 +20,9 @@ export interface User {
 }
 
 export interface ProfileOut extends User {
-  fullname: string
-  lastname: string
-  firstname: string
+  fullName: string
+  lastName: string
+  firstName: string
   year: number
   month: number
   day: number

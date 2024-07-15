@@ -89,9 +89,7 @@ export default function SettingMyPageEdit(props: Props) {
             <Input value={values.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleTagManagerId} />
           </TableRow>
           <TableRow label="概要">
-            <Textarea className="textarea_margin" value={values.content} onChange={handleContent}>
-              {values.content}
-            </Textarea>
+            <Textarea className="textarea_margin" defaultValue={values.content} onChange={handleContent} />
           </TableRow>
         </Table>
       </LoginRequired>

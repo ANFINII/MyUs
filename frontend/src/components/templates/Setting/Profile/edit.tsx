@@ -41,8 +41,8 @@ export default function SettingProfileEdit(props: Props) {
   const handleEmail = (email: string) => setValues({ ...values, email })
   const handleUsername = (username: string) => setValues({ ...values, username })
   const handleNickname = (nickname: string) => setValues({ ...values, nickname })
-  const handleLastname = (lastname: string) => setValues({ ...values, lastname })
-  const handleFirstname = (firstname: string) => setValues({ ...values, firstname })
+  const handleLastName = (lastName: string) => setValues({ ...values, lastName })
+  const handleFirstName = (firstName: string) => setValues({ ...values, firstName })
   const handleYear = (year: string) => setValues({ ...values, year: Number(year) })
   const handleMonth = (month: string) => setValues({ ...values, month: Number(month) })
   const handleDay = (day: string) => setValues({ ...values, day: Number(day) })
@@ -61,8 +61,8 @@ export default function SettingProfileEdit(props: Props) {
   }
 
   const handlSubmit = async () => {
-    const { email, username, nickname, lastname, firstname, phone, postalCode } = values
-    if (!(email && username && nickname && lastname && firstname && phone && postalCode)) {
+    const { email, username, nickname, lastName, firstName, phone, postalCode, prefecture } = values
+    if (!(email && username && nickname && lastName && firstName && phone && postalCode && prefecture)) {
       setIsRequired(true)
       return
     }
@@ -71,7 +71,10 @@ export default function SettingProfileEdit(props: Props) {
     const request: ProfileIn = { ...values, avatar }
     try {
       const data = await postProfile(request)
-      data?.message && setMessage(data.message)
+      if (data?.message) {
+        setMessage(data.message)
+        return
+      }
       const profile = await getProfile()
       setUser((prev) => ({ ...prev, avatar: profile.avatar }))
       setIsRequired(false)
@@ -112,8 +115,8 @@ export default function SettingProfileEdit(props: Props) {
           </TableRow>
           <TableRow label="名前">
             <div className="td_name">
-              <Input value={values.lastname} placeholder="姓" maxLength={30} required={isRequired} onChange={handleLastname} />
-              <Input value={values.firstname} placeholder="名" maxLength={30} required={isRequired} onChange={handleFirstname} />
+              <Input value={values.lastName} placeholder="姓" maxLength={30} required={isRequired} onChange={handleLastName} />
+              <Input value={values.firstName} placeholder="名" maxLength={30} required={isRequired} onChange={handleFirstName} />
             </div>
           </TableRow>
           <TableRow label="生年月日">
@@ -154,9 +157,7 @@ export default function SettingProfileEdit(props: Props) {
             </div>
           </TableRow>
           <TableRow label="自己紹介">
-            <Textarea className="textarea_margin" value={values.introduction} onChange={handleIntroduction}>
-              {values.introduction}
-            </Textarea>
+            <Textarea className="textarea_margin" defaultValue={values.introduction} onChange={handleIntroduction} />
           </TableRow>
         </Table>
       </LoginRequired>

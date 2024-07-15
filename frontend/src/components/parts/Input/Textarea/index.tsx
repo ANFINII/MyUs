@@ -7,13 +7,13 @@ interface Props {
   errorText?: string
   name?: string
   value?: string
+  defaultValue?: string
   placeholder?: string
   className?: string
   error?: boolean
   required?: boolean
   disabled?: boolean
   onChange?: (value: string) => void
-  children?: React.ReactNode
 }
 
 export default function Textarea(props: Props) {
@@ -39,9 +39,7 @@ export default function Textarea(props: Props) {
           {label}
         </label>
       )}
-      <textarea {...props} id={label} rows={rows} onChange={handleChange} className={clsx(style.textarea, isRequired && style.error)}>
-        {children}
-      </textarea>
+      <textarea {...props} id={label} rows={rows} onChange={handleChange} className={clsx(style.textarea, isRequired && style.error)}></textarea>
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
       {isErrorText && <p className={style.error_text}>{errorText}</p>}
     </div>

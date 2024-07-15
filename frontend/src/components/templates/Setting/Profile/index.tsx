@@ -51,7 +51,7 @@ export default function SettingProfile(props: Props) {
             {profile.nickname}
           </TableRow>
           <TableRow isIndent label="名前">
-            {profile.fullname}
+            {profile.fullName}
           </TableRow>
           <TableRow isIndent label="生年月日">
             {profile.year}年{profile.month}月{profile.day}日
