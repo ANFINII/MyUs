@@ -1,12 +1,15 @@
+import datetime
+
 from django.contrib.auth import get_user_model
 
 from config.settings.base import DOMAIN_URL
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
+from apps.myus.models import Profile, MyPage, Follow, NotificationSetting, SearchTag
 from apps.myus.modules.filter_data import DeferData
-from apps.myus.models import MyPage, Follow, NotificationSetting, SearchTag
+from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number, has_birthday
 from apps.api.services.user import get_user_id
 from apps.api.utils.functions.logger import Log
 
@@ -47,9 +50,9 @@ class ProfileAPI(APIView):
             'email': user.email,
             'username': user.username,
             'nickname': user.nickname,
-            'fullname': user.fullname(),
-            'lastname': user.profile.last_name,
-            'firstname': user.profile.first_name,
+            'full_name': user.full_name(),
+            'last_name': user.profile.last_name,
+            'first_name': user.profile.first_name,
             'year': user.year(),
             'month': user.month(),
             'day': user.day(),
@@ -58,6 +61,7 @@ class ProfileAPI(APIView):
             'phone': user.profile.phone,
             'country_code': user.profile.country_code,
             'postal_code': user.profile.postal_code,
+            'prefecture': user.profile.prefecture,
             'city': user.profile.city,
             'street': user.profile.street,
             'building': user.profile.building,
@@ -66,7 +70,55 @@ class ProfileAPI(APIView):
         return Response(data, status=HTTP_200_OK)
 
     def post(self, request):
+        auth = get_user_id(request)
+        if auth.status_code != HTTP_200_OK:
+            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+
+        user_id = auth.data['user_id']
+        user = User.objects.filter(id=user_id).first()
+        profile = Profile.objects.filter(id=user_id).first()
         data = request.data
+
+        if has_email(data['email']):
+            return Response({'message': 'メールアドレスの形式が違います!'}, status=HTTP_400_BAD_REQUEST)
+
+        if has_username(data['username']):
+            return Response({'message': 'ユーザー名は半角英数字のみ入力できます!'}, status=HTTP_400_BAD_REQUEST)
+
+        if has_number(data['last_name']):
+            return Response({'message': '姓に数字が含まれております!'}, status=HTTP_400_BAD_REQUEST)
+
+        if has_number(data['first_name']):
+            return Response({'message': '名に数字が含まれております!'}, status=HTTP_400_BAD_REQUEST)
+
+        if has_phone(data['phone']):
+            return Response({'message': '電話番号の形式が違います!'}, status=HTTP_400_BAD_REQUEST)
+
+        if has_postal_code(data['postal_code']):
+            return Response({'message': '郵便番号の形式が違います!'}, status=HTTP_400_BAD_REQUEST)
+
+        year = data['year']
+        month = data['month']
+        day = data['day']
+        if has_birthday(int(year), int(month), int(day)):
+            return Response({'message': f'{year}年{month}月{day}日は存在しない日付です!'}, status=HTTP_400_BAD_REQUEST)
+        birthday = datetime.date(year=int(year), month=int(month), day=int(day))
+
+        user_fields = ['avatar', 'email', 'username', 'nickname', 'content']
+        for field in user_fields:
+            setattr(user, field, data.get(field))
+
+        profile_fields = ('last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'street', 'building', 'introduction')
+        for field in profile_fields:
+            setattr(profile, field, data.get(field))
+
+        try:
+            user.save()
+            profile.birthday = birthday.isoformat()
+            profile.save()
+        except Exception:
+            return Response({'message': 'ユーザー名またはメールアドレス、投稿者名は既に登録済みです!'}, status=HTTP_400_BAD_REQUEST)
+
         Log.info('ProfileAPI', 'post', data)
         return Response({'message': '保存しました!'}, status=HTTP_204_NO_CONTENT)
 
