@@ -1,6 +1,6 @@
 import { Gender } from 'utils/constants/enum'
 
-export interface UserInfo {
+export interface UserMe {
   avatar: string
   email: string
   nickname: string
@@ -38,11 +38,11 @@ export interface ProfileOut extends User {
   introduction: string
 }
 
-export interface UserProfileIn extends ProfileOut {
+export interface ProfileIn extends ProfileOut {
   avatar?: File
 }
 
-export interface Mypage {
+export interface MypageOut {
   banner: string
   nickname: string
   email: string
@@ -56,7 +56,7 @@ export interface Mypage {
 }
 
 export interface MypageIn {
-  banner: string
+  banner?: File
   email: string
   tagManagerId: string
   isAdvertise: boolean
