@@ -75,7 +75,7 @@ export default function SttingMyPage(props: Props) {
         {isEdit ? (
           <Table>
             <TableRow label="バナー画像" className="table_header">
-              <label htmlFor="account_image_input" className="update_account_image">
+              <label htmlFor="account_image_input" className="account_image_edit">
                 <IconPicture size="3.5em" />
                 <input type="file" accept="image/*" id="account_image_input" className="custom-file-input" />
               </label>
@@ -115,7 +115,7 @@ export default function SttingMyPage(props: Props) {
                   <LightBox width=" 270" height="56" src={values.banner} title={values.nickname} />
                 </label>
               ) : (
-                <label htmlFor="account_image_input" className="update_account_image">
+                <label htmlFor="account_image_input" className="account_image_edit">
                   <IconPicture size="3.5em" />
                 </label>
               )}

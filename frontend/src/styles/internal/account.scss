@@ -63,17 +63,17 @@
   border: 4px solid rgb(100, 220, 150);
 }
 
-.update_account_image {
+.account_image_edit {
   width: 56px;
   color: rgb(200, 200, 200);
 }
 
-.update_account_image:hover {
+.account_image_edit:hover {
   color: rgb(100, 220, 150);
   cursor: pointer;
 }
 
-.update_account_image input {
+.account_image_edit input {
   display: none;
 }
 

@@ -1,21 +1,28 @@
 import { HttpStatusCode } from 'axios'
 import { apiServer } from 'lib/apiServer'
-import { apiClient } from 'lib/axios'
+import { apiClient, apiFormClient } from 'lib/axios'
 import { Req } from 'types/global/next'
-import { UserProfile, Mypage, MypageIn, Follow, SearchTagOut, NotificationOut, NotificationIn } from 'types/internal/auth'
+import { ProfileOut, Mypage, MypageIn, Follow, SearchTagOut, NotificationOut, NotificationIn, UserProfileIn } from 'types/internal/auth'
 import { camelSnake } from 'utils/functions/convertCase'
 import { apiProfile, apiMypage, apiFollow, apiFollower, apiSearchTag, apiNotification } from './uri'
 
 export const getServerProfile = async (req: Req) => {
   const data = await apiServer(req, apiClient, apiProfile).then((res) => {
     if (res.status !== HttpStatusCode.Ok) return {}
-    return res.data as UserProfile
+    return res.data as ProfileOut
   })
   return data
 }
 
-export const postProfile = async (request: UserProfile) => {
-  const data = await apiClient.post(apiProfile, camelSnake(request)).then((res) => {
+export const getProfile = async (): Promise<ProfileOut> => {
+  const data = await apiClient.get(apiProfile).then((res) => {
+    return res.data as ProfileOut
+  })
+  return data
+}
+
+export const postProfile = async (request: UserProfileIn) => {
+  const data = await apiFormClient.post(apiProfile, camelSnake(request)).then((res) => {
     if (res.status !== HttpStatusCode.NoContent) {
       return res.data
     }
@@ -32,7 +39,7 @@ export const getServerMypage = async (req: Req) => {
 }
 
 export const postMypage = async (request: MypageIn) => {
-  const data = await apiClient.post(apiMypage, camelSnake(request)).then((res) => {
+  const data = await apiFormClient.post(apiMypage, camelSnake(request)).then((res) => {
     if (res.status !== HttpStatusCode.NoContent) {
       return res.data
     }

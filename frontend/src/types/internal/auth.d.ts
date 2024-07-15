@@ -19,25 +19,7 @@ export interface User {
   dateJoined: string
 }
 
-export interface Profile {
-  lastname: string
-  firstname: string
-  year: number
-  month: number
-  day: number
-  age: number
-  gender: string
-  phone: string
-  countryCode: string
-  postalCode: string
-  prefecture: string
-  city: string
-  street: string
-  building: string
-  introduction: string
-}
-
-export interface UserProfile extends User {
+export interface ProfileOut extends User {
   fullname: string
   lastname: string
   firstname: string
@@ -54,6 +36,10 @@ export interface UserProfile extends User {
   street: string
   building: string
   introduction: string
+}
+
+export interface UserProfileIn extends ProfileOut {
+  avatar?: File
 }
 
 export interface Mypage {
