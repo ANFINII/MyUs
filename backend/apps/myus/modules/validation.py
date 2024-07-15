@@ -1,5 +1,7 @@
 import re
 
+from datetime import datetime
+
 
 # バリデーション関数定義
 def has_username(text):
@@ -31,3 +33,10 @@ def has_number(text):
     if re.search('[0-9０-９]', text):
         return True
     return False
+
+def has_birthday(year: int, month: int, day: int) -> bool:
+    try:
+        datetime(year, month, day)
+        return False
+    except ValueError:
+        return True
