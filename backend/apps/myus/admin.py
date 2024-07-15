@@ -88,8 +88,8 @@ class ComicPageInlineAdmin(admin.StackedInline):
 
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'email', 'username', 'nickname', 'fullname', 'birthday', 'age', 'gender', 'plan')
-    search_fields = ('email', 'username', 'nickname', 'fullname', 'age', 'gender', 'plan')
+    list_display = ('id', 'email', 'username', 'nickname', 'full_name', 'birthday', 'age', 'gender', 'plan')
+    search_fields = ('email', 'username', 'nickname', 'full_name', 'age', 'gender', 'plan')
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
     readonly_fields = ('last_login', 'date_joined')

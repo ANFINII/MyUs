@@ -69,9 +69,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
-    def fullname(self):
+    def full_name(self):
         return self.profile.last_name + ' ' + self.profile.first_name
-    fullname.short_description = 'name'
+    full_name.short_description = 'name'
 
     def year(self):
         if self.birthday:
