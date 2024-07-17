@@ -4,22 +4,22 @@ import IconBell from 'components/parts/Icon/Bell'
 // import ExImage from 'components/parts/Image'
 
 interface Props {
-  isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  open: boolean
+  onClose: () => void
 }
 
 export default function DropMenuNotice(props: Props) {
-  const { isOpen, setIsOpen } = props
+  const { open, onClose } = props
 
   const router = useRouter()
 
   const handleClick = (url: string) => {
     router.push(url)
-    setIsOpen(false)
+    onClose()
   }
 
   return (
-    <nav className={clsx('drop_menu drop_menu_notice', isOpen ? 'active' : '')}>
+    <nav className={clsx('drop_menu drop_menu_notice', open ? 'active' : '')}>
       <ul>
         <li className="drop_menu_list" onClick={() => handleClick('/setting/notification')}>
           <IconBell size="1.5em" className="color_drop_menu_bi" />

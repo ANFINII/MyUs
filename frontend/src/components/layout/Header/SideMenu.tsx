@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
+import { nowDate } from 'utils/functions/datetime'
 import ExImage from 'components/parts/ExImage'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconFile from 'components/parts/Icon/File'
@@ -9,27 +10,24 @@ import IconLightning from 'components/parts/Icon/Lightning'
 import IconPerson from 'components/parts/Icon/Person'
 
 interface Props {
-  isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  open: boolean
+  onClose: () => void
 }
 
 export default function SideMenu(props: Props) {
-  const { isOpen, setIsOpen } = props
+  const { open, onClose } = props
 
   const router = useRouter()
 
-  const date = new Date()
-  const handleClose = () => setIsOpen(false)
-
   const handleClick = (url: string) => {
-    setIsOpen(false)
+    onClose()
     router.push(url)
   }
 
   return (
-    <aside className={clsx('side_menu', isOpen ? 'active' : '')}>
+    <aside className={clsx('side_menu', open ? 'active' : '')}>
       <nav>
-        <div className="side_menu_close side_menu_color" onClick={handleClose}>
+        <div className="side_menu_close side_menu_color" onClick={onClose}>
           <IconArrow size="1.5em" type="left" className="side_menu_color_bi" />
           <ExImage src="/image/MyUs.png" size="30" />
         </div>
@@ -64,7 +62,7 @@ export default function SideMenu(props: Props) {
 
           <li className="side_menu_footer_item side_menu_color" onClick={() => handleClick('/')}>
             <ExImage src="/image/MyUs.png" size="24" className="myus_img" />
-            <span className="side_menu_footer_item">© {date.getFullYear()} MyUs Co.,Ltd</span>
+            <span className="side_menu_footer_item">© {nowDate.year} MyUs Co.,Ltd</span>
           </li>
         </ul>
       </nav>

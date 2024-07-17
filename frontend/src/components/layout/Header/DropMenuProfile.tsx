@@ -10,19 +10,19 @@ import IconPencil from 'components/parts/Icon/Pencil'
 import IconPerson from 'components/parts/Icon/Person'
 
 interface Props {
-  isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  open: boolean
+  onClose: () => void
 }
 
 export default function DropMenuProfile(props: Props) {
-  const { isOpen, setIsOpen } = props
+  const { open, onClose } = props
 
   const router = useRouter()
   const { user, resetUser } = useUser()
 
   const handleClick = (url: string) => {
     router.push(url)
-    setIsOpen(false)
+    onClose()
   }
 
   const handleLogout = async () => {
@@ -32,7 +32,7 @@ export default function DropMenuProfile(props: Props) {
   }
 
   return (
-    <nav className={clsx('drop_menu drop_menu_profile', isOpen ? 'active' : '')}>
+    <nav className={clsx('drop_menu drop_menu_profile', open ? 'active' : '')}>
       <ul>
         <li className="drop_menu_list" onClick={() => handleClick('/setting/profile')}>
           <IconPerson size="1.5em" type="circle" className="color_drop_menu_bi" />

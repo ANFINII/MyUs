@@ -55,7 +55,7 @@ export default function Header(props: Props) {
 
         <button className="header_nav_1 header_color" onClick={handleSideMenu}>
           <IconList width="2em" height="1.7em" />
-          <SideMenu isOpen={isOpenSideMenu} setIsOpen={setIsOpenSideMenu} />
+          <SideMenu open={isOpenSideMenu} onClose={handleSideMenu} />
         </button>
 
         <div className="header_nav_2 header_color_MyUs">
@@ -74,18 +74,18 @@ export default function Header(props: Props) {
 
         <button className={clsx('header_nav_5 header_color', isActive(isOpenCloud))} onClick={handleCloud}>
           <IconCloud size="1.5em" />
-          <DropMenuCloud isOpen={isOpenCloud} setIsOpen={setIsOpenCloud} />
+          <DropMenuCloud open={isOpenCloud} onClose={handleCloud} />
         </button>
 
         <button className={clsx('header_nav_6 header_color', isActive(isOpenNotice))} onClick={handleNotice}>
           <IconBell size="1.5em" className={isActive(notificationCount > 0)} />
           <IconExclamation size="1.2em" className={isActive(notificationCount > 0)} />
-          <DropMenuNotice isOpen={isOpenNotice} setIsOpen={setIsOpenNotice} />
+          <DropMenuNotice open={isOpenNotice} onClose={handleNotice} />
         </button>
 
         <button className={clsx('header_nav_7 header_color', isActive(isOpenProfile))} onClick={handleProfile}>
           {user.avatar !== '' ? <ExImage src={user.avatar} title={nickname} size="32" className={clsx('account', isActive(isOpenProfile))} /> : <IconPerson size="1.8em" type="circle" />}
-          <DropMenuProfile isOpen={isOpenProfile} setIsOpen={setIsOpenProfile} />
+          <DropMenuProfile open={isOpenProfile} onClose={handleProfile} />
         </button>
       </nav>
     </header>

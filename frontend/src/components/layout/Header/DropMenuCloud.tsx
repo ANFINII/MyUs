@@ -8,22 +8,22 @@ import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
 
 interface Props {
-  isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  open: boolean
+  onClose: () => void
 }
 
 export default function DropMenuCloud(props: Props) {
-  const { isOpen, setIsOpen } = props
+  const { open, onClose } = props
 
   const router = useRouter()
 
   const handleClick = (url: string) => {
     router.push(url)
-    setIsOpen(false)
+    onClose()
   }
 
   return (
-    <nav className={clsx('drop_menu drop_menu_cloud', isOpen ? 'active' : '')}>
+    <nav className={clsx('drop_menu drop_menu_cloud', open ? 'active' : '')}>
       <ul>
         <li className="drop_menu_list" onClick={() => handleClick('/media/video/create')}>
           <IconVideo size="1.5em" className="color_drop_menu_bi" />
