@@ -104,7 +104,7 @@ class ProfileAPI(APIView):
             return Response({'message': f'{year}年{month}月{day}日は存在しない日付です!'}, status=HTTP_400_BAD_REQUEST)
         birthday = datetime.date(year=int(year), month=int(month), day=int(day))
 
-        user_fields = ['avatar', 'email', 'username', 'nickname', 'content']
+        user_fields = ['email', 'username', 'nickname', 'content']
         for field in user_fields:
             setattr(user, field, data.get(field))
 
@@ -113,6 +113,7 @@ class ProfileAPI(APIView):
             setattr(profile, field, data.get(field))
 
         try:
+            user.avatar = data.get('avatar') if data.get('avatar') else user.avatar
             user.save()
             profile.birthday = birthday.isoformat()
             profile.save()
