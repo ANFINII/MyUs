@@ -27,9 +27,9 @@ export default function SettingNotification(props: Props) {
     await new Promise((resolve) => setTimeout(resolve, 200))
     try {
       postNotification(newNotification)
-    } catch (error) {
+    } catch (e) {
       setNewNotification(notification)
-      console.log(error)
+      console.log(e)
     } finally {
       setIsLoading(false)
     }

@@ -1,7 +1,7 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { getAddressForm } from 'api/address'
-import { getProfile, postProfile } from 'api/user'
+import { postProfile } from 'api/user'
 import { ProfileIn, ProfileOut } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/address'
 import { isEmpty } from 'utils/constants/common'
@@ -28,7 +28,7 @@ export default function SettingProfileEdit(props: Props) {
   const { profile } = props
 
   const router = useRouter()
-  const { setUser } = useUser()
+  const { updateUser } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
@@ -75,8 +75,7 @@ export default function SettingProfileEdit(props: Props) {
         setMessage(data.message)
         return
       }
-      const profile = await getProfile()
-      setUser((prev) => ({ ...prev, avatar: profile.avatar }))
+      await updateUser()
       setIsRequired(false)
       handleBack()
     } catch (e) {

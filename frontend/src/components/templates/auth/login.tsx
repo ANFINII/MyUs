@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { getUser, postLogin } from 'api/auth'
+import { postLogin } from 'api/auth'
 import { LoginIn } from 'types/internal/auth'
 import { useUser } from 'components/hooks/useUser'
 import Footer from 'components/layout/Footer'
@@ -11,7 +11,7 @@ import Input from 'components/parts/Input'
 
 export default function Login() {
   const router = useRouter()
-  const { user, setUser } = useUser()
+  const { updateUser } = useUser()
   const [message, setMessage] = useState<string>('')
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [data, setData] = useState<LoginIn>({ username: '', password: '' })
@@ -29,8 +29,7 @@ export default function Login() {
       if (login?.message) {
         setMessage(login.message)
       } else {
-        const user = await getUser()
-        setUser(user)
+        await updateUser()
         router.push('/setting/profile')
       }
     } catch (e) {
@@ -43,8 +42,6 @@ export default function Login() {
       <article className="article_registration">
         <form method="POST" action="" className="form_account">
           <h1 className="login_h1">MyUsへようこそ</h1>
-
-          {user.email}
 
           {message && (
             <ul className="messages_login">

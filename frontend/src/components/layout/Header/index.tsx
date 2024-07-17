@@ -84,8 +84,8 @@ export default function Header(props: Props) {
         </button>
 
         <button className={clsx('header_nav_7 header_color', isActive(isOpenProfile))} onClick={handleProfile}>
-          {user.avatar !== '' ? <ExImage src={user.avatar} title={nickname} size="32" className="radius_90" /> : <IconPerson size="1.8em" type="circle" />}
-          <DropMenuProfile isOpen={isOpenProfile} setIsOpen={setIsOpenProfile} isActive isStaff={false} />
+          {user.avatar !== '' ? <ExImage src={user.avatar} title={nickname} size="32" className={clsx('account', isActive(isOpenProfile))} /> : <IconPerson size="1.8em" type="circle" />}
+          <DropMenuProfile isOpen={isOpenProfile} setIsOpen={setIsOpenProfile} />
         </button>
       </nav>
     </header>

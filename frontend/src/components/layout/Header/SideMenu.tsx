@@ -20,9 +20,10 @@ export default function SideMenu(props: Props) {
 
   const date = new Date()
   const handleClose = () => setIsOpen(false)
+
   const handleClick = (url: string) => {
-    router.push(url)
     setIsOpen(false)
+    router.push(url)
   }
 
   return (
