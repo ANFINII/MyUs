@@ -32,25 +32,22 @@ export default function Header(props: Props) {
   const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false)
 
   const isActive = (isbool: boolean) => (isbool ? 'active' : '')
+  const handleSearch = (value: string) => setSearch(value)
   const handleSideMenu = () => setIsOpenSideMenu(!isOpenSideMenu)
   const handleCloud = () => setIsOpenCloud(!isOpenCloud)
   const handleNotice = () => setIsOpenNotice(!isOpenNotice)
   const handleProfile = () => setIsOpenProfile(!isOpenProfile)
-  const handleSearch = (value: string) => setSearch(value)
-  const handleSideMenuClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.target === e.currentTarget && setIsOpenSideMenu(false)
 
-  const handleCoverClose = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (e.target === e.currentTarget) {
-      setIsOpenCloud(false)
-      setIsOpenNotice(false)
-      setIsOpenProfile(false)
-    }
+  const handleCoverClose = () => {
+    handleCloud()
+    handleNotice()
+    handleProfile()
   }
 
   return (
     <header className={clsx('header', loading ? 'loading' : '')}>
       <nav className="header_nav">
-        <div className={clsx('side_nemu_cover', isActive(isOpenSideMenu))} onClick={handleSideMenuClose}></div>
+        <div className={clsx('side_nemu_cover', isActive(isOpenSideMenu))} onClick={handleSideMenu}></div>
         <div className={clsx('drop_back_cover', isActive(isOpenCloud || isOpenNotice || isOpenProfile))} onClick={handleCoverClose}></div>
 
         <button className="header_nav_1 header_color" onClick={handleSideMenu}>
