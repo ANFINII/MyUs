@@ -5,7 +5,7 @@ import { Req } from 'types/global/next'
 import { LoginIn, User } from 'types/internal/auth'
 import { apiAuth, apiUser, apiLogin, apiLogout } from './uri'
 
-export const getAuth = async (req: Req): Promise<boolean> => {
+export const getServerAuth = async (req: Req): Promise<boolean> => {
   const data = await apiServer(req, apiClient, apiAuth).then((res) => {
     return res.status === HttpStatusCode.Ok
   })
@@ -14,9 +14,7 @@ export const getAuth = async (req: Req): Promise<boolean> => {
 
 export const getUser = async (): Promise<User> => {
   const data = await apiClient.get(apiUser).then((res) => {
-    if (res.status !== HttpStatusCode.NoContent) {
-      return res.data
-    }
+    return res.data
   })
   return data
 }

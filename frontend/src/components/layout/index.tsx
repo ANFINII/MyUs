@@ -16,7 +16,7 @@ export default function Layout(props: Props) {
     <div className="layout">
       <Header loading={loading} />
       <SideBar />
-      <SearchTagBar isAuth={true} />
+      <SearchTagBar />
       {children}
     </div>
   )

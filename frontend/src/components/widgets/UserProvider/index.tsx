@@ -21,15 +21,15 @@ export function UserProvider(props: Props) {
 
   const [user, setUser] = useState<UserMe>(initUser)
 
-  const resetUser = () => setUser(initUser)
   const updateUser = async () => setUser(await getUser())
+  const resetUser = () => setUser(initUser)
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         await updateUser()
-      } catch (e) {
-        setUser(initUser)
+      } finally {
+        resetUser()
       }
     }
     fetchUser()
