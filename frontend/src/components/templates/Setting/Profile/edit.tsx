@@ -4,7 +4,6 @@ import { getAddressForm } from 'api/address'
 import { postProfile } from 'api/user'
 import { ProfileIn, ProfileOut } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/address'
-import { isEmpty } from 'utils/constants/common'
 import { Gender } from 'utils/constants/enum'
 import { selectDate } from 'utils/functions/datetime'
 import { genders } from 'utils/functions/user'
@@ -28,7 +27,7 @@ export default function SettingProfileEdit(props: Props) {
   const { profile } = props
 
   const router = useRouter()
-  const { updateUser } = useUser()
+  const { user, updateUser } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
@@ -87,7 +86,7 @@ export default function SettingProfileEdit(props: Props) {
 
   return (
     <Main title="アカウント設定" type="table">
-      <LoginRequired isAuth={!isEmpty(values)}>
+      <LoginRequired isAuth={user.isActive}>
         <div className="button_group">
           <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
           <Button color="blue" size="s" name="戻る" onClick={handleBack} />

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { MypageOut } from 'types/internal/auth'
-import { isEmpty } from 'utils/constants/common'
+import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPicture from 'components/parts/Icon/Picture'
@@ -18,12 +18,13 @@ export default function SettingMyPage(props: Props) {
   const { mypage } = props
 
   const router = useRouter()
+  const { user } = useUser()
   const handleEdit = () => router.push('/setting/mypage/edit')
   const handleUserPage = () => router.push(`/userpage/${mypage.nickname}`)
 
   return (
     <Main title="マイページ設定" type="table">
-      <LoginRequired isAuth={!isEmpty(mypage)}>
+      <LoginRequired isAuth={user.isActive}>
         <div className="button_group">
           <Button color="blue" size="s" name="編集" onClick={handleEdit} />
           <Button color="purple" size="s" name="ユーザページ" onClick={handleUserPage} />

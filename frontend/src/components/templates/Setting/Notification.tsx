@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { getNotification, postNotification } from 'api/user'
 import { Notification, NotificationOut } from 'types/internal/auth'
-import { isEmpty } from 'utils/constants/common'
 import { notificationTypes } from 'utils/functions/user'
+import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Toggle from 'components/parts/Input/Toggle'
@@ -17,18 +17,19 @@ interface Props {
 export default function SettingNotification(props: Props) {
   const { notification } = props
 
+  const { user } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [newNotification, setNewNotification] = useState<Notification>(notification)
+  const [values, setValues] = useState<Notification>(notification)
 
-  const handleToggle = (type: keyof Notification) => setNewNotification((prev) => ({ ...prev, [type]: !prev[type] }))
+  const handleToggle = (type: keyof Notification) => setValues((prev) => ({ ...prev, [type]: !prev[type] }))
 
   const handlSubmit = async () => {
     setIsLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     try {
-      postNotification(newNotification)
+      await postNotification(values)
     } catch (e) {
-      setNewNotification(notification)
+      setValues(notification)
       console.log(e)
     } finally {
       setIsLoading(false)
@@ -37,12 +38,12 @@ export default function SettingNotification(props: Props) {
 
   const handleReset = async () => {
     const data = await getNotification()
-    setNewNotification(data)
+    setValues(data)
   }
 
   return (
     <Main title="通知設定" type="table">
-      <LoginRequired isAuth={!isEmpty(notification)}>
+      <LoginRequired isAuth={user.isActive}>
         <div className="button_group">
           <Button color="green" size="s" name="保存" loading={isLoading} onClick={handlSubmit} />
           <Button color="blue" size="s" name="リセット" onClick={handleReset} />
@@ -54,9 +55,7 @@ export default function SettingNotification(props: Props) {
           </TableRow>
           {notificationTypes?.map((type, index) => (
             <TableRow key={index} isIndent label={`${type.slice(2)}通知`}>
-              <form method="POST" action="">
-                {newNotification && <Toggle isActive={newNotification[type]} onClick={() => handleToggle(type)} />}
-              </form>
+              <Toggle isActive={values[type]} onClick={() => handleToggle(type)} />
             </TableRow>
           ))}
         </Table>

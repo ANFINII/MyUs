@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { ProfileOut } from 'types/internal/auth'
-import { isEmpty } from 'utils/constants/common'
 import { genderMap } from 'utils/functions/user'
+import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPerson from 'components/parts/Icon/Person'
@@ -18,12 +18,13 @@ export default function SettingProfile(props: Props) {
   const { profile } = props
 
   const router = useRouter()
+  const { user } = useUser()
   const handleEdit = () => router.push('/setting/profile/edit')
   const handlePassword = () => router.push('/setting/password/change')
 
   return (
     <Main title="アカウント設定" type="table">
-      <LoginRequired isAuth={!isEmpty(profile)}>
+      <LoginRequired isAuth={user.isActive}>
         <div className="button_group">
           <Button color="blue" size="s" name="編集" onClick={handleEdit} />
           <Button color="blue" size="s" name="パスワード変更" onClick={handlePassword} />

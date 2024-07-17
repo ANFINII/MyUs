@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { postMypage } from 'api/user'
 import { MypageIn, MypageOut } from 'types/internal/auth'
-import { isEmpty } from 'utils/constants/common'
+import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPicture from 'components/parts/Icon/Picture'
@@ -22,6 +22,7 @@ export default function SettingMyPageEdit(props: Props) {
   const { mypage } = props
 
   const router = useRouter()
+  const { user } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
   const [banner, setBanner] = useState<File>()
@@ -51,7 +52,7 @@ export default function SettingMyPageEdit(props: Props) {
 
   return (
     <Main title="マイページ設定" type="table">
-      <LoginRequired isAuth={!isEmpty(mypage)}>
+      <LoginRequired isAuth={user.isActive}>
         <div className="button_group">
           <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
           <Button color="blue" size="s" name="戻る" onClick={handleBack} />

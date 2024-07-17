@@ -1,4 +1,5 @@
-import Router from 'next/router'
+import { useRouter } from 'next/router'
+import { useUser } from 'components/hooks/useUser'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -6,12 +7,13 @@ import Input from 'components/parts/Input'
 import LoginRequired from 'components/parts/LoginRequired'
 
 export default function WithdrawalConfirm() {
-  const isAuthenticated = true
+  const router = useRouter()
+  const { user } = useUser()
 
   return (
     <Main title="退会処理">
-      <article className="article_pass">
-        <LoginRequired isAuth>
+      <LoginRequired isAuth={user.isActive}>
+        <article className="article_pass">
           <form method="POST" action="" className="form_account">
             {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}
             <p className="red mb_24">本当に退会しますか？</p>
@@ -20,12 +22,12 @@ export default function WithdrawalConfirm() {
 
             <Button color="red" size="l" name="退会する" className="w_full mv_24" />
 
-            <Button color="blue" size="l" name="戻る" className="w_full mb_24" onClick={() => Router.push('/setting/withdrawal')} />
+            <Button color="blue" size="l" name="戻る" className="w_full mb_24" onClick={() => router.push('/setting/withdrawal')} />
           </form>
 
           <Footer />
-        </LoginRequired>
-      </article>
+        </article>
+      </LoginRequired>
     </Main>
   )
 }

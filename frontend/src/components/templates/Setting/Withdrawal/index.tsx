@@ -1,4 +1,5 @@
-import Router from 'next/router'
+import { useRouter } from 'next/router'
+import { useUser } from 'components/hooks/useUser'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -6,7 +7,9 @@ import Input from 'components/parts/Input'
 import LoginRequired from 'components/parts/LoginRequired'
 
 export default function Withdrawal() {
-  const isAuthenticated = true
+  const router = useRouter()
+  const { user } = useUser()
+
   const messages = false
   const message = '退会URL'
   const tokenSigned = false
@@ -14,8 +17,8 @@ export default function Withdrawal() {
 
   return (
     <Main title="退会処理">
-      <article className="article_pass">
-        <LoginRequired isAuth>
+      <LoginRequired isAuth={user.isActive}>
+        <article className="article_pass">
           <form method="POST" action="" className="form_account">
             {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}
             {messages && (
@@ -32,14 +35,14 @@ export default function Withdrawal() {
 
             <Button color="green" size="l" name="退会URL生成" className="w_full mv_24" />
 
-            {tokenSigned && <Button color="red" size="l" name="退会する" className="w_full mb_24" onClick={() => Router.push('/setting/withdrawal/confirm')} />}
+            {tokenSigned && <Button color="red" size="l" name="退会する" className="w_full mb_24" onClick={() => router.push('/setting/withdrawal/confirm')} />}
             {message && <Button color="red" size="l" name={message} className="w_full mb_24" />}
 
-            <Button color="blue" size="l" name="ホーム" className="w_full mb_24" onClick={() => Router.push('/')} />
+            <Button color="blue" size="l" name="ホーム" className="w_full mb_24" onClick={() => router.push('/')} />
           </form>
           <Footer />
-        </LoginRequired>
-      </article>
+        </article>
+      </LoginRequired>
     </Main>
   )
 }
