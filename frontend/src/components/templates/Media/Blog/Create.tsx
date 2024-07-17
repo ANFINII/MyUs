@@ -6,6 +6,7 @@ import { DeltaStatic, Sources } from 'quill'
 import { postBlogCreate } from 'api/media/post'
 import { BlogIn } from 'types/internal/media'
 import { MentionUser } from 'types/internal/timeline'
+import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
@@ -21,14 +22,9 @@ const users: MentionUser[] = [
   { id: 3, value: 'keima' },
 ]
 
-interface Props {
-  isAuth: boolean
-}
-
-export default function BlogCreate(props: Props) {
-  const { isAuth } = props
-
+export default function BlogCreate() {
   const router = useRouter()
+  const { user } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<BlogIn>({ title: '', content: '', richtext: '', delta: '' })
@@ -61,7 +57,7 @@ export default function BlogCreate(props: Props) {
 
   return (
     <Main title="Blog">
-      <LoginRequired isAuth={isAuth}>
+      <LoginRequired isAuth={user.isActive}>
         <form method="POST" action="">
           <Input label="タイトル" className="mt_16" required={isRequired} onChange={handleTitle} />
 

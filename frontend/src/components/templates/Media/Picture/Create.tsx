@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { postPictureCreate } from 'api/media/post'
 import { PictureIn } from 'types/internal/media'
+import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
@@ -9,14 +10,9 @@ import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
 
-interface Props {
-  isAuth: boolean
-}
-
-export default function PictureCreate(props: Props) {
-  const { isAuth } = props
-
+export default function PictureCreate() {
   const router = useRouter()
+  const { user } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<PictureIn>({ title: '', content: '' })
@@ -44,7 +40,7 @@ export default function PictureCreate(props: Props) {
 
   return (
     <Main title="Picture">
-      <LoginRequired isAuth={isAuth}>
+      <LoginRequired isAuth={user.isActive}>
         <form method="POST" action="">
           <Input label="タイトル" className="mt_16" required={isRequired} onChange={handleTitle} />
 
