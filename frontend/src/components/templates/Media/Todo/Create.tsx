@@ -13,7 +13,6 @@ import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
 
 export default function TodoCreate() {
-  const { year } = nowDate()
   const { user } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
@@ -54,7 +53,7 @@ export default function TodoCreate() {
 
           <Select label="進捗度" className="mt_16" options={progress} value={values.progress} onChange={handleProgress} />
 
-          <Input label="期日" className="mt_16" placeholder={`${year}-12-31`} required={isRequired} onChange={handleDuedate} />
+          <Input label="期日" className="mt_16" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handleDuedate} />
 
           <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
         </form>

@@ -1,14 +1,12 @@
-import { NowDate } from 'types/internal/datetime'
-
-export const nowDate = (): NowDate => {
+export const nowDate = (() => {
   const date = new Date()
   const year = date.getFullYear()
-  const manth = date.getMonth() + 1
+  const month = date.getMonth() + 1
   const day = date.getDate()
-  return { year, manth, day }
-}
+  return { year, month, day }
+})()
 
-export const selectDate = () => {
+export const selectDate = (() => {
   const years = Array.from({ length: new Date().getFullYear() - 1899 }, (_, index) => {
     const year = 1900 + index
     return { label: year.toString(), value: year.toString() }
@@ -24,7 +22,7 @@ export const selectDate = () => {
     return { label: day.toString(), value: day.toString() }
   })
   return { years, months, days }
-}
+})()
 
 export const padZero = (num: number): string => (num < 10 ? `0${num}` : `${num}`)
 

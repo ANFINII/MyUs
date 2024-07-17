@@ -11,7 +11,6 @@ import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
 
 export default function ChatCreate() {
-  const { year } = nowDate()
   const router = useRouter()
   const { user } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -47,7 +46,7 @@ export default function ChatCreate() {
 
           <Textarea label="内容" className="mt_16" required={isRequired} onChange={handleContent} />
 
-          <Input label="期間" className="mt_16" placeholder={`${year}-12-31`} required={isRequired} onChange={handlePeriod} />
+          <Input label="期間" className="mt_16" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handlePeriod} />
 
           <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
         </form>

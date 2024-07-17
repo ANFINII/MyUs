@@ -1,8 +1,9 @@
+import { nowDate } from 'utils/functions/datetime'
+
 export default function Footer() {
-  const today = new Date()
   return (
     <footer className="footer">
-      <small>© {today.getFullYear()} MyUs Co.,Ltd</small>
+      <small>© {nowDate.year} MyUs Co.,Ltd</small>
     </footer>
   )
 }

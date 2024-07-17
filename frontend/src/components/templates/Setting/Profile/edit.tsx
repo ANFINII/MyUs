@@ -33,7 +33,6 @@ export default function SettingProfileEdit(props: Props) {
   const [message, setMessage] = useState<string>('')
   const [avatar, setAvatar] = useState<File>()
   const [values, setValues] = useState<ProfileOut>(profile)
-  const { years, months, days } = selectDate()
 
   const handleBack = () => router.push('/setting/profile')
   const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatar(files)
@@ -119,9 +118,9 @@ export default function SettingProfileEdit(props: Props) {
           </TableRow>
           <TableRow label="生年月日">
             <div className="td_birthday">
-              <Select value={values.year} options={years} placeholder="年" onChange={handleYear} />
-              <Select value={values.month} options={months} placeholder="月" onChange={handleMonth} />
-              <Select value={values.day} options={days} placeholder="日" onChange={handleDay} />
+              <Select value={values.year} options={selectDate.years} placeholder="年" onChange={handleYear} />
+              <Select value={values.month} options={selectDate.months} placeholder="月" onChange={handleMonth} />
+              <Select value={values.day} options={selectDate.days} placeholder="日" onChange={handleDay} />
             </div>
           </TableRow>
           <TableRow isIndent label="年齢">
