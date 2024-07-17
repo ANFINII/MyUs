@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { isActive } from 'utils/functions/common'
 
 interface Props {
   href: string
@@ -11,7 +12,7 @@ export default function LinkActive(props: Props) {
   const { href, children } = props
 
   return (
-    <Link href={href} className={router.pathname === href ? 'active' : ''}>
+    <Link href={href} className={isActive(router.pathname === href)}>
       {children}
     </Link>
   )

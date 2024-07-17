@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import clsx from 'clsx'
+import { isActive } from 'utils/functions/common'
 import { useUser } from 'components/hooks/useUser'
 import DropMenuCloud from 'components/layout/Header/DropMenuCloud'
 import DropMenuNotice from 'components/layout/Header/DropMenuNotice'
@@ -31,7 +32,6 @@ export default function Header(props: Props) {
   const [isOpenNotice, setIsOpenNotice] = useState<boolean>(false)
   const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false)
 
-  const isActive = (isbool: boolean) => (isbool ? 'active' : '')
   const handleSearch = (value: string) => setSearch(value)
   const handleSideMenu = () => setIsOpenSideMenu(!isOpenSideMenu)
   const handleCloud = () => setIsOpenCloud(!isOpenCloud)

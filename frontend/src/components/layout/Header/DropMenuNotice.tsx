@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
+import { isActive } from 'utils/functions/common'
 import IconBell from 'components/parts/Icon/Bell'
 // import ExImage from 'components/parts/Image'
 
@@ -19,7 +20,7 @@ export default function DropMenuNotice(props: Props) {
   }
 
   return (
-    <nav className={clsx('drop_menu drop_menu_notice', open ? 'active' : '')}>
+    <nav className={clsx('drop_menu drop_menu_notice', isActive(open))}>
       <ul>
         <li className="drop_menu_list" onClick={() => handleClick('/setting/notification')}>
           <IconBell size="1.5em" className="color_drop_menu_bi" />

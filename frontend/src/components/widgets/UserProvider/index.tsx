@@ -28,7 +28,7 @@ export function UserProvider(props: Props) {
     const fetchUser = async () => {
       try {
         await updateUser()
-      } finally {
+      } catch (e) {
         resetUser()
       }
     }

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
+import { isActive } from 'utils/functions/common'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
@@ -11,7 +12,7 @@ import IconVideo from 'components/parts/Icon/Video'
 export default function SideBar() {
   const router = useRouter()
 
-  const activeCheck = (url: string) => router.pathname === url && 'active'
+  const activeCheck = (url: string) => isActive(router.pathname === url)
 
   return (
     <aside className="sidebar">

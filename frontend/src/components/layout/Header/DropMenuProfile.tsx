@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { postLogout } from 'api/auth'
+import { isActive } from 'utils/functions/common'
 import { useUser } from 'components/hooks/useUser'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconCredit from 'components/parts/Icon/Credit'
@@ -32,7 +33,7 @@ export default function DropMenuProfile(props: Props) {
   }
 
   return (
-    <nav className={clsx('drop_menu drop_menu_profile', open ? 'active' : '')}>
+    <nav className={clsx('drop_menu drop_menu_profile', isActive(open))}>
       <ul>
         <li className="drop_menu_list" onClick={() => handleClick('/setting/profile')}>
           <IconPerson size="1.5em" type="circle" className="color_drop_menu_bi" />
