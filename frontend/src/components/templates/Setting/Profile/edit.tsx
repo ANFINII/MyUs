@@ -67,7 +67,7 @@ export default function SettingProfileEdit(props: Props) {
       return
     }
     setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 200))
     const request: ProfileIn = { ...values, avatar }
     try {
       const data = await postProfile(request)

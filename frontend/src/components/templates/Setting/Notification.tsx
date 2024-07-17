@@ -24,7 +24,7 @@ export default function SettingNotification(props: Props) {
 
   const handlSubmit = async () => {
     setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 200))
     try {
       postNotification(newNotification)
     } catch (error) {

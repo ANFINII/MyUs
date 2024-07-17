@@ -36,7 +36,7 @@ export default function SettingMyPageEdit(props: Props) {
 
   const handlSubmit = async () => {
     setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 200))
     const request: MypageIn = { ...values, banner }
     try {
       const data = await postMypage(request)

@@ -63,7 +63,7 @@ export default function SettingMyPage(props: Props) {
             GTM{mypage.tagManagerId && '-' + mypage.tagManagerId}
           </TableRow>
           <TableRow isIndent label="概要">
-            {mypage.content}
+            <div className="pv_4 ws_wrap">{mypage.content}</div>
           </TableRow>
         </Table>
       </LoginRequired>

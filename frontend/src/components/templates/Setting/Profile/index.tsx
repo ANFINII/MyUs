@@ -73,7 +73,7 @@ export default function SettingProfile(props: Props) {
             {profile.street} {profile.building}
           </TableRow>
           <TableRow isIndent label="自己紹介">
-            {profile.introduction}
+            <div className="pv_4 ws_wrap">{profile.introduction}</div>
           </TableRow>
         </Table>
       </LoginRequired>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import clsx from 'clsx'
 import style from './Textarea.module.scss'
 
@@ -10,6 +10,7 @@ interface Props {
   defaultValue?: string
   placeholder?: string
   className?: string
+  height?: number
   error?: boolean
   required?: boolean
   disabled?: boolean
@@ -17,17 +18,25 @@ interface Props {
 }
 
 export default function Textarea(props: Props) {
-  const { label, errorText, value, className, error = false, required = false, onChange } = props
+  const { label, errorText, value, className, height, error = false, required = false, onChange } = props
 
-  const [rows, setRows] = useState(value?.split('\n').length || 1)
+  const ref = useRef<HTMLTextAreaElement>(null)
   const [isValue, setIsValue] = useState<boolean>(false)
 
   const isRequired = required && !isValue
   const isErrorText = !isRequired && error
 
+  const adjustHeight = (height?: number) => {
+    if (ref.current) {
+      ref.current.style.height = height ? `${height}px` : '36px'
+      ref.current.style.height = `${ref.current.scrollHeight}px`
+    }
+  }
+
+  useEffect(() => adjustHeight(height), [value, height])
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const height = e.target.value.split('\n').length
-    setRows(height)
+    adjustHeight()
     setIsValue(e.target.value !== '')
     onChange && onChange(e.target.value)
   }
@@ -39,7 +48,7 @@ export default function Textarea(props: Props) {
           {label}
         </label>
       )}
-      <textarea {...props} id={label} rows={rows} onChange={handleChange} className={clsx(style.textarea, isRequired && style.error)}></textarea>
+      <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} className={clsx(style.textarea, isRequired && style.error)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
       {isErrorText && <p className={style.error_text}>{errorText}</p>}
     </div>
