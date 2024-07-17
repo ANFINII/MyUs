@@ -39,9 +39,9 @@ export default function Header(props: Props) {
   const handleProfile = () => setIsOpenProfile(!isOpenProfile)
 
   const handleCoverClose = () => {
-    handleCloud()
-    handleNotice()
-    handleProfile()
+    setIsOpenCloud(false)
+    setIsOpenNotice(false)
+    setIsOpenProfile(false)
   }
 
   return (
