@@ -56,8 +56,8 @@ export default function SearchTagBar() {
         <Input name="searchtag" className={clsx('searchtag_3', isSearchtag ? 'active' : '')} maxLength={30} placeholder="タグ名" disabled={user.isActive} />
         <div className={isSearchtag ? 'searchtag_n active' : 'searchtag_n'} ref={scrollRef}>
           <div className="searchtag_n_list">
-            {searchTags?.map((tag, index) => (
-              <Link href={`?search=${tag.name}`} data-search={tag.name} key={index}>
+            {searchTags?.map((tag) => (
+              <Link key={tag.sequence} href={`?search=${tag.name}`}>
                 {tag.name}
               </Link>
             ))}

@@ -17,7 +17,7 @@ export default function Videos(props: Props) {
     <Main title="Video" search={{ name: search, count: newDatas.length }}>
       <article className="article_list">
         {newDatas.map((data) => (
-          <ArticleVideo data={data} key={data.id} />
+          <ArticleVideo key={data.id} data={data} />
         ))}
       </article>
     </Main>

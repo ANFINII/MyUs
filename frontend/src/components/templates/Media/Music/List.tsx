@@ -17,7 +17,7 @@ export default function Musics(props: Props) {
     <Main title="Music" search={{ name: search, count: newDatas.length }}>
       <article className="article_list">
         {newDatas.map((data) => (
-          <ArticleMusic data={data} key={data.id} />
+          <ArticleMusic key={data.id} data={data} />
         ))}
       </article>
     </Main>

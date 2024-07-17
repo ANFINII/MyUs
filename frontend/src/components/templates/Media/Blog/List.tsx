@@ -17,7 +17,7 @@ export default function Blogs(props: Props) {
     <Main title="Blog" search={{ name: search, count: newDatas.length }}>
       <article className="article_list">
         {newDatas.map((data) => (
-          <ArticleBlog data={data} key={data.id} />
+          <ArticleBlog key={data.id} data={data} />
         ))}
       </article>
     </Main>

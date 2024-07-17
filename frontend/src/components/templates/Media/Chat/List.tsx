@@ -17,7 +17,7 @@ export default function Chats(props: Props) {
     <Main title="Chat" search={{ name: search, count: newDatas.length }}>
       <article className="article_list">
         {newDatas.map((data) => (
-          <ArticleChat data={data} key={data.id} />
+          <ArticleChat key={data.id} data={data} />
         ))}
       </article>
     </Main>

@@ -17,7 +17,7 @@ export default function Pictures(props: Props) {
     <Main title="Picture" search={{ name: search, count: newDatas.length }}>
       <article className="article_list">
         {newDatas.map((data) => (
-          <ArticlePicture data={data} key={data.id} />
+          <ArticlePicture key={data.id} data={data} />
         ))}
       </article>
     </Main>
