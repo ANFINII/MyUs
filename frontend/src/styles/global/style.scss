@@ -118,12 +118,38 @@ $values: 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 
   }
 }
 
-.radius_8 {
-  border-radius: 8px;
+.h {
+  &_fit {
+    height: fit-content;
+  }
+
+  &_min {
+    height: min-content;
+  }
+
+  &_max {
+    height: max-content;
+  }
 }
 
-.radius_90 {
-  border-radius: 90px;
+.radius {
+  &_8 {
+    border-radius: 8px;
+  }
+
+  &_90 {
+    border-radius: 90px;
+  }
+}
+
+.ws {
+  &_nowrap {
+    white-space: nowrap;
+  }
+
+  &_wrap {
+    white-space: pre-wrap;
+  }
 }
 
 hr {
