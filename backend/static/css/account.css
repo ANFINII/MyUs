@@ -81,10 +81,6 @@ td:not(:last-child) {
   border-right: 1px solid rgb(0, 125, 0);
 }
 
-.table_header {
-  height: 59px;
-}
-
 .account_image {
   display: block;
   width: 56px;
