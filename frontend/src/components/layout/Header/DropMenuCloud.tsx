@@ -23,40 +23,38 @@ export default function DropMenuCloud(props: Props) {
   }
 
   return (
-    <>
-      <nav className={clsx('drop_menu drop_menu_cloud', isOpen ? 'active' : '')}>
-        <ul>
-          <li className="drop_menu_list" onClick={() => handleClick('/media/video/create')}>
-            <IconVideo size="1.5em" className="color_drop_menu_bi" />
-            <span>Videoアップロード</span>
-          </li>
+    <nav className={clsx('drop_menu drop_menu_cloud', isOpen ? 'active' : '')}>
+      <ul>
+        <li className="drop_menu_list" onClick={() => handleClick('/media/video/create')}>
+          <IconVideo size="1.5em" className="color_drop_menu_bi" />
+          <span>Videoアップロード</span>
+        </li>
 
-          <li className="drop_menu_list" onClick={() => handleClick('/media/music/create')}>
-            <IconMusic size="1.5em" className="color_drop_menu_bi" />
-            <span>Musicアップロード</span>
-          </li>
+        <li className="drop_menu_list" onClick={() => handleClick('/media/music/create')}>
+          <IconMusic size="1.5em" className="color_drop_menu_bi" />
+          <span>Musicアップロード</span>
+        </li>
 
-          <li className="drop_menu_list" onClick={() => handleClick('/media/comic/create')}>
-            <IconComic size="1.5em" className="color_drop_menu_bi" />
-            <span>Comicアップロード</span>
-          </li>
+        <li className="drop_menu_list" onClick={() => handleClick('/media/comic/create')}>
+          <IconComic size="1.5em" className="color_drop_menu_bi" />
+          <span>Comicアップロード</span>
+        </li>
 
-          <li className="drop_menu_list" onClick={() => handleClick('/media/picture/create')}>
-            <IconPicture size="1.5em" className="color_drop_menu_bi" />
-            <span>Pictureアップロード</span>
-          </li>
+        <li className="drop_menu_list" onClick={() => handleClick('/media/picture/create')}>
+          <IconPicture size="1.5em" className="color_drop_menu_bi" />
+          <span>Pictureアップロード</span>
+        </li>
 
-          <li className="drop_menu_list" onClick={() => handleClick('/media/blog/create')}>
-            <IconBlog size="1.5em" className="color_drop_menu_bi" />
-            <span>Blogアップロード</span>
-          </li>
+        <li className="drop_menu_list" onClick={() => handleClick('/media/blog/create')}>
+          <IconBlog size="1.5em" className="color_drop_menu_bi" />
+          <span>Blogアップロード</span>
+        </li>
 
-          <li className="drop_menu_list" onClick={() => handleClick('/media/chat/create')}>
-            <IconChat size="1.5em" className="color_drop_menu_bi" />
-            <span>Chatアップロード</span>
-          </li>
-        </ul>
-      </nav>
-    </>
+        <li className="drop_menu_list" onClick={() => handleClick('/media/chat/create')}>
+          <IconChat size="1.5em" className="color_drop_menu_bi" />
+          <span>Chatアップロード</span>
+        </li>
+      </ul>
+    </nav>
   )
 }

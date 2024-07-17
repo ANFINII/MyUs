@@ -276,12 +276,12 @@ button.header_color {
 }
 
 /* ドロップダウンメニュー Profile */
-.drop_open.profile img {
+.account {
   border-radius: 50%;
-}
 
-#drop_menu_profile:checked ~ .drop_open.profile img {
-  box-shadow: 0 0 0 1.5px rgba(255, 221, 0, 0.9);
+  &.active {
+    box-shadow: 0 0 0 1.5px rgba(255, 221, 0, 0.9);
+  }
 }
 
 .drop_menu_list {

@@ -1,6 +1,8 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { postLogout } from 'api/auth'
+import { useUser } from 'components/hooks/useUser'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconCredit from 'components/parts/Icon/Credit'
 import IconGrid from 'components/parts/Icon/Grid'
@@ -10,14 +12,13 @@ import IconPerson from 'components/parts/Icon/Person'
 interface Props {
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-  isActive?: boolean
-  isStaff?: boolean
 }
 
 export default function DropMenuProfile(props: Props) {
-  const { isOpen, setIsOpen, isActive, isStaff } = props
+  const { isOpen, setIsOpen } = props
 
   const router = useRouter()
+  const { user, resetUser } = useUser()
 
   const handleClick = (url: string) => {
     router.push(url)
@@ -26,7 +27,7 @@ export default function DropMenuProfile(props: Props) {
 
   const handleLogout = async () => {
     await postLogout()
-    localStorage.removeItem('user')
+    resetUser()
     router.push('/login')
   }
 
@@ -44,7 +45,7 @@ export default function DropMenuProfile(props: Props) {
         </li>
 
         <li className="drop_menu_list" onClick={() => handleClick('/media/todo')}>
-          {/* <Link href={isStaff || isActive ? '/' : '/login'} className="icon_link"></Link> */}
+          <Link href={user.isStaff || user.isActive ? '/' : '/login'} className="icon_link"></Link>
           <IconGrid size="1.5em" className="color_drop_menu_bi" />
           <span>投稿管理</span>
         </li>
@@ -59,7 +60,7 @@ export default function DropMenuProfile(props: Props) {
           <span>料金プラン</span>
         </li>
 
-        {!isStaff && (
+        {user.isActive && !user.isStaff && (
           <li className="drop_menu_list" onClick={() => handleClick('/setting/withdrawal')}>
             <IconPerson size="1.5em" type="cross" className="color_drop_menu_bi" />
             <span>退会処理</span>
