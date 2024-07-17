@@ -36,8 +36,8 @@ export default function ChatCreate(props: Props) {
     try {
       const data = await postChatCreate(values)
       router.push(`/media/chat/${data.id}`)
-    } catch (error) {
-      console.log(error)
+    } catch (e) {
+      console.log(e)
     } finally {
       setIsLoading(false)
     }

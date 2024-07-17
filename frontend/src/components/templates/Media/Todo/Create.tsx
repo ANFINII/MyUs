@@ -39,8 +39,8 @@ export default function TodoCreate(props: Props) {
     try {
       const data = await postTodoCreate(values)
       router.push(`/media/todo/${data.id}`)
-    } catch (error) {
-      console.log(error)
+    } catch (e) {
+      console.log(e)
     } finally {
       setIsLoading(false)
     }

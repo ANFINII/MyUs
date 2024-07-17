@@ -36,8 +36,8 @@ export default function ComicCreate(props: Props) {
     try {
       const data = await postComicCreate(values)
       router.push(`/media/comic/${data.id}`)
-    } catch (error) {
-      console.log(error)
+    } catch (e) {
+      console.log(e)
     } finally {
       setIsLoading(false)
     }

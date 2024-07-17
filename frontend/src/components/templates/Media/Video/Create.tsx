@@ -36,8 +36,8 @@ export default function VideoCreate(props: Props) {
     try {
       const data = await postVideoCreate(values)
       router.push(`/media/video/${data.id}`)
-    } catch (error) {
-      console.log(error)
+    } catch (e) {
+      console.log(e)
     } finally {
       setIsLoading(false)
     }

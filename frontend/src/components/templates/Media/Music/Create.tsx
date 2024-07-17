@@ -38,8 +38,8 @@ export default function MusicCreate(props: Props) {
     try {
       const data = await postMusicCreate(values)
       router.push(`/media/music/${data.id}`)
-    } catch (error) {
-      console.log(error)
+    } catch (e) {
+      console.log(e)
     } finally {
       setIsLoading(false)
     }

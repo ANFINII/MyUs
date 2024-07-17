@@ -35,8 +35,8 @@ export default function PictureCreate(props: Props) {
     try {
       const data = await postPictureCreate(values)
       router.push(`/media/picture/${data.id}`)
-    } catch (error) {
-      console.log(error)
+    } catch (e) {
+      console.log(e)
     } finally {
       setIsLoading(false)
     }
