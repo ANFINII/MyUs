@@ -7,13 +7,12 @@ import DropMenuCloud from 'components/layout/Header/DropMenuCloud'
 import DropMenuNotice from 'components/layout/Header/DropMenuNotice'
 import DropMenuProfile from 'components/layout/Header/DropMenuProfile'
 import SideMenu from 'components/layout/Header/SideMenu'
-import ExImage from 'components/parts/ExImage'
+import Avatar from 'components/parts/Avatar'
 import IconBell from 'components/parts/Icon/Bell'
 import IconCloud from 'components/parts/Icon/Cloud'
 import IconExclamation from 'components/parts/Icon/Exclamation'
 import IconLightning from 'components/parts/Icon/Lightning'
 import IconList from 'components/parts/Icon/List'
-import IconPerson from 'components/parts/Icon/Person'
 import Search from 'components/parts/Input/Search'
 
 interface Props {
@@ -81,7 +80,7 @@ export default function Header(props: Props) {
         </button>
 
         <button className={clsx('header_nav_7 header_color', isActive(isOpenProfile))} onClick={handleProfile}>
-          {user.avatar !== '' ? <ExImage src={user.avatar} title={nickname} size="32" className={clsx('account', isActive(isOpenProfile))} /> : <IconPerson size="1.8em" type="circle" />}
+          <Avatar size="1.8em" imgSize="32" src={user.avatar} nickname={user.nickname} className={clsx('account', isActive(isOpenProfile))} />
           <DropMenuProfile open={isOpenProfile} onClose={handleProfile} />
         </button>
       </nav>

@@ -11,6 +11,7 @@ interface Props {
   size?: string
   className?: string
   onClick?: () => void
+  onError?: () => void
 }
 
 export default function ExImage(props: Props) {
