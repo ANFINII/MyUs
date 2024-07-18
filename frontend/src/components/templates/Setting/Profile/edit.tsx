@@ -55,7 +55,11 @@ export default function SettingProfileEdit(props: Props) {
 
   const handleAutoAddress = async () => {
     const address = await getAddressForm(values.postalCode)
-    setValues({ ...values, prefecture: address.address1, city: address.address2, street: address.address3, building: '' })
+    const results = address.results
+    if (Number(results.length) > 0) {
+      const result = results[0]
+      setValues({ ...values, prefecture: result.address1, city: result.address2, street: result.address3, building: '' })
+    }
   }
 
   const handlSubmit = async () => {
