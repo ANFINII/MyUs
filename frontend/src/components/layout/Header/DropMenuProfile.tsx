@@ -26,6 +26,8 @@ export default function DropMenuProfile(props: Props) {
     onClose()
   }
 
+  const handleIn = () => router.push('/login')
+
   const handleLogout = async () => {
     router.push('/login')
     await postLogout()
@@ -68,8 +70,13 @@ export default function DropMenuProfile(props: Props) {
           </li>
         )}
 
+        <li className="drop_menu_list" onClick={handleIn}>
+          <IconArrow size="1.5em" type="in" className="color_drop_menu_bi" />
+          <span>ログイン</span>
+        </li>
+
         <li className="drop_menu_list" onClick={handleLogout}>
-          <IconArrow size="1.5em" type="box" className="color_drop_menu_bi" />
+          <IconArrow size="1.5em" type="out" className="color_drop_menu_bi" />
           <span>ログアウト</span>
         </li>
       </ul>

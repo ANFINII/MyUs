@@ -58,6 +58,7 @@ export default function SettingProfileEdit(props: Props) {
     if (results) {
       const result = results[0]
       setValues({ ...values, prefecture: result.address1, city: result.address2, street: result.address3 })
+      setMessage('')
     } else {
       setMessage('住所が取得できませんでした!')
     }

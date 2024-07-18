@@ -17,12 +17,10 @@ import Search from 'components/parts/Input/Search'
 
 interface Props {
   loading?: boolean
-  nickname?: string
-  notificationCount?: number
 }
 
 export default function Header(props: Props) {
-  const { loading, nickname, notificationCount = 0 } = props
+  const { loading } = props
 
   const { user } = useUser()
   const [search, setSearch] = useState<string>('')
@@ -42,6 +40,8 @@ export default function Header(props: Props) {
     setIsOpenNotice(false)
     setIsOpenProfile(false)
   }
+
+  const notificationCount = 0
 
   return (
     <header className={clsx('header', loading ? 'loading' : '')}>
