@@ -1,3 +1,7 @@
+export interface MessageOut {
+  message: string
+}
+
 export interface SearchTag {
   id: number
   name: string

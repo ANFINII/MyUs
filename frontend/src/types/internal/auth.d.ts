@@ -1,5 +1,10 @@
 import { Gender } from 'utils/constants/enum'
 
+export interface LoginIn {
+  username: string
+  password: string
+}
+
 export interface UserMe {
   avatar: string
   email: string
@@ -91,8 +96,3 @@ export interface Notification {
 
 export type NotificationIn = Notification
 export type NotificationOut = Notification
-
-export interface LoginIn {
-  username: string
-  password: string
-}

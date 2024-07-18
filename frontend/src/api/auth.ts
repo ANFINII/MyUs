@@ -3,6 +3,7 @@ import { apiServer } from 'lib/apiServer'
 import { apiClient } from 'lib/axios'
 import { Req } from 'types/global/next'
 import { LoginIn, User } from 'types/internal/auth'
+import { MessageOut } from 'types/internal/other'
 import { apiAuth, apiUser, apiLogin, apiLogout } from './uri'
 
 export const getServerAuth = async (req: Req): Promise<boolean> => {
@@ -19,13 +20,13 @@ export const getUser = async (): Promise<User> => {
   return data
 }
 
-export const postLogin = async (request: LoginIn) => {
+export const postLogin = async (request: LoginIn): Promise<MessageOut | void> => {
   const data = await apiClient.post(apiLogin, request).then((res) => {
     return res.data
   })
   return data
 }
 
-export const postLogout = async () => {
+export const postLogout = async (): Promise<void> => {
   await apiClient.post(apiLogout)
 }
