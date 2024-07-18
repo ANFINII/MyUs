@@ -13,6 +13,7 @@ export default function Login() {
   const router = useRouter()
   const { updateUser } = useUser()
   const [message, setMessage] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [data, setData] = useState<LoginIn>({ username: '', password: '' })
 
@@ -20,6 +21,7 @@ export default function Login() {
   const handlePassword = (password: string) => setData({ ...data, password })
 
   const handleSubmit = async () => {
+    setIsLoading(true)
     if (!(data.username && data.password)) {
       setIsRequired(true)
       return
@@ -35,6 +37,7 @@ export default function Login() {
     } catch (e) {
       setMessage('エラーが発生しました！')
     }
+    setIsLoading(false)
   }
 
   return (
@@ -56,7 +59,7 @@ export default function Login() {
             <Link href="/setting/password_reset">パスワードをリセット</Link>
           </div>
 
-          <Button color="blue" size="l" name="ログイン" className="w_full mb_24" onClick={handleSubmit} />
+          <Button color="blue" size="l" name="ログイン" type="submit" className="w_full mb_24" loading={isLoading} onClick={handleSubmit} />
           <Button color="green" size="l" name="アカウント登録" className="w_full mb_24" onClick={() => router.push('/registration/signup')} />
         </form>
         <Footer />
