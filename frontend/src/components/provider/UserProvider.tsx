@@ -2,7 +2,7 @@ import { useState, createContext, useEffect } from 'react'
 import { getUser } from 'api/auth'
 import { UserMe } from 'types/internal/auth'
 
-export interface UserContextType {
+interface UserContextType {
   user: UserMe
   updateUser: () => Promise<void>
   resetUser: () => void

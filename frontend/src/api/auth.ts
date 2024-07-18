@@ -15,6 +15,7 @@ export const getServerAuth = async (req: Req): Promise<boolean> => {
 
 export const getUser = async (): Promise<User> => {
   const data = await apiClient.get(apiUser).then((res) => {
+    if (res.status !== HttpStatusCode.Ok) throw Error
     return res.data
   })
   return data
