@@ -11,3 +11,18 @@ export interface Option {
   label: string
   value: string
 }
+
+export interface MetaType {
+  description?: string
+  url?: string
+  locale?: string
+  siteName?: string
+  canonical?: string
+}
+
+export interface ToastType {
+  content?: string
+  error?: boolean
+  toast?: boolean
+  setToast?: React.Dispatch<React.SetStateAction<boolean>>
+}
