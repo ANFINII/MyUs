@@ -1,12 +1,13 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { getAddressForm } from 'api/address'
-import { postProfile } from 'api/user'
+import { putProfile } from 'api/user'
 import { ProfileIn, ProfileOut } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/address'
 import { Gender } from 'utils/constants/enum'
 import { selectDate } from 'utils/functions/datetime'
 import { genders } from 'utils/functions/user'
+import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -28,6 +29,7 @@ export default function SettingProfileEdit(props: Props) {
 
   const router = useRouter()
   const { user, updateUser } = useUser()
+  const { toastContent, isError, isToast, setIsToast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
@@ -74,7 +76,7 @@ export default function SettingProfileEdit(props: Props) {
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: ProfileIn = { ...values, avatar }
     try {
-      const data = await postProfile(request)
+      const data = await putProfile(request)
       if (data?.message) {
         setMessage(data.message)
         return
@@ -83,14 +85,14 @@ export default function SettingProfileEdit(props: Props) {
       setIsRequired(false)
       handleBack()
     } catch (e) {
-      setMessage('エラーが発生しました！')
+      handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <Main title="アカウント設定" type="table">
+    <Main title="アカウント設定" type="table" toast={{ toastContent, isError, isToast, setIsToast }}>
       <LoginRequired isAuth={user.isActive}>
         <div className="button_group">
           <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />

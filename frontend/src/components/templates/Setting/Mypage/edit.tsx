@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { postMypage } from 'api/user'
+import { putMypage } from 'api/user'
 import { MypageIn, MypageOut } from 'types/internal/auth'
+import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -23,6 +24,7 @@ export default function SettingMyPageEdit(props: Props) {
 
   const router = useRouter()
   const { user } = useUser()
+  const { toastContent, isError, isToast, setIsToast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
   const [banner, setBanner] = useState<File>()
@@ -40,18 +42,21 @@ export default function SettingMyPageEdit(props: Props) {
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: MypageIn = { ...values, banner }
     try {
-      const data = await postMypage(request)
-      data?.message && setMessage(data.message)
+      const data = await putMypage(request)
+      if (data?.message) {
+        setMessage(data.message)
+        return
+      }
       handleBack()
     } catch (e) {
-      setMessage('エラーが発生しました！')
+      handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <Main title="マイページ設定" type="table">
+    <Main title="マイページ設定" type="table" toast={{ toastContent, isError, isToast, setIsToast }}>
       <LoginRequired isAuth={user.isActive}>
         <div className="button_group">
           <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />

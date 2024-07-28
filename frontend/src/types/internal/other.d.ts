@@ -21,8 +21,8 @@ export interface MetaType {
 }
 
 export interface ToastType {
-  content?: string
-  error?: boolean
-  toast?: boolean
-  setToast?: React.Dispatch<React.SetStateAction<boolean>>
+  toastContent?: string
+  isError?: boolean
+  isToast?: boolean
+  setIsToast?: React.Dispatch<React.SetStateAction<boolean>>
 }

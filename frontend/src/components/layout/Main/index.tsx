@@ -1,24 +1,21 @@
 import { Search } from 'types/internal/media'
+import { ToastType, MetaType } from 'types/internal/other'
 import Footer from 'components/layout//Footer'
 import Meta from 'components/layout/Head/Meta'
+import Toast from 'components/parts/Toast'
 
 interface Props {
   title?: string
   isTitle?: boolean
   search?: Search
+  toast?: ToastType
   type?: 'defalt' | 'table'
-  meta?: {
-    description?: string
-    url?: string
-    locale?: string
-    siteName?: string
-    canonical?: string
-  }
+  meta?: MetaType
   children: React.ReactNode
 }
 
 export default function Main(props: Props) {
-  const { title, isTitle = true, search, type = 'defalt', meta, children } = props
+  const { title, isTitle = true, search, toast, type = 'defalt', meta, children } = props
 
   return (
     <main className="main">
@@ -41,6 +38,7 @@ export default function Main(props: Props) {
           <Footer />
         </article>
       )}
+      <Toast {...toast} />
     </main>
   )
 }
