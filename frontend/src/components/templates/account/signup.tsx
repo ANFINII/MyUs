@@ -49,11 +49,12 @@ export default function Signup() {
   const handleGender = (e: React.ChangeEvent<HTMLInputElement>) => setValues({ ...values, gender: e.target.value as Gender })
 
   const handleSubmit = async () => {
-    setIsLoading(true)
-    if (!(values.email && values.username && values.nickname && values.lastName && values.firstName && values.password1 && values.password1)) {
+    const { email, username, nickname, lastName, firstName, password1, password2 } = values
+    if (!(email && username && nickname && lastName && firstName && password1 && password2)) {
       setIsRequired(true)
       return
     }
+    setIsLoading(true)
     try {
       const data = await postSignup(values)
       data && setMessage(data.message)
