@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 
 from config.settings.base import DOMAIN_URL
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from apps.myus.models import Profile, MyPage, Follow, NotificationSetting, SearchTag
@@ -101,26 +101,24 @@ class ProfileAPI(APIView):
         month = data['month']
         day = data['day']
         if has_birthday(int(year), int(month), int(day)):
-            return Response({'message': f'{year}年{month}月{day}日は存在しない日付です!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
-        birthday = datetime.date(year=int(year), month=int(month), day=int(day))
+            return Response({'message': f'{year}年{month}月{day}日は存在しない日付です!'}, status=HTTP_400_BAD_REQUEST)
 
         user_fields = ['email', 'username', 'nickname', 'content']
-        for field in user_fields:
-            setattr(user, field, data.get(field))
+        [setattr(user, field, data.get(field)) for field in user_fields]
+        user.avatar = data.get('avatar') if data.get('avatar') else user.avatar
 
         profile_fields = ('last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'street', 'building', 'introduction')
-        for field in profile_fields:
-            setattr(profile, field, data.get(field))
+        [setattr(profile, field, data.get(field)) for field in profile_fields]
+        birthday = datetime.date(year=int(year), month=int(month), day=int(day))
+        profile.birthday = birthday.isoformat()
 
         try:
-            user.avatar = data.get('avatar') if data.get('avatar') else user.avatar
             user.save()
-            profile.birthday = birthday.isoformat()
             profile.save()
         except Exception:
             return Response({'message': 'ユーザー名またはメールアドレス、投稿者名は既に登録済みです!'}, status=HTTP_400_BAD_REQUEST)
 
-        Log.info('ProfileAPI', 'post', data)
+        Log.info('ProfileAPI', 'put', data)
         return Response({'message': '保存しました!'}, status=HTTP_204_NO_CONTENT)
 
 
@@ -160,11 +158,16 @@ class MyPageAPI(APIView):
         if has_email(data['email']):
             return Response({'message': 'メールアドレスの形式が違います!'}, status=HTTP_400_BAD_REQUEST)
 
-        update_fields = ['banner', 'email', 'is_advertise', 'tag_manager_id', 'content']
-        for field in update_fields:
-            setattr(mypage, field, data.get(field))
-        mypage.save()
+        update_fields = ['banner', 'email', 'tag_manager_id', 'content']
+        [setattr(mypage, field, data.get(field)) for field in update_fields]
+        mypage.is_advertise = data['is_advertise'] == 'true'
 
+        try:
+            mypage.save()
+        except Exception:
+            return Response({'message': 'メールアドレスが既に登録済みです!'}, status=HTTP_400_BAD_REQUEST)
+
+        Log.info('MyPageAPI', 'put', data)
         return Response({'message': 'success'}, status=HTTP_204_NO_CONTENT)
 
 
