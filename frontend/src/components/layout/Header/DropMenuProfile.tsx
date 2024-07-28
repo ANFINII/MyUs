@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { postLogout } from 'api/auth'
@@ -26,12 +25,23 @@ export default function DropMenuProfile(props: Props) {
     onClose()
   }
 
-  const handleIn = () => router.push('/login')
+  const handleLogin = () => router.push('/account/login')
 
   const handleLogout = async () => {
-    router.push('/login')
+    handleLogin()
     await postLogout()
     resetUser()
+  }
+
+  const handleManagement = () => {
+    if (user.isStaff) {
+      router.push('http://127.0.0.1:8000/myus-admin')
+    } else if (user.isActive) {
+      router.push('http://127.0.0.1:8000/myus-manage')
+    } else {
+      router.push('/')
+    }
+    onClose()
   }
 
   return (
@@ -47,8 +57,7 @@ export default function DropMenuProfile(props: Props) {
           <span>マイページ</span>
         </li>
 
-        <li className="drop_menu_list" onClick={() => handleClick('/media/todo')}>
-          <Link href={user.isStaff || user.isActive ? '/' : '/login'} className="icon_link"></Link>
+        <li className="drop_menu_list" onClick={handleManagement}>
           <IconGrid size="1.5em" className="color_drop_menu_bi" />
           <span>投稿管理</span>
         </li>
@@ -70,7 +79,7 @@ export default function DropMenuProfile(props: Props) {
           </li>
         )}
 
-        <li className="drop_menu_list" onClick={handleIn}>
+        <li className="drop_menu_list" onClick={handleLogin}>
           <IconArrow size="1.5em" type="in" className="color_drop_menu_bi" />
           <span>ログイン</span>
         </li>
