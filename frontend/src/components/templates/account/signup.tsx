@@ -78,7 +78,7 @@ export default function Signup() {
             </ul>
           )}
 
-          <p className="margin">名前</p>
+          <p className="mb_8">名前</p>
           <div className="name_group">
             <Input type="text" placeholder="姓" maxLength={30} required={isRequired} onChange={handleLastName} />
             <Input type="text" placeholder="名" maxLength={30} required={isRequired} onChange={handleFirstName} />
@@ -90,14 +90,14 @@ export default function Signup() {
           <Input type="password" placeholder="パスワード(英数字8~16文字)" minLength={8} maxLength={16} className="mb_16" required={isRequired} onChange={handlePassword1} />
           <Input type="password" placeholder="パスワード(確認用)" minLength={8} maxLength={16} className="mb_16" required={isRequired} onChange={handlePassword2} />
 
-          <p className="margin">生年月日</p>
+          <p className="mb_8">生年月日</p>
           <div className="birthday_group mb_24">
             <Select value={values.year} options={selectDate.years} placeholder="年" onChange={handleYear} />
             <Select value={values.month} options={selectDate.months} placeholder="月" onChange={handleMonth} />
             <Select value={values.day} options={selectDate.days} placeholder="日" onChange={handleDay} />
           </div>
 
-          <p className="margin">性別</p>
+          <p className="mb_8">性別</p>
           <div className="td_gender mb_40">
             {genders.map((gender) => (
               <div key={gender.value} className="gender_radio">

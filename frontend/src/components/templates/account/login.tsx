@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { postLogin } from 'api/auth'
 import { LoginIn } from 'types/internal/auth'
@@ -20,6 +19,7 @@ export default function Login() {
   const [values, setValues] = useState<LoginIn>({ username: '', password: '' })
 
   const handleSignup = () => router.push('/account/signup')
+  const handleReset = () => router.push('/account/reset')
   const handleUsername = (username: string) => setValues({ ...values, username })
   const handlePassword = (password: string) => setValues({ ...values, password })
 
@@ -58,9 +58,9 @@ export default function Login() {
           <Input type="text" placeholder="ユーザー名 or メールアドレス" className="mb_16" required={isRequired} autoFocus onChange={handleUsername} />
           <Input type="password" placeholder="パスワード" minLength={8} maxLength={16} className="mb_16" required={isRequired} onChange={handlePassword} />
 
-          <div className="password_reset">
-            <Link href="/setting/password_reset">パスワードをリセット</Link>
-          </div>
+          <p className="password_reset" onClick={handleReset}>
+            パスワードをリセット
+          </p>
 
           <Button color="blue" size="l" name="ログイン" type="submit" className="w_full mb_24" loading={isLoading} onClick={handleSubmit} />
           <Button color="green" size="l" name="アカウント登録" className="w_full mb_24" onClick={handleSignup} />
