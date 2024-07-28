@@ -1,10 +1,13 @@
+import Divide from 'components/parts/Divide'
+
 interface Props {
   title: string
+  divide?: boolean
   children: React.ReactNode
 }
 
 export default function ArticleIndex(props: Props) {
-  const { title, children } = props
+  const { title, divide = true, children } = props
 
   return (
     <>
@@ -12,7 +15,7 @@ export default function ArticleIndex(props: Props) {
         <h2>{title}</h2>
         {children}
       </article>
-      <hr />
+      {divide && <Divide />}
     </>
   )
 }

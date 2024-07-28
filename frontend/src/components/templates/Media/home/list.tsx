@@ -1,5 +1,6 @@
 import { MediaHome, Search } from 'types/internal/media'
 import Main from 'components/layout/Main'
+import Divide from 'components/parts/Divide'
 import ArticleBlog from 'components/widgets/Article/Blog'
 import ArticleChat from 'components/widgets/Article/Chat'
 import ArticleComic from 'components/widgets/Article/Comic'
@@ -19,7 +20,7 @@ export default function Homes(props: Props) {
 
   return (
     <Main title="Home" search={search}>
-      <hr />
+      <Divide />
 
       <ArticleIndex title="Video">
         {videos?.map((data) => (
@@ -51,7 +52,7 @@ export default function Homes(props: Props) {
         ))}
       </ArticleIndex>
 
-      <ArticleIndex title="Chat">
+      <ArticleIndex title="Chat" divide={false}>
         {chats?.map((data) => (
           <ArticleChat key={data.id} data={data} />
         ))}
