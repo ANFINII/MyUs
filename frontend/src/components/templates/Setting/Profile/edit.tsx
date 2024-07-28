@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { getAddressForm } from 'api/address'
 import { putProfile } from 'api/user'
@@ -46,7 +46,7 @@ export default function SettingProfileEdit(props: Props) {
   const handleYear = (year: string) => setValues({ ...values, year: Number(year) })
   const handleMonth = (month: string) => setValues({ ...values, month: Number(month) })
   const handleDay = (day: string) => setValues({ ...values, day: Number(day) })
-  const handleGender = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, gender: e.target.value as Gender })
+  const handleGender = (e: React.ChangeEvent<HTMLInputElement>) => setValues({ ...values, gender: e.target.value as Gender })
   const handlePhone = (phone: string) => setValues({ ...values, phone })
   const handlePostalCode = (postalCode: string) => setValues({ ...values, postalCode })
   const handlePrefecture = (prefecture: string) => setValues({ ...values, prefecture })
@@ -77,13 +77,12 @@ export default function SettingProfileEdit(props: Props) {
     const request: ProfileIn = { ...values, avatar }
     try {
       const data = await putProfile(request)
-      if (data?.message) {
-        setMessage(data.message)
-        return
+      data && setMessage(data.message)
+      if (!data?.error) {
+        await updateUser()
+        setIsRequired(false)
+        handleBack()
       }
-      await updateUser()
-      setIsRequired(false)
-      handleBack()
     } catch (e) {
       handleToast('エラーが発生しました！', true)
     } finally {

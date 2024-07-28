@@ -83,6 +83,8 @@ export const getNotification = async (): Promise<NotificationOut> => {
   return data
 }
 
-export const postNotification = async (request: NotificationIn): Promise<void> => {
-  await apiClient.post(apiNotification, camelSnake(request))
+export const putNotification = async (request: NotificationIn): Promise<void> => {
+  await apiClient.put(apiNotification, camelSnake(request)).then((res) => {
+    if (res.status === HttpStatusCode.InternalServerError) throw Error
+  })
 }

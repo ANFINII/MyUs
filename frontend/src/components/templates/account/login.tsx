@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { postLogin } from 'api/auth'
 import { LoginIn } from 'types/internal/auth'
+import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
@@ -12,36 +13,38 @@ import Input from 'components/parts/Input'
 export default function Login() {
   const router = useRouter()
   const { updateUser } = useUser()
+  const { toastContent, isError, isToast, setIsToast, handleToast } = useToast()
   const [message, setMessage] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [data, setData] = useState<LoginIn>({ username: '', password: '' })
+  const [values, setValues] = useState<LoginIn>({ username: '', password: '' })
 
-  const handleUsername = (username: string) => setData({ ...data, username })
-  const handlePassword = (password: string) => setData({ ...data, password })
+  const handleSignup = () => router.push('/account/signup')
+  const handleUsername = (username: string) => setValues({ ...values, username })
+  const handlePassword = (password: string) => setValues({ ...values, password })
 
   const handleSubmit = async () => {
     setIsLoading(true)
-    if (!(data.username && data.password)) {
+    if (!(values.username && values.password)) {
       setIsRequired(true)
       return
     }
     try {
-      const login = await postLogin(data)
-      if (login?.message) {
-        setMessage(login.message)
-      } else {
+      const data = await postLogin(values)
+      data && setMessage(data.message)
+      if (!data?.error) {
         await updateUser()
         router.push('/setting/profile')
       }
     } catch (e) {
-      setMessage('エラーが発生しました！')
+      handleToast('エラーが発生しました！', true)
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   return (
-    <Main title="ログイン">
+    <Main title="ログイン" toast={{ toastContent, isError, isToast, setIsToast }}>
       <article className="article_registration">
         <form method="POST" action="" className="form_account">
           <h1 className="login_h1">MyUsへようこそ</h1>
@@ -60,7 +63,7 @@ export default function Login() {
           </div>
 
           <Button color="blue" size="l" name="ログイン" type="submit" className="w_full mb_24" loading={isLoading} onClick={handleSubmit} />
-          <Button color="green" size="l" name="アカウント登録" className="w_full mb_24" onClick={() => router.push('/registration/signup')} />
+          <Button color="green" size="l" name="アカウント登録" className="w_full mb_24" onClick={handleSignup} />
         </form>
         <Footer />
       </article>

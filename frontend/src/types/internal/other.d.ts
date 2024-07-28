@@ -1,4 +1,5 @@
 export interface MessageOut {
+  error: boolean
   message: string
 }
 

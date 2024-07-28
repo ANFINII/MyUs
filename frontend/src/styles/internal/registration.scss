@@ -12,20 +12,20 @@
 }
 
 .form_account .login_h1 {
-  font-family: "Libre Caslon Display", serif;
+  font-family: 'Libre Caslon Display', serif;
   font-size: 28px;
   color: rgb(50, 50, 50);
-  margin:  40px 0;
+  margin: 40px 0;
 }
 
 .myus_h1 {
-  font-family: "Libre Caslon Display", serif;
+  font-family: 'Libre Caslon Display', serif;
   font-size: 26px;
   margin: 0 0 24px 0;
 }
 
 .form_account .signup_h1 {
-  font-family: "Libre Caslon Display", serif;
+  font-family: 'Libre Caslon Display', serif;
   font-size: 28px;
   color: rgb(50, 50, 50);
   margin: 20px 0 20px 0;
@@ -76,7 +76,8 @@
   margin: 0 0 40px 0;
 }
 
-#login, #submit  {
+#login,
+#submit {
   margin: 0 0 24px 0;
 }
 
@@ -112,17 +113,15 @@
   text-decoration: none;
 }
 
-.name_group,
-.birthday_group {
+.name_group {
   display: flex;
-  margin: 0 0 16px 0;
-  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 4px;
 }
 
-.name_group .name {
-  width: 174px;
-}
-
-.birthday {
-  width: 115px;
+.birthday_group {
+  display: grid;
+  grid-template-columns: minmax(74px, 1fr) minmax(74px, 1fr) minmax(74px, 1fr);
+  height: 36px;
+  column-gap: 4px;
 }

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { getNotification, postNotification } from 'api/user'
+import { getNotification, putNotification } from 'api/user'
 import { Notification, NotificationOut } from 'types/internal/auth'
 import { notificationTypes } from 'utils/functions/user'
+import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -18,6 +19,7 @@ export default function SettingNotification(props: Props) {
   const { notification } = props
 
   const { user } = useUser()
+  const { toastContent, isError, isToast, setIsToast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [values, setValues] = useState<Notification>(notification)
 
@@ -27,10 +29,9 @@ export default function SettingNotification(props: Props) {
     setIsLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     try {
-      await postNotification(values)
+      await putNotification(values)
     } catch (e) {
-      setValues(notification)
-      console.log(e)
+      handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)
     }
@@ -42,7 +43,7 @@ export default function SettingNotification(props: Props) {
   }
 
   return (
-    <Main title="通知設定" type="table">
+    <Main title="通知設定" type="table" toast={{ toastContent, isError, isToast, setIsToast }}>
       <LoginRequired isAuth={user.isActive}>
         <div className="button_group">
           <Button color="green" size="s" name="保存" loading={isLoading} onClick={handlSubmit} />
