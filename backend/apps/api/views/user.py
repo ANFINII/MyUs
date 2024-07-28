@@ -9,8 +9,9 @@ from rest_framework.views import APIView
 
 from apps.myus.models import Profile, MyPage, Follow, NotificationSetting, SearchTag
 from apps.myus.modules.filter_data import DeferData
-from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number, has_birthday
-from apps.api.services.user import get_user_id
+from apps.myus.modules.validation import has_email
+from apps.api.services.user import get_user_id, profile_check
+from apps.api.utils.functions.index import message
 from apps.api.utils.functions.logger import Log
 
 
@@ -21,7 +22,7 @@ class UserAPI(APIView):
     def get(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+            return Response(message(True, auth.data.get('message')), status=auth.status_code)
 
         user_id = auth.data['user_id']
         user = User.objects.filter(id=user_id).first()
@@ -40,7 +41,7 @@ class ProfileAPI(APIView):
     def get(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+            return Response(message(True, auth.data.get('message')), status=auth.status_code)
 
         user_id = auth.data['user_id']
         user = User.objects.filter(id=user_id).select_related('profile').defer(*DeferData.profile).first()
@@ -72,61 +73,44 @@ class ProfileAPI(APIView):
     def put(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+            return Response(message(True, auth.data.get('message')), status=auth.status_code)
 
         user_id = auth.data['user_id']
         user = User.objects.filter(id=user_id).first()
         profile = Profile.objects.filter(id=user_id).first()
         data = request.data
 
-        if has_email(data['email']):
-            return Response({'message': 'メールアドレスの形式が違います!'}, status=HTTP_400_BAD_REQUEST)
+        validation = profile_check(request.data)
+        if validation:
+            return Response(message(True, validation), status=HTTP_400_BAD_REQUEST)
 
-        if has_username(data['username']):
-            return Response({'message': 'ユーザー名は半角英数字のみ入力できます!'}, status=HTTP_400_BAD_REQUEST)
-
-        if has_number(data['last_name']):
-            return Response({'message': '姓に数字が含まれております!'}, status=HTTP_400_BAD_REQUEST)
-
-        if has_number(data['first_name']):
-            return Response({'message': '名に数字が含まれております!'}, status=HTTP_400_BAD_REQUEST)
-
-        if has_phone(data['phone']):
-            return Response({'message': '電話番号の形式が違います!'}, status=HTTP_400_BAD_REQUEST)
-
-        if has_postal_code(data['postal_code']):
-            return Response({'message': '郵便番号の形式が違います!'}, status=HTTP_400_BAD_REQUEST)
-
-        year = data['year']
-        month = data['month']
-        day = data['day']
-        if has_birthday(int(year), int(month), int(day)):
-            return Response({'message': f'{year}年{month}月{day}日は存在しない日付です!'}, status=HTTP_400_BAD_REQUEST)
-
+        validation = profile_check(request.data)
+        if validation:
+            return Response(message(True, validation), status=HTTP_400_BAD_REQUEST)
         user_fields = ['email', 'username', 'nickname', 'content']
         [setattr(user, field, data.get(field)) for field in user_fields]
         user.avatar = data.get('avatar') if data.get('avatar') else user.avatar
 
         profile_fields = ('last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'street', 'building', 'introduction')
         [setattr(profile, field, data.get(field)) for field in profile_fields]
-        birthday = datetime.date(year=int(year), month=int(month), day=int(day))
+        birthday = datetime.date(year=int(data['year']), month=int(data['month']), day=int(data['day']))
         profile.birthday = birthday.isoformat()
 
         try:
             user.save()
             profile.save()
         except Exception:
-            return Response({'message': 'ユーザー名またはメールアドレス、投稿者名は既に登録済みです!'}, status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, 'ユーザー名またはメールアドレス、投稿者名は既に登録済みです!'), status=HTTP_400_BAD_REQUEST)
 
         Log.info('ProfileAPI', 'put', data)
-        return Response({'message': '保存しました!'}, status=HTTP_204_NO_CONTENT)
+        return Response(message(False, '保存しました!'), status=HTTP_204_NO_CONTENT)
 
 
 class MyPageAPI(APIView):
     def get(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+            return Response(message(True, auth.data.get('message')), status=auth.status_code)
 
         user_id = auth.data['user_id']
         user = User.objects.filter(id=user_id).select_related('mypage').defer(*DeferData.mypage).first()
@@ -149,14 +133,14 @@ class MyPageAPI(APIView):
     def put(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+            return Response(message(True, auth.data.get('message')), status=auth.status_code)
 
         user_id = auth.data['user_id']
         mypage = MyPage.objects.filter(id=user_id).first()
         data = request.data
 
         if has_email(data['email']):
-            return Response({'message': 'メールアドレスの形式が違います!'}, status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, 'メールアドレスの形式が違います!'), status=HTTP_400_BAD_REQUEST)
 
         update_fields = ['banner', 'email', 'tag_manager_id', 'content']
         [setattr(mypage, field, data.get(field)) for field in update_fields]
@@ -165,17 +149,17 @@ class MyPageAPI(APIView):
         try:
             mypage.save()
         except Exception:
-            return Response({'message': 'メールアドレスが既に登録済みです!'}, status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, 'メールアドレスが既に登録済みです!'), status=HTTP_400_BAD_REQUEST)
 
         Log.info('MyPageAPI', 'put', data)
-        return Response({'message': 'success'}, status=HTTP_204_NO_CONTENT)
+        return Response(message(False), status=HTTP_204_NO_CONTENT)
 
 
 class FollowAPI(APIView):
     def get(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+            return Response(message(True, auth.data.get('message')), status=auth.status_code)
 
         user_id = auth.data['user_id']
         follows = Follow.objects.filter(follower=user_id).select_related('following__mypage').order_by('created')[:100]
@@ -195,7 +179,7 @@ class FollowerAPI(APIView):
     def get(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+            return Response(message(True, auth.data.get('message')), status=auth.status_code)
 
         user_id = auth.data['user_id']
         follows = Follow.objects.filter(following=user_id).select_related('follower__mypage').order_by('created')[:100]
@@ -215,7 +199,7 @@ class SearchTagAPI(APIView):
     def get(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+            return Response(message(True, auth.data.get('message')), status=auth.status_code)
 
         user_id = auth.data['user_id']
         search_tags = SearchTag.objects.filter(author=user_id).order_by('sequence')[:20]
@@ -227,7 +211,7 @@ class NotificationAPI(APIView):
     def get(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+            return Response(message(True, auth.data.get('message')), status=auth.status_code)
 
         user_id = auth.data['user_id']
         notification_setting = NotificationSetting.objects.filter(user=user_id).first()
@@ -246,10 +230,10 @@ class NotificationAPI(APIView):
         }
         return Response(data, status=HTTP_200_OK)
 
-    def post(self, request):
+    def put(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
-            return Response({'message': auth.data.get('message')}, status=auth.status_code)
+            return Response(message(True, auth.data.get('message')), status=auth.status_code)
 
         user_id = auth.data['user_id']
         notification_setting = NotificationSetting.objects.filter(user=user_id).first()
@@ -259,4 +243,4 @@ class NotificationAPI(APIView):
             [setattr(notification_setting, key, value) for key, value in data.items()]
             notification_setting.save()
 
-        return Response({'message': 'success'}, status=HTTP_204_NO_CONTENT)
+        return Response(message(False), status=HTTP_204_NO_CONTENT)
