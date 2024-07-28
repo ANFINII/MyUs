@@ -1,0 +1,48 @@
+.cover {
+  position: fixed;
+  display: flex;
+  left: 0;
+  right: 0;
+  bottom: -38px;
+  align-items: center;
+  justify-content: end;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0);
+  transition: all 0.2s 0s linear;
+
+  &.active {
+    bottom: 50px;
+    transition: all 0.3s 0s linear;
+  }
+
+  .toast {
+    display: flex;
+    min-width: 100px;
+    height: 38px;
+    padding: 8px;
+    font-size: 13px;
+    color: white;
+    border: 1px solid rgb(230, 55, 70);
+    border-radius: 5px;
+    justify-content: center;
+    background: rgb(25, 25, 25);
+
+    &.error {
+      background: rgb(230, 55, 70);
+    }
+  }
+
+  .content {
+    padding-left: 4px;
+  }
+
+  .cross {
+    margin-top: -1px;
+    color: rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      color: rgb(255, 255, 255);
+      cursor: pointer;
+    }
+  }
+}
