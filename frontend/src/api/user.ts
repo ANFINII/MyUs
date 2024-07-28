@@ -22,8 +22,9 @@ export const getProfile = async (): Promise<ProfileOut> => {
   return data
 }
 
-export const postProfile = async (request: ProfileIn): Promise<MessageOut | void> => {
-  const data = await apiFormClient.post(apiProfile, camelSnake(request)).then((res) => {
+export const putProfile = async (request: ProfileIn): Promise<MessageOut | void> => {
+  const data = await apiFormClient.put(apiProfile, camelSnake(request)).then((res) => {
+    if (res.status === HttpStatusCode.InternalServerError) throw Error
     return res.data
   })
   return data
@@ -37,8 +38,12 @@ export const getServerMypage = async (req: Req): Promise<MypageOut> => {
   return data
 }
 
-export const postMypage = async (request: MypageIn): Promise<void> => {
-  await apiFormClient.post(apiMypage, camelSnake(request))
+export const putMypage = async (request: MypageIn): Promise<MessageOut | void> => {
+  const data = await apiFormClient.put(apiMypage, camelSnake(request)).then((res) => {
+    if (res.status === HttpStatusCode.InternalServerError) throw Error
+    return res.data
+  })
+  return data
 }
 
 export const getServerFollow = async (req: Req): Promise<Follow[]> => {

@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 
 from config.settings.base import DOMAIN_URL
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
 from rest_framework.views import APIView
 
 from apps.myus.models import Profile, MyPage, Follow, NotificationSetting, SearchTag
@@ -69,7 +69,7 @@ class ProfileAPI(APIView):
         }
         return Response(data, status=HTTP_200_OK)
 
-    def post(self, request):
+    def put(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
             return Response({'message': auth.data.get('message')}, status=auth.status_code)
@@ -101,7 +101,7 @@ class ProfileAPI(APIView):
         month = data['month']
         day = data['day']
         if has_birthday(int(year), int(month), int(day)):
-            return Response({'message': f'{year}年{month}月{day}日は存在しない日付です!'}, status=HTTP_400_BAD_REQUEST)
+            return Response({'message': f'{year}年{month}月{day}日は存在しない日付です!'}, status=HTTP_500_INTERNAL_SERVER_ERROR)
         birthday = datetime.date(year=int(year), month=int(month), day=int(day))
 
         user_fields = ['email', 'username', 'nickname', 'content']
@@ -148,15 +148,18 @@ class MyPageAPI(APIView):
         }
         return Response(data, status=HTTP_200_OK)
 
-    def post(self, request):
+    def put(self, request):
         auth = get_user_id(request)
         if auth.status_code != HTTP_200_OK:
             return Response({'message': auth.data.get('message')}, status=auth.status_code)
 
         user_id = auth.data['user_id']
         mypage = MyPage.objects.filter(id=user_id).first()
-
         data = request.data
+
+        if has_email(data['email']):
+            return Response({'message': 'メールアドレスの形式が違います!'}, status=HTTP_400_BAD_REQUEST)
+
         update_fields = ['banner', 'email', 'is_advertise', 'tag_manager_id', 'content']
         for field in update_fields:
             setattr(mypage, field, data.get(field))
