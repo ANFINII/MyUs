@@ -84,9 +84,6 @@ class ProfileAPI(APIView):
         if validation:
             return Response(message(True, validation), status=HTTP_400_BAD_REQUEST)
 
-        validation = profile_check(request.data)
-        if validation:
-            return Response(message(True, validation), status=HTTP_400_BAD_REQUEST)
         user_fields = ['email', 'username', 'nickname', 'content']
         [setattr(user, field, data.get(field)) for field in user_fields]
         user.avatar = data.get('avatar') if data.get('avatar') else user.avatar
