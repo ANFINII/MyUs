@@ -10,6 +10,7 @@ import Input from 'components/parts/Input'
 export default function Reset() {
   const router = useRouter()
   const { toastContent, isError, isToast, setIsToast, handleToast } = useToast()
+  const [message, setMessage] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
@@ -38,6 +39,13 @@ export default function Reset() {
       <article className="article_registration">
         <form method="POST" action="" className="form_account">
           <h1 className="login_h1">パスワードリセット</h1>
+
+          {message && (
+            <ul className="messages_login">
+              <li>{message}</li>
+            </ul>
+          )}
+
           <Input type="email" placeholder="メールアドレス" className="mb_40" required={isRequired} onChange={handleEmail} />
           <Button color="green" size="l" name="送信" type="submit" className="w_full mb_24" loading={isLoading} onClick={handleSubmit} />
           <Button color="blue" size="l" name="戻る" className="w_full mb_24" onClick={handleBack} />
