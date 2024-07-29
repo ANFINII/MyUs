@@ -126,7 +126,7 @@ class LoginAPI(views.TokenObtainPairView):
 
 class LogoutAPI(views.TokenObtainPairView):
     def post(self, request):
-        response = Response(message(False), status=HTTP_204_NO_CONTENT)
+        response = Response(message(False, 'success'), status=HTTP_204_NO_CONTENT)
         try:
             response.delete_cookie('access_token')
             response.delete_cookie('refresh_token')

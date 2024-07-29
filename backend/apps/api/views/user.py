@@ -149,7 +149,7 @@ class MyPageAPI(APIView):
             return Response(message(True, 'メールアドレスが既に登録済みです!'), status=HTTP_400_BAD_REQUEST)
 
         Log.info('MyPageAPI', 'put', data)
-        return Response(message(False), status=HTTP_204_NO_CONTENT)
+        return Response(message(False, 'success'), status=HTTP_204_NO_CONTENT)
 
 
 class FollowAPI(APIView):
@@ -240,4 +240,4 @@ class NotificationAPI(APIView):
             [setattr(notification_setting, key, value) for key, value in data.items()]
             notification_setting.save()
 
-        return Response(message(False), status=HTTP_204_NO_CONTENT)
+        return Response(message(False, 'success'), status=HTTP_204_NO_CONTENT)
