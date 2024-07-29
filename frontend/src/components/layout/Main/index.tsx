@@ -6,6 +6,7 @@ import Toast from 'components/parts/Toast'
 
 interface Props {
   title?: string
+  metaTitle?: string
   isTitle?: boolean
   search?: Search
   toast?: ToastType
@@ -15,14 +16,14 @@ interface Props {
 }
 
 export default function Main(props: Props) {
-  const { title, isTitle = true, search, toast, type = 'defalt', meta, children } = props
+  const { title, metaTitle, isTitle = true, search, toast, type = 'defalt', meta, children } = props
 
   return (
     <main className="main">
-      <Meta title={title} {...meta} />
+      <Meta title={title || metaTitle} {...meta} />
       {type === 'defalt' && (
         <>
-          {isTitle && <h1 className="main_title">{title}</h1>}
+          {isTitle && !metaTitle && <h1 className="main_title">{title}</h1>}
           {search?.name && (
             <section className="search_message">
               「{search.name}」の検索結果「{search.count}」件
@@ -33,7 +34,7 @@ export default function Main(props: Props) {
       )}
       {type === 'table' && (
         <article className="article_table">
-          {title && <h1 className="main_title">{title}</h1>}
+          {title && !metaTitle && <h1 className="main_title">{title}</h1>}
           {children}
           <Footer />
         </article>

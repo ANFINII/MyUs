@@ -35,7 +35,7 @@ export default function Reset() {
   }
 
   return (
-    <Main title="パスワードリセット" toast={{ toastContent, isError, isToast, setIsToast }}>
+    <Main metaTitle="パスワードリセット" toast={{ toastContent, isError, isToast, setIsToast }}>
       <article className="article_registration">
         <form method="POST" action="" className="form_account">
           <h1 className="login_h1">パスワードリセット</h1>

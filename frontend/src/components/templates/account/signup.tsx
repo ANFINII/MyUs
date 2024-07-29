@@ -67,7 +67,7 @@ export default function Signup() {
   }
 
   return (
-    <Main title="アカウント登録" toast={{ toastContent, isError, isToast, setIsToast }}>
+    <Main metaTitle="アカウント登録" toast={{ toastContent, isError, isToast, setIsToast }}>
       <article className="article_registration">
         <form method="POST" action="" className="form_account">
           <h1 className="signup_h1">アカウント登録</h1>
