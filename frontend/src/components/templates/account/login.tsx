@@ -24,11 +24,11 @@ export default function Login() {
   const handlePassword = (password: string) => setValues({ ...values, password })
 
   const handleSubmit = async () => {
-    setIsLoading(true)
     if (!(values.username && values.password)) {
       setIsRequired(true)
       return
     }
+    setIsLoading(true)
     try {
       const data = await postLogin(values)
       data && setMessage(data.message)

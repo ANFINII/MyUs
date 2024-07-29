@@ -34,3 +34,11 @@ export const postSignup = async (request: SignupIn): Promise<MessageOut | void> 
   })
   return data
 }
+
+export const postReset = async (email: string): Promise<MessageOut | void> => {
+  const data = await apiFormClient.post(apiSignup, email).then((res) => {
+    if (res.status === HttpStatusCode.InternalServerError) throw Error
+    return res.data
+  })
+  return data
+}
