@@ -1,8 +1,5 @@
-{% extends 'base2.html' %}
-{% block title %}<title>MyUsアカウント</title>{% endblock title %}
-{% load static %}
-
-{% block content %}
+{% extends 'base2.html' %} {% block title %}<title>MyUsアカウント</title>{%
+endblock title %} {% load static %} {% block content %}
 <main class="main">
   <form method="POST" action="" enctype="multipart/form-data">
     {% csrf_token %}
@@ -11,85 +8,226 @@
       {% if messages %}
       <ul class="messages_profile">
         {% for message in messages %}
-        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li><br>
+        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+          {{ message }}
+        </li>
+        <br />
         {% endfor %}
       </ul>
       {% endif %}
 
       <div class="button_group">
         <button type="submit" class="button green xs">登録</button>
-        <button type="button" href="{% url 'myus:profile' %}" class="button blue xs pjax_button">戻る</button>
+        <button
+          type="button"
+          href="{% url 'myus:profile' %}"
+          class="button blue xs pjax_button"
+        >
+          戻る
+        </button>
       </div>
 
       <table class="table">
         <tbody>
-          <tr><td class="td_color">アカウント画像</td>
+          <tr>
+            <td class="td_color">アバター画像</td>
             <td valign="baseline">
               <label for="account_image_input" class="account_image_edit">
-                <svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
-                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                  <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="3.5em"
+                  height="3.5em"
+                  fill="currentColor"
+                  class="bi bi-person-square"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                  <path
+                    d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"
+                  />
                 </svg>
-                <input type="file" name="avatar" accept="image/*" id="account_image_input" class="custom-file-input">
+                <input
+                  type="file"
+                  name="avatar"
+                  accept="image/*"
+                  id="account_image_input"
+                  class="custom-file-input"
+                />
               </label>
             </td>
           </tr>
-          <tr><td class="td_color">メールアドレス</td><td><input type="text" name="email" value="{{ user.email }}" maxlength="120" class="input"></td></tr>
-          <tr><td class="td_color">ユーザー名</td><td><input type="text" name="username" value="{{ user.username }}" maxlength="30" placeholder="英数字" class="input"></td></tr>
-          <tr><td class="td_color">投稿者名</td><td><input type="text" name="nickname" value="{{ user.nickname }}" maxlength="60" class="input"></td></tr>
-          <tr><td class="td_color">名前</td>
+          <tr>
+            <td class="td_color">メールアドレス</td>
+            <td>
+              <input
+                type="text"
+                name="email"
+                value="{{ user.email }}"
+                maxlength="120"
+                class="input"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="td_color">ユーザー名</td>
+            <td>
+              <input
+                type="text"
+                name="username"
+                value="{{ user.username }}"
+                maxlength="30"
+                placeholder="英数字"
+                class="input"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="td_color">投稿者名</td>
+            <td>
+              <input
+                type="text"
+                name="nickname"
+                value="{{ user.nickname }}"
+                maxlength="60"
+                class="input"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="td_color">名前</td>
             <td>
               <div class="td_name">
-                <input type="text" name="last_name" value="{{ user.profile.last_name }}" placeholder="姓" maxlength="30" class="input">
-                <input type="text" name="first_name" value="{{ user.profile.first_name }}" placeholder="名" maxlength="30" class="input">
+                <input
+                  type="text"
+                  name="last_name"
+                  value="{{ user.profile.last_name }}"
+                  placeholder="姓"
+                  maxlength="30"
+                  class="input"
+                />
+                <input
+                  type="text"
+                  name="first_name"
+                  value="{{ user.profile.first_name }}"
+                  placeholder="名"
+                  maxlength="30"
+                  class="input"
+                />
               </div>
             </td>
           </tr>
-          <tr><td class="td_color">生年月日</td>
+          <tr>
+            <td class="td_color">生年月日</td>
             <td>
               <div class="td_birthday">
                 <label class="select">
-                  <select name="year" id="year"><option value="{{ user.year }}">{{ user.year }}</option></select>
+                  <select name="year" id="year">
+                    <option value="{{ user.year }}">{{ user.year }}</option>
+                  </select>
                 </label>
                 <label class="select">
-                  <select name="month" id="month"><option value="{{ user.month }}">{{ user.month }}</option></select>
+                  <select name="month" id="month">
+                    <option value="{{ user.month }}">{{ user.month }}</option>
+                  </select>
                 </label>
                 <label class="select">
-                  <select name="day" id="day"><option value="{{ user.day }}">{{ user.day }}</option></select>
+                  <select name="day" id="day">
+                    <option value="{{ user.day }}">{{ user.day }}</option>
+                  </select>
                 </label>
               </div>
             </td>
           </tr>
-          <tr><td class="td_color">年齢</td><td class="td_indent">{{ user.age }}歳</td></tr>
+          <tr>
+            <td class="td_color">年齢</td>
+            <td class="td_indent">{{ user.age }}歳</td>
+          </tr>
           <tr>
             <td class="td_color">性別</td>
             <td class="td_gender">
               {% for key, gender in gender.items %}
               <div class="gender">
-                <input type="radio" name="gender" value="{{ key }}" id="gender_{{ key }}" {% if user.gender == key %} checked {% endif %}>
+                <input type="radio" name="gender" value="{{ key }}"
+                id="gender_{{ key }}" {% if user.gender == key %} checked {%
+                endif %}>
                 <label for="gender_{{ key }}">{{ gender }}</label>
               </div>
               {% endfor %}
             </td>
           </tr>
-          <tr><td class="td_color">電話番号</td><td><input type="tel" name="phone" value="{{ user.profile.phone }}" maxlength="15" class="input" required></td></tr>
-          <tr><td class="td_color">郵便番号</td><td><input type="tel" name="postal_code" value="{{ user.profile.postal_code }}" maxlength="8" class="input" required></td></tr>
-          <tr><td class="td_color">住所</td>
+          <tr>
+            <td class="td_color">電話番号</td>
+            <td>
+              <input
+                type="tel"
+                name="phone"
+                value="{{ user.profile.phone }}"
+                maxlength="15"
+                class="input"
+                required
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="td_color">郵便番号</td>
+            <td>
+              <input
+                type="tel"
+                name="postal_code"
+                value="{{ user.profile.postal_code }}"
+                maxlength="8"
+                class="input"
+                required
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="td_color">住所</td>
             <td>
               <div class="td_location">
                 <label class="select">
                   <select name="prefecture" id="prefecture" required>
                     <option value="">都道府県</option>
-                    <option value="{{ user.prefecture }}" selected>{{ user.prefecture }}</option>
+                    <option value="{{ user.prefecture }}" selected>
+                      {{ user.prefecture }}
+                    </option>
                   </select>
                 </label>
-                <input type="text" name="city" value="{{ user.city }}" placeholder="市区町村" maxlength="255" class="input">
-                <input type="text" name="street" value="{{ user.street }}" placeholder="町名番地" maxlength="255" class="input">
-                <input type="text" name="building" value="{{ user.building }}" placeholder="建物名" maxlength="255" class="input">
+                <input
+                  type="text"
+                  name="city"
+                  value="{{ user.city }}"
+                  placeholder="市区町村"
+                  maxlength="255"
+                  class="input"
+                />
+                <input
+                  type="text"
+                  name="street"
+                  value="{{ user.street }}"
+                  placeholder="町名番地"
+                  maxlength="255"
+                  class="input"
+                />
+                <input
+                  type="text"
+                  name="building"
+                  value="{{ user.building }}"
+                  placeholder="建物名"
+                  maxlength="255"
+                  class="input"
+                />
               </div>
             </td>
           </tr>
-          <tr><td class="td_color">自己紹介</td><td><textarea name="introduction" rows="1" class="textarea margin">{{ user.profile.introduction }}</textarea></td></tr>
+          <tr>
+            <td class="td_color">自己紹介</td>
+            <td>
+              <textarea name="introduction" rows="1" class="textarea margin">
+{{ user.profile.introduction }}</textarea
+              >
+            </td>
+          </tr>
         </tbody>
       </table>
 
@@ -97,9 +235,7 @@
     </article>
   </form>
 </main>
-{% endblock content %}
-
-{% block extrajs %}
+{% endblock content %} {% block extrajs %}
 <script src="{% static 'js/date.js' %}"></script>
 <script src="{% static 'js/prefecture.js' %}"></script>
 {% endblock extrajs %}

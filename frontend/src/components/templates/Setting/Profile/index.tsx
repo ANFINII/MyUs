@@ -31,7 +31,7 @@ export default function SettingProfile(props: Props) {
         </div>
 
         <Table>
-          <TableRow label="アカウント画像">
+          <TableRow label="アバター画像">
             {profile.avatar !== '' ? (
               <label className="account_image">
                 <LightBox size="56" src={profile.avatar} title={profile.nickname} />

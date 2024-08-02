@@ -2,37 +2,93 @@
   <h1>アカウント設定</h1>
   {% if user.is_authenticated %}
   <div class="button_group">
-    <button onclick="location.href='{% url 'myus:profile_update' %}'" class="button blue xs">編集</button>
-    <button onclick="location.href='{% url 'password_change' %}'" class="button blue xs">パスワード変更</button>
+    <button
+      onclick="location.href='{% url 'myus:profile_update' %}'"
+      class="button blue xs"
+    >
+      編集
+    </button>
+    <button
+      onclick="location.href='{% url 'password_change' %}'"
+      class="button blue xs"
+    >
+      パスワード変更
+    </button>
   </div>
 
   <table class="table">
     <tbody>
-      <tr><td class="td_color td-header">アカウント画像</td>
+      <tr>
+        <td class="td_color td-header">アバター画像</td>
         <td>
           <label for="account_image_input" class="account_image">
             <a href="{{ user.image }}" data-lightbox="group">
-              <img src="{{ user.image }}" title="{{ user.nickname }}" width="56px" height="56xp" data-lightbox="group">
+              <img
+                src="{{ user.image }}"
+                title="{{ user.nickname }}"
+                width="56px"
+                height="56xp"
+                data-lightbox="group"
+              />
             </a>
           </label>
         </td>
       </tr>
-      <tr><td class="td_color">メールアドレス</td><td class="td_indent">{{ user.email }}</td></tr>
-      <tr><td class="td_color">ユーザー名</td><td class="td_indent">{{ user.username }}</td></tr>
-      <tr><td class="td_color">投稿者名</td><td class="td_indent">{{ user.nickname }}</td></tr>
-      <tr><td class="td_color">名前</td><td class="td_indent">{{ user.full_name }}</td></tr>
-      <tr><td class="td_color">生年月日</td><td class="td_indent">{{ user.year }}年{{ user.month }}月{{ user.day }}日</td></tr>
-      <tr><td class="td_color">年齢</td><td class="td_indent">{{ user.age }}歳</td></tr>
-      <tr><td class="td_color">性別</td><td class="td_indent">{{ user.profile.get_gender_display }}</td></tr>
-      <tr><td class="td_color">電話番号</td><td class="td_indent">{{ user.profile.phone }}</td></tr>
-      <tr><td class="td_color">郵便番号</td><td class="td_indent">{{ user.profile.postal_code }}</td></tr>
-      <tr><td class="td_color">住所</td><td class="td_indent">{{ user.prefecture }} {{ user.city }}{{ user.street }} {{ user.building }}</td></tr>
-      <tr><td class="td_color">自己紹介</td><td class="td_indent">{{ user.profile.introduction|linebreaksbr|urlize }}</td></tr>
+      <tr>
+        <td class="td_color">メールアドレス</td>
+        <td class="td_indent">{{ user.email }}</td>
+      </tr>
+      <tr>
+        <td class="td_color">ユーザー名</td>
+        <td class="td_indent">{{ user.username }}</td>
+      </tr>
+      <tr>
+        <td class="td_color">投稿者名</td>
+        <td class="td_indent">{{ user.nickname }}</td>
+      </tr>
+      <tr>
+        <td class="td_color">名前</td>
+        <td class="td_indent">{{ user.full_name }}</td>
+      </tr>
+      <tr>
+        <td class="td_color">生年月日</td>
+        <td class="td_indent">
+          {{ user.year }}年{{ user.month }}月{{ user.day }}日
+        </td>
+      </tr>
+      <tr>
+        <td class="td_color">年齢</td>
+        <td class="td_indent">{{ user.age }}歳</td>
+      </tr>
+      <tr>
+        <td class="td_color">性別</td>
+        <td class="td_indent">{{ user.profile.get_gender_display }}</td>
+      </tr>
+      <tr>
+        <td class="td_color">電話番号</td>
+        <td class="td_indent">{{ user.profile.phone }}</td>
+      </tr>
+      <tr>
+        <td class="td_color">郵便番号</td>
+        <td class="td_indent">{{ user.profile.postal_code }}</td>
+      </tr>
+      <tr>
+        <td class="td_color">住所</td>
+        <td class="td_indent">
+          {{ user.prefecture }} {{ user.city }}{{ user.street }} {{
+          user.building }}
+        </td>
+      </tr>
+      <tr>
+        <td class="td_color">自己紹介</td>
+        <td class="td_indent">
+          {{ user.profile.introduction|linebreaksbr|urlize }}
+        </td>
+      </tr>
     </tbody>
   </table>
 
-  {% include 'parts/footer-myus.html' %}
-  {% else %}
+  {% include 'parts/footer-myus.html' %} {% else %}
   <h2 class="login_required">ログインしてください</h2>
   {% endif %}
 </article>
