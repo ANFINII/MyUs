@@ -106,7 +106,7 @@ export default function SettingProfileEdit(props: Props) {
 
         <Table>
           <TableRow label="アバター画像">
-            <InputImage id="avatar" className="account_image_edit" icon={<IconPerson size="3.5em" type="square" />} onChange={handleAvatar} />
+            <InputImage id="avatar" className="account_image_edit" icon={<IconPerson size="56" type="square" />} onChange={handleAvatar} />
           </TableRow>
           <TableRow label="メールアドレス">
             <Input value={values.email} maxLength={120} required={isRequired} onChange={handleEmail} />

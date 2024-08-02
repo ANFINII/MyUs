@@ -33,6 +33,10 @@
       white-space: nowrap;
     }
 
+    &.td_no {
+      padding: 1px;
+    }
+
     &:not(:last-child) {
       border-right: 1px solid rgb(0, 125, 0);
     }

@@ -38,7 +38,7 @@ export default function SettingProfile(props: Props) {
               </label>
             ) : (
               <label className="account_image_edit">
-                <IconPerson size="3.5em" type="square" />
+                <IconPerson size="56" type="square" />
               </label>
             )}
           </TableRow>

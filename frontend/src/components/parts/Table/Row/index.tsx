@@ -13,7 +13,7 @@ export default function TableRow(props: Props) {
   return (
     <tr className={className}>
       <td className={style.td_color}>{label}</td>
-      <td className={isIndent ? style.td_indent : undefined}>{children}</td>
+      <td className={isIndent ? style.td_indent : style.td_no}>{children}</td>
     </tr>
   )
 }

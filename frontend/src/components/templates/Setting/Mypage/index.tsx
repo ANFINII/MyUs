@@ -38,7 +38,7 @@ export default function SettingMyPage(props: Props) {
               </label>
             ) : (
               <label htmlFor="account_image" className="account_image_edit">
-                <IconPicture size="3.5em" />
+                <IconPicture size="56" />
               </label>
             )}
           </TableRow>

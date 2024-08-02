@@ -70,7 +70,7 @@ export default function SettingMyPageEdit(props: Props) {
 
         <Table>
           <TableRow label="バナー画像">
-            <InputImage id="banner" className="account_image_edit" icon={<IconPicture size="3.5em" />} onChange={handleBanner} />
+            <InputImage id="banner" className="account_image_edit" icon={<IconPicture size="56" />} onChange={handleBanner} />
           </TableRow>
           <TableRow isIndent label="投稿者名">
             {values.nickname}
