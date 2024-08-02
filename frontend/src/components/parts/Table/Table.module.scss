@@ -23,7 +23,8 @@
 
     &.td_color {
       width: 125px;
-      padding: 0 0 0 8px;
+      padding: 8px;
+      align-content: flex-start;
       background: rgb(190, 250, 210);
     }
 
