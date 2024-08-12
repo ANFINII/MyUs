@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   myus_backend:
@@ -16,7 +16,9 @@ services:
       - myus_redis
     ports:
       - "8056:8000"
-    command: sh -c 'python manage.py runserver 0.0.0.0:8000 --settings config.settings.local'
+    command: sh -c 'python manage.py runserver 127.0.0.1:8000 --settings config.settings.local'
+    networks:
+      - myus_network
 
   # myus_frontend:
   #   container_name: myus_frontend
@@ -26,6 +28,12 @@ services:
   #     dockerfile: Dockerfile
   #   volumes:
   #     - frontend_build:/frontend/build
+  #   ports:
+  #     - "3056:3000"
+  #   environment:
+  #     - NODE_ENV=development
+  #   networks:
+  #     - myus_network
 
   # myus_nginx:
   #   container_name: myus_nginx
@@ -33,12 +41,15 @@ services:
   #   build: ./nginx
   #   ports:
   #     - "80:80"
-  #   links:
-  #     - app:django
+  #   depends_on:
+  #     - myus_backend
+  #     - myus_frontend
   #   volumes:
-  #     - ./nginx:/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
   #     - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params
   #     - ./static:/static
+  #   networks:
+  #     - myus_network
 
   mysql:
     container_name: myus_mysql
@@ -53,6 +64,8 @@ services:
     ports:
       - "3356:3306"
     command: mysqld --default-authentication-plugin=mysql_native_password --innodb_use_native_aio=0 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - myus_network
 
   myus_redis:
     container_name: myus_redis
@@ -62,3 +75,9 @@ services:
     ports:
       - "6356:6379"
     command: redis-server --requirepass redis1234
+    networks:
+      - myus_network
+
+networks:
+  myus_network:
+    driver: bridge
