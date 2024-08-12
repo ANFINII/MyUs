@@ -76,7 +76,7 @@ def profile_check(profile) -> str | None:
         return '郵便番号の形式が違います!'
 
     if has_birthday(int(profile['year']), int(profile['month']), int(profile['day'])):
-        return f'{profile['year']}年{profile['month']}月{profile['day']}日は存在しない日付です!'
+        return f'{profile["year"]}年{profile["month"]}月{profile["day"]}日は存在しない日付です!'
 
 
 def signup_check(user) -> str | None:
