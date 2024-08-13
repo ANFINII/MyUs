@@ -70,8 +70,9 @@ export default function SettingProfile(props: Props) {
             {profile.postalCode}
           </TableRow>
           <TableRow isIndent label="住所">
-            {profile.prefecture} {profile.city}
-            {profile.street} {profile.building}
+            {profile.prefecture}
+            {profile.city}
+            {profile.street}
           </TableRow>
           <TableRow isIndent label="自己紹介">
             <div className="pv_4 ws_wrap">{profile.introduction}</div>

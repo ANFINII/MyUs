@@ -54,7 +54,6 @@ export interface ProfileOut extends User {
   prefecture: string
   city: string
   street: string
-  building: string
   introduction: string
 }
 

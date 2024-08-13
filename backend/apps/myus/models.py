@@ -106,9 +106,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def street(self):
         return self.profile.street
 
-    def building(self):
-        return self.profile.building
-
     def image(self):
         if self.avatar:
             return self.avatar.url
@@ -166,7 +163,6 @@ class Profile(models.Model):
     prefecture   = models.CharField(max_length=255, blank=True)
     city         = models.CharField(max_length=255, blank=True)
     street       = models.CharField(max_length=255, blank=True)
-    building     = models.CharField(max_length=255, blank=True)
     introduction = models.TextField(blank=True)
 
     objects = ProfileManager()

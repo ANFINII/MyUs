@@ -65,7 +65,6 @@ class ProfileAPI(APIView):
             'prefecture': user.profile.prefecture,
             'city': user.profile.city,
             'street': user.profile.street,
-            'building': user.profile.building,
             'introduction': user.profile.introduction,
         }
         return Response(data, status=HTTP_200_OK)
@@ -88,7 +87,7 @@ class ProfileAPI(APIView):
         [setattr(user, field, data.get(field)) for field in user_fields]
         user.avatar = data.get('avatar') if data.get('avatar') else user.avatar
 
-        profile_fields = ('last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'street', 'building', 'introduction')
+        profile_fields = ('last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'street', 'introduction')
         [setattr(profile, field, data.get(field)) for field in profile_fields]
         birthday = datetime.date(year=int(data['year']), month=int(data['month']), day=int(data['day']))
         profile.birthday = birthday.isoformat()

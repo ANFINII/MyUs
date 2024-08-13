@@ -120,9 +120,7 @@
 
 .td_location {
   display: grid;
-  grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr);
-  grid-template-rows: 38px 38px;
-  max-height: 74px;
+  grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr);
   column-gap: 2px;
   border: none;
   border-right: 1px solid rgb(0, 125, 0);

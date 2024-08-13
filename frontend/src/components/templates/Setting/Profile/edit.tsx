@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { getAddressForm } from 'api/address'
+import { getAddress } from 'api/address'
 import { putProfile } from 'api/user'
 import { ProfileIn, ProfileOut } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/address'
@@ -52,11 +52,10 @@ export default function SettingProfileEdit(props: Props) {
   const handlePrefecture = (prefecture: string) => setValues({ ...values, prefecture })
   const handleCity = (city: string) => setValues({ ...values, city })
   const handleStreet = (street: string) => setValues({ ...values, street })
-  const handleBuilding = (building: string) => setValues({ ...values, building })
   const handleIntroduction = (introduction: string) => setValues({ ...values, introduction })
 
   const handleAutoAddress = async () => {
-    const results = await getAddressForm(values.postalCode)
+    const results = await getAddress(values.postalCode)
     if (results) {
       const result = results[0]
       setValues({ ...values, prefecture: result.address1, city: result.address2, street: result.address3 })
@@ -157,7 +156,6 @@ export default function SettingProfileEdit(props: Props) {
               <Select value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handlePrefecture} />
               <Input value={values.city} placeholder="市区町村" maxLength={255} onChange={handleCity} />
               <Input value={values.street} placeholder="町名番地" maxLength={255} onChange={handleStreet} />
-              <Input value={values.building} placeholder="建物名" maxLength={255} onChange={handleBuilding} />
             </div>
           </TableRow>
           <TableRow label="自己紹介">
