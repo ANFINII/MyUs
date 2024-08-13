@@ -18,6 +18,7 @@ export const apiFollower = base + '/user/follower'
 
 // Media
 export const apiHome = base + '/home'
+
 export const apiVideos = base + '/media/video'
 export const apiVideo = (videoId: number) => base + `/media/video/${videoId}`
 export const apiVideoCreate = base + '/media/video/create'
