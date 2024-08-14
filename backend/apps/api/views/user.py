@@ -203,6 +203,7 @@ class SearchTagAPI(APIView):
         data = [{'sequence': tag.sequence, 'name': tag.name} for tag in search_tags]
         return Response(data, status=HTTP_200_OK)
 
+
 class NotificationAPI(APIView):
     def get(self, request):
         auth = get_user_id(request)

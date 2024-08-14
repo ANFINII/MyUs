@@ -8,83 +8,66 @@ import { camelSnake } from 'utils/functions/convertCase'
 import { apiProfile, apiMypage, apiFollow, apiFollower, apiSearchTag, apiNotification } from './uri'
 
 export const getServerProfile = async (req: Req): Promise<ProfileOut> => {
-  const data = await apiServer(req, apiClient, apiProfile).then((res) => {
-    if (res.status !== HttpStatusCode.Ok) return {}
-    return res.data
-  })
-  return data
+  const res = await apiServer(req, apiClient, apiProfile)
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+  return res.data
 }
 
 export const getProfile = async (): Promise<ProfileOut> => {
-  const data = await apiClient.get(apiProfile).then((res) => {
-    return res.data
-  })
-  return data
+  const res = await apiClient.get(apiProfile)
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+  return res.data
 }
 
 export const putProfile = async (request: ProfileIn): Promise<MessageOut | void> => {
-  const data = await apiFormClient.put(apiProfile, camelSnake(request)).then((res) => {
-    if (res.status === HttpStatusCode.InternalServerError) throw Error
-    return res.data
-  })
-  return data
+  const res = await apiFormClient.put(apiProfile, camelSnake(request))
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+  return res.data
 }
 
 export const getServerMypage = async (req: Req): Promise<MypageOut> => {
-  const data = await apiServer(req, apiClient, apiMypage).then((res) => {
-    if (res.status !== HttpStatusCode.Ok) return {}
-    return res.data
-  })
-  return data
+  const res = await apiServer(req, apiClient, apiMypage)
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+  return res.data
 }
 
 export const putMypage = async (request: MypageIn): Promise<MessageOut | void> => {
-  const data = await apiFormClient.put(apiMypage, camelSnake(request)).then((res) => {
-    if (res.status === HttpStatusCode.InternalServerError) throw Error
-    return res.data
-  })
-  return data
-}
-
-export const getServerFollow = async (req: Req): Promise<Follow[]> => {
-  const data = await apiServer(req, apiClient, apiFollow).then((res) => {
-    if (res.status !== HttpStatusCode.Ok) return []
-    return res.data
-  })
-  return data
-}
-
-export const getServerFollower = async (req: Req): Promise<Follow[]> => {
-  const data = await apiServer(req, apiClient, apiFollower).then((res) => {
-    if (res.status !== HttpStatusCode.Ok) return []
-    return res.data
-  })
-  return data
-}
-
-export const getSearchTag = async (): Promise<SearchTagOut[]> => {
-  const data = await apiClient.get(apiSearchTag).then((res) => {
-    return res.data
-  })
-  return data
+  const res = await apiFormClient.put(apiMypage, camelSnake(request))
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+  return res.data
 }
 
 export const getServerNotification = async (req: Req): Promise<NotificationOut> => {
-  const data = await apiServer(req, apiClient, apiNotification).then((res) => {
-    return res.data
-  })
-  return data
+  const res = await apiServer(req, apiClient, apiNotification)
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+  return res.data
 }
 
 export const getNotification = async (): Promise<NotificationOut> => {
-  const data = await apiClient.get(apiNotification).then((res) => {
-    return res.data as NotificationOut
-  })
-  return data
+  const res = await apiClient.get(apiNotification)
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+  return res.data
 }
 
 export const putNotification = async (request: NotificationIn): Promise<void> => {
-  await apiClient.put(apiNotification, camelSnake(request)).then((res) => {
-    if (res.status === HttpStatusCode.InternalServerError) throw Error
-  })
+  const res = await apiClient.put(apiNotification, camelSnake(request))
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+}
+
+export const getSearchTag = async (): Promise<SearchTagOut[]> => {
+  const res = await apiClient.get(apiSearchTag)
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+  return res.data
+}
+
+export const getServerFollow = async (req: Req): Promise<Follow[]> => {
+  const res = await apiServer(req, apiClient, apiFollow)
+  if (res.status !== HttpStatusCode.Ok) return []
+  return res.data
+}
+
+export const getServerFollower = async (req: Req): Promise<Follow[]> => {
+  const res = await apiServer(req, apiClient, apiFollower)
+  if (res.status !== HttpStatusCode.Ok) return []
+  return res.data
 }
