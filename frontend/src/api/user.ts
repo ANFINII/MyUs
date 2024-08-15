@@ -9,54 +9,54 @@ import { apiProfile, apiMypage, apiFollow, apiFollower, apiSearchTag, apiNotific
 
 export const getServerProfile = async (req: Req): Promise<ProfileOut> => {
   const res = await apiServer(req, apiClient, apiProfile)
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
 export const getProfile = async (): Promise<ProfileOut> => {
   const res = await apiClient.get(apiProfile)
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
 export const putProfile = async (request: ProfileIn): Promise<MessageOut | void> => {
   const res = await apiFormClient.put(apiProfile, camelSnake(request))
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
 export const getServerMypage = async (req: Req): Promise<MypageOut> => {
   const res = await apiServer(req, apiClient, apiMypage)
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
 export const putMypage = async (request: MypageIn): Promise<MessageOut | void> => {
   const res = await apiFormClient.put(apiMypage, camelSnake(request))
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
 export const getServerNotification = async (req: Req): Promise<NotificationOut> => {
   const res = await apiServer(req, apiClient, apiNotification)
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
 export const getNotification = async (): Promise<NotificationOut> => {
   const res = await apiClient.get(apiNotification)
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
 export const putNotification = async (request: NotificationIn): Promise<void> => {
   const res = await apiClient.put(apiNotification, camelSnake(request))
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
 }
 
 export const getSearchTag = async (): Promise<SearchTagOut[]> => {
   const res = await apiClient.get(apiSearchTag)
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
