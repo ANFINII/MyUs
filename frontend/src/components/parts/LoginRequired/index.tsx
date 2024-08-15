@@ -1,10 +1,13 @@
+import clsx from 'clsx'
+
 interface Props {
   isAuth: boolean
+  margin?: string
   children: React.ReactNode
 }
 
 export default function LoginRequired(props: Props) {
-  const { isAuth, children } = props
+  const { isAuth, margin, children } = props
 
-  return <>{isAuth ? <>{children}</> : <h2 className="login_required">ログインしてください</h2>}</>
+  return <>{isAuth ? <>{children}</> : <h2 className={clsx('login_required', margin)}>ログインしてください</h2>}</>
 }

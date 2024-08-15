@@ -18,7 +18,7 @@ export default function Follows(props: Props) {
 
   return (
     <Main title="Follow">
-      <LoginRequired isAuth={user.isActive}>
+      <LoginRequired isAuth={user.isActive} margin="mt_20">
         <div className="follow_button">
           <Button color="blue" size="s" name="フォロー" onClick={() => router.push('/menu/follower')} />
           <span>フォロー数：{follows.length}</span>

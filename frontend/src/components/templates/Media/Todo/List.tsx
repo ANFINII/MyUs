@@ -18,7 +18,7 @@ export default function Todos(props: Props) {
 
   return (
     <Main title="Todo" search={{ name: search, count: newDatas.length }}>
-      <LoginRequired isAuth={user.isActive}>
+      <LoginRequired isAuth={user.isActive} margin="mt_20">
         <article className="article_list">
           {newDatas.map((data) => (
             <ArticleTodo key={data.id} data={data} />

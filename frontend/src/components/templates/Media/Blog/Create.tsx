@@ -57,7 +57,7 @@ export default function BlogCreate() {
 
   return (
     <Main title="Blog">
-      <LoginRequired isAuth={user.isActive}>
+      <LoginRequired isAuth={user.isActive} margin="mt_20">
         <form method="POST" action="">
           <Input label="タイトル" className="mt_16" required={isRequired} onChange={handleTitle} />
 

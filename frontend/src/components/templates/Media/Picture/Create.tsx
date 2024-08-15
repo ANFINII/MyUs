@@ -40,7 +40,7 @@ export default function PictureCreate() {
 
   return (
     <Main title="Picture">
-      <LoginRequired isAuth={user.isActive}>
+      <LoginRequired isAuth={user.isActive} margin="mt_20">
         <form method="POST" action="">
           <Input label="タイトル" className="mt_16" required={isRequired} onChange={handleTitle} />
 

@@ -41,7 +41,7 @@ export default function VideoCreate() {
 
   return (
     <Main title="Video">
-      <LoginRequired isAuth={user.isActive}>
+      <LoginRequired isAuth={user.isActive} margin="mt_20">
         <form method="POST" action="" encType="multipart/form-data">
           <Input label="タイトル" className="mt_16" required={isRequired} onChange={handleTitle} />
 
