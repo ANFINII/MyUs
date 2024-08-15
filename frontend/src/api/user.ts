@@ -62,12 +62,12 @@ export const getSearchTag = async (): Promise<SearchTagOut[]> => {
 
 export const getServerFollow = async (req: Req): Promise<Follow[]> => {
   const res = await apiServer(req, apiClient, apiFollow)
-  if (res.status !== HttpStatusCode.Ok) return []
+  if (res.status >= HttpStatusCode.BadRequest) return []
   return res.data
 }
 
 export const getServerFollower = async (req: Req): Promise<Follow[]> => {
   const res = await apiServer(req, apiClient, apiFollower)
-  if (res.status !== HttpStatusCode.Ok) return []
+  if (res.status >= HttpStatusCode.BadRequest) return []
   return res.data
 }
