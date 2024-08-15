@@ -6,39 +6,30 @@ import { camelSnake } from 'utils/functions/convertCase'
 import { apiUser, apiLogin, apiLogout, apiSignup } from './uri'
 
 export const getUser = async (): Promise<User> => {
-  const data = await apiClient.get(apiUser).then((res) => {
-    if (res.status !== HttpStatusCode.Ok) throw Error
-    return res.data
-  })
-  return data
+  const res = await apiClient.get(apiUser)
+  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  return res.data
 }
 
 export const postLogin = async (request: LoginIn): Promise<MessageOut | void> => {
-  const data = await apiClient.post(apiLogin, request).then((res) => {
-    if (res.status === HttpStatusCode.InternalServerError) throw Error
-    return res.data
-  })
-  return data
+  const res = await apiClient.post(apiLogin, request)
+  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  return res.data
 }
 
 export const postLogout = async (): Promise<void> => {
-  await apiClient.post(apiLogout).then((res) => {
-    if (res.status === HttpStatusCode.InternalServerError) throw Error
-  })
+  const res = await apiClient.post(apiLogout)
+  if (res.status >= HttpStatusCode.BadRequest) throw Error
 }
 
 export const postSignup = async (request: SignupIn): Promise<MessageOut | void> => {
-  const data = await apiFormClient.post(apiSignup, camelSnake(request)).then((res) => {
-    if (res.status === HttpStatusCode.InternalServerError) throw Error
-    return res.data
-  })
-  return data
+  const res = await apiFormClient.post(apiSignup, camelSnake(request))
+  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  return res.data
 }
 
 export const postReset = async (email: string): Promise<MessageOut | void> => {
-  const data = await apiFormClient.post(apiSignup, email).then((res) => {
-    if (res.status === HttpStatusCode.InternalServerError) throw Error
-    return res.data
-  })
-  return data
+  const res = await apiFormClient.post(apiSignup, email)
+  if (res.status >= HttpStatusCode.BadRequest) throw Error
+  return res.data
 }
