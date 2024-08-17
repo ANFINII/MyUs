@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { putMypage } from 'api/user'
+import { putMypage } from 'api/internal/user'
 import { MypageIn, MypageOut } from 'types/internal/auth'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { postLogin } from 'api/auth'
+import { postLogin } from 'api/internal/auth'
 import { LoginIn } from 'types/internal/auth'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'

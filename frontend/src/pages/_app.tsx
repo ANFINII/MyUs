@@ -1,4 +1,6 @@
 import type { AppProps } from 'next/app'
+import { UserProvider } from 'components/provider/UserProvider'
+import Layout from 'components/layout'
 import 'styles/global/reset.scss'
 import 'styles/global/style.scss'
 import 'styles/global/quill/index.scss'
@@ -15,8 +17,6 @@ import 'styles/internal/userpolicy.scss'
 import 'styles/internal/registration.scss'
 import 'styles/internal/audio.scss'
 import 'styles/internal/videojs-myus.scss'
-import { UserProvider } from 'components/provider/UserProvider'
-import Layout from 'components/layout'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (

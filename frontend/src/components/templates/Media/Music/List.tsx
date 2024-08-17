@@ -1,4 +1,4 @@
-import { getMusics } from 'api/media/get/list'
+import { getMusics } from 'api/internal/media/list'
 import { Music } from 'types/internal/media'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'

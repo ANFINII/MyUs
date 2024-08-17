@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { postComicCreate } from 'api/media/post'
+import { postComicCreate } from 'api/internal/media/create'
 import { ComicIn } from 'types/internal/media'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'

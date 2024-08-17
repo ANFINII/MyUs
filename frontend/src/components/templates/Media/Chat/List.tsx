@@ -1,4 +1,4 @@
-import { getChats } from 'api/media/get/list'
+import { getChats } from 'api/internal/media/list'
 import { Chat } from 'types/internal/media'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'

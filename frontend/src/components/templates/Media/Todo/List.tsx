@@ -1,4 +1,4 @@
-import { getTodos } from 'api/media/get/list'
+import { getTodos } from 'api/internal/media/list'
 import { Todo } from 'types/internal/media'
 import { useNewDatas } from 'components/hooks/useNewList'
 import { useUser } from 'components/hooks/useUser'

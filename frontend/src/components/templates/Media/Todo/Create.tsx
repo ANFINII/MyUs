@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import router from 'next/router'
-import { postTodoCreate } from 'api/media/post'
+import { postTodoCreate } from 'api/internal/media/create'
 import { TodoIn } from 'types/internal/media'
 import { priority, progress } from 'utils/constants/todo'
 import { nowDate } from 'utils/functions/datetime'

@@ -1,4 +1,4 @@
-import { getComics } from 'api/media/get/list'
+import { getComics } from 'api/internal/media/list'
 import { Comic } from 'types/internal/media'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'

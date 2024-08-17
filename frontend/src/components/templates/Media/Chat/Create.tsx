@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { postChatCreate } from 'api/media/post'
+import { postChatCreate } from 'api/internal/media/create'
 import { ChatIn } from 'types/internal/media'
 import { nowDate } from 'utils/functions/datetime'
 import { useUser } from 'components/hooks/useUser'

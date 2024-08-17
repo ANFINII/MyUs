@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { postPictureCreate } from 'api/media/post'
+import { postPictureCreate } from 'api/internal/media/create'
 import { PictureIn } from 'types/internal/media'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'

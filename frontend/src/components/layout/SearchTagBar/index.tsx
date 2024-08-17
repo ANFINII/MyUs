@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import clsx from 'clsx'
-import { getSearchTag } from 'api/user'
+import { getSearchTag } from 'api/internal/user'
 import { SearchTagOut } from 'types/internal/auth'
 import { isActive } from 'utils/functions/common'
 import { useUser } from 'components/hooks/useUser'

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { postMusicCreate } from 'api/media/post'
+import { postMusicCreate } from 'api/internal/media/create'
 import { MusicIn } from 'types/internal/media'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'

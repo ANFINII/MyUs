@@ -55,6 +55,7 @@
           { "pattern": "utils/**", "group": "internal", "position": "before" },
           { "pattern": "pages/**", "group": "internal", "position": "before" },
           { "pattern": "components/hooks/**", "group": "internal", "position": "before" },
+          { "pattern": "components/provider/**", "group": "internal", "position": "before" },
           { "pattern": "{components/layout,components/layout/**}", "group": "internal", "position": "before" },
           { "pattern": "components/parts/**", "group": "sibling", "position": "before" },
           { "pattern": "components/widgets/**", "group": "sibling", "position": "before" },
