@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getComics } from 'api/media/get/list'
+import { getComics } from 'api/internal/media/list'
 import { Comic } from 'types/internal/media'
 import Comics from 'components/templates/media/comic/list'
 

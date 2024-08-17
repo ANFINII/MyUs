@@ -3,7 +3,7 @@ import { apiClient, apiFormClient } from 'lib/axios'
 import { LoginIn, SignupIn, User } from 'types/internal/auth'
 import { MessageOut } from 'types/internal/other'
 import { camelSnake } from 'utils/functions/convertCase'
-import { apiUser, apiLogin, apiLogout, apiSignup } from './uri'
+import { apiUser, apiLogin, apiLogout, apiSignup } from '../uri'
 
 export const getUser = async (): Promise<User> => {
   const res = await apiClient.get(apiUser)

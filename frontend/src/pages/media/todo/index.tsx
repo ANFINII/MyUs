@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getTodos } from 'api/media/get/list'
+import { getTodos } from 'api/internal/media/list'
 import { Todo } from 'types/internal/media'
 import Todos from 'components/templates/media/todo/list'
 

@@ -5,7 +5,7 @@ import { Req } from 'types/global/next'
 import { ProfileIn, ProfileOut, MypageIn, MypageOut, Follow, SearchTagOut, NotificationOut, NotificationIn } from 'types/internal/auth'
 import { MessageOut } from 'types/internal/other'
 import { camelSnake } from 'utils/functions/convertCase'
-import { apiProfile, apiMypage, apiFollow, apiFollower, apiSearchTag, apiNotification } from './uri'
+import { apiProfile, apiMypage, apiFollow, apiFollower, apiSearchTag, apiNotification } from '../uri'
 
 export const getServerProfile = async (req: Req): Promise<ProfileOut> => {
   const res = await apiServer(req, apiClient, apiProfile)

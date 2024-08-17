@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getServerMypage } from 'api/user'
+import { getServerMypage } from 'api/internal/user'
 import { MypageOut } from 'types/internal/auth'
 import SettingMyPage from 'components/templates/setting/mypage'
 

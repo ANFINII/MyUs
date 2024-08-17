@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getServerFollow } from 'api/user'
+import { getServerFollow } from 'api/internal/user'
 import { Follow } from 'types/internal/auth'
 import Follows from 'components/templates/menu/follow'
 

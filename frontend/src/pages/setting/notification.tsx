@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getServerNotification } from 'api/user'
+import { getServerNotification } from 'api/internal/user'
 import { NotificationOut } from 'types/internal/auth'
 import SettingNotification from 'components/templates/setting/notification'
 
