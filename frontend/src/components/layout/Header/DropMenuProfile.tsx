@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
-import { postLogout } from 'api/auth'
+import { postLogout } from 'api/internal/auth'
 import { isActive } from 'utils/functions/common'
 import { useUser } from 'components/hooks/useUser'
 import IconArrow from 'components/parts/Icon/Arrow'
