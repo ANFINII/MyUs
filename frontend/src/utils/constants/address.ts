@@ -1,4 +1,6 @@
-export const prefectures = [
+import { Option } from 'types/internal/other'
+
+export const prefectures: Option[] = [
   { label: '北海道', value: '北海道' },
   { label: '青森県', value: '青森県' },
   { label: '岩手県', value: '岩手県' },
