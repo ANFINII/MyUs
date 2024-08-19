@@ -1421,18 +1421,18 @@ div.field > button {
   grid-row: 4/5;
 }
 
-.todo_link {
-  display: flex;
-  grid-column: 1/-1;
-  grid-row: 5/6;
-  margin: 8px 0 0 0;
-}
+// .todo_link {
+//   display: flex;
+//   grid-column: 1/-1;
+//   grid-row: 5/6;
+//   margin: 8px 0 0 0;
+// }
 
-.todo_link a {
-  margin: 0px 6px 0 0;
-  color: rgb(255, 255, 255);
-  text-decoration: none;
-}
+// .todo_link a {
+//   margin: 0px 6px 0 0;
+//   color: rgb(255, 255, 255);
+//   text-decoration: none;
+// }
 
 .todo_link_detail {
   display: inline;
