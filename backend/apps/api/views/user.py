@@ -11,6 +11,7 @@ from apps.myus.modules.validation import has_email
 from apps.api.services.user import get_user, profile_check
 from apps.api.utils.functions.index import message
 from apps.api.utils.functions.logger import Log
+from apps.api.utils.functions.search import search_follow
 
 
 class UserAPI(APIView):
@@ -147,15 +148,20 @@ class FollowAPI(APIView):
         if not user:
             return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        follows = Follow.objects.filter(follower=user).select_related('following__mypage').order_by('created')[:100]
+        objs = Follow.objects.none
+        search = request.query_params.get('search')
+        if search:
+            objs = search_follow(50, user, search)
+        else:
+            objs = Follow.objects.filter(follower=user).select_related('following__mypage').order_by('created')[:100]
 
         data = [{
-            'avatar': f'{DOMAIN_URL}{follow.following.avatar.url}',
-            'nickname': follow.following.nickname,
-            'introduction': follow.following.profile.introduction,
-            'follower_count': follow.following.mypage.follower_count,
-            'following_count': follow.following.mypage.following_count,
-        } for follow in follows]
+            'avatar': f'{DOMAIN_URL}{obj.following.avatar.url}',
+            'nickname': obj.following.nickname,
+            'introduction': obj.following.profile.introduction,
+            'follower_count': obj.following.mypage.follower_count,
+            'following_count': obj.following.mypage.following_count,
+        } for obj in objs]
 
         return Response(data, status=HTTP_200_OK)
 
@@ -166,15 +172,20 @@ class FollowerAPI(APIView):
         if not user:
             return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        follows = Follow.objects.filter(following=user).select_related('follower__mypage').order_by('created')[:100]
+        objs = Follow.objects.none
+        search = request.query_params.get('search')
+        if search:
+            objs = search_follow(50, user, search)
+        else:
+            objs = Follow.objects.filter(following=user).select_related('follower__mypage').order_by('created')[:100]
 
         data = [{
-            'avatar': f'{DOMAIN_URL}{follow.follower.avatar.url}',
-            'nickname': follow.follower.nickname,
-            'introduction': follow.follower.profile.introduction,
-            'follower_count': follow.follower.mypage.follower_count,
-            'following_count': follow.follower.mypage.following_count,
-        } for follow in follows]
+            'avatar': f'{DOMAIN_URL}{obj.follower.avatar.url}',
+            'nickname': obj.follower.nickname,
+            'introduction': obj.follower.profile.introduction,
+            'follower_count': obj.follower.mypage.follower_count,
+            'following_count': obj.follower.mypage.following_count,
+        } for obj in objs]
 
         return Response(data, status=HTTP_200_OK)
 
