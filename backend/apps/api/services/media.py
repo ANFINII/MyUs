@@ -1,6 +1,7 @@
 from config.settings.base import DOMAIN_URL
+from apps.myus.models import User
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
-from apps.api.utils.functions.search import search_models
+from apps.api.utils.functions.search import search_media, search_todo
 from apps.api.utils.functions.user import get_author
 
 
@@ -29,7 +30,7 @@ def get_recommend(count: int, search: str | None):
 def get_videos(count: int, search: str | None):
     objs = Video.objects.none
     if search:
-        objs = search_models(Video, search)
+        objs = search_media(Video, search)
     else:
         objs = Video.objects.filter(publish=True).order_by('-created')[:count]
 
@@ -54,7 +55,7 @@ def get_videos(count: int, search: str | None):
 def get_musics(count: int, search: str | None):
     objs = Music.objects.none
     if search:
-        objs = search_models(Music, search)
+        objs = search_media(Music, search)
     else:
         objs = Music.objects.filter(publish=True).order_by('-created')[:count]
 
@@ -79,7 +80,7 @@ def get_musics(count: int, search: str | None):
 def get_comics(count: int, search: str | None):
     objs = Comic.objects.none
     if search:
-        objs = search_models(Comic, search)
+        objs = search_media(Comic, search)
     else:
         objs = Comic.objects.filter(publish=True).order_by('-created')[:count]
 
@@ -101,7 +102,7 @@ def get_comics(count: int, search: str | None):
 def get_pictures(count: int, search: str | None):
     objs = Picture.objects.none
     if search:
-        objs = search_models(Picture, search)
+        objs = search_media(Picture, search)
     else:
         objs = Picture.objects.filter(publish=True).order_by('-created')[:count]
 
@@ -124,7 +125,7 @@ def get_pictures(count: int, search: str | None):
 def get_blogs(count: int, search: str | None):
     objs = Blog.objects.none
     if search:
-        objs = search_models(Blog, search)
+        objs = search_media(Blog, search)
     else:
         objs = Blog.objects.filter(publish=True).order_by('-created')[:count]
 
@@ -148,7 +149,7 @@ def get_blogs(count: int, search: str | None):
 def get_chats(count: int, search: str | None):
     objs = Chat.objects.none
     if search:
-        objs = search_models(Chat, search)
+        objs = search_media(Chat, search)
     else:
         objs = Chat.objects.filter(publish=True).order_by('-created')[:count]
 
@@ -169,21 +170,20 @@ def get_chats(count: int, search: str | None):
     return data
 
 
-def get_todos(count: int, search: str | None):
+def get_todos(count: int, user: User, search: str | None):
     objs = Todo.objects.none
     if search:
-        objs = search_models(Todo, search)
+        objs = search_todo(Todo, user, search)
     else:
-        objs = Todo.objects.all().order_by('-created')[:count]
+        objs = Todo.objects.filter(author=user.id).order_by('-created')[:count]
 
     data = [{
         'id': obj.id,
         'title': obj.title,
         'content': obj.content,
-        'like': obj.total_like(),
-        'read': obj.read,
-        'period': obj.period,
-        'publish': obj.publish,
+        'priority': obj.priority,
+        'progress': obj.progress,
+        'duedate': obj.duedate,
         'created': obj.created,
         'updated': obj.updated,
         'author': get_author(obj.author)
