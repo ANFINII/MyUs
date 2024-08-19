@@ -10,7 +10,7 @@ interface Props {
 
 export default function BlogDetail(props: Props) {
   const { data } = props
-  const { publish } = data
+  const { title, content, read, totalLike, commentCount, publish, created, author, user } = data
 
   return (
     <Main title="Blog" isTitle={false}>
@@ -19,7 +19,7 @@ export default function BlogDetail(props: Props) {
         <hr />
         <div className="article_detail_section">
           <div className="article_detail_section_1">
-            <MediaDetailCommon data={data} />
+            <MediaDetailCommon title={title} content={content} read={read} totalLike={totalLike} commentCount={commentCount} created={created} author={author} user={user} />
           </div>
           <div className="article_detail_section_2">
             <MediaDetailInfo />
