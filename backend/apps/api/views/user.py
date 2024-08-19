@@ -1,31 +1,23 @@
 import datetime
 
-from django.contrib.auth import get_user_model
-
 from config.settings.base import DOMAIN_URL
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-from apps.myus.models import Profile, MyPage, Follow, NotificationSetting, SearchTag
+from apps.myus.models import User, Profile, MyPage, Follow, NotificationSetting, SearchTag
 from apps.myus.modules.filter_data import DeferData
 from apps.myus.modules.validation import has_email
-from apps.api.services.user import get_user_id, profile_check
+from apps.api.services.user import get_user, profile_check
 from apps.api.utils.functions.index import message
 from apps.api.utils.functions.logger import Log
 
 
-User = get_user_model()
-
-
 class UserAPI(APIView):
     def get(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response(message(True, auth.data.get('message')), status=auth.status_code)
-
-        user_id = auth.data['user_id']
-        user = User.objects.filter(id=user_id).first()
+        user = get_user(request)
+        if not user:
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
         data = {
             'avatar': f'{DOMAIN_URL}{user.image()}' if user.image() else '',
@@ -39,12 +31,11 @@ class UserAPI(APIView):
 
 class ProfileAPI(APIView):
     def get(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response(message(True, auth.data.get('message')), status=auth.status_code)
+        user = get_user(request)
+        if not user:
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        user_id = auth.data['user_id']
-        user = User.objects.filter(id=user_id).select_related('profile').defer(*DeferData.profile).first()
+        user = User.objects.filter(id=user.id).select_related('profile').defer(*DeferData.profile).first()
 
         data = {
             'avatar': f'{DOMAIN_URL}{user.image()}' if user.image() else '',
@@ -70,13 +61,11 @@ class ProfileAPI(APIView):
         return Response(data, status=HTTP_200_OK)
 
     def put(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response(message(True, auth.data.get('message')), status=auth.status_code)
+        user = get_user(request)
+        if not user:
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        user_id = auth.data['user_id']
-        user = User.objects.filter(id=user_id).first()
-        profile = Profile.objects.filter(id=user_id).first()
+        profile = Profile.objects.filter(id=user.id).first()
         data = request.data
 
         validation = profile_check(request.data)
@@ -104,12 +93,11 @@ class ProfileAPI(APIView):
 
 class MyPageAPI(APIView):
     def get(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response(message(True, auth.data.get('message')), status=auth.status_code)
+        user = get_user(request)
+        if not user:
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        user_id = auth.data['user_id']
-        user = User.objects.filter(id=user_id).select_related('mypage').defer(*DeferData.mypage).first()
+        user = User.objects.filter(id=user.id).select_related('mypage').defer(*DeferData.mypage).first()
 
         data = {
             'banner': f'{DOMAIN_URL}{user.banner()}' if user.banner() else '',
@@ -127,12 +115,11 @@ class MyPageAPI(APIView):
         return Response(data, status=HTTP_200_OK)
 
     def put(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response(message(True, auth.data.get('message')), status=auth.status_code)
+        user = get_user(request)
+        if not user:
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        user_id = auth.data['user_id']
-        mypage = MyPage.objects.filter(id=user_id).first()
+        mypage = MyPage.objects.filter(id=user.id).first()
         data = request.data
 
         if has_email(data['email']):
@@ -153,12 +140,11 @@ class MyPageAPI(APIView):
 
 class FollowAPI(APIView):
     def get(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response(message(True, auth.data.get('message')), status=auth.status_code)
+        user = get_user(request)
+        if not user:
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        user_id = auth.data['user_id']
-        follows = Follow.objects.filter(follower=user_id).select_related('following__mypage').order_by('created')[:100]
+        follows = Follow.objects.filter(follower=user).select_related('following__mypage').order_by('created')[:100]
 
         data = [{
             'avatar': f'{DOMAIN_URL}{follow.following.avatar.url}',
@@ -173,12 +159,11 @@ class FollowAPI(APIView):
 
 class FollowerAPI(APIView):
     def get(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response(message(True, auth.data.get('message')), status=auth.status_code)
+        user = get_user(request)
+        if not user:
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        user_id = auth.data['user_id']
-        follows = Follow.objects.filter(following=user_id).select_related('follower__mypage').order_by('created')[:100]
+        follows = Follow.objects.filter(following=user).select_related('follower__mypage').order_by('created')[:100]
 
         data = [{
             'avatar': f'{DOMAIN_URL}{follow.follower.avatar.url}',
@@ -193,12 +178,11 @@ class FollowerAPI(APIView):
 
 class SearchTagAPI(APIView):
     def get(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response(message(True, auth.data.get('message')), status=auth.status_code)
+        user = get_user(request)
+        if not user:
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        user_id = auth.data['user_id']
-        search_tags = SearchTag.objects.filter(author=user_id).order_by('sequence')[:20]
+        search_tags = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
 
         data = [{'sequence': tag.sequence, 'name': tag.name} for tag in search_tags]
         return Response(data, status=HTTP_200_OK)
@@ -206,12 +190,11 @@ class SearchTagAPI(APIView):
 
 class NotificationAPI(APIView):
     def get(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response(message(True, auth.data.get('message')), status=auth.status_code)
+        user = get_user(request)
+        if not user:
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        user_id = auth.data['user_id']
-        notification_setting = NotificationSetting.objects.filter(user=user_id).first()
+        notification_setting = NotificationSetting.objects.filter(user=user).first()
 
         data = {
             'is_video': notification_setting.is_video,
@@ -228,12 +211,11 @@ class NotificationAPI(APIView):
         return Response(data, status=HTTP_200_OK)
 
     def put(self, request):
-        auth = get_user_id(request)
-        if auth.status_code != HTTP_200_OK:
-            return Response(message(True, auth.data.get('message')), status=auth.status_code)
+        user = get_user(request)
+        if not user:
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        user_id = auth.data['user_id']
-        notification_setting = NotificationSetting.objects.filter(user=user_id).first()
+        notification_setting = NotificationSetting.objects.filter(user=user).first()
 
         data = request.data
         if notification_setting:

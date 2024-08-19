@@ -17,7 +17,7 @@ from apps.api.serializers import VideoSerializer, MusicSerializer, ComicSerializ
 from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializer, TodoSerializer
 from apps.api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
 from apps.api.services.user import get_user
-from apps.api.utils.functions.index import is_bool
+from apps.api.utils.functions.index import is_bool, message
 from apps.api.utils.functions.comment import get_comment
 from apps.api.utils.functions.user import get_author
 
@@ -82,7 +82,7 @@ class VideoAPI(APIView):
     def post(self, request):
         author = get_user(request)
         if not author:
-            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
         data = request.data
         field = {
@@ -149,7 +149,7 @@ class MusicAPI(APIView):
     def post(self, request) -> Response:
         author = get_user(request)
         if not author:
-            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
         data = request.data
         field = {
@@ -203,7 +203,7 @@ class ComicAPI(APIView):
     def post(self, request) -> Response:
         author = get_user(request)
         if not author:
-            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
         data = request.data
         images = data.getlist('images[]')
@@ -261,7 +261,7 @@ class PictureAPI(APIView):
     def post(self, request):
         author = get_user(request)
         if not author:
-            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
         data = request.data
         field = {
@@ -326,7 +326,7 @@ class BlogAPI(APIView):
     def post(self, request) -> Response:
         author = get_user(request)
         if not author:
-            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
         data = request.data
         field = {
@@ -391,7 +391,7 @@ class ChatAPI(APIView):
     def post(self, request) -> Response:
         author = get_user(request)
         if not author:
-            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
         data = request.data
         field = {
@@ -409,7 +409,7 @@ class TodoListAPI(APIView):
     def get(self, request):
         author = get_user(request)
         if not author:
-            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
         search = request.query_params.get('search')
         data = get_todos(50, author, search)
@@ -448,7 +448,7 @@ class TodoAPI(APIView):
     def post(self, request):
         author = get_user(request)
         if not author:
-            return Response({'message': '認証されていません!'}, status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
         data = request.data
         field = {
