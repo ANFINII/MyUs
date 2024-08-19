@@ -1,6 +1,8 @@
 import { HttpStatusCode } from 'axios'
+import { apiServer } from 'lib/apiServer'
 import { apiClient } from 'lib/axios'
 import { apiHome, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats, apiTodos } from 'api/uri'
+import { Req } from 'types/global/next'
 import { MediaHome, Video, Music, Comic, Picture, Blog, Chat, Todo } from 'types/internal/media'
 
 export const getHome = async (search?: string): Promise<MediaHome> => {
@@ -47,6 +49,12 @@ export const getChats = async (search?: string): Promise<Chat[]> => {
 
 export const getTodos = async (search?: string): Promise<Todo[]> => {
   const res = await apiClient.get(apiTodos, { params: { search } })
+  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+  return res.data
+}
+
+export const getServerTodos = async (req: Req, search?: string): Promise<Todo[]> => {
+  const res = await apiServer(req, apiClient, apiTodos, { search })
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
