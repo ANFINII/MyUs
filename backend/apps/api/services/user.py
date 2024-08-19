@@ -1,7 +1,9 @@
 import jwt
 from django.conf import settings
 
-from apps.myus.models import User
+from config.settings.base import DOMAIN_URL
+from apps.api.utils.functions.search import search_follow
+from apps.myus.models import User, Follow
 from apps.myus.modules.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
 
 
@@ -83,3 +85,37 @@ def signup_check(user) -> str | None:
 
     if User.objects.filter(nickname=user['nickname']).exists():
         return '投稿者名は既に登録されています!'
+
+
+def get_follows(count: int, user: User, search: str | None):
+    objs = Follow.objects.none
+    if search:
+        objs = search_follow(Follow, 'follow', user, search)
+    else:
+        objs = Follow.objects.filter(follower=user).select_related('following__mypage').order_by('created')[:count]
+
+    data = [{
+        'avatar': f'{DOMAIN_URL}{obj.following.avatar.url}',
+        'nickname': obj.following.nickname,
+        'introduction': obj.following.profile.introduction,
+        'follower_count': obj.following.mypage.follower_count,
+        'following_count': obj.following.mypage.following_count,
+    } for obj in objs]
+    return data
+
+
+def get_followers(count: int, user: User, search: str | None):
+    objs = Follow.objects.none
+    if search:
+        objs = search_follow(Follow, 'follower', user, search)
+    else:
+        objs = Follow.objects.filter(following=user).select_related('follower__mypage').order_by('created')[:count]
+
+    data = [{
+        'avatar': f'{DOMAIN_URL}{obj.follower.avatar.url}',
+        'nickname': obj.follower.nickname,
+        'introduction': obj.follower.profile.introduction,
+        'follower_count': obj.follower.mypage.follower_count,
+        'following_count': obj.follower.mypage.following_count,
+    } for obj in objs]
+    return data

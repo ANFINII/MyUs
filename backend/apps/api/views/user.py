@@ -12,6 +12,7 @@ from apps.api.services.user import get_user, profile_check
 from apps.api.utils.functions.index import message
 from apps.api.utils.functions.logger import Log
 from apps.api.utils.functions.search import search_follow
+from apps.api.services.user import get_follows, get_followers
 
 
 class UserAPI(APIView):
@@ -200,21 +201,8 @@ class FollowAPI(APIView):
         if not user:
             return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        objs = Follow.objects.none
         search = request.query_params.get('search')
-        if search:
-            objs = search_follow(50, user, search)
-        else:
-            objs = Follow.objects.filter(follower=user).select_related('following__mypage').order_by('created')[:100]
-
-        data = [{
-            'avatar': f'{DOMAIN_URL}{obj.following.avatar.url}',
-            'nickname': obj.following.nickname,
-            'introduction': obj.following.profile.introduction,
-            'follower_count': obj.following.mypage.follower_count,
-            'following_count': obj.following.mypage.following_count,
-        } for obj in objs]
-
+        data = get_follows(100, user, search)
         return Response(data, status=HTTP_200_OK)
 
 
@@ -224,19 +212,6 @@ class FollowerAPI(APIView):
         if not user:
             return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        objs = Follow.objects.none
         search = request.query_params.get('search')
-        if search:
-            objs = search_follow(50, user, search)
-        else:
-            objs = Follow.objects.filter(following=user).select_related('follower__mypage').order_by('created')[:100]
-
-        data = [{
-            'avatar': f'{DOMAIN_URL}{obj.follower.avatar.url}',
-            'nickname': obj.follower.nickname,
-            'introduction': obj.follower.profile.introduction,
-            'follower_count': obj.follower.mypage.follower_count,
-            'following_count': obj.follower.mypage.following_count,
-        } for obj in objs]
-
+        data = get_followers(100, user, search)
         return Response(data, status=HTTP_200_OK)
