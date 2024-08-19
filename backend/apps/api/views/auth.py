@@ -2,10 +2,9 @@ import jwt
 import datetime
 
 from django.conf import settings
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import authenticate
 from django.middleware.csrf import get_token
 
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
@@ -13,26 +12,13 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt import views
 from rest_framework_simplejwt import exceptions
 
-from apps.myus.models import Profile
+from apps.myus.models import User, Profile
 from apps.api.services.user import signup_check
 from apps.api.utils.functions.encrypt import create_key, encrypt, decrypt
 from apps.api.utils.functions.index import message
 
 
-User = get_user_model()
-
-
 class AuthAPI(APIView):
-    def get_object(self, access_token):
-        key = settings.SECRET_KEY
-        try:
-            payload = jwt.decode(jwt=access_token, key=key, algorithms=['HS256'])
-            return payload['user_id']
-        except jwt.ExpiredSignatureError:
-            return Response(message(True, '認証エラーが発生しました!'), status=HTTP_500_INTERNAL_SERVER_ERROR)
-        except jwt.exceptions.DecodeError:
-            return Response(message(True, '認証エラーが発生しました!'), status=HTTP_500_INTERNAL_SERVER_ERROR)
-
     def get(self, request):
         access_token = request.COOKIES.get('access_token')
         if not access_token:
@@ -43,6 +29,16 @@ class AuthAPI(APIView):
         if not user.is_active:
             return Response(message(True, '退会済みです!'), status=HTTP_400_BAD_REQUEST)
         return Response(message(False, '認証済みです!'), status=HTTP_200_OK)
+
+    def get_object(self, access_token):
+        key = settings.SECRET_KEY
+        try:
+            payload = jwt.decode(jwt=access_token, key=key, algorithms=['HS256'])
+            return payload['user_id']
+        except jwt.ExpiredSignatureError:
+            return Response(message(True, '認証エラーが発生しました!'), status=HTTP_500_INTERNAL_SERVER_ERROR)
+        except jwt.exceptions.DecodeError:
+            return Response(message(True, '認証エラーが発生しました!'), status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class RefreshAPI(views.TokenRefreshView):
