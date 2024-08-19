@@ -67,6 +67,7 @@ class ProfileAPI(APIView):
 
         profile = Profile.objects.filter(id=user.id).first()
         data = request.data
+        avatar = data.get('avatar')
 
         validation = profile_check(request.data)
         if validation:
@@ -74,7 +75,7 @@ class ProfileAPI(APIView):
 
         user_fields = ['email', 'username', 'nickname', 'content']
         [setattr(user, field, data.get(field)) for field in user_fields]
-        user.avatar = data.get('avatar') if data.get('avatar') else user.avatar
+        user.avatar = avatar if avatar else user.avatar
 
         profile_fields = ('last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'street', 'introduction')
         [setattr(profile, field, data.get(field)) for field in profile_fields]
@@ -121,12 +122,14 @@ class MyPageAPI(APIView):
 
         mypage = MyPage.objects.filter(id=user.id).first()
         data = request.data
+        banner = data.get('banner')
 
         if has_email(data['email']):
             return Response(message(True, 'メールアドレスの形式が違います!'), status=HTTP_400_BAD_REQUEST)
 
-        update_fields = ['banner', 'email', 'tag_manager_id', 'content']
+        update_fields = ['email', 'tag_manager_id', 'content']
         [setattr(mypage, field, data.get(field)) for field in update_fields]
+        mypage.banner = banner if banner else mypage.banner
         mypage.is_advertise = data['is_advertise'] == 'true'
 
         try:
