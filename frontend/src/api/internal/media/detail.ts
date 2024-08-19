@@ -1,6 +1,8 @@
 import { HttpStatusCode } from 'axios'
+import { apiServer } from 'lib/apiServer'
 import { apiClient } from 'lib/axios'
 import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat, apiTodo } from 'api/uri'
+import { Req } from 'types/global/next'
 import { Video, Music, Comic, Picture, Blog, Chat, Todo } from 'types/internal/media'
 
 export const getVideo = async (id: number): Promise<Video> => {
@@ -39,8 +41,8 @@ export const getChat = async (id: number): Promise<Chat> => {
   return res.data
 }
 
-export const getToDo = async (id: number): Promise<Todo> => {
-  const res = await apiClient.get(apiTodo(id))
+export const getServerTodo = async (req: Req, id: number): Promise<Todo[]> => {
+  const res = await apiServer(req, apiClient, apiTodo(id))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }

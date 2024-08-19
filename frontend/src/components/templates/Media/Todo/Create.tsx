@@ -16,7 +16,7 @@ export default function TodoCreate() {
   const { user } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [values, setValues] = useState<TodoIn>({ title: '', content: '', priority: '', progress: '', duedate: '' })
+  const [values, setValues] = useState<TodoIn>({ title: '', content: '', priority: priority[0].value, progress: progress[0].value, duedate: '' })
 
   const handleTitle = (title: string) => setValues({ ...values, title })
   const handleContent = (content: string) => setValues({ ...values, content })

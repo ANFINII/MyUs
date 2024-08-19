@@ -1,17 +1,22 @@
 import Link from 'next/link'
-import { Blog } from 'types/internal/media'
+import { Author, MediaUser } from 'types/internal/media'
 import { formatDatetime } from 'utils/functions/datetime'
 import Button from 'components/parts/Button'
 import ExImage from 'components/parts/ExImage'
-import CommentInput from 'components/widgets/Comment/Input'
 
 interface Props {
-  data: Blog
+  title: string
+  content: string
+  read: number
+  totalLike?: number
+  commentCount?: number
+  created: string
+  author: Author
+  user?: MediaUser
 }
 
 export default function MediaDetailCommon(props: Props) {
-  const { data } = props
-  const { id, title, content, read, totalLike, commentCount, created, author, user } = data
+  const { title, content, read, totalLike, commentCount, created, author, user } = props
   const { isLike } = user || {}
 
   const isAuth = false
@@ -31,7 +36,7 @@ export default function MediaDetailCommon(props: Props) {
           </div>
           {isAuth ? (
             // <form method="POST" action="" obj-id="{{ object.id }}" path="{{ request.path }}" csrf="{{ csrf_token }}>
-            <form method="POST" action="" obj-id={id}>
+            <form method="POST" action="">
               {isLike ? (
                 <button type="submit" name="like" className="like_form like_fill">
                   <i className="bi bi-hand-thumbs-up-fill icon_font like_color" title="いいね"></i>
@@ -88,7 +93,7 @@ export default function MediaDetailCommon(props: Props) {
       </div>
       <hr />
 
-      <CommentInput user={user} commentCount={commentCount} />
+      {/* <CommentInput user={user} commentCount={commentCount} /> */}
 
       <input type="checkbox" id="comment_aria_check_id" className="comment_aria_check" />
       <label htmlFor="comment_aria_check_id" className="comment_aria_check_label1">
