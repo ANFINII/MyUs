@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router'
+import { getFollower } from 'api/internal/user'
 import { Follow } from 'types/internal/auth'
+import { useNewDatas } from 'components/hooks/useNewList'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -15,9 +17,10 @@ export default function Followers(props: Props) {
 
   const router = useRouter()
   const { user } = useUser()
+  const { search, newDatas } = useNewDatas<Follow[]>({ datas: follows, getDatas: (search) => getFollower(search) })
 
   return (
-    <Main title="Follower">
+    <Main title="Follower" search={{ name: search, count: newDatas.length }}>
       <LoginRequired isAuth={user.isActive} margin="mt_20">
         <div className="mt_16">
           <Button color="blue" size="s" name="フォロワー" onClick={() => router.push('/menu/follow')} />
