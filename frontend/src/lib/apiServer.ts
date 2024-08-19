@@ -1,7 +1,7 @@
 import { AxiosInstance, AxiosResponse } from 'axios'
 import { Req } from 'types/global/next'
 
-type Query = Record<string, string>
+type Query = Record<string, string | undefined>
 
 export const apiServer = async (req: Req, client: AxiosInstance, url: string, query?: Query, header?: Query): Promise<AxiosResponse> => {
   const cookie = req.headers.cookie
