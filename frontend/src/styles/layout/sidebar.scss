@@ -11,9 +11,10 @@
   }
 
   .sidebar_color {
-    a:hover,
-    &.active a {
+    div:hover,
+    &.active div {
       color: rgb(255, 255, 255);
+      cursor: pointer;
     }
   }
 
@@ -27,7 +28,7 @@
       text-align: center;
       justify-content: center;
 
-      a {
+      div {
         display: block;
         width: 4.5em;
         height: 52px;

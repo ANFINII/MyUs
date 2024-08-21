@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { isActive } from 'utils/functions/common'
@@ -12,6 +11,7 @@ import IconVideo from 'components/parts/Icon/Video'
 export default function SideBar() {
   const router = useRouter()
 
+  const handleClick = (url: string) => router.push(url)
   const activeCheck = (url: string) => isActive(router.pathname === url)
 
   return (
@@ -19,45 +19,45 @@ export default function SideBar() {
       <nav className="sidebar_nav">
         <ul>
           <li className={clsx('sidebar_color', activeCheck('/media/video'))}>
-            <Link href="/media/video">
+            <div onClick={() => handleClick('/media/video')}>
               <IconVideo size="1.8em" />
               <p className="sidebar_text">Video</p>
-            </Link>
+            </div>
           </li>
 
           <li className={clsx('sidebar_color', activeCheck('/media/music'))}>
-            <Link href="/media/music">
+            <div onClick={() => handleClick('/media/music')}>
               <IconMusic size="1.8em" />
               <p className="sidebar_text">Music</p>
-            </Link>
+            </div>
           </li>
 
           <li className={clsx('sidebar_color', activeCheck('/media/comic'))}>
-            <Link href="/media/comic">
+            <div onClick={() => handleClick('/media/comic')}>
               <IconComic size="1.8em" />
               <p className="sidebar_text">Comic</p>
-            </Link>
+            </div>
           </li>
 
           <li className={clsx('sidebar_color', activeCheck('/media/picture'))}>
-            <Link href="/media/picture">
+            <div onClick={() => handleClick('/media/picture')}>
               <IconPicture size="1.8em" />
               <p className="sidebar_text">Picture</p>
-            </Link>
+            </div>
           </li>
 
           <li className={clsx('sidebar_color', activeCheck('/media/blog'))}>
-            <Link href="/media/blog">
+            <div onClick={() => handleClick('/media/blog')}>
               <IconBlog size="1.8em" />
               <p className="sidebar_text">Blog</p>
-            </Link>
+            </div>
           </li>
 
           <li className={clsx('sidebar_color', activeCheck('/media/chat'))}>
-            <Link href="/media/chat">
+            <div onClick={() => handleClick('/media/chat')}>
               <IconChat size="1.8em" />
               <p className="sidebar_text">Chat</p>
-            </Link>
+            </div>
           </li>
         </ul>
       </nav>
