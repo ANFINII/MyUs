@@ -4,9 +4,9 @@ import { getVideo } from 'api/internal/media/detail'
 import { Video } from 'types/internal/media'
 import VideoDetail from 'components/templates/media/video/detail'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const video = await getVideo(Number(params?.id))
+  const video = await getVideo(Number(query?.id))
   return { props: { video, ...translations } }
 }
 

@@ -4,7 +4,7 @@ import { getBlog } from 'api/internal/media/detail'
 import { Blog } from 'types/internal/media'
 import BlogDetail from 'components/templates/media/blog/detail'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
   const data = await getBlog(Number(query.id))
   return { props: { data, ...translations } }
