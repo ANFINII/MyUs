@@ -1,11 +1,10 @@
+export interface AnyObject {
+  [key: string]: any
+}
+
 export interface MessageOut {
   error: boolean
   message: string
-}
-
-export interface SearchTag {
-  id: number
-  name: string
 }
 
 export interface Option {

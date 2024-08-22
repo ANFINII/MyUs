@@ -1,4 +1,4 @@
-type AnyObject = { [key: string]: any }
+import { AnyObject } from 'types/internal/other'
 
 const snakeCase = (s: string) => s.replace(/([A-Z])/g, '_$1').toLowerCase()
 const camelCase = (s: string) => s.replace(/([-_][a-z])/gi, ($1) => $1.toUpperCase().replace('-', '').replace('_', ''))
