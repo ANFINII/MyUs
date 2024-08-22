@@ -8,7 +8,7 @@ export const camelSnake = <T extends AnyObject>(obj: AnyObject): T => {
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const value = obj[key]
-      if (typeof window !== 'undefined' && value instanceof File) {
+      if (typeof window !== 'undefined') {
         result[snakeCase(key)] = value
       } else if (typeof value === 'object' && value !== null) {
         result[snakeCase(key)] = camelSnake(value)
