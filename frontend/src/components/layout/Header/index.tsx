@@ -24,21 +24,21 @@ export default function Header(props: Props) {
 
   const { user } = useUser()
   const [search, setSearch] = useState<string>('')
-  const [isOpenSideMenu, setIsOpenSideMenu] = useState<boolean>(false)
-  const [isOpenCloud, setIsOpenCloud] = useState<boolean>(false)
-  const [isOpenNotice, setIsOpenNotice] = useState<boolean>(false)
-  const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false)
+  const [isSideMenu, setIsSideMenu] = useState<boolean>(false)
+  const [isCloud, setIsCloud] = useState<boolean>(false)
+  const [isNotice, setIsNotice] = useState<boolean>(false)
+  const [isProfile, setIsProfile] = useState<boolean>(false)
 
   const handleSearch = (value: string) => setSearch(value)
-  const handleSideMenu = () => setIsOpenSideMenu(!isOpenSideMenu)
-  const handleCloud = () => setIsOpenCloud(!isOpenCloud)
-  const handleNotice = () => setIsOpenNotice(!isOpenNotice)
-  const handleProfile = () => setIsOpenProfile(!isOpenProfile)
+  const handleSideMenu = () => setIsSideMenu((prev) => !prev)
+  const handleCloud = () => setIsCloud((prev) => !prev)
+  const handleNotice = () => setIsNotice((prev) => !prev)
+  const handleProfile = () => setIsProfile((prev) => !prev)
 
   const handleCoverClose = () => {
-    setIsOpenCloud(false)
-    setIsOpenNotice(false)
-    setIsOpenProfile(false)
+    setIsCloud(false)
+    setIsNotice(false)
+    setIsProfile(false)
   }
 
   const notificationCount = 0
@@ -46,12 +46,12 @@ export default function Header(props: Props) {
   return (
     <header className={clsx('header', loading ? 'loading' : '')}>
       <nav className="header_nav">
-        <div className={clsx('side_nemu_cover', isActive(isOpenSideMenu))} onClick={handleSideMenu}></div>
-        <div className={clsx('drop_back_cover', isActive(isOpenCloud || isOpenNotice || isOpenProfile))} onClick={handleCoverClose}></div>
+        <div className={clsx('side_nemu_cover', isActive(isSideMenu))} onClick={handleSideMenu}></div>
+        <div className={clsx('drop_back_cover', isActive(isCloud || isNotice || isProfile))} onClick={handleCoverClose}></div>
 
         <button className="header_nav_1 header_color" onClick={handleSideMenu}>
           <IconList width="2em" height="1.7em" />
-          <SideMenu open={isOpenSideMenu} onClose={handleSideMenu} />
+          <SideMenu open={isSideMenu} onClose={handleSideMenu} />
         </button>
 
         <div className="header_nav_2 header_color_MyUs">
@@ -68,20 +68,20 @@ export default function Header(props: Props) {
           <IconLightning size="1.5em" type="fill" />
         </button>
 
-        <button className={clsx('header_nav_5 header_color', isActive(isOpenCloud))} onClick={handleCloud}>
+        <button className={clsx('header_nav_5 header_color', isActive(isCloud))} onClick={handleCloud}>
           <IconCloud size="1.5em" />
-          <DropMenuCloud open={isOpenCloud} onClose={handleCloud} />
+          <DropMenuCloud open={isCloud} onClose={handleCloud} />
         </button>
 
-        <button className={clsx('header_nav_6 header_color', isActive(isOpenNotice))} onClick={handleNotice}>
+        <button className={clsx('header_nav_6 header_color', isActive(isNotice))} onClick={handleNotice}>
           <IconBell size="1.5em" className={isActive(notificationCount > 0)} />
           <IconExclamation size="1.2em" className={isActive(notificationCount > 0)} />
-          <DropMenuNotice open={isOpenNotice} onClose={handleNotice} />
+          <DropMenuNotice open={isNotice} onClose={handleNotice} />
         </button>
 
-        <button className={clsx('header_nav_7 header_color', isActive(isOpenProfile))} onClick={handleProfile}>
-          <Avatar size="1.8em" imgSize="32" src={user.avatar} nickname={user.nickname} className={clsx('account', isActive(isOpenProfile))} />
-          <DropMenuProfile open={isOpenProfile} onClose={handleProfile} />
+        <button className={clsx('header_nav_7 header_color', isActive(isProfile))} onClick={handleProfile}>
+          <Avatar size="1.8em" imgSize="32" src={user.avatar} nickname={user.nickname} className={clsx('account', isActive(isProfile))} />
+          <DropMenuProfile open={isProfile} onClose={handleProfile} />
         </button>
       </nav>
     </header>
