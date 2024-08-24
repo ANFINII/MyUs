@@ -1,7 +1,8 @@
 /* サーチタグバー */
 .searchtag {
   position: fixed;
-  top: 3.5em;
+  top: 56px;
+  left: 72px;
   width: 100%;
   height: 26px;
   background: rgb(240, 240, 240);
@@ -10,19 +11,14 @@
 
 .searchtag_grid {
   display: grid;
-  grid-template-columns: 4.5em 3em 12.125em 3em auto;
-  grid-template-rows: auto;
-}
-
-.searchtag_menu {
-  display: none; /* チェックボックスは非表示に */
+  grid-template-columns: 48px 194px 48px auto;
+  grid-template-rows: 26px;
 }
 
 .searchtag_1 {
   display: block;
-  grid-column: 2/3;
+  grid-column: 1/2;
   grid-row: 1/2;
-  text-align: center;
 }
 
 .searchtag_1.active {
@@ -35,9 +31,8 @@
 
 .searchtag_2.active {
   display: block;
-  grid-column: 2/3;
+  grid-column: 1/2;
   grid-row: 1/2;
-  text-align: center;
 }
 
 .searchtag_3 {
@@ -46,14 +41,16 @@
 
 .searchtag_3.active {
   display: block;
-  grid-column: 3/4;
+  grid-column: 2/3;
   grid-row: 1/2;
-  height: 24px;
-  width: 12em;
-  margin: 1px 0 1px 1px;
+  margin: 1px;
   outline: none;
   border-radius: 4px;
   border: 1px solid rgb(206, 212, 218);
+}
+
+.searchtag_3.active input {
+  height: 24px;
 }
 
 .searchtag_3.active::placeholder {
@@ -73,13 +70,13 @@
 
 .searchtag_4.active {
   display: block;
-  grid-column: 4/5;
+  grid-column: 3/4;
   grid-row: 1/2;
   text-align: center;
 }
 
 .searchtag_n {
-  grid-column: 3/4;
+  grid-column: 2/3;
   grid-row: 1/2;
   width: calc(100vw - 166px);
   overflow-x: auto;
@@ -91,7 +88,7 @@
 }
 
 .searchtag_n.active {
-  grid-column: 5/6;
+  grid-column: 4/5;
   width: calc(100vw - 408px);
 }
 

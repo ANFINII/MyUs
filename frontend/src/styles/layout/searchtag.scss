@@ -1,7 +1,8 @@
 /* サーチタグバー */
 .searchtag {
   position: fixed;
-  top: 3.5em;
+  top: 56px;
+  left: 72px;
   width: 100%;
   height: 26px;
   background: rgb(240, 240, 240);
@@ -10,78 +11,73 @@
 
 .searchtag_grid {
   display: grid;
-  grid-template-columns: 4.5em 3em 12.125em 3em auto;
-  grid-template-rows: auto;
-}
-
-.searchtag_menu {
-  display: none; /* チェックボックスは非表示に */
-}
-
-.searchtag_1.active {
-  display: none;
+  grid-template-columns: 48px 194px 48px auto;
+  grid-template-rows: 26px;
 }
 
 .searchtag_1 {
   display: block;
-  grid-column: 2/3;
+  grid-column: 1/2;
   grid-row: 1/2;
+
+  &.active {
+    display: none;
+  }
 }
 
 .searchtag_2 {
   display: none;
-}
 
-.searchtag_2.active {
-  display: block;
-  grid-column: 2/3;
-  grid-row: 1/2;
+  &.active {
+    display: block;
+    grid-column: 1/2;
+    grid-row: 1/2;
+  }
 }
 
 .searchtag_3 {
   display: none;
-}
 
-.searchtag_3.active {
-  display: block;
-  grid-column: 3/4;
-  grid-row: 1/2;
-  height: 24px;
-  width: 12em;
-  margin: 1px 0 1px 1px;
-  outline: none;
-  border-radius: 4px;
-  border: 1px solid rgb(206, 212, 218);
-}
+  &.active {
+    display: block;
+    grid-column: 2/3;
+    grid-row: 1/2;
+    margin: 0 1px;
 
-.searchtag_3.active::placeholder {
-  font-size: 14px;
-  color: rgb(150, 150, 150);
-}
+    input {
+      height: 24px;
+    }
 
-.searchtag_3.active:focus {
-  border-radius: 4px;
-  border: 1px solid rgb(80, 170, 255);
-  box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
+    &::placeholder {
+      font-size: 14px;
+      color: rgb(150, 150, 150);
+    }
+
+    &:focus {
+      border-radius: 4px;
+      border: 1px solid rgb(80, 170, 255);
+      box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
+    }
+  }
 }
 
 .searchtag_4 {
   display: none;
-}
 
-.searchtag_4.active {
-  display: block;
-  grid-column: 4/5;
-  grid-row: 1/2;
-}
+  &.active {
+    display: block;
+    grid-column: 3/4;
+    grid-row: 1/2;
 
-.searchtag_4.active:hover {
-  cursor: pointer;
-  background: rgb(0, 160, 190);
-}
+    &:hover {
+      cursor: pointer;
+      background: rgb(0, 160, 190);
+    }
 
-.searchtag_4.active:active {
-  background: rgb(0, 180, 220);
+    &:active {
+      background: rgb(0, 180, 220);
+    }
+  }
 }
 
 .searchtag_center {
@@ -90,7 +86,7 @@
 }
 
 .searchtag_n {
-  grid-column: 3/4;
+  grid-column: 2/3;
   grid-row: 1/2;
   width: calc(100vw - 166px);
   overflow-x: scroll;
@@ -99,45 +95,44 @@
   scrollbar-width: none; /* Firefoxでスクロールバーを非表示 */
   -ms-overflow-style: none; /* IEとEdgeでスクロールバーを非表示 */
 
+  &.active {
+    grid-column: 4/5;
+    width: calc(100vw - 408px);
+  }
+
   &::-webkit-scrollbar {
     display: none;
     height: 0;
   }
 }
 
-.searchtag_n.active {
-  grid-column: 5/6;
-  width: calc(100vw - 408px);
-}
-
 .searchtag_n_list {
   display: inline;
-  margin: 0 0 0 2px;
-}
 
-.searchtag_n_list a {
-  font-size: 14px;
-  margin: 0 0 0 5px;
-  color: rgb(100, 100, 100);
-  text-decoration: none;
+  a {
+    font-size: 14px;
+    margin: 0 0 0 5px;
+    color: rgb(100, 100, 100);
+    text-decoration: none;
+  }
 }
 
 .searchtag_left {
   position: fixed;
   right: 18px;
   padding: 0 0 2px 0;
-  cursor: pointer;
   color: rgb(120, 120, 120);
   background: rgb(240, 240, 240);
+  cursor: pointer;
 }
 
 .searchtag_right {
   position: fixed;
   right: 0;
   padding: 0 0 2px 0;
-  cursor: pointer;
   color: rgb(120, 120, 120);
   background: rgb(240, 240, 240);
+  cursor: pointer;
 }
 
 .searchtag_left:hover,
@@ -159,12 +154,12 @@
 .hashtag_list {
   display: inline;
   margin: 0 2px 0 0;
-}
 
-.hashtag_list a {
-  text-decoration: none;
-  font-size: 12px;
-  color: rgb(100, 100, 100);
+  a {
+    text-decoration: none;
+    font-size: 12px;
+    color: rgb(100, 100, 100);
+  }
 }
 
 .searchtag_n_list a:hover,

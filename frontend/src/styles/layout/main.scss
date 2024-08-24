@@ -1,8 +1,12 @@
 /* メインコンテンツ */
 .main {
-  grid-column: 2/-1;
-  grid-row: 3/-1;
+  position: fixed;
+  top: 82px;
+  left: 72px;
+  width: calc(100% - 72px);
+  height: calc(100% - 82px);
   padding: 16px;
+  overflow-y: auto;
 
   .main_title {
     display: inline-block;
@@ -1420,19 +1424,6 @@ div.field > button {
   grid-column: 1/-1;
   grid-row: 4/5;
 }
-
-// .todo_link {
-//   display: flex;
-//   grid-column: 1/-1;
-//   grid-row: 5/6;
-//   margin: 8px 0 0 0;
-// }
-
-// .todo_link a {
-//   margin: 0px 6px 0 0;
-//   color: rgb(255, 255, 255);
-//   text-decoration: none;
-// }
 
 .todo_link_detail {
   display: inline;

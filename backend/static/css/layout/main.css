@@ -1,8 +1,12 @@
 /* メインコンテンツ */
 .main {
-  grid-column: 2/-1;
-  grid-row: 3/-1;
+  position: fixed;
+  top: 82px;
+  left: 72px;
+  width: calc(100% - 72px);
+  height: calc(100% - 82px);
   padding: 16px;
+  overflow-y: auto;
 }
 
 .main h1 {
