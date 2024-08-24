@@ -59,7 +59,7 @@ export default function Header(props: Props) {
           <h1>MyUs</h1>
         </div>
 
-        <div className="header_nav_3 search_container">
+        <div className="header_nav_3 search_box">
           <Search value={search} onChange={handleSearch} />
         </div>
 
