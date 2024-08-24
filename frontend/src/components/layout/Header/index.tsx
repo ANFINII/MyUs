@@ -30,10 +30,10 @@ export default function Header(props: Props) {
   const [isProfile, setIsProfile] = useState<boolean>(false)
 
   const handleSearch = (value: string) => setSearch(value)
-  const handleSideMenu = () => setIsSideMenu((prev) => !prev)
-  const handleCloud = () => setIsCloud((prev) => !prev)
-  const handleNotice = () => setIsNotice((prev) => !prev)
-  const handleProfile = () => setIsProfile((prev) => !prev)
+  const handleSideMenu = () => setIsSideMenu(!isSideMenu)
+  const handleCloud = () => setIsCloud(!isCloud)
+  const handleNotice = () => setIsNotice(!isNotice)
+  const handleProfile = () => setIsProfile(!isProfile)
 
   const handleCoverClose = () => {
     setIsCloud(false)
@@ -49,10 +49,10 @@ export default function Header(props: Props) {
         <div className={clsx('side_nemu_cover', isActive(isSideMenu))} onClick={handleSideMenu}></div>
         <div className={clsx('drop_back_cover', isActive(isCloud || isNotice || isProfile))} onClick={handleCoverClose}></div>
 
-        <button className="header_nav_1 header_color" onClick={handleSideMenu}>
+        <div className="header_nav_1 header_color" onClick={handleSideMenu}>
           <IconList width="2em" height="1.7em" />
           <SideMenu open={isSideMenu} onClose={handleSideMenu} />
-        </button>
+        </div>
 
         <div className="header_nav_2 header_color_MyUs">
           <Link href="/" className="icon_link"></Link>
@@ -63,26 +63,26 @@ export default function Header(props: Props) {
           <Search value={search} onChange={handleSearch} />
         </div>
 
-        <button className="header_nav_4 header_color">
+        <div className="header_nav_4 header_color">
           <Link href="/recommend" className="icon_link"></Link>
           <IconLightning size="1.5em" type="fill" />
-        </button>
+        </div>
 
-        <button className={clsx('header_nav_5 header_color', isActive(isCloud))} onClick={handleCloud}>
+        <div className={clsx('header_nav_5 header_color', isActive(isCloud))} onClick={handleCloud}>
           <IconCloud size="1.5em" />
           <DropMenuCloud open={isCloud} onClose={handleCloud} />
-        </button>
+        </div>
 
-        <button className={clsx('header_nav_6 header_color', isActive(isNotice))} onClick={handleNotice}>
+        <div className={clsx('header_nav_6 header_color', isActive(isNotice))} onClick={handleNotice}>
           <IconBell size="1.5em" className={isActive(notificationCount > 0)} />
           <IconExclamation size="1.2em" className={isActive(notificationCount > 0)} />
           <DropMenuNotice open={isNotice} onClose={handleNotice} />
-        </button>
+        </div>
 
-        <button className={clsx('header_nav_7 header_color', isActive(isProfile))} onClick={handleProfile}>
+        <div className={clsx('header_nav_7 header_color', isActive(isProfile))} onClick={handleProfile}>
           <Avatar size="1.8em" imgSize="32" src={user.avatar} nickname={user.nickname} className={clsx('account', isActive(isProfile))} />
           <DropMenuProfile open={isProfile} onClose={handleProfile} />
-        </button>
+        </div>
       </nav>
     </header>
   )
