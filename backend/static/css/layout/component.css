@@ -24,14 +24,19 @@
   cursor: initial;
 }
 
-.button.xs {
+.button.s {
   padding: 4px 8px;
   font-size: 12px;
 }
 
-.button.xl {
-  padding: 8px 16px;
-  font-size: 18px;
+.button.m {
+  padding: 7px 14px;
+  font-size: 14px;
+}
+
+.button.l {
+  padding: 9px 20px;
+  font-size: 16px;
 }
 
 .button.blue {

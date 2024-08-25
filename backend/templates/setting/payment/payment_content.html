@@ -16,7 +16,7 @@
     <div class="content_description">
       {{ payment.description|linebreaksbr }}
     </div>
-    <button value="{{ payment.stripe_api_id }}" csrf="{{ csrf_token }}" class="button purple xs mh_8 checkout">購入する</button>
+    <button value="{{ payment.stripe_api_id }}" csrf="{{ csrf_token }}" class="button purple s mh_8 checkout">購入する</button>
   </section>
   {% endfor %}
 
@@ -31,7 +31,7 @@
     <div class="content_description">
       現在のプランを変更
     </div>
-    <button onclick="location.href='{% url 'myus:chage_plan' %}'" class="button purple xs">変更する</button>
+    <button onclick="location.href='{% url 'myus:chage_plan' %}'" class="button purple s">変更する</button>
   </section>
 </article>
 
