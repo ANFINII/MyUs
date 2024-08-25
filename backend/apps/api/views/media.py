@@ -19,7 +19,7 @@ from apps.api.services.media import get_home, get_recommend, get_videos, get_mus
 from apps.api.services.user import get_user
 from apps.api.utils.functions.index import is_bool, message
 from apps.api.utils.functions.comment import get_comment
-from apps.api.utils.functions.user import get_author
+from apps.api.utils.functions.user import get_author, get_media_user
 
 
 # Index
@@ -55,8 +55,7 @@ class VideoAPI(APIView):
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
 
-        user_id = obj.author.id
-        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
         subquery = obj.comment.filter(**filter_kwargs)
         comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
@@ -122,8 +121,7 @@ class MusicAPI(APIView):
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
 
-        user_id = obj.author.id
-        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
         subquery = obj.comment.filter(**filter_kwargs)
         comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
@@ -179,8 +177,7 @@ class ComicAPI(APIView):
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
 
-        user_id = obj.author.id
-        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
         subquery = obj.comment.filter(**filter_kwargs)
         comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
@@ -236,8 +233,7 @@ class PictureAPI(APIView):
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
 
-        user_id = obj.author.id
-        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
         subquery = obj.comment.filter(**filter_kwargs)
         comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
@@ -289,9 +285,8 @@ class BlogAPI(APIView):
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
 
-        author = obj.author
         user = get_user(request)
-        filter_kwargs = {'id': OuterRef('pk'), 'like': author.id}
+        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
         subquery = obj.comment.filter(**filter_kwargs)
         comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
 
@@ -309,18 +304,11 @@ class BlogAPI(APIView):
             'publish': obj.publish,
             'created': obj.created,
             'updated': obj.updated,
-            'author': {
-                'nickname': author.nickname,
-                'image': author.image(),
-                'follower_count': author.mypage.follower_count
-            },
+            'author': get_author(obj.author),
         }
         if user:
-            data['user'] = {
-                'nickname': user.nickname,
-                'image': user.image(),
-                'is_like': obj.like.filter(id=user.id).exists()
-            }
+            data['user'] = get_media_user(user, obj)
+
         return Response(data, status=HTTP_200_OK)
 
     def post(self, request) -> Response:
@@ -423,8 +411,7 @@ class TodoAPI(APIView):
         if not obj:
             return Response('not objects', status=HTTP_400_BAD_REQUEST)
 
-        user_id = obj.author.id
-        filter_kwargs = {'id': OuterRef('pk'), 'like': user_id}
+        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
         subquery = obj.comment.filter(**filter_kwargs)
         comments = obj.comment.all().annotate(is_comment_like=Exists(subquery))
 
