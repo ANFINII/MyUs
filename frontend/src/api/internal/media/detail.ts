@@ -5,38 +5,38 @@ import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat, apiTodo } f
 import { Req } from 'types/global/next'
 import { Video, Music, Comic, Picture, Blog, Chat, Todo } from 'types/internal/media'
 
-export const getVideo = async (id: number): Promise<Video> => {
-  const res = await apiClient.get(apiVideo(id))
+export const getServerVideo = async (req: Req, id: number): Promise<Video> => {
+  const res = await apiServer(req, apiClient, apiVideo(id))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getMusic = async (id: number): Promise<Music> => {
-  const res = await apiClient.get(apiMusic(id))
+export const getServerMusic = async (req: Req, id: number): Promise<Music> => {
+  const res = await apiServer(req, apiClient, apiMusic(id))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getComic = async (id: number): Promise<Comic> => {
-  const res = await apiClient.get(apiComic(id))
+export const getServerComic = async (req: Req, id: number): Promise<Comic> => {
+  const res = await apiServer(req, apiClient, apiComic(id))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getPicture = async (id: number): Promise<Picture> => {
-  const res = await apiClient.get(apiPicture(id))
+export const getServerPicture = async (req: Req, id: number): Promise<Picture> => {
+  const res = await apiServer(req, apiClient, apiPicture(id))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getBlog = async (id: number): Promise<Blog> => {
-  const res = await apiClient.get(apiBlog(id))
+export const getServerBlog = async (req: Req, id: number): Promise<Blog> => {
+  const res = await apiServer(req, apiClient, apiBlog(id))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getChat = async (id: number): Promise<Chat> => {
-  const res = await apiClient.get(apiChat(id))
+export const getServerChat = async (req: Req, id: number): Promise<Chat> => {
+  const res = await apiServer(req, apiClient, apiChat(id))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
