@@ -46,17 +46,7 @@
 
     input {
       height: 24px;
-    }
-
-    &::placeholder {
-      font-size: 14px;
-      color: rgb(150, 150, 150);
-    }
-
-    &:focus {
-      border-radius: 4px;
-      border: 1px solid rgb(80, 170, 255);
-      box-shadow: 0 0 0 2px rgba(80, 170, 255, 0.5);
+      padding: 4px 8px;
     }
   }
 }

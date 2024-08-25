@@ -47,6 +47,8 @@ export default function SearchTagBar() {
     }
   }
 
+  console.log('user.isActive', user.isActive)
+
   return (
     <nav className="searchtag">
       <form method="POST" action="" className="searchtag_grid">
@@ -54,8 +56,8 @@ export default function SearchTagBar() {
 
         <ButtonSquare color="sakura" name="追加" className={clsx('searchtag_2', isActive(isSearchtag))} />
 
-        <Input name="searchtag" className={clsx('searchtag_3', isActive(isSearchtag))} maxLength={30} placeholder="タグ名" disabled={user.isActive} />
-        <div className={isSearchtag ? 'searchtag_n active' : 'searchtag_n'} ref={scrollRef}>
+        <Input placeholder="タグ名" maxLength={30} disabled={!user.isActive} className={clsx('searchtag_3', isActive(isSearchtag))} />
+        <div ref={scrollRef} className={clsx('searchtag_n', isActive(isSearchtag))}>
           <div className="searchtag_n_list">
             {searchTags?.map((tag) => (
               <Link key={tag.sequence} href={`?search=${tag.name}`}>
