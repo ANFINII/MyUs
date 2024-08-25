@@ -22,17 +22,15 @@ export default function SettingProfile(props: Props) {
   const handleEdit = () => router.push('/setting/profile/edit')
   const handlePassword = () => router.push('/setting/password/change')
 
+  const buttonArea = (
+    <>
+      <Button color="blue" size="s" name="編集" onClick={handleEdit} />
+      <Button color="blue" size="s" name="パスワード変更" onClick={handlePassword} />
+    </>
+  )
+
   return (
-    <Main
-      title="アカウント設定"
-      type="table"
-      buttonArea={
-        <>
-          <Button color="blue" size="s" name="編集" onClick={handleEdit} />
-          <Button color="blue" size="s" name="パスワード変更" onClick={handlePassword} />
-        </>
-      }
-    >
+    <Main title="アカウント設定" type="table" buttonArea={buttonArea}>
       <LoginRequired isAuth={user.isActive}>
         <Table>
           <TableRow label="アバター画像">
