@@ -23,13 +23,17 @@ export default function SettingMyPage(props: Props) {
   const handleUserPage = () => router.push(`/userpage/${mypage.nickname}`)
 
   return (
-    <Main title="マイページ設定" type="table">
-      <LoginRequired isAuth={user.isActive}>
-        <div className="button_group">
+    <Main
+      title="マイページ設定"
+      type="table"
+      buttonArea={
+        <>
           <Button color="blue" size="s" name="編集" onClick={handleEdit} />
           <Button color="purple" size="s" name="ユーザページ" onClick={handleUserPage} />
-        </div>
-
+        </>
+      }
+    >
+      <LoginRequired isAuth={user.isActive}>
         <Table>
           <TableRow label="バナー画像">
             {mypage.banner !== '' ? (

@@ -23,13 +23,17 @@ export default function SettingProfile(props: Props) {
   const handlePassword = () => router.push('/setting/password/change')
 
   return (
-    <Main title="アカウント設定" type="table">
-      <LoginRequired isAuth={user.isActive}>
-        <div className="button_group">
+    <Main
+      title="アカウント設定"
+      type="table"
+      buttonArea={
+        <>
           <Button color="blue" size="s" name="編集" onClick={handleEdit} />
           <Button color="blue" size="s" name="パスワード変更" onClick={handlePassword} />
-        </div>
-
+        </>
+      }
+    >
+      <LoginRequired isAuth={user.isActive}>
         <Table>
           <TableRow label="アバター画像">
             {profile.avatar !== '' ? (

@@ -1,28 +1,44 @@
 {% load static %}
 
-<h1>Music</h1>
-{% if user.is_authenticated %}
-<form method="POST" action="" enctype="multipart/form-data">
-  {% csrf_token %}
-  <p class="mv_16">タイトル</p>
-  <input name="title" class="input" required>
-
-  <p class="mv_16">内容</p>
-  <textarea name="content" rows="1" class="textarea" required></textarea>
-
-  <p class="mv_16">歌詞</p>
-  <textarea name="lyric" rows="1" class="textarea"></textarea>
-
-  <p class="mt_16">音楽</p>
-  <div class="check_group check_margin">
-    <input type="checkbox" name="download" id="download" class="checkbox" checked>
-    <label for="download">ダウンロード許可</label>
+<div class="main_header">
+  <h1>Music</h1>
+  {% if user.is_authenticated %}
+  <div className="main_button_area">
+    <button type="submit" class="button green s">作成する</button>
   </div>
-  <input type="file" name="music" accept="audio/*" class="input file_1" hidden required>
-  <input placeholder="ファイル選択..." id="file_1" class="input" onclick="$('input.file_1').click()">
+  {% endif %}
+</div>
 
-  <button type="submit" class="button green mt_32">作成する</button>
-</form>
+{% if user.is_authenticated %}
+<article class="main_article">
+  <form method="POST" action="" enctype="multipart/form-data" class="create_grid">
+    {% csrf_token %}
+    <div>
+      <p class="mb_4">タイトル</p>
+      <input name="title" class="input" required>
+    </div>
+
+    <div>
+      <p class="mb_4">内容</p>
+      <textarea name="content" rows="1" class="textarea" required></textarea>
+    </div>
+
+    <div>
+      <p class="mb_4">歌詞</p>
+      <textarea name="lyric" rows="1" class="textarea"></textarea>
+    </div>
+
+    <div>
+      <p class="mb_4">音楽</p>
+      <input type="file" name="music" accept="audio/*" class="input file_1" hidden required>
+      <input placeholder="ファイル選択..." id="file_1" class="input" onclick="$('input.file_1').click()">
+      <div class="check_group check_margin">
+        <input type="checkbox" name="download" id="download" class="checkbox" checked>
+        <label for="download">ダウンロード許可</label>
+      </div>
+    </div>
+  </form>
+</article>
 {% else %}
 <h2 class="login_required">ログインしてください</h2>
 {% endif %}

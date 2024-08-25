@@ -3,7 +3,7 @@ import Divide from 'components/parts/Divide'
 
 export default function UserPolicy() {
   return (
-    <Main title="MyUs利用規約">
+    <Main title="利用規約" type="table">
       <article className="article_userpolicy">
         <p>利用規約を読み同意した上で、本サービスを利用するものとする。</p>
         <p>利用規約に違反している者は本サービンの利用停止、またはユーザー削除を通知なく行うものとします。</p>

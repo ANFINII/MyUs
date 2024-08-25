@@ -42,20 +42,18 @@ export default function TodoCreate() {
   }
 
   return (
-    <Main title="Todo">
+    <Main title="Todo" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <LoginRequired isAuth={user.isActive} margin="mt_20">
-        <form method="POST" action="">
-          <Input label="タイトル" className="mt_16" required={isRequired} onChange={handleTitle} />
+        <form method="POST" action="" className="create_grid">
+          <Input label="タイトル" required={isRequired} onChange={handleTitle} />
 
-          <Textarea label="内容" className="mt_16" required={isRequired} onChange={handleContent} />
+          <Textarea label="内容" required={isRequired} onChange={handleContent} />
 
-          <Select label="優先度" className="mt_16" options={priority} value={values.priority} onChange={handlePriority} />
+          <Select label="優先度" options={priority} value={values.priority} onChange={handlePriority} />
 
-          <Select label="進捗度" className="mt_16" options={progress} value={values.progress} onChange={handleProgress} />
+          <Select label="進捗度" options={progress} value={values.progress} onChange={handleProgress} />
 
-          <Input label="期日" className="mt_16" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handleDuedate} />
-
-          <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
+          <Input label="期日" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handleDuedate} />
         </form>
       </LoginRequired>
     </Main>

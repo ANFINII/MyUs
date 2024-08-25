@@ -1,21 +1,35 @@
 {% load static %}
 
-<h1>Picture</h1>
+<div class="main_header">
+  <h1>Picture</h1>
+  {% if user.is_authenticated %}
+  <div className="main_button_area">
+    <button type="submit" class="button green s">作成する</button>
+  </div>
+  {% endif %}
+</div>
+
 {% if user.is_authenticated %}
-<form method="POST" action="" enctype="multipart/form-data">
-  {% csrf_token %}
-  <p class="mv_16">タイトル</p>
-  <input name="title" class="input" required>
+<article class="main_article">
+  <form method="POST" action="" enctype="multipart/form-data" class="create_grid">
+    {% csrf_token %}
+    <div>
+      <p class="mb_4">タイトル</p>
+      <input name="title" class="input" required>
+    </div>
 
-  <p class="mv_16">内容</p>
-  <textarea name="content" rows="1" class="textarea" required></textarea>
+    <div>
+      <p class="mb_4">内容</p>
+      <textarea name="content" rows="1" class="textarea" required></textarea>
+    </div>
 
-  <p class="mv_16">画像</p>
-  <input type="file" name="image" accept="image/*" class="input file_1" hidden required>
-  <input placeholder="ファイル選択..." id="file_1" class="input" onclick="$('input.file_1').click()">
-
-  <button type="submit" class="button green mt_32">作成する</button>
-</form>
+    <div>
+      <p class="mb_4">画像</p>
+      <input type="file" name="image" accept="image/*" class="input file_1" hidden required>
+      <input placeholder="ファイル選択..." id="file_1" class="input" onclick="$('input.file_1').click()">
+    </div>
+  </form>
+</article>
 {% else %}
 <h2 class="login_required">ログインしてください</h2>
 {% endif %}

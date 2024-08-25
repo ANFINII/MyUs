@@ -90,13 +90,18 @@ export default function SettingProfileEdit(props: Props) {
   }
 
   return (
-    <Main title="アカウント設定" type="table" toast={{ toastContent, isError, isToast, setIsToast }}>
-      <LoginRequired isAuth={user.isActive}>
-        <div className="button_group">
+    <Main
+      title="アカウント設定"
+      type="table"
+      toast={{ toastContent, isError, isToast, setIsToast }}
+      buttonArea={
+        <>
           <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
           <Button color="blue" size="s" name="戻る" onClick={handleBack} />
-        </div>
-
+        </>
+      }
+    >
+      <LoginRequired isAuth={user.isActive}>
         {message && (
           <ul className="messages_profile">
             <li>{message}</li>

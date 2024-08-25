@@ -13,7 +13,7 @@ export default function TodoDetail(props: Props) {
   const { title, content, read, publish, created, author } = data
 
   return (
-    <Main title="Todo" isTitle={false}>
+    <Main metaTitle="Todo">
       <MediaDetail publish={publish}>
         <div className="article_detail_blog quill_content">{/* <p>{{ object.richtext|safe }}</p> */}</div>
         <hr />

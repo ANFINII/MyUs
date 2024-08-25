@@ -39,16 +39,14 @@ export default function PictureCreate() {
   }
 
   return (
-    <Main title="Picture">
+    <Main title="Picture" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <LoginRequired isAuth={user.isActive} margin="mt_20">
-        <form method="POST" action="">
-          <Input label="タイトル" className="mt_16" required={isRequired} onChange={handleTitle} />
+        <form method="POST" action="" className="create_grid">
+          <Input label="タイトル" required={isRequired} onChange={handleTitle} />
 
-          <Textarea label="内容" className="mt_16" required={isRequired} onChange={handleContent} />
+          <Textarea label="内容" required={isRequired} onChange={handleContent} />
 
-          <InputFile label="画像" accept="image/*" className="mt_16" required={isRequired} onChange={handleFile} />
-
-          <Button color="green" name="作成する" className="mt_32" loading={isLoading} onClick={handleForm} />
+          <InputFile label="画像" accept="image/*" required={isRequired} onChange={handleFile} />
         </form>
       </LoginRequired>
     </Main>

@@ -8,6 +8,11 @@
   padding: 16px;
   overflow-y: auto;
 
+  .main_header {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .main_title {
     display: inline-block;
     height: 30px;
@@ -18,6 +23,16 @@
       font-size: 18px;
       margin: 6px 0 0 10px;
     }
+  }
+
+  .main_button_area {
+    button {
+      margin-left: 6px;
+    }
+  }
+
+  .main_article {
+    margin: 24px 0;
   }
 }
 

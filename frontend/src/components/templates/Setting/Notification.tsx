@@ -43,13 +43,18 @@ export default function SettingNotification(props: Props) {
   }
 
   return (
-    <Main title="通知設定" type="table" toast={{ toastContent, isError, isToast, setIsToast }}>
-      <LoginRequired isAuth={user.isActive}>
-        <div className="button_group">
+    <Main
+      title="通知設定"
+      type="table"
+      toast={{ toastContent, isError, isToast, setIsToast }}
+      buttonArea={
+        <>
           <Button color="green" size="s" name="保存" loading={isLoading} onClick={handlSubmit} />
           <Button color="blue" size="s" name="リセット" onClick={handleReset} />
-        </div>
-
+        </>
+      }
+    >
+      <LoginRequired isAuth={user.isActive}>
         <Table>
           <TableRow isIndent label="通知設定">
             フォローしているユーザの投稿通知などを設定

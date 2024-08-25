@@ -13,7 +13,7 @@ export default function BlogDetail(props: Props) {
   const { title, content, read, totalLike, commentCount, publish, created, author, user } = data
 
   return (
-    <Main title="Blog" isTitle={false}>
+    <Main metaTitle="Blog">
       <MediaDetail publish={publish}>
         <div className="article_detail_blog quill_content">{/* <p>{{ object.richtext|safe }}</p> */}</div>
         <hr />
