@@ -1,21 +1,15 @@
-<article class="article_table">
+<div class="main_header">
   <h1>アカウント設定</h1>
   {% if user.is_authenticated %}
-  <div class="button_group">
-    <button
-      onclick="location.href='{% url 'myus:profile_update' %}'"
-      class="button blue xs"
-    >
-      編集
-    </button>
-    <button
-      onclick="location.href='{% url 'password_change' %}'"
-      class="button blue xs"
-    >
-      パスワード変更
-    </button>
+  <div className="main_button_area">
+    <button onclick="location.href='{% url 'myus:profile_update' %}'" class="button blue s">編集</button>
+    <button onclick="location.href='{% url 'password_change' %}'" class="button blue s">パスワード変更</button>
   </div>
+  {% endif %}
+</div>
 
+<article class="main_article">
+  {% if user.is_authenticated %}
   <table class="table">
     <tbody>
       <tr>

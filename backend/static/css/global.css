@@ -26,6 +26,10 @@
   margin-top: 32px;
 }
 
+.mb_4 {
+  margin-bottom: 4px;
+}
+
 .mb_16 {
   margin-bottom: 16px;
 }
@@ -94,4 +98,9 @@ hr {
 
 .d_flex {
   display: flex;
+}
+
+.create_grid {
+  display: grid;
+  row-gap: 16px;
 }

@@ -1,11 +1,15 @@
-<article class="article_table">
+<div class="main_header">
   <h1>マイページ設定</h1>
   {% if user.is_authenticated %}
-  <div class="button_group">
-    <button onclick="location.href='{% url 'myus:mypage_update' %}'" class="button blue xs">編集</button>
-    <button href="{% url 'myus:userpage' user.nickname %}" data="{{ user.nickname }}" class="button purple xs pjax_button_userpage">ユーザページ</button>
+  <div className="main_button_area">
+    <button onclick="location.href='{% url 'myus:mypage_update' %}'" class="button blue s">編集</button>
+    <button href="{% url 'myus:userpage' user.nickname %}" data="{{ user.nickname }}" class="button purple s pjax_button_userpage">ユーザページ</button>
   </div>
+  {% endif %}
+</div>
 
+<article class="main_article">
+  {% if user.is_authenticated %}
   <table class="table">
     <tbody>
       <tr><td class="td_color">バナー画像</td>

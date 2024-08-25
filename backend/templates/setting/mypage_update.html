@@ -3,10 +3,19 @@
 
 {% block content %}
 <main class="main">
-  <form method="POST" action="" enctype="multipart/form-data">
-    {% csrf_token %}
-    <article class="article_table">
-      <h1>マイページ設定</h1>
+  <div class="main_header">
+    <h1>マイページ設定</h1>
+    {% if user.is_authenticated %}
+    <div className="main_button_area">
+      <button type="submit" class="button green s">登録</button>
+      <button href="{% url 'myus:mypage' %}" class="button blue s pjax_button">戻る</button>
+    </div>
+    {% endif %}
+  </div>
+
+  <article class="main_article">
+    <form method="POST" action="" enctype="multipart/form-data">
+      {% csrf_token %}
       {% if messages %}
       <ul class="messages_profile">
         {% for message in messages %}
@@ -14,11 +23,6 @@
         {% endfor %}
       </ul>
       {% endif %}
-
-      <div class="button_group">
-        <button type="submit" class="button green xs">登録</button>
-        <button href="{% url 'myus:mypage' %}" class="button blue xs pjax_button">戻る</button>
-      </div>
 
       <table class="table">
         <tbody>
@@ -59,9 +63,8 @@
           </tr>
         </tbody>
       </table>
-
-      {% include 'parts/footer-myus.html' %}
-    </article>
-  </form>
+    </form>
+    {% include 'parts/footer-myus.html' %}
+  </article>
 </main>
 {% endblock content %}
