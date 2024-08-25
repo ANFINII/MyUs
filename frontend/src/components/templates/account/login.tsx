@@ -12,7 +12,7 @@ import Input from 'components/parts/Input'
 export default function Login() {
   const router = useRouter()
   const { updateUser } = useUser()
-  const { toastContent, isError, isToast, setIsToast, handleToast } = useToast()
+  const { toast, handleToast } = useToast()
   const [message, setMessage] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
@@ -44,7 +44,7 @@ export default function Login() {
   }
 
   return (
-    <Main title="ログイン" toast={{ toastContent, isError, isToast, setIsToast }}>
+    <Main title="ログイン" toast={toast}>
       <article className="article_registration">
         <form method="POST" action="" className="form_account">
           <h1 className="login_h1">MyUsへようこそ</h1>

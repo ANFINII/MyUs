@@ -24,7 +24,7 @@ export default function SettingMyPageEdit(props: Props) {
 
   const router = useRouter()
   const { user } = useUser()
-  const { toastContent, isError, isToast, setIsToast, handleToast } = useToast()
+  const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
   const [banner, setBanner] = useState<File>()
@@ -54,18 +54,15 @@ export default function SettingMyPageEdit(props: Props) {
     }
   }
 
+  const buttonArea = (
+    <>
+      <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
+      <Button color="blue" size="s" name="戻る" onClick={handleBack} />
+    </>
+  )
+
   return (
-    <Main
-      title="マイページ設定"
-      type="table"
-      toast={{ toastContent, isError, isToast, setIsToast }}
-      buttonArea={
-        <>
-          <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
-          <Button color="blue" size="s" name="戻る" onClick={handleBack} />
-        </>
-      }
-    >
+    <Main title="マイページ設定" type="table" toast={toast} buttonArea={buttonArea}>
       <LoginRequired isAuth={user.isActive}>
         {message && (
           <ul className="messages_profile">

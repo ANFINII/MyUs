@@ -19,7 +19,7 @@ export default function SettingNotification(props: Props) {
   const { notification } = props
 
   const { user } = useUser()
-  const { toastContent, isError, isToast, setIsToast, handleToast } = useToast()
+  const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [values, setValues] = useState<Notification>(notification)
 
@@ -42,18 +42,15 @@ export default function SettingNotification(props: Props) {
     setValues(data)
   }
 
+  const buttonArea = (
+    <>
+      <Button color="green" size="s" name="保存" loading={isLoading} onClick={handlSubmit} />
+      <Button color="blue" size="s" name="リセット" onClick={handleReset} />
+    </>
+  )
+
   return (
-    <Main
-      title="通知設定"
-      type="table"
-      toast={{ toastContent, isError, isToast, setIsToast }}
-      buttonArea={
-        <>
-          <Button color="green" size="s" name="保存" loading={isLoading} onClick={handlSubmit} />
-          <Button color="blue" size="s" name="リセット" onClick={handleReset} />
-        </>
-      }
-    >
+    <Main title="通知設定" type="table" toast={toast} buttonArea={buttonArea}>
       <LoginRequired isAuth={user.isActive}>
         <Table>
           <TableRow isIndent label="通知設定">

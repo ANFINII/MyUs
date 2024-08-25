@@ -29,7 +29,7 @@ const initSignup: SignupIn = {
 
 export default function Signup() {
   const router = useRouter()
-  const { toastContent, isError, isToast, setIsToast, handleToast } = useToast()
+  const { toast, handleToast } = useToast()
   const [message, setMessage] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
@@ -67,7 +67,7 @@ export default function Signup() {
   }
 
   return (
-    <Main metaTitle="アカウント登録" toast={{ toastContent, isError, isToast, setIsToast }}>
+    <Main metaTitle="アカウント登録" toast={toast}>
       <article className="article_registration">
         <form method="POST" action="" className="form_account">
           <h1 className="signup_h1">アカウント登録</h1>

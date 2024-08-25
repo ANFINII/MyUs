@@ -9,7 +9,7 @@ import Input from 'components/parts/Input'
 
 export default function Reset() {
   const router = useRouter()
-  const { toastContent, isError, isToast, setIsToast, handleToast } = useToast()
+  const { toast, handleToast } = useToast()
   const [message, setMessage] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
@@ -35,7 +35,7 @@ export default function Reset() {
   }
 
   return (
-    <Main metaTitle="パスワードリセット" toast={{ toastContent, isError, isToast, setIsToast }}>
+    <Main metaTitle="パスワードリセット" toast={toast}>
       <article className="article_registration">
         <form method="POST" action="" className="form_account">
           <h1 className="login_h1">パスワードリセット</h1>

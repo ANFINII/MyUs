@@ -1,23 +1,23 @@
 import { useState } from 'react'
+import { ToastType } from 'types/internal/other'
 
 interface OutProps {
-  toastContent: string
-  isError: boolean
-  isToast: boolean
-  setIsToast: React.Dispatch<React.SetStateAction<boolean>>
+  toast: ToastType
   handleToast: (content: string, isError: boolean) => void
 }
 
 export const useToast = (): OutProps => {
+  const [content, setContent] = useState<string>('')
   const [isError, setIsError] = useState<boolean>(false)
   const [isToast, setIsToast] = useState<boolean>(false)
-  const [toastContent, setToastContent] = useState<string>('')
+
+  const toast = { content, isError, isToast, setIsToast }
 
   const handleToast = (content: string, isError: boolean): void => {
-    setToastContent(content)
+    setContent(content)
     setIsError(isError)
     setIsToast(true)
   }
 
-  return { toastContent, isError, isToast, setIsToast, handleToast }
+  return { toast, handleToast }
 }
