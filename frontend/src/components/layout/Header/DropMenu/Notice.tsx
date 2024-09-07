@@ -23,7 +23,7 @@ export default function DropMenuNotice(props: Props) {
     <nav className={clsx('drop_menu drop_menu_notice', isActive(open))}>
       <ul>
         <li className="drop_menu_list" onClick={() => handleClick('/setting/notification')}>
-          <IconBell size="1.5em" className="color_drop_menu_bi" />
+          <IconBell size="1.5em" />
           <span>通知設定</span>
         </li>
 

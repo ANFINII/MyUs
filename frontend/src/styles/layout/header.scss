@@ -200,15 +200,15 @@ button.header_color {
 .side_menu_color {
   padding: 12px 0;
   margin: 0;
-}
 
-.side_menu_color:hover {
-  color: rgb(0, 100, 255);
-  background: rgb(200, 230, 255);
-}
+  .bi {
+    color: rgb(0, 70, 175);
+  }
 
-.side_menu_color_bi {
-  color: rgb(0, 70, 175);
+  &:hover {
+    color: rgb(0, 100, 255);
+    background: rgb(200, 230, 255);
+  }
 }
 
 /* ドロップダウンメニュー */
@@ -289,15 +289,15 @@ button.header_color {
   padding: 12px 0;
   margin: 0;
   text-align: start;
-}
 
-.drop_menu_list:hover {
-  color: rgb(250, 130, 0);
-  background: rgb(255, 230, 200);
-}
+  .bi {
+    color: rgb(240, 130, 0);
+  }
 
-.drop_menu_color {
-  color: rgb(240, 130, 0);
+  &:hover {
+    color: rgb(250, 130, 0);
+    background: rgb(255, 230, 200);
+  }
 }
 
 /* ドロップダウンメニュー 通知 */
