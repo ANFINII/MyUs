@@ -4,7 +4,7 @@ interface Props {
   onClick: () => void
 }
 
-export default function HeaderItem(props: Props): JSX.Element {
+export default function DropMenuItem(props: Props): JSX.Element {
   const { label, icon, onClick } = props
 
   return (

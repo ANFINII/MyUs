@@ -7,7 +7,7 @@ import IconComic from 'components/parts/Icon/Comic'
 import IconMusic from 'components/parts/Icon/Music'
 import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
-import HeaderItem from './Item'
+import DropMenuItem from './Item'
 
 interface Props {
   open: boolean
@@ -23,14 +23,14 @@ export default function DropMenuCloud(props: Props) {
   }
 
   return (
-    <nav className={clsx('drop_menu', 'drop_menu_cloud', isActive(open))}>
+    <nav className={clsx('drop_menu drop_menu_cloud', isActive(open))}>
       <ul>
-        <HeaderItem label="Videoアップロード" icon={<IconVideo size="1.5em" />} onClick={() => handleClick('video')} />
-        <HeaderItem label="Musicアップロード" icon={<IconMusic size="1.5em" />} onClick={() => handleClick('music')} />
-        <HeaderItem label="Comicアップロード" icon={<IconComic size="1.5em" />} onClick={() => handleClick('comic')} />
-        <HeaderItem label="Pictureアップロード" icon={<IconPicture size="1.5em" />} onClick={() => handleClick('picture')} />
-        <HeaderItem label="Blogアップロード" icon={<IconBlog size="1.5em" />} onClick={() => handleClick('blog')} />
-        <HeaderItem label="Chatアップロード" icon={<IconChat size="1.5em" />} onClick={() => handleClick('chat')} />
+        <DropMenuItem label="Videoアップロード" icon={<IconVideo size="1.5em" />} onClick={() => handleClick('video')} />
+        <DropMenuItem label="Musicアップロード" icon={<IconMusic size="1.5em" />} onClick={() => handleClick('music')} />
+        <DropMenuItem label="Comicアップロード" icon={<IconComic size="1.5em" />} onClick={() => handleClick('comic')} />
+        <DropMenuItem label="Pictureアップロード" icon={<IconPicture size="1.5em" />} onClick={() => handleClick('picture')} />
+        <DropMenuItem label="Blogアップロード" icon={<IconBlog size="1.5em" />} onClick={() => handleClick('blog')} />
+        <DropMenuItem label="Chatアップロード" icon={<IconChat size="1.5em" />} onClick={() => handleClick('chat')} />
       </ul>
     </nav>
   )

@@ -8,7 +8,7 @@ import IconCredit from 'components/parts/Icon/Credit'
 import IconGrid from 'components/parts/Icon/Grid'
 import IconPencil from 'components/parts/Icon/Pencil'
 import IconPerson from 'components/parts/Icon/Person'
-import HeaderItem from './Item'
+import DropMenuItem from './Item'
 
 interface Props {
   open: boolean
@@ -48,14 +48,14 @@ export default function DropMenuProfile(props: Props) {
   return (
     <nav className={clsx('drop_menu drop_menu_profile', isActive(open))}>
       <ul>
-        <HeaderItem label="アカウント" icon={<IconPerson size="1.5em" type="circle" />} onClick={() => handleClick('/setting/profile')} />
-        <HeaderItem label="マイページ" icon={<IconPerson size="1.5em" type="square" />} onClick={() => handleClick('/setting/mypage')} />
-        <HeaderItem label="投稿管理" icon={<IconGrid size="1.5em" />} onClick={handleManagement} />
-        <HeaderItem label="ToDo" icon={<IconPencil size="1.5em" />} onClick={() => handleClick('/media/todo')} />
-        <HeaderItem label="料金プラン" icon={<IconCredit size="1.5em" />} onClick={() => handleClick('/setting/payment')} />
-        <HeaderItem label="退会処理" icon={<IconPerson size="1.5em" type="cross" />} onClick={() => handleClick('/setting/withdrawal')} />
-        <HeaderItem label="ログイン" icon={<IconArrow size="1.5em" type="in" />} onClick={handleLogin} />
-        <HeaderItem label="ログアウト" icon={<IconArrow size="1.5em" type="out" />} onClick={handleLogout} />
+        <DropMenuItem label="アカウント" icon={<IconPerson size="1.5em" type="circle" />} onClick={() => handleClick('/setting/profile')} />
+        <DropMenuItem label="マイページ" icon={<IconPerson size="1.5em" type="square" />} onClick={() => handleClick('/setting/mypage')} />
+        <DropMenuItem label="投稿管理" icon={<IconGrid size="1.5em" />} onClick={handleManagement} />
+        <DropMenuItem label="ToDo" icon={<IconPencil size="1.5em" />} onClick={() => handleClick('/media/todo')} />
+        <DropMenuItem label="料金プラン" icon={<IconCredit size="1.5em" />} onClick={() => handleClick('/setting/payment')} />
+        <DropMenuItem label="退会処理" icon={<IconPerson size="1.5em" type="cross" />} onClick={() => handleClick('/setting/withdrawal')} />
+        <DropMenuItem label="ログイン" icon={<IconArrow size="1.5em" type="in" />} onClick={handleLogin} />
+        <DropMenuItem label="ログアウト" icon={<IconArrow size="1.5em" type="out" />} onClick={handleLogout} />
       </ul>
     </nav>
   )

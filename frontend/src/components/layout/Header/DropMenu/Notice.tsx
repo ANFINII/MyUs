@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { isActive } from 'utils/functions/common'
 import IconBell from 'components/parts/Icon/Bell'
+import DropMenuItem from './Item'
 // import ExImage from 'components/parts/Image'
 
 interface Props {
@@ -22,11 +23,7 @@ export default function DropMenuNotice(props: Props) {
   return (
     <nav className={clsx('drop_menu drop_menu_notice', isActive(open))}>
       <ul>
-        <li className="drop_menu_list" onClick={() => handleClick('/setting/notification')}>
-          <IconBell size="1.5em" />
-          <span>通知設定</span>
-        </li>
-
+        <DropMenuItem label="通知設定" icon={<IconBell size="1.5em" />} onClick={() => handleClick('/setting/notification')} />
         {/* {% for notification in notification_list %} */}
         <li id="notification_aria_link_{{ notification.id }}" className="drop_menu_list">
           <object notification-id="{{ notification.id }}" data-csrf="{{ csrf_token }}" className="notification_aria_list">
