@@ -29,35 +29,35 @@ export default function SideMenu(props: Props) {
     <aside className={clsx('side_menu', isActive(open))}>
       <nav>
         <div className="side_menu_close side_menu_color" onClick={onClose}>
-          <IconArrow size="1.5em" type="left" className="side_menu_color_bi" />
+          <IconArrow size="1.5em" type="left" />
           <ExImage src="/image/MyUs.png" size="30" />
         </div>
 
         <ul>
           <li className="side_menu_item side_menu_color" onClick={() => handleClick('/')}>
-            <IconHouse size="1.5em" className="side_menu_color_bi" />
+            <IconHouse size="1.5em" />
             <span>ホーム</span>
           </li>
 
           <li className="side_menu_item side_menu_color" onClick={() => handleClick('/recommend')}>
-            <IconLightning size="1.5em" type="defalt" className="side_menu_color_bi" />
+            <IconLightning size="1.5em" type="defalt" />
             <span>急上昇</span>
           </li>
 
           <li className="side_menu_item side_menu_color" onClick={() => handleClick('/menu/follow')}>
-            <IconPerson size="1.5em" type="check" className="side_menu_color_bi" />
+            <IconPerson size="1.5em" type="check" />
             <span>フォロー</span>
           </li>
         </ul>
 
         <ul className="side_menu_footer">
           <li className="side_menu_item side_menu_color icon_link" onClick={() => handleClick('/menu/userpolicy')}>
-            <IconFile size="1.5em" type="earmark" className="side_menu_color_bi" />
+            <IconFile size="1.5em" type="earmark" />
             <span>利用規約</span>
           </li>
 
           <li className="side_menu_item side_menu_color" onClick={() => handleClick('/menu/knowledge')}>
-            <IconGlobe size="1.5em" className="side_menu_color_bi" />
+            <IconGlobe size="1.5em" />
             <span>Knowledge Base</span>
           </li>
 
