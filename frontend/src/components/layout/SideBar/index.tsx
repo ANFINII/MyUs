@@ -7,22 +7,16 @@ import IconVideo from 'components/parts/Icon/Video'
 import SideBarItem from './Item'
 
 export default function SideBar() {
-  const navItems = [
-    { url: '/media/video', label: 'Video', icon: <IconVideo size="1.8em" /> },
-    { url: '/media/music', label: 'Music', icon: <IconMusic size="1.8em" /> },
-    { url: '/media/comic', label: 'Comic', icon: <IconComic size="1.8em" /> },
-    { url: '/media/picture', label: 'Picture', icon: <IconPicture size="1.8em" /> },
-    { url: '/media/blog', label: 'Blog', icon: <IconBlog size="1.8em" /> },
-    { url: '/media/chat', label: 'Chat', icon: <IconChat size="1.8em" /> },
-  ]
-
   return (
     <aside className="sidebar">
       <nav className="sidebar_nav">
         <ul>
-          {navItems.map(({ url, label, icon }) => (
-            <SideBarItem key={label} url={url} label={label} icon={icon} />
-          ))}
+          <SideBarItem url="/media/video" label="Video" icon={<IconVideo size="1.8em" />} />
+          <SideBarItem url="/media/music" label="Music" icon={<IconMusic size="1.8em" />} />
+          <SideBarItem url="/media/comic" label="Comic" icon={<IconComic size="1.8em" />} />
+          <SideBarItem url="/media/picture" label="Picture" icon={<IconPicture size="1.8em" />} />
+          <SideBarItem url="/media/blog" label="Blog" icon={<IconBlog size="1.8em" />} />
+          <SideBarItem url="/media/chat" label="Chat" icon={<IconChat size="1.8em" />} />
         </ul>
       </nav>
     </aside>
