@@ -1,64 +1,28 @@
-import { useRouter } from 'next/router'
-import clsx from 'clsx'
-import { isActive } from 'utils/functions/common'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
 import IconMusic from 'components/parts/Icon/Music'
 import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
+import SideBarItem from './Item'
 
 export default function SideBar() {
-  const router = useRouter()
-
-  const handleClick = (url: string) => router.push(url)
-  const activeCheck = (url: string) => isActive(router.pathname === url)
+  const navItems = [
+    { url: '/media/video', label: 'Video', icon: <IconVideo size="1.8em" /> },
+    { url: '/media/music', label: 'Music', icon: <IconMusic size="1.8em" /> },
+    { url: '/media/comic', label: 'Comic', icon: <IconComic size="1.8em" /> },
+    { url: '/media/picture', label: 'Picture', icon: <IconPicture size="1.8em" /> },
+    { url: '/media/blog', label: 'Blog', icon: <IconBlog size="1.8em" /> },
+    { url: '/media/chat', label: 'Chat', icon: <IconChat size="1.8em" /> },
+  ]
 
   return (
     <aside className="sidebar">
       <nav className="sidebar_nav">
         <ul>
-          <li className={clsx('sidebar_color', activeCheck('/media/video'))}>
-            <div onClick={() => handleClick('/media/video')}>
-              <IconVideo size="1.8em" />
-              <p className="sidebar_text">Video</p>
-            </div>
-          </li>
-
-          <li className={clsx('sidebar_color', activeCheck('/media/music'))}>
-            <div onClick={() => handleClick('/media/music')}>
-              <IconMusic size="1.8em" />
-              <p className="sidebar_text">Music</p>
-            </div>
-          </li>
-
-          <li className={clsx('sidebar_color', activeCheck('/media/comic'))}>
-            <div onClick={() => handleClick('/media/comic')}>
-              <IconComic size="1.8em" />
-              <p className="sidebar_text">Comic</p>
-            </div>
-          </li>
-
-          <li className={clsx('sidebar_color', activeCheck('/media/picture'))}>
-            <div onClick={() => handleClick('/media/picture')}>
-              <IconPicture size="1.8em" />
-              <p className="sidebar_text">Picture</p>
-            </div>
-          </li>
-
-          <li className={clsx('sidebar_color', activeCheck('/media/blog'))}>
-            <div onClick={() => handleClick('/media/blog')}>
-              <IconBlog size="1.8em" />
-              <p className="sidebar_text">Blog</p>
-            </div>
-          </li>
-
-          <li className={clsx('sidebar_color', activeCheck('/media/chat'))}>
-            <div onClick={() => handleClick('/media/chat')}>
-              <IconChat size="1.8em" />
-              <p className="sidebar_text">Chat</p>
-            </div>
-          </li>
+          {navItems.map(({ url, label, icon }) => (
+            <SideBarItem key={label} url={url} label={label} icon={icon} />
+          ))}
         </ul>
       </nav>
     </aside>
