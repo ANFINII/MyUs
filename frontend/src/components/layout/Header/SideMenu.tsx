@@ -9,6 +9,7 @@ import IconGlobe from 'components/parts/Icon/Globe'
 import IconHouse from 'components/parts/Icon/House'
 import IconLightning from 'components/parts/Icon/Lightning'
 import IconPerson from 'components/parts/Icon/Person'
+import SideMenuItem from './Item'
 
 interface Props {
   open: boolean
@@ -21,8 +22,8 @@ export default function SideMenu(props: Props) {
   const router = useRouter()
 
   const handleClick = (url: string) => {
-    onClose()
     router.push(url)
+    onClose()
   }
 
   return (
@@ -34,33 +35,14 @@ export default function SideMenu(props: Props) {
         </div>
 
         <ul>
-          <li className="side_menu_item side_menu_color" onClick={() => handleClick('/')}>
-            <IconHouse size="1.5em" />
-            <span>ホーム</span>
-          </li>
-
-          <li className="side_menu_item side_menu_color" onClick={() => handleClick('/recommend')}>
-            <IconLightning size="1.5em" type="defalt" />
-            <span>急上昇</span>
-          </li>
-
-          <li className="side_menu_item side_menu_color" onClick={() => handleClick('/menu/follow')}>
-            <IconPerson size="1.5em" type="check" />
-            <span>フォロー</span>
-          </li>
+          <SideMenuItem label="ホーム" icon={<IconHouse size="1.5em" />} onClick={() => handleClick('/')} />
+          <SideMenuItem label="急上昇" icon={<IconLightning size="1.5em" type="defalt" />} onClick={() => handleClick('/recommend')} />
+          <SideMenuItem label="フォロー" icon={<IconPerson size="1.5em" type="check" />} onClick={() => handleClick('/menu/follow')} />
         </ul>
 
         <ul className="side_menu_footer">
-          <li className="side_menu_item side_menu_color icon_link" onClick={() => handleClick('/menu/userpolicy')}>
-            <IconFile size="1.5em" type="earmark" />
-            <span>利用規約</span>
-          </li>
-
-          <li className="side_menu_item side_menu_color" onClick={() => handleClick('/menu/knowledge')}>
-            <IconGlobe size="1.5em" />
-            <span>Knowledge Base</span>
-          </li>
-
+          <SideMenuItem label="利用規約" icon={<IconFile size="1.5em" type="earmark" />} onClick={() => handleClick('/menu/userpolicy')} />
+          <SideMenuItem label="Knowledge Base" icon={<IconGlobe size="1.5em" />} onClick={() => handleClick('/menu/knowledge')} />
           <li className="side_menu_footer_item side_menu_color" onClick={() => handleClick('/')}>
             <ExImage src="/image/MyUs.png" size="24" className="myus_img" />
             <span className="side_menu_footer_item">© {nowDate.year} MyUs Co.,Ltd</span>
