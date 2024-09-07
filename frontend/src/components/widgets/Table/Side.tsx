@@ -6,7 +6,7 @@ interface Props {
   rows: Row[]
 }
 
-export default function TableList(props: Props) {
+export default function SideTable(props: Props) {
   const { rows } = props
 
   return (

@@ -1,6 +1,6 @@
 import { Row } from 'types/internal/table'
 import Main from 'components/layout/Main'
-import TableList from 'components/widgets/Table/List'
+import SideTable from 'components/widgets/Table/Side'
 
 export default function Knowledge() {
   const rows: Row[] = [
@@ -20,7 +20,7 @@ export default function Knowledge() {
 
   return (
     <Main title="Knowledge Base" type="table">
-      <TableList rows={rows} />
+      <SideTable rows={rows} />
     </Main>
   )
 }
