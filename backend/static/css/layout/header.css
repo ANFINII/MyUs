@@ -159,13 +159,6 @@
   text-align: start;
 }
 
-.side_menu_footer_item {
-  position: relative;
-  display: flex;
-  text-align: start;
-  font-size: 0.9rem;
-}
-
 .side_menu_color {
   padding: 12px 0;
   margin: 0;
