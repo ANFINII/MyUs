@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { isActive } from 'utils/functions/common'
 import { useUser } from 'components/hooks/useUser'
@@ -22,6 +22,7 @@ interface Props {
 export default function Header(props: Props) {
   const { loading } = props
 
+  const router = useRouter()
   const { user } = useUser()
   const [search, setSearch] = useState<string>('')
   const [isSideMenu, setIsSideMenu] = useState<boolean>(false)
@@ -29,6 +30,7 @@ export default function Header(props: Props) {
   const [isNotice, setIsNotice] = useState<boolean>(false)
   const [isProfile, setIsProfile] = useState<boolean>(false)
 
+  const handleRouter = (url: string) => router.push(url)
   const handleSearch = (value: string) => setSearch(value)
   const handleSideMenu = () => setIsSideMenu(!isSideMenu)
   const handleCloud = () => setIsCloud(!isCloud)
@@ -54,8 +56,7 @@ export default function Header(props: Props) {
           <SideMenu open={isSideMenu} onClose={handleSideMenu} />
         </div>
 
-        <div className="header_nav_2 header_color_MyUs">
-          <Link href="/" className="icon_link"></Link>
+        <div className="header_nav_2 header_color_MyUs" onClick={() => handleRouter('/')}>
           <h1>MyUs</h1>
         </div>
 
@@ -63,8 +64,7 @@ export default function Header(props: Props) {
           <Search value={search} onChange={handleSearch} />
         </div>
 
-        <div className="header_nav_4 header_color">
-          <Link href="/recommend" className="icon_link"></Link>
+        <div className="header_nav_4 header_color" onClick={() => handleRouter('/recommend')}>
           <IconLightning size="1.5em" type="fill" />
         </div>
 
