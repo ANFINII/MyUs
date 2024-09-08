@@ -184,8 +184,8 @@
 .drop_open {
   display: block;
   margin: 0;
-  cursor: pointer;
   transition: all 0.01s;
+  cursor: pointer;
 }
 
 .drop_menu ul {
