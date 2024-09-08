@@ -143,7 +143,7 @@ class MyPageAPI(APIView):
         return Response(message(False, 'success'), status=HTTP_204_NO_CONTENT)
 
 
-class NotificationAPI(APIView):
+class NotificationSettingAPI(APIView):
     def get(self, request):
         user = get_user(request)
         if not user:

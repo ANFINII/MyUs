@@ -1,6 +1,6 @@
 from django.urls import path
 from apps.api.views.auth import AuthAPI, RefreshAPI, SignUpAPI, LoginAPI, LogoutAPI
-from apps.api.views.user import UserAPI, ProfileAPI, MyPageAPI, FollowAPI, FollowerAPI, SearchTagAPI, NotificationAPI
+from apps.api.views.user import UserAPI, ProfileAPI, MyPageAPI, FollowAPI, FollowerAPI, SearchTagAPI, NotificationSettingAPI
 from apps.api.views.media import HomeAPI
 from apps.api.views.media import VideoListAPI, VideoAPI
 from apps.api.views.media import MusicListAPI, MusicAPI
@@ -26,7 +26,7 @@ urlpatterns = [
     path('user/follow', FollowAPI.as_view()),
     path('user/follower', FollowerAPI.as_view()),
     path('user/search_tag', SearchTagAPI.as_view()),
-    path('user/notification', NotificationAPI.as_view()),
+    path('user/notification', NotificationSettingAPI.as_view()),
 
     path('home', HomeAPI.as_view()),
 
