@@ -2,7 +2,7 @@ import { HttpStatusCode } from 'axios'
 import { apiServer } from 'lib/apiServer'
 import { apiClient, apiFormClient } from 'lib/axios'
 import { Req } from 'types/global/next'
-import { ProfileIn, ProfileOut, MypageIn, MypageOut, Follow, SearchTagOut, NotificationOut, NotificationIn } from 'types/internal/auth'
+import { ProfileIn, ProfileOut, MypageIn, MypageOut, Follow, SearchTagOut, NotificationSettingIn, NotificationSettingOut } from 'types/internal/auth'
 import { MessageOut } from 'types/internal/other'
 import { camelSnake } from 'utils/functions/convertCase'
 import { apiProfile, apiMypage, apiFollow, apiFollower, apiSearchTag, apiNotification } from '../uri'
@@ -37,19 +37,19 @@ export const putMypage = async (request: MypageIn): Promise<MessageOut | void> =
   return res.data
 }
 
-export const getServerNotification = async (req: Req): Promise<NotificationOut> => {
+export const getServerNotification = async (req: Req): Promise<NotificationSettingOut> => {
   const res = await apiServer(req, apiClient, apiNotification)
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getNotification = async (): Promise<NotificationOut> => {
+export const getNotification = async (): Promise<NotificationSettingOut> => {
   const res = await apiClient.get(apiNotification)
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const putNotification = async (request: NotificationIn): Promise<void> => {
+export const putNotification = async (request: NotificationSettingIn): Promise<void> => {
   const res = await apiClient.put(apiNotification, camelSnake(request))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
 }

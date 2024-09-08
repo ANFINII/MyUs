@@ -1,19 +1,19 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { getServerNotification } from 'api/internal/user'
-import { NotificationOut } from 'types/internal/auth'
+import { NotificationSettingOut } from 'types/internal/auth'
 import SettingNotification from 'components/templates/setting/notification'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const notification = await getServerNotification(req)
-  return { props: { notification, ...translations } }
+  const notificationSetting = await getServerNotification(req)
+  return { props: { notificationSetting, ...translations } }
 }
 
 interface Props {
-  notification: NotificationOut
+  notificationSetting: NotificationSettingOut
 }
 
-export default function SettingNotificationPage(props: Props) {
+export default function NotificationSettingPage(props: Props) {
   return <SettingNotification {...props} />
 }

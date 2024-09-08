@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { putNotification, getNotification } from 'api/internal/user'
-import { Notification, NotificationOut } from 'types/internal/auth'
+import { NotificationSetting, NotificationSettingOut } from 'types/internal/auth'
 import { notificationTypes } from 'utils/functions/user'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
@@ -12,20 +12,20 @@ import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
 
 interface Props {
-  notification: NotificationOut
+  notificationSetting: NotificationSettingOut
 }
 
 export default function SettingNotification(props: Props) {
-  const { notification } = props
+  const { notificationSetting } = props
 
   const { user } = useUser()
   const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [values, setValues] = useState<Notification>(notification)
+  const [values, setValues] = useState<NotificationSetting>(notificationSetting)
 
-  const handleToggle = (type: keyof Notification) => setValues((prev) => ({ ...prev, [type]: !prev[type] }))
+  const handleToggle = (type: keyof NotificationSetting) => setValues((prev) => ({ ...prev, [type]: !prev[type] }))
 
-  const handlSubmit = async () => {
+  const handleSubmit = async () => {
     setIsLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     try {
@@ -44,7 +44,7 @@ export default function SettingNotification(props: Props) {
 
   const buttonArea = (
     <>
-      <Button color="green" size="s" name="保存" loading={isLoading} onClick={handlSubmit} />
+      <Button color="green" size="s" name="保存" loading={isLoading} onClick={handleSubmit} />
       <Button color="blue" size="s" name="リセット" onClick={handleReset} />
     </>
   )

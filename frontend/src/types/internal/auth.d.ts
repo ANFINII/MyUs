@@ -95,7 +95,11 @@ interface SearchTagOut {
   name: string
 }
 
-export interface Notification {
+// export interface Notification {
+//   notificationType: string
+// }
+
+export interface NotificationSetting {
   isVideo: boolean
   isMusic: boolean
   isComic: boolean
@@ -108,5 +112,5 @@ export interface Notification {
   isViews: boolean
 }
 
-export type NotificationIn = Notification
-export type NotificationOut = Notification
+export type NotificationSettingIn = NotificationSetting
+export type NotificationSettingOut = NotificationSetting
