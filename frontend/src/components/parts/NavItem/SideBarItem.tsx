@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
+import NavItem from 'components/parts/NavItem'
 
 interface Props {
   url: string
@@ -15,11 +16,11 @@ export default function SideBarItem(props: Props): JSX.Element {
   const handleRouter = () => router.push(url)
 
   return (
-    <li className={clsx('sidebar_color', { active: isActive })}>
+    <NavItem className={clsx('sidebar_color', { active: isActive })}>
       <div onClick={handleRouter}>
         {icon}
         <p className="sidebar_text">{label}</p>
       </div>
-    </li>
+    </NavItem>
   )
 }

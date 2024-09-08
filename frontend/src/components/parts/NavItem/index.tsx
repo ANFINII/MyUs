@@ -1,19 +1,19 @@
 interface Props {
+  className?: string
   label?: string
   icon?: React.ReactNode
-  content?: React.ReactNode
-  className?: string
-  onClick: () => void
+  children?: React.ReactNode
+  onClick?: () => void
 }
 
 export default function NavItem(props: Props): JSX.Element {
-  const { label, icon, content, className, onClick } = props
+  const { className, label, icon, children, onClick } = props
 
   return (
     <li className={className} onClick={onClick}>
       {icon}
       {label && <span>{label}</span>}
-      {content}
+      {children}
     </li>
   )
 }

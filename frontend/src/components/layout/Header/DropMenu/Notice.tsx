@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { isActive } from 'utils/functions/common'
 import IconBell from 'components/parts/Icon/Bell'
-import DropMenuItem from './Item'
+import DropMenuItem from 'components/parts/NavItem/DropMenuItem'
 // import ExImage from 'components/parts/Image'
 
 interface Props {

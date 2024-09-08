@@ -4,7 +4,7 @@ import IconComic from 'components/parts/Icon/Comic'
 import IconMusic from 'components/parts/Icon/Music'
 import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
-import SideBarItem from './Item'
+import SideBarItem from 'components/parts/NavItem/SideBarItem'
 
 export default function SideBar() {
   return (

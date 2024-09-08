@@ -7,7 +7,7 @@ import IconComic from 'components/parts/Icon/Comic'
 import IconMusic from 'components/parts/Icon/Music'
 import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
-import DropMenuItem from './Item'
+import DropMenuItem from 'components/parts/NavItem/DropMenuItem'
 
 interface Props {
   open: boolean

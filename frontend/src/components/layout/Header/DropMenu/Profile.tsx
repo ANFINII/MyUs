@@ -8,7 +8,7 @@ import IconCredit from 'components/parts/Icon/Credit'
 import IconGrid from 'components/parts/Icon/Grid'
 import IconPencil from 'components/parts/Icon/Pencil'
 import IconPerson from 'components/parts/Icon/Person'
-import DropMenuItem from './Item'
+import DropMenuItem from 'components/parts/NavItem/DropMenuItem'
 
 interface Props {
   open: boolean

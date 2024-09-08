@@ -1,3 +1,5 @@
+import NavItem from 'components/parts/NavItem'
+
 interface Props {
   label: string
   icon: React.ReactNode
@@ -7,10 +9,5 @@ interface Props {
 export default function DropMenuItem(props: Props): JSX.Element {
   const { label, icon, onClick } = props
 
-  return (
-    <li className="drop_menu_list" onClick={onClick}>
-      {icon}
-      <span>{label}</span>
-    </li>
-  )
+  return <NavItem className="drop_menu_list" icon={icon} label={label} onClick={onClick} />
 }
