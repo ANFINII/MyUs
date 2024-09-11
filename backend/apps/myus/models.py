@@ -226,8 +226,8 @@ def create_mypage(sender, **kwargs):
         MyPage.objects.get_or_create(user=kwargs['instance'])
 
 
-class NotificationSetting(models.Model):
-    """NotificationSetting"""
+class UserNotification(models.Model):
+    """UserNotification"""
     user       = models.OneToOneField(User, on_delete=models.CASCADE)
     is_video   = models.BooleanField(default=False)
     is_music   = models.BooleanField(default=False)
@@ -251,7 +251,7 @@ class NotificationSetting(models.Model):
 def create_notification_setting(sender, **kwargs):
     """ユーザー作成時に空のnotification_settingも作成する"""
     if kwargs['created']:
-        NotificationSetting.objects.get_or_create(user=kwargs['instance'])
+        UserNotification.objects.get_or_create(user=kwargs['instance'])
 
 
 class PlanMaster(models.Model):

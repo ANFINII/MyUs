@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from apps.myus.models import Profile, MyPage, SearchTag, HashTag, NotificationSetting, PlanMaster, UserPlan
+from apps.myus.models import Profile, MyPage, SearchTag, HashTag, UserNotification, PlanMaster, UserPlan
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 
@@ -64,9 +64,9 @@ class MyPageSerializer(serializers.ModelSerializer):
         fields = ('banner', 'email', 'content', 'follower_count', 'following_count', 'tag_manager_id', 'is_advertise')
 
 
-class NotificationSettingSerializer(serializers.ModelSerializer):
+class UserNotificationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = NotificationSetting
+        model = UserNotification
         fields = (
             'is_video', 'is_music', 'is_comic', 'is_picture', 'is_blog',
             'is_chat', 'is_follow', 'is_reply', 'is_like', 'is_views'

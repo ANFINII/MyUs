@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count
 from django.template.loader import render_to_string
-from apps.myus.models import PlanMaster, MyPage, NotificationSetting, Follow, Advertise, Todo
+from apps.myus.models import PlanMaster, MyPage, UserNotification, Follow, Advertise, Todo
 from apps.myus.modules.contains import model_dict, model_pjax, model_create_pjax
 from apps.myus.modules.search import SearchData
 
@@ -112,5 +112,5 @@ def pjax_context(request, href):
         context = {'expired_seconds': 60}
     if href == 'setting/notification':
         template = 'setting/notification_content.html'
-        context = {'notification_setting': NotificationSetting.objects.filter(user=user.id).first()}
+        context = {'notification_setting': UserNotification.objects.filter(user=user.id).first()}
     return {'html': render_to_string(template, context, request)}

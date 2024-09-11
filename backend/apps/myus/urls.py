@@ -4,7 +4,7 @@ from apps.myus.views import PasswordReset, PasswordResetDone, PasswordResetConfi
 from apps.myus.views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
 from apps.myus.views import ProfileView, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle, Withdrawal
 from apps.myus.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
-from apps.myus.views import NotificationSettingView, notification_update, notification_confirmed, notification_deleted
+from apps.myus.views import UserNotificationView, notification_update, notification_confirmed, notification_deleted
 from apps.myus.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
 from apps.myus.views import VideoList, VideoCreate, VideoDetail
 from apps.myus.views import MusicList, MusicCreate, MusicDetail
@@ -50,7 +50,7 @@ urlpatterns = [
     path('setting/payment/chage_plan', ChangePlan.as_view(), name='chage_plan'),
     path('setting/payment/create_checkout_session', create_checkout_session, name='create_checkout_session'),
 
-    path('setting/notification', NotificationSettingView.as_view(), name='notification'),
+    path('setting/notification', UserNotificationView.as_view(), name='notification'),
     path('setting/notification/update', notification_update, name='notification_update'),
     path('setting/notification/confirmed', notification_confirmed, name='notification_confirmed'),
     path('setting/notification/deleted', notification_deleted, name='notification_deleted'),
