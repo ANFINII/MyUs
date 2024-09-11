@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { putNotification, getNotification } from 'api/internal/user'
-import { NotificationSetting, NotificationSettingOut } from 'types/internal/auth'
+import { getSettingNotification, putSettingNotification } from 'api/internal/setting'
+import { UserNotification, UserNotificationOut } from 'types/internal/auth'
 import { notificationTypes } from 'utils/functions/user'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
@@ -12,24 +12,24 @@ import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
 
 interface Props {
-  notificationSetting: NotificationSettingOut
+  userNotification: UserNotificationOut
 }
 
 export default function SettingNotification(props: Props) {
-  const { notificationSetting } = props
+  const { userNotification } = props
 
   const { user } = useUser()
   const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [values, setValues] = useState<NotificationSetting>(notificationSetting)
+  const [values, setValues] = useState<UserNotification>(userNotification)
 
-  const handleToggle = (type: keyof NotificationSetting) => setValues((prev) => ({ ...prev, [type]: !prev[type] }))
+  const handleToggle = (type: keyof UserNotification) => setValues((prev) => ({ ...prev, [type]: !prev[type] }))
 
   const handleSubmit = async () => {
     setIsLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     try {
-      await putNotification(values)
+      await putSettingNotification(values)
     } catch (e) {
       handleToast('エラーが発生しました！', true)
     } finally {
@@ -38,7 +38,7 @@ export default function SettingNotification(props: Props) {
   }
 
   const handleReset = async () => {
-    const data = await getNotification()
+    const data = await getSettingNotification()
     setValues(data)
   }
 
