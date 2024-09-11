@@ -131,19 +131,19 @@ class SettingNotificationAPI(APIView):
         if not user:
             return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        notification_setting = UserNotification.objects.filter(user=user).first()
+        user_notification = UserNotification.objects.filter(user=user).first()
 
         data = {
-            'is_video': notification_setting.is_video,
-            'is_music': notification_setting.is_music,
-            'is_comic': notification_setting.is_comic,
-            'is_picture': notification_setting.is_picture,
-            'is_blog': notification_setting.is_blog,
-            'is_chat': notification_setting.is_chat,
-            'is_follow': notification_setting.is_follow,
-            'is_reply': notification_setting.is_reply,
-            'is_like': notification_setting.is_like,
-            'is_views': notification_setting.is_views,
+            'is_video': user_notification.is_video,
+            'is_music': user_notification.is_music,
+            'is_comic': user_notification.is_comic,
+            'is_picture': user_notification.is_picture,
+            'is_blog': user_notification.is_blog,
+            'is_chat': user_notification.is_chat,
+            'is_follow': user_notification.is_follow,
+            'is_reply': user_notification.is_reply,
+            'is_like': user_notification.is_like,
+            'is_views': user_notification.is_views,
         }
         return Response(data, status=HTTP_200_OK)
 
@@ -152,13 +152,13 @@ class SettingNotificationAPI(APIView):
         if not user:
             return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
 
-        notification_setting = UserNotification.objects.filter(user=user).first()
+        user_notification = UserNotification.objects.filter(user=user).first()
 
         data = request.data
-        [setattr(notification_setting, key, value) for key, value in data.items()]
+        [setattr(user_notification, key, value) for key, value in data.items()]
 
         try:
-            notification_setting.save()
+            user_notification.save()
         except Exception:
             return Response(message(True, 'メールアドレスが既に登録済みです!'), status=HTTP_400_BAD_REQUEST)
 

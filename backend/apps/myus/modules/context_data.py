@@ -26,7 +26,7 @@ class ContextData:
 
         class_name = str(class_name.__name__)
         if class_name == 'UserNotificationView':
-            context['notification_setting'] = UserNotification.objects.filter(user=user.id).first()
+            context['user_notification'] = UserNotification.objects.filter(user=user.id).first()
 
         if class_name == 'ProfileUpdate':
             context['gender'] = {'0':'男性', '1':'女性', '2':'秘密'}

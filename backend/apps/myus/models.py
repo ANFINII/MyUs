@@ -244,12 +244,12 @@ class UserNotification(models.Model):
         return self.user.nickname
 
     class Meta:
-        db_table = 'notification_setting'
+        db_table = 'user_notification'
         verbose_name_plural = '001 通知設定'
 
 @receiver(post_save, sender=User)
-def create_notification_setting(sender, **kwargs):
-    """ユーザー作成時に空のnotification_settingも作成する"""
+def create_user_notification(sender, **kwargs):
+    """ユーザー作成時に空のuser_notificationも作成する"""
     if kwargs['created']:
         UserNotification.objects.get_or_create(user=kwargs['instance'])
 

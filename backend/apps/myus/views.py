@@ -32,7 +32,7 @@ from apps.myus.modules.contains import NotificationTypeNo, model_like_dict, mode
 from apps.myus.modules.context_data import ContextData
 from apps.myus.modules.get_form import get_detail
 from apps.myus.modules.pjax import pjax_context
-from apps.myus.modules.notification import notification_data, notification_setting_update
+from apps.myus.modules.notification import notification_data, user_notification_update
 from apps.myus.modules.search import Search
 from apps.myus.modules.success_url import success_url
 from apps.myus.modules.follow import follow_update_data
@@ -477,11 +477,11 @@ def notification_update(request):
         user = request.user
         is_notification = request.POST['notification']
         notification_type = request.POST['notification_type']
-        notification_setting = UserNotification.objects.get(user=user)
-        notification_setting_update(is_notification, notification_type, notification_setting)
+        user_notification = UserNotification.objects.get(user=user)
+        user_notification_update(is_notification, notification_type, user_notification)
     context = {
-        'notification_setting_html': render_to_string('parts/notification_setting.html', {
-            'notification_setting': UserNotification.objects.filter(user=user).first(),
+        'user_notification_html': render_to_string('parts/user_notification.html', {
+            'user_notification': UserNotification.objects.filter(user=user).first(),
         }, request=request)
     }
     return JsonResponse(context)

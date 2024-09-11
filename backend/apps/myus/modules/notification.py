@@ -7,9 +7,9 @@ def notification_data(user):
     fields_1 = ['is_video', 'is_music', 'is_comic', 'is_picture', 'is_blog', 'is_chat']
     fields_2 = ['is_follow', 'is_like', 'is_reply', 'is_views']
 
-    notification_setting = UserNotification.objects.get(user=user)
-    notification_no_list_1 = [notification_type_no[field] for field in fields_1 if getattr(notification_setting, field)]
-    notification_no_list_2 = [notification_type_no[field] for field in fields_2 if getattr(notification_setting, field)]
+    user_notification = UserNotification.objects.get(user=user)
+    notification_no_list_1 = [notification_type_no[field] for field in fields_1 if getattr(user_notification, field)]
+    notification_no_list_2 = [notification_type_no[field] for field in fields_2 if getattr(user_notification, field)]
 
     notification_none = Notification.objects.none()
     notification_union_1, notification_union_2 = notification_none, notification_none
@@ -32,7 +32,7 @@ def notification_data(user):
     return context
 
 
-def notification_setting_update(is_notification, notification_type, notification_obj):
+def user_notification_update(is_notification, notification_type, notification_obj):
     attribute_name = f'is_{notification_type}'
     is_bool = is_notification != 'True'
     if hasattr(notification_obj, attribute_name):

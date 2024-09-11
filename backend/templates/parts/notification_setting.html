@@ -2,8 +2,8 @@
   <tbody>
     <tr><td class="td_color">通知設定</td><td class="td_indent">フォローしているユーザの投稿通知などを設定</td></tr>
     <tr><td class="td_color">Video通知</td><td class="td_indent">
-      <form method="POST" action="" notification="{{ notification_setting.is_video }}" notification-type="video">
-        {% if notification_setting.is_video %}
+      <form method="POST" action="" notification="{{ user_notification.is_video }}" notification-type="video">
+        {% if user_notification.is_video %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -15,8 +15,8 @@
       </form>
     </td></tr>
     <tr><td class="td_color">Music通知</td><td class="td_indent">
-      <form method="POST" action="" notification="{{ notification_setting.is_music }}" notification-type="music">
-        {% if notification_setting.is_music %}
+      <form method="POST" action="" notification="{{ user_notification.is_music }}" notification-type="music">
+        {% if user_notification.is_music %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -28,8 +28,8 @@
       </form>
     </td></tr>
     <tr><td class="td_color">Comic通知</td><td class="td_indent">
-      <form method="POST" action="" notification="{{ notification_setting.is_comic }}" notification-type="comic">
-        {% if notification_setting.is_comic %}
+      <form method="POST" action="" notification="{{ user_notification.is_comic }}" notification-type="comic">
+        {% if user_notification.is_comic %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -41,8 +41,8 @@
       </form>
     </td></tr>
     <tr><td class="td_color">Picture通知</td><td class="td_indent">
-      <form method="POST" action="" notification="{{ notification_setting.is_picture }}"  notification-type="picture">
-        {% if notification_setting.is_picture %}
+      <form method="POST" action="" notification="{{ user_notification.is_picture }}"  notification-type="picture">
+        {% if user_notification.is_picture %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -54,8 +54,8 @@
       </form>
     </td></tr>
     <tr><td class="td_color">Blog通知</td><td class="td_indent">
-      <form method="POST" action="" notification="{{ notification_setting.is_blog }}" notification-type="blog">
-        {% if notification_setting.is_blog %}
+      <form method="POST" action="" notification="{{ user_notification.is_blog }}" notification-type="blog">
+        {% if user_notification.is_blog %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -67,8 +67,8 @@
       </form>
     </td></tr>
     <tr><td class="td_color">Chat通知</td><td class="td_indent">
-      <form method="POST" action="" notification="{{ notification_setting.is_chat }}" notification-type="chat">
-        {% if notification_setting.is_chat %}
+      <form method="POST" action="" notification="{{ user_notification.is_chat }}" notification-type="chat">
+        {% if user_notification.is_chat %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -80,8 +80,8 @@
       </form>
     </td></tr>
     <tr><td class="td_color">フォロー通知</td><td class="td_indent">
-      <form method="POST" action="" notification="{{ notification_setting.is_follow }}" notification-type="follow">
-        {% if notification_setting.is_follow %}
+      <form method="POST" action="" notification="{{ user_notification.is_follow }}" notification-type="follow">
+        {% if user_notification.is_follow %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -93,8 +93,8 @@
       </form>
     </td></tr>
     <tr><td class="td_color">返信通知</td><td class="td_indent">
-      <form method="POST" action="" notification="{{ notification_setting.is_reply }}" notification-type="reply">
-        {% if notification_setting.is_reply %}
+      <form method="POST" action="" notification="{{ user_notification.is_reply }}" notification-type="reply">
+        {% if user_notification.is_reply %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -106,8 +106,8 @@
       </form>
     </td></tr>
     <tr><td class="td_color">いいね通知</td><td class="td_indent">
-      <form method="POST" action="" notification="{{ notification_setting.is_like }}" notification-type="like">
-        {% if notification_setting.is_like %}
+      <form method="POST" action="" notification="{{ user_notification.is_like }}" notification-type="like">
+        {% if user_notification.is_like %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
@@ -119,8 +119,8 @@
       </form>
     </td></tr>
     <tr><td class="td_color">閲覧数通知</td><td class="td_indent">
-      <form method="POST" action="" notification="{{ notification_setting.is_views }}" notification-type="views">
-        {% if notification_setting.is_views %}
+      <form method="POST" action="" notification="{{ user_notification.is_views }}" notification-type="views">
+        {% if user_notification.is_views %}
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi-toggle-on toggle_button" viewBox="0 0 16 16">
           <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
         </svg>
