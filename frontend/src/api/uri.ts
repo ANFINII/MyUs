@@ -9,12 +9,15 @@ export const apiLogout = base + '/auth/logout'
 
 // User
 export const apiUser = base + '/user/me'
-export const apiProfile = base + '/user/profile'
-export const apiMypage = base + '/user/mypage'
 export const apiSearchTag = base + '/user/search_tag'
 export const apiNotification = base + '/user/notification'
 export const apiFollow = base + '/user/follow'
 export const apiFollower = base + '/user/follower'
+
+// Setting
+export const apiSettingProfile = base + '/setting/profile'
+export const apiSettingMypage = base + '/setting/mypage'
+export const apiSettingNotification = base + '/setting/notification'
 
 // Media
 export const apiHome = base + '/home'

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { getAddress } from 'api/external/address'
-import { putProfile } from 'api/internal/user'
+import { putSettingProfile } from 'api/internal/setting'
 import { ProfileIn, ProfileOut } from 'types/internal/auth'
 import { prefectures } from 'utils/constants/address'
 import { Gender } from 'utils/constants/enum'
@@ -75,7 +75,7 @@ export default function SettingProfileEdit(props: Props) {
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: ProfileIn = { ...values, avatar }
     try {
-      const data = await putProfile(request)
+      const data = await putSettingProfile(request)
       data && setMessage(data.message)
       if (!data?.error) {
         await updateUser()

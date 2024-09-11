@@ -1,5 +1,5 @@
 from django.db.models import Exists, OuterRef
-from apps.myus.models import NotificationSetting, Notification, Follow
+from apps.myus.models import UserNotification, Notification, Follow
 from apps.myus.modules.contains import notification_type_no
 
 
@@ -7,7 +7,7 @@ def notification_data(user):
     fields_1 = ['is_video', 'is_music', 'is_comic', 'is_picture', 'is_blog', 'is_chat']
     fields_2 = ['is_follow', 'is_like', 'is_reply', 'is_views']
 
-    notification_setting = NotificationSetting.objects.get(user=user)
+    notification_setting = UserNotification.objects.get(user=user)
     notification_no_list_1 = [notification_type_no[field] for field in fields_1 if getattr(notification_setting, field)]
     notification_no_list_2 = [notification_type_no[field] for field in fields_2 if getattr(notification_setting, field)]
 

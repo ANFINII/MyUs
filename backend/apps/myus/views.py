@@ -25,7 +25,7 @@ from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from apps.myus.convert.convert_hls import convert_exe
-from apps.myus.models import Profile, MyPage, SearchTag, NotificationSetting
+from apps.myus.models import Profile, MyPage, SearchTag, UserNotification
 from apps.myus.models import Notification, Follow, Comment, Advertise, ComicPage
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 from apps.myus.modules.contains import NotificationTypeNo, model_like_dict, model_comment_dict
@@ -462,13 +462,13 @@ def get_subscription(stripe_customer_id):
 
 
 # 通知設定
-class NotificationSettingView(TemplateView):
-    """NotificationSettingView"""
-    model = NotificationSetting
+class UserNotificationView(TemplateView):
+    """UserNotificationView"""
+    model = UserNotification
     template_name = 'setting/notification.html'
 
     def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, NotificationSettingView, **kwargs)
+        return ContextData.context_data(self, UserNotificationView, **kwargs)
 
 
 def notification_update(request):
@@ -477,11 +477,11 @@ def notification_update(request):
         user = request.user
         is_notification = request.POST['notification']
         notification_type = request.POST['notification_type']
-        notification_setting = NotificationSetting.objects.get(user=user)
+        notification_setting = UserNotification.objects.get(user=user)
         notification_setting_update(is_notification, notification_type, notification_setting)
     context = {
         'notification_setting_html': render_to_string('parts/notification_setting.html', {
-            'notification_setting': NotificationSetting.objects.filter(user=user).first(),
+            'notification_setting': UserNotification.objects.filter(user=user).first(),
         }, request=request)
     }
     return JsonResponse(context)

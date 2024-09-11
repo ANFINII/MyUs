@@ -6,7 +6,7 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
-from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, NotificationSetting
+from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, UserNotification
 from apps.myus.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 
@@ -37,8 +37,8 @@ class MyPageInline(admin.StackedInline):
         return False
 
 
-class NotificationSettingInline(admin.TabularInline):
-    model = NotificationSetting
+class UserNotificationInline(admin.TabularInline):
+    model = UserNotification
     verbose_name = '通知設定'
 
     def has_delete_permission(self, request, obj=None):
@@ -93,7 +93,7 @@ class UserAdmin(ImportExportModelAdmin):
     ordering = ('id',)
     filter_horizontal = ('groups', 'user_permissions')
     readonly_fields = ('last_login', 'date_joined')
-    inlines = [ProfileInline, MyPageInline, NotificationSettingInline, SearchTagInline]
+    inlines = [ProfileInline, MyPageInline, UserNotificationInline, SearchTagInline]
 
     # 詳細画面
     fieldsets = [

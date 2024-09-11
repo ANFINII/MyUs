@@ -1,12 +1,12 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getServerMypage } from 'api/internal/user'
+import { getServerSettingMypage } from 'api/internal/setting'
 import { MypageOut } from 'types/internal/auth'
 import SettingMyPage from 'components/templates/setting/mypage'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const mypage = await getServerMypage(req)
+  const mypage = await getServerSettingMypage(req)
   return { props: { mypage, ...translations } }
 }
 

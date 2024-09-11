@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { putMypage } from 'api/internal/user'
+import { putSettingMypage } from 'api/internal/setting'
 import { MypageIn, MypageOut } from 'types/internal/auth'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
@@ -42,7 +42,7 @@ export default function SettingMyPageEdit(props: Props) {
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: MypageIn = { ...values, banner }
     try {
-      const data = await putMypage(request)
+      const data = await putSettingMypage(request)
       data && setMessage(data.message)
       if (!data?.error) {
         handleBack()

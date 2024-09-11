@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, date
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count, Exists, OuterRef
-from apps.myus.models import PlanMaster, MyPage, SearchTag, NotificationSetting, Follow, Comment
+from apps.myus.models import PlanMaster, MyPage, SearchTag, UserNotification, Follow, Comment
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo, Advertise
 from apps.myus.modules.contains import model_dict
 from apps.myus.modules.notification import notification_data
@@ -25,8 +25,8 @@ class ContextData:
             context['query'] = self.request.GET.get('search')
 
         class_name = str(class_name.__name__)
-        if class_name == 'NotificationSettingView':
-            context['notification_setting'] = NotificationSetting.objects.filter(user=user.id).first()
+        if class_name == 'UserNotificationView':
+            context['notification_setting'] = UserNotification.objects.filter(user=user.id).first()
 
         if class_name == 'ProfileUpdate':
             context['gender'] = {'0':'男性', '1':'女性', '2':'秘密'}
