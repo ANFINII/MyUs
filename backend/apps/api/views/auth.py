@@ -16,13 +16,14 @@ from apps.myus.models import User, Profile
 from apps.api.services.user import signup_check
 from apps.api.utils.functions.encrypt import create_key, encrypt, decrypt
 from apps.api.utils.functions.index import message
+from apps.api.utils.functions.response import ApiResponse
 
 
 class AuthAPI(APIView):
     def get(self, request):
         access_token = request.COOKIES.get('access_token')
         if not access_token:
-            return Response(message(True, '認証されていません!'), status=HTTP_400_BAD_REQUEST)
+            return ApiResponse.UNAUTHORIZED.run()
 
         user_id = self.get_object(access_token)
         user = User.objects.filter(id=user_id).first()
@@ -110,7 +111,7 @@ class LoginAPI(views.TokenObtainPairView):
         try:
             response.delete_cookie('access_token')
         except Exception:
-            return Response(message(True, 'Not Access Token'), status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, 'Not Access Token'), status=HTTP_500_INTERNAL_SERVER_ERROR)
 
         access = serializer.validated_data['access']
         refresh = serializer.validated_data['refresh']
@@ -128,4 +129,4 @@ class LogoutAPI(views.TokenObtainPairView):
             response.delete_cookie('refresh_token')
             return response
         except Exception:
-            return Response(message(True, 'Exception'), status=HTTP_400_BAD_REQUEST)
+            return Response(message(True, 'Exception'), status=HTTP_500_INTERNAL_SERVER_ERROR)
