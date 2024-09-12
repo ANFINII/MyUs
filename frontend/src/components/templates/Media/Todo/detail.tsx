@@ -10,11 +10,11 @@ interface Props {
 
 export default function TodoDetail(props: Props) {
   const { data } = props
-  const { title, content, read, publish, created, author } = data
+  const { title, content, read, created, author } = data
 
   return (
     <Main metaTitle="Todo">
-      <MediaDetail publish={publish}>
+      <MediaDetail publish={true}>
         <div className="article_detail_blog quill_content">{/* <p>{{ object.richtext|safe }}</p> */}</div>
         <hr />
         <div className="article_detail_section">

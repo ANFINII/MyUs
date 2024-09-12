@@ -49,12 +49,12 @@ export const getChats = async (search?: string): Promise<Chat[]> => {
 
 export const getTodos = async (search?: string): Promise<Todo[]> => {
   const res = await apiClient.get(apiTodos, { params: { search } })
-  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+  if (res.status >= HttpStatusCode.BadRequest) return []
   return res.data
 }
 
 export const getServerTodos = async (req: Req, search?: string): Promise<Todo[]> => {
   const res = await apiServer(req, apiClient, apiTodos, { search })
-  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+  if (res.status >= HttpStatusCode.BadRequest) return []
   return res.data
 }

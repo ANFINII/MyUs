@@ -22,7 +22,6 @@ export interface Todo {
   like: number
   read: number
   period: string
-  publish: boolean
   created: string
   updated: string
   author: Author

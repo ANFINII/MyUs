@@ -21,7 +21,7 @@ export default function Todos(props: Props) {
 
   return (
     <Main title="Todo" search={{ name: search, count: newDatas.length }}>
-      <LoginRequired isAuth={user.isActive} margin="mt_20">
+      <LoginRequired isAuth={user.isActive} margin="mt_24">
         <div className="mt_16">
           <Button color="blue" size="s" name="新規作成" onClick={() => router.push('/media/todo/create')} />
         </div>

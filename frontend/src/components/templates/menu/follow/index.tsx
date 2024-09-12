@@ -21,7 +21,7 @@ export default function Follows(props: Props) {
 
   return (
     <Main title="Follow" search={{ name: search, count: newDatas.length }}>
-      <LoginRequired isAuth={user.isActive} margin="mt_20">
+      <LoginRequired isAuth={user.isActive} margin="mt_24">
         <div className="mt_16">
           <Button color="blue" size="s" name="フォロー" onClick={() => router.push('/menu/follower')} />
           <span className="ml_8">フォロー数：{follows.length}</span>
