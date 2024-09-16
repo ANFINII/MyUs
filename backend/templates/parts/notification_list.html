@@ -4,7 +4,7 @@
     <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" class="pjax_button_userpage">
       <img src="{{ notification.user_from.image }}" title="{{ notification.user_from.nickname }}" class="profile_image">
     </a>
-    {% if notification.user_confirmed %}
+    {% if notification.is_confirmed %}
     <span></span>
     {% else %}
     <svg xmlns="http://www.w3.org/2000/svg" class="svg-circle" viewBox="0 0 2 2">
