@@ -26,13 +26,3 @@ def get_notification_user(user: MediaUser) -> dict:
         'nickname': user.nickname,
     }
     return data
-
-
-def get_content_object(content_object) -> dict:
-    data = {
-        'id': content_object.id,
-        'title': content_object.title,
-        'text': content_object.text,
-        'read': content_object.read,
-    }
-    return data

@@ -4,9 +4,10 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
 from apps.myus.models import SearchTag
-from apps.api.services.user import get_user
+from apps.api.services.notification import get_notification, get_content_object
+from apps.api.services.user import get_user, get_follows, get_followers
 from apps.api.utils.functions.response import ApiResponse
-from apps.api.services.user import get_follows, get_followers
+from apps.api.utils.functions.user import get_notification_user
 
 
 class UserAPI(APIView):
@@ -56,4 +57,28 @@ class FollowerAPI(APIView):
 
         search = request.query_params.get('search')
         data = get_followers(100, user, search)
+        return Response(data, status=HTTP_200_OK)
+
+
+class NotificationAPI(APIView):
+    def get(self, request):
+        user = get_user(request)
+        if not user:
+            return ApiResponse.UNAUTHORIZED.run()
+
+        notification = get_notification(user)
+        data = {
+            'count': notification['count'],
+            'datas': [
+                {
+                    'id': obj.id,
+                    'user_from': get_notification_user(obj.user_from),
+                    'user_to': get_notification_user(obj.user_to),
+                    'type_no': obj.type_no,
+                    'type_name': obj.type_name,
+                    'content_object': get_content_object(obj),
+                    'is_confirmed': obj.is_confirmed,
+                } for obj in notification['datas']
+            ],
+        }
         return Response(data, status=HTTP_200_OK)
