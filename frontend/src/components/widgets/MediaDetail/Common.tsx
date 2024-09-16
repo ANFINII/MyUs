@@ -72,7 +72,7 @@ export default function MediaDetailCommon(props: Props) {
         <div className="content_detail">
           {/* <a href="{% url 'myus:userpage' object.author.nickname %}" data="{{ object.author.nickname }}" className="pjax_button_userpage"> */}
           <Link href="">
-            <ExImage src={author.image} title={author.nickname} className="profile_image_detail" />
+            <ExImage src={author.avatar} title={author.nickname} className="profile_image_detail" />
           </Link>
           <div className="username_space">{author.nickname}</div>
           <div className="registered_person">

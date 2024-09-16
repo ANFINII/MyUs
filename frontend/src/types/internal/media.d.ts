@@ -1,12 +1,12 @@
 export interface Author {
+  avatar: string
   nickname: string
-  image: string
   followerCount: number
 }
 
 export interface MediaUser {
+  avatar: string
   nickname: string
-  image: string
   isLike: boolean
 }
 

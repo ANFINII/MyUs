@@ -25,7 +25,7 @@ export default function ArticleVideo(props: Props) {
               <track kind="subtitles" src="/vtt/captions.ja.vtt" srcLang="en" label="English" />
             </video>
             <div className="author_space">
-              <AuthorSpace imageUrl={author.image} nickname={nickname} />
+              <AuthorSpace imageUrl={author.avatar} nickname={nickname} />
               <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />
             </div>
           </Link>

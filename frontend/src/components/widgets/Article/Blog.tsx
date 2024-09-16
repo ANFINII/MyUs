@@ -21,7 +21,7 @@ export default function ArticleBlog(props: Props) {
             <ExImage src={image} width="272" height="153" className="radius_8" />
           </figure>
           <div className="author_space">
-            <AuthorSpace imageUrl={author.image} nickname={nickname} />
+            <AuthorSpace imageUrl={author.avatar} nickname={nickname} />
             <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />
           </div>
         </Link>

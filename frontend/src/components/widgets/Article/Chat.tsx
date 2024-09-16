@@ -9,13 +9,13 @@ interface Props {
 export default function ArticleChat(props: Props) {
   const { data } = props
   const { author, id, title, read, like, joined, thread, created } = data
-  const { nickname, image } = author
+  const { nickname, avatar } = author
 
   return (
     <section className="section_other">
       <div className="main_decolation">
         <Link href={`/media/chat/${id}`} className="author_space">
-          <AuthorSpace imageUrl={image} nickname={nickname} />
+          <AuthorSpace imageUrl={avatar} nickname={nickname} />
           <div title={title} className="content_title">
             {title}
           </div>

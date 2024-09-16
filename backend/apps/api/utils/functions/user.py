@@ -4,8 +4,8 @@ from apps.api.types.user import Author, MediaUser
 
 def get_author(author: Author) -> dict:
     data = {
+        'avatar': f'{DOMAIN_URL}{author.image()}',
         'nickname': author.nickname,
-        'image': f'{DOMAIN_URL}{author.image()}',
         'follower_count': author.mypage.follower_count,
     }
     return data
@@ -13,8 +13,26 @@ def get_author(author: Author) -> dict:
 
 def get_media_user(user: MediaUser, obj) -> dict:
     data = {
+        'avatar': f'{DOMAIN_URL}{user.image()}',
         'nickname': user.nickname,
-        'image': f'{DOMAIN_URL}{user.image()}',
         'is_like': obj.like.filter(id=user.id).exists(),
+    }
+    return data
+
+
+def get_notification_user(user: MediaUser) -> dict:
+    data = {
+        'avatar': f'{DOMAIN_URL}{user.image()}',
+        'nickname': user.nickname,
+    }
+    return data
+
+
+def get_content_object(content_object) -> dict:
+    data = {
+        'id': content_object.id,
+        'title': content_object.title,
+        'text': content_object.text,
+        'read': content_object.read,
     }
     return data
