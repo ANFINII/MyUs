@@ -90,14 +90,32 @@ export interface Follow {
   followingCount: number
 }
 
-interface SearchTagOut {
+export interface SearchTagOut {
   sequence: number
   name: string
 }
 
-// export interface Notification {
-//   notificationType: string
-// }
+export interface ContentObject {
+  id: number
+  title: string
+  text: string
+  read: number
+}
+
+export interface Notification {
+  id: number
+  userFrom: MediaUser
+  userTo: MediaUser
+  typeNo: number
+  typeName: string
+  contentObject: ContentObject
+  isConfirmed: boolean
+}
+
+export interface NotificationOut {
+  count: number
+  datas: Notification[]
+}
 
 export interface UserNotification {
   isVideo: boolean
