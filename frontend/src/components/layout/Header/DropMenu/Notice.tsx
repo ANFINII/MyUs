@@ -2,19 +2,21 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { getNotification } from 'api/internal/user'
-import { NotificationOut } from 'types/internal/auth'
+import { Notification, NotificationOut } from 'types/internal/auth'
 import { NotificationType } from 'utils/constants/enum'
 import { isActive } from 'utils/functions/common'
 import { useUser } from 'components/hooks/useUser'
-import ExImage from 'components/parts/ExImage'
 import IconBell from 'components/parts/Icon/Bell'
-import IconCircle from 'components/parts/Icon/Circle'
 import DropMenuItem from 'components/parts/NavItem/DropMenuItem'
+import NotificationItem from 'components/parts/NavItem/NotificationItem'
 
 interface Props {
   open: boolean
   onClose: () => void
 }
+
+const mediaObjects = [NotificationType.Video, NotificationType.Music, NotificationType.Comic, NotificationType.Picture, NotificationType.Blog, NotificationType.Chat]
+const otherObjects = [NotificationType.Follow, NotificationType.Like, NotificationType.Reply, NotificationType.Views]
 
 export default function DropMenuNotice(props: Props) {
   const { open, onClose } = props
@@ -37,8 +39,6 @@ export default function DropMenuNotice(props: Props) {
     onClose()
   }
 
-  const renderElement = (isBool: boolean, element: JSX.Element) => isBool && element
-
   const readNotification = (read: number, title: string) => {
     const thresholds = [
       { limit: 10000, message: '1万回閲覧されました' },
@@ -58,109 +58,54 @@ export default function DropMenuNotice(props: Props) {
     )
   }
 
+  const handleRouter = (typeName: string, notification: Notification) => {
+    if (typeName === NotificationType.Video) handleClick(`/video/detail/${notification.contentObject.id}`)
+    if (typeName === NotificationType.Music) handleClick(`/music/detail/${notification.contentObject.id}`)
+    if (typeName === NotificationType.Comic) handleClick(`/comic/detail/${notification.contentObject.id}`)
+    if (typeName === NotificationType.Picture) handleClick(`/picture/detail/${notification.contentObject.id}`)
+    if (typeName === NotificationType.Blog) handleClick(`/blog/detail/${notification.contentObject.id}`)
+    if (typeName === NotificationType.Chat) handleClick(`/chat/detail/${notification.contentObject.id}`)
+    if (typeName in otherObjects) handleClick(`/userpage/${notification.userFrom.nickname}`)
+  }
+
   return (
     <nav className={clsx('drop_menu drop_menu_notice', isActive(open))}>
       <ul>
-        <DropMenuItem label="通知設定" icon={<IconBell size="1.5em" />} onClick={() => handleClick('/setting/notification')} />
-        {notifications?.datas?.map((notification) => (
-          <li key={notification.id} className="drop_menu_notification">
-            <div className="notification_aria_list">
-              <div onClick={() => handleClick(`/userpage/${notification.userFrom.nickname}`)}>
-                <ExImage src={notification.userFrom.avatar} title={notification.userFrom.nickname} className="profile_image" />
-              </div>
-
-              {!notification.isConfirmed && <IconCircle size="6" className="svg-circle" />}
-
-              {renderElement(
-                notification.typeName === NotificationType.Video,
-                <div className="notification_aria_anker" onClick={() => handleClick(`/video/detail/${notification.contentObject.id}`)}>
-                  <div className="notification_aria_list_1" title={`${notification.userFrom.nickname}さんが${notification.contentObject.title}を投稿しました`}>
-                    {notification.contentObject.title}
+        <li>
+          <DropMenuItem label="通知設定" icon={<IconBell size="1.5em" />} onClick={() => handleClick('/setting/notification')} />
+        </li>
+        {notifications?.datas?.map((notification) => {
+          const { id, typeName, userFrom, contentObject } = notification
+          const { avatar, nickname } = userFrom
+          const { title, text, read } = contentObject
+          return (
+            <NotificationItem key={id} avatar={avatar} nickname={nickname} isConfirmed={notification.isConfirmed} onClick={() => handleRouter(typeName, notification)}>
+              <>
+                {typeName in mediaObjects && (
+                  <div className="notification_aria_list_1" title={`${nickname}が${title}を投稿しました`}>
+                    {title}
                   </div>
-                </div>,
-              )}
-
-              {renderElement(
-                notification.typeName === NotificationType.Music,
-                <div className="notification_aria_anker" onClick={() => handleClick(`/music/detail/${notification.contentObject.id}`)}>
-                  <div className="notification_aria_list_1" title={`${notification.userFrom.nickname}さんが${notification.contentObject.title}を投稿しました`}>
-                    {notification.contentObject.title}
+                )}
+                {typeName === NotificationType.Follow && (
+                  <div className="notification_aria_list_1" title={`${nickname}にフォローされました`}>
+                    {nickname}にフォローされました
                   </div>
-                </div>,
-              )}
-
-              {renderElement(
-                notification.typeName === NotificationType.Comic,
-                <div className="notification_aria_anker" onClick={() => handleClick(`/comic/detail/${notification.contentObject.id}`)}>
-                  <div className="notification_aria_list_1" title={`${notification.userFrom.nickname}さんが${notification.contentObject.title}を投稿しました`}>
-                    {notification.contentObject.title}
+                )}
+                {typeName === NotificationType.Like && (
+                  <div className="notification_aria_list_1" title={`${text}が${nickname}にいいねされました`}>
+                    {text}が{nickname}にいいねされました
                   </div>
-                </div>,
-              )}
-
-              {renderElement(
-                notification.typeName === NotificationType.Picture,
-                <div className="notification_aria_anker" onClick={() => handleClick(`/picture/detail/${notification.contentObject.id}`)}>
-                  <div className="notification_aria_list_1" title={`${notification.userFrom.nickname}さんが${notification.contentObject.title}を投稿しました`}>
-                    {notification.contentObject.title}
+                )}
+                {typeName === NotificationType.Reply && (
+                  <div className="notification_aria_list_1" title={`${nickname}さんから返信がありました ${text}`}>
+                    {text}
                   </div>
-                </div>,
-              )}
-
-              {renderElement(
-                notification.typeName === NotificationType.Blog,
-                <div className="notification_aria_anker" onClick={() => handleClick(`/blog/detail/${notification.contentObject.id}`)}>
-                  <div className="notification_aria_list_1" title={`${notification.userFrom.nickname}さんが${notification.contentObject.title}を投稿しました`}>
-                    {notification.contentObject.title}
-                  </div>
-                </div>,
-              )}
-
-              {renderElement(
-                notification.typeName === NotificationType.Chat,
-                <div className="notification_aria_anker" onClick={() => handleClick(`/chat/detail/${notification.contentObject.id}`)}>
-                  <div className="notification_aria_list_1" title={`${notification.userFrom.nickname}さんが${notification.contentObject.title}を投稿しました`}>
-                    {notification.contentObject.title}
-                  </div>
-                </div>,
-              )}
-
-              {notification.typeName === NotificationType.Follow && (
-                <div className="notification_aria_anker" onClick={() => handleClick(`/userpage/${notification.userFrom.nickname}`)}>
-                  <div className="notification_aria_list_1" title={`${notification.userFrom.nickname}にフォローされました`}>
-                    {notification.userFrom.nickname}にフォローされました
-                  </div>
-                </div>
-              )}
-
-              {notification.typeName === NotificationType.Like && (
-                <div className="notification_aria_anker" onClick={() => handleClick(`/userpage/${notification.userFrom.nickname}`)}>
-                  <div className="notification_aria_list_1" title={`${notification.contentObject.text}が${notification.userFrom.nickname}さんにいいねされました`}>
-                    {notification.contentObject.text}が{notification.userFrom.nickname}さんにいいねされました
-                  </div>
-                </div>
-              )}
-
-              {notification.typeName === NotificationType.Reply && (
-                <div className="notification_aria_anker" onClick={() => handleClick(`/userpage/${notification.userFrom.nickname}`)}>
-                  <div className="notification_aria_list_1" title={`${notification.userFrom.nickname}さんから返信がありました ${notification.contentObject.text}`}>
-                    {notification.contentObject.text}
-                  </div>
-                </div>
-              )}
-
-              {notification.typeName === NotificationType.Views && (
-                <div className="notification_aria_anker" onClick={() => handleClick(`/userpage/${notification.userFrom.nickname}`)}>
-                  {readNotification(notification.contentObject.read, notification.contentObject.title)}
-                </div>
-              )}
-
-              <form method="POST">
-                <i title="閉じる" className="bi-x notification_aria_list_2" style={{ fontSize: '1.41em' }}></i>
-              </form>
-            </div>
-          </li>
-        ))}
+                )}
+                {typeName === NotificationType.Views && <>{readNotification(read, title)}</>}
+              </>
+            </NotificationItem>
+          )
+        })}
       </ul>
     </nav>
   )
