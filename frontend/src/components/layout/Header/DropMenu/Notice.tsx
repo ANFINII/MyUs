@@ -97,7 +97,7 @@ export default function DropMenuNotice(props: Props) {
                   </div>
                 )}
                 {typeName === NotificationType.Reply && (
-                  <div className="notification_aria_list_1" title={`${nickname}さんから返信がありました ${text}`}>
+                  <div className="notification_aria_list_1" title={`${nickname}から返信がありました ${text}`}>
                     {text}
                   </div>
                 )}
