@@ -272,6 +272,20 @@
   }
 }
 
+.drop_menu_notification {
+  position: relative;
+  text-align: start;
+
+  .bi {
+    color: rgb(240, 130, 0);
+  }
+
+  &:hover {
+    color: rgb(250, 130, 0);
+    background: rgb(255, 230, 200);
+  }
+}
+
 /* ドロップダウンメニュー 通知 */
 .bi-bell-fill.active {
   position: relative;
