@@ -34,7 +34,7 @@ export default function DropMenuNotice(props: Props) {
     fetch()
   }, [user.isActive])
 
-  const handleClick = (url: string) => {
+  const handleRouter = (url: string) => {
     router.push(url)
     onClose()
   }
@@ -58,14 +58,14 @@ export default function DropMenuNotice(props: Props) {
     )
   }
 
-  const handleRouter = (typeName: string, notification: Notification) => {
-    if (typeName === NotificationType.Video) handleClick(`/video/detail/${notification.contentObject.id}`)
-    if (typeName === NotificationType.Music) handleClick(`/music/detail/${notification.contentObject.id}`)
-    if (typeName === NotificationType.Comic) handleClick(`/comic/detail/${notification.contentObject.id}`)
-    if (typeName === NotificationType.Picture) handleClick(`/picture/detail/${notification.contentObject.id}`)
-    if (typeName === NotificationType.Blog) handleClick(`/blog/detail/${notification.contentObject.id}`)
-    if (typeName === NotificationType.Chat) handleClick(`/chat/detail/${notification.contentObject.id}`)
-    if (typeName in otherObjects) handleClick(`/userpage/${notification.userFrom.nickname}`)
+  const handleClick = (typeName: string, notification: Notification) => {
+    if (typeName === NotificationType.Video) handleRouter(`/video/detail/${notification.contentObject.id}`)
+    if (typeName === NotificationType.Music) handleRouter(`/music/detail/${notification.contentObject.id}`)
+    if (typeName === NotificationType.Comic) handleRouter(`/comic/detail/${notification.contentObject.id}`)
+    if (typeName === NotificationType.Picture) handleRouter(`/picture/detail/${notification.contentObject.id}`)
+    if (typeName === NotificationType.Blog) handleRouter(`/blog/detail/${notification.contentObject.id}`)
+    if (typeName === NotificationType.Chat) handleRouter(`/chat/detail/${notification.contentObject.id}`)
+    if (typeName in otherObjects) handleRouter(`/userpage/${notification.userFrom.nickname}`)
   }
 
   return (
@@ -79,7 +79,7 @@ export default function DropMenuNotice(props: Props) {
           const { avatar, nickname } = userFrom
           const { title, text, read } = contentObject
           return (
-            <NotificationItem key={id} avatar={avatar} nickname={nickname} isConfirmed={notification.isConfirmed} onClick={() => handleRouter(typeName, notification)}>
+            <NotificationItem key={id} avatar={avatar} nickname={nickname} isConfirmed={notification.isConfirmed} onClick={() => handleClick(typeName, notification)}>
               <>
                 {typeName in mediaObjects && (
                   <div className="notification_aria_list_1" title={`${nickname}が${title}を投稿しました`}>
