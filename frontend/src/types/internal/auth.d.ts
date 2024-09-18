@@ -1,4 +1,4 @@
-import { Gender } from 'utils/constants/enum'
+import { Gender, NotificationType } from 'utils/constants/enum'
 
 export interface LoginIn {
   username: string
@@ -107,7 +107,7 @@ export interface Notification {
   userFrom: MediaUser
   userTo: MediaUser
   typeNo: number
-  typeName: string
+  typeName: NotificationType
   contentObject: ContentObject
   isConfirmed: boolean
 }
