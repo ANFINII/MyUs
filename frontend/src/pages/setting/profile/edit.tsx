@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { getServerSettingProfile } from 'api/internal/setting'
 import { ProfileOut } from 'types/internal/auth'
-import SettingProfileEdit from 'components/templates/setting/profile/edit'
+import SettingProfileEdit from 'components/templates/setting1/profile/edit'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])

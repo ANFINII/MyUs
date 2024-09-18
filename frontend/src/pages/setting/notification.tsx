@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { getServerSettingNotification } from 'api/internal/setting'
 import { UserNotificationOut } from 'types/internal/auth'
-import SettingNotification from 'components/templates/setting/notification'
+import SettingNotification from 'components/templates/setting1/notification'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
