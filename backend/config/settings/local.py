@@ -2,7 +2,7 @@ from config.settings.base import *
 
 DEBUG = True
 ALLOWED_HOSTS = ['*']
-INTERNAL_IPS = ['127.0.0.1']
+INTERNAL_IPS = ['127.0.0.1', 'https://my-us.vercel.app/']
 
 # Add Application
 INSTALLED_APPS += [

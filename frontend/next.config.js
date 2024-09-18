@@ -19,5 +19,5 @@ const { i18n } = require('./next-i18next.config')
 module.exports = {
   nextConfig,
   i18n,
-  images: { domains: ['127.0.0.1'], formats: ['image/avif', 'image/webp'] },
+  images: { domains: ['127.0.0.1', 'https://my-us.vercel.app/'], formats: ['image/avif', 'image/webp'] },
 }
