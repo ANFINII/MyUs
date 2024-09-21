@@ -4,7 +4,7 @@ import LoginRequired from 'components/parts/LoginRequired'
 export default function TodoDelete() {
   return (
     <Main title="Todo">
-      <LoginRequired isAuth>
+      <LoginRequired>
         <h1>ToDo削除</h1>
         {/* {% if user.isAuth %} */}
         {/* <p>タイトル：{{ object.title }}</p>

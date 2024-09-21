@@ -71,9 +71,7 @@ export default function DropMenuNotice(props: Props) {
   return (
     <nav className={clsx('drop_menu drop_menu_notice', isActive(open))}>
       <ul>
-        <li>
-          <DropMenuItem label="通知設定" icon={<IconBell size="1.5em" />} onClick={() => handleRouter('/setting/notification')} />
-        </li>
+        <DropMenuItem label="通知設定" icon={<IconBell size="1.5em" />} onClick={() => handleRouter('/setting/notification')} />
         {notifications?.datas?.map((notification) => {
           const { id, typeName, userFrom, contentObject } = notification
           const { avatar, nickname } = userFrom

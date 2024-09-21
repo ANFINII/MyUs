@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import { MypageOut } from 'types/internal/auth'
-import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPicture from 'components/parts/Icon/Picture'
@@ -18,7 +17,6 @@ export default function SettingMyPage(props: Props) {
   const { mypage } = props
 
   const router = useRouter()
-  const { user } = useUser()
   const handleEdit = () => router.push('/setting/mypage/edit')
   const handleUserPage = () => router.push(`/userpage/${mypage.nickname}`)
 
@@ -31,7 +29,7 @@ export default function SettingMyPage(props: Props) {
 
   return (
     <Main title="マイページ設定" type="table" buttonArea={buttonArea}>
-      <LoginRequired isAuth={user.isActive}>
+      <LoginRequired>
         <Table>
           <TableRow label="バナー画像">
             {mypage.banner !== '' ? (

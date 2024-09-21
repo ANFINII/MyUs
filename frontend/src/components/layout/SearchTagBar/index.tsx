@@ -47,8 +47,6 @@ export default function SearchTagBar() {
     }
   }
 
-  console.log('user.isActive', user.isActive)
-
   return (
     <nav className="searchtag">
       <form method="POST" action="" className="searchtag_grid">

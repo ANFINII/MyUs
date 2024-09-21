@@ -6,7 +6,6 @@ import { DeltaStatic, Sources } from 'quill'
 import { postBlogCreate } from 'api/internal/media/create'
 import { BlogIn } from 'types/internal/media'
 import { MentionUser } from 'types/internal/timeline'
-import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
@@ -24,7 +23,6 @@ const users: MentionUser[] = [
 
 export default function BlogCreate() {
   const router = useRouter()
-  const { user } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<BlogIn>({ title: '', content: '', richtext: '', delta: '' })
@@ -57,7 +55,7 @@ export default function BlogCreate() {
 
   return (
     <Main title="Blog" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
-      <LoginRequired isAuth={user.isActive} margin="mt_20">
+      <LoginRequired margin="mt_20">
         <form method="POST" action="" className="create_grid">
           <Input label="タイトル" required={isRequired} onChange={handleTitle} />
 

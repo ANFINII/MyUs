@@ -3,7 +3,6 @@ import { getSettingNotification, putSettingNotification } from 'api/internal/set
 import { UserNotification, UserNotificationOut } from 'types/internal/auth'
 import { notificationTypes } from 'utils/functions/user'
 import { useToast } from 'components/hooks/useToast'
-import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Toggle from 'components/parts/Input/Toggle'
@@ -18,7 +17,6 @@ interface Props {
 export default function SettingNotification(props: Props) {
   const { userNotification } = props
 
-  const { user } = useUser()
   const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [values, setValues] = useState<UserNotification>(userNotification)
@@ -51,7 +49,7 @@ export default function SettingNotification(props: Props) {
 
   return (
     <Main title="通知設定" type="table" toast={toast} buttonArea={buttonArea}>
-      <LoginRequired isAuth={user.isActive}>
+      <LoginRequired>
         <Table>
           <TableRow isIndent label="通知設定">
             フォローしているユーザの投稿通知などを設定

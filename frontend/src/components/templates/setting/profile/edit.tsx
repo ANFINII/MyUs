@@ -28,7 +28,7 @@ export default function SettingProfileEdit(props: Props) {
   const { profile } = props
 
   const router = useRouter()
-  const { user, updateUser } = useUser()
+  const { updateUser } = useUser()
   const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
@@ -98,7 +98,7 @@ export default function SettingProfileEdit(props: Props) {
 
   return (
     <Main title="アカウント設定" type="table" toast={toast} buttonArea={buttonArea}>
-      <LoginRequired isAuth={user.isActive}>
+      <LoginRequired>
         {message && (
           <ul className="messages_profile">
             <li>{message}</li>

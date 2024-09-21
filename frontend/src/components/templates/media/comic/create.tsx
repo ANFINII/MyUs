@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { postComicCreate } from 'api/internal/media/create'
 import { ComicIn } from 'types/internal/media'
-import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
@@ -12,7 +11,6 @@ import LoginRequired from 'components/parts/LoginRequired'
 
 export default function ComicCreate() {
   const router = useRouter()
-  const { user } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<ComicIn>({ title: '', content: '' })
@@ -41,7 +39,7 @@ export default function ComicCreate() {
 
   return (
     <Main title="Comic" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
-      <LoginRequired isAuth={user.isActive} margin="mt_20">
+      <LoginRequired margin="mt_20">
         <form method="POST" action="" encType="multipart/form-data" className="create_grid">
           <Input label="タイトル" required={isRequired} onChange={handleTitle} />
 
