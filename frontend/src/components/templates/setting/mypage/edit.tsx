@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { putSettingMypage } from 'api/internal/setting'
 import { MypageIn, MypageOut } from 'types/internal/auth'
 import { useToast } from 'components/hooks/useToast'
-import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPicture from 'components/parts/Icon/Picture'
@@ -23,7 +22,6 @@ export default function SettingMyPageEdit(props: Props) {
   const { mypage } = props
 
   const router = useRouter()
-  const { user } = useUser()
   const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
@@ -63,7 +61,7 @@ export default function SettingMyPageEdit(props: Props) {
 
   return (
     <Main title="マイページ設定" type="table" toast={toast} buttonArea={buttonArea}>
-      <LoginRequired isAuth={user.isActive}>
+      <LoginRequired>
         {message && (
           <ul className="messages_profile">
             <li>{message}</li>

@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { useUser } from 'components/hooks/useUser'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -8,7 +7,6 @@ import LoginRequired from 'components/parts/LoginRequired'
 
 export default function Withdrawal() {
   const router = useRouter()
-  const { user } = useUser()
 
   const messages = false
   const message = '退会URL'
@@ -17,7 +15,7 @@ export default function Withdrawal() {
 
   return (
     <Main title="退会処理">
-      <LoginRequired isAuth={user.isActive} margin="mt_24">
+      <LoginRequired margin="mt_24">
         <article className="article_pass">
           <form method="POST" action="" className="form_account">
             {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}

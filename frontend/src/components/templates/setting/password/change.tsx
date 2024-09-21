@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { useUser } from 'components/hooks/useUser'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -8,11 +7,10 @@ import LoginRequired from 'components/parts/LoginRequired'
 
 export default function PasswordChange() {
   const router = useRouter()
-  const { user } = useUser()
 
   return (
     <Main title="パスワード変更">
-      <LoginRequired isAuth={user.isActive}>
+      <LoginRequired>
         <h1>パスワード変更</h1>
         <article className="article_pass">
           <form method="POST" action="" className="form_account">

@@ -4,7 +4,6 @@ import { postTodoCreate } from 'api/internal/media/create'
 import { TodoIn } from 'types/internal/media'
 import { priority, progress } from 'utils/constants/todo'
 import { nowDate } from 'utils/functions/datetime'
-import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
@@ -13,7 +12,6 @@ import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
 
 export default function TodoCreate() {
-  const { user } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<TodoIn>({ title: '', content: '', priority: priority[0].value, progress: progress[0].value, duedate: '' })
@@ -43,7 +41,7 @@ export default function TodoCreate() {
 
   return (
     <Main title="Todo" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
-      <LoginRequired isAuth={user.isActive} margin="mt_20">
+      <LoginRequired margin="mt_20">
         <form method="POST" action="" className="create_grid">
           <Input label="タイトル" required={isRequired} onChange={handleTitle} />
 
