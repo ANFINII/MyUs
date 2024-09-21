@@ -31,7 +31,7 @@ export default function DropMenuProfile(props: Props) {
   const handleLogout = async () => {
     handleLogin()
     await postLogout()
-    resetUser()
+    await resetUser()
   }
 
   const handleManagement = () => {

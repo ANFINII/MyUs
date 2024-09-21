@@ -5,7 +5,7 @@ import { UserMe } from 'types/internal/auth'
 interface UserContextType {
   user: UserMe
   updateUser: () => Promise<void>
-  resetUser: () => void
+  resetUser: () => Promise<void>
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined)
@@ -22,14 +22,14 @@ export function UserProvider(props: Props) {
   const [user, setUser] = useState<UserMe>(initUser)
 
   const updateUser = async () => setUser(await getUser())
-  const resetUser = () => setUser(initUser)
+  const resetUser = async () => setUser(initUser)
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         await updateUser()
       } catch (e) {
-        resetUser()
+        await resetUser()
       }
     }
     fetchUser()
