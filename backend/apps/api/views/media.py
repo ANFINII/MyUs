@@ -5,7 +5,6 @@ from django.db.models import Exists, OuterRef
 from django.conf import settings
 
 from config.settings.base import DOMAIN_URL
-from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
@@ -13,12 +12,10 @@ from rest_framework.views import APIView
 from apps.myus.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Todo
 from apps.myus.modules.search import Search
 from apps.myus.convert.convert_hls import convert_exe
-from apps.api.serializers import VideoSerializer, MusicSerializer, ComicSerializer
-from apps.api.serializers import PictureSerializer, BlogSerializer, ChatSerializer, TodoSerializer
 from apps.api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
 from apps.api.services.user import get_user
-from apps.api.utils.functions.index import is_bool, message
-from apps.api.utils.functions.comment import get_comment
+from apps.api.utils.functions.index import is_bool
+from apps.api.utils.functions.comment import get_comment, get_comments
 from apps.api.utils.functions.response import ApiResponse
 from apps.api.utils.functions.user import get_author, get_media_user
 
@@ -56,9 +53,7 @@ class VideoAPI(APIView):
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
-        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
-        subquery = obj.comment.filter(**filter_kwargs)
-        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+        comments = get_comments(obj)
 
         data = {
             'id': obj.id,
@@ -122,9 +117,7 @@ class MusicAPI(APIView):
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
-        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
-        subquery = obj.comment.filter(**filter_kwargs)
-        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+        comments = get_comments(obj)
 
         data = {
             'id': obj.id,
@@ -178,9 +171,7 @@ class ComicAPI(APIView):
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
-        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
-        subquery = obj.comment.filter(**filter_kwargs)
-        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+        comments = get_comments(obj)
 
         data = {
             'id': obj.id,
@@ -234,9 +225,7 @@ class PictureAPI(APIView):
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
-        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
-        subquery = obj.comment.filter(**filter_kwargs)
-        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+        comments = get_comments(obj)
 
         data = {
             'id': obj.id,
@@ -287,9 +276,7 @@ class BlogAPI(APIView):
             return ApiResponse.NOT_FOUND.run()
 
         user = get_user(request)
-        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
-        subquery = obj.comment.filter(**filter_kwargs)
-        comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
+        comments = get_comments(obj)
 
         data = {
             'id': obj.id,
