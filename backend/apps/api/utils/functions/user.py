@@ -1,5 +1,7 @@
+# from django.db.models import BaseManager
 from config.settings.base import DOMAIN_URL
 from apps.api.types.user import Author, MediaUser
+from apps.myus.models import Follow
 
 
 def get_author(author: Author) -> dict:
@@ -16,6 +18,7 @@ def get_media_user(user: MediaUser, obj) -> dict:
         'avatar': f'{DOMAIN_URL}{user.image()}',
         'nickname': user.nickname,
         'is_like': obj.like.filter(id=user.id).exists(),
+        'is_follow': Follow.objects.filter(follower=user.id, following=obj.author).exists()
     }
     return data
 
