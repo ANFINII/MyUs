@@ -275,27 +275,31 @@ class BlogAPI(APIView):
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
+        search = request.query_params.get('search')
         user = get_user(request)
         comments = get_comments(obj)
 
         data = {
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'richtext': obj.richtext,
-            'image': obj.image.url,
-            'comment': [get_comment(comment) for comment in comments],
-            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            'like': obj.total_like(),
-            'read': obj.read,
-            'comment_count': obj.comment_count(),
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': get_author(obj.author),
+            'detail': {
+                'id': obj.id,
+                'title': obj.title,
+                'content': obj.content,
+                'richtext': obj.richtext,
+                'image': obj.image.url,
+                'comment': [get_comment(comment) for comment in comments],
+                'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
+                'like': obj.total_like(),
+                'read': obj.read,
+                'comment_count': obj.comment_count(),
+                'publish': obj.publish,
+                'created': obj.created,
+                'updated': obj.updated,
+                'author': get_author(obj.author),
+            },
+            'list': get_blogs(50, search),
         }
         if user:
-            data['user'] = get_media_user(user, obj)
+            data['detail']['user'] = get_media_user(user, obj)
 
         return Response(data, status=HTTP_200_OK)
 
