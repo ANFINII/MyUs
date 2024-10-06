@@ -782,13 +782,13 @@ div.field > button {
 }
 
 .content_detail_check,
-.content_detail_check:checked ~ .content_detail_check_label1,
-.content_detail_check_label2 {
+.content_detail_check:checked ~ .content_detail_label1,
+.content_detail_label2 {
   display: none;
 }
 
-.content_detail_check_label1,
-.content_detail_check:checked ~ .content_detail_check_label2 {
+.content_detail_label1,
+.content_detail_check:checked ~ .content_detail_label2 {
   display: block;
   width: 56px;
   height: 18px;
@@ -796,8 +796,8 @@ div.field > button {
   color: rgb(120, 120, 120);
 }
 
-.content_detail_check_label1:hover,
-.content_detail_check:checked ~ .content_detail_check_label2:hover {
+.content_detail_label1:hover,
+.content_detail_check:checked ~ .content_detail_label2:hover {
   color: rgb(0, 100, 255);
   cursor: pointer;
 }
