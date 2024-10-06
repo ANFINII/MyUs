@@ -8,6 +8,7 @@ export interface MediaUser {
   avatar: string
   nickname: string
   isLike: boolean
+  isFollow: boolean
 }
 
 export interface Search {
@@ -64,6 +65,12 @@ export interface Picture extends Media {
 
 export interface Blog extends Media {
   image: string
+  richtext: string
+}
+
+export interface BlogDetailOut {
+  detail: Blog
+  list: Blog[]
 }
 
 export interface Chat extends Media {

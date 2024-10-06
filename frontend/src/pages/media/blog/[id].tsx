@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { getServerBlog } from 'api/internal/media/detail'
-import { Blog } from 'types/internal/media'
+import { BlogDetailOut } from 'types/internal/media'
 import BlogDetail from 'components/templates/media/blog/detail'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
 }
 
 interface Props {
-  data: Blog
+  data: BlogDetailOut
 }
 
 export default function BlogDetailPage(props: Props) {
