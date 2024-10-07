@@ -448,11 +448,8 @@ div.field > button {
   display: flex;
   grid-column: 1/-1;
   grid-row: 3/4;
+  margin-top: 8px;
   color: rgb(100, 100, 100);
-}
-
-.article_detail_aria_2 .read {
-  margin: 0 16px 0 0;
 }
 
 .article_detail_aria_3 {
@@ -475,11 +472,6 @@ div.field > button {
   display: inline;
 }
 
-.comment_aria_list_3 .like_count {
-  margin: 0 6px 0 0;
-}
-
-.like_no,
 .like_fill {
   background: transparent;
   border: none;
@@ -488,25 +480,17 @@ div.field > button {
   appearance: none;
 }
 
-.like_no {
-  color: rgb(100, 100, 100);
-}
-
-.like_fill,
-.like_no:hover {
+.like_fill {
   color: rgb(255, 220, 0);
 }
 
-.like_no:focus,
 .like_fill:focus {
   outline: none;
   color: rgb(255, 220, 0);
 }
 
-.icon_font {
-  font-size: 16px;
-  width: 16px;
-  margin: 0 4px 0 0;
+.read_count {
+  line-height: 0.9;
 }
 
 /* follow関連画面 */
@@ -734,9 +718,14 @@ div.field > button {
   user-select: none;
 }
 
-.content_detail_label:hover {
-  color: rgb(0, 100, 255);
+.content_detail_label {
+  font-size: 13px;
+  color: rgb(120, 120, 120);
   cursor: pointer;
+
+  &:hover {
+    color: rgb(0, 100, 255);
+  }
 }
 
 .content_detail {

@@ -4,7 +4,9 @@ import clsx from 'clsx'
 import { Author, MediaUser } from 'types/internal/media'
 import { formatDatetime } from 'utils/functions/datetime'
 import Button from 'components/parts/Button'
+import CountLike from 'components/parts/Count/Like'
 import ExImage from 'components/parts/ExImage'
+import IconCaret from 'components/parts/Icon/Caret'
 
 interface Props {
   title: string
@@ -35,30 +37,11 @@ export default function MediaDetailCommon(props: Props) {
         <time className="article_detail_aria_1">{formatDatetime(created)}</time>
 
         <div className="article_detail_aria_2">
-          <div className="read">
-            <i className="bi bi-caret-right-square icon_font" title="閲覧数"></i>
-            <span>{read}</span>
+          <div className="d_flex mr_16">
+            <IconCaret size="16" className="mr_8" />
+            <span className="read_count">{read}</span>
           </div>
-          {user ? (
-            // <form method="POST" action="" obj-id="{{ object.id }}" path="{{ request.path }}" csrf="{{ csrf_token }}>
-            <form method="POST" action="">
-              {isLike ? (
-                <button type="submit" name="like" className="like_form like_fill">
-                  <i className="bi bi-hand-thumbs-up-fill icon_font like_color" title="いいね"></i>
-                </button>
-              ) : (
-                <button type="submit" name="like" className="like_form like_no">
-                  <i className="bi bi-hand-thumbs-up icon_font like_color" title="いいね"></i>
-                </button>
-              )}
-              <span className="like_count">{totalLike}</span>
-            </form>
-          ) : (
-            <>
-              <i className="bi bi-hand-thumbs-up icon_font" title="いいね"></i>
-              <span>{totalLike}</span>
-            </>
-          )}
+          {user && <CountLike isLike={isLike} totalLike={totalLike} />}
         </div>
 
         <div className="article_detail_aria_3">{/* {% include 'parts/common/hashtag.html' %} */}</div>
