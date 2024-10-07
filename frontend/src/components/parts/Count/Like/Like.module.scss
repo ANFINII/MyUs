@@ -1,23 +1,22 @@
-.like {
+.count {
   display: flex;
-  margin-right: 16px;
-  cursor: pointer;
 
   .on {
     margin-right: 8px;
     fill: rgb(255, 220, 0);
+    cursor: pointer;
   }
 
   .off {
     margin-right: 8px;
+    cursor: pointer;
 
     &:hover {
       fill: rgb(255, 220, 0);
     }
   }
 
-  .like_count {
-    margin-right: 6px;
-    line-height: 0.9;
+  .icon {
+    margin-top: -2px;
   }
 }

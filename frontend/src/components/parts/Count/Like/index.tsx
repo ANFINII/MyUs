@@ -5,19 +5,24 @@ interface Props {
   isLike?: boolean
   disable?: boolean
   totalLike?: number
+  onClick?: () => void
 }
 
 export default function CountLike(props: Props) {
-  const { isLike, disable, totalLike } = props
+  const { isLike, disable, totalLike, onClick } = props
 
   return (
-    <div className={style.like}>
+    <div className={style.count}>
       {disable ? (
-        <IconHand size="16" type="off" className={style.off} />
+        <div>
+          <IconHand size="16" type="off" className="mr_8" />
+        </div>
       ) : (
-        <IconHand size="16" type={isLike ? 'on' : 'off'} className={isLike ? style.on : style.off} />
+        <div className={style.icon} onClick={onClick}>
+          <IconHand size="16" type={isLike ? 'on' : 'off'} className={isLike ? style.on : style.off} />
+        </div>
       )}
-      <span className={style.like_count}>{totalLike || 0}</span>
+      <span>{totalLike || 0}</span>
     </div>
   )
 }
