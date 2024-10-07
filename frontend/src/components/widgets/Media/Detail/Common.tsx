@@ -5,8 +5,8 @@ import { Author, MediaUser } from 'types/internal/media'
 import { formatDatetime } from 'utils/functions/datetime'
 import Button from 'components/parts/Button'
 import CountLike from 'components/parts/Count/Like'
+import CountRead from 'components/parts/Count/Read'
 import ExImage from 'components/parts/ExImage'
-import IconCaret from 'components/parts/Icon/Caret'
 
 interface Props {
   title: string
@@ -21,13 +21,17 @@ interface Props {
 
 export default function MediaDetailCommon(props: Props) {
   const { title, content, read, totalLike, commentCount, created, author, user } = props
-  const { isLike, isFollow } = user || {}
 
+  const [isLike, setIsLike] = useState<boolean>(Boolean(user?.isLike))
   const [isContentView, setIsContentVIew] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
 
   const handleContentView = () => setIsContentVIew(!isContentView)
   const handleCommnetView = () => setIsCommentView(!isCommentView)
+
+  const handleLike = () => {
+    setIsLike(!isLike)
+  }
 
   return (
     <div className="article_detail_section_1">
@@ -37,11 +41,8 @@ export default function MediaDetailCommon(props: Props) {
         <time className="article_detail_aria_1">{formatDatetime(created)}</time>
 
         <div className="article_detail_aria_2">
-          <div className="d_flex mr_16">
-            <IconCaret size="16" className="mr_8" />
-            <span className="read_count">{read}</span>
-          </div>
-          {user && <CountLike isLike={isLike} totalLike={totalLike} />}
+          <CountRead read={read} />
+          <CountLike isLike={isLike} disable={Boolean(!user)} totalLike={totalLike} onClick={handleLike} />
         </div>
 
         <div className="article_detail_aria_3">{/* {% include 'parts/common/hashtag.html' %} */}</div>
@@ -70,7 +71,7 @@ export default function MediaDetailCommon(props: Props) {
             {user?.nickname == author.nickname || (!user && <Button color="green" name="フォローする" disabled />)}
             {user && (
               <form method="POST" action="" className="follow_form">
-                {isFollow ? <Button color="red" name="解除する" className="follow_change" /> : <Button color="green" name="フォローする" className="follow_change" />}
+                {user.isFollow ? <Button color="red" name="解除する" className="follow_change" /> : <Button color="green" name="フォローする" className="follow_change" />}
               </form>
             )}
           </div>
