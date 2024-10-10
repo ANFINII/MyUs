@@ -1,10 +1,10 @@
 /* Quill全体  */
-.ql-toolbar {
-  border-radius: 5px 5px 0 0;
-}
-
 .ql-formats {
   margin-right: 10px;
+}
+
+.ql-toolbar {
+  border-radius: 5px 5px 0 0;
 }
 
 .ql-editor .ql-clipboard {
@@ -38,7 +38,13 @@
   text-decoration: none;
 }
 
-/*  クォートデザイン */
+/*  画像デザイン */
+.ql-snow .ql-editor img,
+.quill_content img {
+  max-width: 480px;
+}
+
+/* コードブロックデザイン */
 .ql-snow .ql-editor pre.ql-syntax,
 .quill_content pre.ql-syntax {
   padding: 4px 8px;
@@ -46,23 +52,41 @@
   font-size: 12px;
   color: rgb(65, 65, 65);
   border: 1px solid rgb(200, 200, 200);
-  border-radius: 3px;
-  background: rgb(235, 235, 235);
+  border-radius: 4px;
+  background: rgb(250, 250, 250);
 }
 
-/*  コードブロックデザイン */
+/*  クォートデザイン */
 .ql-snow .ql-editor blockquote,
 .quill_content blockquote {
-  padding-left: 14px;
-  margin-top: 0;
-  margin-bottom: 5px;
-  border-left: 4px solid #ccc;
+  position: relative;
+  padding: 2px 0 2px 16px;
+  margin: 0;
+  font-size: 14px;
 }
 
-/*  画像デザイン */
-.ql-snow .ql-editor img,
-.quill_content img {
-  max-width: 480px;
+.ql-snow .ql-editor blockquote::before,
+.quill_content blockquote::before {
+  position: absolute;
+  display: block;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background: rgb(200, 200, 200);
+  content: "";
+}
+
+.ql-snow .ql-editor blockquote:first-of-type::before,
+.quill_content blockquote:first-of-type::before {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.ql-snow .ql-editor blockquote:last-of-type::before,
+.quill_content blockquote:last-of-type::before {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 /* Blog */
