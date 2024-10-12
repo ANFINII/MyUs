@@ -50,18 +50,13 @@
     bottom: 0;
     left: 0;
     width: 4px;
+    border-radius: 8px;
     background: rgb(200, 200, 200);
     content: "";
   }
 
-  &:first-of-type::before {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-  }
-
-  &:last-of-type::before {
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+  & + blockquote::before {
+    top: -2px;
   }
 }
 

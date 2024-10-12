@@ -73,20 +73,14 @@
   bottom: 0;
   left: 0;
   width: 4px;
+  border-radius: 8px;
   background: rgb(200, 200, 200);
   content: "";
 }
 
-.ql-snow .ql-editor blockquote:first-of-type::before,
-.quill_content blockquote:first-of-type::before {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
-
-.ql-snow .ql-editor blockquote:last-of-type::before,
-.quill_content blockquote:last-of-type::before {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+.ql-snow .ql-editor blockquote + blockquote::before,
+.quill_content blockquote + blockquote::before {
+  top: -2px;
 }
 
 /* Blog */
