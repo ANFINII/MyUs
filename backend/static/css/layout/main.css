@@ -6,6 +6,7 @@
   width: calc(100% - 72px);
   height: calc(100% - 82px);
   padding: 16px;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
@@ -25,6 +26,15 @@
 .main .main_title span {
   font-size: 18px;
   margin: 6px 0 0 10px;
+}
+
+.main .main_search_message {
+  display: inline-block;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0 8px;
+  font-size: 14px;
+  color: rgb(33, 37, 41);
 }
 
 .main .main_button_area button {
@@ -47,7 +57,7 @@
   margin: 2px 0 6px 0;
 }
 
-.main div.field > input,
+/* .main div.field > input,
 div.field > textarea,
 div.field > select,
 div.field > button {
@@ -65,7 +75,7 @@ div.field > button {
 
 .main p textarea {
   height: 38px;
-}
+} */
 
 /* メインリストデザイン index用 */
 .article_index {
@@ -86,15 +96,8 @@ div.field > button {
   overflow-y: auto;
 }
 
-.article_index .search_message {
-  grid-column: 1/-1;
-  grid-row: 1/2;
-  margin: 0px 0 0 50px;
-}
-
 /* メインリストデザイン */
-.article_list,
-.article_list_adver {
+.article_list {
   position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(auto, 272px));
@@ -299,7 +302,7 @@ div.field > button {
 /* コンテンツ詳細セクション */
 .article_detail {
   padding: 0;
-  margin: 16px 0;
+  /* margin: 16px 0; */
 }
 
 .article_detail_section {
