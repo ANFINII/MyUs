@@ -14,7 +14,7 @@ class UserAPI(APIView):
     def get(self, request):
         user = get_user(request)
         if not user:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         data = {
             'avatar': f'{DOMAIN_URL}{user.image()}' if user.image() else '',
@@ -30,7 +30,7 @@ class SearchTagAPI(APIView):
     def get(self, request):
         user = get_user(request)
         if not user:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         search_tags = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
 
@@ -42,7 +42,7 @@ class FollowAPI(APIView):
     def get(self, request):
         user = get_user(request)
         if not user:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         search = request.query_params.get('search')
         data = get_follows(100, user, search)
@@ -53,7 +53,7 @@ class FollowerAPI(APIView):
     def get(self, request):
         user = get_user(request)
         if not user:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         search = request.query_params.get('search')
         data = get_followers(100, user, search)
@@ -64,7 +64,7 @@ class NotificationAPI(APIView):
     def get(self, request):
         user = get_user(request)
         if not user:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         notification = get_notification(user)
         data = {

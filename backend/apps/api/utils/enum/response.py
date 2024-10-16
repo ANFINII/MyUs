@@ -7,8 +7,8 @@ from apps.api.utils.functions.index import message
 
 
 class ApiResponse(Enum):
-    unauthorized = (True, 'Un Authorized', HTTP_401_UNAUTHORIZED)
-    not_found = (True, 'Not Found', HTTP_404_NOT_FOUND)
+    UNAUTHORIZED = (True, 'Un Authorized', HTTP_401_UNAUTHORIZED)
+    NOT_FOUND = (True, 'Not Found', HTTP_404_NOT_FOUND)
 
     def run(self):
         is_error, content, status_code = self.value

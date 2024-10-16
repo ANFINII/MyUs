@@ -23,7 +23,7 @@ class AuthAPI(APIView):
     def get(self, request):
         access_token = request.COOKIES.get('access_token')
         if not access_token:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         user_id = self.get_object(access_token)
         user = User.objects.filter(id=user_id).first()

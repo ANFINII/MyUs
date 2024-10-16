@@ -51,7 +51,7 @@ class VideoAPI(APIView):
     def get(self, request, id):
         obj = Video.objects.filter(id=id, publish=True).first()
         if not obj:
-            return ApiResponse.not_found.run()
+            return ApiResponse.NOT_FOUND.run()
 
         comments = get_comments(obj)
 
@@ -77,7 +77,7 @@ class VideoAPI(APIView):
     def post(self, request):
         author = get_user(request)
         if not author:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
         field = {
@@ -115,7 +115,7 @@ class MusicAPI(APIView):
     def get(self, request, id):
         obj = Music.objects.filter(id=id, publish=True).first()
         if not obj:
-            return ApiResponse.not_found.run()
+            return ApiResponse.NOT_FOUND.run()
 
         comments = get_comments(obj)
 
@@ -141,7 +141,7 @@ class MusicAPI(APIView):
     def post(self, request) -> Response:
         author = get_user(request)
         if not author:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
         field = {
@@ -169,7 +169,7 @@ class ComicAPI(APIView):
     def get(self, request, id):
         obj = Comic.objects.filter(id=id, publish=True).first()
         if not obj:
-            return ApiResponse.not_found.run()
+            return ApiResponse.NOT_FOUND.run()
 
         comments = get_comments(obj)
 
@@ -192,7 +192,7 @@ class ComicAPI(APIView):
     def post(self, request) -> Response:
         author = get_user(request)
         if not author:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
         images = data.getlist('images[]')
@@ -223,7 +223,7 @@ class PictureAPI(APIView):
     def get(self, request, id):
         obj = Picture.objects.filter(id=id, publish=True).first()
         if not obj:
-            return ApiResponse.not_found.run()
+            return ApiResponse.NOT_FOUND.run()
 
         comments = get_comments(obj)
 
@@ -247,7 +247,7 @@ class PictureAPI(APIView):
     def post(self, request):
         author = get_user(request)
         if not author:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
         field = {
@@ -273,7 +273,7 @@ class BlogAPI(APIView):
     def get(self, request, id):
         obj = Blog.objects.filter(id=id, publish=True).first()
         if not obj:
-            return ApiResponse.not_found.run()
+            return ApiResponse.NOT_FOUND.run()
 
         search = request.query_params.get('search')
         user = get_user(request)
@@ -306,7 +306,7 @@ class BlogAPI(APIView):
     def post(self, request) -> Response:
         author = get_user(request)
         if not author:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
         field = {
@@ -339,7 +339,7 @@ class ChatAPI(APIView):
     def get(self, request, id):
         obj = Chat.objects.filter(id=id, publish=True).first()
         if not obj:
-            return ApiResponse.not_found.run()
+            return ApiResponse.NOT_FOUND.run()
 
         messages = obj.message.filter(parent__isnull=True).select_related('author')
 
@@ -372,7 +372,7 @@ class ChatAPI(APIView):
     def post(self, request) -> Response:
         author = get_user(request)
         if not author:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
         field = {
@@ -390,7 +390,7 @@ class TodoListAPI(APIView):
     def get(self, request):
         author = get_user(request)
         if not author:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         search = request.query_params.get('search')
         data = get_todos(50, author, search)
@@ -401,7 +401,7 @@ class TodoAPI(APIView):
     def get(self, request, id):
         obj = Todo.objects.filter(id=id, publish=True).first()
         if not obj:
-            return ApiResponse.not_found.run()
+            return ApiResponse.NOT_FOUND.run()
 
         filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
         subquery = obj.comment.filter(**filter_kwargs)
@@ -428,7 +428,7 @@ class TodoAPI(APIView):
     def post(self, request):
         author = get_user(request)
         if not author:
-            return ApiResponse.unauthorized.run()
+            return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
         field = {
