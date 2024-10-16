@@ -9,16 +9,16 @@ from apps.myus.models import User, Profile, MyPage, UserNotification
 from apps.myus.modules.filter_data import DeferData
 from apps.myus.modules.validation import has_email
 from apps.api.services.user import get_user, profile_check
+from apps.api.utils.enum.response import ApiResponse
 from apps.api.utils.functions.index import message
 from apps.api.utils.functions.logger import Log
-from apps.api.utils.functions.response import ApiResponse
 
 
 class SettingProfileAPI(APIView):
     def get(self, request):
         user = get_user(request)
         if not user:
-            return ApiResponse.UNAUTHORIZED.run()
+            return ApiResponse.unauthorized.run()
 
         user = User.objects.filter(id=user.id).select_related('profile').defer(*DeferData.profile).first()
 
@@ -48,7 +48,7 @@ class SettingProfileAPI(APIView):
     def put(self, request):
         user = get_user(request)
         if not user:
-            return ApiResponse.UNAUTHORIZED.run()
+            return ApiResponse.unauthorized.run()
 
         profile = Profile.objects.filter(id=user.id).first()
         data = request.data
@@ -81,7 +81,7 @@ class SettingMyPageAPI(APIView):
     def get(self, request):
         user = get_user(request)
         if not user:
-            return ApiResponse.UNAUTHORIZED.run()
+            return ApiResponse.unauthorized.run()
 
         user = User.objects.filter(id=user.id).select_related('mypage').defer(*DeferData.mypage).first()
 
@@ -103,7 +103,7 @@ class SettingMyPageAPI(APIView):
     def put(self, request):
         user = get_user(request)
         if not user:
-            return ApiResponse.UNAUTHORIZED.run()
+            return ApiResponse.unauthorized.run()
 
         mypage = MyPage.objects.filter(id=user.id).first()
         data = request.data
@@ -130,7 +130,7 @@ class SettingNotificationAPI(APIView):
     def get(self, request):
         user = get_user(request)
         if not user:
-            return ApiResponse.UNAUTHORIZED.run()
+            return ApiResponse.unauthorized.run()
 
         user_notification = UserNotification.objects.filter(user=user).first()
 
@@ -151,7 +151,7 @@ class SettingNotificationAPI(APIView):
     def put(self, request):
         user = get_user(request)
         if not user:
-            return ApiResponse.UNAUTHORIZED.run()
+            return ApiResponse.unauthorized.run()
 
         user_notification = UserNotification.objects.filter(user=user).first()
 

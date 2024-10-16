@@ -14,16 +14,16 @@ from rest_framework_simplejwt import exceptions
 
 from apps.myus.models import User, Profile
 from apps.api.services.user import signup_check
+from apps.api.utils.enum.response import ApiResponse
 from apps.api.utils.functions.encrypt import create_key, encrypt, decrypt
 from apps.api.utils.functions.index import message
-from apps.api.utils.functions.response import ApiResponse
 
 
 class AuthAPI(APIView):
     def get(self, request):
         access_token = request.COOKIES.get('access_token')
         if not access_token:
-            return ApiResponse.UNAUTHORIZED.run()
+            return ApiResponse.unauthorized.run()
 
         user_id = self.get_object(access_token)
         user = User.objects.filter(id=user_id).first()
