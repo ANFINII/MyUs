@@ -1,4 +1,3 @@
-# from django.db.models import BaseManager
 from config.settings.base import DOMAIN_URL
 from apps.api.types.user import Author, MediaUser
 from apps.myus.models import Follow
