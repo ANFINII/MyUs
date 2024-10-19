@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 from django.utils import timezone
-from apps.myus.models.master import PlanMaster
+from apps.myus.models.master import Plan
 from apps.api.utils.functions.file import user_image
 
 
@@ -249,7 +249,7 @@ def create_user_notification(sender, **kwargs):
 class UserPlan(models.Model):
     """UserPlan"""
     user         = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_plan')
-    plan         = models.ForeignKey(PlanMaster, on_delete=models.CASCADE, default=1)
+    plan         = models.ForeignKey(Plan, on_delete=models.CASCADE, default=1)
     customer_id  = models.CharField(max_length=255)
     subscription = models.CharField(max_length=255)
     is_paid      = models.BooleanField(default=False)

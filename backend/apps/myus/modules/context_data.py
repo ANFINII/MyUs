@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, date
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count, Exists, OuterRef
-from apps.myus.models import PlanMaster, MyPage, SearchTag, UserNotification, Follow, Comment
+from apps.myus.models import Plan, MyPage, SearchTag, UserNotification, Follow, Comment
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo, Advertise
 from apps.myus.modules.contains import model_dict
 from apps.myus.modules.notification import notification_data
@@ -35,7 +35,7 @@ class ContextData:
             context['mypage_list'] = MyPage.objects.filter(user=user.id)
 
         if class_name == 'Payment':
-            context['payment_list'] = PlanMaster.objects.all().order_by('-id')
+            context['payment_list'] = Plan.objects.all().order_by('-id')
 
         if class_name == 'FollowList':
             context['follow_list'] = Follow.objects.filter(follower=user.id).select_related('following__mypage').order_by('created')[:100]

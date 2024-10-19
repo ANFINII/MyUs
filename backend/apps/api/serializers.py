@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from apps.myus.models import Profile, MyPage, SearchTag, HashTag, UserNotification, PlanMaster, UserPlan
+from apps.myus.models import Profile, MyPage, SearchTag, HashTag, UserNotification, Plan, UserPlan
 from apps.myus.models import Notification, Follow, Comment, Message, Advertise
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 
@@ -83,9 +83,9 @@ class NotificationSerializer(serializers.ModelSerializer):
         read_only_field = ['created',]
 
 
-class PlanMasterSerializer(serializers.ModelSerializer):
+class PlanSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PlanMaster
+        model = Plan
         fields = ('id', 'name', 'stripe_api_id', 'price', 'max_advertise', 'description')
 
 

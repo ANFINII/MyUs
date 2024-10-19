@@ -1,8 +1,8 @@
 from django.db import models
 
 
-class PlanMaster(models.Model):
-    """PlanMaster"""
+class Plan(models.Model):
+    """Plan"""
     name          = models.CharField(max_length=30)
     stripe_api_id = models.CharField(max_length=30)
     price         = models.IntegerField(default=0)
@@ -13,8 +13,8 @@ class PlanMaster(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'plan_master'
-        verbose_name_plural = '001 PlanMaster'
+        db_table = 'plan'
+        verbose_name_plural = '001 Plan'
         indexes = [models.Index(fields=['stripe_api_id'], name='stripe_api_idx')]
 
 
