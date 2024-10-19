@@ -10,8 +10,8 @@ interface Props {
   height?: string
   size?: string
   className?: string
-  onClick?: () => void
-  onError?: () => void
+  onClick?: React.MouseEventHandler
+  onError?: React.ReactEventHandler
 }
 
 export default function ExImage(props: Props) {

@@ -25,7 +25,7 @@ export default function LightBox(props: Props) {
       <div className={open ? style.light_box : 'd_none'} onClick={handleClose}>
         <div className={style.image_box}>
           <div>
-            <ExImage src={src} title={title} />
+            <ExImage src={src} title={title} onClick={(e) => e.stopPropagation()} />
             <div className={style.cross}>
               <IconCross size="2em" type="large" onClick={handleToggle} />
             </div>
