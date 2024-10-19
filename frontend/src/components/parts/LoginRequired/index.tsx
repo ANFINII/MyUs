@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import { useUser } from 'components/hooks/useUser'
+import style from './LoginRequired.module.scss'
 
 interface Props {
   margin?: string
@@ -11,5 +12,5 @@ export default function LoginRequired(props: Props) {
 
   const { user } = useUser()
 
-  return <>{user.isActive ? <>{children}</> : <h2 className={clsx('login_required', margin)}>ログインしてください</h2>}</>
+  return <>{user.isActive ? <>{children}</> : <h2 className={clsx(style.login_required, margin)}>ログインしてください</h2>}</>
 }
