@@ -7,11 +7,6 @@
     grid-template-columns: 4.5em 5.5em minmax(9.5em, 1fr) 2.5em 2.5em 2.5em 2.5em;
   }
 
-  .article_list,
-  .article_index {
-    place-content: center;
-  }
-
   .bi-exclamation-lg.active {
     margin: -43px 0 0 21px;
   }

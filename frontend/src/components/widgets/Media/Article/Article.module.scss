@@ -1,0 +1,36 @@
+/* メインリストデザイン index用 */
+.article_index {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 272px));
+  grid-template-rows: 25px auto;
+  grid-gap: 15px;
+
+  h2 {
+    display: inline;
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    font-size: 16px;
+    max-height: 25px;
+    margin: 0;
+    overflow-y: auto;
+  }
+}
+
+/* メインリストデザイン */
+.article_list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 272px));
+  grid-template-rows: auto;
+  grid-gap: 15px;
+  margin-top: 16px;
+}
+
+/* 668pxまでの幅の場合に適応される  */
+@media screen and (max-width: 668px) {
+  .article_list,
+  .article_index {
+    place-content: center;
+  }
+}
