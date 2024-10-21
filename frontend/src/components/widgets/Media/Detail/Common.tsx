@@ -66,7 +66,6 @@ export default function MediaDetailCommon(props: Props) {
             <span className="follower_count">{author.followerCount}</span>
           </div>
           <p className="content_detail_p1">{content}</p>
-
           <div className="content_detail_p2">
             {user?.nickname == author.nickname || (!user && <Button color="green" name="フォローする" disabled />)}
             {user && (

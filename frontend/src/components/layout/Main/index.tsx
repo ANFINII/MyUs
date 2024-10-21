@@ -29,7 +29,7 @@ export default function Main(props: Props) {
           <div>
             {title && <h1 className="main_title">{title}</h1>}
             {search?.name && (
-              <section className="search_message">
+              <section className="main_search_message">
                 「{search.name}」の検索結果「{search.count}」件
               </section>
             )}
