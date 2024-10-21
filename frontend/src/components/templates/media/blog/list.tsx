@@ -2,7 +2,8 @@ import { getBlogs } from 'api/internal/media/list'
 import { Blog } from 'types/internal/media'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
-import ArticleBlog from 'components/widgets/Article/Blog'
+import ArticleMedia from 'components/widgets/Media/Article/Media'
+import SectionBlog from 'components/widgets/Media/Section/Blog'
 
 interface Props {
   datas: Blog[]
@@ -15,11 +16,7 @@ export default function Blogs(props: Props) {
 
   return (
     <Main title="Blog" search={{ name: search, count: newDatas.length }}>
-      <article className="article_list">
-        {newDatas.map((data) => (
-          <ArticleBlog key={data.id} data={data} />
-        ))}
-      </article>
+      <ArticleMedia datas={newDatas} SectionMedia={SectionBlog} />
     </Main>
   )
 }

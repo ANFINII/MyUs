@@ -2,7 +2,8 @@ import { getPictures } from 'api/internal/media/list'
 import { Picture } from 'types/internal/media'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
-import ArticlePicture from 'components/widgets/Article/Picture'
+import ArticleMedia from 'components/widgets/Media/Article/Media'
+import SectionPicture from 'components/widgets/Media/Section/Picture'
 
 interface Props {
   datas: Picture[]
@@ -15,11 +16,7 @@ export default function Pictures(props: Props) {
 
   return (
     <Main title="Picture" search={{ name: search, count: newDatas.length }}>
-      <article className="article_list">
-        {newDatas.map((data) => (
-          <ArticlePicture key={data.id} data={data} />
-        ))}
-      </article>
+      <ArticleMedia datas={newDatas} SectionMedia={SectionPicture} />
     </Main>
   )
 }

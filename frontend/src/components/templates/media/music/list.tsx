@@ -2,7 +2,8 @@ import { getMusics } from 'api/internal/media/list'
 import { Music } from 'types/internal/media'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
-import ArticleMusic from 'components/widgets/Article/Music'
+import ArticleMedia from 'components/widgets/Media/Article/Media'
+import SectionMusic from 'components/widgets/Media/Section/Music'
 
 interface Props {
   datas: Music[]
@@ -15,11 +16,7 @@ export default function Musics(props: Props) {
 
   return (
     <Main title="Music" search={{ name: search, count: newDatas.length }}>
-      <article className="article_list">
-        {newDatas.map((data) => (
-          <ArticleMusic key={data.id} data={data} />
-        ))}
-      </article>
+      <ArticleMedia datas={newDatas} SectionMedia={SectionMusic} />
     </Main>
   )
 }

@@ -1,21 +1,21 @@
 import style from './Article.module.scss'
 
-interface ObjectId {
-  id: number
+interface ObjectName {
+  nickname: string
 }
 
-interface ArticleProps<T extends ObjectId> {
+interface Props<T extends ObjectName> {
   datas: T[]
   SectionMedia: React.ComponentType<{ data: T }>
 }
 
-export default function ArticleList<T extends ObjectId>(props: ArticleProps<T>) {
+export default function ArticleFollow<T extends ObjectName>(props: Props<T>) {
   const { datas, SectionMedia } = props
 
   return (
     <article className={style.article_list}>
       {datas.map((data) => (
-        <SectionMedia key={data.id} data={data} />
+        <SectionMedia key={data.nickname} data={data} />
       ))}
     </article>
   )

@@ -2,7 +2,8 @@ import { getComics } from 'api/internal/media/list'
 import { Comic } from 'types/internal/media'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
-import ArticleComic from 'components/widgets/Article/Comic'
+import ArticleMedia from 'components/widgets/Media/Article/Media'
+import SectionComic from 'components/widgets/Media/Section/Comic'
 
 interface Props {
   datas: Comic[]
@@ -15,11 +16,7 @@ export default function Comics(props: Props) {
 
   return (
     <Main title="Comic" search={{ name: search, count: newDatas.length }}>
-      <article className="article_list">
-        {newDatas.map((data) => (
-          <ArticleComic data={data} key={data.id} />
-        ))}
-      </article>
+      <ArticleMedia datas={newDatas} SectionMedia={SectionComic} />
     </Main>
   )
 }

@@ -5,7 +5,8 @@ import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginRequired from 'components/parts/LoginRequired'
-import ArticleTodo from 'components/widgets/Article/Todo'
+import ArticleMedia from 'components/widgets/Media/Article/Media'
+import SectionTodo from 'components/widgets/Media/Section/Todo'
 
 interface Props {
   datas: Todo[]
@@ -23,11 +24,7 @@ export default function Todos(props: Props) {
         <div className="mt_16">
           <Button color="blue" size="s" name="新規作成" onClick={() => router.push('/media/todo/create')} />
         </div>
-        <article className="article_list">
-          {newDatas.map((data) => (
-            <ArticleTodo key={data.id} data={data} />
-          ))}
-        </article>
+        <ArticleMedia datas={newDatas} SectionMedia={SectionTodo} />
       </LoginRequired>
     </Main>
   )

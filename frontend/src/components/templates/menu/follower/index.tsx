@@ -5,7 +5,8 @@ import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginRequired from 'components/parts/LoginRequired'
-import ArticleFollow from 'components/widgets/Article/Follow'
+import ArticleFollow from 'components/widgets/Media/Article/Follow'
+import SectionFollow from 'components/widgets/Media/Section/Follow'
 
 interface Props {
   follows: Follow[]
@@ -24,11 +25,7 @@ export default function Followers(props: Props) {
           <Button color="blue" size="s" name="フォロワー" onClick={() => router.push('/menu/follow')} />
           <span className="ml_8">フォロワー数：{follows.length}</span>
         </div>
-        <article className="article_list">
-          {follows.map((data) => (
-            <ArticleFollow key={data.nickname} follow={data} />
-          ))}
-        </article>
+        <ArticleFollow datas={newDatas} SectionMedia={SectionFollow} />
       </LoginRequired>
     </Main>
   )
