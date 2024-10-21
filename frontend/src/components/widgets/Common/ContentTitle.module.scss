@@ -1,0 +1,38 @@
+.content_title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  grid-column: 2/3;
+  grid-row: 1/2;
+  height: 3em;
+  margin: 7px 0 5px 6px;
+  font-size: 14px;
+  color: rgb(3, 3, 3);
+  overflow: hidden;
+  word-break: break-all;
+}
+
+.content_nickname {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  margin: 0;
+  overflow: hidden;
+}
+
+.view_good {
+  grid-column: 2/3;
+  grid-row: 2/3;
+  margin: 0 0 0 6px;
+}
+
+.view_good_font {
+  height: 16px;
+  font-size: 13px;
+  color: rgb(40, 70, 150);
+}
+
+.view_good_inline {
+  display: inline;
+  margin: 0 8px 0 0;
+}

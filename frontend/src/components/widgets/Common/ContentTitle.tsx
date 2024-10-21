@@ -1,3 +1,6 @@
+import clsx from 'clsx'
+import style from './ContentTitle.module.scss'
+
 interface Props {
   title: string
   nickname: string
@@ -11,24 +14,24 @@ export default function ContentTitle(props: Props) {
 
   return (
     <>
-      <div title={title} className="content_title">
+      <div title={title} className={style.content_title}>
         {title}
       </div>
 
-      <span className="view_good">
-        <div className="view_good_font content_nickname">{nickname}</div>
+      <span className={style.view_good}>
+        <div className={clsx(style.view_good_font, style.content_nickname)}>{nickname}</div>
 
-        <div className="view_good_font view_good_inline">
-          <i title="閲覧数" className="bi bi-caret-right-square view_good_space"></i>
+        <div className={clsx(style.view_good_font, style.view_good_inline)}>
+          <i title="閲覧数" className="bi bi-caret-right-square mr_2"></i>
           {read}
         </div>
 
-        <div className="view_good_font view_good_inline">
+        <div className={clsx(style.view_good_font, style.view_good_inline)}>
           <i title="いいね数" className="bi bi-hand-thumbs-up"></i>
           {totalLike}
         </div>
 
-        <div className="view_good_font">
+        <div className={style.view_good_inline}>
           <time>{created}</time>
         </div>
       </span>
