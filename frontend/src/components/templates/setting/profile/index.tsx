@@ -3,6 +3,7 @@ import { ProfileOut } from 'types/internal/auth'
 import { genderMap } from 'utils/functions/user'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import Horizontal from 'components/parts/Horizontal/inedex'
 import IconPerson from 'components/parts/Icon/Person'
 import LoginRequired from 'components/parts/LoginRequired'
 import Table from 'components/parts/Table'
@@ -21,10 +22,10 @@ export default function SettingProfile(props: Props) {
   const handlePassword = () => router.push('/setting/password/change')
 
   const buttonArea = (
-    <>
+    <Horizontal gap="4">
       <Button color="blue" size="s" name="編集" onClick={handleEdit} />
       <Button color="blue" size="s" name="パスワード変更" onClick={handlePassword} />
-    </>
+    </Horizontal>
   )
 
   return (

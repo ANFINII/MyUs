@@ -5,6 +5,7 @@ import { MypageIn, MypageOut } from 'types/internal/auth'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import Horizontal from 'components/parts/Horizontal/inedex'
 import IconPicture from 'components/parts/Icon/Picture'
 import Input from 'components/parts/Input'
 import InputImage from 'components/parts/Input/Image'
@@ -53,10 +54,10 @@ export default function SettingMyPageEdit(props: Props) {
   }
 
   const buttonArea = (
-    <>
+    <Horizontal gap="4">
       <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
       <Button color="blue" size="s" name="戻る" onClick={handleBack} />
-    </>
+    </Horizontal>
   )
 
   return (

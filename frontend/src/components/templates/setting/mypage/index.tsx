@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import { MypageOut } from 'types/internal/auth'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import Horizontal from 'components/parts/Horizontal/inedex'
 import IconPicture from 'components/parts/Icon/Picture'
 import Toggle from 'components/parts/Input/Toggle'
 import LoginRequired from 'components/parts/LoginRequired'
@@ -21,10 +22,10 @@ export default function SettingMyPage(props: Props) {
   const handleUserPage = () => router.push(`/userpage/${mypage.nickname}`)
 
   const buttonArea = (
-    <>
+    <Horizontal gap="4">
       <Button color="blue" size="s" name="編集" onClick={handleEdit} />
       <Button color="purple" size="s" name="ユーザページ" onClick={handleUserPage} />
-    </>
+    </Horizontal>
   )
 
   return (

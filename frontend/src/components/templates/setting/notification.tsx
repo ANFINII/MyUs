@@ -5,6 +5,7 @@ import { notificationTypes } from 'utils/functions/user'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import Horizontal from 'components/parts/Horizontal/inedex'
 import Toggle from 'components/parts/Input/Toggle'
 import LoginRequired from 'components/parts/LoginRequired'
 import Table from 'components/parts/Table'
@@ -41,10 +42,10 @@ export default function SettingNotification(props: Props) {
   }
 
   const buttonArea = (
-    <>
+    <Horizontal gap="4">
       <Button color="green" size="s" name="保存" loading={isLoading} onClick={handleSubmit} />
       <Button color="blue" size="s" name="リセット" onClick={handleReset} />
-    </>
+    </Horizontal>
   )
 
   return (
