@@ -8,6 +8,7 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
+import Vertical from 'components/parts/Vertical/inedex'
 
 export default function ChatCreate() {
   const router = useRouter()
@@ -39,12 +40,12 @@ export default function ChatCreate() {
   return (
     <Main title="Chat" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <LoginRequired margin="mt_20">
-        <form method="POST" action="" className="create_grid">
-          <Input label="タイトル" required={isRequired} onChange={handleTitle} />
-
-          <Textarea label="内容" required={isRequired} onChange={handleContent} />
-
-          <Input label="期間" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handlePeriod} />
+        <form method="POST" action="">
+          <Vertical gap="8">
+            <Input label="タイトル" required={isRequired} onChange={handleTitle} />
+            <Textarea label="内容" required={isRequired} onChange={handleContent} />
+            <Input label="期間" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handlePeriod} />
+          </Vertical>
         </form>
       </LoginRequired>
     </Main>

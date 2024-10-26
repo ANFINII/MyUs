@@ -12,6 +12,7 @@ import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
+import Vertical from 'components/parts/Vertical/inedex'
 
 const Quill = dynamic(() => import('components/widgets/Quill'), { ssr: false })
 
@@ -56,14 +57,13 @@ export default function BlogCreate() {
   return (
     <Main title="Blog" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <LoginRequired margin="mt_20">
-        <form method="POST" action="" className="create_grid">
-          <Input label="タイトル" required={isRequired} onChange={handleTitle} />
-
-          <Textarea label="内容" required={isRequired} onChange={handleContent} />
-
-          <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
-
-          <Quill label="本文" users={users} value={values.richtext} className="blog" required={isRequired} onChange={handleQuill} />
+        <form method="POST" action="">
+          <Vertical gap="8">
+            <Input label="タイトル" required={isRequired} onChange={handleTitle} />
+            <Textarea label="内容" required={isRequired} onChange={handleContent} />
+            <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
+            <Quill label="本文" users={users} value={values.richtext} className="blog" required={isRequired} onChange={handleQuill} />
+          </Vertical>
         </form>
       </LoginRequired>
     </Main>

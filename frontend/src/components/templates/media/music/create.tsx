@@ -9,6 +9,7 @@ import CheckBox from 'components/parts/Input/CheckBox'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
+import Vertical from 'components/parts/Vertical/inedex'
 
 export default function MusicCreate() {
   const router = useRouter()
@@ -42,17 +43,16 @@ export default function MusicCreate() {
   return (
     <Main title="Music" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <LoginRequired margin="mt_20">
-        <form method="POST" action="" encType="multipart/form-data" className="create_grid">
-          <Input label="タイトル" required={isRequired} onChange={handleTitle} />
-
-          <Textarea label="内容" required={isRequired} onChange={handleContent} />
-
-          <Textarea label="歌詞" required={isRequired} onChange={handleLyric} />
-
-          <div>
-            <InputFile label="音楽" accept="audio/*" required={isRequired} onChange={handleFile} />
-            <CheckBox label="ダウンロード許可" className="mt_4" checked onChange={handleDownload} />
-          </div>
+        <form method="POST" action="" encType="multipart/form-data">
+          <Vertical gap="8">
+            <Input label="タイトル" required={isRequired} onChange={handleTitle} />
+            <Textarea label="内容" required={isRequired} onChange={handleContent} />
+            <Textarea label="歌詞" required={isRequired} onChange={handleLyric} />
+            <div>
+              <InputFile label="音楽" accept="audio/*" required={isRequired} onChange={handleFile} />
+              <CheckBox label="ダウンロード許可" className="mt_4" checked onChange={handleDownload} />
+            </div>
+          </Vertical>
         </form>
       </LoginRequired>
     </Main>

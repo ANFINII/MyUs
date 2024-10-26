@@ -8,6 +8,7 @@ import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
+import Vertical from 'components/parts/Vertical/inedex'
 
 export default function VideoCreate() {
   const router = useRouter()
@@ -40,14 +41,13 @@ export default function VideoCreate() {
   return (
     <Main title="Video" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <LoginRequired margin="mt_20">
-        <form method="POST" action="" encType="multipart/form-data" className="create_grid">
-          <Input label="タイトル" required={isRequired} onChange={handleTitle} />
-
-          <Textarea label="内容" required={isRequired} onChange={handleContent} />
-
-          <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
-
-          <InputFile label="動画" accept="video/*" required={isRequired} onChange={handleMovie} />
+        <form method="POST" action="" encType="multipart/form-data">
+          <Vertical gap="8">
+            <Input label="タイトル" required={isRequired} onChange={handleTitle} />
+            <Textarea label="内容" required={isRequired} onChange={handleContent} />
+            <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
+            <InputFile label="動画" accept="video/*" required={isRequired} onChange={handleMovie} />
+          </Vertical>
         </form>
       </LoginRequired>
     </Main>

@@ -8,6 +8,7 @@ import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
+import Vertical from 'components/parts/Vertical/inedex'
 
 export default function PictureCreate() {
   const router = useRouter()
@@ -39,12 +40,12 @@ export default function PictureCreate() {
   return (
     <Main title="Picture" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <LoginRequired margin="mt_20">
-        <form method="POST" action="" className="create_grid">
-          <Input label="タイトル" required={isRequired} onChange={handleTitle} />
-
-          <Textarea label="内容" required={isRequired} onChange={handleContent} />
-
-          <InputFile label="画像" accept="image/*" required={isRequired} onChange={handleFile} />
+        <form method="POST" action="">
+          <Vertical gap="8">
+            <Input label="タイトル" required={isRequired} onChange={handleTitle} />
+            <Textarea label="内容" required={isRequired} onChange={handleContent} />
+            <InputFile label="画像" accept="image/*" required={isRequired} onChange={handleFile} />
+          </Vertical>
         </form>
       </LoginRequired>
     </Main>

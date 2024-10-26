@@ -10,6 +10,7 @@ import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
+import Vertical from 'components/parts/Vertical/inedex'
 
 export default function TodoCreate() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -42,16 +43,14 @@ export default function TodoCreate() {
   return (
     <Main title="Todo" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <LoginRequired margin="mt_20">
-        <form method="POST" action="" className="create_grid">
-          <Input label="タイトル" required={isRequired} onChange={handleTitle} />
-
-          <Textarea label="内容" required={isRequired} onChange={handleContent} />
-
-          <Select label="優先度" options={priority} value={values.priority} onChange={handlePriority} />
-
-          <Select label="進捗度" options={progress} value={values.progress} onChange={handleProgress} />
-
-          <Input label="期日" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handleDuedate} />
+        <form method="POST" action="">
+          <Vertical gap="8">
+            <Input label="タイトル" required={isRequired} onChange={handleTitle} />
+            <Textarea label="内容" required={isRequired} onChange={handleContent} />
+            <Select label="優先度" options={priority} value={values.priority} onChange={handlePriority} />
+            <Select label="進捗度" options={progress} value={values.progress} onChange={handleProgress} />
+            <Input label="期日" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handleDuedate} />
+          </Vertical>
         </form>
       </LoginRequired>
     </Main>
