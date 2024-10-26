@@ -42,7 +42,7 @@ export default function Main(props: Props) {
         <>
           <div className="main_header">
             {title && <h1 className="main_title">{title}</h1>}
-            {buttonArea && user.isActive && <div className="main_button_area">{buttonArea}</div>}
+            {buttonArea && user.isActive && <div className="ml_8">{buttonArea}</div>}
           </div>
           <article className="mv_24">{children}</article>
           <Footer />
