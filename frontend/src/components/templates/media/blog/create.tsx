@@ -12,7 +12,7 @@ import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
-import Vertical from 'components/parts/Vertical/inedex'
+import Vertical from 'components/parts/Stack/Vertical'
 
 const Quill = dynamic(() => import('components/widgets/Quill'), { ssr: false })
 

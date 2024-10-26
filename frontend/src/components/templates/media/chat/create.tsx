@@ -8,7 +8,7 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 import LoginRequired from 'components/parts/LoginRequired'
-import Vertical from 'components/parts/Vertical/inedex'
+import Vertical from 'components/parts/Stack/Vertical'
 
 export default function ChatCreate() {
   const router = useRouter()
