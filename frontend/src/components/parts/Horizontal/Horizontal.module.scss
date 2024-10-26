@@ -1,0 +1,17 @@
+.horizontal {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+
+  &[style*="justifyContent: center"] {
+    justify-content: center;
+  }
+
+  &[style*="justifyContent: end"] {
+    justify-content: flex-end;
+  }
+
+  &[style*="justifyContent: stretch"] {
+    justify-content: stretch;
+  }
+}
