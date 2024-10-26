@@ -1,0 +1,17 @@
+.vertical {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+
+  &[style*="alignItems: center"] {
+    align-items: center;
+  }
+
+  &[style*="alignItems: end"] {
+    align-items: flex-end;
+  }
+
+  &[style*="alignItems: stretch"] {
+    align-items: stretch;
+  }
+}
