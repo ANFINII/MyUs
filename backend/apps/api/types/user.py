@@ -3,7 +3,7 @@ from typing import Any
 
 
 @dataclass(frozen=True, slots=True)
-class UserOut:
+class UserData:
     avatar: str
     email: str
     nickname: str
@@ -12,14 +12,14 @@ class UserOut:
 
 
 @dataclass(frozen=True, slots=True)
-class Author:
+class AuthorData:
     avatar: str
     nickname: str
     follower_count: int
 
 
 @dataclass(frozen=True, slots=True)
-class MediaUser:
+class MediaUserData:
     avatar: str
     nickname: str
     is_like: bool
@@ -27,7 +27,7 @@ class MediaUser:
 
 
 @dataclass(frozen=True, slots=True)
-class NotificationUser:
+class NotificationUserData:
     avatar: int
     nickname: str
 
@@ -35,8 +35,8 @@ class NotificationUser:
 @dataclass(frozen=True)
 class NotificationData:
     id: int
-    user_from: NotificationUser
-    user_to: NotificationUser
+    user_from: NotificationUserData
+    user_to: NotificationUserData
     type_no: int
     type_name: str
     content_object: Any
@@ -44,6 +44,6 @@ class NotificationData:
 
 
 @dataclass(frozen=True)
-class NotificationOut:
+class NotificationData:
     count: int
     datas: list[NotificationData]

@@ -1,11 +1,11 @@
 from apps.myus.models.user import User
 from apps.myus.models import Follow
-from apps.api.types.user import Author, MediaUser, NotificationUser
+from apps.api.types.user import AuthorData, MediaUserData, NotificationUserData
 from apps.api.utils.functions.index import create_url
 
 
-def get_author(author: User) -> Author:
-    data = Author(
+def get_author(author: User) -> AuthorData:
+    data = AuthorData(
         avatar=create_url(author.image()) or '',
         nickname=author.nickname,
         follower_count=author.mypage.follower_count,
@@ -13,8 +13,8 @@ def get_author(author: User) -> Author:
     return data
 
 
-def get_media_user(user: User, obj) -> MediaUser:
-    data = MediaUser(
+def get_media_user(user: User, obj) -> MediaUserData:
+    data = MediaUserData(
         avatar=create_url(user.image()),
         nickname=user.nickname,
         is_like=obj.like.filter(id=user.id).exists(),
@@ -23,6 +23,6 @@ def get_media_user(user: User, obj) -> MediaUser:
     return data
 
 
-def get_notification_user(user: User) -> NotificationUser:
-    data = NotificationUser(avatar=create_url(user.image()), nickname=user.nickname)
+def get_notification_user(user: User) -> NotificationUserData:
+    data = NotificationUserData(avatar=create_url(user.image()), nickname=user.nickname)
     return data

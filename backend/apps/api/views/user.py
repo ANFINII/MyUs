@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from apps.myus.models import SearchTag
 from apps.api.services.notification import get_notification, get_content_object
 from apps.api.services.user import get_user, get_follows, get_followers
-from apps.api.types.user import UserOut
+from apps.api.types.user import UserData
 from apps.api.utils.enum.response import ApiResponse
 from apps.api.utils.functions.index import create_url
 from apps.api.utils.functions.response import DataResponse
@@ -17,7 +17,7 @@ class UserAPI(APIView):
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
 
-        data = UserOut(
+        data = UserData(
             avatar=create_url(user.image()),
             email=user.email,
             nickname=user.nickname,
