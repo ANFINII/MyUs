@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import clsx from 'clsx'
 import { Chat } from 'types/internal/media'
-import AuthorSpace from 'components/widgets/Common/AuthorSpace'
+import AuthorLink from 'components/parts/AuthorLink'
 import style from './Section.module.scss'
 
 interface Props {
@@ -17,7 +17,7 @@ export default function SectionChat(props: Props) {
     <section className={style.section_other}>
       <div className={style.decolation}>
         <Link href={`/media/chat/${id}`} className={style.author_space}>
-          <AuthorSpace imageUrl={avatar} nickname={nickname} />
+          <AuthorLink imageUrl={avatar} nickname={nickname} />
           <div title={title} className="content_title">
             {title}
           </div>

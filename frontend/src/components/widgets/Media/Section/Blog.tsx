@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Picture } from 'types/internal/media'
 import ExImage from 'components/parts/ExImage'
-import AuthorSpace from 'components/widgets/Common/AuthorSpace'
+import AuthorLink from 'components/parts/AuthorLink'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
 import style from './Section.module.scss'
 
@@ -20,7 +20,7 @@ export default function SectionBlog(props: Props) {
         <Link href={`/media/blog/${id}`}>
           <ExImage src={image} width="272" height="153" className="radius_8" />
           <div className={style.author_space}>
-            <AuthorSpace imageUrl={author.avatar} nickname={nickname} />
+            <AuthorLink imageUrl={author.avatar} nickname={nickname} />
             <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />
           </div>
         </Link>

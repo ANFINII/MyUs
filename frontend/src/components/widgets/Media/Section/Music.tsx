@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Music } from 'types/internal/media'
-import AuthorSpace from 'components/widgets/Common/AuthorSpace'
+import AuthorLink from 'components/parts/AuthorLink'
 import ContentTitle from 'components/widgets/Common/ContentTitle'
 import style from './Section.module.scss'
 
@@ -21,7 +21,7 @@ export default function SectionMusic(props: Props) {
           <p>ブラウザがaudioに対応しておりません</p>
         </audio>
         <Link href={`/media/music/${id}`} className={style.author_space}>
-          <AuthorSpace imageUrl={avatar} nickname={nickname} />
+          <AuthorLink imageUrl={avatar} nickname={nickname} />
           <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />
         </Link>
       </div>
