@@ -12,6 +12,7 @@ from apps.api.services.user import get_user, profile_check
 from apps.api.utils.enum.response import ApiResponse
 from apps.api.utils.functions.index import message
 from apps.api.utils.functions.logger import Log
+from apps.api.utils.functions.response import DataResponse
 
 
 class SettingProfileAPI(APIView):
@@ -43,7 +44,7 @@ class SettingProfileAPI(APIView):
             'street': user.profile.street,
             'introduction': user.profile.introduction,
         }
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
     def put(self, request):
         user = get_user(request)
@@ -98,7 +99,7 @@ class SettingMyPageAPI(APIView):
             'plan_end_date': user.plan_end_date(),
             'is_advertise': user.mypage.is_advertise,
         }
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
     def put(self, request):
         user = get_user(request)
@@ -146,7 +147,7 @@ class SettingNotificationAPI(APIView):
             'is_like': user_notification.is_like,
             'is_views': user_notification.is_views,
         }
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
     def put(self, request):
         user = get_user(request)
