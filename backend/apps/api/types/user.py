@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class UserOut:
     avatar: str
     email: str
@@ -11,14 +11,14 @@ class UserOut:
     is_staff: bool
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Author:
     avatar: str
     nickname: str
     follower_count: int
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class MediaUser:
     avatar: str
     nickname: str
@@ -26,7 +26,7 @@ class MediaUser:
     is_follow: bool
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class NotificationUser:
     avatar: int
     nickname: str
