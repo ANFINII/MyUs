@@ -1,6 +1,13 @@
 .section_list {
   max-width: 272px;
   height: 265px;
+  border: 1px solid rgb(220, 220, 220);
+  border-radius: 8px;
+  box-shadow: 0 0.06rem 0 0 rgba(25, 25, 25, .07);
+}
+
+.section_image {
+  border-radius: 8px 8px 0 0;
 }
 
 .section_music {
