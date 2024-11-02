@@ -1,6 +1,6 @@
-from config.settings.base import DOMAIN_URL
 from apps.myus.models import User
 from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from apps.api.utils.functions.index import create_url
 from apps.api.utils.functions.search import search_media, search_todo
 from apps.api.utils.functions.user import get_author
 
@@ -88,7 +88,7 @@ def get_comics(count: int, search: str | None):
         'id': obj.id,
         'title': obj.title,
         'content': obj.content,
-        'image': f'{DOMAIN_URL}{obj.image.url}',
+        'image': create_url(obj.image.url),
         'like': obj.total_like(),
         'read': obj.read,
         'publish': obj.publish,
@@ -110,7 +110,7 @@ def get_pictures(count: int, search: str | None):
         'id': obj.id,
         'title': obj.title,
         'content': obj.content,
-        'image': f'{DOMAIN_URL}{obj.image.url}',
+        'image': create_url(obj.image.url),
         'like': obj.total_like(),
         'read': obj.read,
         'comment_count': obj.comment_count(),
@@ -134,7 +134,7 @@ def get_blogs(count: int, search: str | None):
         'title': obj.title,
         'content': obj.content,
         'richtext': obj.richtext,
-        'image': f'{DOMAIN_URL}{obj.image.url}',
+        'image': create_url(obj.image.url),
         'like': obj.total_like(),
         'read': obj.read,
         'comment_count': obj.comment_count(),

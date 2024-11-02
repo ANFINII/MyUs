@@ -1,10 +1,10 @@
 import jwt
 from django.conf import settings
 
-from config.settings.base import DOMAIN_URL
-from apps.api.utils.functions.search import search_follow
 from apps.myus.models import User, Follow
 from apps.myus.modules.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
+from apps.api.utils.functions.index import create_url
+from apps.api.utils.functions.search import search_follow
 
 
 def get_user(request) -> User | None:
@@ -95,7 +95,7 @@ def get_follows(count: int, user: User, search: str | None):
         objs = Follow.objects.filter(follower=user).select_related('following__mypage').order_by('created')[:count]
 
     data = [{
-        'avatar': f'{DOMAIN_URL}{obj.following.avatar.url}',
+        'avatar': create_url(obj.following.avatar.url),
         'nickname': obj.following.nickname,
         'introduction': obj.following.profile.introduction,
         'follower_count': obj.following.mypage.follower_count,
@@ -112,7 +112,7 @@ def get_followers(count: int, user: User, search: str | None):
         objs = Follow.objects.filter(following=user).select_related('follower__mypage').order_by('created')[:count]
 
     data = [{
-        'avatar': f'{DOMAIN_URL}{obj.follower.avatar.url}',
+        'avatar': create_url(obj.follower.avatar.url),
         'nickname': obj.follower.nickname,
         'introduction': obj.follower.profile.introduction,
         'follower_count': obj.follower.mypage.follower_count,

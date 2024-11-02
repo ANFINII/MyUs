@@ -1,12 +1,12 @@
-from config.settings.base import DOMAIN_URL
-from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
 from apps.myus.models import SearchTag
 from apps.api.services.notification import get_notification, get_content_object
 from apps.api.services.user import get_user, get_follows, get_followers
+from apps.api.types.user import UserOut
 from apps.api.utils.enum.response import ApiResponse
+from apps.api.utils.functions.index import create_url
 from apps.api.utils.functions.response import DataResponse
 from apps.api.utils.functions.user import get_notification_user
 
@@ -17,13 +17,13 @@ class UserAPI(APIView):
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
 
-        data = {
-            'avatar': f'{DOMAIN_URL}{user.image()}' if user.image() else '',
-            'email': user.email,
-            'nickname': user.nickname,
-            'is_active': user.is_active,
-            'is_staff': user.is_staff,
-        }
+        data = UserOut(
+            avatar=create_url(user.image()),
+            email=user.email,
+            nickname=user.nickname,
+            is_active=user.is_active,
+            is_staff=user.is_staff,
+        )
         return DataResponse(data, HTTP_200_OK)
 
 

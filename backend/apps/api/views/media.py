@@ -4,18 +4,16 @@ import os
 from django.db.models import Exists, OuterRef
 from django.conf import settings
 
-from config.settings.base import DOMAIN_URL
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from apps.myus.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Todo
-from apps.myus.modules.search import Search
 from apps.myus.convert.convert_hls import convert_exe
 from apps.api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
 from apps.api.services.user import get_user
 from apps.api.utils.enum.response import ApiResponse
-from apps.api.utils.functions.index import is_bool
+from apps.api.utils.functions.index import is_bool, create_url
 from apps.api.utils.functions.comment import get_comment, get_comments
 from apps.api.utils.functions.response import DataResponse
 from apps.api.utils.functions.user import get_author, get_media_user
@@ -229,7 +227,7 @@ class PictureAPI(APIView):
             'id': obj.id,
             'title': obj.title,
             'content': obj.content,
-            'image': f'{DOMAIN_URL}/{obj.image.url}',
+            'image': create_url(obj.image.url),
             'comment': [get_comment(comment) for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
