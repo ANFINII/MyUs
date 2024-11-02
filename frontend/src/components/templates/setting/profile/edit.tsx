@@ -57,7 +57,7 @@ export default function SettingProfileEdit(props: Props) {
 
   const handleAutoAddress = async () => {
     const results = await getAddress(values.postalCode)
-    if (results) {
+    if (results && results[0]) {
       const result = results[0]
       setValues({ ...values, prefecture: result.address1, city: result.address2, street: result.address3 })
       setMessage('')

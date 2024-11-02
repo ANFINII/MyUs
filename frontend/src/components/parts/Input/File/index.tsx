@@ -26,10 +26,11 @@ export default function InputFile(props: Props) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    if (files) {
+    if (files && files.length > 0) {
       const names = Array.from(files).map((file) => file.name)
       setFileNames(names)
-      onChange && onChange(multiple ? Array.from(files) : files[0])
+      const selectedFiles = multiple ? Array.from(files) : files[0]
+      onChange && selectedFiles && onChange(selectedFiles)
     }
   }
 

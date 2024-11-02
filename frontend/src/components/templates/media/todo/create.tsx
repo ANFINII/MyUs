@@ -15,7 +15,7 @@ import Vertical from 'components/parts/Stack/Vertical'
 export default function TodoCreate() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
-  const [values, setValues] = useState<TodoIn>({ title: '', content: '', priority: priority[0].value, progress: progress[0].value, duedate: '' })
+  const [values, setValues] = useState<TodoIn>({ title: '', content: '', priority: 'success', progress: '0', duedate: '' })
 
   const handleTitle = (title: string) => setValues({ ...values, title })
   const handleContent = (content: string) => setValues({ ...values, content })

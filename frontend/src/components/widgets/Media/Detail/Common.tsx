@@ -21,6 +21,7 @@ interface Props {
 
 export default function MediaDetailCommon(props: Props) {
   const { title, content, read, totalLike, commentCount, created, author, user } = props
+  console.log(commentCount)
 
   const [isLike, setIsLike] = useState<boolean>(Boolean(user?.isLike))
   const [isContentView, setIsContentVIew] = useState<boolean>(false)

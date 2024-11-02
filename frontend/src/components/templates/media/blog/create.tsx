@@ -32,7 +32,7 @@ export default function BlogCreate() {
   const handleContent = (content: string) => setValues({ ...values, content })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
 
-  const handleQuill = (value: string, delta: DeltaStatic, source: Sources, editor: UnprivilegedEditor) => {
+  const handleQuill = (value: string, _delta: DeltaStatic, _source: Sources, editor: UnprivilegedEditor) => {
     const richtext = value.trim() === '<p><br></p>' ? '' : value.trim()
     setValues({ ...values, richtext, delta: JSON.stringify(editor.getContents()) })
   }
