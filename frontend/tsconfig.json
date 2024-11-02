@@ -33,7 +33,6 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "useUnknownInCatchVariables": true,
-    // いつか有効化してほしいオプションたち!!!!
     // "exactOptionalPropertyTypes": true
     // "noImplicitOverride": true,
     // "noPropertyAccessFromIndexSignature": true,
