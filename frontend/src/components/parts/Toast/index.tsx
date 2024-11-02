@@ -15,8 +15,7 @@ export default function Toast(props: Props): JSX.Element {
 
   useEffect(() => {
     if (isToast) {
-      const timer = setTimeout(() => setIsToast && setIsToast(false), 5000)
-      return () => clearTimeout(timer)
+      setTimeout(() => setIsToast && setIsToast(false), 5000)
     }
   }, [isToast, setIsToast])
 

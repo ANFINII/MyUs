@@ -7,8 +7,9 @@ interface Props {
 
 export default function SectionTodo(props: Props) {
   const { data } = props
-  const { author, id, title } = data
-  const { nickname } = author
+  // const { author, id, title } = data
+  // const { nickname } = author
+  data
 
   return <section className={style.section_todo}></section>
 }
