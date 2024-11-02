@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getBlogs } from 'api/internal/media/list'
 import { Blog } from 'types/internal/media'
+import { getBlogs } from 'api/internal/media/list'
 import Blogs from 'components/templates/media/blog/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {

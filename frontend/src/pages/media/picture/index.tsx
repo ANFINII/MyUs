@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getPictures } from 'api/internal/media/list'
 import { Picture } from 'types/internal/media'
+import { getPictures } from 'api/internal/media/list'
 import Pictures from 'components/templates/media/picture/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {

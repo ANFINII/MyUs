@@ -1,48 +1,48 @@
 import { HttpStatusCode } from 'axios'
-import { apiServer } from 'lib/apiServer'
 import { apiClient } from 'lib/axios'
-import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat, apiTodo } from 'api/uri'
-import { Req } from 'types/global/next'
+import { cookieHeader } from 'lib/config'
+import { Req } from 'types/global'
 import { Video, Music, Comic, Picture, Chat, Todo, BlogDetailOut } from 'types/internal/media'
+import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat, apiTodo } from 'api/uri'
 
-export const getServerVideo = async (req: Req, id: number): Promise<Video> => {
-  const res = await apiServer(req, apiClient, apiVideo(id))
+export const getVideo = async (id: number, req?: Req): Promise<Video> => {
+  const res = await apiClient.get(apiVideo(id), cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getServerMusic = async (req: Req, id: number): Promise<Music> => {
-  const res = await apiServer(req, apiClient, apiMusic(id))
+export const getMusic = async (id: number, req?: Req): Promise<Music> => {
+  const res = await apiClient.get(apiMusic(id), cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getServerComic = async (req: Req, id: number): Promise<Comic> => {
-  const res = await apiServer(req, apiClient, apiComic(id))
+export const getComic = async (id: number, req?: Req): Promise<Comic> => {
+  const res = await apiClient.get(apiComic(id), cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getServerPicture = async (req: Req, id: number): Promise<Picture> => {
-  const res = await apiServer(req, apiClient, apiPicture(id))
+export const getPicture = async (id: number, req?: Req): Promise<Picture> => {
+  const res = await apiClient.get(apiPicture(id), cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getServerBlog = async (req: Req, id: number): Promise<BlogDetailOut> => {
-  const res = await apiServer(req, apiClient, apiBlog(id))
+export const getBlog = async (id: number, req?: Req): Promise<BlogDetailOut> => {
+  const res = await apiClient.get(apiBlog(id), cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getServerChat = async (req: Req, id: number): Promise<Chat> => {
-  const res = await apiServer(req, apiClient, apiChat(id))
+export const getChat = async (id: number, req?: Req): Promise<Chat> => {
+  const res = await apiClient.get(apiChat(id), cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
 
-export const getServerTodo = async (req: Req, id: number): Promise<Todo[]> => {
-  const res = await apiServer(req, apiClient, apiTodo(id))
+export const getTodo = async (id: number, req?: Req): Promise<Todo[]> => {
+  const res = await apiClient.get(apiTodo(id), cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }

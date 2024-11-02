@@ -1,6 +1,6 @@
 import { useState, createContext, useEffect } from 'react'
-import { getUser } from 'api/internal/auth'
 import { UserMe } from 'types/internal/auth'
+import { getUser } from 'api/internal/auth'
 
 interface UserContextType {
   user: UserMe

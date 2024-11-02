@@ -1,8 +1,8 @@
 import { HttpStatusCode } from 'axios'
 import { apiClient, apiFormClient } from 'lib/axios'
-import { apiVideoCreate, apiMusicCreate, apiComicCreate, apiPictureCreate, apiBlogCreate, apiChatCreate, apiTodoCreate } from 'api/uri'
 import { Video, Music, Comic, Picture, Blog, Chat, Todo, TodoIn } from 'types/internal/media'
 import { VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn } from 'types/internal/media'
+import { apiVideoCreate, apiMusicCreate, apiComicCreate, apiPictureCreate, apiBlogCreate, apiChatCreate, apiTodoCreate } from 'api/uri'
 
 export const postVideoCreate = async (request: VideoIn): Promise<Video> => {
   const res = await apiFormClient.post(apiVideoCreate, request)

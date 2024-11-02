@@ -1,5 +1,5 @@
-import { getChats } from 'api/internal/media/list'
 import { Chat } from 'types/internal/media'
+import { getChats } from 'api/internal/media/list'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import ArticleMedia from 'components/widgets/Media/Article/Media'

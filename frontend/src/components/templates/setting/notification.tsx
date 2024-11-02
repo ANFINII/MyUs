@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { getSettingNotification, putSettingNotification } from 'api/internal/setting'
 import { UserNotification, UserNotificationOut } from 'types/internal/auth'
+import { getSettingNotification, putSettingNotification } from 'api/internal/setting'
 import { notificationTypes } from 'utils/functions/user'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'

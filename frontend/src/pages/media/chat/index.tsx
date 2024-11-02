@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getChats } from 'api/internal/media/list'
 import { Chat } from 'types/internal/media'
+import { getChats } from 'api/internal/media/list'
 import Chats from 'components/templates/media/chat/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {

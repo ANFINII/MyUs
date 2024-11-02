@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import { getTodos } from 'api/internal/media/list'
 import { Todo } from 'types/internal/media'
+import { getTodos } from 'api/internal/media/list'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -16,7 +16,7 @@ export default function Todos(props: Props) {
   const { datas } = props
 
   const router = useRouter()
-  const { search, newDatas } = useNewDatas<Todo[]>({ datas, getDatas: (search) => getTodos(search) })
+  const { search, newDatas } = useNewDatas<Todo[]>({ datas, getDatas: (search) => getTodos(undefined, search) })
 
   return (
     <Main title="Todo" search={{ name: search, count: newDatas.length }}>

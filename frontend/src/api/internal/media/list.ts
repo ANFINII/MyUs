@@ -1,9 +1,9 @@
 import { HttpStatusCode } from 'axios'
-import { apiServer } from 'lib/apiServer'
 import { apiClient } from 'lib/axios'
-import { apiHome, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats, apiTodos } from 'api/uri'
-import { Req } from 'types/global/next'
+import { cookieHeader } from 'lib/config'
+import { Req } from 'types/global'
 import { MediaHome, Video, Music, Comic, Picture, Blog, Chat, Todo } from 'types/internal/media'
+import { apiHome, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats, apiTodos } from 'api/uri'
 
 export const getHome = async (search?: string): Promise<MediaHome> => {
   const res = await apiClient.get(apiHome, { params: { search } })
@@ -47,14 +47,8 @@ export const getChats = async (search?: string): Promise<Chat[]> => {
   return res.data
 }
 
-export const getTodos = async (search?: string): Promise<Todo[]> => {
-  const res = await apiClient.get(apiTodos, { params: { search } })
-  if (res.status >= HttpStatusCode.BadRequest) return []
-  return res.data
-}
-
-export const getServerTodos = async (req: Req, search?: string): Promise<Todo[]> => {
-  const res = await apiServer(req, apiClient, apiTodos, { search })
+export const getTodos = async (req?: Req, search?: string): Promise<Todo[]> => {
+  const res = await apiClient.get(apiTodos, cookieHeader(req, { search }))
   if (res.status >= HttpStatusCode.BadRequest) return []
   return res.data
 }
