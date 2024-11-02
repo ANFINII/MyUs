@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import ExImage from '../ExImage'
-import IconPerson from '../Icon/Person'
+import ExImage from 'components/parts/ExImage'
+import IconPerson from 'components/parts/Icon/Person'
 
 interface Props {
   size: string
@@ -17,5 +17,13 @@ export default function Avatar(props: Props) {
 
   const handleError = () => setIsError(true)
 
-  return <>{isError || src === '' ? <IconPerson size={size} type="circle" /> : <ExImage src={src} title={nickname} size={imgSize} className={className} onError={handleError} />}</>
+  return (
+    <>
+      {isError || src === '' ? (
+        <IconPerson size={size} type="circle" />
+      ) : (
+        <ExImage src={src} title={nickname} size={imgSize} className={className} onError={handleError} />
+      )}
+    </>
+  )
 }
