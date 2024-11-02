@@ -1,5 +1,6 @@
 from dataclasses import asdict, is_dataclass
-from typing import Any
+from typing import Any, Optional
+from rest_framework.response import Response
 
 
 def dataclass_dict(instance: Any) -> Any:
@@ -19,3 +20,8 @@ def dataclass_dict(instance: Any) -> Any:
         return [dataclass_dict(item) for item in instance]
     else:
         return instance
+
+
+class DataResponse(Response):
+    def __init__(self, data: Any, status: Optional[int], **kwargs):
+        super().__init__(dataclass_dict(data), status=status, **kwargs)

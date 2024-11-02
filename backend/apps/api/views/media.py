@@ -17,6 +17,7 @@ from apps.api.services.user import get_user
 from apps.api.utils.enum.response import ApiResponse
 from apps.api.utils.functions.index import is_bool
 from apps.api.utils.functions.comment import get_comment, get_comments
+from apps.api.utils.functions.response import DataResponse
 from apps.api.utils.functions.user import get_author, get_media_user
 
 
@@ -25,7 +26,7 @@ class HomeAPI(APIView):
     def get(self, request):
         search = request.query_params.get('search')
         data = get_home(8, search)
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 # Recommend
@@ -33,7 +34,7 @@ class RecommendAPI(APIView):
     def get(self, request):
         search = request.query_params.get('search')
         data = get_recommend(8, search)
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 # Video
@@ -41,10 +42,7 @@ class VideoListAPI(APIView):
     def get(self, request):
         search = request.query_params.get('search')
         data = get_videos(50, search)
-        return Response(data, status=HTTP_200_OK)
-
-    def get_queryset(self):
-        return Search.search_models(self, Video)
+        return DataResponse(data, HTTP_200_OK)
 
 
 class VideoAPI(APIView):
@@ -72,7 +70,7 @@ class VideoAPI(APIView):
             'updated': obj.updated,
             'author': get_author(obj.author),
         }
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
     def post(self, request):
         author = get_user(request)
@@ -100,7 +98,7 @@ class VideoAPI(APIView):
         obj.save()
 
         data = {'id': obj.id}
-        return Response(data, status=HTTP_201_CREATED)
+        return DataResponse(data, HTTP_201_CREATED)
 
 
 # Music
@@ -108,7 +106,7 @@ class MusicListAPI(APIView):
     def get(self, request):
         search = request.query_params.get('search')
         data = get_musics(50, search)
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 class MusicAPI(APIView):
@@ -135,7 +133,7 @@ class MusicAPI(APIView):
             'updated': obj.updated,
             'author': get_author(obj.author),
         }
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
     def post(self, request) -> Response:
@@ -154,7 +152,7 @@ class MusicAPI(APIView):
         }
         obj = Music.objects.create(**field)
         data = {'id': obj.id}
-        return Response(data, status=HTTP_201_CREATED)
+        return DataResponse(data, HTTP_201_CREATED)
 
 
 # Comic
@@ -162,7 +160,7 @@ class ComicListAPI(APIView):
     def get(self, request):
         search = request.query_params.get('search')
         data = get_comics(50, search)
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 class ComicAPI(APIView):
@@ -187,7 +185,7 @@ class ComicAPI(APIView):
             'updated': obj.updated,
             'author': get_author(obj.author),
         }
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
     def post(self, request) -> Response:
         author = get_user(request)
@@ -208,7 +206,7 @@ class ComicAPI(APIView):
         ComicPage.objects.bulk_create(comic_pages)
 
         data = {'id': obj.id}
-        return Response(data, status=HTTP_201_CREATED)
+        return DataResponse(data, HTTP_201_CREATED)
 
 
 # Picture
@@ -216,7 +214,7 @@ class PictureListAPI(APIView):
     def get(self, request):
         search = request.query_params.get('search')
         data = get_pictures(50, search)
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 class PictureAPI(APIView):
@@ -242,7 +240,7 @@ class PictureAPI(APIView):
             'updated': obj.updated,
             'author': get_author(obj.author),
         }
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
     def post(self, request):
         author = get_user(request)
@@ -258,7 +256,7 @@ class PictureAPI(APIView):
         }
         obj = Picture.objects.create(**field)
         data = {'id': obj.id}
-        return Response(data, status=HTTP_201_CREATED)
+        return DataResponse(data, HTTP_201_CREATED)
 
 
 # Blog
@@ -266,7 +264,7 @@ class BlogListAPI(APIView):
     def get(self, request):
         search = request.query_params.get('search')
         data = get_blogs(50, search)
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 class BlogAPI(APIView):
@@ -301,7 +299,7 @@ class BlogAPI(APIView):
         if user:
             data['detail']['user'] = get_media_user(user, obj)
 
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
     def post(self, request) -> Response:
         author = get_user(request)
@@ -319,7 +317,7 @@ class BlogAPI(APIView):
         }
         obj = Blog.objects.create(**field)
         data = {'id': obj.id}
-        return Response(data, status=HTTP_201_CREATED)
+        return DataResponse(data, HTTP_201_CREATED)
 
     @staticmethod
     def get_delta(delta, html):
@@ -332,7 +330,7 @@ class ChatListAPI(APIView):
     def get(self, request):
         search = request.query_params.get('search')
         data = get_chats(50, search)
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 class ChatAPI(APIView):
@@ -367,7 +365,7 @@ class ChatAPI(APIView):
             'updated': obj.updated,
             'author': get_author(obj.author),
         }
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
     def post(self, request) -> Response:
         author = get_user(request)
@@ -383,7 +381,7 @@ class ChatAPI(APIView):
         }
         obj = Chat.objects.create(**field)
         data = {'id': obj.id}
-        return Response(data, status=HTTP_201_CREATED)
+        return DataResponse(data, HTTP_201_CREATED)
 
 # Todo
 class TodoListAPI(APIView):
@@ -394,7 +392,7 @@ class TodoListAPI(APIView):
 
         search = request.query_params.get('search')
         data = get_todos(50, author, search)
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 class TodoAPI(APIView):
@@ -423,7 +421,7 @@ class TodoAPI(APIView):
             'updated': obj.updated,
             'author': get_author(obj.author),
         }
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
     def post(self, request):
         author = get_user(request)
@@ -441,4 +439,4 @@ class TodoAPI(APIView):
         }
         obj = Todo.objects.create(**field)
         data = {'id': obj.id}
-        return Response(data, status=HTTP_201_CREATED)
+        return DataResponse(data, HTTP_201_CREATED)
