@@ -18,9 +18,7 @@ export default function SectionComic(props: Props) {
     <section className={style.section_list}>
       <div className={style.decolation}>
         <Link href={`/media/comic/${id}`}>
-          <figure>
-            <ExImage src={image} width="272" height="153" className="radius_8" />
-          </figure>
+          <ExImage src={image} width="272" height="153" className="radius_8" />
           <div className={style.author_space}>
             <AuthorSpace imageUrl={author.avatar} nickname={nickname} />
             <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />

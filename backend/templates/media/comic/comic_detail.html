@@ -16,9 +16,7 @@
         </svg>
       </div>
       {% for comic_page in object.comic.all %}
-        <figure>
-          <img src="{{ comic_page.image.url }}" class="comic_page">
-        </figure>
+        <img src="{{ comic_page.image.url }}" class="comic_page">
       {% endfor %}
       <div class="left" id="nextButton">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
