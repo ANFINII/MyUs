@@ -7,6 +7,7 @@ from apps.myus.models import SearchTag
 from apps.api.services.notification import get_notification, get_content_object
 from apps.api.services.user import get_user, get_follows, get_followers
 from apps.api.utils.enum.response import ApiResponse
+from apps.api.utils.functions.response import DataResponse
 from apps.api.utils.functions.user import get_notification_user
 
 
@@ -23,7 +24,7 @@ class UserAPI(APIView):
             'is_active': user.is_active,
             'is_staff': user.is_staff,
         }
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 class SearchTagAPI(APIView):
@@ -35,7 +36,7 @@ class SearchTagAPI(APIView):
         search_tags = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
 
         data = [{'sequence': tag.sequence, 'name': tag.name} for tag in search_tags]
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 class FollowAPI(APIView):
@@ -46,7 +47,7 @@ class FollowAPI(APIView):
 
         search = request.query_params.get('search')
         data = get_follows(100, user, search)
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 class FollowerAPI(APIView):
@@ -57,7 +58,7 @@ class FollowerAPI(APIView):
 
         search = request.query_params.get('search')
         data = get_followers(100, user, search)
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
 
 
 class NotificationAPI(APIView):
@@ -81,4 +82,4 @@ class NotificationAPI(APIView):
                 } for obj in notification['datas']
             ],
         }
-        return Response(data, status=HTTP_200_OK)
+        return DataResponse(data, HTTP_200_OK)
