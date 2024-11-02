@@ -100,6 +100,10 @@ hr {
   display: flex;
 }
 
+.us_none {
+  user-select: none;
+}
+
 .create_grid {
   display: grid;
   row-gap: 16px;

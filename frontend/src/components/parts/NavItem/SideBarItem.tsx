@@ -19,7 +19,7 @@ export default function SideBarItem(props: Props): JSX.Element {
     <NavItem className={clsx('sidebar_color', { active: isActive })}>
       <div onClick={handleRouter}>
         {icon}
-        <p className="sidebar_text">{label}</p>
+        <p className="us_none">{label}</p>
       </div>
     </NavItem>
   )
