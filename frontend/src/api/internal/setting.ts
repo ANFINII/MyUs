@@ -1,14 +1,14 @@
 import { HttpStatusCode } from 'axios'
-import { apiServer } from 'lib/apiServer'
 import { apiClient, apiFormClient } from 'lib/axios'
-import { Req } from 'types/global/next'
+import { cookieHeader } from 'lib/config'
+import { Req } from 'types/global'
 import { ProfileIn, ProfileOut, MypageIn, MypageOut, UserNotificationIn, UserNotificationOut } from 'types/internal/auth'
 import { MessageOut } from 'types/internal/other'
 import { camelSnake } from 'utils/functions/convertCase'
 import { apiSettingProfile, apiSettingMypage, apiSettingNotification } from '../uri'
 
-export const getServerSettingProfile = async (req: Req): Promise<ProfileOut> => {
-  const res = await apiServer(req, apiClient, apiSettingProfile)
+export const getSettingProfile = async (req?: Req): Promise<ProfileOut> => {
+  const res = await apiClient.get(apiSettingProfile, cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
@@ -19,8 +19,8 @@ export const putSettingProfile = async (request: ProfileIn): Promise<MessageOut 
   return res.data
 }
 
-export const getServerSettingMypage = async (req: Req): Promise<MypageOut> => {
-  const res = await apiServer(req, apiClient, apiSettingMypage)
+export const getSettingMypage = async (req?: Req): Promise<MypageOut> => {
+  const res = await apiClient.get(apiSettingMypage, cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
@@ -31,14 +31,8 @@ export const putSettingMypage = async (request: MypageIn): Promise<MessageOut | 
   return res.data
 }
 
-export const getServerSettingNotification = async (req: Req): Promise<UserNotificationOut> => {
-  const res = await apiServer(req, apiClient, apiSettingNotification)
-  if (res.status >= HttpStatusCode.InternalServerError) throw Error
-  return res.data
-}
-
-export const getSettingNotification = async (): Promise<UserNotificationOut> => {
-  const res = await apiClient.get(apiSettingNotification)
+export const getSettingNotification = async (req?: Req): Promise<UserNotificationOut> => {
+  const res = await apiClient.get(apiSettingNotification, cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }

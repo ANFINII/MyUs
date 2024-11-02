@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import { getFollow } from 'api/internal/user'
 import { Follow } from 'types/internal/auth'
+import { getFollow } from 'api/internal/user'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -16,7 +16,7 @@ export default function Follows(props: Props) {
   const { follows } = props
 
   const router = useRouter()
-  const { search, newDatas } = useNewDatas<Follow[]>({ datas: follows, getDatas: (search) => getFollow(search) })
+  const { search, newDatas } = useNewDatas<Follow[]>({ datas: follows, getDatas: (search) => getFollow(undefined, search) })
 
   return (
     <Main title="Follow" search={{ name: search, count: newDatas.length }}>

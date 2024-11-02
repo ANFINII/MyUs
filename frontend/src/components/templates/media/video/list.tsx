@@ -1,5 +1,5 @@
-import { getVideos } from 'api/internal/media/list'
 import { Video } from 'types/internal/media'
+import { getVideos } from 'api/internal/media/list'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import ArticleMedia from 'components/widgets/Media/Article/Media'

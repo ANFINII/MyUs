@@ -1,5 +1,5 @@
-import { getComics } from 'api/internal/media/list'
 import { Comic } from 'types/internal/media'
+import { getComics } from 'api/internal/media/list'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import ArticleMedia from 'components/widgets/Media/Article/Media'

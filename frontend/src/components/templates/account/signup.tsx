@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { postSignup } from 'api/internal/auth'
 import { SignupIn } from 'types/internal/auth'
+import { postSignup } from 'api/internal/auth'
 import { Gender } from 'utils/constants/enum'
 import { nowDate, selectDate } from 'utils/functions/datetime'
 import { genders } from 'utils/functions/user'

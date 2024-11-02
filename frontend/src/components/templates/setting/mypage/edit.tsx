@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { putSettingMypage } from 'api/internal/setting'
 import { MypageIn, MypageOut } from 'types/internal/auth'
+import { putSettingMypage } from 'api/internal/setting'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
