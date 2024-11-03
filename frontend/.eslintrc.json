@@ -16,8 +16,8 @@
     "next/core-web-vitals",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "plugin:storybook/recommended"
+    "plugin:prettier/recommended"
+    // "plugin:storybook/recommended"
   ],
   "plugins": ["react", "complexity", "import", "unused-imports"],
   "settings": {
@@ -50,8 +50,8 @@
           { "pattern": "{react,react/**,react-dom/**,react-**}", "group": "builtin", "position": "before" },
           { "pattern": "{next,next/**,next-i18next,next-i18next/**,next-**}", "group": "builtin", "position": "before" },
           { "pattern": "lib/**", "group": "internal", "position": "before" },
-          { "pattern": "api/**", "group": "internal", "position": "before" },
           { "pattern": "types/**", "group": "internal", "position": "before" },
+          { "pattern": "api/**", "group": "internal", "position": "before" },
           { "pattern": "utils/**", "group": "internal", "position": "before" },
           { "pattern": "pages/**", "group": "internal", "position": "before" },
           { "pattern": "components/hooks/**", "group": "internal", "position": "before" },
