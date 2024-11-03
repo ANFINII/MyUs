@@ -1,15 +1,6 @@
-.author_image_space {
-  grid-column: 1/2;
-  grid-row: 1/2;
-
-  // .profile_image {
-  //   margin: 10px 0 8px 0;
-  // }
-}
-
-.profile_image {
-  width: 36px;
-  height: 36px;
+.avatar {
+  min-width: 36px;
+  min-height: 36px;
   background: rgb(200, 200, 200);
   border-radius: 50%;
   -webkit-border-radius: 50%;
