@@ -3,15 +3,15 @@
   width: 100%;
   flex-direction: row;
 
-  &[style*="justifyContent: center"] {
+  &[style*='justifyContent: center'] {
     justify-content: center;
   }
 
-  &[style*="justifyContent: end"] {
+  &[style*='justifyContent: end'] {
     justify-content: flex-end;
   }
 
-  &[style*="justifyContent: stretch"] {
+  &[style*='justifyContent: stretch'] {
     justify-content: stretch;
   }
 }

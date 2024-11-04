@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import styles from './Vertical.module.scss'
+import style from './Vertical.module.scss'
 
 interface Props {
   gap?: string | number
@@ -9,10 +9,10 @@ interface Props {
 }
 
 export default function Vertical(props: Props): JSX.Element {
-  const { gap, alignment, className, children } = props
+  const { gap = 0, alignment, className, children } = props
 
   return (
-    <div className={clsx(styles.vertical, className)} style={{ gap: `${Number(gap) * 2}px`, alignItems: alignment }}>
+    <div className={clsx(style.vertical, className)} style={{ gap: `${Number(gap) * 2}px`, alignItems: alignment }}>
       {children}
     </div>
   )

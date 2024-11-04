@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import styles from './Horizontal.module.scss'
+import style from './Horizontal.module.scss'
 
 interface Props {
   gap?: string | number
@@ -10,10 +10,10 @@ interface Props {
 }
 
 export default function Horizontal(props: Props): JSX.Element {
-  const { gap, alignment, wrap, className, children } = props
+  const { gap = 0, alignment, wrap, className, children } = props
 
   return (
-    <div className={clsx(styles.horizontal, className)} style={{ gap: `${Number(gap) * 2}px`, justifyContent: alignment, flexWrap: wrap ? 'wrap' : 'nowrap' }}>
+    <div className={clsx(style.horizontal, className)} style={{ gap: `${Number(gap) * 2}px`, justifyContent: alignment, flexWrap: wrap ? 'wrap' : 'nowrap' }}>
       {children}
     </div>
   )
