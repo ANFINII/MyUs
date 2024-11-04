@@ -16,7 +16,7 @@ export default function Blogs(props: Props) {
 
   return (
     <Main title="Blog" search={{ name: search, count: newDatas.length }}>
-      <MediaList datas={newDatas} MediaMedia={MediaBlog} />
+      <MediaList medias={newDatas} MediaComponent={MediaBlog} />
     </Main>
   )
 }

@@ -16,7 +16,7 @@ export default function Musics(props: Props) {
 
   return (
     <Main title="Music" search={{ name: search, count: newDatas.length }}>
-      <MediaList datas={newDatas} MediaMedia={MediaMusic} />
+      <MediaList medias={newDatas} MediaComponent={MediaMusic} />
     </Main>
   )
 }

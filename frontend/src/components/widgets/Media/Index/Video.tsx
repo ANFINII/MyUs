@@ -1,18 +1,18 @@
 import Link from 'next/link'
 import { Video } from 'types/internal/media'
 import MediaContent from 'components/widgets/Common/MediaContent'
-import style from './MediaContent.module.scss'
+import style from './Media.module.scss'
 
 interface Props {
-  data: Video
+  media: Video
 }
 
 export default function MediaVideo(props: Props) {
-  const { data } = props
-  const { id, title, image, convert, read, like, created, author } = data
+  const { media } = props
+  const { id, image, convert } = media
 
   return (
-    <section className={style.section_list}>
+    <section className={style.media}>
       <div className={style.decolation}>
         <div className="video video_auto">
           <Link href={`/media/video/${id}`}>
@@ -23,8 +23,8 @@ export default function MediaVideo(props: Props) {
               <track kind="captions" src="/vtt/captions.ja.vtt" srcLang="en" label="English" />
               <track kind="subtitles" src="/vtt/captions.ja.vtt" srcLang="en" label="English" />
             </video>
-            <MediaContent author={author} title={title} read={read} totalLike={like} created={created} />
           </Link>
+          <MediaContent href={`/media/video/${id}`} media={media} />
         </div>
       </div>
     </section>

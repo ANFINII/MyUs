@@ -5,12 +5,12 @@ import AuthorLink from 'components/parts/AuthorLink'
 import style from './Media.module.scss'
 
 interface Props {
-  data: Chat
+  media: Chat
 }
 
 export default function MediaChat(props: Props) {
-  const { data } = props
-  const { author, id, title, read, like, joined, thread, created } = data
+  const { media } = props
+  const { author, id, title, read, like, joined, thread, created } = media
   const { nickname, avatar } = author
 
   return (

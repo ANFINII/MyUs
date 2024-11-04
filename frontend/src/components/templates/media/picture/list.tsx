@@ -16,7 +16,7 @@ export default function Pictures(props: Props) {
 
   return (
     <Main title="Picture" search={{ name: search, count: newDatas.length }}>
-      <MediaList datas={newDatas} MediaMedia={MediaPicture} />
+      <MediaList medias={newDatas} MediaComponent={MediaPicture} />
     </Main>
   )
 }

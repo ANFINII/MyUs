@@ -23,38 +23,38 @@ export default function Homes(props: Props) {
       <Divide />
 
       <MediaIndex title="Video">
-        {videos?.map((data) => (
-          <MediaVideo key={data.id} data={data} />
+        {videos?.map((media) => (
+          <MediaVideo key={media.id} media={media} />
         ))}
       </MediaIndex>
 
       <MediaIndex title="Music">
-        {musics?.map((data) => (
-          <MediaMusic key={data.id} data={data} />
+        {musics?.map((media) => (
+          <MediaMusic key={media.id} media={media} />
         ))}
       </MediaIndex>
 
       <MediaIndex title="Comic">
-        {comics?.map((data) => (
-          <MediaComic key={data.id} data={data} />
+        {comics?.map((media) => (
+          <MediaComic key={media.id} media={media} />
         ))}
       </MediaIndex>
 
       <MediaIndex title="Picture">
-        {pictures?.map((data) => (
-          <MediaPicture key={data.id} data={data} />
+        {pictures?.map((media) => (
+          <MediaPicture key={media.id} media={media} />
         ))}
       </MediaIndex>
 
       <MediaIndex title="Blog">
-        {blogs?.map((data) => (
-          <MediaBlog key={data.id} data={data} />
+        {blogs?.map((media) => (
+          <MediaBlog key={media.id} media={media} />
         ))}
       </MediaIndex>
 
       <MediaIndex title="Chat" divide={false}>
-        {chats?.map((data) => (
-          <MediaChat key={data.id} data={data} />
+        {chats?.map((media) => (
+          <MediaChat key={media.id} media={media} />
         ))}
       </MediaIndex>
     </Main>

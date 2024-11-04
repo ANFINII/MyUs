@@ -16,7 +16,7 @@ export default function Comics(props: Props) {
 
   return (
     <Main title="Comic" search={{ name: search, count: newDatas.length }}>
-      <MediaList datas={newDatas} MediaMedia={MediaComic} />
+      <MediaList medias={newDatas} MediaComponent={MediaComic} />
     </Main>
   )
 }

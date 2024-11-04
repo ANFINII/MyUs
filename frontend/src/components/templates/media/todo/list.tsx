@@ -5,8 +5,8 @@ import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginRequired from 'components/parts/LoginRequired'
-import MediaList from 'components/widgets/Media/List/Media'
-import MediaTodo from 'components/widgets/Media/Index/Todo'
+// import MediaList from 'components/widgets/Media/List/Media'
+// import MediaTodo from 'components/widgets/Media/Index/Todo'
 
 interface Props {
   datas: Todo[]
@@ -24,7 +24,7 @@ export default function Todos(props: Props) {
         <div className="mt_16">
           <Button color="blue" size="s" name="新規作成" onClick={() => router.push('/media/todo/create')} />
         </div>
-        <MediaList datas={newDatas} MediaMedia={MediaTodo} />
+        {/* <MediaList medias={newDatas} MediaComponent={MediaTodo} /> */}
       </LoginRequired>
     </Main>
   )

@@ -4,12 +4,12 @@ import MediaContent from 'components/widgets/Common/MediaContent'
 import style from './Media.module.scss'
 
 interface Props {
-  data: Music
+  media: Music
 }
 
 export default function MediaMusic(props: Props) {
-  const { data } = props
-  const { author, id, title, music, read, like, created } = data
+  const { media } = props
+  const { id, music } = media
 
   return (
     <section className={style.section_music}>
@@ -19,7 +19,7 @@ export default function MediaMusic(props: Props) {
           <p>ブラウザがaudioに対応しておりません</p>
         </audio>
         <Link href={`/media/music/${id}`}>
-          <MediaContent author={author} title={title} read={read} totalLike={like} created={created} />
+          <MediaContent href={`/media/music/${id}`} media={media} />
         </Link>
       </div>
     </section>

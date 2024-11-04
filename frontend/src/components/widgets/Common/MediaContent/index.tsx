@@ -1,25 +1,22 @@
 import Link from 'next/link'
 import clsx from 'clsx'
-import { Author } from 'types/internal/media'
+import { Media } from 'types/internal/media'
+import { formatTimeAgo } from 'utils/functions/datetime'
 import IconCaret from 'components/parts/Icon/Caret'
 import IconHand from 'components/parts/Icon/Hand'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import AuthorLink from 'components/parts/AuthorLink'
-import style from './MediaContent.module.scss'
 import Vertical from 'components/parts/Stack/Vertical'
-import { formatTimeAgo } from 'utils/functions/datetime'
+import style from './MediaContent.module.scss'
 
-interface Props {
+interface Props<Media> {
   href: string
-  title: string
-  read: number
-  totalLike: number
-  created: string
-  author: Author
+  media: Media
 }
 
-export default function MediaContent(props: Props) {
-  const { href, title, read, totalLike, created, author } = props
+export default function MediaContent(props: Props<Media>) {
+  const { href, media } = props
+  const { title, read, totalLike, created, author } = media
 
   return (
     <Horizontal gap="4" alignment="stretch" className="w_full p_6">

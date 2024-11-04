@@ -16,7 +16,7 @@ export default function Videos(props: Props) {
 
   return (
     <Main title="Video" search={{ name: search, count: newDatas.length }}>
-      <MediaList datas={newDatas} MediaMedia={MediaVideo} />
+      <MediaList medias={newDatas} MediaComponent={MediaVideo} />
     </Main>
   )
 }

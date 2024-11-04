@@ -16,7 +16,7 @@ export default function Chats(props: Props) {
 
   return (
     <Main title="Chat" search={{ name: search, count: newDatas.length }}>
-      <MediaList datas={newDatas} MediaMedia={MediaChat} />
+      <MediaList medias={newDatas} MediaComponent={MediaChat} />
     </Main>
   )
 }

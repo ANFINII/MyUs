@@ -5,17 +5,17 @@ interface ObjectId {
 }
 
 interface Props<T extends ObjectId> {
-  datas: T[]
-  MediaMedia: React.ComponentType<{ data: T }>
+  medias: T[]
+  MediaComponent: React.ComponentType<{ media: T }>
 }
 
 export default function MediaList<T extends ObjectId>(props: Props<T>) {
-  const { datas, MediaMedia } = props
+  const { medias, MediaComponent } = props
 
   return (
     <article className={style.media_list}>
-      {datas.map((data) => (
-        <MediaMedia key={data.id} data={data} />
+      {medias.map((media) => (
+        <MediaComponent key={media.id} media={media} />
       ))}
     </article>
   )

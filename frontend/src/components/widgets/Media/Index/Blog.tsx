@@ -5,20 +5,20 @@ import MediaContent from 'components/widgets/Common/MediaContent'
 import style from './Media.module.scss'
 
 interface Props {
-  data: Picture
+  media: Picture
 }
 
 export default function MediaBlog(props: Props) {
-  const { data } = props
-  const { id, title, image, read, like, created, author } = data
+  const { media } = props
+  const { id, image } = media
 
   return (
     <section className={style.media}>
       <div className={style.decolation}>
         <Link href={`/media/blog/${id}`}>
-          <ExImage src={image} width="272" height="153" className={style.section_image} />
+          <ExImage src={image} width="272" height="153" className={style.avatar} />
         </Link>
-        <MediaContent href={`/media/blog/${id}`} title={title} read={read} totalLike={like} created={created} author={author} />
+        <MediaContent href={`/media/blog/${id}`} media={media} />
       </div>
     </section>
   )
