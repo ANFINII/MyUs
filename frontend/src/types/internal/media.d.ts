@@ -16,18 +16,6 @@ export interface Search {
   count: number
 }
 
-export interface Todo {
-  id: number
-  title: string
-  content: string
-  like: number
-  read: number
-  period: string
-  created: string
-  updated: string
-  author: Author
-}
-
 export interface Media {
   id: number
   title: string
@@ -67,15 +55,27 @@ export interface Blog extends Media {
   richtext: string
 }
 
-export interface BlogDetailOut {
-  detail: Blog
-  list: Blog[]
-}
-
 export interface Chat extends Media {
   read: number
   joined: number
   thread: number
+}
+
+export interface Todo {
+  id: number
+  title: string
+  content: string
+  like: number
+  read: number
+  period: string
+  created: string
+  updated: string
+  author: Author
+}
+
+export interface BlogDetailOut {
+  detail: Blog
+  list: Blog[]
 }
 
 export interface MediaDetail {

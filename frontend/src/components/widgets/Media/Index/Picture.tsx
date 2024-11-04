@@ -16,7 +16,7 @@ export default function MediaPicture(props: Props) {
     <section className={style.media}>
       <div className={style.decolation}>
         <Link href={`/media/picture/${id}`}>
-          <ExImage src={image} width="272" height="153" className={style.avatar} />
+          <ExImage src={image} width="272" height="153" className={style.thumbnail} />
         </Link>
         <MediaContent href={`/media/picture/${id}`} media={media} />
       </div>
