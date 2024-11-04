@@ -33,7 +33,7 @@
     "prettier/prettier": ["error", { "semi": false }],
     "complexity": ["error", 12],
     "no-unused-vars": "off",
-    "unused-imports/no-unused-imports": "warn",
+    "unused-imports/no-unused-imports": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-var-requires": "off",
