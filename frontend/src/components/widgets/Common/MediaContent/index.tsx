@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import clsx from 'clsx'
 import { Author } from 'types/internal/media'
 import IconCaret from 'components/parts/Icon/Caret'
@@ -9,20 +10,21 @@ import Vertical from 'components/parts/Stack/Vertical'
 import { formatTimeAgo } from 'utils/functions/datetime'
 
 interface Props {
-  author: Author
+  href: string
   title: string
   read: number
   totalLike: number
   created: string
+  author: Author
 }
 
 export default function MediaContent(props: Props) {
-  const { author, title, read, totalLike, created } = props
+  const { href, title, read, totalLike, created, author } = props
 
   return (
-    <Horizontal gap="4" className="p_6">
+    <Horizontal gap="4" alignment="stretch" className="w_full p_6">
       <AuthorLink imageUrl={author.avatar} nickname={author.nickname} />
-      <div>
+      <Link href={href} className="w_full">
         <div title={title} className={style.media_title}>
           {title}
         </div>
@@ -37,14 +39,14 @@ export default function MediaContent(props: Props) {
             </div>
 
             <div className={style.font}>
-              <IconHand size="14なんで調子はパスワード難しいの？子のパスワード何" type="off" className={style.margin} />
+              <IconHand size="14" type="off" className={style.margin} />
               {totalLike}
             </div>
           </Horizontal>
 
           <time className={style.font}>{formatTimeAgo(created)}</time>
         </Vertical>
-      </div>
+      </Link>
     </Horizontal>
   )
 }

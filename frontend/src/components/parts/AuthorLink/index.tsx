@@ -11,7 +11,7 @@ export default function AuthorLink(props: Props) {
   const { imageUrl, nickname } = props
 
   return (
-    <Link href={`/userpage/${nickname}`}>
+    <Link href={`/userpage/${nickname}`} className={style.link}>
       <Avatar size="1.8em" imgSize="32" src={imageUrl} nickname={nickname} className={style.avatar} />
     </Link>
   )

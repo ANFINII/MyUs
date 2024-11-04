@@ -10,15 +10,15 @@ interface Props {
 
 export default function MediaBlog(props: Props) {
   const { data } = props
-  const { author, id, title, image, read, like, created } = data
+  const { id, title, image, read, like, created, author } = data
 
   return (
     <section className={style.media}>
       <div className={style.decolation}>
         <Link href={`/media/blog/${id}`}>
           <ExImage src={image} width="272" height="153" className={style.section_image} />
-          <MediaContent author={author} title={title} read={read} totalLike={like} created={created} />
         </Link>
+        <MediaContent href={`/media/blog/${id}`} title={title} read={read} totalLike={like} created={created} author={author} />
       </div>
     </section>
   )
