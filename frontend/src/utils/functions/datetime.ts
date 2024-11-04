@@ -35,3 +35,14 @@ export const formatDatetime = (datetime: string): string => {
   const minutes = padZero(date.getMinutes())
   return `${year}/${month}/${day} ${hours}:${minutes}`
 }
+
+export const formatTimeAgo = (dateString: string): string => {
+  const date = new Date(dateString)
+  const now = new Date()
+  const diff = (now.getFullYear() - date.getFullYear()) * 12 + (now.getMonth() - date.getMonth())
+  const year = Math.floor(diff / 12)
+  const month = diff % 12
+  const yearText = year > 0 ? `${year}年` : ''
+  const monthText = month > 0 ? `${month}ヶ月` : ''
+  return `${yearText}${monthText}前`
+}
