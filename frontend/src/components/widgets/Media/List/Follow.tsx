@@ -5,17 +5,17 @@ interface ObjectName {
 }
 
 interface Props<T extends ObjectName> {
-  datas: T[]
-  MediaMedia: React.ComponentType<{ data: T }>
+  medias: T[]
+  MediaComponent: React.ComponentType<{ media: T }>
 }
 
 export default function FollowList<T extends ObjectName>(props: Props<T>) {
-  const { datas, MediaMedia } = props
+  const { medias, MediaComponent } = props
 
   return (
     <article className={style.media_list}>
-      {datas.map((data) => (
-        <MediaMedia key={data.nickname} data={data} />
+      {medias.map((media) => (
+        <MediaComponent key={media.nickname} media={media} />
       ))}
     </article>
   )

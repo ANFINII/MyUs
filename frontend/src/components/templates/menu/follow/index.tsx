@@ -25,7 +25,7 @@ export default function Follows(props: Props) {
           <Button color="blue" size="s" name="フォロー" onClick={() => router.push('/menu/follower')} />
           <span className="ml_8">フォロー数：{follows.length}</span>
         </div>
-        <FollowList datas={newDatas} MediaMedia={MediaFollow} />
+        <FollowList medias={newDatas} MediaComponent={MediaFollow} />
       </LoginRequired>
     </Main>
   )

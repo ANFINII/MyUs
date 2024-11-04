@@ -4,17 +4,17 @@ import ExImage from 'components/parts/ExImage'
 import style from './Follow.module.scss'
 
 interface Props {
-  data: Follow
+  media: Follow
 }
 
 export default function MediaFollow(props: Props) {
-  const { data } = props
-  const { avatar, nickname, introduction, followerCount, followingCount } = data
+  const { media } = props
+  const { avatar, nickname, introduction, followerCount, followingCount } = media
 
   return (
     <section key={nickname} className={style.media_follow}>
       <div className={style.decolation}>
-        <Link href={`/userpage/${nickname}`} data-name={nickname} className={style.follow_box}>
+        <Link href={`/userpage/${nickname}`} className={style.follow_box}>
           <div className={style.author_follow}>
             <ExImage src={avatar} title={nickname} className={style.follow_image} />
           </div>
