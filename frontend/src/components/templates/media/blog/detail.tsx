@@ -13,7 +13,7 @@ interface Props {
 export default function BlogDetail(props: Props) {
   const { data } = props
   const { detail, list } = data
-  const { title, content, richtext, read, totalLike, commentCount, publish, created, author, user } = detail
+  const { title, content, richtext, read, like, commentCount, publish, created, author, user } = detail
 
   return (
     <Main metaTitle="Blog">
@@ -24,7 +24,7 @@ export default function BlogDetail(props: Props) {
         <Divide />
         <div className="article_detail_section">
           <div className="article_detail_section_1">
-            <MediaDetailCommon title={title} content={content} read={read} totalLike={totalLike} commentCount={commentCount} created={created} author={author} user={user} />
+            <MediaDetailCommon title={title} content={content} read={read} like={like} commentCount={commentCount} created={created} author={author} user={user} />
           </div>
           <div className="article_detail_section_2">
             {list.map((data) => (
@@ -35,7 +35,7 @@ export default function BlogDetail(props: Props) {
                 imageUrl={data.image}
                 nickname={data.author.nickname}
                 read={data.read}
-                totalLike={data.totalLike}
+                like={data.like}
                 created={created}
               />
             ))}

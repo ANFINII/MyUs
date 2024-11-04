@@ -16,28 +16,28 @@ interface Props<Media> {
 
 export default function MediaContent(props: Props<Media>) {
   const { href, media } = props
-  const { title, read, totalLike, created, author } = media
+  const { title, read, like, created, author } = media
+  const { avatar, nickname } = author
 
   return (
     <Horizontal gap="4" alignment="stretch" className="w_full p_6">
-      <AuthorLink imageUrl={author.avatar} nickname={author.nickname} />
+      <AuthorLink imageUrl={avatar} nickname={nickname} />
       <Link href={href} className="w_full">
         <div title={title} className={style.media_title}>
           {title}
         </div>
 
         <Vertical gap="2">
-          <div className={clsx(style.font, style.nickname)}>{author.nickname}</div>
+          <div className={clsx(style.font, style.nickname)}>{nickname}</div>
 
           <Horizontal gap="4">
             <div className={style.font}>
               <IconCaret size="14" className={style.margin} />
               {read}
             </div>
-
             <div className={style.font}>
               <IconHand size="14" type="off" className={style.margin} />
-              {totalLike}
+              {like}
             </div>
           </Horizontal>
 

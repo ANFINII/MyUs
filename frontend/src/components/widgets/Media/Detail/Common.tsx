@@ -12,7 +12,7 @@ interface Props {
   title: string
   content: string
   read: number
-  totalLike?: number
+  like?: number
   commentCount?: number
   created: string
   author: Author
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export default function MediaDetailCommon(props: Props) {
-  const { title, content, read, totalLike, commentCount, created, author, user } = props
+  const { title, content, read, like, commentCount, created, author, user } = props
   console.log(commentCount)
 
   const [isLike, setIsLike] = useState<boolean>(Boolean(user?.isLike))
@@ -43,7 +43,7 @@ export default function MediaDetailCommon(props: Props) {
 
         <div className="article_detail_aria_2">
           <CountRead read={read} />
-          <CountLike isLike={isLike} disable={Boolean(!user)} totalLike={totalLike} onClick={handleLike} />
+          <CountLike isLike={isLike} disable={Boolean(!user)} like={like} onClick={handleLike} />
         </div>
 
         <div className="article_detail_aria_3">{/* {% include 'parts/common/hashtag.html' %} */}</div>

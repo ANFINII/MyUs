@@ -4,12 +4,12 @@ import style from './Like.module.scss'
 interface Props {
   isLike?: boolean
   disable?: boolean
-  totalLike?: number
+  like?: number
   onClick?: () => void
 }
 
 export default function CountLike(props: Props) {
-  const { isLike, disable, totalLike, onClick } = props
+  const { isLike, disable, like, onClick } = props
 
   return (
     <div className={style.count}>
@@ -22,7 +22,7 @@ export default function CountLike(props: Props) {
           <IconHand size="16" type={isLike ? 'on' : 'off'} className={isLike ? style.on : style.off} />
         </div>
       )}
-      <span>{totalLike || 0}</span>
+      <span>{like || 0}</span>
     </div>
   )
 }

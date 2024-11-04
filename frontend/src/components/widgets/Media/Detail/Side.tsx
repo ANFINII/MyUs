@@ -8,12 +8,12 @@ interface Props {
   imageUrl: string
   nickname: string
   read: number
-  totalLike: number
+  like: number
   created: string
 }
 
 export default function MediaDetailSide(props: Props) {
-  // const { href, title, imageUrl, nickname, read, totalLike, created } = props
+  // const { href, title, imageUrl, nickname, read, like, created } = props
   const { href, imageUrl } = props
 
   return (
@@ -24,7 +24,7 @@ export default function MediaDetailSide(props: Props) {
             <ExImage src={imageUrl} className="radius_8" />
           </figure>
           {/* <div className="author_space_side">
-            <ContentTitle title={title} nickname={nickname} read={read} totalLike={totalLike} created={created} />
+            <ContentTitle title={title} nickname={nickname} read={read} like={like} created={created} />
           </div> */}
         </a>
       </div>

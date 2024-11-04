@@ -34,7 +34,6 @@ export interface Media {
   content: string
   like: number
   read: number
-  totalLike: number
   commentCount: number
   publish: boolean
   created: string
@@ -85,7 +84,6 @@ export interface MediaDetail {
   content: string
   like: number
   read: number
-  totalLike: number
   commentCount: number
   publish: boolean
   created: string
