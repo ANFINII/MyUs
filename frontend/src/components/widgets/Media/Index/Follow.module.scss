@@ -1,31 +1,27 @@
-/* follow関連画面 */
 .media_follow {
-  max-width: 272px;
+  width: 272px;
   height: 250px;
-}
-
-.follow_box {
-  display: grid;
-  grid-template-columns: 68px 208px;
-  grid-template-rows: 24px 20px 20px 184px;
   border: 1px solid rgba(0, 130, 255, 0.5);
   border-radius: 10px;
+  box-shadow: 0 0.06rem 0 0 rgba(25, 25, 25, 0.07);
 
   &:hover {
     background: rgba(200, 230, 255, 0.1);
   }
 }
 
-.author_follow {
-  grid-column: 1/2;
-  grid-row: 1/5;
+.follow_box {
+  display: block;
+  height: 250px;
   padding: 6px;
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .follow_image {
   width: 56px;
   height: 56px;
-  background: rgb(200, 200, 200);
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
@@ -33,46 +29,13 @@
   -o-border-radius: 50%;
 }
 
-.follow_content_1 {
-  grid-column: 2/3;
-  grid-row: 1/2;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 6px 0 0 4px;
-  vertical-align: bottom;
-}
-
-.follow_content_2 {
-  grid-column: 2/3;
-  grid-row: 2/3;
-  font-size: 12px;
-  padding: 2px 0 0 4px;
-}
-
-.follow_content_3 {
-  grid-column: 2/3;
-  grid-row: 3/4;
-  font-size: 12px;
-  padding: 2px 0 0 4px;
-}
-
-.follow_content_4 {
+.follow_introduction {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 9;
-  grid-column: 1/3;
-  grid-row: 4/5;
   max-width: 272px;
   font-size: 13px;
   padding: 6px;
   overflow: hidden;
   word-break: break-all;
-
-  a {
-    color: rgb(0, 100, 255);
-
-    &:hover {
-      color: rgb(0, 85, 215);
-    }
-  }
 }

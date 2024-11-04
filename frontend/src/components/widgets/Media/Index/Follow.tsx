@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { Follow } from 'types/internal/auth'
 import ExImage from 'components/parts/ExImage'
 import style from './Follow.module.scss'
+import Horizontal from 'components/parts/Stack/Horizontal'
+import Vertical from 'components/parts/Stack/Vertical'
 
 interface Props {
   media: Follow
@@ -14,16 +16,15 @@ export default function MediaFollow(props: Props) {
   return (
     <section key={nickname} className={style.media_follow}>
       <Link href={`/userpage/${nickname}`} className={style.follow_box}>
-        {/* <div className={style.author_follow}> */}
-        <ExImage src={avatar} title={nickname} className={style.follow_image} />
-        {/* </div> */}
-
-        <span title={nickname} className={style.follow_content_1}>
-          {nickname}
-        </span>
-        <span className={style.follow_content_2}>フォロワー数：{followerCount}</span>
-        <span className={style.follow_content_3}>フォロー数：{followingCount}</span>
-        <div title={introduction} className={style.follow_content_4}>
+        <Horizontal gap="5">
+          <ExImage src={avatar} title={nickname} className={style.follow_image} />
+          <Vertical gap="1" className="fs_12">
+            <span title={nickname}>{nickname}</span>
+            <span>フォロワー数：{followerCount}</span>
+            <span>フォロー数：{followingCount}</span>
+          </Vertical>
+        </Horizontal>
+        <div title={introduction} className={style.follow_introduction}>
           {introduction}
         </div>
       </Link>
