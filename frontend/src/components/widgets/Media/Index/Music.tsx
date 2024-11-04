@@ -13,15 +13,11 @@ export default function MediaMusic(props: Props) {
 
   return (
     <section className={style.media_music}>
-      <div className={style.decolation}>
-        <audio controls controlsList="nodownload" preload="none" className="audio_auto">
-          <source src={music} />
-          <p>ブラウザがaudioに対応しておりません</p>
-        </audio>
-        <Link href={`/media/music/${id}`}>
-          <MediaContent href={`/media/music/${id}`} media={media} />
-        </Link>
-      </div>
+      <audio controls controlsList="nodownload" preload="none" className="audio_auto">
+        <source src={music} />
+        <p>ブラウザがaudioに対応しておりません</p>
+      </audio>
+      <MediaContent href={`/media/music/${id}`} media={media} />
     </section>
   )
 }

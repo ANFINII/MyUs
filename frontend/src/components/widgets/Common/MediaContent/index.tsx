@@ -22,7 +22,7 @@ export default function MediaContent(props: Props<Media>) {
   return (
     <Horizontal gap="4" className="p_6">
       <AuthorLink imageUrl={avatar} nickname={nickname} />
-      <Link href={href} className="w_full">
+      <Link href={href} className={style.link}>
         <div title={title} className={style.media_title}>
           {title}
         </div>

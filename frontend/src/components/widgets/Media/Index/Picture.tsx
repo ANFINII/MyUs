@@ -14,12 +14,10 @@ export default function MediaPicture(props: Props) {
 
   return (
     <section className={style.media}>
-      <div className={style.decolation}>
-        <Link href={`/media/picture/${id}`}>
-          <ExImage src={image} width="272" height="153" className={style.thumbnail} />
-        </Link>
-        <MediaContent href={`/media/picture/${id}`} media={media} />
-      </div>
+      <Link href={`/media/picture/${id}`}>
+        <ExImage src={image} width="272" height="153" className={style.thumbnail} />
+      </Link>
+      <MediaContent href={`/media/picture/${id}`} media={media} />
     </section>
   )
 }

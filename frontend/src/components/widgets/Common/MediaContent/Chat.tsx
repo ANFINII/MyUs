@@ -8,8 +8,8 @@ import Horizontal from 'components/parts/Stack/Horizontal'
 import AuthorLink from 'components/parts/AuthorLink'
 import IconPerson from 'components/parts/Icon/Person'
 import IconChat from 'components/parts/Icon/Chat'
-import style from './MediaContent.module.scss'
 import Vertical from 'components/parts/Stack/Vertical'
+import style from './MediaContent.module.scss'
 
 interface Props {
   href: string
@@ -24,7 +24,7 @@ export default function ChatMediaContent(props: Props) {
   return (
     <Horizontal gap="4" alignment="stretch" className="p_6">
       <AuthorLink imageUrl={avatar} nickname={nickname} />
-      <Link href={href} className="w_full">
+      <Link href={href} className={style.link}>
         <div title={title} className={style.media_title}>
           {title}
         </div>

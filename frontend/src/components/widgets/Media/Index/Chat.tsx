@@ -12,9 +12,7 @@ export default function MediaChat(props: Props) {
 
   return (
     <section className={style.media_chat}>
-      <div className={style.decolation}>
-        <ChatMediaContent href={`/media/chat/${id}`} media={media} />
-      </div>
+      <ChatMediaContent href={`/media/chat/${id}`} media={media} />
     </section>
   )
 }

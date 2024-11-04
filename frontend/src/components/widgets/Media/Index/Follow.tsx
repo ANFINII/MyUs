@@ -13,21 +13,20 @@ export default function MediaFollow(props: Props) {
 
   return (
     <section key={nickname} className={style.media_follow}>
-      <div className={style.decolation}>
-        <Link href={`/userpage/${nickname}`} className={style.follow_box}>
-          <div className={style.author_follow}>
-            <ExImage src={avatar} title={nickname} className={style.follow_image} />
-          </div>
-          <span title={nickname} className={style.follow_content_1}>
-            {nickname}
-          </span>
-          <span className={style.follow_content_2}>フォロワー数：{followerCount}</span>
-          <span className={style.follow_content_3}>フォロー数：{followingCount}</span>
-          <div title={introduction} className={style.follow_content_4}>
-            {introduction}
-          </div>
-        </Link>
-      </div>
+      <Link href={`/userpage/${nickname}`} className={style.follow_box}>
+        {/* <div className={style.author_follow}> */}
+        <ExImage src={avatar} title={nickname} className={style.follow_image} />
+        {/* </div> */}
+
+        <span title={nickname} className={style.follow_content_1}>
+          {nickname}
+        </span>
+        <span className={style.follow_content_2}>フォロワー数：{followerCount}</span>
+        <span className={style.follow_content_3}>フォロー数：{followingCount}</span>
+        <div title={introduction} className={style.follow_content_4}>
+          {introduction}
+        </div>
+      </Link>
     </section>
   )
 }

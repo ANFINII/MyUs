@@ -14,12 +14,10 @@ export default function MediaComic(props: Props) {
 
   return (
     <section className={style.media}>
-      <div className={style.decolation}>
-        <Link href={`/media/comic/${id}`}>
-          <ExImage src={image} width="272" height="153" className={style.thumbnail} />
-        </Link>
-        <MediaContent href={`/media/comic/${id}`} media={media} />
-      </div>
+      <Link href={`/media/comic/${id}`}>
+        <ExImage src={image} width="272" height="153" className={style.thumbnail} />
+      </Link>
+      <MediaContent href={`/media/comic/${id}`} media={media} />
     </section>
   )
 }
