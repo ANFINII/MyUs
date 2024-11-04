@@ -11,7 +11,7 @@ export default function MediaChat(props: Props) {
   const { id } = media
 
   return (
-    <section className={style.section_other}>
+    <section className={style.media_chat}>
       <div className={style.decolation}>
         <ChatMediaContent href={`/media/chat/${id}`} media={media} />
       </div>

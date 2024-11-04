@@ -12,7 +12,7 @@ export default function MediaMusic(props: Props) {
   const { id, music } = media
 
   return (
-    <section className={style.section_music}>
+    <section className={style.media_music}>
       <div className={style.decolation}>
         <audio controls controlsList="nodownload" preload="none" className="audio_auto">
           <source src={music} />

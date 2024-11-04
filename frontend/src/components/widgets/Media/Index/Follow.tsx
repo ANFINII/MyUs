@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Follow } from 'types/internal/auth'
 import ExImage from 'components/parts/ExImage'
-import style from './Media.module.scss'
+import style from './Follow.module.scss'
 
 interface Props {
   data: Follow
@@ -12,7 +12,7 @@ export default function MediaFollow(props: Props) {
   const { avatar, nickname, introduction, followerCount, followingCount } = data
 
   return (
-    <section key={nickname} className={style.section_follow}>
+    <section key={nickname} className={style.media_follow}>
       <div className={style.decolation}>
         <Link href={`/userpage/${nickname}`} data-name={nickname} className={style.follow_box}>
           <div className={style.author_follow}>

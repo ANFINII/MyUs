@@ -23,6 +23,20 @@
   margin: 0 6px 0 10px;
 }
 
+.article_list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 272px));
+  grid-template-rows: auto;
+  grid-gap: 15px;
+  margin-top: 16px;
+}
+
+.section_plan {
+  max-width: 272px;
+  height: 230px;
+}
+
 .section_plan .content_title {
   display: -webkit-box;
   -webkit-box-orient: vertical;
