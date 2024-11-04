@@ -1,11 +1,11 @@
 import { Todo } from 'types/internal/media'
-import style from './Section.module.scss'
+import style from './Media.module.scss'
 
 interface Props {
   data: Todo
 }
 
-export default function SectionTodo(props: Props) {
+export default function MediaTodo(props: Props) {
   const { data } = props
   // const { author, id, title } = data
   // const { nickname } = author

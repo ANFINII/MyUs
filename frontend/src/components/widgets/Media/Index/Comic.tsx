@@ -1,28 +1,23 @@
 import Link from 'next/link'
 import { Comic } from 'types/internal/media'
 import ExImage from 'components/parts/ExImage'
-import AuthorLink from 'components/parts/AuthorLink'
-import ContentTitle from 'components/widgets/Common/ContentTitle'
-import style from './Section.module.scss'
+import MediaContent from 'components/widgets/Common/MediaContent'
+import style from './Media.module.scss'
 
 interface Props {
   data: Comic
 }
 
-export default function SectionComic(props: Props) {
+export default function MediaComic(props: Props) {
   const { data } = props
   const { author, id, title, image, read, like, created } = data
-  const { nickname } = author
 
   return (
     <section className={style.section_list}>
       <div className={style.decolation}>
         <Link href={`/media/comic/${id}`}>
           <ExImage src={image} width="272" height="153" className="radius_8" />
-          <div className={style.author_space}>
-            <AuthorLink imageUrl={author.avatar} nickname={nickname} />
-            <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />
-          </div>
+          <MediaContent author={author} title={title} read={read} totalLike={like} created={created} />
         </Link>
       </div>
     </section>

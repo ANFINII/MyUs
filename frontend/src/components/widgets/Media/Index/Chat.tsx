@@ -2,13 +2,13 @@ import Link from 'next/link'
 import clsx from 'clsx'
 import { Chat } from 'types/internal/media'
 import AuthorLink from 'components/parts/AuthorLink'
-import style from './Section.module.scss'
+import style from './Media.module.scss'
 
 interface Props {
   data: Chat
 }
 
-export default function SectionChat(props: Props) {
+export default function MediaChat(props: Props) {
   const { data } = props
   const { author, id, title, read, like, joined, thread, created } = data
   const { nickname, avatar } = author

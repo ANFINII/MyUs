@@ -1,17 +1,15 @@
 import Link from 'next/link'
 import { Video } from 'types/internal/media'
-import AuthorLink from 'components/parts/AuthorLink'
-import ContentTitle from 'components/widgets/Common/ContentTitle'
-import style from './Section.module.scss'
+import MediaContent from 'components/widgets/Common/MediaContent'
+import style from './MediaContent.module.scss'
 
 interface Props {
   data: Video
 }
 
-export default function SectionVideo(props: Props) {
+export default function MediaVideo(props: Props) {
   const { data } = props
   const { id, title, image, convert, read, like, created, author } = data
-  const { nickname } = author
 
   return (
     <section className={style.section_list}>
@@ -25,10 +23,7 @@ export default function SectionVideo(props: Props) {
               <track kind="captions" src="/vtt/captions.ja.vtt" srcLang="en" label="English" />
               <track kind="subtitles" src="/vtt/captions.ja.vtt" srcLang="en" label="English" />
             </video>
-            <div className={style.author_space}>
-              <AuthorLink imageUrl={author.avatar} nickname={nickname} />
-              <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />
-            </div>
+            <MediaContent author={author} title={title} read={read} totalLike={like} created={created} />
           </Link>
         </div>
       </div>

@@ -1,28 +1,23 @@
 import Link from 'next/link'
 import { Picture } from 'types/internal/media'
 import ExImage from 'components/parts/ExImage'
-import AuthorLink from 'components/parts/AuthorLink'
-import ContentTitle from 'components/widgets/Common/ContentTitle'
-import style from './Section.module.scss'
+import MediaContent from 'components/widgets/Common/MediaContent'
+import style from './Media.module.scss'
 
 interface Props {
   data: Picture
 }
 
-export default function SectionPicture(props: Props) {
+export default function MediaPicture(props: Props) {
   const { data } = props
   const { author, id, title, image, read, like, created } = data
-  const { nickname } = author
 
   return (
     <section className={style.section_list}>
       <div className={style.decolation}>
         <Link href={`/media/picture/${id}`}>
           <ExImage src={image} width="272" height="153" className={style.section_image} />
-          <div className={style.author_space}>
-            <AuthorLink imageUrl={author.avatar} nickname={nickname} />
-            <ContentTitle title={title} nickname={nickname} read={read} totalLike={like} created={created} />
-          </div>
+          <MediaContent author={author} title={title} read={read} totalLike={like} created={created} />
         </Link>
       </div>
     </section>

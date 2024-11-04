@@ -1,4 +1,4 @@
-.section_list {
+.media {
   max-width: 272px;
   height: 265px;
   border: 1px solid rgb(220, 220, 220);
@@ -35,12 +35,6 @@
     color: rgb(0, 0, 0);
     text-decoration: none;
   }
-}
-
-.author_space {
-  display: grid;
-  grid-template-columns: 36px 236px;
-  grid-template-rows: 54px 58px;
 }
 
 .view_good {

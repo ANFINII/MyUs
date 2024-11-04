@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import { Follow } from 'types/internal/auth'
 import ExImage from 'components/parts/ExImage'
-import style from './Section.module.scss'
+import style from './Media.module.scss'
 
 interface Props {
   data: Follow
 }
 
-export default function SectionFollow(props: Props) {
+export default function MediaFollow(props: Props) {
   const { data } = props
   const { avatar, nickname, introduction, followerCount, followingCount } = data
 
