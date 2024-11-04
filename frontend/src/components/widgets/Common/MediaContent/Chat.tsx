@@ -45,7 +45,7 @@ export default function ChatMediaContent(props: Props) {
 
           <Horizontal gap="4">
             <div className={style.font}>
-              <IconPerson size="14" type="circle" className={style.margin} />
+              <IconPerson size="14" type="base" className={style.margin} />
               {joined}
             </div>
             <div className={style.font}>
