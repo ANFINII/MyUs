@@ -1,5 +1,5 @@
 import Divide from 'components/parts/Divide'
-import style from './Article.module.scss'
+import style from './MediaList.module.scss'
 
 interface Props {
   title: string
@@ -7,12 +7,12 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function ArticleIndex(props: Props) {
+export default function MediaIndex(props: Props) {
   const { title, divide = true, children } = props
 
   return (
     <>
-      <article className={style.article_index}>
+      <article className={style.media_index}>
         <h2>{title}</h2>
         {children}
       </article>

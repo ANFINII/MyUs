@@ -2,8 +2,8 @@ import { Video } from 'types/internal/media'
 import { getVideos } from 'api/internal/media/list'
 import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
-import ArticleMedia from 'components/widgets/Media/Article/Media'
-import SectionVideo from 'components/widgets/Media/Section/Video'
+import MediaList from 'components/widgets/Media/List/Media'
+import MediaVideo from 'components/widgets/Media/Index/Video'
 
 interface Props {
   datas: Video[]
@@ -16,7 +16,7 @@ export default function Videos(props: Props) {
 
   return (
     <Main title="Video" search={{ name: search, count: newDatas.length }}>
-      <ArticleMedia datas={newDatas} SectionMedia={SectionVideo} />
+      <MediaList datas={newDatas} MediaMedia={MediaVideo} />
     </Main>
   )
 }

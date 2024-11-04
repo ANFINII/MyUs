@@ -1,13 +1,13 @@
 import { MediaHome, Search } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
-import ArticleIndex from 'components/widgets/Media/Article/Index'
-import SectionBlog from 'components/widgets/Media/Section/Blog'
-import SectionChat from 'components/widgets/Media/Section/Chat'
-import SectionComic from 'components/widgets/Media/Section/Comic'
-import SectionMusic from 'components/widgets/Media/Section/Music'
-import SectionPicture from 'components/widgets/Media/Section/Picture'
-import SectionVideo from 'components/widgets/Media/Section/Video'
+import MediaIndex from 'components/widgets/Media/List/Index'
+import MediaBlog from 'components/widgets/Media/Index/Blog'
+import MediaChat from 'components/widgets/Media/Index/Chat'
+import MediaComic from 'components/widgets/Media/Index/Comic'
+import MediaMusic from 'components/widgets/Media/Index/Music'
+import MediaPicture from 'components/widgets/Media/Index/Picture'
+import MediaVideo from 'components/widgets/Media/Index/Video'
 
 interface Props {
   mediaHome: MediaHome
@@ -22,41 +22,41 @@ export default function Homes(props: Props) {
     <Main title="Home" search={search}>
       <Divide />
 
-      <ArticleIndex title="Video">
+      <MediaIndex title="Video">
         {videos?.map((data) => (
-          <SectionVideo key={data.id} data={data} />
+          <MediaVideo key={data.id} data={data} />
         ))}
-      </ArticleIndex>
+      </MediaIndex>
 
-      <ArticleIndex title="Music">
+      <MediaIndex title="Music">
         {musics?.map((data) => (
-          <SectionMusic key={data.id} data={data} />
+          <MediaMusic key={data.id} data={data} />
         ))}
-      </ArticleIndex>
+      </MediaIndex>
 
-      <ArticleIndex title="Comic">
+      <MediaIndex title="Comic">
         {comics?.map((data) => (
-          <SectionComic key={data.id} data={data} />
+          <MediaComic key={data.id} data={data} />
         ))}
-      </ArticleIndex>
+      </MediaIndex>
 
-      <ArticleIndex title="Picture">
+      <MediaIndex title="Picture">
         {pictures?.map((data) => (
-          <SectionPicture key={data.id} data={data} />
+          <MediaPicture key={data.id} data={data} />
         ))}
-      </ArticleIndex>
+      </MediaIndex>
 
-      <ArticleIndex title="Blog">
+      <MediaIndex title="Blog">
         {blogs?.map((data) => (
-          <SectionBlog key={data.id} data={data} />
+          <MediaBlog key={data.id} data={data} />
         ))}
-      </ArticleIndex>
+      </MediaIndex>
 
-      <ArticleIndex title="Chat" divide={false}>
+      <MediaIndex title="Chat" divide={false}>
         {chats?.map((data) => (
-          <SectionChat key={data.id} data={data} />
+          <MediaChat key={data.id} data={data} />
         ))}
-      </ArticleIndex>
+      </MediaIndex>
     </Main>
   )
 }
