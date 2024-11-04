@@ -21,7 +21,9 @@ export default function MediaFollow(props: Props) {
           <Vertical gap="1" className="fs_12">
             <span title={nickname}>{nickname}</span>
             <span>フォロワー数：{followerCount}</span>
-            <span>フォロー数：{followingCount}</span>
+            <span>
+              フォロー数<span className="ml_12">：{followingCount}</span>
+            </span>
           </Vertical>
         </Horizontal>
         <div title={introduction} className={style.follow_introduction}>
