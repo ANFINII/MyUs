@@ -30,7 +30,7 @@ export default function ChatMediaContent(props: Props) {
         </div>
 
         <Vertical gap="2">
-          <div className={clsx(style.font, style.nickname)}>{author.nickname}</div>
+          <div className={clsx(style.font, style.nickname)}>{nickname}</div>
 
           <Horizontal gap="4">
             <div className={style.font}>
