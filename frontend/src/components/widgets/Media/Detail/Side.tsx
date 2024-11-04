@@ -1,5 +1,6 @@
 import ExImage from 'components/parts/ExImage'
-import ContentTitle from 'components/widgets/Common/ContentTitle'
+// import MediaContent from 'components/widgets/Common/MediaContent'
+// import ContentTitle from 'components/widgets/Common/MediaContent'
 
 interface Props {
   href: string
@@ -12,7 +13,8 @@ interface Props {
 }
 
 export default function MediaDetailSide(props: Props) {
-  const { href, title, imageUrl, nickname, read, totalLike, created } = props
+  // const { href, title, imageUrl, nickname, read, totalLike, created } = props
+  const { href, imageUrl } = props
 
   return (
     <section className="section_detail">
@@ -21,9 +23,9 @@ export default function MediaDetailSide(props: Props) {
           <figure className="content_size">
             <ExImage src={imageUrl} className="radius_8" />
           </figure>
-          <div className="author_space_side">
+          {/* <div className="author_space_side">
             <ContentTitle title={title} nickname={nickname} read={read} totalLike={totalLike} created={created} />
-          </div>
+          </div> */}
         </a>
       </div>
     </section>
