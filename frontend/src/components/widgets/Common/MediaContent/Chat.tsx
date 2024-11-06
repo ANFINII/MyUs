@@ -22,7 +22,7 @@ export default function ChatMediaContent(props: Props) {
   const { avatar, nickname } = author
 
   return (
-    <Horizontal gap="4" alignment="stretch" className="p_6">
+    <Horizontal gap="4" align="stretch" className="p_6">
       <AuthorLink imageUrl={avatar} nickname={nickname} />
       <Link href={href} className={style.link}>
         <div title={title} className={style.media_title}>
