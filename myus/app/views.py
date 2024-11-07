@@ -23,19 +23,19 @@ from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from myus.api.models import Profile, MyPage, SearchTag, UserNotification
-from myus.api.models import Notification, Follow, Comment, Advertise, ComicPage
-from myus.api.models import Video, Music, Comic, Picture, Blog, Chat, Todo
-from myus.api.utils.contains import NotificationTypeNo, model_like_dict, model_comment_dict
-from myus.api.utils.functions.convert.convert_hls import convert_exe
-from myus.api.utils.functions.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
-from myus.app.modules.context_data import ContextData
-from myus.app.modules.get_form import get_detail
-from myus.app.modules.pjax import pjax_context
-from myus.app.modules.notification import notification_data, user_notification_update
-from myus.app.modules.search import Search
-from myus.app.modules.success_url import success_url
-from myus.app.modules.follow import follow_update_data
+from api.models import Profile, MyPage, SearchTag, UserNotification
+from api.models import Notification, Follow, Comment, Advertise, ComicPage
+from api.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from api.utils.contains import NotificationTypeNo, model_like_dict, model_comment_dict
+from api.utils.functions.convert.convert_hls import convert_exe
+from api.utils.functions.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
+from app.modules.context_data import ContextData
+from app.modules.get_form import get_detail
+from app.modules.pjax import pjax_context
+from app.modules.notification import notification_data, user_notification_update
+from app.modules.search import Search
+from app.modules.success_url import success_url
+from app.modules.follow import follow_update_data
 
 
 logger = logging.getLogger(__name__)
@@ -121,7 +121,7 @@ def signup_form(request):
             message = render_to_string('registration/email/account/message.txt', context)
             user.email_user(subject, message)
             messages.success(request, '本アカウント登録用のメールを送信しました!')
-            return redirect('myus:login')
+            return redirect('app:login')
         except Exception:
             messages.error(request, 'アカウント登録に失敗しました!')
             logger.exception('アカウント登録に失敗しました!')
@@ -141,16 +141,16 @@ class SignupComplete(TemplateView):
             user = User.objects.filter(id=user_id).first()
             if user.is_active:
                 messages.success(request, '既に本アカウント登録が完了しています!')
-                return redirect('myus:login')
+                return redirect('app:login')
 
         except SignatureExpired:
             messages.error(request, '本登録の期限が切れております!')
             logger.exception('SignatureExpired Exception')
-            return redirect('myus:login')
+            return redirect('app:login')
         except BadSignature:
             messages.error(request, '登録用のURLが間違っています!')
             logger.exception('BadSignature Exception')
-            return redirect('myus:login')
+            return redirect('app:login')
 
         user.is_active = True
         user.save()
@@ -162,7 +162,7 @@ class PasswordReset(PasswordResetView):
     subject_template_name = 'registration/email/reset/subject.txt'
     email_template_name = 'registration/email/reset/message.txt'
     template_name = 'registration/password_reset_form.html'
-    success_url = reverse_lazy('myus:password_reset_done')
+    success_url = reverse_lazy('app:password_reset_done')
 
 
 class PasswordResetDone(PasswordResetDoneView):
@@ -172,7 +172,7 @@ class PasswordResetDone(PasswordResetDoneView):
 
 class PasswordResetConfirm(PasswordResetConfirmView):
     """PasswordResetConfirm"""
-    success_url = reverse_lazy('myus:password_reset_complete')
+    success_url = reverse_lazy('app:password_reset_complete')
     template_name = 'registration/password_reset_confirm.html'
 
 
@@ -190,10 +190,10 @@ def login_form(request):
         user = authenticate(request, username=username, password=password)
         if user and user.is_active:
             login(request, user)
-            return redirect('myus:index')
+            return redirect('app:index')
         else:
             messages.error(request, 'ID又はパスワードが違います!')
-            return redirect('myus:login')
+            return redirect('app:login')
     return render(request, 'registration/login.html')
 
 
@@ -202,7 +202,7 @@ def login_form(request):
 def logout_form(request):
     """ログアウト処理"""
     logout(request)
-    return redirect('myus:login')
+    return redirect('app:login')
 
 
 # pjax
@@ -265,10 +265,10 @@ class Withdrawal(View):
                 user.save(update_fields=['is_active'])
                 logout(self.request)
                 messages.error(self.request, '退会しました!')
-                return redirect('myus:login')
+                return redirect('app:login')
             else:
                 messages.error(self.request, 'パスワードが違います!')
-                return redirect('myus:withdrawal')
+                return redirect('app:withdrawal')
 
 
 # Profile
@@ -286,7 +286,7 @@ class ProfileUpdate(UpdateView):
     model = Profile
     fields = ('last_name', 'first_name', 'gender', 'phone', 'postal_code', 'prefecture', 'city', 'street', 'introduction')
     template_name = 'setting/profile_update.html'
-    success_url = reverse_lazy('myus:profile')
+    success_url = reverse_lazy('app:profile')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, ProfileUpdate, **kwargs)
@@ -368,7 +368,7 @@ class MyPageUpdate(UpdateView):
     model = MyPage
     fields = ('banner', 'email', 'content', 'tag_manager_id')
     template_name = 'setting/mypage_update.html'
-    success_url = reverse_lazy('myus:mypage')
+    success_url = reverse_lazy('app:mypage')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, MyPageUpdate, **kwargs)
@@ -445,8 +445,8 @@ def create_checkout_session(request):
             payment_method_types=['card'],
             line_items=[{'price': post_data['priceId'], 'quantity': 1}],
             mode='subscription',
-            success_url=request.build_absolute_uri(reverse('myus:payment_success')),
-            cancel_url=request.build_absolute_uri(reverse('myus:payment_cancel')),
+            success_url=request.build_absolute_uri(reverse('app:payment_success')),
+            cancel_url=request.build_absolute_uri(reverse('app:payment_cancel')),
         )
         return JsonResponse({'id': checkout_session.id, 'publicKey': settings.STRIPE_PUBLIC_KEY})
     except Exception as e:
@@ -828,7 +828,7 @@ class VideoCreate(CreateView):
         return super(VideoCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:video_detail', NotificationTypeNo.video, 'video')
+        return success_url(self, 'app:video_detail', NotificationTypeNo.video, 'video')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, VideoCreate, **kwargs)
@@ -872,7 +872,7 @@ class MusicCreate(CreateView):
         return super(MusicCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:music_detail', NotificationTypeNo.music, 'music')
+        return success_url(self, 'app:music_detail', NotificationTypeNo.music, 'music')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, MusicCreate, **kwargs)
@@ -921,7 +921,7 @@ class ComicCreate(CreateView):
         return super(ComicCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:comic_detail', NotificationTypeNo.comic, 'comic')
+        return success_url(self, 'app:comic_detail', NotificationTypeNo.comic, 'comic')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, ComicCreate, **kwargs)
@@ -965,7 +965,7 @@ class PictureCreate(CreateView):
         return super(PictureCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:picture_detail', NotificationTypeNo.picture, 'picture')
+        return success_url(self, 'app:picture_detail', NotificationTypeNo.picture, 'picture')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, PictureCreate, **kwargs)
@@ -1016,7 +1016,7 @@ class BlogCreate(CreateView):
         return super(BlogCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:blog_detail', NotificationTypeNo.blog, 'blog')
+        return success_url(self, 'app:blog_detail', NotificationTypeNo.blog, 'blog')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, BlogCreate, **kwargs)
@@ -1060,7 +1060,7 @@ class ChatCreate(CreateView):
         return super(ChatCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return success_url(self, 'myus:chat_detail', NotificationTypeNo.chat, 'chat')
+        return success_url(self, 'app:chat_detail', NotificationTypeNo.chat, 'chat')
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, ChatCreate, **kwargs)
@@ -1133,7 +1133,7 @@ class TodoCreate(CreateView):
         return super(TodoCreate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('myus:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+        return reverse('app:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
     def get_context_data(self, **kwargs):
         return ContextData.context_data(self, TodoCreate, **kwargs)
@@ -1176,11 +1176,11 @@ class TodoUpdate(UpdateView):
     template_name = 'media/todo/todo_update.html'
 
     def get_success_url(self):
-        return reverse('myus:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
+        return reverse('app:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
 
 
 class TodoDelete(DeleteView):
     """TodoUpdate"""
     model = Todo
     template_name = 'media/todo/todo_delete.html'
-    success_url = reverse_lazy('myus:todo_list')
+    success_url = reverse_lazy('app:todo_list')

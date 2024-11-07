@@ -72,7 +72,7 @@ INSTALLED_APPS += [
 
 # Add Application
 INSTALLED_APPS += [
-    'myus.api.apps.ApiConfig',
+    'api.apps.ApiConfig',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -149,8 +149,8 @@ ASGI_APPLICATION = 'config.asgi.application'
 WSGI_APPLICATION = 'config.wsgi.application'
 ROOT_URLCONF = 'config.urls'
 
-AUTH_USER_MODEL = 'myus.User'
-AUTHENTICATION_BACKENDS = ['myus.api.backends.MyBackend']
+AUTH_USER_MODEL = 'api.User'
+AUTHENTICATION_BACKENDS = ['api.backends.MyBackend']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # CORS
@@ -189,9 +189,9 @@ DOMAIN_URL = env('DOMAIN_URL')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_URL = 'myus:login'
-LOGIN_REDIRECT_URL = 'myus:index'
-LOGOUT_REDIRECT_URL = 'myus:login'
+LOGIN_URL = 'app:login'
+LOGIN_REDIRECT_URL = 'app:index'
+LOGOUT_REDIRECT_URL = 'app:login'
 
 # Email
 EMAIL_HOST = env('EMAIL_HOST')

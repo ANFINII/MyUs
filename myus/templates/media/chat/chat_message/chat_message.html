@@ -2,7 +2,7 @@
 
 {% for message in message_list %}
   <div id="message_aria_list_{{ message.id }}" class="message_aria_list">
-    <a href="{% url 'myus:userpage' message.author.nickname %}" data="{{ message.author.nickname }}" class="pjax_button_userpage">
+    <a href="{% url 'app:userpage' message.author.nickname %}" data="{{ message.author.nickname }}" class="pjax_button_userpage">
       <img src="{{ message.author.image }}" title="{{ message.author.nickname }}" class="profile_image_message">
     </a>
     <div class="message_aria_list_1">
@@ -10,7 +10,7 @@
       <time>{{ message.created|date:'Y/m/d H:i' }}</time>
     </div>
     <div id="message_aria_list_2_{{ message.id }}" class="message_aria_list_2">{{ message.text|safe }}</div>
-    <a href="{% url 'myus:chat_thread' obj_id message.id %}" thread="{% url 'myus:chat_thread_button' %}" message-id="{{ message.id }}" class="message_aria_thread">
+    <a href="{% url 'app:chat_thread' obj_id message.id %}" thread="{% url 'app:chat_thread_button' %}" message-id="{{ message.id }}" class="message_aria_thread">
       スレッド表示
       <span id="reply_count_{{ message.id }}">返信 {{ message.reply_count|intcomma }} 件</span>
     </a>

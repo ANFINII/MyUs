@@ -6,7 +6,7 @@
 まだアカウント登録は完了しておりませんので、ご注意ください。
 
 本登録用URL
-{{ protocol }}://{{ domain }}{% url 'myus:signup_complete' token %}
+{{ protocol }}://{{ domain }}{% url 'app:signup_complete' token %}
 
 会員登録に関するリクエストを行っていない場合、このメールを無視してください。
 

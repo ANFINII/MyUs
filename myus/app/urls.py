@@ -1,20 +1,20 @@
 from django.urls import path
-from myus.app.views import pjax, login_form, logout_form, signup_form, SignupComplete
-from myus.app.views import PasswordReset, PasswordResetDone, PasswordResetConfirm, PasswordResetComplete
-from myus.app.views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
-from myus.app.views import ProfileView, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle, Withdrawal
-from myus.app.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
-from myus.app.views import UserNotificationView, notification_update, notification_confirmed, notification_deleted
-from myus.app.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
-from myus.app.views import VideoList, VideoCreate, VideoDetail
-from myus.app.views import MusicList, MusicCreate, MusicDetail
-from myus.app.views import ComicList, ComicCreate, ComicDetail
-from myus.app.views import PictureList, PictureCreate, PictureDetail
-from myus.app.views import BlogList, BlogCreate, BlogDetail
-from myus.app.views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
-from myus.app.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
-from myus.app.views import searchtag_create, advertise_read, like_form, like_form_comment
-from myus.app.views import comment_form, comment_update, comment_delete, reply_form, reply_delete
+from app.views import pjax, login_form, logout_form, signup_form, SignupComplete
+from app.views import PasswordReset, PasswordResetDone, PasswordResetConfirm, PasswordResetComplete
+from app.views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
+from app.views import ProfileView, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle, Withdrawal
+from app.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
+from app.views import UserNotificationView, notification_update, notification_confirmed, notification_deleted
+from app.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
+from app.views import VideoList, VideoCreate, VideoDetail
+from app.views import MusicList, MusicCreate, MusicDetail
+from app.views import ComicList, ComicCreate, ComicDetail
+from app.views import PictureList, PictureCreate, PictureDetail
+from app.views import BlogList, BlogCreate, BlogDetail
+from app.views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
+from app.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
+from app.views import searchtag_create, advertise_read, like_form, like_form_comment
+from app.views import comment_form, comment_update, comment_delete, reply_form, reply_delete
 
 app_name = 'app'
 

@@ -3,14 +3,14 @@
 {% for item in todo_list %}
 <section class="section_todo">
   <div class="main_decolation_todo {{ item.priority }}">
-    <a href="{% url 'myus:todo_detail' item.pk item.title %}" class="author_space_todo">
+    <a href="{% url 'app:todo_detail' item.pk item.title %}" class="author_space_todo">
       <div class="content_title">{{ item.title }}</div>
       <p class="priority">優先度 {{ item.get_priority_display }}</p>
       <p class="progress_myus">進捗度 {{ item.get_progress_display }}</p>
       <time class="todo_time">期日 {{ item.duedate }}</time>
       <object class="todo_link">
-        <a href="{% url 'myus:todo_update' item.pk item.title %}" class="button green s">編集</a>
-        <a href="{% url 'myus:todo_delete' item.pk item.title %}" class="button red s">削除</a>
+        <a href="{% url 'app:todo_update' item.pk item.title %}" class="button green s">編集</a>
+        <a href="{% url 'app:todo_delete' item.pk item.title %}" class="button red s">削除</a>
       </object>
     </a>
   </div>

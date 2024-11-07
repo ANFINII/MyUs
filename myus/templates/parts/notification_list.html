@@ -1,7 +1,7 @@
 {% for notification in notification_list %}
 <li id="notification_aria_link_{{ notification.id }}" class="drop_menu_list">
   <object notification-id="{{ notification.id }}" csrf="{{ csrf_token }}" class="notification_aria_list">
-    <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" class="pjax_button_userpage">
+    <a href="{% url 'app:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" class="pjax_button_userpage">
       <img src="{{ notification.user_from.image }}" title="{{ notification.user_from.nickname }}" class="profile_image">
     </a>
     {% if notification.is_confirmed %}
@@ -13,19 +13,19 @@
     {% endif %}
 
     {% if notification.type_name == 'video' %}
-    <a href="{% url 'myus:video_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
+    <a href="{% url 'app:video_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
     {% elif notification.type_name == 'music' %}
-    <a href="{% url 'myus:music_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
+    <a href="{% url 'app:music_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
     {% elif notification.type_name == 'comic' %}
-    <a href="{% url 'myus:comic_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
+    <a href="{% url 'app:comic_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
     {% elif notification.type_name == 'picture' %}
-    <a href="{% url 'myus:picture_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
+    <a href="{% url 'app:picture_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
     {% elif notification.type_name == 'blog' %}
-    <a href="{% url 'myus:blog_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
+    <a href="{% url 'app:blog_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
     {% elif notification.type_name == 'chat' %}
-    <a href="{% url 'myus:chat_detail' notification.content_object.id %}" class="notification_aria_anker">
+    <a href="{% url 'app:chat_detail' notification.content_object.id %}" class="notification_aria_anker">
     {% elif notification.type_no >= 7 and notification.type_no <= 9 %}
-    <a href="{% url 'myus:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" class="notification_aria_anker pjax_button_userpage">
+    <a href="{% url 'app:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" class="notification_aria_anker pjax_button_userpage">
     {% endif %}
       {% if notification.type_no >= 1 and notification.type_no <= 6 %}
       <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんが{{ notification.content_object.title }}を投稿しました">

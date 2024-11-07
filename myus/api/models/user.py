@@ -6,8 +6,8 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 from django.utils import timezone
-from myus.api.models.master import Plan
-from myus.api.utils.functions.file import user_image
+from api.models.master import Plan
+from api.utils.functions.file import user_image
 
 
 class UserManager(BaseUserManager):

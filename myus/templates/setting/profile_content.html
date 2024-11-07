@@ -2,7 +2,7 @@
   <h1>アカウント設定</h1>
   {% if user.is_authenticated %}
   <div className="main_button_area">
-    <button onclick="location.href='{% url 'myus:profile_update' %}'" class="button blue s">編集</button>
+    <button onclick="location.href='{% url 'app:profile_update' %}'" class="button blue s">編集</button>
     <button onclick="location.href='{% url 'password_change' %}'" class="button blue s">パスワード変更</button>
   </div>
   {% endif %}

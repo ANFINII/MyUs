@@ -2,10 +2,10 @@ from django.db import models
 from django.db.models import Q
 from django.contrib.contenttypes.fields import GenericRelation
 from django_quill.fields import QuillField
-from myus.api.models.master import HashTag
-from myus.api.models.base import MediaModel, MediaManager
-from myus.api.models.user import User
-from myus.api.utils.functions.file import image_upload, video_upload, musics_upload, comic_upload
+from api.models.master import HashTag
+from api.models.base import MediaModel, MediaManager
+from api.models.user import User
+from api.utils.functions.file import image_upload, video_upload, musics_upload, comic_upload
 
 
 # Video

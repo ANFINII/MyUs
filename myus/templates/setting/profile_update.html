@@ -8,7 +8,7 @@
     {% if user.is_authenticated %}
     <div className="main_button_area">
       <button type="submit" class="button green s">登録</button>
-      <button href="{% url 'myus:profile' %}" class="button blue s pjax_button">戻る</button>
+      <button href="{% url 'app:profile' %}" class="button blue s pjax_button">戻る</button>
     </div>
     {% endif %}
   </div>

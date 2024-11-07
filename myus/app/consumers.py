@@ -4,9 +4,9 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
-from myus.app.views import get_delta
-from myus.api.models import Chat, Message, Notification
-from myus.api.utils.contains import NotificationTypeNo
+from api.models import Chat, Message, Notification
+from api.utils.contains import NotificationTypeNo
+from app.views import get_delta
 
 User = get_user_model()
 

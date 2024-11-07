@@ -4,14 +4,14 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-from myus.api.models import User, Profile, MyPage, UserNotification
-from myus.api.services.user import get_user, profile_check
-from myus.api.utils.enum.response import ApiResponse
-from myus.api.utils.filter_data import DeferData
-from myus.api.utils.functions.validation import has_email
-from myus.api.utils.functions.index import create_url, message
-from myus.api.utils.functions.logger import Log
-from myus.api.utils.functions.response import DataResponse
+from api.models import User, Profile, MyPage, UserNotification
+from api.services.user import get_user, profile_check
+from api.utils.enum.response import ApiResponse
+from api.utils.filter_data import DeferData
+from api.utils.functions.validation import has_email
+from api.utils.functions.index import create_url, message
+from api.utils.functions.logger import Log
+from api.utils.functions.response import DataResponse
 
 
 class SettingProfileAPI(APIView):

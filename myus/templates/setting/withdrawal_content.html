@@ -2,7 +2,7 @@
 
 <article class="article_pass">
   {% if user.is_authenticated %}
-  <form method="POST" action="{% url 'myus:withdrawal' %}" class="form_account">
+  <form method="POST" action="{% url 'app:withdrawal' %}" class="form_account">
     {% csrf_token %}
     {% if messages %}
     <ul class="messages_password_change">
@@ -19,14 +19,14 @@
     <button class="button green xl w_full mv_24">退会URL生成</button>
 
     {% if token_signed %}
-    <button onclick="location.href='{% url 'myus:withdrawal' token_signed %}'" class="button red xl w_full mb_24">退会する</button>
+    <button onclick="location.href='{% url 'app:withdrawal' token_signed %}'" class="button red xl w_full mb_24">退会する</button>
     {% endif %}
 
     {% if message %}
     <button class="button red xl w_full mb_24">{{ message }}</button>
     {% endif %}
 
-    <button href="{% url 'myus:index' %}" class="button blue xl w_full mb_24 pjax_button">ホーム</button>
+    <button href="{% url 'app:index' %}" class="button blue xl w_full mb_24 pjax_button">ホーム</button>
   </form>
   {% include 'parts/footer-myus.html' %}
   {% else %}

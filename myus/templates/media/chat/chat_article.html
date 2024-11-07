@@ -3,7 +3,7 @@
 
 <section class="section_other">
   <div class="main_decolation">
-    <a href="{% url 'myus:chat_detail' item.pk %}" class="author_space">
+    <a href="{% url 'app:chat_detail' item.pk %}" class="author_space">
       {% include 'parts/author_space.html' %}
       <div title="{{ item.title }}" class="content_title">{{ item.title }}</div>
       <span class="view_good">

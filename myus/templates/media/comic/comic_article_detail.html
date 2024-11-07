@@ -3,7 +3,7 @@
 {% for item in comic_list %}
 <section class="section_detail">
   <div class="main_decolation">
-    <a href="{% url 'myus:comic_detail' item.pk item.title %}" class="content_side">
+    <a href="{% url 'app:comic_detail' item.pk item.title %}" class="content_side">
       <figure class="content_size">
         <img src="{{ item.image.url }}" class="radius_8">
       </figure>

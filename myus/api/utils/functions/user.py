@@ -1,7 +1,7 @@
-from myus.api.models.user import User
-from myus.api.models import Follow
-from myus.api.types.dto.user import AuthorData, MediaUserData, NotificationUserData
-from myus.api.utils.functions.index import create_url
+from api.models.user import User
+from api.models import Follow
+from api.types.dto.user import AuthorData, MediaUserData, NotificationUserData
+from api.utils.functions.index import create_url
 
 
 def get_author(author: User) -> AuthorData:

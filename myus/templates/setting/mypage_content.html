@@ -2,8 +2,8 @@
   <h1>マイページ設定</h1>
   {% if user.is_authenticated %}
   <div className="main_button_area">
-    <button onclick="location.href='{% url 'myus:mypage_update' %}'" class="button blue s">編集</button>
-    <button href="{% url 'myus:userpage' user.nickname %}" data="{{ user.nickname }}" class="button purple s pjax_button_userpage">ユーザページ</button>
+    <button onclick="location.href='{% url 'app:mypage_update' %}'" class="button blue s">編集</button>
+    <button href="{% url 'app:userpage' user.nickname %}" data="{{ user.nickname }}" class="button purple s pjax_button_userpage">ユーザページ</button>
   </div>
   {% endif %}
 </div>

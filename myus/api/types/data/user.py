@@ -1,6 +1,6 @@
 from datetime import date
 from dataclasses import dataclass
-from myus.api.types.data.plan import PlanData
+from api.types.data.plan import PlanData
 
 
 @dataclass(frozen=True)

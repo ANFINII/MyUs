@@ -4,7 +4,7 @@
 <section class="section_detail">
   <div class="main_decolation">
     <div class="video video_auto">
-      <a href="{% url 'myus:video_detail' item.pk item.title %}" class="content_side">
+      <a href="{% url 'app:video_detail' item.pk item.title %}" class="content_side">
         <video class="video-js" muted width="192" height="108" controlsList="nodownload" oncontextmenu="return false;" poster="{{ item.image.url }}" data-setup="">
           <source src="{{ item.convert.url }}#t=,16" type="video/mp4" label="360p" res="360">
           <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>

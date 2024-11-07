@@ -3,7 +3,7 @@
 <form method="POST" action="" id="comment_aria_list_reply_{{ comment.id }}" obj-id="{{ obj_id }}" path="{{ obj_path }}" comment-id="{{ comment.id }}" csrf="{{ csrf_token }}" class="comment_aria_list_4">
   <div class="reply_input">
     {% if user.is_authenticated %}
-    <a href="{% url 'myus:userpage' user.nickname %}" data="{{ user.nickname }}" class="pjax_button_userpage">
+    <a href="{% url 'app:userpage' user.nickname %}" data="{{ user.nickname }}" class="pjax_button_userpage">
       <img src="{{ user.image }}" title="{{ user.nickname }}" class="profile_image_reply">
     </a>
     <textarea name="reply" rows="1" placeholder="返信コメント入力" id="reply_{{ comment.id }}" class="textarea_br reply_area"></textarea>

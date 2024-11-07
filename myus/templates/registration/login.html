@@ -25,11 +25,11 @@
     <input type="password" name="password" placeholder="パスワード" minlength="8" maxlength="16" class="input mb_16" required>
 
     <div class="password_reset">
-      <a href="{% url 'myus:password_reset' %}">パスワードをリセット</a>
+      <a href="{% url 'app:password_reset' %}">パスワードをリセット</a>
     </div>
 
     <button type="submit" class="button blue xl w_full mb_24">ログイン</button>
-    <button type="button" onclick="location.href='{% url 'myus:signup' %}'" class="button green xl w_full mb_24">アカウント登録</button>
+    <button type="button" onclick="location.href='{% url 'app:signup' %}'" class="button green xl w_full mb_24">アカウント登録</button>
   </form>
 </main>
 {% endblock content %}

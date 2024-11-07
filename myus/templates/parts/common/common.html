@@ -42,7 +42,7 @@
 
 <div class="content_detail_aria">
   <div class="content_detail">
-    <a href="{% url 'myus:userpage' object.author.nickname %}" data="{{ object.author.nickname }}" class="pjax_button_userpage">
+    <a href="{% url 'app:userpage' object.author.nickname %}" data="{{ object.author.nickname }}" class="pjax_button_userpage">
       <img src="{{ object.author.image }}" title="{{ object.author.nickname }}" class="profile_image_detail">
     </a>
     <div class="username_space">{{ object.author.nickname }}</div>

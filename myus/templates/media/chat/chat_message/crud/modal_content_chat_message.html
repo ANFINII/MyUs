@@ -8,7 +8,7 @@
     <span class="modal_content_body_span">このメッセージを削除しますか？</span>
     <div class="modal_content_body">
       <div class="message_aria_list">
-        <a href="{% url 'myus:userpage' message.author.nickname %}" data="{{ message.author.nickname }}" class="pjax_button_userpage">
+        <a href="{% url 'app:userpage' message.author.nickname %}" data="{{ message.author.nickname }}" class="pjax_button_userpage">
           <img src="{{ message.author.image }}" title="{{ message.author.nickname }}" class="profile_image_message">
         </a>
         <div class="message_aria_list_1">

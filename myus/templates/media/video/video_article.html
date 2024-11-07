@@ -2,7 +2,7 @@
 
 <section class="section_list">
   <div class="main_decolation">
-    <a href="{% url 'myus:video_detail' item.pk item.title %}">
+    <a href="{% url 'app:video_detail' item.pk item.title %}">
       <div class="video video_auto">
         <video class="video-js vjs-16-9" muted width="272" height="153" controlsList="nodownload" oncontextmenu="return false;" poster="{{ item.image.url }}" data-setup="">
           <source src="{{ item.convert.url }}#t=,16" type="video/mp4" label="360p" res="360">

@@ -1,7 +1,7 @@
 from django.db.models import Exists, OuterRef
-from myus.api.models.comment import Comment
-from myus.api.types.data.comment import CommentData
-from myus.api.utils.functions.user import get_author
+from api.models.comment import Comment
+from api.types.data.comment import CommentData
+from api.utils.functions.user import get_author
 
 
 def get_comments(obj) -> Comment:

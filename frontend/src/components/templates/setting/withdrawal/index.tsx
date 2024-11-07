@@ -18,7 +18,7 @@ export default function Withdrawal() {
       <LoginRequired margin="mt_24">
         <article className="article_pass">
           <form method="POST" action="" className="form_account">
-            {/* <form method="POST" action="{% url 'myus:withdrawal' %}" className="form_account"> */}
+            {/* <form method="POST" action="{% url 'app:withdrawal' %}" className="form_account"> */}
             {messages && (
               <ul className="messages_password_change">
                 {/* {% for message in messages %}

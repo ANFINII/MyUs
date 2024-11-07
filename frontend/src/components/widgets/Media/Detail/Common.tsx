@@ -57,7 +57,7 @@ export default function MediaDetailCommon(props: Props) {
 
       <div className={clsx('content_detail_aria', isContentView ? 'active' : '')}>
         <div className="content_detail">
-          {/* <a href="{% url 'myus:userpage' object.author.nickname %}" data="{{ object.author.nickname }}" className="pjax_button_userpage"> */}
+          {/* <a href="{% url 'app:userpage' object.author.nickname %}" data="{{ object.author.nickname }}" className="pjax_button_userpage"> */}
           <Link href="">
             <ExImage src={author.avatar} title={author.nickname} className="profile_image_detail" />
           </Link>

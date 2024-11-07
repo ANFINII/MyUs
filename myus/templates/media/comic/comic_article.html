@@ -2,9 +2,9 @@
 
 <section class="section_list">
   <div class="main_decolation">
-    <a href="{% url 'myus:comic_detail' item.pk item.title %}">
+    <a href="{% url 'app:comic_detail' item.pk item.title %}">
       <img src="{{ item.image.url }}" width="272" height="153" class="radius_8">
-      <div href="{% url 'myus:comic_detail' item.pk item.title %}" class="author_space">
+      <div href="{% url 'app:comic_detail' item.pk item.title %}" class="author_space">
         {% include 'parts/author_space.html' %}
         {% include 'parts/content_title.html' %}
       </div>

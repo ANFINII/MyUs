@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from myus.api.types.dto.user import AuthorData
+from api.types.dto.user import AuthorData
 
 
 @dataclass(frozen=True, slots=True)

@@ -1,15 +1,15 @@
 from django.urls import path
-from myus.api.views.auth import AuthAPI, RefreshAPI, SignUpAPI, LoginAPI, LogoutAPI
-from myus.api.views.user import UserAPI, SearchTagAPI, FollowAPI, FollowerAPI, NotificationAPI
-from myus.api.views.setting import SettingProfileAPI, SettingMyPageAPI, SettingNotificationAPI
-from myus.api.views.media import HomeAPI
-from myus.api.views.media import VideoListAPI, VideoAPI
-from myus.api.views.media import MusicListAPI, MusicAPI
-from myus.api.views.media import ComicListAPI, ComicAPI
-from myus.api.views.media import PictureListAPI, PictureAPI
-from myus.api.views.media import BlogListAPI, BlogAPI
-from myus.api.views.media import ChatListAPI, ChatAPI
-from myus.api.views.media import TodoListAPI, TodoAPI
+from api.views.auth import AuthAPI, RefreshAPI, SignUpAPI, LoginAPI, LogoutAPI
+from api.views.user import UserAPI, SearchTagAPI, FollowAPI, FollowerAPI, NotificationAPI
+from api.views.setting import SettingProfileAPI, SettingMyPageAPI, SettingNotificationAPI
+from api.views.media import HomeAPI
+from api.views.media import VideoListAPI, VideoAPI
+from api.views.media import MusicListAPI, MusicAPI
+from api.views.media import ComicListAPI, ComicAPI
+from api.views.media import PictureListAPI, PictureAPI
+from api.views.media import BlogListAPI, BlogAPI
+from api.views.media import ChatListAPI, ChatAPI
+from api.views.media import TodoListAPI, TodoAPI
 
 
 app_name = 'myus'

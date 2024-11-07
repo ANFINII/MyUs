@@ -1,8 +1,8 @@
-from myus.api.models import User
-from myus.api.models import Video, Music, Comic, Picture, Blog, Chat, Todo
-from myus.api.utils.functions.index import create_url
-from myus.api.utils.functions.search import search_media, search_todo
-from myus.api.utils.functions.user import get_author
+from api.models import User
+from api.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from api.utils.functions.index import create_url
+from api.utils.functions.search import search_media, search_todo
+from api.utils.functions.user import get_author
 
 
 def get_home(count: int, search: str | None):

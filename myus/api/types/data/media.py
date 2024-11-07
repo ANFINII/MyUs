@@ -1,7 +1,7 @@
 from datetime import datetime
 from dataclasses import dataclass
-from myus.api.types.data.comment import CommentData
-from myus.api.types.dto.user import AuthorData
+from api.types.data.comment import CommentData
+from api.types.dto.user import AuthorData
 
 
 @dataclass(frozen=True, slots=True)

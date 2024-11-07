@@ -1,5 +1,5 @@
 <form method="POST" message-id="{{ message.id }}" class="edit_update_chat">
-  <a href="{% url 'myus:userpage' message.author.nickname %}" data="{{ message.author.nickname }}" class="pjax_button_userpage">
+  <a href="{% url 'app:userpage' message.author.nickname %}" data="{{ message.author.nickname }}" class="pjax_button_userpage">
     <img src="{{ message.author.image }}" title="{{ message.author.nickname }}" class="profile_image_message">
   </a>
   <div id="edit_textarea_caht_{{ message.id }}" class="edit_textarea_caht">

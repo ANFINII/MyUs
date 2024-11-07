@@ -13,7 +13,7 @@ from channels.security.websocket import AllowedHostsOriginValidator
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter
 from channels.routing import URLRouter
-from myus.app import routing
+from app import routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')
 

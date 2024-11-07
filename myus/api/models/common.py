@@ -1,6 +1,6 @@
 from django.db import models
-from myus.api.models.user import User
-from myus.api.utils.functions.file import image_upload, video_upload
+from api.models.user import User
+from api.utils.functions.file import image_upload, video_upload
 
 
 class AccessLog(models.Model):

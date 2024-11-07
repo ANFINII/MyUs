@@ -41,19 +41,19 @@
         <nav>
           <ul>
             <li class="side_menu_item side_menu_color">
-              <a href="{% url 'myus:index' %}" class="icon_link pjax_button"></a>
+              <a href="{% url 'app:index' %}" class="icon_link pjax_button"></a>
               {% include 'icon/side_menu/house.html' %}
               <span>ホーム</span>
             </li>
 
             <li class="side_menu_item side_menu_color">
-              <a href="{% url 'myus:recommend' %}" class="icon_link pjax_button"></a>
+              <a href="{% url 'app:recommend' %}" class="icon_link pjax_button"></a>
               {% include 'icon/side_menu/lightning.html' %}
               <span>急上昇</span>
             </li>
 
             <li class="side_menu_item side_menu_color">
-              <a href="{% url 'myus:follow_list' %}" class="icon_link pjax_button"></a>
+              <a href="{% url 'app:follow_list' %}" class="icon_link pjax_button"></a>
               {% include 'icon/side_menu/follow.html' %}
               <span>フォロー</span>
             </li>
@@ -63,13 +63,13 @@
         <nav class="side_menu_footer">
           <ul>
             <li class="side_menu_item side_menu_color">
-              <a href="{% url 'myus:userpolicy' %}" class="icon_link pjax_button"></a>
+              <a href="{% url 'app:userpolicy' %}" class="icon_link pjax_button"></a>
               {% include 'icon/side_menu/userpolicy.html' %}
               <span>利用規約</span>
             </li>
 
             <li class="side_menu_item side_menu_color">
-              <a href="{% url 'myus:knowledge' %}" class="icon_link pjax_button"></a>
+              <a href="{% url 'app:knowledge' %}" class="icon_link pjax_button"></a>
               {% include 'icon/side_menu/globe.html' %}
               <span>Knowledge Base</span>
             </li>
@@ -79,7 +79,7 @@
     </div>
 
     <div class="header_nav_2 header_color_MyUs">
-      <a href="{% url 'myus:index' %}" class="icon_link pjax_button"></a>
+      <a href="{% url 'app:index' %}" class="icon_link pjax_button"></a>
       <h1>MyUs</h1>
     </div>
 
@@ -93,7 +93,7 @@
     </div>
 
     <div class="header_nav_4 header_color">
-      <a href="{% url 'myus:recommend' %}" class="icon_link pjax_button"></a>
+      <a href="{% url 'app:recommend' %}" class="icon_link pjax_button"></a>
       {% include 'icon/header/lightning.html' %}
     </div>
 
@@ -107,37 +107,37 @@
       <nav class="drop_menu drop_menu_cloud">
         <ul>
           <li class="drop_menu_list">
-            <a href="{% url 'myus:video_create' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:video_create' %}" class="icon_link pjax_button"></a>
             {% include 'icon/drop_menu/media/video.html' %}
             <span>Videoアップロード</span>
           </li>
 
           <li class="drop_menu_list">
-            <a href="{% url 'myus:music_create' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:music_create' %}" class="icon_link pjax_button"></a>
             {% include 'icon/drop_menu/media/music.html' %}
             <span>Musicアップロード</span>
           </li>
 
           <li class="drop_menu_list">
-            <a href="{% url 'myus:comic_create' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:comic_create' %}" class="icon_link pjax_button"></a>
             {% include 'icon/drop_menu/media/comic.html' %}
             <span>Comicアップロード</span>
           </li>
 
           <li class="drop_menu_list">
-            <a href="{% url 'myus:picture_create' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:picture_create' %}" class="icon_link pjax_button"></a>
             {% include 'icon/drop_menu/media/picture.html' %}
             <span>Pictureアップロード</span>
           </li>
 
           <li class="drop_menu_list">
-            <a href="{% url 'myus:blog_create' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:blog_create' %}" class="icon_link pjax_button"></a>
             {% include 'icon/drop_menu/media/blog.html' %}
             <span>Blogアップロード</span>
           </li>
 
           <li class="drop_menu_list">
-            <a href="{% url 'myus:chat_create' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:chat_create' %}" class="icon_link pjax_button"></a>
             {% include 'icon/drop_menu/media/chat.html' %}
             <span>Chatアップロード</span>
           </li>
@@ -169,7 +169,7 @@
       <nav class="drop_menu drop_menu_notice">
         <ul>
           <li class="drop_menu_list">
-            <a href="{% url 'myus:notification' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:notification' %}" class="icon_link pjax_button"></a>
             {% include 'icon/header/bell.html' %}
             <span>通知設定</span>
           </li>
@@ -192,13 +192,13 @@
       <nav class="drop_menu drop_menu_profile">
         <ul>
           <li class="drop_menu_list">
-            <a href="{% url 'myus:profile' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:profile' %}" class="icon_link pjax_button"></a>
             {% include 'icon/drop_menu/account/profile.html' %}
             <span>アカウント</span>
           </li>
 
           <li class="drop_menu_list">
-            <a href="{% url 'myus:mypage' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:mypage' %}" class="icon_link pjax_button"></a>
             {% include 'icon/drop_menu/account/mypage.html' %}
             <span>マイページ</span>
           </li>
@@ -209,20 +209,20 @@
             {% elif user.is_active %}
             <a href="{% url 'mymanage:index' %}" class="icon_link"></a>
             {% else %}
-            <a href="{% url 'myus:login' %}" class="icon_link"></a>
+            <a href="{% url 'app:login' %}" class="icon_link"></a>
             {% endif %}
             {% include 'icon/drop_menu/account/admin.html' %}
             <span>投稿管理</span>
           </li>
 
           <li class="drop_menu_list">
-            <a href="{% url 'myus:todo_list' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:todo_list' %}" class="icon_link pjax_button"></a>
             {% include 'icon/drop_menu/account/todo.html' %}
             <span>ToDo</span>
           </li>
 
           <li class="drop_menu_list">
-            <a href="{% url 'myus:payment' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:payment' %}" class="icon_link pjax_button"></a>
             {% include 'icon/drop_menu/account/payment.html' %}
             <span>料金プラン</span>
           </li>
@@ -231,7 +231,7 @@
             {% if user.is_staff %}
             <a class="icon_link"></a>
             {% else %}
-            <a href="{% url 'myus:withdrawal' %}" class="icon_link pjax_button"></a>
+            <a href="{% url 'app:withdrawal' %}" class="icon_link pjax_button"></a>
             {% endif %}
             {% include 'icon/drop_menu/account/withdrawal.html' %}
             <span>退会処理</span>
@@ -239,9 +239,9 @@
 
           <li class="drop_menu_list">
             {% if user.is_authenticated %}
-            <a href="{% url 'myus:logout' %}" class="icon_link"></a>
+            <a href="{% url 'app:logout' %}" class="icon_link"></a>
             {% else %}
-            <a href="{% url 'myus:login' %}" class="icon_link"></a>
+            <a href="{% url 'app:login' %}" class="icon_link"></a>
             {% endif %}
             {% include 'icon/drop_menu/account/logout.html' %}
             <span>ログアウト</span>
@@ -258,42 +258,42 @@
   <nav class="sidebar_nav">
     <ul>
       <li class="sidebar_color {% if request.path == '/video' %}active{% endif %}">
-        <a href="{% url 'myus:video_list' %}" class="pjax_button">
+        <a href="{% url 'app:video_list' %}" class="pjax_button">
           {% include 'icon/sidebar/video.html' %}
           <p class="us_none">Video</p>
         </a>
       </li>
 
       <li class="sidebar_color {% if request.path == '/music' %}active{% endif %}">
-        <a href="{% url 'myus:music_list' %}" class="pjax_button">
+        <a href="{% url 'app:music_list' %}" class="pjax_button">
           {% include 'icon/sidebar/music.html' %}
           <p class="us_none">Music</p>
         </a>
       </li>
 
       <li class="sidebar_color {% if request.path == '/comic' %}active{% endif %}">
-        <a href="{% url 'myus:comic_list' %}" class="pjax_button">
+        <a href="{% url 'app:comic_list' %}" class="pjax_button">
           {% include 'icon/sidebar/comic.html' %}
           <p class="us_none">Comic</p>
         </a>
       </li>
 
       <li class="sidebar_color {% if request.path == '/picture' %}active{% endif %}">
-        <a href="{% url 'myus:picture_list' %}" class="pjax_button">
+        <a href="{% url 'app:picture_list' %}" class="pjax_button">
           {% include 'icon/sidebar/picture.html' %}
           <p class="us_none">Picture</p>
         </a>
       </li>
 
       <li class="sidebar_color {% if request.path == '/blog' %}active{% endif %}">
-        <a href="{% url 'myus:blog_list' %}" class="pjax_button">
+        <a href="{% url 'app:blog_list' %}" class="pjax_button">
           {% include 'icon/sidebar/blog.html' %}
           <p class="us_none">Blog</p>
         </a>
       </li>
 
       <li class="sidebar_color {% if request.path == '/chat' %}active{% endif %}">
-        <a href="{% url 'myus:chat_list' %}" class="pjax_button">
+        <a href="{% url 'app:chat_list' %}" class="pjax_button">
           {% include 'icon/sidebar/chat.html' %}
           <p class="us_none">Chat</p>
         </a>

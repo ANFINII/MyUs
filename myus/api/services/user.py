@@ -1,10 +1,10 @@
 import jwt
 from django.conf import settings
 
-from myus.api.models import User, Follow
-from myus.api.utils.functions.index import create_url
-from myus.api.utils.functions.search import search_follow
-from myus.api.utils.functions.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
+from api.models import User, Follow
+from api.utils.functions.index import create_url
+from api.utils.functions.search import search_follow
+from api.utils.functions.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
 
 
 def get_user(request) -> User | None:

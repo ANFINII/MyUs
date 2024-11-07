@@ -12,11 +12,11 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt import views
 from rest_framework_simplejwt import exceptions
 
-from myus.api.models import User, Profile
-from myus.api.services.user import signup_check
-from myus.api.utils.enum.response import ApiResponse
-from myus.api.utils.functions.encrypt import create_key, encrypt, decrypt
-from myus.api.utils.functions.index import message
+from api.models import User, Profile
+from api.services.user import signup_check
+from api.utils.enum.response import ApiResponse
+from api.utils.functions.encrypt import create_key, encrypt, decrypt
+from api.utils.functions.index import message
 
 
 class AuthAPI(APIView):

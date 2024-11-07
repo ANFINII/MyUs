@@ -1,6 +1,6 @@
 from django.db.models import Exists, OuterRef
-from myus.api.models import UserNotification, Notification, Follow
-from myus.api.utils.contains import notification_type_no
+from api.models import UserNotification, Notification, Follow
+from api.utils.contains import notification_type_no
 
 
 def get_notification(user):
