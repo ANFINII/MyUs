@@ -13,7 +13,6 @@ from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
-from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.signing import TimestampSigner,BadSignature, SignatureExpired, loads, dumps
 from django.http import JsonResponse
@@ -24,19 +23,19 @@ from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from apps.myus.convert.convert_hls import convert_exe
-from apps.myus.models import Profile, MyPage, SearchTag, UserNotification
-from apps.myus.models import Notification, Follow, Comment, Advertise, ComicPage
-from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
-from apps.myus.modules.contains import NotificationTypeNo, model_like_dict, model_comment_dict
-from apps.myus.modules.context_data import ContextData
-from apps.myus.modules.get_form import get_detail
-from apps.myus.modules.pjax import pjax_context
-from apps.myus.modules.notification import notification_data, user_notification_update
-from apps.myus.modules.search import Search
-from apps.myus.modules.success_url import success_url
-from apps.myus.modules.follow import follow_update_data
-from apps.myus.modules.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
+from myus.api.models import Profile, MyPage, SearchTag, UserNotification
+from myus.api.models import Notification, Follow, Comment, Advertise, ComicPage
+from myus.api.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from myus.api.utils.contains import NotificationTypeNo, model_like_dict, model_comment_dict
+from myus.api.utils.functions.convert.convert_hls import convert_exe
+from myus.api.utils.functions.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
+from myus.app.modules.context_data import ContextData
+from myus.app.modules.get_form import get_detail
+from myus.app.modules.pjax import pjax_context
+from myus.app.modules.notification import notification_data, user_notification_update
+from myus.app.modules.search import Search
+from myus.app.modules.success_url import success_url
+from myus.app.modules.follow import follow_update_data
 
 
 logger = logging.getLogger(__name__)

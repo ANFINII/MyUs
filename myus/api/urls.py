@@ -1,18 +1,18 @@
 from django.urls import path
-from apps.api.views.auth import AuthAPI, RefreshAPI, SignUpAPI, LoginAPI, LogoutAPI
-from apps.api.views.user import UserAPI, SearchTagAPI, FollowAPI, FollowerAPI, NotificationAPI
-from apps.api.views.setting import SettingProfileAPI, SettingMyPageAPI, SettingNotificationAPI
-from apps.api.views.media import HomeAPI
-from apps.api.views.media import VideoListAPI, VideoAPI
-from apps.api.views.media import MusicListAPI, MusicAPI
-from apps.api.views.media import ComicListAPI, ComicAPI
-from apps.api.views.media import PictureListAPI, PictureAPI
-from apps.api.views.media import BlogListAPI, BlogAPI
-from apps.api.views.media import ChatListAPI, ChatAPI
-from apps.api.views.media import TodoListAPI, TodoAPI
+from myus.api.views.auth import AuthAPI, RefreshAPI, SignUpAPI, LoginAPI, LogoutAPI
+from myus.api.views.user import UserAPI, SearchTagAPI, FollowAPI, FollowerAPI, NotificationAPI
+from myus.api.views.setting import SettingProfileAPI, SettingMyPageAPI, SettingNotificationAPI
+from myus.api.views.media import HomeAPI
+from myus.api.views.media import VideoListAPI, VideoAPI
+from myus.api.views.media import MusicListAPI, MusicAPI
+from myus.api.views.media import ComicListAPI, ComicAPI
+from myus.api.views.media import PictureListAPI, PictureAPI
+from myus.api.views.media import BlogListAPI, BlogAPI
+from myus.api.views.media import ChatListAPI, ChatAPI
+from myus.api.views.media import TodoListAPI, TodoAPI
 
 
-app_name = 'api'
+app_name = 'myus'
 
 urlpatterns = [
     path('auth', AuthAPI.as_view()),

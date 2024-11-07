@@ -4,9 +4,9 @@ from itertools import chain
 from operator import and_
 from django.contrib.auth import get_user_model
 from django.db.models import Q, F, Count
-from apps.myus.models import Video, Music
-from apps.myus.modules.contains import model_list
-from apps.myus.modules.filter_data import DeferData
+from myus.api.models import Video, Music
+from myus.api.utils.contains import model_list
+from myus.api.utils.filter_data import DeferData
 
 
 User = get_user_model()

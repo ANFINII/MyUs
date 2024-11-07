@@ -2,7 +2,7 @@ from functools import reduce
 from operator import and_
 
 from django.db.models import Q, F, Count
-from apps.myus.models import User, Music
+from myus.api.models import User, Music
 
 
 def get_q_list(search: str) -> str:

@@ -1,14 +1,14 @@
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
-from apps.myus.models import SearchTag
-from apps.api.services.notification import get_notification, get_content_object
-from apps.api.services.user import get_user, get_follows, get_followers
-from apps.api.types.data.user import UserData
-from apps.api.utils.enum.response import ApiResponse
-from apps.api.utils.functions.index import create_url
-from apps.api.utils.functions.response import DataResponse
-from apps.api.utils.functions.user import get_notification_user
+from myus.api.models import SearchTag
+from myus.api.services.notification import get_notification, get_content_object
+from myus.api.services.user import get_user, get_follows, get_followers
+from myus.api.types.data.user import UserData
+from myus.api.utils.enum.response import ApiResponse
+from myus.api.utils.functions.index import create_url
+from myus.api.utils.functions.response import DataResponse
+from myus.api.utils.functions.user import get_notification_user
 
 
 class UserAPI(APIView):

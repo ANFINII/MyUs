@@ -2,9 +2,9 @@ from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count
 from django.template.loader import render_to_string
-from apps.myus.models import Plan, MyPage, UserNotification, Follow, Advertise, Todo
-from apps.myus.modules.contains import model_dict, model_pjax, model_create_pjax
-from apps.myus.modules.search import SearchData
+from myus.api.models import Plan, MyPage, UserNotification, Follow, Advertise, Todo
+from myus.api.utils.contains import model_dict, model_pjax, model_create_pjax
+from myus.app.modules.search import SearchData
 
 
 User = get_user_model()

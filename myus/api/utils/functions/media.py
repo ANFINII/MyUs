@@ -1,10 +1,10 @@
-from apps.api.types.data.media import HashtagData
-from apps.myus.models.media import HashTag
-from apps.api.types.data.media import VideoDetailData
-from apps.myus.models.media import Video
-from apps.myus.models.comment import Comment
-from apps.api.utils.functions.comment import get_comment_data
-from apps.api.utils.functions.user import get_author
+from myus.api.types.data.media import HashtagData
+from myus.api.models.media import HashTag
+from myus.api.types.data.media import VideoDetailData
+from myus.api.models.media import Video
+from myus.api.models.comment import Comment
+from myus.api.utils.functions.comment import get_comment_data
+from myus.api.utils.functions.user import get_author
 
 
 def get_hashtag(hashtag: HashTag) -> HashtagData:

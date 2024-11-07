@@ -1,22 +1,22 @@
 from django.urls import path
-from apps.myus.views import pjax, login_form, logout_form, signup_form, SignupComplete
-from apps.myus.views import PasswordReset, PasswordResetDone, PasswordResetConfirm, PasswordResetComplete
-from apps.myus.views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
-from apps.myus.views import ProfileView, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle, Withdrawal
-from apps.myus.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
-from apps.myus.views import UserNotificationView, notification_update, notification_confirmed, notification_deleted
-from apps.myus.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
-from apps.myus.views import VideoList, VideoCreate, VideoDetail
-from apps.myus.views import MusicList, MusicCreate, MusicDetail
-from apps.myus.views import ComicList, ComicCreate, ComicDetail
-from apps.myus.views import PictureList, PictureCreate, PictureDetail
-from apps.myus.views import BlogList, BlogCreate, BlogDetail
-from apps.myus.views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
-from apps.myus.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
-from apps.myus.views import searchtag_create, advertise_read, like_form, like_form_comment
-from apps.myus.views import comment_form, comment_update, comment_delete, reply_form, reply_delete
+from myus.app.views import pjax, login_form, logout_form, signup_form, SignupComplete
+from myus.app.views import PasswordReset, PasswordResetDone, PasswordResetConfirm, PasswordResetComplete
+from myus.app.views import Index, Recommend, UserPage, UserPageInfo, UserPageAdvertise
+from myus.app.views import ProfileView, ProfileUpdate, MyPageView, MyPageUpdate, mypage_toggle, Withdrawal
+from myus.app.views import Payment, PaymentSuccess, PaymentCancel, ChangePlan, create_checkout_session
+from myus.app.views import UserNotificationView, notification_update, notification_confirmed, notification_deleted
+from myus.app.views import UserPolicy, Knowledge, FollowerList, FollowList, follow_create
+from myus.app.views import VideoList, VideoCreate, VideoDetail
+from myus.app.views import MusicList, MusicCreate, MusicDetail
+from myus.app.views import ComicList, ComicCreate, ComicDetail
+from myus.app.views import PictureList, PictureCreate, PictureDetail
+from myus.app.views import BlogList, BlogCreate, BlogDetail
+from myus.app.views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
+from myus.app.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
+from myus.app.views import searchtag_create, advertise_read, like_form, like_form_comment
+from myus.app.views import comment_form, comment_update, comment_delete, reply_form, reply_delete
 
-app_name = 'myus'
+app_name = 'app'
 
 urlpatterns = [
     path('pjax', pjax, name='pjax'),

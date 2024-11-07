@@ -2,14 +2,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from apps.myus.admin import manage_site
+from myus.api.admin import manage_site
 
 
 urlpatterns = [
-    path('setting/', include('django.contrib.auth.urls')),
-    path('', include('apps.myus.urls')),
-    path('api/', include('apps.api.urls')),
+    path('api/', include('myus.api.urls')),
     path('api/auth/', include('rest_framework.urls')),
+    path('', include('myus.app.urls')),
+    path('setting/', include('django.contrib.auth.urls')),
     path('myus-admin/', admin.site.urls),
     path('myus-manage/', manage_site.urls),
 ]

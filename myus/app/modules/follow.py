@@ -1,5 +1,5 @@
-from apps.myus.models import Follow, Notification
-from apps.myus.modules.contains import NotificationTypeNo
+from myus.api.models import Follow, Notification
+from myus.api.utils.contains import NotificationTypeNo
 
 
 def follow_update_data(follower, following, follow):

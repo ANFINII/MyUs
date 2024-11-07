@@ -6,9 +6,9 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
-from apps.myus.models import User, Profile, MyPage, SearchTag, HashTag, UserNotification
-from apps.myus.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
-from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from myus.api.models import User, Profile, MyPage, SearchTag, HashTag, UserNotification
+from myus.api.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
+from myus.api.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 
 
 # Admin用の管理画面

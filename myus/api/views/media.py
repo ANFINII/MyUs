@@ -5,19 +5,19 @@ from django.db.models import Exists, OuterRef
 from django.conf import settings
 
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
-from apps.myus.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Todo
-from apps.myus.convert.convert_hls import convert_exe
-from apps.api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
-from apps.api.services.user import get_user
-from apps.api.utils.enum.response import ApiResponse
-from apps.api.utils.functions.index import is_bool, create_url
-from apps.api.utils.functions.comment import get_comments
-from apps.api.utils.functions.media import get_video_detail_data
-from apps.api.utils.functions.response import DataResponse
-from apps.api.utils.functions.user import get_author, get_media_user
+from myus.api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Todo
+from myus.api.utils.functions.convert.convert_hls import convert_exe
+from myus.api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
+from myus.api.services.user import get_user
+from myus.api.utils.enum.response import ApiResponse
+from myus.api.utils.functions.index import is_bool, create_url
+from myus.api.utils.functions.comment import get_comments
+from myus.api.utils.functions.media import get_video_detail_data
+from myus.api.utils.functions.response import DataResponse
+from myus.api.utils.functions.user import get_author, get_media_user
 
 
 # Index

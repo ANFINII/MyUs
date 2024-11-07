@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta, date
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count, Exists, OuterRef
-from apps.myus.models import Plan, MyPage, SearchTag, UserNotification, Follow, Comment
-from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo, Advertise
-from apps.myus.modules.contains import model_dict
-from apps.myus.modules.notification import notification_data
+from myus.api.models import Plan, MyPage, SearchTag, UserNotification, Follow, Comment
+from myus.api.models import Video, Music, Comic, Picture, Blog, Chat, Todo, Advertise
+from myus.api.utils.contains import model_dict
+from myus.api.utils.contains import notification_data
 
 
 User = get_user_model()

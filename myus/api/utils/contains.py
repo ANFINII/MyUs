@@ -1,4 +1,4 @@
-from apps.myus.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from myus.api.models import Video, Music, Comic, Picture, Blog, Chat, Todo
 
 
 model_list = [Video, Music, Comic, Picture, Blog, Chat]

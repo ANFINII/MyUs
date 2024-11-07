@@ -72,7 +72,7 @@ INSTALLED_APPS += [
 
 # Add Application
 INSTALLED_APPS += [
-    'apps.myus.apps.ApiConfig',
+    'myus.api.apps.ApiConfig',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -150,7 +150,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ROOT_URLCONF = 'config.urls'
 
 AUTH_USER_MODEL = 'myus.User'
-AUTHENTICATION_BACKENDS = ['apps.myus.backends.MyBackend']
+AUTHENTICATION_BACKENDS = ['myus.api.backends.MyBackend']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # CORS
