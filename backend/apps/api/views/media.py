@@ -14,7 +14,8 @@ from apps.api.services.media import get_home, get_recommend, get_videos, get_mus
 from apps.api.services.user import get_user
 from apps.api.utils.enum.response import ApiResponse
 from apps.api.utils.functions.index import is_bool, create_url
-from apps.api.utils.functions.comment import get_comment, get_comments
+from apps.api.utils.functions.comment import get_comments
+from apps.api.utils.functions.media import get_video_detail_data
 from apps.api.utils.functions.response import DataResponse
 from apps.api.utils.functions.user import get_author, get_media_user
 
@@ -50,24 +51,7 @@ class VideoAPI(APIView):
             return ApiResponse.NOT_FOUND.run()
 
         comments = get_comments(obj)
-
-        data = {
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'image': obj.image.url,
-            'video': obj.video.url,
-            'convert': obj.convert.url,
-            'comment': [get_comment(comment) for comment in comments],
-            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            'like': obj.total_like(),
-            'read': obj.read,
-            'comment_count': obj.comment_count(),
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': get_author(obj.author),
-        }
+        data = get_video_detail_data(obj, comments)
         return DataResponse(data, HTTP_200_OK)
 
     def post(self, request):

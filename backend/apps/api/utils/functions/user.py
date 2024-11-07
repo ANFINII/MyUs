@@ -1,6 +1,6 @@
 from apps.myus.models.user import User
 from apps.myus.models import Follow
-from apps.api.types.user import AuthorData, MediaUserData, NotificationUserData
+from apps.api.types.dto.user import AuthorData, MediaUserData, NotificationUserData
 from apps.api.utils.functions.index import create_url
 
 

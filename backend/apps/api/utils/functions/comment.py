@@ -1,6 +1,6 @@
 from django.db.models import Exists, OuterRef
 from apps.myus.models.comment import Comment
-from apps.api.types.comment import CommentData
+from apps.api.types.data.comment import CommentData
 from apps.api.utils.functions.user import get_author
 
 
@@ -11,7 +11,7 @@ def get_comments(obj) -> Comment:
     return comments
 
 
-def get_comment(comment: Comment) -> CommentData:
+def get_comment_data(comment: Comment) -> CommentData:
     data = CommentData(
         id=comment.id,
         text=comment.text,
