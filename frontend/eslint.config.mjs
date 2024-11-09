@@ -36,13 +36,7 @@ export default [
   },
   {
     ignores: ['.storybook/*', 'src/stories/*', 'src/**/*.stories.tsx', 'dist'],
-    settings: {
-      react: {
-        pragma: 'React',
-        fragment: 'Fragment',
-        version: '18.3',
-      },
-    },
+    settings: { react: { pragma: 'React', fragment: 'Fragment', version: '18.3' } },
     rules: {
       ...pluginNext.configs.recommended.rules,
       indent: ['error', 2], // インデントを4スペースで強制
