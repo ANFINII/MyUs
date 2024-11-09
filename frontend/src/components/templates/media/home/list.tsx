@@ -1,13 +1,13 @@
 import { MediaHome, Search } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
-import MediaIndex from 'components/widgets/Media/List/Index'
 import MediaBlog from 'components/widgets/Media/Index/Blog'
 import MediaChat from 'components/widgets/Media/Index/Chat'
 import MediaComic from 'components/widgets/Media/Index/Comic'
 import MediaMusic from 'components/widgets/Media/Index/Music'
 import MediaPicture from 'components/widgets/Media/Index/Picture'
 import MediaVideo from 'components/widgets/Media/Index/Video'
+import MediaIndex from 'components/widgets/Media/List/Index'
 
 interface Props {
   mediaHome: MediaHome

@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import style from './AuthorLink.module.scss'
 import Avatar from 'components/parts/Avatar'
+import style from './AuthorLink.module.scss'
 
 interface Props {
   imageUrl: string

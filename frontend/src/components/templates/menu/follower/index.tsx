@@ -5,8 +5,8 @@ import { useNewDatas } from 'components/hooks/useNewList'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginRequired from 'components/parts/LoginRequired'
-import FollowList from 'components/widgets/Media/List/Follow'
 import MediaFollow from 'components/widgets/Media/Index/Follow'
+import FollowList from 'components/widgets/Media/List/Follow'
 
 interface Props {
   follows: Follow[]
