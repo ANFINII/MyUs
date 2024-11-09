@@ -46,6 +46,7 @@ export default [
       complexity: ['warn', { max: 15 }], // 関数の複雑さを制限
       camelcase: ['error', { properties: 'always' }], // キャメルケースを強制
       'no-var': ['error'], // var の使用を禁止
+      'no-undef': ['off'],
       'no-console': ['warn'], // console.log の使用を警告
       'no-unused-vars': ['off'], // 未使用の変数をエラーとして検出
       'no-magic-numbers': ['warn', { ignore: [0, 1] }], // マジックナンバーの使用を警告
@@ -58,6 +59,7 @@ export default [
       '@stylistic/space-infix-ops': 'error', // 演算子の前後にスペースを強制
       '@stylistic/ts/space-infix-ops': 'error', // TypeScript特有のフォーマット設定も追加
       '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
       'unused-imports/no-unused-imports': 'error',
       'import/order': ['error',
         {
