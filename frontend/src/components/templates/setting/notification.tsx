@@ -5,8 +5,8 @@ import { notificationTypes } from 'utils/functions/user'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import LoginError from 'components/parts/Error/Login'
 import Toggle from 'components/parts/Input/Toggle'
-import LoginRequired from 'components/parts/LoginRequired'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
@@ -29,7 +29,7 @@ export default function SettingNotification(props: Props) {
     await new Promise((resolve) => setTimeout(resolve, 200))
     try {
       await putSettingNotification(values)
-    } catch (e) {
+    } catch {
       handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)
@@ -41,7 +41,7 @@ export default function SettingNotification(props: Props) {
     setValues(data)
   }
 
-  const buttonArea = (
+  const button = (
     <Horizontal gap="4">
       <Button color="green" size="s" name="保存" loading={isLoading} onClick={handleSubmit} />
       <Button color="blue" size="s" name="リセット" onClick={handleReset} />
@@ -49,8 +49,8 @@ export default function SettingNotification(props: Props) {
   )
 
   return (
-    <Main title="通知設定" type="table" toast={toast} buttonArea={buttonArea}>
-      <LoginRequired>
+    <Main title="通知設定" type="table" toast={toast} button={button}>
+      <LoginError>
         <Table>
           <TableRow isIndent label="通知設定">
             フォローしているユーザの投稿通知などを設定
@@ -61,7 +61,7 @@ export default function SettingNotification(props: Props) {
             </TableRow>
           ))}
         </Table>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }

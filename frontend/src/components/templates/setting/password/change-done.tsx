@@ -2,14 +2,14 @@ import { useRouter } from 'next/router'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import LoginRequired from 'components/parts/LoginRequired'
+import LoginError from 'components/parts/Error/Login'
 
 export default function PasswordChangeDone() {
   const router = useRouter()
 
   return (
     <Main title="パスワード変更">
-      <LoginRequired>
+      <LoginError>
         <h1>パスワード変更</h1>
         <article className="article_pass">
           <div className="form_account password_done">
@@ -18,7 +18,7 @@ export default function PasswordChangeDone() {
           </div>
           <Footer />
         </article>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }

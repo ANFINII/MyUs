@@ -4,15 +4,17 @@ import { TodoIn } from 'types/internal/media'
 import { postTodoCreate } from 'api/internal/media/create'
 import { priority, progress } from 'utils/constants/todo'
 import { nowDate } from 'utils/functions/datetime'
+import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
-import LoginRequired from 'components/parts/LoginRequired'
 import Vertical from 'components/parts/Stack/Vertical'
 
 export default function TodoCreate() {
+  const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<TodoIn>({ title: '', content: '', priority: 'success', progress: '0', duedate: '' })
@@ -33,16 +35,16 @@ export default function TodoCreate() {
     try {
       const data = await postTodoCreate(values)
       router.push(`/media/todo/${data.id}`)
-    } catch (e) {
-      console.log(e)
+    } catch {
+      handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <Main title="Todo" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
-      <LoginRequired margin="mt_20">
+    <Main title="Todo" type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
+      <LoginError margin="mt_20">
         <form method="POST" action="">
           <Vertical gap="8">
             <Input label="タイトル" required={isRequired} onChange={handleTitle} />
@@ -52,7 +54,7 @@ export default function TodoCreate() {
             <Input label="期日" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handleDuedate} />
           </Vertical>
         </form>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }

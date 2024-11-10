@@ -5,12 +5,12 @@ import { putSettingMypage } from 'api/internal/setting'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import LoginError from 'components/parts/Error/Login'
 import IconPicture from 'components/parts/Icon/Picture'
 import Input from 'components/parts/Input'
 import InputImage from 'components/parts/Input/Image'
 import Textarea from 'components/parts/Input/Textarea'
 import Toggle from 'components/parts/Input/Toggle'
-import LoginRequired from 'components/parts/LoginRequired'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
@@ -46,14 +46,14 @@ export default function SettingMyPageEdit(props: Props) {
       if (!data?.error) {
         handleBack()
       }
-    } catch (e) {
+    } catch {
       handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)
     }
   }
 
-  const buttonArea = (
+  const button = (
     <Horizontal gap="4">
       <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
       <Button color="blue" size="s" name="戻る" onClick={handleBack} />
@@ -61,8 +61,8 @@ export default function SettingMyPageEdit(props: Props) {
   )
 
   return (
-    <Main title="マイページ設定" type="table" toast={toast} buttonArea={buttonArea}>
-      <LoginRequired>
+    <Main title="マイページ設定" type="table" toast={toast} button={button}>
+      <LoginError>
         {message && (
           <ul className="messages_profile">
             <li>{message}</li>
@@ -98,7 +98,7 @@ export default function SettingMyPageEdit(props: Props) {
             <Textarea className="textarea_margin" defaultValue={values.content} onChange={handleContent} />
           </TableRow>
         </Table>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }

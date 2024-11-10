@@ -3,8 +3,8 @@ import { ProfileOut } from 'types/internal/auth'
 import { genderMap } from 'utils/functions/user'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import LoginError from 'components/parts/Error/Login'
 import IconPerson from 'components/parts/Icon/Person'
-import LoginRequired from 'components/parts/LoginRequired'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
@@ -21,7 +21,7 @@ export default function SettingProfile(props: Props) {
   const handleEdit = () => router.push('/setting/profile/edit')
   const handlePassword = () => router.push('/setting/password/change')
 
-  const buttonArea = (
+  const button = (
     <Horizontal gap="4">
       <Button color="blue" size="s" name="編集" onClick={handleEdit} />
       <Button color="blue" size="s" name="パスワード変更" onClick={handlePassword} />
@@ -29,8 +29,8 @@ export default function SettingProfile(props: Props) {
   )
 
   return (
-    <Main title="アカウント設定" type="table" buttonArea={buttonArea}>
-      <LoginRequired>
+    <Main title="アカウント設定" type="table" button={button}>
+      <LoginError>
         <Table>
           <TableRow label="アバター画像">
             {profile.avatar !== '' ? (
@@ -79,7 +79,7 @@ export default function SettingProfile(props: Props) {
             <div className="pv_4 ws_wrap">{profile.introduction}</div>
           </TableRow>
         </Table>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }

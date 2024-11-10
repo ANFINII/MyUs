@@ -11,12 +11,12 @@ import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import LoginError from 'components/parts/Error/Login'
 import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
 import InputImage from 'components/parts/Input/Image'
 import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
-import LoginRequired from 'components/parts/LoginRequired'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
@@ -83,14 +83,14 @@ export default function SettingProfileEdit(props: Props) {
         setIsRequired(false)
         handleBack()
       }
-    } catch (e) {
+    } catch {
       handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)
     }
   }
 
-  const buttonArea = (
+  const button = (
     <Horizontal gap="4">
       <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
       <Button color="blue" size="s" name="戻る" onClick={handleBack} />
@@ -98,8 +98,8 @@ export default function SettingProfileEdit(props: Props) {
   )
 
   return (
-    <Main title="アカウント設定" type="table" toast={toast} buttonArea={buttonArea}>
-      <LoginRequired>
+    <Main title="アカウント設定" type="table" toast={toast} button={button}>
+      <LoginError>
         {message && (
           <ul className="messages_profile">
             <li>{message}</li>
@@ -165,7 +165,7 @@ export default function SettingProfileEdit(props: Props) {
             <Textarea className="textarea_margin" defaultValue={values.introduction} onChange={handleIntroduction} />
           </TableRow>
         </Table>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }

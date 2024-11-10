@@ -2,9 +2,9 @@ import { useRouter } from 'next/router'
 import { MypageOut } from 'types/internal/auth'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import LoginError from 'components/parts/Error/Login'
 import IconPicture from 'components/parts/Icon/Picture'
 import Toggle from 'components/parts/Input/Toggle'
-import LoginRequired from 'components/parts/LoginRequired'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
@@ -21,7 +21,7 @@ export default function SettingMyPage(props: Props) {
   const handleEdit = () => router.push('/setting/mypage/edit')
   const handleUserPage = () => router.push(`/userpage/${mypage.nickname}`)
 
-  const buttonArea = (
+  const button = (
     <Horizontal gap="4">
       <Button color="blue" size="s" name="編集" onClick={handleEdit} />
       <Button color="purple" size="s" name="ユーザページ" onClick={handleUserPage} />
@@ -29,8 +29,8 @@ export default function SettingMyPage(props: Props) {
   )
 
   return (
-    <Main title="マイページ設定" type="table" buttonArea={buttonArea}>
-      <LoginRequired>
+    <Main title="マイページ設定" type="table" button={button}>
+      <LoginError>
         <Table>
           <TableRow label="バナー画像">
             {mypage.banner !== '' ? (
@@ -68,7 +68,7 @@ export default function SettingMyPage(props: Props) {
             <div className="pv_4 ws_wrap">{mypage.content}</div>
           </TableRow>
         </Table>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }

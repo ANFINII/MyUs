@@ -2,15 +2,15 @@ import { useRouter } from 'next/router'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
-import LoginRequired from 'components/parts/LoginRequired'
 
 export default function WithdrawalConfirm() {
   const router = useRouter()
 
   return (
     <Main title="退会処理">
-      <LoginRequired>
+      <LoginError>
         <article className="article_pass">
           <form method="POST" action="" className="form_account">
             {/* <form method="POST" action="{% url 'app:withdrawal' %}" className="form_account"> */}
@@ -25,7 +25,7 @@ export default function WithdrawalConfirm() {
 
           <Footer />
         </article>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }

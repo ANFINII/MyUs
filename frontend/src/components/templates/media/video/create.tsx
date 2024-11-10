@@ -2,16 +2,18 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { VideoIn } from 'types/internal/media'
 import { postVideoCreate } from 'api/internal/media/create'
+import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
-import LoginRequired from 'components/parts/LoginRequired'
 import Vertical from 'components/parts/Stack/Vertical'
 
 export default function VideoCreate() {
   const router = useRouter()
+  const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<VideoIn>({ title: '', content: '' })
@@ -31,16 +33,16 @@ export default function VideoCreate() {
     try {
       const data = await postVideoCreate(values)
       router.push(`/media/video/${data.id}`)
-    } catch (e) {
-      console.log(e)
+    } catch {
+      handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <Main title="Video" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
-      <LoginRequired margin="mt_20">
+    <Main title="Video" type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
+      <LoginError margin="mt_20">
         <form method="POST" action="" encType="multipart/form-data">
           <Vertical gap="8">
             <Input label="タイトル" required={isRequired} onChange={handleTitle} />
@@ -49,7 +51,7 @@ export default function VideoCreate() {
             <InputFile label="動画" accept="video/*" required={isRequired} onChange={handleMovie} />
           </Vertical>
         </form>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }

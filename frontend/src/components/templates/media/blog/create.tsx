@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { UnprivilegedEditor } from 'react-quill'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
@@ -6,12 +6,13 @@ import { DeltaStatic, Sources } from 'quill'
 import { BlogIn } from 'types/internal/media'
 import { MentionUser } from 'types/internal/timeline'
 import { postBlogCreate } from 'api/internal/media/create'
+import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
-import LoginRequired from 'components/parts/LoginRequired'
 import Vertical from 'components/parts/Stack/Vertical'
 
 const Quill = dynamic(() => import('components/widgets/Quill'), { ssr: false })
@@ -24,6 +25,7 @@ const users: MentionUser[] = [
 
 export default function BlogCreate() {
   const router = useRouter()
+  const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<BlogIn>({ title: '', content: '', richtext: '', delta: '' })
@@ -47,16 +49,16 @@ export default function BlogCreate() {
     try {
       const data = await postBlogCreate(values)
       router.push(`/media/blog/${data.id}`)
-    } catch (e) {
-      console.log(e)
+    } catch {
+      handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <Main title="Blog" type="table" buttonArea={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
-      <LoginRequired margin="mt_20">
+    <Main title="Blog" type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
+      <LoginError margin="mt_20">
         <form method="POST" action="">
           <Vertical gap="8">
             <Input label="タイトル" required={isRequired} onChange={handleTitle} />
@@ -65,7 +67,7 @@ export default function BlogCreate() {
             <Quill label="本文" users={users} value={values.richtext} className="blog" required={isRequired} onChange={handleQuill} />
           </Vertical>
         </form>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }

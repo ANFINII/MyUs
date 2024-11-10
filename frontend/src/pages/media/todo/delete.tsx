@@ -1,10 +1,10 @@
 import Main from 'components/layout/Main'
-import LoginRequired from 'components/parts/LoginRequired'
+import LoginError from 'components/parts/Error/Login'
 
 export default function TodoDelete() {
   return (
     <Main title="Todo">
-      <LoginRequired>
+      <LoginError>
         <h1>ToDo削除</h1>
         {/* {% if user.isAuth %} */}
         {/* <p>タイトル：{{ object.title }}</p>
@@ -22,7 +22,7 @@ export default function TodoDelete() {
         <form method="POST" action="">
           <input type="submit" value="削除する" className="btn btn-danger btn-sm" />
         </form>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }

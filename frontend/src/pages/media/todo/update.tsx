@@ -1,10 +1,10 @@
 import Main from 'components/layout/Main'
-import LoginRequired from 'components/parts/LoginRequired'
+import LoginError from 'components/parts/Error/Login'
 
 export default function TodoUpdate() {
   return (
     <Main title="ToDo削除">
-      <LoginRequired>
+      <LoginError>
         <form method="POST" action="">
           <p>
             <label htmlFor="title">タイトル</label>
@@ -81,7 +81,7 @@ export default function TodoUpdate() {
             <input type="submit" value="完了する" className="btn btn-success btn-sm" />
           </p>
         </form>
-      </LoginRequired>
+      </LoginError>
     </Main>
   )
 }
