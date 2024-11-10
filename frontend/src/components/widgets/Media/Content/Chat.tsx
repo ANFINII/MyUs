@@ -22,41 +22,46 @@ export default function ChatMediaContent(props: Props) {
   const { avatar, nickname } = author
 
   return (
-    <Horizontal gap="4" align="stretch" className="p_6">
-      <AuthorLink imageUrl={avatar} nickname={nickname} />
+    <div>
+      <AuthorLink imageUrl={avatar} nickname={nickname} className={style.avatar} />
       <Link href={href} className={style.link}>
-        <div title={title} className={style.media_title}>
-          {title}
-        </div>
-
-        <Vertical gap="2">
-          <div className={clsx(style.font, style.nickname)}>{nickname}</div>
-
-          <Horizontal gap="4">
-            <div className={style.font}>
-              <IconCaret size="14" className={style.margin} />
-              {read}
+        <Horizontal gap="4" align="stretch" className="p_6">
+          <div className='mr_36' />
+          <Vertical gap="1">
+            <div title={title} className={style.media_title}>
+              {title}
             </div>
-            <div className={style.font}>
-              <IconHand size="14" type="off" className={style.margin} />
-              {like}
-            </div>
-          </Horizontal>
 
-          <Horizontal gap="4">
-            <div className={style.font}>
-              <IconPerson size="14" type="base" className={style.margin} />
-              {joined}
-            </div>
-            <div className={style.font}>
-              <IconChat size="14" className={style.margin} />
-              {thread}
-            </div>
-          </Horizontal>
+            <Vertical gap="2">
+              <div className={clsx(style.font, style.nickname)}>{nickname}</div>
 
-          <time className={style.font}>{formatTimeAgo(created)}</time>
-        </Vertical>
+              <Horizontal gap="4">
+                <div className={style.font}>
+                  <IconCaret size="14" className={style.margin} />
+                  {read}
+                </div>
+                <div className={style.font}>
+                  <IconHand size="14" type="off" className={style.margin} />
+                  {like}
+                </div>
+              </Horizontal>
+
+              <Horizontal gap="4">
+                <div className={style.font}>
+                  <IconPerson size="14" type="base" className={style.margin} />
+                  {joined}
+                </div>
+                <div className={style.font}>
+                  <IconChat size="14" className={style.margin} />
+                  {thread}
+                </div>
+              </Horizontal>
+
+              <time className={style.font}>{formatTimeAgo(created)}</time>
+            </Vertical>
+          </Vertical>
+        </Horizontal>
       </Link>
-    </Horizontal>
+    </div>
   )
 }

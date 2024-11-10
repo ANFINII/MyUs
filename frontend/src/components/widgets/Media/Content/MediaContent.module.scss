@@ -1,3 +1,8 @@
+.avatar {
+  position: absolute;
+  margin: 6px;
+}
+
 .media_title {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -5,7 +10,7 @@
   grid-column: 2/3;
   grid-row: 1/2;
   height: 42px;
-  margin: -3px 0 2px 0;
+  margin: -3px 0 0 0;
   font-size: 14px;
   color: rgb(3, 3, 3);
   overflow: hidden;
