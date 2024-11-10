@@ -39,7 +39,7 @@ export default [
     settings: { react: { pragma: 'React', fragment: 'Fragment', version: '18.3' } },
     rules: {
       ...pluginNext.configs.recommended.rules,
-      indent: ['error', 2], // インデントを4スペースで強制
+      indent: ['error', 2], // インデントを2スペースで強制
       semi: ['error', 'never'], // セミコロンを不要に
       quotes: ['error', 'single'], // シングルクォートを強制
       eqeqeq: ['error', 'always'], // 厳密な等価演算子を強制

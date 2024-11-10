@@ -296,7 +296,7 @@ div.field > button {
 
 .advertise .video-js,
 .video_auto .video-js {
-  border-radius: 10px;
+  border-radius: 6px 6px 0 0;
 }
 
 /* コンテンツ詳細セクション */
