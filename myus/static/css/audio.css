@@ -314,8 +314,9 @@
 
 /* audioplayerを読み込まなかった時のデザイン */
 audio {
-  width: 272px;
+  width: 270px;
   height: 40px;
+  border-radius: 6px 6px 0 0;
   background: rgb(243, 243, 243);
 }
 
