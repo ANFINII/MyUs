@@ -1,4 +1,3 @@
-import js from '@eslint/js'
 import pluginJs from '@eslint/js'
 import pluginNext from '@next/eslint-plugin-next'
 import stylistic from '@stylistic/eslint-plugin'
@@ -15,9 +14,8 @@ import tseslint from 'typescript-eslint'
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
-  { languageOptions: { globals: globals.browser,parser: tsParser } },
+  { languageOptions: { globals: globals.browser, parser: tsParser } },
   { linterOptions: { reportUnusedDisableDirectives: 'error' } },
-  js.configs.recommended,
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   react.configs.flat.recommended,
