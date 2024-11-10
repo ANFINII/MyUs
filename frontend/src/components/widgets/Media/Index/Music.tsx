@@ -16,7 +16,9 @@ export default function MediaMusic(props: Props) {
         <source src={music} />
         <p>ブラウザがaudioに対応しておりません</p>
       </audio>
-      <MediaContent href={`/media/music/${id}`} media={media} />
+      <div className={style.media_content}>
+        <MediaContent href={`/media/music/${id}`} media={media} />
+      </div>
     </section>
   )
 }

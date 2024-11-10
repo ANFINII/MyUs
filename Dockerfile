@@ -15,11 +15,11 @@ RUN apt-get update \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
-COPY /backend/requirements /code/requirements
+COPY /myus/requirements /code/requirements
 RUN pip install --upgrade pip
 RUN pip install -r /code/requirements/dev.txt
 
 ADD . /code/
 EXPOSE 8056
 
-# CMD cd /backend && uvicorn app.main:app --reload --port=$PORT --host=0.0.0.0 --log-level debug
+# CMD cd /myus && uvicorn app.main:app --reload --port=$PORT --host=0.0.0.0 --log-level debug

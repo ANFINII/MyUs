@@ -23,7 +23,7 @@ export default function MediaVideo(props: Props) {
             <track kind="subtitles" src="/vtt/captions.ja.vtt" srcLang="en" label="English" />
           </video>
         </Link>
-        <div className={style.video_content}>
+        <div className={style.media_content}>
           <MediaContent href={`/media/video/${id}`} media={media} />
         </div>
       </div>
