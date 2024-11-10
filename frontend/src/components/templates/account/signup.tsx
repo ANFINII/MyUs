@@ -59,7 +59,7 @@ export default function Signup() {
       const data = await postSignup(values)
       data && setMessage(data.message)
       if (!data?.error) handleBack()
-    } catch (e) {
+    } catch {
       handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)

@@ -27,7 +27,7 @@ export default function Reset() {
     try {
       const data = await postReset(email)
       data && setMessage(data.message)
-    } catch (e) {
+    } catch {
       handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)

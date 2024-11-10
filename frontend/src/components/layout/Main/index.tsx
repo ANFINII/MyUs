@@ -12,12 +12,12 @@ interface Props {
   search?: Search
   toast?: ToastType
   type?: 'defalt' | 'table'
-  buttonArea?: React.ReactNode
+  button?: React.ReactNode
   children: React.ReactNode
 }
 
 export default function Main(props: Props) {
-  const { title, metaTitle, meta, search, toast, type = 'defalt', buttonArea, children } = props
+  const { title, metaTitle, meta, search, toast, type = 'defalt', button, children } = props
 
   const { user } = useUser()
 
@@ -42,7 +42,7 @@ export default function Main(props: Props) {
         <>
           <div className="main_header">
             {title && <h1 className="main_title">{title}</h1>}
-            {buttonArea && user.isActive && <div className="ml_8">{buttonArea}</div>}
+            {button && user.isActive && <div className="ml_8">{button}</div>}
           </div>
           <article className="mv_24">{children}</article>
           <Footer />

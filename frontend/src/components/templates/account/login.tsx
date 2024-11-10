@@ -36,7 +36,7 @@ export default function Login() {
         await updateUser()
         router.push('/setting/profile')
       }
-    } catch (e) {
+    } catch {
       handleToast('エラーが発生しました！', true)
     } finally {
       setIsLoading(false)
