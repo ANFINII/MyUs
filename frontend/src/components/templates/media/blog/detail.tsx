@@ -4,7 +4,7 @@ import Divide from 'components/parts/Divide'
 import FormatHtml from 'components/parts/FormatHtml'
 import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
-import MediaDetailSide from 'components/widgets/Media/Detail/Side'
+import MediaDetailSide from 'components/widgets/Media/Side'
 
 interface Props {
   data: BlogDetailOut

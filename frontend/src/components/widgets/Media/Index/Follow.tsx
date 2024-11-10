@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import { Follow } from 'types/internal/auth'
 import ExImage from 'components/parts/ExImage'
-import style from './Follow.module.scss'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Vertical from 'components/parts/Stack/Vertical'
+import style from './Follow.module.scss'
 
 interface Props {
   media: Follow

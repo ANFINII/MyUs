@@ -1,5 +1,5 @@
 import { Chat } from 'types/internal/media'
-import ChatMediaContent from 'components/widgets/Common/MediaContent/Chat'
+import ChatMediaContent from 'components/widgets/Media/Content/Chat'
 import style from './Media.module.scss'
 
 interface Props {

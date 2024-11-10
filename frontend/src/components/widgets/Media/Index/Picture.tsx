@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Picture } from 'types/internal/media'
 import ExImage from 'components/parts/ExImage'
-import MediaContent from 'components/widgets/Common/MediaContent'
+import MediaContent from 'components/widgets/Media/Content'
 import style from './Media.module.scss'
 
 interface Props {
