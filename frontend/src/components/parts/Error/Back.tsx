@@ -1,7 +1,7 @@
 import router from 'next/router'
 import clsx from 'clsx'
+import Button from 'components/parts/Button'
 import style from './Error.module.scss'
-import Button from '../Button'
 
 interface Props {
   content: string
