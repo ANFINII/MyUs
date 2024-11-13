@@ -67,37 +67,7 @@
 }
 
 /* リストデザイン詳細用 */
-.section_detail {
-  width: auto;
-  height: 118px;
-}
-
-.author_space_side {
-  display: grid;
-  grid-template-columns: 2px 290px;
-  grid-template-rows: 48px 60px;
-}
-
-.author_space_side .content_title {
-  height: 48px;
-  max-width: 232px;
-  margin: 0 0 0 6px;
-}
-
-.author_space_side .view_good {
-  grid-column: 2/3;
-  grid-row: 2/3;
-  margin: 0 0 0 7px;
-}
-
-.content_side {
-  display: flex;
-  width: 100%;
-}
-
-.video-js,
-.content_size img,
-.content_size video {
+.video-js {
   min-width: 192px;
   min-height: 153px;
 }
@@ -110,7 +80,6 @@
 /* コンテンツ詳細セクション */
 .article_detail {
   padding: 0;
-  // margin: 16px 0;
 }
 
 .article_detail_section {
