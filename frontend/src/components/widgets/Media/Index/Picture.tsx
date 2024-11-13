@@ -15,7 +15,7 @@ export default function MediaPicture(props: Props) {
   return (
     <section className={style.media}>
       <Link href={`/media/picture/${id}`}>
-        <ExImage src={image} width="272" height="153" className={style.thumbnail} />
+        <ExImage src={image} width="270" height="153" className={style.thumbnail} />
       </Link>
       <MediaContent href={`/media/picture/${id}`} media={media} />
     </section>
