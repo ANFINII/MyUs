@@ -137,6 +137,10 @@ $values: 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 
 }
 
 .radius {
+  &_6 {
+    border-radius: 6px;
+  }
+
   &_8 {
     border-radius: 8px;
   }
@@ -159,6 +163,10 @@ $values: 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 
 hr {
   margin: 16px 0;
   border: 0.5px solid rgb(200, 200, 200);
+}
+
+.cursor_p {
+  cursor: pointer;
 }
 
 .us_none {

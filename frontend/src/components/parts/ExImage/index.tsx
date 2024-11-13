@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import clsx from 'clsx'
-import style from './ExImage.module.scss'
 
 interface Props {
   src?: string
@@ -21,7 +20,7 @@ export default function ExImage(props: Props) {
   const [imageSrc, setImageSrc] = useState(src)
 
   const handleError = () => setImageSrc(undefined)
-  if (!imageSrc) return <img src="/image/no_image.png" width={width || size} height={height || size} className={clsx(style.no_image, className)} />
+  if (!imageSrc) return <img src="/image/no_image.png" width={width || size} height={height || size} className={className} />
 
-  return <img {...props} width={width || size} height={height || size} className={clsx(style.image, className)} onError={handleError} />
+  return <img {...props} width={width || size} height={height || size} className={clsx('cursor_p', className)} onError={handleError} />
 }
