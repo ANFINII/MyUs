@@ -17,7 +17,7 @@ export default function MediaSideBlog(props: Props) {
     <section>
       <Link href={`/media/blog/${id}`} className={style.link}>
         <Horizontal gap="4">
-          <ExImage src={image} width="192" height="98" className={style.thumbnail} />
+          <ExImage src={image} width="192" height="100" className={style.thumbnail} />
           <MediaBaseContent media={media} />
         </Horizontal>
       </Link>

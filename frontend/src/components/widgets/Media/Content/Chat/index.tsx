@@ -3,7 +3,7 @@ import { Chat } from 'types/internal/media'
 import AuthorLink from 'components/parts/AuthorLink'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import ChatMediaBaseContent from './Base'
-import style from './MediaContent.module.scss'
+import style from '../MediaContent.module.scss'
 
 interface Props {
   href: string
