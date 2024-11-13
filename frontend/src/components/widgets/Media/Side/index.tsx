@@ -14,10 +14,10 @@ export default function MediaSideBlog(props: Props) {
   const { id, image } = media
 
   return (
-    <section className={style.media_detail_side}>
+    <section>
       <Link href={`/media/blog/${id}`} className={style.link}>
         <Horizontal gap="4">
-          <ExImage src={image} width="192" height="108" className="radius_6" />
+          <ExImage src={image} width="192" height="98" className={style.thumbnail} />
           <MediaBaseContent media={media} />
         </Horizontal>
       </Link>

@@ -2,6 +2,7 @@ import { BlogDetailOut } from 'types/internal/media'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import FormatHtml from 'components/parts/FormatHtml'
+import Vertical from 'components/parts/Stack/Vertical'
 import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
 import MediaSideBlog from 'components/widgets/Media/Side'
@@ -27,7 +28,9 @@ export default function BlogDetail(props: Props) {
             <MediaDetailCommon title={title} content={content} read={read} like={like} commentCount={commentCount} created={created} author={author} user={user} />
           </div>
           <div className="article_detail_section_2">
-            {list.map((media) => (<MediaSideBlog key={media.id} media={media} />))}
+            <Vertical gap="4">
+              {list.map((media) => (<MediaSideBlog key={media.id} media={media} />))}
+            </Vertical>
           </div>
         </div>
       </MediaDetail>
