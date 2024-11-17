@@ -5,8 +5,8 @@ import { Req } from 'types/global'
 import { Follow, NotificationOut, SearchTagOut } from 'types/internal/auth'
 import { apiFollow, apiFollower, apiNotification, apiSearchTag } from '../uri'
 
-export const getSearchTag = async (): Promise<SearchTagOut[]> => {
-  const res = await apiClient.get(apiSearchTag)
+export const getSearchTag = async (req?: Req): Promise<SearchTagOut[]> => {
+  const res = await apiClient.get(apiSearchTag, cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
@@ -23,8 +23,8 @@ export const getFollower = async (req?: Req, search?: string): Promise<Follow[]>
   return res.data
 }
 
-export const getNotification = async (): Promise<NotificationOut> => {
-  const res = await apiClient.get(apiNotification)
+export const getNotification = async (req?: Req): Promise<NotificationOut> => {
+  const res = await apiClient.get(apiNotification, cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }
