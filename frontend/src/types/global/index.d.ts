@@ -10,5 +10,5 @@ export interface Req extends IncomingMessage {
 
 export interface Config {
   params?: Query | undefined
-  headers: Headers
+  headers: NextApiRequestCookies
 }
