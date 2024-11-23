@@ -48,9 +48,20 @@ export default [
       'no-console': ['warn'], // console.log の使用を警告
       'no-unused-vars': ['off'], // 未使用の変数をエラーとして検出
       'no-magic-numbers': ['warn', { ignore: [0, 1] }], // マジックナンバーの使用を警告
+      'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0 }],
       'prefer-const': ['error'], // 再代入されない変数に const を推奨
       'consistent-return': ['error'], // 一貫した return を強制
       'brace-style': ['error', '1tbs'], // ブレースのスタイルを 1tbs に強制
+      'comma-spacing': ['error', { before: false, after: true }], // カンマの後にスペースを強制
+      'key-spacing': ['error', { beforeColon: false, afterColon: true }], // キーとコロンの間隔を設定
+      'array-bracket-spacing': ['error', 'never'], // 配列の括弧内にスペースを禁止
+      'object-curly-spacing': ['error', 'always'], // オブジェクトの中括弧内にスペースを強制
+      'arrow-spacing': ['error', { before: true, after: true }], // アロー関数の矢印前後にスペースを強制
+      'space-in-parens': ['error', 'never'], // 丸括弧内にスペースを禁止
+      'func-call-spacing': ['error', 'never'], // 関数呼び出し時の関数名と括弧の間にスペースを禁止
+      'eol-last': ['error', 'always'], // ファイル末尾に空行を強制
+      'spaced-comment': ['error', 'always', { markers: ['/'] }], // コメントの開始にスペースを強制
+      'linebreak-style': ['error', 'unix'], // 改行スタイルをLFに強制
       'react/jsx-uses-react': 'off',
       'react/react-in-jsx-scope': 'off',
       'react-hooks/exhaustive-deps': 'warn',
