@@ -3,13 +3,14 @@ import { IncomingMessage } from 'http'
 
 export type Query = Record<string, string | undefined>
 export type Header = Record<string, string>
+export type Cookie = string | undefined
+
+export type CookieHeaders = {
+  cookie: Cookie
+}
 
 export interface Req extends IncomingMessage {
   cookies: NextApiRequestCookies
-}
-
-export const CookieHeaders: {
-  cookie: NextApiRequestCookies
 }
 
 export interface Config {
