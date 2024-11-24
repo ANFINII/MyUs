@@ -23,7 +23,7 @@ export default function BlogDetail(props: Props) {
           <FormatHtml content={richtext} />
         </div>
         <Divide />
-        <div className="detail_section">
+        <div className="media_detail_section">
           <MediaDetailCommon title={title} content={content} read={read} like={like} commentCount={commentCount} created={created} author={author} user={user} />
           <div className="ml_20">
             <Vertical gap="4">
