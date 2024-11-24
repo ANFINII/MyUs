@@ -1,12 +1,14 @@
 import { HttpStatusCode } from 'axios'
 import { apiClient, apiFormClient } from 'lib/axios'
+import { cookieHeader } from 'lib/config'
+import { Req } from 'types/global'
 import { LoginIn, SignupIn, User } from 'types/internal/auth'
 import { MessageOut } from 'types/internal/other'
 import { camelSnake } from 'utils/functions/convertCase'
 import { apiUser, apiLogin, apiLogout, apiSignup } from '../uri'
 
-export const getUser = async (): Promise<User> => {
-  const res = await apiClient.get(apiUser)
+export const getUser = async (req?: Req): Promise<User> => {
+  const res = await apiClient.get(apiUser, cookieHeader(req))
   if (res.status >= HttpStatusCode.BadRequest) throw Error
   return res.data
 }
