@@ -35,18 +35,18 @@ export default function MediaDetailCommon(props: Props) {
   }
 
   return (
-    <div className="article_detail_section_1">
-      <div className="article_detail_aria">
+    <div>
+      <div className="media_detail_aria">
         <h1 title={title}>{title}</h1>
 
-        <time className="article_detail_aria_1">{formatDatetime(created)}</time>
+        <time className="media_detail_aria_1">{formatDatetime(created)}</time>
 
-        <div className="article_detail_aria_2">
+        <div className="media_detail_aria_2">
           <CountRead read={read} />
           <CountLike isLike={isLike} disable={Boolean(!user)} like={like} onClick={handleLike} />
         </div>
 
-        <div className="article_detail_aria_3">{/* {% include 'parts/common/hashtag.html' %} */}</div>
+        <div className="media_detail_aria_3">{/* {% include 'parts/common/hashtag.html' %} */}</div>
       </div>
 
       <hr />
@@ -68,7 +68,7 @@ export default function MediaDetailCommon(props: Props) {
           </div>
           <p className="content_detail_p1">{content}</p>
           <div className="content_detail_p2">
-            {user?.nickname == author.nickname || (!user && <Button color="green" name="フォローする" disabled />)}
+            {user?.nickname === author.nickname || (!user && <Button color="green" name="フォローする" disabled />)}
             {user && (
               <form method="POST" action="" className="follow_form">
                 {user.isFollow ? <Button color="red" name="解除する" className="follow_change" /> : <Button color="green" name="フォローする" className="follow_change" />}

@@ -169,7 +169,7 @@ a:focus {
 
 /*  リンクデザイン */
 .ql-snow .ql-editor a,
-.article_detail_blog a {
+.media_detail_blog a {
   text-decoration: none !important;
 }
 

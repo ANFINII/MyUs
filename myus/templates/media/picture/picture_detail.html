@@ -7,22 +7,22 @@
 
 {% block content %}
 <main class="main">
-  <article class="article_detail">
+  <article class="media_detail">
     {% if object.publish %}
-    <div class="article_detail_picture">
+    <div class="media_detail_picture">
       <a href="{{ object.image.url }}" data-lightbox="group">
-        <figure class="article_detail_contents">
+        <figure class="media_detail_contents">
           <img src="{{ object.image.url }}">
         </figure>
       </a>
     </div>
 
-    <div class="article_detail_section">
-      <div class="article_detail_section_1">
+    <div class="media_detail_section">
+      <div class="media_detail_section_1">
         {% include 'parts/common/common.html' %}
       </div>
-      <div class="article_detail_section_2">
-        {% include 'media/picture/picture_article_detail.html' %}
+      <div class="media_detail_section_2">
+        {% include 'media/picture/picture_media_detail.html' %}
       </div>
     </div>
     {% else %}

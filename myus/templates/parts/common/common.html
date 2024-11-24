@@ -1,12 +1,12 @@
 {% load static %}
 {% load humanize %}
 
-<div class="article_detail_aria">
+<div class="media_detail_aria">
   <h1 title="{{ object.title }}">{{ object.title }}</h1>
 
-  <time class="article_detail_aria_1">{{ object.created|date:'Y/m/d H:i' }}</time>
+  <time class="media_detail_aria_1">{{ object.created|date:'Y/m/d H:i' }}</time>
 
-  <div class="article_detail_aria_2">
+  <div class="media_detail_aria_2">
     <div class="read">
       <i class="bi bi-caret-right-square icon_font" title="閲覧数"></i>
       <span>{{ object.read|intcomma }}</span>
@@ -30,7 +30,7 @@
     {% endif %}
   </div>
 
-  <div class="article_detail_aria_3">
+  <div class="media_detail_aria_3">
     {% include 'parts/common/hashtag.html' %}
   </div>
 </div>

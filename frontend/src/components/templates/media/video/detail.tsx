@@ -14,9 +14,9 @@ export default function VideDetailPage(props: Props) {
     <Main>
       <Meta title="Video" />
       {publish ? (
-        <article className="article_detail">
-          <div className="article_detail_picture">
-            <div className="article_detail_contents">
+        <article className="media_detail">
+          <div className="media_detail_picture">
+            <div className="media_detail_contents">
               <video
                 id="video"
                 className="video vjs-fluid vjs-big-play-centered vjs-16-9"
@@ -38,9 +38,9 @@ export default function VideDetailPage(props: Props) {
             </div>
           </div>
 
-          <div className="article_detail_section_music">
-            <div className="article_detail_section_1">{/* {% include 'parts/common/common.html' %} */}</div>
-            <div className="article_detail_section_2">{/* {% include 'video/video_article_detail.html' %} */}</div>
+          <div className="media_detail_section_music">
+            <div className="media_detail_section_1">{/* {% include 'parts/common/common.html' %} */}</div>
+            <div className="media_detail_section_2">{/* {% include 'video/video_media_detail.html' %} */}</div>
           </div>
         </article>
       ) : (

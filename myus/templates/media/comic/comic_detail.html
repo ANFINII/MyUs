@@ -7,9 +7,9 @@
 
 {% block content %}
 <main class="main">
-  <article class="article_detail">
+  <article class="media_detail">
     {% if object.publish %}
-    <div class="article_detail_comic">
+    <div class="media_detail_comic">
       <div class="right" id="prevButton">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
@@ -25,12 +25,12 @@
       </div>
     </div>
 
-    <div class="article_detail_section">
-      <div class="article_detail_section_1">
+    <div class="media_detail_section">
+      <div class="media_detail_section_1">
         {% include 'parts/common/common.html' %}
       </div>
-      <div class="article_detail_section_2">
-        {% include 'media/comic/comic_article_detail.html' %}
+      <div class="media_detail_section_2">
+        {% include 'media/comic/comic_media_detail.html' %}
       </div>
     </div>
     {% else %}

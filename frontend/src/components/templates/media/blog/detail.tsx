@@ -19,15 +19,13 @@ export default function BlogDetail(props: Props) {
   return (
     <Main metaTitle="Blog">
       <MediaDetail publish={publish}>
-        <div className="article_detail_blog quill_content">
+        <div className="media_detail_blog quill_content">
           <FormatHtml content={richtext} />
         </div>
         <Divide />
-        <div className="article_detail_section">
-          <div className="article_detail_section_1">
-            <MediaDetailCommon title={title} content={content} read={read} like={like} commentCount={commentCount} created={created} author={author} user={user} />
-          </div>
-          <div className="article_detail_section_2">
+        <div className="detail_section">
+          <MediaDetailCommon title={title} content={content} read={read} like={like} commentCount={commentCount} created={created} author={author} user={user} />
+          <div className="ml_20">
             <Vertical gap="4">
               {list.map((media) => (<MediaSideBlog key={media.id} media={media} />))}
             </Vertical>

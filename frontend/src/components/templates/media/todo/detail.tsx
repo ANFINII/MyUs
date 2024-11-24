@@ -14,15 +14,15 @@ export default function TodoDetail(props: Props) {
   return (
     <Main metaTitle="Todo">
       <MediaDetail publish={true}>
-        <div className="article_detail_blog quill_content">{/* <p>{{ object.richtext|safe }}</p> */}</div>
+        <div className="media_detail_blog quill_content">{/* <p>{{ object.richtext|safe }}</p> */}</div>
         <hr />
-        <div className="article_detail_section">
-          <div className="article_detail_section_1">
+        <div className="media_detail_section">
+          <div className="media_detail_section_1">
             <MediaDetailCommon title={title} content={content} read={read} created={created} author={author} />
           </div>
-          <div className="article_detail_section_2">
+          <div className="media_detail_section_2">
             {/* <MediaDetailSide href={`/media/blog/${id}`} imageUrl="" nickname="" /> */}
-            {/* {% include 'media/blog/blog_article_detail.html' %} */}
+            {/* {% include 'media/blog/blog_media_detail.html' %} */}
           </div>
         </div>
       </MediaDetail>

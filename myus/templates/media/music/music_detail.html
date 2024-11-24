@@ -7,9 +7,9 @@
 
 {% block content %}
 <main class="main">
-  <article class="article_detail">
+  <article class="media_detail">
     {% if object.publish %}
-    <div class="article_detail_music">
+    <div class="media_detail_music">
       <audio preload controls controlslist="nodownload">
         <source src="{{ object.music.url }}">
         <p>ブラウザがaudioに対応しておりません</p>
@@ -28,16 +28,16 @@
       {% endif %}
     </div>
 
-    <input type="checkbox" id="article_detail_lyric_check" class="article_detail_lyric_check">
-    <label for="article_detail_lyric_check" class="article_detail_lyric_check_label1">拡大表示</label>
-    <label for="article_detail_lyric_check" class="article_detail_lyric_check_label2">縮小表示</label>
-    <div class="article_detail_lyric">{{ object.lyric|linebreaksbr }}</div>
+    <input type="checkbox" id="media_detail_lyric_check" class="media_detail_lyric_check">
+    <label for="media_detail_lyric_check" class="media_detail_lyric_check_label1">拡大表示</label>
+    <label for="media_detail_lyric_check" class="media_detail_lyric_check_label2">縮小表示</label>
+    <div class="media_detail_lyric">{{ object.lyric|linebreaksbr }}</div>
 
-    <div class="article_detail_section_music">
-      <div class="article_detail_section_1">
+    <div class="media_detail_section_music">
+      <div class="media_detail_section_1">
         {% include 'parts/common/common.html' %}
       </div>
-      <div class="article_detail_section_2">
+      <div class="media_detail_section_2">
       {% for item in music_list %}
         {% include 'media/music/music_article.html' %}
       {% endfor %}
