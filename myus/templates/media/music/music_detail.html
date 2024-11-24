@@ -33,11 +33,11 @@
     <label for="media_detail_lyric_check" class="media_detail_lyric_check_label2">縮小表示</label>
     <div class="media_detail_lyric">{{ object.lyric|linebreaksbr }}</div>
 
-    <div class="media_detail_section_music">
-      <div class="media_detail_section_1">
+    <div class="media_detail_grid_music">
+      <div class="media_detail_grid_1">
         {% include 'parts/common/common.html' %}
       </div>
-      <div class="media_detail_section_2">
+      <div class="media_detail_grid_2">
       {% for item in music_list %}
         {% include 'media/music/music_article.html' %}
       {% endfor %}

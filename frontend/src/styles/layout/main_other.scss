@@ -78,13 +78,13 @@
 }
 
 /* コンテンツ詳細セクション */
-.media_detail_section {
+.media_detail_grid {
   display: grid;
   grid-template-columns: minmax(400px, 7fr) minmax(450px, 450px);
   grid-template-rows: auto auto;
 }
 
-.media_detail_section_music {
+.media_detail_grid_music {
   display: grid;
   grid-template-columns: minmax(400px, 7fr) minmax(292px, 292px);
   grid-template-rows: auto auto;

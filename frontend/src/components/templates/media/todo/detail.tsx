@@ -16,11 +16,9 @@ export default function TodoDetail(props: Props) {
       <MediaDetail publish={true}>
         <div className="media_detail_blog quill_content">{/* <p>{{ object.richtext|safe }}</p> */}</div>
         <hr />
-        <div className="media_detail_section">
-          <div className="media_detail_section_1">
-            <MediaDetailCommon title={title} content={content} read={read} created={created} author={author} />
-          </div>
-          <div className="media_detail_section_2">
+        <div className="media_detail_grid">
+          <MediaDetailCommon title={title} content={content} read={read} created={created} author={author} />
+          <div className="ml_20">
             {/* <MediaDetailSide href={`/media/blog/${id}`} imageUrl="" nickname="" /> */}
             {/* {% include 'media/blog/blog_media_detail.html' %} */}
           </div>

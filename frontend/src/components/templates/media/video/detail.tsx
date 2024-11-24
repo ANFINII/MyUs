@@ -38,9 +38,9 @@ export default function VideDetailPage(props: Props) {
             </div>
           </div>
 
-          <div className="media_detail_section_music">
-            <div className="media_detail_section_1">{/* {% include 'parts/common/common.html' %} */}</div>
-            <div className="media_detail_section_2">{/* {% include 'video/video_media_detail.html' %} */}</div>
+          <div className="media_detail_grid_music">
+            <div>{/* {% include 'parts/common/common.html' %} */}</div>
+            <div className="ml_20">{/* {% include 'video/video_media_detail.html' %} */}</div>
           </div>
         </article>
       ) : (
