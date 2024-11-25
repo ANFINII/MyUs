@@ -3,10 +3,9 @@ import { IncomingMessage } from 'http'
 
 export type Query = Record<string, string | undefined>
 export type Header = Record<string, string>
-export type Cookie = string | undefined
 
 export type CookieHeaders = {
-  cookie: Cookie
+  cookie: string
 }
 
 export interface Req extends IncomingMessage {
