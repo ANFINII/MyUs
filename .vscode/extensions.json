@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "editorconfig.editorconfig",
+    "ms-python.python",
+    "LittleFoxTeam.vscode-python-test-adapter",
+    "dongli.python-preview",
+    "visualstudioexptteam.vscodeintellicode",
+    "dbaeumer.vscode-eslint", // ESLint
+    "esbenp.prettier-vscode", // Prettier
+    "formulahendry.auto-rename-tag" // Auto Rename Tag
+  ]
+}
