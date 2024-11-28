@@ -6,8 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --dir src",
-    "format": "next lint --fix --dir src"
+    "prebuild": "npm run lint",
+    "lint": "eslint src",
+    "format": "eslint --fix src"
   },
   "dependencies": {
     "@next/font": "^14.2.15",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/config-array": "^0.19.0",
+    "@eslint/js": "^9.15.0",
     "@eslint/object-schema": "^2.1.4",
     "@next/eslint-plugin-next": "^15.0.3",
     "@stylistic/eslint-plugin": "^2.11.0",
@@ -34,8 +36,8 @@
     "@types/node": "^22.9.4",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
-    "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.57.1",
+    "@typescript-eslint/parser": "^8.16.0",
+    "eslint": "^9.15.0",
     "eslint-config-next": "^15.0.3",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-complexity": "^1.0.2",
@@ -51,6 +53,7 @@
   },
   "overrides": {
     "@types/react": "18.3.12",
-    "@types/react-dom": "18.3.1"
+    "@types/react-dom": "18.3.1",
+    "eslint": "$eslint"
   }
 }
