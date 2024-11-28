@@ -36,7 +36,6 @@ export default [
       'no-console': ['warn'], // console.log の使用を警告
       'no-multi-spaces': ['error'], // 複数スペースを禁止
       'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 0 }], // 連続する空行を禁止
-      'no-extra-parens': ['error'], // 不必要な丸括弧を禁止
       'no-magic-numbers': ['warn', { ignore: [0, 1, 2] }], // マジックナンバーの使用を警告
       'prefer-const': ['error'], // 再代入されない変数に const を強制
       'comma-dangle': ['error', 'always-multiline'], // 配列やオブジェクトの最後にカンマを強制
