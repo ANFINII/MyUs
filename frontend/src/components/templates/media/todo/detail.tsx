@@ -20,7 +20,7 @@ export default function TodoDetail(props: Props) {
           <MediaDetailCommon title={title} content={content} read={read} created={created} author={author} />
           <div className="ml_20">
             {/* <MediaDetailSide href={`/media/blog/${id}`} imageUrl="" nickname="" /> */}
-            {/* {% include 'media/blog/blog_media_detail.html' %} */}
+            {/* {% include 'media/blog/blog_article_detail.html' %} */}
           </div>
         </div>
       </MediaDetail>

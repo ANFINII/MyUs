@@ -40,7 +40,7 @@ export default function VideDetailPage(props: Props) {
 
           <div className="media_detail_grid_music">
             <div>{/* {% include 'parts/common/common.html' %} */}</div>
-            <div className="ml_20">{/* {% include 'video/video_media_detail.html' %} */}</div>
+            <div className="ml_20">{/* {% include 'video/video_article_detail.html' %} */}</div>
           </div>
         </article>
       ) : (
