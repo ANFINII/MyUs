@@ -1,1 +1,1 @@
-export const isActive = (isbool: boolean) => (isbool ? 'active' : '')
+export const isActive = (isbool: boolean) => isbool ? 'active' : ''

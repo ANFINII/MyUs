@@ -5,7 +5,7 @@ export type Query = Record<string, string | undefined>
 export type Header = Record<string, string>
 
 export type CookieHeaders = {
-  cookie: string
+  cookie?: string
 }
 
 export interface Req extends IncomingMessage {

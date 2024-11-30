@@ -24,7 +24,7 @@ export const selectDate = (() => {
   return { years, months, days }
 })()
 
-export const padZero = (num: number): string => (num < 10 ? `0${num}` : `${num}`)
+export const padZero = (num: number): string => num < 10 ? `0${num}` : `${num}`
 
 export const formatDatetime = (datetime: string): string => {
   const date = new Date(datetime)
