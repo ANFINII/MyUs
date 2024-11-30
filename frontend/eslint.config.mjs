@@ -53,6 +53,7 @@ export default [
       'object-curly-spacing': ['error', 'always'], // オブジェクトの中括弧内にスペースを強制
       'object-curly-newline': ['error', { 'consistent': true }], // オブジェクトの括弧内での改行を一貫性を持たせる
       'eol-last': ['error', 'always'], // ファイル末尾に空行を強制
+      'react/jsx-uses-react': 'off', // Reactのimportが不要
       'react/react-in-jsx-scope': 'off', // Reactのimportが不要
       'react-hooks/exhaustive-deps': 'warn', // Hooksの依存配列で警告
       '@typescript-eslint/no-explicit-any': 'warn', // anyの使用を警告
