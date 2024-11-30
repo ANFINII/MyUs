@@ -13,7 +13,7 @@ export default function CommentInput(props: Props) {
   const { user, commentCount } = props
 
   return (
-    <form method="POST" action="" id="comment_form" obj-id="{{ obj_id }}">
+    <form method="POST" action="" id="comment_form">
       <div className="comment_input">
         <p>
           コメント総数

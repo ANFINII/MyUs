@@ -38,7 +38,7 @@ export default function Textarea(props: Props) {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     adjustHeight()
     setIsValue(e.target.value !== '')
-    onChange && onChange(e.target.value)
+    if (onChange) onChange(e.target.value)
   }
 
   return (

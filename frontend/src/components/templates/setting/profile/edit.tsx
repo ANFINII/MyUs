@@ -77,7 +77,7 @@ export default function SettingProfileEdit(props: Props) {
     const request: ProfileIn = { ...values, avatar }
     try {
       const data = await putSettingProfile(request)
-      data && setMessage(data.message)
+      if (data) setMessage(data.message)
       if (!data?.error) {
         await updateUser()
         setIsRequired(false)

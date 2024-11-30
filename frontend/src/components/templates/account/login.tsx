@@ -31,7 +31,7 @@ export default function Login() {
     setIsLoading(true)
     try {
       const data = await postLogin(values)
-      data && setMessage(data.message)
+      if (data) setMessage(data.message)
       if (!data?.error) {
         await updateUser()
         router.push('/setting/profile')

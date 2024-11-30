@@ -42,10 +42,8 @@ export default function SettingMyPageEdit(props: Props) {
     const request: MypageIn = { ...values, banner }
     try {
       const data = await putSettingMypage(request)
-      data && setMessage(data.message)
-      if (!data?.error) {
-        handleBack()
-      }
+      if (data) setMessage(data.message)
+      if (!data?.error) handleBack()
     } catch {
       handleToast('エラーが発生しました！', true)
     } finally {

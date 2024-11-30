@@ -30,7 +30,7 @@ export default function InputFile(props: Props) {
       const names = Array.from(files).map((file) => file.name)
       setFileNames(names)
       const selectedFiles = multiple ? Array.from(files) : files[0]
-      onChange && selectedFiles && onChange(selectedFiles)
+      if (onChange && selectedFiles) onChange(selectedFiles)
     }
   }
 

@@ -22,7 +22,7 @@ export default function TextareaLine(props: Props) {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const lines = (e.target.value + '\n').match(/\n/g)?.length || 1
     setRows(lines)
-    onChange && onChange(e.target.value)
+    if (onChange) onChange(e.target.value)
     setLineHeight(e.target.scrollHeight / lines)
   }
 

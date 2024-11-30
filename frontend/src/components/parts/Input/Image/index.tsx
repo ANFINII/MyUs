@@ -14,7 +14,7 @@ export default function InputImage(props: Props) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    if (files && files[0]) onChange && onChange(files[0])
+    if (files && files[0] && onChange) onChange(files[0])
   }
 
   return (

@@ -9,7 +9,7 @@ export default function MediaTodo(props: Props) {
   const { data } = props
   // const { author, id, title } = data
   // const { nickname } = author
-  data
+  console.log(data)
 
   return <section className={style.section_todo}></section>
 }
