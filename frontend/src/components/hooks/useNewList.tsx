@@ -11,7 +11,7 @@ interface Props<T> {
   getDatas: (search?: string) => Promise<T>
 }
 
-export const useNewDatas = <T,>(props: Props<T>): OutProps<T> => {
+export const useNewDatas = <T extends object>(props: Props<T>): OutProps<T> => {
   const { datas, getDatas } = props
 
   const router = useRouter()
