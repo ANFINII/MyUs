@@ -3,15 +3,27 @@
   width: 100%;
   flex-direction: row;
 
-  &[style*='justifyContent: center'] {
+  &.align_start {
+    justify-content: flex-start;
+  }
+
+  &.align_center {
     justify-content: center;
   }
 
-  &[style*='justifyContent: end'] {
+  &.align_end {
     justify-content: flex-end;
   }
 
-  &[style*='justifyContent: stretch'] {
-    justify-content: stretch;
+  &.align_around {
+    justify-content: space-around;
+  }
+
+  &.align_between {
+    justify-content: space-between;
+  }
+
+  &.align_evenly {
+    justify-content: space-evenly;
   }
 }
