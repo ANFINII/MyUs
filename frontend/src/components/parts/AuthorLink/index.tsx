@@ -4,17 +4,19 @@ import Avatar from 'components/parts/Avatar'
 import style from './AuthorLink.module.scss'
 
 interface Props {
-  imageUrl: string
+  src: string
+  size: string
+  imgSize: string
   nickname: string
   className?: string
 }
 
 export default function AuthorLink(props: Props) {
-  const { imageUrl, nickname, className } = props
+  const { src, size, imgSize, nickname, className } = props
 
   return (
     <Link href={`/userpage/${nickname}`} className={clsx(style.link, className)}>
-      <Avatar size="1.8em" imgSize="32" src={imageUrl} nickname={nickname} className={style.avatar} />
+      <Avatar src={src} title={nickname} size={size} imgSize={imgSize} className={style.avatar} />
     </Link>
   )
 }

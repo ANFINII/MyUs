@@ -3,15 +3,15 @@ import ExImage from 'components/parts/ExImage'
 import IconPerson from 'components/parts/Icon/Person'
 
 interface Props {
-  size: string
-  imgSize: string
   src: string
-  nickname: string
+  title?: string
+  size: string
+  imgSize?: string
   className?: string
 }
 
 export default function Avatar(props: Props) {
-  const { size, src, imgSize, nickname, className } = props
+  const { src, title, size, imgSize, className } = props
 
   const [isError, setIsError] = useState<boolean>(false)
 
@@ -22,7 +22,7 @@ export default function Avatar(props: Props) {
       {isError || src === '' ? (
         <IconPerson size={size} type="circle" />
       ) : (
-        <ExImage src={src} title={nickname} size={imgSize} className={className} onError={handleError} />
+        <ExImage src={src} title={title} size={imgSize} className={className} onError={handleError} />
       )}
     </>
   )

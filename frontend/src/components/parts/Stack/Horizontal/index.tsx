@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function Horizontal(props: Props): JSX.Element {
-  const { gap = 0, align = 'start', wrap, className, children } = props
+  const { gap = 0, align, wrap, className, children } = props
 
   return (
     <div className={clsx(style.horizontal, style[`align_${align}`], className)} style={{ gap: `${Number(gap) * 2}px`, flexWrap: wrap ? 'wrap' : 'nowrap' }}>

@@ -80,7 +80,7 @@ export default function Header(props: Props) {
         </div>
 
         <div className={clsx('header_nav_7 header_color', isActive(isProfile))} onClick={handleProfile}>
-          <Avatar size="1.8em" imgSize="32" src={user.avatar} nickname={user.nickname} className={clsx('account', isActive(isProfile))} />
+          <Avatar src={user.avatar} title={user.nickname} size="1.8em" imgSize="32" className={clsx('account', isActive(isProfile))} />
           <DropMenuProfile open={isProfile} onClose={handleProfile} />
         </div>
       </nav>
