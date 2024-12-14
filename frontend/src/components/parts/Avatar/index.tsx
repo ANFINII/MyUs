@@ -20,7 +20,7 @@ export default function Avatar(props: Props) {
   return (
     <>
       {isError || src === '' ? (
-        <IconPerson size={size} type="circle" />
+        <IconPerson size={size} type="circle" className="grey" />
       ) : (
         <ExImage src={src} title={title} size={imgSize} className={className} onError={handleError} />
       )}

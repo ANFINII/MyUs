@@ -90,7 +90,6 @@
   grid-template-rows: auto auto;
 }
 
-
 /* コンテンツ詳細 */
 .unpublished {
   font-size: 18px;
@@ -397,12 +396,11 @@
 
 /* コンテンツ説明 */
 .content_detail_aria {
-  height: 167px;
-  margin: 8px 0 0 0;
+  height: 104px;
   overflow-y: scroll;
 
   &.active {
-    min-height: 167px;
+    min-height: 104px;
     height: fit-content;
   }
 }
@@ -426,49 +424,9 @@
   }
 }
 
-.content_detail {
-  display: grid;
-  grid-template-columns: 48px auto auto;
-  grid-template-rows: 24px 24px;
-  gap: 0 10px;
-}
-
-.profile_image_detail {
-  width: 48px;
-  height: 48px;
-  background: rgb(200, 200, 200);
-  border-radius: 50%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-}
-
-.content_detail .profile_image_detail {
-  grid-column: 1/2;
-  grid-row: 1/2;
-}
-
-.content_detail .username_space {
-  grid-column: 2/3;
-  grid-row: 1/2;
-  font-size: 14px;
-  align-self: center;
-}
-
-.content_detail .registered_person {
-  grid-column: 2/3;
-  grid-row: 2/3;
-  font-size: 13px;
-  color: rgb(120, 120, 120);
-  align-self: center;
-}
-
 .content_detail_p1 {
-  grid-column: 2/-1;
-  grid-row: 3/4;
   font-size: 14px;
-  margin: 10px 0 0 0;
+  margin: 10px 0 0 56px;
   white-space: pre-wrap;
 }
 

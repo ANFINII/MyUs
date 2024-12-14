@@ -1,12 +1,14 @@
 import { useState } from 'react'
-import Link from 'next/link'
 import clsx from 'clsx'
 import { Author, MediaUser } from 'types/internal/media'
 import { formatDatetime } from 'utils/functions/datetime'
+import AuthorLink from 'components/parts/AuthorLink'
 import Button from 'components/parts/Button'
 import CountLike from 'components/parts/Count/Like'
 import CountRead from 'components/parts/Count/Read'
-import ExImage from 'components/parts/ExImage'
+import Divide from 'components/parts/Divide'
+import Horizontal from 'components/parts/Stack/Horizontal'
+import Vertical from 'components/parts/Stack/Vertical'
 
 interface Props {
   title: string
@@ -49,24 +51,19 @@ export default function MediaDetailCommon(props: Props) {
         <div className="media_detail_aria_3">{/* {% include 'parts/common/hashtag.html' %} */}</div>
       </div>
 
-      <hr />
+      <Divide />
 
-      <label className="content_detail_label" onClick={handleContentView}>
-        {isContentView ? '拡大表示' : '縮小表示'}
-      </label>
-
-      <div className={clsx('content_detail_aria', isContentView ? 'active' : '')}>
-        <div className="content_detail">
-          {/* <a href="{% url 'app:userpage' object.author.nickname %}" data="{{ object.author.nickname }}" className="pjax_button_userpage"> */}
-          <Link href="">
-            <ExImage src={author.avatar} title={author.nickname} className="profile_image_detail" />
-          </Link>
-          <div className="username_space">{author.nickname}</div>
-          <div className="registered_person">
-            登録者数
-            <span className="follower_count">{author.followerCount}</span>
-          </div>
-          <p className="content_detail_p1">{content}</p>
+      <div className="content_detail">
+        <Horizontal gap="4" align="between">
+          <Horizontal gap="4">
+            <AuthorLink src={author.avatar} size='3em' imgSize='48' nickname={author.nickname} />
+            <Vertical gap="2">
+              <p className="fs_14">{author.nickname}</p>
+              <p className="fs_14 text_sub">
+                  登録者数<span className="ml_8">{author.followerCount}</span>
+              </p>
+            </Vertical>
+          </Horizontal>
           <div className="content_detail_p2">
             {user?.nickname === author.nickname || (!user && <Button color="green" name="フォローする" disabled />)}
             {user && (
@@ -75,10 +72,20 @@ export default function MediaDetailCommon(props: Props) {
               </form>
             )}
           </div>
+        </Horizontal>
+        <div className="content_detail_p1">
+          <Vertical gap="2">
+            <label className="content_detail_label" onClick={handleContentView}>
+              {isContentView ? '拡大表示' : '縮小表示'}
+            </label>
+            <div className={clsx('content_detail_aria', isContentView ? 'active' : '')}>
+              <p>{content}</p>
+            </div>
+          </Vertical>
         </div>
       </div>
 
-      <hr />
+      <Divide />
 
       {/* <CommentInput user={user} commentCount={commentCount} /> */}
 
@@ -98,12 +105,12 @@ export default function MediaDetailCommon(props: Props) {
         {/* {% include 'parts/common/comment/comment.html' %} */}
       </div>
 
-      <hr className="comment_aria_hr" />
+      <Divide />
 
       <div className="advertise_aria">
         <h2>広告表示</h2>
         <article className="article_list">{/* {% include 'parts/advertise_article_auto.html' %} */}</article>
-        <hr />
+        <Divide />
 
         <h2>個別広告</h2>
         <article className="article_list">{/* {% include 'parts/advertise_article.html' %} */}</article>
