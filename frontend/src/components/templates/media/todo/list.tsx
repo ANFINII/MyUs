@@ -16,7 +16,7 @@ export default function Todos(props: Props) {
   const { datas } = props
 
   const router = useRouter()
-  const { search, newDatas } = useNewDatas<Todo[]>({ datas, getDatas: (search) => getTodos(undefined, search) })
+  const { search, newDatas } = useNewDatas<Todo[]>({ datas, getDatas: (search) => getTodos(search) })
 
   return (
     <Main title="Todo" search={{ name: search, count: newDatas.length }}>
