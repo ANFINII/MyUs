@@ -9,6 +9,7 @@ import CountRead from 'components/parts/Count/Read'
 import Divide from 'components/parts/Divide'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Vertical from 'components/parts/Stack/Vertical'
+import Zoom from 'components/widgets/ Zoom'
 
 interface Props {
   title: string
@@ -75,9 +76,7 @@ export default function MediaDetailCommon(props: Props) {
         </Horizontal>
         <div className="content_detail_p1">
           <Vertical gap="2">
-            <label className="content_detail_label" onClick={handleContentView}>
-              {isContentView ? '拡大表示' : '縮小表示'}
-            </label>
+            <Zoom isView={isContentView} onView={handleContentView} />
             <div className={clsx('content_detail_aria', isContentView ? 'active' : '')}>
               <p>{content}</p>
             </div>
