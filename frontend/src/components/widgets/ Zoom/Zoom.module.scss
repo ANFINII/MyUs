@@ -1,0 +1,15 @@
+.zoom {
+  display: flex;
+  font-size: 13px;
+  color: rgb(120, 120, 120);
+  cursor: pointer;
+
+  .icon {
+    line-height: 1.4;
+    margin-right: 2px;
+  }
+
+  &:hover {
+    color: rgb(0, 100, 255);
+  }
+}
