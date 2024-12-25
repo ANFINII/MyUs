@@ -7,9 +7,14 @@
   .icon {
     line-height: 1.4;
     margin-right: 2px;
+    color: rgb(150, 150, 150);
   }
 
   &:hover {
     color: rgb(0, 100, 255);
+
+    .icon {
+      color: rgb(0, 100, 255);
+    }
   }
 }
