@@ -14,7 +14,7 @@ from api.services.media import get_home, get_recommend, get_videos, get_musics, 
 from api.services.user import get_user
 from api.utils.enum.response import ApiResponse
 from api.utils.functions.index import is_bool, create_url
-from api.utils.functions.comment import get_comments
+from api.utils.functions.comment import get_comments, get_comment_data
 from api.utils.functions.media import get_video_detail_data
 from api.utils.functions.response import DataResponse
 from api.utils.functions.user import get_author, get_media_user
@@ -105,7 +105,7 @@ class MusicAPI(APIView):
             'content': obj.content,
             'lyric': obj.lyric,
             'music': obj.music.url,
-            'comment': [get_comment(comment) for comment in comments],
+            'comment': [get_comment_data(comment) for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -157,7 +157,7 @@ class ComicAPI(APIView):
             'id': obj.id,
             'title': obj.title,
             'content': obj.content,
-            'comment': [get_comment(comment) for comment in comments],
+            'comment': [get_comment_data(comment) for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -212,7 +212,7 @@ class PictureAPI(APIView):
             'title': obj.title,
             'content': obj.content,
             'image': create_url(obj.image.url),
-            'comment': [get_comment(comment) for comment in comments],
+            'comment': [get_comment_data(comment) for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
@@ -266,7 +266,7 @@ class BlogAPI(APIView):
                 'content': obj.content,
                 'richtext': obj.richtext,
                 'image': obj.image.url,
-                'comment': [get_comment(comment) for comment in comments],
+                'comment': [get_comment_data(comment) for comment in comments],
                 'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
                 'like': obj.total_like(),
                 'read': obj.read,
@@ -393,7 +393,7 @@ class TodoAPI(APIView):
             'content': obj.content,
             'priority': obj.priority,
             'progress': obj.progress,
-            'comment': [get_comment(comment) for comment in comments],
+            'comment': [get_comment_data(comment) for comment in comments],
             'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
             'like': obj.total_like(),
             'read': obj.read,
