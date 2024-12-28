@@ -90,19 +90,7 @@ export default function MediaDetailCommon(props: Props) {
       <Divide />
 
       <CommentInput user={user} count={commentCount} value={comment} onChange={handleComment} />
-
-      {/* <input type="checkbox" id="comment_aria_check_id" className="comment_aria_check" />
-      <label htmlFor="comment_aria_check_id" className="comment_aria_check_label1">
-        拡大表示
-      </label>
-      <label htmlFor="comment_aria_check_id" className="comment_aria_check_label2">
-        縮小表示
-      </label> */}
-
-      <label className="comment_aria_label" onClick={handleCommentView}>
-        {isCommentView ? '拡大表示' : '縮小表示'}
-      </label>
-
+      <Zoom isView={isCommentView} onView={handleCommentView} />
       <div id="comment_aria" className="comment_aria">
         {/* {% include 'parts/common/comment/comment.html' %} */}
       </div>
