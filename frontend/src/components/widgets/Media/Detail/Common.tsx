@@ -10,6 +10,7 @@ import Divide from 'components/parts/Divide'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Vertical from 'components/parts/Stack/Vertical'
 import Zoom from 'components/widgets/ Zoom'
+import CommentInput from 'components/widgets/Comment/Input'
 
 interface Props {
   title: string
@@ -23,15 +24,17 @@ interface Props {
 }
 
 export default function MediaDetailCommon(props: Props) {
-  const { title, content, read, like, commentCount, created, author, user } = props
+  const { title, content, read, like, commentCount = 0, created, author, user } = props
   console.log(commentCount)
 
   const [isLike, setIsLike] = useState<boolean>(Boolean(user?.isLike))
   const [isContentView, setIsContentVIew] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
+  const [comment, setComment] = useState<string>('')
 
+  const handleComment = (value: string): void => setComment(value)
   const handleContentView = () => setIsContentVIew(!isContentView)
-  const handleCommnetView = () => setIsCommentView(!isCommentView)
+  const handleCommentView = () => setIsCommentView(!isCommentView)
 
   const handleLike = () => {
     setIsLike(!isLike)
@@ -61,7 +64,7 @@ export default function MediaDetailCommon(props: Props) {
             <Vertical gap="2">
               <p className="fs_14">{author.nickname}</p>
               <p className="fs_14 text_sub">
-                  登録者数<span className="ml_8">{author.followerCount}</span>
+                登録者数<span className="ml_8">{author.followerCount}</span>
               </p>
             </Vertical>
           </Horizontal>
@@ -86,7 +89,7 @@ export default function MediaDetailCommon(props: Props) {
 
       <Divide />
 
-      {/* <CommentInput user={user} commentCount={commentCount} /> */}
+      <CommentInput user={user} count={commentCount} value={comment} onChange={handleComment} />
 
       {/* <input type="checkbox" id="comment_aria_check_id" className="comment_aria_check" />
       <label htmlFor="comment_aria_check_id" className="comment_aria_check_label1">
@@ -96,7 +99,7 @@ export default function MediaDetailCommon(props: Props) {
         縮小表示
       </label> */}
 
-      <label className="comment_aria_label" onClick={handleCommnetView}>
+      <label className="comment_aria_label" onClick={handleCommentView}>
         {isCommentView ? '拡大表示' : '縮小表示'}
       </label>
 
