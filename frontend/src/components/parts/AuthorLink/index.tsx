@@ -16,7 +16,7 @@ export default function AuthorLink(props: Props) {
 
   return (
     <Link href={`/userpage/${nickname}`} className={clsx(style.link, className)}>
-      <Avatar src={src} title={nickname} size={size} imgSize={imgSize} className={style.avatar} />
+      <Avatar src={src} title={nickname} size={size} imgSize={imgSize} color="grey" className={style.avatar} />
     </Link>
   )
 }
