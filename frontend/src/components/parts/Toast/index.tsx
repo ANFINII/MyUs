@@ -10,7 +10,7 @@ export interface Props {
   setIsToast?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function Toast(props: Props): JSX.Element {
+export default function Toast(props: Props) {
   const { content, isError, isToast, setIsToast } = props
 
   useEffect(() => {

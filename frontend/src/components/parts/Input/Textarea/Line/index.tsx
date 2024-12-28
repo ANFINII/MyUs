@@ -1,34 +1,41 @@
-import { useState } from 'react'
+import { useEffect, useRef } from 'react'
 import clsx from 'clsx'
 import style from '../Textarea.module.scss'
 
 interface Props {
+  label?: string
   name?: string
   value?: string
+  defaultValue?: string
   placeholder?: string
+  className?: string
+  height?: number
+  error?: boolean
   required?: boolean
   disabled?: boolean
-  className?: string
-  children?: React.ReactNode
   onChange?: (value: string) => void
 }
 
 export default function TextareaLine(props: Props) {
-  const { className = '', children, onChange } = props
+  const { label, value, className, height, onChange } = props
 
-  const [rows, setRows] = useState(1)
-  const [lineHeight, setLineHeight] = useState(16)
+  const ref = useRef<HTMLTextAreaElement>(null)
+
+  const adjustHeight = (height?: number) => {
+    if (ref.current) {
+      ref.current.style.height = height ? `${height}px` : '36px'
+      ref.current.style.height = `${ref.current.scrollHeight}px`
+    }
+  }
+
+  useEffect(() => adjustHeight(height), [value, height])
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const lines = (e.target.value + '\n').match(/\n/g)?.length || 1
-    setRows(lines)
+    adjustHeight()
     if (onChange) onChange(e.target.value)
-    setLineHeight(e.target.scrollHeight / lines)
   }
 
   return (
-    <textarea {...props} rows={rows} onChange={handleChange} style={{ lineHeight: `${lineHeight}px` }} className={clsx(style.line, className)}>
-      {children}
-    </textarea>
+    <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} className={clsx(style.line, className)} />
   )
 }

@@ -17,7 +17,7 @@ interface Props {
   icon?: React.ReactNode
 }
 
-export default function Button(props: Props): JSX.Element {
+export default function Button(props: Props) {
   const { name, color = 'white', size = 'm', type = 'button', className = '', disabled = false, loading = false, icon } = props
 
   const spinnerColor = (color: string): SpinnerColor => {
