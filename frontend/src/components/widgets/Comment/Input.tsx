@@ -29,7 +29,7 @@ export default function CommentInput(props: Props) {
           )}
         </Horizontal>
         <div className={style.button}>
-          <Button color="blue" size="s" name="コメント" disabled={value === ''} />
+          <Button color="blue" size="s" name="コメント" disabled={!value?.trim()} />
         </div>
       </Vertical>
     </form>
