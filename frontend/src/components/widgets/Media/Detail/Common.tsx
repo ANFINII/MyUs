@@ -23,7 +23,7 @@ interface Props {
   created: string
   author: Author
   user?: MediaUser
-  type: 'video' | 'music' | 'comic' | 'picture' | 'blog' | 'chat'
+  type: 'video' | 'music' | 'comic' | 'picture' | 'blog' | 'chat' | 'todo'
 }
 
 export default function MediaDetailCommon(props: Props) {
