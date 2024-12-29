@@ -9,3 +9,9 @@ class CommentData:
     reply_count: str
     created: bool
     author: AuthorData
+
+
+@dataclass(frozen=True, slots=True)
+class CommentInData:
+    text: str
+    type: str

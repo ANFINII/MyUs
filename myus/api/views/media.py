@@ -9,6 +9,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
 from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Todo, Comment
+from api.types.data.comment import CommentInData
 from api.utils.contains import model_media_comment_dict
 from api.utils.functions.convert.convert_hls import convert_exe
 from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
@@ -431,12 +432,12 @@ class CommentAPI(APIView):
         if not author:
             return ApiResponse.UNAUTHORIZED.run()
 
-        data = request.data
-        model = model_media_comment_dict[data['type']]
+        data = CommentInData(**request.data)
+        model = model_media_comment_dict[data.type]
         content_object = model.objects.get(id=id)
         field = {
             'content_object': content_object,
-            'text': data['text'],
+            'text': data.text,
             'author': author,
         }
 
