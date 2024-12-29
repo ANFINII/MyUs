@@ -15,19 +15,23 @@ import Zoom from 'components/widgets/ Zoom'
 import CommentInput from 'components/widgets/Comment/Input'
 
 interface Props {
-  title: string
-  content: string
-  read: number
-  like?: number
-  commentCount?: number
-  created: string
-  author: Author
-  user?: MediaUser
-  type: 'video' | 'music' | 'comic' | 'picture' | 'blog' | 'chat' | 'todo'
+  media: {
+    title: string
+    content: string
+    read: number
+    like?: number
+    commentCount?: number
+    created: string
+    author: Author
+    user?: MediaUser
+    type: 'video' | 'music' | 'comic' | 'picture' | 'blog' | 'todo'
+  }
+  handleToast: (content: string, isError: boolean) => void
 }
 
 export default function MediaDetailCommon(props: Props) {
-  const { title, content, read, like, commentCount = 0, created, author, user, type } = props
+  const { media, handleToast } = props
+  const { title, content, read, like, commentCount = 0, created, author, user, type } = media
 
   const router = useRouter()
   const [isLike, setIsLike] = useState<boolean>(Boolean(user?.isLike))
@@ -46,7 +50,12 @@ export default function MediaDetailCommon(props: Props) {
   const handleMediaComment = async () => {
     const id = Number(router.query.id)
     const request: CommnetIn = { text, type }
-    await createComment(id, request)
+    try {
+      await createComment(id, request)
+      setText('')
+    } catch {
+      handleToast('エラーが発生しました！', true)
+    }
   }
 
   return (

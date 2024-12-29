@@ -47,7 +47,7 @@ export const getTodo = async (id: number, req?: Req): Promise<Todo[]> => {
   return res.data
 }
 
-export const createComment = async (id: number, request: CommnetIn): Promise<Todo[]> => {
+export const createComment = async (id: number, request: CommnetIn): Promise<void> => {
   const res = await apiClient.post(apiCommnet(id), request)
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data

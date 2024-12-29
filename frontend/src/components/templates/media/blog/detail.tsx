@@ -1,4 +1,5 @@
 import { BlogDetailOut } from 'types/internal/media'
+import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import FormatHtml from 'components/parts/FormatHtml'
@@ -16,15 +17,17 @@ export default function BlogDetail(props: Props) {
   const { detail, list } = data
   const { title, content, richtext, read, like, commentCount, publish, created, author, user } = detail
 
+  const { toast, handleToast } = useToast()
+
   return (
-    <Main metaTitle="Blog">
+    <Main metaTitle="Blog" toast={toast}>
       <MediaDetail publish={publish}>
         <div className="media_detail_blog quill_content">
           <FormatHtml content={richtext} />
         </div>
         <Divide />
         <div className="media_detail_grid">
-          <MediaDetailCommon title={title} content={content} read={read} like={like} commentCount={commentCount} created={created} author={author} user={user} type="blog" />
+          <MediaDetailCommon media={{ title, content, read, like, commentCount, created, author, user, type: 'blog' }} handleToast={handleToast} />
           <div className="ml_20">
             <Vertical gap="4">
               {list.map((media) => (<MediaSideBlog key={media.id} media={media} />))}
