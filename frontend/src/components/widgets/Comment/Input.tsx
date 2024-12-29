@@ -11,10 +11,11 @@ interface Props {
   count: number
   value?: string
   onChange?: (value: string) => void
+  onClick?: () => void
 }
 
 export default function CommentInput(props: Props) {
-  const { user, count, value, onChange } = props
+  const { user, count, value, onChange, onClick } = props
 
   return (
     <form method="POST" action="">
@@ -29,7 +30,7 @@ export default function CommentInput(props: Props) {
           )}
         </Horizontal>
         <div className={style.button}>
-          <Button color="blue" size="s" name="コメント" disabled={!value?.trim()} />
+          <Button color="blue" size="s" name="コメント" disabled={!value?.trim()} onClick={onClick} />
         </div>
       </Vertical>
     </form>

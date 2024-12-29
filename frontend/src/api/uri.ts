@@ -50,5 +50,7 @@ export const apiTodos = base + '/media/todo'
 export const apiTodo = (todoId: number) => base + `/media/todo/${todoId}`
 export const apiTodoCreate = base + '/media/todo/create'
 
+export const apiCommnet = (id: number) => base + `/media/${id}/comment`
+
 // 外部API
 export const apiAddress = base + '/search'
