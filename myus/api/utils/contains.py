@@ -40,6 +40,15 @@ model_like_dict = {
     'chat/detail'   : Chat,
 }
 
+model_media_comment_dict = {
+    'video'  : Video,
+    'music'  : Music,
+    'comic'  : Comic,
+    'picture': Picture,
+    'blog'   : Blog,
+    'todo'   : Todo,
+}
+
 model_comment_dict = {
     'video/detail'  : Video,
     'music/detail'  : Music,

@@ -8,7 +8,8 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
-from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Todo
+from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Todo, Comment
+from api.utils.contains import model_media_comment_dict
 from api.utils.functions.convert.convert_hls import convert_exe
 from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
 from api.services.user import get_user
@@ -420,5 +421,25 @@ class TodoAPI(APIView):
             'duedate': data.get('duedate'),
         }
         obj = Todo.objects.create(**field)
+        data = {'id': obj.id}
+        return DataResponse(data, HTTP_201_CREATED)
+
+
+class CommentAPI(APIView):
+    def post(self, request, id):
+        author = get_user(request)
+        if not author:
+            return ApiResponse.UNAUTHORIZED.run()
+
+        data = request.data
+        model = model_media_comment_dict[data['type']]
+        content_object = model.objects.get(id=id)
+        field = {
+            'content_object': content_object,
+            'text': data['text'],
+            'author': author,
+        }
+
+        obj = Comment.objects.create(**field)
         data = {'id': obj.id}
         return DataResponse(data, HTTP_201_CREATED)

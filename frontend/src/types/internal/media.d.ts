@@ -151,3 +151,8 @@ interface TodoIn {
   progress: string
   duedate: string
 }
+
+export interface CommnetIn {
+  text: string
+  type: string
+}

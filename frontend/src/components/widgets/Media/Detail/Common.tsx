@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import clsx from 'clsx'
-import { Author, MediaUser } from 'types/internal/media'
+import { Author, CommnetIn, MediaUser } from 'types/internal/media'
+import { createComment } from 'api/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
 import AuthorLink from 'components/parts/AuthorLink'
 import Button from 'components/parts/Button'
@@ -21,23 +23,30 @@ interface Props {
   created: string
   author: Author
   user?: MediaUser
+  type: 'video' | 'music' | 'comic' | 'picture' | 'blog' | 'chat' | 'todo'
 }
 
 export default function MediaDetailCommon(props: Props) {
-  const { title, content, read, like, commentCount = 0, created, author, user } = props
-  console.log(commentCount)
+  const { title, content, read, like, commentCount = 0, created, author, user, type } = props
 
+  const router = useRouter()
   const [isLike, setIsLike] = useState<boolean>(Boolean(user?.isLike))
   const [isContentView, setIsContentVIew] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
-  const [comment, setComment] = useState<string>('')
+  const [text, setText] = useState<string>('')
 
-  const handleComment = (value: string): void => setComment(value)
+  const handleComment = (value: string): void => setText(value)
   const handleContentView = () => setIsContentVIew(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
 
   const handleLike = () => {
     setIsLike(!isLike)
+  }
+
+  const handleMediaComment = async () => {
+    const id = Number(router.query.id)
+    const request: CommnetIn = { text, type }
+    await createComment(id, request)
   }
 
   return (
@@ -89,7 +98,7 @@ export default function MediaDetailCommon(props: Props) {
 
       <Divide />
 
-      <CommentInput user={user} count={commentCount} value={comment} onChange={handleComment} />
+      <CommentInput user={user} count={commentCount} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <Zoom isView={isCommentView} onView={handleCommentView} />
       <div id="comment_aria" className="comment_aria">
         {/* {% include 'parts/common/comment/comment.html' %} */}

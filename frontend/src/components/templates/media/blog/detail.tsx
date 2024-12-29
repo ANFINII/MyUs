@@ -24,7 +24,7 @@ export default function BlogDetail(props: Props) {
         </div>
         <Divide />
         <div className="media_detail_grid">
-          <MediaDetailCommon title={title} content={content} read={read} like={like} commentCount={commentCount} created={created} author={author} user={user} />
+          <MediaDetailCommon title={title} content={content} read={read} like={like} commentCount={commentCount} created={created} author={author} user={user} type="blog" />
           <div className="ml_20">
             <Vertical gap="4">
               {list.map((media) => (<MediaSideBlog key={media.id} media={media} />))}
