@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios'
-import { apiClient, apiFormClient } from 'lib/axios'
+import { apiFormClient, apiClient } from 'lib/axios/internal'
 import { Video, Music, Comic, Picture, Blog, Chat, Todo, TodoIn } from 'types/internal/media'
 import { VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn } from 'types/internal/media'
 import { apiVideoCreate, apiMusicCreate, apiComicCreate, apiPictureCreate, apiBlogCreate, apiChatCreate, apiTodoCreate } from 'api/uri'
