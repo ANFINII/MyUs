@@ -46,10 +46,6 @@ export const apiChats = base + '/media/chat'
 export const apiChat = (chatId: number) => base + `/media/chat/${chatId}`
 export const apiChatCreate = base + '/media/chat/create'
 
-export const apiTodos = base + '/media/todo'
-export const apiTodo = (todoId: number) => base + `/media/todo/${todoId}`
-export const apiTodoCreate = base + '/media/todo/create'
-
 export const apiCommnet = (id: number) => base + `/media/${id}/comment`
 
 // 外部API

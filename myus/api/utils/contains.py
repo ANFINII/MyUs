@@ -1,4 +1,4 @@
-from api.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from api.models import Video, Music, Comic, Picture, Blog, Chat
 
 
 model_list = [Video, Music, Comic, Picture, Blog, Chat]
@@ -28,7 +28,6 @@ model_create_pjax = (
     'media/picture/create',
     'media/blog/create',
     'media/chat/create',
-    'media/todo/create',
 )
 
 model_like_dict = {
@@ -46,7 +45,6 @@ model_media_comment_dict = {
     'comic'  : Comic,
     'picture': Picture,
     'blog'   : Blog,
-    'todo'   : Todo,
 }
 
 model_comment_dict = {
@@ -55,7 +53,6 @@ model_comment_dict = {
     'comic/detail'  : Comic,
     'picture/detail': Picture,
     'blog/detail'   : Blog,
-    'todo/detail'   : Todo,
 }
 
 notification_type_no = {

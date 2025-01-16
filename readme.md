@@ -11,7 +11,6 @@
 - Picture投稿
 - Blog投稿
 - Chat投稿
-- Todo管理
 - 投稿管理 (CRUD)
 
 ### アカウント機能

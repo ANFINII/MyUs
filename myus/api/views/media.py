@@ -8,11 +8,11 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
-from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Todo, Comment
+from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Comment
 from api.types.data.comment import CommentInData
 from api.utils.contains import model_media_comment_dict
 from api.utils.functions.convert.convert_hls import convert_exe
-from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats, get_todos
+from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats
 from api.services.user import get_user
 from api.utils.enum.response import ApiResponse
 from api.utils.functions.index import is_bool, create_url
@@ -364,64 +364,6 @@ class ChatAPI(APIView):
             'period': data.get('period'),
         }
         obj = Chat.objects.create(**field)
-        data = {'id': obj.id}
-        return DataResponse(data, HTTP_201_CREATED)
-
-# Todo
-class TodoListAPI(APIView):
-    def get(self, request):
-        author = get_user(request)
-        if not author:
-            return ApiResponse.UNAUTHORIZED.run()
-
-        search = request.query_params.get('search')
-        data = get_todos(50, author, search)
-        return DataResponse(data, HTTP_200_OK)
-
-
-class TodoAPI(APIView):
-    def get(self, request, id):
-        obj = Todo.objects.filter(id=id, publish=True).first()
-        if not obj:
-            return ApiResponse.NOT_FOUND.run()
-
-        filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
-        subquery = obj.comment.filter(**filter_kwargs)
-        comments = obj.comment.all().annotate(is_comment_like=Exists(subquery))
-
-        data = {
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'priority': obj.priority,
-            'progress': obj.progress,
-            'comment': [get_comment_data(comment) for comment in comments],
-            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            'like': obj.total_like(),
-            'read': obj.read,
-            'comment_count': obj.comment_count(),
-            'duete': obj.duedate,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': get_author(obj.author),
-        }
-        return DataResponse(data, HTTP_200_OK)
-
-    def post(self, request):
-        author = get_user(request)
-        if not author:
-            return ApiResponse.UNAUTHORIZED.run()
-
-        data = request.data
-        field = {
-            'author': author,
-            'title': data.get('title'),
-            'content': data.get('content'),
-            'priority': data.get('priority'),
-            'progress': data.get('progress'),
-            'duedate': data.get('duedate'),
-        }
-        obj = Todo.objects.create(**field)
         data = {'id': obj.id}
         return DataResponse(data, HTTP_201_CREATED)
 

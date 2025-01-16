@@ -1,7 +1,6 @@
-from api.models import User
-from api.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from api.models import Video, Music, Comic, Picture, Blog, Chat
 from api.utils.functions.index import create_url
-from api.utils.functions.search import search_media, search_todo
+from api.utils.functions.search import search_media
 from api.utils.functions.user import get_author
 
 
@@ -163,27 +162,6 @@ def get_chats(count: int, search: str | None):
         'joined': obj.joined_count(),
         'period': obj.period,
         'publish': obj.publish,
-        'created': obj.created,
-        'updated': obj.updated,
-        'author': get_author(obj.author)
-    } for obj in objs]
-    return data
-
-
-def get_todos(count: int, user: User, search: str | None):
-    objs = Todo.objects.none
-    if search:
-        objs = search_todo(Todo, user, search)
-    else:
-        objs = Todo.objects.filter(author=user.id).order_by('-created')[:count]
-
-    data = [{
-        'id': obj.id,
-        'title': obj.title,
-        'content': obj.content,
-        'priority': obj.priority,
-        'progress': obj.progress,
-        'duedate': obj.duedate,
         'created': obj.created,
         'updated': obj.updated,
         'author': get_author(obj.author)

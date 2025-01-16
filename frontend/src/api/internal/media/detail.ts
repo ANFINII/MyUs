@@ -2,8 +2,8 @@ import { HttpStatusCode } from 'axios'
 import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { Req } from 'types/global'
-import { Video, Music, Comic, Picture, Chat, Todo, BlogDetailOut, CommnetIn } from 'types/internal/media'
-import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat, apiTodo, apiCommnet } from 'api/uri'
+import { Video, Music, Comic, Picture, Chat, BlogDetailOut, CommnetIn } from 'types/internal/media'
+import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat, apiCommnet } from 'api/uri'
 
 export const getVideo = async (id: number, req?: Req): Promise<Video> => {
   const res = await apiClient.get(apiVideo(id), cookieHeader(req))
@@ -37,12 +37,6 @@ export const getBlog = async (id: number, req?: Req): Promise<BlogDetailOut> => 
 
 export const getChat = async (id: number, req?: Req): Promise<Chat> => {
   const res = await apiClient.get(apiChat(id), cookieHeader(req))
-  if (res.status >= HttpStatusCode.InternalServerError) throw Error
-  return res.data
-}
-
-export const getTodo = async (id: number, req?: Req): Promise<Todo[]> => {
-  const res = await apiClient.get(apiTodo(id), cookieHeader(req))
   if (res.status >= HttpStatusCode.InternalServerError) throw Error
   return res.data
 }

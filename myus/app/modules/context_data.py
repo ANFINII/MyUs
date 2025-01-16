@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, date
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count, Exists, OuterRef
 from api.models import Plan, MyPage, SearchTag, UserNotification, Follow, Comment
-from api.models import Video, Music, Comic, Picture, Blog, Chat, Todo, Advertise
+from api.models import Video, Music, Comic, Picture, Blog, Chat, Advertise
 from api.utils.contains import model_dict
 from app.modules.notification import notification_data
 
@@ -139,9 +139,4 @@ class ContextData:
             context['reply_list'] = obj.message.filter(parent_id=message_id).select_related('author')
             context['chat_list'] = Chat.objects.filter(publish=True).exclude(id=obj.id).order_by('-created')[:50]
 
-        if class_name == 'TodoDetail':
-            context['todo_list'] = Todo.objects.filter(author=user).exclude(id=obj.id)[:50]
-
-        if class_name != 'TodoDetail':
-            context['is_like'] = obj.like.filter(id=user.id).exists()
         return context

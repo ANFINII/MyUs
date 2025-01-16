@@ -61,18 +61,6 @@ export interface Chat extends Media {
   thread: number
 }
 
-export interface Todo {
-  id: number
-  title: string
-  content: string
-  like: number
-  read: number
-  period: string
-  created: string
-  updated: string
-  author: Author
-}
-
 export interface BlogDetailOut {
   detail: Blog
   list: Blog[]
@@ -142,14 +130,6 @@ export interface ChatIn {
   title: string
   content: string
   period: string
-}
-
-interface TodoIn {
-  title: string
-  content: string
-  priority: string
-  progress: string
-  duedate: string
 }
 
 export interface CommnetIn {

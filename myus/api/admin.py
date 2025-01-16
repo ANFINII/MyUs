@@ -8,7 +8,7 @@ from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
 from api.models import User, Profile, MyPage, SearchTag, HashTag, UserNotification
 from api.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
-from api.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from api.models import Video, Music, Comic, Picture, Blog, Chat
 
 
 # Admin用の管理画面
@@ -255,23 +255,6 @@ class ChatAdmin(ImportExportModelAdmin):
     fieldsets = [
         ('編集項目', {'fields': ('author', 'title', 'content', 'hashtag', 'like', 'read', 'period', 'publish')}),
         ('確認項目', {'fields': ('total_like', 'thread_count', 'joined_count', 'created', 'updated')})
-    ]
-
-
-@admin.register(Todo)
-class TodoAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'author', 'title', 'comment_count', 'priority', 'progress', 'duedate')
-    list_select_related = ('author',)
-    list_filter = ('priority', 'progress', 'duedate')
-    search_fields = ('title', 'author__nickname', 'priority', 'progress', 'duedate')
-    ordering = ('author', 'priority', '-duedate')
-    readonly_fields = ('comment_count', 'created', 'updated')
-    inlines = [CommentInlineAdmin]
-
-    # 詳細画面
-    fieldsets = [
-        ('編集項目', {'fields': ('author', 'title', 'content', 'priority', 'progress', 'duedate')}),
-        ('確認項目', {'fields': ('comment_count', 'created', 'updated')})
     ]
 
 
@@ -632,36 +615,6 @@ class ChatAdminSite(admin.ModelAdmin, PublishMixin):
         obj.author = request.user
         super(ChatAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Chat, ChatAdminSite)
-
-
-class TodoAdminSite(admin.ModelAdmin):
-    list_display = ('id', 'title', 'comment_count', 'priority', 'progress', 'duedate')
-    list_editable = ('title', 'priority', 'progress', 'duedate')
-    list_filter = ('priority', 'progress', 'duedate')
-    search_fields = ('title', 'duedate')
-    ordering = ('priority', '-duedate')
-    actions = ('delete_action',)
-    readonly_fields = ('comment_count', 'created', 'updated')
-    inlines = [CommentInline]
-
-    # 詳細画面
-    fieldsets = [
-        ('編集項目', {'fields': ('title', 'content', 'priority', 'progress', 'duedate')}),
-        ('確認項目', {'fields': ('comment_count', 'created', 'updated')})
-    ]
-
-    def get_queryset(self, request):
-        qs = super(TodoAdminSite, self).get_queryset(request)
-        return qs.filter(author=request.user)
-
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(TodoAdminSite, self).save_model(request, obj, form, change)
-
-    def delete_action(self, request, queryset):
-        queryset.delete()
-    delete_action.short_description = '削除する'
-manage_site.register(Todo, TodoAdminSite)
 
 
 class FollowAdminSite(admin.ModelAdmin):

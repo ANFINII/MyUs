@@ -9,7 +9,6 @@ from api.views.media import ComicListAPI, ComicAPI
 from api.views.media import PictureListAPI, PictureAPI
 from api.views.media import BlogListAPI, BlogAPI
 from api.views.media import ChatListAPI, ChatAPI
-from api.views.media import TodoListAPI, TodoAPI
 from api.views.media import CommentAPI
 
 
@@ -57,10 +56,6 @@ urlpatterns = [
     path('media/chat', ChatListAPI.as_view()),
     path('media/chat/<int:id>', ChatAPI.as_view()),
     path('media/chat/create', ChatAPI.as_view()),
-
-    path('media/todo', TodoListAPI.as_view()),
-    path('media/todo/<int:id>', TodoAPI.as_view()),
-    path('media/todo/create', TodoAPI.as_view()),
 
     path('media/<int:id>/comment', CommentAPI.as_view()),
 ]

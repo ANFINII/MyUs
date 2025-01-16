@@ -24,7 +24,7 @@ interface Props {
     created: string
     author: Author
     user?: MediaUser
-    type: 'video' | 'music' | 'comic' | 'picture' | 'blog' | 'todo'
+    type: 'video' | 'music' | 'comic' | 'picture' | 'blog'
   }
   handleToast: (content: string, isError: boolean) => void
 }
