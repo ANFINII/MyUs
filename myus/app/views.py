@@ -25,7 +25,7 @@ from django.views.generic import View, TemplateView, ListView, DetailView, Creat
 
 from api.models import Profile, MyPage, SearchTag, UserNotification
 from api.models import Notification, Follow, Comment, Advertise, ComicPage
-from api.models import Video, Music, Comic, Picture, Blog, Chat, Todo
+from api.models import Video, Music, Comic, Picture, Blog, Chat
 from api.utils.contains import NotificationTypeNo, model_like_dict, model_comment_dict
 from api.utils.functions.convert.convert_hls import convert_exe
 from api.utils.functions.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
@@ -1119,68 +1119,3 @@ def chat_thread_button(request):
             }, request=request)
         }
         return JsonResponse(context)
-
-
-# Todo
-class TodoCreate(CreateView):
-    """TodoCreate"""
-    model = Todo
-    fields = ('title', 'content', 'priority', 'duedate')
-    template_name = 'media/todo/todo_create.html'
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super(TodoCreate, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse('app:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
-
-    def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, TodoCreate, **kwargs)
-
-
-class TodoList(ListView):
-    """TodoList"""
-    model = Todo
-    template_name = 'media/todo/todo.html'
-    context_object_name = 'todo_list'
-    ordering = ['-duedate']
-
-    def get_context_data(self, **kwargs):
-        return ContextData.context_data(self, TodoList, **kwargs)
-
-    def get_queryset(self, **kwargs):
-        return Search.search_todo(self, Todo)
-
-
-class TodoDetail(DetailView):
-    """TodoDetail"""
-    model = Todo
-    template_name = 'media/todo/todo_detail.html'
-
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_superuser:
-            return Todo.objects.all()
-        else:
-            return Todo.objects.filter(author=user)
-
-    def get_context_data(self, **kwargs):
-        return ContextData.models_context_data(self, TodoDetail, **kwargs)
-
-
-class TodoUpdate(UpdateView):
-    """TodoUpdate"""
-    model = Todo
-    fields = ('title', 'content', 'priority', 'progress', 'duedate')
-    template_name = 'media/todo/todo_update.html'
-
-    def get_success_url(self):
-        return reverse('app:todo_detail', kwargs={'pk': self.object.pk, 'title': self.object.title})
-
-
-class TodoDelete(DeleteView):
-    """TodoUpdate"""
-    model = Todo
-    template_name = 'media/todo/todo_delete.html'
-    success_url = reverse_lazy('app:todo_list')

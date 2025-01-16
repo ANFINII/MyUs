@@ -12,7 +12,6 @@ from app.views import ComicList, ComicCreate, ComicDetail
 from app.views import PictureList, PictureCreate, PictureDetail
 from app.views import BlogList, BlogCreate, BlogDetail
 from app.views import ChatList, ChatCreate, ChatDetail, ChatThread, chat_thread_button
-from app.views import TodoList, TodoDetail, TodoCreate, TodoDelete, TodoUpdate
 from app.views import searchtag_create, advertise_read, like_form, like_form_comment
 from app.views import comment_form, comment_update, comment_delete, reply_form, reply_delete
 
@@ -86,12 +85,6 @@ urlpatterns = [
     path('media/chat/detail/<int:pk>', ChatDetail.as_view(), name='chat_detail'),
     path('media/chat/detail/<int:pk>/thread/<int:message_id>', ChatThread.as_view(), name='chat_thread'),
     path('media/chat/detail/thread', chat_thread_button, name='chat_thread_button'),
-
-    path('media/todo', TodoList.as_view(), name='todo_list'),
-    path('media/todo/create', TodoCreate.as_view(), name='todo_create'),
-    path('media/todo/detail/<int:pk>/<str:title>', TodoDetail.as_view(), name='todo_detail'),
-    path('media/todo/update/<int:pk>/<str:title>', TodoUpdate.as_view(), name='todo_update'),
-    path('media/todo/delete/<int:pk>/<str:title>', TodoDelete.as_view(), name='todo_delete'),
 
     path('searchtag/create', searchtag_create, name='searchtag_create'),
     path('url/read', advertise_read, name='advertise_read'),

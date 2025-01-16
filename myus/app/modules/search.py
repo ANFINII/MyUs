@@ -78,16 +78,6 @@ class SearchData:
             ])
         return result.filter(query).annotate(score=F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20).order_by('-score').distinct()
 
-    def search_todo(model, user, search):
-        result = model.objects.filter(author=user.id)
-        q_list = get_q_list(search)
-        query = reduce(and_, [
-            Q(title__icontains=q) |
-            Q(content__icontains=q) |
-            Q(duedate__icontains=q) for q in q_list
-        ])
-        return result.filter(query).order_by('-duedate').distinct()
-
     def search_advertise(model, author, search):
         result = model.objects.filter(author=author, publish=True).order_by('created')
         q_list = get_q_list(search)
@@ -145,15 +135,6 @@ class Search:
             self.count = result.count()
             return result
         return model.objects.filter(publish=True).defer(*DeferData.defer_list).order_by('-created')
-
-    def search_todo(self, model):
-        user = self.request.user
-        search = self.request.GET.get('search')
-        if search:
-            result = SearchData.search_todo(model, user, search)
-            self.count = result.count()
-            return result
-        return model.objects.filter(author=user.id).defer(*DeferData.defer_list)
 
     def search_advertise(self, model):
         author = User.objects.get(nickname=self.kwargs['nickname'])

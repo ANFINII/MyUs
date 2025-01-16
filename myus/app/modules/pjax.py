@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count
 from django.template.loader import render_to_string
-from api.models import Plan, MyPage, UserNotification, Follow, Advertise, Todo
+from api.models import Plan, MyPage, UserNotification, Follow, Advertise
 from api.utils.contains import model_dict, model_pjax, model_create_pjax
 from app.modules.search import SearchData
 
@@ -74,13 +74,6 @@ def pjax_context(request, href):
             context = {f'{model}_list': result[:100], 'query': search, 'count': result.count()}
         else:
             context = {f'{model}_list': model_pjax[href].objects.filter(publish=True).order_by('-created')[:100]}
-    if href == 'media/todo':
-        template = 'media/todo/todo_list.html'
-        if search:
-            result = SearchData.search_todo(Todo, user, search)
-            context = {'todo_list': result[:100], 'query': search, 'count': result.count()}
-        else:
-            context = {'todo_list': Todo.objects.filter(author=user.id).order_by('-created')[:100]}
     if href in ('menu/follow', 'menu/follower'):
         if search:
             template = f'menu/follow/{href}_list.html'

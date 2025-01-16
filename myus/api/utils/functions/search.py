@@ -49,14 +49,3 @@ def search_media(model: any, search: str):
             Q(content__icontains=q) for q in q_list
         ])
     return result.filter(query).annotate(score=score).order_by('-score').distinct()
-
-
-def search_todo(model: any, user: User, search: str):
-    result = model.objects.filter(author=user.id)
-    q_list = get_q_list(search)
-    query = reduce(and_, [
-        Q(title__icontains=q) |
-        Q(content__icontains=q) |
-        Q(duedate__icontains=q) for q in q_list
-    ])
-    return result.filter(query).order_by('-duedate').distinct()

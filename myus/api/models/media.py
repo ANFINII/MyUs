@@ -337,30 +337,3 @@ class Chat(models.Model):
     class Meta:
         db_table = 'chat'
         verbose_name_plural = '06 Chat'
-
-
-# Todo
-class Todo(models.Model):
-    """Todo"""
-    priority_type = (('danger', '高'), ('success', '普通'), ('info', '低'))
-    progress_type = (('0', '未着手'), ('1', '進行中'), ('2', '完了'))
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    priority = models.CharField(max_length=10, choices=priority_type)
-    progress = models.CharField(max_length=10, choices=progress_type)
-    comment  = GenericRelation('Comment')
-    duedate  = models.DateField()
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.title
-
-    def comment_count(self):
-        return self.comment.count()
-    comment_count.short_description = 'comment'
-
-    class Meta:
-        db_table = 'todo'
-        verbose_name_plural = '07 ToDo'
