@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios'
-import { apiClient, apiFormClient } from 'lib/axios'
+import { apiClient, apiFormClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { Req } from 'types/global'
 import { ProfileIn, ProfileOut, MypageIn, MypageOut, UserNotificationIn, UserNotificationOut } from 'types/internal/auth'

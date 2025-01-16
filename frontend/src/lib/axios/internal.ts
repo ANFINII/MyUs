@@ -16,9 +16,9 @@ const responseInterceptor = (client: AxiosInstance) => {
   )
 }
 
-const axiosInstance = (contentType: string, csrfToken?: string) => {
+const axiosInstance = (baseURL: string, contentType: string, csrfToken?: string) => {
   const client: AxiosInstance = axios.create({
-    baseURL: API_URL,
+    baseURL,
     withCredentials: true,
     headers: {
       'Content-Type': contentType,
@@ -31,16 +31,5 @@ const axiosInstance = (contentType: string, csrfToken?: string) => {
   return client
 }
 
-const axiosAddressInstance = (contentType: string) => {
-  const client: AxiosInstance = axios.create({
-    baseURL: 'https://zipcloud.ibsnet.co.jp',
-    headers: { 'Content-Type': contentType },
-    timeout: 5000,
-  })
-  responseInterceptor(client)
-  return client
-}
-
-export const apiClient = axiosInstance('application/json')
-export const apiFormClient = axiosInstance('multipart/form-data')
-export const apiAddressClient = axiosAddressInstance('application/json')
+export const apiClient = axiosInstance(API_URL, 'application/json')
+export const apiFormClient = axiosInstance(API_URL, 'multipart/form-data')
