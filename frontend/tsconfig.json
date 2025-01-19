@@ -5,7 +5,7 @@
     "moduleResolution": "node",
     "lib": ["dom", "dom.iterable", "esnext"],
     "types": ["@types/react", "@types/react-dom"],
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "baseUrl": "src",
     "sourceRoot": "/",
     "sourceMap": true,
@@ -33,7 +33,7 @@
     "strictFunctionTypes": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
-    "useUnknownInCatchVariables": true,
+    "useUnknownInCatchVariables": true
     // "exactOptionalPropertyTypes": true
     // "noImplicitOverride": true,
     // "noPropertyAccessFromIndexSignature": true,
