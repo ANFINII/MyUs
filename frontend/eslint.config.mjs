@@ -4,7 +4,6 @@ import tsEsLintPlugin from '@typescript-eslint/eslint-plugin'
 import importPlugin from 'eslint-plugin-import'
 import pluginReact from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
 import unusedPlugin from 'eslint-plugin-unused-imports'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
@@ -23,7 +22,6 @@ export default [
     plugins: {
       react: pluginReact,
       'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
       'import': importPlugin,
       'unused-imports': unusedPlugin,
       '@typescript-eslint': tsEsLintPlugin,
