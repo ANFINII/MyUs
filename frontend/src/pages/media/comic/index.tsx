@@ -14,6 +14,6 @@ interface Props {
   datas: Comic[]
 }
 
-export default function ComicsPage(props: Props) {
+export default function ComicsPage(props: Props): JSX.Element {
   return <Comics {...props} />
 }

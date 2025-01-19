@@ -8,7 +8,7 @@ interface Props {
   onClick?: () => void
 }
 
-export default function Toggle(props: Props) {
+export default function Toggle(props: Props): JSX.Element {
   const { isActive, disable = false, onClick } = props
 
   return (

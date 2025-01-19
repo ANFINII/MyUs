@@ -14,6 +14,6 @@ interface Props {
   datas: Blog[]
 }
 
-export default function BlogsPage(props: Props) {
+export default function BlogsPage(props: Props): JSX.Element {
   return <Blogs {...props} />
 }

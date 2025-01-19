@@ -5,7 +5,7 @@ interface Props {
   className?: string
 }
 
-export default function IconChat(props: Props) {
+export default function IconChat(props: Props): JSX.Element {
   const { size, className = '' } = props
 
   return (

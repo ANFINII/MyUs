@@ -5,7 +5,7 @@ interface Props {
   className?: string
 }
 
-export default function IconPicture(props: Props) {
+export default function IconPicture(props: Props): JSX.Element {
   const { size, className = '' } = props
 
   return (

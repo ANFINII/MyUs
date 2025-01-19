@@ -8,7 +8,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function Vertical(props: Props) {
+export default function Vertical(props: Props): JSX.Element {
   const { gap = 0, align, className, children } = props
 
   return (

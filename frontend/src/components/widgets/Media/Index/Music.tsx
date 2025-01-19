@@ -6,7 +6,7 @@ interface Props {
   media: Music
 }
 
-export default function MediaMusic(props: Props) {
+export default function MediaMusic(props: Props): JSX.Element {
   const { media } = props
   const { id, music } = media
 

@@ -9,7 +9,7 @@ interface Props {
   datas: Picture[]
 }
 
-export default function Pictures(props: Props) {
+export default function Pictures(props: Props): JSX.Element {
   const { datas } = props
 
   const { search, newDatas } = useNewDatas<Picture[]>({ datas, getDatas: (search) => getPictures(search) })

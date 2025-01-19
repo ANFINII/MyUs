@@ -7,6 +7,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return { props: { ...translations } }
 }
 
-export default function ResetPage() {
+export default function ResetPage(): JSX.Element {
   return <Reset />
 }

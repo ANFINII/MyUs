@@ -5,7 +5,7 @@ interface Props {
   className?: string
 }
 
-export default function IconCredit(props: Props) {
+export default function IconCredit(props: Props): JSX.Element {
   const { size, className = '' } = props
 
   return (

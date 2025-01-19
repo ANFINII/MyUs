@@ -14,6 +14,6 @@ interface Props {
   datas: Picture[]
 }
 
-export default function PicturesPage(props: Props) {
+export default function PicturesPage(props: Props): JSX.Element {
   return <Pictures {...props} />
 }

@@ -7,6 +7,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return { props: { ...translations } }
 }
 
-export default function MusicCreatePage() {
+export default function MusicCreatePage(): JSX.Element {
   return <MusicCreate />
 }

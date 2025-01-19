@@ -7,7 +7,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 
-export default function Reset() {
+export default function Reset(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
   const [message, setMessage] = useState<string>('')

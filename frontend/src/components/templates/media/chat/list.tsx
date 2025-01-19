@@ -9,7 +9,7 @@ interface Props {
   datas: Chat[]
 }
 
-export default function Chats(props: Props) {
+export default function Chats(props: Props): JSX.Element {
   const { datas } = props
 
   const { search, newDatas } = useNewDatas<Chat[]>({ datas, getDatas: (search) => getChats(search) })

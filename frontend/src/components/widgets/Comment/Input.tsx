@@ -14,7 +14,7 @@ interface Props {
   onClick?: () => void
 }
 
-export default function CommentInput(props: Props) {
+export default function CommentInput(props: Props): JSX.Element {
   const { user, count, value, onChange, onClick } = props
 
   return (

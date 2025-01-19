@@ -16,7 +16,7 @@ interface Props {
   onChange?: (value: string) => void
 }
 
-export default function TextareaLine(props: Props) {
+export default function TextareaLine(props: Props): JSX.Element {
   const { label, value, className, height, onChange } = props
 
   const ref = useRef<HTMLTextAreaElement>(null)

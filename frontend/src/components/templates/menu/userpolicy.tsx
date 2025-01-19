@@ -1,7 +1,7 @@
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 
-export default function UserPolicy() {
+export default function UserPolicy(): JSX.Element {
   return (
     <Main title="利用規約" type="table">
       <article className="article_userpolicy">

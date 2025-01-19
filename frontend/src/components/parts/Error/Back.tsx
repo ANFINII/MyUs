@@ -7,7 +7,7 @@ interface Props {
   content: string
 }
 
-export default function BackError(props: Props) {
+export default function BackError(props: Props): JSX.Element {
   const { content } = props
 
   return (

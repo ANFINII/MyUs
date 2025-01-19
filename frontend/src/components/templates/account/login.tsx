@@ -9,7 +9,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 
-export default function Login() {
+export default function Login(): JSX.Element {
   const router = useRouter()
   const { updateUser } = useUser()
   const { toast, handleToast } = useToast()

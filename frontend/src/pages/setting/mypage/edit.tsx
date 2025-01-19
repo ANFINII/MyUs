@@ -14,6 +14,6 @@ interface Props {
   mypage: MypageOut
 }
 
-export default function SettingMypageEditPage(props: Props) {
+export default function SettingMypageEditPage(props: Props): JSX.Element {
   return <SettingMyPageEdit {...props} />
 }

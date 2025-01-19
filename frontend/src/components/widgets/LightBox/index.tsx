@@ -11,7 +11,7 @@ interface Props {
   title?: string
 }
 
-export default function LightBox(props: Props) {
+export default function LightBox(props: Props): JSX.Element {
   const { src, title } = props
 
   const [open, setOpen] = useState<boolean>(false)

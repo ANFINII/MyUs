@@ -5,7 +5,7 @@ interface Props {
   read?: number
 }
 
-export default function CountRead(props: Props) {
+export default function CountRead(props: Props): JSX.Element {
   const { read } = props
 
   return (

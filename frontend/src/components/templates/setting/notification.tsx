@@ -15,7 +15,7 @@ interface Props {
   userNotification: UserNotificationOut
 }
 
-export default function SettingNotification(props: Props) {
+export default function SettingNotification(props: Props): JSX.Element {
   const { userNotification } = props
 
   const { toast, handleToast } = useToast()

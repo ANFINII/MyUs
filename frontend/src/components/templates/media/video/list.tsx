@@ -9,7 +9,7 @@ interface Props {
   datas: Video[]
 }
 
-export default function Videos(props: Props) {
+export default function Videos(props: Props): JSX.Element {
   const { datas } = props
 
   const { search, newDatas } = useNewDatas<Video[]>({ datas, getDatas: (search) => getVideos(search) })

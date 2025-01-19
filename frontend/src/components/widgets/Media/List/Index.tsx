@@ -7,7 +7,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function MediaIndex(props: Props) {
+export default function MediaIndex(props: Props): JSX.Element {
   const { title, divide = true, children } = props
 
   return (

@@ -6,7 +6,7 @@ interface Props {
   video: Video
 }
 
-export default function VideDetailPage(props: Props) {
+export default function VideDetailPage(props: Props): JSX.Element {
   const { video } = props
   const { image, convert, publish } = video
 

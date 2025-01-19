@@ -6,7 +6,7 @@ interface Props {
   onView: () => void
 }
 
-export default function Zoom(props: Props) {
+export default function Zoom(props: Props): JSX.Element {
   const { isView, onView } = props
 
   return (

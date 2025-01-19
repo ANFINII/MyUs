@@ -14,6 +14,6 @@ interface Props {
   follows: Follow[]
 }
 
-export default function FollowsPage(props: Props) {
+export default function FollowsPage(props: Props): JSX.Element {
   return <Follows {...props} />
 }

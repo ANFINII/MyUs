@@ -12,7 +12,7 @@ interface Props {
   follows: Follow[]
 }
 
-export default function Followers(props: Props) {
+export default function Followers(props: Props): JSX.Element {
   const { follows } = props
 
   const router = useRouter()

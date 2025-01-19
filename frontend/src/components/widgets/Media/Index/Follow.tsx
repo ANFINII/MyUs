@@ -9,7 +9,7 @@ interface Props {
   media: Follow
 }
 
-export default function MediaFollow(props: Props) {
+export default function MediaFollow(props: Props): JSX.Element {
   const { media } = props
   const { avatar, nickname, introduction, followerCount, followingCount } = media
 

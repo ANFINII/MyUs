@@ -12,7 +12,7 @@ import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import Vertical from 'components/parts/Stack/Vertical'
 
-export default function MusicCreate() {
+export default function MusicCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)

@@ -14,7 +14,7 @@ interface Props {
   search?: Search
 }
 
-export default function Homes(props: Props) {
+export default function Homes(props: Props): JSX.Element {
   const { mediaHome, search } = props
   const { videos, musics, comics, pictures, blogs, chats } = mediaHome
 

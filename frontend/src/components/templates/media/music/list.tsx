@@ -9,7 +9,7 @@ interface Props {
   datas: Music[]
 }
 
-export default function Musics(props: Props) {
+export default function Musics(props: Props): JSX.Element {
   const { datas } = props
 
   const { search, newDatas } = useNewDatas<Music[]>({ datas, getDatas: (search) => getMusics(search) })

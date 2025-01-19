@@ -9,7 +9,7 @@ interface Props {
   onChange?: (checked: boolean) => void
 }
 
-export default function CheckBox(props: Props) {
+export default function CheckBox(props: Props): JSX.Element {
   const { label, className = '', checked, onChange } = props
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

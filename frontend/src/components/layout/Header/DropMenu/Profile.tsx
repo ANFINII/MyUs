@@ -14,7 +14,7 @@ interface Props {
   onClose: () => void
 }
 
-export default function DropMenuProfile(props: Props) {
+export default function DropMenuProfile(props: Props): JSX.Element {
   const { open, onClose } = props
 
   const router = useRouter()

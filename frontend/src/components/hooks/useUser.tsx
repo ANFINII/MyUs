@@ -1,7 +1,7 @@
 import { useContext } from 'react'
-import { UserContext } from 'components/provider/UserProvider'
+import { UserContext, UserContextType } from 'components/provider/UserProvider'
 
-export function useUser() {
+export function useUser(): UserContextType {
   const context = useContext(UserContext)
   if (!context) throw new Error()
   return context

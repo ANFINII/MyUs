@@ -12,7 +12,7 @@ interface Props {
   onClick?: () => void
 }
 
-export default function ButtonSquare(props: Props) {
+export default function ButtonSquare(props: Props): JSX.Element {
   const { name, color = 'sakura', type = 'button', className = '' } = props
 
   return (

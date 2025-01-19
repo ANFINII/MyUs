@@ -7,6 +7,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return { props: { ...translations } }
 }
 
-export default function SignupPage() {
+export default function SignupPage(): JSX.Element {
   return <Signup />
 }

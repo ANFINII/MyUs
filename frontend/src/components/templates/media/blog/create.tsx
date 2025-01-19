@@ -23,7 +23,7 @@ const users: MentionUser[] = [
   { id: 3, value: 'keima' },
 ]
 
-export default function BlogCreate() {
+export default function BlogCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)

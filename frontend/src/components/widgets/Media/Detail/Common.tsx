@@ -29,7 +29,7 @@ interface Props {
   handleToast: (content: string, isError: boolean) => void
 }
 
-export default function MediaDetailCommon(props: Props) {
+export default function MediaDetailCommon(props: Props): JSX.Element {
   const { media, handleToast } = props
   const { title, content, read, like, commentCount = 0, created, author, user, type } = media
 

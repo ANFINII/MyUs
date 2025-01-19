@@ -6,7 +6,7 @@ interface Props {
   rows: Row[]
 }
 
-export default function SideTable(props: Props) {
+export default function SideTable(props: Props): JSX.Element {
   const { rows } = props
 
   return (

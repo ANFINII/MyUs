@@ -14,6 +14,6 @@ interface Props {
   video: Video
 }
 
-export default function VideDetailPage(props: Props) {
+export default function VideDetailPage(props: Props): JSX.Element {
   return <VideoDetail {...props} />
 }

@@ -14,6 +14,6 @@ interface Props {
   profile: ProfileOut
 }
 
-export default function SettingProfilePage(props: Props) {
+export default function SettingProfilePage(props: Props): JSX.Element {
   return <SettingProfileEdit {...props} />
 }

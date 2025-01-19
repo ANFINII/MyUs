@@ -9,7 +9,7 @@ interface Props {
   media: Blog
 }
 
-export default function MediaSideBlog(props: Props) {
+export default function MediaSideBlog(props: Props): JSX.Element {
   const { media } = props
   const { id, image } = media
 

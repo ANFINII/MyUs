@@ -7,6 +7,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return { props: { ...translations } }
 }
 
-export default function ComicCreatePage() {
+export default function ComicCreatePage(): JSX.Element {
   return <ComicCreate />
 }

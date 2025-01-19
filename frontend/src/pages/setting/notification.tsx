@@ -14,6 +14,6 @@ interface Props {
   userNotification: UserNotificationOut
 }
 
-export default function SettingNotificationPage(props: Props) {
+export default function SettingNotificationPage(props: Props): JSX.Element {
   return <SettingNotification {...props} />
 }

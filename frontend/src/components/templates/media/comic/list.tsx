@@ -9,7 +9,7 @@ interface Props {
   datas: Comic[]
 }
 
-export default function Comics(props: Props) {
+export default function Comics(props: Props): JSX.Element {
   const { datas } = props
 
   const { search, newDatas } = useNewDatas<Comic[]>({ datas, getDatas: (search) => getComics(search) })

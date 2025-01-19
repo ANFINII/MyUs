@@ -11,7 +11,7 @@ interface Props {
   onChange: (value: string) => void
 }
 
-export default function Select(props: Props) {
+export default function Select(props: Props): JSX.Element {
   const { label, name, value, options, placeholder, className = '', onChange } = props
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

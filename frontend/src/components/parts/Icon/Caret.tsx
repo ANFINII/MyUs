@@ -8,7 +8,7 @@ interface Props {
   className?: string
 }
 
-export default function IconCaret(props: Props) {
+export default function IconCaret(props: Props): JSX.Element {
   const { size, type = 'square', className = '' } = props
 
   return (

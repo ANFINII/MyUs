@@ -7,6 +7,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return { props: { ...translations } }
 }
 
-export default function PictureCreatePage() {
+export default function PictureCreatePage(): JSX.Element {
   return <PictureCreate />
 }

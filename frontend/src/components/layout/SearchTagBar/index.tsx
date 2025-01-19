@@ -9,7 +9,7 @@ import ButtonSquare from 'components/parts/Button/Square'
 import IconChevront from 'components/parts/Icon/Chevront'
 import Input from 'components/parts/Input'
 
-export default function SearchTagBar() {
+export default function SearchTagBar(): JSX.Element {
   const { user } = useUser()
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isSearchtag, setIsSearchtag] = useState(false)

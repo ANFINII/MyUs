@@ -7,7 +7,7 @@ interface Props {
   onChange?: (files: File | File[]) => void
 }
 
-export default function InputImage(props: Props) {
+export default function InputImage(props: Props): JSX.Element {
   const { id, className = '', icon, onChange } = props
 
   const inputEl = useRef<HTMLInputElement>(null)

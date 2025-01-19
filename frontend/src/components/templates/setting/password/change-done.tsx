@@ -4,7 +4,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
 
-export default function PasswordChangeDone() {
+export default function PasswordChangeDone(): JSX.Element {
   const router = useRouter()
 
   return (

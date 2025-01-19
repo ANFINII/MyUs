@@ -11,7 +11,7 @@ interface Props {
   className?: string
 }
 
-export default function AuthorLink(props: Props) {
+export default function AuthorLink(props: Props): JSX.Element {
   const { src, size, imgSize, nickname, className } = props
 
   return (

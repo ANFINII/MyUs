@@ -27,7 +27,7 @@ const initSignup: SignupIn = {
   gender: Gender.Male,
 }
 
-export default function Signup() {
+export default function Signup(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
   const [message, setMessage] = useState<string>('')

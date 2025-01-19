@@ -5,7 +5,7 @@ interface Props {
   className?: string
 }
 
-export default function IconExclamation(props: Props) {
+export default function IconExclamation(props: Props): JSX.Element {
   const { size, className = '' } = props
 
   return (

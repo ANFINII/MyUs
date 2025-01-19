@@ -10,7 +10,7 @@ interface Props {
   canonical?: string
 }
 
-export default function Meta(props: Props) {
+export default function Meta(props: Props): JSX.Element {
   const { title, description, url, locale, siteName, canonical } = props
 
   return (

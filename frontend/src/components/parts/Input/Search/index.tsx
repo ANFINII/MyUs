@@ -8,7 +8,7 @@ interface Props {
   onChange?: (value: string) => void
 }
 
-export default function Search(props: Props) {
+export default function Search(props: Props): JSX.Element {
   const { value, className, onChange } = props
 
   const router = useRouter()

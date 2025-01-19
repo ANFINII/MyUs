@@ -14,6 +14,6 @@ interface Props {
   datas: Video[]
 }
 
-export default function VideosPage(props: Props) {
+export default function VideosPage(props: Props): JSX.Element {
   return <Videos {...props} />
 }

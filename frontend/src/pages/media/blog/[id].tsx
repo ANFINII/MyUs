@@ -14,6 +14,6 @@ interface Props {
   data: BlogDetailOut
 }
 
-export default function BlogDetailPage(props: Props) {
+export default function BlogDetailPage(props: Props): JSX.Element {
   return <BlogDetail {...props} />
 }

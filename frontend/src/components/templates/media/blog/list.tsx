@@ -9,7 +9,7 @@ interface Props {
   datas: Blog[]
 }
 
-export default function Blogs(props: Props) {
+export default function Blogs(props: Props): JSX.Element {
   const { datas } = props
 
   const { search, newDatas } = useNewDatas<Blog[]>({ datas, getDatas: (search) => getBlogs(search) })

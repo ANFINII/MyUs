@@ -7,7 +7,7 @@ interface Props {
   className?: string
 }
 
-export default function IconList(props: Props) {
+export default function IconList(props: Props): JSX.Element {
   const { size = '', width = '', height = '', className = '' } = props
 
   return (

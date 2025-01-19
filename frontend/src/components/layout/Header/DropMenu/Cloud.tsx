@@ -14,7 +14,7 @@ interface Props {
   onClose: () => void
 }
 
-export default function DropMenuCloud(props: Props) {
+export default function DropMenuCloud(props: Props): JSX.Element {
   const { open, onClose } = props
 
   const handleClick = (media: string) => {

@@ -12,7 +12,7 @@ interface Props {
   data: BlogDetailOut
 }
 
-export default function BlogDetail(props: Props) {
+export default function BlogDetail(props: Props): JSX.Element {
   const { data } = props
   const { detail, list } = data
   const { title, content, richtext, read, like, commentCount, publish, created, author, user } = detail

@@ -8,7 +8,7 @@ interface Props {
   media: Comic
 }
 
-export default function MediaComic(props: Props) {
+export default function MediaComic(props: Props): JSX.Element {
   const { media } = props
   const { id, image } = media
 

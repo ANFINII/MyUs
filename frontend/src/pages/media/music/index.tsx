@@ -14,6 +14,6 @@ interface Props {
   datas: Music[]
 }
 
-export default function MusicsPage(props: Props) {
+export default function MusicsPage(props: Props): JSX.Element {
   return <Musics {...props} />
 }

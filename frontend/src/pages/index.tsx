@@ -14,6 +14,6 @@ interface Props {
   mediaHome: MediaHome
 }
 
-export default function HomesPage(props: Props) {
+export default function HomesPage(props: Props): JSX.Element {
   return <Homes {...props} />
 }

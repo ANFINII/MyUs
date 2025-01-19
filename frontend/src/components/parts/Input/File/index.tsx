@@ -13,7 +13,7 @@ interface Props {
   onChange?: (files: File | File[]) => void
 }
 
-export default function InputFile(props: Props) {
+export default function InputFile(props: Props): JSX.Element {
   const { label, errorText, accept, className = '', error = false, required = false, multiple, onChange } = props
 
   const inputEl = useRef<HTMLInputElement>(null)

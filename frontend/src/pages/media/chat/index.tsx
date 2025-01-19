@@ -14,6 +14,6 @@ interface Props {
   datas: Chat[]
 }
 
-export default function ChatsPage(props: Props) {
+export default function ChatsPage(props: Props): JSX.Element {
   return <Chats {...props} />
 }

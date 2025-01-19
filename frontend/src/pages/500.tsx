@@ -7,6 +7,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return { props: translations }
 }
 
-export default function Custom500Page() {
+export default function Custom500Page(): JSX.Element {
   return <Custom500 />
 }

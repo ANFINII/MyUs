@@ -7,7 +7,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function TableRow(props: Props) {
+export default function TableRow(props: Props): JSX.Element {
   const { label, className, isIndent, children } = props
 
   return (

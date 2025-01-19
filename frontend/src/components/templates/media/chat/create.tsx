@@ -11,7 +11,7 @@ import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 import Vertical from 'components/parts/Stack/Vertical'
 
-export default function ChatCreate() {
+export default function ChatCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
   const [isLoading, setIsLoading] = useState<boolean>(false)

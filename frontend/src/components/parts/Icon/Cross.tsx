@@ -9,7 +9,7 @@ interface Props {
   onClick?: () => void
 }
 
-export default function IconCross(props: Props) {
+export default function IconCross(props: Props): JSX.Element {
   const { size, type = 'defalt', className = '', onClick } = props
 
   return (

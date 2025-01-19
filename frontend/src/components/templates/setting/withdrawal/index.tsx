@@ -5,7 +5,7 @@ import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
 
-export default function Withdrawal() {
+export default function Withdrawal(): JSX.Element {
   const router = useRouter()
 
   const messages = false

@@ -2,7 +2,7 @@ import { useState, createContext, useEffect } from 'react'
 import { UserMe } from 'types/internal/auth'
 import { getUser } from 'api/internal/auth'
 
-interface UserContextType {
+export interface UserContextType {
   user: UserMe
   updateUser: () => Promise<void>
   resetUser: () => Promise<void>
@@ -16,7 +16,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export function UserProvider(props: Props) {
+export function UserProvider(props: Props): JSX.Element {
   const { children } = props
 
   const [user, setUser] = useState<UserMe>(initUser)

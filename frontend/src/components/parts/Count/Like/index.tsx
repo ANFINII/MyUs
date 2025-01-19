@@ -8,7 +8,7 @@ interface Props {
   onClick?: () => void
 }
 
-export default function CountLike(props: Props) {
+export default function CountLike(props: Props): JSX.Element {
   const { isLike, disable, like, onClick } = props
 
   return (

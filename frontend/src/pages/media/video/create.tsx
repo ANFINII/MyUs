@@ -7,6 +7,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return { props: { ...translations } }
 }
 
-export default function VideoCreatePage() {
+export default function VideoCreatePage(): JSX.Element {
   return <VideoCreate />
 }

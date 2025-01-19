@@ -8,7 +8,7 @@ interface Props {
   className?: string
 }
 
-export default function IconChevront(props: Props) {
+export default function IconChevront(props: Props): JSX.Element {
   const { width, height, type, className = '' } = props
 
   return (

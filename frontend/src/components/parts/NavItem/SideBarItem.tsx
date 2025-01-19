@@ -8,7 +8,7 @@ interface Props {
   icon: React.ReactNode
 }
 
-export default function SideBarItem(props: Props) {
+export default function SideBarItem(props: Props): JSX.Element {
   const { url, label, icon } = props
 
   const router = useRouter()
