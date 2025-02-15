@@ -3,7 +3,7 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { Req } from 'types/global'
 import { Follow, NotificationOut, SearchTagOut } from 'types/internal/auth'
-import { apiFollow, apiFollower, apiNotification, apiSearchTag } from '../uri'
+import { apiFollow, apiFollower, apiNotification, apiSearchTag } from 'api/uri'
 
 export const getSearchTag = async (req?: Req): Promise<SearchTagOut[]> => {
   const res = await apiClient.get(apiSearchTag, cookieHeader(req))

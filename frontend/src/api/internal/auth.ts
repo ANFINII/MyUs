@@ -4,8 +4,8 @@ import { cookieHeader } from 'lib/config'
 import { Req } from 'types/global'
 import { LoginIn, SignupIn, User } from 'types/internal/auth'
 import { MessageOut } from 'types/internal/other'
+import { apiUser, apiLogin, apiLogout, apiSignup } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
-import { apiUser, apiLogin, apiLogout, apiSignup } from '../uri'
 
 export const getUser = async (req?: Req): Promise<User> => {
   const res = await apiClient.get(apiUser, cookieHeader(req))

@@ -4,8 +4,8 @@ import { cookieHeader } from 'lib/config'
 import { Req } from 'types/global'
 import { ProfileIn, ProfileOut, MypageIn, MypageOut, UserNotificationIn, UserNotificationOut } from 'types/internal/auth'
 import { MessageOut } from 'types/internal/other'
+import { apiSettingProfile, apiSettingMypage, apiSettingNotification } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
-import { apiSettingProfile, apiSettingMypage, apiSettingNotification } from '../uri'
 
 export const getSettingProfile = async (req?: Req): Promise<ProfileOut> => {
   const res = await apiClient.get(apiSettingProfile, cookieHeader(req))

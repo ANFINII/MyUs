@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios'
 import { apiAddressClient } from 'lib/axios/external'
 import { Address, AddressResult } from 'types/internal/address'
-import { apiAddress } from '../uri'
+import { apiAddress } from 'api/uri'
 
 // 住所検索APIリファレンス: http://zipcloud.ibsnet.co.jp/doc/api
 export const getAddress = async (zipcode: string): Promise<AddressResult[]> => {
