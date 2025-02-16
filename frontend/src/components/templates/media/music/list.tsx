@@ -12,7 +12,7 @@ interface Props {
 export default function Musics(props: Props): JSX.Element {
   const { datas } = props
 
-  const { search, newDatas } = useNewDatas<Music[]>({ datas, getDatas: (search) => getMusics(search) })
+  const { search, newDatas } = useNewDatas<Music[]>({ datas, getDatas: (search) => getMusics({ search }) })
 
   return (
     <Main title="Music" search={{ name: search, count: newDatas.length }}>

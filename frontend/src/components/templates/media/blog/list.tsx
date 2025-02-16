@@ -12,7 +12,7 @@ interface Props {
 export default function Blogs(props: Props): JSX.Element {
   const { datas } = props
 
-  const { search, newDatas } = useNewDatas<Blog[]>({ datas, getDatas: (search) => getBlogs(search) })
+  const { search, newDatas } = useNewDatas<Blog[]>({ datas, getDatas: (search) => getBlogs({ search }) })
 
   return (
     <Main title="Blog" search={{ name: search, count: newDatas.length }}>

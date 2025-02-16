@@ -12,7 +12,7 @@ interface Props {
 export default function Pictures(props: Props): JSX.Element {
   const { datas } = props
 
-  const { search, newDatas } = useNewDatas<Picture[]>({ datas, getDatas: (search) => getPictures(search) })
+  const { search, newDatas } = useNewDatas<Picture[]>({ datas, getDatas: (search) => getPictures({ search }) })
 
   return (
     <Main title="Picture" search={{ name: search, count: newDatas.length }}>

@@ -4,9 +4,10 @@ import { Music } from 'types/internal/media'
 import { getMusics } from 'api/internal/media/list'
 import Musics from 'components/templates/media/music/list'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const datas = await getMusics()
+  const params = { search: String(query.search) }
+  const datas = await getMusics(params)
   return { props: { datas, ...translations } }
 }
 

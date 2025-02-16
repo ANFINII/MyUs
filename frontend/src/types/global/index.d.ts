@@ -1,7 +1,6 @@
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { IncomingMessage } from 'http'
 
-export type Query = Record<string, string | undefined>
 export type Header = Record<string, string>
 
 export type CookieHeaders = {

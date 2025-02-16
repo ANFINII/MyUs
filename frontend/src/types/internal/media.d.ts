@@ -90,6 +90,10 @@ export interface MediaHome {
 }
 
 // request
+export interface SearchParms {
+  search?: string
+}
+
 export interface VideoIn {
   title: string
   content: string

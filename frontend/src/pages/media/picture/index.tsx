@@ -4,9 +4,10 @@ import { Picture } from 'types/internal/media'
 import { getPictures } from 'api/internal/media/list'
 import Pictures from 'components/templates/media/picture/list'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const datas = await getPictures()
+  const params = { search: String(query.search) }
+  const datas = await getPictures(params)
   return { props: { datas, ...translations } }
 }
 

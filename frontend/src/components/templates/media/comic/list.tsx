@@ -12,7 +12,7 @@ interface Props {
 export default function Comics(props: Props): JSX.Element {
   const { datas } = props
 
-  const { search, newDatas } = useNewDatas<Comic[]>({ datas, getDatas: (search) => getComics(search) })
+  const { search, newDatas } = useNewDatas<Comic[]>({ datas, getDatas: (search) => getComics({ search }) })
 
   return (
     <Main title="Comic" search={{ name: search, count: newDatas.length }}>

@@ -12,7 +12,7 @@ interface Props {
 export default function Videos(props: Props): JSX.Element {
   const { datas } = props
 
-  const { search, newDatas } = useNewDatas<Video[]>({ datas, getDatas: (search) => getVideos(search) })
+  const { search, newDatas } = useNewDatas<Video[]>({ datas, getDatas: (search) => getVideos({ search }) })
 
   return (
     <Main title="Video" search={{ name: search, count: newDatas.length }}>

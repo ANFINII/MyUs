@@ -4,9 +4,10 @@ import { Comic } from 'types/internal/media'
 import { getComics } from 'api/internal/media/list'
 import Comics from 'components/templates/media/comic/list'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const datas = await getComics()
+  const params = { search: String(query.search) }
+  const datas = await getComics(params)
   return { props: { datas, ...translations } }
 }
 

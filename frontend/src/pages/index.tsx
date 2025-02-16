@@ -4,9 +4,10 @@ import { MediaHome } from 'types/internal/media'
 import { getHome } from 'api/internal/media/list'
 import Homes from 'components/templates/media/home/list'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const mediaHome = await getHome()
+  const params = { search: String(query.search) }
+  const mediaHome = await getHome(params)
   return { props: { mediaHome, ...translations } }
 }
 

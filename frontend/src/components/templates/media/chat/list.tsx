@@ -12,7 +12,7 @@ interface Props {
 export default function Chats(props: Props): JSX.Element {
   const { datas } = props
 
-  const { search, newDatas } = useNewDatas<Chat[]>({ datas, getDatas: (search) => getChats(search) })
+  const { search, newDatas } = useNewDatas<Chat[]>({ datas, getDatas: (search) => getChats({ search }) })
 
   return (
     <Main title="Chat" search={{ name: search, count: newDatas.length }}>
