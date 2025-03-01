@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
-import { API_URL } from 'lib/config'
+import { API_URL, AxiosErrorLog } from 'lib/config'
 import { snakeCamel } from 'utils/functions/convertCase'
 
 const responseInterceptor = (client: AxiosInstance) => {
@@ -9,9 +9,8 @@ const responseInterceptor = (client: AxiosInstance) => {
       return response
     },
     (e: AxiosError) => {
-      const error = e.response
-      console.log('===== error:', error, '=====')
-      return Promise.resolve(error)
+      AxiosErrorLog(e)
+      return Promise.resolve(e.response)
     },
   )
 }

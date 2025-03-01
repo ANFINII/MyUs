@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios'
 import { Req, Config } from 'types/global'
 
 export const API_URL = String(process.env.NEXT_PUBLIC_API_URL)
@@ -8,4 +9,17 @@ export const cookieHeader = <T>(req?: Req, query?: T): Config => {
   const headers = { cookie }
   const config = { headers, ...(query && { params: query }) }
   return config
+}
+
+export const AxiosErrorLog = (e: AxiosError) => {
+  const errResponse = e.response
+  const errRequest = e.request
+
+  console.groupCollapsed('========== Axios Error Start ==========')
+  console.log('Status:', errResponse?.status)
+  console.log('Message:', errResponse?.statusText)
+  console.log('Path:', errRequest?.path)
+  console.log('Header:', errRequest?._header)
+  console.log('========== Axios Error End ==========')
+  console.groupEnd()
 }
