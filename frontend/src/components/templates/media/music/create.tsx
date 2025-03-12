@@ -21,8 +21,8 @@ export default function MusicCreate(): JSX.Element {
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, music: files })
-  const handleDownload = (checked: boolean) => setValues({ ...values, download: checked })
 
   const handleForm = async () => {
     const { title, content, lyric, music } = values
@@ -51,7 +51,7 @@ export default function MusicCreate(): JSX.Element {
             <Textarea label="歌詞" name='lyric' required={isRequired} onChange={handleText} />
             <Vertical gap="2">
               <InputFile label="音楽" accept="audio/*" required={isRequired} onChange={handleFile} />
-              <CheckBox label="ダウンロード許可" checked onChange={handleDownload} />
+              <CheckBox label="ダウンロード許可" name="download" defaultChecked onChange={handleCheck} />
             </Vertical>
           </Vertical>
         </form>
