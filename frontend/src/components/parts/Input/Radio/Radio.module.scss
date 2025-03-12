@@ -3,6 +3,12 @@
 
   input {
     display: inline-block;
-    margin-right: 6px;
+    cursor: pointer;
+  }
+
+  .label {
+    padding-left: 2px;
+    user-select: none;
+    cursor: pointer;
   }
 }

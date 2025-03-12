@@ -10,6 +10,7 @@ import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import Radio from 'components/parts/Input/Radio'
 import Select from 'components/parts/Input/Select'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Vertical from 'components/parts/Stack/Vertical'
@@ -41,7 +42,6 @@ export default function Signup(): JSX.Element {
   const handleBack = () => router.push('/account/login')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-  const handleGender = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, gender: e.target.value as Gender })
 
   const handleSubmit = async () => {
     const { email, username, nickname, lastName, firstName, password1, password2 } = values
@@ -99,14 +99,11 @@ export default function Signup(): JSX.Element {
 
             <Vertical gap="4">
               <p>性別</p>
-              <div className="td_gender">
+              <Horizontal gap="5">
                 {genders.map((gender) => (
-                  <div key={gender.value} className="gender_radio">
-                    <input type="radio" value={gender.value} checked={gender.value === values.gender} id={`gender_${gender.value}`} onChange={handleGender} />
-                    <label htmlFor={`gender_${gender.value}`}>{gender.key}</label>
-                  </div>
+                  <Radio key={gender.key} label={gender.key} name="gender" value={gender.value} checked={gender.value === values.gender} onChange={handleInput} />
                 ))}
-              </div>
+              </Horizontal>
             </Vertical>
           </Vertical>
 
