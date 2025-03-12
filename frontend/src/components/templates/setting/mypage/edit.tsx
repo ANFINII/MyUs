@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { MypageIn, MypageOut } from 'types/internal/auth'
 import { putSettingMypage } from 'api/internal/setting'
@@ -31,10 +31,9 @@ export default function SettingMyPageEdit(props: Props): JSX.Element {
 
   const handleBack = () => router.push('/setting/mypage')
   const handleBanner = (files: File | File[]) => Array.isArray(files) || setBanner(files)
-  const handleEmail = (email: string) => setValues({ ...values, email })
-  const handleToggle = (isAdvertise: boolean) => setValues({ ...values, isAdvertise: !isAdvertise })
-  const handleTagManagerId = (tagManagerId: string) => setValues({ ...values, tagManagerId })
-  const handleContent = (content: string) => setValues({ ...values, content })
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleToggle = () => setValues({ ...values, isAdvertise: !values.isAdvertise })
 
   const handlSubmit = async () => {
     setIsLoading(true)
@@ -75,7 +74,7 @@ export default function SettingMyPageEdit(props: Props): JSX.Element {
             {values.nickname}
           </TableRow>
           <TableRow label="メールアドレス">
-            <Input value={values.email} maxLength={120} onChange={handleEmail} />
+            <Input name='email' value={values.email} maxLength={120} onChange={handleInput} />
           </TableRow>
           <TableRow isIndent label="フォロー数">
             {values.followingCount}
@@ -87,13 +86,13 @@ export default function SettingMyPageEdit(props: Props): JSX.Element {
             {values.plan}
           </TableRow>
           <TableRow isIndent label="全体広告">
-            {values.plan === 'Free' ? <Toggle isActive={values.isAdvertise} disable /> : <Toggle isActive={values.isAdvertise} onClick={() => handleToggle(values.isAdvertise)} />}
+            {values.plan === 'Free' ? <Toggle isActive={values.isAdvertise} disable /> : <Toggle isActive={values.isAdvertise} onClick={handleToggle} />}
           </TableRow>
           <TableRow label="タグID">
-            <Input value={values.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleTagManagerId} />
+            <Input name='tagManagerId' value={values.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleInput} />
           </TableRow>
           <TableRow label="概要">
-            <Textarea className="textarea_margin" defaultValue={values.content} onChange={handleContent} />
+            <Textarea name='content' className="textarea_margin" defaultValue={values.content} onChange={handleText} />
           </TableRow>
         </Table>
       </LoginError>
