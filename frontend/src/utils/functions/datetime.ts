@@ -1,5 +1,3 @@
-const baseYear = 1900
-
 export const nowDate = (() => {
   const date = new Date()
   const year = date.getFullYear()
@@ -9,7 +7,11 @@ export const nowDate = (() => {
 })()
 
 export const selectDate = () => {
-  const years = Array.from({ length: new Date().getFullYear() - baseYear - 1 }, (_, index) => {
+  const date = new Date()
+  const currentYear = date.getFullYear()
+  const baseYear = currentYear - 130
+
+  const years = Array.from({ length: currentYear - baseYear + 1 }, (_, index) => {
     const year = baseYear + index
     return { label: year.toString(), value: year.toString() }
   })

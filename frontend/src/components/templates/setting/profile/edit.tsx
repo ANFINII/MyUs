@@ -116,9 +116,9 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
           </TableRow>
           <TableRow label="生年月日">
             <Horizontal gap="1" full>
-              <Select name='year' value={values.year} options={years} placeholder="年" onChange={handleSelect} />
-              <Select name='month' value={values.month} options={months} placeholder="月" onChange={handleSelect} />
-              <Select name='day' value={values.day} options={days} placeholder="日" onChange={handleSelect} />
+              <Select name='year' value={values.year} options={years} onChange={handleSelect} />
+              <Select name='month' value={values.month} options={months} onChange={handleSelect} />
+              <Select name='day' value={values.day} options={days} onChange={handleSelect} />
             </Horizontal>
           </TableRow>
           <TableRow isIndent label="年齢">

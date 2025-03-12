@@ -24,7 +24,7 @@ const initSignup: SignupIn = {
   fullName: '',
   lastName: '',
   firstName: '',
-  year: (nowDate.year + 1900) / 2,
+  year: nowDate.year - 50,
   month: 6,
   day: 15,
   gender: Gender.Male,
@@ -91,9 +91,9 @@ export default function Signup(): JSX.Element {
             <Vertical gap="4">
               <p>生年月日</p>
               <Horizontal gap="2" full>
-                <Select name="year" value={values.year} options={years} placeholder="年" onChange={handleSelect} />
-                <Select name="month" value={values.month} options={months} placeholder="月" onChange={handleSelect} />
-                <Select name="day" value={values.day} options={days} placeholder="日" onChange={handleSelect} />
+                <Select name="year" value={values.year} options={years} onChange={handleSelect} />
+                <Select name="month" value={values.month} options={months} onChange={handleSelect} />
+                <Select name="day" value={values.day} options={days} onChange={handleSelect} />
               </Horizontal>
             </Vertical>
 
