@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { ChatIn } from 'types/internal/media'
 import { postChatCreate } from 'api/internal/media/create'
@@ -18,9 +18,8 @@ export default function ChatCreate(): JSX.Element {
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<ChatIn>({ title: '', content: '', period: '' })
 
-  const handleTitle = (title: string) => setValues({ ...values, title })
-  const handleContent = (content: string) => setValues({ ...values, content })
-  const handlePeriod = (period: string) => setValues({ ...values, period })
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   const handleForm = async () => {
     const { title, content, period } = values
@@ -44,9 +43,9 @@ export default function ChatCreate(): JSX.Element {
       <LoginError margin="mt_20">
         <form method="POST" action="">
           <Vertical gap="8">
-            <Input label="タイトル" required={isRequired} onChange={handleTitle} />
-            <Textarea label="内容" required={isRequired} onChange={handleContent} />
-            <Input label="期間" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handlePeriod} />
+            <Input label="タイトル" name='title' required={isRequired} onChange={handleInput} />
+            <Textarea label="内容" name='content' required={isRequired} onChange={handleText} />
+            <Input label="期間" name='period' placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handleInput} />
           </Vertical>
         </form>
       </LoginError>
