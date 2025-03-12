@@ -64,19 +64,6 @@
   border: 4px solid rgb(100, 220, 150);
 }
 
-.td_name {
-  display: grid;
-  grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr);
-  column-gap: 2px;
-}
-
-.td_birthday {
-  display: grid;
-  grid-template-columns: minmax(74px, 1fr) minmax(74px, 1fr) minmax(74px, 1fr);
-  height: 36px;
-  column-gap: 2px;
-}
-
 .td_gender {
   padding-left: 4px;
 
@@ -92,14 +79,6 @@
       margin-right: 6px;
     }
   }
-}
-
-.td_location {
-  display: grid;
-  grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr);
-  column-gap: 2px;
-  border: none;
-  border-right: 1px solid rgb(0, 125, 0);
 }
 
 td .textarea_margin {

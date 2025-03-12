@@ -90,10 +90,10 @@ export default function Signup(): JSX.Element {
 
             <Vertical gap="4">
               <p>生年月日</p>
-              <Horizontal gap="2">
-                <Select name="year" value={values.year} options={years} placeholder="年" className='w_full' onChange={handleSelect} />
-                <Select name="month" value={values.month} options={months} placeholder="月" className='w_full' onChange={handleSelect} />
-                <Select name="day" value={values.day} options={days} placeholder="日" className='w_full' onChange={handleSelect} />
+              <Horizontal gap="2" full>
+                <Select name="year" value={values.year} options={years} placeholder="年" onChange={handleSelect} />
+                <Select name="month" value={values.month} options={months} placeholder="月" onChange={handleSelect} />
+                <Select name="day" value={values.day} options={days} placeholder="日" onChange={handleSelect} />
               </Horizontal>
             </Vertical>
 
