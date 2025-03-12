@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class MediaType(Enum):
+class MediaType(str, Enum):
     video = 'video'
     music = 'music'
     comic = 'comic'
@@ -10,7 +10,7 @@ class MediaType(Enum):
     chat = 'chat'
 
 
-class NotificationType(Enum):
+class NotificationType(str, Enum):
     video = 'video'
     music = 'music'
     comic = 'comic'
