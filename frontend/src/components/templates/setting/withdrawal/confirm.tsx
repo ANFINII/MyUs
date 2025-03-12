@@ -20,12 +20,10 @@ export default function WithdrawalConfirm(): JSX.Element {
               <Input type="password" name="password2" placeholder="パスワード" minLength={8} maxLength={16} required />
             </Vertical>
 
-            <div className='mv_40'>
-              <Vertical gap="12">
-                <Button color="red" size="l" name="退会する" />
-                <Button color="blue" size="l" name="戻る" onClick={handleBack} />
-              </Vertical>
-            </div>
+            <Vertical gap="12" className='mv_40'>
+              <Button color="red" size="l" name="退会する" />
+              <Button color="blue" size="l" name="戻る" onClick={handleBack} />
+            </Vertical>
           </form>
         </article>
       </LoginError>

@@ -29,9 +29,9 @@ export default function CommentInput(props: Props): JSX.Element {
             <TextareaLine name="text" placeholder="コメントするにはログインが必要です!" disabled className={style.textarea} />
           )}
         </Horizontal>
-        <div className={style.button}>
+        <Horizontal align="end">
           <Button color="blue" size="s" name="コメント" disabled={!value?.trim()} onClick={onClick} />
-        </div>
+        </Horizontal>
       </Vertical>
     </form>
   )
