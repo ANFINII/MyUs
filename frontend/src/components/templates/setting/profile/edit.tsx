@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { ProfileIn, ProfileOut } from 'types/internal/auth'
 import { getAddress } from 'api/external/address'
@@ -37,23 +37,13 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
   const [avatar, setAvatar] = useState<File>()
   const [values, setValues] = useState<ProfileOut>(profile)
 
+  const { years, months, days } = selectDate()
   const handleBack = () => router.push('/setting/profile')
   const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatar(files)
-  const handleEmail = (email: string) => setValues({ ...values, email })
-  const handleUsername = (username: string) => setValues({ ...values, username })
-  const handleNickname = (nickname: string) => setValues({ ...values, nickname })
-  const handleLastName = (lastName: string) => setValues({ ...values, lastName })
-  const handleFirstName = (firstName: string) => setValues({ ...values, firstName })
-  const handleYear = (year: string) => setValues({ ...values, year: Number(year) })
-  const handleMonth = (month: string) => setValues({ ...values, month: Number(month) })
-  const handleDay = (day: string) => setValues({ ...values, day: Number(day) })
-  const handleGender = (e: React.ChangeEvent<HTMLInputElement>) => setValues({ ...values, gender: e.target.value as Gender })
-  const handlePhone = (phone: string) => setValues({ ...values, phone })
-  const handlePostalCode = (postalCode: string) => setValues({ ...values, postalCode })
-  const handlePrefecture = (prefecture: string) => setValues({ ...values, prefecture })
-  const handleCity = (city: string) => setValues({ ...values, city })
-  const handleStreet = (street: string) => setValues({ ...values, street })
-  const handleIntroduction = (introduction: string) => setValues({ ...values, introduction })
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleGender = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, gender: e.target.value as Gender })
 
   const handleAutoAddress = async () => {
     const results = await getAddress(values.postalCode)
@@ -111,25 +101,25 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
             <InputImage id="avatar" className="account_image_edit" icon={<IconPerson size="56" type="square" />} onChange={handleAvatar} />
           </TableRow>
           <TableRow label="メールアドレス">
-            <Input value={values.email} maxLength={120} required={isRequired} onChange={handleEmail} />
+            <Input name='email' value={values.email} maxLength={120} required={isRequired} onChange={handleInput} />
           </TableRow>
           <TableRow label="ユーザー名">
-            <Input value={values.username} maxLength={30} placeholder="英数字" required={isRequired} onChange={handleUsername} />
+            <Input name='username' value={values.username} maxLength={30} placeholder="英数字" required={isRequired} onChange={handleInput} />
           </TableRow>
           <TableRow label="投稿者名">
-            <Input value={values.nickname} maxLength={60} required={isRequired} onChange={handleNickname} />
+            <Input name='nickname' value={values.nickname} maxLength={60} required={isRequired} onChange={handleInput} />
           </TableRow>
           <TableRow label="名前">
             <div className="td_name">
-              <Input value={values.lastName} placeholder="姓" maxLength={30} required={isRequired} onChange={handleLastName} />
-              <Input value={values.firstName} placeholder="名" maxLength={30} required={isRequired} onChange={handleFirstName} />
+              <Input name='lastName' value={values.lastName} placeholder="姓" maxLength={30} required={isRequired} onChange={handleInput} />
+              <Input name='firstName' value={values.firstName} placeholder="名" maxLength={30} required={isRequired} onChange={handleInput} />
             </div>
           </TableRow>
           <TableRow label="生年月日">
             <div className="td_birthday">
-              <Select value={values.year} options={selectDate.years} placeholder="年" onChange={handleYear} />
-              <Select value={values.month} options={selectDate.months} placeholder="月" onChange={handleMonth} />
-              <Select value={values.day} options={selectDate.days} placeholder="日" onChange={handleDay} />
+              <Select name='year' value={values.year} options={years} placeholder="年" onChange={handleSelect} />
+              <Select name='month' value={values.month} options={months} placeholder="月" onChange={handleSelect} />
+              <Select name='day' value={values.day} options={days} placeholder="日" onChange={handleSelect} />
             </div>
           </TableRow>
           <TableRow isIndent label="年齢">
@@ -146,23 +136,23 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
             </div>
           </TableRow>
           <TableRow label="電話番号">
-            <Input type="tel" value={values.phone} maxLength={15} required={isRequired} onChange={handlePhone} />
+            <Input type="tel" name='phone' value={values.phone} maxLength={15} required={isRequired} onChange={handleInput} />
           </TableRow>
           <TableRow label="郵便番号">
             <div className="d_flex">
-              <Input type="tel" value={values.postalCode} maxLength={8} className="mr_2" required={isRequired} onChange={handlePostalCode} />
+              <Input type="tel" name='postalCode' value={values.postalCode} maxLength={8} className="mr_2" required={isRequired} onChange={handleInput} />
               <Button name="住所自動入力" onClick={handleAutoAddress} />
             </div>
           </TableRow>
           <TableRow label="住所">
             <div className="td_location">
-              <Select value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handlePrefecture} />
-              <Input value={values.city} placeholder="市区町村" maxLength={255} onChange={handleCity} />
-              <Input value={values.street} placeholder="町名番地" maxLength={255} onChange={handleStreet} />
+              <Select name='prefecture' value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handleSelect} />
+              <Input name='city' value={values.city} placeholder="市区町村" maxLength={255} onChange={handleInput} />
+              <Input name='street' value={values.street} placeholder="町名番地" maxLength={255} onChange={handleInput} />
             </div>
           </TableRow>
           <TableRow label="自己紹介">
-            <Textarea className="textarea_margin" defaultValue={values.introduction} onChange={handleIntroduction} />
+            <Textarea name='introduction' className="textarea_margin" defaultValue={values.introduction} onChange={handleText} />
           </TableRow>
         </Table>
       </LoginError>

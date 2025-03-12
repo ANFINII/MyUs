@@ -11,6 +11,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Select from 'components/parts/Input/Select'
+import Horizontal from 'components/parts/Stack/Horizontal'
 import Vertical from 'components/parts/Stack/Vertical'
 
 const initSignup: SignupIn = {
@@ -36,10 +37,11 @@ export default function Signup(): JSX.Element {
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<SignupIn>(initSignup)
 
+  const { years, months, days } = selectDate()
   const handleBack = () => router.push('/account/login')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-  const handleGender = (e: React.ChangeEvent<HTMLInputElement>) => setValues({ ...values, gender: e.target.value as Gender })
+  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleGender = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, gender: e.target.value as Gender })
 
   const handleSubmit = async () => {
     const { email, username, nickname, lastName, firstName, password1, password2 } = values
@@ -71,14 +73,14 @@ export default function Signup(): JSX.Element {
             </ul>
           )}
 
-          <Vertical gap="8" >
-            <div>
-              <p className="mb_8">名前</p>
+          <Vertical gap="8">
+            <Vertical gap="4">
+              <p>名前</p>
               <div className="name_group">
                 <Input name="lastName" placeholder="姓" maxLength={30} required={isRequired} onChange={handleInput} />
                 <Input name="firstName" placeholder="名" maxLength={30} required={isRequired} onChange={handleInput} />
               </div>
-            </div>
+            </Vertical>
 
             <Input name="username" placeholder="ユーザー名(英数字)" maxLength={20} required={isRequired} onChange={handleInput} />
             <Input name="nickname" placeholder="投稿者名" maxLength={80} required={isRequired} onChange={handleInput} />
@@ -86,17 +88,17 @@ export default function Signup(): JSX.Element {
             <Input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minLength={8} maxLength={16} required={isRequired} onChange={handleInput} />
             <Input type="password" name="password2" placeholder="パスワード(確認用)" minLength={8} maxLength={16} required={isRequired} onChange={handleInput} />
 
-            <div>
-              <p className="mb_8">生年月日</p>
-              <div className="birthday_group mb_24">
-                <Select name="year" value={values.year} options={selectDate.years} placeholder="年" onChange={handleSelect} />
-                <Select name="month" value={values.month} options={selectDate.months} placeholder="月" onChange={handleSelect} />
-                <Select name="day" value={values.day} options={selectDate.days} placeholder="日" onChange={handleSelect} />
-              </div>
-            </div>
+            <Vertical gap="4">
+              <p>生年月日</p>
+              <Horizontal gap="2">
+                <Select name="year" value={values.year} options={years} placeholder="年" className='w_full' onChange={handleSelect} />
+                <Select name="month" value={values.month} options={months} placeholder="月" className='w_full' onChange={handleSelect} />
+                <Select name="day" value={values.day} options={days} placeholder="日" className='w_full' onChange={handleSelect} />
+              </Horizontal>
+            </Vertical>
 
-            <div>
-              <p className="mb_8">性別</p>
+            <Vertical gap="4">
+              <p>性別</p>
               <div className="td_gender">
                 {genders.map((gender) => (
                   <div key={gender.value} className="gender_radio">
@@ -105,7 +107,7 @@ export default function Signup(): JSX.Element {
                   </div>
                 ))}
               </div>
-            </div>
+            </Vertical>
           </Vertical>
 
           <div className='mv_40'>

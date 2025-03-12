@@ -8,7 +8,7 @@ export const nowDate = (() => {
   return { year, month, day }
 })()
 
-export const selectDate = (() => {
+export const selectDate = () => {
   const years = Array.from({ length: new Date().getFullYear() - baseYear - 1 }, (_, index) => {
     const year = baseYear + index
     return { label: year.toString(), value: year.toString() }
@@ -23,8 +23,9 @@ export const selectDate = (() => {
     const day = index + 1
     return { label: day.toString(), value: day.toString() }
   })
+
   return { years, months, days }
-})()
+}
 
 export const padZero = (num: number): string => num < 10 ? `0${num}` : `${num}`
 
