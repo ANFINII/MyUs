@@ -3,19 +3,21 @@ import style from './Radio.module.scss'
 
 interface Props {
   label: string
-  value: string
+  id?: string
+  name?: string
+  value?: string
   checked?: boolean
   className?: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export default function Radio(props: Props): JSX.Element {
-  const { label, value, className = '', checked, onChange } = props
+  const { label, id, value, className = '' } = props
 
   return (
     <div className={clsx(style.radio, className)}>
-      <input type="radio" value={value} checked={checked} id={value} onChange={onChange} />
-      <label htmlFor={value}>{label}</label>
+      <input {...props} type="radio" id={id || value} />
+      <label htmlFor={id || value} className={style.label}>{label}</label>
     </div>
   )
 }

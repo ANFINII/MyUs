@@ -64,23 +64,6 @@
   border: 4px solid rgb(100, 220, 150);
 }
 
-.td_gender {
-  padding-left: 4px;
-
-  .gender_radio {
-    display: inline;
-
-    &:not(:last-child) {
-      padding-right: 10px;
-    }
-
-    input {
-      display: inline-block;
-      margin-right: 6px;
-    }
-  }
-}
-
 td .textarea_margin {
   margin: 0 0 -5.5px 0;
 }

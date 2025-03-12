@@ -4,7 +4,6 @@ import { ProfileIn, ProfileOut } from 'types/internal/auth'
 import { getAddress } from 'api/external/address'
 import { putSettingProfile } from 'api/internal/setting'
 import { prefectures } from 'utils/constants/address'
-import { Gender } from 'utils/constants/enum'
 import { selectDate } from 'utils/functions/datetime'
 import { genders } from 'utils/functions/user'
 import { useToast } from 'components/hooks/useToast'
@@ -15,6 +14,7 @@ import LoginError from 'components/parts/Error/Login'
 import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
 import InputImage from 'components/parts/Input/Image'
+import Radio from 'components/parts/Input/Radio'
 import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
 import Horizontal from 'components/parts/Stack/Horizontal'
@@ -43,7 +43,6 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-  const handleGender = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, gender: e.target.value as Gender })
 
   const handleAutoAddress = async () => {
     const results = await getAddress(values.postalCode)
@@ -126,14 +125,11 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
             {values.age}歳
           </TableRow>
           <TableRow label="性別">
-            <div className="td_gender">
+            <Horizontal gap="5" className="pl_4">
               {genders.map((gender) => (
-                <div key={gender.value} className="gender_radio">
-                  <input type="radio" value={gender.value} checked={gender.value === values.gender} id={`gender_${gender.value}`} onChange={handleGender} />
-                  <label htmlFor={`gender_${gender.value}`}>{gender.key}</label>
-                </div>
+                <Radio key={gender.key} label={gender.key} name="gender" value={gender.value} checked={gender.value === values.gender} onChange={handleInput} />
               ))}
-            </div>
+            </Horizontal>
           </TableRow>
           <TableRow label="電話番号">
             <Input type="tel" name='phone' value={values.phone} maxLength={15} required={isRequired} onChange={handleInput} />
