@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'
@@ -8,6 +8,7 @@ import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import Vertical from 'components/parts/Stack/Vertical'
 
 export default function Login(): JSX.Element {
   const router = useRouter()
@@ -20,8 +21,7 @@ export default function Login(): JSX.Element {
 
   const handleSignup = () => router.push('/account/signup')
   const handleReset = () => router.push('/account/reset')
-  const handleUsername = (username: string) => setValues({ ...values, username })
-  const handlePassword = (password: string) => setValues({ ...values, password })
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   const handleSubmit = async () => {
     if (!(values.username && values.password)) {
@@ -55,17 +55,19 @@ export default function Login(): JSX.Element {
             </ul>
           )}
 
-          <Input type="text" placeholder="ユーザー名 or メールアドレス" className="mb_16" required={isRequired} autoFocus onChange={handleUsername} />
-          <Input type="password" placeholder="パスワード" minLength={8} maxLength={16} className="mb_16" required={isRequired} onChange={handlePassword} />
+          <Vertical gap="8">
+            <Input type="text" name="username" placeholder="ユーザー名 or メールアドレス" required={isRequired} onChange={handleInput} />
+            <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} required={isRequired} onChange={handleInput} />
+            <p className="password_reset" onClick={handleReset}>パスワードをリセット</p>
+          </Vertical>
 
-          <p className="password_reset" onClick={handleReset}>
-            パスワードをリセット
-          </p>
-
-          <Button color="blue" size="l" name="ログイン" type="submit" className="w_full mb_24" loading={isLoading} onClick={handleSubmit} />
-          <Button color="green" size="l" name="アカウント登録" className="w_full mb_24" onClick={handleSignup} />
+          <div className='mv_40'>
+            <Vertical gap="12">
+              <Button color="blue" size="l" name="ログイン" type="submit" loading={isLoading} onClick={handleSubmit} />
+              <Button color="green" size="l" name="アカウント登録" onClick={handleSignup} />
+            </Vertical>
+          </div>
         </form>
-        <Footer />
       </article>
       <Footer />
     </Main>

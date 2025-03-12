@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { postReset } from 'api/internal/auth'
 import { useToast } from 'components/hooks/useToast'
@@ -6,6 +6,7 @@ import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import Vertical from 'components/parts/Stack/Vertical'
 
 export default function Reset(): JSX.Element {
   const router = useRouter()
@@ -16,7 +17,7 @@ export default function Reset(): JSX.Element {
   const [email, setEmail] = useState<string>('')
 
   const handleBack = () => router.push('/account/login')
-  const handleEmail = (email: string) => setEmail(email)
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)
 
   const handleSubmit = async () => {
     if (!email) {
@@ -46,11 +47,15 @@ export default function Reset(): JSX.Element {
             </ul>
           )}
 
-          <Input type="email" placeholder="メールアドレス" className="mb_40" required={isRequired} onChange={handleEmail} />
-          <Button color="green" size="l" name="送信" type="submit" className="w_full mb_24" loading={isLoading} onClick={handleSubmit} />
-          <Button color="blue" size="l" name="戻る" className="w_full mb_24" onClick={handleBack} />
+          <Input type="email" placeholder="メールアドレス" required={isRequired} onChange={handleInput} />
+
+          <div className='mv_40'>
+            <Vertical gap="12">
+              <Button color="green" size="l" name="送信" type="submit" loading={isLoading} onClick={handleSubmit} />
+              <Button color="blue" size="l" name="戻る" onClick={handleBack} />
+            </Vertical>
+          </div>
         </form>
-        <Footer />
       </article>
       <Footer />
     </Main>
