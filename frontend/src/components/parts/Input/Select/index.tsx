@@ -21,18 +21,20 @@ export default function Select(props: Props): JSX.Element {
           {label}
         </label>
       )}
-      <select id={label} name={name} value={value} onChange={onChange} className={style.select}>
-        {placeholder && (
-          <option value="" disabled selected hidden>
-            {placeholder}
-          </option>
-        )}
-        {options.map((option, index) => (
-          <option key={index} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <div className={style.select_box}>
+        <select id={label} name={name} value={value} onChange={onChange} className={style.select}>
+          {placeholder && (
+            <option value="" hidden>
+              {placeholder}
+            </option>
+          )}
+          {options.map((option, index) => (
+            <option key={index} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   )
 }
