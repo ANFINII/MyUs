@@ -32,14 +32,12 @@ export default function Withdrawal(): JSX.Element {
               <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} required />
             </Vertical>
 
-            <div className='mv_40'>
-              <Vertical gap="12">
-                <Button color="green" size="l" name="退会URL生成" />
-                {tokenSigned && <Button color="red" size="l" name="退会する" onClick={handleWithdrawal} />}
-                {message && <Button color="red" size="l" name={message} />}
-                <Button color="blue" size="l" name="ホーム" onClick={handleBack} />
-              </Vertical>
-            </div>
+            <Vertical gap="12" className='mv_40'>
+              <Button color="green" size="l" name="退会URL生成" />
+              {tokenSigned && <Button color="red" size="l" name="退会する" onClick={handleWithdrawal} />}
+              {message && <Button color="red" size="l" name={message} />}
+              <Button color="blue" size="l" name="ホーム" onClick={handleBack} />
+            </Vertical>
           </form>
         </article>
       </LoginError>
