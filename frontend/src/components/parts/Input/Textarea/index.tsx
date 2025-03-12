@@ -14,7 +14,7 @@ interface Props {
   error?: boolean
   required?: boolean
   disabled?: boolean
-  onChange?: (value: string) => void
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
 }
 
 export default function Textarea(props: Props): JSX.Element {
@@ -38,7 +38,7 @@ export default function Textarea(props: Props): JSX.Element {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     adjustHeight()
     setIsValue(e.target.value !== '')
-    if (onChange) onChange(e.target.value)
+    if (onChange) onChange(e)
   }
 
   return (

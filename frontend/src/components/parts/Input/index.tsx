@@ -18,7 +18,7 @@ interface Props {
   required?: boolean
   disabled?: boolean
   autoFocus?: boolean
-  onChange?: (value: string) => void
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   onClick?: (event: React.MouseEvent<HTMLInputElement>) => void
 }
 
@@ -34,7 +34,7 @@ export default function Input(props: Props): JSX.Element {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setIsValue(value !== '')
-    if (onChange) onChange(value)
+    if (onChange) onChange(e)
   }
 
   return (
