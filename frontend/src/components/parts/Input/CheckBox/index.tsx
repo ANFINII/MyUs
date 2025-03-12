@@ -4,24 +4,21 @@ import style from './CheckBox.module.scss'
 
 interface Props {
   label: string
+  id?: string
+  name?: string
   className?: string
   checked?: boolean
-  onChange?: (checked: boolean) => void
+  defaultChecked?: boolean
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 export default function CheckBox(props: Props): JSX.Element {
-  const { label, className = '', checked, onChange } = props
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (onChange) {
-      onChange(e.target.checked)
-    }
-  }
+  const { label, id, className = '' } = props
 
   return (
-    <div className={clsx(style.check_group, className)}>
-      <input id={label} type="checkbox" className={style.checkbox} defaultChecked={checked} onChange={handleChange} />
-      <label htmlFor={label}>{label}</label>
+    <div className={clsx(style.checkbox, className)}>
+      <input {...props} type="checkbox" id={id || label} className={style.input} />
+      <label htmlFor={id || label} className={style.label}>{label}</label>
     </div>
   )
 }
