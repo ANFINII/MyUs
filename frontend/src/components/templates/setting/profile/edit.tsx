@@ -110,17 +110,17 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
             <Input name='nickname' value={values.nickname} maxLength={60} required={isRequired} onChange={handleInput} />
           </TableRow>
           <TableRow label="名前">
-            <div className="td_name">
+            <Horizontal gap="1" full>
               <Input name='lastName' value={values.lastName} placeholder="姓" maxLength={30} required={isRequired} onChange={handleInput} />
               <Input name='firstName' value={values.firstName} placeholder="名" maxLength={30} required={isRequired} onChange={handleInput} />
-            </div>
+            </Horizontal>
           </TableRow>
           <TableRow label="生年月日">
-            <div className="td_birthday">
+            <Horizontal gap="1" full>
               <Select name='year' value={values.year} options={years} placeholder="年" onChange={handleSelect} />
               <Select name='month' value={values.month} options={months} placeholder="月" onChange={handleSelect} />
               <Select name='day' value={values.day} options={days} placeholder="日" onChange={handleSelect} />
-            </div>
+            </Horizontal>
           </TableRow>
           <TableRow isIndent label="年齢">
             {values.age}歳
@@ -145,11 +145,11 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
             </div>
           </TableRow>
           <TableRow label="住所">
-            <div className="td_location">
+            <Horizontal gap="1" full>
               <Select name='prefecture' value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handleSelect} />
               <Input name='city' value={values.city} placeholder="市区町村" maxLength={255} onChange={handleInput} />
               <Input name='street' value={values.street} placeholder="町名番地" maxLength={255} onChange={handleInput} />
-            </div>
+            </Horizontal>
           </TableRow>
           <TableRow label="自己紹介">
             <Textarea name='introduction' className="textarea_margin" defaultValue={values.introduction} onChange={handleText} />
