@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { MusicIn } from 'types/internal/media'
 import { postMusicCreate } from 'api/internal/media/create'
@@ -19,9 +19,8 @@ export default function MusicCreate(): JSX.Element {
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<MusicIn>({ title: '', content: '', lyric: '', download: true })
 
-  const handleTitle = (title: string) => setValues({ ...values, title })
-  const handleContent = (content: string) => setValues({ ...values, content })
-  const handleLyric = (lyric: string) => setValues({ ...values, lyric })
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, music: files })
   const handleDownload = (checked: boolean) => setValues({ ...values, download: checked })
 
@@ -47,9 +46,9 @@ export default function MusicCreate(): JSX.Element {
       <LoginError margin="mt_20">
         <form method="POST" action="" encType="multipart/form-data">
           <Vertical gap="8">
-            <Input label="タイトル" required={isRequired} onChange={handleTitle} />
-            <Textarea label="内容" required={isRequired} onChange={handleContent} />
-            <Textarea label="歌詞" required={isRequired} onChange={handleLyric} />
+            <Input label="タイトル" name='title' required={isRequired} onChange={handleInput} />
+            <Textarea label="内容" name='content' required={isRequired} onChange={handleText} />
+            <Textarea label="歌詞" name='lyric' required={isRequired} onChange={handleText} />
             <div>
               <InputFile label="音楽" accept="audio/*" required={isRequired} onChange={handleFile} />
               <CheckBox label="ダウンロード許可" className="mt_4" checked onChange={handleDownload} />

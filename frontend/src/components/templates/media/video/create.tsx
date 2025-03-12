@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { VideoIn } from 'types/internal/media'
 import { postVideoCreate } from 'api/internal/media/create'
@@ -18,8 +18,8 @@ export default function VideoCreate(): JSX.Element {
   const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<VideoIn>({ title: '', content: '' })
 
-  const handleTitle = (title: string) => setValues({ ...values, title })
-  const handleContent = (content: string) => setValues({ ...values, content })
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
   const handleMovie = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, video: files })
 
@@ -45,8 +45,8 @@ export default function VideoCreate(): JSX.Element {
       <LoginError margin="mt_20">
         <form method="POST" action="" encType="multipart/form-data">
           <Vertical gap="8">
-            <Input label="タイトル" required={isRequired} onChange={handleTitle} />
-            <Textarea label="内容" required={isRequired} onChange={handleContent} />
+            <Input label="タイトル" name='title' required={isRequired} onChange={handleInput} />
+            <Textarea label="内容" name='content' required={isRequired} onChange={handleText} />
             <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
             <InputFile label="動画" accept="video/*" required={isRequired} onChange={handleMovie} />
           </Vertical>
