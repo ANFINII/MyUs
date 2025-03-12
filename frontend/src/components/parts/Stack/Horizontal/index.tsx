@@ -5,15 +5,16 @@ interface Props {
   gap?: string | number
   align?: 'start' | 'center' | 'end' | 'around' | 'between' | 'evenly'
   wrap?: boolean
+  full?: boolean
   className?: string
   children: React.ReactNode
 }
 
 export default function Horizontal(props: Props): JSX.Element {
-  const { gap = 0, align, wrap, className, children } = props
+  const { gap = 0, align, wrap, full, className, children } = props
 
   return (
-    <div className={clsx(style.horizontal, style[`align_${align}`], className)} style={{ gap: `${Number(gap) * 2}px`, flexWrap: wrap ? 'wrap' : 'nowrap' }}>
+    <div className={clsx(style.horizontal, style[`align_${align}`], full && style.full, className)} style={{ gap: `${Number(gap) * 2}px`, flexWrap: wrap ? 'wrap' : 'nowrap' }}>
       {children}
     </div>
   )
