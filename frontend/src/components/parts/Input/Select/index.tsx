@@ -8,15 +8,11 @@ interface Props {
   options: Option[]
   placeholder?: string
   className?: string
-  onChange: (value: string) => void
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
 export default function Select(props: Props): JSX.Element {
   const { label, name, value, options, placeholder, className = '', onChange } = props
-
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange(e.target.value)
-  }
 
   return (
     <div className={className}>
@@ -25,7 +21,7 @@ export default function Select(props: Props): JSX.Element {
           {label}
         </label>
       )}
-      <select id={label} name={name} value={value} onChange={handleChange} className={style.select}>
+      <select id={label} name={name} value={value} onChange={onChange} className={style.select}>
         {placeholder && (
           <option value="" disabled selected hidden>
             {placeholder}
