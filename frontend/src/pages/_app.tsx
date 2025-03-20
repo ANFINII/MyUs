@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app'
 import { UserProvider } from 'components/provider/UserProvider'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
+import Error from 'components/widgets/Error'
 import 'styles/global/reset.scss'
 import 'styles/global/style.scss'
 import 'styles/global/quill/index.scss'
@@ -24,7 +25,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UserProvider>
       <Layout>
-        <ErrorBoundary>
+        <ErrorBoundary fallback={<Error />}>
           <Component {...pageProps} />
         </ErrorBoundary>
       </Layout>

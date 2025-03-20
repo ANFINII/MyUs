@@ -15,7 +15,8 @@ export const AxiosErrorLog = (e: AxiosError) => {
   const errResponse = e.response
   const errRequest = e.request
 
-  console.groupCollapsed('========== Axios Error Start ==========')
+  console.group()
+  console.log('%c========== Axios Error Start ==========', 'color: red;')
   console.log('Status:', errResponse?.status)
   console.log('Message:', errResponse?.statusText)
   console.log('Path:', errRequest?.path)
