@@ -13,7 +13,11 @@ export default function BackError(props: Props): JSX.Element {
   const router = useRouter()
 
   const handleBack = () => {
-    router.back()
+    if (window.history.length > 1) {
+      router.back()
+    } else {
+      router.replace('/')
+    }
     setTimeout(() => router.reload(), 100)
   }
 
