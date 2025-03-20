@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
-import { Result, ok, err } from 'neverthrow'
+import { ok, err } from 'neverthrow'
+import { Result } from 'neverthrow'
 
 export interface ApiError {
   status: number
