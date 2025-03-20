@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app'
 import { UserProvider } from 'components/provider/UserProvider'
 import Layout from 'components/layout'
+import { ErrorBoundary } from 'components/parts/ErrorBoundary'
 import 'styles/global/reset.scss'
 import 'styles/global/style.scss'
 import 'styles/global/quill/index.scss'
@@ -23,7 +24,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UserProvider>
       <Layout>
-        <Component {...pageProps} />
+        <ErrorBoundary>
+          <Component {...pageProps} />
+        </ErrorBoundary>
       </Layout>
     </UserProvider>
   )
