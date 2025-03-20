@@ -10,7 +10,7 @@ const responseInterceptor = (client: AxiosInstance) => {
     },
     (e: AxiosError) => {
       AxiosErrorLog(e)
-      return Promise.reject(e.response)
+      return Promise.resolve(e.response)
     },
   )
 }
