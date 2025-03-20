@@ -33,5 +33,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 }
 
 const logErrorToMyService = (error: Error, errorInfo: ErrorInfo): void => {
-  console.error('Error:', error, errorInfo)
+  console.group()
+  console.log('%c========== Error Boundary Start ==========', 'color: red;')
+  console.error(error, errorInfo)
+  console.log('%c========== Error Boundary End ==========', 'color: red;')
+  console.groupEnd()
 }
