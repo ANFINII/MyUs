@@ -28,8 +28,9 @@ export default function DropMenuNotice(props: Props): JSX.Element {
   useEffect(() => {
     if (!user.isActive) return
     const fetch = async () => {
-      const notifications = await getNotification()
-      setNotifications(notifications)
+      const ret = await getNotification()
+      if (ret.isErr()) return
+      setNotifications(ret.value)
     }
     fetch()
   }, [user.isActive])
@@ -69,7 +70,7 @@ export default function DropMenuNotice(props: Props): JSX.Element {
   }
 
   return (
-    <nav className={clsx('drop_menu drop_menu_notice', isActive(open))}>
+    <nav className={clsx('drop_menu', 'drop_menu_notice', isActive(open))}>
       <ul>
         <DropMenuItem label="通知設定" icon={<IconBell size="1.5em" />} onClick={() => handleRouter('/setting/notification')} />
         {notifications?.datas?.map((notification) => {

@@ -18,8 +18,9 @@ export default function SearchTagBar(): JSX.Element {
 
   useEffect(() => {
     const fetchSearchTag = async (): Promise<void> => {
-      const data = await getSearchTag()
-      const sortedData = data.sort((a, b) => a.sequence - b.sequence)
+      const ret = await getSearchTag()
+      if (ret.isErr()) return
+      const sortedData = ret.value.sort((a, b) => a.sequence - b.sequence)
       setSearchTags(sortedData)
     }
     if (user.isActive) {
