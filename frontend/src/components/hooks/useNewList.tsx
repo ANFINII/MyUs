@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { ApiOut } from 'lib/error'
 
 interface OutProps<T> {
   search?: string
@@ -8,7 +9,7 @@ interface OutProps<T> {
 
 interface Props<T> {
   datas: T
-  getDatas: (search?: string) => Promise<T>
+  getDatas: (search?: string) => Promise<ApiOut<T>>
 }
 
 export const useNewDatas = <T extends object>(props: Props<T>): OutProps<T> => {
@@ -20,7 +21,9 @@ export const useNewDatas = <T extends object>(props: Props<T>): OutProps<T> => {
   const search = router.query.search as string
   useEffect(() => {
     const fetchDatas = async (search?: string) => {
-      const newDatas = await getDatas(search)
+      const ret = await getDatas(search)
+      if (ret.isErr()) return
+      const newDatas = ret.value
       setNewDatas(newDatas)
     }
     fetchDatas(search)
