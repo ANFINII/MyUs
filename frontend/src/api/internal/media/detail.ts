@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios'
 import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
+import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
 import { Video, Music, Comic, Picture, Chat, BlogDetailOut, CommnetIn } from 'types/internal/media'
 import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat, apiCommnet } from 'api/uri'
@@ -29,10 +30,8 @@ export const getPicture = async (id: number, req?: Req): Promise<Picture> => {
   return res.data
 }
 
-export const getBlog = async (id: number, req?: Req): Promise<BlogDetailOut> => {
-  const res = await apiClient.get(apiBlog(id), cookieHeader(req))
-  if (res.status >= HttpStatusCode.InternalServerError) throw Error
-  return res.data
+export const getBlog = async (id: number, req?: Req): Promise<ApiOut<BlogDetailOut>> => {
+  return await apiOut(apiClient.get(apiBlog(id), cookieHeader(req)))
 }
 
 export const getChat = async (id: number, req?: Req): Promise<Chat> => {
