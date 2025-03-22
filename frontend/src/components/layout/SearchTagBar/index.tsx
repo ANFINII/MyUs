@@ -21,7 +21,7 @@ export default function SearchTagBar(): JSX.Element {
       const ret = await getSearchTag()
       if (ret.isErr()) return
       const data = ret.value
-      const sortedData = data.sort((a, b) => a.sequence - b.sequence)
+      const sortedData = data.sort((a: SearchTagOut, b: SearchTagOut) => a.sequence - b.sequence)
       setSearchTags(sortedData)
     }
     if (user.isActive) {
