@@ -20,7 +20,8 @@ export default function SearchTagBar(): JSX.Element {
     const fetchSearchTag = async (): Promise<void> => {
       const ret = await getSearchTag()
       if (ret.isErr()) return
-      const sortedData = ret.value.sort((a, b) => a.sequence - b.sequence)
+      const data = ret.value
+      const sortedData = data.sort((a, b) => a.sequence - b.sequence)
       setSearchTags(sortedData)
     }
     if (user.isActive) {
