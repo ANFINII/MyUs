@@ -1,4 +1,4 @@
-import { useState, createContext, useEffect } from 'react'
+import { useState, createContext, useEffect, useCallback } from 'react'
 import { UserMe } from 'types/internal/auth'
 import { getUser } from 'api/internal/auth'
 
@@ -21,19 +21,18 @@ export function UserProvider(props: Props): JSX.Element {
 
   const [user, setUser] = useState<UserMe>(initUser)
 
-  const updateUser = async () => setUser(await getUser())
   const resetUser = async () => setUser(initUser)
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        await updateUser()
-      } catch {
-        await resetUser()
-      }
-    }
-    fetchUser()
+  const updateUser = useCallback(async () => {
+    const ret = await getUser()
+    if (ret.isErr()) return resetUser()
+    setUser(ret.value)
   }, [])
+
+  useEffect(() => {
+    const fetchUser = async () => updateUser()
+    fetchUser()
+  }, [updateUser])
 
   const value = { user, updateUser, resetUser }
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>

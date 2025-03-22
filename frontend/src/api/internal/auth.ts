@@ -1,37 +1,27 @@
-import { HttpStatusCode } from 'axios'
 import { apiClient, apiFormClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
+import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
 import { LoginIn, SignupIn, User } from 'types/internal/auth'
 import { MessageOut } from 'types/internal/other'
 import { apiUser, apiLogin, apiLogout, apiSignup } from 'api/uri'
-import { camelSnake } from 'utils/functions/convertCase'
 
-export const getUser = async (req?: Req): Promise<User> => {
-  const res = await apiClient.get(apiUser, cookieHeader(req))
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
-  return res.data
+export const getUser = async (req?: Req): Promise<ApiOut<User>> => {
+  return await apiOut(apiClient.get(apiUser, cookieHeader(req)))
 }
 
-export const postLogin = async (request: LoginIn): Promise<MessageOut | void> => {
-  const res = await apiClient.post(apiLogin, request)
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
-  return res.data
+export const postLogin = async (request: LoginIn): Promise<ApiOut<MessageOut | void>> => {
+  return await apiOut(apiFormClient.post(apiLogin, request))
 }
 
-export const postLogout = async (): Promise<void> => {
-  const res = await apiClient.post(apiLogout)
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
+export const postLogout = async (): Promise<ApiOut<void>> => {
+  return await apiOut(apiFormClient.post(apiLogout))
 }
 
-export const postSignup = async (request: SignupIn): Promise<MessageOut | void> => {
-  const res = await apiFormClient.post(apiSignup, camelSnake(request))
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
-  return res.data
+export const postSignup = async (request: SignupIn): Promise<ApiOut<MessageOut | void>> => {
+  return await apiOut(apiFormClient.post(apiSignup, request))
 }
 
-export const postReset = async (email: string): Promise<MessageOut | void> => {
-  const res = await apiFormClient.post(apiSignup, email)
-  if (res.status >= HttpStatusCode.BadRequest) throw Error
-  return res.data
+export const postReset = async (email: string): Promise<ApiOut<MessageOut | void>> => {
+  return await apiOut(apiFormClient.post(apiSignup, email))
 }

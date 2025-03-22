@@ -29,7 +29,8 @@ export default function DropMenuProfile(props: Props): JSX.Element {
 
   const handleLogout = async () => {
     handleLogin()
-    await postLogout()
+    const ret = await postLogout()
+    if (ret.isErr()) return
     await resetUser()
   }
 

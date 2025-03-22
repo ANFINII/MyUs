@@ -50,15 +50,12 @@ export default function Signup(): JSX.Element {
       return
     }
     setIsLoading(true)
-    try {
-      const data = await postSignup(values)
-      if (data) setMessage(data.message)
-      if (!data?.error) handleBack()
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
-      setIsLoading(false)
-    }
+    const ret = await postSignup(values)
+    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    const data = ret.value
+    if (data) setMessage(data.message)
+    if (!data?.error) handleBack()
+    setIsLoading(false)
   }
 
   return (
