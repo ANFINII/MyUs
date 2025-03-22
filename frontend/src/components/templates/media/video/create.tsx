@@ -30,14 +30,10 @@ export default function VideoCreate(): JSX.Element {
       return
     }
     setIsLoading(true)
-    try {
-      const data = await postVideoCreate(values)
-      router.push(`/media/video/${data.id}`)
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
-      setIsLoading(false)
-    }
+    const ret = await postVideoCreate(values)
+    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    router.push(`/media/video/${ret.value.id}`)
+    setIsLoading(false)
   }
 
   return (
