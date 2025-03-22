@@ -25,14 +25,11 @@ export default function Reset(): JSX.Element {
       return
     }
     setIsLoading(true)
-    try {
-      const data = await postReset(email)
-      if (data) setMessage(data.message)
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
-      setIsLoading(false)
-    }
+    const ret = await postReset(email)
+    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    const data = ret.value
+    if (data) setMessage(data.message)
+    setIsLoading(false)
   }
 
   return (

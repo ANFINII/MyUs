@@ -29,18 +29,15 @@ export default function Login(): JSX.Element {
       return
     }
     setIsLoading(true)
-    try {
-      const data = await postLogin(values)
-      if (data) setMessage(data.message)
-      if (!data?.error) {
-        await updateUser()
-        router.push('/setting/profile')
-      }
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
-      setIsLoading(false)
+    const ret = await postLogin(values)
+    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    const data = ret.value
+    if (data) setMessage(data.message)
+    if (!data?.error) {
+      await updateUser()
+      router.push('/setting/profile')
     }
+    setIsLoading(false)
   }
 
   return (
