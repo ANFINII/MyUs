@@ -28,14 +28,10 @@ export default function ChatCreate(): JSX.Element {
       return
     }
     setIsLoading(true)
-    try {
-      const data = await postChatCreate(values)
-      router.push(`/media/chat/${data.id}`)
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
-      setIsLoading(false)
-    }
+    const ret = await postChatCreate(values)
+    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    router.push(`/media/chat/${ret.value.id}`)
+    setIsLoading(false)
   }
 
   return (

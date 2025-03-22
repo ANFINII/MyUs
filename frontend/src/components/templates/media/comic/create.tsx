@@ -30,14 +30,10 @@ export default function ComicCreate(): JSX.Element {
       return
     }
     setIsLoading(true)
-    try {
-      const data = await postComicCreate(values)
-      router.push(`/media/comic/${data.id}`)
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
-      setIsLoading(false)
-    }
+    const ret = await postComicCreate(values)
+    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    router.push(`/media/comic/${ret.value.id}`)
+    setIsLoading(false)
   }
 
   return (

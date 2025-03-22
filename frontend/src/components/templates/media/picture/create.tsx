@@ -29,14 +29,10 @@ export default function PictureCreate(): JSX.Element {
       return
     }
     setIsLoading(true)
-    try {
-      const data = await postPictureCreate(values)
-      router.push(`/media/picture/${data.id}`)
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
-      setIsLoading(false)
-    }
+    const ret = await postPictureCreate(values)
+    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    router.push(`/media/picture/${ret.value.id}`)
+    setIsLoading(false)
   }
 
   return (

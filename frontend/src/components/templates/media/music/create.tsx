@@ -31,14 +31,10 @@ export default function MusicCreate(): JSX.Element {
       return
     }
     setIsLoading(true)
-    try {
-      const data = await postMusicCreate(values)
-      router.push(`/media/music/${data.id}`)
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
-      setIsLoading(false)
-    }
+    const ret = await postMusicCreate(values)
+    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    router.push(`/media/music/${ret.value.id}`)
+    setIsLoading(false)
   }
 
   return (

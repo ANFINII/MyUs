@@ -46,14 +46,10 @@ export default function BlogCreate(): JSX.Element {
       return
     }
     setIsLoading(true)
-    try {
-      const data = await postBlogCreate(values)
-      router.push(`/media/blog/${data.id}`)
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
-      setIsLoading(false)
-    }
+    const ret = await postBlogCreate(values)
+    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    router.push(`/media/chat/${ret.value.id}`)
+    setIsLoading(false)
   }
 
   return (
