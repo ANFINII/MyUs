@@ -45,7 +45,9 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   const handleAutoAddress = async () => {
-    const results = await getAddress(values.postalCode)
+    const ret = await getAddress(values.postalCode)
+    if (ret.isErr()) return handleToast('住所が取得できませんでした!', true)
+    const results = ret.value.results
     if (results && results[0]) {
       const result = results[0]
       setValues({ ...values, prefecture: result.address1, city: result.address2, street: result.address3 })

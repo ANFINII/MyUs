@@ -1,11 +1,9 @@
-import { HttpStatusCode } from 'axios'
 import { apiAddressClient } from 'lib/axios/external'
-import { Address, AddressResult } from 'types/internal/address'
+import { ApiOut, apiOut } from 'lib/error'
+import { Address } from 'types/internal/address'
 import { apiAddress } from 'api/uri'
 
 // 住所検索APIリファレンス: http://zipcloud.ibsnet.co.jp/doc/api
-export const getAddress = async (zipcode: string): Promise<AddressResult[]> => {
-  const res: Address = await apiAddressClient.get(apiAddress, { params: { zipcode } })
-  if (res.status >= HttpStatusCode.InternalServerError) throw Error
-  return res.results
+export const getAddress = async (zipcode: string): Promise<ApiOut<Address>> => {
+  return await apiOut(apiAddressClient.get(apiAddress, { params: { zipcode } }))
 }
