@@ -1,4 +1,14 @@
+from enum import Enum
 from api.models import Video, Music, Comic, Picture, Blog, Chat
+
+
+class MediaType(str, Enum):
+    VIDEO = 'Video'
+    MUSIC = 'Music'
+    COMIC = 'Comic'
+    PICTURE = 'Picture'
+    BLOG = 'Blog'
+    CHAT = 'Chat'
 
 
 model_list = [Video, Music, Comic, Picture, Blog, Chat]
