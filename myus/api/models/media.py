@@ -1,8 +1,7 @@
 from django.db import models
 from django.db.models import Q
-from django.contrib.contenttypes.fields import GenericRelation
 from django_quill.fields import QuillField
-from api.models.master import HashTag
+from api.models.master import Category, HashTag
 from api.models.base import MediaModel, MediaManager
 from api.models.user import User
 from api.utils.functions.file import image_upload, video_upload, musics_upload, comic_upload
@@ -24,23 +23,23 @@ class VideoQuerySet(models.QuerySet):
 
 class VideoManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return VideoQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like', 'comment')
+        return VideoQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 class Video(models.Model, MediaModel):
     """Video"""
-    author  = models.ForeignKey(User, on_delete=models.CASCADE)
-    title   = models.CharField(max_length=100)
-    content = models.TextField()
-    image   = models.ImageField(upload_to=image_upload)
-    video   = models.FileField(upload_to=video_upload)
-    convert = models.FileField(upload_to=video_upload)
-    comment = GenericRelation('Comment')
-    hashtag = models.ManyToManyField(HashTag, blank=True)
-    like    = models.ManyToManyField(User, related_name='video_like', blank=True)
-    read    = models.IntegerField(default=0)
-    publish = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    title    = models.CharField(max_length=100)
+    content  = models.TextField()
+    image    = models.ImageField(upload_to=image_upload)
+    video    = models.FileField(upload_to=video_upload)
+    convert  = models.FileField(upload_to=video_upload)
+    category = models.ManyToManyField(Category, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    like     = models.ManyToManyField(User, related_name='video_like', blank=True)
+    read     = models.IntegerField(default=0)
+    publish  = models.BooleanField(default=True)
+    created  = models.DateTimeField(auto_now_add=True)
+    updated  = models.DateTimeField(auto_now=True)
 
     objects = VideoManager()
 
@@ -82,7 +81,7 @@ class MusicQuerySet(models.QuerySet):
 
 class MusicManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return MusicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like', 'comment')
+        return MusicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 class Music(models.Model, MediaModel):
     """Music"""
@@ -91,7 +90,7 @@ class Music(models.Model, MediaModel):
     content  = models.TextField()
     lyric    = models.TextField(blank=True)
     music    = models.FileField(upload_to=musics_upload)
-    comment  = GenericRelation('Comment')
+    category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name='music_like', blank=True)
     read     = models.IntegerField(default=0)
@@ -133,21 +132,21 @@ class ComicQuerySet(models.QuerySet):
 
 class ComicManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return ComicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like', 'comment')
+        return ComicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 class Comic(models.Model, MediaModel):
     """Comic"""
-    author  = models.ForeignKey(User, on_delete=models.CASCADE)
-    title   = models.CharField(max_length=100)
-    content = models.TextField()
-    image   = models.ImageField(upload_to=image_upload)
-    comment = GenericRelation('Comment')
-    hashtag = models.ManyToManyField(HashTag, blank=True)
-    like    = models.ManyToManyField(User, related_name='comic_like', blank=True)
-    read    = models.IntegerField(default=0)
-    publish = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    title    = models.CharField(max_length=100)
+    content  = models.TextField()
+    image    = models.ImageField(upload_to=image_upload)
+    category = models.ManyToManyField(Category, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    like     = models.ManyToManyField(User, related_name='comic_like', blank=True)
+    read     = models.IntegerField(default=0)
+    publish  = models.BooleanField(default=True)
+    created  = models.DateTimeField(auto_now_add=True)
+    updated  = models.DateTimeField(auto_now=True)
 
     objects = ComicManager()
 
@@ -198,21 +197,21 @@ class PictureQuerySet(models.QuerySet):
 
 class PictureManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return PictureQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like', 'comment')
+        return PictureQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 class Picture(models.Model, MediaModel):
     """Picture"""
-    author  = models.ForeignKey(User, on_delete=models.CASCADE)
-    title   = models.CharField(max_length=100)
-    content = models.TextField()
-    image   = models.ImageField(upload_to=image_upload)
-    comment = GenericRelation('Comment')
-    hashtag = models.ManyToManyField(HashTag, blank=True)
-    like    = models.ManyToManyField(User, related_name='picture_like', blank=True)
-    read    = models.IntegerField(default=0)
-    publish = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    title    = models.CharField(max_length=100)
+    content  = models.TextField()
+    image    = models.ImageField(upload_to=image_upload)
+    category = models.ManyToManyField(Category, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    like     = models.ManyToManyField(User, related_name='picture_like', blank=True)
+    read     = models.IntegerField(default=0)
+    publish  = models.BooleanField(default=True)
+    created  = models.DateTimeField(auto_now_add=True)
+    updated  = models.DateTimeField(auto_now=True)
 
     objects = PictureManager()
 
@@ -248,7 +247,7 @@ class BlogQuerySet(models.QuerySet):
 
 class BlogManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return BlogQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like', 'comment')
+        return BlogQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
 
 class Blog(models.Model, MediaModel):
     """Blog"""
@@ -258,7 +257,7 @@ class Blog(models.Model, MediaModel):
     richtext = models.TextField()
     delta    = QuillField()
     image    = models.ImageField(upload_to=image_upload)
-    comment  = GenericRelation('Comment')
+    category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name='blog_like', blank=True)
     read     = models.IntegerField(default=0)
@@ -303,16 +302,17 @@ class ChatManager(models.Manager, MediaManager):
 
 class Chat(models.Model):
     """Chat"""
-    author  = models.ForeignKey(User, on_delete=models.CASCADE)
-    title   = models.CharField(max_length=100)
-    content = models.TextField()
-    hashtag = models.ManyToManyField(HashTag, blank=True)
-    like    = models.ManyToManyField(User, related_name='chat_like', blank=True)
-    read    = models.IntegerField(default=0)
-    period  = models.DateField()
-    publish = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    title    = models.CharField(max_length=100)
+    content  = models.TextField()
+    category = models.ManyToManyField(Category, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    like     = models.ManyToManyField(User, related_name='chat_like', blank=True)
+    read     = models.IntegerField(default=0)
+    period   = models.DateField()
+    publish  = models.BooleanField(default=True)
+    created  = models.DateTimeField(auto_now_add=True)
+    updated  = models.DateTimeField(auto_now=True)
 
     objects = ChatManager()
 
