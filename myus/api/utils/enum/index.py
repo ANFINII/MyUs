@@ -1,19 +1,14 @@
 from enum import Enum
+from api.models import Video, Music, Comic, Picture, Blog, Chat
 
 
-class MediaType(str, Enum):
-    video = 'video'
-    music = 'music'
-    comic = 'comic'
-    picture = 'picture'
-    blog = 'blog'
-    chat = 'chat'
+MediaModelType = Video | Music | Comic | Picture | Blog | Chat
 
 
 class NotificationType(str, Enum):
-    video = 'video'
-    music = 'music'
-    comic = 'comic'
-    picture = 'picture'
-    blog = 'blog'
-    chat = 'chat'
+    VIDEO = 'video'
+    MUSIC = 'music'
+    COMIC = 'comic'
+    PICTURE = 'picture'
+    BLOG = 'blog'
+    CHAT = 'chat'

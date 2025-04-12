@@ -3,7 +3,6 @@ from enum import Enum, auto
 from functools import reduce
 from operator import and_
 
-from api.models import Blog, Chat, Comic, Music, Picture, Video
 from api.utils.enum.index import MediaModelType
 from api.utils.functions.search import search_q_list
 from django.db.models import Count, F, Q
@@ -29,7 +28,7 @@ class SortOption:
 
 
 class MediaDomain:
-    def get(model: MediaModelType, id: int) -> Video | None:
+    def get(model: MediaModelType, id: int) -> MediaModelType | None:
         qs = model.objects.filter(id=id).first()
         return qs
 

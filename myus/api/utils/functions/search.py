@@ -1,6 +1,5 @@
 from functools import reduce
 from operator import and_
-
 from django.db.models import Q, F, Count
 from api.models import User, Music
 
@@ -9,6 +8,17 @@ def get_q_list(search: str) -> str:
     """除外リストを作成"""
     exclusion_list = {' ', '　'}
     return ''.join([q for q in search if q not in exclusion_list])
+
+
+def search_q_list(search: str) -> Q:
+    q_list = get_q_list(search)
+    query = reduce(and_, [
+        Q(title__icontains=q) |
+        Q(hashtag__jp_name__icontains=q) |
+        Q(author__nickname__icontains=q) |
+        Q(content__icontains=q) for q in q_list
+    ])
+    return query
 
 
 def search_follow(model: any, path: str, user: User, search: str):
