@@ -135,7 +135,7 @@ def get_blogs(limit: int, search: str | None) -> list[BlogData]:
     return data
 
 
-def get_chats(limit: int, search: str | None):
+def get_chats(limit: int, search: str | None) -> list[ChatData]:
     objs = MediaDomain.bulk_get(Chat, FilterOption(search=search), SortOption(), limit)
 
     data = [ChatData(
