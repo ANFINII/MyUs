@@ -24,7 +24,7 @@ from api.utils.functions.user import get_author, get_media_user
 
 # Index
 class HomeAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         search = request.query_params.get('search')
         data = get_home(8, search)
         return DataResponse(data, HTTP_200_OK)
@@ -32,7 +32,7 @@ class HomeAPI(APIView):
 
 # Recommend
 class RecommendAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         search = request.query_params.get('search')
         data = get_recommend(8, search)
         return DataResponse(data, HTTP_200_OK)
@@ -40,14 +40,14 @@ class RecommendAPI(APIView):
 
 # Video
 class VideoListAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         search = request.query_params.get('search')
         data = get_videos(50, search)
         return DataResponse(data, HTTP_200_OK)
 
 
 class VideoAPI(APIView):
-    def get(self, request, id):
+    def get(self, request, id) -> DataResponse:
         obj = Video.objects.filter(id=id, publish=True).first()
         if not obj:
             return ApiResponse.NOT_FOUND.run()
@@ -56,7 +56,7 @@ class VideoAPI(APIView):
         data = get_video_detail_data(obj, comments)
         return DataResponse(data, HTTP_200_OK)
 
-    def post(self, request):
+    def post(self, request) -> DataResponse:
         author = get_user(request)
         if not author:
             return ApiResponse.UNAUTHORIZED.run()
@@ -87,14 +87,14 @@ class VideoAPI(APIView):
 
 # Music
 class MusicListAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         search = request.query_params.get('search')
         data = get_musics(50, search)
         return DataResponse(data, HTTP_200_OK)
 
 
 class MusicAPI(APIView):
-    def get(self, request, id):
+    def get(self, request, id) -> DataResponse:
         obj = Music.objects.filter(id=id, publish=True).first()
         if not obj:
             return ApiResponse.NOT_FOUND.run()
@@ -141,14 +141,14 @@ class MusicAPI(APIView):
 
 # Comic
 class ComicListAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         search = request.query_params.get('search')
         data = get_comics(50, search)
         return DataResponse(data, HTTP_200_OK)
 
 
 class ComicAPI(APIView):
-    def get(self, request, id):
+    def get(self, request, id) -> DataResponse:
         obj = Comic.objects.filter(id=id, publish=True).first()
         if not obj:
             return ApiResponse.NOT_FOUND.run()
@@ -171,7 +171,7 @@ class ComicAPI(APIView):
         }
         return DataResponse(data, HTTP_200_OK)
 
-    def post(self, request) -> Response:
+    def post(self, request) -> DataResponse:
         author = get_user(request)
         if not author:
             return ApiResponse.UNAUTHORIZED.run()
@@ -195,14 +195,14 @@ class ComicAPI(APIView):
 
 # Picture
 class PictureListAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         search = request.query_params.get('search')
         data = get_pictures(50, search)
         return DataResponse(data, HTTP_200_OK)
 
 
 class PictureAPI(APIView):
-    def get(self, request, id):
+    def get(self, request, id) -> DataResponse:
         obj = Picture.objects.filter(id=id, publish=True).first()
         if not obj:
             return ApiResponse.NOT_FOUND.run()
@@ -226,7 +226,7 @@ class PictureAPI(APIView):
         }
         return DataResponse(data, HTTP_200_OK)
 
-    def post(self, request):
+    def post(self, request) -> DataResponse:
         author = get_user(request)
         if not author:
             return ApiResponse.UNAUTHORIZED.run()
@@ -252,7 +252,7 @@ class BlogListAPI(APIView):
 
 
 class BlogAPI(APIView):
-    def get(self, request, id):
+    def get(self, request, id) -> DataResponse:
         obj = Blog.objects.filter(id=id, publish=True).first()
         if not obj:
             return ApiResponse.NOT_FOUND.run()
@@ -311,14 +311,14 @@ class BlogAPI(APIView):
 
 # Chat
 class ChatListAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         search = request.query_params.get('search')
         data = get_chats(50, search)
         return DataResponse(data, HTTP_200_OK)
 
 
 class ChatAPI(APIView):
-    def get(self, request, id):
+    def get(self, request, id) -> DataResponse:
         obj = Chat.objects.filter(id=id, publish=True).first()
         if not obj:
             return ApiResponse.NOT_FOUND.run()
@@ -369,7 +369,7 @@ class ChatAPI(APIView):
 
 
 class CommentAPI(APIView):
-    def post(self, request, id):
+    def post(self, request, id) -> DataResponse:
         author = get_user(request)
         if not author:
             return ApiResponse.UNAUTHORIZED.run()
