@@ -15,3 +15,12 @@ class CommentData:
 class CommentInData:
     text: str
     type: str
+
+
+@dataclass(frozen=True, slots=True)
+class CommentOutData:
+    id: str
+    text: str
+    reply_count: str
+    created: bool
+    author: AuthorData
