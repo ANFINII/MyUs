@@ -17,23 +17,17 @@ import os
 import environ
 from datetime import timedelta
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 BASE_DIR = environ.Path(__file__) - 3
-
-env = environ.Env(DEBUG=(bool, False))
-env.read_env(os.path.join(BASE_DIR, '../envs/django.env'))
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, 'envs/django.env'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = env('SECRET_KEY')
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-
-# Stripe API keys
-STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
-STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -192,6 +186,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = 'app:login'
 LOGIN_REDIRECT_URL = 'app:index'
 LOGOUT_REDIRECT_URL = 'app:login'
+
+# Stripe API keys
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
 
 # Email
 EMAIL_HOST = env('EMAIL_HOST')
