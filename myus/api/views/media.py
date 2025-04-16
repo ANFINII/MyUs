@@ -25,7 +25,7 @@ from api.utils.functions.user import get_author, get_media_user
 # Index
 class HomeAPI(APIView):
     def get(self, request) -> DataResponse:
-        search = request.query_params.get('search')
+        search = request.query_params.get("search")
         data = get_home(8, search)
         return DataResponse(data, HTTP_200_OK)
 
@@ -33,7 +33,7 @@ class HomeAPI(APIView):
 # Recommend
 class RecommendAPI(APIView):
     def get(self, request) -> DataResponse:
-        search = request.query_params.get('search')
+        search = request.query_params.get("search")
         data = get_recommend(8, search)
         return DataResponse(data, HTTP_200_OK)
 
@@ -41,7 +41,7 @@ class RecommendAPI(APIView):
 # Video
 class VideoListAPI(APIView):
     def get(self, request) -> DataResponse:
-        search = request.query_params.get('search')
+        search = request.query_params.get("search")
         data = get_videos(50, search)
         return DataResponse(data, HTTP_200_OK)
 
@@ -63,32 +63,32 @@ class VideoAPI(APIView):
 
         data = request.data
         field = {
-            'author': author,
-            'title': data.get('title'),
-            'content': data.get('content'),
-            'image': data.get('image'),
+            "author": author,
+            "title": data.get("title"),
+            "content": data.get("content"),
+            "image": data.get("image"),
         }
 
         obj = Video.objects.create(**field)
-        obj_id = f'object_{obj.id}'
-        user_id = f'user_{obj.author.id}'
+        obj_id = f"object_{obj.id}"
+        user_id = f"user_{obj.author.id}"
         media_root = settings.MEDIA_ROOT
-        video_path = os.path.join(media_root, 'videos', 'videos_video', user_id, obj_id)
-        video_file = os.path.join(video_path, os.path.basename(f'{obj.convert}'))
+        video_path = os.path.join(media_root, "videos", "videos_video", user_id, obj_id)
+        video_file = os.path.join(video_path, os.path.basename(f"{obj.convert}"))
         file_path = convert_exe(video_file, video_path, media_root)
 
-        obj.convert = file_path['mp4_path']
-        obj.video = file_path['hls_path']
+        obj.convert = file_path["mp4_path"]
+        obj.video = file_path["hls_path"]
         obj.save()
 
-        data = {'id': obj.id}
+        data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)
 
 
 # Music
 class MusicListAPI(APIView):
     def get(self, request) -> DataResponse:
-        search = request.query_params.get('search')
+        search = request.query_params.get("search")
         data = get_musics(50, search)
         return DataResponse(data, HTTP_200_OK)
 
@@ -102,20 +102,20 @@ class MusicAPI(APIView):
         comments = get_comments(obj)
 
         data = {
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'lyric': obj.lyric,
-            'music': obj.music.url,
-            'comment': [get_comment_data(comment) for comment in comments],
-            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            'like': obj.total_like(),
-            'read': obj.read,
-            'comment_count': obj.comment_count(),
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': get_author(obj.author),
+            "id": obj.id,
+            "title": obj.title,
+            "content": obj.content,
+            "lyric": obj.lyric,
+            "music": obj.music.url,
+            "comment": [get_comment_data(comment) for comment in comments],
+            "hashtag": [hashtag.jp_name for hashtag in obj.hashtag.all()],
+            "like": obj.total_like(),
+            "read": obj.read,
+            "comment_count": obj.comment_count(),
+            "publish": obj.publish,
+            "created": obj.created,
+            "updated": obj.updated,
+            "author": get_author(obj.author),
         }
         return DataResponse(data, HTTP_200_OK)
 
@@ -127,22 +127,22 @@ class MusicAPI(APIView):
 
         data = request.data
         field = {
-            'author': author,
-            'title': data.get('title'),
-            'content': data.get('content'),
-            'lyric': data.get('lyric'),
-            'music': data.get('music'),
-            'download': is_bool(data.get('download')),
+            "author": author,
+            "title": data.get("title"),
+            "content": data.get("content"),
+            "lyric": data.get("lyric"),
+            "music": data.get("music"),
+            "download": is_bool(data.get("download")),
         }
         obj = Music.objects.create(**field)
-        data = {'id': obj.id}
+        data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)
 
 
 # Comic
 class ComicListAPI(APIView):
     def get(self, request) -> DataResponse:
-        search = request.query_params.get('search')
+        search = request.query_params.get("search")
         data = get_comics(50, search)
         return DataResponse(data, HTTP_200_OK)
 
@@ -156,18 +156,18 @@ class ComicAPI(APIView):
         comments = get_comments(obj)
 
         data = {
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'comment': [get_comment_data(comment) for comment in comments],
-            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            'like': obj.total_like(),
-            'read': obj.read,
-            'comment_count': obj.comment_count(),
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': get_author(obj.author),
+            "id": obj.id,
+            "title": obj.title,
+            "content": obj.content,
+            "comment": [get_comment_data(comment) for comment in comments],
+            "hashtag": [hashtag.jp_name for hashtag in obj.hashtag.all()],
+            "like": obj.total_like(),
+            "read": obj.read,
+            "comment_count": obj.comment_count(),
+            "publish": obj.publish,
+            "created": obj.created,
+            "updated": obj.updated,
+            "author": get_author(obj.author),
         }
         return DataResponse(data, HTTP_200_OK)
 
@@ -177,26 +177,26 @@ class ComicAPI(APIView):
             return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
-        images = data.getlist('images[]')
+        images = data.getlist("images[]")
         field = {
-            'author': author,
-            'title': data.get('title'),
-            'content': data.get('content'),
-            'image': data.get('image'),
+            "author": author,
+            "title": data.get("title"),
+            "content": data.get("content"),
+            "image": data.get("image"),
         }
         obj = Comic.objects.create(**field)
 
         comic_pages = [ComicPage(comic=obj, image=image, sequence=sequence) for sequence, image in enumerate(images, start=1)]
         ComicPage.objects.bulk_create(comic_pages)
 
-        data = {'id': obj.id}
+        data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)
 
 
 # Picture
 class PictureListAPI(APIView):
     def get(self, request) -> DataResponse:
-        search = request.query_params.get('search')
+        search = request.query_params.get("search")
         data = get_pictures(50, search)
         return DataResponse(data, HTTP_200_OK)
 
@@ -210,19 +210,19 @@ class PictureAPI(APIView):
         comments = get_comments(obj)
 
         data = {
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'image': create_url(obj.image.url),
-            'comment': [get_comment_data(comment) for comment in comments],
-            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            'like': obj.total_like(),
-            'read': obj.read,
-            'comment_count': obj.comment_count(),
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': get_author(obj.author),
+            "id": obj.id,
+            "title": obj.title,
+            "content": obj.content,
+            "image": create_url(obj.image.url),
+            "comment": [get_comment_data(comment) for comment in comments],
+            "hashtag": [hashtag.jp_name for hashtag in obj.hashtag.all()],
+            "like": obj.total_like(),
+            "read": obj.read,
+            "comment_count": obj.comment_count(),
+            "publish": obj.publish,
+            "created": obj.created,
+            "updated": obj.updated,
+            "author": get_author(obj.author),
         }
         return DataResponse(data, HTTP_200_OK)
 
@@ -233,20 +233,20 @@ class PictureAPI(APIView):
 
         data = request.data
         field = {
-            'author': author,
-            'title': data.get('title'),
-            'content': data.get('content'),
-            'image': data.get('image'),
+            "author": author,
+            "title": data.get("title"),
+            "content": data.get("content"),
+            "image": data.get("image"),
         }
         obj = Picture.objects.create(**field)
-        data = {'id': obj.id}
+        data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)
 
 
 # Blog
 class BlogListAPI(APIView):
     def get(self, request):
-        search = request.query_params.get('search')
+        search = request.query_params.get("search")
         data = get_blogs(50, search)
         return DataResponse(data, HTTP_200_OK)
 
@@ -257,31 +257,31 @@ class BlogAPI(APIView):
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
-        search = request.query_params.get('search')
+        search = request.query_params.get("search")
         user = get_user(request)
         comments = get_comments(obj)
 
         data = {
-            'detail': {
-                'id': obj.id,
-                'title': obj.title,
-                'content': obj.content,
-                'richtext': obj.richtext,
-                'image': obj.image.url,
-                'comment': [get_comment_data(comment) for comment in comments],
-                'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
-                'like': obj.total_like(),
-                'read': obj.read,
-                'comment_count': obj.comment_count(),
-                'publish': obj.publish,
-                'created': obj.created,
-                'updated': obj.updated,
-                'author': get_author(obj.author),
+            "detail": {
+                "id": obj.id,
+                "title": obj.title,
+                "content": obj.content,
+                "richtext": obj.richtext,
+                "image": obj.image.url,
+                "comment": [get_comment_data(comment) for comment in comments],
+                "hashtag": [hashtag.jp_name for hashtag in obj.hashtag.all()],
+                "like": obj.total_like(),
+                "read": obj.read,
+                "comment_count": obj.comment_count(),
+                "publish": obj.publish,
+                "created": obj.created,
+                "updated": obj.updated,
+                "author": get_author(obj.author),
             },
-            'list': get_blogs(50, search),
+            "list": get_blogs(50, search),
         }
         if user:
-            data['detail']['user'] = get_media_user(user, obj)
+            data["detail"]["user"] = get_media_user(user, obj)
 
         return DataResponse(data, HTTP_200_OK)
 
@@ -292,27 +292,27 @@ class BlogAPI(APIView):
 
         data = request.data
         field = {
-            'author': author,
-            'title': data.get('title'),
-            'content': data.get('content'),
-            'image': data.get('image'),
-            'richtext': data.get('richtext'),
-            'delta': self.get_delta(data.get('delta'), data.get('richtext')),
+            "author": author,
+            "title": data.get("title"),
+            "content": data.get("content"),
+            "image": data.get("image"),
+            "richtext": data.get("richtext"),
+            "delta": self.get_delta(data.get("delta"), data.get("richtext")),
         }
         obj = Blog.objects.create(**field)
-        data = {'id': obj.id}
+        data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)
 
     @staticmethod
     def get_delta(delta, html):
-        quill = json.dumps({'delta': delta, 'html': html})
+        quill = json.dumps({"delta": delta, "html": html})
         return quill
 
 
 # Chat
 class ChatListAPI(APIView):
     def get(self, request) -> DataResponse:
-        search = request.query_params.get('search')
+        search = request.query_params.get("search")
         data = get_chats(50, search)
         return DataResponse(data, HTTP_200_OK)
 
@@ -323,31 +323,31 @@ class ChatAPI(APIView):
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
-        messages = obj.message.filter(parent__isnull=True).select_related('author')
+        messages = obj.message.filter(parent__isnull=True).select_related("author")
 
         data = {
-            'id': obj.id,
-            'title': obj.title,
-            'content': obj.content,
-            'message': [{
-                'id': message.id,
-                'text': message.text,
-                'reply_count': message.reply_count,
-                'created': message.created,
-                'author': message.author.id,
-                'image': message.author.image(),
-                'nickname': message.author.nickname
+            "id": obj.id,
+            "title": obj.title,
+            "content": obj.content,
+            "message": [{
+                "id": message.id,
+                "text": message.text,
+                "reply_count": message.reply_count,
+                "created": message.created,
+                "author": message.author.id,
+                "image": message.author.image(),
+                "nickname": message.author.nickname
             } for message in messages],
-            'hashtag': [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            'like': obj.total_like(),
-            'read': obj.read,
-            'thread': obj.thread,
-            'joined': obj.joined,
-            'period': obj.period,
-            'publish': obj.publish,
-            'created': obj.created,
-            'updated': obj.updated,
-            'author': get_author(obj.author),
+            "hashtag": [hashtag.jp_name for hashtag in obj.hashtag.all()],
+            "like": obj.total_like(),
+            "read": obj.read,
+            "thread": obj.thread,
+            "joined": obj.joined,
+            "period": obj.period,
+            "publish": obj.publish,
+            "created": obj.created,
+            "updated": obj.updated,
+            "author": get_author(obj.author),
         }
         return DataResponse(data, HTTP_200_OK)
 
@@ -358,13 +358,13 @@ class ChatAPI(APIView):
 
         data = request.data
         field = {
-            'author': author,
-            'title': data.get('title'),
-            'content': data.get('content'),
-            'period': data.get('period'),
+            "author": author,
+            "title": data.get("title"),
+            "content": data.get("content"),
+            "period": data.get("period"),
         }
         obj = Chat.objects.create(**field)
-        data = {'id': obj.id}
+        data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)
 
 
@@ -378,11 +378,11 @@ class CommentAPI(APIView):
         model = model_media_comment_dict[data.type]
         content_object = model.objects.get(id=id)
         field = {
-            'content_object': content_object,
-            'text': data.text,
-            'author': author,
+            "content_object": content_object,
+            "text": data.text,
+            "author": author,
         }
 
         obj = Comment.objects.create(**field)
-        data = {'id': obj.id}
+        data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)

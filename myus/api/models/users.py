@@ -14,24 +14,24 @@ class SearchTag(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'searchtag'
-        verbose_name_plural = '08 検索タグ'
+        db_table = "searchtag"
+        verbose_name_plural = "08 検索タグ"
 
 
 class Follow(models.Model):
     """Follow"""
-    follower  = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
-    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+    follower  = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
+    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
     created   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.follower} : {self.following}'
+        return f"{self.follower} : {self.following}"
 
     class Meta:
-        db_table = 'follow'
-        verbose_name_plural = '10 フォロー'
+        db_table = "follow"
+        verbose_name_plural = "10 フォロー"
         indexes = [
-            models.Index(fields=['follower'], name='follower_idx'),
-            models.Index(fields=['following'], name='following_idx'),
-            models.Index(fields=['follower', 'following'], name='follower_following_idx'),
+            models.Index(fields=["follower"], name="follower_idx"),
+            models.Index(fields=["following"], name="following_idx"),
+            models.Index(fields=["follower", "following"], name="follower_following_idx"),
         ]

@@ -6,7 +6,7 @@ from api.utils.functions.index import create_url
 
 def get_author(author: User) -> AuthorData:
     data = AuthorData(
-        avatar=create_url(author.image()) or '',
+        avatar=create_url(author.image()) or "",
         nickname=author.nickname,
         follower_count=author.mypage.follower_count,
     )

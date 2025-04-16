@@ -13,9 +13,9 @@ class Plan(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'plan'
-        verbose_name_plural = '001 Plan'
-        indexes = [models.Index(fields=['stripe_api_id'], name='stripe_api_idx')]
+        db_table = "plan"
+        verbose_name_plural = "001 Plan"
+        indexes = [models.Index(fields=["stripe_api_id"], name="stripe_api_idx")]
 
 
 class Category(models.Model):
@@ -27,8 +27,8 @@ class Category(models.Model):
         return self.jp_name
 
     class Meta:
-        db_table = 'category'
-        verbose_name_plural = '001 カテゴリー'
+        db_table = "category"
+        verbose_name_plural = "001 カテゴリー"
 
 
 class HashTag(models.Model):
@@ -40,5 +40,5 @@ class HashTag(models.Model):
         return self.jp_name
 
     class Meta:
-        db_table = 'hashtag'
-        verbose_name_plural = '001 ハッシュタグ'
+        db_table = "hashtag"
+        verbose_name_plural = "001 ハッシュタグ"

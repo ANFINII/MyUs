@@ -5,7 +5,7 @@ from api.utils.functions.user import get_author
 
 
 def get_comments(obj) -> Comment:
-    filter_kwargs = {'id': OuterRef('pk'), 'like': obj.author.id}
+    filter_kwargs = {"id": OuterRef("pk"), "like": obj.author.id}
     subquery = obj.comment.filter(**filter_kwargs)
     comments = obj.comment.filter(parent__isnull=True).annotate(is_comment_like=Exists(subquery))
     return comments

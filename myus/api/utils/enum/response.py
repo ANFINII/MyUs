@@ -7,8 +7,8 @@ from api.utils.functions.response import DataResponse
 
 
 class ApiResponse(Enum):
-    UNAUTHORIZED = (True, 'Un Authorized', HTTP_401_UNAUTHORIZED)
-    NOT_FOUND = (True, 'Not Found', HTTP_404_NOT_FOUND)
+    UNAUTHORIZED = (True, "Un Authorized", HTTP_401_UNAUTHORIZED)
+    NOT_FOUND = (True, "Not Found", HTTP_404_NOT_FOUND)
 
     def run(self) -> DataResponse:
         is_error, content, status_code = self.value

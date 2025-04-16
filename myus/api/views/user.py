@@ -33,9 +33,9 @@ class SearchTagAPI(APIView):
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
 
-        search_tags = SearchTag.objects.filter(author=user).order_by('sequence')[:20]
+        search_tags = SearchTag.objects.filter(author=user).order_by("sequence")[:20]
 
-        data = [{'sequence': tag.sequence, 'name': tag.name} for tag in search_tags]
+        data = [{"sequence": tag.sequence, "name": tag.name} for tag in search_tags]
         return DataResponse(data, HTTP_200_OK)
 
 
@@ -45,7 +45,7 @@ class FollowAPI(APIView):
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
 
-        search = request.query_params.get('search')
+        search = request.query_params.get("search")
         data = get_follows(100, user, search)
         return DataResponse(data, HTTP_200_OK)
 
@@ -56,7 +56,7 @@ class FollowerAPI(APIView):
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
 
-        search = request.query_params.get('search')
+        search = request.query_params.get("search")
         data = get_followers(100, user, search)
         return DataResponse(data, HTTP_200_OK)
 
@@ -69,17 +69,15 @@ class NotificationAPI(APIView):
 
         notification = get_notification(user)
         data = {
-            'count': notification['count'],
-            'datas': [
-                {
-                    'id': obj.id,
-                    'user_from': get_notification_user(obj.user_from),
-                    'user_to': get_notification_user(obj.user_to),
-                    'type_no': obj.type_no,
-                    'type_name': obj.type_name,
-                    'content_object': get_content_object(obj),
-                    'is_confirmed': obj.is_confirmed,
-                } for obj in notification['datas']
-            ],
+            "count": notification["count"],
+            "datas": [{
+                "id": obj.id,
+                "user_from": get_notification_user(obj.user_from),
+                "user_to": get_notification_user(obj.user_to),
+                "type_no": obj.type_no,
+                "type_name": obj.type_name,
+                "content_object": get_content_object(obj),
+                "is_confirmed": obj.is_confirmed,
+            } for obj in notification["datas"]],
         }
         return DataResponse(data, HTTP_200_OK)

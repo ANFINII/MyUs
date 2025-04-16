@@ -13,11 +13,11 @@ from api.utils.functions.file import user_image
 class UserManager(BaseUserManager):
     def create_user(self, email, username, nickname, password=None):
         if not email:
-            raise ValueError('Users must have an email')
+            raise ValueError("Users must have an email")
         elif not username:
-            raise ValueError('Users must have an username')
+            raise ValueError("Users must have an username")
         elif not nickname:
-            raise ValueError('Users must have an nickname')
+            raise ValueError("Users must have an nickname")
         user = self.model(email=self.normalize_email(email), username=username, nickname=nickname)
         user.set_password(password)
         user.is_active=False
@@ -32,11 +32,11 @@ class UserManager(BaseUserManager):
         return user
 
     def get_queryset(self):
-        return super(UserManager,self).get_queryset().select_related('mypage')
+        return super(UserManager,self).get_queryset().select_related("mypage")
 
 class User(AbstractBaseUser, PermissionsMixin):
     """User"""
-    img         = '../static/img/user_icon.png'
+    img         = "../static/img/user_icon.png"
     avatar      = models.ImageField(upload_to=user_image, default=img, blank=True, null=True)
     email       = models.EmailField(max_length=255, unique=True)
     username    = models.CharField(max_length=20, unique=True)
@@ -48,9 +48,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'nickname']
+    EMAIL_FIELD = "email"
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email", "nickname"]
 
     def __str__(self):
         return self.nickname
@@ -65,8 +65,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def full_name(self):
-        return self.profile.last_name + ' ' + self.profile.first_name
-    full_name.short_description = 'name'
+        return self.profile.last_name + " " + self.profile.first_name
+    full_name.short_description = "name"
 
     def year(self):
         if self.birthday:
@@ -124,36 +124,36 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.avatar = None
             super().save(*args, **kwargs)
             self.avatar = avatar
-            if 'force_insert' in kwargs:
-                kwargs.pop('force_insert')
+            if "force_insert" in kwargs:
+                kwargs.pop("force_insert")
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'user'
-        verbose_name_plural = '001 User'
+        db_table = "user"
+        verbose_name_plural = "001 User"
         indexes = [
-            models.Index(fields=['email'], name='email_idx'),
-            models.Index(fields=['username'], name='username_idx'),
-            models.Index(fields=['nickname'], name='nickname_idx'),
+            models.Index(fields=["email"], name="email_idx"),
+            models.Index(fields=["username"], name="username_idx"),
+            models.Index(fields=["nickname"], name="nickname_idx"),
         ]
 
 
 class ProfileManager(models.Manager):
     def get_queryset(self):
-        return super(ProfileManager,self).get_queryset().select_related('user')
+        return super(ProfileManager,self).get_queryset().select_related("user")
 
 class Profile(models.Model):
     """Profile"""
-    gender_type  = (('0', '男性'), ('1', '女性'), ('2', '秘密'))
-    message      = '電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます'
-    phone_no     = RegexValidator(regex=r'\d{2,4}-?\d{2,4}-?\d{3,4}', message=message)
+    gender_type  = (("0", "男性"), ("1", "女性"), ("2", "秘密"))
+    message      = "電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます"
+    phone_no     = RegexValidator(regex=r"\d{2,4}-?\d{2,4}-?\d{3,4}", message=message)
     user         = models.OneToOneField(User, on_delete=models.CASCADE)
     last_name    = models.CharField(max_length=50)
     first_name   = models.CharField(max_length=50)
     birthday     = models.DateField(blank=True, null=True)
     gender       = models.CharField(choices=gender_type, max_length=1)
     phone        = models.CharField(validators=[phone_no], max_length=15, blank=True)
-    country_code = models.CharField(max_length=255, default='JP')
+    country_code = models.CharField(max_length=255, default="JP")
     postal_code  = models.CharField(max_length=255, blank=True)
     prefecture   = models.CharField(max_length=255, blank=True)
     city         = models.CharField(max_length=255, blank=True)
@@ -166,29 +166,29 @@ class Profile(models.Model):
         return self.user.nickname
 
     class Meta:
-        db_table = 'user_profile'
-        verbose_name_plural = '001 profile'
+        db_table = "user_profile"
+        verbose_name_plural = "001 profile"
 
 @receiver(post_save, sender=User)
 def create_profile(sender, **kwargs):
     """ユーザー作成時に空のProfileも作成する"""
-    if kwargs['created']:
-        Profile.objects.get_or_create(user=kwargs['instance'])
+    if kwargs["created"]:
+        Profile.objects.get_or_create(user=kwargs["instance"])
 
 
 class MyPageManager(models.Manager):
     def get_queryset(self):
-        return super(MyPageManager,self).get_queryset().select_related('user')
+        return super(MyPageManager,self).get_queryset().select_related("user")
 
 class MyPage(models.Model):
     """MyPage"""
-    img             = '../static/img/MyUs_banner.png'
+    img             = "../static/img/MyUs_banner.png"
     user            = models.OneToOneField(User, on_delete=models.CASCADE)
     banner          = models.ImageField(upload_to=user_image, default=img, blank=True, null=True)
     email           = models.EmailField(max_length=255, blank=True)
     content         = models.TextField(blank=True)
-    follower_count  = models.IntegerField(verbose_name='follower', default=0)
-    following_count = models.IntegerField(verbose_name='follow', default=0)
+    follower_count  = models.IntegerField(verbose_name="follower", default=0)
+    following_count = models.IntegerField(verbose_name="follow", default=0)
     tag_manager_id  = models.CharField(max_length=10, blank=True)
     is_advertise    = models.BooleanField(default=True)
 
@@ -203,19 +203,19 @@ class MyPage(models.Model):
             self.banner = None
             super().save(*args, **kwargs)
             self.banner = banner
-            if 'force_insert' in kwargs:
-                kwargs.pop('force_insert')
+            if "force_insert" in kwargs:
+                kwargs.pop("force_insert")
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'user_mypage'
-        verbose_name_plural = '001 MyPage'
+        db_table = "user_mypage"
+        verbose_name_plural = "001 MyPage"
 
 @receiver(post_save, sender=User)
 def create_mypage(sender, **kwargs):
     """ユーザー作成時に空のMyPageも作成する"""
-    if kwargs['created']:
-        MyPage.objects.get_or_create(user=kwargs['instance'])
+    if kwargs["created"]:
+        MyPage.objects.get_or_create(user=kwargs["instance"])
 
 
 class UserNotification(models.Model):

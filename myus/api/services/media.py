@@ -11,22 +11,22 @@ from api.types.data.media import VideoData, MusicData, ComicsData, PictureData, 
 
 def get_home(limit: int, search: str | None):
     data = {
-        'videos': get_videos(limit, search),
-        'musics': get_musics(limit, search),
-        'pictures': get_pictures(limit, search),
-        'blogs': get_blogs(limit, search),
-        'chats': get_chats(limit, search),
+        "videos": get_videos(limit, search),
+        "musics": get_musics(limit, search),
+        "pictures": get_pictures(limit, search),
+        "blogs": get_blogs(limit, search),
+        "chats": get_chats(limit, search),
     }
     return data
 
 
 def get_recommend(limit: int, search: str | None):
     data = {
-        'videos': get_videos(limit, search),
-        'musics': get_musics(limit, search),
-        'pictures': get_pictures(limit, search),
-        'blogs': get_blogs(limit, search),
-        'chats': get_chats(limit, search),
+        "videos": get_videos(limit, search),
+        "musics": get_musics(limit, search),
+        "pictures": get_pictures(limit, search),
+        "blogs": get_blogs(limit, search),
+        "chats": get_chats(limit, search),
     }
     return data
 

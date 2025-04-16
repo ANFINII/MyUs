@@ -13,4 +13,4 @@ class Product(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'product'
+        db_table = "product"

@@ -6,9 +6,9 @@ MediaModelType = Video | Music | Comic | Picture | Blog | Chat
 
 
 class NotificationType(str, Enum):
-    VIDEO = 'video'
-    MUSIC = 'music'
-    COMIC = 'comic'
-    PICTURE = 'picture'
-    BLOG = 'blog'
-    CHAT = 'chat'
+    VIDEO = "video"
+    MUSIC = "music"
+    COMIC = "comic"
+    PICTURE = "picture"
+    BLOG = "blog"
+    CHAT = "chat"

@@ -4,11 +4,11 @@ class MediaModel:
 
     def total_like(self):
         return self.like.count()
-    total_like.short_description = 'like'
+    total_like.short_description = "like"
 
     def comment_count(self):
         return self.comment.count()
-    comment_count.short_description = 'comment'
+    comment_count.short_description = "comment"
 
     def score(self):
         return int(self.read + self.like.count()*10 + self.read*self.like.count()/(self.read+1)*20)

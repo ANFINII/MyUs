@@ -15,14 +15,14 @@ class AccessLog(models.Model):
         return str(self.ip_address)
 
     class Meta:
-        db_table = 'access_log'
-        verbose_name_plural = '002 Access Log'
-        indexes = [models.Index(fields=['ip_address', 'type', 'type_id'], name='ip_address_type_idx')]
+        db_table = "access_log"
+        verbose_name_plural = "002 Access Log"
+        indexes = [models.Index(fields=["ip_address", "type", "type_id"], name="ip_address_type_idx")]
 
 
 class Advertise(models.Model):
     """Advertise"""
-    choice  = (('all', '全体'), ('one', '個別'))
+    choice  = (("all", "全体"), ("one", "個別"))
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
     url     = models.URLField()
@@ -48,10 +48,10 @@ class Advertise(models.Model):
             super().save(*args, **kwargs)
             self.image = image
             self.video  = video
-            if 'force_insert' in kwargs:
-                kwargs.pop('force_insert')
+            if "force_insert" in kwargs:
+                kwargs.pop("force_insert")
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'advertise'
-        verbose_name_plural = '12 広告設定'
+        db_table = "advertise"
+        verbose_name_plural = "12 広告設定"

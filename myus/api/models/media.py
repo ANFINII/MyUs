@@ -23,7 +23,7 @@ class VideoQuerySet(models.QuerySet):
 
 class VideoManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return VideoQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
+        return VideoQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like")
 
 class Video(models.Model, MediaModel):
     """Video"""
@@ -35,7 +35,7 @@ class Video(models.Model, MediaModel):
     convert  = models.FileField(upload_to=video_upload)
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='video_like', blank=True)
+    like     = models.ManyToManyField(User, related_name="video_like", blank=True)
     read     = models.IntegerField(default=0)
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
@@ -55,13 +55,13 @@ class Video(models.Model, MediaModel):
             self.image = image
             self.video  = video
             self.convert = convert
-            if 'force_insert' in kwargs:
-                kwargs.pop('force_insert')
+            if "force_insert" in kwargs:
+                kwargs.pop("force_insert")
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'video'
-        verbose_name_plural = '01 Video'
+        db_table = "video"
+        verbose_name_plural = "01 Video"
 
 
 # Music
@@ -81,7 +81,7 @@ class MusicQuerySet(models.QuerySet):
 
 class MusicManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return MusicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
+        return MusicQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like")
 
 class Music(models.Model, MediaModel):
     """Music"""
@@ -92,7 +92,7 @@ class Music(models.Model, MediaModel):
     music    = models.FileField(upload_to=musics_upload)
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='music_like', blank=True)
+    like     = models.ManyToManyField(User, related_name="music_like", blank=True)
     read     = models.IntegerField(default=0)
     download = models.BooleanField(default=True)
     publish  = models.BooleanField(default=True)
@@ -107,13 +107,13 @@ class Music(models.Model, MediaModel):
             self.music = None
             super().save(*args, **kwargs)
             self.music = music
-            if 'force_insert' in kwargs:
-                kwargs.pop('force_insert')
+            if "force_insert" in kwargs:
+                kwargs.pop("force_insert")
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'music'
-        verbose_name_plural = '02 Music'
+        db_table = "music"
+        verbose_name_plural = "02 Music"
 
 
 # Comic
@@ -132,7 +132,7 @@ class ComicQuerySet(models.QuerySet):
 
 class ComicManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return ComicQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
+        return ComicQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like")
 
 class Comic(models.Model, MediaModel):
     """Comic"""
@@ -142,7 +142,7 @@ class Comic(models.Model, MediaModel):
     image    = models.ImageField(upload_to=image_upload)
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='comic_like', blank=True)
+    like     = models.ManyToManyField(User, related_name="comic_like", blank=True)
     read     = models.IntegerField(default=0)
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
@@ -156,18 +156,18 @@ class Comic(models.Model, MediaModel):
             self.image = None
             super().save(*args, **kwargs)
             self.image = image
-            if 'force_insert' in kwargs:
-                kwargs.pop('force_insert')
+            if "force_insert" in kwargs:
+                kwargs.pop("force_insert")
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'comic'
-        verbose_name_plural = '03 Comic'
+        db_table = "comic"
+        verbose_name_plural = "03 Comic"
 
 
 class ComicPage(models.Model):
     """ComicPage"""
-    comic = models.ForeignKey(Comic, on_delete=models.CASCADE, related_name='comic')
+    comic = models.ForeignKey(Comic, on_delete=models.CASCADE, related_name="comic")
     image = models.ImageField(upload_to=comic_upload)
     sequence = models.IntegerField()
 
@@ -177,8 +177,8 @@ class ComicPage(models.Model):
         ]
 
     class Meta:
-        db_table = 'comic_page'
-        verbose_name_plural = '03 ComicPage'
+        db_table = "comic_page"
+        verbose_name_plural = "03 ComicPage"
 
 
 # Picture
@@ -197,7 +197,7 @@ class PictureQuerySet(models.QuerySet):
 
 class PictureManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return PictureQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
+        return PictureQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like")
 
 class Picture(models.Model, MediaModel):
     """Picture"""
@@ -207,7 +207,7 @@ class Picture(models.Model, MediaModel):
     image    = models.ImageField(upload_to=image_upload)
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='picture_like', blank=True)
+    like     = models.ManyToManyField(User, related_name="picture_like", blank=True)
     read     = models.IntegerField(default=0)
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
@@ -221,13 +221,13 @@ class Picture(models.Model, MediaModel):
             self.image = None
             super().save(*args, **kwargs)
             self.image = image
-            if 'force_insert' in kwargs:
-                kwargs.pop('force_insert')
+            if "force_insert" in kwargs:
+                kwargs.pop("force_insert")
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'picture'
-        verbose_name_plural = '04 Picture'
+        db_table = "picture"
+        verbose_name_plural = "04 Picture"
 
 
 # Blog
@@ -247,7 +247,7 @@ class BlogQuerySet(models.QuerySet):
 
 class BlogManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return BlogQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like')
+        return BlogQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like")
 
 class Blog(models.Model, MediaModel):
     """Blog"""
@@ -259,7 +259,7 @@ class Blog(models.Model, MediaModel):
     image    = models.ImageField(upload_to=image_upload)
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='blog_like', blank=True)
+    like     = models.ManyToManyField(User, related_name="blog_like", blank=True)
     read     = models.IntegerField(default=0)
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
@@ -273,13 +273,13 @@ class Blog(models.Model, MediaModel):
             self.image = None
             super().save(*args, **kwargs)
             self.image = image
-            if 'force_insert' in kwargs:
-                kwargs.pop('force_insert')
+            if "force_insert" in kwargs:
+                kwargs.pop("force_insert")
         super().save(*args, **kwargs)
 
     class Meta:
-        db_table = 'blog'
-        verbose_name_plural = '05 Blog'
+        db_table = "blog"
+        verbose_name_plural = "05 Blog"
 
 
 # Chat
@@ -298,7 +298,7 @@ class ChatQuerySet(models.QuerySet):
 
 class ChatManager(models.Manager, MediaManager):
     def get_queryset(self):
-        return ChatQuerySet(self.model, using=self._db).select_related('author').prefetch_related('like', 'message')
+        return ChatQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like", "message")
 
 class Chat(models.Model):
     """Chat"""
@@ -307,7 +307,7 @@ class Chat(models.Model):
     content  = models.TextField()
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name='chat_like', blank=True)
+    like     = models.ManyToManyField(User, related_name="chat_like", blank=True)
     read     = models.IntegerField(default=0)
     period   = models.DateField()
     publish  = models.BooleanField(default=True)
@@ -321,19 +321,19 @@ class Chat(models.Model):
 
     def total_like(self):
         return self.like.count()
-    total_like.short_description = 'like'
+    total_like.short_description = "like"
 
     def thread_count(self):
         return self.message.filter(parent__isnull=True).count()
-    thread_count.short_description = 'thread'
+    thread_count.short_description = "thread"
 
     def joined_count(self):
-        return self.message.values_list('author').distinct().count()
-    joined_count.short_description = 'joined'
+        return self.message.values_list("author").distinct().count()
+    joined_count.short_description = "joined"
 
     def score(self):
         return int(self.read + self.like.count()*10 + self.read*self.like.count()/(self.read+1)*20)
 
     class Meta:
-        db_table = 'chat'
-        verbose_name_plural = '06 Chat'
+        db_table = "chat"
+        verbose_name_plural = "06 Chat"
