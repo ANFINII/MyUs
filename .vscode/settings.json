@@ -1,33 +1,71 @@
 {
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": ["source.addMissingImports", "source.fixAll.eslint"],
+  "explorer.sortOrder": "type",
+  "explorer.sortOrderLexicographicOptions": "unicode",
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.associations": {
+    "*.tsx": "typescriptreact"
+  },
+  "diffEditor.ignoreTrimWhitespace": false,
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.openRepositoryInParentFolders": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "workbench.startupEditor": "none",
+  "workbench.editor.decorations.colors": false,
+  "workbench.colorTheme": "Default Light+",
+  "workbench.iconTheme": "vscode-icons",
+  "vsicons.dontShowNewVersionMessage": true,
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-  },
-  "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[python]": {
-    "editor.formatOnPaste": false,
-    "editor.formatOnType": false
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "never",
+      "source.organizeImports": "never"
+    },
   },
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "editor.suggestSelection": "recentlyUsedByPrefix",
+  "editor.defaultFoldingRangeProvider": "dbaeumer.vscode-eslint",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.debug": true,
+  "eslint.useFlatConfig": true,
+  "eslint.format.enable": true,
+  "eslint.lintTask.enable": true,
+  "python.languageServer": "Pylance",
+  // "python.defaultInterpreterPath": "/Users/anfinii/Documents/MyUs/myus/home/vscode/.venv/bin/python",
+  "python.defaultInterpreterPath": "${workspaceFolder}/myus/.venv/bin/python",
   "python.analysis.extraPaths": [
-    "~/Documents/myspace/bin/python",
-    "/Users/anfinii/Documents/myspace/lib/python3.12/site-packages"
-  ]
+    "./"
+  ],
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.useLibraryCodeForTypes": true,
+  "python.analysis.autoImportCompletions": false,
+  "python.analysis.enableSyncServer": true,
+  "python.analysis.extraCommitChars": false,
+  "python.analysis.typeCheckingMode": "off",
+  "python.analysis.fixAll": [],
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "notebook.defaultFormatter": "dbaeumer.vscode-eslint",
 }
