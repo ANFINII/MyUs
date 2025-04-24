@@ -9,6 +9,7 @@
     "baseUrl": "src",
     "sourceRoot": "/",
     "sourceMap": true,
+    "paths": {"lib/*": ["src/lib/*"]},
     "alwaysStrict": true,
     "allowJs": false,
     "allowUnusedLabels": false,

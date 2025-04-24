@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "test": "jest",
     "prebuild": "npm run lint",
     "lint": "eslint src",
     "format": "eslint --fix src"
