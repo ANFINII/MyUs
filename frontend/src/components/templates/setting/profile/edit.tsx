@@ -57,28 +57,36 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
     }
   }
 
-  const handlSubmit = async () => {
-    const { email, username, nickname, lastName, firstName, phone, postalCode, prefecture } = values
-    if (!(email && username && nickname && lastName && firstName && phone && postalCode && prefecture)) {
+  const isRequiredCheck = (): boolean => {
+    const { email, username, nickname, lastName, firstName, phone, postalCode } = values
+    if (!(email && username && nickname && lastName && firstName && phone && postalCode)) {
       setIsRequired(true)
-      return
+      return false
+    } else {
+      setIsRequired(false)
+      return true
     }
+  }
+
+  const handlSubmit = async () => {
+    if (!isRequiredCheck()) return
     setIsLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: ProfileIn = { ...values, avatar }
-    try {
-      const data = await putSettingProfile(request)
-      if (data) setMessage(data.message)
-      if (!data?.error) {
-        await updateUser()
-        setIsRequired(false)
-        handleBack()
-      }
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
+    const ret = await putSettingProfile(request)
+    if (ret.isErr()) {
       setIsLoading(false)
+      handleToast('エラーが発生しました！', true)
+      return
     }
+    const data = ret.value
+    if (data.error) {
+      setMessage(data.message)
+    } else {
+      await updateUser()
+      handleBack()
+    }
+    setIsLoading(false)
   }
 
   const button = (
