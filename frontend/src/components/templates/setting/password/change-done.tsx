@@ -15,7 +15,7 @@ export default function PasswordChangeDone(): JSX.Element {
         <article className="article_pass">
           <div className="form_account password_done">
             <p className="fs_14">パスワードの変更が完了しました!</p>
-            <Vertical className='mv_24'>
+            <Vertical className="mv_24">
               <Button color="blue" size="l" name="戻る" onClick={handleBack} />
             </Vertical>
           </div>

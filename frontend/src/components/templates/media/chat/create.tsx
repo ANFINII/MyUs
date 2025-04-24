@@ -39,9 +39,9 @@ export default function ChatCreate(): JSX.Element {
       <LoginError margin="mt_20">
         <form method="POST" action="">
           <Vertical gap="8">
-            <Input label="タイトル" name='title' required={isRequired} onChange={handleInput} />
-            <Textarea label="内容" name='content' required={isRequired} onChange={handleText} />
-            <Input label="期間" name='period' placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handleInput} />
+            <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
+            <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
+            <Input label="期間" name="period" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handleInput} />
           </Vertical>
         </form>
       </LoginError>

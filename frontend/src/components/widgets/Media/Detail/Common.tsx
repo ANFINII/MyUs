@@ -78,7 +78,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
       <div className="content_detail">
         <Horizontal gap="4" align="between">
           <Horizontal gap="4">
-            <AuthorLink src={author.avatar} size='3em' imgSize='48' nickname={author.nickname} />
+            <AuthorLink src={author.avatar} size="3em" imgSize="48" nickname={author.nickname} />
             <Vertical gap="2">
               <p className="fs_14">{author.nickname}</p>
               <p className="fs_14 text_sub">

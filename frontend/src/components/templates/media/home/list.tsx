@@ -21,42 +21,22 @@ export default function Homes(props: Props): JSX.Element {
   return (
     <Main title="Home" search={search}>
       <Divide />
+      <MediaIndex title="Video">{videos?.map((media) => <MediaVideo key={media.id} media={media} />)}</MediaIndex>
 
-      <MediaIndex title="Video">
-        {videos?.map((media) => (
-          <MediaVideo key={media.id} media={media} />
-        ))}
-      </MediaIndex>
+      <Divide />
+      <MediaIndex title="Music">{musics?.map((media) => <MediaMusic key={media.id} media={media} />)}</MediaIndex>
 
-      <MediaIndex title="Music">
-        {musics?.map((media) => (
-          <MediaMusic key={media.id} media={media} />
-        ))}
-      </MediaIndex>
+      <Divide />
+      <MediaIndex title="Comic">{comics?.map((media) => <MediaComic key={media.id} media={media} />)}</MediaIndex>
 
-      <MediaIndex title="Comic">
-        {comics?.map((media) => (
-          <MediaComic key={media.id} media={media} />
-        ))}
-      </MediaIndex>
+      <Divide />
+      <MediaIndex title="Picture">{pictures?.map((media) => <MediaPicture key={media.id} media={media} />)}</MediaIndex>
 
-      <MediaIndex title="Picture">
-        {pictures?.map((media) => (
-          <MediaPicture key={media.id} media={media} />
-        ))}
-      </MediaIndex>
+      <Divide />
+      <MediaIndex title="Blog">{blogs?.map((media) => <MediaBlog key={media.id} media={media} />)}</MediaIndex>
 
-      <MediaIndex title="Blog">
-        {blogs?.map((media) => (
-          <MediaBlog key={media.id} media={media} />
-        ))}
-      </MediaIndex>
-
-      <MediaIndex title="Chat" divide={false}>
-        {chats?.map((media) => (
-          <MediaChat key={media.id} media={media} />
-        ))}
-      </MediaIndex>
+      <Divide />
+      <MediaIndex title="Chat">{chats?.map((media) => <MediaChat key={media.id} media={media} />)}</MediaIndex>
     </Main>
   )
 }

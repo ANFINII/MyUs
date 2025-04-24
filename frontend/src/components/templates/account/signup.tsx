@@ -104,7 +104,7 @@ export default function Signup(): JSX.Element {
             </Vertical>
           </Vertical>
 
-          <Vertical gap="12" className='mv_40'>
+          <Vertical gap="12" className="mv_40">
             <Button color="green" size="l" name="アカウント登録" type="submit" loading={isLoading} onClick={handleSubmit} />
             <Button color="blue" size="l" name="戻る" onClick={handleBack} />
           </Vertical>

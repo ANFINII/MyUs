@@ -40,8 +40,8 @@ export default function PictureCreate(): JSX.Element {
       <LoginError margin="mt_20">
         <form method="POST" action="">
           <Vertical gap="8">
-            <Input label="タイトル" name='title' required={isRequired} onChange={handleInput} />
-            <Textarea label="内容" name='content' required={isRequired} onChange={handleText} />
+            <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
+            <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
             <InputFile label="画像" accept="image/*" required={isRequired} onChange={handleFile} />
           </Vertical>
         </form>

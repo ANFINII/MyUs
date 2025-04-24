@@ -46,7 +46,7 @@ export default function Reset(): JSX.Element {
 
           <Input type="email" placeholder="メールアドレス" required={isRequired} onChange={handleInput} />
 
-          <Vertical gap="12" className='mv_40'>
+          <Vertical gap="12" className="mv_40">
             <Button color="green" size="l" name="送信" type="submit" loading={isLoading} onClick={handleSubmit} />
             <Button color="blue" size="l" name="戻る" onClick={handleBack} />
           </Vertical>
