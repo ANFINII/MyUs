@@ -74,7 +74,7 @@ export default function SettingMyPageEdit(props: Props): JSX.Element {
             {values.nickname}
           </TableRow>
           <TableRow label="メールアドレス">
-            <Input name='email' value={values.email} maxLength={120} onChange={handleInput} />
+            <Input name="email" value={values.email} maxLength={120} onChange={handleInput} />
           </TableRow>
           <TableRow isIndent label="フォロー数">
             {values.followingCount}
@@ -89,10 +89,10 @@ export default function SettingMyPageEdit(props: Props): JSX.Element {
             {values.plan === 'Free' ? <Toggle isActive={values.isAdvertise} disable /> : <Toggle isActive={values.isAdvertise} onClick={handleToggle} />}
           </TableRow>
           <TableRow label="タグID">
-            <Input name='tagManagerId' value={values.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleInput} />
+            <Input name="tagManagerId" value={values.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleInput} />
           </TableRow>
           <TableRow label="概要">
-            <Textarea name='content' className="textarea_margin" defaultValue={values.content} onChange={handleText} />
+            <Textarea name="content" className="textarea_margin" defaultValue={values.content} onChange={handleText} />
           </TableRow>
         </Table>
       </LoginError>

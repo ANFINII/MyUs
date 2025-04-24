@@ -26,7 +26,7 @@ export default function PasswordChange(): JSX.Element {
               <Input type="password" name="new_password2" minLength={8} maxLength={16} placeholder="新規パスワード(確認用)" required />
             </Vertical>
 
-            <Vertical gap="12" className='mv_40'>
+            <Vertical gap="12" className="mv_40">
               <Button color="red" size="l" name="退会する" />
               <Button color="blue" size="l" name="戻る" onClick={handleBack} />
             </Vertical>

@@ -17,10 +17,10 @@ export default function MediaContent(props: Props<Media>) {
 
   return (
     <div>
-      <AuthorLink src={avatar} size='1.8em' imgSize='32' nickname={nickname} className={style.avatar} />
+      <AuthorLink src={avatar} size="1.8em" imgSize="32" nickname={nickname} className={style.avatar} />
       <Link href={href} className={style.link}>
         <Horizontal gap="4" className="p_6">
-          <div className='mr_36' />
+          <div className="mr_36" />
           <MediaBaseContent media={media} />
         </Horizontal>
       </Link>

@@ -57,8 +57,8 @@ export default function BlogCreate(): JSX.Element {
       <LoginError margin="mt_20">
         <form method="POST" action="">
           <Vertical gap="8">
-            <Input label="タイトル" name='title' required={isRequired} onChange={handleInput} />
-            <Textarea label="内容" name='content' required={isRequired} onChange={handleText} />
+            <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
+            <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
             <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
             <Quill label="本文" users={users} value={values.richtext} className="blog" required={isRequired} onChange={handleQuill} />
           </Vertical>

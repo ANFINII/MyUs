@@ -42,9 +42,9 @@ export default function MusicCreate(): JSX.Element {
       <LoginError margin="mt_20">
         <form method="POST" action="" encType="multipart/form-data">
           <Vertical gap="8">
-            <Input label="タイトル" name='title' required={isRequired} onChange={handleInput} />
-            <Textarea label="内容" name='content' required={isRequired} onChange={handleText} />
-            <Textarea label="歌詞" name='lyric' required={isRequired} onChange={handleText} />
+            <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
+            <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
+            <Textarea label="歌詞" name="lyric" required={isRequired} onChange={handleText} />
             <Vertical gap="2">
               <InputFile label="音楽" accept="audio/*" required={isRequired} onChange={handleFile} />
               <CheckBox label="ダウンロード許可" name="download" defaultChecked onChange={handleCheck} />

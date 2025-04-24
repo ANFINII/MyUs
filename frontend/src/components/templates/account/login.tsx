@@ -58,7 +58,7 @@ export default function Login(): JSX.Element {
             <p className="password_reset" onClick={handleReset}>パスワードをリセット</p>
           </Vertical>
 
-          <Vertical gap="12" className='mv_40'>
+          <Vertical gap="12" className="mv_40">
             <Button color="blue" size="l" name="ログイン" type="submit" loading={isLoading} onClick={handleSubmit} />
             <Button color="green" size="l" name="アカウント登録" onClick={handleSignup} />
           </Vertical>

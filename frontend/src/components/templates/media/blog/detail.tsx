@@ -29,7 +29,9 @@ export default function BlogDetail(props: Props): JSX.Element {
         <div className="media_detail_grid">
           <MediaDetailCommon media={{ title, content, read, like, commentCount, created, author, user, type: 'blog' }} handleToast={handleToast} />
           <Vertical gap="4" className="ml_20">
-            {list.map((media) => (<MediaSideBlog key={media.id} media={media} />))}
+            {list.map((media) => (
+              <MediaSideBlog key={media.id} media={media} />
+            ))}
           </Vertical>
         </div>
       </MediaDetail>

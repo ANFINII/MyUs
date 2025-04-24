@@ -102,25 +102,25 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
             <InputImage id="avatar" className="account_image_edit" icon={<IconPerson size="56" type="square" />} onChange={handleAvatar} />
           </TableRow>
           <TableRow label="メールアドレス">
-            <Input name='email' value={values.email} maxLength={120} required={isRequired} onChange={handleInput} />
+            <Input name="email" value={values.email} maxLength={120} required={isRequired} onChange={handleInput} />
           </TableRow>
           <TableRow label="ユーザー名">
-            <Input name='username' value={values.username} maxLength={30} placeholder="英数字" required={isRequired} onChange={handleInput} />
+            <Input name="username" value={values.username} maxLength={30} placeholder="英数字" required={isRequired} onChange={handleInput} />
           </TableRow>
           <TableRow label="投稿者名">
-            <Input name='nickname' value={values.nickname} maxLength={60} required={isRequired} onChange={handleInput} />
+            <Input name="nickname" value={values.nickname} maxLength={60} required={isRequired} onChange={handleInput} />
           </TableRow>
           <TableRow label="名前">
             <Horizontal gap="1" full>
-              <Input name='lastName' value={values.lastName} placeholder="姓" maxLength={30} required={isRequired} onChange={handleInput} />
-              <Input name='firstName' value={values.firstName} placeholder="名" maxLength={30} required={isRequired} onChange={handleInput} />
+              <Input name="lastName" value={values.lastName} placeholder="姓" maxLength={30} required={isRequired} onChange={handleInput} />
+              <Input name="firstName" value={values.firstName} placeholder="名" maxLength={30} required={isRequired} onChange={handleInput} />
             </Horizontal>
           </TableRow>
           <TableRow label="生年月日">
             <Horizontal gap="1" full>
-              <Select name='year' value={values.year} options={years} onChange={handleSelect} />
-              <Select name='month' value={values.month} options={months} onChange={handleSelect} />
-              <Select name='day' value={values.day} options={days} onChange={handleSelect} />
+              <Select name="year" value={values.year} options={years} onChange={handleSelect} />
+              <Select name="month" value={values.month} options={months} onChange={handleSelect} />
+              <Select name="day" value={values.day} options={days} onChange={handleSelect} />
             </Horizontal>
           </TableRow>
           <TableRow isIndent label="年齢">
@@ -134,23 +134,23 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
             </Horizontal>
           </TableRow>
           <TableRow label="電話番号">
-            <Input type="tel" name='phone' value={values.phone} maxLength={15} required={isRequired} onChange={handleInput} />
+            <Input type="tel" name="phone" value={values.phone} maxLength={15} required={isRequired} onChange={handleInput} />
           </TableRow>
           <TableRow label="郵便番号">
             <div className="d_flex">
-              <Input type="tel" name='postalCode' value={values.postalCode} maxLength={8} className="mr_2" required={isRequired} onChange={handleInput} />
+              <Input type="tel" name="postalCode" value={values.postalCode} maxLength={8} className="mr_2" required={isRequired} onChange={handleInput} />
               <Button name="住所自動入力" onClick={handleAutoAddress} />
             </div>
           </TableRow>
           <TableRow label="住所">
             <Horizontal gap="1" full>
-              <Select name='prefecture' value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handleSelect} />
-              <Input name='city' value={values.city} placeholder="市区町村" maxLength={255} onChange={handleInput} />
-              <Input name='street' value={values.street} placeholder="町名番地" maxLength={255} onChange={handleInput} />
+              <Select name="prefecture" value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handleSelect} />
+              <Input name="city" value={values.city} placeholder="市区町村" maxLength={255} onChange={handleInput} />
+              <Input name="street" value={values.street} placeholder="町名番地" maxLength={255} onChange={handleInput} />
             </Horizontal>
           </TableRow>
           <TableRow label="自己紹介">
-            <Textarea name='introduction' className="textarea_margin" defaultValue={values.introduction} onChange={handleText} />
+            <Textarea name="introduction" className="textarea_margin" defaultValue={values.introduction} onChange={handleText} />
           </TableRow>
         </Table>
       </LoginError>
