@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app'
+import { useRouter } from 'next/router'
 import { UserProvider } from 'components/provider/UserProvider'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
@@ -22,13 +23,14 @@ import 'styles/internal/audio.scss'
 import 'styles/internal/videojs-myus.scss'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter()
   return (
     <UserProvider>
-      <Layout>
-        <ErrorBoundary fallback={<Error />}>
+      <ErrorBoundary fallback={<Error />} resetKeys={[router.pathname]}>
+        <Layout>
           <Component {...pageProps} />
-        </ErrorBoundary>
-      </Layout>
+        </Layout>
+      </ErrorBoundary>
     </UserProvider>
   )
 }
