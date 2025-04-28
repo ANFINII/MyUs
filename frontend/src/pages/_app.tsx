@@ -26,11 +26,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
   return (
     <UserProvider>
-      <ErrorBoundary fallback={<Error />} resetKeys={[router.pathname]}>
-        <Layout>
+      <Layout>
+        <ErrorBoundary fallback={<Error />} resetKeys={[router.pathname]}>
           <Component {...pageProps} />
-        </Layout>
-      </ErrorBoundary>
+        </ErrorBoundary>
+      </Layout>
     </UserProvider>
   )
 }
