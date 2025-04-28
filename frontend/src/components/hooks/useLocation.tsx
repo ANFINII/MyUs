@@ -4,7 +4,7 @@ interface OutProps {
   location?: Location
 }
 
-export default function useLocation(): OutProps {
+export function useLocation(): OutProps {
   const [location, setLocation] = useState<Location | undefined>(undefined)
 
   useEffect(() => {
