@@ -1,4 +1,3 @@
-import { HttpStatusCode } from 'axios'
 import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
@@ -24,13 +23,10 @@ export const putSettingMypage = async (request: MypageIn): Promise<ApiOut<Messag
   return await apiOut(apiClient.put(apiSettingMypage, camelSnake(request)))
 }
 
-export const getSettingNotification = async (req?: Req): Promise<UserNotificationOut> => {
-  const res = await apiClient.get(apiSettingNotification, cookieHeader(req))
-  if (res.status >= HttpStatusCode.InternalServerError) throw Error
-  return res.data
+export const getSettingNotification = async (req?: Req): Promise<ApiOut<UserNotificationOut>> => {
+  return await apiOut(apiClient.get(apiSettingNotification, cookieHeader(req)))
 }
 
-export const putSettingNotification = async (request: UserNotificationIn): Promise<void> => {
-  const res = await apiClient.put(apiSettingNotification, camelSnake(request))
-  if (res.status >= HttpStatusCode.InternalServerError) throw Error
+export const putSettingNotification = async (request: UserNotificationIn): Promise<ApiOut<void>> => {
+  return await apiOut(apiClient.put(apiSettingNotification, camelSnake(request)))
 }

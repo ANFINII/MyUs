@@ -27,18 +27,19 @@ export default function SettingNotification(props: Props): JSX.Element {
   const handleSubmit = async () => {
     setIsLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
-    try {
-      await putSettingNotification(values)
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
+    const ret = await putSettingNotification(values)
+    if (ret.isErr()) {
       setIsLoading(false)
+      handleToast('エラーが発生しました！', true)
+      return
     }
+    setIsLoading(false)
   }
 
   const handleReset = async () => {
-    const data = await getSettingNotification()
-    setValues(data)
+    const ret = await getSettingNotification()
+    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    setValues(ret.value)
   }
 
   const button = (
