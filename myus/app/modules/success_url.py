@@ -14,7 +14,7 @@ def success_url(self, myus_detail, type_no, type_name):
         type_name=type_name,
         content_object=obj,
     )
-    if 'app:chat_detail' in str(myus_detail):
-        return reverse(myus_detail, kwargs={'pk': self.object.pk,})
+    if "app:chat_detail" in str(myus_detail):
+        return reverse(myus_detail, kwargs={"pk": self.object.pk,})
     else:
-        return reverse(myus_detail, kwargs={'pk': self.object.pk, 'title': self.object.title})
+        return reverse(myus_detail, kwargs={"pk": self.object.pk, "title": self.object.title})
