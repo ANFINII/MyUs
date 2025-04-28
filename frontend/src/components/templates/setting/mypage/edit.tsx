@@ -39,15 +39,16 @@ export default function SettingMyPageEdit(props: Props): JSX.Element {
     setIsLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: MypageIn = { ...values, banner }
-    try {
-      const data = await putSettingMypage(request)
-      if (data) setMessage(data.message)
-      if (!data?.error) handleBack()
-    } catch {
-      handleToast('エラーが発生しました！', true)
-    } finally {
+    const ret = await putSettingMypage(request)
+    if (ret.isErr()) {
       setIsLoading(false)
+      handleToast('エラーが発生しました！', true)
+      return
     }
+    const data = ret.value
+    if (!data.error) handleBack()
+    if (data.error) setMessage(data.message)
+    setIsLoading(false)
   }
 
   const button = (

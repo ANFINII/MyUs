@@ -8,7 +8,6 @@ import { selectDate } from 'utils/functions/datetime'
 import { genders } from 'utils/functions/user'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
-import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
@@ -30,7 +29,6 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
   const { profile } = props
 
   const router = useRouter()
-  const { updateUser } = useUser()
   const { toast, handleToast } = useToast()
   const { isRequired, isRequiredCheck } = useRequired()
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -71,12 +69,8 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
       return
     }
     const data = ret.value
-    if (data.error) {
-      setMessage(data.message)
-    } else {
-      await updateUser()
-      handleBack()
-    }
+    if (!data.error) handleBack()
+    if (data.error) setMessage(data.message)
     setIsLoading(false)
   }
 
