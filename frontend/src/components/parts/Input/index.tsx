@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
-import useAutoFocus from 'components/hooks/useAutoFocus'
+import { useAutoFocus } from 'components/hooks/useAutoFocus'
 import style from './Input.module.scss'
 
 interface Props {

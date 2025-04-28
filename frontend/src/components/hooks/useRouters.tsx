@@ -5,7 +5,7 @@ interface OutProps {
   handleRouter: (url: string) => Promise<boolean>
 }
 
-export default function useRouters(): OutProps {
+export function useRouters(): OutProps {
   const router = useRouter()
 
   const handleRouter = async (url: string) => {

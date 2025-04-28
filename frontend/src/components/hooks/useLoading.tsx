@@ -6,7 +6,7 @@ interface OutProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const useLoading = (): OutProps => {
+export function useLoading(): OutProps {
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
 
