@@ -6,6 +6,7 @@ import { putSettingProfile } from 'api/internal/setting'
 import { prefectures } from 'utils/constants/address'
 import { selectDate } from 'utils/functions/datetime'
 import { genders } from 'utils/functions/user'
+import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
@@ -31,8 +32,8 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
   const router = useRouter()
   const { updateUser } = useUser()
   const { toast, handleToast } = useToast()
+  const { isRequired, isRequiredCheck } = useRequired()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isRequired, setIsRequired] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
   const [avatar, setAvatar] = useState<File>()
   const [values, setValues] = useState<ProfileOut>(profile)
@@ -57,19 +58,9 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
     }
   }
 
-  const isRequiredCheck = (): boolean => {
-    const { email, username, nickname, lastName, firstName, phone, postalCode } = values
-    if (!(email && username && nickname && lastName && firstName && phone && postalCode)) {
-      setIsRequired(true)
-      return false
-    } else {
-      setIsRequired(false)
-      return true
-    }
-  }
-
   const handlSubmit = async () => {
-    if (!isRequiredCheck()) return
+    const { email, username, nickname, lastName, firstName, phone, postalCode } = values
+    if (!isRequiredCheck({ email, username, nickname, lastName, firstName, phone, postalCode })) return
     setIsLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: ProfileIn = { ...values, avatar }

@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'
+import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Footer from 'components/layout/Footer'
@@ -14,9 +15,9 @@ export default function Login(): JSX.Element {
   const router = useRouter()
   const { updateUser } = useUser()
   const { toast, handleToast } = useToast()
-  const [message, setMessage] = useState<string>('')
+  const { isRequired, isRequiredCheck } = useRequired()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isRequired, setIsRequired] = useState<boolean>(false)
+  const [message, setMessage] = useState<string>('')
   const [values, setValues] = useState<LoginIn>({ username: '', password: '' })
 
   const handleSignup = () => router.push('/account/signup')
@@ -24,10 +25,8 @@ export default function Login(): JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   const handleSubmit = async () => {
-    if (!(values.username && values.password)) {
-      setIsRequired(true)
-      return
-    }
+    const { username, password } = values
+    if (!isRequiredCheck({ username, password })) return
     setIsLoading(true)
     const ret = await postLogin(values)
     if (ret.isErr()) return handleToast('エラーが発生しました！', true)

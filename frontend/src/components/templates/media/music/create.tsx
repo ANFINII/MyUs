@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { MusicIn } from 'types/internal/media'
 import { postMusicCreate } from 'api/internal/media/create'
+import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -15,8 +16,8 @@ import Vertical from 'components/parts/Stack/Vertical'
 export default function MusicCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isRequired, isRequiredCheck } = useRequired()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<MusicIn>({ title: '', content: '', lyric: '', download: true })
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -26,10 +27,7 @@ export default function MusicCreate(): JSX.Element {
 
   const handleForm = async () => {
     const { title, content, lyric, music } = values
-    if (!(title && content && lyric && music)) {
-      setIsRequired(true)
-      return
-    }
+    if (!isRequiredCheck({ title, content, lyric, music })) return
     setIsLoading(true)
     const ret = await postMusicCreate(values)
     if (ret.isErr()) return handleToast('エラーが発生しました！', true)

@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { ComicIn } from 'types/internal/media'
 import { postComicCreate } from 'api/internal/media/create'
+import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -14,8 +15,8 @@ import Vertical from 'components/parts/Stack/Vertical'
 export default function ComicCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isRequired, isRequiredCheck } = useRequired()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<ComicIn>({ title: '', content: '' })
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -25,10 +26,7 @@ export default function ComicCreate(): JSX.Element {
 
   const handleForm = async () => {
     const { title, content, image, images } = values
-    if (!(title && content && image && images)) {
-      setIsRequired(true)
-      return
-    }
+    if (!isRequiredCheck({ title, content, image, images })) return
     setIsLoading(true)
     const ret = await postComicCreate(values)
     if (ret.isErr()) return handleToast('エラーが発生しました！', true)
