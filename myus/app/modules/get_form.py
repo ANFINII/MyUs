@@ -4,9 +4,9 @@ from api.utils.contains import NotificationTypeNo, model_dict
 
 
 def get_client_ip(request):
-    X_FORWARDED_FOR = request.META.get('HTTP_X_FORWARDED_FOR')
-    REMOTE_ADDR = request.META.get('REMOTE_ADDR')
-    return X_FORWARDED_FOR.split(',')[0] if X_FORWARDED_FOR else REMOTE_ADDR
+    X_FORWARDED_FOR = request.META.get("HTTP_X_FORWARDED_FOR")
+    REMOTE_ADDR = request.META.get("REMOTE_ADDR")
+    return X_FORWARDED_FOR.split(",")[0] if X_FORWARDED_FOR else REMOTE_ADDR
 
 
 def get_detail(self, request):
@@ -17,16 +17,16 @@ def get_detail(self, request):
     author = obj.author
 
     ip = get_client_ip(request)
-    JST = timezone(timedelta(hours=9), 'JST')
+    JST = timezone(timedelta(hours=9), "JST")
     access_log = AccessLog.objects.filter(ip_address=ip, type=obj_name, type_id=obj.id).first()
     if access_log and datetime.now(JST) - access_log.updated > timedelta(hours=2):
         obj.read += 1
-        obj.save(update_fields=['read'])
-        access_log.save(update_fields=['updated'])
+        obj.save(update_fields=["read"])
+        access_log.save(update_fields=["updated"])
     else:
         AccessLog.objects.create(ip_address=ip, type=obj_name, type_id=obj.id)
         obj.read += 1
-        obj.save(update_fields=['read'])
+        obj.save(update_fields=["read"])
 
     if obj.read == 10000:
         if author.notificationsetting.is_views:

@@ -21,17 +21,17 @@ def follow_update_data(follower, following, follow):
                 user_from=follower.user,
                 user_to=following.user,
                 type_no=NotificationTypeNo.follow,
-                type_name='follow',
+                type_name="follow",
                 content_object=follow,
             )
 
     # ログインユーザーのフォロー数
     following_count = Follow.objects.filter(follower=follower.user).count()
     follower.following_count = following_count
-    follower.save(update_fields=['following_count'])
+    follower.save(update_fields=["following_count"])
 
     # フォローユーザーのフォロワー数
     follower_count = Follow.objects.filter(following=following.user).count()
     following.follower_count = follower_count
-    following.save(update_fields=['follower_count'])
-    return {'is_follow': is_follow, 'follower_count': follower_count}
+    following.save(update_fields=["follower_count"])
+    return {"is_follow": is_follow, "follower_count": follower_count}
