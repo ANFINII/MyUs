@@ -45,7 +45,7 @@ class SettingProfileAPI(APIView):
         }
         return DataResponse(data, HTTP_200_OK)
 
-    def put(self, request):
+    def put(self, request) -> DataResponse:
         user = get_user(request)
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
@@ -56,7 +56,7 @@ class SettingProfileAPI(APIView):
 
         validation = profile_check(request.data)
         if validation:
-            return Response(message(True, validation), status=HTTP_400_BAD_REQUEST)
+            return DataResponse(message(True, validation), status=HTTP_400_BAD_REQUEST)
 
         user_fields = ["email", "username", "nickname", "content"]
         [setattr(user, field, data.get(field)) for field in user_fields]
@@ -71,10 +71,10 @@ class SettingProfileAPI(APIView):
             user.save()
             profile.save()
         except Exception:
-            return Response(message(True, "ユーザー名またはメールアドレス、投稿者名は既に登録済みです!"), status=HTTP_400_BAD_REQUEST)
+            return DataResponse(message(True, "ユーザー名またはメールアドレス、投稿者名は既に登録済みです!"), status=HTTP_400_BAD_REQUEST)
 
         Log.info("ProfileAPI", "put", data)
-        return Response(message(False, "保存しました!"), status=HTTP_204_NO_CONTENT)
+        return DataResponse(message(False, "保存しました!"), status=HTTP_204_NO_CONTENT)
 
 
 class SettingMyPageAPI(APIView):
