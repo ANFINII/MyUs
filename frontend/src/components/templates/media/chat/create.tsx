@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { ChatIn } from 'types/internal/media'
 import { postChatCreate } from 'api/internal/media/create'
 import { nowDate } from 'utils/functions/datetime'
+import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -14,8 +15,8 @@ import Vertical from 'components/parts/Stack/Vertical'
 export default function ChatCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isRequired, isRequiredCheck } = useRequired()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<ChatIn>({ title: '', content: '', period: '' })
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -23,10 +24,7 @@ export default function ChatCreate(): JSX.Element {
 
   const handleForm = async () => {
     const { title, content, period } = values
-    if (!(title && content && period)) {
-      setIsRequired(true)
-      return
-    }
+    if (!isRequiredCheck({ title, content, period })) return
     setIsLoading(true)
     const ret = await postChatCreate(values)
     if (ret.isErr()) return handleToast('エラーが発生しました！', true)

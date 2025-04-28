@@ -6,6 +6,7 @@ import { DeltaStatic, Sources } from 'quill'
 import { BlogIn } from 'types/internal/media'
 import { MentionUser } from 'types/internal/timeline'
 import { postBlogCreate } from 'api/internal/media/create'
+import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -26,8 +27,8 @@ const users: MentionUser[] = [
 export default function BlogCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isRequired, isRequiredCheck } = useRequired()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isRequired, setIsRequired] = useState<boolean>(false)
   const [values, setValues] = useState<BlogIn>({ title: '', content: '', richtext: '', delta: '' })
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -41,10 +42,7 @@ export default function BlogCreate(): JSX.Element {
 
   const handleForm = async () => {
     const { title, content, richtext, image } = values
-    if (!(title && content && richtext && image)) {
-      setIsRequired(true)
-      return
-    }
+    if (!isRequiredCheck({ title, content, richtext, image })) return
     setIsLoading(true)
     const ret = await postBlogCreate(values)
     if (ret.isErr()) return handleToast('エラーが発生しました！', true)

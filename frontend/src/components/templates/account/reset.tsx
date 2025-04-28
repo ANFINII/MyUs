@@ -1,6 +1,7 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { postReset } from 'api/internal/auth'
+import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
@@ -11,19 +12,16 @@ import Vertical from 'components/parts/Stack/Vertical'
 export default function Reset(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
-  const [message, setMessage] = useState<string>('')
+  const { isRequired, isRequiredCheck } = useRequired()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isRequired, setIsRequired] = useState<boolean>(false)
+  const [message, setMessage] = useState<string>('')
   const [email, setEmail] = useState<string>('')
 
   const handleBack = () => router.push('/account/login')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)
 
   const handleSubmit = async () => {
-    if (!email) {
-      setIsRequired(true)
-      return
-    }
+    if (!isRequiredCheck({ email })) return
     setIsLoading(true)
     const ret = await postReset(email)
     if (ret.isErr()) return handleToast('エラーが発生しました！', true)

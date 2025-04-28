@@ -5,6 +5,7 @@ import { postSignup } from 'api/internal/auth'
 import { Gender } from 'utils/constants/enum'
 import { nowDate, selectDate } from 'utils/functions/datetime'
 import { genders } from 'utils/functions/user'
+import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
@@ -33,9 +34,9 @@ const initSignup: SignupIn = {
 export default function Signup(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
-  const [message, setMessage] = useState<string>('')
+  const { isRequired, isRequiredCheck } = useRequired()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isRequired, setIsRequired] = useState<boolean>(false)
+  const [message, setMessage] = useState<string>('')
   const [values, setValues] = useState<SignupIn>(initSignup)
 
   const { years, months, days } = selectDate()
@@ -45,10 +46,7 @@ export default function Signup(): JSX.Element {
 
   const handleSubmit = async () => {
     const { email, username, nickname, lastName, firstName, password1, password2 } = values
-    if (!(email && username && nickname && lastName && firstName && password1 && password2)) {
-      setIsRequired(true)
-      return
-    }
+    if (!isRequiredCheck({ email, username, nickname, lastName, firstName, password1, password2 })) return
     setIsLoading(true)
     const ret = await postSignup(values)
     if (ret.isErr()) return handleToast('エラーが発生しました！', true)
