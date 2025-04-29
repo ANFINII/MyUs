@@ -15,13 +15,14 @@ export const cookieHeader = <T>(req?: Req, query?: T): Config => {
 export const AxiosErrorLog = (e: AxiosError) => {
   const errResponse = e.response
   const errRequest = e.request
-
-  console.group()
-  console.log('%c========== Axios Error Start ==========', 'color: red;')
-  console.log('Status:', errResponse?.status)
-  console.log('Message:', errResponse?.statusText)
-  console.log('Path:', errRequest?.path)
-  console.log('Header:', errRequest?._header)
-  console.log('========== Axios Error End ==========')
-  console.groupEnd()
+  if (ENV === 'http://127.0.0.1') {
+    console.group()
+    console.log('%c========== Axios Error Start ==========', 'color: red;')
+    console.log('Status:', errResponse?.status)
+    console.log('Message:', errResponse?.statusText)
+    console.log('Path:', errRequest?.path)
+    console.log('Header:', errRequest?._header)
+    console.log('%c========== Axios Error End ==========', 'color: red;')
+    console.groupEnd()
+  }
 }
