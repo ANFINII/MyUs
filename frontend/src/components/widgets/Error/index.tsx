@@ -4,8 +4,8 @@ import BackError from 'components/parts/Error/Back'
 
 export default function Error(): JSX.Element {
   return (
-    <Main title="Front End Error">
-      <BackError content="UIでエラーが発生しました" />
+    <Main title="Unexpected Error">
+      <BackError content="予期せぬエラーが発生しました" />
       <Footer />
     </Main>
   )
