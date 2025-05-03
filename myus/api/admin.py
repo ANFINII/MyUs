@@ -52,18 +52,18 @@ class SearchTagInline(admin.TabularInline):
     verbose_name_plural = "検索タグ"
 
 
-class CommentInlineAdmin(GenericTabularInline):
-    model = Comment
-    extra = 0
-    max_num = 100
-    exclude = ("like", "reply_count")
-    fields = ("author", "parent", "text", "total_like")
-    readonly_fields = ("total_like",)
-    verbose_name_plural = "コメント"
+# class CommentInlineAdmin(GenericTabularInline):
+#     model = Comment
+#     extra = 0
+#     max_num = 100
+#     exclude = ("like", "reply_count")
+#     fields = ("author", "parent", "text", "total_like")
+#     readonly_fields = ("total_like",)
+#     verbose_name_plural = "コメント"
 
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = "いいね数"
+#     def total_like(self, obj):
+#         return obj.like.count()
+#     total_like.short_description = "いいね数"
 
 
 class MessageInlineAdmin(admin.TabularInline):
@@ -160,7 +160,7 @@ class VideoAdmin(ImportExportModelAdmin):
     ordering = ("author", "-created")
     filter_horizontal = ("hashtag", "like")
     readonly_fields = ("total_like", "comment_count", "created", "updated")
-    inlines = [CommentInlineAdmin]
+    # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
@@ -177,7 +177,7 @@ class MusicAdmin(ImportExportModelAdmin):
     ordering = ("author", "-created")
     filter_horizontal = ("hashtag", "like")
     readonly_fields = ("total_like", "comment_count", "created", "updated")
-    inlines = [CommentInlineAdmin]
+    # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
@@ -194,7 +194,7 @@ class ComicAdmin(ImportExportModelAdmin):
     ordering = ("author", "-created")
     filter_horizontal = ("hashtag", "like")
     readonly_fields = ("total_like", "comment_count", "created", "updated")
-    inlines = [CommentInlineAdmin, ComicPageInlineAdmin]
+    # inlines = [CommentInlineAdmin, ComicPageInlineAdmin]
 
     # 詳細画面
     fieldsets = [
@@ -211,7 +211,7 @@ class PictureAdmin(ImportExportModelAdmin):
     ordering = ("author", "-created")
     filter_horizontal = ("hashtag", "like")
     readonly_fields = ("total_like", "comment_count", "created", "updated")
-    inlines = [CommentInlineAdmin]
+    # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
@@ -228,7 +228,7 @@ class BlogAdmin(ImportExportModelAdmin):
     ordering = ("author", "-created")
     filter_horizontal = ("hashtag", "like")
     readonly_fields = ("total_like", "comment_count", "created", "updated")
-    inlines = [CommentInlineAdmin]
+    # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
@@ -310,7 +310,7 @@ class AdvertiseAdmin(ImportExportModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(ImportExportModelAdmin):
-    list_display = ("id", "content_type", "object_id", "author", "parent", "text", "total_like", "reply_count", "created", "updated")
+    list_display = ("id", "media_type", "object_id", "author", "parent", "text", "total_like", "reply_count", "created", "updated")
     list_select_related = ("author", "parent")
     search_fields = ("text", "author__nickname", "created", "updated")
     ordering = ("created",)
@@ -319,7 +319,7 @@ class CommentAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("author", "parent", "text", "like", "content_type", "object_id")}),
+        ("編集項目", {"fields": ("author", "parent", "text", "like", "media_type", "object_id")}),
         ("確認項目", {"fields": ("total_like", "reply_count", "created", "updated")})
     ]
 
@@ -362,20 +362,20 @@ manage_site = MyUsAdminSite(name="mymanage")
 manage_site.disable_action("delete_selected")
 
 
-class CommentInline(GenericTabularInline):
-    model = Comment
-    extra = 0
-    max_num = 100
-    exclude = ("like", "reply_count")
-    readonly_fields = ("author", "parent", "text", "total_like")
-    verbose_name_plural = "コメント"
+# class CommentInline(GenericTabularInline):
+#     model = Comment
+#     extra = 0
+#     max_num = 100
+#     exclude = ("like", "reply_count")
+#     readonly_fields = ("author", "parent", "text", "total_like")
+#     verbose_name_plural = "コメント"
 
-    def has_add_permission(self, request, obj=None):
-        return False
+#     def has_add_permission(self, request, obj=None):
+#         return False
 
-    def total_like(self, obj):
-        return obj.like.count()
-    total_like.short_description = "いいね数"
+#     def total_like(self, obj):
+#         return obj.like.count()
+#     total_like.short_description = "いいね数"
 
 
 class MessageInline(admin.TabularInline):
@@ -468,7 +468,7 @@ class VideoAdminSite(admin.ModelAdmin, PublishMixin):
     actions = ("published", "unpublished")
     filter_horizontal = ("hashtag",)
     readonly_fields = ("read", "total_like", "comment_count", "created", "updated")
-    inlines = [CommentInline]
+    # inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
@@ -494,7 +494,7 @@ class MusicAdminSite(admin.ModelAdmin, PublishMixin):
     actions = ("published", "unpublished")
     filter_horizontal = ("hashtag",)
     readonly_fields = ("read", "total_like", "comment_count", "created", "updated")
-    inlines = [CommentInline]
+    # inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
@@ -520,7 +520,7 @@ class ComicAdminSite(admin.ModelAdmin, PublishMixin):
     actions = ("published", "unpublished")
     filter_horizontal = ("hashtag",)
     readonly_fields = ("read", "total_like", "comment_count", "created", "updated")
-    inlines = [CommentInline, ComicPageInline]
+    # inlines = [CommentInline, ComicPageInline]
 
     # 詳細画面
     fieldsets = [
@@ -546,7 +546,7 @@ class PictureAdminSite(admin.ModelAdmin, PublishMixin):
     actions = ("published", "unpublished")
     filter_horizontal = ("hashtag",)
     readonly_fields = ("read", "total_like", "comment_count", "created", "updated")
-    inlines = [CommentInline]
+    # inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
@@ -572,7 +572,7 @@ class BlogAdminSite(admin.ModelAdmin, PublishMixin):
     actions = ("published", "unpublished")
     filter_horizontal = ("hashtag",)
     readonly_fields = ("read", "total_like", "comment_count", "created", "updated")
-    inlines = [CommentInline]
+    # inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [

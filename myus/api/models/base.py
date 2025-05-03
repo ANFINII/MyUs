@@ -7,7 +7,7 @@ class MediaModel:
     total_like.short_description = "like"
 
     def comment_count(self):
-        return self.comment.count()
+        return 1
     comment_count.short_description = "comment"
 
     def score(self):
