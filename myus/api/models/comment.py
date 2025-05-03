@@ -1,7 +1,5 @@
 from django.db import models
 from django.db.models import Count
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
 from api.models.user import User
 
 
@@ -13,15 +11,14 @@ class CommentManager(models.Manager):
 
 class Comment(models.Model):
     """Comment"""
-    author         = models.ForeignKey(User, on_delete=models.CASCADE)
-    parent         = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", blank=True, null=True)
-    text           = models.TextField()
-    like           = models.ManyToManyField(User, related_name="comment_like", blank=True)
-    content_type   = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id      = models.PositiveIntegerField()
-    content_object = GenericForeignKey("content_type", "object_id")
-    created        = models.DateTimeField(auto_now_add=True)
-    updated        = models.DateTimeField(auto_now=True)
+    author     = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent     = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", blank=True, null=True)
+    media_type = models.CharField(max_length=20)
+    object_id  = models.PositiveIntegerField()
+    text       = models.TextField()
+    like       = models.ManyToManyField(User, related_name="comment_like", blank=True)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
 
     objects = CommentManager()
 
