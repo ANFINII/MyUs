@@ -1,19 +1,6 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
-import { API_URL, AxiosErrorLog } from 'lib/config'
-import { snakeCamel } from 'utils/functions/convertCase'
-
-const responseInterceptor = (client: AxiosInstance) => {
-  client.interceptors.response.use(
-    (response: AxiosResponse) => {
-      response.data = snakeCamel(response.data)
-      return response
-    },
-    (e: AxiosError) => {
-      AxiosErrorLog(e)
-      return Promise.resolve(e.response)
-    },
-  )
-}
+import axios, { AxiosInstance } from 'axios'
+import { API_URL } from 'lib/config'
+import { axiosInterceptor } from '.'
 
 const axiosInstance = (baseURL: string, contentType: string, csrfToken?: string) => {
   const client: AxiosInstance = axios.create({
@@ -26,7 +13,7 @@ const axiosInstance = (baseURL: string, contentType: string, csrfToken?: string)
     timeout: 2000,
     paramsSerializer: { indexes: null },
   })
-  responseInterceptor(client)
+  axiosInterceptor(client)
   return client
 }
 
