@@ -29,9 +29,9 @@ export const selectDate = () => {
   return { years, months, days }
 }
 
-export const padZero = (num: number): string => num < 10 ? `0${num}` : `${num}`
+export const padZero = (num: number): string => (num < 10 ? `0${num}` : `${num}`)
 
-export const formatDatetime = (datetime: string): string => {
+export const formatDatetime = (datetime: Date): string => {
   const date = new Date(datetime)
   const year = date.getFullYear()
   const month = padZero(date.getMonth() + 1)
@@ -41,9 +41,9 @@ export const formatDatetime = (datetime: string): string => {
   return `${year}/${month}/${day} ${hours}:${minutes}`
 }
 
-export const formatTimeAgo = (dateString: string): string => {
-  const date = new Date(dateString)
+export const formatTimeAgo = (datetime: Date): string => {
   const now = new Date()
+  const date = new Date(datetime)
   const diff = (now.getFullYear() - date.getFullYear()) * 12 + (now.getMonth() - date.getMonth())
   const year = Math.floor(diff / 12)
   const month = diff % 12

@@ -1,3 +1,5 @@
+import { Comment } from './comment'
+
 export interface Author {
   avatar: string
   nickname: string
@@ -22,10 +24,9 @@ export interface Media {
   content: string
   like: number
   read: number
-  commentCount: number
   publish: boolean
-  created: string
-  updated: string
+  created: Date
+  updated: Date
   author: Author
   user: MediaUser
 }
@@ -59,25 +60,6 @@ export interface Chat extends Media {
   read: number
   joined: number
   thread: number
-}
-
-export interface BlogDetailOut {
-  detail: Blog
-  list: Blog[]
-}
-
-export interface MediaDetail {
-  id: number
-  title: string
-  content: string
-  like: number
-  read: number
-  commentCount: number
-  publish: boolean
-  created: string
-  updated: string
-  author: Author
-  user: MediaUser
 }
 
 export interface MediaHome {
@@ -139,4 +121,28 @@ export interface ChatIn {
 export interface CommnetIn {
   text: string
   type: string
+}
+
+export interface MediaDetail {
+  id: number
+  title: string
+  content: string
+  like: number
+  read: number
+  publish: boolean
+  created: Date
+  updated: Date
+  author: Author
+  user: MediaUser
+}
+
+export interface BlogDetail extends MediaDetail {
+  image: str
+  richtext: str
+  comments: Comment[]
+}
+
+export interface BlogDetailOut {
+  detail: BlogDetail
+  list: Blog[]
 }
