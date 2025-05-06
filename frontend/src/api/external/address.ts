@@ -1,4 +1,4 @@
-import { apiAddressClient } from 'lib/axios/external'
+import { apiAddressClient } from 'lib/axios/externals'
 import { ApiOut, apiOut } from 'lib/error'
 import { Address } from 'types/internal/address'
 import { apiAddress } from 'api/uri'
