@@ -15,7 +15,7 @@ interface Props {
 export default function BlogDetail(props: Props): JSX.Element {
   const { data } = props
   const { detail, list } = data
-  const { title, content, richtext, read, like, commentCount, publish, created, author, user } = detail
+  const { title, content, richtext, like, read, publish, created, comments, author, user } = detail
 
   const { toast, handleToast } = useToast()
 
@@ -27,7 +27,7 @@ export default function BlogDetail(props: Props): JSX.Element {
         </div>
         <Divide />
         <div className="media_detail_grid">
-          <MediaDetailCommon media={{ title, content, read, like, commentCount, created, author, user, type: 'blog' }} handleToast={handleToast} />
+          <MediaDetailCommon media={{ title, content, like, read, created, comments, author, user, type: 'blog' }} handleToast={handleToast} />
           <Vertical gap="4" className="ml_20">
             {list.map((media) => (
               <MediaSideBlog key={media.id} media={media} />

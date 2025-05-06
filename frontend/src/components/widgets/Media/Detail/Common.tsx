@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
+import { Comment } from 'types/internal/comment'
 import { Author, CommnetIn, MediaUser } from 'types/internal/media'
 import { createComment } from 'api/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
@@ -20,8 +21,8 @@ interface Props {
     content: string
     read: number
     like?: number
-    commentCount?: number
-    created: string
+    created: Date
+    comments: Comment[]
     author: Author
     user?: MediaUser
     type: 'video' | 'music' | 'comic' | 'picture' | 'blog'
@@ -31,7 +32,7 @@ interface Props {
 
 export default function MediaDetailCommon(props: Props): JSX.Element {
   const { media, handleToast } = props
-  const { title, content, read, like, commentCount = 0, created, author, user, type } = media
+  const { title, content, read, like, created, comments, author, user, type } = media
 
   const router = useRouter()
   const [isLike, setIsLike] = useState<boolean>(Boolean(user?.isLike))
@@ -107,7 +108,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
       <Divide />
 
-      <CommentInput user={user} count={commentCount} value={text} onChange={handleComment} onClick={handleMediaComment} />
+      <CommentInput user={user} count={comments.length} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <Zoom isView={isCommentView} onView={handleCommentView} />
       <div id="comment_aria" className="comment_aria">
         {/* {% include 'parts/common/comment/comment.html' %} */}
