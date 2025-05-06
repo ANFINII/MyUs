@@ -7,7 +7,7 @@
     "types": ["@types/react", "@types/react-dom"],
     "jsx": "preserve",
     "baseUrl": "src",
-    "paths": {"lib/*": ["lib/*"], "types/*": ["types/*"], "api/*": ["api/*"]},
+    "paths": {"api/*": ["api/*"], "lib/*": ["lib/*"], "types/*": ["types/*"]},
     "sourceRoot": "/",
     "sourceMap": true,
     "alwaysStrict": true,
