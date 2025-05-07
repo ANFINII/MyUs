@@ -2,12 +2,13 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Video } from 'types/internal/media'
 import { getVideos } from 'api/internal/media/list'
+import { searchParams } from 'utils/functions/common'
 import ErrorCheck from 'components/widgets/ErrorCheck'
 import Videos from 'components/templates/media/video/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const params = { search: String(query.search) }
+  const params = searchParams(query)
   const ret = await getVideos(params)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const datas = ret.value
