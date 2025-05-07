@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router'
 import { Follow } from 'types/internal/auth'
-import { getFollow } from 'api/internal/user'
-import { useNewDatas } from 'components/hooks/useNewList'
+import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
@@ -9,23 +8,23 @@ import MediaFollow from 'components/widgets/Media/Index/Follow'
 import FollowList from 'components/widgets/Media/List/Follow'
 
 interface Props {
-  follows: Follow[]
+  datas: Follow[]
 }
 
 export default function Follows(props: Props): JSX.Element {
-  const { follows } = props
+  const { datas } = props
 
   const router = useRouter()
-  const { search, newDatas } = useNewDatas<Follow[]>({ datas: follows, getDatas: (search) => getFollow(undefined, search) })
+  const search = useSearch(datas)
 
   return (
-    <Main title="Follow" search={{ name: search, count: newDatas.length }}>
+    <Main title="Follow" search={search}>
       <LoginError margin="mt_24">
         <div className="mt_16">
           <Button color="blue" size="s" name="フォロワー" onClick={() => router.push('/menu/follower')} />
-          <span className="ml_16">フォロー数：{follows.length}</span>
+          <span className="ml_16">フォロー数：{datas.length}</span>
         </div>
-        <FollowList medias={newDatas} MediaComponent={MediaFollow} />
+        <FollowList medias={datas} MediaComponent={MediaFollow} />
       </LoginError>
     </Main>
   )

@@ -1,6 +1,5 @@
 import { Music } from 'types/internal/media'
-import { getMusics } from 'api/internal/media/list'
-import { useNewDatas } from 'components/hooks/useNewList'
+import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import MediaMusic from 'components/widgets/Media/Index/Music'
 import MediaList from 'components/widgets/Media/List/Media'
@@ -12,11 +11,11 @@ interface Props {
 export default function Musics(props: Props): JSX.Element {
   const { datas } = props
 
-  const { search, newDatas } = useNewDatas<Music[]>({ datas, getDatas: (search) => getMusics({ search }) })
+  const search = useSearch(datas)
 
   return (
-    <Main title="Music" search={{ name: search, count: newDatas.length }}>
-      <MediaList medias={newDatas} MediaComponent={MediaMusic} />
+    <Main title="Music" search={search}>
+      <MediaList medias={datas} MediaComponent={MediaMusic} />
     </Main>
   )
 }

@@ -1,6 +1,5 @@
 import { Chat } from 'types/internal/media'
-import { getChats } from 'api/internal/media/list'
-import { useNewDatas } from 'components/hooks/useNewList'
+import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import MediaChat from 'components/widgets/Media/Index/Chat'
 import MediaList from 'components/widgets/Media/List/Media'
@@ -12,11 +11,11 @@ interface Props {
 export default function Chats(props: Props): JSX.Element {
   const { datas } = props
 
-  const { search, newDatas } = useNewDatas<Chat[]>({ datas, getDatas: (search) => getChats({ search }) })
+  const search = useSearch(datas)
 
   return (
-    <Main title="Chat" search={{ name: search, count: newDatas.length }}>
-      <MediaList medias={newDatas} MediaComponent={MediaChat} />
+    <Main title="Chat" search={search}>
+      <MediaList medias={datas} MediaComponent={MediaChat} />
     </Main>
   )
 }

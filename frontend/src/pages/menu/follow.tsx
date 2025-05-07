@@ -11,13 +11,13 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
   const params = searchParams(query)
   const ret = await getFollow(params, req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
-  const follows = ret.value
-  return { props: { follows, ...translations } }
+  const datas = ret.value
+  return { props: { datas, ...translations } }
 }
 
 interface Props {
   status: number
-  follows: Follow[]
+  datas: Follow[]
 }
 
 export default function FollowsPage(props: Props): JSX.Element {
