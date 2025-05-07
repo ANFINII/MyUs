@@ -1,6 +1,5 @@
 import { Picture } from 'types/internal/media'
-import { getPictures } from 'api/internal/media/list'
-import { useNewDatas } from 'components/hooks/useNewList'
+import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import MediaPicture from 'components/widgets/Media/Index/Picture'
 import MediaList from 'components/widgets/Media/List/Media'
@@ -12,11 +11,11 @@ interface Props {
 export default function Pictures(props: Props): JSX.Element {
   const { datas } = props
 
-  const { search, newDatas } = useNewDatas<Picture[]>({ datas, getDatas: (search) => getPictures({ search }) })
+  const search = useSearch(datas)
 
   return (
-    <Main title="Picture" search={{ name: search, count: newDatas.length }}>
-      <MediaList medias={newDatas} MediaComponent={MediaPicture} />
+    <Main title="Picture" search={search}>
+      <MediaList medias={datas} MediaComponent={MediaPicture} />
     </Main>
   )
 }

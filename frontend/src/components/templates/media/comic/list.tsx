@@ -1,6 +1,5 @@
 import { Comic } from 'types/internal/media'
-import { getComics } from 'api/internal/media/list'
-import { useNewDatas } from 'components/hooks/useNewList'
+import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import MediaComic from 'components/widgets/Media/Index/Comic'
 import MediaList from 'components/widgets/Media/List/Media'
@@ -12,11 +11,11 @@ interface Props {
 export default function Comics(props: Props): JSX.Element {
   const { datas } = props
 
-  const { search, newDatas } = useNewDatas<Comic[]>({ datas, getDatas: (search) => getComics({ search }) })
+  const search = useSearch(datas)
 
   return (
-    <Main title="Comic" search={{ name: search, count: newDatas.length }}>
-      <MediaList medias={newDatas} MediaComponent={MediaComic} />
+    <Main title="Comic" search={search}>
+      <MediaList medias={datas} MediaComponent={MediaComic} />
     </Main>
   )
 }
