@@ -7,11 +7,11 @@ import Horizontal from 'components/parts/Stack/Horizontal'
 import Vertical from 'components/parts/Stack/Vertical'
 import style from './MediaContent.module.scss'
 
-interface Props<Media> {
+interface Props {
   media: Media
 }
 
-export default function MediaBaseContent(props: Props<Media>) {
+export default function MediaBaseContent(props: Props) {
   const { media } = props
   const { title, read, like, created, author } = media
   const { nickname } = author

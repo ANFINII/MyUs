@@ -6,7 +6,7 @@ import FormatHtml from 'components/parts/FormatHtml'
 import Vertical from 'components/parts/Stack/Vertical'
 import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
-import MediaSideBlog from 'components/widgets/Media/Side'
+import MediaSideImage from 'components/widgets/Media/Side/Image'
 
 interface Props {
   data: BlogDetailOut
@@ -15,7 +15,7 @@ interface Props {
 export default function BlogDetail(props: Props): JSX.Element {
   const { data } = props
   const { detail, list } = data
-  const { title, content, richtext, like, read, publish, created, comments, author, user } = detail
+  const { publish, richtext, ...other } = detail
 
   const { toast, handleToast } = useToast()
 
@@ -27,10 +27,10 @@ export default function BlogDetail(props: Props): JSX.Element {
         </div>
         <Divide />
         <div className="media_detail_grid">
-          <MediaDetailCommon media={{ title, content, like, read, created, comments, author, user, type: 'blog' }} handleToast={handleToast} />
+          <MediaDetailCommon media={{ type: 'blog', ...other }} handleToast={handleToast} />
           <Vertical gap="4" className="ml_20">
             {list.map((media) => (
-              <MediaSideBlog key={media.id} media={media} />
+              <MediaSideImage key={media.id} href={`/media/blog/${media.id}`} src={media.image} media={media} />
             ))}
           </Vertical>
         </div>
