@@ -13,7 +13,7 @@ class ReplyData:
 
 
 @dataclass(frozen=True, slots=True)
-class CommentData:
+class MessageData:
     id: str
     text: str
     created: datetime
