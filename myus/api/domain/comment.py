@@ -14,8 +14,8 @@ class CommnetDomain:
         objs = (
             Comment.objects
             .filter(parent__isnull=True, **filter_obj)
-            .prefetch_related(Prefetch("reply", queryset=Comment.objects.select_related("author")))
             .select_related("author")
+            .prefetch_related(Prefetch("reply", queryset=Comment.objects.select_related("author")))
             .annotate(is_comment_like=Exists(subquery))
         )
 

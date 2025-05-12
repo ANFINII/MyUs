@@ -3,6 +3,8 @@ from enum import Enum, auto
 from functools import reduce
 from operator import and_
 
+from django.db.models.manager import BaseManager
+
 from api.utils.enum.index import MediaModelType
 from api.utils.functions.search import search_q_list
 from django.db.models import Count, F, Q
@@ -29,12 +31,12 @@ class SortOption:
 
 class MediaDomain:
     @staticmethod
-    def get(model: MediaModelType, id: int) -> MediaModelType | None:
-        qs = model.objects.filter(id=id).first()
+    def get(model: MediaModelType, id: int, publish: bool) -> MediaModelType | None:
+        qs = model.objects.filter(id=id, publish=publish).first()
         return qs
 
     @staticmethod
-    def bulk_get(model: MediaModelType, option: FilterOption, sort_options: SortOption, limit: int | None):
+    def bulk_get(model: MediaModelType, option: FilterOption, sort_options: SortOption, limit: int | None) -> MediaModelType:
         q_list: list[Q] = []
         if option.publish:
             q_list.append(Q(publish=option.publish))

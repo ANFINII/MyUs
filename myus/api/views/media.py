@@ -9,7 +9,10 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
 from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Comment
-from api.types.data.comment import CommentInData
+from api.types.data.comment import CommentInData, CommentData, ReplyData
+from api.types.data.media import BlogDetailOutData, BlogDetailData, BlogData
+from api.domain.comment import CommnetDomain
+from api.domain.media import MediaDomain
 from api.utils.contains import model_media_comment_dict
 from api.utils.functions.convert.convert_hls import convert_exe
 from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats
@@ -247,41 +250,54 @@ class PictureAPI(APIView):
 class BlogListAPI(APIView):
     def get(self, request):
         search = request.query_params.get("search")
+        print('search====================', search)
         data = get_blogs(50, search)
         return DataResponse(data, HTTP_200_OK)
 
 
 class BlogAPI(APIView):
     def get(self, request, id) -> DataResponse:
-        obj = Blog.objects.filter(id=id, publish=True).first()
+        obj = MediaDomain.get(model=Blog, id=id, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
         search = request.query_params.get("search")
         user = get_user(request)
-        comments = get_comments(obj)
+        comments = CommnetDomain.get(media_type="Blog", object_id=obj.id, author_id=obj.author.id)
 
-        data = {
-            "detail": {
-                "id": obj.id,
-                "title": obj.title,
-                "content": obj.content,
-                "richtext": obj.richtext,
-                "image": obj.image.url,
-                "comment": [get_comment_data(comment) for comment in comments],
-                "hashtag": [hashtag.jp_name for hashtag in obj.hashtag.all()],
-                "like": obj.total_like(),
-                "read": obj.read,
-                "comment_count": obj.comment_count(),
-                "publish": obj.publish,
-                "created": obj.created,
-                "updated": obj.updated,
-                "author": get_author(obj.author),
-            },
-            "list": get_blogs(50, search),
-        }
-        if user:
-            data["detail"]["user"] = get_media_user(user, obj)
+        comments = [
+            CommentData(
+                id=str(c.id),
+                text=c.text,
+                created=c.created,
+                updated=c.updated,
+                replys=[
+                    ReplyData(id=str(r.id), text=r.text, created=r.created, updated=r.updated, author=get_author(r.author))
+                    for r in c.reply.all()
+                ],
+                author=get_author(c.author),
+            ) for c in comments
+        ]
+
+        data = BlogDetailOutData(
+            detail=BlogDetailData(
+                id=obj.id,
+                title=obj.title,
+                content=obj.content,
+                richtext=obj.richtext,
+                image=obj.image.url,
+                comments=comments,
+                hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
+                like=obj.total_like(),
+                read=obj.read,
+                publish=obj.publish,
+                created=obj.created,
+                updated=obj.updated,
+                author=get_author(obj.author),
+                user=get_media_user(user, obj) if user else None,
+            ),
+            list=get_blogs(50, search),
+        )
 
         return DataResponse(data, HTTP_200_OK)
 
