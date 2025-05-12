@@ -1,7 +1,7 @@
 from datetime import datetime
 from dataclasses import dataclass
 from api.types.data.comment import CommentData
-from api.types.dto.user import AuthorData
+from api.types.dto.user import AuthorData, MediaUserData
 
 
 @dataclass(frozen=True, slots=True)
@@ -33,8 +33,7 @@ class MediaDetailData:
     created: datetime
     updated: datetime
     author: AuthorData
-    comment_count: int
-    comments: list[CommentData]
+    user: MediaUserData | None
     hashtags: list[HashtagData]
 
 
@@ -50,6 +49,14 @@ class VideoDetailData(MediaDetailData):
     image: str
     video: str
     convert: str
+    comments: list[CommentData]
+
+
+@dataclass(frozen=True, slots=True)
+class VideoDetailOutData():
+    detail: VideoDetailData
+    list: list[VideoData]
+
 
 @dataclass(frozen=True, slots=True)
 class MusicData(MediaData):
@@ -63,6 +70,13 @@ class MusicDetailData(MediaDetailData):
     lyric: str
     music: str
     download: bool
+    comments: list[CommentData]
+
+
+@dataclass(frozen=True, slots=True)
+class MusicDetailOutData():
+    detail: MusicDetailData
+    list: list[MusicData]
 
 
 @dataclass(frozen=True, slots=True)
@@ -73,6 +87,13 @@ class ComicsData(MediaData):
 @dataclass(frozen=True, slots=True)
 class ComicsDetailData(MediaDetailData):
     image: str
+    comments: list[CommentData]
+
+
+@dataclass(frozen=True, slots=True)
+class ComicsDetailOutData():
+    detail: ComicsDetailData
+    list: list[ComicsData]
 
 
 @dataclass(frozen=True, slots=True)
@@ -83,16 +104,31 @@ class PictureData(MediaData):
 @dataclass(frozen=True, slots=True)
 class PictureDetailData(MediaDetailData):
     image: str
+    comments: list[CommentData]
+
+
+@dataclass(frozen=True, slots=True)
+class PictureDetailOutData():
+    detail: PictureDetailData
+    list: list[PictureData]
 
 
 @dataclass(frozen=True, slots=True)
 class BlogData(MediaData):
     image: str
 
+
 @dataclass(frozen=True, slots=True)
 class BlogDetailData(MediaDetailData):
-    image: str
     richtext: str
+    image: str
+    comments: list[CommentData]
+
+
+@dataclass(frozen=True, slots=True)
+class BlogDetailOutData():
+    detail: BlogDetailData
+    list: list[BlogData]
 
 
 @dataclass(frozen=True, slots=True)
@@ -107,3 +143,20 @@ class ChatDetailData(MediaDetailData):
     thread: int
     joined: int
     period: datetime
+    # messages:
+
+
+@dataclass(frozen=True, slots=True)
+class ChatDetailOutData():
+    detail: ChatDetailData
+    list: list[ChatData]
+
+
+@dataclass(frozen=True, slots=True)
+class HomeData():
+    videos: list[VideoData]
+    musics: list[MusicData]
+    comics: list[ComicsData]
+    pictures: list[PictureData]
+    blogs: list[BlogData]
+    chats: list[ChatData]

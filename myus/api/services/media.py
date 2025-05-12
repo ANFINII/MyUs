@@ -1,33 +1,35 @@
 from datetime import datetime
 from dataclasses import dataclass
-from api.models import Video, Music, Comic, Picture, Blog, Chat, Comment
+from api.models import Video, Music, Comic, Picture, Blog, Chat
 from api.utils.enum.index import MediaModelType
 from api.utils.functions.index import create_url
 from api.utils.functions.search import search_media
 from api.utils.functions.user import get_author
-from api.domain.media import FilterOption, MediaDomain, SortOption, SortType, MediaDomain
-from api.types.data.media import VideoData, MusicData, ComicsData, PictureData, BlogData, ChatData, AuthorData
+from api.domain.media import MediaDomain, FilterOption, SortOption
+from api.types.data.media import HomeData, VideoData, MusicData, ComicsData, PictureData, BlogData, ChatData, AuthorData
 
 
-def get_home(limit: int, search: str | None):
-    data = {
-        "videos": get_videos(limit, search),
-        "musics": get_musics(limit, search),
-        "pictures": get_pictures(limit, search),
-        "blogs": get_blogs(limit, search),
-        "chats": get_chats(limit, search),
-    }
+def get_home(limit: int, search: str | None) -> HomeData:
+    data = HomeData(
+        videos=get_videos(limit, search),
+        musics=get_musics(limit, search),
+        comics=get_comics(limit, search),
+        pictures=get_pictures(limit, search),
+        blogs=get_blogs(limit, search),
+        chats=get_chats(limit, search),
+    )
     return data
 
 
-def get_recommend(limit: int, search: str | None):
-    data = {
-        "videos": get_videos(limit, search),
-        "musics": get_musics(limit, search),
-        "pictures": get_pictures(limit, search),
-        "blogs": get_blogs(limit, search),
-        "chats": get_chats(limit, search),
-    }
+def get_recommend(limit: int, search: str | None) -> HomeData:
+    data = HomeData(
+        videos=get_videos(limit, search),
+        musics=get_musics(limit, search),
+        comics=get_comics(limit, search),
+        pictures=get_pictures(limit, search),
+        blogs=get_blogs(limit, search),
+        chats=get_chats(limit, search),
+    )
     return data
 
 
