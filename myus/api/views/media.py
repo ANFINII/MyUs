@@ -250,7 +250,6 @@ class PictureAPI(APIView):
 class BlogListAPI(APIView):
     def get(self, request):
         search = request.query_params.get("search")
-        print('search====================', search)
         data = get_blogs(50, search)
         return DataResponse(data, HTTP_200_OK)
 
