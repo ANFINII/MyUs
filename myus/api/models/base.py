@@ -1,3 +1,5 @@
+from api.models.comment import Comment
+
 class MediaModel:
     def __str__(self):
         return self.title
@@ -7,7 +9,10 @@ class MediaModel:
     total_like.short_description = "like"
 
     def comment_count(self):
-        return 1
+        class_name = self.__class__.__name__
+        objs = Comment.objects.filter(media_type=class_name, object_id=self.id).count()
+        count = objs.count()
+        return count
     comment_count.short_description = "comment"
 
     def score(self):
