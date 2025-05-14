@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 
 from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Comment
 from api.types.data.comment import CommentInData, CommentData, ReplyData
-from api.types.data.media import BlogDetailOutData, BlogDetailData, BlogData
+from api.types.data.media import BlogDetailOutData, BlogDetailData
 from api.domain.comment import CommnetDomain
 from api.domain.media import MediaDomain
 from api.utils.contains import model_media_comment_dict
@@ -263,20 +263,6 @@ class BlogAPI(APIView):
         search = request.query_params.get("search")
         user = get_user(request)
         comments = CommnetDomain.get(media_type="Blog", object_id=obj.id, author_id=obj.author.id)
-
-        comments = [
-            CommentData(
-                id=str(c.id),
-                text=c.text,
-                created=c.created,
-                updated=c.updated,
-                replys=[
-                    ReplyData(id=str(r.id), text=r.text, created=r.created, updated=r.updated, author=get_author(r.author))
-                    for r in c.reply.all()
-                ],
-                author=get_author(c.author),
-            ) for c in comments
-        ]
 
         data = BlogDetailOutData(
             detail=BlogDetailData(
