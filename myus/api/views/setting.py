@@ -5,7 +5,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD
 from rest_framework.views import APIView
 
 from api.models import User, Profile, MyPage, UserNotification
-from api.types.data.user import SettingProfileData, SettingMyPageData, SettingNotificationData
+from api.types.data.setting import SettingProfileData, SettingMyPageData, SettingNotificationData
 from api.services.user import get_user, profile_check
 from api.utils.enum.response import ApiResponse
 from api.utils.filter_data import DeferData
