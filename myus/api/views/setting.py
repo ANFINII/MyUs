@@ -5,6 +5,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD
 from rest_framework.views import APIView
 
 from api.models import User, Profile, MyPage, UserNotification
+from api.types.data.user import SettingProfileData, SettingMyPageData, SettingNotificationData
 from api.services.user import get_user, profile_check
 from api.utils.enum.response import ApiResponse
 from api.utils.filter_data import DeferData
@@ -22,27 +23,27 @@ class SettingProfileAPI(APIView):
 
         user = User.objects.filter(id=user.id).select_related("profile").defer(*DeferData.profile).first()
 
-        data = {
-            "avatar": create_url(user.image()),
-            "email": user.email,
-            "username": user.username,
-            "nickname": user.nickname,
-            "full_name": user.full_name(),
-            "last_name": user.profile.last_name,
-            "first_name": user.profile.first_name,
-            "year": user.year(),
-            "month": user.month(),
-            "day": user.day(),
-            "age": user.age(),
-            "gender": user.gender(),
-            "phone": user.profile.phone,
-            "country_code": user.profile.country_code,
-            "postal_code": user.profile.postal_code,
-            "prefecture": user.profile.prefecture,
-            "city": user.profile.city,
-            "street": user.profile.street,
-            "introduction": user.profile.introduction,
-        }
+        data = SettingProfileData(
+            avatar=create_url(user.image()),
+            email=user.email,
+            username=user.username,
+            nickname=user.nickname,
+            full_name=user.full_name(),
+            last_name=user.profile.last_name,
+            first_name=user.profile.first_name,
+            year=user.year(),
+            month=user.month(),
+            day=user.day(),
+            age=user.age(),
+            gender=user.gender(),
+            phone=user.profile.phone,
+            country_code=user.profile.country_code,
+            postal_code=user.profile.postal_code,
+            prefecture=user.profile.prefecture,
+            city=user.profile.city,
+            street=user.profile.street,
+            introduction=user.profile.introduction,
+        )
         return DataResponse(data, HTTP_200_OK)
 
     def put(self, request) -> DataResponse:
@@ -85,19 +86,19 @@ class SettingMyPageAPI(APIView):
 
         user = User.objects.filter(id=user.id).select_related("mypage").defer(*DeferData.mypage).first()
 
-        data = {
-            "banner": create_url(user.banner()),
-            "nickname": user.nickname,
-            "email": user.mypage.email,
-            "content": user.mypage.content,
-            "follower_count": user.mypage.follower_count,
-            "following_count": user.mypage.following_count,
-            "tag_manager_id": user.mypage.tag_manager_id,
-            "plan": user.plan(),
-            "plan_start_date": user.plan_start_date(),
-            "plan_end_date": user.plan_end_date(),
-            "is_advertise": user.mypage.is_advertise,
-        }
+        data = SettingMyPageData(
+            banner=create_url(user.banner()),
+            nickname=user.nickname,
+            email=user.mypage.email,
+            content=user.mypage.content,
+            follower_count=user.mypage.follower_count,
+            following_count=user.mypage.following_count,
+            tag_manager_id=user.mypage.tag_manager_id,
+            plan=user.plan(),
+            plan_start_date=user.plan_start_date(),
+            plan_end_date=user.plan_end_date(),
+            is_advertise=user.mypage.is_advertise,
+        )
         return DataResponse(data, HTTP_200_OK)
 
     def put(self, request):
@@ -134,18 +135,18 @@ class SettingNotificationAPI(APIView):
 
         user_notification = UserNotification.objects.filter(user=user).first()
 
-        data = {
-            "is_video": user_notification.is_video,
-            "is_music": user_notification.is_music,
-            "is_comic": user_notification.is_comic,
-            "is_picture": user_notification.is_picture,
-            "is_blog": user_notification.is_blog,
-            "is_chat": user_notification.is_chat,
-            "is_follow": user_notification.is_follow,
-            "is_reply": user_notification.is_reply,
-            "is_like": user_notification.is_like,
-            "is_views": user_notification.is_views,
-        }
+        data = SettingNotificationData(
+            is_video=user_notification.is_video,
+            is_music=user_notification.is_music,
+            is_comic=user_notification.is_comic,
+            is_picture=user_notification.is_picture,
+            is_blog=user_notification.is_blog,
+            is_chat=user_notification.is_chat,
+            is_follow=user_notification.is_follow,
+            is_reply=user_notification.is_reply,
+            is_like=user_notification.is_like,
+            is_views=user_notification.is_views,
+        )
         return DataResponse(data, HTTP_200_OK)
 
     def put(self, request):
