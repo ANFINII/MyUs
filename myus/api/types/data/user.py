@@ -13,10 +13,18 @@ class UserData:
 
 
 @dataclass(frozen=True, slots=True)
-class ProfileData:
+class SettingProfileData:
+    avatar: str
+    email: str
+    username: str
+    nickname: str
+    full_name: str
     last_name: str
     first_name: str
-    birthday: str
+    year: int
+    month: int
+    day: int
+    age: int
     gender: str
     phone: str
     country_code: str
@@ -28,14 +36,32 @@ class ProfileData:
 
 
 @dataclass(frozen=True, slots=True)
-class MyPageData:
+class SettingMyPageData:
     banner: str
+    nickname: str
     email: str
     content: str
     follower_count: int
     following_count: int
-    tag_manager_id: int
+    tag_manager_id: str
+    plan: str
+    plan_start_date: date
+    plan_end_date: date
     is_advertise: bool
+
+
+@dataclass(frozen=True, slots=True)
+class SettingNotificationData:
+    is_video: bool
+    is_music: bool
+    is_comic: bool
+    is_picture: bool
+    is_blog: bool
+    is_chat: bool
+    is_follow: bool
+    is_reply: bool
+    is_like: bool
+    is_views: bool
 
 
 @dataclass(frozen=True)
@@ -46,64 +72,3 @@ class UserPlanData:
     is_paid: int
     start_date: int
     end_date: int
-
-
-@dataclass(frozen=True)
-class UserDTO:
-    user: UserData
-    profile: ProfileData
-    maypage: MyPageData
-    plan: UserPlanData
-
-    def full_name(self):
-        return self.profile.last_name + ' ' + self.profile.first_name
-
-    def birthday(self):
-        return self.profile.birthday
-
-    def year(self):
-        if self.birthday:
-            return self.birthday.year
-
-    def month(self):
-        if self.birthday:
-            return self.birthday.month
-
-    def day(self):
-        if self.birthday:
-            return self.birthday.day
-
-    def age(self):
-        if self.birthday:
-            birthday = self.birthday
-            DAYS_IN_YEAR = 365.2425
-            return int((date.today() - birthday).days / DAYS_IN_YEAR)
-
-    def gender(self):
-        return self.profile.gender
-
-    def prefecture(self):
-        return self.profile.prefecture
-
-    def city(self):
-        return self.profile.city
-
-    def street(self):
-        return self.profile.street
-
-    def image(self):
-        if self.avatar:
-            return self.avatar.url
-
-    def banner(self):
-        if self.mypage.banner:
-            return self.mypage.banner.url
-
-    def plan_name(self):
-        return self.plan.plan.name
-
-    def plan_start_date(self):
-        return self.plan.start_date
-
-    def plan_end_date(self):
-        return self.plan.end_date
