@@ -1,9 +1,9 @@
-from datetime import date
 from dataclasses import dataclass
+from typing import Any
 from api.types.data.plan import PlanData
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class UserData:
     avatar: str
     email: str
@@ -13,58 +13,6 @@ class UserData:
 
 
 @dataclass(frozen=True, slots=True)
-class SettingProfileData:
-    avatar: str
-    email: str
-    username: str
-    nickname: str
-    full_name: str
-    last_name: str
-    first_name: str
-    year: int
-    month: int
-    day: int
-    age: int
-    gender: str
-    phone: str
-    country_code: str
-    postal_code: str
-    prefecture: str
-    city: str
-    street: str
-    introduction: str
-
-
-@dataclass(frozen=True, slots=True)
-class SettingMyPageData:
-    banner: str
-    nickname: str
-    email: str
-    content: str
-    follower_count: int
-    following_count: int
-    tag_manager_id: str
-    plan: str
-    plan_start_date: date
-    plan_end_date: date
-    is_advertise: bool
-
-
-@dataclass(frozen=True, slots=True)
-class SettingNotificationData:
-    is_video: bool
-    is_music: bool
-    is_comic: bool
-    is_picture: bool
-    is_blog: bool
-    is_chat: bool
-    is_follow: bool
-    is_reply: bool
-    is_like: bool
-    is_views: bool
-
-
-@dataclass(frozen=True)
 class UserPlanData:
     plan: PlanData
     customer_id: str
@@ -72,3 +20,41 @@ class UserPlanData:
     is_paid: int
     start_date: int
     end_date: int
+
+
+@dataclass(frozen=True, slots=True)
+class AuthorData:
+    avatar: str
+    nickname: str
+    follower_count: int
+
+
+@dataclass(frozen=True, slots=True)
+class MediaUserData:
+    avatar: str
+    nickname: str
+    is_like: bool
+    is_follow: bool
+
+
+@dataclass(frozen=True, slots=True)
+class NotificationUserData:
+    avatar: int
+    nickname: str
+
+
+@dataclass(frozen=True, slots=True)
+class NotificationData:
+    id: int
+    user_from: NotificationUserData
+    user_to: NotificationUserData
+    type_no: int
+    type_name: str
+    content_object: Any
+    is_confirmed: bool
+
+
+@dataclass(frozen=True)
+class NotificationData:
+    count: int
+    datas: list[NotificationData]
