@@ -1,6 +1,6 @@
 from datetime import datetime
 from dataclasses import dataclass
-from api.types.dto.user import AuthorData
+from api.types.data.user import AuthorData
 
 
 @dataclass(frozen=True, slots=True)

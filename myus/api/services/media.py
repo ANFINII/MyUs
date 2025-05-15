@@ -1,12 +1,9 @@
-from datetime import datetime
-from dataclasses import dataclass
 from api.models import Video, Music, Comic, Picture, Blog, Chat
 from api.utils.enum.index import MediaModelType
 from api.utils.functions.index import create_url
-from api.utils.functions.search import search_media
 from api.utils.functions.user import get_author
 from api.domain.media import MediaDomain, FilterOption, SortOption
-from api.types.data.media import HomeData, VideoData, MusicData, ComicsData, PictureData, BlogData, ChatData, AuthorData
+from api.types.data.media import HomeData, VideoData, MusicData, ComicsData, PictureData, BlogData, ChatData
 
 
 def get_home(limit: int, search: str | None) -> HomeData:
