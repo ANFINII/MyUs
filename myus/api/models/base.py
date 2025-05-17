@@ -10,9 +10,8 @@ class MediaModel:
 
     def comment_count(self):
         class_name = self.__class__.__name__
-        objs = Comment.objects.filter(media_type=class_name, object_id=self.id).count()
-        count = objs.count()
-        return count
+        objs = Comment.objects.filter(media_type=class_name, object_id=self.id)
+        return objs.count()
     comment_count.short_description = "comment"
 
     def score(self):

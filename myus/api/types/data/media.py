@@ -41,6 +41,7 @@ class VideoData(MediaData):
     image: str
     video: str
     convert: str
+    comment_count: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -62,6 +63,7 @@ class MusicData(MediaData):
     lyric: str
     music: str
     download: bool
+    comment_count: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -81,6 +83,7 @@ class MusicDetailOutData():
 @dataclass(frozen=True, slots=True)
 class ComicsData(MediaData):
     image: str
+    comment_count: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -98,6 +101,7 @@ class ComicsDetailOutData():
 @dataclass(frozen=True, slots=True)
 class PictureData(MediaData):
     image: str
+    comment_count: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -115,6 +119,7 @@ class PictureDetailOutData():
 @dataclass(frozen=True, slots=True)
 class BlogData(MediaData):
     image: str
+    comment_count: int
 
 
 @dataclass(frozen=True, slots=True)
