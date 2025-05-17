@@ -54,7 +54,7 @@ class NotificationData:
     is_confirmed: bool
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class NotificationData:
     count: int
     datas: list[NotificationData]
