@@ -12,7 +12,7 @@ class ReplyData:
     author: AuthorData
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class MessageData:
     id: str
     text: str

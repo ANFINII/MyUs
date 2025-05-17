@@ -16,14 +16,14 @@ class SortType(Enum):
     SCORE = auto()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class FilterOption:
     publish: bool | None = True
     category_id: int | None = None
     search: str | None = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class SortOption:
     is_asc: bool = False
     sort_type: SortType = SortType.ID
