@@ -9,9 +9,15 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
 from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Comment
-from api.types.data.comment import CommentInData, CommentData, ReplyData
+from api.types.data.comment import CommentInData
+from api.types.data.media import VideoDetailOutData, VideoDetailData
+from api.types.data.media import MusicDetailOutData, MusicDetailData
+from api.types.data.media import ComicDetailOutData, ComicDetailData
 from api.types.data.media import BlogDetailOutData, BlogDetailData
+from api.types.data.media import PictureDetailOutData, PictureDetailData
+from api.types.data.media import ChatDetailOutData, ChatDetailData
 from api.domain.comment import CommnetDomain
+from api.domain.message import MessageDomain
 from api.domain.media import MediaDomain
 from api.utils.contains import model_media_comment_dict
 from api.utils.functions.convert.convert_hls import convert_exe
@@ -19,7 +25,6 @@ from api.services.media import get_home, get_recommend, get_videos, get_musics, 
 from api.services.user import get_user
 from api.utils.enum.response import ApiResponse
 from api.utils.functions.index import is_bool, create_url
-from api.utils.functions.comment import get_comments, get_comment_data
 from api.utils.functions.media import get_video_detail_data
 from api.utils.functions.response import DataResponse
 from api.utils.functions.user import get_author, get_media_user
@@ -51,12 +56,35 @@ class VideoListAPI(APIView):
 
 class VideoAPI(APIView):
     def get(self, request, id) -> DataResponse:
-        obj = Video.objects.filter(id=id, publish=True).first()
+        obj = MediaDomain.get(model=Video, id=id, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
-        comments = get_comments(obj)
-        data = get_video_detail_data(obj, comments)
+        search = request.query_params.get("search")
+        user = get_user(request)
+        comments = CommnetDomain.get(media_type="Video", object_id=obj.id, author_id=obj.author.id)
+
+        data = VideoDetailOutData(
+            detail=VideoDetailData(
+                id=obj.id,
+                title=obj.title,
+                content=obj.content,
+                image=obj.image.url,
+                video=obj.video.url,
+                convert=obj.convert.url,
+                comments=comments,
+                hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
+                like=obj.total_like(),
+                read=obj.read,
+                publish=obj.publish,
+                created=obj.created,
+                updated=obj.updated,
+                author=get_author(obj.author),
+                user=get_media_user(user, obj) if user else None,
+            ),
+            list=get_videos(50, search),
+        )
+
         return DataResponse(data, HTTP_200_OK)
 
     def post(self, request) -> DataResponse:
@@ -98,28 +126,35 @@ class MusicListAPI(APIView):
 
 class MusicAPI(APIView):
     def get(self, request, id) -> DataResponse:
-        obj = Music.objects.filter(id=id, publish=True).first()
+        obj = MediaDomain.get(model=Music, id=id, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
-        comments = get_comments(obj)
+        search = request.query_params.get("search")
+        user = get_user(request)
+        comments = CommnetDomain.get(media_type="Music", object_id=obj.id, author_id=obj.author.id)
 
-        data = {
-            "id": obj.id,
-            "title": obj.title,
-            "content": obj.content,
-            "lyric": obj.lyric,
-            "music": obj.music.url,
-            "comment": [get_comment_data(comment) for comment in comments],
-            "hashtag": [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            "like": obj.total_like(),
-            "read": obj.read,
-            "comment_count": obj.comment_count(),
-            "publish": obj.publish,
-            "created": obj.created,
-            "updated": obj.updated,
-            "author": get_author(obj.author),
-        }
+        data = MusicDetailOutData(
+            detail=MusicDetailData(
+                id=obj.id,
+                title=obj.title,
+                content=obj.content,
+                lyric=obj.lyric,
+                music=obj.music.url,
+                convert=obj.convert.url,
+                comments=comments,
+                hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
+                like=obj.total_like(),
+                read=obj.read,
+                publish=obj.publish,
+                created=obj.created,
+                updated=obj.updated,
+                author=get_author(obj.author),
+                user=get_media_user(user, obj) if user else None,
+            ),
+            list=get_musics(50, search),
+        )
+
         return DataResponse(data, HTTP_200_OK)
 
 
@@ -152,26 +187,33 @@ class ComicListAPI(APIView):
 
 class ComicAPI(APIView):
     def get(self, request, id) -> DataResponse:
-        obj = Comic.objects.filter(id=id, publish=True).first()
+        obj = MediaDomain.get(model=Comic, id=id, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
-        comments = get_comments(obj)
+        search = request.query_params.get("search")
+        user = get_user(request)
+        comments = CommnetDomain.get(media_type="Comic", object_id=obj.id, author_id=obj.author.id)
 
-        data = {
-            "id": obj.id,
-            "title": obj.title,
-            "content": obj.content,
-            "comment": [get_comment_data(comment) for comment in comments],
-            "hashtag": [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            "like": obj.total_like(),
-            "read": obj.read,
-            "comment_count": obj.comment_count(),
-            "publish": obj.publish,
-            "created": obj.created,
-            "updated": obj.updated,
-            "author": get_author(obj.author),
-        }
+        data = ComicDetailOutData(
+            detail=ComicDetailData(
+                id=obj.id,
+                title=obj.title,
+                content=obj.content,
+                image=obj.image.url,
+                comments=comments,
+                hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
+                like=obj.total_like(),
+                read=obj.read,
+                publish=obj.publish,
+                created=obj.created,
+                updated=obj.updated,
+                author=get_author(obj.author),
+                user=get_media_user(user, obj) if user else None,
+            ),
+            list=get_comics(50, search),
+        )
+
         return DataResponse(data, HTTP_200_OK)
 
     def post(self, request) -> DataResponse:
@@ -206,27 +248,33 @@ class PictureListAPI(APIView):
 
 class PictureAPI(APIView):
     def get(self, request, id) -> DataResponse:
-        obj = Picture.objects.filter(id=id, publish=True).first()
+        obj = MediaDomain.get(model=Picture, id=id, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
-        comments = get_comments(obj)
+        search = request.query_params.get("search")
+        user = get_user(request)
+        comments = CommnetDomain.get(media_type="Picture", object_id=obj.id, author_id=obj.author.id)
 
-        data = {
-            "id": obj.id,
-            "title": obj.title,
-            "content": obj.content,
-            "image": create_url(obj.image.url),
-            "comment": [get_comment_data(comment) for comment in comments],
-            "hashtag": [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            "like": obj.total_like(),
-            "read": obj.read,
-            "comment_count": obj.comment_count(),
-            "publish": obj.publish,
-            "created": obj.created,
-            "updated": obj.updated,
-            "author": get_author(obj.author),
-        }
+        data = PictureDetailOutData(
+            detail=PictureDetailData(
+                id=obj.id,
+                title=obj.title,
+                content=obj.content,
+                image=obj.image.url,
+                comments=comments,
+                hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
+                like=obj.total_like(),
+                read=obj.read,
+                publish=obj.publish,
+                created=obj.created,
+                updated=obj.updated,
+                author=get_author(obj.author),
+                user=get_media_user(user, obj) if user else None,
+            ),
+            list=get_pictures(50, search),
+        )
+
         return DataResponse(data, HTTP_200_OK)
 
     def post(self, request) -> DataResponse:
@@ -320,36 +368,35 @@ class ChatListAPI(APIView):
 
 class ChatAPI(APIView):
     def get(self, request, id) -> DataResponse:
-        obj = Chat.objects.filter(id=id, publish=True).first()
+        obj = MediaDomain.get(model=Chat, id=id, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
-        messages = obj.message.filter(parent__isnull=True).select_related("author")
+        search = request.query_params.get("search")
+        user = get_user(request)
+        messages = MessageDomain.get_messages(chat_id=obj.id)
 
-        data = {
-            "id": obj.id,
-            "title": obj.title,
-            "content": obj.content,
-            "message": [{
-                "id": message.id,
-                "text": message.text,
-                "reply_count": message.reply_count,
-                "created": message.created,
-                "author": message.author.id,
-                "image": message.author.image(),
-                "nickname": message.author.nickname
-            } for message in messages],
-            "hashtag": [hashtag.jp_name for hashtag in obj.hashtag.all()],
-            "like": obj.total_like(),
-            "read": obj.read,
-            "thread": obj.thread,
-            "joined": obj.joined,
-            "period": obj.period,
-            "publish": obj.publish,
-            "created": obj.created,
-            "updated": obj.updated,
-            "author": get_author(obj.author),
-        }
+        data = ChatDetailOutData(
+            detail=ChatDetailData(
+                id=obj.id,
+                title=obj.title,
+                content=obj.content,
+                messages=messages,
+                hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
+                like=obj.total_like(),
+                read=obj.read,
+                thread=obj.thread,
+                joined=obj.joined,
+                period=obj.period,
+                publish=obj.publish,
+                created=obj.created,
+                updated=obj.updated,
+                author=get_author(obj.author),
+                user=get_media_user(user, obj) if user else None,
+            ),
+            list=get_chats(50, search),
+        )
+
         return DataResponse(data, HTTP_200_OK)
 
     def post(self, request) -> Response:

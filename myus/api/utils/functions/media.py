@@ -1,9 +1,8 @@
 from api.types.data.media import HashtagData
 from api.models.media import HashTag
+from api.types.data.comment import CommentData
 from api.types.data.media import VideoDetailData
 from api.models.media import Video
-from api.models.comment import Comment
-from api.utils.functions.comment import get_comment_data
 from api.utils.functions.user import get_author
 
 
@@ -11,7 +10,7 @@ def get_hashtag(hashtag: HashTag) -> HashtagData:
     return HashtagData(jp_name=hashtag.jp_name)
 
 
-def get_video_detail_data(video: Video, comments: list[Comment]) -> HashtagData:
+def get_video_detail_data(video: Video, comments: list[CommentData]) -> VideoDetailData:
     data = VideoDetailData(
         id=video.id,
         title=video.title,
@@ -19,7 +18,7 @@ def get_video_detail_data(video: Video, comments: list[Comment]) -> HashtagData:
         image=video.image.url,
         video=video.video.url,
         convert=video.convert.url,
-        comments=[get_comment_data(comment) for comment in comments],
+        comments=comments,
         hashtags=[get_hashtag(hashtag) for hashtag in video.hashtag.all()],
         like=video.total_like(),
         read=video.read,
