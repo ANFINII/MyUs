@@ -520,6 +520,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "django-debug-toolbar" },
+    { name = "mypy" },
 ]
 
 [package.metadata]
@@ -548,7 +549,10 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-dev = [{ name = "django-debug-toolbar", specifier = ">=5.1.0" }]
+dev = [
+    { name = "django-debug-toolbar", specifier = ">=5.1.0" },
+    { name = "mypy", specifier = ">=1.15.0" },
+]
 
 [[package]]
 name = "packaging"
