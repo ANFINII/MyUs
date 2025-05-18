@@ -3,7 +3,7 @@ from api.utils.enum.index import MediaModelType
 from api.utils.functions.index import create_url
 from api.utils.functions.user import get_author
 from api.domain.media import MediaDomain, FilterOption, SortOption
-from api.types.data.media import HomeData, VideoData, MusicData, ComicsData, PictureData, BlogData, ChatData
+from api.types.data.media import HomeData, VideoData, MusicData, ComicData, PictureData, BlogData, ChatData
 
 
 def get_home(limit: int, search: str | None) -> HomeData:
@@ -74,10 +74,10 @@ def get_musics(limit: int, search: str | None) -> list[MusicData]:
     return data
 
 
-def get_comics(limit: int, search: str | None) -> list[ComicsData]:
+def get_comics(limit: int, search: str | None) -> list[ComicData]:
     objs = MediaDomain.bulk_get(Comic, FilterOption(search=search), SortOption(), limit)
 
-    data = [ComicsData(
+    data = [ComicData(
         id=obj.id,
         title=obj.title,
         content=obj.content,
@@ -108,7 +108,7 @@ def get_pictures(limit: int, search: str | None) -> list[PictureData]:
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author)
+        author=get_author(obj.author),
     ) for obj in objs]
 
     return data
@@ -143,7 +143,6 @@ def get_chats(limit: int, search: str | None) -> list[ChatData]:
         content=obj.content,
         like=obj.total_like(),
         read=obj.read,
-        comment_count=obj.comment_count(),
         thread=obj.thread_count(),
         joined=obj.joined_count(),
         period=obj.period,
