@@ -4,8 +4,9 @@ from api.types.data.user import AuthorData
 
 
 @dataclass(frozen=True, slots=True)
-class ReplyData:
-    id: str
+class MessageReplyData:
+    id: int
+    parent_id: int
     text: str
     created: datetime
     updated: datetime
@@ -14,15 +15,8 @@ class ReplyData:
 
 @dataclass(frozen=True, slots=True)
 class MessageData:
-    id: str
+    id: int
     text: str
     created: datetime
     updated: datetime
-    replys: list[ReplyData]
     author: AuthorData
-
-
-@dataclass(frozen=True, slots=True)
-class CommentInData:
-    text: str
-    type: str
