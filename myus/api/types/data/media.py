@@ -81,21 +81,21 @@ class MusicDetailOutData():
 
 
 @dataclass(frozen=True, slots=True)
-class ComicsData(MediaData):
+class ComicData(MediaData):
     image: str
     comment_count: int
 
 
 @dataclass(frozen=True, slots=True)
-class ComicsDetailData(MediaDetailData):
+class ComicDetailData(MediaDetailData):
     image: str
     comments: list[CommentData]
 
 
 @dataclass(frozen=True, slots=True)
-class ComicsDetailOutData():
-    detail: ComicsDetailData
-    list: list[ComicsData]
+class ComicDetailOutData():
+    detail: ComicDetailData
+    list: list[ComicData]
 
 
 @dataclass(frozen=True, slots=True)
@@ -160,7 +160,7 @@ class ChatDetailOutData():
 class HomeData():
     videos: list[VideoData]
     musics: list[MusicData]
-    comics: list[ComicsData]
+    comics: list[ComicData]
     pictures: list[PictureData]
     blogs: list[BlogData]
     chats: list[ChatData]
