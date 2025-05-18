@@ -5,7 +5,7 @@ from api.types.data.user import AuthorData
 
 @dataclass(frozen=True, slots=True)
 class ReplyData:
-    id: str
+    id: int
     text: str
     created: datetime
     updated: datetime
@@ -14,7 +14,7 @@ class ReplyData:
 
 @dataclass(frozen=True, slots=True)
 class CommentData:
-    id: str
+    id: int
     text: str
     created: datetime
     updated: datetime

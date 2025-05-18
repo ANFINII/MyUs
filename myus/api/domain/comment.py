@@ -24,12 +24,12 @@ class CommnetDomain:
 def get_comment_data(comments: list[Comment]) -> list[CommentData]:
     data = [
         CommentData(
-            id=str(c.id),
+            id=c.id,
             text=c.text,
             created=c.created,
             updated=c.updated,
             replys=[
-                ReplyData(id=str(r.id), text=r.text, created=r.created, updated=r.updated, author=get_author(r.author))
+                ReplyData(id=r.id, text=r.text, created=r.created, updated=r.updated, author=get_author(r.author))
                 for r in c.reply.all()
             ],
             author=get_author(c.author),
