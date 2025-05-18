@@ -25,14 +25,37 @@ dependencies = [
     "pillow>=11.1.0",
     "python-dateutil>=2.9.0.post0",
     "python-ffmpeg-video-streaming>=0.1.16",
-    "ruff>=0.11.5",
     "stripe>=12.0.0",
 ]
 
 [dependency-groups]
-dev = [
-    "django-debug-toolbar>=5.1.0",
-]
+dev = ["django-debug-toolbar>=5.1.0", "mypy>=1.15.0"]
+
+[tool.mypy]
+python_version = "3.13"            # Pythonのバージョンを指定
+warn_return_any = true             # 戻り値の型がAnyの場合に警告
+warn_unused_configs = true         # 使用されていない設定がある場合に警告
+disallow_untyped_defs = true       # 型アノテーションのない関数定義を禁止
+disallow_incomplete_defs = true    # 一部のパラメータにのみ型アノテーションがある関数を禁止
+check_untyped_defs = true          # 型アノテーションのない関数の中身もチェック
+disallow_untyped_decorators = true # 型アノテーションのないデコレータを禁止
+no_implicit_optional = true        # 暗黙的なOptional型を禁止
+warn_redundant_casts = true        # 不要な型キャストがある場合に警告
+warn_unused_ignores = true         # 不要な型チェック無視の指定がある場合に警告
+warn_no_return = true              # 関数が値を返さない可能性がある場合に警告
+warn_unreachable = true            # 到達不可能なコードがある場合に警告
+strict_optional = true             # Optional型の厳密なチェックを有効化
+disallow_any_unimported = true     # インポートされていない型のAnyを禁止
+disallow_untyped_calls = true      # 型アノテーションのない関数呼び出しを禁止
+strict = true                      # すべての厳密なチェックを有効化
+
+# サードパーティライブラリの型チェック設定
+ignore_missing_imports = true # 外部ライブラリの型情報が見つからない場合はエラーを無視
+
+# 特定のモジュールの設定
+[[tool.mypy.overrides]]
+module = "tests.*"            # testsディレクトリ配下のモジュールに対して
+disallow_untyped_defs = false # 型アノテーションのない関数定義を許可
 
 # [tool.ruff]
 # line-length =  200
