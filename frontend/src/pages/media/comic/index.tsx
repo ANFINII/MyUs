@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Comic } from 'types/internal/media'
 import { getComics } from 'api/internal/media/list'
 import { searchParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/ErrorCheck'
+import ErrorCheck from 'components/widgets/Error/Check'
 import Comics from 'components/templates/media/comic/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {

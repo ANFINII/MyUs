@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Music } from 'types/internal/media'
 import { getMusics } from 'api/internal/media/list'
 import { searchParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/ErrorCheck'
+import ErrorCheck from 'components/widgets/Error/Check'
 import Musics from 'components/templates/media/music/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {

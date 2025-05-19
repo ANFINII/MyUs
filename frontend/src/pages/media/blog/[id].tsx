@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { BlogDetailOut } from 'types/internal/media'
 import { getBlog } from 'api/internal/media/detail'
-import ErrorCheck from 'components/widgets/ErrorCheck'
+import ErrorCheck from 'components/widgets/Error/Check'
 import BlogDetail from 'components/templates/media/blog/detail'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
