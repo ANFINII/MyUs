@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { UserNotificationOut } from 'types/internal/auth'
 import { getSettingNotification } from 'api/internal/setting'
-import ErrorCheck from 'components/widgets/ErrorCheck'
+import ErrorCheck from 'components/widgets/Error/Check'
 import SettingNotification from 'components/templates/setting/notification'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {

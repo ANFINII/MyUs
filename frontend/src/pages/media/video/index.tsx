@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Video } from 'types/internal/media'
 import { getVideos } from 'api/internal/media/list'
 import { searchParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/ErrorCheck'
+import ErrorCheck from 'components/widgets/Error/Check'
 import Videos from 'components/templates/media/video/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
