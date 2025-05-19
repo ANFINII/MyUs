@@ -15,11 +15,8 @@
   "git.openRepositoryInParentFolders": "always",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "workbench.startupEditor": "none",
   "workbench.editor.decorations.colors": false,
   "workbench.colorTheme": "Default Light+",
-  "workbench.iconTheme": "vscode-icons",
-  "vsicons.dontShowNewVersionMessage": true,
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
@@ -54,11 +51,8 @@
   "eslint.format.enable": true,
   "eslint.lintTask.enable": true,
   "python.languageServer": "Pylance",
-  // "python.defaultInterpreterPath": "/Users/anfinii/Documents/MyUs/myus/home/vscode/.venv/bin/python",
   "python.defaultInterpreterPath": "${workspaceFolder}/myus/.venv/bin/python",
-  "python.analysis.extraPaths": [
-    "./"
-  ],
+  "python.analysis.extraPaths": ["./"],
   "python.analysis.autoSearchPaths": true,
   "python.analysis.useLibraryCodeForTypes": true,
   "python.analysis.autoImportCompletions": false,
