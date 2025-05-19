@@ -33,6 +33,8 @@ dev = ["django-debug-toolbar>=5.1.0", "mypy>=1.15.0"]
 
 [tool.mypy]
 python_version = "3.13"            # Pythonのバージョンを指定
+strict = true                      # すべての厳密なチェックを有効化
+show_error_codes = true            # エラーコードを表示
 warn_return_any = true             # 戻り値の型がAnyの場合に警告
 warn_unused_configs = true         # 使用されていない設定がある場合に警告
 disallow_untyped_defs = true       # 型アノテーションのない関数定義を禁止
@@ -47,7 +49,6 @@ warn_unreachable = true            # 到達不可能なコードがある場合�
 strict_optional = true             # Optional型の厳密なチェックを有効化
 disallow_any_unimported = true     # インポートされていない型のAnyを禁止
 disallow_untyped_calls = true      # 型アノテーションのない関数呼び出しを禁止
-strict = true                      # すべての厳密なチェックを有効化
 
 # サードパーティライブラリの型チェック設定
 ignore_missing_imports = true # 外部ライブラリの型情報が見つからない場合はエラーを無視
