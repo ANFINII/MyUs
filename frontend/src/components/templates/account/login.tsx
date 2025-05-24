@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'
+import { encrypt } from 'utils/functions/encrypt'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
@@ -27,8 +28,9 @@ export default function Login(): JSX.Element {
   const handleSubmit = async () => {
     const { username, password } = values
     if (!isRequiredCheck({ username, password })) return
+    const request = { username: encrypt(username), password: encrypt(password) }
     setIsLoading(true)
-    const ret = await postLogin(values)
+    const ret = await postLogin(request)
     if (ret.isErr()) return handleToast('エラーが発生しました！', true)
     const data = ret.value
     if (data) setMessage(data.message)
