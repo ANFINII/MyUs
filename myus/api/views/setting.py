@@ -1,6 +1,5 @@
 import datetime
 
-from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
@@ -16,7 +15,7 @@ from api.utils.functions.response import DataResponse
 
 
 class SettingProfileAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         user = get_user(request)
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
@@ -101,7 +100,7 @@ class SettingMyPageAPI(APIView):
         )
         return DataResponse(data, HTTP_200_OK)
 
-    def put(self, request):
+    def put(self, request) -> DataResponse:
         user = get_user(request)
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
@@ -111,7 +110,7 @@ class SettingMyPageAPI(APIView):
         banner = data.get("banner")
 
         if has_email(data["email"]):
-            return Response(message(True, "メールアドレスの形式が違います!"), status=HTTP_400_BAD_REQUEST)
+            return DataResponse(message(True, "メールアドレスの形式が違います!"), status=HTTP_400_BAD_REQUEST)
 
         update_fields = ["email", "tag_manager_id", "content"]
         [setattr(mypage, field, data.get(field)) for field in update_fields]
@@ -121,14 +120,14 @@ class SettingMyPageAPI(APIView):
         try:
             mypage.save()
         except Exception:
-            return Response(message(True, "メールアドレスが既に登録済みです!"), status=HTTP_400_BAD_REQUEST)
+            return DataResponse(message(True, "メールアドレスが既に登録済みです!"), status=HTTP_400_BAD_REQUEST)
 
         Log.info("MyPageAPI", "put", data)
-        return Response(message(False, "success"), status=HTTP_204_NO_CONTENT)
+        return DataResponse(message(False, "success"), status=HTTP_204_NO_CONTENT)
 
 
 class SettingNotificationAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         user = get_user(request)
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
@@ -162,6 +161,6 @@ class SettingNotificationAPI(APIView):
         try:
             user_notification.save()
         except Exception:
-            return Response(message(True, "メールアドレスが既に登録済みです!"), status=HTTP_400_BAD_REQUEST)
+            return DataResponse(message(True, "メールアドレスが既に登録済みです!"), status=HTTP_400_BAD_REQUEST)
 
-        return Response(message(False, "success"), status=HTTP_204_NO_CONTENT)
+        return DataResponse(message(False, "success"), status=HTTP_204_NO_CONTENT)

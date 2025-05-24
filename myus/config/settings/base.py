@@ -179,6 +179,8 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"),]
 DOMAIN_URL = env("DOMAIN_URL")
+ENCRYPT_KEY = env("ENCRYPT_KEY")
+ENCRYPT_IV = env("ENCRYPT_IV")
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

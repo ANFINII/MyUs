@@ -12,7 +12,7 @@ from api.utils.functions.user import get_notification_user
 
 
 class UserAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         user = get_user(request)
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
@@ -28,7 +28,7 @@ class UserAPI(APIView):
 
 
 class SearchTagAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         user = get_user(request)
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
@@ -40,7 +40,7 @@ class SearchTagAPI(APIView):
 
 
 class FollowAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         user = get_user(request)
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
@@ -51,7 +51,7 @@ class FollowAPI(APIView):
 
 
 class FollowerAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         user = get_user(request)
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
@@ -62,7 +62,7 @@ class FollowerAPI(APIView):
 
 
 class NotificationAPI(APIView):
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         user = get_user(request)
         if not user:
             return ApiResponse.UNAUTHORIZED.run()
