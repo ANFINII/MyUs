@@ -15,7 +15,7 @@ from rest_framework_simplejwt import exceptions
 from api.models import User, Profile
 from api.services.user import signup_check
 from api.utils.enum.response import ApiResponse
-from api.utils.functions.encrypt import create_key, encrypt, decrypt
+from api.utils.functions.encrypt import encrypt, decrypt
 from api.utils.functions.index import message
 
 
@@ -86,10 +86,13 @@ class SignUpAPI(CreateAPIView):
 
 class LoginAPI(views.TokenObtainPairView):
     def post(self, request):
-        data = request.data
+        decrypt_data = request.data
+        data = {
+            "username": decrypt(decrypt_data["username"]),
+            "password": decrypt(decrypt_data["password"]),
+        }
         username = data["username"]
         password = data["password"]
-        key = create_key()
 
         user = authenticate(username=username, password=password)
         if not user:
@@ -117,7 +120,7 @@ class LoginAPI(views.TokenObtainPairView):
         refresh = serializer.validated_data["refresh"]
         response.set_cookie("access_token", access, max_age=60 * 60 * 24 * 10, httponly=True)
         response.set_cookie("refresh_token", refresh, max_age=60 * 60 * 24 * 30, httponly=True)
-        response.data["user"] = {"id": encrypt(key, f"{user.id}"), "avatar": user.image(), "nickname": user.nickname, "is_staff": user.is_staff}
+        response.data["user"] = {"id": encrypt(str(user.id)), "avatar": user.image(), "nickname": user.nickname, "is_staff": user.is_staff}
         return response
 
 
