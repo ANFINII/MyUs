@@ -5,11 +5,11 @@ export interface Props {
   onClose: () => void
   onAction: () => void
   loading?: boolean
-  children: React.ReactNode
+  content: React.ReactNode
 }
 
 export default function CommentDeleteModal(props: Props): JSX.Element {
-  const { open, onClose, onAction, loading, children } = props
+  const { open, onClose, onAction, loading, content } = props
 
   return (
     <Modal
@@ -19,7 +19,7 @@ export default function CommentDeleteModal(props: Props): JSX.Element {
       actions={[{ name: '削除', color: 'red', loading, onClick: onAction }, { name: 'キャンセル', color: 'white', onClick: onClose }]}
     >
       <div>このメッセージを削除しますか？</div>
-      {children}
+      {content}
     </Modal>
   )
 }
