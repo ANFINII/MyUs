@@ -13,6 +13,7 @@ import Divide from 'components/parts/Divide'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Vertical from 'components/parts/Stack/Vertical'
 import CommentInput from 'components/widgets/Comment/Input'
+import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import Zoom from 'components/widgets/Zoom'
 
 interface Props {
@@ -35,18 +36,17 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const { title, content, read, like, created, comments, author, user, type } = media
 
   const router = useRouter()
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   const [isLike, setIsLike] = useState<boolean>(Boolean(user?.isLike))
-  const [isContentView, setIsContentVIew] = useState<boolean>(false)
+  const [isContentView, setIsContentView] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
   const [text, setText] = useState<string>('')
 
-  const handleComment = (value: string): void => setText(value)
-  const handleContentView = () => setIsContentVIew(!isContentView)
+  const handleModal = () => setIsOpen(!isOpen)
+  const handleLike = () => setIsLike(!isLike)
+  const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
-
-  const handleLike = () => {
-    setIsLike(!isLike)
-  }
+  const handleComment = (value: string): void => setText(value)
 
   const handleMediaComment = async () => {
     const id = Number(router.query.id)
@@ -124,6 +124,8 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
         <h2>個別広告</h2>
         <article className="article_list">{/* {% include 'parts/advertise_article.html' %} */}</article>
       </div>
+
+      <CommentDeleteModal open={isOpen} onClose={handleModal} onAction={handleModal} content={<></>} />
     </div>
   )
 }
