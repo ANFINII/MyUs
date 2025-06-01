@@ -1,7 +1,7 @@
 export enum GenderType {
-  Male = '0',
-  Female = '1',
-  Secret = '2',
+  Male = 'male',
+  Female = 'female',
+  Secret = 'secret',
 }
 
 export enum GenderView {

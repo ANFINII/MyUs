@@ -29,6 +29,6 @@ export const getChat = async (id: number, req?: Req): Promise<ApiOut<Chat>> => {
   return await apiOut(apiClient.get(apiChat(id), cookieHeader(req)))
 }
 
-export const createComment = async (id: number, request: CommnetIn): Promise<ApiOut<void>> => {
+export const postComment = async (id: number, request: CommnetIn): Promise<ApiOut<void>> => {
   return await apiOut(apiClient.post(apiCommnet(id), request))
 }
