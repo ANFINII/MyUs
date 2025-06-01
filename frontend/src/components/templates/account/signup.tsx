@@ -2,9 +2,9 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { SignupIn } from 'types/internal/auth'
 import { postSignup } from 'api/internal/auth'
-import { Gender } from 'utils/constants/enum'
+import { GenderType } from 'utils/constants/enum'
+import { genderMap } from 'utils/constants/map'
 import { nowDate, selectDate } from 'utils/functions/datetime'
-import { genders } from 'utils/functions/user'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
@@ -28,7 +28,7 @@ const initSignup: SignupIn = {
   year: nowDate.year - 50,
   month: 6,
   day: 15,
-  gender: Gender.Male,
+  gender: GenderType.Male,
 }
 
 export default function Signup(): JSX.Element {
@@ -95,8 +95,8 @@ export default function Signup(): JSX.Element {
             <Vertical gap="4">
               <p>性別</p>
               <Horizontal gap="5">
-                {genders.map((gender) => (
-                  <Radio key={gender.key} label={gender.key} name="gender" value={gender.value} checked={gender.value === values.gender} onChange={handleInput} />
+                {Object.entries(GenderType).map(([key, value]) => (
+                  <Radio key={key} name="gender" label={genderMap[value]} value={value} checked={value === values.gender} onChange={handleInput} />
                 ))}
               </Horizontal>
             </Vertical>

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { ProfileOut } from 'types/internal/auth'
-import { genderMap } from 'utils/functions/user'
+import { genderMap } from 'utils/constants/map'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
