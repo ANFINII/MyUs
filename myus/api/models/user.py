@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 from django.utils import timezone
 from api.models.master import Plan
+from api.utils.enum.index import GenderType
 from api.utils.functions.file import user_image
 
 
@@ -144,14 +145,14 @@ class ProfileManager(models.Manager):
 
 class Profile(models.Model):
     """Profile"""
-    gender_type  = (("0", "男性"), ("1", "女性"), ("2", "秘密"))
+    gender_type  = ((GenderType.MALE, "男性"), (GenderType.FEMALE, "女性"), (GenderType.SECRET, "秘密"))
     message      = "電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます"
     phone_no     = RegexValidator(regex=r"\d{2,4}-?\d{2,4}-?\d{3,4}", message=message)
     user         = models.OneToOneField(User, on_delete=models.CASCADE)
     last_name    = models.CharField(max_length=50)
     first_name   = models.CharField(max_length=50)
     birthday     = models.DateField(blank=True, null=True)
-    gender       = models.CharField(choices=gender_type, max_length=1)
+    gender       = models.CharField(choices=gender_type, max_length=6)
     phone        = models.CharField(validators=[phone_no], max_length=15, blank=True)
     country_code = models.CharField(max_length=255, default="JP")
     postal_code  = models.CharField(max_length=255, blank=True)

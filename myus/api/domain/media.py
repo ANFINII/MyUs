@@ -3,7 +3,7 @@ from enum import Enum, auto
 from functools import reduce
 from operator import and_
 
-from api.utils.enum.index import MediaModelType
+from api.types.union.media import MediaModelType
 from api.utils.functions.search import search_q_list
 from django.db.models import Count, F, Q
 
