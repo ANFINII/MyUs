@@ -60,13 +60,14 @@ export default function DropMenuNotice(props: Props): JSX.Element {
   }
 
   const handleClick = (typeName: NotificationType, notification: Notification) => {
-    if (typeName === NotificationType.Video) handleRouter(`/video/detail/${notification.contentObject.id}`)
-    if (typeName === NotificationType.Music) handleRouter(`/music/detail/${notification.contentObject.id}`)
-    if (typeName === NotificationType.Comic) handleRouter(`/comic/detail/${notification.contentObject.id}`)
-    if (typeName === NotificationType.Picture) handleRouter(`/picture/detail/${notification.contentObject.id}`)
-    if (typeName === NotificationType.Blog) handleRouter(`/blog/detail/${notification.contentObject.id}`)
-    if (typeName === NotificationType.Chat) handleRouter(`/chat/detail/${notification.contentObject.id}`)
-    if (otherObjects.includes(typeName)) handleRouter(`/userpage/${notification.userFrom.nickname}`)
+    const { contentObject, userFrom } = notification
+    if (typeName === NotificationType.Video) handleRouter(`/video/detail/${contentObject.id}`)
+    if (typeName === NotificationType.Music) handleRouter(`/music/detail/${contentObject.id}`)
+    if (typeName === NotificationType.Comic) handleRouter(`/comic/detail/${contentObject.id}`)
+    if (typeName === NotificationType.Picture) handleRouter(`/picture/detail/${contentObject.id}`)
+    if (typeName === NotificationType.Blog) handleRouter(`/blog/detail/${contentObject.id}`)
+    if (typeName === NotificationType.Chat) handleRouter(`/chat/detail/${contentObject.id}`)
+    if (otherObjects.includes(typeName)) handleRouter(`/userpage/${userFrom.nickname}`)
   }
 
   return (

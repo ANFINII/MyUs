@@ -1,3 +1,4 @@
+import { MediaUser } from 'types/internal/media'
 import { GenderType, NotificationType } from 'utils/constants/enum'
 
 export interface LoginIn {

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { UserNotification, UserNotificationOut } from 'types/internal/auth'
 import { getSettingNotification, putSettingNotification } from 'api/internal/setting'
-import { notificationTypes } from 'utils/functions/user'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -22,7 +21,7 @@ export default function SettingNotification(props: Props): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [values, setValues] = useState<UserNotification>(userNotification)
 
-  const handleToggle = (type: keyof UserNotification) => setValues((prev) => ({ ...prev, [type]: !prev[type] }))
+  const handleToggle = (key: keyof UserNotification) => setValues((prev) => ({ ...prev, [key]: !prev[key] }))
 
   const handleSubmit = async () => {
     setIsLoading(true)
@@ -56,9 +55,9 @@ export default function SettingNotification(props: Props): JSX.Element {
           <TableRow isIndent label="通知設定">
             フォローしているユーザの投稿通知などを設定
           </TableRow>
-          {notificationTypes?.map((type, index) => (
-            <TableRow key={index} isIndent label={`${type.slice(2)}通知`}>
-              <Toggle isActive={values[type]} onClick={() => handleToggle(type)} />
+          {Object.keys(userNotification).map((key) => (
+            <TableRow key={key} isIndent label={`${key.slice(2)}通知`}>
+              <Toggle isActive={values[key as keyof UserNotification]} onClick={() => handleToggle(key as keyof UserNotification)} />
             </TableRow>
           ))}
         </Table>
