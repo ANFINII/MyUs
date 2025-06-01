@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { Comment } from 'types/internal/comment'
 import { Author, CommnetIn, MediaUser } from 'types/internal/media'
-import { createComment } from 'api/internal/media/detail'
+import { postComment } from 'api/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
 import AuthorLink from 'components/parts/AuthorLink'
 import Button from 'components/parts/Button'
@@ -52,7 +52,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
     const id = Number(router.query.id)
     const request: CommnetIn = { text, type }
     try {
-      await createComment(id, request)
+      await postComment(id, request)
       setText('')
     } catch {
       handleToast('エラーが発生しました！', true)
