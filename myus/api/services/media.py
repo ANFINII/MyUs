@@ -1,5 +1,4 @@
 from api.models import Video, Music, Comic, Picture, Blog, Chat
-from api.utils.enum.index import MediaModelType
 from api.utils.functions.index import create_url
 from api.utils.functions.user import get_author
 from api.domain.media import MediaDomain, FilterOption, SortOption
