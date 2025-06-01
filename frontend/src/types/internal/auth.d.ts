@@ -1,4 +1,4 @@
-import { Gender, NotificationType } from 'utils/constants/enum'
+import { GenderType, NotificationType } from 'utils/constants/enum'
 
 export interface LoginIn {
   username: string
@@ -47,7 +47,7 @@ export interface ProfileOut extends User {
   month: number
   day: number
   age: number
-  gender: Gender
+  gender: GenderType
   phone: string
   countryCode: string
   postalCode: string

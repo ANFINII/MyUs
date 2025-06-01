@@ -4,8 +4,9 @@ import { ProfileIn, ProfileOut } from 'types/internal/auth'
 import { getAddress } from 'api/external/address'
 import { putSettingProfile } from 'api/internal/setting'
 import { prefectures } from 'utils/constants/address'
+import { GenderType } from 'utils/constants/enum'
+import { genderMap } from 'utils/constants/map'
 import { selectDate } from 'utils/functions/datetime'
-import { genders } from 'utils/functions/user'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -121,8 +122,8 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
           </TableRow>
           <TableRow label="性別">
             <Horizontal gap="5" className="pl_4">
-              {genders.map((gender) => (
-                <Radio key={gender.key} label={gender.key} name="gender" value={gender.value} checked={gender.value === values.gender} onChange={handleInput} />
+              {Object.entries(GenderType).map(([key, value]) => (
+                <Radio key={key} name="gender" label={genderMap[value]} value={value} checked={value === values.gender} onChange={handleInput} />
               ))}
             </Horizontal>
           </TableRow>
