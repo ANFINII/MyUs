@@ -15,8 +15,8 @@ interface Props {
   onClose: () => void
 }
 
-const mediaObjects = [NotificationType.Video, NotificationType.Music, NotificationType.Comic, NotificationType.Picture, NotificationType.Blog, NotificationType.Chat]
-const otherObjects = [NotificationType.Follow, NotificationType.Like, NotificationType.Reply, NotificationType.Views]
+const mediaObjs = [NotificationType.Video, NotificationType.Music, NotificationType.Comic, NotificationType.Picture, NotificationType.Blog, NotificationType.Chat]
+const otherObjs = [NotificationType.Follow, NotificationType.Like, NotificationType.Reply, NotificationType.Views]
 
 export default function DropMenuNotice(props: Props): JSX.Element {
   const { open, onClose } = props
@@ -67,7 +67,7 @@ export default function DropMenuNotice(props: Props): JSX.Element {
     if (typeName === NotificationType.Picture) handleRouter(`/picture/detail/${contentObject.id}`)
     if (typeName === NotificationType.Blog) handleRouter(`/blog/detail/${contentObject.id}`)
     if (typeName === NotificationType.Chat) handleRouter(`/chat/detail/${contentObject.id}`)
-    if (otherObjects.includes(typeName)) handleRouter(`/userpage/${userFrom.nickname}`)
+    if (mediaObjs.includes(typeName)) handleRouter(`/userpage/${userFrom.nickname}`)
   }
 
   return (
@@ -81,7 +81,7 @@ export default function DropMenuNotice(props: Props): JSX.Element {
           return (
             <NotificationItem key={id} avatar={avatar} nickname={nickname} isConfirmed={notification.isConfirmed} onClick={() => handleClick(typeName, notification)}>
               <>
-                {mediaObjects.includes(typeName) && (
+                {otherObjs.includes(typeName) && (
                   <div className="notification_aria_list_1" title={`${nickname}が${title}を投稿しました`}>
                     {title}
                   </div>
