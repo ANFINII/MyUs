@@ -1,7 +1,7 @@
 export enum GenderType {
-  Male = 'male',
-  Female = 'female',
-  Secret = 'secret',
+  Male = 'Male',
+  Female = 'Female',
+  Secret = 'Secret',
 }
 
 export enum GenderView {
@@ -11,14 +11,14 @@ export enum GenderView {
 }
 
 export enum NotificationType {
-  Video = 'video',
-  Music = 'music',
-  Comic = 'comic',
-  Picture = 'picture',
-  Blog = 'blog',
-  Chat = 'chat',
-  Follow = 'follow',
-  Like = 'like',
-  Reply = 'reply',
-  Views = 'views',
+  Video = 'Video',
+  Music = 'Music',
+  Comic = 'Comic',
+  Picture = 'Picture',
+  Blog = 'Blog',
+  Chat = 'Chat',
+  Follow = 'Follow',
+  Like = 'Like',
+  Reply = 'Reply',
+  Views = 'Views',
 }
