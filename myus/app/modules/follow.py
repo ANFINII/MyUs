@@ -16,7 +16,7 @@ def follow_update_data(follower, following, follow):
         follow = Follow.objects.create(follower=follower.user, following=following.user)
         is_follow = True
         # フォローしました
-        if following.user.notificationsetting.is_follow:
+        if following.user.usernotification.is_follow:
             Notification.objects.create(
                 user_from=follower.user,
                 user_to=following.user,

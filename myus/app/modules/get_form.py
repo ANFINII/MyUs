@@ -29,7 +29,7 @@ def get_detail(self, request):
         obj.save(update_fields=["read"])
 
     if obj.read == 10000:
-        if author.notificationsetting.is_views:
+        if author.usernotification.is_views:
             type_name = [value for key, value in model_dict.items() if obj_class == key][0]
             Notification.objects.create(
                 user_from=author,

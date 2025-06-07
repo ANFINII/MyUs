@@ -567,7 +567,7 @@ def like_form_comment(request):
             comment.like.remove(user)
         else:
             comment.like.add(user)
-            if user != author and author.notificationsetting.is_like:
+            if user != author and author.usernotification.is_like:
                 Notification.objects.create(
                     user_from=user,
                     user_to=author,
@@ -621,7 +621,7 @@ def reply_form(request):
             parent=Comment.objects.get(id=comment_id),
         )
         author = comment.parent.author
-        if user != author and author.notificationsetting.is_reply:
+        if user != author and author.user_notification.is_reply:
             Notification.objects.create(
                 user_from=user,
                 user_to=author,

@@ -275,7 +275,7 @@ class FollowAdmin(ImportExportModelAdmin):
 
 @admin.register(Notification)
 class NotificationAdmin(ImportExportModelAdmin):
-    list_display = ("id", "user_from", "user_to", "type_no", "type_name", "content_type", "object_id", "title", "confirmed_count", "deleted_count", "created")
+    list_display = ("id", "user_from", "user_to", "type_no", "type_name", "object_id", "title", "confirmed_count", "deleted_count", "created")
     list_select_related = ("user_from", "user_to", "content_type")
     search_fields = ("type_name", "created")
     ordering = ("type_no", "created")
@@ -284,7 +284,7 @@ class NotificationAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("user_from", "user_to", "type_no", "type_name", "content_type", "object_id", "confirmed", "deleted")}),
+        ("編集項目", {"fields": ("user_from", "user_to", "type_no", "type_name", "object_id", "confirmed", "deleted")}),
         ("確認項目", {"fields": ("title", "confirmed_count", "deleted_count", "created")})
     ]
 
@@ -310,7 +310,7 @@ class AdvertiseAdmin(ImportExportModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(ImportExportModelAdmin):
-    list_display = ("id", "media_type", "object_id", "author", "parent", "text", "total_like", "reply_count", "created", "updated")
+    list_display = ("id", "type_no", "type_name", "object_id", "author", "parent", "text", "total_like", "reply_count", "created", "updated")
     list_select_related = ("author", "parent")
     search_fields = ("text", "author__nickname", "created", "updated")
     ordering = ("created",)
@@ -319,7 +319,7 @@ class CommentAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("author", "parent", "text", "like", "media_type", "object_id")}),
+        ("編集項目", {"fields": ("author", "parent", "text", "like", "type_no", "type_name", "object_id")}),
         ("確認項目", {"fields": ("total_like", "reply_count", "created", "updated")})
     ]
 
