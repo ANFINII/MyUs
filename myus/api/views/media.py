@@ -16,16 +16,17 @@ from api.types.data.media import ComicDetailOutData, ComicDetailData
 from api.types.data.media import BlogDetailOutData, BlogDetailData
 from api.types.data.media import PictureDetailOutData, PictureDetailData
 from api.types.data.media import ChatDetailOutData, ChatDetailData
-from api.domain.comment import CommnetDomain
+from api.domain.comment import CommentDomain
 from api.domain.message import MessageDomain
 from api.domain.media import MediaDomain
-from api.utils.contains import model_media_comment_dict
-from api.utils.functions.convert.convert_hls import convert_exe
 from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats
 from api.services.user import get_user
+from api.utils.contains import model_media_comment_dict
 from api.utils.enum.response import ApiResponse
-from api.utils.functions.index import is_bool, create_url
-from api.utils.functions.media import get_video_detail_data
+from api.utils.enum.index import CommentType
+from api.utils.functions.convert.convert_hls import convert_exe
+from api.utils.functions.index import is_bool
+from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.response import DataResponse
 from api.utils.functions.user import get_author, get_media_user
 
@@ -62,7 +63,8 @@ class VideoAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
-        comments = CommnetDomain.get(media_type="Video", object_id=obj.id, author_id=obj.author.id)
+        type_no = comment_type_no_map(CommentType.VIDEO)
+        comments = CommentDomain.get(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
 
         data = VideoDetailOutData(
             detail=VideoDetailData(
@@ -132,7 +134,8 @@ class MusicAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
-        comments = CommnetDomain.get(media_type="Music", object_id=obj.id, author_id=obj.author.id)
+        type_no = comment_type_no_map(CommentType.MUSIC)
+        comments = CommentDomain.get(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
 
         data = MusicDetailOutData(
             detail=MusicDetailData(
@@ -193,7 +196,8 @@ class ComicAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
-        comments = CommnetDomain.get(media_type="Comic", object_id=obj.id, author_id=obj.author.id)
+        type_no = comment_type_no_map(CommentType.COMIC)
+        comments = CommentDomain.get(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
 
         data = ComicDetailOutData(
             detail=ComicDetailData(
@@ -254,7 +258,8 @@ class PictureAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
-        comments = CommnetDomain.get(media_type="Picture", object_id=obj.id, author_id=obj.author.id)
+        type_no = comment_type_no_map(CommentType.PICTURE)
+        comments = CommentDomain.get(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
 
         data = PictureDetailOutData(
             detail=PictureDetailData(
@@ -310,7 +315,8 @@ class BlogAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
-        comments = CommnetDomain.get(media_type="Blog", object_id=obj.id, author_id=obj.author.id)
+        type_no = comment_type_no_map(CommentType.BLOG)
+        comments = CommentDomain.get(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
 
         data = BlogDetailOutData(
             detail=BlogDetailData(

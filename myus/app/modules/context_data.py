@@ -105,7 +105,7 @@ class ContextData:
         class_name = str(class_name.__name__)
         if class_name not in ["ChatDetail", "ChatThread"]:
             filter_subquery = dict(id=OuterRef("pk"), like__id=user.id)
-            filter_obj = dict(media_type="Blog", object_id=obj.id)
+            filter_obj = dict(type_no="Blog", object_id=obj.id)
             subquery = Comment.objects.filter(**filter_subquery, **filter_obj)
             comment = Comment.objects.annotate(is_comment_like=Exists(subquery))
             context["comment_list"] = comment.filter(parent__isnull=True)

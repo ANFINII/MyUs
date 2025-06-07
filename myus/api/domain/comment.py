@@ -1,13 +1,14 @@
 from django.db.models import Exists, OuterRef, Prefetch
 from api.models.comment import Comment
 from api.types.data.comment import CommentData, ReplyData
+from api.utils.enum.index import CommentTypeNo
 from api.utils.functions.user import get_author
 
 
-class CommnetDomain:
+class CommentDomain:
     @staticmethod
-    def get(media_type: str, object_id: int, author_id: int) -> list[CommentData]:
-        filter_obj = dict(media_type=media_type, object_id=object_id)
+    def get(type_no: CommentTypeNo, object_id: int, author_id: int) -> list[CommentData]:
+        filter_obj = dict(type_no=type_no, object_id=object_id)
         subquery = Comment.objects.filter(id=OuterRef("pk"), like__id=author_id, **filter_obj)
 
         objs = (
