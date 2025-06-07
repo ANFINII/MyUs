@@ -6,18 +6,14 @@ from api.models.user import User
 
 class Notification(models.Model):
     """Notification"""
-    # "video": 1, "music": 2, "comic": 3, "picture": 4, "blog": 5,
-    # "chat": 6, "follow": 7, "like": 8, "reply": 9, "views": 10
-    user_from      = models.ForeignKey(User, related_name="user_from", on_delete=models.CASCADE)
-    user_to        = models.ForeignKey(User, related_name="user_to", on_delete=models.CASCADE, blank=True, null=True)
-    type_no        = models.IntegerField()
-    type_name      = models.CharField(max_length=7, blank=True)
-    content_type   = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id      = models.PositiveIntegerField()
-    content_object = GenericForeignKey("content_type", "object_id")
-    confirmed      = models.ManyToManyField(User, related_name="confirmed", blank=True)
-    deleted        = models.ManyToManyField(User, related_name="deleted", blank=True)
-    created        = models.DateTimeField(auto_now_add=True)
+    user_from = models.ForeignKey(User, related_name="user_from", on_delete=models.CASCADE)
+    user_to   = models.ForeignKey(User, related_name="user_to", on_delete=models.CASCADE, blank=True, null=True)
+    type_no   = models.IntegerField()
+    type_name = models.CharField(max_length=7, blank=True)
+    object_id = models.PositiveIntegerField()
+    confirmed = models.ManyToManyField(User, related_name="confirmed", blank=True)
+    deleted   = models.ManyToManyField(User, related_name="deleted", blank=True)
+    created   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.content_object)
