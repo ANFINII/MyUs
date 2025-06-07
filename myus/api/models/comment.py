@@ -11,14 +11,15 @@ class CommentManager(models.Manager):
 
 class Comment(models.Model):
     """Comment"""
-    author     = models.ForeignKey(User, on_delete=models.CASCADE)
-    parent     = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", blank=True, null=True)
-    media_type = models.CharField(max_length=20)
-    object_id  = models.PositiveIntegerField()
-    text       = models.TextField()
-    like       = models.ManyToManyField(User, related_name="comment_like", blank=True)
-    created    = models.DateTimeField(auto_now_add=True)
-    updated    = models.DateTimeField(auto_now=True)
+    author    = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent    = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", blank=True, null=True)
+    type_no   = models.IntegerField()
+    type_name = models.CharField(max_length=7, blank=True)
+    object_id = models.PositiveIntegerField()
+    text      = models.TextField()
+    like      = models.ManyToManyField(User, related_name="comment_like", blank=True)
+    created   = models.DateTimeField(auto_now_add=True)
+    updated   = models.DateTimeField(auto_now=True)
 
     objects = CommentManager()
 
@@ -36,4 +37,7 @@ class Comment(models.Model):
     class Meta:
         db_table = "comment"
         verbose_name_plural = "13 コメント"
-        indexes = [models.Index(fields=["parent"], name="comment_parent_idx")]
+        indexes = [
+            models.Index(fields=["parent"], name="comment_parent_idx"),
+            models.Index(fields=["type_no", "object_id"], name="comment_type_object_idx"),
+        ]
