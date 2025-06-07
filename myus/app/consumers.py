@@ -41,7 +41,7 @@ class ChatConsumer(WebsocketConsumer):
             parent_id=data["parent_id"],
         )
         author = message.parent.author
-        if user != author and author.notificationsetting.is_reply:
+        if user != author and author.usernotification.is_reply:
             Notification.objects.create(
                 user_from=user,
                 user_to=author,
