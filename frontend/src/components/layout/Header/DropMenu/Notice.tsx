@@ -50,12 +50,10 @@ export default function DropMenuNotice(props: Props): JSX.Element {
       { limit: 1000000000, message: '10億回閲覧されました' },
     ]
     const threshold = thresholds.find((t) => read >= t.limit)
-    return threshold ? (
+    return threshold && (
       <div className="notification_aria_list_1" title={`${title}が${threshold.message}`}>
         {title}が{threshold.message}
       </div>
-    ) : (
-      <></>
     )
   }
 
