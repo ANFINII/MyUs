@@ -1,5 +1,5 @@
 from api.models import Follow, Notification
-from api.utils.contains import NotificationTypeNo
+from api.utils.enum.index import NotificationType, NotificationTypeNo
 
 
 def follow_update_data(follower, following, follow):
@@ -7,7 +7,7 @@ def follow_update_data(follower, following, follow):
         # 自分はフォローできません
         pass
     elif follow:
-        notification = Notification.objects.filter(type_no=NotificationTypeNo.follow, object_id=follow.id)
+        notification = Notification.objects.filter(type_no=NotificationTypeNo.FOLLOW, object_id=follow.id)
         notification.delete()
         # フォローを外しました
         follow.delete()
@@ -20,9 +20,9 @@ def follow_update_data(follower, following, follow):
             Notification.objects.create(
                 user_from=follower.user,
                 user_to=following.user,
-                type_no=NotificationTypeNo.follow,
-                type_name="follow",
-                content_object=follow,
+                type_no=NotificationTypeNo.FOLLOW,
+                type_name=NotificationType.FOLLOW,
+                object_id=follow.id,
             )
 
     # ログインユーザーのフォロー数

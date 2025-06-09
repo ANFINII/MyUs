@@ -1,6 +1,7 @@
 from datetime import datetime, timezone, timedelta
 from api.models import Notification, AccessLog
-from api.utils.contains import NotificationTypeNo, model_dict
+from api.utils.contains import model_dict
+from api.utils.enum.index import NotificationTypeNo
 
 
 def get_client_ip(request):
@@ -34,18 +35,18 @@ def get_detail(self, request):
             Notification.objects.create(
                 user_from=author,
                 user_to=author,
-                type_no=NotificationTypeNo.views,
+                type_no=NotificationTypeNo.VIEWS,
                 type_name=type_name,
-                content_object=obj,
+                object_id=obj.id,
             )
 
     if obj.read in (100000, 1000000, 10000000, 100000000, 1000000000):
         notification_obj = Notification.objects.get_or_create(
             user_from=author,
             user_to=author,
-            type_no=NotificationTypeNo.views,
+            type_no=NotificationTypeNo.VIEWS,
             type_name=type_name,
-            content_object=obj,
+            object_id=obj.id,
         )
         if notification_obj.confirmed.filter(id=author.id).exists():
             notification_obj.confirmed.remove(author)

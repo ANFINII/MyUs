@@ -26,7 +26,8 @@ from django.views.generic import View, TemplateView, ListView, DetailView, Creat
 from api.models import Profile, MyPage, SearchTag, UserNotification
 from api.models import Notification, Follow, Comment, Advertise, ComicPage
 from api.models import Video, Music, Comic, Picture, Blog, Chat
-from api.utils.contains import NotificationTypeNo, model_like_dict, model_comment_dict
+from api.utils.contains import model_like_dict, model_comment_dict
+from api.utils.enum.index import NotificationType, NotificationTypeNo
 from api.utils.functions.convert.convert_hls import convert_exe
 from api.utils.functions.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from app.modules.context_data import ContextData
@@ -563,7 +564,7 @@ def like_form_comment(request):
         author = comment.author
         is_comment_like = comment.like.filter(id=user.id).exists()
         if is_comment_like:
-            Notification.objects.filter(type_no=NotificationTypeNo.like, object_id=comment.id).delete()
+            Notification.objects.filter(type_no=NotificationTypeNo.LIKE, object_id=comment.id).delete()
             comment.like.remove(user)
         else:
             comment.like.add(user)
@@ -571,9 +572,9 @@ def like_form_comment(request):
                 Notification.objects.create(
                     user_from=user,
                     user_to=author,
-                    type_no=NotificationTypeNo.like,
-                    type_name="like",
-                    content_object=comment,
+                    type_no=NotificationTypeNo.LIKE,
+                    type_name=NotificationType.LIKE,
+                    object_id=comment.id,
                 )
         context = {
             "is_comment_like": comment.like.filter(id=user.id).exists(),
@@ -625,9 +626,9 @@ def reply_form(request):
             Notification.objects.create(
                 user_from=user,
                 user_to=author,
-                type_no=NotificationTypeNo.reply,
-                type_name="reply",
-                content_object=comment,
+                type_no=NotificationTypeNo.REPLY,
+                type_name=NotificationType.REPLY,
+                object_id=comment.id,
             )
         context = {
             "comment_count": obj.comment_count() + 1,
