@@ -12,7 +12,7 @@ def success_url(self, myus_detail, type_no, type_name):
         user_from=user,
         type_no=type_no,
         type_name=type_name,
-        content_object=obj,
+        object_id=obj.id,
     )
     if "app:chat_detail" in str(myus_detail):
         return reverse(myus_detail, kwargs={"pk": self.object.pk,})

@@ -1,5 +1,6 @@
 from enum import Enum
 from api.models import Video, Music, Comic, Picture, Blog, Chat
+from api.models.users import Follow
 
 
 class MediaType(str, Enum):
@@ -78,14 +79,12 @@ notification_type_no = {
     "is_views"  : 10,
 }
 
-class NotificationTypeNo:
-    video   = 1
-    music   = 2
-    comic   = 3
-    picture = 4
-    blog    = 5
-    chat    = 6
-    follow  = 7
-    like    = 8
-    reply   = 9
-    views   = 10
+notification_type_model = {
+    "video"  : Video,
+    "music"  : Music,
+    "comic"  : Comic,
+    "picture": Picture,
+    "blog"   : Blog,
+    "chat"   : Chat,
+    "follow" : Follow,
+}
