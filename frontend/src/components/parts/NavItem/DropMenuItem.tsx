@@ -9,5 +9,5 @@ interface Props {
 export default function DropMenuItem(props: Props): JSX.Element {
   const { label, icon, onClick } = props
 
-  return <NavItem className="drop_menu_list" icon={icon} label={label} onClick={onClick} />
+  return <NavItem className="drop_menu_item" icon={icon} label={label} onClick={onClick} />
 }

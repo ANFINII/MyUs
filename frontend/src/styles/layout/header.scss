@@ -9,14 +9,19 @@
   color: rgb(255, 255, 255);
   background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
   z-index: 70; /* side_menuよりは小さく */
-}
 
-.header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  height: 2px;
-  background: rgb(0, 60, 255);
+  // ローディングのライン
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background: rgb(0, 60, 255);
+  }
+
+   &.loading::after {
+    animation: loading 5s forwards;
+  }
 }
 
 @keyframes loading {
@@ -26,10 +31,6 @@
   100% {
     width: 100%;
   }
-}
-
-.header.loading::after {
-  animation: loading 5s forwards;
 }
 
 .header_nav {
@@ -50,13 +51,13 @@
   position: relative;
   grid-column: 2/3;
   justify-self: flex-start;
-}
 
-.header_nav_2 h1 {
-  font-family: 'Libre Caslon Display', serif;
-  font-size: 1.8em;
-  font-weight: 100;
-  margin: auto;
+  h1 {
+    font-family: 'Libre Caslon Display', serif;
+    font-size: 1.8em;
+    font-weight: 100;
+    margin: auto;
+  }
 }
 
 .header_nav_3 {
@@ -122,13 +123,9 @@
   list-style-type: none;
 }
 
-.side_menu .bi {
+.side_menu svg {
   float: left;
   margin: 0 16px;
-}
-
-.side_menu .bi-arrow-left {
-  margin: 3px 16px 0 16px;
 }
 
 .side_menu_footer {
@@ -158,12 +155,13 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   cursor: pointer;
 
-  .bi {
-    color: rgb(0, 70, 175);
-  }
-
   &:hover {
     background: rgb(220, 240, 255);
+  }
+
+  svg {
+    margin: 3px 16px 0 16px;
+    color: rgb(0, 70, 175);
   }
 }
 
@@ -173,13 +171,13 @@
   text-align: start;
   cursor: pointer;
 
-  .bi {
-    color: rgb(0, 70, 175);
-  }
-
   &:hover {
     color: rgb(0, 100, 255);
     background: rgb(220, 240, 255);
+  }
+
+  svg {
+    color: rgb(0, 70, 175);
   }
 }
 
@@ -197,7 +195,7 @@
   list-style-type: none;
 }
 
-.drop_menu .bi {
+.drop_menu svg {
   float: left;
   margin: 0 16px;
 }
@@ -256,50 +254,36 @@
   }
 }
 
-.drop_menu_list {
+.drop_menu_item {
   position: relative;
   padding: 12px 0;
   margin: 0;
   text-align: start;
 
-  .bi {
-    color: rgb(240, 130, 0);
-  }
-
   &:hover {
     color: rgb(250, 130, 0);
     background: rgb(255, 230, 200);
   }
-}
 
-.drop_menu_notification {
-  position: relative;
-  text-align: start;
-
-  .bi {
+  svg {
     color: rgb(240, 130, 0);
-  }
-
-  &:hover {
-    color: rgb(250, 130, 0);
-    background: rgb(255, 230, 200);
   }
 }
 
 /* ドロップダウンメニュー 通知 */
-.bi-bell-fill.active {
+.bell.active {
   position: relative;
   margin: -27px 0 0 0;
 }
 
-.bi-exclamation-lg {
+.exclamation {
   display: none;
-}
 
-.bi-exclamation-lg.active {
-  display: block;
-  margin: -43px 0 0 25px;
-  color: rgb(255, 220, 0);
+  &.active {
+    display: block;
+    margin: -43px 0 0 25px;
+    color: rgb(255, 220, 0);
+  }
 }
 
 .notification_aria_list {

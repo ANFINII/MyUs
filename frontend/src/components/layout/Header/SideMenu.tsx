@@ -21,7 +21,7 @@ export default function SideMenu(props: Props): JSX.Element {
 
   const router = useRouter()
 
-  const handleClick = (url: string) => {
+  const handleClick = (url: string) => () => {
     router.push(url)
     onClose()
   }
@@ -34,14 +34,14 @@ export default function SideMenu(props: Props): JSX.Element {
         </NavItem>
 
         <ul>
-          <SideMenuItem label="ホーム" icon={<IconHouse size="1.5em" />} onClick={() => handleClick('/')} />
-          <SideMenuItem label="急上昇" icon={<IconLightning size="1.5em" type="defalt" />} onClick={() => handleClick('/recommend')} />
-          <SideMenuItem label="フォロー" icon={<IconPerson size="1.5em" type="check" />} onClick={() => handleClick('/menu/follow')} />
+          <SideMenuItem label="ホーム" icon={<IconHouse size="1.5em" />} onClick={handleClick('/')} />
+          <SideMenuItem label="急上昇" icon={<IconLightning size="1.5em" type="defalt" />} onClick={handleClick('/recommend')} />
+          <SideMenuItem label="フォロー" icon={<IconPerson size="1.5em" type="check" />} onClick={handleClick('/menu/follow')} />
         </ul>
 
         <ul className="side_menu_footer">
-          <SideMenuItem label="利用規約" icon={<IconFile size="1.5em" type="earmark" />} onClick={() => handleClick('/menu/userpolicy')} />
-          <SideMenuItem label="Knowledge Base" icon={<IconGlobe size="1.5em" />} onClick={() => handleClick('/menu/knowledge')} />
+          <SideMenuItem label="利用規約" icon={<IconFile size="1.5em" type="earmark" />} onClick={handleClick('/menu/userpolicy')} />
+          <SideMenuItem label="Knowledge Base" icon={<IconGlobe size="1.5em" />} onClick={handleClick('/menu/knowledge')} />
         </ul>
       </nav>
     </aside>
