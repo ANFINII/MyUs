@@ -11,12 +11,12 @@ export default function SideBar(): JSX.Element {
     <aside className="sidebar">
       <nav className="sidebar_nav">
         <ul>
-          <SideBarItem url="/media/video" label="Video" icon={<IconVideo size="1.8em" />} />
-          <SideBarItem url="/media/music" label="Music" icon={<IconMusic size="1.8em" />} />
-          <SideBarItem url="/media/comic" label="Comic" icon={<IconComic size="1.8em" />} />
-          <SideBarItem url="/media/picture" label="Picture" icon={<IconPicture size="1.8em" />} />
-          <SideBarItem url="/media/blog" label="Blog" icon={<IconBlog size="1.8em" />} />
-          <SideBarItem url="/media/chat" label="Chat" icon={<IconChat size="1.8em" />} />
+          <SideBarItem url="/media/video" label="Video" icon={<IconVideo size="25" />} />
+          <SideBarItem url="/media/music" label="Music" icon={<IconMusic size="25" />} />
+          <SideBarItem url="/media/comic" label="Comic" icon={<IconComic size="25" />} />
+          <SideBarItem url="/media/picture" label="Picture" icon={<IconPicture size="25" />} />
+          <SideBarItem url="/media/blog" label="Blog" icon={<IconBlog size="25" />} />
+          <SideBarItem url="/media/chat" label="Chat" icon={<IconChat size="25" />} />
         </ul>
       </nav>
     </aside>
