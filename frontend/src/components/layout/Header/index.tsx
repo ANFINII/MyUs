@@ -74,8 +74,8 @@ export default function Header(props: Props): JSX.Element {
         </div>
 
         <div className={clsx('header_nav_6 header_color', isActive(isNotice))} onClick={handleNotice}>
-          <IconBell size="1.5em" className={isActive(notificationCount > 0)} />
-          <IconExclamation size="1.2em" className={isActive(notificationCount > 0)} />
+          <IconBell size="1.5em" className={clsx('bell', isActive(notificationCount > 0))} />
+          <IconExclamation size="1.2em" className={clsx('exclamation', isActive(notificationCount > 0))} />
           <DropMenuNotice open={isNotice} onClose={handleNotice} />
         </div>
 
