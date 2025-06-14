@@ -2,24 +2,29 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from api.models.user import User
+from api.utils.constant import notification_type_model
 
 
 class Notification(models.Model):
     """Notification"""
-    user_from = models.ForeignKey(User, related_name="user_from", on_delete=models.CASCADE)
-    user_to   = models.ForeignKey(User, related_name="user_to", on_delete=models.CASCADE, blank=True, null=True)
-    type_no   = models.IntegerField()
-    type_name = models.CharField(max_length=7, blank=True)
-    object_id = models.PositiveIntegerField()
-    confirmed = models.ManyToManyField(User, related_name="confirmed", blank=True)
-    deleted   = models.ManyToManyField(User, related_name="deleted", blank=True)
-    created   = models.DateTimeField(auto_now_add=True)
+    user_from   = models.ForeignKey(User, related_name="user_from", on_delete=models.CASCADE)
+    user_to     = models.ForeignKey(User, related_name="user_to", on_delete=models.CASCADE, blank=True, null=True)
+    type_no     = models.IntegerField()
+    type_name   = models.CharField(max_length=7, blank=True)
+    object_id   = models.PositiveIntegerField()
+    object_type = models.CharField(max_length=7, blank=True)
+    confirmed   = models.ManyToManyField(User, related_name="confirmed", blank=True)
+    deleted     = models.ManyToManyField(User, related_name="deleted", blank=True)
+    created     = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.content_object)
+        return str(self.type_name)
 
     def title(self):
-        return self.content_object
+        object_type = self.object_type.lower()
+        model = notification_type_model[object_type]
+        obj = model.objects.get(id=self.object_id)
+        return obj
     title.short_description = "title"
 
     def confirmed_count(self):

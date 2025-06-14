@@ -26,8 +26,8 @@ from django.views.generic import View, TemplateView, ListView, DetailView, Creat
 from api.models import Profile, MyPage, SearchTag, UserNotification
 from api.models import Notification, Follow, Comment, Advertise, ComicPage
 from api.models import Video, Music, Comic, Picture, Blog, Chat
-from api.utils.contains import model_like_dict, model_comment_dict
-from api.utils.enum.index import NotificationType, NotificationTypeNo
+from api.utils.constant import model_like_dict, model_comment_dict
+from api.utils.enum.index import NotificationType, NotificationTypeNo, NotificationObjectType
 from api.utils.functions.convert.convert_hls import convert_exe
 from api.utils.functions.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
 from app.modules.context_data import ContextData
@@ -575,6 +575,7 @@ def like_form_comment(request):
                     type_no=NotificationTypeNo.LIKE,
                     type_name=NotificationType.LIKE,
                     object_id=comment.id,
+                    object_type=NotificationObjectType.COMMENT,
                 )
         context = {
             "is_comment_like": comment.like.filter(id=user.id).exists(),
@@ -629,6 +630,7 @@ def reply_form(request):
                 type_no=NotificationTypeNo.REPLY,
                 type_name=NotificationType.REPLY,
                 object_id=comment.id,
+                object_type=NotificationObjectType.COMMENT,
             )
         context = {
             "comment_count": obj.comment_count() + 1,
