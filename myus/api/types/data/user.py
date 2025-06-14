@@ -50,7 +50,7 @@ class NotificationData:
     user_to: NotificationUserData
     type_no: int
     type_name: str
-    content_object: Any
+    # content_object: Any
     is_confirmed: bool
 
 

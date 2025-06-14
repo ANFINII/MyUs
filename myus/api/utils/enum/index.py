@@ -33,6 +33,18 @@ class NotificationTypeNo(int, Enum):
     VIEWS = 10
 
 
+class NotificationObjectType(str, Enum):
+    VIDEO = "Video"
+    MUSIC = "Music"
+    COMIC = "Comic"
+    PICTURE = "Picture"
+    BLOG = "Blog"
+    CHAT = "Chat"
+    FOLLOW = "Follow"
+    COMMENT = "Comment"
+    MESSAGE = "Message"
+
+
 class CommentType(str, Enum):
     VIDEO = "Video"
     MUSIC = "Music"

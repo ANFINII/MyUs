@@ -1,5 +1,5 @@
 from api.models import Follow, Notification
-from api.utils.enum.index import NotificationType, NotificationTypeNo
+from api.utils.enum.index import NotificationType, NotificationTypeNo, NotificationObjectType
 
 
 def follow_update_data(follower, following, follow):
@@ -23,6 +23,7 @@ def follow_update_data(follower, following, follow):
                 type_no=NotificationTypeNo.FOLLOW,
                 type_name=NotificationType.FOLLOW,
                 object_id=follow.id,
+                object_type=NotificationObjectType.FOLLOW,
             )
 
     # ログインユーザーのフォロー数

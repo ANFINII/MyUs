@@ -5,7 +5,7 @@ from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from api.models import Chat, Message, Notification
-from api.utils.enum.index import NotificationType, NotificationTypeNo
+from api.utils.enum.index import NotificationType, NotificationTypeNo, NotificationObjectType
 from app.views import get_delta
 
 User = get_user_model()
@@ -48,6 +48,7 @@ class ChatConsumer(WebsocketConsumer):
                 type_no=NotificationTypeNo.REPLY,
                 type_name=NotificationType.REPLY,
                 object_id=message.id,
+                object_type=NotificationObjectType.MESSAGE,
             )
         content = {
             "command": "create_reply_message",

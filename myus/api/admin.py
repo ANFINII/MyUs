@@ -9,6 +9,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from api.models import User, Profile, MyPage, SearchTag, HashTag, UserNotification
 from api.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
 from api.models import Video, Music, Comic, Picture, Blog, Chat
+from api.utils.constant import model_media_comment_dict
 
 
 # Admin用の管理画面
@@ -276,7 +277,7 @@ class FollowAdmin(ImportExportModelAdmin):
 @admin.register(Notification)
 class NotificationAdmin(ImportExportModelAdmin):
     list_display = ("id", "user_from", "user_to", "type_no", "type_name", "object_id", "title", "confirmed_count", "deleted_count", "created")
-    list_select_related = ("user_from", "user_to", "content_type")
+    list_select_related = ("user_from", "user_to")
     search_fields = ("type_name", "created")
     ordering = ("type_no", "created")
     filter_horizontal = ("confirmed", "deleted")
@@ -290,7 +291,7 @@ class NotificationAdmin(ImportExportModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.prefetch_related("confirmed", "deleted", "content_object")
+        return qs.prefetch_related("confirmed", "deleted")
 
 
 @admin.register(Advertise)
@@ -324,7 +325,7 @@ class CommentAdmin(ImportExportModelAdmin):
     ]
 
     def get_queryset(self, request):
-        return super().get_queryset(request).annotate(reply_count=Count("reply")).select_related("content_type")
+        return super().get_queryset(request).annotate(reply_count=Count("reply"))
 
 
 @admin.register(Message)
@@ -683,8 +684,11 @@ class NotificationAdminSite(admin.ModelAdmin):
         return obj.confirmed.count()
     confirmed_count.short_description = "confirmed"
 
-    def title(self, obj):
-        return obj.content_object
+    def title(self):
+        class_name = self.type_name.lower()
+        model = model_media_comment_dict[class_name]
+        obj = model.objects.get(id=self.object_id)
+        return obj.title
     title.short_description = "title"
 manage_site.register(Notification, NotificationAdminSite)
 

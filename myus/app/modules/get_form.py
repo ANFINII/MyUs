@@ -1,7 +1,7 @@
 from datetime import datetime, timezone, timedelta
 from api.models import Notification, AccessLog
-from api.utils.contains import model_dict
-from api.utils.enum.index import NotificationTypeNo
+from api.utils.constant import model_dict
+from api.utils.enum.index import NotificationTypeNo, NotificationObjectType
 
 
 def get_client_ip(request):
@@ -38,6 +38,7 @@ def get_detail(self, request):
                 type_no=NotificationTypeNo.VIEWS,
                 type_name=type_name,
                 object_id=obj.id,
+                object_type=NotificationObjectType[obj.__class__.__name__],
             )
 
     if obj.read in (100000, 1000000, 10000000, 100000000, 1000000000):
