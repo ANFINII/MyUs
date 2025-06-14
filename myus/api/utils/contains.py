@@ -1,6 +1,8 @@
 from enum import Enum
 from api.models import Video, Music, Comic, Picture, Blog, Chat
 from api.models.users import Follow
+from api.models.comment import Comment
+from api.models.message import Message
 
 
 class MediaType(str, Enum):
@@ -58,6 +60,14 @@ model_media_comment_dict = {
     "blog"   : Blog,
 }
 
+model_media_comment_no_dict = {
+    "video"  : 1,
+    "music"  : 2,
+    "comic"  : 3,
+    "picture": 4,
+    "blog"   : 5,
+}
+
 model_comment_dict = {
     "video/detail"  : Video,
     "music/detail"  : Music,
@@ -87,4 +97,6 @@ notification_type_model = {
     "blog"   : Blog,
     "chat"   : Chat,
     "follow" : Follow,
+    "comment": Comment,
+    "message": Message,
 }
