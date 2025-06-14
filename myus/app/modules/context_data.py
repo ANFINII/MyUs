@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import F, Count, Exists, OuterRef
 from api.models import Plan, MyPage, SearchTag, UserNotification, Follow, Comment
 from api.models import Video, Music, Comic, Picture, Blog, Chat, Advertise
-from api.utils.contains import model_dict
+from api.utils.contains import model_dict, model_media_comment_no_dict
 from app.modules.notification import notification_data
 
 
@@ -105,7 +105,8 @@ class ContextData:
         class_name = str(class_name.__name__)
         if class_name not in ["ChatDetail", "ChatThread"]:
             filter_subquery = dict(id=OuterRef("pk"), like__id=user.id)
-            filter_obj = dict(type_no="Blog", object_id=obj.id)
+            model_name = class_name.lower().split("detail")[0]
+            filter_obj = dict(type_no=model_media_comment_no_dict[model_name], object_id=obj.id)
             subquery = Comment.objects.filter(**filter_subquery, **filter_obj)
             comment = Comment.objects.annotate(is_comment_like=Exists(subquery))
             context["comment_list"] = comment.filter(parent__isnull=True)
