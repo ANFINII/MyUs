@@ -82,7 +82,7 @@ class VideoAPI(APIView):
                 created=obj.created,
                 updated=obj.updated,
                 author=get_author(obj.author),
-                user=get_media_user(user, obj) if user else None,
+                mediaUser=get_media_user(obj, user),
             ),
             list=get_videos(50, search),
         )
@@ -153,7 +153,7 @@ class MusicAPI(APIView):
                 created=obj.created,
                 updated=obj.updated,
                 author=get_author(obj.author),
-                user=get_media_user(user, obj) if user else None,
+                mediaUser=get_media_user(obj, user),
             ),
             list=get_musics(50, search),
         )
@@ -213,7 +213,7 @@ class ComicAPI(APIView):
                 created=obj.created,
                 updated=obj.updated,
                 author=get_author(obj.author),
-                user=get_media_user(user, obj) if user else None,
+                mediaUser=get_media_user(obj, user),
             ),
             list=get_comics(50, search),
         )
@@ -275,7 +275,7 @@ class PictureAPI(APIView):
                 created=obj.created,
                 updated=obj.updated,
                 author=get_author(obj.author),
-                user=get_media_user(user, obj) if user else None,
+                mediaUser=get_media_user(obj, user),
             ),
             list=get_pictures(50, search),
         )
@@ -333,7 +333,7 @@ class BlogAPI(APIView):
                 created=obj.created,
                 updated=obj.updated,
                 author=get_author(obj.author),
-                user=get_media_user(user, obj) if user else None,
+                mediaUser=get_media_user(obj, user),
             ),
             list=get_blogs(50, search),
         )
@@ -398,7 +398,7 @@ class ChatAPI(APIView):
                 created=obj.created,
                 updated=obj.updated,
                 author=get_author(obj.author),
-                user=get_media_user(user, obj) if user else None,
+                mediaUser=get_media_user(obj, user),
             ),
             list=get_chats(50, search),
         )
