@@ -7,10 +7,13 @@ export interface Author {
 }
 
 export interface MediaUser {
-  avatar: string
-  nickname: string
   isLike: boolean
   isFollow: boolean
+}
+
+export interface NotificationUser {
+  avatar: string
+  nickname: string
 }
 
 export interface Search {
@@ -28,7 +31,7 @@ export interface Media {
   created: Date
   updated: Date
   author: Author
-  user: MediaUser
+  mediaUser: MediaUser
 }
 
 export interface Video extends Media {
@@ -133,7 +136,7 @@ export interface MediaDetail {
   created: Date
   updated: Date
   author: Author
-  user: MediaUser
+  mediaUser: MediaUser
 }
 
 export interface BlogDetail extends MediaDetail {

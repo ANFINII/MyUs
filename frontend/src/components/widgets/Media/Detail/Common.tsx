@@ -5,6 +5,7 @@ import { Comment } from 'types/internal/comment'
 import { Author, CommnetIn, MediaUser } from 'types/internal/media'
 import { postComment } from 'api/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
+import { useUser } from 'components/hooks/useUser'
 import AuthorLink from 'components/parts/AuthorLink'
 import Button from 'components/parts/Button'
 import CountLike from 'components/parts/Count/Like'
@@ -25,7 +26,7 @@ interface Props {
     created: Date
     comments: Comment[]
     author: Author
-    user?: MediaUser
+    mediaUser: MediaUser
     type: 'video' | 'music' | 'comic' | 'picture' | 'blog'
   }
   handleToast: (content: string, isError: boolean) => void
@@ -33,20 +34,33 @@ interface Props {
 
 export default function MediaDetailCommon(props: Props): JSX.Element {
   const { media, handleToast } = props
-  const { title, content, read, like, created, comments, author, user, type } = media
+  const { title, content, read, like, created, comments, author, mediaUser, type } = media
 
   const router = useRouter()
+  const { user } = useUser()
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [isLike, setIsLike] = useState<boolean>(Boolean(user?.isLike))
+  const [isLike, setIsLike] = useState<boolean>(mediaUser.isLike)
+  const [isFollow, setIsFollow] = useState<boolean>(mediaUser.isFollow)
   const [isContentView, setIsContentView] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
   const [text, setText] = useState<string>('')
 
+  const isFallowDisable = !user || user.nickname === author.nickname
   const handleModal = () => setIsOpen(!isOpen)
   const handleLike = () => setIsLike(!isLike)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
   const handleComment = (value: string): void => setText(value)
+
+  const handleFollow = async () => {
+    console.log('')
+    setIsFollow(!isLike)
+  }
+
+  const handleDeleteFollow = async () => {
+    console.log('')
+    setIsFollow(!isLike)
+  }
 
   const handleMediaComment = async () => {
     const id = Number(router.query.id)
@@ -68,7 +82,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
         <div className="media_detail_aria_2">
           <CountRead read={read} />
-          <CountLike isLike={isLike} disable={Boolean(!user)} like={like} onClick={handleLike} />
+          <CountLike isLike={isLike} disable={!user.isActive} like={like} onClick={handleLike} />
         </div>
 
         <div className="media_detail_aria_3">{/* {% include 'parts/common/hashtag.html' %} */}</div>
@@ -88,12 +102,8 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
             </Vertical>
           </Horizontal>
           <div className="content_detail_p2">
-            {user?.nickname === author.nickname || (!user && <Button color="green" name="フォローする" disabled />)}
-            {user && (
-              <form method="POST" action="" className="follow_form">
-                {user.isFollow ? <Button color="red" name="解除する" className="follow_change" /> : <Button color="green" name="フォローする" className="follow_change" />}
-              </form>
-            )}
+            {!isFollow && <Button color="green" name="フォローする" disabled={isFallowDisable} onClick={handleFollow} />}
+            {isFollow && <Button color="red" name="解除する" onClick={handleDeleteFollow} />}
           </div>
         </Horizontal>
         <div className="content_detail_p1">

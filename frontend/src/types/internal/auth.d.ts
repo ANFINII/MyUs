@@ -1,4 +1,4 @@
-import { MediaUser } from 'types/internal/media'
+import { NotificationUser } from 'types/internal/media'
 import { GenderType, NotificationType } from 'utils/constants/enum'
 
 export interface LoginIn {
@@ -105,8 +105,8 @@ export interface ContentObject {
 
 export interface Notification {
   id: number
-  userFrom: MediaUser
-  userTo: MediaUser
+  userFrom: NotificationUser
+  userTo: NotificationUser
   typeNo: number
   typeName: NotificationType
   contentObject: ContentObject
