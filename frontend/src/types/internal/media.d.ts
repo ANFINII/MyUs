@@ -11,6 +11,11 @@ export interface MediaUser {
   isFollow: boolean
 }
 
+export interface NotificationUser {
+  avatar: string
+  nickname: string
+}
+
 export interface Search {
   name?: string
   count: number
@@ -131,7 +136,7 @@ export interface MediaDetail {
   created: Date
   updated: Date
   author: Author
-  user: MediaUser
+  mediaUser: MediaUser
 }
 
 export interface BlogDetail extends MediaDetail {
