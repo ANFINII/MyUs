@@ -1,6 +1,7 @@
 from api.models.user import User
 from api.models import Follow
 from api.types.data.user import AuthorData, MediaUserData, NotificationUserData
+from api.types.union.media import MediaModelType
 from api.utils.functions.index import create_url
 
 
@@ -13,12 +14,10 @@ def get_author(author: User) -> AuthorData:
     return data
 
 
-def get_media_user(user: User, obj) -> MediaUserData:
+def get_media_user(obj: MediaModelType, user: User | None) -> MediaUserData:
     data = MediaUserData(
-        avatar=create_url(user.image()),
-        nickname=user.nickname,
-        is_like=obj.like.filter(id=user.id).exists(),
-        is_follow=Follow.objects.filter(follower=user.id, following=obj.author).exists(),
+        is_like=obj.like.filter(id=user.id).exists() if user else False,
+        is_follow=Follow.objects.filter(follower=user.id, following=obj.author).exists() if user else False,
     )
     return data
 
