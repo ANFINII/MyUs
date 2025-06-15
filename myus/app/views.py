@@ -777,9 +777,9 @@ class FollowerList(ListView):
 def follow_create(request, nickname):
     """follow_create"""
     if request.method == "POST":
-        follower = MyPage.objects.get(user=request.user)
-        following = MyPage.objects.get(user__nickname=nickname)
-        follow = Follow.objects.filter(follower=follower.user, following=following.user).first()
+        follower = request.user
+        following = User.objects.get(nickname=nickname)
+        follow = Follow.objects.filter(follower=follower, following=following).first()
         follow_data = follow_update_data(follower, following, follow)
         context = {
             "is_follow": follow_data["is_follow"],
