@@ -32,7 +32,7 @@ class MediaDetailData:
     created: datetime
     updated: datetime
     author: AuthorData
-    user: MediaUserData | None
+    mediaUser: MediaUserData
     hashtags: list[HashtagData]
 
 

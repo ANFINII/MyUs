@@ -31,8 +31,6 @@ class AuthorData:
 
 @dataclass(frozen=True, slots=True)
 class MediaUserData:
-    avatar: str
-    nickname: str
     is_like: bool
     is_follow: bool
 
