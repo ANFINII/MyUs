@@ -22,6 +22,7 @@ from api.domain.media import MediaDomain
 from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats
 from api.services.user import get_user
 from api.utils.constant import model_media_comment_dict
+from api.utils.decorators.auth import auth_user
 from api.utils.enum.response import ApiResponse
 from api.utils.enum.index import CommentType
 from api.utils.functions.convert.convert_hls import convert_exe
@@ -89,12 +90,11 @@ class VideoAPI(APIView):
 
         return DataResponse(data, HTTP_200_OK)
 
+    @auth_user
     def post(self, request) -> DataResponse:
         author = get_user(request)
-        if not author:
-            return ApiResponse.UNAUTHORIZED.run()
-
         data = request.data
+
         field = {
             "author": author,
             "title": data.get("title"),

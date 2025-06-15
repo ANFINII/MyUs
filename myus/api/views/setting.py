@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from api.models import User, Profile, MyPage, UserNotification
 from api.types.data.setting import SettingProfileData, SettingMyPageData, SettingNotificationData
 from api.services.user import get_user, profile_check
+from api.utils.decorators.auth import auth_user
 from api.utils.enum.response import ApiResponse
 from api.utils.filter_data import DeferData
 from api.utils.functions.validation import has_email
@@ -15,11 +16,9 @@ from api.utils.functions.response import DataResponse
 
 
 class SettingProfileAPI(APIView):
+    @auth_user
     def get(self, request) -> DataResponse:
         user = get_user(request)
-        if not user:
-            return ApiResponse.UNAUTHORIZED.run()
-
         user = User.objects.filter(id=user.id).select_related("profile").defer(*DeferData.profile).first()
 
         data = SettingProfileData(
@@ -45,11 +44,9 @@ class SettingProfileAPI(APIView):
         )
         return DataResponse(data, HTTP_200_OK)
 
+    @auth_user
     def put(self, request) -> DataResponse:
         user = get_user(request)
-        if not user:
-            return ApiResponse.UNAUTHORIZED.run()
-
         profile = Profile.objects.filter(id=user.id).first()
         data = request.data
         avatar = data.get("avatar")
@@ -78,11 +75,9 @@ class SettingProfileAPI(APIView):
 
 
 class SettingMyPageAPI(APIView):
+    @auth_user
     def get(self, request):
         user = get_user(request)
-        if not user:
-            return ApiResponse.UNAUTHORIZED.run()
-
         user = User.objects.filter(id=user.id).select_related("mypage").defer(*DeferData.mypage).first()
 
         data = SettingMyPageData(
@@ -100,11 +95,9 @@ class SettingMyPageAPI(APIView):
         )
         return DataResponse(data, HTTP_200_OK)
 
+    @auth_user
     def put(self, request) -> DataResponse:
         user = get_user(request)
-        if not user:
-            return ApiResponse.UNAUTHORIZED.run()
-
         mypage = MyPage.objects.filter(id=user.id).first()
         data = request.data
         banner = data.get("banner")
@@ -127,11 +120,9 @@ class SettingMyPageAPI(APIView):
 
 
 class SettingNotificationAPI(APIView):
+    @auth_user
     def get(self, request) -> DataResponse:
         user = get_user(request)
-        if not user:
-            return ApiResponse.UNAUTHORIZED.run()
-
         user_notification = UserNotification.objects.filter(user=user).first()
 
         data = SettingNotificationData(
@@ -148,11 +139,9 @@ class SettingNotificationAPI(APIView):
         )
         return DataResponse(data, HTTP_200_OK)
 
-    def put(self, request):
+    @auth_user
+    def put(self, request) -> DataResponse:
         user = get_user(request)
-        if not user:
-            return ApiResponse.UNAUTHORIZED.run()
-
         user_notification = UserNotification.objects.filter(user=user).first()
 
         data = request.data

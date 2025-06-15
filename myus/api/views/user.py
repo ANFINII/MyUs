@@ -1,4 +1,4 @@
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
 from api.models import User, Follow, SearchTag
@@ -6,18 +6,16 @@ from app.modules.follow import follow_update_data
 from api.services.notification import get_notification, get_content_object
 from api.services.user import get_user, get_follows, get_followers
 from api.types.data.user import UserData
-from api.utils.enum.response import ApiResponse
+from api.utils.decorators.auth import auth_user
 from api.utils.functions.index import create_url
 from api.utils.functions.response import DataResponse
 from api.utils.functions.user import get_notification_user
 
 
 class UserAPI(APIView):
+    @auth_user
     def get(self, request) -> DataResponse:
         user = get_user(request)
-        if not user:
-            return ApiResponse.UNAUTHORIZED.run()
-
         data = UserData(
             avatar=create_url(user.image()),
             email=user.email,
@@ -29,11 +27,9 @@ class UserAPI(APIView):
 
 
 class SearchTagAPI(APIView):
+    @auth_user
     def get(self, request) -> DataResponse:
         user = get_user(request)
-        if not user:
-            return ApiResponse.UNAUTHORIZED.run()
-
         search_tags = SearchTag.objects.filter(author=user).order_by("sequence")[:20]
 
         data = [{"sequence": tag.sequence, "name": tag.name} for tag in search_tags]
@@ -41,15 +37,14 @@ class SearchTagAPI(APIView):
 
 
 class FollowAPI(APIView):
+    @auth_user
     def get(self, request) -> DataResponse:
         user = get_user(request)
-        if not user:
-            return ApiResponse.UNAUTHORIZED.run()
-
         search = request.query_params.get("search")
         data = get_follows(100, user, search)
         return DataResponse(data, HTTP_200_OK)
 
+    @auth_user
     def post(self, request) -> DataResponse:
         user = get_user(request)
         data = request.data
@@ -67,23 +62,20 @@ class FollowAPI(APIView):
 
 
 class FollowerAPI(APIView):
+    @auth_user
     def get(self, request) -> DataResponse:
         user = get_user(request)
-        if not user:
-            return ApiResponse.UNAUTHORIZED.run()
-
         search = request.query_params.get("search")
         data = get_followers(100, user, search)
         return DataResponse(data, HTTP_200_OK)
 
 
 class NotificationAPI(APIView):
+    @auth_user
     def get(self, request) -> DataResponse:
         user = get_user(request)
-        if not user:
-            return ApiResponse.UNAUTHORIZED.run()
-
         notification = get_notification(user)
+
         data = {
             "count": notification["count"],
             "datas": [{
