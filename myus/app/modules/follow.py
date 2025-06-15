@@ -13,13 +13,13 @@ def follow_update_data(follower, following, follow):
         follow.delete()
         is_follow = False
     else:
-        follow = Follow.objects.create(follower=follower.user, following=following.user)
+        follow = Follow.objects.create(follower=follower, following=following)
         is_follow = True
         # フォローしました
-        if following.user.usernotification.is_follow:
+        if following.usernotification.is_follow:
             Notification.objects.create(
-                user_from=follower.user,
-                user_to=following.user,
+                user_from=follower,
+                user_to=following,
                 type_no=NotificationTypeNo.FOLLOW,
                 type_name=NotificationType.FOLLOW,
                 object_id=follow.id,
@@ -27,12 +27,12 @@ def follow_update_data(follower, following, follow):
             )
 
     # ログインユーザーのフォロー数
-    following_count = Follow.objects.filter(follower=follower.user).count()
+    following_count = Follow.objects.filter(follower=follower).count()
     follower.following_count = following_count
     follower.save(update_fields=["following_count"])
 
     # フォローユーザーのフォロワー数
-    follower_count = Follow.objects.filter(following=following.user).count()
+    follower_count = Follow.objects.filter(following=following).count()
     following.follower_count = follower_count
     following.save(update_fields=["follower_count"])
     return {"is_follow": is_follow, "follower_count": follower_count}
