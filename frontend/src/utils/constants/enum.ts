@@ -1,3 +1,11 @@
+export enum FetchError {
+  Error = 'エラーが発生しました',
+  Get = 'データの取得に失敗しました',
+  Post = 'データの登録に失敗しました',
+  Put = 'データの更新に失敗しました',
+  Delete = 'データの削除に失敗しました',
+}
+
 export enum GenderType {
   Male = 'Male',
   Female = 'Female',

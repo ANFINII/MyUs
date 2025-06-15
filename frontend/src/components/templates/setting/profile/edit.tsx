@@ -4,7 +4,7 @@ import { ProfileIn, ProfileOut } from 'types/internal/auth'
 import { getAddress } from 'api/external/address'
 import { putSettingProfile } from 'api/internal/setting'
 import { prefectures } from 'utils/constants/address'
-import { GenderType } from 'utils/constants/enum'
+import { FetchError, GenderType } from 'utils/constants/enum'
 import { genderMap } from 'utils/constants/map'
 import { selectDate } from 'utils/functions/datetime'
 import { useRequired } from 'components/hooks/useRequired'
@@ -46,7 +46,7 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
 
   const handleAutoAddress = async () => {
     const ret = await getAddress(values.postalCode)
-    if (ret.isErr()) return handleToast('住所が取得できませんでした!', true)
+    if (ret.isErr()) return handleToast(FetchError.Get, true)
     const results = ret.value.results
     if (results && results[0]) {
       const result = results[0]
@@ -66,7 +66,7 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
     const ret = await putSettingProfile(request)
     if (ret.isErr()) {
       setIsLoading(false)
-      handleToast('エラーが発生しました！', true)
+      handleToast(FetchError.Put, true)
       return
     }
     const data = ret.value

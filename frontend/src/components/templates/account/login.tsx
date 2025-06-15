@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'
+import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -31,7 +32,7 @@ export default function Login(): JSX.Element {
     const request = { username: encrypt(username), password: encrypt(password) }
     setIsLoading(true)
     const ret = await postLogin(request)
-    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    if (ret.isErr()) return handleToast(FetchError.Error, true)
     const data = ret.value
     if (data) setMessage(data.message)
     if (!data?.error) {

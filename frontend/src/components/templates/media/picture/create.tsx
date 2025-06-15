@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { PictureIn } from 'types/internal/media'
 import { postPictureCreate } from 'api/internal/media/create'
+import { FetchError } from 'utils/constants/enum'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -28,7 +29,7 @@ export default function PictureCreate(): JSX.Element {
     if (!isRequiredCheck({ title, content, image })) return
     setIsLoading(true)
     const ret = await postPictureCreate(values)
-    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    if (ret.isErr()) return handleToast(FetchError.Post, true)
     router.push(`/media/picture/${ret.value.id}`)
     setIsLoading(false)
   }

@@ -1,6 +1,7 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { postReset } from 'api/internal/auth'
+import { FetchError } from 'utils/constants/enum'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
@@ -24,7 +25,7 @@ export default function Reset(): JSX.Element {
     if (!isRequiredCheck({ email })) return
     setIsLoading(true)
     const ret = await postReset(email)
-    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    if (ret.isErr()) return handleToast(FetchError.Error, true)
     const data = ret.value
     if (data) setMessage(data.message)
     setIsLoading(false)

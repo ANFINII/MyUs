@@ -6,6 +6,7 @@ import { DeltaStatic, Sources } from 'quill'
 import { BlogIn } from 'types/internal/media'
 import { MentionUser } from 'types/internal/timeline'
 import { postBlogCreate } from 'api/internal/media/create'
+import { FetchError } from 'utils/constants/enum'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -45,7 +46,7 @@ export default function BlogCreate(): JSX.Element {
     if (!isRequiredCheck({ title, content, richtext, image })) return
     setIsLoading(true)
     const ret = await postBlogCreate(values)
-    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    if (ret.isErr()) return handleToast(FetchError.Post, true)
     router.push(`/media/chat/${ret.value.id}`)
     setIsLoading(false)
   }

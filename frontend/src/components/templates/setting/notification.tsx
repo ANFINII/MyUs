@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { UserNotification, UserNotificationOut } from 'types/internal/auth'
 import { getSettingNotification, putSettingNotification } from 'api/internal/setting'
+import { FetchError } from 'utils/constants/enum'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -29,7 +30,7 @@ export default function SettingNotification(props: Props): JSX.Element {
     const ret = await putSettingNotification(values)
     if (ret.isErr()) {
       setIsLoading(false)
-      handleToast('エラーが発生しました！', true)
+      handleToast(FetchError.Put, true)
       return
     }
     setIsLoading(false)
@@ -37,7 +38,7 @@ export default function SettingNotification(props: Props): JSX.Element {
 
   const handleReset = async () => {
     const ret = await getSettingNotification()
-    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    if (ret.isErr()) return handleToast(FetchError.Get, true)
     setValues(ret.value)
   }
 

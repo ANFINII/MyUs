@@ -2,7 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { SignupIn } from 'types/internal/auth'
 import { postSignup } from 'api/internal/auth'
-import { GenderType } from 'utils/constants/enum'
+import { FetchError, GenderType } from 'utils/constants/enum'
 import { genderMap } from 'utils/constants/map'
 import { nowDate, selectDate } from 'utils/functions/datetime'
 import { useRequired } from 'components/hooks/useRequired'
@@ -49,7 +49,7 @@ export default function Signup(): JSX.Element {
     if (!isRequiredCheck({ email, username, nickname, lastName, firstName, password1, password2 })) return
     setIsLoading(true)
     const ret = await postSignup(values)
-    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
     if (data) setMessage(data.message)
     if (!data?.error) handleBack()
