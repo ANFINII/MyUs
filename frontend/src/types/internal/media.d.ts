@@ -121,6 +121,10 @@ export interface ChatIn {
   period: string
 }
 
+export interface FollowIn {
+  nickname: string
+}
+
 export interface CommnetIn {
   text: string
   type: string

@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { Comment } from 'types/internal/comment'
-import { Author, CommnetIn, MediaUser } from 'types/internal/media'
-import { postComment } from 'api/internal/media/detail'
+import { Author, FollowIn, CommnetIn, MediaUser } from 'types/internal/media'
+import { postFollow, postComment } from 'api/internal/media/detail'
+import { FetchError } from 'utils/constants/enum'
 import { formatDatetime } from 'utils/functions/datetime'
 import { useUser } from 'components/hooks/useUser'
 import AuthorLink from 'components/parts/AuthorLink'
@@ -53,7 +54,10 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const handleComment = (value: string): void => setText(value)
 
   const handleFollow = async () => {
-    console.log('')
+    const request: FollowIn = { nickname: author.nickname }
+    const ret = await postFollow(request)
+    if (ret.isErr()) handleToast(FetchError.Post, true)
+    handleToast('フォローしました', false)
     setIsFollow(!isLike)
   }
 
@@ -69,7 +73,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
       await postComment(id, request)
       setText('')
     } catch {
-      handleToast('エラーが発生しました！', true)
+      handleToast(FetchError.Post, true)
     }
   }
 
