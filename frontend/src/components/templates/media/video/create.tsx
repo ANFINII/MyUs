@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { VideoIn } from 'types/internal/media'
 import { postVideoCreate } from 'api/internal/media/create'
+import { FetchError } from 'utils/constants/enum'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -29,7 +30,7 @@ export default function VideoCreate(): JSX.Element {
     if (!isRequiredCheck({ title, content, image, video })) return
     setIsLoading(true)
     const ret = await postVideoCreate(values)
-    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    if (ret.isErr()) return handleToast(FetchError.Post, true)
     router.push(`/media/video/${ret.value.id}`)
     setIsLoading(false)
   }

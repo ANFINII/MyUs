@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { MypageIn, MypageOut } from 'types/internal/auth'
 import { putSettingMypage } from 'api/internal/setting'
+import { FetchError } from 'utils/constants/enum'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -42,7 +43,7 @@ export default function SettingMyPageEdit(props: Props): JSX.Element {
     const ret = await putSettingMypage(request)
     if (ret.isErr()) {
       setIsLoading(false)
-      handleToast('エラーが発生しました！', true)
+      handleToast(FetchError.Put, true)
       return
     }
     const data = ret.value

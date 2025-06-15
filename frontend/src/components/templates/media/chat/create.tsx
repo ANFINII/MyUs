@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { ChatIn } from 'types/internal/media'
 import { postChatCreate } from 'api/internal/media/create'
+import { FetchError } from 'utils/constants/enum'
 import { nowDate } from 'utils/functions/datetime'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -27,7 +28,7 @@ export default function ChatCreate(): JSX.Element {
     if (!isRequiredCheck({ title, content, period })) return
     setIsLoading(true)
     const ret = await postChatCreate(values)
-    if (ret.isErr()) return handleToast('エラーが発生しました！', true)
+    if (ret.isErr()) return handleToast(FetchError.Post, true)
     router.push(`/media/chat/${ret.value.id}`)
     setIsLoading(false)
   }
