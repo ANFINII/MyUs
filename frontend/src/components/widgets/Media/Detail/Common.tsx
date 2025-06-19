@@ -51,14 +51,14 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const handleCommentView = () => setIsCommentView(!isCommentView)
   const handleComment = (value: string): void => setText(value)
 
-  const handleComment1 = (commentId: number): void => {
-    console.log('handleComment1', commentId)
-    setText('')
-  }
-  const handleComment2 = (commentId: number): void => {
-    console.log('handleComment2', commentId)
-    setText('')
-  }
+  // const handleComment1 = (commentId: number): void => {
+  //   console.log('handleComment1', commentId)
+  //   setText('')
+  // }
+  // const handleComment2 = (commentId: number): void => {
+  //   console.log('handleComment2', commentId)
+  //   setText('')
+  // }
 
   const handleFollow = async () => {
     const request: FollowIn = { nickname: author.nickname }
