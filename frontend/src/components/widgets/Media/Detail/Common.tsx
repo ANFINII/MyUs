@@ -15,7 +15,6 @@ import Divide from 'components/parts/Divide'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Vertical from 'components/parts/Stack/Vertical'
 import CommentInput from 'components/widgets/Comment/Input'
-import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import Zoom from 'components/widgets/Zoom'
 
 interface Props {
@@ -39,7 +38,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
   const router = useRouter()
   const { user } = useUser()
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  // const [isOpen, setIsOpen] = useState<boolean>(false)
   const [isLike, setIsLike] = useState<boolean>(mediaUser.isLike)
   const [isFollow, setIsFollow] = useState<boolean>(mediaUser.isFollow)
   const [isContentView, setIsContentView] = useState<boolean>(false)
@@ -47,11 +46,19 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const [text, setText] = useState<string>('')
 
   const isFallowDisable = !user || user.nickname === author.nickname
-  const handleModal = () => setIsOpen(!isOpen)
   const handleLike = () => setIsLike(!isLike)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
   const handleComment = (value: string): void => setText(value)
+
+  // const handleComment1 = (commentId: number): void => {
+  //   console.log('handleComment1', commentId)
+  //   setText('')
+  // }
+  // const handleComment2 = (commentId: number): void => {
+  //   console.log('handleComment2', commentId)
+  //   setText('')
+  // }
 
   const handleFollow = async () => {
     const request: FollowIn = { nickname: author.nickname }
@@ -124,9 +131,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
       <CommentInput user={user} count={comments.length} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <Zoom isView={isCommentView} onView={handleCommentView} />
-      <div id="comment_aria" className="comment_aria">
-        {/* {% include 'parts/common/comment/comment.html' %} */}
-      </div>
+      {/* <CommentArea comments={comments} onLikeComment={handleComment1} onReplySubmit={handleComment2} nickname={user.nickname} /> */}
 
       <Divide />
 
@@ -138,8 +143,6 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
         <h2>個別広告</h2>
         <article className="article_list">{/* {% include 'parts/advertise_article.html' %} */}</article>
       </div>
-
-      <CommentDeleteModal open={isOpen} onClose={handleModal} onAction={handleModal} content={<></>} />
     </div>
   )
 }
