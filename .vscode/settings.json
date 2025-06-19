@@ -44,7 +44,8 @@
   "editor.suggestSelection": "recentlyUsedByPrefix",
   "editor.defaultFoldingRangeProvider": "dbaeumer.vscode-eslint",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "explicit",
+    "source.addMissingImports": "explicit",
   },
   "eslint.debug": true,
   "eslint.useFlatConfig": true,
