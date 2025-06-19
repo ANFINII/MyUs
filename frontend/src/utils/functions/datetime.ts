@@ -29,16 +29,15 @@ export const selectDate = () => {
   return { years, months, days }
 }
 
-export const padZero = (num: number): string => (num < 10 ? `0${num}` : `${num}`)
-
 export const formatDatetime = (datetime: Date): string => {
-  const date = new Date(datetime)
-  const year = date.getFullYear()
-  const month = padZero(date.getMonth() + 1)
-  const day = padZero(date.getDate())
-  const hours = padZero(date.getHours())
-  const minutes = padZero(date.getMinutes())
-  return `${year}/${month}/${day} ${hours}:${minutes}`
+  return new Date(datetime).toLocaleString('ja-JP', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  })
 }
 
 export const formatTimeAgo = (datetime: Date): string => {
