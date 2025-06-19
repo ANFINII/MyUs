@@ -14,7 +14,7 @@ export default function Zoom(props: Props): JSX.Element {
       <div className={style.icon}>
         <IconCaret size="16" type={isView ? 'down' : 'right'} />
       </div>
-      <p>{isView ? '縮小表示' : '拡大表示'}</p>
+      <p className="us_none">{isView ? '縮小表示' : '拡大表示'}</p>
     </label>
   )
 }
