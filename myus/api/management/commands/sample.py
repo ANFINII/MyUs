@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from api.utils.enum.index import CommentTypeNo, CommentType
-from myus.api.utils.functions.map import comment_type_map, comment_type_no_map
+from api.utils.functions.map import comment_type_map, comment_type_no_map
 
 
 class Command(BaseCommand):

@@ -4,13 +4,13 @@ from api.utils.functions.user import get_author
 
 
 class MessageDomain:
-    @staticmethod
-    def get_messages(chat_id: int) -> list[MessageData]:
+    @classmethod
+    def get_messages(cls, chat_id: int) -> list[MessageData]:
         objs = Message.objects.filter(chat_id=chat_id, parent__isnull=True).select_related("author")
         return get_messages_data(objs)
 
-    @staticmethod
-    def get_replys(chat_id: int) -> list[MessageData]:
+    @classmethod
+    def get_replys(cls, chat_id: int) -> list[MessageData]:
         objs = Message.objects.filter(chat_id=chat_id, parent__isnull=False).select_related("author")
         return get_replys_data(objs)
 

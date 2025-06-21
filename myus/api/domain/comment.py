@@ -6,8 +6,8 @@ from api.utils.functions.user import get_author
 
 
 class CommentDomain:
-    @staticmethod
-    def get(type_no: CommentTypeNo, object_id: int, author_id: int) -> list[CommentData]:
+    @classmethod
+    def get(cls, type_no: CommentTypeNo, object_id: int, author_id: int) -> list[CommentData]:
         filter_obj = dict(type_no=type_no, object_id=object_id)
         subquery = Comment.objects.filter(id=OuterRef("pk"), like__id=author_id, **filter_obj)
 

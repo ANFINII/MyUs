@@ -28,13 +28,13 @@ class SortOption:
 
 
 class MediaDomain:
-    @staticmethod
-    def get(model: MediaModelType, id: int, publish: bool) -> MediaModelType | None:
+    @classmethod
+    def get(cls, model: MediaModelType, id: int, publish: bool) -> MediaModelType | None:
         qs = model.objects.filter(id=id, publish=publish).first()
         return qs
 
-    @staticmethod
-    def bulk_get(model: MediaModelType, option: FilterOption, sort_options: SortOption, limit: int | None) -> MediaModelType:
+    @classmethod
+    def bulk_get(cls, model: MediaModelType, option: FilterOption, sort_options: SortOption, limit: int | None) -> MediaModelType:
         q_list: list[Q] = []
         if option.publish:
             q_list.append(Q(publish=option.publish))

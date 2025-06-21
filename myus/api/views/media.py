@@ -358,8 +358,8 @@ class BlogAPI(APIView):
         data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)
 
-    @staticmethod
-    def get_delta(delta, html):
+    @classmethod
+    def get_delta(cls, delta: str, html: str) -> str:
         quill = json.dumps({"delta": delta, "html": html})
         return quill
 
