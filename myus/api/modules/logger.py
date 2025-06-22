@@ -15,40 +15,40 @@ type LogLevel = int
 class Color(str, Enum):
     """ANSIエスケープコードによる色定義"""
     # リセット
-    RESET = '\033[0m'
+    RESET = "\033[0m"
 
     # スタイル
-    BOLD = '\033[1m'
+    BOLD = "\033[1m"
 
     # 基本色（前景色）
-    BLACK   = '\033[30m'
-    RED     = '\033[31m'
-    GREEN   = '\033[32m'
-    YELLOW  = '\033[33m'
-    BLUE    = '\033[34m'
-    MAGENTA = '\033[35m'
-    CYAN    = '\033[36m'
-    WHITE   = '\033[37m'
+    BLACK   = "\033[30m"
+    RED     = "\033[31m"
+    GREEN   = "\033[32m"
+    YELLOW  = "\033[33m"
+    BLUE    = "\033[34m"
+    MAGENTA = "\033[35m"
+    CYAN    = "\033[36m"
+    WHITE   = "\033[37m"
 
     # 明るい色（前景色）
-    BRIGHT_BLACK   = '\033[90m'
-    BRIGHT_RED     = '\033[91m'
-    BRIGHT_GREEN   = '\033[92m'
-    BRIGHT_YELLOW  = '\033[93m'
-    BRIGHT_BLUE    = '\033[94m'
-    BRIGHT_MAGENTA = '\033[95m'
-    BRIGHT_CYAN    = '\033[96m'
-    BRIGHT_WHITE   = '\033[97m'
+    BRIGHT_BLACK   = "\033[90m"
+    BRIGHT_RED     = "\033[91m"
+    BRIGHT_GREEN   = "\033[92m"
+    BRIGHT_YELLOW  = "\033[93m"
+    BRIGHT_BLUE    = "\033[94m"
+    BRIGHT_MAGENTA = "\033[95m"
+    BRIGHT_CYAN    = "\033[96m"
+    BRIGHT_WHITE   = "\033[97m"
 
     # 背景色
-    BG_BLACK   = '\033[40m'
-    BG_RED     = '\033[41m'
-    BG_GREEN   = '\033[42m'
-    BG_YELLOW  = '\033[43m'
-    BG_BLUE    = '\033[44m'
-    BG_MAGENTA = '\033[45m'
-    BG_CYAN    = '\033[46m'
-    BG_WHITE   = '\033[47m'
+    BG_BLACK   = "\033[40m"
+    BG_RED     = "\033[41m"
+    BG_GREEN   = "\033[42m"
+    BG_YELLOW  = "\033[43m"
+    BG_BLUE    = "\033[44m"
+    BG_MAGENTA = "\033[45m"
+    BG_CYAN    = "\033[46m"
+    BG_WHITE   = "\033[47m"
 
     def __str__(self) -> str:
         return self
@@ -58,11 +58,11 @@ class ColorFormat(coloredlogs.ColoredFormatter):
     """coloredlogs を継承してログレベルの色をカスタマイズ"""
 
     LEVEL_COLORS = {
-        'DEBUG'   : Color.BLACK,
-        'INFO'    : Color.GREEN,
-        'WARNING' : Color.YELLOW,
-        'ERROR'   : Color.RED,
-        'CRITICAL': Color.RED + Color.BOLD
+        "DEBUG"   : Color.BLACK,
+        "INFO"    : Color.GREEN,
+        "WARNING" : Color.YELLOW,
+        "ERROR"   : Color.RED,
+        "CRITICAL": Color.RED + Color.BOLD
     }
 
     def format(self, record: LogRecord) -> str:
@@ -84,27 +84,27 @@ class Log:
 
     # カラー設定
     LEVEL_STYLES: ClassVar[dict[str, dict[str, Any]]] = {
-        'debug'   : {'color': 'blue'},
-        'info'    : {'color': 'green'},
-        'warning' : {'color': 'yellow', 'bold': False},
-        'error'   : {'color': 'red', 'bold': False},
-        'critical': {'color': 'red', 'bold': True}
+        "debug"   : {"color": "blue"},
+        "info"    : {"color": "green"},
+        "warning" : {"color": "yellow", "bold": False},
+        "error"   : {"color": "red", "bold": False},
+        "critical": {"color": "red", "bold": True}
     }
 
     FIELD_STYLES: ClassVar[dict[str, dict[str, Any]]] = {
-        'asctime'  : {'color': 'blue'},
-        'name'     : {'color': 'yellow'},
-        'levelname': {'color': 'white', 'bold': True},
-        'message'  : {'color': 'white'}
+        "asctime"  : {"color": "blue"},
+        "name"     : {"color": "yellow"},
+        "levelname": {"color": "white", "bold": True},
+        "message"  : {"color": "white"}
     }
 
     # レベルマッピング
     LEVEL_MAP: ClassVar[dict[str, LogLevel]] = {
-        'DEBUG': DEBUG,
-        'INFO': INFO,
-        'WARNING': WARNING,
-        'ERROR': ERROR,
-        'CRITICAL': CRITICAL
+        "DEBUG": DEBUG,
+        "INFO": INFO,
+        "WARNING": WARNING,
+        "ERROR": ERROR,
+        "CRITICAL": CRITICAL
     }
 
     # シングルトンインスタンス
@@ -119,19 +119,19 @@ class Log:
 
     def _initialize_logger(self) -> None:
         """ロガーの初期化"""
-        self._logger = getLogger('MyUs')
+        self._logger = getLogger("MyUs")
         self._logger.setLevel(DEBUG)
 
         # 既存のハンドラーをクリア
         self._logger.handlers.clear()
 
         # ファイルハンドラー（エラー以上）
-        log_dir = Path('logs')
+        log_dir = Path("logs")
         log_dir.mkdir(exist_ok=True)
 
         error_file_handler = FileHandler(
-            log_dir / f'error_{datetime.now().strftime("%Y%m%d")}.log',
-            encoding='utf-8'
+            log_dir / f"error_{datetime.now().strftime('%Y%m%d')}.log",
+            encoding="utf-8"
         )
         error_file_handler.setLevel(ERROR)
         error_file_handler.setFormatter(Formatter(self.LOG_FORMAT, self.DATE_FORMAT))
@@ -172,10 +172,10 @@ class Log:
                     return None, None, None, None
 
             class_name: str | None = None # クラス名の取得
-            if 'self' in frame.f_locals:
-                class_name = frame.f_locals['self'].__class__.__name__
-            elif 'cls' in frame.f_locals:
-                class_name = frame.f_locals['cls'].__name__
+            if "self" in frame.f_locals:
+                class_name = frame.f_locals["self"].__class__.__name__
+            elif "cls" in frame.f_locals:
+                class_name = frame.f_locals["cls"].__name__
 
             func_name = frame.f_code.co_name # 関数名の取得
             full_path = Path(frame.f_code.co_filename) # ファイル名を相対パスで取得
@@ -195,7 +195,7 @@ class Log:
             del frame
 
     @classmethod
-    def _format_message(cls, msg: str, level: str = 'INFO', class_name: str | None = None, func_name: str | None = None, filename: str | None = None, line_no: int | None = None, **kwargs: Any) -> str:
+    def _format_message(cls, msg: str, level: str = "INFO", class_name: str | None = None, func_name: str | None = None, filename: str | None = None, line_no: int | None = None, **kwargs: Any) -> str:
         """メッセージのフォーマット"""
         parts: list[str] = []
         location_parts: list[str] = []
@@ -214,10 +214,14 @@ class Log:
         level_upper = level.upper()
         if level_upper in ColorFormat.LEVEL_COLORS:
             color_code = ColorFormat.LEVEL_COLORS[level_upper]
-            parts.append(f"{color_code}{msg}")
-            parts.append(f"{kwargs_str}{Color.RESET}")
+            if msg and kwargs_str:
+                parts.append(f"{color_code}{msg} - {kwargs_str}{Color.RESET}")
+            elif msg:
+                parts.append(f"{color_code}{msg}{Color.RESET}")
+            elif kwargs_str:
+                parts.append(f"{color_code}{kwargs_str}{Color.RESET}")
         else:
-            parts.append(kwargs_str)
+            parts.append(f"{color_code}{kwargs_str}{Color.RESET}")
 
         return " - ".join(parts)
 
@@ -237,11 +241,11 @@ class Log:
 
             if is_traceback:
                 if exc_info:
-                    tb = ''.join(traceback.format_exception(type(exc_info), exc_info, exc_info.__traceback__))
+                    tb = "".join(traceback.format_exception(type(exc_info), exc_info, exc_info.__traceback__))
                 else:
                     tb = traceback.format_exc()
 
-                if tb and tb != 'NoneType: None\n':
+                if tb and tb != "NoneType: None\n":
                     format_msg += f"\nTraceback:\n{tb}"
 
         logger = cls._instance._logger
@@ -254,41 +258,41 @@ class Log:
             format_msg = f"{color_code}{format_msg}{Color.RESET}"
 
         match level.upper():
-            case 'DEBUG':
+            case "DEBUG":
                 logger.debug(format_msg)
-            case 'INFO':
+            case "INFO":
                 logger.info(format_msg)
-            case 'WARNING':
+            case "WARNING":
                 logger.warning(format_msg)
-            case 'ERROR':
+            case "ERROR":
                 logger.error(format_msg)
-            case 'CRITICAL':
+            case "CRITICAL":
                 logger.critical(format_msg)
 
     @classmethod
-    def debug(cls, msg: str, **kwargs: Any) -> None:
+    def debug(cls, msg: str = "", **kwargs: Any) -> None:
         """デバッグレベルログ"""
-        cls._log('DEBUG', msg, **kwargs)
+        cls._log("DEBUG", msg, **kwargs)
 
     @classmethod
-    def info(cls, msg: str, **kwargs: Any) -> None:
+    def info(cls, msg: str = "", **kwargs: Any) -> None:
         """情報レベルログ"""
-        cls._log('INFO', msg, **kwargs)
+        cls._log("INFO", msg, **kwargs)
 
     @classmethod
-    def warning(cls, msg: str, **kwargs: Any) -> None:
+    def warning(cls, msg: str = "", **kwargs: Any) -> None:
         """警告レベルログ"""
-        cls._log('WARNING', msg, **kwargs)
+        cls._log("WARNING", msg, **kwargs)
 
     @classmethod
-    def error(cls, msg: str, exc_info: Exception | None = None, is_traceback: bool = True, **kwargs: Any) -> None:
+    def error(cls, msg: str = "", exc_info: Exception | None = None, is_traceback: bool = True, **kwargs: Any) -> None:
         """エラーレベルログ（スタックトレース付き）"""
-        cls._log('ERROR', msg, exc_info=exc_info, is_traceback=is_traceback, **kwargs)
+        cls._log("ERROR", msg, exc_info=exc_info, is_traceback=is_traceback, **kwargs)
 
     @classmethod
-    def critical(cls, msg: str, exc_info: Exception | None = None, **kwargs: Any) -> None:
+    def critical(cls, msg: str = "", exc_info: Exception | None = None, **kwargs: Any) -> None:
         """重大エラーレベルログ"""
-        cls._log('CRITICAL', msg, exc_info=exc_info, is_traceback=True, **kwargs)
+        cls._log("CRITICAL", msg, exc_info=exc_info, is_traceback=True, **kwargs)
 
     @classmethod
     def set_level(cls, level: str) -> None:
@@ -329,5 +333,5 @@ if __name__ == "__main__":
     obj.sample_method()
 
     # ログレベル変更
-    log.set_level('DEBUG')
+    log.set_level("DEBUG")
     log.debug("これはデバッグメッセージです")

@@ -4,6 +4,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD
 from rest_framework.views import APIView
 
 from api.models import User, Profile, MyPage, UserNotification
+from api.modules.logger import Log
 from api.types.data.setting import SettingProfileData, SettingMyPageData, SettingNotificationData
 from api.services.user import get_user, profile_check
 from api.utils.decorators.auth import auth_user
@@ -11,7 +12,6 @@ from api.utils.enum.response import ApiResponse
 from api.utils.filter_data import DeferData
 from api.utils.functions.validation import has_email
 from api.utils.functions.index import create_url, message
-from api.utils.functions.logger import Log
 from api.utils.functions.response import DataResponse
 
 
@@ -70,13 +70,13 @@ class SettingProfileAPI(APIView):
         except Exception:
             return DataResponse(message(True, "ユーザー名またはメールアドレス、投稿者名は既に登録済みです!"), status=HTTP_400_BAD_REQUEST)
 
-        Log.info("ProfileAPI", "put", data)
+        Log.info("更新しました", data=data)
         return DataResponse(message(False, "保存しました!"), status=HTTP_204_NO_CONTENT)
 
 
 class SettingMyPageAPI(APIView):
     @auth_user
-    def get(self, request):
+    def get(self, request) -> DataResponse:
         user = get_user(request)
         user = User.objects.filter(id=user.id).select_related("mypage").defer(*DeferData.mypage).first()
 
@@ -115,7 +115,7 @@ class SettingMyPageAPI(APIView):
         except Exception:
             return DataResponse(message(True, "メールアドレスが既に登録済みです!"), status=HTTP_400_BAD_REQUEST)
 
-        Log.info("MyPageAPI", "put", data)
+        Log.info("更新しました", data=data)
         return DataResponse(message(False, "success"), status=HTTP_204_NO_CONTENT)
 
 
