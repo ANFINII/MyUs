@@ -4,7 +4,7 @@ import Button from 'components/parts/Button'
 import TextareaLine from 'components/parts/Input/Textarea/Line'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Vertical from 'components/parts/Stack/Vertical'
-import style from './Comment.module.scss'
+import style from './CommentInput.module.scss'
 
 interface Props {
   user: UserMe
@@ -20,7 +20,9 @@ export default function CommentInput(props: Props): JSX.Element {
   return (
     <form method="POST" action="">
       <Vertical gap="4">
-        <p>コメント総数<span className="ml_4">{count}</span></p>
+        <p>
+          コメント総数<span className="ml_4">{count}</span>
+        </p>
         <Horizontal gap="4">
           <Avatar src={user.avatar} title={user.nickname} size="40" color="grey" className={style.avatar} />
           {user.isActive ? (
