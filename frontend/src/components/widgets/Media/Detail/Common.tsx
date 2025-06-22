@@ -14,8 +14,9 @@ import CountRead from 'components/parts/Count/Read'
 import Divide from 'components/parts/Divide'
 import Horizontal from 'components/parts/Stack/Horizontal'
 import Vertical from 'components/parts/Stack/Vertical'
-import CommentInput from 'components/widgets/Comment/Input'
+import CommentInput from 'components/widgets/Comment/Input/Input'
 import Zoom from 'components/widgets/Zoom'
+// import CommentArea from './CommentArea'
 
 interface Props {
   media: {
