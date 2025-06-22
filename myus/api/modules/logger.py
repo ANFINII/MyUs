@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, ClassVar, Self
 
 
-type CallerInfo = tuple[str | None, str | None, str | None, int | None]
+type CallerInfo = tuple[str, str, str, int]
 type LogLevel = int
 
 
@@ -164,14 +164,14 @@ class Log:
         try:
             frame = inspect.currentframe()
             if not frame:
-                return None, None, None, None
+                return "", "", "", 0
 
             for _ in range(depth):
                 frame = frame.f_back
                 if not frame:
-                    return None, None, None, None
+                    return "", "", "", 0
 
-            class_name: str | None = None # クラス名の取得
+            class_name: str = "" # クラス名の取得
             if "self" in frame.f_locals:
                 class_name = frame.f_locals["self"].__class__.__name__
             elif "cls" in frame.f_locals:
@@ -182,26 +182,26 @@ class Log:
             try:
                 # 現在の作業ディレクトリからの相対パスを取得
                 relative_path = full_path.relative_to(Path.cwd())
-                filename = str(relative_path)
+                file_name = str(relative_path)
             except ValueError:
-                filename = full_path.name # 相対パスが取得できない場合はファイル名のみ
+                file_name = full_path.name # 相対パスが取得できない場合はファイル名のみ
 
             line_no = frame.f_lineno
-            return class_name, func_name, filename, line_no
+            return class_name, func_name, file_name, line_no
 
         except Exception:
-            return None, None, None, None
+            return "", "", "", 0
         finally:
             del frame
 
     @classmethod
-    def _format_message(cls, msg: str, level: str = "INFO", class_name: str | None = None, func_name: str | None = None, filename: str | None = None, line_no: int | None = None, **kwargs: Any) -> str:
+    def _format_message(cls, msg: str, level: str, class_name: str, func_name: str, file_name: str, line_no: int, **kwargs: Any) -> str:
         """メッセージのフォーマット"""
         parts: list[str] = []
         location_parts: list[str] = []
 
-        if filename and line_no:
-            location_parts.append(f"{filename}:{line_no}")
+        if file_name and line_no:
+            location_parts.append(f"{file_name}:{line_no}")
         if class_name:
             location_parts.append(f"{class_name}")
         if func_name:
@@ -231,8 +231,8 @@ class Log:
         if not cls._instance:
             cls()
 
-        class_name, func_name, filename, line_no = cls._get_caller_info()
-        format_msg = cls._format_message(msg, level, class_name, func_name, filename, line_no, **kwargs)
+        class_name, func_name, file_name, line_no = cls._get_caller_info()
+        format_msg = cls._format_message(msg, level, class_name, func_name, file_name, line_no, **kwargs)
 
         # エラー系の場合の追加処理
         if exc_info or is_traceback:
