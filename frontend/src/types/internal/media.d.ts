@@ -142,11 +142,51 @@ export interface MediaDetail {
   author: Author
   mediaUser: MediaUser
 }
+export interface VideoDetail extends Video {
+  comments: Comment[]
+  hashtags: string[]
+}
+
+export interface MusicDetail extends Music {
+  comments: Comment[]
+  hashtags: string[]
+}
+
+export interface ComicDetail extends Comic {
+  comments: Comment[]
+  hashtags: string[]
+}
+
+export interface PictureDetail extends Picture {
+  comments: Comment[]
+  hashtags: string[]
+}
 
 export interface BlogDetail extends MediaDetail {
   image: str
   richtext: str
   comments: Comment[]
+  hashtags: string[]
+}
+
+export interface VideoDetailOut {
+  detail: VideoDetail
+  list: Video[]
+}
+
+export interface MusicDetailOut {
+  detail: MusicDetail
+  list: Music[]
+}
+
+export interface ComicDetailOut {
+  detail: ComicDetail
+  list: Comic[]
+}
+
+export interface PictureDetailOut {
+  detail: PictureDetail
+  list: Picture[]
 }
 
 export interface BlogDetailOut {
