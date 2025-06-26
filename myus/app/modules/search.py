@@ -14,15 +14,8 @@ User = get_user_model()
 
 def get_q_list(search):
     """除外リストを作成"""
-    exclusion_list = set([" ", "　"])
-    q_list = ""
-    for q in search:
-        # 半角と全角の空文字が含まれたら無視
-        if q in exclusion_list:
-            pass
-        else:
-            q_list += q
-    return q_list
+    exclusion_list = {" ", "　"}
+    return "".join([q for q in search if q not in exclusion_list])
 
 
 class SearchData:
