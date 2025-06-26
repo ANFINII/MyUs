@@ -7,7 +7,7 @@ import { postFollow, postComment } from 'api/internal/media/detail'
 import { FetchError } from 'utils/constants/enum'
 import { formatDatetime } from 'utils/functions/datetime'
 import { useUser } from 'components/hooks/useUser'
-import AuthorLink from 'components/parts/AuthorLink'
+import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
 import CountLike from 'components/parts/Count/Like'
 import CountRead from 'components/parts/Count/Read'
@@ -105,7 +105,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
       <div className="content_detail">
         <Horizontal gap="4" align="between">
           <Horizontal gap="4">
-            <AuthorLink src={author.avatar} size="3em" imgSize="48" nickname={author.nickname} />
+            <AvatarLink src={author.avatar} size="48" nickname={author.nickname} />
             <Vertical gap="2">
               <p className="fs_14">{author.nickname}</p>
               <p className="fs_14 text_sub">
@@ -131,8 +131,10 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
       <Divide />
 
       <CommentInput user={user} count={comments.length} value={text} onChange={handleComment} onClick={handleMediaComment} />
-      <Zoom isView={isCommentView} onView={handleCommentView} />
-      {/* <CommentArea comments={comments} onLikeComment={handleComment1} onReplySubmit={handleComment2} nickname={user.nickname} /> */}
+      <Vertical gap="5">
+        <Zoom isView={isCommentView} onView={handleCommentView} />
+        {/* <CommentArea comments={comments} onLikeComment={handleComment1} onReplySubmit={handleComment2} nickname={user.nickname} /> */}
+      </Vertical>
 
       <Divide />
 
