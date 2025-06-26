@@ -1,0 +1,49 @@
+.comment {
+  .comment_info {
+    margin-bottom: 3px;
+    line-height: 1;
+    white-space: nowrap;
+
+    span {
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    time {
+      font-size: 12px;
+      color: rgb(120, 120, 120);
+    }
+  }
+
+  .text {
+    width: 100%;
+    max-height: 150px;
+    font-size: 14px;
+    overflow-y: auto;
+
+    &:hover {
+      overflow-y: scroll;
+    }
+  }
+}
+
+.edit_button {
+  display: flex;
+  height: min-content;
+  padding: 8px;
+  justify-content: flex-end;
+  border: none;
+  outline: none;
+  background: none;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    border-radius: 50px;
+    background: rgb(240, 240, 240);
+  }
+
+  &:active {
+    background: rgb(230, 230, 230);
+  }
+}
