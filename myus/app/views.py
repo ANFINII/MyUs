@@ -919,8 +919,7 @@ class ComicCreate(CreateView):
         comic_images = self.request.FILES.getlist("comic_image")
         self.object = form.save()
 
-        for sequence, image in enumerate(comic_images):
-            ComicPage.objects.create(comic=self.object, image=image, sequence=sequence)
+        [ComicPage.objects.create(comic=self.object, image=i, sequence=s) for s, i in enumerate(comic_images)]
         return super(ComicCreate, self).form_valid(form)
 
     def get_success_url(self):
