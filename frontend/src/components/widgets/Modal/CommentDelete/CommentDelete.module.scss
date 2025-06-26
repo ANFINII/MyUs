@@ -1,16 +1,9 @@
-.comment_area {
+.comment {
   padding: 12px;
   border-radius: 8px;
 
   &:hover {
-    background: rgb(240, 240, 240);
-  }
-
-  .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgb(200, 200, 200);
+    background: rgb(245, 245, 245);
   }
 
   .comment_info {
@@ -29,7 +22,7 @@
     }
   }
 
-  .comment {
+  .text {
     font-size: 14px;
     overflow: hidden;
     overflow-wrap: break-word;

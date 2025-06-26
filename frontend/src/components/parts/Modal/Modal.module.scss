@@ -43,16 +43,14 @@
     border-bottom: 1px solid rgb(225, 230, 240);
 
     .title {
-      margin: 0;
       font-size: 18px;
       font-weight: 500;
+      white-space: nowrap;
     }
 
     .close {
       display: flex;
       padding: 4px;
-      align-items: center;
-      justify-content: center;
       color: rgb(150, 150, 150);
       border: none;
       border-radius: 4px;
@@ -108,8 +106,6 @@
   }
 
   .footer {
-    flex-direction: column;
-
     .button {
       width: 100%;
     }
