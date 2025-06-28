@@ -1,0 +1,49 @@
+.action_list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  padding: 8px;
+  border: 1px solid rgb(240, 240, 240);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: rgb(255, 255, 255);
+  z-index: 100;
+
+  .item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: rgb(0, 80, 250);
+    border: none;
+    border-radius: 8px;
+    background: none;
+    cursor: pointer;
+
+    &:hover {
+      background: rgb(230, 240, 255);
+    }
+
+    &.danger {
+      color: rgb(200, 10, 30);
+
+      .icon {
+        color: rgb(200, 10, 30);
+      }
+
+      &:hover {
+        background: rgb(255, 235, 235);
+      }
+    }
+  }
+
+  .icon {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+}
