@@ -1,3 +1,5 @@
+import { Author } from './media'
+
 export interface Comment {
   id: number
   text: string
@@ -5,12 +7,15 @@ export interface Comment {
   updated: Date
   replys: Reply[]
   author: Author
+  isCommentLike?: boolean
+  totalLike?: number
+  replyCount?: number
 }
 
 export interface Reply {
-  id: str
-  text: str
-  created: datetime
-  updated: datetime
+  id: number
+  text: string
+  created: Date
+  updated: Date
   author: Author
 }
