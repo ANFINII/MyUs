@@ -3,7 +3,7 @@ import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
 import { Video, Music, Comic, Picture, Chat, BlogDetailOut, FollowIn, CommnetIn } from 'types/internal/media'
-import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat, apiCommnet, apiFollow } from 'api/uri'
+import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat, apiCommnet, apiFollow, apiCommentLike } from 'api/uri'
 
 export const getVideo = async (id: number, req?: Req): Promise<ApiOut<Video>> => {
   return await apiOut(apiClient.get(apiVideo(id), cookieHeader(req)))
@@ -35,4 +35,8 @@ export const postFollow = async (request: FollowIn): Promise<ApiOut<void>> => {
 
 export const postComment = async (id: number, request: CommnetIn): Promise<ApiOut<void>> => {
   return await apiOut(apiClient.post(apiCommnet(id), request))
+}
+
+export const postCommentLike = async (commentId: number): Promise<ApiOut<{ isCommentLike: boolean; totalLike: number }>> => {
+  return await apiOut(apiClient.post(apiCommentLike, { commentId }))
 }
