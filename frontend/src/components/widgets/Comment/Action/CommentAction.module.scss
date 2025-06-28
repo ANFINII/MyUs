@@ -1,0 +1,37 @@
+.action_wrap {
+  position: relative;
+
+  .action_button {
+    display: flex;
+    height: min-content;
+    padding: 8px;
+    justify-content: flex-end;
+    border: none;
+    outline: none;
+    background: none;
+    text-decoration: none;
+    color: rgb(100, 100, 100);
+    cursor: pointer;
+
+    &:hover {
+      border-radius: 50px;
+      background: rgb(240, 240, 240);
+    }
+
+    &:active {
+      background: rgb(230, 230, 230);
+    }
+
+    &:disabled {
+      color: rgb(180, 180, 180);
+      background: rgb(255, 255, 255);
+      cursor: default;
+    }
+  }
+
+  .action_list {
+    position: absolute;
+    top: 40px;
+    right: 0;
+  }
+}
