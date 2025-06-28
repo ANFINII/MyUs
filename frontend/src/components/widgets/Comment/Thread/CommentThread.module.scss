@@ -1,0 +1,14 @@
+.thread {
+  display: flex;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(0, 100, 255);
+  }
+
+  .icon {
+    display: flex;
+    margin-right: 2px;
+    align-items: center;
+  }
+}
