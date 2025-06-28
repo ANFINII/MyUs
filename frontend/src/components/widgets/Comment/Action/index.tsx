@@ -5,14 +5,14 @@ import style from './CommentAction.module.scss'
 
 export interface Props {
   open: boolean
-  actionRef: RefObject<HTMLButtonElement>
-  actionItems: ActionItem[]
-  disabled: boolean
   onMenu: () => void
+  actionRef: RefObject<HTMLButtonElement>
+  disabled: boolean
+  actionItems: ActionItem[]
 }
 
 export default function CommentAction(props: Props): JSX.Element {
-  const { open, actionRef, actionItems, disabled, onMenu } = props
+  const { open, onMenu, actionRef, disabled, actionItems } = props
 
   return (
     <div className={style.action_wrap}>
