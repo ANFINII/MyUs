@@ -12,11 +12,11 @@ import style from './CommentContent.module.scss'
 
 export interface Props {
   comment: Comment
-  nickname?: string
+  disabled: boolean
 }
 
 export default function CommentContent(props: Props): JSX.Element {
-  const { comment, nickname } = props
+  const { comment, disabled } = props
   const { author, created, text } = comment
 
   const [isMenu, setIsMenu] = useState<boolean>(false)
@@ -50,16 +50,14 @@ export default function CommentContent(props: Props): JSX.Element {
             <p className={style.text}>{text}</p>
           </div>
         </Horizontal>
-        {comment.author.nickname === nickname && (
-          <div className={style.action_wrap}>
-            <button ref={actionButtonRef} className={style.action_button} onClick={handleMenu}>
-              <IconDots size="18" />
-            </button>
-            <div className={style.action_list}>
-              <ActionList triggerRef={actionButtonRef} open={isMenu} onClose={handleMenu} items={actionItems} />
-            </div>
+        <div className={style.action_wrap}>
+          <button ref={actionButtonRef} className={style.action_button} disabled={disabled} onClick={handleMenu}>
+            <IconDots size="18" />
+          </button>
+          <div className={style.action_list}>
+            <ActionList triggerRef={actionButtonRef} open={isMenu} onClose={handleMenu} items={actionItems} />
           </div>
-        )}
+        </div>
       </Horizontal>
       <CommentDeleteModal open={isModal} onClose={handleModal} onAction={() => {}} comment={comment} />
     </>
