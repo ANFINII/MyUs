@@ -1,12 +1,12 @@
 import { useState, useRef } from 'react'
 import { Comment } from 'types/internal/comment'
 import { formatDatetime } from 'utils/functions/datetime'
+import ActionList from 'components/parts/ActionList'
 import AvatarLink from 'components/parts/Avatar/Link'
 import IconDots from 'components/parts/Icon/Dots'
 import IconEdit from 'components/parts/Icon/Edit'
 import IconTrash from 'components/parts/Icon/Trash'
 import Horizontal from 'components/parts/Stack/Horizontal'
-import ActionList from 'components/widgets/Comment/ActionList'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import style from './CommentContent.module.scss'
 
