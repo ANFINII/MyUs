@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Follow } from 'types/internal/auth'
 import ExImage from 'components/parts/ExImage'
 import Horizontal from 'components/parts/Stack/Horizontal'
-import Vertical from 'components/parts/Stack/Vertical'
+import VStack from 'components/parts/Stack/Vertical'
 import style from './Follow.module.scss'
 
 interface Props {
@@ -18,13 +18,13 @@ export default function MediaFollow(props: Props): JSX.Element {
       <Link href={`/userpage/${nickname}`} className={style.follow_box}>
         <Horizontal gap="5">
           <ExImage src={avatar} title={nickname} className={style.follow_image} />
-          <Vertical gap="1" className="fs_12">
+          <VStack gap="1" className="fs_12">
             <span title={nickname}>{nickname}</span>
             <span>フォロワー数：{followerCount}</span>
             <span>
               フォロー数<span className="ml_12">：{followingCount}</span>
             </span>
-          </Vertical>
+          </VStack>
         </Horizontal>
         <div title={introduction} className={style.follow_introduction}>
           {introduction}

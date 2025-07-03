@@ -11,7 +11,7 @@ import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
-import Vertical from 'components/parts/Stack/Vertical'
+import VStack from 'components/parts/Stack/Vertical'
 
 export default function PictureCreate(): JSX.Element {
   const router = useRouter()
@@ -38,11 +38,11 @@ export default function PictureCreate(): JSX.Element {
     <Main title="Picture" type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <LoginError margin="mt_20">
         <form method="POST" action="">
-          <Vertical gap="8">
+          <VStack gap="8">
             <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
             <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
             <InputFile label="画像" accept="image/*" required={isRequired} onChange={handleFile} />
-          </Vertical>
+          </VStack>
         </form>
       </LoginError>
     </Main>

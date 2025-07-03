@@ -4,7 +4,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
-import Vertical from 'components/parts/Stack/Vertical'
+import VStack from 'components/parts/Stack/Vertical'
 
 export default function WithdrawalConfirm(): JSX.Element {
   const router = useRouter()
@@ -15,15 +15,15 @@ export default function WithdrawalConfirm(): JSX.Element {
       <LoginError>
         <article className="article_pass">
           <form method="POST" action="" className="form_account">
-            <Vertical gap="8">
+            <VStack gap="8">
               <p className="red">本当に退会しますか？</p>
               <Input type="password" name="password2" placeholder="パスワード" minLength={8} maxLength={16} required />
-            </Vertical>
+            </VStack>
 
-            <Vertical gap="12" className="mv_40">
+            <VStack gap="12" className="mv_40">
               <Button color="red" size="l" name="退会する" />
               <Button color="blue" size="l" name="戻る" onClick={handleBack} />
-            </Vertical>
+            </VStack>
           </form>
         </article>
       </LoginError>

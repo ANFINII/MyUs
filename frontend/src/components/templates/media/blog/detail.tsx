@@ -3,7 +3,7 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import FormatHtml from 'components/parts/FormatHtml'
-import Vertical from 'components/parts/Stack/Vertical'
+import VStack from 'components/parts/Stack/Vertical'
 import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
 import MediaSideImage from 'components/widgets/Media/Side/Image'
@@ -28,11 +28,11 @@ export default function BlogDetail(props: Props): JSX.Element {
         <Divide />
         <div className="media_detail_grid">
           <MediaDetailCommon media={{ type: 'blog', ...other }} handleToast={handleToast} />
-          <Vertical gap="4" className="ml_20">
+          <VStack gap="4" className="ml_20">
             {list.map((media) => (
               <MediaSideImage key={media.id} href={`/media/blog/${media.id}`} src={media.image} media={media} />
             ))}
-          </Vertical>
+          </VStack>
         </div>
       </MediaDetail>
     </Main>

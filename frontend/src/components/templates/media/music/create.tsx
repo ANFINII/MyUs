@@ -12,7 +12,7 @@ import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
-import Vertical from 'components/parts/Stack/Vertical'
+import VStack from 'components/parts/Stack/Vertical'
 
 export default function MusicCreate(): JSX.Element {
   const router = useRouter()
@@ -40,15 +40,15 @@ export default function MusicCreate(): JSX.Element {
     <Main title="Music" type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <LoginError margin="mt_20">
         <form method="POST" action="" encType="multipart/form-data">
-          <Vertical gap="8">
+          <VStack gap="8">
             <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
             <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
             <Textarea label="歌詞" name="lyric" required={isRequired} onChange={handleText} />
-            <Vertical gap="2">
+            <VStack gap="2">
               <InputFile label="音楽" accept="audio/*" required={isRequired} onChange={handleFile} />
               <CheckBox label="ダウンロード許可" name="download" defaultChecked onChange={handleCheck} />
-            </Vertical>
-          </Vertical>
+            </VStack>
+          </VStack>
         </form>
       </LoginError>
     </Main>
