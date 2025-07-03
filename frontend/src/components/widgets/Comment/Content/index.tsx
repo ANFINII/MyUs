@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react'
-import clsx from 'clsx'
 import { Comment } from 'types/internal/comment'
 import { postCommentLike } from 'api/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
@@ -72,7 +71,7 @@ export default function CommentContent(props: Props): JSX.Element {
     <HStack>
       <HStack gap="4" className={style.comment}>
         <AvatarLink src={author.avatar} size="40" nickname={author.nickname} />
-        <VStack gap="10" className={clsx(isEdit && 'w_full mr_34')}>
+        <VStack gap="4" className="w_full">
           {!isEdit ? (
             <div>
               <div className={style.comment_info}>
@@ -82,15 +81,14 @@ export default function CommentContent(props: Props): JSX.Element {
               <p className={style.text}>{text}</p>
             </div>
           ) : (
-            <>
+            <VStack gap="4">
               <TextareaLine name="text" placeholder="コメント入力" value={commentText} onChange={handleComment} className={style.textarea} />
               <HStack gap="4" justify="end">
                 <Button size="s" name="キャンセル" onClick={handleEdit} />
                 <Button size="s" color="green" name="更新" disabled={commentText.trim() === ''} onClick={() => handleCommentUpdate(comment.id, commentText)} />
               </HStack>
-            </>
+            </VStack>
           )}
-
           <HStack gap="4" className="fs_12">
             <CountLike isLike={comment.isCommentLike} disable={!isActive} like={comment.totalLike} onClick={() => handleLike(comment.id)} />
             <CommentReply isView={isReplyView} onClick={handleReplyView} />
