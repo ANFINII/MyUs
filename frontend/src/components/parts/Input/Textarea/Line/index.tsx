@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import clsx from 'clsx'
 import style from '../Textarea.module.scss'
 
@@ -13,7 +13,7 @@ interface Props {
   error?: boolean
   required?: boolean
   disabled?: boolean
-  onChange?: (value: string) => void
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
 }
 
 export default function TextareaLine(props: Props): JSX.Element {
@@ -32,10 +32,8 @@ export default function TextareaLine(props: Props): JSX.Element {
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     adjustHeight()
-    if (onChange) onChange(e.target.value)
+    onChange?.(e)
   }
 
-  return (
-    <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} className={clsx(style.line, className)} />
-  )
+  return <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} className={clsx(style.line, className)} />
 }
