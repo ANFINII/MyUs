@@ -10,7 +10,7 @@ interface Props {
   user: UserMe
   count: number
   value?: string
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (value: string) => void
   onClick?: () => void
 }
 
