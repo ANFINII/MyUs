@@ -10,7 +10,7 @@ interface Props {
   user: UserMe
   count: number
   value?: string
-  onChange?: (value: string) => void
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
   onClick?: () => void
 }
 
@@ -31,7 +31,7 @@ export default function CommentInput(props: Props): JSX.Element {
             <TextareaLine name="text" placeholder="コメントするにはログインが必要です!" disabled className={style.textarea} />
           )}
         </Horizontal>
-        <Horizontal align="end">
+        <Horizontal justify="end">
           <Button color="blue" size="s" name="コメント" disabled={!value?.trim()} onClick={onClick} />
         </Horizontal>
       </Vertical>

@@ -2,8 +2,8 @@ import clsx from 'clsx'
 import style from './Horizontal.module.scss'
 
 interface Props {
-  gap?: string | number
-  align?: 'start' | 'center' | 'end' | 'around' | 'between' | 'evenly'
+  gap?: string
+  justify?: 'start' | 'center' | 'end' | 'around' | 'between' | 'evenly'
   wrap?: boolean
   full?: boolean
   className?: string
@@ -11,10 +11,10 @@ interface Props {
 }
 
 export default function Horizontal(props: Props): JSX.Element {
-  const { gap = 0, align, wrap, full, className, children } = props
+  const { gap = '0', justify = 'start', wrap = false, full, className, children } = props
 
   return (
-    <div className={clsx(style.horizontal, style[`align_${align}`], full && style.full, className)} style={{ gap: `${Number(gap) * 2}px`, flexWrap: wrap ? 'wrap' : 'nowrap' }}>
+    <div className={clsx(style.horizontal, style[`justify_${justify}`], wrap && style.wrap, full && style.full, className)} style={{ gap: `${Number(gap) * 2}px` }}>
       {children}
     </div>
   )
