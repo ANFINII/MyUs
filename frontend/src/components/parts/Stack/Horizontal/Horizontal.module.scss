@@ -6,31 +6,31 @@
     width: 100%;
   }
 
-  &.justify_start {
+  &.wrap {
+    flex-wrap: wrap;
+  }
+
+  &.start {
     justify-content: flex-start;
   }
 
-  &.justify_center {
+  &.center {
     justify-content: center;
   }
 
-  &.justify_end {
+  &.end {
     justify-content: flex-end;
   }
 
-  &.justify_around {
+  &.around {
     justify-content: space-around;
   }
 
-  &.justify_between {
+  &.between {
     justify-content: space-between;
   }
 
-  &.justify_evenly {
+  &.evenly {
     justify-content: space-evenly;
-  }
-
-  &.wrap {
-    flex-wrap: wrap;
   }
 }
