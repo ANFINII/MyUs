@@ -13,7 +13,7 @@ import CountLike from 'components/parts/Count/Like'
 import CountRead from 'components/parts/Count/Read'
 import Divide from 'components/parts/Divide'
 import Horizontal from 'components/parts/Stack/Horizontal'
-import Vertical from 'components/parts/Stack/Vertical'
+import VStack from 'components/parts/Stack/Vertical'
 import CommentInput from 'components/widgets/Comment/Input/Input'
 import Zoom from 'components/widgets/Zoom'
 // import CommentArea from './CommentArea'
@@ -102,12 +102,12 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
         <Horizontal gap="4" justify="between">
           <Horizontal gap="4">
             <AvatarLink src={author.avatar} size="48" nickname={author.nickname} />
-            <Vertical gap="2">
+            <VStack gap="2">
               <p className="fs_14">{author.nickname}</p>
               <p className="fs_14 text_sub">
                 登録者数<span className="ml_8">{author.followerCount}</span>
               </p>
-            </Vertical>
+            </VStack>
           </Horizontal>
           <div className="content_detail_p2">
             {!isFollow && <Button color="green" name="フォローする" disabled={isFallowDisable} onClick={handleFollow} />}
@@ -115,22 +115,22 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
           </div>
         </Horizontal>
         <div className="content_detail_p1">
-          <Vertical gap="2">
+          <VStack gap="2">
             <Zoom isView={isContentView} onView={handleContentView} />
             <div className={clsx('content_detail_aria', isContentView ? 'active' : '')}>
               <p>{content}</p>
             </div>
-          </Vertical>
+          </VStack>
         </div>
       </div>
 
       <Divide />
 
       <CommentInput user={user} count={comments.length} value={text} onChange={handleComment} onClick={handleMediaComment} />
-      <Vertical gap="5">
+      <VStack gap="5">
         <Zoom isView={isCommentView} onView={handleCommentView} />
         {/* <CommentArea comments={comments} onLikeComment={handleComment1} nickname={user.nickname} /> */}
-      </Vertical>
+      </VStack>
 
       <Divide />
 

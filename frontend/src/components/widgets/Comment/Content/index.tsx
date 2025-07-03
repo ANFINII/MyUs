@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import clsx from 'clsx'
 import { Comment } from 'types/internal/comment'
 import { postCommentLike } from 'api/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
@@ -9,6 +10,7 @@ import IconEdit from 'components/parts/Icon/Edit'
 import IconTrash from 'components/parts/Icon/Trash'
 import TextareaLine from 'components/parts/Input/Textarea/Line'
 import Horizontal from 'components/parts/Stack/Horizontal'
+import VStack from 'components/parts/Stack/Vertical'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import style from './CommentContent.module.scss'
 import CommentAction from '../Action'
@@ -70,7 +72,7 @@ export default function CommentContent(props: Props): JSX.Element {
     <Horizontal>
       <Horizontal gap="4" className={style.comment}>
         <AvatarLink src={author.avatar} size="40" nickname={author.nickname} />
-        <>
+        <VStack gap="10" className={clsx(isEdit && 'w_full mr_34')}>
           {!isEdit ? (
             <div>
               <div className={style.comment_info}>
@@ -96,7 +98,7 @@ export default function CommentContent(props: Props): JSX.Element {
             <div className={style.comment_aria_list_space} />
             <div id={`reply_aria_list_${comment.id}`} className={style.comment_aria_list_5} />
           </Horizontal>
-        </>
+        </VStack>
       </Horizontal>
       <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
       <CommentDeleteModal open={isModal} onClose={handleModal} onAction={() => {}} comment={comment} />

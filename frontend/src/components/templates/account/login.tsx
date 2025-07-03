@@ -11,7 +11,7 @@ import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
-import Vertical from 'components/parts/Stack/Vertical'
+import VStack from 'components/parts/Stack/Vertical'
 
 export default function Login(): JSX.Element {
   const router = useRouter()
@@ -54,16 +54,18 @@ export default function Login(): JSX.Element {
             </ul>
           )}
 
-          <Vertical gap="8">
+          <VStack gap="8">
             <Input type="text" name="username" placeholder="ユーザー名 or メールアドレス" required={isRequired} onChange={handleInput} />
             <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} required={isRequired} onChange={handleInput} />
-            <p className="password_reset" onClick={handleReset}>パスワードをリセット</p>
-          </Vertical>
+            <p className="password_reset" onClick={handleReset}>
+              パスワードをリセット
+            </p>
+          </VStack>
 
-          <Vertical gap="12" className="mv_40">
+          <VStack gap="12" className="mv_40">
             <Button color="blue" size="l" name="ログイン" type="submit" loading={isLoading} onClick={handleSubmit} />
             <Button color="green" size="l" name="アカウント登録" onClick={handleSignup} />
-          </Vertical>
+          </VStack>
         </form>
       </article>
       <Footer />

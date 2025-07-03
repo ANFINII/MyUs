@@ -3,7 +3,7 @@ import Avatar from 'components/parts/Avatar'
 import Button from 'components/parts/Button'
 import TextareaLine from 'components/parts/Input/Textarea/Line'
 import Horizontal from 'components/parts/Stack/Horizontal'
-import Vertical from 'components/parts/Stack/Vertical'
+import VStack from 'components/parts/Stack/Vertical'
 import style from './CommentInput.module.scss'
 
 interface Props {
@@ -19,7 +19,7 @@ export default function CommentInput(props: Props): JSX.Element {
 
   return (
     <form method="POST" action="">
-      <Vertical gap="4">
+      <VStack gap="4">
         <p>
           コメント総数<span className="ml_4">{count}</span>
         </p>
@@ -34,7 +34,7 @@ export default function CommentInput(props: Props): JSX.Element {
         <Horizontal justify="end">
           <Button color="blue" size="s" name="コメント" disabled={!value?.trim()} onClick={onClick} />
         </Horizontal>
-      </Vertical>
+      </VStack>
     </form>
   )
 }

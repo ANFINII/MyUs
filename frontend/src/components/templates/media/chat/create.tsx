@@ -11,7 +11,7 @@ import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
-import Vertical from 'components/parts/Stack/Vertical'
+import VStack from 'components/parts/Stack/Vertical'
 
 export default function ChatCreate(): JSX.Element {
   const router = useRouter()
@@ -37,11 +37,11 @@ export default function ChatCreate(): JSX.Element {
     <Main title="Chat" type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <LoginError margin="mt_20">
         <form method="POST" action="">
-          <Vertical gap="8">
+          <VStack gap="8">
             <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
             <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
             <Input label="期間" name="period" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handleInput} />
-          </Vertical>
+          </VStack>
         </form>
       </LoginError>
     </Main>

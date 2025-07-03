@@ -4,7 +4,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
-import Vertical from 'components/parts/Stack/Vertical'
+import VStack from 'components/parts/Stack/Vertical'
 
 export default function PasswordChange(): JSX.Element {
   const router = useRouter()
@@ -20,16 +20,16 @@ export default function PasswordChange(): JSX.Element {
               <li>{/* { form.new_password2.errors } */}</li>
             </ul>
 
-            <Vertical gap="8">
+            <VStack gap="8">
               <Input type="password" name="old_password" minLength={8} maxLength={16} placeholder="現在パスワード" required />
               <Input type="password" name="new_password1" minLength={8} maxLength={16} placeholder="新規パスワード(英数字8~16文字)" required />
               <Input type="password" name="new_password2" minLength={8} maxLength={16} placeholder="新規パスワード(確認用)" required />
-            </Vertical>
+            </VStack>
 
-            <Vertical gap="12" className="mv_40">
+            <VStack gap="12" className="mv_40">
               <Button color="red" size="l" name="退会する" />
               <Button color="blue" size="l" name="戻る" onClick={handleBack} />
-            </Vertical>
+            </VStack>
           </form>
         </article>
       </LoginError>

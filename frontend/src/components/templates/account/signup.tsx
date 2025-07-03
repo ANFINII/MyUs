@@ -14,7 +14,7 @@ import Input from 'components/parts/Input'
 import Radio from 'components/parts/Input/Radio'
 import Select from 'components/parts/Input/Select'
 import Horizontal from 'components/parts/Stack/Horizontal'
-import Vertical from 'components/parts/Stack/Vertical'
+import VStack from 'components/parts/Stack/Vertical'
 
 const initSignup: SignupIn = {
   email: '',
@@ -68,14 +68,14 @@ export default function Signup(): JSX.Element {
             </ul>
           )}
 
-          <Vertical gap="8">
-            <Vertical gap="4">
+          <VStack gap="8">
+            <VStack gap="4">
               <p>名前</p>
               <div className="name_group">
                 <Input name="lastName" placeholder="姓" maxLength={30} required={isRequired} onChange={handleInput} />
                 <Input name="firstName" placeholder="名" maxLength={30} required={isRequired} onChange={handleInput} />
               </div>
-            </Vertical>
+            </VStack>
 
             <Input name="username" placeholder="ユーザー名(英数字)" maxLength={20} required={isRequired} onChange={handleInput} />
             <Input name="nickname" placeholder="投稿者名" maxLength={80} required={isRequired} onChange={handleInput} />
@@ -83,29 +83,29 @@ export default function Signup(): JSX.Element {
             <Input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minLength={8} maxLength={16} required={isRequired} onChange={handleInput} />
             <Input type="password" name="password2" placeholder="パスワード(確認用)" minLength={8} maxLength={16} required={isRequired} onChange={handleInput} />
 
-            <Vertical gap="4">
+            <VStack gap="4">
               <p>生年月日</p>
               <Horizontal gap="2" full>
                 <Select name="year" value={values.year} options={years} onChange={handleSelect} />
                 <Select name="month" value={values.month} options={months} onChange={handleSelect} />
                 <Select name="day" value={values.day} options={days} onChange={handleSelect} />
               </Horizontal>
-            </Vertical>
+            </VStack>
 
-            <Vertical gap="4">
+            <VStack gap="4">
               <p>性別</p>
               <Horizontal gap="5">
                 {Object.entries(GenderType).map(([key, value]) => (
                   <Radio key={key} name="gender" label={genderMap[value]} value={value} checked={value === values.gender} onChange={handleInput} />
                 ))}
               </Horizontal>
-            </Vertical>
-          </Vertical>
+            </VStack>
+          </VStack>
 
-          <Vertical gap="12" className="mv_40">
+          <VStack gap="12" className="mv_40">
             <Button color="green" size="l" name="アカウント登録" type="submit" loading={isLoading} onClick={handleSubmit} />
             <Button color="blue" size="l" name="戻る" onClick={handleBack} />
-          </Vertical>
+          </VStack>
         </form>
       </article>
       <Footer />
