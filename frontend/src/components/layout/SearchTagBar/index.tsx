@@ -8,6 +8,7 @@ import { useUser } from 'components/hooks/useUser'
 import ButtonSquare from 'components/parts/Button/Square'
 import IconChevront from 'components/parts/Icon/Chevront'
 import Input from 'components/parts/Input'
+import HStack from 'components/parts/Stack/Horizontal'
 
 export default function SearchTagBar(): JSX.Element {
   const { user } = useUser()
@@ -51,32 +52,32 @@ export default function SearchTagBar(): JSX.Element {
 
   return (
     <nav className="searchtag">
-      <form method="POST" action="" className="searchtag_grid">
-        <ButtonSquare color="emerald" name="タグ" className={clsx('searchtag_1', isActive(isSearchtag))} onClick={handleSearchtag} />
-
-        <ButtonSquare color="sakura" name="追加" className={clsx('searchtag_2', isActive(isSearchtag))} />
-
-        <Input placeholder="タグ名" maxLength={30} disabled={!user.isActive} className={clsx('searchtag_3', isActive(isSearchtag))} />
-        <div ref={scrollRef} className={clsx('searchtag_n', isActive(isSearchtag))}>
-          <div className="searchtag_n_list">
-            {searchTags?.map((tag) => (
-              <Link key={tag.sequence} href={`?search=${tag.name}`}>
-                {tag.name}
-              </Link>
-            ))}
+      <HStack justify="between">
+        <HStack gap="3">
+          <HStack gap="0.5">
+            <ButtonSquare color="emerald" name={isSearchtag ? '完了' : 'タグ'} className="button_1" onClick={handleSearchtag} />
+            <Input placeholder="タグ名" maxLength={30} disabled={!user.isActive} className={clsx('input', isActive(isSearchtag))} />
+            <ButtonSquare color="sakura" name="追加" className={clsx('button_2', isActive(isSearchtag))} />
+          </HStack>
+          <div ref={scrollRef} className={clsx('tags', isActive(isSearchtag))}>
+            <HStack gap="2.5">
+              {searchTags?.map((tag) => (
+                <Link key={tag.sequence} href={`?search=${tag.name}`}>
+                  {tag.name}
+                </Link>
+              ))}
+            </HStack>
           </div>
-        </div>
-
-        <ButtonSquare color="emerald" name="完了" className={clsx('searchtag_4', isActive(isSearchtag))} onClick={handleSearchtag} />
-
-        <div className="searchtag_left" onClick={handleLeft}>
-          <IconChevront width="18" height="17" type="left" />
-        </div>
-
-        <div className="searchtag_right" onClick={handleRight}>
-          <IconChevront width="18" height="17" type="right" />
-        </div>
-      </form>
+        </HStack>
+        <HStack>
+          <div className="arrow" onClick={handleLeft}>
+            <IconChevront width="18" height="17" type="left" />
+          </div>
+          <div className="arrow" onClick={handleRight}>
+            <IconChevront width="18" height="17" type="right" />
+          </div>
+        </HStack>
+      </HStack>
     </nav>
   )
 }

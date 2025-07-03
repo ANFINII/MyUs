@@ -1,158 +1,76 @@
-/* サーチタグバー */
 .searchtag {
   position: fixed;
   top: 56px;
   left: 72px;
-  width: 100%;
+  width: calc(100% - 72px);
   height: 26px;
   background: rgb(240, 240, 240);
   z-index: 50;
-}
 
-.searchtag_grid {
-  display: grid;
-  grid-template-columns: 48px 194px 48px auto;
-  grid-template-rows: 26px;
-}
+  .button_1 {
+    width: 48px;
+  }
 
-.searchtag_1 {
-  display: block;
-  grid-column: 1/2;
-  grid-row: 1/2;
-
-  &.active {
+  .button_2 {
     display: none;
+
+    &.active {
+      display: block;
+      width: 48px;
+    }
   }
-}
 
-.searchtag_2 {
-  display: none;
+  .input {
+    display: none;
 
-  &.active {
-    display: block;
-    grid-column: 1/2;
-    grid-row: 1/2;
-  }
-}
-
-.searchtag_3 {
-  display: none;
-
-  &.active {
-    display: block;
-    grid-column: 2/3;
-    grid-row: 1/2;
-    margin: 0 1px;
+    &.active {
+      display: block;
+    }
 
     input {
+      width: 194px;
       height: 24px;
       padding: 4px 8px;
     }
   }
-}
 
-.searchtag_4 {
-  display: none;
+  .tags {
+    width: calc(100vw - 166px);
+    line-height: 1.8;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: none; /* Firefoxでスクロールバーを非表示 */
 
-  &.active {
-    display: block;
-    grid-column: 3/4;
-    grid-row: 1/2;
+    &.active {
+      width: calc(100vw - 408px);
+    }
+
+    a {
+      font-size: 14px;
+      color: rgb(100, 100, 100);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: rgb(0, 130, 255);
+    }
+  }
+
+  .arrow {
+    height: 26px;
+    line-height: 1.4;
+    color: rgb(120, 120, 120);
+    cursor: pointer;
 
     &:hover {
-      cursor: pointer;
-      background: rgb(0, 160, 190);
+      color: rgb(35, 150, 255);
+      background: rgb(220, 220, 220);
     }
 
     &:active {
-      background: rgb(0, 180, 220);
+      color: rgb(0, 130, 255);
+      background: rgb(210, 210, 210);
     }
   }
-}
-
-.searchtag_center {
-  display: inline-block;
-  margin: 1px 0 0 0;
-}
-
-.searchtag_n {
-  grid-column: 2/3;
-  grid-row: 1/2;
-  width: calc(100vw - 166px);
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
-  scrollbar-width: none; /* Firefoxでスクロールバーを非表示 */
-  -ms-overflow-style: none; /* IEとEdgeでスクロールバーを非表示 */
-
-  &.active {
-    grid-column: 4/5;
-    width: calc(100vw - 408px);
-  }
-
-  &::-webkit-scrollbar {
-    display: none;
-    height: 0;
-  }
-}
-
-.searchtag_n_list {
-  display: inline;
-
-  a {
-    font-size: 14px;
-    margin: 0 0 0 5px;
-    color: rgb(100, 100, 100);
-    text-decoration: none;
-  }
-}
-
-.searchtag_left {
-  position: fixed;
-  right: 18px;
-  padding: 0 0 2px 0;
-  color: rgb(120, 120, 120);
-  background: rgb(240, 240, 240);
-  cursor: pointer;
-}
-
-.searchtag_right {
-  position: fixed;
-  right: 0;
-  padding: 0 0 2px 0;
-  color: rgb(120, 120, 120);
-  background: rgb(240, 240, 240);
-  cursor: pointer;
-}
-
-.searchtag_left:hover,
-.searchtag_right:hover {
-  color: rgb(35, 150, 255);
-  background: rgb(210, 210, 210);
-}
-
-.searchtag_left:active,
-.searchtag_right:active {
-  color: rgb(0, 130, 255);
-  background: rgb(200, 200, 200);
-}
-
-.tag_n_add {
-  margin: 0 4.3px 0 0;
-}
-
-.hashtag_list {
-  display: inline;
-  margin: 0 2px 0 0;
-
-  a {
-    text-decoration: none;
-    font-size: 12px;
-    color: rgb(100, 100, 100);
-  }
-}
-
-.searchtag_n_list a:hover,
-.hashtag_list a:hover {
-  color: rgb(0, 130, 255);
 }
