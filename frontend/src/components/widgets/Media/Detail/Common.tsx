@@ -17,6 +17,7 @@ import Vertical from 'components/parts/Stack/Vertical'
 import CommentInput from 'components/widgets/Comment/Input/Input'
 import Zoom from 'components/widgets/Zoom'
 // import CommentArea from './CommentArea'
+// import CommentArea from './CommentArea'
 
 interface Props {
   media: {
@@ -50,14 +51,10 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const handleLike = () => setIsLike(!isLike)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
-  const handleComment = (value: string): void => setText(value)
+  const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setText(e.target.value)
 
   // const handleComment1 = (commentId: number): void => {
   //   console.log('handleComment1', commentId)
-  //   setText('')
-  // }
-  // const handleComment2 = (commentId: number): void => {
-  //   console.log('handleComment2', commentId)
   //   setText('')
   // }
 
@@ -103,7 +100,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
       <Divide />
 
       <div className="content_detail">
-        <Horizontal gap="4" align="between">
+        <Horizontal gap="4" justify="between">
           <Horizontal gap="4">
             <AvatarLink src={author.avatar} size="48" nickname={author.nickname} />
             <Vertical gap="2">
@@ -133,7 +130,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
       <CommentInput user={user} count={comments.length} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <Vertical gap="5">
         <Zoom isView={isCommentView} onView={handleCommentView} />
-        {/* <CommentArea comments={comments} onLikeComment={handleComment1} onReplySubmit={handleComment2} nickname={user.nickname} /> */}
+        {/* <CommentArea comments={comments} onLikeComment={handleComment1} nickname={user.nickname} /> */}
       </Vertical>
 
       <Divide />
