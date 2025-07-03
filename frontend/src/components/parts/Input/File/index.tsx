@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import clsx from 'clsx'
+import VStack from 'components/parts/Stack/Vertical'
 import style from '../Input.module.scss'
 
 interface Props {
@@ -35,7 +36,7 @@ export default function InputFile(props: Props): JSX.Element {
   }
 
   return (
-    <div className={className}>
+    <VStack gap="2" className={className}>
       {label && (
         <label htmlFor={label} className={style.label}>
           {label}
@@ -45,6 +46,6 @@ export default function InputFile(props: Props): JSX.Element {
       <input placeholder="ファイル選択..." value={fileNames.join(', ')} required={required} onClick={handleClick} className={clsx(style.input, isRequired && style.error)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
       {isErrorText && <p className={style.error_text}>{errorText}</p>}
-    </div>
+    </VStack>
   )
 }

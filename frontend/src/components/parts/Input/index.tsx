@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
 import { useAutoFocus } from 'components/hooks/useAutoFocus'
+import VStack from 'components/parts/Stack/Vertical'
 import style from './Input.module.scss'
 
 interface Props {
@@ -38,7 +39,7 @@ export default function Input(props: Props): JSX.Element {
   }
 
   return (
-    <div className={className}>
+    <VStack gap="2" className={className}>
       {label && (
         <label htmlFor={label} className={style.label}>
           {label}
@@ -47,6 +48,6 @@ export default function Input(props: Props): JSX.Element {
       <input {...props} id={label} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={clsx(style.input, isRequired && style.error)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
       {isErrorText && <p className={style.error_text}>{errorText}</p>}
-    </div>
+    </VStack>
   )
 }

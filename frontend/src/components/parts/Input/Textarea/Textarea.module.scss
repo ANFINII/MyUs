@@ -23,30 +23,8 @@
   }
 }
 
-.line {
-  width: 100%;
-  min-height: 40px;
-  min-height: 36px;
-  padding: 8px 3px;
-  font-size: 14px;
-  outline: none;
-  resize: none;
-  border: none;
-  border-bottom: 2px solid rgb(200, 200, 200);
-  overflow-y: hidden;
-
-  &:disabled {
-    background: rgb(248, 248, 248);
-  }
-
-  &:focus {
-    border-bottom: 2px solid rgb(80, 170, 255);
-  }
-}
-
 .label {
   display: block;
-  margin-bottom: 4px;
   font-size: 14px;
   color: rgb(50, 50, 50);
 }
