@@ -1,5 +1,6 @@
 .reply {
   display: flex;
+  color: rgb(100, 100, 100);
   cursor: pointer;
 
   &:hover {
@@ -8,7 +9,7 @@
 
   .icon {
     display: flex;
-    margin-right: 2px;
+    margin-right: 1px;
     align-items: center;
   }
 }
