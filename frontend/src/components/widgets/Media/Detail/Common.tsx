@@ -50,8 +50,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const handleLike = () => setIsLike(!isLike)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
-  // const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setText(e.target.value)
-  const handleComment = (value: string): void => setText(value)
+  const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setText(e.target.value)
 
   // const handleComment1 = (commentId: number): void => {
   //   console.log('handleComment1', commentId)

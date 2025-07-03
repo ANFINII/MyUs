@@ -34,7 +34,7 @@ export default function Input(props: Props): JSX.Element {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setIsValue(value !== '')
-    if (onChange) onChange(e)
+    onChange?.(e)
   }
 
   return (
