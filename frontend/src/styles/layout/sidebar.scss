@@ -6,10 +6,6 @@
   background: rgb(0, 0, 80);
   z-index: 60; /* headerよりは小さく */
 
-  .sidebar_nav {
-    height: 100%;
-  }
-
   .sidebar_color {
     div:hover,
     &.active div {
@@ -26,15 +22,11 @@
     li {
       display: flex;
       text-align: center;
+      align-items: center;
       justify-content: center;
-
-      div {
-        display: block;
-        height: 52px;
-        margin: 18px 0;
-        font-size: 14px;
-        color: rgb(125, 125, 125);
-      }
+      min-height: 88px;
+      font-size: 14px;
+      color: rgb(125, 125, 125);
     }
   }
 }

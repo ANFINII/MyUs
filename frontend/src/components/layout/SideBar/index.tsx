@@ -9,7 +9,7 @@ import SideBarItem from 'components/parts/NavItem/SideBarItem'
 export default function SideBar(): JSX.Element {
   return (
     <aside className="sidebar">
-      <nav className="sidebar_nav">
+      <nav>
         <ul>
           <SideBarItem url="/media/video" label="Video" icon={<IconVideo size="25" />} />
           <SideBarItem url="/media/music" label="Music" icon={<IconMusic size="25" />} />
