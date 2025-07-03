@@ -6,6 +6,7 @@ import 'react-quill/dist/quill.snow.css'
 import 'quill-mention'
 import 'quill-mention/dist/quill.mention.css'
 import { MentionUser } from 'types/internal/timeline'
+import VStack from 'components/parts/Stack/Vertical'
 import style from './Quill.module.scss'
 
 interface Props {
@@ -59,7 +60,7 @@ export default function Quill(props: Props): JSX.Element {
   }
 
   return (
-    <div className={className}>
+    <VStack gap="2" className={className}>
       {label && (
         <label htmlFor={label} className={style.label} onClick={handleLabel}>
           {label}
@@ -67,6 +68,6 @@ export default function Quill(props: Props): JSX.Element {
       )}
       <ReactQuill {...props} theme="snow" ref={ref} modules={modules} formats={formats} className={clsx(isRequired && style.error)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
-    </div>
+    </VStack>
   )
 }
