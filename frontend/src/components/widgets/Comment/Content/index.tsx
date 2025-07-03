@@ -94,7 +94,7 @@ export default function CommentContent(props: Props): JSX.Element {
             <CommentReply isView={isReplyView} onClick={handleReplyView} />
             <CommentThread isView={isThreadView} count={comment.replyCount || 0} onClick={handleThreadView} />
             <div className={style.comment_aria_list_space} />
-            <div id={`reply_aria_list_${comment.id}`} className={style.comment_aria_list_5} />
+            <div className={style.comment_aria_list_5} />
           </HStack>
         </VStack>
       </HStack>
