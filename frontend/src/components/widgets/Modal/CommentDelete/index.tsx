@@ -2,7 +2,7 @@ import { Comment } from 'types/internal/comment'
 import { formatDatetime } from 'utils/functions/datetime'
 import Avatar from 'components/parts/Avatar'
 import Modal from 'components/parts/Modal'
-import Horizontal from 'components/parts/Stack/Horizontal'
+import HStack from 'components/parts/Stack/Horizontal'
 import style from './CommentDelete.module.scss'
 
 export interface Props {
@@ -28,7 +28,7 @@ export default function CommentDeleteModal(props: Props): JSX.Element {
       ]}
     >
       <div className="mb_8">こちらコメントを削除しますか？</div>
-      <Horizontal gap="4" className={style.comment}>
+      <HStack gap="4" className={style.comment}>
         <Avatar src={author.avatar} title={author.nickname} size="40" color="grey" />
         <div>
           <div className={style.comment_info}>
@@ -37,7 +37,7 @@ export default function CommentDeleteModal(props: Props): JSX.Element {
           </div>
           <p className={style.text}>{text}</p>
         </div>
-      </Horizontal>
+      </HStack>
     </Modal>
   )
 }

@@ -7,7 +7,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
 import Toggle from 'components/parts/Input/Toggle'
-import Horizontal from 'components/parts/Stack/Horizontal'
+import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
 
@@ -43,10 +43,10 @@ export default function SettingNotification(props: Props): JSX.Element {
   }
 
   const button = (
-    <Horizontal gap="4">
+    <HStack gap="4">
       <Button color="green" size="s" name="保存" loading={isLoading} onClick={handleSubmit} />
       <Button color="blue" size="s" name="リセット" onClick={handleReset} />
-    </Horizontal>
+    </HStack>
   )
 
   return (

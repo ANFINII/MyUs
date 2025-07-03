@@ -12,7 +12,7 @@ import Input from 'components/parts/Input'
 import InputImage from 'components/parts/Input/Image'
 import Textarea from 'components/parts/Input/Textarea'
 import Toggle from 'components/parts/Input/Toggle'
-import Horizontal from 'components/parts/Stack/Horizontal'
+import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
 
@@ -53,10 +53,10 @@ export default function SettingMyPageEdit(props: Props): JSX.Element {
   }
 
   const button = (
-    <Horizontal gap="4">
+    <HStack gap="4">
       <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
       <Button color="blue" size="s" name="戻る" onClick={handleBack} />
-    </Horizontal>
+    </HStack>
   )
 
   return (

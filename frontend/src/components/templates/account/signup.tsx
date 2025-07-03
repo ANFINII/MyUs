@@ -13,7 +13,7 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Radio from 'components/parts/Input/Radio'
 import Select from 'components/parts/Input/Select'
-import Horizontal from 'components/parts/Stack/Horizontal'
+import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 
 const initSignup: SignupIn = {
@@ -85,20 +85,20 @@ export default function Signup(): JSX.Element {
 
             <VStack gap="4">
               <p>生年月日</p>
-              <Horizontal gap="2" full>
+              <HStack gap="2" full>
                 <Select name="year" value={values.year} options={years} onChange={handleSelect} />
                 <Select name="month" value={values.month} options={months} onChange={handleSelect} />
                 <Select name="day" value={values.day} options={days} onChange={handleSelect} />
-              </Horizontal>
+              </HStack>
             </VStack>
 
             <VStack gap="4">
               <p>性別</p>
-              <Horizontal gap="5">
+              <HStack gap="5">
                 {Object.entries(GenderType).map(([key, value]) => (
                   <Radio key={key} name="gender" label={genderMap[value]} value={value} checked={value === values.gender} onChange={handleInput} />
                 ))}
-              </Horizontal>
+              </HStack>
             </VStack>
           </VStack>
 

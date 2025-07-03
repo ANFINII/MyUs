@@ -5,7 +5,7 @@ import IconCaret from 'components/parts/Icon/Caret'
 import IconChat from 'components/parts/Icon/Chat'
 import IconHand from 'components/parts/Icon/Hand'
 import IconPerson from 'components/parts/Icon/Person'
-import Horizontal from 'components/parts/Stack/Horizontal'
+import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../MediaContent.module.scss'
 
@@ -27,7 +27,7 @@ export default function ChatMediaBaseContent(props: Props): JSX.Element {
       <VStack gap="2">
         <div className={clsx(style.font, style.nickname)}>{nickname}</div>
 
-        <Horizontal gap="4">
+        <HStack gap="4">
           <div className={style.font}>
             <IconCaret size="14" className={style.margin} />
             {read}
@@ -36,9 +36,9 @@ export default function ChatMediaBaseContent(props: Props): JSX.Element {
             <IconHand size="14" type="off" className={style.margin} />
             {like}
           </div>
-        </Horizontal>
+        </HStack>
 
-        <Horizontal gap="4">
+        <HStack gap="4">
           <div className={style.font}>
             <IconPerson size="14" type="base" className={style.margin} />
             {joined}
@@ -47,7 +47,7 @@ export default function ChatMediaBaseContent(props: Props): JSX.Element {
             <IconChat size="14" className={style.margin} />
             {thread}
           </div>
-        </Horizontal>
+        </HStack>
 
         <time className={style.font}>{formatTimeAgo(created)}</time>
       </VStack>
