@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Chat } from 'types/internal/media'
 import AvatarLink from 'components/parts/Avatar/Link'
-import Horizontal from 'components/parts/Stack/Horizontal'
+import HStack from 'components/parts/Stack/Horizontal'
 import ChatMediaBaseContent from './Base'
 import style from '../MediaContent.module.scss'
 
@@ -19,10 +19,10 @@ export default function ChatMediaContent(props: Props): JSX.Element {
     <div>
       <AvatarLink src={avatar} size="40" nickname={nickname} className={style.avatar} />
       <Link href={href} className={style.link}>
-        <Horizontal gap="4" className="p_6">
+        <HStack gap="4" className="p_6">
           <div className="mr_36" />
           <ChatMediaBaseContent media={media} />
-        </Horizontal>
+        </HStack>
       </Link>
     </div>
   )

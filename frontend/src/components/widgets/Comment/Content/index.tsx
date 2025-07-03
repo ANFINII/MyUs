@@ -9,7 +9,7 @@ import CountLike from 'components/parts/Count/Like'
 import IconEdit from 'components/parts/Icon/Edit'
 import IconTrash from 'components/parts/Icon/Trash'
 import TextareaLine from 'components/parts/Input/Textarea/Line'
-import Horizontal from 'components/parts/Stack/Horizontal'
+import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import style from './CommentContent.module.scss'
@@ -69,8 +69,8 @@ export default function CommentContent(props: Props): JSX.Element {
   ]
 
   return (
-    <Horizontal>
-      <Horizontal gap="4" className={style.comment}>
+    <HStack>
+      <HStack gap="4" className={style.comment}>
         <AvatarLink src={author.avatar} size="40" nickname={author.nickname} />
         <VStack gap="10" className={clsx(isEdit && 'w_full mr_34')}>
           {!isEdit ? (
@@ -84,24 +84,24 @@ export default function CommentContent(props: Props): JSX.Element {
           ) : (
             <>
               <TextareaLine name="text" placeholder="コメント入力" value={commentText} onChange={handleComment} className={style.textarea} />
-              <Horizontal gap="4" justify="end">
+              <HStack gap="4" justify="end">
                 <Button size="s" name="キャンセル" onClick={handleEdit} />
                 <Button size="s" color="green" name="更新" disabled={commentText.trim() === ''} onClick={() => handleCommentUpdate(comment.id, commentText)} />
-              </Horizontal>
+              </HStack>
             </>
           )}
 
-          <Horizontal gap="4" className="fs_12">
+          <HStack gap="4" className="fs_12">
             <CountLike isLike={comment.isCommentLike} disable={!isActive} like={comment.totalLike} onClick={() => handleLike(comment.id)} />
             <CommentReply isView={isReplyView} onClick={handleReplyView} />
             <CommentThread isView={isThreadView} count={comment.replyCount || 0} onClick={handleThreadView} />
             <div className={style.comment_aria_list_space} />
             <div id={`reply_aria_list_${comment.id}`} className={style.comment_aria_list_5} />
-          </Horizontal>
+          </HStack>
         </VStack>
-      </Horizontal>
+      </HStack>
       <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
       <CommentDeleteModal open={isModal} onClose={handleModal} onAction={() => {}} comment={comment} />
-    </Horizontal>
+    </HStack>
   )
 }

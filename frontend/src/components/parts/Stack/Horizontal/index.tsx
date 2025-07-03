@@ -10,7 +10,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function Horizontal(props: Props): JSX.Element {
+export default function HStack(props: Props): JSX.Element {
   const { gap = '0', justify = 'start', full, wrap = false, className, children } = props
 
   return (

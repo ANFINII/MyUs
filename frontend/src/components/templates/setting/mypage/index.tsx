@@ -5,7 +5,7 @@ import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
 import IconPicture from 'components/parts/Icon/Picture'
 import Toggle from 'components/parts/Input/Toggle'
-import Horizontal from 'components/parts/Stack/Horizontal'
+import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
 import LightBox from 'components/widgets/LightBox'
@@ -22,10 +22,10 @@ export default function SettingMyPage(props: Props): JSX.Element {
   const handleUserPage = () => router.push(`/userpage/${mypage.nickname}`)
 
   const button = (
-    <Horizontal gap="4">
+    <HStack gap="4">
       <Button color="blue" size="s" name="編集" onClick={handleEdit} />
       <Button color="purple" size="s" name="ユーザページ" onClick={handleUserPage} />
-    </Horizontal>
+    </HStack>
   )
 
   return (

@@ -3,7 +3,7 @@ import { Media } from 'types/internal/media'
 import { formatTimeAgo } from 'utils/functions/datetime'
 import IconCaret from 'components/parts/Icon/Caret'
 import IconHand from 'components/parts/Icon/Hand'
-import Horizontal from 'components/parts/Stack/Horizontal'
+import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import style from './MediaContent.module.scss'
 
@@ -25,7 +25,7 @@ export default function MediaBaseContent(props: Props) {
       <VStack gap="2">
         <div className={clsx(style.font, style.nickname)}>{nickname}</div>
 
-        <Horizontal gap="4">
+        <HStack gap="4">
           <div className={style.font}>
             <IconCaret size="14" className={style.margin} />
             {read}
@@ -34,7 +34,7 @@ export default function MediaBaseContent(props: Props) {
             <IconHand size="14" type="off" className={style.margin} />
             {like}
           </div>
-        </Horizontal>
+        </HStack>
 
         <time className={style.font}>{formatTimeAgo(created)}</time>
       </VStack>

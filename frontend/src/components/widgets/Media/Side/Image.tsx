@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Media } from 'types/internal/media'
 import ExImage from 'components/parts/ExImage'
-import Horizontal from 'components/parts/Stack/Horizontal'
+import HStack from 'components/parts/Stack/Horizontal'
 import MediaBaseContent from 'components/widgets/Media/Content/Base'
 import style from './Side.module.scss'
 
@@ -17,10 +17,10 @@ export default function MediaSideImage(props: Props): JSX.Element {
   return (
     <section>
       <Link href={href} className={style.link}>
-        <Horizontal gap="4">
+        <HStack gap="4">
           <ExImage src={src} width="192" height="100" className={style.thumbnail} />
           <MediaBaseContent media={media} />
-        </Horizontal>
+        </HStack>
       </Link>
     </section>
   )

@@ -18,7 +18,7 @@ import InputImage from 'components/parts/Input/Image'
 import Radio from 'components/parts/Input/Radio'
 import Select from 'components/parts/Input/Select'
 import Textarea from 'components/parts/Input/Textarea'
-import Horizontal from 'components/parts/Stack/Horizontal'
+import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
 
@@ -76,10 +76,10 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
   }
 
   const button = (
-    <Horizontal gap="4">
+    <HStack gap="4">
       <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
       <Button color="blue" size="s" name="戻る" onClick={handleBack} />
-    </Horizontal>
+    </HStack>
   )
 
   return (
@@ -105,27 +105,27 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
             <Input name="nickname" value={values.nickname} maxLength={60} required={isRequired} onChange={handleInput} />
           </TableRow>
           <TableRow label="名前">
-            <Horizontal gap="1" full>
+            <HStack gap="1" full>
               <Input name="lastName" value={values.lastName} placeholder="姓" maxLength={30} required={isRequired} onChange={handleInput} />
               <Input name="firstName" value={values.firstName} placeholder="名" maxLength={30} required={isRequired} onChange={handleInput} />
-            </Horizontal>
+            </HStack>
           </TableRow>
           <TableRow label="生年月日">
-            <Horizontal gap="1" full>
+            <HStack gap="1" full>
               <Select name="year" value={values.year} options={years} onChange={handleSelect} />
               <Select name="month" value={values.month} options={months} onChange={handleSelect} />
               <Select name="day" value={values.day} options={days} onChange={handleSelect} />
-            </Horizontal>
+            </HStack>
           </TableRow>
           <TableRow isIndent label="年齢">
             {values.age}歳
           </TableRow>
           <TableRow label="性別">
-            <Horizontal gap="5" className="pl_4">
+            <HStack gap="5" className="pl_4">
               {Object.entries(GenderType).map(([key, value]) => (
                 <Radio key={key} name="gender" label={genderMap[value]} value={value} checked={value === values.gender} onChange={handleInput} />
               ))}
-            </Horizontal>
+            </HStack>
           </TableRow>
           <TableRow label="電話番号">
             <Input type="tel" name="phone" value={values.phone} maxLength={15} required={isRequired} onChange={handleInput} />
@@ -137,11 +137,11 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
             </div>
           </TableRow>
           <TableRow label="住所">
-            <Horizontal gap="1" full>
+            <HStack gap="1" full>
               <Select name="prefecture" value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handleSelect} />
               <Input name="city" value={values.city} placeholder="市区町村" maxLength={255} onChange={handleInput} />
               <Input name="street" value={values.street} placeholder="町名番地" maxLength={255} onChange={handleInput} />
-            </Horizontal>
+            </HStack>
           </TableRow>
           <TableRow label="自己紹介">
             <Textarea name="introduction" className="textarea_margin" defaultValue={values.introduction} onChange={handleText} />
