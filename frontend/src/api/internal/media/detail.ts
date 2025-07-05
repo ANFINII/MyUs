@@ -40,3 +40,7 @@ export const postComment = async (id: number, request: CommnetIn): Promise<ApiOu
 export const postCommentLike = async (commentId: number): Promise<ApiOut<{ isCommentLike: boolean; totalLike: number }>> => {
   return await apiOut(apiClient.post(apiCommentLike, { commentId }))
 }
+
+export const deleteCommentLike = async (commentId: number): Promise<ApiOut<{ isCommentLike: boolean; totalLike: number }>> => {
+  return await apiOut(apiClient.delete(apiCommentLike, { data: { commentId } }))
+}
