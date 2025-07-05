@@ -1,0 +1,10 @@
+.comment_aria {
+  height: 500px;
+  padding-bottom: 68px;
+  overflow-y: scroll;
+
+  &.active {
+    min-height: 500px;
+    height: fit-content;
+  }
+}
