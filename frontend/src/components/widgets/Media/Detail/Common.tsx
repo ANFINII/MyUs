@@ -5,6 +5,7 @@ import { Comment } from 'types/internal/comment'
 import { Author, FollowIn, CommnetIn, MediaUser } from 'types/internal/media'
 import { postFollow, postComment } from 'api/internal/media/detail'
 import { FetchError } from 'utils/constants/enum'
+import { isActive } from 'utils/functions/common'
 import { formatDatetime } from 'utils/functions/datetime'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -16,7 +17,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentInput from 'components/widgets/Comment/Input/Input'
 import Zoom from 'components/widgets/Zoom'
-// import CommentArea from './CommentArea'
+import CommentArea from './CommentArea'
 
 interface Props {
   media: {
@@ -39,7 +40,6 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
   const router = useRouter()
   const { user } = useUser()
-  // const [isOpen, setIsOpen] = useState<boolean>(false)
   const [isLike, setIsLike] = useState<boolean>(mediaUser.isLike)
   const [isFollow, setIsFollow] = useState<boolean>(mediaUser.isFollow)
   const [isContentView, setIsContentView] = useState<boolean>(false)
@@ -52,11 +52,6 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const handleCommentView = () => setIsCommentView(!isCommentView)
   const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setText(e.target.value)
 
-  // const handleComment1 = (commentId: number): void => {
-  //   console.log('handleComment1', commentId)
-  //   setText('')
-  // }
-
   const handleFollow = async () => {
     const request: FollowIn = { nickname: author.nickname }
     const ret = await postFollow(request)
@@ -66,7 +61,6 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   }
 
   const handleDeleteFollow = async () => {
-    console.log('')
     setIsFollow(!isLike)
   }
 
@@ -117,7 +111,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
         <div className="content_detail_p1">
           <VStack gap="2">
             <Zoom isView={isContentView} onView={handleContentView} />
-            <div className={clsx('content_detail_aria', isContentView ? 'active' : '')}>
+            <div className={clsx('content_detail_aria', isActive(isContentView))}>
               <p>{content}</p>
             </div>
           </VStack>
@@ -127,9 +121,9 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
       <Divide />
 
       <CommentInput user={user} count={comments.length} value={text} onChange={handleComment} onClick={handleMediaComment} />
-      <VStack gap="5">
+      <VStack gap="6">
         <Zoom isView={isCommentView} onView={handleCommentView} />
-        {/* <CommentArea comments={comments} onLikeComment={handleComment1} nickname={user.nickname} /> */}
+        <CommentArea comments={comments} isView={isCommentView} nickname={user.nickname} />
       </VStack>
 
       <Divide />
