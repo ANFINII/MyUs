@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { Comment } from 'types/internal/comment'
-import { postCommentLike } from 'api/internal/media/detail'
+import { deleteCommentLike, postCommentLike } from 'api/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
 import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
@@ -20,33 +20,38 @@ export interface Props {
   comment: Comment
   disabled: boolean
   isActive: boolean
-  onLikeComment: (commentId: number) => void
 }
 
 export default function CommentContent(props: Props): JSX.Element {
-  const { comment, disabled, isActive, onLikeComment } = props
+  const { comment, disabled, isActive } = props
   const { author, created, text } = comment
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
-  const [commentText, setCommentText] = useState<string>('')
   const [isReplyView, setIsReplyView] = useState<boolean>(false)
   const [isThreadView, setIsThreadView] = useState<boolean>(false)
-
-  const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
-  const handleReplyView = () => setIsReplyView(!isReplyView)
-  const handleThreadView = () => setIsThreadView(!isThreadView)
-
-  const handleLike = async (commentId: number): Promise<void> => {
-    const ret = await postCommentLike(commentId)
-    if (ret.isErr()) return
-    onLikeComment(commentId)
-  }
+  const [isLike, setIsLike] = useState<boolean>(comment.isCommentLike || false)
+  const [commentText, setCommentText] = useState<string>('')
 
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
+  const handleDelete = () => setIsModal(true)
+  const handleReplyView = () => setIsReplyView(!isReplyView)
+  const handleThreadView = () => setIsThreadView(!isThreadView)
+  const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
+
+  const handleLike = async (commentId: number): Promise<void> => {
+    if (isLike) {
+      const ret = await deleteCommentLike(commentId)
+      if (ret.isErr()) return
+    } else {
+      const ret = await postCommentLike(commentId)
+      if (ret.isErr()) return
+    }
+    setIsLike(!isLike)
+  }
 
   const handleEdit = () => {
     if (!isEdit) {
@@ -54,8 +59,6 @@ export default function CommentContent(props: Props): JSX.Element {
     }
     setIsEdit(!isEdit)
   }
-
-  const handleDelete = () => setIsModal(true)
 
   const handleCommentUpdate = (commentId: number, text: string) => {
     console.log(commentId, text)
@@ -90,7 +93,7 @@ export default function CommentContent(props: Props): JSX.Element {
             </VStack>
           )}
           <HStack gap="4" className="fs_12">
-            <CountLike isLike={comment.isCommentLike} disable={!isActive} like={comment.totalLike} onClick={() => handleLike(comment.id)} />
+            <CountLike isLike={isLike} disable={!isActive} like={comment.totalLike} onClick={() => handleLike(comment.id)} />
             <CommentReply isView={isReplyView} onClick={handleReplyView} />
             <CommentThread isView={isThreadView} count={comment.replyCount || 0} onClick={handleThreadView} />
             <div className={style.comment_aria_list_space} />

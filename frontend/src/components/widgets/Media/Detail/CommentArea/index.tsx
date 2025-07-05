@@ -7,13 +7,12 @@ import style from './CommentArea.module.scss'
 
 interface Props {
   comments: Comment[]
-  onLikeComment: (commentId: number) => void
   isView: boolean
   nickname?: string
 }
 
 export default function CommentArea(props: Props): JSX.Element {
-  const { comments, onLikeComment, isView, nickname } = props
+  const { comments, isView, nickname } = props
   const { user } = useUser()
 
   return (
@@ -22,7 +21,7 @@ export default function CommentArea(props: Props): JSX.Element {
         const disabled = comment.author.nickname !== nickname
         return (
           <div key={comment.id}>
-            <CommentContent comment={comment} disabled={disabled} isActive={user.isActive} onLikeComment={onLikeComment} />
+            <CommentContent comment={comment} disabled={disabled} isActive={user.isActive} />
           </div>
         )
       })}
