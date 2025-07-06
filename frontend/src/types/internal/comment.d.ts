@@ -9,7 +9,6 @@ export interface Comment {
   author: Author
   isCommentLike?: boolean
   totalLike?: number
-  replyCount?: number
 }
 
 export interface Reply {

@@ -1,4 +1,16 @@
 .avatar {
-  min-width: 40px;
-  min-height: 40px;
+  &.s {
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  &.m {
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  &.l {
+    min-width: 48px;
+    min-height: 48px;
+  }
 }

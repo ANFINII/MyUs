@@ -24,7 +24,7 @@ export interface Props {
 
 export default function CommentContent(props: Props): JSX.Element {
   const { comment, disabled, isActive } = props
-  const { author, created, text } = comment
+  const { author, created, text, replys } = comment
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
   const [isMenu, setIsMenu] = useState<boolean>(false)
@@ -86,7 +86,7 @@ export default function CommentContent(props: Props): JSX.Element {
   return (
     <HStack>
       <HStack gap="4" className={style.comment}>
-        <AvatarLink src={author.avatar} size="40" nickname={author.nickname} />
+        <AvatarLink src={author.avatar} size="m" nickname={author.nickname} />
         <VStack gap="4" className="w_full">
           {!isEdit ? (
             <div>
@@ -103,7 +103,7 @@ export default function CommentContent(props: Props): JSX.Element {
           <HStack gap="4" className="fs_12">
             <CountLike isLike={isLike} disable={!isActive} like={comment.totalLike} onClick={() => handleLike(comment.id)} />
             <ReplyView isView={isReplyView} onClick={handleReplyView} />
-            <ThreadView isView={isThreadView} count={comment.replyCount || 0} onClick={handleThreadView} />
+            <ThreadView isView={isThreadView} count={replys.length || 0} onClick={handleThreadView} />
           </HStack>
 
           <ReplyInput author={author} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleReplyInput(comment.id, replyText)} onCancel={handleReplyCancel} />
