@@ -1,12 +1,12 @@
 import IconCaret from 'components/parts/Icon/Caret'
-import style from './CommentReply.module.scss'
+import style from './ReplyView.module.scss'
 
 interface Props {
   isView: boolean
   onClick: () => void
 }
 
-export default function CommentReply(props: Props): JSX.Element {
+export default function ReplyView(props: Props): JSX.Element {
   const { isView, onClick } = props
 
   return (
@@ -14,7 +14,7 @@ export default function CommentReply(props: Props): JSX.Element {
       <div className={style.icon}>
         <IconCaret size="16" type={isView ? 'down' : 'right'} />
       </div>
-      <p className="us_none">{isView ? '返信' : '返信'}</p>
+      <p className="us_none">返信</p>
     </label>
   )
 }
