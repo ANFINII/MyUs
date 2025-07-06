@@ -13,7 +13,8 @@ import VStack from 'components/parts/Stack/Vertical'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import style from './CommentContent.module.scss'
 import CommentAction from '../Action'
-import CommentReply from '../Reply'
+import ReplyInput from '../Reply/Input'
+import ReplyView from '../Reply/View'
 import CommentThread from '../Thread'
 
 export interface Props {
@@ -34,13 +35,16 @@ export default function CommentContent(props: Props): JSX.Element {
   const [isThreadView, setIsThreadView] = useState<boolean>(false)
   const [isLike, setIsLike] = useState<boolean>(comment.isCommentLike || false)
   const [commentText, setCommentText] = useState<string>('')
+  const [replyText, setReplyText] = useState<string>('')
 
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
   const handleDelete = () => setIsModal(true)
+  const handleEditToggle = () => setIsEdit(!isEdit)
   const handleReplyView = () => setIsReplyView(!isReplyView)
   const handleThreadView = () => setIsThreadView(!isThreadView)
   const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
+  const handleReply = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setReplyText(e.target.value)
 
   const handleLike = async (commentId: number): Promise<void> => {
     if (isLike) {
@@ -57,12 +61,22 @@ export default function CommentContent(props: Props): JSX.Element {
     if (!isEdit) {
       setCommentText(text)
     }
-    setIsEdit(!isEdit)
+    handleEditToggle()
   }
 
-  const handleCommentUpdate = (commentId: number, text: string) => {
+  const handleCommentUpdate = (commentId: number, text: string) => () => {
     console.log(commentId, text)
-    setIsEdit(false)
+    handleEditToggle()
+  }
+
+  const handleReplyInput = (commentId: number, text: string) => () => {
+    console.log(commentId, text)
+    setReplyText('')
+  }
+
+  const handleReplyCancel = () => {
+    setReplyText('')
+    handleReplyView()
   }
 
   const actionItems = [
@@ -87,18 +101,21 @@ export default function CommentContent(props: Props): JSX.Element {
             <VStack gap="4">
               <TextareaLine name="text" placeholder="コメント入力" value={commentText} onChange={handleComment} className={style.textarea} />
               <HStack gap="4" justify="end">
-                <Button size="s" name="キャンセル" onClick={handleEdit} />
-                <Button size="s" color="green" name="更新" disabled={commentText.trim() === ''} onClick={() => handleCommentUpdate(comment.id, commentText)} />
+                <Button size="s" name="キャンセル" onClick={handleEditToggle} />
+                <Button size="s" color="green" name="更新" disabled={commentText.trim() === ''} onClick={handleCommentUpdate(comment.id, commentText)} />
               </HStack>
             </VStack>
           )}
+
           <HStack gap="4" className="fs_12">
             <CountLike isLike={isLike} disable={!isActive} like={comment.totalLike} onClick={() => handleLike(comment.id)} />
-            <CommentReply isView={isReplyView} onClick={handleReplyView} />
+            <ReplyView isView={isReplyView} onClick={handleReplyView} />
             <CommentThread isView={isThreadView} count={comment.replyCount || 0} onClick={handleThreadView} />
-            <div className={style.comment_aria_list_space} />
-            <div className={style.comment_aria_list_5} />
           </HStack>
+
+          <ReplyInput author={author} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleReplyInput(comment.id, replyText)} onCancel={handleReplyCancel} />
+
+          <div className={style.comment_aria_list_5} />
         </VStack>
       </HStack>
       <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
