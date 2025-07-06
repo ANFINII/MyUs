@@ -3,11 +3,9 @@ import { Comment } from 'types/internal/comment'
 import { deleteCommentLike, postCommentLike } from 'api/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
 import AvatarLink from 'components/parts/Avatar/Link'
-import Button from 'components/parts/Button'
 import CountLike from 'components/parts/Count/Like'
 import IconEdit from 'components/parts/Icon/Edit'
 import IconTrash from 'components/parts/Icon/Trash'
-import TextareaLine from 'components/parts/Input/Textarea/Line'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
@@ -16,6 +14,7 @@ import CommentAction from '../Action'
 import ReplyInput from '../Reply/Input'
 import ReplyView from '../Reply/View'
 import CommentThread from '../Thread'
+import CommentUpdate from '../Update'
 
 export interface Props {
   comment: Comment
@@ -98,13 +97,7 @@ export default function CommentContent(props: Props): JSX.Element {
               <p className={style.text}>{text}</p>
             </div>
           ) : (
-            <VStack gap="4">
-              <TextareaLine name="text" placeholder="コメント入力" value={commentText} onChange={handleComment} className={style.textarea} />
-              <HStack gap="4" justify="end">
-                <Button size="s" name="キャンセル" onClick={handleEditToggle} />
-                <Button size="s" color="green" name="更新" disabled={commentText.trim() === ''} onClick={handleCommentUpdate(comment.id, commentText)} />
-              </HStack>
-            </VStack>
+            <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleCommentUpdate(comment.id, commentText)} onCancel={handleEditToggle} />
           )}
 
           <HStack gap="4" className="fs_12">
