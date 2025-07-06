@@ -13,7 +13,7 @@ import style from './CommentContent.module.scss'
 import CommentAction from '../Action'
 import ReplyInput from '../Reply/Input'
 import ReplyView from '../Reply/View'
-import CommentThread from '../Thread'
+import ThreadView from '../Thread/View'
 import CommentUpdate from '../Update'
 
 export interface Props {
@@ -103,7 +103,7 @@ export default function CommentContent(props: Props): JSX.Element {
           <HStack gap="4" className="fs_12">
             <CountLike isLike={isLike} disable={!isActive} like={comment.totalLike} onClick={() => handleLike(comment.id)} />
             <ReplyView isView={isReplyView} onClick={handleReplyView} />
-            <CommentThread isView={isThreadView} count={comment.replyCount || 0} onClick={handleThreadView} />
+            <ThreadView isView={isThreadView} count={comment.replyCount || 0} onClick={handleThreadView} />
           </HStack>
 
           <ReplyInput author={author} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleReplyInput(comment.id, replyText)} onCancel={handleReplyCancel} />
