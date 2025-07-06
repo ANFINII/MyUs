@@ -26,9 +26,9 @@ export default function CommentInput(props: Props): JSX.Element {
         <HStack gap="4">
           <Avatar src={user.avatar} title={user.nickname} size="40" color="grey" className={style.avatar} />
           {user.isActive ? (
-            <TextareaLine name="text" placeholder="コメント入力" onChange={onChange} className={style.textarea} />
+            <TextareaLine name="text" placeholder="コメント入力" onChange={onChange} />
           ) : (
-            <TextareaLine name="text" placeholder="コメントするにはログインが必要です!" disabled className={style.textarea} />
+            <TextareaLine name="text" placeholder="コメントするにはログインが必要です!" disabled />
           )}
         </HStack>
         <HStack justify="end">
