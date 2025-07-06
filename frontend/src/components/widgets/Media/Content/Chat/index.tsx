@@ -17,7 +17,7 @@ export default function ChatMediaContent(props: Props): JSX.Element {
 
   return (
     <div>
-      <AvatarLink src={avatar} size="40" nickname={nickname} className={style.avatar} />
+      <AvatarLink src={avatar} size="m" nickname={nickname} className={style.avatar} />
       <Link href={href} className={style.link}>
         <HStack gap="4" className="p_6">
           <div className="mr_36" />

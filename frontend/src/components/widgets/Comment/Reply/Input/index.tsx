@@ -1,10 +1,9 @@
 import { Author } from 'types/internal/media'
-import Avatar from 'components/parts/Avatar'
+import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
 import TextareaLine from 'components/parts/Input/Textarea/Line'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
-import style from './ReplyInput.module.scss'
 
 interface Props {
   author: Author
@@ -22,7 +21,7 @@ export default function ReplyInput(props: Props): JSX.Element {
     <>
       {open && (
         <HStack gap="4">
-          <Avatar src={author.avatar} title={author.nickname} size="36" color="grey" className={style.avatar} />
+          <AvatarLink src={author.avatar} size="s" nickname={author.nickname} className="m_2" />
           <VStack gap="4" className="w_full">
             <TextareaLine name="text" placeholder="コメント入力" value={value} onChange={onChange} />
             <HStack gap="4" justify="end">
