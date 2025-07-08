@@ -17,4 +17,5 @@ export interface Reply {
   created: Date
   updated: Date
   author: Author
+  totalLike?: number
 }
