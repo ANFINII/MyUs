@@ -3,7 +3,6 @@ import clsx from 'clsx'
 import { UserMe } from 'types/internal/auth'
 import { Comment } from 'types/internal/comment'
 import { deleteCommentLike, postCommentLike } from 'api/internal/media/detail'
-import { formatDatetime } from 'utils/functions/datetime'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
 import IconEdit from 'components/parts/Icon/Edit'
@@ -12,8 +11,8 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import View from 'components/widgets/View'
-import style from './Content.module.scss'
 import CommentAction from '../Action'
+import CommentInfo from '../Info'
 import ReplyInput from '../ReplyInput'
 import CommentThread from '../Thread'
 import CommentUpdate from '../Update'
@@ -25,7 +24,7 @@ export interface Props {
 
 export default function CommentContent(props: Props): JSX.Element {
   const { comment, user } = props
-  const { id, author, created, text, replys, isCommentLike, totalLike } = comment
+  const { id, author, text, replys, isCommentLike, totalLike } = comment
   const { isActive, nickname } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
@@ -89,17 +88,11 @@ export default function CommentContent(props: Props): JSX.Element {
   return (
     <div>
       <HStack>
-        <HStack gap="4" className={style.comment}>
+        <HStack gap="4" className="w_full">
           <AvatarLink src={author.avatar} nickname={author.nickname} />
           <VStack gap="4" className="w_full">
             {!isEdit ? (
-              <div>
-                <div className={style.comment_info}>
-                  <span className="mr_4">{author.nickname}</span>
-                  <time>{formatDatetime(created)}</time>
-                </div>
-                <p className={style.text}>{text}</p>
-              </div>
+              <CommentInfo comment={comment} />
             ) : (
               <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate(id, commentText)} onCancel={handleEditToggle} />
             )}

@@ -1,7 +1,5 @@
-.comment {
-  width: 100%;
-
-  .comment_info {
+.comment_info {
+  .name {
     margin-bottom: 3px;
     line-height: 1;
     white-space: nowrap;
@@ -25,9 +23,5 @@
     &:hover {
       overflow-y: scroll;
     }
-  }
-
-  .textarea {
-    min-height: 40px;
   }
 }
