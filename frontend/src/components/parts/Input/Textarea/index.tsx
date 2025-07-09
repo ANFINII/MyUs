@@ -15,11 +15,12 @@ interface Props {
   error?: boolean
   required?: boolean
   disabled?: boolean
+  focus?: boolean
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
 }
 
 export default function Textarea(props: Props): JSX.Element {
-  const { label, errorText, value, className, height, error = false, required = false, onChange } = props
+  const { label, errorText, value, className, height, error = false, required = false, focus, onChange } = props
 
   const ref = useRef<HTMLTextAreaElement>(null)
   const [isValue, setIsValue] = useState<boolean>(false)
@@ -35,6 +36,10 @@ export default function Textarea(props: Props): JSX.Element {
   }
 
   useEffect(() => adjustHeight(height), [value, height])
+
+  useEffect(() => {
+    if (focus && ref.current) ref.current.focus()
+  }, [focus])
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     adjustHeight()
