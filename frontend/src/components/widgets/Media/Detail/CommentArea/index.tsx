@@ -21,7 +21,7 @@ export default function CommentArea(props: Props): JSX.Element {
         const disabled = comment.author.nickname !== nickname
         return (
           <div key={comment.id}>
-            <CommentContent comment={comment} disabled={disabled} isActive={user.isActive} />
+            <CommentContent comment={comment} disabled={disabled} isActive={user.isActive} nickname={nickname} />
           </div>
         )
       })}
