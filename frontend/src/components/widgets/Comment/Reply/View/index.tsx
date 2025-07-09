@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import IconCaret from 'components/parts/Icon/Caret'
 import style from './ReplyView.module.scss'
 
@@ -10,7 +11,7 @@ export default function ReplyView(props: Props): JSX.Element {
   const { isView, onClick } = props
 
   return (
-    <label className={style.reply} onClick={onClick}>
+    <label className={clsx(style.reply, isView && style.active)} onClick={onClick}>
       <div className={style.icon}>
         <IconCaret size="16" type={isView ? 'down' : 'right'} />
       </div>
