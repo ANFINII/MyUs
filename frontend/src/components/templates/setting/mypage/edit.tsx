@@ -94,7 +94,7 @@ export default function SettingMyPageEdit(props: Props): JSX.Element {
             <Input name="tagManagerId" value={values.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleInput} />
           </TableRow>
           <TableRow label="概要">
-            <Textarea name="content" className="textarea_margin" defaultValue={values.content} onChange={handleText} />
+            <Textarea name="content" defaultValue={values.content} onChange={handleText} />
           </TableRow>
         </Table>
       </LoginError>

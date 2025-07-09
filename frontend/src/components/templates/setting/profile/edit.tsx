@@ -144,7 +144,7 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
             </HStack>
           </TableRow>
           <TableRow label="自己紹介">
-            <Textarea name="introduction" className="textarea_margin" defaultValue={values.introduction} onChange={handleText} />
+            <Textarea name="introduction" defaultValue={values.introduction} onChange={handleText} />
           </TableRow>
         </Table>
       </LoginError>
