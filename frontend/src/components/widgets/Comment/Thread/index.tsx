@@ -20,13 +20,13 @@ interface Props {
 
 export default function CommentThread(props: Props): JSX.Element {
   const { reply, disabled } = props
-  const { author, created, text } = reply
+  const { id, author, created, text, isCommentLike, totalLike } = reply
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [isLike, setIsLike] = useState<boolean>(false)
+  const [isLike, setIsLike] = useState<boolean>(isCommentLike || false)
   const [commentText, setCommentText] = useState<string>('')
 
   const handleMenu = () => setIsMenu(!isMenu)
@@ -76,10 +76,10 @@ export default function CommentThread(props: Props): JSX.Element {
             <p className={style.text}>{text}</p>
           </div>
         ) : (
-          <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleCommentUpdate(reply.id, commentText)} onCancel={handleEditToggle} />
+          <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleCommentUpdate(id, commentText)} onCancel={handleEditToggle} />
         )}
         <div className="fs_12">
-          <CountLike isLike={reply.isCommentLike} disable={disabled} like={reply.totalLike} onClick={handleLike(reply.id)} />
+          <CountLike isLike={isLike} disable={disabled} like={totalLike} onClick={handleLike(id)} />
         </div>
       </VStack>
       <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
