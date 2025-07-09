@@ -15,9 +15,10 @@ import CountRead from 'components/parts/Count/Read'
 import Divide from 'components/parts/Divide'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import CommentContent from 'components/widgets/Comment/Content'
 import CommentInput from 'components/widgets/Comment/Input/Input'
 import View from 'components/widgets/View'
-import CommentArea from './CommentArea'
+import style from './Common.module.scss'
 
 interface Props {
   media: {
@@ -123,7 +124,11 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
       <CommentInput user={user} count={comments.length} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <VStack gap="6">
         <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
-        <CommentArea comments={comments} isView={isCommentView} nickname={user.nickname} />
+        <VStack gap="10" className={clsx(style.comment_aria, isCommentView && style.active)}>
+          {comments.map((comment) => (
+            <CommentContent key={comment.id} comment={comment} user={user} />
+          ))}
+        </VStack>
       </VStack>
 
       <Divide />

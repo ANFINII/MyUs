@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import clsx from 'clsx'
+import { UserMe } from 'types/internal/auth'
 import { Comment } from 'types/internal/comment'
 import { deleteCommentLike, postCommentLike } from 'api/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
@@ -19,14 +20,13 @@ import CommentUpdate from '../Update'
 
 export interface Props {
   comment: Comment
-  disabled: boolean
-  isActive: boolean
-  nickname?: string
+  user: UserMe
 }
 
 export default function CommentContent(props: Props): JSX.Element {
-  const { comment, disabled, isActive, nickname } = props
+  const { comment, user } = props
   const { id, author, created, text, replys, isCommentLike, totalLike } = comment
+  const { isActive, nickname } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
   const [isMenu, setIsMenu] = useState<boolean>(false)
@@ -38,6 +38,7 @@ export default function CommentContent(props: Props): JSX.Element {
   const [commentText, setCommentText] = useState<string>('')
   const [replyText, setReplyText] = useState<string>('')
 
+  const disabled = author.nickname !== nickname
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
   const handleDelete = () => setIsModal(true)
@@ -119,9 +120,7 @@ export default function CommentContent(props: Props): JSX.Element {
       {isThreadView && (
         <VStack gap="5" className={clsx(replys.length > 0 && 'mt_10 ml_50')}>
           {replys.map((reply) => (
-            <div key={reply.id}>
-              <CommentThread reply={reply} isActive={isActive} disabled={reply.author.nickname !== nickname} />
-            </div>
+            <CommentThread key={reply.id} reply={reply} user={user} />
           ))}
         </VStack>
       )}

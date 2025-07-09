@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { UserMe } from 'types/internal/auth'
 import { Reply } from 'types/internal/comment'
 import { deleteCommentLike, postCommentLike } from 'api/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
@@ -15,13 +16,13 @@ import style from './CommentThread.module.scss'
 
 interface Props {
   reply: Reply
-  isActive: boolean
-  disabled: boolean
+  user: UserMe
 }
 
 export default function CommentThread(props: Props): JSX.Element {
-  const { reply, isActive, disabled } = props
+  const { reply, user } = props
   const { id, author, created, text, isCommentLike, totalLike } = reply
+  const { isActive, nickname } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
   const [isMenu, setIsMenu] = useState<boolean>(false)
@@ -30,6 +31,7 @@ export default function CommentThread(props: Props): JSX.Element {
   const [isLike, setIsLike] = useState<boolean>(isCommentLike || false)
   const [commentText, setCommentText] = useState<string>('')
 
+  const disabled = author.nickname !== nickname
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
   const handleDelete = () => setIsModal(true)
