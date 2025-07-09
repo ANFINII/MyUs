@@ -1,4 +1,4 @@
-import { Comment } from 'types/internal/comment'
+import { Author } from 'types/internal/media'
 import { formatDatetime } from 'utils/functions/datetime'
 import Avatar from 'components/parts/Avatar'
 import Modal from 'components/parts/Modal'
@@ -10,7 +10,11 @@ export interface Props {
   onClose: () => void
   onAction: () => void
   loading?: boolean
-  comment: Comment
+  comment: {
+    author: Author
+    created: Date
+    text: string
+  }
 }
 
 export default function CommentDeleteModal(props: Props): JSX.Element {

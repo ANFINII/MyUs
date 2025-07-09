@@ -17,5 +17,6 @@ export interface Reply {
   created: Date
   updated: Date
   author: Author
+  isCommentLike?: boolean
   totalLike?: number
 }
