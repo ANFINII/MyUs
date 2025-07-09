@@ -53,7 +53,7 @@ export default function CommentThread(props: Props): JSX.Element {
     handleEditToggle()
   }
 
-  const handleCommentUpdate = (commentId: number, text: string) => () => {
+  const handleUpdate = (commentId: number, text: string) => () => {
     console.log(commentId, text)
     handleEditToggle()
   }
@@ -76,7 +76,7 @@ export default function CommentThread(props: Props): JSX.Element {
             <p className={style.text}>{text}</p>
           </div>
         ) : (
-          <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleCommentUpdate(id, commentText)} onCancel={handleEditToggle} />
+          <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate(id, commentText)} onCancel={handleEditToggle} />
         )}
         <div className="fs_12">
           <CountLike isLike={isLike} disable={disabled} like={totalLike} onClick={handleLike(id)} />
