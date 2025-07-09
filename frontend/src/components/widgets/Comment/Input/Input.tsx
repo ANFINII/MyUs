@@ -1,10 +1,9 @@
 import { UserMe } from 'types/internal/auth'
-import Avatar from 'components/parts/Avatar'
+import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
 import TextareaLine from 'components/parts/Input/Textarea/Line'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
-import style from './CommentInput.module.scss'
 
 interface Props {
   user: UserMe
@@ -24,7 +23,7 @@ export default function CommentInput(props: Props): JSX.Element {
           コメント総数<span className="ml_4">{count}</span>
         </p>
         <HStack gap="4">
-          <Avatar src={user.avatar} title={user.nickname} size="40" color="grey" className={style.avatar} />
+          <AvatarLink src={user.avatar} nickname={user.nickname} />
           {user.isActive ? (
             <TextareaLine name="text" placeholder="コメント入力" onChange={onChange} />
           ) : (

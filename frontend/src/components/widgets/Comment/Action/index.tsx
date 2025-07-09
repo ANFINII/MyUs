@@ -1,7 +1,7 @@
 import { RefObject } from 'react'
 import ActionList, { ActionItem } from 'components/parts/ActionList'
 import IconDots from 'components/parts/Icon/Dots'
-import style from './CommentAction.module.scss'
+import style from './Action.module.scss'
 
 export interface Props {
   open: boolean

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import clsx from 'clsx'
-import style from './TextareaLine.module.scss'
+import style from './Line.module.scss'
 
 interface Props {
   label?: string

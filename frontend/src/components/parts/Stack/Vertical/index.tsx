@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import style from './VStack.module.scss'
+import style from './Vertical.module.scss'
 
 interface Props {
   gap?: string

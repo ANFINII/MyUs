@@ -1,4 +1,4 @@
-import { Author } from 'types/internal/media'
+import { UserMe } from 'types/internal/auth'
 import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
 import TextareaLine from 'components/parts/Input/Textarea/Line'
@@ -6,7 +6,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 
 interface Props {
-  author: Author
+  user: UserMe
   value: string
   open: boolean
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
@@ -15,13 +15,13 @@ interface Props {
 }
 
 export default function ReplyInput(props: Props): JSX.Element {
-  const { author, value, open, onChange, onSubmit, onCancel } = props
+  const { user, value, open, onChange, onSubmit, onCancel } = props
 
   return (
     <>
       {open && (
         <HStack gap="4">
-          <AvatarLink src={author.avatar} size="s" nickname={author.nickname} className="m_2" />
+          <AvatarLink src={user.avatar} size="s" nickname={user.nickname} className="m_2" />
           <VStack gap="4" className="w_full">
             <TextareaLine name="text" placeholder="コメント入力" value={value} onChange={onChange} />
             <HStack gap="4" justify="end">
