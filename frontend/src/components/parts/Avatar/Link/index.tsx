@@ -17,7 +17,7 @@ export default function AvatarLink(props: Props): JSX.Element {
 
   return (
     <Link href={`/userpage/${nickname}`} className={className}>
-      {<Avatar src={src} title={nickname} size={sizeValue} color="grey" className={clsx(style.avatar, style[size])} />}
+      <Avatar src={src} title={nickname} size={sizeValue} color="grey" className={clsx(style.avatar, style[size])} />
     </Link>
   )
 }

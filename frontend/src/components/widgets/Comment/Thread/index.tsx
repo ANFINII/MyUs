@@ -12,7 +12,7 @@ import VStack from 'components/parts/Stack/Vertical'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import CommentAction from '../Action'
 import CommentUpdate from '../Update'
-import style from './CommentThread.module.scss'
+import style from './Thread.module.scss'
 
 interface Props {
   reply: Reply

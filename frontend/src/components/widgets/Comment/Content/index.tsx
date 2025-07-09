@@ -12,7 +12,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import View from 'components/widgets/View'
-import style from './CommentContent.module.scss'
+import style from './Content.module.scss'
 import CommentAction from '../Action'
 import ReplyInput from '../ReplyInput'
 import CommentThread from '../Thread'
@@ -103,14 +103,12 @@ export default function CommentContent(props: Props): JSX.Element {
             ) : (
               <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate(id, commentText)} onCancel={handleEditToggle} />
             )}
-
             <HStack gap="4" className="fs_12">
               <CountLike isLike={isLike} disable={!isActive} like={totalLike} onClick={handleLike(id)} />
               <View isView={isReplyView} onView={handleReplyView} size="s" color="grey" content="返信" />
               <View isView={isThreadView} onView={handleThreadView} size="s" color="grey" content={`スレッド ${replys.length || 0} 件`} />
             </HStack>
-
-            <ReplyInput author={author} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleReplyInput(id, replyText)} onCancel={handleReplyCancel} />
+            <ReplyInput user={user} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleReplyInput(id, replyText)} onCancel={handleReplyCancel} />
           </VStack>
         </HStack>
         <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
