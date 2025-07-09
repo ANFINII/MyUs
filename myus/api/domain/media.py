@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from functools import reduce
-from operator import and_
 
 from api.types.union.media import MediaModelType
 from api.utils.functions.search import search_q_list
@@ -27,6 +25,11 @@ class SortOption:
     sort_type: SortType = SortType.ID
 
 
+@dataclass(frozen=True, slots=True)
+class ExcludeOption:
+    id: int = 0
+
+
 class MediaDomain:
     @classmethod
     def get(cls, model: MediaModelType, id: int, publish: bool) -> MediaModelType | None:
@@ -34,25 +37,27 @@ class MediaDomain:
         return qs
 
     @classmethod
-    def bulk_get(cls, model: MediaModelType, option: FilterOption, sort_options: SortOption, limit: int | None) -> MediaModelType:
+    def bulk_get(cls, model: MediaModelType, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None) -> MediaModelType:
         q_list: list[Q] = []
-        if option.publish:
-            q_list.append(Q(publish=option.publish))
-        if option.category_id:
-            q_list.append(Q(category_id=option.category_id))
-        if option.search:
-            q_list.append(search_q_list(option.search))
+        e_list: list[Q] = []
+        if filter.publish:
+            q_list.append(Q(publish=filter.publish))
+        if filter.category_id:
+            q_list.append(Q(category_id=filter.category_id))
+        if filter.search:
+            q_list.append(search_q_list(filter.search))
+        if exclude.id:
+            e_list.append(Q(id=exclude.id))
 
-        q = reduce(and_, q_list)
-        qs = model.objects.filter(q)
+        qs = model.objects.filter(*q_list).exclude(*e_list)
 
-        if option.search:
-            sort_options = SortOption(is_asc=sort_options.is_asc,sort_type=SortType.SCORE)
+        if filter.search:
+            sort = SortOption(is_asc=sort.is_asc, sort_type=SortType.SCORE)
             score = F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20
             qs = qs.annotate(score=score)
 
-        field_name = sort_options.sort_type.name.lower()
-        order_by_key = field_name if sort_options.is_asc else f'-{field_name}'
+        field_name = sort.sort_type.name.lower()
+        order_by_key = field_name if sort.is_asc else f'-{field_name}'
         qs = qs.order_by(order_by_key)
 
         if limit:
