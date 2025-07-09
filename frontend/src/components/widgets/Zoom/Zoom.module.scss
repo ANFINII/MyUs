@@ -1,21 +1,29 @@
 .zoom {
   display: flex;
-  width: fit-content;
-  font-size: 13px;
   color: rgb(120, 120, 120);
   cursor: pointer;
 
-  .icon {
-    line-height: 1.4;
-    margin-right: 2px;
-    color: rgb(150, 150, 150);
+  &:hover,
+  &.active {
+    color: rgb(0, 100, 255);
   }
 
-  &:hover {
-    color: rgb(0, 100, 255);
+  &.s {
+    font-size: 12px;
+  }
 
-    .icon {
-      color: rgb(0, 100, 255);
-    }
+  &.m {
+    font-size: 13px;
+  }
+
+  &.l {
+    font-size: 14px;
+  }
+
+  .icon {
+    display: flex;
+    margin-right: 1px;
+    align-items: center;
+    opacity: 0.8;
   }
 }
