@@ -121,7 +121,7 @@ export default function CommentContent(props: Props): JSX.Element {
         <VStack gap="5" className={clsx(replys.length > 0 && 'mt_10 ml_50')}>
           {replys.map((reply) => (
             <div key={reply.id}>
-              <CommentThread reply={reply} disabled={reply.author.nickname !== nickname} />
+              <CommentThread reply={reply} isActive={isActive} disabled={reply.author.nickname !== nickname} />
             </div>
           ))}
         </VStack>

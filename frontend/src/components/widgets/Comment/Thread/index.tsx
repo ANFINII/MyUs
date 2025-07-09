@@ -15,11 +15,12 @@ import style from './CommentThread.module.scss'
 
 interface Props {
   reply: Reply
+  isActive: boolean
   disabled: boolean
 }
 
 export default function CommentThread(props: Props): JSX.Element {
-  const { reply, disabled } = props
+  const { reply, isActive, disabled } = props
   const { id, author, created, text, isCommentLike, totalLike } = reply
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
@@ -79,7 +80,7 @@ export default function CommentThread(props: Props): JSX.Element {
           <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate(id, commentText)} onCancel={handleEditToggle} />
         )}
         <div className="fs_12">
-          <CountLike isLike={isLike} disable={disabled} like={totalLike} onClick={handleLike(id)} />
+          <CountLike isLike={isLike} disable={!isActive} like={totalLike} onClick={handleLike(id)} />
         </div>
       </VStack>
       <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
