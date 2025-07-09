@@ -11,7 +11,6 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import View from 'components/widgets/View'
-import style from './Content.module.scss'
 import CommentAction from '../Action'
 import CommentInfo from '../Info'
 import ReplyInput from '../ReplyInput'
@@ -89,7 +88,7 @@ export default function CommentContent(props: Props): JSX.Element {
   return (
     <div>
       <HStack>
-        <HStack gap="4" className={style.comment}>
+        <HStack gap="4" className="w_full">
           <AvatarLink src={author.avatar} nickname={author.nickname} />
           <VStack gap="4" className="w_full">
             {!isEdit ? (
