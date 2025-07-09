@@ -90,7 +90,7 @@ export default function CommentContent(props: Props): JSX.Element {
     <div>
       <HStack>
         <HStack gap="4" className={style.comment}>
-          <AvatarLink src={author.avatar} size="m" nickname={author.nickname} />
+          <AvatarLink src={author.avatar} nickname={author.nickname} />
           <VStack gap="4" className="w_full">
             {!isEdit ? (
               <div>

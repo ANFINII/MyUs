@@ -23,7 +23,7 @@ export default function CommentInput(props: Props): JSX.Element {
           コメント総数<span className="ml_4">{count}</span>
         </p>
         <HStack gap="4">
-          <AvatarLink src={user.avatar} size="m" nickname={user.nickname} />
+          <AvatarLink src={user.avatar} nickname={user.nickname} />
           {user.isActive ? (
             <TextareaLine name="text" placeholder="コメント入力" onChange={onChange} />
           ) : (
