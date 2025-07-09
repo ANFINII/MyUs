@@ -14,9 +14,9 @@ class SortType(Enum):
 
 @dataclass(frozen=True, slots=True)
 class FilterOption:
-    publish: bool | None = True
-    category_id: int | None = None
-    search: str | None = None
+    publish: bool = True
+    category_id: int = 0
+    search: str = ""
 
 
 @dataclass(frozen=True, slots=True)
