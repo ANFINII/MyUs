@@ -16,7 +16,7 @@ import Divide from 'components/parts/Divide'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentInput from 'components/widgets/Comment/Input/Input'
-import Zoom from 'components/widgets/Zoom'
+import View from 'components/widgets/View'
 import CommentArea from './CommentArea'
 
 interface Props {
@@ -110,7 +110,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
         </HStack>
         <div className="content_detail_p1">
           <VStack gap="2">
-            <Zoom isView={isContentView} onView={handleContentView} content={isContentView ? '縮小表示' : '拡大表示'} />
+            <View isView={isContentView} onView={handleContentView} content={isContentView ? '縮小表示' : '拡大表示'} />
             <div className={clsx('content_detail_aria', isActive(isContentView))}>
               <p>{content}</p>
             </div>
@@ -122,7 +122,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
       <CommentInput user={user} count={comments.length} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <VStack gap="6">
-        <Zoom isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
+        <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
         <CommentArea comments={comments} isView={isCommentView} nickname={user.nickname} />
       </VStack>
 

@@ -10,12 +10,11 @@ import IconTrash from 'components/parts/Icon/Trash'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
+import View from 'components/widgets/View'
 import style from './CommentContent.module.scss'
 import CommentAction from '../Action'
-import ReplyInput from '../Reply/Input'
-import ReplyView from '../Reply/View'
+import ReplyInput from '../ReplyInput'
 import CommentThread from '../Thread'
-import ThreadView from '../Thread/View'
 import CommentUpdate from '../Update'
 
 export interface Props {
@@ -106,8 +105,8 @@ export default function CommentContent(props: Props): JSX.Element {
 
             <HStack gap="4" className="fs_12">
               <CountLike isLike={isLike} disable={!isActive} like={totalLike} onClick={handleLike(id)} />
-              <ReplyView isView={isReplyView} onClick={handleReplyView} />
-              <ThreadView isView={isThreadView} count={replys.length || 0} onClick={handleThreadView} />
+              <View isView={isReplyView} onView={handleReplyView} size="s" color="grey" content="返信" />
+              <View isView={isThreadView} onView={handleThreadView} size="s" color="grey" content={`スレッド ${replys.length || 0} 件`} />
             </HStack>
 
             <ReplyInput author={author} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleReplyInput(id, replyText)} onCancel={handleReplyCancel} />
