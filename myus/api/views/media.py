@@ -85,7 +85,7 @@ class VideoAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_videos(50, search),
+            list=get_videos(50, search, id),
         )
 
         return DataResponse(data, HTTP_200_OK)
@@ -155,7 +155,7 @@ class MusicAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_musics(50, search),
+            list=get_musics(50, search, id),
         )
 
         return DataResponse(data, HTTP_200_OK)
@@ -215,7 +215,7 @@ class ComicAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_comics(50, search),
+            list=get_comics(50, search, id),
         )
 
         return DataResponse(data, HTTP_200_OK)
@@ -277,7 +277,7 @@ class PictureAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_pictures(50, search),
+            list=get_pictures(50, search, id),
         )
 
         return DataResponse(data, HTTP_200_OK)
@@ -335,7 +335,7 @@ class BlogAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_blogs(50, search),
+            list=get_blogs(50, search, id),
         )
 
         return DataResponse(data, HTTP_200_OK)
@@ -400,7 +400,7 @@ class ChatAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_chats(50, search),
+            list=get_chats(50, search, id),
         )
 
         return DataResponse(data, HTTP_200_OK)
