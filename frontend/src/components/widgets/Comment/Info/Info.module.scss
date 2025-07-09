@@ -1,0 +1,27 @@
+.comment_info {
+  .name {
+    margin-bottom: 3px;
+    line-height: 1;
+    white-space: nowrap;
+
+    span {
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    time {
+      font-size: 12px;
+      color: rgb(120, 120, 120);
+    }
+  }
+
+  .text {
+    max-height: 150px;
+    font-size: 14px;
+    overflow-y: auto;
+
+    &:hover {
+      overflow-y: scroll;
+    }
+  }
+}
