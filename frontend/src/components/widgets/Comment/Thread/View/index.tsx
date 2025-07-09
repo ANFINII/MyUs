@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import IconCaret from 'components/parts/Icon/Caret'
 import style from './ThreadView.module.scss'
 
@@ -11,7 +12,7 @@ export default function ThreadView(props: Props): JSX.Element {
   const { isView, count, onClick } = props
 
   return (
-    <label className={style.thread} onClick={onClick}>
+    <label className={clsx(style.thread, isView && style.active)} onClick={onClick}>
       <div className={style.icon}>
         <IconCaret size="16" type={isView ? 'down' : 'right'} />
       </div>
