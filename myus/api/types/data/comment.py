@@ -1,6 +1,7 @@
 from datetime import datetime
 from dataclasses import dataclass
 from api.types.data.user import AuthorData
+from api.utils.enum.index import CommentTypeNo, CommentType
 
 
 @dataclass(frozen=True, slots=True)
@@ -24,5 +25,9 @@ class CommentData:
 
 @dataclass(frozen=True, slots=True)
 class CommentInData:
+    author: AuthorData
     text: str
-    type: str
+    type_no: CommentTypeNo
+    type_name: CommentType
+    object_id: int
+    parent_id: int | None
