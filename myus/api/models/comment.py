@@ -18,6 +18,7 @@ class Comment(models.Model):
     object_id = models.PositiveIntegerField()
     text      = models.TextField()
     like      = models.ManyToManyField(User, related_name="comment_like", blank=True)
+    deleted   = models.BooleanField(default=False)
     created   = models.DateTimeField(auto_now_add=True)
     updated   = models.DateTimeField(auto_now=True)
 
