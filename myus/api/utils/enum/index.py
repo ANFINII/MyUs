@@ -45,17 +45,17 @@ class NotificationObjectType(str, Enum):
     MESSAGE = "Message"
 
 
-class CommentType(str, Enum):
-    VIDEO = "Video"
-    MUSIC = "Music"
-    COMIC = "Comic"
-    PICTURE = "Picture"
-    BLOG = "Blog"
-
-
 class CommentTypeNo(int, Enum):
     VIDEO = 1
     MUSIC = 2
     COMIC = 3
     PICTURE = 4
     BLOG = 5
+
+
+class CommentType(str, Enum):
+    VIDEO = "Video"
+    MUSIC = "Music"
+    COMIC = "Comic"
+    PICTURE = "Picture"
+    BLOG = "Blog"

@@ -423,20 +423,21 @@ class ChatAPI(APIView):
 
 
 class CommentAPI(APIView):
-    def post(self, request, id) -> DataResponse:
+    def post(self, request) -> DataResponse:
         author = get_user(request)
         if not author:
             return ApiResponse.UNAUTHORIZED.run()
 
-        data = CommentInData(**request.data)
-        model = model_media_comment_dict[data.type]
-        content_object = model.objects.get(id=id)
-        field = {
-            "content_object": content_object,
-            "text": data.text,
-            "author": author,
-        }
+        data = request.data
 
-        obj = Comment.objects.create(**field)
-        data = {"id": obj.id}
+        comment_data = CommentInData(
+            author=author,
+            text=data["text"],
+            type_no=data["type_no"],
+            type_name=data["type_name"],
+            object_id=data["object_id"],
+            parent_id=data.get("parent_id", None),
+        )
+
+        data = CommentDomain.create(comment_data)
         return DataResponse(data, HTTP_201_CREATED)
