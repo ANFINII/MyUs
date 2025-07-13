@@ -8,14 +8,14 @@ import VStack from 'components/parts/Stack/Vertical'
 interface Props {
   user: UserMe
   count: number
-  value?: string
   loading?: boolean
+  value?: string
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
   onClick?: () => void
 }
 
 export default function CommentInput(props: Props): JSX.Element {
-  const { user, count, value, loading, onChange, onClick } = props
+  const { user, count, loading, value, onChange, onClick } = props
 
   return (
     <form method="POST" action="">
@@ -26,7 +26,7 @@ export default function CommentInput(props: Props): JSX.Element {
         <HStack gap="4">
           <AvatarLink src={user.avatar} nickname={user.nickname} />
           {user.isActive ? (
-            <TextareaLine name="text" placeholder="コメント入力" onChange={onChange} />
+            <TextareaLine name="text" placeholder="コメント入力" value={value} onChange={onChange} />
           ) : (
             <TextareaLine name="text" placeholder="コメントするにはログインが必要です!" disabled />
           )}
