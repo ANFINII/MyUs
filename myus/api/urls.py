@@ -58,4 +58,5 @@ urlpatterns = [
     path("media/chat/create", ChatAPI.as_view()),
 
     path("media/comment", CommentAPI.as_view()),
+    path("media/comment/<int:id>", CommentAPI.as_view()),
 ]
