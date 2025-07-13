@@ -23,30 +23,31 @@ export const apiSettingNotification = base + '/setting/notification'
 export const apiHome = base + '/home'
 
 export const apiVideos = base + '/media/video'
-export const apiVideo = (videoId: number) => base + `/media/video/${videoId}`
+export const apiVideo = (id: number) => base + `/media/video/${id}`
 export const apiVideoCreate = base + '/media/video/create'
 
 export const apiMusics = base + '/media/music'
-export const apiMusic = (musicId: number) => base + `/media/music/${musicId}`
+export const apiMusic = (id: number) => base + `/media/music/${id}`
 export const apiMusicCreate = base + '/media/music/create'
 
 export const apiComics = base + '/media/comic'
-export const apiComic = (comicId: number) => base + `/media/comic/${comicId}`
+export const apiComic = (id: number) => base + `/media/comic/${id}`
 export const apiComicCreate = base + '/media/comic/create'
 
 export const apiPictures = base + '/media/picture'
-export const apiPicture = (pictureId: number) => base + `/media/picture/${pictureId}`
+export const apiPicture = (id: number) => base + `/media/picture/${id}`
 export const apiPictureCreate = base + '/media/picture/create'
 
 export const apiBlogs = base + '/media/blog'
-export const apiBlog = (blogId: number) => base + `/media/blog/${blogId}`
+export const apiBlog = (id: number) => base + `/media/blog/${id}`
 export const apiBlogCreate = base + '/media/blog/create'
 
 export const apiChats = base + '/media/chat'
-export const apiChat = (chatId: number) => base + `/media/chat/${chatId}`
+export const apiChat = (id: number) => base + `/media/chat/${id}`
 export const apiChatCreate = base + '/media/chat/create'
 
-export const apiCommnet = base + '/media/comment'
+export const apiComments = base + '/media/comment'
+export const apiComment = (id: number) => base + `/media/comment/${id}`
 export const apiCommentLike = base + '/like/form/comment'
 
 // 外部API
