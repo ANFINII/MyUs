@@ -2,7 +2,8 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
-import { Video, Music, Comic, Picture, Chat, BlogDetailOut, FollowIn, CommnetIn } from 'types/internal/media'
+import { CommnetIn } from 'types/internal/comment'
+import { Video, Music, Comic, Picture, Chat, BlogDetailOut, FollowIn } from 'types/internal/media'
 import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat, apiCommnet, apiFollow, apiCommentLike } from 'api/uri'
 
 export const getVideo = async (id: number, req?: Req): Promise<ApiOut<Video>> => {
