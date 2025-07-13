@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
-import { Comment } from 'types/internal/comment'
-import { Author, FollowIn, CommnetIn, MediaUser } from 'types/internal/media'
+import { Comment, CommnetIn } from 'types/internal/comment'
+import { Author, FollowIn, MediaUser } from 'types/internal/media'
 import { postFollow, postComment } from 'api/internal/media/detail'
-import { FetchError } from 'utils/constants/enum'
-import { isActive } from 'utils/functions/common'
+import { CommentType, FetchError } from 'utils/constants/enum'
+import { commentTypeNoMap } from 'utils/constants/map'
+import { capitalize, isActive } from 'utils/functions/common'
 import { formatDatetime } from 'utils/functions/datetime'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -37,10 +38,11 @@ interface Props {
 
 export default function MediaDetailCommon(props: Props): JSX.Element {
   const { media, handleToast } = props
-  const { title, content, read, like, created, comments, author, mediaUser, type } = media
+  const { title, content, read, like, created, comments, author, mediaUser } = media
 
   const router = useRouter()
   const { user } = useUser()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isLike, setIsLike] = useState<boolean>(mediaUser.isLike)
   const [isFollow, setIsFollow] = useState<boolean>(mediaUser.isFollow)
   const [isContentView, setIsContentView] = useState<boolean>(false)
@@ -66,14 +68,18 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   }
 
   const handleMediaComment = async () => {
+    setIsLoading(true)
     const id = Number(router.query.id)
-    const request: CommnetIn = { text, type }
-    try {
-      await postComment(id, request)
-      setText('')
-    } catch {
+    const typeName = capitalize(String(router.pathname.split('/')[2]))
+    const typeNo = commentTypeNoMap[typeName as CommentType]
+    const request: CommnetIn = { text, typeNo, typeName, objectId: id }
+    const ret = await postComment(id, request)
+    if (ret.isErr()) {
+      setIsLoading(false)
       handleToast(FetchError.Post, true)
     }
+    setIsLoading(false)
+    setText('')
   }
 
   return (
@@ -121,7 +127,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
       <Divide />
 
-      <CommentInput user={user} count={comments.length} value={text} onChange={handleComment} onClick={handleMediaComment} />
+      <CommentInput user={user} count={comments.length} value={text} loading={isLoading} onChange={handleComment} onClick={handleMediaComment} />
       <VStack gap="6">
         <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
         <VStack gap="10" className={clsx(style.comment_aria, isCommentView && style.active)}>

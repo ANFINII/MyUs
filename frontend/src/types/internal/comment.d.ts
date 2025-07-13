@@ -20,3 +20,11 @@ export interface Reply {
   isCommentLike?: boolean
   totalLike?: number
 }
+
+export interface CommnetIn {
+  text: string
+  typeNo: CommentTypeNo
+  typeName: CommentType
+  objectId: number
+  parentId?: number
+}

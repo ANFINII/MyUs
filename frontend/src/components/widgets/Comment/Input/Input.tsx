@@ -9,12 +9,13 @@ interface Props {
   user: UserMe
   count: number
   value?: string
+  loading?: boolean
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
   onClick?: () => void
 }
 
 export default function CommentInput(props: Props): JSX.Element {
-  const { user, count, value, onChange, onClick } = props
+  const { user, count, value, loading, onChange, onClick } = props
 
   return (
     <form method="POST" action="">
@@ -31,7 +32,7 @@ export default function CommentInput(props: Props): JSX.Element {
           )}
         </HStack>
         <HStack justify="end">
-          <Button color="blue" size="s" name="コメント" disabled={!value?.trim()} onClick={onClick} />
+          <Button color="blue" size="s" name="コメント" disabled={!value?.trim()} loading={loading} onClick={onClick} />
         </HStack>
       </VStack>
     </form>
