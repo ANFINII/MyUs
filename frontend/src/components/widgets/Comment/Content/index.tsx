@@ -1,8 +1,9 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, SetStateAction } from 'react'
 import clsx from 'clsx'
 import { UserMe } from 'types/internal/auth'
-import { Comment } from 'types/internal/comment'
-import { deleteCommentLike, postCommentLike } from 'api/internal/media/detail'
+import { Comment, Reply } from 'types/internal/comment'
+import { deleteComment, deleteCommentLike, postCommentLike } from 'api/internal/media/detail'
+import { FetchError } from 'utils/constants/enum'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
 import IconEdit from 'components/parts/Icon/Edit'
@@ -20,14 +21,17 @@ import CommentUpdate from '../Update'
 export interface Props {
   comment: Comment
   user: UserMe
+  setComments: (value: SetStateAction<Comment[]>) => void
+  handleToast: (content: string, isError: boolean) => void
 }
 
 export default function CommentContent(props: Props): JSX.Element {
-  const { comment, user } = props
-  const { id, author, text, replys, isCommentLike, totalLike } = comment
+  const { comment, user, setComments, handleToast } = props
+  const { id, author, text, isCommentLike, totalLike } = comment
   const { isActive, nickname } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -36,11 +40,12 @@ export default function CommentContent(props: Props): JSX.Element {
   const [isLike, setIsLike] = useState<boolean>(isCommentLike || false)
   const [commentText, setCommentText] = useState<string>('')
   const [replyText, setReplyText] = useState<string>('')
+  const [replys, setReplys] = useState<Reply[]>(comment.replys)
 
   const disabled = author.nickname !== nickname
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
-  const handleDelete = () => setIsModal(true)
+  const handleDelete = () => setIsModal(!isModal)
   const handleEditToggle = () => setIsEdit(!isEdit)
   const handleReplyView = () => setIsReplyView(!isReplyView)
   const handleThreadView = () => setIsThreadView(!isThreadView)
@@ -80,6 +85,19 @@ export default function CommentContent(props: Props): JSX.Element {
     handleReplyView()
   }
 
+  const handleCommentDelete = (commentId: number) => async () => {
+    setIsLoading(true)
+    const ret = await deleteComment(commentId)
+    if (ret.isErr()) {
+      setIsLoading(false)
+      handleToast(FetchError.Delete, true)
+      return
+    }
+    setComments((prev) => prev.filter((comment) => comment.id !== commentId))
+    setIsLoading(false)
+    handleModal()
+  }
+
   const actionItems = [
     { icon: <IconEdit size="16" />, label: '編集', onClick: handleEdit },
     { icon: <IconTrash size="16" />, label: '削除', onClick: handleDelete, danger: true },
@@ -105,13 +123,13 @@ export default function CommentContent(props: Props): JSX.Element {
           </VStack>
         </HStack>
         <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
-        <CommentDeleteModal open={isModal} onClose={handleModal} onAction={() => {}} comment={comment} />
+        <CommentDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleCommentDelete(id)} comment={comment} />
       </HStack>
 
       {isThreadView && (
         <VStack gap="5" className={clsx(replys.length > 0 && 'mt_10 ml_50')}>
           {replys.map((reply) => (
-            <CommentThread key={reply.id} reply={reply} user={user} />
+            <CommentThread key={reply.id} reply={reply} user={user} setReplys={setReplys} handleToast={handleToast} />
           ))}
         </VStack>
       )}

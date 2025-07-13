@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
+import { SetStateAction, useRef, useState } from 'react'
 import { UserMe } from 'types/internal/auth'
 import { Reply } from 'types/internal/comment'
-import { deleteCommentLike, postCommentLike } from 'api/internal/media/detail'
+import { deleteComment, deleteCommentLike, postCommentLike } from 'api/internal/media/detail'
+import { FetchError } from 'utils/constants/enum'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
 import IconEdit from 'components/parts/Icon/Edit'
@@ -17,14 +18,17 @@ import CommentInfo from '../Info'
 interface Props {
   reply: Reply
   user: UserMe
+  setReplys: (value: SetStateAction<Reply[]>) => void
+  handleToast: (content: string, isError: boolean) => void
 }
 
 export default function CommentThread(props: Props): JSX.Element {
-  const { reply, user } = props
+  const { reply, user, setReplys, handleToast } = props
   const { id, author, text, isCommentLike, totalLike } = reply
   const { isActive, nickname } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -61,6 +65,19 @@ export default function CommentThread(props: Props): JSX.Element {
     handleEditToggle()
   }
 
+  const handleReplyDelete = (commentId: number) => async () => {
+    setIsLoading(true)
+    const ret = await deleteComment(commentId)
+    if (ret.isErr()) {
+      setIsLoading(false)
+      handleToast(FetchError.Delete, true)
+      return
+    }
+    setReplys((prev) => prev.filter((comment) => comment.id !== commentId))
+    setIsLoading(false)
+    handleModal()
+  }
+
   const actionItems = [
     { icon: <IconEdit size="16" />, label: '編集', onClick: handleEdit },
     { icon: <IconTrash size="16" />, label: '削除', onClick: handleDelete, danger: true },
@@ -80,7 +97,7 @@ export default function CommentThread(props: Props): JSX.Element {
         </div>
       </VStack>
       <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
-      <CommentDeleteModal open={isModal} onClose={handleModal} onAction={() => {}} comment={reply} />
+      <CommentDeleteModal open={isModal} onClose={handleModal} onAction={handleReplyDelete(id)} loading={isLoading} comment={reply} />
     </HStack>
   )
 }
