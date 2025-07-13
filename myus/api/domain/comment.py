@@ -1,5 +1,6 @@
 from dataclasses import asdict, dataclass
-from enum import Enum, auto
+from datetime import timezone
+from enum import Enum
 from django.db.models import Exists, OuterRef, Prefetch
 from api.models.comment import Comment
 from api.types.data.comment import CommentData, ReplyData, CommentInData
@@ -49,6 +50,10 @@ class CommentDomain:
             author=get_author(obj.author),
         )
         return data
+
+    @classmethod
+    def delete(cls, id: int) -> None:
+        Comment.objects.filter(id=id).update(deleted=True, updated=timezone.now())
 
 
 def get_comment_data(comments: list[Comment]) -> list[CommentData]:

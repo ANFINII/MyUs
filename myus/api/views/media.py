@@ -441,3 +441,11 @@ class CommentAPI(APIView):
 
         data = CommentDomain.create(comment_data)
         return DataResponse(data, HTTP_201_CREATED)
+
+    def delete(self, request, id: int) -> DataResponse:
+        author = get_user(request)
+        if not author:
+            return ApiResponse.UNAUTHORIZED.run()
+
+        CommentDomain.delete(id)
+        return DataResponse({}, HTTP_200_OK)
