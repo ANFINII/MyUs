@@ -30,3 +30,19 @@ export enum NotificationType {
   Reply = 'Reply',
   Views = 'Views',
 }
+
+export enum CommentTypeNo {
+  Video = 1,
+  Music = 2,
+  Comic = 3,
+  Picture = 4,
+  Blog = 5,
+}
+
+export enum CommentType {
+  Video = 'Video',
+  Music = 'Music',
+  Comic = 'Comic',
+  Picture = 'Picture',
+  Blog = 'Blog',
+}
