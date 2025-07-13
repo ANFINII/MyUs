@@ -38,7 +38,7 @@ interface Props {
 
 export default function MediaDetailCommon(props: Props): JSX.Element {
   const { media, handleToast } = props
-  const { title, content, read, like, created, comments, author, mediaUser } = media
+  const { title, content, read, like, created, author, mediaUser } = media
 
   const router = useRouter()
   const { user } = useUser()
@@ -48,6 +48,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const [isContentView, setIsContentView] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
   const [text, setText] = useState<string>('')
+  const [comments, setComments] = useState<Comment[]>(media.comments)
 
   const isFallowDisable = !user || user.nickname === author.nickname
   const handleLike = () => setIsLike(!isLike)
@@ -69,15 +70,17 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
   const handleMediaComment = async () => {
     setIsLoading(true)
-    const id = Number(router.query.id)
     const typeName = capitalize(String(router.pathname.split('/')[2]))
     const typeNo = commentTypeNoMap[typeName as CommentType]
-    const request: CommnetIn = { text, typeNo, typeName, objectId: id }
-    const ret = await postComment(id, request)
+    const objectId = Number(router.query.id)
+    const request: CommnetIn = { text, typeNo, typeName, objectId }
+    const ret = await postComment(request)
     if (ret.isErr()) {
       setIsLoading(false)
       handleToast(FetchError.Post, true)
+      return
     }
+    setComments([ret.value, ...comments])
     setIsLoading(false)
     setText('')
   }
@@ -127,7 +130,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
       <Divide />
 
-      <CommentInput user={user} count={comments.length} value={text} loading={isLoading} onChange={handleComment} onClick={handleMediaComment} />
+      <CommentInput user={user} count={comments.length} loading={isLoading} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <VStack gap="6">
         <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
         <VStack gap="10" className={clsx(style.comment_aria, isCommentView && style.active)}>

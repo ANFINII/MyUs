@@ -46,7 +46,7 @@ export const apiChats = base + '/media/chat'
 export const apiChat = (chatId: number) => base + `/media/chat/${chatId}`
 export const apiChatCreate = base + '/media/chat/create'
 
-export const apiCommnet = (id: number) => base + `/media/${id}/comment`
+export const apiCommnet = base + '/media/comment'
 export const apiCommentLike = base + '/like/form/comment'
 
 // 外部API
