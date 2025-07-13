@@ -125,11 +125,6 @@ export interface FollowIn {
   nickname: string
 }
 
-export interface CommnetIn {
-  text: string
-  type: string
-}
-
 export interface MediaDetail {
   id: number
   title: string
@@ -142,6 +137,7 @@ export interface MediaDetail {
   author: Author
   mediaUser: MediaUser
 }
+
 export interface VideoDetail extends Video {
   comments: Comment[]
   hashtags: string[]
