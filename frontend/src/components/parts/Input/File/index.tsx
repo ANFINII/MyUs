@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { ChangeEvent, useRef, useState } from 'react'
 import clsx from 'clsx'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../Input.module.scss'
@@ -25,7 +25,7 @@ export default function InputFile(props: Props): JSX.Element {
 
   const handleClick = () => inputEl.current?.click()
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files && files.length > 0) {
       const names = Array.from(files).map((file) => file.name)

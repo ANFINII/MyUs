@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import clsx from 'clsx'
 import { useAutoFocus } from 'components/hooks/useAutoFocus'
 import VStack from 'components/parts/Stack/Vertical'
@@ -19,7 +19,7 @@ interface Props {
   required?: boolean
   disabled?: boolean
   autoFocus?: boolean
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   onClick?: (event: React.MouseEvent<HTMLInputElement>) => void
 }
 
@@ -32,7 +32,7 @@ export default function Input(props: Props): JSX.Element {
   const isRequired = required && !isValue && !value
   const isErrorText = !isRequired && error
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setIsValue(value !== '')
     onChange?.(e)

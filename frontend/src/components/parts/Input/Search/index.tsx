@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import style from './Search.module.scss'
@@ -5,7 +6,7 @@ import style from './Search.module.scss'
 interface Props {
   value?: string
   className?: string
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 export default function Search(props: Props): JSX.Element {

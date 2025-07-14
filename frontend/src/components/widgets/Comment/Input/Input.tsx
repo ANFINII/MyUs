@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react'
 import { UserMe } from 'types/internal/auth'
 import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
@@ -10,7 +11,7 @@ interface Props {
   count: number
   loading?: boolean
   value?: string
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
   onClick?: () => void
 }
 

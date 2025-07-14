@@ -1,4 +1,4 @@
-import { SetStateAction, useRef, useState } from 'react'
+import { ChangeEvent, SetStateAction, useRef, useState } from 'react'
 import { UserMe } from 'types/internal/auth'
 import { Reply } from 'types/internal/comment'
 import { deleteComment, deleteCommentLike, postCommentLike, putComment } from 'api/internal/media/detail'
@@ -39,7 +39,7 @@ export default function CommentThread(props: Props): JSX.Element {
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
   const handleEditToggle = () => setIsEdit(!isEdit)
-  const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
+  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
 
   const handleLike = (commentId: number) => async (): Promise<void> => {
     if (isLike) {

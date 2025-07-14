@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { Comment, CommnetIn } from 'types/internal/comment'
@@ -54,7 +54,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const handleLike = () => setIsLike(!isLike)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
-  const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setText(e.target.value)
+  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setText(e.target.value)
 
   const handleFollow = async () => {
     const request: FollowIn = { nickname: author.nickname }

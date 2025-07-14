@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { ChangeEvent, useRef } from 'react'
 
 interface Props {
   id: string
@@ -12,7 +12,7 @@ export default function InputImage(props: Props): JSX.Element {
 
   const inputEl = useRef<HTMLInputElement>(null)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files && files[0] && onChange) onChange(files[0])
   }
