@@ -1,15 +1,15 @@
 import json
 import os
 
-from django.db.models import Exists, OuterRef
 from django.conf import settings
+from django.utils import timezone
 
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
-from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat, Comment
-from api.types.data.comment import CommentInData
+from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat
+from api.types.data.comment import CommentInData, CommentUpdateData
 from api.types.data.media import VideoDetailOutData, VideoDetailData
 from api.types.data.media import MusicDetailOutData, MusicDetailData
 from api.types.data.media import ComicDetailOutData, ComicDetailData
@@ -442,10 +442,21 @@ class CommentAPI(APIView):
         data = CommentDomain.create(comment_data)
         return DataResponse(data, HTTP_201_CREATED)
 
+    def put(self, request, id: int) -> DataResponse:
+        author = get_user(request)
+        if not author:
+            return ApiResponse.UNAUTHORIZED.run()
+
+        data = request.data
+
+        comment_update_data = CommentUpdateData(text=data["text"], updated=timezone.now())
+        CommentDomain.update(id, comment_update_data)
+        return DataResponse(None, HTTP_200_OK)
+
     def delete(self, request, id: int) -> DataResponse:
         author = get_user(request)
         if not author:
             return ApiResponse.UNAUTHORIZED.run()
 
         CommentDomain.delete(id)
-        return DataResponse({}, HTTP_200_OK)
+        return DataResponse(None, HTTP_200_OK)
