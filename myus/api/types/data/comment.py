@@ -31,9 +31,3 @@ class CommentInData:
     type_name: CommentType
     object_id: int
     parent_id: int | None
-
-
-@dataclass(frozen=True, slots=True)
-class CommentUpdateData:
-    text: str
-    updated: datetime
