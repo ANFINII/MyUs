@@ -28,3 +28,7 @@ export interface CommnetIn {
   objectId: number
   parentId?: number
 }
+
+export interface CommentUpdateIn {
+  text: string
+}
