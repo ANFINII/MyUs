@@ -2,7 +2,6 @@ import json
 import os
 
 from django.conf import settings
-from django.utils import timezone
 
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
@@ -448,9 +447,7 @@ class CommentAPI(APIView):
             return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
-
-        comment_update_data = CommentUpdateData(text=data["text"], updated=timezone.now())
-        CommentDomain.update(id, comment_update_data)
+        CommentDomain.update(id, text=data["text"])
         return DataResponse(None, HTTP_200_OK)
 
     def delete(self, request, id: int) -> DataResponse:

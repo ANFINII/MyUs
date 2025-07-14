@@ -52,8 +52,8 @@ class CommentDomain:
         return data
 
     @classmethod
-    def update(cls, id: int, data: CommentUpdateData) -> None:
-        Comment.objects.filter(id=id).update(**asdict(data))
+    def update(cls, id: int, text: str) -> None:
+        Comment.objects.filter(id=id).update(text=text, updated=timezone.now())
 
     @classmethod
     def delete(cls, id: int) -> None:
