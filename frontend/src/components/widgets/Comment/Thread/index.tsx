@@ -38,7 +38,6 @@ export default function CommentThread(props: Props): JSX.Element {
   const disabled = author.nickname !== nickname
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
-  const handleDelete = () => setIsModal(true)
   const handleEditToggle = () => setIsEdit(!isEdit)
   const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
 
@@ -88,7 +87,7 @@ export default function CommentThread(props: Props): JSX.Element {
 
   const actionItems = [
     { icon: <IconEdit size="16" />, label: '編集', onClick: handleEdit },
-    { icon: <IconTrash size="16" />, label: '削除', onClick: handleDelete, danger: true },
+    { icon: <IconTrash size="16" />, label: '削除', onClick: handleModal, danger: true },
   ]
 
   return (
