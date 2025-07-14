@@ -3,7 +3,7 @@ from enum import Enum
 from django.db.models import Exists, OuterRef, Prefetch
 from django.utils import timezone
 from api.models.comment import Comment
-from api.types.data.comment import CommentData, ReplyData, CommentInData, CommentUpdateData
+from api.types.data.comment import CommentData, ReplyData, CommentInData
 from api.utils.enum.index import CommentTypeNo
 from api.utils.functions.user import get_author
 
@@ -28,7 +28,7 @@ class CommentDomain:
 
         objs = (
             Comment.objects
-            .filter(parent__isnull=True, **filter_obj)
+            .filter(parent__isnull=True, deleted=False, **filter_obj)
             .select_related("author")
             .prefetch_related(Prefetch("reply", queryset=Comment.objects.select_related("author")))
             .annotate(is_comment_like=Exists(subquery))
