@@ -48,7 +48,6 @@ export default function CommentContent(props: Props): JSX.Element {
   const disabled = author.nickname !== nickname
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
-  const handleDelete = () => setIsModal(!isModal)
   const handleEditToggle = () => setIsEdit(!isEdit)
   const handleReplyView = () => setIsReplyView(!isReplyView)
   const handleThreadView = () => setIsThreadView(!isThreadView)
@@ -115,11 +114,6 @@ export default function CommentContent(props: Props): JSX.Element {
     handleModal()
   }
 
-  const handleReplyInput = (commentId: number, text: string) => () => {
-    console.log(commentId, text)
-    setReplyText('')
-  }
-
   const handleReplyCancel = () => {
     setReplyText('')
     handleReplyView()
@@ -127,7 +121,7 @@ export default function CommentContent(props: Props): JSX.Element {
 
   const actionItems = [
     { icon: <IconEdit size="16" />, label: '編集', onClick: handleEdit },
-    { icon: <IconTrash size="16" />, label: '削除', onClick: handleDelete, danger: true },
+    { icon: <IconTrash size="16" />, label: '削除', onClick: handleModal, danger: true },
   ]
 
   return (
