@@ -2,7 +2,7 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
-import { Comment, CommnetIn } from 'types/internal/comment'
+import { Comment, CommentUpdateIn, CommnetIn } from 'types/internal/comment'
 import { Video, Music, Comic, Picture, Chat, BlogDetailOut, FollowIn } from 'types/internal/media'
 import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat, apiFollow, apiCommentLike, apiComment, apiComments } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
@@ -37,6 +37,10 @@ export const postFollow = async (request: FollowIn): Promise<ApiOut<void>> => {
 
 export const postComment = async (request: CommnetIn): Promise<ApiOut<Comment>> => {
   return await apiOut(apiClient.post(apiComments, camelSnake(request)))
+}
+
+export const putComment = async (id: number, request: CommentUpdateIn): Promise<ApiOut<void>> => {
+  return await apiOut(apiClient.put(apiComment(id), request))
 }
 
 export const deleteComment = async (id: number): Promise<ApiOut<void>> => {

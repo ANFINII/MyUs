@@ -1,7 +1,7 @@
 import { SetStateAction, useRef, useState } from 'react'
 import { UserMe } from 'types/internal/auth'
 import { Reply } from 'types/internal/comment'
-import { deleteComment, deleteCommentLike, postCommentLike } from 'api/internal/media/detail'
+import { deleteComment, deleteCommentLike, postCommentLike, putComment } from 'api/internal/media/detail'
 import { FetchError } from 'utils/constants/enum'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
@@ -60,8 +60,16 @@ export default function CommentThread(props: Props): JSX.Element {
     handleEditToggle()
   }
 
-  const handleUpdate = (commentId: number, text: string) => () => {
-    console.log(commentId, text)
+  const handleUpdate = (commentId: number, text: string) => async () => {
+    setIsLoading(true)
+    const ret = await putComment(commentId, { text })
+    if (ret.isErr()) {
+      handleToast(FetchError.Put, true)
+      setIsLoading(false)
+      return
+    }
+    setReplys((prev) => prev.map((comment) => (comment.id === commentId ? { ...comment, text } : comment)))
+    setIsLoading(false)
     handleEditToggle()
   }
 

@@ -2,7 +2,7 @@ import { useState, useRef, SetStateAction } from 'react'
 import clsx from 'clsx'
 import { UserMe } from 'types/internal/auth'
 import { Comment, Reply } from 'types/internal/comment'
-import { deleteComment, deleteCommentLike, postCommentLike } from 'api/internal/media/detail'
+import { deleteComment, deleteCommentLike, postCommentLike, putComment } from 'api/internal/media/detail'
 import { FetchError } from 'utils/constants/enum'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
@@ -70,19 +70,17 @@ export default function CommentContent(props: Props): JSX.Element {
     handleEditToggle()
   }
 
-  const handleUpdate = (commentId: number, text: string) => () => {
-    console.log(commentId, text)
+  const handleUpdate = (commentId: number, text: string) => async () => {
+    setIsLoading(true)
+    const ret = await putComment(commentId, { text })
+    if (ret.isErr()) {
+      handleToast(FetchError.Put, true)
+      setIsLoading(false)
+      return
+    }
+    setComments((prev) => prev.map((comment) => (comment.id === commentId ? { ...comment, text } : comment)))
+    setIsLoading(false)
     handleEditToggle()
-  }
-
-  const handleReplyInput = (commentId: number, text: string) => () => {
-    console.log(commentId, text)
-    setReplyText('')
-  }
-
-  const handleReplyCancel = () => {
-    setReplyText('')
-    handleReplyView()
   }
 
   const handleCommentDelete = (commentId: number) => async () => {
@@ -94,8 +92,17 @@ export default function CommentContent(props: Props): JSX.Element {
       return
     }
     setComments((prev) => prev.filter((comment) => comment.id !== commentId))
-    setIsLoading(false)
     handleModal()
+  }
+
+  const handleReplyInput = (commentId: number, text: string) => () => {
+    console.log(commentId, text)
+    setReplyText('')
+  }
+
+  const handleReplyCancel = () => {
+    setReplyText('')
+    handleReplyView()
   }
 
   const actionItems = [
