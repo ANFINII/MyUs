@@ -1,9 +1,12 @@
 import { useState, useRef, SetStateAction } from 'react'
+import router from 'next/router'
 import clsx from 'clsx'
+import { capitalize } from 'lodash'
 import { UserMe } from 'types/internal/auth'
-import { Comment, Reply } from 'types/internal/comment'
-import { deleteComment, deleteCommentLike, postCommentLike, putComment } from 'api/internal/media/detail'
-import { FetchError } from 'utils/constants/enum'
+import { Comment, CommnetIn, Reply } from 'types/internal/comment'
+import { deleteComment, deleteCommentLike, postComment, postCommentLike, putComment } from 'api/internal/media/detail'
+import { CommentType, FetchError } from 'utils/constants/enum'
+import { commentTypeNoMap } from 'utils/constants/map'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
 import IconEdit from 'components/parts/Icon/Edit'
@@ -70,6 +73,23 @@ export default function CommentContent(props: Props): JSX.Element {
     handleEditToggle()
   }
 
+  const handleMediaReply = (parentId: number, text: string) => async () => {
+    setIsLoading(true)
+    const typeName = capitalize(String(router.pathname.split('/')[2]))
+    const typeNo = commentTypeNoMap[typeName as CommentType]
+    const objectId = Number(router.query.id)
+    const request: CommnetIn = { text, typeNo, typeName, objectId, parentId }
+    const ret = await postComment(request)
+    if (ret.isErr()) {
+      setIsLoading(false)
+      handleToast(FetchError.Post, true)
+      return
+    }
+    setReplys([ret.value, ...replys])
+    setIsLoading(false)
+    setReplyText('')
+  }
+
   const handleUpdate = (commentId: number, text: string) => async () => {
     setIsLoading(true)
     const ret = await putComment(commentId, { text })
@@ -126,7 +146,7 @@ export default function CommentContent(props: Props): JSX.Element {
               <View isView={isReplyView} onView={handleReplyView} size="s" color="grey" content="返信" />
               <View isView={isThreadView} onView={handleThreadView} size="s" color="grey" content={`スレッド ${replys.length || 0} 件`} />
             </HStack>
-            <ReplyInput user={user} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleReplyInput(id, replyText)} onCancel={handleReplyCancel} />
+            <ReplyInput user={user} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleMediaReply(id, replyText)} onCancel={handleReplyCancel} />
           </VStack>
         </HStack>
         <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
