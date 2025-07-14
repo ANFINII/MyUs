@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react'
 import { Option } from 'types/internal/other'
 import style from './Select.module.scss'
 
@@ -8,7 +9,7 @@ interface Props {
   options: Option[]
   placeholder?: string
   className?: string
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  onChange: (e: ChangeEvent<HTMLSelectElement>) => void
 }
 
 export default function Select(props: Props): JSX.Element {

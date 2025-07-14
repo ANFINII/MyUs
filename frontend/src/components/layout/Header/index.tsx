@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { isActive } from 'utils/functions/common'
@@ -31,7 +31,7 @@ export default function Header(props: Props): JSX.Element {
   const [isProfile, setIsProfile] = useState<boolean>(false)
 
   const handleRouter = (url: string) => router.push(url)
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
   const handleSideMenu = () => setIsSideMenu(!isSideMenu)
   const handleCloud = () => setIsCloud(!isCloud)
   const handleNotice = () => setIsNotice(!isNotice)

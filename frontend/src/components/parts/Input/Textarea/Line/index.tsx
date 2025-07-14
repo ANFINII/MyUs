@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { ChangeEvent, useEffect, useRef } from 'react'
 import clsx from 'clsx'
 import style from './Line.module.scss'
 
@@ -14,7 +14,7 @@ interface Props {
   required?: boolean
   disabled?: boolean
   focus?: boolean
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
 }
 
 export default function TextareaLine(props: Props): JSX.Element {
@@ -35,7 +35,7 @@ export default function TextareaLine(props: Props): JSX.Element {
     if (focus && ref.current) ref.current.focus()
   }, [focus])
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     adjustHeight()
     onChange?.(e)
   }

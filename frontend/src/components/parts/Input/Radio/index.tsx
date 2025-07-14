@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react'
 import clsx from 'clsx'
 import style from './Radio.module.scss'
 
@@ -8,7 +9,7 @@ interface Props {
   value?: string
   checked?: boolean
   className?: string
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 export default function Radio(props: Props): JSX.Element {
@@ -17,7 +18,9 @@ export default function Radio(props: Props): JSX.Element {
   return (
     <div className={clsx(style.radio, className)}>
       <input {...props} type="radio" id={id || value} />
-      <label htmlFor={id || value} className={style.label}>{label}</label>
+      <label htmlFor={id || value} className={style.label}>
+        {label}
+      </label>
     </div>
   )
 }

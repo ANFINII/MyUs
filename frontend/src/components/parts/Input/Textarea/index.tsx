@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { ChangeEvent, useState, useRef, useEffect } from 'react'
 import clsx from 'clsx'
 import VStack from 'components/parts/Stack/Vertical'
 import style from './Textarea.module.scss'
@@ -16,7 +16,7 @@ interface Props {
   required?: boolean
   disabled?: boolean
   focus?: boolean
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
 }
 
 export default function Textarea(props: Props): JSX.Element {
@@ -41,7 +41,7 @@ export default function Textarea(props: Props): JSX.Element {
     if (focus && ref.current) ref.current.focus()
   }, [focus])
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     adjustHeight()
     setIsValue(e.target.value !== '')
     onChange?.(e)

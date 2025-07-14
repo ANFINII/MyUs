@@ -1,4 +1,4 @@
-import { useState, useRef, SetStateAction } from 'react'
+import { useState, useRef, SetStateAction, ChangeEvent } from 'react'
 import router from 'next/router'
 import clsx from 'clsx'
 import { capitalize } from 'lodash'
@@ -51,8 +51,8 @@ export default function CommentContent(props: Props): JSX.Element {
   const handleEditToggle = () => setIsEdit(!isEdit)
   const handleReplyView = () => setIsReplyView(!isReplyView)
   const handleThreadView = () => setIsThreadView(!isThreadView)
-  const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
-  const handleReply = (e: React.ChangeEvent<HTMLTextAreaElement>): void => setReplyText(e.target.value)
+  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
+  const handleReply = (e: ChangeEvent<HTMLTextAreaElement>): void => setReplyText(e.target.value)
 
   const handleLike = (commentId: number) => async (): Promise<void> => {
     if (isLike) {
