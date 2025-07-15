@@ -31,7 +31,7 @@ export default function CommentDeleteModal(props: Props): JSX.Element {
         { name: 'キャンセル', color: 'white', onClick: onClose },
       ]}
     >
-      <div className="mb_8">こちらコメントを削除しますか？</div>
+      <div className="mb_8">こちらのコメントを削除しますか？</div>
       <HStack gap="4" className={style.comment}>
         <Avatar src={author.avatar} title={author.nickname} size="40" color="grey" />
         <div>
