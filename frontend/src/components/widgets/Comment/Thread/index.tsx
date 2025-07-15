@@ -1,7 +1,7 @@
 import { ChangeEvent, SetStateAction, useRef, useState } from 'react'
 import { UserMe } from 'types/internal/auth'
 import { Reply } from 'types/internal/comment'
-import { deleteComment, deleteCommentLike, postCommentLike, putComment } from 'api/internal/media/detail'
+import { postCommentLike, putComment, deleteComment, deleteCommentLike } from 'api/internal/media/comment'
 import { FetchError } from 'utils/constants/enum'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
