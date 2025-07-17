@@ -24,18 +24,18 @@ export default function Header(props: Props): JSX.Element {
 
   const router = useRouter()
   const { user } = useUser()
-  const [search, setSearch] = useState<string>('')
   const [isSideMenu, setIsSideMenu] = useState<boolean>(false)
   const [isCloud, setIsCloud] = useState<boolean>(false)
   const [isNotice, setIsNotice] = useState<boolean>(false)
   const [isProfile, setIsProfile] = useState<boolean>(false)
+  const [search, setSearch] = useState<string>('')
 
   const handleRouter = (url: string) => router.push(url)
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
   const handleSideMenu = () => setIsSideMenu(!isSideMenu)
   const handleCloud = () => setIsCloud(!isCloud)
   const handleNotice = () => setIsNotice(!isNotice)
   const handleProfile = () => setIsProfile(!isProfile)
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
 
   const handleCoverClose = () => {
     setIsCloud(false)
