@@ -422,6 +422,15 @@ class ChatAPI(APIView):
 
 
 class CommentAPI(APIView):
+    def get(self, request) -> DataResponse:
+        author = get_user(request)
+        if not author:
+            return ApiResponse.UNAUTHORIZED.run()
+
+        data = request.data
+        obj = CommentDomain.get(type_no=data["type_no"], object_id=data["object_id"], author_id=author.id)
+        return DataResponse(obj, HTTP_200_OK)
+
     def post(self, request) -> DataResponse:
         author = get_user(request)
         if not author:
