@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { Comment, CommnetIn } from 'types/internal/comment'
@@ -50,6 +50,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
   const [text, setText] = useState<string>('')
   const [comments, setComments] = useState<Comment[]>(media.comments)
+  useEffect(() => setComments(media.comments), [media.comments])
 
   const isFallowDisable = !user || user.nickname === author.nickname
   const handleLike = () => setIsLike(!isLike)
