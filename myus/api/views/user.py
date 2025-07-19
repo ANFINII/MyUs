@@ -1,4 +1,4 @@
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from api.models import User, Follow, SearchTag
@@ -59,6 +59,15 @@ class FollowAPI(APIView):
             "follower_count": follow_data["follower_count"],
         }
         return DataResponse(data, status=HTTP_201_CREATED)
+
+    @auth_user
+    def delete(self, request) -> DataResponse:
+        user = get_user(request)
+        data = request.data
+        nickname = data.get("nickname")
+        following = User.objects.get(nickname=nickname)
+        Follow.objects.filter(follower=user, following=following).delete()
+        return DataResponse(None, status=HTTP_204_NO_CONTENT)
 
 
 class FollowerAPI(APIView):
