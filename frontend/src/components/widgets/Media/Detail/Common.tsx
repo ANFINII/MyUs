@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { Author, FollowIn, MediaUser } from 'types/internal/media'
 import { postComment } from 'api/internal/media/comment'
-import { postFollow } from 'api/internal/media/detail'
+import { deleteFollow, postFollow } from 'api/internal/media/detail'
 import { CommentType, FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap } from 'utils/constants/map'
 import { capitalize, isActive } from 'utils/functions/common'
@@ -19,6 +19,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentContent from 'components/widgets/Comment/Content'
 import CommentInput from 'components/widgets/Comment/Input/Input'
+import FollowDeleteModal from 'components/widgets/Modal/FollowDelete'
 import View from 'components/widgets/View'
 import style from './Common.module.scss'
 
@@ -46,6 +47,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isLike, setIsLike] = useState<boolean>(mediaUser.isLike)
   const [isFollow, setIsFollow] = useState<boolean>(mediaUser.isFollow)
+  const [isModal, setIsModal] = useState<boolean>(false)
   const [isContentView, setIsContentView] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
   const [text, setText] = useState<string>('')
@@ -54,6 +56,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
   const isFallowDisable = !user || user.nickname === author.nickname
   const handleLike = () => setIsLike(!isLike)
+  const handleModal = () => setIsModal(!isModal)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setText(e.target.value)
@@ -63,11 +66,16 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
     const ret = await postFollow(request)
     if (ret.isErr()) handleToast(FetchError.Post, true)
     handleToast('フォローしました', false)
-    setIsFollow(!isLike)
+    setIsFollow(true)
   }
 
   const handleDeleteFollow = async () => {
-    setIsFollow(!isLike)
+    const request: FollowIn = { nickname: author.nickname }
+    const ret = await deleteFollow(request)
+    if (ret.isErr()) handleToast(FetchError.Post, true)
+    handleToast('フォローを解除しました', false)
+    setIsFollow(false)
+    handleModal()
   }
 
   const handleMediaComment = async () => {
@@ -117,7 +125,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
           </HStack>
           <div className="content_detail_p2">
             {!isFollow && <Button color="green" name="フォローする" disabled={isFallowDisable} onClick={handleFollow} />}
-            {isFollow && <Button color="red" name="解除する" onClick={handleDeleteFollow} />}
+            {isFollow && <Button color="white" name="フォロー済み" onClick={handleModal} />}
           </div>
         </HStack>
         <div className="content_detail_p1">
@@ -152,6 +160,8 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
         <h2>個別広告</h2>
         <article className="article_list">{/* {% include 'parts/advertise_article.html' %} */}</article>
       </div>
+
+      <FollowDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleDeleteFollow} author={author} />
     </div>
   )
 }

@@ -32,3 +32,7 @@ export const getChat = async (id: number, req?: Req): Promise<ApiOut<Chat>> => {
 export const postFollow = async (request: FollowIn): Promise<ApiOut<void>> => {
   return await apiOut(apiClient.post(apiFollow, request))
 }
+
+export const deleteFollow = async (request: FollowIn): Promise<ApiOut<void>> => {
+  return await apiOut(apiClient.delete(apiFollow, { data: request }))
+}
