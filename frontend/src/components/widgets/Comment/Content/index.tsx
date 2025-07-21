@@ -31,7 +31,7 @@ export interface Props {
 export default function CommentContent(props: Props): JSX.Element {
   const { comment, user, setComments, handleToast } = props
   const { id, author, text, isCommentLike, totalLike } = comment
-  const { isActive, nickname } = user
+  const { isActive, ulid } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -45,7 +45,7 @@ export default function CommentContent(props: Props): JSX.Element {
   const [replyText, setReplyText] = useState<string>('')
   const [replys, setReplys] = useState<Reply[]>(comment.replys)
 
-  const disabled = author.nickname !== nickname
+  const disabled = author.ulid !== ulid
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
   const handleEditToggle = () => setIsEdit(!isEdit)
@@ -128,7 +128,7 @@ export default function CommentContent(props: Props): JSX.Element {
     <div>
       <HStack>
         <HStack gap="4" className="w_full">
-          <AvatarLink src={author.avatar} nickname={author.nickname} />
+          <AvatarLink src={author.avatar} ulid={author.ulid} nickname={author.nickname} />
           <VStack gap="4" className="w_full">
             {!isEdit ? (
               <CommentInfo comment={comment} />

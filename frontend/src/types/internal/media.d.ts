@@ -124,7 +124,7 @@ export interface ChatIn {
 }
 
 export interface FollowIn {
-  nickname: string
+  ulid: string
 }
 
 export interface MediaDetail {

@@ -27,7 +27,7 @@ export default function FollowDeleteModal(props: Props): JSX.Element {
     >
       <div className="mb_8">こちらのユーザーのフォローを解除しますか？</div>
       <HStack gap="4">
-        <AvatarLink src={author.avatar} size="l" nickname={author.nickname} />
+        <AvatarLink src={author.avatar} size="l" ulid={author.ulid} nickname={author.nickname} />
         <VStack gap="2">
           <p className="fs_14">{author.nickname}</p>
           <p className="fs_14 text_sub">

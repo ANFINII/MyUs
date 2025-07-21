@@ -13,11 +13,11 @@ interface Props<Media> {
 export default function MediaContent(props: Props<Media>) {
   const { href, media } = props
   const { author } = media
-  const { avatar, nickname } = author
+  const { avatar, ulid, nickname } = author
 
   return (
     <div>
-      <AvatarLink src={avatar} nickname={nickname} className={style.avatar} />
+      <AvatarLink src={avatar} ulid={ulid} nickname={nickname} className={style.avatar} />
       <Link href={href} className={style.link}>
         <HStack gap="4" className="p_6">
           <div className="mr_36" />
