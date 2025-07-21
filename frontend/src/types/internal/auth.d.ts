@@ -87,6 +87,7 @@ export interface MypageIn {
 
 export interface Follow {
   avatar: string
+  ulid: string
   nickname: string
   introduction: string
   followerCount: number

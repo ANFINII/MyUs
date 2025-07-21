@@ -11,11 +11,11 @@ interface Props {
 
 export default function MediaFollow(props: Props): JSX.Element {
   const { media } = props
-  const { avatar, nickname, introduction, followerCount, followingCount } = media
+  const { avatar, ulid, nickname, introduction, followerCount, followingCount } = media
 
   return (
-    <section key={nickname} className={style.media_follow}>
-      <Link href={`/userpage/${nickname}`} className={style.follow_box}>
+    <section key={ulid} className={style.media_follow}>
+      <Link href={`/userpage/${ulid}`} className={style.follow_box}>
         <HStack gap="5">
           <ExImage src={avatar} title={nickname} className={style.follow_image} />
           <VStack gap="1" className="fs_12">

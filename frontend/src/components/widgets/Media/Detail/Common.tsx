@@ -54,7 +54,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const [comments, setComments] = useState<Comment[]>(media.comments)
   useEffect(() => setComments(media.comments), [media.comments])
 
-  const isFallowDisable = !user || user.nickname === author.nickname
+  const isFallowDisable = !user || user.ulid === author.ulid
   const handleLike = () => setIsLike(!isLike)
   const handleModal = () => setIsModal(!isModal)
   const handleContentView = () => setIsContentView(!isContentView)
@@ -62,7 +62,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setText(e.target.value)
 
   const handleFollow = async () => {
-    const request: FollowIn = { nickname: author.nickname }
+    const request: FollowIn = { ulid: author.ulid }
     const ret = await postFollow(request)
     if (ret.isErr()) handleToast(FetchError.Post, true)
     handleToast('フォローしました', false)
@@ -70,7 +70,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   }
 
   const handleDeleteFollow = async () => {
-    const request: FollowIn = { nickname: author.nickname }
+    const request: FollowIn = { ulid: author.ulid }
     const ret = await deleteFollow(request)
     if (ret.isErr()) handleToast(FetchError.Post, true)
     handleToast('フォローを解除しました', false)
@@ -115,7 +115,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
       <div className="content_detail">
         <HStack gap="4" justify="between">
           <HStack gap="4">
-            <AvatarLink src={author.avatar} size="l" nickname={author.nickname} />
+            <AvatarLink src={author.avatar} size="l" ulid={author.ulid} nickname={author.nickname} />
             <VStack gap="2">
               <p className="fs_14">{author.nickname}</p>
               <p className="fs_14 text_sub">

@@ -50,14 +50,16 @@ export default function DropMenuNotice(props: Props): JSX.Element {
       { limit: 1000000000, message: '10億回閲覧されました' },
     ]
     const threshold = thresholds.find((t) => read >= t.limit)
-    return threshold && (
-      <div className="notification_aria_list_1" title={`${title}が${threshold.message}`}>
-        {title}が{threshold.message}
-      </div>
+    return (
+      threshold && (
+        <div className="notification_aria_list_1" title={`${title}が${threshold.message}`}>
+          {title}が{threshold.message}
+        </div>
+      )
     )
   }
 
-  const handleClick = (typeName: NotificationType, notification: Notification) => {
+  const handleClick = (typeName: NotificationType, notification: Notification) => () => {
     const { contentObject, userFrom } = notification
     if (typeName === NotificationType.Video) handleRouter(`/video/detail/${contentObject.id}`)
     if (typeName === NotificationType.Music) handleRouter(`/music/detail/${contentObject.id}`)
@@ -65,7 +67,7 @@ export default function DropMenuNotice(props: Props): JSX.Element {
     if (typeName === NotificationType.Picture) handleRouter(`/picture/detail/${contentObject.id}`)
     if (typeName === NotificationType.Blog) handleRouter(`/blog/detail/${contentObject.id}`)
     if (typeName === NotificationType.Chat) handleRouter(`/chat/detail/${contentObject.id}`)
-    if (mediaObjs.includes(typeName)) handleRouter(`/userpage/${userFrom.nickname}`)
+    if (mediaObjs.includes(typeName)) handleRouter(`/userpage/${userFrom.ulid}`)
   }
 
   return (
@@ -74,10 +76,10 @@ export default function DropMenuNotice(props: Props): JSX.Element {
         <DropMenuItem label="通知設定" icon={<IconBell size="1.5em" />} onClick={() => handleRouter('/setting/notification')} />
         {notifications?.datas?.map((notification) => {
           const { id, typeName, userFrom, contentObject } = notification
-          const { avatar, nickname } = userFrom
+          const { avatar, ulid, nickname } = userFrom
           const { title, text, read } = contentObject
           return (
-            <NotificationItem key={id} avatar={avatar} nickname={nickname} isConfirmed={notification.isConfirmed} onClick={() => handleClick(typeName, notification)}>
+            <NotificationItem key={id} avatar={avatar} ulid={ulid} nickname={nickname} isConfirmed={notification.isConfirmed} onClick={handleClick(typeName, notification)}>
               <>
                 {otherObjs.includes(typeName) && (
                   <div className="notification_aria_list_1" title={`${nickname}が${title}を投稿しました`}>

@@ -5,6 +5,7 @@ import IconCircle from '../Icon/Circle'
 
 interface Props {
   avatar: string
+  ulid: string
   nickname: string
   isConfirmed: boolean
   children?: React.ReactNode
@@ -12,15 +13,15 @@ interface Props {
 }
 
 export default function NotificationItem(props: Props): JSX.Element {
-  const { avatar, nickname, isConfirmed, children, onClick } = props
+  const { avatar, ulid, nickname, isConfirmed, children, onClick } = props
 
   const router = useRouter()
-  const handleRouter = (url: string) => router.push(url)
+  const handleRouter = (url: string) => () => router.push(url)
 
   return (
     <NavItem className="drop_menu_notification">
       <div className="notification_aria_list">
-        <div onClick={() => handleRouter(`/userpage/${nickname}`)}>
+        <div onClick={handleRouter(`/userpage/${ulid}`)}>
           <ExImage src={avatar} title={nickname} className="profile_image" />
         </div>
         {!isConfirmed && <IconCircle size="6" className="svg-circle" />}

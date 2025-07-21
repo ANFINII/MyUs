@@ -25,7 +25,7 @@ interface Props {
 export default function CommentThread(props: Props): JSX.Element {
   const { reply, user, setReplys, handleToast } = props
   const { id, author, text, isCommentLike, totalLike } = reply
-  const { isActive, nickname } = user
+  const { isActive, ulid } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -35,7 +35,7 @@ export default function CommentThread(props: Props): JSX.Element {
   const [isLike, setIsLike] = useState<boolean>(isCommentLike || false)
   const [commentText, setCommentText] = useState<string>('')
 
-  const disabled = author.nickname !== nickname
+  const disabled = author.ulid !== ulid
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
   const handleEditToggle = () => setIsEdit(!isEdit)
@@ -92,7 +92,7 @@ export default function CommentThread(props: Props): JSX.Element {
 
   return (
     <HStack gap="4" className={style.reply}>
-      <AvatarLink src={author.avatar} size="s" nickname={author.nickname} />
+      <AvatarLink src={author.avatar} size="s" ulid={author.ulid} nickname={author.nickname} />
       <VStack gap="4" className="w_full">
         {!isEdit ? (
           <CommentInfo comment={reply} />
