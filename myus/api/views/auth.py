@@ -120,7 +120,7 @@ class LoginAPI(views.TokenObtainPairView):
         refresh = serializer.validated_data["refresh"]
         response.set_cookie("access_token", access, max_age=60 * 60 * 24 * 10, httponly=True)
         response.set_cookie("refresh_token", refresh, max_age=60 * 60 * 24 * 30, httponly=True)
-        response.data["user"] = {"id": encrypt(str(user.id)), "avatar": user.image(), "nickname": user.nickname, "is_staff": user.is_staff}
+        response.data["user"] = {"avatar": user.image(), "ulid": user.ulid, "nickname": user.nickname, "is_staff": user.is_staff}
         return response
 
 

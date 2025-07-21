@@ -1,8 +1,9 @@
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
-from api.models import User, Follow, SearchTag
+from api.models import SearchTag
 from api.domain.follow import FollowDomain
+from api.domain.user import UserDomain
 from api.services.notification import get_notification, get_content_object
 from api.services.user import get_user
 from api.types.data.user import UserData
@@ -18,6 +19,7 @@ class UserAPI(APIView):
         user = get_user(request)
         data = UserData(
             avatar=create_url(user.image()),
+            ulid=user.ulid,
             email=user.email,
             nickname=user.nickname,
             is_active=user.is_active,
@@ -49,17 +51,17 @@ class FollowAPI(APIView):
         user = get_user(request)
         data = request.data
         nickname = data.get("nickname")
-
-        following = User.objects.get(nickname=nickname)
-        data = FollowDomain.create(user.id, following.id)
+        following = UserDomain.get(nickname=nickname)
+        data = FollowDomain.create(user, following)
         return DataResponse(data, status=HTTP_201_CREATED)
 
     @auth_user
     def delete(self, request) -> DataResponse:
         user = get_user(request)
         data = request.data
-        nickname = data.get("nickname")
-        FollowDomain.delete(user.id, nickname)
+        nickname = data["nickname"]
+        following = UserDomain.get(nickname=nickname)
+        FollowDomain.delete(user, following)
         return DataResponse(None, status=HTTP_204_NO_CONTENT)
 
 
