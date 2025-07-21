@@ -33,9 +33,6 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def get_queryset(self):
-        return super(UserManager,self).get_queryset().select_related("profile", "mypage")
-
 class User(AbstractBaseUser, PermissionsMixin):
     """User"""
     img         = "../static/img/user_icon.png"

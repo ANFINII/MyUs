@@ -6,6 +6,7 @@ from api.types.data.plan import PlanData
 @dataclass(frozen=True, slots=True)
 class UserData:
     avatar: str
+    ulid: str
     email: str
     nickname: str
     is_active: bool
@@ -25,6 +26,7 @@ class UserPlanData:
 @dataclass(frozen=True, slots=True)
 class AuthorData:
     avatar: str
+    ulid: str
     nickname: str
     follower_count: int
 
@@ -48,7 +50,6 @@ class NotificationData:
     user_to: NotificationUserData
     type_no: int
     type_name: str
-    # content_object: Any
     is_confirmed: bool
 
 
