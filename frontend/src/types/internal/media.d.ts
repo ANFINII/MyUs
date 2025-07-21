@@ -2,6 +2,7 @@ import { Comment } from './comment'
 
 export interface Author {
   avatar: string
+  ulid: string
   nickname: string
   followerCount: number
 }
@@ -13,6 +14,7 @@ export interface MediaUser {
 
 export interface NotificationUser {
   avatar: string
+  ulid: string
   nickname: string
 }
 

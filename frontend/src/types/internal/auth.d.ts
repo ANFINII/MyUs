@@ -23,6 +23,7 @@ export interface SignupIn {
 
 export interface UserMe {
   avatar: string
+  ulid: string
   email: string
   nickname: string
   isActive: boolean
@@ -31,6 +32,7 @@ export interface UserMe {
 
 export interface User {
   avatar: string
+  ulid: string
   email: string
   username: string
   nickname: string
