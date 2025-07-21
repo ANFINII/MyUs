@@ -10,7 +10,7 @@ export interface UserContextType {
 
 export const UserContext = createContext<UserContextType | undefined>(undefined)
 
-const initUser = { avatar: '', email: '', nickname: '', isActive: false, isStaff: false }
+const initUser = { avatar: '', ulid: '', email: '', nickname: '', isActive: false, isStaff: false }
 
 interface Props {
   children: React.ReactNode
