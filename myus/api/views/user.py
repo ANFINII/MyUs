@@ -2,9 +2,9 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CON
 from rest_framework.views import APIView
 
 from api.models import User, Follow, SearchTag
-from app.modules.follow import follow_update_data
+from api.domain.follow import FollowDomain
 from api.services.notification import get_notification, get_content_object
-from api.services.user import get_user, get_follows, get_followers
+from api.services.user import get_user
 from api.types.data.user import UserData
 from api.utils.decorators.auth import auth_user
 from api.utils.functions.index import create_url
@@ -41,7 +41,7 @@ class FollowAPI(APIView):
     def get(self, request) -> DataResponse:
         user = get_user(request)
         search = request.query_params.get("search")
-        data = get_follows(100, user, search)
+        data = FollowDomain.get_follows(user.id, search, 100)
         return DataResponse(data, HTTP_200_OK)
 
     @auth_user
@@ -50,14 +50,8 @@ class FollowAPI(APIView):
         data = request.data
         nickname = data.get("nickname")
 
-        followwe = user
         following = User.objects.get(nickname=nickname)
-        follow = Follow.objects.filter(follower=followwe, following=following).first()
-        follow_data = follow_update_data(followwe, following, follow)
-        data = {
-            "is_follow": follow_data["is_follow"],
-            "follower_count": follow_data["follower_count"],
-        }
+        data = FollowDomain.create(user.id, following.id)
         return DataResponse(data, status=HTTP_201_CREATED)
 
     @auth_user
@@ -65,8 +59,7 @@ class FollowAPI(APIView):
         user = get_user(request)
         data = request.data
         nickname = data.get("nickname")
-        following = User.objects.get(nickname=nickname)
-        Follow.objects.filter(follower=user, following=following).delete()
+        FollowDomain.delete(user.id, nickname)
         return DataResponse(None, status=HTTP_204_NO_CONTENT)
 
 
@@ -75,7 +68,7 @@ class FollowerAPI(APIView):
     def get(self, request) -> DataResponse:
         user = get_user(request)
         search = request.query_params.get("search")
-        data = get_followers(100, user, search)
+        data = FollowDomain.get_followers(user.id, search, 100)
         return DataResponse(data, HTTP_200_OK)
 
 
