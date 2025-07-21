@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 from django.utils import timezone
+from django_ulid.models import ulid
 from api.models.master import Plan
 from api.utils.enum.index import GenderType
 from api.utils.functions.file import user_image
@@ -33,12 +34,13 @@ class UserManager(BaseUserManager):
         return user
 
     def get_queryset(self):
-        return super(UserManager,self).get_queryset().select_related("mypage")
+        return super(UserManager,self).get_queryset().select_related("profile", "mypage")
 
 class User(AbstractBaseUser, PermissionsMixin):
     """User"""
     img         = "../static/img/user_icon.png"
     avatar      = models.ImageField(upload_to=user_image, default=img, blank=True, null=True)
+    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     email       = models.EmailField(max_length=255, unique=True)
     username    = models.CharField(max_length=20, unique=True)
     nickname    = models.CharField(max_length=80, unique=True)
