@@ -22,12 +22,12 @@ class SortOption:
 
 class UserDomain:
     @classmethod
-    def get(cls, id: int | None = None, nickname: str | None = None) -> User | None:
+    def get(cls, id: int | None = None, ulid: str | None = None) -> User | None:
         if id:
             user = User.objects.filter(id=id).select_related("profile", "mypage").first()
 
-        if nickname:
-            user = User.objects.filter(nickname=nickname).select_related("profile", "mypage").first()
+        if ulid:
+            user = User.objects.filter(ulid=ulid).select_related("profile", "mypage").first()
 
         if not user:
             return None
