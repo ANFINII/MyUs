@@ -3,9 +3,8 @@ from enum import Enum
 from django.db.models import Exists, OuterRef, Prefetch
 from django.utils import timezone
 from api.models.comment import Comment
-from api.types.data.comment import CommentData, ReplyData, CommentInData
+from api.types.data.comment import CommentInData
 from api.utils.enum.index import CommentTypeNo
-from api.utils.functions.user import get_author
 
 
 class SortType(Enum):
@@ -20,7 +19,7 @@ class SortOption:
 
 class CommentDomain:
     @classmethod
-    def get(cls, type_no: CommentTypeNo, object_id: int, author_id: int) -> list[CommentData]:
+    def bulk_get(cls, type_no: CommentTypeNo, object_id: int, author_id: int) -> list[Comment]:
         filter_obj = dict(type_no=type_no, object_id=object_id)
         subquery = Comment.objects.filter(id=OuterRef("pk"), like__id=author_id, **filter_obj)
         field_name = SortType.CREATED.value
@@ -35,21 +34,11 @@ class CommentDomain:
             .order_by(order_by_key)
         )
 
-        return get_comment_data(objs)
+        return objs
 
     @classmethod
-    def create(cls, comment_data: CommentInData) -> CommentData:
-        obj = Comment.objects.create(**asdict(comment_data))
-
-        data = CommentData(
-            id=obj.id,
-            text=obj.text,
-            created=obj.created,
-            updated=obj.updated,
-            replys=[],
-            author=get_author(obj.author),
-        )
-        return data
+    def create(cls, comment_data: CommentInData) -> Comment:
+       return Comment.objects.create(**asdict(comment_data))
 
     @classmethod
     def update(cls, id: int, text: str) -> None:
@@ -58,20 +47,3 @@ class CommentDomain:
     @classmethod
     def delete(cls, id: int) -> None:
         Comment.objects.filter(id=id).update(deleted=True, updated=timezone.now())
-
-
-def get_comment_data(comments: list[Comment]) -> list[CommentData]:
-    data = [
-        CommentData(
-            id=c.id,
-            text=c.text,
-            created=c.created,
-            updated=c.updated,
-            replys=[
-                ReplyData(id=r.id, text=r.text, created=r.created, updated=r.updated, author=get_author(r.author))
-                for r in c.reply.all()
-            ],
-            author=get_author(c.author),
-        ) for c in comments
-    ]
-    return data
