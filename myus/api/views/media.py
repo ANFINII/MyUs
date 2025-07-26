@@ -18,6 +18,7 @@ from api.types.data.media import ChatDetailOutData, ChatDetailData
 from api.domain.comment import CommentDomain
 from api.domain.message import MessageDomain
 from api.domain.media import MediaDomain
+from api.services.comment import create_comment, get_comments
 from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats
 from api.services.user import get_user
 from api.utils.constant import model_media_comment_dict
@@ -64,7 +65,7 @@ class VideoAPI(APIView):
         search = request.query_params.get("search")
         user = get_user(request)
         type_no = comment_type_no_map(CommentType.VIDEO)
-        comments = CommentDomain.get(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
+        comments = get_comments(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
 
         data = VideoDetailOutData(
             detail=VideoDetailData(
@@ -134,7 +135,7 @@ class MusicAPI(APIView):
         search = request.query_params.get("search")
         user = get_user(request)
         type_no = comment_type_no_map(CommentType.MUSIC)
-        comments = CommentDomain.get(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
+        comments = get_comments(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
 
         data = MusicDetailOutData(
             detail=MusicDetailData(
@@ -196,7 +197,7 @@ class ComicAPI(APIView):
         search = request.query_params.get("search")
         user = get_user(request)
         type_no = comment_type_no_map(CommentType.COMIC)
-        comments = CommentDomain.get(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
+        comments = get_comments(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
 
         data = ComicDetailOutData(
             detail=ComicDetailData(
@@ -258,7 +259,7 @@ class PictureAPI(APIView):
         search = request.query_params.get("search")
         user = get_user(request)
         type_no = comment_type_no_map(CommentType.PICTURE)
-        comments = CommentDomain.get(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
+        comments = get_comments(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
 
         data = PictureDetailOutData(
             detail=PictureDetailData(
@@ -315,7 +316,7 @@ class BlogAPI(APIView):
         search = request.query_params.get("search")
         user = get_user(request)
         type_no = comment_type_no_map(CommentType.BLOG)
-        comments = CommentDomain.get(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
+        comments = get_comments(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
 
         data = BlogDetailOutData(
             detail=BlogDetailData(
@@ -428,8 +429,8 @@ class CommentAPI(APIView):
             return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
-        obj = CommentDomain.get(type_no=data["type_no"], object_id=data["object_id"], author_id=author.id)
-        return DataResponse(obj, HTTP_200_OK)
+        comments = get_comments(type_no=data["type_no"], object_id=data["object_id"], author_id=author.id)
+        return DataResponse(comments, HTTP_200_OK)
 
     def post(self, request) -> DataResponse:
         author = get_user(request)
@@ -447,7 +448,7 @@ class CommentAPI(APIView):
             parent_id=data.get("parent_id", None),
         )
 
-        data = CommentDomain.create(comment_data)
+        data = create_comment(comment_data)
         return DataResponse(data, HTTP_201_CREATED)
 
     def put(self, request, id: int) -> DataResponse:
