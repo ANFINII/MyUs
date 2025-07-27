@@ -379,7 +379,7 @@ class ChatAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
-        messages = get_messages(chat_id=obj.id, is_parent=True)
+        messages = get_messages(chat_id=obj.id)
 
         data = ChatDetailOutData(
             detail=ChatDetailData(
