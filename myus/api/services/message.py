@@ -4,7 +4,7 @@ from api.utils.functions.user import get_author
 
 
 def get_messages(chat_id: int) -> list[MessageData]:
-    objs = MessageDomain.get_messages(chat_id)
+    objs = MessageDomain.bulk_get(chat_id, is_parent=True)
     data = [
         MessageData(
             id=m.id,
@@ -18,7 +18,7 @@ def get_messages(chat_id: int) -> list[MessageData]:
 
 
 def get_replys(chat_id: int) -> list[MessageReplyData]:
-    objs = MessageDomain.get_replys(chat_id)
+    objs = MessageDomain.bulk_get(chat_id, is_parent=False)
     data = [
         MessageReplyData(
             id=m.id,
