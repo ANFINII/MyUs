@@ -21,7 +21,6 @@ from api.services.comment import create_comment, get_comments
 from api.services.message import get_messages
 from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats
 from api.services.user import get_user
-from api.utils.constant import model_media_comment_dict
 from api.utils.decorators.auth import auth_user
 from api.utils.enum.response import ApiResponse
 from api.utils.enum.index import CommentType
@@ -380,7 +379,7 @@ class ChatAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
-        messages = get_messages(chat_id=obj.id)
+        messages = get_messages(chat_id=obj.id, is_parent=True)
 
         data = ChatDetailOutData(
             detail=ChatDetailData(
