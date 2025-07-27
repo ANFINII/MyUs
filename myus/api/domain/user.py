@@ -34,6 +34,15 @@ class UserDomain:
 
         return user
 
+    @classmethod
+    def update_follower_count(cls, user: User, count: int) -> None:
+        user.follower_count = count
+        user.save(update_fields=["follower_count"])
+
+    @classmethod
+    def update_following_count(cls, user: User, count: int) -> None:
+        user.following_count = count
+        user.save(update_fields=["following_count"])
 
     # @classmethod
     # def bulk_get(cls, search: str | None = None, limit: int = 100, sort_option: SortOption | None = None) -> list[AuthorData]:
