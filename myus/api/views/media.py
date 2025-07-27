@@ -16,9 +16,9 @@ from api.types.data.media import BlogDetailOutData, BlogDetailData
 from api.types.data.media import PictureDetailOutData, PictureDetailData
 from api.types.data.media import ChatDetailOutData, ChatDetailData
 from api.domain.comment import CommentDomain
-from api.domain.message import MessageDomain
 from api.domain.media import MediaDomain
 from api.services.comment import create_comment, get_comments
+from api.services.message import get_messages
 from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats
 from api.services.user import get_user
 from api.utils.constant import model_media_comment_dict
@@ -380,7 +380,7 @@ class ChatAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
-        messages = MessageDomain.get_messages(chat_id=obj.id)
+        messages = get_messages(chat_id=obj.id)
 
         data = ChatDetailOutData(
             detail=ChatDetailData(
