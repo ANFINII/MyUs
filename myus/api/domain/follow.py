@@ -9,6 +9,12 @@ from app.modules.search import get_q_list
 from api.types.data.follow import FollowOutData
 
 
+@dataclass(frozen=True, slots=True)
+class FilterOption:
+    follower_id: int = 0
+    following_id: int = 0
+
+
 class SortType(Enum):
     CREATED = "created"
 
@@ -20,6 +26,10 @@ class SortOption:
 
 
 class FollowDomain:
+    @classmethod
+    def get(cls, follower: User, following: User) -> Follow | None:
+        return Follow.objects.filter(follower=follower, following=following).first()
+
     @classmethod
     def get_follows(cls, user_id: int, search: str | None, limit: int) -> list[Follow]:
         field_name = SortType.CREATED.value
@@ -53,28 +63,8 @@ class FollowDomain:
         return qs.order_by(order_by_key)[:limit]
 
     @classmethod
-    def create(cls, follower: User, following: User) -> FollowOutData:
-        if follower == following:
-            return FollowOutData(is_follow=False, follower_count=following.follower_count)
-
-        follow = Follow.objects.filter(follower=follower, following=following).first()
-
-        if follow:
-            follow.delete()
-            is_follow = False
-        else:
-            follow = Follow.objects.create(follower=follower, following=following)
-            is_follow = True
-
-        following_count = Follow.objects.filter(follower=follower).count()
-        follower.following_count = following_count
-        follower.save(update_fields=["following_count"])
-
-        follower_count = Follow.objects.filter(following=following).count()
-        following.follower_count = follower_count
-        following.save(update_fields=["follower_count"])
-
-        return FollowOutData(is_follow=is_follow, follower_count=follower_count)
+    def create(cls, follower: User, following: User) -> None:
+        Follow.objects.create(follower=follower, following=following)
 
     @classmethod
     def delete(cls, follower: User, following: User) -> None:
@@ -92,3 +82,12 @@ class FollowDomain:
         follower_count = Follow.objects.filter(following=following).count()
         following.follower_count = follower_count
         following.save(update_fields=["follower_count"])
+
+    @classmethod
+    def count(cls, filter: FilterOption) -> int:
+        q_list: list[Q] = []
+        if filter.follower_id:
+            q_list.append(Q(follower_id=filter.follower_id))
+        if filter.following_id:
+            q_list.append(Q(following_id=filter.following_id))
+        return Follow.objects.filter(*q_list).count()

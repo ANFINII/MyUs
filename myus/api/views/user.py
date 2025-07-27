@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from api.models import SearchTag
 from api.domain.follow import FollowDomain
 from api.domain.user import UserDomain
-from api.services.follow import get_follows, get_followers
+from api.services.follow import create_follow, get_follows, get_followers
 from api.services.notification import get_notification, get_content_object
 from api.services.user import get_user
 from api.types.data.user import UserData
@@ -51,17 +51,17 @@ class FollowAPI(APIView):
     def post(self, request) -> DataResponse:
         user = get_user(request)
         data = request.data
-        nickname = data.get("nickname")
-        following = UserDomain.get(nickname=nickname)
-        data = FollowDomain.create(user, following)
+        ulid = data.get("ulid")
+        following = UserDomain.get(ulid=ulid)
+        data = create_follow(user, following)
         return DataResponse(data, status=HTTP_201_CREATED)
 
     @auth_user
     def delete(self, request) -> DataResponse:
         user = get_user(request)
         data = request.data
-        nickname = data["nickname"]
-        following = UserDomain.get(nickname=nickname)
+        ulid = data["ulid"]
+        following = UserDomain.get(ulid=ulid)
         FollowDomain.delete(user, following)
         return DataResponse(None, status=HTTP_204_NO_CONTENT)
 
