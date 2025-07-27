@@ -6,8 +6,7 @@ from django.db.models import Q
 from api.models.users import Follow
 from api.models.user import User
 from app.modules.search import get_q_list
-from api.types.data.follow import FollowUserData, FollowOutData
-from api.utils.functions.index import create_url
+from api.types.data.follow import FollowOutData
 
 
 class SortType(Enum):
@@ -22,7 +21,7 @@ class SortOption:
 
 class FollowDomain:
     @classmethod
-    def get_follows(cls, user_id: int, search: str | None = None, limit: int = 100) -> list[FollowUserData]:
+    def get_follows(cls, user_id: int, search: str | None, limit: int) -> list[Follow]:
         field_name = SortType.CREATED.value
         order_by_key = field_name if SortOption().is_asc else f'-{field_name}'
         qs = Follow.objects.filter(follower_id=user_id).select_related("following__profile", "following__mypage").distinct()
@@ -35,20 +34,10 @@ class FollowDomain:
             ])
             qs = qs.filter(query)
 
-        objs = qs.order_by(order_by_key)[:limit]
-
-        return [
-            FollowUserData(
-                avatar=create_url(obj.following.avatar.url),
-                nickname=obj.following.nickname,
-                introduction=obj.following.profile.introduction,
-                follower_count=obj.following.mypage.follower_count,
-                following_count=obj.following.mypage.following_count,
-            ) for obj in objs
-        ]
+        return qs.order_by(order_by_key)[:limit]
 
     @classmethod
-    def get_followers(cls, user_id: int, search: str | None = None, limit: int = 100) -> list[FollowUserData]:
+    def get_followers(cls, user_id: int, search: str | None, limit: int) -> list[Follow]:
         field_name = SortType.CREATED.value
         order_by_key = field_name if SortOption().is_asc else f'-{field_name}'
         qs = Follow.objects.filter(following_id=user_id).select_related("follower__profile", "follower__mypage").distinct()
@@ -61,17 +50,7 @@ class FollowDomain:
             ])
             qs = qs.filter(search_query)
 
-        objs = qs.order_by(order_by_key)[:limit]
-
-        return [
-            FollowUserData(
-                avatar=create_url(obj.follower.avatar.url),
-                nickname=obj.follower.nickname,
-                introduction=obj.follower.profile.introduction,
-                follower_count=obj.follower.mypage.follower_count,
-                following_count=obj.follower.mypage.following_count,
-            ) for obj in objs
-        ]
+        return qs.order_by(order_by_key)[:limit]
 
     @classmethod
     def create(cls, follower: User, following: User) -> FollowOutData:

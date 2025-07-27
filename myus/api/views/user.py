@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from api.models import SearchTag
 from api.domain.follow import FollowDomain
 from api.domain.user import UserDomain
+from api.services.follow import get_follows, get_followers
 from api.services.notification import get_notification, get_content_object
 from api.services.user import get_user
 from api.types.data.user import UserData
@@ -43,7 +44,7 @@ class FollowAPI(APIView):
     def get(self, request) -> DataResponse:
         user = get_user(request)
         search = request.query_params.get("search")
-        data = FollowDomain.get_follows(user.id, search, 100)
+        data = get_follows(user.id, search, 100)
         return DataResponse(data, HTTP_200_OK)
 
     @auth_user
@@ -70,7 +71,7 @@ class FollowerAPI(APIView):
     def get(self, request) -> DataResponse:
         user = get_user(request)
         search = request.query_params.get("search")
-        data = FollowDomain.get_followers(user.id, search, 100)
+        data = get_followers(user.id, search, 100)
         return DataResponse(data, HTTP_200_OK)
 
 
