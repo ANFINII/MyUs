@@ -22,6 +22,7 @@ class Follow(models.Model):
     """Follow"""
     follower  = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
+    is_follow = models.BooleanField(default=True)
     created   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
