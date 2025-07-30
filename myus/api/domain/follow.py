@@ -39,6 +39,7 @@ class FollowDomain:
         if search:
             q_list = get_q_list(search)
             query = reduce(and_, [
+                Q(is_follow=True) |
                 Q(following__nickname__icontains=q) |
                 Q(following__profile__introduction__icontains=q) for q in q_list
             ])
@@ -55,6 +56,7 @@ class FollowDomain:
         if search:
             q_list = get_q_list(search)
             search_query = reduce(and_, [
+                Q(is_follow=True) |
                 Q(follower__nickname__icontains=q) |
                 Q(follower__profile__introduction__icontains=q) for q in q_list
             ])
@@ -64,30 +66,18 @@ class FollowDomain:
 
     @classmethod
     def create(cls, follower: User, following: User) -> None:
-        Follow.objects.create(follower=follower, following=following)
+        Follow.objects.create(follower=follower, following=following, is_follow=True)
 
     @classmethod
-    def delete(cls, follower: User, following: User) -> None:
-        follow = Follow.objects.filter(follower=follower, following=following).first()
-
-        if not follow:
-            return None
-
-        follow.delete()
-
-        following_count = Follow.objects.filter(follower=follower).count()
-        follower.following_count = following_count
-        follower.save(update_fields=["following_count"])
-
-        follower_count = Follow.objects.filter(following=following).count()
-        following.follower_count = follower_count
-        following.save(update_fields=["follower_count"])
+    def update(cls, follow: Follow, is_follow: bool) -> None:
+        follow.is_follow = is_follow
+        follow.save(update_fields=["is_follow"])
 
     @classmethod
     def count(cls, filter: FilterOption) -> int:
         q_list: list[Q] = []
         if filter.follower_id:
-            q_list.append(Q(follower_id=filter.follower_id))
+            q_list.append(Q(follower_id=filter.follower_id, is_follow=True))
         if filter.following_id:
-            q_list.append(Q(following_id=filter.following_id))
+            q_list.append(Q(following_id=filter.following_id, is_follow=True))
         return Follow.objects.filter(*q_list).count()
