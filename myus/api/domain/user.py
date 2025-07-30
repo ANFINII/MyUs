@@ -39,11 +39,8 @@ class UserDomain:
         if not kwargs:
             return
 
-        for field, value in kwargs.items():
-            setattr(user.mypage, field, value)
-
-        fields = list(kwargs.keys())
-        user.mypage.save(update_fields=fields)
+        [setattr(user.mypage, key, value) for key, value in kwargs.items()]
+        user.mypage.save(update_fields=list(kwargs.keys()))
 
     # @classmethod
     # def bulk_get(cls, search: str | None = None, limit: int = 100, sort_option: SortOption | None = None) -> list[AuthorData]:
