@@ -34,12 +34,11 @@ class FollowDomain:
     def get_follows(cls, user_id: int, search: str | None, limit: int) -> list[Follow]:
         field_name = SortType.CREATED.value
         order_by_key = field_name if SortOption().is_asc else f'-{field_name}'
-        qs = Follow.objects.filter(follower_id=user_id).select_related("following__profile", "following__mypage").distinct()
+        qs = Follow.objects.filter(follower_id=user_id, is_follow=True).select_related("following__profile", "following__mypage").distinct()
 
         if search:
             q_list = get_q_list(search)
             query = reduce(and_, [
-                Q(is_follow=True) |
                 Q(following__nickname__icontains=q) |
                 Q(following__profile__introduction__icontains=q) for q in q_list
             ])
@@ -51,12 +50,11 @@ class FollowDomain:
     def get_followers(cls, user_id: int, search: str | None, limit: int) -> list[Follow]:
         field_name = SortType.CREATED.value
         order_by_key = field_name if SortOption().is_asc else f'-{field_name}'
-        qs = Follow.objects.filter(following_id=user_id).select_related("follower__profile", "follower__mypage").distinct()
+        qs = Follow.objects.filter(following_id=user_id, is_follow=True).select_related("follower__profile", "follower__mypage").distinct()
 
         if search:
             q_list = get_q_list(search)
             search_query = reduce(and_, [
-                Q(is_follow=True) |
                 Q(follower__nickname__icontains=q) |
                 Q(follower__profile__introduction__icontains=q) for q in q_list
             ])

@@ -35,10 +35,12 @@ class UserDomain:
         return user
 
     @classmethod
-    def update_count(cls, user: User, follower_count: int, following_count: int) -> None:
-        user.mypage.follower_count = follower_count
-        user.mypage.following_count = following_count
-        user.mypage.save(update_fields=["follower_count", "following_count"])
+    def update_mypage(cls, user: User, **kwargs) -> None:
+        if not kwargs:
+            return
+
+        [setattr(user.mypage, key, value) for key, value in kwargs.items()]
+        user.mypage.save(update_fields=list(kwargs.keys()))
 
     # @classmethod
     # def bulk_get(cls, search: str | None = None, limit: int = 100, sort_option: SortOption | None = None) -> list[AuthorData]:
