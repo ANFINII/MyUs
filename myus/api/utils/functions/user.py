@@ -18,7 +18,7 @@ def get_author(author: User) -> AuthorData:
 def get_media_user(obj: MediaModelType, user: User | None) -> MediaUserData:
     data = MediaUserData(
         is_like=obj.like.filter(id=user.id).exists() if user else False,
-        is_follow=Follow.objects.filter(follower=user.id, following=obj.author).exists() if user else False,
+        is_follow=Follow.objects.filter(follower=user.id, following=obj.author, is_follow=True).exists() if user else False,
     )
     return data
 

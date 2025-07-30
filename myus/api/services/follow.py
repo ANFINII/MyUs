@@ -1,9 +1,9 @@
+from django.db import transaction
 from api.domain.follow import FilterOption, FollowDomain
 from api.domain.user import UserDomain
 from api.types.data.follow import FollowOutData, FollowUserData
 from api.utils.functions.index import create_url
 from api.models.user import User
-from api.models.users import Follow
 
 
 def get_follows(user_id: int, search: str | None, limit: int) -> list[FollowUserData]:
@@ -32,13 +32,34 @@ def get_followers(user_id: int, search: str | None, limit: int) -> list[FollowUs
     ]
 
 
-def create_follow(follower: User, following: User) -> FollowOutData:
-    FollowDomain.create(follower, following)
+def upsert_follow(follower: User, following: User) -> FollowOutData:
+    follow = FollowDomain.get(follower, following)
+    with transaction.atomic():
+        if not follow:
+            FollowDomain.create(follower, following)
+        elif not follow.is_follow:
+            FollowDomain.update(follow, is_follow=True)
 
-    following_count = FollowDomain.count(FilterOption(follower_id=follower.id))
-    UserDomain.update_following_count(follower, following_count)
+        update_count(follower.id, following.id)
 
-    follower_count = FollowDomain.count(FilterOption(following_id=following.id))
-    UserDomain.update_follower_count(following, follower_count)
 
-    return FollowOutData(is_follow=True, follower_count=follower_count)
+def delete_follow(follower: User, following: User) -> FollowOutData:
+    follow = FollowDomain.get(follower, following)
+    with transaction.atomic():
+        FollowDomain.update(follow, is_follow=False)
+        update_count(follower.id, following.id)
+
+
+def update_count(follower_id: int, following_id: int) -> None:
+    follower = UserDomain.get(id=follower_id)
+    following = UserDomain.get(id=following_id)
+
+    if follower:
+        follower_count = follower.mypage.follower_count
+        following_count = FollowDomain.count(FilterOption(follower_id=follower_id))
+        UserDomain.update_count(follower, follower_count, following_count)
+
+    if following:
+        follower_count = FollowDomain.count(FilterOption(following_id=following_id))
+        following_count = following.mypage.following_count
+        UserDomain.update_count(following, follower_count, following_count)
