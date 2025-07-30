@@ -1,9 +1,9 @@
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
 from api.models import SearchTag
 from api.domain.user import UserDomain
-from api.services.follow import get_follows, get_followers, upsert_follow, delete_follow
+from api.services.follow import get_follows, get_followers, upsert_follow
 from api.services.notification import get_notification, get_content_object
 from api.services.user import get_user
 from api.types.data.user import UserData
@@ -51,18 +51,10 @@ class FollowAPI(APIView):
         user = get_user(request)
         data = request.data
         ulid = data.get("ulid")
+        is_follow = data.get("is_follow")
         following = UserDomain.get(ulid=ulid)
-        data = upsert_follow(user, following)
+        data = upsert_follow(user, following, is_follow)
         return DataResponse(data, status=HTTP_201_CREATED)
-
-    @auth_user
-    def delete(self, request) -> DataResponse:
-        user = get_user(request)
-        data = request.data
-        ulid = data["ulid"]
-        following = UserDomain.get(ulid=ulid)
-        delete_follow(user, following)
-        return DataResponse(None, status=HTTP_204_NO_CONTENT)
 
 
 class FollowerAPI(APIView):

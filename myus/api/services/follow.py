@@ -32,34 +32,17 @@ def get_followers(user_id: int, search: str | None, limit: int) -> list[FollowUs
     ]
 
 
-def upsert_follow(follower: User, following: User) -> FollowOutData:
+def upsert_follow(follower: User, following: User, is_follow: bool) -> FollowOutData:
     follow = FollowDomain.get(follower, following)
     with transaction.atomic():
         if not follow:
             FollowDomain.create(follower, following)
-        elif not follow.is_follow:
-            FollowDomain.update(follow, is_follow=True)
+        else:
+            FollowDomain.update(follow, is_follow=is_follow)
 
-        update_count(follower.id, following.id)
+        follower_count = FollowDomain.count(FilterOption(following_id=following.id))
+        following_count = FollowDomain.count(FilterOption(follower_id=follower.id))
+        UserDomain.update_mypage(follower, following_count=following_count)
+        UserDomain.update_mypage(following, follower_count=follower_count)
 
-
-def delete_follow(follower: User, following: User) -> FollowOutData:
-    follow = FollowDomain.get(follower, following)
-    with transaction.atomic():
-        FollowDomain.update(follow, is_follow=False)
-        update_count(follower.id, following.id)
-
-
-def update_count(follower_id: int, following_id: int) -> None:
-    follower = UserDomain.get(id=follower_id)
-    following = UserDomain.get(id=following_id)
-
-    if follower:
-        follower_count = follower.mypage.follower_count
-        following_count = FollowDomain.count(FilterOption(follower_id=follower_id))
-        UserDomain.update_count(follower, follower_count, following_count)
-
-    if following:
-        follower_count = FollowDomain.count(FilterOption(following_id=following_id))
-        following_count = following.mypage.following_count
-        UserDomain.update_count(following, follower_count, following_count)
+    return FollowOutData(is_follow=is_follow, follower_count=follower_count)
