@@ -1,10 +1,10 @@
-import { ChangeEvent, useState, useEffect } from 'react'
+import { ChangeEvent, useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { Author, FollowIn, MediaUser } from 'types/internal/media'
 import { postComment } from 'api/internal/media/comment'
-import { deleteFollow, postFollow } from 'api/internal/media/detail'
+import { postFollow } from 'api/internal/media/detail'
 import { CommentType, FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap } from 'utils/constants/map'
 import { capitalize, isActive } from 'utils/functions/common'
@@ -22,6 +22,14 @@ import CommentInput from 'components/widgets/Comment/Input/Input'
 import FollowDeleteModal from 'components/widgets/Modal/FollowDelete'
 import View from 'components/widgets/View'
 import style from './Common.module.scss'
+
+export interface MediaDetailState {
+  isLike: boolean
+  isFollow: boolean
+  followerCount: number
+  text: string
+  comments: Comment[]
+}
 
 interface Props {
   media: {
@@ -42,40 +50,51 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const { media, handleToast } = props
   const { title, content, read, like, created, author, mediaUser } = media
 
+  const initFormState: MediaDetailState = useMemo(
+    () => ({
+      isLike: mediaUser.isLike,
+      isFollow: mediaUser.isFollow,
+      followerCount: author.followerCount,
+      text: '',
+      comments: media.comments,
+    }),
+    [mediaUser, author, media],
+  )
+
   const router = useRouter()
   const { user } = useUser()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isLike, setIsLike] = useState<boolean>(mediaUser.isLike)
-  const [isFollow, setIsFollow] = useState<boolean>(mediaUser.isFollow)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isContentView, setIsContentView] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
-  const [text, setText] = useState<string>('')
-  const [comments, setComments] = useState<Comment[]>(media.comments)
-  useEffect(() => setComments(media.comments), [media.comments])
+  const [formState, setFormState] = useState<MediaDetailState>(initFormState)
+  useEffect(() => setFormState(initFormState), [router.query.id, initFormState])
 
+  const { isLike, isFollow, followerCount, text, comments } = formState
   const isFallowDisable = !user || user.ulid === author.ulid
-  const handleLike = () => setIsLike(!isLike)
   const handleModal = () => setIsModal(!isModal)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
-  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setText(e.target.value)
+  const handleLike = () => setFormState((prev) => ({ ...prev, isLike: !prev.isLike }))
+  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setFormState((prev) => ({ ...prev, text: e.target.value }))
+
+  const fetchFollow = async (isFollow: boolean) => {
+    const request: FollowIn = { ulid: author.ulid, isFollow }
+    const ret = await postFollow(request)
+    if (ret.isErr()) return handleToast(FetchError.Post, true)
+    const data = ret.value
+    setFormState((prev) => ({ ...prev, isFollow: data.isFollow, followerCount: data.followerCount }))
+  }
 
   const handleFollow = async () => {
-    const request: FollowIn = { ulid: author.ulid }
-    const ret = await postFollow(request)
-    if (ret.isErr()) handleToast(FetchError.Post, true)
+    fetchFollow(true)
     handleToast('フォローしました', false)
-    setIsFollow(true)
   }
 
   const handleDeleteFollow = async () => {
-    const request: FollowIn = { ulid: author.ulid }
-    const ret = await deleteFollow(request)
-    if (ret.isErr()) handleToast(FetchError.Post, true)
-    handleToast('フォローを解除しました', false)
-    setIsFollow(false)
+    fetchFollow(false)
     handleModal()
+    handleToast('フォローを解除しました', false)
   }
 
   const handleMediaComment = async () => {
@@ -83,16 +102,15 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
     const typeName = capitalize(String(router.pathname.split('/')[2]))
     const typeNo = commentTypeNoMap[typeName as CommentType]
     const objectId = Number(router.query.id)
-    const request: CommnetIn = { text, typeNo, typeName, objectId }
+    const request: CommnetIn = { text, typeName, typeNo, objectId }
     const ret = await postComment(request)
     if (ret.isErr()) {
       setIsLoading(false)
       handleToast(FetchError.Post, true)
       return
     }
-    setComments([ret.value, ...comments])
+    setFormState((prev) => ({ ...prev, text: '', comments: [ret.value, ...prev.comments] }))
     setIsLoading(false)
-    setText('')
   }
 
   return (
@@ -119,7 +137,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
             <VStack gap="2">
               <p className="fs_14">{author.nickname}</p>
               <p className="fs_14 text_sub">
-                登録者数<span className="ml_8">{author.followerCount}</span>
+                登録者数<span className="ml_8">{followerCount}</span>
               </p>
             </VStack>
           </HStack>
@@ -145,7 +163,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
         <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
         <VStack gap="10" className={clsx(style.comment_aria, isCommentView && style.active)}>
           {comments.map((comment) => (
-            <CommentContent key={comment.id} comment={comment} user={user} setComments={setComments} handleToast={handleToast} />
+            <CommentContent key={comment.id} comment={comment} user={user} setFormState={setFormState} handleToast={handleToast} />
           ))}
         </VStack>
       </VStack>

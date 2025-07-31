@@ -27,7 +27,7 @@ class CommentData:
 class CommentInData:
     author: AuthorData
     text: str
-    type_no: CommentTypeNo
     type_name: CommentType
+    type_no: CommentTypeNo
     object_id: int
     parent_id: int | None
