@@ -125,6 +125,12 @@ export interface ChatIn {
 
 export interface FollowIn {
   ulid: string
+  isFollow: boolean
+}
+
+export interface FollowOut {
+  isFollow: boolean
+  followerCount: number
 }
 
 export interface MediaDetail {

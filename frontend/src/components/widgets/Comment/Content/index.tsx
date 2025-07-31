@@ -1,4 +1,4 @@
-import { useState, useRef, SetStateAction, ChangeEvent } from 'react'
+import { useState, useRef, SetStateAction, ChangeEvent, Dispatch } from 'react'
 import router from 'next/router'
 import clsx from 'clsx'
 import { capitalize } from 'lodash'
@@ -13,6 +13,7 @@ import IconEdit from 'components/parts/Icon/Edit'
 import IconTrash from 'components/parts/Icon/Trash'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import { MediaDetailState } from 'components/widgets/Media/Detail/Common'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import View from 'components/widgets/View'
 import CommentAction from '../Action'
@@ -24,12 +25,12 @@ import CommentUpdate from '../Update'
 export interface Props {
   comment: Comment
   user: UserMe
-  setComments: (value: SetStateAction<Comment[]>) => void
+  setFormState: Dispatch<SetStateAction<MediaDetailState>>
   handleToast: (content: string, isError: boolean) => void
 }
 
 export default function CommentContent(props: Props): JSX.Element {
-  const { comment, user, setComments, handleToast } = props
+  const { comment, user, setFormState, handleToast } = props
   const { id, author, text, isCommentLike, totalLike } = comment
   const { isActive, ulid } = user
 
@@ -54,30 +55,30 @@ export default function CommentContent(props: Props): JSX.Element {
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
   const handleReply = (e: ChangeEvent<HTMLTextAreaElement>): void => setReplyText(e.target.value)
 
-  const handleLike = (commentId: number) => async (): Promise<void> => {
+  const handleLike = async (): Promise<void> => {
     if (isLike) {
-      const ret = await deleteCommentLike(commentId)
+      const ret = await deleteCommentLike(id)
       if (ret.isErr()) return
     } else {
-      const ret = await postCommentLike(commentId)
+      const ret = await postCommentLike(id)
       if (ret.isErr()) return
     }
     setIsLike(!isLike)
   }
 
   const handleEdit = () => {
-    if (!isEdit) {
-      setCommentText(text)
-    }
+    if (!isEdit) setCommentText(text)
     handleEditToggle()
   }
 
-  const handleMediaReply = (parentId: number, text: string) => async () => {
+  const handleMediaReply = async (): Promise<void> => {
     setIsLoading(true)
+    const text = replyText
     const typeName = capitalize(String(router.pathname.split('/')[2]))
     const typeNo = commentTypeNoMap[typeName as CommentType]
     const objectId = Number(router.query.id)
-    const request: CommnetIn = { text, typeNo, typeName, objectId, parentId }
+    const parentId = id
+    const request: CommnetIn = { text, typeName, typeNo, objectId, parentId }
     const ret = await postComment(request)
     if (ret.isErr()) {
       setIsLoading(false)
@@ -89,28 +90,28 @@ export default function CommentContent(props: Props): JSX.Element {
     setReplyText('')
   }
 
-  const handleUpdate = (commentId: number, text: string) => async () => {
+  const handleUpdate = async (): Promise<void> => {
     setIsLoading(true)
-    const ret = await putComment(commentId, { text })
+    const ret = await putComment(id, { text: commentText })
     if (ret.isErr()) {
       handleToast(FetchError.Put, true)
       setIsLoading(false)
       return
     }
-    setComments((prev) => prev.map((comment) => (comment.id === commentId ? { ...comment, text } : comment)))
+    setFormState((prev) => ({ ...prev, comments: prev.comments.map((c) => (c.id === id ? { ...c, text } : c)) }))
     setIsLoading(false)
     handleEditToggle()
   }
 
-  const handleCommentDelete = (commentId: number) => async () => {
+  const handleCommentDelete = async (): Promise<void> => {
     setIsLoading(true)
-    const ret = await deleteComment(commentId)
+    const ret = await deleteComment(id)
     if (ret.isErr()) {
       setIsLoading(false)
       handleToast(FetchError.Delete, true)
       return
     }
-    setComments((prev) => prev.filter((comment) => comment.id !== commentId))
+    setFormState((prev) => ({ ...prev, comments: prev.comments.filter((c) => c.id !== id) }))
     handleModal()
   }
 
@@ -130,21 +131,17 @@ export default function CommentContent(props: Props): JSX.Element {
         <HStack gap="4" className="w_full">
           <AvatarLink src={author.avatar} ulid={author.ulid} nickname={author.nickname} />
           <VStack gap="4" className="w_full">
-            {!isEdit ? (
-              <CommentInfo comment={comment} />
-            ) : (
-              <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate(id, commentText)} onCancel={handleEditToggle} />
-            )}
+            {!isEdit ? <CommentInfo comment={comment} /> : <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
             <HStack gap="4" className="fs_12">
-              <CountLike isLike={isLike} disable={!isActive} like={totalLike} onClick={handleLike(id)} />
+              <CountLike isLike={isLike} disable={!isActive} like={totalLike} onClick={handleLike} />
               <View isView={isReplyView} onView={handleReplyView} size="s" color="grey" content="返信" />
               <View isView={isThreadView} onView={handleThreadView} size="s" color="grey" content={`スレッド ${replys.length || 0} 件`} />
             </HStack>
-            <ReplyInput user={user} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleMediaReply(id, replyText)} onCancel={handleReplyCancel} />
+            <ReplyInput user={user} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleMediaReply} onCancel={handleReplyCancel} />
           </VStack>
         </HStack>
         <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
-        <CommentDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleCommentDelete(id)} comment={comment} />
+        <CommentDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleCommentDelete} comment={comment} />
       </HStack>
 
       {isThreadView && (

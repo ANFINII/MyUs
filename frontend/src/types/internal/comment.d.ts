@@ -23,8 +23,8 @@ export interface Reply {
 
 export interface CommnetIn {
   text: string
-  typeNo: CommentTypeNo
   typeName: CommentType
+  typeNo: CommentTypeNo
   objectId: number
   parentId?: number
 }
