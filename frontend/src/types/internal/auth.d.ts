@@ -94,6 +94,16 @@ export interface Follow {
   followingCount: number
 }
 
+export interface FollowIn {
+  ulid: string
+  isFollow: boolean
+}
+
+export interface FollowOut {
+  isFollow: boolean
+  followerCount: number
+}
+
 export interface SearchTagOut {
   sequence: number
   name: string
