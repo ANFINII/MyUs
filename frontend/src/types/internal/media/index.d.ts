@@ -1,5 +1,3 @@
-import { Comment } from './comment'
-
 export interface Author {
   avatar: string
   ulid: string
@@ -121,79 +119,4 @@ export interface ChatIn {
   title: string
   content: string
   period: string
-}
-
-export interface FollowIn {
-  ulid: string
-  isFollow: boolean
-}
-
-export interface FollowOut {
-  isFollow: boolean
-  followerCount: number
-}
-
-export interface MediaDetail {
-  id: number
-  title: string
-  content: string
-  like: number
-  read: number
-  publish: boolean
-  created: Date
-  updated: Date
-  author: Author
-  mediaUser: MediaUser
-}
-
-export interface VideoDetail extends Video {
-  comments: Comment[]
-  hashtags: string[]
-}
-
-export interface MusicDetail extends Music {
-  comments: Comment[]
-  hashtags: string[]
-}
-
-export interface ComicDetail extends Comic {
-  comments: Comment[]
-  hashtags: string[]
-}
-
-export interface PictureDetail extends Picture {
-  comments: Comment[]
-  hashtags: string[]
-}
-
-export interface BlogDetail extends MediaDetail {
-  image: str
-  richtext: str
-  comments: Comment[]
-  hashtags: string[]
-}
-
-export interface VideoDetailOut {
-  detail: VideoDetail
-  list: Video[]
-}
-
-export interface MusicDetailOut {
-  detail: MusicDetail
-  list: Music[]
-}
-
-export interface ComicDetailOut {
-  detail: ComicDetail
-  list: Comic[]
-}
-
-export interface PictureDetailOut {
-  detail: PictureDetail
-  list: Picture[]
-}
-
-export interface BlogDetailOut {
-  detail: BlogDetail
-  list: Blog[]
 }

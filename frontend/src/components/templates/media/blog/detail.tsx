@@ -1,4 +1,4 @@
-import { BlogDetailOut } from 'types/internal/media'
+import { BlogDetailOut } from 'types/internal/media/detail'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
