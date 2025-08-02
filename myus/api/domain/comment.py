@@ -41,9 +41,9 @@ class CommentDomain:
        return Comment.objects.create(**asdict(comment_data))
 
     @classmethod
-    def update(cls, id: int, text: str) -> None:
-        Comment.objects.filter(id=id).update(text=text, updated=timezone.now())
-
-    @classmethod
-    def delete(cls, id: int) -> None:
-        Comment.objects.filter(id=id).update(deleted=True, updated=timezone.now())
+    def update(cls, id: int, **kwargs) -> None:
+        if not kwargs:
+            return
+        
+        kwargs["updated"] = timezone.now()
+        Comment.objects.filter(id=id).update(**kwargs)

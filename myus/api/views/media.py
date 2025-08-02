@@ -464,5 +464,5 @@ class CommentAPI(APIView):
         if not author:
             return ApiResponse.UNAUTHORIZED.run()
 
-        CommentDomain.delete(id)
+        CommentDomain.update(id, deleted=True)
         return DataResponse(None, HTTP_200_OK)
