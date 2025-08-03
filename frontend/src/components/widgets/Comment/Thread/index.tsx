@@ -39,9 +39,9 @@ export default function CommentThread(props: Props): JSX.Element {
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
   const handleEditToggle = () => setIsEdit(!isEdit)
-  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
+  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setCommentText(e.target.value)
 
-  const handleLike = async (): Promise<void> => {
+  const handleLike = async () => {
     if (isLike) {
       const ret = await deleteCommentLike(id)
       if (ret.isErr()) return
@@ -52,12 +52,12 @@ export default function CommentThread(props: Props): JSX.Element {
     setIsLike(!isLike)
   }
 
-  const handleEdit = (): void => {
+  const handleEdit = () => {
     if (!isEdit) setCommentText(text)
     handleEditToggle()
   }
 
-  const handleUpdate = async (): Promise<void> => {
+  const handleUpdate = async () => {
     setIsLoading(true)
     const text = commentText
     const ret = await putComment(id, { text })
@@ -71,7 +71,7 @@ export default function CommentThread(props: Props): JSX.Element {
     handleEditToggle()
   }
 
-  const handleReplyDelete = async (): Promise<void> => {
+  const handleReplyDelete = async () => {
     setIsLoading(true)
     const ret = await deleteComment(id)
     if (ret.isErr()) {

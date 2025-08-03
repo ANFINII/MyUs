@@ -18,7 +18,7 @@ export default function SearchTagBar(): JSX.Element {
   const [searchTags, setSearchTags] = useState<SearchTagOut[]>([])
 
   useEffect(() => {
-    const fetchSearchTag = async (): Promise<void> => {
+    const fetchSearchTag = async () => {
       const ret = await getSearchTag()
       if (ret.isErr()) return
       const data = ret.value

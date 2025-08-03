@@ -52,10 +52,10 @@ export default function CommentContent(props: Props): JSX.Element {
   const handleEditToggle = () => setIsEdit(!isEdit)
   const handleReplyView = () => setIsReplyView(!isReplyView)
   const handleThreadView = () => setIsThreadView(!isThreadView)
-  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
-  const handleReply = (e: ChangeEvent<HTMLTextAreaElement>): void => setReplyText(e.target.value)
+  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setCommentText(e.target.value)
+  const handleReply = (e: ChangeEvent<HTMLTextAreaElement>) => setReplyText(e.target.value)
 
-  const handleLike = async (): Promise<void> => {
+  const handleLike = async () => {
     if (isLike) {
       const ret = await deleteCommentLike(id)
       if (ret.isErr()) return
@@ -66,12 +66,12 @@ export default function CommentContent(props: Props): JSX.Element {
     setIsLike(!isLike)
   }
 
-  const handleEdit = (): void => {
+  const handleEdit = () => {
     if (!isEdit) setCommentText(text)
     handleEditToggle()
   }
 
-  const handleMediaReply = async (): Promise<void> => {
+  const handleMediaReply = async () => {
     setIsLoading(true)
     const text = replyText
     const typeName = capitalize(String(router.pathname.split('/')[2]))
@@ -90,7 +90,7 @@ export default function CommentContent(props: Props): JSX.Element {
     setReplyText('')
   }
 
-  const handleUpdate = async (): Promise<void> => {
+  const handleUpdate = async () => {
     setIsLoading(true)
     const text = commentText
     const ret = await putComment(id, { text })
@@ -104,7 +104,7 @@ export default function CommentContent(props: Props): JSX.Element {
     handleEditToggle()
   }
 
-  const handleCommentDelete = async (): Promise<void> => {
+  const handleCommentDelete = async () => {
     setIsLoading(true)
     const ret = await deleteComment(id)
     if (ret.isErr()) {
