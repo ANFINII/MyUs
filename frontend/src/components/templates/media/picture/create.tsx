@@ -29,7 +29,11 @@ export default function PictureCreate(): JSX.Element {
     if (!isRequiredCheck({ title, content, image })) return
     setIsLoading(true)
     const ret = await postPictureCreate(values)
-    if (ret.isErr()) return handleToast(FetchError.Post, true)
+    if (ret.isErr()) {
+      handleToast(FetchError.Post, true)
+      setIsLoading(false)
+      return
+    }
     router.push(`/media/picture/${ret.value.id}`)
     setIsLoading(false)
   }

@@ -30,7 +30,11 @@ export default function ComicCreate(): JSX.Element {
     if (!isRequiredCheck({ title, content, image, images })) return
     setIsLoading(true)
     const ret = await postComicCreate(values)
-    if (ret.isErr()) return handleToast(FetchError.Post, true)
+    if (ret.isErr()) {
+      handleToast(FetchError.Post, true)
+      setIsLoading(false)
+      return
+    }
     router.push(`/media/comic/${ret.value.id}`)
     setIsLoading(false)
   }

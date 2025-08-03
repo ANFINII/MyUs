@@ -30,7 +30,11 @@ export default function VideoCreate(): JSX.Element {
     if (!isRequiredCheck({ title, content, image, video })) return
     setIsLoading(true)
     const ret = await postVideoCreate(values)
-    if (ret.isErr()) return handleToast(FetchError.Post, true)
+    if (ret.isErr()) {
+      handleToast(FetchError.Post, true)
+      setIsLoading(false)
+      return
+    }
     router.push(`/media/video/${ret.value.id}`)
     setIsLoading(false)
   }
