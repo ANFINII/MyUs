@@ -9,7 +9,7 @@ from api.views.media import ComicListAPI, ComicAPI
 from api.views.media import PictureListAPI, PictureAPI
 from api.views.media import BlogListAPI, BlogAPI
 from api.views.media import ChatListAPI, ChatAPI
-from api.views.media import CommentAPI
+from api.views.comment import CommentAPI
 
 
 app_name = "myus"

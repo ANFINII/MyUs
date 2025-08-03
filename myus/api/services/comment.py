@@ -14,7 +14,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, author_id: int) -> list
             updated=c.updated,
             replys=[
                 ReplyData(id=r.id, text=r.text, created=r.created, updated=r.updated, author=get_author(r.author))
-                for r in c.reply.all()
+                for r in c.reply.all() if not r.deleted
             ],
             author=get_author(c.author),
         ) for c in objs

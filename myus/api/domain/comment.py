@@ -19,6 +19,10 @@ class SortOption:
 
 class CommentDomain:
     @classmethod
+    def get(cls, id: int) -> Comment | None:
+        return Comment.objects.filter(id=id).first()
+
+    @classmethod
     def bulk_get(cls, type_no: CommentTypeNo, object_id: int, author_id: int) -> list[Comment]:
         filter_obj = dict(type_no=type_no, object_id=object_id)
         subquery = Comment.objects.filter(id=OuterRef("pk"), like__id=author_id, **filter_obj)
@@ -41,9 +45,10 @@ class CommentDomain:
        return Comment.objects.create(**asdict(comment_data))
 
     @classmethod
-    def update(cls, id: int, **kwargs) -> None:
+    def update(cls, comment: Comment, **kwargs) -> None:
         if not kwargs:
             return
-        
+
         kwargs["updated"] = timezone.now()
-        Comment.objects.filter(id=id).update(**kwargs)
+        [setattr(comment, key, value) for key, value in kwargs.items()]
+        comment.save(update_fields=list(kwargs.keys()))
