@@ -98,7 +98,7 @@ class VideoAPI(APIView):
             "image": data.get("image"),
         }
 
-        obj = Video.objects.create(**field)
+        obj = MediaDomain.create(model=Video, **field)
         obj_id = f"object_{obj.id}"
         user_id = f"user_{obj.author.id}"
         media_root = settings.MEDIA_ROOT
@@ -171,7 +171,7 @@ class MusicAPI(APIView):
             "music": data.get("music"),
             "download": is_bool(data.get("download")),
         }
-        obj = Music.objects.create(**field)
+        obj = MediaDomain.create(model=Music, **field)
         data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)
 
@@ -229,7 +229,7 @@ class ComicAPI(APIView):
             "content": data.get("content"),
             "image": data.get("image"),
         }
-        obj = Comic.objects.create(**field)
+        obj = MediaDomain.create(model=Comic, **field)
 
         comic_pages = [ComicPage(comic=obj, image=image, sequence=sequence) for sequence, image in enumerate(images, start=1)]
         ComicPage.objects.bulk_create(comic_pages)
@@ -290,7 +290,7 @@ class PictureAPI(APIView):
             "content": data.get("content"),
             "image": data.get("image"),
         }
-        obj = Picture.objects.create(**field)
+        obj = MediaDomain.create(model=Picture, **field)
         data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)
 
@@ -350,7 +350,7 @@ class BlogAPI(APIView):
             "richtext": data.get("richtext"),
             "delta": self.get_delta(data.get("delta"), data.get("richtext")),
         }
-        obj = Blog.objects.create(**field)
+        obj = MediaDomain.create(model=Blog, **field)
         data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)
 
@@ -413,6 +413,6 @@ class ChatAPI(APIView):
             "content": data.get("content"),
             "period": data.get("period"),
         }
-        obj = Chat.objects.create(**field)
+        obj = MediaDomain.create(model=Chat, **field)
         data = {"id": obj.id}
         return DataResponse(data, HTTP_201_CREATED)
