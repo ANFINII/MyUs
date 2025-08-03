@@ -31,7 +31,11 @@ export default function MusicCreate(): JSX.Element {
     if (!isRequiredCheck({ title, content, lyric, music })) return
     setIsLoading(true)
     const ret = await postMusicCreate(values)
-    if (ret.isErr()) return handleToast(FetchError.Post, true)
+    if (ret.isErr()) {
+      handleToast(FetchError.Post, true)
+      setIsLoading(false)
+      return
+    }
     router.push(`/media/music/${ret.value.id}`)
     setIsLoading(false)
   }

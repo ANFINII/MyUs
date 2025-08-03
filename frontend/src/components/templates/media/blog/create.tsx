@@ -39,7 +39,11 @@ export default function BlogCreate(): JSX.Element {
     if (!isRequiredCheck({ title, content, richtext, image })) return
     setIsLoading(true)
     const ret = await postBlogCreate(values)
-    if (ret.isErr()) return handleToast(FetchError.Post, true)
+    if (ret.isErr()) {
+      handleToast(FetchError.Post, true)
+      setIsLoading(false)
+      return
+    }
     router.push(`/media/blog/${ret.value.id}`)
     setIsLoading(false)
   }
