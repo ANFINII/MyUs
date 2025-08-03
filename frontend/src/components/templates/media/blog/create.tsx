@@ -47,7 +47,7 @@ export default function BlogCreate(): JSX.Element {
     setIsLoading(true)
     const ret = await postBlogCreate(values)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
-    router.push(`/media/chat/${ret.value.id}`)
+    router.push(`/media/blog/${ret.value.id}`)
     setIsLoading(false)
   }
 
