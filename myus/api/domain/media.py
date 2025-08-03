@@ -64,3 +64,7 @@ class MediaDomain:
             qs = qs[:limit]
 
         return qs
+
+    @classmethod
+    def create(cls, model: MediaModelType, **kwargs) -> MediaModelType:
+        return model.objects.create(**kwargs)
