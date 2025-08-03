@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { DeltaStatic, Sources } from 'quill'
 import { BlogIn } from 'types/internal/media'
-import { MentionUser } from 'types/internal/timeline'
 import { postBlogCreate } from 'api/internal/media/create'
 import { FetchError } from 'utils/constants/enum'
 import { useRequired } from 'components/hooks/useRequired'
@@ -18,12 +17,6 @@ import Textarea from 'components/parts/Input/Textarea'
 import VStack from 'components/parts/Stack/Vertical'
 
 const Quill = dynamic(() => import('components/widgets/Quill'), { ssr: false })
-
-const users: MentionUser[] = [
-  { id: 1, value: 'an' },
-  { id: 2, value: 'souhi' },
-  { id: 3, value: 'keima' },
-]
 
 export default function BlogCreate(): JSX.Element {
   const router = useRouter()
@@ -59,7 +52,7 @@ export default function BlogCreate(): JSX.Element {
             <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
             <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
             <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
-            <Quill label="本文" users={users} value={values.richtext} className="blog" required={isRequired} onChange={handleQuill} />
+            <Quill label="本文" value={values.richtext} className="blog" required={isRequired} onChange={handleQuill} />
           </VStack>
         </form>
       </LoginError>
