@@ -18,6 +18,7 @@
   .text {
     max-height: 150px;
     font-size: 14px;
+    white-space: pre-wrap;
     overflow-y: auto;
 
     &:hover {
