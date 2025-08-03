@@ -66,7 +66,7 @@ export default function CommentContent(props: Props): JSX.Element {
     setIsLike(!isLike)
   }
 
-  const handleEdit = () => {
+  const handleEdit = (): void => {
     if (!isEdit) setCommentText(text)
     handleEditToggle()
   }
@@ -92,7 +92,8 @@ export default function CommentContent(props: Props): JSX.Element {
 
   const handleUpdate = async (): Promise<void> => {
     setIsLoading(true)
-    const ret = await putComment(id, { text: commentText })
+    const text = commentText
+    const ret = await putComment(id, { text })
     if (ret.isErr()) {
       handleToast(FetchError.Put, true)
       setIsLoading(false)

@@ -41,46 +41,45 @@ export default function CommentThread(props: Props): JSX.Element {
   const handleEditToggle = () => setIsEdit(!isEdit)
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setCommentText(e.target.value)
 
-  const handleLike = (commentId: number) => async (): Promise<void> => {
+  const handleLike = async (): Promise<void> => {
     if (isLike) {
-      const ret = await deleteCommentLike(commentId)
+      const ret = await deleteCommentLike(id)
       if (ret.isErr()) return
     } else {
-      const ret = await postCommentLike(commentId)
+      const ret = await postCommentLike(id)
       if (ret.isErr()) return
     }
     setIsLike(!isLike)
   }
 
-  const handleEdit = () => {
-    if (!isEdit) {
-      setCommentText(text)
-    }
+  const handleEdit = (): void => {
+    if (!isEdit) setCommentText(text)
     handleEditToggle()
   }
 
-  const handleUpdate = (commentId: number, text: string) => async () => {
+  const handleUpdate = async (): Promise<void> => {
     setIsLoading(true)
-    const ret = await putComment(commentId, { text })
+    const text = commentText
+    const ret = await putComment(id, { text })
     if (ret.isErr()) {
       handleToast(FetchError.Put, true)
       setIsLoading(false)
       return
     }
-    setReplys((prev) => prev.map((comment) => (comment.id === commentId ? { ...comment, text } : comment)))
+    setReplys((prev) => prev.map((comment) => (comment.id === id ? { ...comment, text } : comment)))
     setIsLoading(false)
     handleEditToggle()
   }
 
-  const handleReplyDelete = (commentId: number) => async () => {
+  const handleReplyDelete = async (): Promise<void> => {
     setIsLoading(true)
-    const ret = await deleteComment(commentId)
+    const ret = await deleteComment(id)
     if (ret.isErr()) {
       setIsLoading(false)
       handleToast(FetchError.Delete, true)
       return
     }
-    setReplys((prev) => prev.filter((comment) => comment.id !== commentId))
+    setReplys((prev) => prev.filter((comment) => comment.id !== id))
     setIsLoading(false)
     handleModal()
   }
@@ -94,17 +93,13 @@ export default function CommentThread(props: Props): JSX.Element {
     <HStack gap="4" className={style.reply}>
       <AvatarLink src={author.avatar} size="s" ulid={author.ulid} nickname={author.nickname} />
       <VStack gap="4" className="w_full">
-        {!isEdit ? (
-          <CommentInfo comment={reply} />
-        ) : (
-          <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate(id, commentText)} onCancel={handleEditToggle} />
-        )}
+        {!isEdit ? <CommentInfo comment={reply} /> : <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
         <div className="fs_12">
-          <CountLike isLike={isLike} disable={!isActive} like={totalLike} onClick={handleLike(id)} />
+          <CountLike isLike={isLike} disable={!isActive} like={totalLike} onClick={handleLike} />
         </div>
       </VStack>
       <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
-      <CommentDeleteModal open={isModal} onClose={handleModal} onAction={handleReplyDelete(id)} loading={isLoading} comment={reply} />
+      <CommentDeleteModal open={isModal} onClose={handleModal} onAction={handleReplyDelete} loading={isLoading} comment={reply} />
     </HStack>
   )
 }
