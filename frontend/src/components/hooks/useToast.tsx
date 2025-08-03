@@ -13,7 +13,7 @@ export const useToast = (): OutProps => {
 
   const toast = { content, isError, isToast, setIsToast }
 
-  const handleToast = (content: string, isError: boolean): void => {
+  const handleToast = (content: string, isError: boolean) => {
     setContent(content)
     setIsError(isError)
     setIsToast(true)

@@ -15,7 +15,7 @@ export default function Search(props: Props): JSX.Element {
   const router = useRouter()
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleSearch()
 
-  const handleSearch = (): void => {
+  const handleSearch = () => {
     const query = value ? { search: value } : ''
     router.push({ pathname: router.pathname, query })
   }

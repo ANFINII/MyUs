@@ -11,14 +11,14 @@ export function useLoading(): OutProps {
   const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    const startLoading = (): void => setLoading(true)
-    const stopLoading = (): void => setLoading(false)
+    const startLoading = () => setLoading(true)
+    const stopLoading = () => setLoading(false)
 
     router.events.on('routeChangeStart', startLoading)
     router.events.on('routeChangeComplete', stopLoading)
     router.events.on('routeChangeError', stopLoading)
 
-    return (): void => {
+    return () => {
       router.events.off('routeChangeStart', startLoading)
       router.events.off('routeChangeComplete', stopLoading)
       router.events.off('routeChangeError', stopLoading)

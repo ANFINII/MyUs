@@ -7,7 +7,7 @@ interface Props {
   onClick: () => void
 }
 
-export function useClickOutside(props: Props): void {
+export function useClickOutside(props: Props) {
   const { actionRef, triggerRef, isActive, onClick } = props
 
   useEffect(() => {

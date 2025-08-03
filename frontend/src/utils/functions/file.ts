@@ -1,4 +1,4 @@
-export const downloadFile = async (file: File, fileName: string, extension: string): Promise<void> => {
+export const downloadFile = async (file: File, fileName: string, extension: string) => {
   const blob = new Blob([file])
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')

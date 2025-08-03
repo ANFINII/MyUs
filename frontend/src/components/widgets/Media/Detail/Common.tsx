@@ -77,7 +77,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
   const handleLike = () => setFormState((prev) => ({ ...prev, isLike: !prev.isLike }))
-  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>): void => setFormState((prev) => ({ ...prev, text: e.target.value }))
+  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setFormState((prev) => ({ ...prev, text: e.target.value }))
 
   const fetchFollow = async (isFollow: boolean) => {
     const request: FollowIn = { ulid: author.ulid, isFollow }
