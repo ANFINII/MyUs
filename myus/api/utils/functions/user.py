@@ -3,6 +3,7 @@ from api.models import Follow
 from api.types.data.user import AuthorData, MediaUserData, NotificationUserData
 from api.types.union.media import MediaModelType
 from api.utils.functions.index import create_url
+from api.domain.follow import FollowDomain
 
 
 def get_author(author: User) -> AuthorData:
@@ -18,7 +19,7 @@ def get_author(author: User) -> AuthorData:
 def get_media_user(obj: MediaModelType, user: User | None) -> MediaUserData:
     data = MediaUserData(
         is_like=obj.like.filter(id=user.id).exists() if user else False,
-        is_follow=Follow.objects.filter(follower=user.id, following=obj.author, is_follow=True).exists() if user else False,
+        is_follow=FollowDomain.get(user, obj.author).is_follow if user else False,
     )
     return data
 
