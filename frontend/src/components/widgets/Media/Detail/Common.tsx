@@ -1,13 +1,13 @@
 import { ChangeEvent, useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
-import { FollowIn } from 'types/internal/auth'
+import { FollowIn, LikeMediaIn } from 'types/internal/auth'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { Author, MediaUser } from 'types/internal/media'
 import { postComment } from 'api/internal/media/comment'
-import { postFollow } from 'api/internal/user'
+import { postFollow, postLikeMedia } from 'api/internal/user'
 import { CommentType, FetchError } from 'utils/constants/enum'
-import { commentTypeNoMap } from 'utils/constants/map'
+import { commentTypeNoMap, mediaTypeMap } from 'utils/constants/map'
 import { capitalize, isActive } from 'utils/functions/common'
 import { formatDatetime } from 'utils/functions/datetime'
 import { useUser } from 'components/hooks/useUser'
@@ -76,8 +76,18 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const handleModal = () => setIsModal(!isModal)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
-  const handleLike = () => setFormState((prev) => ({ ...prev, isLike: !prev.isLike }))
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setFormState((prev) => ({ ...prev, text: e.target.value }))
+
+  const handleLike = async () => {
+    const id = Number(router.query.id)
+    const pathname = capitalize(String(router.pathname.split('/')[2]))
+    const mediaType = mediaTypeMap[pathname]
+    if (!mediaType) return
+    const request: LikeMediaIn = { id, mediaType, isLike: !isLike }
+    const ret = await postLikeMedia(request)
+    if (ret.isErr()) return handleToast(FetchError.Post, true)
+    setFormState((prev) => ({ ...prev, isLike: !isLike }))
+  }
 
   const fetchFollow = async (isFollow: boolean) => {
     const request: FollowIn = { ulid: author.ulid, isFollow }
