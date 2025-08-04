@@ -67,9 +67,12 @@ class FollowDomain:
         Follow.objects.create(follower=follower, following=following, is_follow=True)
 
     @classmethod
-    def update(cls, follow: Follow, is_follow: bool) -> None:
-        follow.is_follow = is_follow
-        follow.save(update_fields=["is_follow"])
+    def update(cls, follow: Follow, **kwargs) -> None:
+        if not kwargs:
+            return
+
+        [setattr(follow, key, value) for key, value in kwargs.items()]
+        follow.save(update_fields=list(kwargs.keys()))
 
     @classmethod
     def count(cls, filter: FilterOption) -> int:
