@@ -18,6 +18,14 @@ export enum GenderView {
   Secret = '秘密',
 }
 
+export enum MediaType {
+  Video = 'Video',
+  Music = 'Music',
+  Comic = 'Comic',
+  Picture = 'Picture',
+  Blog = 'Blog',
+}
+
 export enum NotificationType {
   Video = 'Video',
   Music = 'Music',
