@@ -1,5 +1,5 @@
 import { NotificationUser } from 'types/internal/media'
-import { GenderType, NotificationType } from 'utils/constants/enum'
+import { GenderType, MediaType, NotificationType } from 'utils/constants/enum'
 
 export interface LoginIn {
   username: string
@@ -102,6 +102,22 @@ export interface FollowIn {
 export interface FollowOut {
   isFollow: boolean
   followerCount: number
+}
+
+export interface LikeMediaIn {
+  id: number
+  mediaType: MediaType
+  isLike: boolean
+}
+
+export interface LikeCommentIn {
+  id: number
+  isLike: boolean
+}
+
+export interface LikeOut {
+  isLike: boolean
+  likeCount: number
 }
 
 export interface SearchTagOut {

@@ -1,7 +1,8 @@
 import { ChangeEvent, SetStateAction, useRef, useState } from 'react'
-import { UserMe } from 'types/internal/auth'
+import { LikeCommentIn, UserMe } from 'types/internal/auth'
 import { Reply } from 'types/internal/comment'
-import { postCommentLike, putComment, deleteComment, deleteCommentLike } from 'api/internal/media/comment'
+import { putComment, deleteComment } from 'api/internal/media/comment'
+import { postLikeComment } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
@@ -42,13 +43,9 @@ export default function CommentThread(props: Props): JSX.Element {
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setCommentText(e.target.value)
 
   const handleLike = async () => {
-    if (isLike) {
-      const ret = await deleteCommentLike(id)
-      if (ret.isErr()) return
-    } else {
-      const ret = await postCommentLike(id)
-      if (ret.isErr()) return
-    }
+    const request: LikeCommentIn = { id, isLike: !isLike }
+    const ret = await postLikeComment(request)
+    if (ret.isErr()) return handleToast(FetchError.Post, true)
     setIsLike(!isLike)
   }
 

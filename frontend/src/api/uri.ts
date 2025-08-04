@@ -12,6 +12,8 @@ export const apiUser = base + '/user/me'
 export const apiSearchTag = base + '/user/search_tag'
 export const apiFollow = base + '/user/follow'
 export const apiFollower = base + '/user/follower'
+export const apiLikeMedia = base + '/user/like/media'
+export const apiLikeComment = base + '/user/like/comment'
 export const apiNotification = base + '/user/notification'
 
 // Setting
@@ -48,7 +50,6 @@ export const apiChatCreate = base + '/media/chat/create'
 
 export const apiComments = base + '/media/comment'
 export const apiComment = (id: number) => base + `/media/comment/${id}`
-export const apiCommentLike = base + '/like/form/comment'
 
 // 外部API
 export const apiAddress = base + '/search'

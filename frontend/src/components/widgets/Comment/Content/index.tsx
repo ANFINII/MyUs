@@ -2,9 +2,10 @@ import { useState, useRef, SetStateAction, ChangeEvent, Dispatch } from 'react'
 import router from 'next/router'
 import clsx from 'clsx'
 import { capitalize } from 'lodash'
-import { UserMe } from 'types/internal/auth'
+import { LikeCommentIn, UserMe } from 'types/internal/auth'
 import { Reply, Comment, CommnetIn } from 'types/internal/comment'
-import { postComment, putComment, postCommentLike, deleteComment, deleteCommentLike } from 'api/internal/media/comment'
+import { postComment, putComment, deleteComment } from 'api/internal/media/comment'
+import { postLikeComment } from 'api/internal/user'
 import { CommentType, FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap } from 'utils/constants/map'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -56,13 +57,9 @@ export default function CommentContent(props: Props): JSX.Element {
   const handleReply = (e: ChangeEvent<HTMLTextAreaElement>) => setReplyText(e.target.value)
 
   const handleLike = async () => {
-    if (isLike) {
-      const ret = await deleteCommentLike(id)
-      if (ret.isErr()) return
-    } else {
-      const ret = await postCommentLike(id)
-      if (ret.isErr()) return
-    }
+    const request: LikeCommentIn = { id, isLike: !isLike }
+    const ret = await postLikeComment(request)
+    if (ret.isErr()) return handleToast(FetchError.Post, true)
     setIsLike(!isLike)
   }
 
