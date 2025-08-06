@@ -13,8 +13,8 @@ class MediaData:
     id: int
     title: str
     content: str
-    like: int
     read: int
+    like_count: int
     publish: bool
     created: datetime
     updated: datetime
@@ -26,8 +26,8 @@ class MediaDetailData:
     id: int
     title: str
     content: str
-    like: int
     read: int
+    like_count: int
     publish: bool
     created: datetime
     updated: datetime
