@@ -50,18 +50,18 @@ interface Props {
 
 export default function MediaDetailCommon(props: Props): JSX.Element {
   const { media, handleToast } = props
-  const { title, content, read, like, created, author, mediaUser } = media
+  const { title, content, read, created, author, mediaUser } = media
 
   const initFormState: MediaDetailState = useMemo(
     () => ({
       isLike: mediaUser.isLike,
       isFollow: mediaUser.isFollow,
-      likeCount: like,
+      likeCount: media.like,
       followerCount: author.followerCount,
       text: '',
       comments: media.comments,
     }),
-    [mediaUser, like, author, media],
+    [mediaUser, media, author],
   )
 
   const router = useRouter()
