@@ -137,7 +137,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
         <div className="media_detail_aria_2">
           <CountRead read={read} />
-          <CountLike isLike={isLike} disable={!user.isActive} likeCount={likeCount} onClick={handleLike} />
+          <CountLike isLike={isLike} disable={!user.isActive} count={likeCount} onClick={handleLike} />
         </div>
 
         <div className="media_detail_aria_3">{/* {% include 'parts/common/hashtag.html' %} */}</div>
