@@ -131,7 +131,7 @@ export default function CommentContent(props: Props): JSX.Element {
           <VStack gap="4" className="w_full">
             {!isEdit ? <CommentInfo comment={comment} /> : <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
             <HStack gap="4" className="fs_12">
-              <CountLike isLike={isLike} disable={!isActive} like={totalLike} onClick={handleLike} />
+              <CountLike isLike={isLike} disable={!isActive} likeCount={totalLike || 0} onClick={handleLike} />
               <View isView={isReplyView} onView={handleReplyView} size="s" color="grey" content="返信" />
               <View isView={isThreadView} onView={handleThreadView} size="s" color="grey" content={`スレッド ${replys.length || 0} 件`} />
             </HStack>

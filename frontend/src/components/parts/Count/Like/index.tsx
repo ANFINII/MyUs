@@ -2,14 +2,14 @@ import IconHand from 'components/parts/Icon/Hand'
 import style from './Like.module.scss'
 
 interface Props {
-  isLike?: boolean
+  isLike: boolean
   disable?: boolean
-  like?: number
-  onClick?: () => void
+  likeCount: number
+  onClick: () => void
 }
 
 export default function CountLike(props: Props): JSX.Element {
-  const { isLike, disable, like, onClick } = props
+  const { isLike, disable, likeCount, onClick } = props
 
   return (
     <div className={style.count}>
@@ -22,7 +22,7 @@ export default function CountLike(props: Props): JSX.Element {
           <IconHand size="16" type={isLike ? 'on' : 'off'} className={isLike ? style.on : style.off} />
         </div>
       )}
-      <span>{like || 0}</span>
+      <span>{likeCount}</span>
     </div>
   )
 }
