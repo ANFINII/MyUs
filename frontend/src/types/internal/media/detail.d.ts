@@ -6,8 +6,8 @@ export interface MediaDetail {
   id: number
   title: string
   content: string
-  like: number
   read: number
+  likeCount: number
   publish: boolean
   created: Date
   updated: Date

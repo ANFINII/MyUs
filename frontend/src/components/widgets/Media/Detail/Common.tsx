@@ -38,7 +38,7 @@ interface Props {
     title: string
     content: string
     read: number
-    like: number
+    likeCount: number
     created: Date
     comments: Comment[]
     author: Author
@@ -56,12 +56,12 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
     () => ({
       isLike: mediaUser.isLike,
       isFollow: mediaUser.isFollow,
-      likeCount: media.like,
+      likeCount: media.likeCount,
       followerCount: author.followerCount,
       text: '',
       comments: media.comments,
     }),
-    [mediaUser, author, media.like, media.comments],
+    [mediaUser, author, media.likeCount, media.comments],
   )
 
   const router = useRouter()
