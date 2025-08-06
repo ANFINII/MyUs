@@ -61,7 +61,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
       text: '',
       comments: media.comments,
     }),
-    [mediaUser, media, author],
+    [mediaUser, author, media.like, media.comments],
   )
 
   const router = useRouter()
@@ -97,16 +97,16 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
     const ret = await postFollow(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
-    setFormState((prev) => ({ ...prev, isFollow: data.isFollow, followerCount: data.followerCount }))
+    setFormState((prev) => ({ ...prev, ...data }))
   }
 
   const handleFollow = async () => {
-    fetchFollow(true)
+    await fetchFollow(true)
     handleToast('フォローしました', false)
   }
 
   const handleDeleteFollow = async () => {
-    fetchFollow(false)
+    await fetchFollow(false)
     handleModal()
     handleToast('フォローを解除しました', false)
   }
@@ -123,7 +123,8 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
       handleToast(FetchError.Post, true)
       return
     }
-    setFormState((prev) => ({ ...prev, text: '', comments: [ret.value, ...prev.comments] }))
+    const data = ret.value
+    setFormState((prev) => ({ ...prev, text: '', comments: [data, ...prev.comments] }))
     setIsLoading(false)
   }
 

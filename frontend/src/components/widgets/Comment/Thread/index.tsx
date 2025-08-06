@@ -92,7 +92,7 @@ export default function CommentThread(props: Props): JSX.Element {
       <VStack gap="4" className="w_full">
         {!isEdit ? <CommentInfo comment={reply} /> : <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
         <div className="fs_12">
-          <CountLike isLike={isLike} disable={!isActive} like={totalLike} onClick={handleLike} />
+          <CountLike isLike={isLike} disable={!isActive} likeCount={totalLike || 0} onClick={handleLike} />
         </div>
       </VStack>
       <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
