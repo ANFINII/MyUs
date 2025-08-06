@@ -27,6 +27,7 @@ import style from './Common.module.scss'
 export interface MediaDetailState {
   isLike: boolean
   isFollow: boolean
+  likeCount: number
   followerCount: number
   text: string
   comments: Comment[]
@@ -37,7 +38,7 @@ interface Props {
     title: string
     content: string
     read: number
-    like?: number
+    like: number
     created: Date
     comments: Comment[]
     author: Author
@@ -55,11 +56,12 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
     () => ({
       isLike: mediaUser.isLike,
       isFollow: mediaUser.isFollow,
+      likeCount: like,
       followerCount: author.followerCount,
       text: '',
       comments: media.comments,
     }),
-    [mediaUser, author, media],
+    [mediaUser, like, author, media],
   )
 
   const router = useRouter()
@@ -71,7 +73,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   const [formState, setFormState] = useState<MediaDetailState>(initFormState)
   useEffect(() => setFormState(initFormState), [router.query.id, initFormState])
 
-  const { isLike, isFollow, followerCount, text, comments } = formState
+  const { isLike, isFollow, likeCount, followerCount, text, comments } = formState
   const isFallowDisable = !user || user.ulid === author.ulid
   const handleModal = () => setIsModal(!isModal)
   const handleContentView = () => setIsContentView(!isContentView)
@@ -86,7 +88,8 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
     const request: LikeMediaIn = { id, mediaType, isLike: !isLike }
     const ret = await postLikeMedia(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
-    setFormState((prev) => ({ ...prev, isLike: !isLike }))
+    const data = ret.value
+    setFormState((prev) => ({ ...prev, ...data }))
   }
 
   const fetchFollow = async (isFollow: boolean) => {
@@ -133,7 +136,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
         <div className="media_detail_aria_2">
           <CountRead read={read} />
-          <CountLike isLike={isLike} disable={!user.isActive} like={like} onClick={handleLike} />
+          <CountLike isLike={isLike} disable={!user.isActive} likeCount={likeCount} onClick={handleLike} />
         </div>
 
         <div className="media_detail_aria_3">{/* {% include 'parts/common/hashtag.html' %} */}</div>
