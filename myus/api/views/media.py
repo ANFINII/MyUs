@@ -73,8 +73,8 @@ class VideoAPI(APIView):
                 convert=obj.convert.url,
                 comments=comments,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
-                like=obj.total_like(),
                 read=obj.read,
+                like_count=obj.total_like(),
                 publish=obj.publish,
                 created=obj.created,
                 updated=obj.updated,
@@ -143,8 +143,8 @@ class MusicAPI(APIView):
                 convert=obj.convert.url,
                 comments=comments,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
-                like=obj.total_like(),
                 read=obj.read,
+                like_count=obj.total_like(),
                 publish=obj.publish,
                 created=obj.created,
                 updated=obj.updated,
@@ -203,8 +203,8 @@ class ComicAPI(APIView):
                 image=obj.image.url,
                 comments=comments,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
-                like=obj.total_like(),
                 read=obj.read,
+                like_count=obj.total_like(),
                 publish=obj.publish,
                 created=obj.created,
                 updated=obj.updated,
@@ -265,8 +265,8 @@ class PictureAPI(APIView):
                 image=obj.image.url,
                 comments=comments,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
-                like=obj.total_like(),
                 read=obj.read,
+                like_count=obj.total_like(),
                 publish=obj.publish,
                 created=obj.created,
                 updated=obj.updated,
@@ -313,6 +313,7 @@ class BlogAPI(APIView):
         user = get_user(request)
         type_no = comment_type_no_map(CommentType.BLOG)
         comments = get_comments(type_no=type_no, object_id=obj.id, author_id=obj.author.id)
+        print("comments===============================", comments)
 
         data = BlogDetailOutData(
             detail=BlogDetailData(
@@ -323,8 +324,8 @@ class BlogAPI(APIView):
                 image=obj.image.url,
                 comments=comments,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
-                like=obj.total_like(),
                 read=obj.read,
+                like_count=obj.total_like(),
                 publish=obj.publish,
                 created=obj.created,
                 updated=obj.updated,
@@ -385,8 +386,8 @@ class ChatAPI(APIView):
                 content=obj.content,
                 messages=messages,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
-                like=obj.total_like(),
                 read=obj.read,
+                like_count=obj.total_like(),
                 thread=obj.thread,
                 joined=obj.joined,
                 period=obj.period,

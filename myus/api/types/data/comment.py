@@ -10,6 +10,8 @@ class ReplyData:
     text: str
     created: datetime
     updated: datetime
+    is_comment_like: bool
+    like_count: int
     author: AuthorData
 
 
@@ -19,8 +21,10 @@ class CommentData:
     text: str
     created: datetime
     updated: datetime
-    replys: list[ReplyData]
+    is_comment_like: bool
+    like_count: int
     author: AuthorData
+    replys: list[ReplyData]
 
 
 @dataclass(frozen=True, slots=True)
