@@ -25,7 +25,7 @@ interface Props {
 
 export default function CommentThread(props: Props): JSX.Element {
   const { reply, user, setReplys, handleToast } = props
-  const { id, author, text, isCommentLike, totalLike } = reply
+  const { id, author, text, isCommentLike, likeCount } = reply
   const { isActive, ulid } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
@@ -92,7 +92,7 @@ export default function CommentThread(props: Props): JSX.Element {
       <VStack gap="4" className="w_full">
         {!isEdit ? <CommentInfo comment={reply} /> : <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
         <div className="fs_12">
-          <CountLike isLike={isLike} disable={!isActive} likeCount={totalLike || 0} onClick={handleLike} />
+          <CountLike isLike={isLike} disable={!isActive} count={likeCount} onClick={handleLike} />
         </div>
       </VStack>
       <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />

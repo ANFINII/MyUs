@@ -8,7 +8,7 @@ export interface Comment {
   replys: Reply[]
   author: Author
   isCommentLike?: boolean
-  totalLike?: number
+  likeCount: number
 }
 
 export interface Reply {
@@ -18,7 +18,7 @@ export interface Reply {
   updated: Date
   author: Author
   isCommentLike?: boolean
-  totalLike?: number
+  likeCount: number
 }
 
 export interface CommnetIn {

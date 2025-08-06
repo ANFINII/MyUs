@@ -32,7 +32,7 @@ export interface Props {
 
 export default function CommentContent(props: Props): JSX.Element {
   const { comment, user, setFormState, handleToast } = props
-  const { id, author, text, isCommentLike, totalLike } = comment
+  const { id, author, text, isCommentLike, likeCount } = comment
   const { isActive, ulid } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
@@ -131,7 +131,7 @@ export default function CommentContent(props: Props): JSX.Element {
           <VStack gap="4" className="w_full">
             {!isEdit ? <CommentInfo comment={comment} /> : <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
             <HStack gap="4" className="fs_12">
-              <CountLike isLike={isLike} disable={!isActive} likeCount={totalLike || 0} onClick={handleLike} />
+              <CountLike isLike={isLike} disable={!isActive} count={likeCount} onClick={handleLike} />
               <View isView={isReplyView} onView={handleReplyView} size="s" color="grey" content="返信" />
               <View isView={isThreadView} onView={handleThreadView} size="s" color="grey" content={`スレッド ${replys.length || 0} 件`} />
             </HStack>
