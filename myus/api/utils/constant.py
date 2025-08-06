@@ -13,6 +13,13 @@ class MediaType(str, Enum):
     BLOG = "Blog"
     CHAT = "Chat"
 
+media_models = {
+    'Video': Video,
+    'Music': Music,
+    'Comic': Comic,
+    'Picture': Picture,
+    'Blog': Blog,
+}
 
 model_list = [Video, Music, Comic, Picture, Blog, Chat]
 
