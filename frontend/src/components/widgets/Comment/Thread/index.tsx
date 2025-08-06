@@ -33,7 +33,7 @@ export default function CommentThread(props: Props): JSX.Element {
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [isLike, setIsLike] = useState<boolean>(isCommentLike || false)
+  const [isLike, setIsLike] = useState<boolean>(isCommentLike)
   const [commentText, setCommentText] = useState<string>('')
 
   const disabled = author.ulid !== ulid

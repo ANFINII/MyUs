@@ -42,7 +42,7 @@ export default function CommentContent(props: Props): JSX.Element {
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isReplyView, setIsReplyView] = useState<boolean>(false)
   const [isThreadView, setIsThreadView] = useState<boolean>(false)
-  const [isLike, setIsLike] = useState<boolean>(isCommentLike || false)
+  const [isLike, setIsLike] = useState<boolean>(isCommentLike)
   const [commentText, setCommentText] = useState<string>('')
   const [replyText, setReplyText] = useState<string>('')
   const [replys, setReplys] = useState<Reply[]>(comment.replys)
