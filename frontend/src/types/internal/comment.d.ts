@@ -5,10 +5,10 @@ export interface Comment {
   text: string
   created: Date
   updated: Date
-  replys: Reply[]
-  author: Author
-  isCommentLike?: boolean
+  isCommentLike: boolean
   likeCount: number
+  author: Author
+  replys: Reply[]
 }
 
 export interface Reply {
@@ -16,9 +16,9 @@ export interface Reply {
   text: string
   created: Date
   updated: Date
-  author: Author
-  isCommentLike?: boolean
+  isCommentLike: boolean
   likeCount: number
+  author: Author
 }
 
 export interface CommnetIn {
