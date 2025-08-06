@@ -57,3 +57,9 @@ class NotificationData:
 class NotificationData:
     count: int
     datas: list[NotificationData]
+
+
+@dataclass(frozen=True, slots=True)
+class LikeOutData:
+    is_like: bool
+    like_count: int
