@@ -2,12 +2,14 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
 from api.models import SearchTag
+from api.domain.comment import CommentDomain
 from api.domain.user import UserDomain
 from api.services.follow import get_follows, get_followers, upsert_follow
 from api.services.notification import get_notification, get_content_object
 from api.services.user import get_user
 from api.types.data.user import LikeOutData, UserData
 from api.utils.constant import media_models
+from api.utils.enum.response import ApiResponse
 from api.utils.decorators.auth import auth_user
 from api.utils.functions.index import create_url
 from api.utils.functions.response import DataResponse
@@ -76,6 +78,31 @@ class LikeMediaAPI(APIView):
 
         model = media_models.get(media_type)
         obj = model.objects.get(id=obj_id)
+        is_liked = obj.like.filter(id=user.id).exists()
+
+        if is_liked:
+            obj.like.remove(user)
+            is_like = False
+        else:
+            obj.like.add(user)
+            is_like = True
+
+        data = LikeOutData(is_like=is_like, like_count=obj.total_like())
+
+        return DataResponse(data, status=HTTP_200_OK)
+
+
+class LikeCommentAPI(APIView):
+    @auth_user
+    def post(self, request) -> DataResponse:
+        user = get_user(request)
+        data = request.data
+        obj_id = data['id']
+
+        obj = CommentDomain.get(obj_id)
+        if not obj:
+            return ApiResponse.NOT_FOUND.run()
+
         is_liked = obj.like.filter(id=user.id).exists()
 
         if is_liked:
