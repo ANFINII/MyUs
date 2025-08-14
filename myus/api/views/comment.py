@@ -11,23 +11,23 @@ from api.utils.functions.response import DataResponse
 
 class CommentAPI(APIView):
     def get(self, request) -> DataResponse:
-        author = get_user(request)
-        if not author:
+        user = get_user(request)
+        if not user:
             return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
-        comments = get_comments(type_no=data["type_no"], object_id=data["object_id"], author_id=author.id)
+        comments = get_comments(type_no=data["type_no"], object_id=data["object_id"], user_id=user.id)
         return DataResponse(comments, HTTP_200_OK)
 
     def post(self, request) -> DataResponse:
-        author = get_user(request)
-        if not author:
+        user = get_user(request)
+        if not user:
             return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
 
         comment_data = CommentInData(
-            author=author,
+            author=user,
             text=data["text"],
             type_no=data["type_no"],
             type_name=data["type_name"],
@@ -39,8 +39,8 @@ class CommentAPI(APIView):
         return DataResponse(data, HTTP_201_CREATED)
 
     def put(self, request, id: int) -> DataResponse:
-        author = get_user(request)
-        if not author:
+        user = get_user(request)
+        if not user:
             return ApiResponse.UNAUTHORIZED.run()
 
         data = request.data
@@ -52,8 +52,8 @@ class CommentAPI(APIView):
         return DataResponse(None, HTTP_200_OK)
 
     def delete(self, request, id: int) -> DataResponse:
-        author = get_user(request)
-        if not author:
+        user = get_user(request)
+        if not user:
             return ApiResponse.UNAUTHORIZED.run()
 
         comment = CommentDomain.get(id)

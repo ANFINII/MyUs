@@ -4,8 +4,8 @@ from api.utils.enum.index import CommentTypeNo
 from api.utils.functions.user import get_author
 
 
-def get_comments(type_no: CommentTypeNo, object_id: int, author_id: int) -> list[CommentData]:
-    objs = CommentDomain.bulk_get(type_no, object_id, author_id)
+def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int) -> list[CommentData]:
+    objs = CommentDomain.bulk_get(type_no, object_id, user_id)
     data = [
         CommentData(
             id=c.id,
