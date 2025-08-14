@@ -25,7 +25,7 @@ interface Props {
 
 export default function CommentThread(props: Props): JSX.Element {
   const { reply, user, setReplys, handleToast } = props
-  const { id, author, text, isCommentLike, likeCount } = reply
+  const { id, author, text } = reply
   const { isActive, ulid } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
@@ -33,7 +33,8 @@ export default function CommentThread(props: Props): JSX.Element {
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [isLike, setIsLike] = useState<boolean>(isCommentLike)
+  const [isLike, setIsLike] = useState<boolean>(reply.isCommentLike)
+  const [likeCount, setLikeCount] = useState<number>(reply.likeCount)
   const [commentText, setCommentText] = useState<string>('')
 
   const disabled = author.ulid !== ulid
@@ -46,7 +47,9 @@ export default function CommentThread(props: Props): JSX.Element {
     const request: LikeCommentIn = { id, isLike: !isLike }
     const ret = await postLikeComment(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
-    setIsLike(!isLike)
+    const data = ret.value
+    setIsLike(data.isLike)
+    setLikeCount(data.likeCount)
   }
 
   const handleEdit = () => {
