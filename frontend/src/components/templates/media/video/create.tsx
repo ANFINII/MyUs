@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { VideoIn } from 'types/internal/media'
 import { postVideoCreate } from 'api/internal/media/create'
 import { FetchError } from 'utils/constants/enum'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -16,8 +17,8 @@ import VStack from 'components/parts/Stack/Vertical'
 export default function VideoCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [values, setValues] = useState<VideoIn>({ title: '', content: '' })
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -28,15 +29,15 @@ export default function VideoCreate(): JSX.Element {
   const handleForm = async () => {
     const { title, content, image, video } = values
     if (!isRequiredCheck({ title, content, image, video })) return
-    setIsLoading(true)
+    handleLoading(true)
     const ret = await postVideoCreate(values)
     if (ret.isErr()) {
       handleToast(FetchError.Post, true)
-      setIsLoading(false)
+      handleLoading(false)
       return
     }
     router.push(`/media/video/${ret.value.id}`)
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   return (

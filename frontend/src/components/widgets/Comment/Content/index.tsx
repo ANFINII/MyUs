@@ -8,6 +8,7 @@ import { postComment, putComment, deleteComment } from 'api/internal/media/comme
 import { postLikeComment } from 'api/internal/user'
 import { CommentType, FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap } from 'utils/constants/map'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
 import IconEdit from 'components/parts/Icon/Edit'
@@ -36,7 +37,7 @@ export default function CommentContent(props: Props): JSX.Element {
   const { isActive, ulid } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { isLoading, handleLoading } = useIsLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -67,12 +68,12 @@ export default function CommentContent(props: Props): JSX.Element {
   }
 
   const handleEdit = () => {
-    if (!isEdit) setCommentText(text)
+    setCommentText(text)
     handleEditToggle()
   }
 
   const handleMediaReply = async () => {
-    setIsLoading(true)
+    handleLoading(true)
     const text = replyText
     const typeName = capitalize(String(router.pathname.split('/')[2]))
     const typeNo = commentTypeNoMap[typeName as CommentType]
@@ -81,34 +82,34 @@ export default function CommentContent(props: Props): JSX.Element {
     const request: CommnetIn = { text, typeName, typeNo, objectId, parentId }
     const ret = await postComment(request)
     if (ret.isErr()) {
-      setIsLoading(false)
+      handleLoading(false)
       handleToast(FetchError.Post, true)
       return
     }
     setReplys([ret.value, ...replys])
-    setIsLoading(false)
+    handleLoading(false)
     setReplyText('')
   }
 
   const handleUpdate = async () => {
-    setIsLoading(true)
+    handleLoading(true)
     const text = commentText
     const ret = await putComment(id, { text })
     if (ret.isErr()) {
       handleToast(FetchError.Put, true)
-      setIsLoading(false)
+      handleLoading(false)
       return
     }
     setFormState((prev) => ({ ...prev, comments: prev.comments.map((c) => (c.id === id ? { ...c, text } : c)) }))
-    setIsLoading(false)
+    handleLoading(false)
     handleEditToggle()
   }
 
-  const handleCommentDelete = async () => {
-    setIsLoading(true)
+  const handleDelete = async () => {
+    handleLoading(true)
     const ret = await deleteComment(id)
     if (ret.isErr()) {
-      setIsLoading(false)
+      handleLoading(false)
       handleToast(FetchError.Delete, true)
       return
     }
@@ -142,7 +143,7 @@ export default function CommentContent(props: Props): JSX.Element {
           </VStack>
         </HStack>
         <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
-        <CommentDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleCommentDelete} comment={comment} />
+        <CommentDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleDelete} comment={comment} />
       </HStack>
 
       {isThreadView && (

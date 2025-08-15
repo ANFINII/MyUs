@@ -7,6 +7,7 @@ import { prefectures } from 'utils/constants/address'
 import { FetchError, GenderType } from 'utils/constants/enum'
 import { genderMap } from 'utils/constants/map'
 import { selectDate } from 'utils/functions/datetime'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -31,8 +32,8 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
 
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
   const [avatar, setAvatar] = useState<File>()
   const [values, setValues] = useState<ProfileOut>(profile)
@@ -60,19 +61,19 @@ export default function SettingProfileEdit(props: Props): JSX.Element {
   const handlSubmit = async () => {
     const { email, username, nickname, lastName, firstName, phone, postalCode } = values
     if (!isRequiredCheck({ email, username, nickname, lastName, firstName, phone, postalCode })) return
-    setIsLoading(true)
+    handleLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: ProfileIn = { ...values, avatar }
     const ret = await putSettingProfile(request)
     if (ret.isErr()) {
-      setIsLoading(false)
+      handleLoading(false)
       handleToast(FetchError.Put, true)
       return
     }
     const data = ret.value
     if (!data.error) handleBack()
     if (data.error) setMessage(data.message)
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   const button = (

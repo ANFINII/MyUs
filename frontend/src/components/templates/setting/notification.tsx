@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { UserNotification, UserNotificationOut } from 'types/internal/auth'
 import { getSettingNotification, putSettingNotification } from 'api/internal/setting'
 import { FetchError } from 'utils/constants/enum'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -19,21 +20,21 @@ export default function SettingNotification(props: Props): JSX.Element {
   const { userNotification } = props
 
   const { toast, handleToast } = useToast()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { isLoading, handleLoading } = useIsLoading()
   const [values, setValues] = useState<UserNotification>(userNotification)
 
   const handleToggle = (key: keyof UserNotification) => setValues((prev) => ({ ...prev, [key]: !prev[key] }))
 
   const handleSubmit = async () => {
-    setIsLoading(true)
+    handleLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     const ret = await putSettingNotification(values)
     if (ret.isErr()) {
-      setIsLoading(false)
+      handleLoading(false)
       handleToast(FetchError.Put, true)
       return
     }
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   const handleReset = async () => {

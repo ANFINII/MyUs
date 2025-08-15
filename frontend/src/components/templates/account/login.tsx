@@ -4,6 +4,7 @@ import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
@@ -17,8 +18,8 @@ export default function Login(): JSX.Element {
   const router = useRouter()
   const { updateUser } = useUser()
   const { toast, handleToast } = useToast()
+  const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
   const [values, setValues] = useState<LoginIn>({ username: '', password: '' })
 
@@ -30,7 +31,7 @@ export default function Login(): JSX.Element {
     const { username, password } = values
     if (!isRequiredCheck({ username, password })) return
     const request = { username: encrypt(username), password: encrypt(password) }
-    setIsLoading(true)
+    handleLoading(true)
     const ret = await postLogin(request)
     if (ret.isErr()) return handleToast(FetchError.Error, true)
     const data = ret.value
@@ -39,7 +40,7 @@ export default function Login(): JSX.Element {
       await updateUser()
       router.push('/setting/profile')
     }
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   return (

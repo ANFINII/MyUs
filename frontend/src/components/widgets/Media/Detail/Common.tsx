@@ -10,6 +10,7 @@ import { CommentType, FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap, mediaTypeMap } from 'utils/constants/map'
 import { capitalize, isActive } from 'utils/functions/common'
 import { formatDatetime } from 'utils/functions/datetime'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
@@ -66,7 +67,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
 
   const router = useRouter()
   const { user } = useUser()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { isLoading, handleLoading } = useIsLoading()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isContentView, setIsContentView] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
@@ -112,20 +113,20 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
   }
 
   const handleMediaComment = async () => {
-    setIsLoading(true)
+    handleLoading(true)
     const typeName = capitalize(String(router.pathname.split('/')[2]))
     const typeNo = commentTypeNoMap[typeName as CommentType]
     const objectId = Number(router.query.id)
     const request: CommnetIn = { text, typeName, typeNo, objectId }
     const ret = await postComment(request)
     if (ret.isErr()) {
-      setIsLoading(false)
+      handleLoading(false)
       handleToast(FetchError.Post, true)
       return
     }
     const data = ret.value
     setFormState((prev) => ({ ...prev, text: '', comments: [data, ...prev.comments] }))
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   return (

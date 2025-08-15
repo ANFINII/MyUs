@@ -5,6 +5,7 @@ import { postSignup } from 'api/internal/auth'
 import { FetchError, GenderType } from 'utils/constants/enum'
 import { genderMap } from 'utils/constants/map'
 import { nowDate, selectDate } from 'utils/functions/datetime'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
@@ -34,8 +35,8 @@ const initSignup: SignupIn = {
 export default function Signup(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
   const [values, setValues] = useState<SignupIn>(initSignup)
 
@@ -47,13 +48,13 @@ export default function Signup(): JSX.Element {
   const handleSubmit = async () => {
     const { email, username, nickname, lastName, firstName, password1, password2 } = values
     if (!isRequiredCheck({ email, username, nickname, lastName, firstName, password1, password2 })) return
-    setIsLoading(true)
+    handleLoading(true)
     const ret = await postSignup(values)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
     if (data) setMessage(data.message)
     if (!data?.error) handleBack()
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   return (

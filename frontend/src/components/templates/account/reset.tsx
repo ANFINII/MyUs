@@ -2,6 +2,7 @@ import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { postReset } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
@@ -13,8 +14,8 @@ import VStack from 'components/parts/Stack/Vertical'
 export default function Reset(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
   const [email, setEmail] = useState<string>('')
 
@@ -23,12 +24,12 @@ export default function Reset(): JSX.Element {
 
   const handleSubmit = async () => {
     if (!isRequiredCheck({ email })) return
-    setIsLoading(true)
+    handleLoading(true)
     const ret = await postReset(email)
     if (ret.isErr()) return handleToast(FetchError.Error, true)
     const data = ret.value
     if (data) setMessage(data.message)
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   return (

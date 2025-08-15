@@ -6,6 +6,7 @@ import { DeltaStatic, Sources } from 'quill'
 import { BlogIn } from 'types/internal/media'
 import { postBlogCreate } from 'api/internal/media/create'
 import { FetchError } from 'utils/constants/enum'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -21,8 +22,8 @@ const Quill = dynamic(() => import('components/widgets/Quill'), { ssr: false })
 export default function BlogCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [values, setValues] = useState<BlogIn>({ title: '', content: '', richtext: '', delta: '' })
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -37,15 +38,15 @@ export default function BlogCreate(): JSX.Element {
   const handleForm = async () => {
     const { title, content, richtext, image } = values
     if (!isRequiredCheck({ title, content, richtext, image })) return
-    setIsLoading(true)
+    handleLoading(true)
     const ret = await postBlogCreate(values)
     if (ret.isErr()) {
       handleToast(FetchError.Post, true)
-      setIsLoading(false)
+      handleLoading(false)
       return
     }
     router.push(`/media/blog/${ret.value.id}`)
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   return (

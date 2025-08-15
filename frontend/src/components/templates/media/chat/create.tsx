@@ -4,6 +4,7 @@ import { ChatIn } from 'types/internal/media'
 import { postChatCreate } from 'api/internal/media/create'
 import { FetchError } from 'utils/constants/enum'
 import { nowDate } from 'utils/functions/datetime'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -16,8 +17,8 @@ import VStack from 'components/parts/Stack/Vertical'
 export default function ChatCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [values, setValues] = useState<ChatIn>({ title: '', content: '', period: '' })
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -26,15 +27,15 @@ export default function ChatCreate(): JSX.Element {
   const handleForm = async () => {
     const { title, content, period } = values
     if (!isRequiredCheck({ title, content, period })) return
-    setIsLoading(true)
+    handleLoading(true)
     const ret = await postChatCreate(values)
     if (ret.isErr()) {
       handleToast(FetchError.Post, true)
-      setIsLoading(false)
+      handleLoading(false)
       return
     }
     router.push(`/media/chat/${ret.value.id}`)
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   return (

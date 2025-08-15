@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { MypageIn, MypageOut } from 'types/internal/auth'
 import { putSettingMypage } from 'api/internal/setting'
 import { FetchError } from 'utils/constants/enum'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -25,7 +26,7 @@ export default function SettingMyPageEdit(props: Props): JSX.Element {
 
   const router = useRouter()
   const { toast, handleToast } = useToast()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { isLoading, handleLoading } = useIsLoading()
   const [message, setMessage] = useState<string>('')
   const [banner, setBanner] = useState<File>()
   const [values, setValues] = useState<MypageOut>(mypage)
@@ -37,19 +38,19 @@ export default function SettingMyPageEdit(props: Props): JSX.Element {
   const handleToggle = () => setValues({ ...values, isAdvertise: !values.isAdvertise })
 
   const handlSubmit = async () => {
-    setIsLoading(true)
+    handleLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: MypageIn = { ...values, banner }
     const ret = await putSettingMypage(request)
     if (ret.isErr()) {
-      setIsLoading(false)
+      handleLoading(false)
       handleToast(FetchError.Put, true)
       return
     }
     const data = ret.value
     if (!data.error) handleBack()
     if (data.error) setMessage(data.message)
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   const button = (
