@@ -32,7 +32,7 @@ export interface Props {
 
 export default function CommentContent(props: Props): JSX.Element {
   const { comment, user, setFormState, handleToast } = props
-  const { id, author, text, isCommentLike, likeCount } = comment
+  const { id, author, text } = comment
   const { isActive, ulid } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
@@ -42,7 +42,8 @@ export default function CommentContent(props: Props): JSX.Element {
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isReplyView, setIsReplyView] = useState<boolean>(false)
   const [isThreadView, setIsThreadView] = useState<boolean>(false)
-  const [isLike, setIsLike] = useState<boolean>(isCommentLike)
+  const [isLike, setIsLike] = useState<boolean>(comment.isCommentLike)
+  const [likeCount, setLikeCount] = useState<number>(comment.likeCount)
   const [commentText, setCommentText] = useState<string>('')
   const [replyText, setReplyText] = useState<string>('')
   const [replys, setReplys] = useState<Reply[]>(comment.replys)
@@ -60,7 +61,9 @@ export default function CommentContent(props: Props): JSX.Element {
     const request: LikeCommentIn = { id, isLike: !isLike }
     const ret = await postLikeComment(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
-    setIsLike(!isLike)
+    const data = ret.value
+    setIsLike(data.isLike)
+    setLikeCount(data.likeCount)
   }
 
   const handleEdit = () => {
