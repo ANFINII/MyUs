@@ -24,17 +24,33 @@ import ReplyInput from '../ReplyInput'
 import CommentThread from '../Thread'
 import CommentUpdate from '../Update'
 
+export interface CommentContentState {
+  isLike: boolean
+  likeCount: number
+  commentText: string
+  replyText: string
+  replys: Reply[]
+}
+
 export interface Props {
   comment: Comment
   user: UserMe
-  setFormState: Dispatch<SetStateAction<MediaDetailState>>
+  setParentState: Dispatch<SetStateAction<MediaDetailState>>
   handleToast: (content: string, isError: boolean) => void
 }
 
 export default function CommentContent(props: Props): JSX.Element {
-  const { comment, user, setFormState, handleToast } = props
+  const { comment, user, setParentState, handleToast } = props
   const { id, author, text } = comment
   const { isActive, ulid } = user
+
+  const initFormState: CommentContentState = {
+    isLike: comment.isCommentLike,
+    likeCount: comment.likeCount,
+    commentText: '',
+    replyText: '',
+    replys: comment.replys,
+  }
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
   const { isLoading, handleLoading } = useIsLoading()
@@ -43,32 +59,28 @@ export default function CommentContent(props: Props): JSX.Element {
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isReplyView, setIsReplyView] = useState<boolean>(false)
   const [isThreadView, setIsThreadView] = useState<boolean>(false)
-  const [isLike, setIsLike] = useState<boolean>(comment.isCommentLike)
-  const [likeCount, setLikeCount] = useState<number>(comment.likeCount)
-  const [commentText, setCommentText] = useState<string>('')
-  const [replyText, setReplyText] = useState<string>('')
-  const [replys, setReplys] = useState<Reply[]>(comment.replys)
+  const [formState, setFormState] = useState<CommentContentState>(initFormState)
 
+  const { isLike, likeCount, commentText, replyText, replys } = formState
   const disabled = author.ulid !== ulid
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
   const handleEditToggle = () => setIsEdit(!isEdit)
   const handleReplyView = () => setIsReplyView(!isReplyView)
   const handleThreadView = () => setIsThreadView(!isThreadView)
-  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setCommentText(e.target.value)
-  const handleReply = (e: ChangeEvent<HTMLTextAreaElement>) => setReplyText(e.target.value)
+  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setFormState((prev) => ({ ...prev, commentText: e.target.value }))
+  const handleReply = (e: ChangeEvent<HTMLTextAreaElement>) => setFormState((prev) => ({ ...prev, replyText: e.target.value }))
 
   const handleLike = async () => {
     const request: LikeCommentIn = { id, isLike: !isLike }
     const ret = await postLikeComment(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
-    setIsLike(data.isLike)
-    setLikeCount(data.likeCount)
+    setFormState((prev) => ({ ...prev, ...data }))
   }
 
   const handleEdit = () => {
-    setCommentText(text)
+    setFormState((prev) => ({ ...prev, commentText: text }))
     handleEditToggle()
   }
 
@@ -86,9 +98,8 @@ export default function CommentContent(props: Props): JSX.Element {
       handleToast(FetchError.Post, true)
       return
     }
-    setReplys([ret.value, ...replys])
+    setFormState((prev) => ({ ...prev, replys: [ret.value, ...prev.replys], replyText: '' }))
     handleLoading(false)
-    setReplyText('')
   }
 
   const handleUpdate = async () => {
@@ -100,7 +111,7 @@ export default function CommentContent(props: Props): JSX.Element {
       handleLoading(false)
       return
     }
-    setFormState((prev) => ({ ...prev, comments: prev.comments.map((c) => (c.id === id ? { ...c, text } : c)) }))
+    setParentState((prev) => ({ ...prev, comments: prev.comments.map((c) => (c.id === id ? { ...c, text } : c)) }))
     handleLoading(false)
     handleEditToggle()
   }
@@ -113,12 +124,12 @@ export default function CommentContent(props: Props): JSX.Element {
       handleToast(FetchError.Delete, true)
       return
     }
-    setFormState((prev) => ({ ...prev, comments: prev.comments.filter((c) => c.id !== id) }))
+    setParentState((prev) => ({ ...prev, comments: prev.comments.filter((c) => c.id !== id) }))
     handleModal()
   }
 
   const handleReplyCancel = () => {
-    setReplyText('')
+    setFormState((prev) => ({ ...prev, replyText: '' }))
     handleReplyView()
   }
 
@@ -149,7 +160,7 @@ export default function CommentContent(props: Props): JSX.Element {
       {isThreadView && (
         <VStack gap="5" className={clsx(replys.length > 0 && 'mt_10 ml_50')}>
           {replys.map((reply) => (
-            <CommentThread key={reply.id} reply={reply} user={user} setReplys={setReplys} handleToast={handleToast} />
+            <CommentThread key={reply.id} reply={reply} user={user} setParentState={setFormState} handleToast={handleToast} />
           ))}
         </VStack>
       )}

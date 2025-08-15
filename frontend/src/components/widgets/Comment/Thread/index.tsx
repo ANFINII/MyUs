@@ -1,4 +1,4 @@
-import { ChangeEvent, SetStateAction, useRef, useState } from 'react'
+import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from 'react'
 import { LikeCommentIn, UserMe } from 'types/internal/auth'
 import { Reply } from 'types/internal/comment'
 import { putComment, deleteComment } from 'api/internal/media/comment'
@@ -15,46 +15,57 @@ import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import CommentAction from '../Action'
 import CommentUpdate from '../Update'
 import style from './Thread.module.scss'
+import { CommentContentState } from '../Content'
 import CommentInfo from '../Info'
+
+export interface CommentThreadState {
+  isLike: boolean
+  likeCount: number
+  commentText: string
+}
 
 interface Props {
   reply: Reply
   user: UserMe
-  setReplys: (value: SetStateAction<Reply[]>) => void
+  setParentState: Dispatch<SetStateAction<CommentContentState>>
   handleToast: (content: string, isError: boolean) => void
 }
 
 export default function CommentThread(props: Props): JSX.Element {
-  const { reply, user, setReplys, handleToast } = props
+  const { reply, user, setParentState, handleToast } = props
   const { id, author, text } = reply
   const { isActive, ulid } = user
+
+  const initFormState: CommentThreadState = {
+    isLike: reply.isCommentLike,
+    likeCount: reply.likeCount,
+    commentText: '',
+  }
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
   const { isLoading, handleLoading } = useIsLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [isLike, setIsLike] = useState<boolean>(reply.isCommentLike)
-  const [likeCount, setLikeCount] = useState<number>(reply.likeCount)
-  const [commentText, setCommentText] = useState<string>('')
+  const [formState, setFormState] = useState<CommentThreadState>(initFormState)
 
+  const { isLike, likeCount, commentText } = formState
   const disabled = author.ulid !== ulid
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
   const handleEditToggle = () => setIsEdit(!isEdit)
-  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setCommentText(e.target.value)
+  const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setFormState((prev) => ({ ...prev, commentText: e.target.value }))
 
   const handleLike = async () => {
     const request: LikeCommentIn = { id, isLike: !isLike }
     const ret = await postLikeComment(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
-    setIsLike(data.isLike)
-    setLikeCount(data.likeCount)
+    setFormState((prev) => ({ ...prev, ...data }))
   }
 
   const handleEdit = () => {
-    setCommentText(text)
+    setFormState((prev) => ({ ...prev, commentText: text }))
     handleEditToggle()
   }
 
@@ -67,7 +78,7 @@ export default function CommentThread(props: Props): JSX.Element {
       handleLoading(false)
       return
     }
-    setReplys((prev) => prev.map((comment) => (comment.id === id ? { ...comment, text } : comment)))
+    setParentState((prev) => ({ ...prev, replys: prev.replys.map((c) => (c.id === id ? { ...c, text } : c)) }))
     handleLoading(false)
     handleEditToggle()
   }
@@ -80,7 +91,7 @@ export default function CommentThread(props: Props): JSX.Element {
       handleToast(FetchError.Delete, true)
       return
     }
-    setReplys((prev) => prev.filter((comment) => comment.id !== id))
+    setParentState((prev) => ({ ...prev, replys: prev.replys.filter((c) => c.id !== id) }))
     handleLoading(false)
     handleModal()
   }

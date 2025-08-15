@@ -179,7 +179,7 @@ export default function MediaDetailCommon(props: Props): JSX.Element {
         <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
         <VStack gap="10" className={clsx(style.comment_aria, isCommentView && style.active)}>
           {comments.map((comment) => (
-            <CommentContent key={comment.id} comment={comment} user={user} setFormState={setFormState} handleToast={handleToast} />
+            <CommentContent key={comment.id} comment={comment} user={user} setParentState={setFormState} handleToast={handleToast} />
           ))}
         </VStack>
       </VStack>
