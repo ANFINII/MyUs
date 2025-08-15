@@ -67,7 +67,7 @@ export default function CommentThread(props: Props): JSX.Element {
       handleLoading(false)
       return
     }
-    setReplys((prev) => prev.map((comment) => (comment.id === id ? { ...comment, text } : comment)))
+    setReplys((prev) => prev.map((c) => (c.id === id ? { ...c, text } : c)))
     handleLoading(false)
     handleEditToggle()
   }
@@ -80,7 +80,7 @@ export default function CommentThread(props: Props): JSX.Element {
       handleToast(FetchError.Delete, true)
       return
     }
-    setReplys((prev) => prev.filter((comment) => comment.id !== id))
+    setReplys((prev) => prev.filter((c) => c.id !== id))
     handleLoading(false)
     handleModal()
   }
