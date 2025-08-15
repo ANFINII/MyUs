@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { ComicIn } from 'types/internal/media'
 import { postComicCreate } from 'api/internal/media/create'
 import { FetchError } from 'utils/constants/enum'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -16,8 +17,8 @@ import VStack from 'components/parts/Stack/Vertical'
 export default function ComicCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [values, setValues] = useState<ComicIn>({ title: '', content: '' })
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -28,15 +29,15 @@ export default function ComicCreate(): JSX.Element {
   const handleForm = async () => {
     const { title, content, image, images } = values
     if (!isRequiredCheck({ title, content, image, images })) return
-    setIsLoading(true)
+    handleLoading(true)
     const ret = await postComicCreate(values)
     if (ret.isErr()) {
       handleToast(FetchError.Post, true)
-      setIsLoading(false)
+      handleLoading(false)
       return
     }
     router.push(`/media/comic/${ret.value.id}`)
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   return (

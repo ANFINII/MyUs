@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { MusicIn } from 'types/internal/media'
 import { postMusicCreate } from 'api/internal/media/create'
 import { FetchError } from 'utils/constants/enum'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -17,8 +18,8 @@ import VStack from 'components/parts/Stack/Vertical'
 export default function MusicCreate(): JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [values, setValues] = useState<MusicIn>({ title: '', content: '', lyric: '', download: true })
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -29,15 +30,15 @@ export default function MusicCreate(): JSX.Element {
   const handleForm = async () => {
     const { title, content, lyric, music } = values
     if (!isRequiredCheck({ title, content, lyric, music })) return
-    setIsLoading(true)
+    handleLoading(true)
     const ret = await postMusicCreate(values)
     if (ret.isErr()) {
       handleToast(FetchError.Post, true)
-      setIsLoading(false)
+      handleLoading(false)
       return
     }
     router.push(`/media/music/${ret.value.id}`)
-    setIsLoading(false)
+    handleLoading(false)
   }
 
   return (
