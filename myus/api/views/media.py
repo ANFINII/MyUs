@@ -60,8 +60,9 @@ class VideoAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
+        user_id = user.id if user else None
         type_no = comment_type_no_map(CommentType.VIDEO)
-        comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user.id)
+        comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
 
         data = VideoDetailOutData(
             detail=VideoDetailData(
@@ -130,8 +131,9 @@ class MusicAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
+        user_id = user.id if user else None
         type_no = comment_type_no_map(CommentType.MUSIC)
-        comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user.id)
+        comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
 
         data = MusicDetailOutData(
             detail=MusicDetailData(
@@ -192,8 +194,9 @@ class ComicAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
+        user_id = user.id if user else None
         type_no = comment_type_no_map(CommentType.COMIC)
-        comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user.id)
+        comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
 
         data = ComicDetailOutData(
             detail=ComicDetailData(
@@ -254,8 +257,9 @@ class PictureAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
+        user_id = user.id if user else None
         type_no = comment_type_no_map(CommentType.PICTURE)
-        comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user.id)
+        comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
 
         data = PictureDetailOutData(
             detail=PictureDetailData(
@@ -311,8 +315,9 @@ class BlogAPI(APIView):
 
         search = request.query_params.get("search")
         user = get_user(request)
+        user_id = user.id if user else None
         type_no = comment_type_no_map(CommentType.BLOG)
-        comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user.id)
+        comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
 
         data = BlogDetailOutData(
             detail=BlogDetailData(
