@@ -16,6 +16,7 @@
 - 関数コンポーネントを使用（クラスコンポーネントは使用しない）
 - カスタムフックは`use`プレフィックスを付ける
 - コンポーネント名はPascalCase、その他の関数はcamelCase
+- 関数コンポーネントの引数は分割代入せず、propsとして受け取ってから内部で展開する
 
 ## コーディング規約
 
@@ -29,7 +30,7 @@
 ```
 
 ### 命名規則
-- **Props型**: `Props`または`${ComponentName}Props`
+- **Props型**: 必ず`Props`のみを使用（`${ComponentName}Props`は使用しない）
 - **状態変数**: `[value, setValue]`の形式
 - **イベントハンドラー**: `handle${EventName}`の形式
 - **boolean変数**: `is${State}`、`has${Feature}`、`should${Action}`
@@ -44,6 +45,7 @@
 ## 品質管理
 
 ### ESLint/Prettier遵守
+- **必ずLinterのチェックを実行すること（`npm run lint`）**
 - すべてのESLintエラーを解決
 - ファイル末尾に改行を追加
 - セミコロンなし（設定による）
@@ -59,6 +61,20 @@ const handleClick = (e: any) => {}
 type Player = ReturnType<typeof videojs>
 const playerRef = useRef<Player | null>(null)
 const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {}
+```
+
+### コンポーネントのProps受け取り方
+```typescript
+// ❌ 悪い例
+export default function VideoJS({ options, onReady }: Props): JSX.Element {
+  // ...
+}
+
+// ✅ 良い例
+export default function VideoJS(props: Props): JSX.Element {
+  const { options, onReady } = props
+  // ...
+}
 ```
 
 ### Null/Undefinedチェック
@@ -164,3 +180,4 @@ console.log('Error:', error)
 
 ## 更新履歴
 - 2024-08-21: 初版作成
+- 2025-08-21: Props名の統一ルール、関数コンポーネントの引数展開ルール、Linterチェックの必須化を追加
