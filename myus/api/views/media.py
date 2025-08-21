@@ -3,7 +3,7 @@ import os
 
 from django.conf import settings
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat
@@ -22,7 +22,7 @@ from api.utils.decorators.auth import auth_user
 from api.utils.enum.response import ApiResponse
 from api.utils.enum.index import CommentType
 from api.utils.functions.convert.convert_hls import convert_exe
-from api.utils.functions.index import is_bool
+from api.utils.functions.index import create_url, is_bool
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.response import DataResponse
 from api.utils.functions.user import get_author, get_media_user
@@ -69,9 +69,9 @@ class VideoAPI(APIView):
                 id=obj.id,
                 title=obj.title,
                 content=obj.content,
-                image=obj.image.url,
-                video=obj.video.url,
-                convert=obj.convert.url,
+                image=create_url(obj.image.url),
+                video=create_url(obj.video.url),
+                convert=create_url(obj.convert.url),
                 comments=comments,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
                 read=obj.read,
@@ -141,8 +141,8 @@ class MusicAPI(APIView):
                 title=obj.title,
                 content=obj.content,
                 lyric=obj.lyric,
-                music=obj.music.url,
-                convert=obj.convert.url,
+                music=create_url(obj.music.url),
+                convert=create_url(obj.convert.url),
                 comments=comments,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
                 read=obj.read,
@@ -203,7 +203,7 @@ class ComicAPI(APIView):
                 id=obj.id,
                 title=obj.title,
                 content=obj.content,
-                image=obj.image.url,
+                image=create_url(obj.image.url),
                 comments=comments,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
                 read=obj.read,
@@ -266,7 +266,7 @@ class PictureAPI(APIView):
                 id=obj.id,
                 title=obj.title,
                 content=obj.content,
-                image=obj.image.url,
+                image=create_url(obj.image.url),
                 comments=comments,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
                 read=obj.read,
@@ -325,7 +325,7 @@ class BlogAPI(APIView):
                 title=obj.title,
                 content=obj.content,
                 richtext=obj.richtext,
-                image=obj.image.url,
+                image=create_url(obj.image.url),
                 comments=comments,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
                 read=obj.read,

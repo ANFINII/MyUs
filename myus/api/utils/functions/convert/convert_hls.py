@@ -13,14 +13,14 @@ from api.utils.functions.convert.master_m3u8 import Masterm3u8
 
 
 """
-    videos/videos_video/user_{instance.author.id}/object_{instance.id}/file_name.mp4
-    videos/videos_video/user_{instance.author.id}/object_{instance.id}/file_name.m3u8
-    videos/videos_video/user_{instance.author.id}/object_{instance.id}/file_name_144p.m3u8
-    videos/videos_video/user_{instance.author.id}/object_{instance.id}/file_name_240p.m3u8
-    videos/videos_video/user_{instance.author.id}/object_{instance.id}/file_name_360p.m3u8
-    videos/videos_video/user_{instance.author.id}/object_{instance.id}/file_name_480p.m3u8
-    videos/videos_video/user_{instance.author.id}/object_{instance.id}/file_name_720p.m3u8
-    videos/videos_video/user_{instance.author.id}/object_{instance.id}/file_name_1080p.m3u8
+    videos/video/user_{instance.author.id}/object_{instance.id}/file_name.mp4
+    videos/video/user_{instance.author.id}/object_{instance.id}/file_name.m3u8
+    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_144p.m3u8
+    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_240p.m3u8
+    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_360p.m3u8
+    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_480p.m3u8
+    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_720p.m3u8
+    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_1080p.m3u8
 """
 
 

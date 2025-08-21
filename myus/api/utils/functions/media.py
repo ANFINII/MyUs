@@ -4,6 +4,7 @@ from api.types.data.comment import CommentData
 from api.types.data.media import VideoDetailData
 from api.models.media import Video
 from api.utils.functions.user import get_author
+from api.utils.functions.index import create_url
 
 
 def get_hashtag(hashtag: HashTag) -> HashtagData:
@@ -15,9 +16,9 @@ def get_video_detail_data(video: Video, comments: list[CommentData]) -> VideoDet
         id=video.id,
         title=video.title,
         content=video.content,
-        image=video.image.url,
-        video=video.video.url,
-        convert=video.convert.url,
+        image=create_url(video.image.url),
+        video=create_url(video.video.url),
+        convert=create_url(video.convert.url),
         comments=comments,
         hashtags=[get_hashtag(hashtag) for hashtag in video.hashtag.all()],
         like=video.total_like(),
