@@ -127,12 +127,12 @@
   -ms-flex: 0 1 auto;
   flex: 0 1 auto;
   width: 1; /* auto → 1*/
-  padding: 0; /* add */
+  padding: 0;
 }
 
 .video-js .vjs-time-control.vjs-time-divider {
   width: 14px;
-  padding: 0; /* add */
+  padding: 0;
 }
 
 .video-js .vjs-time-control.vjs-time-divider div {
@@ -142,8 +142,8 @@
 
 .video-js .vjs-time-control.vjs-current-time {
   margin-left: 1em;
-  padding: 0; /* add */
-  margin: 0; /* add */
+  padding: 0;
+  margin: 0;
 }
 
 .video-js .vjs-time-control .vjs-current-time-display,
@@ -268,10 +268,10 @@
   width: 2em;
   height: 2em;
   line-height: 2em;
-  border: 0.06666em solid #fff; /* none → 0.06666em solid #fff */
+  border: 0.06666em solid rgb(255, 255, 255);
   font-size: 2.5em;
-  background: rgba(0, 105, 255, 0.2); /* #cc181e → rgba(0, 105, 255, 0.2) */
-  color: #fff;
+  background: rgba(0, 105, 255, 0.2);
+  color: rgb(255, 255, 255);
   -webkit-transition: border-color 0.4s, outline 0.4s, background-color 0.4s;
   -moz-transition: border-color 0.4s, outline 0.4s, background-color 0.4s;
   -ms-transition: border-color 0.4s, outline 0.4s, background-color 0.4s;
@@ -293,9 +293,9 @@
 
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-item,
 .video-js .vjs-menu-button-popup .vjs-menu .vjs-menu-title {
-  background: #151b17;
   margin: 0.3em 0;
   border-radius: 0.3em;
+  background: #151b17;
 }
 
 .vjs-menu li.vjs-menu-title {
@@ -324,7 +324,7 @@
 }
 
 .video-js .vjs-loading-spinner {
-  border-color: rgb(50, 150, 255); /* #cc181e → rgb(50, 150, 255); */
+  border-color: rgb(50, 150, 255);
 }
 
 .video-js .vjs-control-bar2 {
@@ -332,14 +332,14 @@
 }
 
 .video-js .vjs-control-bar {
-  background: rgba(0, 0, 0, 0.3) !important;
   color: #ffffff;
   font-size: 12px;
+  background: rgba(0, 0, 0, 0.3) !important;
 }
 
 .video-js .vjs-play-progress,
 .video-js .vjs-volume-level {
-  background: rgb(50, 150, 255); /* #cc181e → rgb(50, 150, 255) */
+  background: rgb(50, 150, 255);
 }
 
 .video-js .vjs-load-progress {
@@ -385,7 +385,7 @@
   cursor: pointer;
   font-size: 15px;
   font-weight: bold;
-  color: #fff;
+  color: rgb(255, 255, 255);
   border: 1px solid #00008b;
   background: #0000cd;
 }
@@ -393,10 +393,10 @@
 /* リストホバー自動再生 */
 .video .video-js .vjs-big-play-button {
   display: none;
-  border: 0 solid #fff; /* none → 0.06666em solid #fff */
+  border: 0 solid rgb(255, 255, 255);
   opacity: 0;
   color: rgba(255, 255, 255, 0);
-  background: rgba(255, 255, 255, 0); /* #cc181e → rgba(0, 105, 255, 0) */
+  background: rgba(255, 255, 255, 0);
 }
 
 .video .video-js {
