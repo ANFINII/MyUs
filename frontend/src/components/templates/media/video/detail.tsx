@@ -1,51 +1,121 @@
-import { Video } from 'types/internal/media'
-import Meta from 'components/layout/Head/Meta'
+import { useRef } from 'react'
+import Player from 'video.js/dist/types/player'
+import { VideoDetailOut } from 'types/internal/media/detail'
+import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
+import Divide from 'components/parts/Divide'
+import VStack from 'components/parts/Stack/Vertical'
+import MediaDetail from 'components/widgets/Media/Detail'
+import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
+import MediaSideImage from 'components/widgets/Media/Side/Image'
+import VideoJS from 'components/widgets/Video/videojs'
 
-interface Props {
-  video: Video
+interface QualityLevels {
+  length: number
+  on: (event: string, callback: () => void) => void
 }
 
-export default function VideDetailPage(props: Props): JSX.Element {
-  const { video } = props
-  const { image, convert, publish } = video
+type PlayerWithQuality = Player & {
+  qualityLevels?: () => QualityLevels
+}
+
+interface Props {
+  status: number
+  data: VideoDetailOut
+}
+
+export default function VideoDetail(props: Props): JSX.Element {
+  const { data } = props
+  const { detail, list } = data
+  const { image, convert, publish, ...other } = detail
+
+  const { toast, handleToast } = useToast()
+
+  const playerRef = useRef<Player | null>(null)
+
+  const handlePlayerReady = (player: Player) => {
+    playerRef.current = player
+
+    // 解像度選択メニューを追加（複数の解像度がある場合）
+    const playerWithQuality = player as PlayerWithQuality
+    if (playerWithQuality.qualityLevels && typeof playerWithQuality.qualityLevels === 'function') {
+      const qualityLevels = playerWithQuality.qualityLevels()
+
+      // 解像度が複数ある場合のみメニューを表示
+      if (qualityLevels && qualityLevels.length > 1) {
+        // qualityLevelsプラグインが利用可能な場合の処理
+        qualityLevels.on('addqualitylevel', () => {
+          // 解像度が追加された時の処理
+        })
+      }
+    }
+  }
 
   return (
-    <Main>
-      <Meta title="Video" />
-      {publish ? (
-        <article className="media_detail">
-          <div className="media_detail_picture">
-            <div className="media_detail_contents">
-              <video
-                id="video"
-                className="video vjs-fluid vjs-big-play-centered vjs-16-9"
-                controls
-                controlsList="nodownload"
-                // onContextMenu="return false"
-                poster={image}
-                data-setup='{"playbackRates": [0.5, 1, 1.25, 1.5, 2]}'
-              >
-                <source src={convert} type="application/x-mpegURL" />
-                <p>動画を再生するには、videoタグをサポートしたブラウザが必要です!</p>
-                {/* <track kind="captions" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English">
-                <track kind="subtitles" src="{% static 'vtt/captions.ja.vtt' %}" srclang="en" label="English"> */}
-                <p className="vjs-no-js">
-                  この動画を見るには、JavaScriptを有効にしてください!
-                  {/* <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> */}
-                </p>
-              </video>
-            </div>
+    <Main metaTitle="Video" toast={toast}>
+      <MediaDetail publish={publish}>
+        <div className="media_detail_video">
+          <div className="media_detail_contents">
+            <VideoJS
+              onReady={handlePlayerReady}
+              options={{
+                src: convert,
+                poster: image,
+                width: 544,
+                height: 306,
+                muted: false,
+                controls: true,
+                autoplay: false,
+                loop: false,
+                preload: 'auto',
+                controlBar: {
+                  playToggle: true,
+                  volumePanel: {
+                    inline: false,
+                    vertical: true,
+                  },
+                  currentTimeDisplay: true,
+                  timeDivider: true,
+                  durationDisplay: true,
+                  progressControl: {
+                    seekBar: {
+                      loadProgressBar: true,
+                      mouseTimeDisplay: true,
+                      playProgressBar: true,
+                    },
+                  },
+                  remainingTimeDisplay: false,
+                  customControlSpacer: true,
+                  playbackRateMenuButton: {
+                    playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
+                  },
+                  chaptersButton: false,
+                  descriptionsButton: false,
+                  subsCapsButton: false,
+                  audioTrackButton: false,
+                  fullscreenToggle: true,
+                },
+                playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
+                loadingSpinner: true,
+                bigPlayButton: true,
+                errorDisplay: true,
+                userActions: {
+                  hotkeys: true,
+                },
+              }}
+            />
           </div>
-
-          <div className="media_detail_grid_music">
-            <div>{/* {% include 'parts/common/common.html' %} */}</div>
-            <div className="ml_20">{/* {% include 'video/video_article_detail.html' %} */}</div>
-          </div>
-        </article>
-      ) : (
-        <h2 className="unpublished">非公開に設定されてます!</h2>
-      )}
+        </div>
+        <Divide />
+        <div className="media_detail_grid">
+          <MediaDetailCommon media={{ type: 'video', ...other }} handleToast={handleToast} />
+          <VStack gap="4" className="ml_20">
+            {list.map((media) => (
+              <MediaSideImage key={media.id} href={`/media/video/${media.id}`} src={media.image} media={media} />
+            ))}
+          </VStack>
+        </div>
+      </MediaDetail>
     </Main>
   )
 }
