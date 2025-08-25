@@ -81,9 +81,7 @@ export default function VideoJS(props: Props): JSX.Element {
                     }
                     return 0
                   })
-                  sortedItems.forEach((item) => {
-                    menuContent.appendChild(item)
-                  })
+                  sortedItems.forEach((item) => menuContent.appendChild(item))
                 }
               }
             }
