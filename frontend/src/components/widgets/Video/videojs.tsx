@@ -100,9 +100,15 @@ export default function VideoJS(props: Props): JSX.Element {
       }
 
       handleClick(): void {
-        const menu = (this as unknown as { player: () => Player }).player().el().querySelector('.vjs-settings-menu')
-        if (menu) {
-          menu.classList.toggle('vjs-hidden')
+        const playerEl = (this as unknown as { player: () => Player }).player().el()
+        const mainMenu = playerEl.querySelector('.vjs-settings-menu')
+        const submenus = playerEl.querySelectorAll('.vjs-speed-submenu, .vjs-quality-submenu')
+        const isSubmenuOpen = Array.from(submenus).some((submenu) => !submenu.classList.contains('vjs-hidden'))
+        if (isSubmenuOpen) {
+          submenus.forEach((submenu) => submenu.classList.add('vjs-hidden'))
+          if (mainMenu) mainMenu.classList.add('vjs-hidden')
+        } else {
+          if (mainMenu) mainMenu.classList.toggle('vjs-hidden')
         }
       }
     }
