@@ -67,7 +67,7 @@ export default function VideoJS(props: Props): JSX.Element {
               const menu = qualityButton.querySelector('.vjs-menu')
               const menuContent = menu?.querySelector('.vjs-menu-content')
               if (menuContent) {
-                const menuItems = Array.from(menuContent.querySelectorAll('.vjs-menu-item')) as HTMLElement[]
+                const menuItems = Array.from(menuContent.querySelectorAll('.vjs-menu-item'))
                 if (menuItems.length > 1) {
                   const sortedItems = [...menuItems].sort((a, b) => {
                     const aText = (a.textContent || '').trim()
