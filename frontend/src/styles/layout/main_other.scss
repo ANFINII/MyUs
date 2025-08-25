@@ -67,10 +67,10 @@
 }
 
 /* リストデザイン詳細用 */
-.video-js {
-  min-width: 192px;
-  min-height: 153px;
-}
+// .video-js {
+//   min-width: 192px;
+//   min-height: 153px;
+// }
 
 .advertise .video-js,
 .video_auto .video-js {
@@ -102,15 +102,13 @@
 
 .media_detail_video,
 .media_detail_picture {
-  background: rgb(220, 220, 220);
+  background: rgb(0, 0, 0);
 }
 
 .media_detail_contents {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 72%;
   margin: 0 auto;
+  cursor: pointer;
 
   img {
     width: 100%;

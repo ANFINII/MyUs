@@ -382,12 +382,12 @@
   box-sizing: border-box;
   padding: 5px;
   text-align: center;
-  cursor: pointer;
   font-size: 15px;
   font-weight: bold;
   color: rgb(255, 255, 255);
-  border: 1px solid #00008b;
-  background: #0000cd;
+  border: 1px solid rgb(0, 0, 139);
+  background: rgb(0, 0, 205);
+  cursor: pointer;
 }
 
 /* リストホバー自動再生 */
@@ -405,4 +405,110 @@
 
 .video .vjs-control-bar {
   display: none !important;
+}
+
+// ボリュームバーを常に表示
+.video-js {
+  .vjs-volume-panel.vjs-control.vjs-volume-panel-horizontal:not(.vjs-slider-active),
+  .vjs-volume-panel.vjs-control.vjs-volume-panel-horizontal:hover,
+  .vjs-volume-panel.vjs-control.vjs-volume-panel-horizontal:active,
+  .vjs-volume-panel.vjs-control.vjs-volume-panel-horizontal {
+    width: auto !important;
+  }
+
+  .vjs-volume-panel .vjs-volume-control.vjs-control.vjs-volume-horizontal {
+    display: flex !important;
+    width: 5em !important;
+    height: 3em !important;
+    margin-right: 1em !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .vjs-volume-panel:hover .vjs-volume-control.vjs-control.vjs-volume-horizontal,
+  .vjs-volume-panel.vjs-hover .vjs-volume-control.vjs-control.vjs-volume-horizontal,
+  .vjs-volume-panel.vjs-slider-active .vjs-volume-control.vjs-control.vjs-volume-horizontal,
+  .vjs-volume-panel .vjs-volume-control.vjs-control.vjs-volume-horizontal {
+    display: flex !important;
+    width: 5em !important;
+    height: 3em !important;
+    margin-right: 1em !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+// カスタム設定ボタン
+.vjs-settings-button {
+  cursor: pointer;
+}
+
+// カスタム設定メニュー
+.vjs-settings-menu {
+  position: absolute;
+  bottom: 40px;
+  right: 0;
+  min-width: 200px;
+  padding: 0;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+
+  &.vjs-hidden {
+    display: none;
+  }
+}
+
+.vjs-speed-submenu,
+.vjs-quality-submenu {
+  position: absolute;
+  bottom: 40px;
+  right: 0;
+  padding: 0;
+  min-width: 200px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+
+  &.vjs-hidden {
+    display: none;
+  }
+}
+
+.vjs-settings-menu-content {
+  margin: 8px 0;
+}
+
+.vjs-settings-menu-item {
+  display: flex;
+  padding: 8px 16px;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &.vjs-back-button {
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .vjs-menu-label {
+    color: rgba(255, 255, 255, 1);
+  }
+
+  .vjs-menu-value {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .vjs-menu-checkmark {
+    margin-left: 16px;
+  }
+
+  .vjs-back-arrow {
+    margin-right: 8px;
+  }
 }
