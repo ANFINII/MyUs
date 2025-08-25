@@ -27,7 +27,7 @@ interface Props {
 export default function VideoDetail(props: Props): JSX.Element {
   const { data } = props
   const { detail, list } = data
-  const { image, convert, publish, ...other } = detail
+  const { image, video, publish, ...other } = detail
 
   const { toast, handleToast } = useToast()
 
@@ -59,49 +59,36 @@ export default function VideoDetail(props: Props): JSX.Element {
             <VideoJS
               onReady={handlePlayerReady}
               options={{
-                src: convert,
+                src: video,
+                // sources: [
+                //   { src: video, type: 'video/mp4', label: '1080p', default: true },
+                //   { src: video, type: 'video/mp4', label: '720p' },
+                //   { src: video, type: 'video/mp4', label: '480p' },
+                //   { src: video, type: 'video/mp4', label: '360p' },
+                //   { src: video, type: 'video/mp4', label: '240p' },
+                // ],
                 poster: image,
-                width: 544,
-                height: 306,
-                muted: false,
                 controls: true,
-                autoplay: false,
                 loop: false,
                 preload: 'auto',
                 controlBar: {
                   playToggle: true,
-                  volumePanel: {
-                    inline: false,
-                    vertical: true,
-                  },
                   currentTimeDisplay: true,
                   timeDivider: true,
                   durationDisplay: true,
-                  progressControl: {
-                    seekBar: {
-                      loadProgressBar: true,
-                      mouseTimeDisplay: true,
-                      playProgressBar: true,
-                    },
-                  },
                   remainingTimeDisplay: false,
                   customControlSpacer: true,
-                  playbackRateMenuButton: {
-                    playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
-                  },
                   chaptersButton: false,
                   descriptionsButton: false,
-                  subsCapsButton: false,
-                  audioTrackButton: false,
+                  subsCapsButton: true,
+                  audioTrackButton: true,
                   fullscreenToggle: true,
                 },
-                playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
+                playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
                 loadingSpinner: true,
                 bigPlayButton: true,
                 errorDisplay: true,
-                userActions: {
-                  hotkeys: true,
-                },
+                userActions: { hotkeys: true },
               }}
             />
           </div>
