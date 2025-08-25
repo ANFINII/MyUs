@@ -28,7 +28,9 @@
     "react-quill": "^2.0.0",
     "sass": "^1.90.0",
     "sass-loader": "^16.0.5",
-    "video.js": "^8.23.4"
+    "video.js": "^8.23.4",
+    "videojs-contrib-quality-levels": "^4.1.0",
+    "videojs-hls-quality-selector": "^2.0.0"
   },
   "devDependencies": {
     "@eslint/config-array": "^0.19.2",
