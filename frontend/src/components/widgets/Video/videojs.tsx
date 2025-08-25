@@ -1,8 +1,29 @@
 import { useRef, useEffect } from 'react'
 import videojs from 'video.js'
+import 'videojs-contrib-quality-levels'
+import 'videojs-hls-quality-selector'
 
 type Player = ReturnType<typeof videojs>
 type PlayerOptions = Parameters<typeof videojs>[1]
+
+interface QualityLevel {
+  enabled: boolean
+  height: number
+  width: number
+  bitrate: number
+}
+
+interface QualityLevels {
+  length: number
+  selectedIndex: number
+  [index: number]: QualityLevel
+  on(event: string, callback: () => void): void
+}
+
+interface ExtendedPlayer extends Player {
+  qualityLevels(): QualityLevels
+  hlsQualitySelector(options?: { displayCurrentQuality?: boolean; sort?: 'high-to-low' | 'low-to-high' }): void
+}
 
 interface Props {
   options: PlayerOptions
@@ -37,6 +58,39 @@ export default function VideoJS(props: Props): JSX.Element {
       }
 
       const player = (playerRef.current = videojs(videoElement, playerOptions, () => {
+        const extendedPlayer = player as ExtendedPlayer
+        extendedPlayer.hlsQualitySelector({ displayCurrentQuality: true })
+        setTimeout(() => {
+          const reorderQualityMenu = () => {
+            const qualityButton = player.el().querySelector('.vjs-quality-selector')
+            if (qualityButton) {
+              const menu = qualityButton.querySelector('.vjs-menu')
+              const menuContent = menu?.querySelector('.vjs-menu-content')
+              if (menuContent) {
+                const menuItems = Array.from(menuContent.querySelectorAll('.vjs-menu-item'))
+                if (menuItems.length > 1) {
+                  const sortedItems = [...menuItems].sort((a, b) => {
+                    const aText = (a.textContent || '').trim()
+                    const bText = (b.textContent || '').trim()
+                    if (aText.includes('Auto')) return 1
+                    if (bText.includes('Auto')) return -1
+                    const aMatch = aText.match(/(\d+)p/)
+                    const bMatch = bText.match(/(\d+)p/)
+                    if (aMatch && bMatch && aMatch[1] && bMatch[1]) {
+                      return parseInt(bMatch[1]) - parseInt(aMatch[1])
+                    }
+                    return 0
+                  })
+                  sortedItems.forEach((item) => menuContent.appendChild(item))
+                }
+              }
+            }
+          }
+          reorderQualityMenu()
+          setTimeout(reorderQualityMenu, 500)
+          setTimeout(reorderQualityMenu, 1000)
+          setTimeout(reorderQualityMenu, 2000)
+        }, 100)
         onReady?.(player)
       }))
 
