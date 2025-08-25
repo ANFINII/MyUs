@@ -1,6 +1,5 @@
 import { useRef, useEffect } from 'react'
 import videojs from 'video.js'
-import 'video.js/dist/video-js.css'
 
 type Player = ReturnType<typeof videojs>
 type PlayerOptions = Parameters<typeof videojs>[1]
