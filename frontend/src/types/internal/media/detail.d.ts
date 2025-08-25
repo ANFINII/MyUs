@@ -15,7 +15,10 @@ export interface MediaDetail {
   mediaUser: MediaUser
 }
 
-export interface VideoDetail extends Video {
+export interface VideoDetail extends MediaDetail {
+  image: string
+  video: string
+  convert: string
   comments: Comment[]
   hashtags: string[]
 }
