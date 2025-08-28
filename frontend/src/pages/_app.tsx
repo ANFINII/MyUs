@@ -23,7 +23,8 @@ import 'styles/internal/audio.scss'
 import 'video.js/dist/video-js.css'
 import 'styles/internal/videojs-myus.scss'
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp(props: AppProps) {
+  const { Component, pageProps } = props
   const router = useRouter()
   return (
     <UserProvider>
