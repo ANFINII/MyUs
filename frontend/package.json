@@ -26,7 +26,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-quill": "^2.0.0",
-    "sass": "^1.90.0",
+    "sass": "^1.91.0",
     "sass-loader": "^16.0.5",
     "video.js": "^8.23.4",
     "videojs-contrib-quality-levels": "^4.1.0",
