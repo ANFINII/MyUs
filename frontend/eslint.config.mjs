@@ -1,6 +1,7 @@
 import js from '@eslint/js'
 import stylisticTs from '@stylistic/eslint-plugin-ts'
 import tsEsLintPlugin from '@typescript-eslint/eslint-plugin'
+import nextPlugin from '@next/eslint-plugin-next'
 import importPlugin from 'eslint-plugin-import'
 import pluginReact from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -19,9 +20,15 @@ export default [
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
     plugins: {
       react: pluginReact,
       'react-hooks': reactHooks,
+      '@next/next': nextPlugin,
       'import': importPlugin,
       'unused-imports': unusedPlugin,
       '@typescript-eslint': tsEsLintPlugin,
@@ -29,7 +36,6 @@ export default [
     },
     rules: {
       semi: ['error', 'never'], // セミコロンを不要に
-      indent: ['error', 2], // インデントを2スペースで強制
       quotes: ['error', 'single'], // シングルクォートを強制
       eqeqeq: ['error', 'always'], // 厳密な等価演算子を強制
       complexity: ['warn', { max: 20 }], // 関数の複雑さを制限
