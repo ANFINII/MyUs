@@ -11,7 +11,7 @@ interface Props {
   media: Media
 }
 
-export default function MediaSideImage(props: Props): JSX.Element {
+export default function MediaSideImage(props: Props): React.JSX.Element {
   const { href, src, media } = props
 
   return (

@@ -6,7 +6,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function ErrorCheck(props: Props): JSX.Element {
+export default function ErrorCheck(props: Props): React.JSX.Element {
   const { status, children } = props
 
   if (status >= 500) return <Custom500 />

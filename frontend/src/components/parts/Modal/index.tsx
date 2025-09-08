@@ -21,7 +21,7 @@ export interface Props {
   children: React.ReactNode
 }
 
-export default function Modal(props: Props): JSX.Element {
+export default function Modal(props: Props): React.JSX.Element {
   const { open, onClose, title, children, actions, size = 'm', className } = props
 
   if (!open) return <></>
@@ -36,11 +36,13 @@ export default function Modal(props: Props): JSX.Element {
           </button>
         </header>
         <div className={style.content}>{children}</div>
-        {actions &&
+        {actions && (
           <footer className={style.footer}>
-            {actions.reverse().map((action, index) => <Button key={index} {...action} />)}
+            {actions.reverse().map((action, index) => (
+              <Button key={index} {...action} />
+            ))}
           </footer>
-        }
+        )}
       </div>
     </div>
   )

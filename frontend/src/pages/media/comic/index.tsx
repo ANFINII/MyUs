@@ -20,7 +20,7 @@ interface Props {
   datas: Comic[]
 }
 
-export default function ComicsPage(props: Props): JSX.Element {
+export default function ComicsPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <Comics {...props} />

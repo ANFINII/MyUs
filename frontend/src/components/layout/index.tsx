@@ -7,7 +7,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function Layout(props: Props): JSX.Element {
+export default function Layout(props: Props): React.JSX.Element {
   const { children } = props
 
   const { loading } = useLoading()

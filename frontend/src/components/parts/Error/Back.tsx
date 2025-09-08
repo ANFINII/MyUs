@@ -7,7 +7,7 @@ interface Props {
   content: string
 }
 
-export default function BackError(props: Props): JSX.Element {
+export default function BackError(props: Props): React.JSX.Element {
   const { content } = props
 
   const router = useRouter()

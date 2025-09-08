@@ -20,7 +20,7 @@ interface Props {
   datas: Video[]
 }
 
-export default function VideosPage(props: Props): JSX.Element {
+export default function VideosPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <Videos {...props} />

@@ -7,6 +7,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return { props: translations }
 }
 
-export default function UserPolicyPage(): JSX.Element {
+export default function UserPolicyPage(): React.JSX.Element {
   return <UserPolicy />
 }

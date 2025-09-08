@@ -14,7 +14,7 @@ interface Props {
   onError?: React.ReactEventHandler
 }
 
-export default function ExImage(props: Props): JSX.Element {
+export default function ExImage(props: Props): React.JSX.Element {
   const { src, width, height, size, className } = props
 
   const [imageSrc, setImageSrc] = useState(src)

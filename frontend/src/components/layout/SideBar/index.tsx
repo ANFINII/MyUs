@@ -6,7 +6,7 @@ import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
 import SideBarItem from 'components/parts/NavItem/SideBarItem'
 
-export default function SideBar(): JSX.Element {
+export default function SideBar(): React.JSX.Element {
   return (
     <aside className="sidebar">
       <nav>

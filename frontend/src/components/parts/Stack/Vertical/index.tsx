@@ -10,7 +10,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function VStack(props: Props): JSX.Element {
+export default function VStack(props: Props): React.JSX.Element {
   const { gap = '0', align = 'stretch', full, wrap = false, className, children } = props
 
   return (

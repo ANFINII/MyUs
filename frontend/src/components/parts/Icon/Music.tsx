@@ -3,7 +3,7 @@ interface Props {
   className?: string
 }
 
-export default function IconMusic(props: Props): JSX.Element {
+export default function IconMusic(props: Props): React.JSX.Element {
   const { size, className = '' } = props
 
   return (

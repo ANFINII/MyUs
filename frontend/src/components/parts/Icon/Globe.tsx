@@ -3,7 +3,7 @@ interface Props {
   className?: string
 }
 
-export default function IconGlobe(props: Props): JSX.Element {
+export default function IconGlobe(props: Props): React.JSX.Element {
   const { size, className = '' } = props
 
   return (

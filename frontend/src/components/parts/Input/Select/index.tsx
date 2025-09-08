@@ -12,7 +12,7 @@ interface Props {
   onChange: (e: ChangeEvent<HTMLSelectElement>) => void
 }
 
-export default function Select(props: Props): JSX.Element {
+export default function Select(props: Props): React.JSX.Element {
   const { label, name, value, options, placeholder, className = '', onChange } = props
 
   return (

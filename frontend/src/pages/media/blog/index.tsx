@@ -20,7 +20,7 @@ interface Props {
   datas: Blog[]
 }
 
-export default function BlogsPage(props: Props): JSX.Element {
+export default function BlogsPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <Blogs {...props} />

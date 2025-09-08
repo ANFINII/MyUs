@@ -32,7 +32,7 @@ const initSignup: SignupIn = {
   gender: GenderType.Male,
 }
 
-export default function Signup(): JSX.Element {
+export default function Signup(): React.JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()

@@ -12,7 +12,7 @@ interface Props {
   media: Video
 }
 
-export default function MediaVideo(props: Props): JSX.Element {
+export default function MediaVideo(props: Props): React.JSX.Element {
   const { media } = props
   const { id, image, convert } = media
 

@@ -11,7 +11,7 @@ interface Props {
   className?: string
 }
 
-export default function AvatarLink(props: Props): JSX.Element {
+export default function AvatarLink(props: Props): React.JSX.Element {
   const { src, size = 'm', ulid, nickname, className } = props
 
   const sizeValue = size === 's' ? '36' : size === 'm' ? '40' : '48'

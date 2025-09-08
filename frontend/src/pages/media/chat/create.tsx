@@ -7,6 +7,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return { props: { ...translations } }
 }
 
-export default function ChatCreatePage(): JSX.Element {
+export default function ChatCreatePage(): React.JSX.Element {
   return <ChatCreate />
 }

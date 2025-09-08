@@ -27,7 +27,7 @@ interface Props {
   profile: ProfileOut
 }
 
-export default function SettingProfileEdit(props: Props): JSX.Element {
+export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const { profile } = props
 
   const router = useRouter()

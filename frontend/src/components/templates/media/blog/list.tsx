@@ -8,7 +8,7 @@ interface Props {
   datas: Blog[]
 }
 
-export default function Blogs(props: Props): JSX.Element {
+export default function Blogs(props: Props): React.JSX.Element {
   const { datas } = props
 
   const search = useSearch(datas)

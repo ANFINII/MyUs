@@ -19,7 +19,7 @@ import VStack from 'components/parts/Stack/Vertical'
 
 const Quill = dynamic(() => import('components/widgets/Quill'), { ssr: false })
 
-export default function BlogCreate(): JSX.Element {
+export default function BlogCreate(): React.JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()

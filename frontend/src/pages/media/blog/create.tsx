@@ -7,6 +7,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return { props: { ...translations } }
 }
 
-export default function BlogCreatePage(): JSX.Element {
+export default function BlogCreatePage(): React.JSX.Element {
   return <BlogCreate />
 }

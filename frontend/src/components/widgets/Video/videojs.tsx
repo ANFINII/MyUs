@@ -10,7 +10,7 @@ interface Props {
   onReady?: (player: Player) => void
 }
 
-export default function VideoJS(props: Props): JSX.Element {
+export default function VideoJS(props: Props): React.JSX.Element {
   const { options, onReady } = props
 
   const videoRef = useRef<HTMLDivElement>(null)

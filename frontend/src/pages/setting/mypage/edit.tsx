@@ -18,7 +18,7 @@ interface Props {
   mypage: MypageOut
 }
 
-export default function SettingMypageEditPage(props: Props): JSX.Element {
+export default function SettingMypageEditPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <SettingMyPageEdit {...props} />

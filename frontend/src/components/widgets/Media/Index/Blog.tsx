@@ -8,7 +8,7 @@ interface Props {
   media: Blog
 }
 
-export default function MediaBlog(props: Props): JSX.Element {
+export default function MediaBlog(props: Props): React.JSX.Element {
   const { media } = props
   const { id, image } = media
 

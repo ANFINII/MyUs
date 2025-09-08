@@ -9,7 +9,7 @@ interface Props {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function Search(props: Props): JSX.Element {
+export default function Search(props: Props): React.JSX.Element {
   const { value, className, onChange } = props
 
   const router = useRouter()

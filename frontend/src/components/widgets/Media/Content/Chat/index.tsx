@@ -10,7 +10,7 @@ interface Props {
   media: Chat
 }
 
-export default function ChatMediaContent(props: Props): JSX.Element {
+export default function ChatMediaContent(props: Props): React.JSX.Element {
   const { href, media } = props
   const { author } = media
   const { avatar, ulid, nickname } = author

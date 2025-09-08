@@ -8,7 +8,7 @@ interface Props {
   datas: Chat[]
 }
 
-export default function Chats(props: Props): JSX.Element {
+export default function Chats(props: Props): React.JSX.Element {
   const { datas } = props
 
   const search = useSearch(datas)

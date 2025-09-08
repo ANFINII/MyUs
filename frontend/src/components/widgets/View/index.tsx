@@ -10,7 +10,7 @@ interface Props {
   content: string
 }
 
-export default function View(props: Props): JSX.Element {
+export default function View(props: Props): React.JSX.Element {
   const { isView, onView, size = 'm', content, color = 'light' } = props
 
   return (

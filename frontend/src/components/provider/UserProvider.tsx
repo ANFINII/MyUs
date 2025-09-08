@@ -16,7 +16,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export function UserProvider(props: Props): JSX.Element {
+export function UserProvider(props: Props): React.JSX.Element {
   const { children } = props
 
   const [user, setUser] = useState<UserMe>(initUser)

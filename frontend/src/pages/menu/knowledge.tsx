@@ -7,6 +7,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return { props: translations }
 }
 
-export default function KnowledgePage(): JSX.Element {
+export default function KnowledgePage(): React.JSX.Element {
   return <Knowledge />
 }

@@ -2,7 +2,7 @@ import { Row } from 'types/internal/table'
 import Main from 'components/layout/Main'
 import SideTable from 'components/widgets/Table/Side'
 
-export default function Knowledge(): JSX.Element {
+export default function Knowledge(): React.JSX.Element {
   const rows: Row[] = [
     { label: 'MyUs', content: 'MyUsは総合SNS投稿サイトです。是非いろいろなアイディアを投稿して楽しみましょう!' },
     { label: 'Video', content: '動画コンテンツを投稿できる機能です。' },

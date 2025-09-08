@@ -18,7 +18,7 @@ interface Props {
   data: BlogDetailOut
 }
 
-export default function BlogDetailPage(props: Props): JSX.Element {
+export default function BlogDetailPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <BlogDetail {...props} />

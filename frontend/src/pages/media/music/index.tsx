@@ -20,7 +20,7 @@ interface Props {
   datas: Music[]
 }
 
-export default function MusicsPage(props: Props): JSX.Element {
+export default function MusicsPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <Musics {...props} />

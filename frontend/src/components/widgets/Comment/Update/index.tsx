@@ -11,7 +11,7 @@ interface Props {
   onCancel: () => void
 }
 
-export default function CommentUpdate(props: Props): JSX.Element {
+export default function CommentUpdate(props: Props): React.JSX.Element {
   const { value, onChange, onSubmit, onCancel } = props
 
   return (

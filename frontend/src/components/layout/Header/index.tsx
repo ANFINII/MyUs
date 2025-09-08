@@ -19,7 +19,7 @@ interface Props {
   loading?: boolean
 }
 
-export default function Header(props: Props): JSX.Element {
+export default function Header(props: Props): React.JSX.Element {
   const { loading } = props
 
   const router = useRouter()

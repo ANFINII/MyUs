@@ -16,7 +16,7 @@ interface Props {
   onClose: () => void
 }
 
-export default function SideMenu(props: Props): JSX.Element {
+export default function SideMenu(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
   const router = useRouter()

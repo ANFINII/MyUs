@@ -8,7 +8,7 @@ interface Props {
   media: Picture
 }
 
-export default function MediaPicture(props: Props): JSX.Element {
+export default function MediaPicture(props: Props): React.JSX.Element {
   const { media } = props
   const { id, image } = media
 

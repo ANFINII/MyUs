@@ -6,7 +6,7 @@ interface Props {
   className?: string
 }
 
-export default function IconHand(props: Props): JSX.Element {
+export default function IconHand(props: Props): React.JSX.Element {
   const { size, type, className = '' } = props
 
   return (

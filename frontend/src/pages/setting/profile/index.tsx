@@ -18,7 +18,7 @@ interface Props {
   profile: ProfileOut
 }
 
-export default function SettingProfilePage(props: Props): JSX.Element {
+export default function SettingProfilePage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <SettingProfile {...props} />

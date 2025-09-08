@@ -19,7 +19,7 @@ interface Props {
   onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
 }
 
-export default function Textarea(props: Props): JSX.Element {
+export default function Textarea(props: Props): React.JSX.Element {
   const { label, errorText, value, className, height, error = false, required = false, focus, onChange } = props
 
   const ref = useRef<HTMLTextAreaElement>(null)

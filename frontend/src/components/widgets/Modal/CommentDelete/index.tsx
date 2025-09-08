@@ -17,7 +17,7 @@ export interface Props {
   }
 }
 
-export default function CommentDeleteModal(props: Props): JSX.Element {
+export default function CommentDeleteModal(props: Props): React.JSX.Element {
   const { open, onClose, onAction, loading, comment } = props
   const { author, created, text } = comment
 

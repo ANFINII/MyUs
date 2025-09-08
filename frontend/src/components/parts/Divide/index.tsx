@@ -6,7 +6,7 @@ interface Props {
   className?: string
 }
 
-export default function Divide(props: Props): JSX.Element {
+export default function Divide(props: Props): React.JSX.Element {
   const { margin = 'mv_16', className } = props
   return <hr className={clsx(style.hr, margin, className)} />
 }
