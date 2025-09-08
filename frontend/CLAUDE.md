@@ -66,12 +66,12 @@ const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {}
 ### コンポーネントのProps受け取り方
 ```typescript
 // ❌ 悪い例
-export default function VideoJS({ options, onReady }: Props): JSX.Element {
+export default function VideoJS({ options, onReady }: Props): React.JSX.Element {
   // ...
 }
 
 // ✅ 良い例
-export default function VideoJS(props: Props): JSX.Element {
+export default function VideoJS(props: Props): React.JSX.Element {
   const { options, onReady } = props
   // ...
 }
