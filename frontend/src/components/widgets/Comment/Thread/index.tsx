@@ -24,7 +24,7 @@ interface Props {
   handleToast: (content: string, isError: boolean) => void
 }
 
-export default function CommentThread(props: Props): JSX.Element {
+export default function CommentThread(props: Props): React.JSX.Element {
   const { reply, user, setReplys, handleToast } = props
   const { id, author, text } = reply
   const { isActive, ulid } = user

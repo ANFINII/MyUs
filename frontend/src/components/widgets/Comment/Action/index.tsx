@@ -6,12 +6,12 @@ import style from './Action.module.scss'
 export interface Props {
   open: boolean
   onMenu: () => void
-  actionRef: RefObject<HTMLButtonElement>
+  actionRef: RefObject<HTMLButtonElement | null>
   disabled: boolean
   actionItems: ActionItem[]
 }
 
-export default function CommentAction(props: Props): JSX.Element {
+export default function CommentAction(props: Props): React.JSX.Element {
   const { open, onMenu, actionRef, disabled, actionItems } = props
 
   return (

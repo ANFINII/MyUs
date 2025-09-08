@@ -14,7 +14,7 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
 
-export default function Login(): JSX.Element {
+export default function Login(): React.JSX.Element {
   const router = useRouter()
   const { updateUser } = useUser()
   const { toast, handleToast } = useToast()

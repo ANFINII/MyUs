@@ -20,7 +20,7 @@ interface Props {
   datas: Picture[]
 }
 
-export default function PicturesPage(props: Props): JSX.Element {
+export default function PicturesPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <Pictures {...props} />

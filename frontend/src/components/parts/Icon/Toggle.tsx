@@ -6,7 +6,7 @@ interface Props {
   className?: string
 }
 
-export default function IconToggle(props: Props): JSX.Element {
+export default function IconToggle(props: Props): React.JSX.Element {
   const { size, type, className = '' } = props
 
   return (

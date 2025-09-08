@@ -12,13 +12,15 @@ interface Props {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function CheckBox(props: Props): JSX.Element {
+export default function CheckBox(props: Props): React.JSX.Element {
   const { label, id, className = '' } = props
 
   return (
     <div className={clsx(style.checkbox, className)}>
       <input {...props} type="checkbox" id={id || label} className={style.input} />
-      <label htmlFor={id || label} className={style.label}>{label}</label>
+      <label htmlFor={id || label} className={style.label}>
+        {label}
+      </label>
     </div>
   )
 }

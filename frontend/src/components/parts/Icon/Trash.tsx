@@ -3,7 +3,7 @@ interface Props {
   className?: string
 }
 
-export default function IconTrash(props: Props): JSX.Element {
+export default function IconTrash(props: Props): React.JSX.Element {
   const { size, className = '' } = props
 
   return (

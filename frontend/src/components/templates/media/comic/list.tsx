@@ -8,7 +8,7 @@ interface Props {
   datas: Comic[]
 }
 
-export default function Comics(props: Props): JSX.Element {
+export default function Comics(props: Props): React.JSX.Element {
   const { datas } = props
 
   const search = useSearch(datas)

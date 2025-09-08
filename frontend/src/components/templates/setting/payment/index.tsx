@@ -3,7 +3,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import ExImage from 'components/parts/ExImage'
 
-export default function Payment(): JSX.Element {
+export default function Payment(): React.JSX.Element {
   return (
     <Main title="料金プラン">
       <article className="article_list">

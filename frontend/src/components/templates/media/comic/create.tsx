@@ -14,7 +14,7 @@ import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import VStack from 'components/parts/Stack/Vertical'
 
-export default function ComicCreate(): JSX.Element {
+export default function ComicCreate(): React.JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()

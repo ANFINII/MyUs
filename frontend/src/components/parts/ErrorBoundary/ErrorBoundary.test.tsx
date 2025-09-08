@@ -2,13 +2,13 @@ import { render, screen, RenderResult } from '@testing-library/react'
 import { ErrorBoundary } from '.'
 
 // 正常画面のコンポーネント
-const NormalScreen = (): JSX.Element => <div>正常画面</div>
+const NormalScreen = (): React.JSX.Element => <div>正常画面</div>
 
 // エラー画面のコンポーネント
 const ErrorScreen = <div>エラー画面</div>
 
 // エラーを発生させるコンポーネント
-const Bomb = (): JSX.Element => {
+const Bomb = (): React.JSX.Element => {
   throw new Error('Boom!')
 }
 

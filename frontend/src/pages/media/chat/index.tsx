@@ -20,7 +20,7 @@ interface Props {
   datas: Chat[]
 }
 
-export default function ChatsPage(props: Props): JSX.Element {
+export default function ChatsPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <Chats {...props} />

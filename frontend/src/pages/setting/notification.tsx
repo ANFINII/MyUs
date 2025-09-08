@@ -18,7 +18,7 @@ interface Props {
   userNotification: UserNotificationOut
 }
 
-export default function SettingNotificationPage(props: Props): JSX.Element {
+export default function SettingNotificationPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <SettingNotification {...props} />

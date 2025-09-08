@@ -15,7 +15,7 @@ interface Props {
   onCancel: () => void
 }
 
-export default function ReplyInput(props: Props): JSX.Element {
+export default function ReplyInput(props: Props): React.JSX.Element {
   const { user, value, open, onChange, onSubmit, onCancel } = props
 
   return (

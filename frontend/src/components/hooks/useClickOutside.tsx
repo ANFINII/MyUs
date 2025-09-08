@@ -1,8 +1,8 @@
 import { RefObject, useEffect } from 'react'
 
 interface Props {
-  actionRef: RefObject<HTMLElement>
-  triggerRef?: RefObject<HTMLElement>
+  actionRef: RefObject<HTMLElement | null>
+  triggerRef: RefObject<HTMLElement | null>
   isActive?: boolean
   onClick: () => void
 }

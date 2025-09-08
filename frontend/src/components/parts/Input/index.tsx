@@ -23,7 +23,7 @@ interface Props {
   onClick?: (event: React.MouseEvent<HTMLInputElement>) => void
 }
 
-export default function Input(props: Props): JSX.Element {
+export default function Input(props: Props): React.JSX.Element {
   const { label, errorText, value, className, error = false, required = false, autoFocus, onChange } = props
 
   const inputFocus = useAutoFocus()

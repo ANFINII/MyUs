@@ -4,7 +4,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function Table(props: Props): JSX.Element {
+export default function Table(props: Props): React.JSX.Element {
   const { children } = props
 
   return (

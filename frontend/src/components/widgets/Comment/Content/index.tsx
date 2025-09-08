@@ -31,7 +31,7 @@ export interface Props {
   handleToast: (content: string, isError: boolean) => void
 }
 
-export default function CommentContent(props: Props): JSX.Element {
+export default function CommentContent(props: Props): React.JSX.Element {
   const { comment, user, setFormState, handleToast } = props
   const { id, author, text } = comment
   const { isActive, ulid } = user

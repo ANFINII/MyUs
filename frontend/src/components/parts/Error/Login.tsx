@@ -7,7 +7,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function LoginError(props: Props): JSX.Element {
+export default function LoginError(props: Props): React.JSX.Element {
   const { margin, children } = props
 
   const { user } = useUser()

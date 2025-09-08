@@ -11,7 +11,7 @@ interface Props {
   datas: Follow[]
 }
 
-export default function Followers(props: Props): JSX.Element {
+export default function Followers(props: Props): React.JSX.Element {
   const { datas } = props
 
   const router = useRouter()

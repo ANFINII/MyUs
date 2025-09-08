@@ -18,7 +18,7 @@ interface Props {
 const mediaObjs = [NotificationType.Video, NotificationType.Music, NotificationType.Comic, NotificationType.Picture, NotificationType.Blog, NotificationType.Chat]
 const otherObjs = [NotificationType.Follow, NotificationType.Like, NotificationType.Reply, NotificationType.Views]
 
-export default function DropMenuNotice(props: Props): JSX.Element {
+export default function DropMenuNotice(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
   const router = useRouter()

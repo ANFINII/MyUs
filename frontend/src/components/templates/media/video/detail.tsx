@@ -24,7 +24,7 @@ interface Props {
   data: VideoDetailOut
 }
 
-export default function VideoDetail(props: Props): JSX.Element {
+export default function VideoDetail(props: Props): React.JSX.Element {
   const { data } = props
   const { detail, list } = data
   const { image, video, publish, ...other } = detail

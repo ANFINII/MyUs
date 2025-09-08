@@ -7,6 +7,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return { props: translations }
 }
 
-export default function Custom404Page(): JSX.Element {
+export default function Custom404Page(): React.JSX.Element {
   return <Custom404 />
 }

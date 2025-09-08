@@ -18,7 +18,7 @@ interface Props {
   onChange?: (value: string, delta: DeltaStatic, source: Sources, editor: UnprivilegedEditor) => void
 }
 
-export default function Quill(props: Props): JSX.Element {
+export default function Quill(props: Props): React.JSX.Element {
   const { label, value, required = false, className, users } = props
 
   const ref = useRef<ReactQuill>(null)

@@ -12,7 +12,7 @@ interface Props {
   onClick: () => void
 }
 
-export default function NotificationItem(props: Props): JSX.Element {
+export default function NotificationItem(props: Props): React.JSX.Element {
   const { avatar, ulid, nickname, isConfirmed, children, onClick } = props
 
   const router = useRouter()

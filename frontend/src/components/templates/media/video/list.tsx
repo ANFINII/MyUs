@@ -8,7 +8,7 @@ interface Props {
   datas: Video[]
 }
 
-export default function Videos(props: Props): JSX.Element {
+export default function Videos(props: Props): React.JSX.Element {
   const { datas } = props
 
   const search = useSearch(datas)

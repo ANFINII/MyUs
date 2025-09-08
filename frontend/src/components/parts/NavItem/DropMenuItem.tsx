@@ -6,7 +6,7 @@ interface Props {
   onClick: () => void
 }
 
-export default function DropMenuItem(props: Props): JSX.Element {
+export default function DropMenuItem(props: Props): React.JSX.Element {
   const { label, icon, onClick } = props
 
   return <NavItem className="drop_menu_item" icon={icon} label={label} onClick={onClick} />

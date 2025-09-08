@@ -20,7 +20,7 @@ interface Props {
   mediaHome: MediaHome
 }
 
-export default function HomesPage(props: Props): JSX.Element {
+export default function HomesPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <Homes {...props} />

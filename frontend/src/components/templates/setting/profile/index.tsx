@@ -14,7 +14,7 @@ interface Props {
   profile: ProfileOut
 }
 
-export default function SettingProfile(props: Props): JSX.Element {
+export default function SettingProfile(props: Props): React.JSX.Element {
   const { profile } = props
 
   const router = useRouter()

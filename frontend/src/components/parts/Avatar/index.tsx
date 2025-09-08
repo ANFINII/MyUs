@@ -12,7 +12,7 @@ interface Props {
   className?: string
 }
 
-export default function Avatar(props: Props): JSX.Element {
+export default function Avatar(props: Props): React.JSX.Element {
   const { src, title, size, color = 'white', className } = props
 
   const [isError, setIsError] = useState<boolean>(false)

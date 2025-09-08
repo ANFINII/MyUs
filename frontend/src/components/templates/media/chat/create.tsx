@@ -14,7 +14,7 @@ import Input from 'components/parts/Input'
 import Textarea from 'components/parts/Input/Textarea'
 import VStack from 'components/parts/Stack/Vertical'
 
-export default function ChatCreate(): JSX.Element {
+export default function ChatCreate(): React.JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()

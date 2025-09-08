@@ -11,7 +11,7 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
 
-export default function Reset(): JSX.Element {
+export default function Reset(): React.JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()

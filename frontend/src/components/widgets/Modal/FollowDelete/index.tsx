@@ -12,7 +12,7 @@ export interface Props {
   author: Author
 }
 
-export default function FollowDeleteModal(props: Props): JSX.Element {
+export default function FollowDeleteModal(props: Props): React.JSX.Element {
   const { open, onClose, onAction, loading, author } = props
 
   return (

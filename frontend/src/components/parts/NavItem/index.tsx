@@ -6,7 +6,7 @@ interface Props {
   onClick?: () => void
 }
 
-export default function NavItem(props: Props): JSX.Element {
+export default function NavItem(props: Props): React.JSX.Element {
   const { className, label, icon, children, onClick } = props
 
   return (

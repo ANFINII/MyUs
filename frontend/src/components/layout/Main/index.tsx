@@ -16,7 +16,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function Main(props: Props): JSX.Element {
+export default function Main(props: Props): React.JSX.Element {
   const { title, metaTitle, meta, search, toast, type = 'defalt', button, children } = props
 
   const { user } = useUser()

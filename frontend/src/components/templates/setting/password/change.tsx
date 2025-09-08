@@ -6,7 +6,7 @@ import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
 
-export default function PasswordChange(): JSX.Element {
+export default function PasswordChange(): React.JSX.Element {
   const router = useRouter()
   const handleBack = () => router.push('/setting/profile')
 

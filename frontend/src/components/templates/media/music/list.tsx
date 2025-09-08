@@ -8,7 +8,7 @@ interface Props {
   datas: Music[]
 }
 
-export default function Musics(props: Props): JSX.Element {
+export default function Musics(props: Props): React.JSX.Element {
   const { datas } = props
 
   const search = useSearch(datas)

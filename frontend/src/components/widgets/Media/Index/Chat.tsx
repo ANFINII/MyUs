@@ -6,7 +6,7 @@ interface Props {
   media: Chat
 }
 
-export default function MediaChat(props: Props): JSX.Element {
+export default function MediaChat(props: Props): React.JSX.Element {
   const { media } = props
   const { id } = media
 

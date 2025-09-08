@@ -10,7 +10,7 @@ import IconChevront from 'components/parts/Icon/Chevront'
 import Input from 'components/parts/Input'
 import HStack from 'components/parts/Stack/Horizontal'
 
-export default function SearchTagBar(): JSX.Element {
+export default function SearchTagBar(): React.JSX.Element {
   const { user } = useUser()
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isSearchtag, setIsSearchtag] = useState(false)

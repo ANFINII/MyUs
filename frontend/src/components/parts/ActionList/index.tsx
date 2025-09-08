@@ -11,13 +11,13 @@ export interface ActionItem {
 }
 
 interface Props {
-  triggerRef: RefObject<HTMLElement>
+  triggerRef: RefObject<HTMLElement | null>
   open: boolean
   onClose?: () => void
   items: ActionItem[]
 }
 
-export default function ActionList(props: Props): JSX.Element {
+export default function ActionList(props: Props): React.JSX.Element {
   const { triggerRef, open, onClose, items } = props
 
   const actionRef = useRef<HTMLDivElement>(null)

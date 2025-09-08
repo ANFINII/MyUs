@@ -21,7 +21,7 @@ interface Props {
   mypage: MypageOut
 }
 
-export default function SettingMyPageEdit(props: Props): JSX.Element {
+export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const { mypage } = props
 
   const router = useRouter()

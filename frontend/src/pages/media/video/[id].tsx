@@ -18,7 +18,7 @@ interface Props {
   data: VideoDetailOut
 }
 
-export default function VideDetailPage(props: Props): JSX.Element {
+export default function VideDetailPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <VideoDetail {...props} />

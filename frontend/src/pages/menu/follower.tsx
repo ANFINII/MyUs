@@ -20,7 +20,7 @@ interface Props {
   datas: Follow[]
 }
 
-export default function FollowersPage(props: Props): JSX.Element {
+export default function FollowersPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
       <Followers {...props} />

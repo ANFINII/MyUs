@@ -1,6 +1,6 @@
 import Head from 'next/head'
 
-export default function UserPage(): JSX.Element {
+export default function UserPage(): React.JSX.Element {
   return (
     <Head>
       <title>MyUsユーザーページ</title>

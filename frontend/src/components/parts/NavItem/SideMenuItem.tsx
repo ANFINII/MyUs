@@ -6,7 +6,7 @@ interface Props {
   onClick: () => void
 }
 
-export default function SideMenuItem(props: Props): JSX.Element {
+export default function SideMenuItem(props: Props): React.JSX.Element {
   const { label, icon, onClick } = props
 
   return <NavItem className="side_menu_item" icon={icon} label={label} onClick={onClick} />

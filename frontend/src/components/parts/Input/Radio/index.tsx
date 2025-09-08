@@ -12,7 +12,7 @@ interface Props {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function Radio(props: Props): JSX.Element {
+export default function Radio(props: Props): React.JSX.Element {
   const { label, id, value, className = '' } = props
 
   return (
