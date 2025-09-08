@@ -3,7 +3,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default function MediaDetail(props: Props): JSX.Element {
+export default function MediaDetail(props: Props): React.JSX.Element {
   const { publish, children } = props
 
   return (
