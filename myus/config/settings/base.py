@@ -161,6 +161,8 @@ CORS_ALLOW_HEADERS = (
     "x-requested-with",
     "access-control-allow-origin",
     "access-control-allow-credentials",
+    "content-length",
+    "content-disposition",
 )
 
 # humanize カンマ区切り値
@@ -188,6 +190,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 LOGIN_URL = "app:login"
 LOGIN_REDIRECT_URL = "app:index"
 LOGOUT_REDIRECT_URL = "app:login"
+
+# File upload size limits
+FILE_UPLOAD_PERMISSIONS = 0o644
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024 * 1024  # 5GB (メモリ上でのファイルサイズ上限)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024 * 1024  # 5GB (POSTデータの上限)
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240  # フォームフィールドの最大数
 
 # Stripe API keys
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
