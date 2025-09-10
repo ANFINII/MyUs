@@ -226,7 +226,7 @@ class Log:
         return " - ".join(parts)
 
     @classmethod
-    def _log(cls, level: str, msg: str, exc_info: Exception | None = None, is_traceback: bool = False, **kwargs: Any) -> None:
+    def _log(cls, level: str, msg: str, exc: Exception | None = None, is_traceback: bool = False, **kwargs: Any) -> None:
         """共通ログ処理（重複コード削減）"""
         if not cls._instance:
             cls()
@@ -235,13 +235,13 @@ class Log:
         format_msg = cls._format_message(msg, level, class_name, func_name, file_name, line_no, **kwargs)
 
         # エラー系の場合の追加処理
-        if exc_info or is_traceback:
-            if exc_info:
-                format_msg += f"\nException: {type(exc_info).__name__}: {str(exc_info)}"
+        if exc or is_traceback:
+            if exc:
+                format_msg += f"\nException: {type(exc).__name__}: {str(exc)}"
 
             if is_traceback:
-                if exc_info:
-                    tb = "".join(traceback.format_exception(type(exc_info), exc_info, exc_info.__traceback__))
+                if exc:
+                    tb = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
                 else:
                     tb = traceback.format_exc()
 
@@ -285,14 +285,14 @@ class Log:
         cls._log("WARNING", msg, **kwargs)
 
     @classmethod
-    def error(cls, msg: str = "", exc_info: Exception | None = None, is_traceback: bool = True, **kwargs: Any) -> None:
+    def error(cls, msg: str = "", exc: Exception | None = None, **kwargs: Any) -> None:
         """エラーレベルログ（スタックトレース付き）"""
-        cls._log("ERROR", msg, exc_info=exc_info, is_traceback=is_traceback, **kwargs)
+        cls._log("ERROR", msg, exc=exc, **kwargs)
 
     @classmethod
-    def critical(cls, msg: str = "", exc_info: Exception | None = None, **kwargs: Any) -> None:
+    def critical(cls, msg: str = "", exc: Exception | None = None, **kwargs: Any) -> None:
         """重大エラーレベルログ"""
-        cls._log("CRITICAL", msg, exc_info=exc_info, is_traceback=True, **kwargs)
+        cls._log("CRITICAL", msg, exc=exc, is_traceback=True, **kwargs)
 
     @classmethod
     def set_level(cls, level: str) -> None:
@@ -326,7 +326,7 @@ if __name__ == "__main__":
                 # エラーを発生させる
                 1 / 0
             except ZeroDivisionError as e:
-                log.error("ゼロ除算エラーが発生", exc_info=e)
+                log.error("ゼロ除算エラーが発生", exc=e)
 
     # テスト実行
     obj = SampleClass()
