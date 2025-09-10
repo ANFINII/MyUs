@@ -2,15 +2,16 @@ import axios, { AxiosInstance } from 'axios'
 import { API_URL } from 'lib/config'
 import { axiosInterceptor } from '.'
 
-const axiosInstance = (baseURL: string, contentType: string, csrfToken?: string) => {
+const FILE_UPLOAD_TIMEOUT_MS = 60000 // 1分
+
+const axiosInstance = (baseURL: string, contentType: string, timeout?: number) => {
   const client: AxiosInstance = axios.create({
     baseURL,
     withCredentials: true,
     headers: {
       'Content-Type': contentType,
-      'X-CSRFToken': csrfToken,
     },
-    timeout: 2000,
+    timeout: timeout || 2000,
     paramsSerializer: { indexes: null },
   })
   axiosInterceptor(client)
@@ -18,4 +19,4 @@ const axiosInstance = (baseURL: string, contentType: string, csrfToken?: string)
 }
 
 export const apiClient = axiosInstance(API_URL, 'application/json')
-export const apiFormClient = axiosInstance(API_URL, 'multipart/form-data')
+export const apiFormClient = axiosInstance(API_URL, 'multipart/form-data', FILE_UPLOAD_TIMEOUT_MS)
