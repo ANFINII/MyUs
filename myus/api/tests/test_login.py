@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.test import Client
 from django.contrib.auth import authenticate, get_user_model
+from api.models.master import Plan
 
 # Create your tests here.
 
@@ -8,13 +9,21 @@ User = get_user_model()
 
 class LoginTest(TestCase):
     def setUp(self):
+        Plan.objects.create(
+            name="Free",
+            stripe_api_id="free_plan",
+            price=0,
+            max_advertise=0
+        )
+
         self.user = User.objects.create_user(
             email="emailtest@gmail.com",
             username="usernametest",
             nickname="nicknametest",
             password="passwordtest",
-            is_active=True,
         )
+        self.user.is_active = True
+        self.user.save()
 
     def test_login_success(self):
         client = Client()
