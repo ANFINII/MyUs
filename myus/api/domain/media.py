@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-
+from django.db.models import Count, F, Q
+from django.utils import timezone
 from api.types.union.media import MediaModelType
 from api.utils.functions.search import search_q_list
-from django.db.models import Count, F, Q
 
 
 class SortType(Enum):
@@ -68,3 +68,12 @@ class MediaDomain:
     @classmethod
     def create(cls, model: MediaModelType, **kwargs) -> MediaModelType:
         return model.objects.create(**kwargs)
+
+    @classmethod
+    def update(cls, model: MediaModelType, **kwargs) -> None:
+        if not kwargs:
+            return
+
+        kwargs["updated"] = timezone.now()
+        [setattr(model, key, value) for key, value in kwargs.items()]
+        model.save(update_fields=list(kwargs.keys()))
