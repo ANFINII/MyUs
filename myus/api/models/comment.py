@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Count
+from django_ulid.models import ulid
 from api.models.user import User
 
 
@@ -11,6 +12,8 @@ class CommentManager(models.Manager):
 
 class Comment(models.Model):
     """Comment"""
+    id        = models.BigAutoField(primary_key=True)
+    ulid      = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author    = models.ForeignKey(User, on_delete=models.CASCADE)
     parent    = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", blank=True, null=True)
     type_no   = models.IntegerField()

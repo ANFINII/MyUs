@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Count
+from django_ulid.models import ulid
 from django_quill.fields import QuillField
 from api.models.user import User
 from api.models.media import Chat
@@ -13,6 +14,8 @@ class MessageManager(models.Manager):
 
 class Message(models.Model):
     """Message"""
+    id      = models.BigAutoField(primary_key=True)
+    ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     chat    = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="message")
     parent  = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", blank=True, null=True)

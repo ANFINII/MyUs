@@ -36,11 +36,12 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """User"""
     img         = "../static/img/user_icon.png"
-    avatar      = models.ImageField(upload_to=user_image, default=img, blank=True, null=True)
+    id          = models.BigAutoField(primary_key=True)
     ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    email       = models.EmailField(max_length=255, unique=True)
     username    = models.CharField(max_length=20, unique=True)
     nickname    = models.CharField(max_length=80, unique=True)
+    email       = models.EmailField(max_length=255, unique=True)
+    avatar      = models.ImageField(upload_to=user_image, default=img, blank=True)
     is_active   = models.BooleanField(default=True)
     is_staff    = models.BooleanField(default=False)
     last_login  = models.DateTimeField(auto_now_add=True)
@@ -144,6 +145,7 @@ class ProfileManager(models.Manager):
 
 class Profile(models.Model):
     """Profile"""
+    id           = models.BigAutoField(primary_key=True)
     gender_type  = ((GenderType.MALE, "男性"), (GenderType.FEMALE, "女性"), (GenderType.SECRET, "秘密"))
     message      = "電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます"
     phone_no     = RegexValidator(regex=r"\d{2,4}-?\d{2,4}-?\d{3,4}", message=message)
@@ -183,8 +185,9 @@ class MyPageManager(models.Manager):
 class MyPage(models.Model):
     """MyPage"""
     img             = "../static/img/MyUs_banner.png"
+    id              = models.BigAutoField(primary_key=True)
     user            = models.OneToOneField(User, on_delete=models.CASCADE)
-    banner          = models.ImageField(upload_to=user_image, default=img, blank=True, null=True)
+    banner          = models.ImageField(upload_to=user_image, default=img, blank=True)
     email           = models.EmailField(max_length=255, blank=True)
     content         = models.TextField(blank=True)
     follower_count  = models.IntegerField(verbose_name="follower", default=0)
@@ -220,6 +223,7 @@ def create_mypage(sender, **kwargs):
 
 class UserNotification(models.Model):
     """UserNotification"""
+    id         = models.BigAutoField(primary_key=True)
     user       = models.OneToOneField(User, on_delete=models.CASCADE)
     is_video   = models.BooleanField(default=False)
     is_music   = models.BooleanField(default=False)
@@ -248,6 +252,7 @@ def create_user_notification(sender, **kwargs):
 
 class UserPlan(models.Model):
     """UserPlan"""
+    id           = models.BigAutoField(primary_key=True)
     user         = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_plan')
     plan         = models.ForeignKey(Plan, on_delete=models.CASCADE, default=1)
     customer_id  = models.CharField(max_length=255)

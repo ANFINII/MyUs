@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Product(models.Model):
+    id                = models.BigAutoField(primary_key=True)
     name              = models.CharField(max_length=100)
     stripe_product_id = models.CharField(max_length=100)
     price             = models.IntegerField()
