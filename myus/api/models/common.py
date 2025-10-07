@@ -1,10 +1,12 @@
 from django.db import models
+from django_ulid.models import ulid
 from api.models.user import User
 from api.utils.functions.file import image_upload, video_upload
 
 
 class AccessLog(models.Model):
     """AccessLog"""
+    id         = models.BigAutoField(primary_key=True)
     ip_address = models.GenericIPAddressField()
     type       = models.CharField(max_length=7, blank=True)
     type_id    = models.BigIntegerField(blank=True, null=True)
@@ -22,6 +24,8 @@ class AccessLog(models.Model):
 
 class Advertise(models.Model):
     """Advertise"""
+    id      = models.BigAutoField(primary_key=True)
+    ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     choice  = (("all", "全体"), ("one", "個別"))
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)

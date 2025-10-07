@@ -5,6 +5,7 @@ from api.models.user import User
 
 class SearchTag(models.Model):
     """SearchTag"""
+    id       = models.BigAutoField(primary_key=True)
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     sequence = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=20)
     name     = models.CharField(max_length=30)
@@ -20,6 +21,7 @@ class SearchTag(models.Model):
 
 class Follow(models.Model):
     """Follow"""
+    id        = models.BigAutoField(primary_key=True)
     follower  = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
     is_follow = models.BooleanField(default=True)

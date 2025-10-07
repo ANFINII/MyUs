@@ -7,6 +7,7 @@ from api.utils.constant import notification_type_model
 
 class Notification(models.Model):
     """Notification"""
+    id          = models.BigAutoField(primary_key=True)
     user_from   = models.ForeignKey(User, related_name="user_from", on_delete=models.CASCADE)
     user_to     = models.ForeignKey(User, related_name="user_to", on_delete=models.CASCADE, blank=True, null=True)
     type_no     = models.IntegerField()

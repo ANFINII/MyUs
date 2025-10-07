@@ -3,6 +3,7 @@ from django.db import models
 
 class Plan(models.Model):
     """Plan"""
+    id            = models.BigAutoField(primary_key=True)
     name          = models.CharField(max_length=30)
     stripe_api_id = models.CharField(max_length=30)
     price         = models.IntegerField(default=0)
@@ -20,6 +21,7 @@ class Plan(models.Model):
 
 class Category(models.Model):
     """Category"""
+    id      = models.BigAutoField(primary_key=True)
     jp_name = models.CharField(max_length=120)
     en_name = models.CharField(max_length=120)
 
@@ -33,6 +35,7 @@ class Category(models.Model):
 
 class HashTag(models.Model):
     """HashTag"""
+    id      = models.BigAutoField(primary_key=True)
     jp_name = models.CharField(max_length=30)
     en_name = models.CharField(max_length=60)
 

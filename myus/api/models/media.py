@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django_quill.fields import QuillField
+from django_ulid.models import ulid
 from api.models.master import Category, HashTag
 from api.models.base import MediaModel, MediaManager
 from api.models.user import User
@@ -27,6 +28,8 @@ class VideoManager(models.Manager, MediaManager):
 
 class Video(models.Model, MediaModel):
     """Video"""
+    id       = models.BigAutoField(primary_key=True)
+    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -85,6 +88,8 @@ class MusicManager(models.Manager, MediaManager):
 
 class Music(models.Model, MediaModel):
     """Music"""
+    id       = models.BigAutoField(primary_key=True)
+    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -136,6 +141,8 @@ class ComicManager(models.Manager, MediaManager):
 
 class Comic(models.Model, MediaModel):
     """Comic"""
+    id       = models.BigAutoField(primary_key=True)
+    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -167,6 +174,7 @@ class Comic(models.Model, MediaModel):
 
 class ComicPage(models.Model):
     """ComicPage"""
+    id    = models.BigAutoField(primary_key=True)
     comic = models.ForeignKey(Comic, on_delete=models.CASCADE, related_name="comic")
     image = models.ImageField(upload_to=comic_upload)
     sequence = models.IntegerField()
@@ -201,6 +209,8 @@ class PictureManager(models.Manager, MediaManager):
 
 class Picture(models.Model, MediaModel):
     """Picture"""
+    id       = models.BigAutoField(primary_key=True)
+    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -251,6 +261,8 @@ class BlogManager(models.Manager, MediaManager):
 
 class Blog(models.Model, MediaModel):
     """Blog"""
+    id       = models.BigAutoField(primary_key=True)
+    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -302,6 +314,8 @@ class ChatManager(models.Manager, MediaManager):
 
 class Chat(models.Model):
     """Chat"""
+    id       = models.BigAutoField(primary_key=True)
+    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
