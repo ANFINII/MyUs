@@ -8,7 +8,7 @@ interface Props {
 
 export default function MediaMusic(props: Props): React.JSX.Element {
   const { media } = props
-  const { id, music } = media
+  const { ulid, music } = media
 
   return (
     <section className={style.media_music}>
@@ -17,7 +17,7 @@ export default function MediaMusic(props: Props): React.JSX.Element {
         <p>ブラウザがaudioに対応しておりません</p>
       </audio>
       <div className={style.media_content}>
-        <MediaContent href={`/media/music/${id}`} media={media} />
+        <MediaContent href={`/media/music/${ulid}`} media={media} />
       </div>
     </section>
   )

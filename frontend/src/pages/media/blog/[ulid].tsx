@@ -7,7 +7,7 @@ import BlogDetail from 'components/templates/media/blog/detail'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const ret = await getBlog(Number(query.id), req)
+  const ret = await getBlog(String(query.ulid), req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const data = ret.value
   return { props: { data, ...translations } }

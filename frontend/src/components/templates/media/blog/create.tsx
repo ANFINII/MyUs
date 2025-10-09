@@ -45,7 +45,7 @@ export default function BlogCreate(): React.JSX.Element {
       handleLoading(false)
       return
     }
-    router.push(`/media/blog/${ret.value.id}`)
+    router.push(`/media/blog/${ret.value.ulid}`)
     handleLoading(false)
   }
 

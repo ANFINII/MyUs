@@ -36,7 +36,7 @@ export default function VideoCreate(): React.JSX.Element {
       handleLoading(false)
       return
     }
-    router.push(`/media/video/${ret.value.id}`)
+    router.push(`/media/video/${ret.value.ulid}`)
     handleLoading(false)
   }
 

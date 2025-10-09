@@ -10,14 +10,14 @@ interface Props {
 
 export default function MediaComic(props: Props): React.JSX.Element {
   const { media } = props
-  const { id, image } = media
+  const { ulid, image } = media
 
   return (
     <section className={style.media}>
-      <Link href={`/media/comic/${id}`}>
+      <Link href={`/media/comic/${ulid}`}>
         <ExImage src={image} width="270" height="153" className={style.thumbnail} />
       </Link>
-      <MediaContent href={`/media/comic/${id}`} media={media} />
+      <MediaContent href={`/media/comic/${ulid}`} media={media} />
     </section>
   )
 }

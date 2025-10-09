@@ -10,14 +10,14 @@ interface Props {
 
 export default function MediaBlog(props: Props): React.JSX.Element {
   const { media } = props
-  const { id, image } = media
+  const { ulid, image } = media
 
   return (
     <section className={style.media}>
-      <Link href={`/media/blog/${id}`}>
+      <Link href={`/media/blog/${ulid}`}>
         <ExImage src={image} width="270" height="153" className={style.thumbnail} />
       </Link>
-      <MediaContent href={`/media/blog/${id}`} media={media} />
+      <MediaContent href={`/media/blog/${ulid}`} media={media} />
     </section>
   )
 }

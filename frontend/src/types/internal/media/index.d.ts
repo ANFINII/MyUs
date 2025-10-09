@@ -22,7 +22,7 @@ export interface Search {
 }
 
 export interface Media {
-  id: number
+  ulid: string
   title: string
   content: string
   like: number
@@ -87,11 +87,13 @@ export interface VideoIn {
 }
 
 export interface MusicIn {
+  // input: {
   title: string
   content: string
   lyric: string
-  music?: File
   download: boolean
+  // }
+  music?: File
 }
 
 export interface ComicIn {
