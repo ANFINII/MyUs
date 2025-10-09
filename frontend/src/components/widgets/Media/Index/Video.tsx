@@ -14,12 +14,12 @@ interface Props {
 
 export default function MediaVideo(props: Props): React.JSX.Element {
   const { media } = props
-  const { id, image, convert } = media
+  const { ulid, image, convert } = media
 
   const router = useRouter()
   const playerRef = useRef<Player | null>(null)
 
-  const handleClick = () => router.push(`/media/video/${id}`)
+  const handleClick = () => router.push(`/media/video/${ulid}`)
 
   const handleMouseEnter = () => {
     const player = playerRef.current
@@ -64,7 +64,7 @@ export default function MediaVideo(props: Props): React.JSX.Element {
           }}
         />
         <div className={style.media_content}>
-          <MediaContent href={`/media/video/${id}`} media={media} />
+          <MediaContent href={`/media/video/${ulid}`} media={media} />
         </div>
       </div>
     </section>

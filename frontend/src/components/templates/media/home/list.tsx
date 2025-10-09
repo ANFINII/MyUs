@@ -23,42 +23,42 @@ export default function Homes(props: Props): React.JSX.Element {
       <Divide />
       <MediaIndex title="Video">
         {videos?.map((media) => (
-          <MediaVideo key={media.id} media={media} />
+          <MediaVideo key={media.ulid} media={media} />
         ))}
       </MediaIndex>
 
       <Divide />
       <MediaIndex title="Music">
         {musics?.map((media) => (
-          <MediaMusic key={media.id} media={media} />
+          <MediaMusic key={media.ulid} media={media} />
         ))}
       </MediaIndex>
 
       <Divide />
       <MediaIndex title="Comic">
         {comics?.map((media) => (
-          <MediaComic key={media.id} media={media} />
+          <MediaComic key={media.ulid} media={media} />
         ))}
       </MediaIndex>
 
       <Divide />
       <MediaIndex title="Picture">
         {pictures?.map((media) => (
-          <MediaPicture key={media.id} media={media} />
+          <MediaPicture key={media.ulid} media={media} />
         ))}
       </MediaIndex>
 
       <Divide />
       <MediaIndex title="Blog">
         {blogs?.map((media) => (
-          <MediaBlog key={media.id} media={media} />
+          <MediaBlog key={media.ulid} media={media} />
         ))}
       </MediaIndex>
 
       <Divide />
       <MediaIndex title="Chat">
         {chats?.map((media) => (
-          <MediaChat key={media.id} media={media} />
+          <MediaChat key={media.ulid} media={media} />
         ))}
       </MediaIndex>
     </Main>

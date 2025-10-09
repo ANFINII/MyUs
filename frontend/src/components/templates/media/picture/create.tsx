@@ -35,7 +35,7 @@ export default function PictureCreate(): React.JSX.Element {
       handleLoading(false)
       return
     }
-    router.push(`/media/picture/${ret.value.id}`)
+    router.push(`/media/picture/${ret.value.ulid}`)
     handleLoading(false)
   }
 

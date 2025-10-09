@@ -30,7 +30,7 @@ export default function BlogDetail(props: Props): React.JSX.Element {
           <MediaDetailCommon media={{ type: 'blog', ...other }} handleToast={handleToast} />
           <VStack gap="4" className="ml_20">
             {list.map((media) => (
-              <MediaSideImage key={media.id} href={`/media/blog/${media.id}`} src={media.image} media={media} />
+              <MediaSideImage key={media.ulid} href={`/media/blog/${media.ulid}`} src={media.image} media={media} />
             ))}
           </VStack>
         </div>

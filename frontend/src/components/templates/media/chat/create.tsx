@@ -34,7 +34,7 @@ export default function ChatCreate(): React.JSX.Element {
       handleLoading(false)
       return
     }
-    router.push(`/media/chat/${ret.value.id}`)
+    router.push(`/media/chat/${ret.value.ulid}`)
     handleLoading(false)
   }
 

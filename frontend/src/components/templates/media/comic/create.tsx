@@ -36,7 +36,7 @@ export default function ComicCreate(): React.JSX.Element {
       handleLoading(false)
       return
     }
-    router.push(`/media/comic/${ret.value.id}`)
+    router.push(`/media/comic/${ret.value.ulid}`)
     handleLoading(false)
   }
 
