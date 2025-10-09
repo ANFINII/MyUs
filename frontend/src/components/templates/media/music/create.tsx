@@ -37,7 +37,7 @@ export default function MusicCreate(): React.JSX.Element {
       handleLoading(false)
       return
     }
-    router.push(`/media/music/${ret.value.id}`)
+    router.push(`/media/music/${ret.value.ulid}`)
     handleLoading(false)
   }
 

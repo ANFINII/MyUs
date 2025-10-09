@@ -7,7 +7,7 @@ import VideoDetail from 'components/templates/media/video/detail'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
-  const ret = await getVideo(Number(query.id), req)
+  const ret = await getVideo(String(query.ulid), req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const data = ret.value
   return { props: { data, ...translations } }
