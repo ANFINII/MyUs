@@ -87,12 +87,10 @@ export interface VideoIn {
 }
 
 export interface MusicIn {
-  // input: {
   title: string
   content: string
   lyric: string
   download: boolean
-  // }
   music?: File
 }
 

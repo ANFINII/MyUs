@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 import Button from 'components/parts/Button'
 import IconCross from 'components/parts/Icon/Cross'
@@ -24,26 +25,30 @@ export interface Props {
 export default function Modal(props: Props): React.JSX.Element {
   const { open, onClose, title, children, actions, size = 'm', className } = props
 
-  if (!open) return <></>
-
   return (
-    <div className={clsx(style.modal, className)} aria-modal="true">
-      <div className={clsx(style.container, style[size])}>
-        <header className={style.header}>
-          <h2 className={style.title}>{title}</h2>
-          <button className={style.close} onClick={onClose}>
-            <IconCross size="25" />
-          </button>
-        </header>
-        <div className={style.content}>{children}</div>
-        {actions && (
-          <footer className={style.footer}>
-            {actions.reverse().map((action, index) => (
-              <Button key={index} {...action} />
-            ))}
-          </footer>
+    <>
+      {open &&
+        createPortal(
+          <div className={clsx(style.modal, className)} aria-modal="true">
+            <div className={clsx(style.container, style[size])}>
+              <header className={style.header}>
+                <h2 className={style.title}>{title}</h2>
+                <button className={style.close} onClick={onClose}>
+                  <IconCross size="25" />
+                </button>
+              </header>
+              <div className={style.content}>{children}</div>
+              {actions && (
+                <footer className={style.footer}>
+                  {[...actions].reverse().map((action, index) => (
+                    <Button key={index} {...action} />
+                  ))}
+                </footer>
+              )}
+            </div>
+          </div>,
+          document.body,
         )}
-      </div>
-    </div>
+    </>
   )
 }
