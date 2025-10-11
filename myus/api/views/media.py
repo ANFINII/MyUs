@@ -2,18 +2,17 @@ import json
 import os
 
 from django.conf import settings
-from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
-from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat
-from api.types.data.media import VideoDetailOutData, VideoDetailData
-from api.types.data.media import MusicDetailOutData, MusicDetailData
-from api.types.data.media import ComicDetailOutData, ComicDetailData
-from api.types.data.media import BlogDetailOutData, BlogDetailData
-from api.types.data.media import PictureDetailOutData, PictureDetailData
-from api.types.data.media import ChatDetailOutData, ChatDetailData
 from api.domain.media import MediaDomain
+from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat
+from api.types.data.media.index import VideoDetailOutData, VideoDetailData
+from api.types.data.media.index import MusicDetailOutData, MusicDetailData
+from api.types.data.media.index import ComicDetailOutData, ComicDetailData
+from api.types.data.media.index import BlogDetailOutData, BlogDetailData
+from api.types.data.media.index import PictureDetailOutData, PictureDetailData
+from api.types.data.media.index import ChatDetailOutData, ChatDetailData
 from api.services.comment import get_comments
 from api.services.message import get_messages
 from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats
@@ -21,7 +20,6 @@ from api.services.user import get_user
 from api.utils.decorators.auth import auth_user
 from api.utils.enum.response import ApiResponse
 from api.utils.enum.index import CommentType
-from api.utils.functions.convert.convert_hls import convert_exe
 from api.utils.functions.index import create_url, is_bool
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.response import DataResponse

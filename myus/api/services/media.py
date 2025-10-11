@@ -2,7 +2,7 @@ from api.models import Video, Music, Comic, Picture, Blog, Chat
 from api.utils.functions.index import create_url
 from api.utils.functions.user import get_author
 from api.domain.media import MediaDomain, FilterOption, SortOption, ExcludeOption
-from api.types.data.media import HomeData, VideoData, MusicData, ComicData, PictureData, BlogData, ChatData
+from api.types.data.media.index import HomeData, VideoData, MusicData, ComicData, PictureData, BlogData, ChatData
 
 
 def get_home(limit: int, search: str | None) -> HomeData:
