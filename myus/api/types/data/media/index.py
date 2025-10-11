@@ -1,5 +1,7 @@
 from datetime import datetime
 from dataclasses import dataclass
+from ninja import Schema
+
 from api.types.data.comment import CommentData
 from api.types.data.user import AuthorData, MediaUserData
 
@@ -164,3 +166,8 @@ class HomeData():
     pictures: list[PictureData]
     blogs: list[BlogData]
     chats: list[ChatData]
+
+
+@dataclass(frozen=True, slots=True)
+class MediaCreateData:
+    ulid: str

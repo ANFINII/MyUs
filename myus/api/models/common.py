@@ -24,9 +24,9 @@ class AccessLog(models.Model):
 
 class Advertise(models.Model):
     """Advertise"""
+    choice  = (("all", "全体"), ("one", "個別"))
     id      = models.BigAutoField(primary_key=True)
     ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    choice  = (("all", "全体"), ("one", "個別"))
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     title   = models.CharField(max_length=100)
     url     = models.URLField()

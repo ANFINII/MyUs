@@ -1,8 +1,6 @@
-from api.types.data.media import HashtagData
-from api.models.media import HashTag
+from api.models.media import HashTag, Video
 from api.types.data.comment import CommentData
-from api.types.data.media import VideoDetailData
-from api.models.media import Video
+from api.types.data.media.index import HashtagData, VideoDetailData
 from api.utils.functions.user import get_author
 from api.utils.functions.index import create_url
 
