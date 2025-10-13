@@ -33,7 +33,7 @@ def get_videos(limit: int, search: str | None, id: int | None = None) -> list[Vi
     objs = MediaDomain.bulk_get(Video, FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
 
     data = [VideoData(
-        id=obj.id,
+        ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         image=create_url(obj.image.url),
@@ -55,7 +55,7 @@ def get_musics(limit: int, search: str | None, id: int | None = None) -> list[Mu
     objs = MediaDomain.bulk_get(Music, FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
 
     data = [MusicData(
-        id=obj.id,
+        ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         lyric=obj.lyric,
@@ -77,7 +77,7 @@ def get_comics(limit: int, search: str | None, id: int | None = None) -> list[Co
     objs = MediaDomain.bulk_get(Comic, FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
 
     data = [ComicData(
-        id=obj.id,
+        ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         image=create_url(obj.image.url),
@@ -97,7 +97,7 @@ def get_pictures(limit: int, search: str | None, id: int | None = None) -> list[
     objs = MediaDomain.bulk_get(Picture, FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
 
     data = [PictureData(
-        id=obj.id,
+        ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         image=create_url(obj.image.url),
@@ -117,7 +117,7 @@ def get_blogs(limit: int, search: str | None, id: int | None = None) -> list[Blo
     objs = MediaDomain.bulk_get(Blog, FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
 
     data = [BlogData(
-        id=obj.id,
+        ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         image=create_url(obj.image.url),
@@ -137,7 +137,7 @@ def get_chats(limit: int, search: str | None, id: int | None = None) -> list[Cha
     objs = MediaDomain.bulk_get(Chat, FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
 
     data = [ChatData(
-        id=obj.id,
+        ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         read=obj.read,

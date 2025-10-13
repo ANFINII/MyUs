@@ -32,8 +32,8 @@ class ExcludeOption:
 
 class MediaDomain:
     @classmethod
-    def get(cls, model: MediaModelType, id: int, publish: bool) -> MediaModelType | None:
-        qs = model.objects.filter(id=id, publish=publish).first()
+    def get(cls, model: MediaModelType, ulid: str, publish: bool) -> MediaModelType | None:
+        qs = model.objects.filter(ulid=ulid, publish=publish).first()
         return qs
 
     @classmethod
