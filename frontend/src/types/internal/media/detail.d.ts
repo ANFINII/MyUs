@@ -3,7 +3,7 @@ import { Author, MediaUser } from 'types/internal/media'
 import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
 
 export interface MediaDetail {
-  id: number
+  ulid: string
   title: string
   content: string
   read: number

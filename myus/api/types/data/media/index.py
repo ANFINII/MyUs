@@ -12,7 +12,7 @@ class HashtagData:
 
 @dataclass(frozen=True, slots=True)
 class MediaData:
-    id: int
+    ulid: str
     title: str
     content: str
     read: int
@@ -25,7 +25,7 @@ class MediaData:
 
 @dataclass(frozen=True, slots=True)
 class MediaDetailData:
-    id: int
+    ulid: str
     title: str
     content: str
     read: int
