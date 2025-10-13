@@ -51,8 +51,8 @@ class VideoListAPI(APIView):
 
 
 class VideoAPI(APIView):
-    def get(self, request, id) -> DataResponse:
-        obj = MediaDomain.get(model=Video, id=id, publish=True)
+    def get(self, request, ulid) -> DataResponse:
+        obj = MediaDomain.get(model=Video, ulid=ulid, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
@@ -64,7 +64,7 @@ class VideoAPI(APIView):
 
         data = VideoDetailOutData(
             detail=VideoDetailData(
-                id=obj.id,
+                ulid=obj.ulid,
                 title=obj.title,
                 content=obj.content,
                 image=create_url(obj.image.url),
@@ -80,7 +80,7 @@ class VideoAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_videos(50, search, id),
+            list=get_videos(50, search, obj.id),
         )
 
         return DataResponse(data, HTTP_200_OK)
@@ -122,8 +122,8 @@ class MusicListAPI(APIView):
 
 
 class MusicAPI(APIView):
-    def get(self, request, id) -> DataResponse:
-        obj = MediaDomain.get(model=Music, id=id, publish=True)
+    def get(self, request, ulid) -> DataResponse:
+        obj = MediaDomain.get(model=Music, ulid=ulid, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
@@ -135,7 +135,7 @@ class MusicAPI(APIView):
 
         data = MusicDetailOutData(
             detail=MusicDetailData(
-                id=obj.id,
+                ulid=obj.ulid,
                 title=obj.title,
                 content=obj.content,
                 lyric=obj.lyric,
@@ -151,13 +151,13 @@ class MusicAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_musics(50, search, id),
+            list=get_musics(50, search, obj.id),
         )
 
         return DataResponse(data, HTTP_200_OK)
 
 
-    def post(self, request) -> Response:
+    def post(self, request) -> DataResponse:
         author = get_user(request)
         if not author:
             return ApiResponse.UNAUTHORIZED.run()
@@ -185,8 +185,8 @@ class ComicListAPI(APIView):
 
 
 class ComicAPI(APIView):
-    def get(self, request, id) -> DataResponse:
-        obj = MediaDomain.get(model=Comic, id=id, publish=True)
+    def get(self, request, ulid) -> DataResponse:
+        obj = MediaDomain.get(model=Comic, ulid=ulid, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
@@ -198,7 +198,7 @@ class ComicAPI(APIView):
 
         data = ComicDetailOutData(
             detail=ComicDetailData(
-                id=obj.id,
+                ulid=obj.ulid,
                 title=obj.title,
                 content=obj.content,
                 image=create_url(obj.image.url),
@@ -212,7 +212,7 @@ class ComicAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_comics(50, search, id),
+            list=get_comics(50, search, obj.id),
         )
 
         return DataResponse(data, HTTP_200_OK)
@@ -248,8 +248,8 @@ class PictureListAPI(APIView):
 
 
 class PictureAPI(APIView):
-    def get(self, request, id) -> DataResponse:
-        obj = MediaDomain.get(model=Picture, id=id, publish=True)
+    def get(self, request, ulid) -> DataResponse:
+        obj = MediaDomain.get(model=Picture, ulid=ulid, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
@@ -261,7 +261,7 @@ class PictureAPI(APIView):
 
         data = PictureDetailOutData(
             detail=PictureDetailData(
-                id=obj.id,
+                ulid=obj.ulid,
                 title=obj.title,
                 content=obj.content,
                 image=create_url(obj.image.url),
@@ -275,7 +275,7 @@ class PictureAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_pictures(50, search, id),
+            list=get_pictures(50, search, obj.id),
         )
 
         return DataResponse(data, HTTP_200_OK)
@@ -306,8 +306,8 @@ class BlogListAPI(APIView):
 
 
 class BlogAPI(APIView):
-    def get(self, request, id) -> DataResponse:
-        obj = MediaDomain.get(model=Blog, id=id, publish=True)
+    def get(self, request, ulid) -> DataResponse:
+        obj = MediaDomain.get(model=Blog, ulid=ulid, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
@@ -319,7 +319,7 @@ class BlogAPI(APIView):
 
         data = BlogDetailOutData(
             detail=BlogDetailData(
-                id=obj.id,
+                ulid=obj.ulid,
                 title=obj.title,
                 content=obj.content,
                 richtext=obj.richtext,
@@ -334,12 +334,12 @@ class BlogAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_blogs(50, search, id),
+            list=get_blogs(50, search, obj.id),
         )
 
         return DataResponse(data, HTTP_200_OK)
 
-    def post(self, request) -> Response:
+    def post(self, request) -> DataResponse:
         author = get_user(request)
         if not author:
             return ApiResponse.UNAUTHORIZED.run()
@@ -372,8 +372,8 @@ class ChatListAPI(APIView):
 
 
 class ChatAPI(APIView):
-    def get(self, request, id) -> DataResponse:
-        obj = MediaDomain.get(model=Chat, id=id, publish=True)
+    def get(self, request, ulid) -> DataResponse:
+        obj = MediaDomain.get(model=Chat, ulid=ulid, publish=True)
         if not obj:
             return ApiResponse.NOT_FOUND.run()
 
@@ -383,7 +383,7 @@ class ChatAPI(APIView):
 
         data = ChatDetailOutData(
             detail=ChatDetailData(
-                id=obj.id,
+                ulid=obj.ulid,
                 title=obj.title,
                 content=obj.content,
                 messages=messages,
@@ -399,12 +399,12 @@ class ChatAPI(APIView):
                 author=get_author(obj.author),
                 mediaUser=get_media_user(obj, user),
             ),
-            list=get_chats(50, search, id),
+            list=get_chats(50, search, obj.id),
         )
 
         return DataResponse(data, HTTP_200_OK)
 
-    def post(self, request) -> Response:
+    def post(self, request) -> DataResponse:
         author = get_user(request)
         if not author:
             return ApiResponse.UNAUTHORIZED.run()

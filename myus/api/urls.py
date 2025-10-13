@@ -36,29 +36,29 @@ urlpatterns = [
     path("home", HomeAPI.as_view()),
 
     path("media/video", VideoListAPI.as_view()),
-    path("media/video/<int:id>", VideoAPI.as_view()),
+    path("media/video/<str:ulid>", VideoAPI.as_view()),
     path("media/video/create", VideoAPI.as_view()),
 
     path("media/music", MusicListAPI.as_view()),
-    path("media/music/<int:id>", MusicAPI.as_view()),
+    path("media/music/<str:ulid>", MusicAPI.as_view()),
     path("media/music/create", MusicAPI.as_view()),
 
     path("media/comic", ComicListAPI.as_view()),
-    path("media/comic/<int:id>", ComicAPI.as_view()),
+    path("media/comic/<str:ulid>", ComicAPI.as_view()),
     path("media/comic/create", ComicAPI.as_view()),
 
     path("media/picture", PictureListAPI.as_view()),
-    path("media/picture/<int:id>", PictureAPI.as_view()),
+    path("media/picture/<str:ulid>", PictureAPI.as_view()),
     path("media/picture/create", PictureAPI.as_view()),
 
     path("media/blog", BlogListAPI.as_view()),
-    path("media/blog/<int:id>", BlogAPI.as_view()),
+    path("media/blog/<str:ulid>", BlogAPI.as_view()),
     path("media/blog/create", BlogAPI.as_view()),
 
     path("media/chat", ChatListAPI.as_view()),
-    path("media/chat/<int:id>", ChatAPI.as_view()),
+    path("media/chat/<str:ulid>", ChatAPI.as_view()),
     path("media/chat/create", ChatAPI.as_view()),
 
     path("media/comment", CommentAPI.as_view()),
-    path("media/comment/<int:id>", CommentAPI.as_view()),
+    path("media/comment/<str:ulid>", CommentAPI.as_view()),
 ]
