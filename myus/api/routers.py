@@ -1,6 +1,6 @@
 from ninja import NinjaAPI
 from api.apis.auth import AuthAPI, RefreshAPI
-from api.apis.media import MusicAPI
+from api.apis.media import VideoAPI, MusicAPI, ComicAPI, PictureAPI, BlogAPI, ChatAPI, CommentAPI
 
 
 api = NinjaAPI(title="MyUs API")
@@ -25,10 +25,10 @@ api.add_router("/auth/refresh", RefreshAPI().router, tags=["auth"])
 
 # # Media
 # api.add_router("/home", HomeAPI().router, tags=["Media Home"])
-# api.add_router("/media/video", VideoAPI().router, tags=["Media Video"])
+api.add_router("/media/video", VideoAPI().router, tags=["Media Video"])
 api.add_router("/media/music", MusicAPI().router, tags=["Media Music"])
-# api.add_router("/media/comic", ComicAPI().router, tags=["Media Comic"])
-# api.add_router("/media/picture", PictureAPI().router, tags=["Media Picture"])
-# api.add_router("/media/blog", BlogAPI().router, tags=["Media Blog"])
-# api.add_router("/media/chat", ChatAPI().router, tags=["Media Chat"])
+api.add_router("/media/comic", ComicAPI().router, tags=["Media Comic"])
+api.add_router("/media/picture", PictureAPI().router, tags=["Media Picture"])
+api.add_router("/media/blog", BlogAPI().router, tags=["Media Blog"])
+api.add_router("/media/chat", ChatAPI().router, tags=["Media Chat"])
 # api.add_router("/media/comment", CommentAPI().router, tags=["Media Comment"])
