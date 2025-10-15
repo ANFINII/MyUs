@@ -62,6 +62,40 @@
 
 ## Django固有ルール
 
+### 型定義（Django Ninja）
+- **入力（Input）データ型**: `ninja.Schema` を使用
+  - APIリクエストボディのバリデーション用
+  - `from ninja import Schema` でインポート
+  - 例: `SignUpDataIn`, `LoginDataIn`, `VideoDataIn`
+
+- **出力（Output）データ型**: `@dataclass` を使用
+  - APIレスポンス用のデータクラス
+  - `from dataclasses import dataclass` でインポート
+  - `@dataclass(frozen=True, slots=True)` を推奨
+  - 例: `LoginOutData`, `VideoData`, `ErrorData`
+
+```python
+# 入力用（ninja.Schema）
+from ninja import Schema
+
+class LoginDataIn(Schema):
+    username: str
+    password: str
+
+# 出力用（dataclass）
+from dataclasses import dataclass
+
+@dataclass(frozen=True, slots=True)
+class LoginOutData:
+    access: str
+    refresh: str
+    user: UserLoginData
+
+@dataclass(frozen=True, slots=True)
+class ErrorData:
+    message: str
+```
+
 ### モデル
 ```python
 class Video(models.Model):
@@ -306,4 +340,5 @@ python manage.py migrate --noinput
 ```
 
 ## 更新履歴
+- 2025-10-15: Django Ninjaの型定義ルールを追加（Schema vs dataclass）
 - 2025-09-29: 初版作成（バックエンド開発ルール）
