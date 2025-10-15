@@ -7,15 +7,13 @@ from api.services.media import get_videos,get_musics, get_comics, get_pictures, 
 from api.services.user import get_user
 from api.types.data.common import ErrorData
 from api.types.data.media.input import VideoDataIn, MusicDataIn, ComicDataIn, PictureDataIn, BlogDataIn, ChatDataIn
-from api.types.data.media.index import (
-    HashtagData, MediaCreateData,
-    VideoData, VideoDetailData, VideoDetailOutData,
-    MusicData, MusicDetailData, MusicDetailOutData,
-    ComicData, ComicDetailData, ComicDetailOutData,
-    PictureData, PictureDetailData, PictureDetailOutData,
-    BlogData, BlogDetailData, BlogDetailOutData,
-    ChatData, ChatDetailData, ChatDetailOutData,
-)
+from api.types.data.media.index import HashtagData, MediaCreateData
+from api.types.data.media.index import VideoData, VideoDetailOutData, VideoDetailData
+from api.types.data.media.index import MusicData, MusicDetailOutData, MusicDetailData
+from api.types.data.media.index import ComicData, ComicDetailOutData, ComicDetailData
+from api.types.data.media.index import PictureData, PictureDetailOutData, PictureDetailData
+from api.types.data.media.index import BlogData, BlogDetailOutData, BlogDetailData
+from api.types.data.media.index import ChatData, ChatDetailOutData, ChatDetailData
 from api.utils.enum.index import CommentType
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
