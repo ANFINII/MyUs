@@ -1,13 +1,11 @@
 from ninja import NinjaAPI
-from api.apis.auth import AuthAPI, RefreshAPI
-from api.apis.media import VideoAPI, MusicAPI, ComicAPI, PictureAPI, BlogAPI, ChatAPI, CommentAPI
-
+from api.apis.auth import AuthAPI
+from api.apis.media import VideoAPI, MusicAPI, ComicAPI, PictureAPI, BlogAPI, ChatAPI
 
 api = NinjaAPI(title="MyUs API")
 
 # Auth
 api.add_router("/auth", AuthAPI().router, tags=["auth"])
-api.add_router("/auth/refresh", RefreshAPI().router, tags=["auth"])
 
 # User
 # api.add_router("/user/me", user_router)

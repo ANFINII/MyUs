@@ -15,7 +15,7 @@ from rest_framework_simplejwt import exceptions
 from api.models import User, Profile
 from api.services.user import signup_check
 from api.utils.enum.response import ApiResponse
-from api.utils.functions.encrypt import encrypt, decrypt
+from api.utils.functions.encrypt import decrypt
 from api.utils.functions.index import message
 
 
