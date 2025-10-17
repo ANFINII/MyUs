@@ -12,7 +12,6 @@ export interface SignupIn {
   nickname: string
   password1: string
   password2: string
-  fullName: string
   lastName: string
   firstName: string
   year: number
@@ -105,7 +104,7 @@ export interface FollowOut {
 }
 
 export interface LikeMediaIn {
-  id: number
+  ulid: string
   mediaType: MediaType
   isLike: boolean
 }
