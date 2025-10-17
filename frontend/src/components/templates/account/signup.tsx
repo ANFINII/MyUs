@@ -23,7 +23,6 @@ const initSignup: SignupIn = {
   nickname: '',
   password1: '',
   password2: '',
-  fullName: '',
   lastName: '',
   firstName: '',
   year: nowDate.year - 50,
