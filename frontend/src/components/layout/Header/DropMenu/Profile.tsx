@@ -28,10 +28,10 @@ export default function DropMenuProfile(props: Props): React.JSX.Element {
   const handleLogin = () => router.push('/account/login')
 
   const handleLogout = async () => {
-    handleLogin()
+    await handleLogin()
     const ret = await postLogout()
     if (ret.isErr()) return
-    await resetUser()
+    resetUser()
   }
 
   const handleManagement = () => {
