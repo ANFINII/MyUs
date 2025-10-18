@@ -1,15 +1,9 @@
 import { apiClient } from 'lib/axios/internal'
-import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
-import { Req } from 'types/global'
-import { LoginIn, SignupIn, User } from 'types/internal/auth'
+import { LoginIn, SignupIn } from 'types/internal/auth'
 import { MessageOut } from 'types/internal/other'
-import { apiUser, apiLogin, apiLogout, apiSignup } from 'api/uri'
+import { apiLogin, apiLogout, apiSignup } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
-
-export const getUser = async (req?: Req): Promise<ApiOut<User>> => {
-  return await apiOut(apiClient.get(apiUser, cookieHeader(req)))
-}
 
 export const postLogin = async (request: LoginIn): Promise<ApiOut<MessageOut | void>> => {
   return await apiOut(apiClient.post(apiLogin, request))

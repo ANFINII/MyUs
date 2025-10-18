@@ -1,6 +1,6 @@
 import { useState, createContext, useEffect, useCallback } from 'react'
 import { UserMe } from 'types/internal/auth'
-import { getUser } from 'api/internal/auth'
+import { getUser } from 'api/internal/user'
 
 export interface UserContextType {
   user: UserMe
@@ -10,7 +10,7 @@ export interface UserContextType {
 
 export const UserContext = createContext<UserContextType | undefined>(undefined)
 
-const initUser = { avatar: '', ulid: '', email: '', nickname: '', isActive: false, isStaff: false }
+const initUser = { avatar: '', ulid: '', nickname: '', isActive: false, isStaff: false }
 
 interface Props {
   children: React.ReactNode
