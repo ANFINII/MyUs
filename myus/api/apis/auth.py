@@ -9,7 +9,7 @@ from ninja import Router
 from api.models import Profile, User
 from api.modules.logger import log
 from api.services.user import signup_check
-from api.types.data.auth import LoginDataIn, LoginOutData, MessageData, RefreshOutData, SignUpDataIn, UserLoginData
+from api.types.data.auth import LoginDataIn, LoginOutData, RefreshOutData, SignUpDataIn, MessageData
 from api.types.data.common import ErrorData
 from api.utils.functions.encrypt import decrypt
 from api.utils.functions.token import access_token, refresh_token
@@ -22,7 +22,6 @@ class AuthAPI:
 
     @router.get("", response={200: MessageData, 401: ErrorData})
     def auth(request):
-        """認証状態確認"""
         log.info("AuthAPI auth")
 
         access_token = request.COOKIES.get("access_token")
@@ -53,7 +52,6 @@ class AuthAPI:
 
     @router.post("refresh", response={200: RefreshOutData, 401: ErrorData, 500: MessageData})
     def refresh(request, response: HttpResponse):
-        """トークンリフレッシュ"""
         log.info("AuthAPI refresh")
 
         refresh_token = request.COOKIES.get("refresh_token")
@@ -94,20 +92,18 @@ class AuthAPI:
         except jwt.exceptions.DecodeError:
             log.warning("Token decode error")
             return 401, ErrorData(message="Invalid token")
-        except Exception as e:
-            log.error("Unexpected error during token refresh", exc=e)
+        except Exception:
+            log.error("Unexpected error during token refresh")
             return 500, MessageData(error=True, message="トークンリフレッシュに失敗しました!")
 
         response.delete_cookie("access_token")
         response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True)
 
-        log.info("Token refreshed successfully", user_id=user_id)
         return 200, RefreshOutData(access=access)
 
     @router.post("/signup", response={201: MessageData, 400: MessageData, 500: MessageData})
     def signup(request, input: SignUpDataIn):
-        """サインアップ"""
-        log.info("AuthAPI signup", email=input.email, username=input.username)
+        log.info("AuthAPI signup", input=input)
 
         validation = signup_check(input.__dict__)
         if validation:
@@ -123,22 +119,20 @@ class AuthAPI:
             profile.gender = input.gender
             profile.birthday = birthday.isoformat()
             profile.save()
-            log.info("User created", user_id=user.id, username=user.username)
             return 201, MessageData(error=False, message="アカウント登録が完了しました!")
-        except Exception as e:
-            log.error("Signup error", exc=e)
+        except Exception:
+            log.error("Signup error")
             return 500, MessageData(error=True, message="アカウント登録に失敗しました!")
 
     @router.post("/login", response={200: LoginOutData, 400: MessageData, 500: MessageData})
     def login(request, response: HttpResponse, input: LoginDataIn):
-        """ログイン"""
         log.info("AuthAPI login", username=input.username)
 
         try:
             username = decrypt(input.username)
             password = decrypt(input.password)
-        except Exception as e:
-            log.error("Decrypt error", exc=e)
+        except Exception:
+            log.error("Decrypt error")
             return 500, MessageData(error=True, message="認証エラーが発生しました!")
 
         user = authenticate(username=username, password=password)
@@ -154,8 +148,8 @@ class AuthAPI:
         try:
             access = access_token(user.id)
             refresh = refresh_token(user.id)
-        except Exception as e:
-            log.error("Token generation error", exc=e)
+        except Exception:
+            log.error("Token generation error")
             return 500, MessageData(error=True, message="認証トークンの生成に失敗しました!")
 
         response.delete_cookie("access_token")
@@ -163,20 +157,16 @@ class AuthAPI:
         response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True)
         response.set_cookie("refresh_token", refresh, max_age=60 * 60 * 24 * 30, httponly=True)
 
-        user = UserLoginData(avatar=user.image(), ulid=str(user.ulid), nickname=user.nickname, is_staff=user.is_staff)
-        log.info("User login success", user=user)
+        return 200, LoginOutData(access=access, refresh=refresh)
 
-        return 200, LoginOutData(access=access, refresh=refresh, user=user)
-
-    @router.post("/logout", response={200: MessageData, 500: MessageData})
+    @router.post("/logout", response={204: None, 500: MessageData})
     def logout(request, response: HttpResponse):
-        """ログアウト"""
         log.info("AuthAPI logout")
 
         try:
             response.delete_cookie("access_token")
             response.delete_cookie("refresh_token")
-            return 200, MessageData(error=False, message="ログアウトしました!")
-        except Exception as e:
-            log.error("Logout error", exc=e)
+            return 204, None
+        except Exception:
+            log.error("Logout error")
             return 500, MessageData(error=True, message="ログアウトに失敗しました!")

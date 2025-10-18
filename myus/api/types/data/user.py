@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from ninja import Schema
 from api.types.data.plan import PlanData
 
 
@@ -6,7 +7,6 @@ from api.types.data.plan import PlanData
 class UserData:
     avatar: str
     ulid: str
-    email: str
     nickname: str
     is_active: bool
     is_staff: bool
@@ -62,3 +62,12 @@ class NotificationData:
 class LikeOutData:
     is_like: bool
     like_count: int
+
+
+class LikeMediaInData(Schema):
+    id: int
+    media_type: str
+
+
+class LikeCommentInData(Schema):
+    id: int

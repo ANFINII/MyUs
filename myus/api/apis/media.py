@@ -33,7 +33,6 @@ class VideoAPI:
         video: UploadedFile = File(...),
         convert: UploadedFile = File(...),
     ):
-        """create"""
         log.info("VideoAPI create", input=input, image=image, video=video, convert=convert)
 
         author = get_user(request)
@@ -46,14 +45,12 @@ class VideoAPI:
 
     @router.get("", response={200: list[VideoData]})
     def list(request, search: str | None = None):
-        """list"""
         log.info("VideoAPI list", search=search)
         data = get_videos(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: VideoDetailOutData, 404: ErrorData})
     def detail(request, ulid: str, search: str | None = None):
-        """detail"""
         log.info("VideoAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Video, ulid=ulid, publish=True)
@@ -96,7 +93,6 @@ class MusicAPI:
 
     @router.post("", response={201: MediaCreateData, 401: ErrorData})
     def create(request, input: MusicDataIn = Form(...), music: UploadedFile = File(...)):
-        """create"""
         log.info("MusicAPI create", input=input, music=music)
 
         author = get_user(request)
@@ -109,14 +105,12 @@ class MusicAPI:
 
     @router.get("", response={200: list[MusicData]})
     def list(request, search: str | None = None):
-        """list"""
         log.info("MusicAPI list", search=search)
         data = get_musics(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: MusicDetailOutData, 404: ErrorData})
     def detail(request, ulid: str, search: str | None = None):
-        """detail"""
         log.info("MusicAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Music, ulid=ulid, publish=True)
@@ -159,7 +153,6 @@ class ComicAPI:
 
     @router.post("", response={201: MediaCreateData, 401: ErrorData})
     def create(request, input: ComicDataIn = Form(...), image: UploadedFile = File(...), images: list[UploadedFile] = File(...)):
-        """create"""
         log.info("ComicAPI create", input=input, image=image, images=images)
 
         author = get_user(request)
@@ -172,14 +165,12 @@ class ComicAPI:
 
     @router.get("", response={200: list[ComicData]})
     def list(request, search: str | None = None):
-        """list"""
         log.info("ComicAPI list", search=search)
         data = get_comics(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: ComicDetailOutData, 404: ErrorData})
     def detail(request, ulid: str, search: str | None = None):
-        """detail"""
         log.info("ComicAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Comic, ulid=ulid, publish=True)
@@ -220,7 +211,6 @@ class PictureAPI:
 
     @router.post("", response={201: MediaCreateData, 401: ErrorData})
     def create(request, input: PictureDataIn = Form(...), image: UploadedFile = File(...)):
-        """create"""
         log.info("PictureAPI create", input=input, image=image)
 
         author = get_user(request)
@@ -233,14 +223,12 @@ class PictureAPI:
 
     @router.get("", response={200: list[PictureData]})
     def list(request, search: str | None = None):
-        """list"""
         log.info("PictureAPI list", search=search)
         data = get_pictures(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: PictureDetailOutData, 404: ErrorData})
     def detail(request, ulid: str, search: str | None = None):
-        """detail"""
         log.info("PictureAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Picture, ulid=ulid, publish=True)
@@ -281,7 +269,6 @@ class BlogAPI:
 
     @router.post("", response={201: MediaCreateData, 401: ErrorData})
     def create(request, input: BlogDataIn = Form(...), image: UploadedFile = File(...)):
-        """create"""
         log.info("BlogAPI create", input=input, image=image)
 
         author = get_user(request)
@@ -294,14 +281,12 @@ class BlogAPI:
 
     @router.get("", response={200: list[BlogData]})
     def list(request, search: str | None = None):
-        """list"""
         log.info("BlogAPI list", search=search)
         data = get_blogs(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: BlogDetailOutData, 404: ErrorData})
     def detail(request, ulid: str, search: str | None = None):
-        """detail"""
         log.info("BlogAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Blog, ulid=ulid, publish=True)
@@ -343,7 +328,6 @@ class ChatAPI:
 
     @router.post("", response={201: MediaCreateData, 401: ErrorData})
     def create(request, input: ChatDataIn = Form(...)):
-        """create"""
         log.info("ChatAPI create", input=input)
 
         author = get_user(request)
@@ -356,14 +340,12 @@ class ChatAPI:
 
     @router.get("", response={200: list[ChatData]})
     def list(request, search: str | None = None):
-        """list"""
         log.info("ChatAPI list", search=search)
         data = get_chats(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: ChatDetailOutData, 404: ErrorData})
     def detail(request, ulid: str, search: str | None = None):
-        """detail"""
         log.info("ChatAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Chat, ulid=ulid, publish=True)

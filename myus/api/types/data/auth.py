@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from ninja import Schema
+from api.utils.enum.index import GenderType
 
 
 @dataclass(frozen=True, slots=True)
@@ -16,10 +17,10 @@ class SignUpDataIn(Schema):
     password2: str
     last_name: str
     first_name: str
-    gender: int
     year: int
     month: int
     day: int
+    gender: GenderType
 
 
 class LoginDataIn(Schema):
@@ -28,18 +29,9 @@ class LoginDataIn(Schema):
 
 
 @dataclass(frozen=True, slots=True)
-class UserLoginData:
-    avatar: str
-    ulid: str
-    nickname: str
-    is_staff: bool
-
-
-@dataclass(frozen=True, slots=True)
 class LoginOutData:
     access: str
     refresh: str
-    user: UserLoginData
 
 
 class RefreshDataIn(Schema):
