@@ -104,7 +104,7 @@ export interface FollowOut {
 }
 
 export interface LikeMediaIn {
-  ulid: string
+  id: number
   mediaType: MediaType
   isLike: boolean
 }
