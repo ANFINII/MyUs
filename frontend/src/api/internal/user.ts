@@ -2,10 +2,14 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
-import { Follow, FollowIn, FollowOut, LikeCommentIn, LikeMediaIn, LikeOut, NotificationOut, SearchTagOut } from 'types/internal/auth'
+import { Follow, FollowIn, FollowOut, LikeCommentIn, LikeMediaIn, LikeOut, NotificationOut, SearchTagOut, UserMe } from 'types/internal/auth'
 import { SearchParms } from 'types/internal/media'
-import { apiFollow, apiFollower, apiLikeComment, apiLikeMedia, apiNotification, apiSearchTag } from 'api/uri'
+import { apiFollow, apiFollower, apiLikeComment, apiLikeMedia, apiNotification, apiSearchTag, apiUser } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
+
+export const getUser = async (req?: Req): Promise<ApiOut<UserMe>> => {
+  return await apiOut(apiClient.get(apiUser, cookieHeader(req)))
+}
 
 export const getSearchTag = async (req?: Req): Promise<ApiOut<SearchTagOut[]>> => {
   return await apiOut(apiClient.get(apiSearchTag, cookieHeader(req)))
