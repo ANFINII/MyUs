@@ -1,5 +1,6 @@
 from datetime import datetime
 from dataclasses import dataclass
+from ninja import Schema
 
 
 @dataclass(frozen=True, slots=True)
@@ -30,3 +31,14 @@ class FollowInData:
 class FollowOutData:
     is_follow: bool
     follower_count: int
+
+
+class FollowInData(Schema):
+    ulid: str
+    is_follow: bool
+
+
+@dataclass(frozen=True, slots=True)
+class SearchTagData:
+    sequence: int
+    name: str

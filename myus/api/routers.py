@@ -1,5 +1,6 @@
 from ninja import NinjaAPI
 from api.apis.auth import AuthAPI
+from api.apis.user import UserAPI
 from api.apis.media import VideoAPI, MusicAPI, ComicAPI, PictureAPI, BlogAPI, ChatAPI
 
 api = NinjaAPI(title="MyUs API")
@@ -8,13 +9,7 @@ api = NinjaAPI(title="MyUs API")
 api.add_router("/auth", AuthAPI().router, tags=["auth"])
 
 # User
-# api.add_router("/user/me", user_router)
-# api.add_router("/user/search_tag", search_tag_router)
-# api.add_router("/user/follow", follow_router)
-# api.add_router("/user/follower", follower_router)
-# api.add_router("/user/like/media", like_media_router)
-# api.add_router("/user/like/comment", like_comment_router)
-# api.add_router("/user/notification", notification_router)
+api.add_router("/user", UserAPI().router, tags=["user"])
 
 # # Setting
 # api.add_router("/setting/profile", setting_profile_router)
