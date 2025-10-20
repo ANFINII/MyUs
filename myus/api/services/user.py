@@ -3,6 +3,7 @@ from django.conf import settings
 
 from api.models import User
 from api.utils.functions.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
+from api.types.data.setting import SettingProfileInData
 
 
 def get_user(request) -> User | None:
@@ -27,27 +28,28 @@ def get_user(request) -> User | None:
         return None
 
 
-def profile_check(profile) -> str | None:
-    if has_email(profile["email"]):
+def profile_check(data: SettingProfileInData) -> str | None:
+
+    if has_email(data.email):
         return "メールアドレスの形式が違います!"
 
-    if has_username(profile["username"]):
+    if has_username(data.username):
         return "ユーザー名は半角英数字のみ入力できます!"
 
-    if has_number(profile["last_name"]):
+    if has_number(data.last_name):
         return "姓に数字が含まれております!"
 
-    if has_number(profile["first_name"]):
+    if has_number(data.first_name):
         return "名に数字が含まれております!"
 
-    if has_phone(profile["phone"]):
+    if has_phone(data.phone):
         return "電話番号の形式が違います!"
 
-    if has_postal_code(profile["postal_code"]):
+    if has_postal_code(data.postal_code):
         return "郵便番号の形式が違います!"
 
-    if has_birthday(int(profile["year"]), int(profile["month"]), int(profile["day"])):
-        return f"{profile["year"]}年{profile["month"]}月{profile["day"]}日は存在しない日付です!"
+    if has_birthday(data.year, data.month, data.day):
+        return f"{data.year}年{data.month}月{data.day}日は存在しない日付です!"
 
 
 def signup_check(user) -> str | None:
