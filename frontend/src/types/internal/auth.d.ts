@@ -56,30 +56,7 @@ export interface ProfileOut extends User {
   introduction: string
 }
 
-export interface UserIn {
-  avatar?: File
-  email: string
-  username: string
-  nickname: string
-}
-
 export interface ProfileIn {
-  lastName: string
-  firstName: string
-  gender: GenderType
-  year: number
-  month: number
-  day: number
-  phone: string
-  countryCode: string
-  postalCode: string
-  prefecture: string
-  city: string
-  street: string
-  introduction: string
-}
-
-export interface SettingProfileIn {
   avatar?: File
   email: string
   username: string
