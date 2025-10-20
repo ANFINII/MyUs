@@ -41,13 +41,11 @@ export interface User {
 }
 
 export interface ProfileOut extends User {
-  fullName: string
   lastName: string
   firstName: string
   year: number
   month: number
   day: number
-  age: number
   gender: GenderType
   phone: string
   countryCode: string
@@ -58,8 +56,47 @@ export interface ProfileOut extends User {
   introduction: string
 }
 
-export interface ProfileIn extends ProfileOut {
+export interface UserIn {
   avatar?: File
+  email: string
+  username: string
+  nickname: string
+}
+
+export interface ProfileIn {
+  lastName: string
+  firstName: string
+  gender: GenderType
+  year: number
+  month: number
+  day: number
+  phone: string
+  countryCode: string
+  postalCode: string
+  prefecture: string
+  city: string
+  street: string
+  introduction: string
+}
+
+export interface SettingProfileIn {
+  avatar?: File
+  email: string
+  username: string
+  nickname: string
+  lastName: string
+  firstName: string
+  gender: GenderType
+  year: number
+  month: number
+  day: number
+  phone: string
+  countryCode: string
+  postalCode: string
+  prefecture: string
+  city: string
+  street: string
+  introduction: string
 }
 
 export interface MypageOut {
@@ -103,6 +140,7 @@ export interface FollowOut {
 }
 
 export interface LikeMediaIn {
+  // ulid: string
   id: number
   mediaType: MediaType
   isLike: boolean

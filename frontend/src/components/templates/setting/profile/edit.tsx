@@ -1,18 +1,20 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
-import { ProfileIn, ProfileOut } from 'types/internal/auth'
+import { ProfileOut, SettingProfileIn } from 'types/internal/auth'
 import { getAddress } from 'api/external/address'
 import { putSettingProfile } from 'api/internal/setting'
 import { prefectures } from 'utils/constants/address'
 import { FetchError, GenderType } from 'utils/constants/enum'
 import { genderMap } from 'utils/constants/map'
 import { selectDate } from 'utils/functions/datetime'
+import { getAge } from 'utils/functions/user'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
+import ExImage from 'components/parts/ExImage'
 import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
 import InputImage from 'components/parts/Input/Image'
@@ -39,11 +41,13 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const [values, setValues] = useState<ProfileOut>(profile)
 
   const { years, months, days } = selectDate()
+  const url = avatar ? URL.createObjectURL(avatar) : profile.avatar
   const handleBack = () => router.push('/setting/profile')
   const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatar(files)
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleNumberSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: Number(e.target.value) })
 
   const handleAutoAddress = async () => {
     const ret = await getAddress(values.postalCode)
@@ -63,7 +67,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
     if (!isRequiredCheck({ email, username, nickname, lastName, firstName, phone, postalCode })) return
     handleLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
-    const request: ProfileIn = { ...values, avatar }
+    const request: SettingProfileIn = { ...values, avatar }
     const ret = await putSettingProfile(request)
     if (ret.isErr()) {
       handleLoading(false)
@@ -94,7 +98,22 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
 
         <Table>
           <TableRow label="アバター画像">
-            <InputImage id="avatar" className="account_image_edit" icon={<IconPerson size="56" type="square" />} onChange={handleAvatar} />
+            <InputImage
+              id="avatar"
+              className="account_image_edit"
+              icon={
+                url ? (
+                  <div className="account_image">
+                    <ExImage src={url} size="56" />
+                  </div>
+                ) : (
+                  <div className="account_image_edit">
+                    <IconPerson size="56" type="square" />
+                  </div>
+                )
+              }
+              onChange={handleAvatar}
+            />
           </TableRow>
           <TableRow label="メールアドレス">
             <Input name="email" value={values.email} maxLength={120} required={isRequired} onChange={handleInput} />
@@ -113,13 +132,13 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
           </TableRow>
           <TableRow label="生年月日">
             <HStack gap="1" full>
-              <Select name="year" value={values.year} options={years} onChange={handleSelect} />
-              <Select name="month" value={values.month} options={months} onChange={handleSelect} />
-              <Select name="day" value={values.day} options={days} onChange={handleSelect} />
+              <Select name="year" value={values.year} options={years} onChange={handleNumberSelect} />
+              <Select name="month" value={values.month} options={months} onChange={handleNumberSelect} />
+              <Select name="day" value={values.day} options={days} onChange={handleNumberSelect} />
             </HStack>
           </TableRow>
           <TableRow isIndent label="年齢">
-            {values.age}歳
+            {getAge(values.year, values.month, values.day)}歳
           </TableRow>
           <TableRow label="性別">
             <HStack gap="5" className="pl_4">
