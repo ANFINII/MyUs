@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
-import { ProfileOut, SettingProfileIn } from 'types/internal/auth'
+import { ProfileOut, ProfileIn } from 'types/internal/auth'
 import { getAddress } from 'api/external/address'
 import { putSettingProfile } from 'api/internal/setting'
 import { prefectures } from 'utils/constants/address'
@@ -67,7 +67,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
     if (!isRequiredCheck({ email, username, nickname, lastName, firstName, phone, postalCode })) return
     handleLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
-    const request: SettingProfileIn = { ...values, avatar }
+    const request: ProfileIn = { ...values, avatar }
     const ret = await putSettingProfile(request)
     if (ret.isErr()) {
       handleLoading(false)
