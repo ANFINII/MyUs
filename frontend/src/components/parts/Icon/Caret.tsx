@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function IconCaret(props: Props): React.JSX.Element {
-  const { size, type = 'square', className = '' } = props
+  const { size, type = 'square', className } = props
 
   return (
     <>

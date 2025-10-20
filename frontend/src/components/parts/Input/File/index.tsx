@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function InputFile(props: Props): React.JSX.Element {
-  const { label, errorText, accept, className = '', error = false, required = false, multiple, onChange } = props
+  const { label, errorText, accept, className, error = false, required = false, multiple, onChange } = props
 
   const inputEl = useRef<HTMLInputElement>(null)
   const [fileNames, setFileNames] = useState<string[]>([])

@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function IconToggle(props: Props): React.JSX.Element {
-  const { size, type, className = '' } = props
+  const { size, type, className } = props
 
   return (
     <>

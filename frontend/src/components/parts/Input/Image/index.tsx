@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function InputImage(props: Props): React.JSX.Element {
-  const { id, className = '', icon, onChange } = props
+  const { id, className, icon, onChange } = props
 
   const inputEl = useRef<HTMLInputElement>(null)
 
