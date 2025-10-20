@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function Select(props: Props): React.JSX.Element {
-  const { label, name, value, options, placeholder, className = '', onChange } = props
+  const { label, name, value, options, placeholder, className, onChange } = props
 
   return (
     <div className={className}>

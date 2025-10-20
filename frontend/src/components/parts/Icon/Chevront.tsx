@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function IconChevront(props: Props): React.JSX.Element {
-  const { width, height, type, className = '' } = props
+  const { width, height, type, className } = props
 
   return (
     <>

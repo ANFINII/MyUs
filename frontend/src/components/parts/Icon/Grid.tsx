@@ -4,7 +4,7 @@ interface Props {
 }
 
 export default function IconGrid(props: Props): React.JSX.Element {
-  const { size, className = '' } = props
+  const { size, className } = props
 
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" width={size} height={size} className={className}>
