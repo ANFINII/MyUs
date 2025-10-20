@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import { ProfileOut } from 'types/internal/auth'
 import { genderMap } from 'utils/constants/map'
+import { getAge, getFullName } from 'utils/functions/user'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
@@ -53,13 +54,13 @@ export default function SettingProfile(props: Props): React.JSX.Element {
             {profile.nickname}
           </TableRow>
           <TableRow isIndent label="名前">
-            {profile.fullName}
+            {getFullName(profile.lastName, profile.firstName)}
           </TableRow>
           <TableRow isIndent label="生年月日">
             {profile.year}年{profile.month}月{profile.day}日
           </TableRow>
           <TableRow isIndent label="年齢">
-            {profile.age}歳
+            {getAge(profile.year, profile.month, profile.day)}歳
           </TableRow>
           <TableRow isIndent label="性別">
             {genderMap[profile.gender]}

@@ -1,8 +1,8 @@
-import { apiClient } from 'lib/axios/internal'
+import { apiClient, apiFormClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
-import { ProfileIn, ProfileOut, MypageIn, MypageOut, UserNotificationIn, UserNotificationOut } from 'types/internal/auth'
+import { ProfileOut, ProfileIn, MypageOut, MypageIn, UserNotificationOut, UserNotificationIn } from 'types/internal/auth'
 import { MessageOut } from 'types/internal/other'
 import { apiSettingProfile, apiSettingMypage, apiSettingNotification } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
@@ -12,7 +12,7 @@ export const getSettingProfile = async (req?: Req): Promise<ApiOut<ProfileOut>> 
 }
 
 export const putSettingProfile = async (request: ProfileIn): Promise<ApiOut<MessageOut>> => {
-  return await apiOut(apiClient.put(apiSettingProfile, camelSnake(request)))
+  return await apiOut(apiFormClient.put(apiSettingProfile, camelSnake(request)))
 }
 
 export const getSettingMypage = async (req?: Req): Promise<ApiOut<MypageOut>> => {
