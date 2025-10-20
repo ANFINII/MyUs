@@ -13,6 +13,14 @@ class UserData:
 
 
 @dataclass(frozen=True, slots=True)
+class UserInData:
+    avatar: str | None
+    email: str
+    username: str
+    nickname: str
+
+
+@dataclass(frozen=True, slots=True)
 class UserPlanData:
     plan: PlanData
     customer_id: str

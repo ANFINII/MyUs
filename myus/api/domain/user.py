@@ -35,6 +35,22 @@ class UserDomain:
         return user
 
     @classmethod
+    def update(cls, user: User, **kwargs) -> None:
+        if not kwargs:
+            return
+
+        [setattr(user, key, value) for key, value in kwargs.items()]
+        user.save(update_fields=list(kwargs.keys()))
+
+    @classmethod
+    def update_profile(cls, user: User, **kwargs) -> None:
+        if not kwargs:
+            return
+
+        [setattr(user.profile, key, value) for key, value in kwargs.items()]
+        user.profile.save(update_fields=list(kwargs.keys()))
+
+    @classmethod
     def update_mypage(cls, user: User, **kwargs) -> None:
         if not kwargs:
             return
