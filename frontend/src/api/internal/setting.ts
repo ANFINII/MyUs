@@ -20,7 +20,7 @@ export const getSettingMypage = async (req?: Req): Promise<ApiOut<MypageOut>> =>
 }
 
 export const putSettingMypage = async (request: MypageIn): Promise<ApiOut<MessageOut>> => {
-  return await apiOut(apiClient.put(apiSettingMypage, camelSnake(request)))
+  return await apiOut(apiFormClient.put(apiSettingMypage, camelSnake(request)))
 }
 
 export const getSettingNotification = async (req?: Req): Promise<ApiOut<UserNotificationOut>> => {
