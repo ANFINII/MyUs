@@ -1,12 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
-from functools import reduce
-from operator import and_
-from django.db.models import Q
 from api.models.user import User
-from app.modules.search import get_q_list
-from api.types.data.user import AuthorData
-from api.utils.functions.index import create_url
+from api.utils.functions.index import set_attr
 
 
 class SortType(Enum):
@@ -39,7 +34,7 @@ class UserDomain:
         if not kwargs:
             return
 
-        [setattr(user, key, value) for key, value in kwargs.items()]
+        [set_attr(user, key, value) for key, value in kwargs.items()]
         user.save(update_fields=list(kwargs.keys()))
 
     @classmethod
@@ -47,7 +42,7 @@ class UserDomain:
         if not kwargs:
             return
 
-        [setattr(user.profile, key, value) for key, value in kwargs.items()]
+        [set_attr(user.profile, key, value) for key, value in kwargs.items()]
         user.profile.save(update_fields=list(kwargs.keys()))
 
     @classmethod
@@ -55,7 +50,7 @@ class UserDomain:
         if not kwargs:
             return
 
-        [setattr(user.mypage, key, value) for key, value in kwargs.items()]
+        [set_attr(user.mypage, key, value) for key, value in kwargs.items()]
         user.mypage.save(update_fields=list(kwargs.keys()))
 
     # @classmethod
