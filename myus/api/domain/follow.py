@@ -7,6 +7,7 @@ from api.models.users import Follow
 from api.models.user import User
 from app.modules.search import get_q_list
 from api.types.data.follow import FollowOutData
+from api.utils.functions.index import set_attr
 
 
 @dataclass(frozen=True, slots=True)
@@ -71,7 +72,7 @@ class FollowDomain:
         if not kwargs:
             return
 
-        [setattr(follow, key, value) for key, value in kwargs.items()]
+        [set_attr(follow, key, value) for key, value in kwargs.items()]
         follow.save(update_fields=list(kwargs.keys()))
 
     @classmethod

@@ -4,6 +4,7 @@ from django.db.models import Count, F, Q
 from django.utils import timezone
 from api.types.union.media import MediaModelType
 from api.utils.functions.search import search_q_list
+from api.utils.functions.index import set_attr
 
 
 class SortType(Enum):
@@ -75,5 +76,5 @@ class MediaDomain:
             return
 
         kwargs["updated"] = timezone.now()
-        [setattr(model, key, value) for key, value in kwargs.items()]
+        [set_attr(model, key, value) for key, value in kwargs.items()]
         model.save(update_fields=list(kwargs.keys()))

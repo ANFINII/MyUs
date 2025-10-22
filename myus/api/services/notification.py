@@ -1,6 +1,7 @@
 from django.db.models import Exists, OuterRef
 from api.models import UserNotification, Notification, Follow
 from api.utils.constant import notification_type_no
+from api.utils.functions.index import set_attr
 
 
 def get_notification(user):
@@ -36,7 +37,7 @@ def user_notification_update(is_notification, notification_type, notification_ob
     attribute_name = f"is_{notification_type}"
     is_bool = is_notification != "True"
     if hasattr(notification_obj, attribute_name):
-        setattr(notification_obj, attribute_name, is_bool)
+        set_attr(notification_obj, attribute_name, is_bool)
         notification_obj.save(update_fields=[attribute_name])
 
 

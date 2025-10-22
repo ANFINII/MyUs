@@ -11,7 +11,7 @@ from api.utils.decorators.auth import auth_user
 from api.utils.enum.response import ApiResponse
 from api.utils.filter_data import DeferData
 from api.utils.functions.validation import has_email
-from api.utils.functions.index import create_url, message
+from api.utils.functions.index import create_url, message, set_attr
 from api.utils.functions.response import DataResponse
 
 
@@ -26,13 +26,11 @@ class SettingProfileAPI(APIView):
             email=user.email,
             username=user.username,
             nickname=user.nickname,
-            full_name=user.full_name(),
             last_name=user.profile.last_name,
             first_name=user.profile.first_name,
             year=user.year(),
             month=user.month(),
             day=user.day(),
-            age=user.age(),
             gender=user.gender(),
             phone=user.profile.phone,
             country_code=user.profile.country_code,
@@ -56,11 +54,11 @@ class SettingProfileAPI(APIView):
             return DataResponse(message(True, validation), status=HTTP_400_BAD_REQUEST)
 
         user_fields = ["email", "username", "nickname", "content"]
-        [setattr(user, field, data.get(field)) for field in user_fields]
+        [set_attr(user, field, data.get(field)) for field in user_fields]
         user.avatar = avatar if avatar else user.avatar
 
         profile_fields = ("last_name", "first_name", "gender", "phone", "postal_code", "prefecture", "city", "street", "introduction")
-        [setattr(profile, field, data.get(field)) for field in profile_fields]
+        [set_attr(profile, field, data.get(field)) for field in profile_fields]
         birthday = datetime.date(year=int(data["year"]), month=int(data["month"]), day=int(data["day"]))
         profile.birthday = birthday.isoformat()
 
@@ -106,7 +104,7 @@ class SettingMyPageAPI(APIView):
             return DataResponse(message(True, "メールアドレスの形式が違います!"), status=HTTP_400_BAD_REQUEST)
 
         update_fields = ["email", "tag_manager_id", "content"]
-        [setattr(mypage, field, data.get(field)) for field in update_fields]
+        [set_attr(mypage, field, data.get(field)) for field in update_fields]
         mypage.banner = banner if banner else mypage.banner
         mypage.is_advertise = data["is_advertise"] == "true"
 
@@ -145,7 +143,7 @@ class SettingNotificationAPI(APIView):
         user_notification = UserNotification.objects.filter(user=user).first()
 
         data = request.data
-        [setattr(user_notification, key, value) for key, value in data.items()]
+        [set_attr(user_notification, key, value) for key, value in data.items()]
 
         try:
             user_notification.save()

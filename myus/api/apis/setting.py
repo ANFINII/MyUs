@@ -10,7 +10,7 @@ from api.types.data.auth import MessageData
 from api.types.data.common import ErrorData
 from api.types.data.setting import MyPageInData, NotificationInData, ProfileInData, SettingProfileData, SettingMyPageData, SettingNotificationData, SettingProfileInData
 from api.utils.functions.validation import has_email
-from api.utils.functions.index import create_url
+from api.utils.functions.index import create_url, set_attr
 from api.types.data.user import UserInData
 
 
@@ -73,7 +73,7 @@ class SettingProfileAPI:
             last_name=input.last_name,
             first_name=input.first_name,
             gender=input.gender,
-            birthday=birthday.isoformat(),
+            birthday=birthday,
             phone=input.phone,
             postal_code=input.postal_code,
             prefecture=input.prefecture,
@@ -120,31 +120,30 @@ class SettingMyPageAPI:
         return 200, data
 
     @router.put("", response={204: MessageData, 400: MessageData, 401: ErrorData})
-    def put(request, input: MyPageInData):
-        log.info("SettingMyPageAPI put")
+    def put(request, input: MyPageInData = Form(...), banner: UploadedFile = File(None)):
+        log.info("SettingMyPageAPI put", input=input)
 
         user = get_user(request)
         if not user:
             return 401, ErrorData(message="Unauthorized")
 
-        mypage = MyPage.objects.filter(id=user.id).first()
-        data = input.dict()
-        banner = data.get("banner")
-
-        if has_email(data["email"]):
+        if has_email(input.email):
             return 400, MessageData(error=True, message="メールアドレスの形式が違います!")
 
-        update_fields = ["email", "tag_manager_id", "content"]
-        [setattr(mypage, field, data.get(field)) for field in update_fields]
-        mypage.banner = banner if banner else mypage.banner
-        mypage.is_advertise = data["is_advertise"] == "true"
+        mypage_data = MyPageInData(
+            banner=banner if banner else user.mypage.banner,
+            email=input.email,
+            tag_manager_id=input.tag_manager_id,
+            content=input.content,
+            is_advertise=input.is_advertise,
+        )
 
         try:
-            mypage.save()
+            UserDomain.update_mypage(user, **asdict(mypage_data))
         except Exception:
             return 400, MessageData(error=True, message="メールアドレスが既に登録済みです!")
 
-        return 204, MessageData(error=False, message="success")
+        return 204, MessageData(error=False, message="保存しました!")
 
 
 class SettingNotificationAPI:
@@ -187,7 +186,7 @@ class SettingNotificationAPI:
         user_notification = UserNotification.objects.filter(user=user).first()
 
         data = input.dict()
-        [setattr(user_notification, key, value) for key, value in data.items()]
+        [set_attr(user_notification, key, value) for key, value in data.items()]
 
         try:
             user_notification.save()

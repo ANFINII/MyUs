@@ -5,6 +5,7 @@ from django.utils import timezone
 from api.models.comment import Comment
 from api.types.data.comment import CommentInData
 from api.utils.enum.index import CommentTypeNo
+from api.utils.functions.index import set_attr
 
 
 class SortType(Enum):
@@ -51,5 +52,5 @@ class CommentDomain:
             return
 
         kwargs["updated"] = timezone.now()
-        [setattr(comment, key, value) for key, value in kwargs.items()]
+        [set_attr(comment, key, value) for key, value in kwargs.items()]
         comment.save(update_fields=list(kwargs.keys()))
