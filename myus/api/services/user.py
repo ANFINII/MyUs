@@ -1,9 +1,9 @@
 import jwt
 from django.conf import settings
-
 from api.models import User
 from api.utils.functions.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
 from api.types.data.setting import SettingProfileInData
+from api.domain.user import UserDomain
 
 
 def get_user(request) -> User | None:
@@ -18,7 +18,7 @@ def get_user(request) -> User | None:
         if not user_id:
             return None
 
-        user = User.objects.filter(id=user_id).first()
+        user = UserDomain.get(id=user_id)
         if not user.is_active:
             return None
         return user
@@ -29,7 +29,6 @@ def get_user(request) -> User | None:
 
 
 def profile_check(data: SettingProfileInData) -> str | None:
-
     if has_email(data.email):
         return "メールアドレスの形式が違います!"
 
@@ -50,6 +49,8 @@ def profile_check(data: SettingProfileInData) -> str | None:
 
     if has_birthday(data.year, data.month, data.day):
         return f"{data.year}年{data.month}月{data.day}日は存在しない日付です!"
+
+    return None
 
 
 def signup_check(user) -> str | None:
@@ -85,3 +86,5 @@ def signup_check(user) -> str | None:
 
     if User.objects.filter(nickname=user["nickname"]).exists():
         return "投稿者名は既に登録されています!"
+
+    return None

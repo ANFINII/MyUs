@@ -3,12 +3,12 @@ from dataclasses import asdict
 from ninja import File, Form, Router, UploadedFile
 
 from api.domain.user import UserDomain
-from api.models import User, MyPage, UserNotification
+from api.models import UserNotification
 from api.modules.logger import log
 from api.services.user import get_user, profile_check
 from api.types.data.auth import MessageData
 from api.types.data.common import ErrorData
-from api.types.data.setting import MyPageInData, NotificationInData, ProfileInData, SettingProfileData, SettingMyPageData, SettingNotificationData, SettingProfileInData
+from api.types.data.setting import MyPageInData, NotificationInData, ProfileInData, SettingMyPageInData, SettingProfileData, SettingMyPageData, SettingNotificationData, SettingProfileInData
 from api.utils.functions.validation import has_email
 from api.utils.functions.index import create_url, set_attr
 from api.types.data.user import UserInData
@@ -86,7 +86,7 @@ class SettingProfileAPI:
             UserDomain.update(user, **asdict(user_data))
             UserDomain.update_profile(user, **asdict(profile_data))
         except Exception:
-            return 400, MessageData(error=True, message="ユーザー名またはメールアドレス、投稿者名は既に登録済みです!")
+            return 400, MessageData(error=True, message="保存に失敗しました!")
 
         return 204, MessageData(error=False, message="保存しました!")
 
@@ -120,7 +120,7 @@ class SettingMyPageAPI:
         return 200, data
 
     @router.put("", response={204: MessageData, 400: MessageData, 401: ErrorData})
-    def put(request, input: MyPageInData = Form(...), banner: UploadedFile = File(None)):
+    def put(request, input: SettingMyPageInData = Form(...), banner: UploadedFile = File(None)):
         log.info("SettingMyPageAPI put", input=input)
 
         user = get_user(request)
@@ -141,7 +141,7 @@ class SettingMyPageAPI:
         try:
             UserDomain.update_mypage(user, **asdict(mypage_data))
         except Exception:
-            return 400, MessageData(error=True, message="メールアドレスが既に登録済みです!")
+            return 400, MessageData(error=True, message="保存に失敗しました!")
 
         return 204, MessageData(error=False, message="保存しました!")
 
@@ -191,6 +191,6 @@ class SettingNotificationAPI:
         try:
             user_notification.save()
         except Exception:
-            return 400, MessageData(error=True, message="通知設定の保存に失敗しました!")
+            return 400, MessageData(error=True, message="保存に失敗しました!")
 
         return 204, None
