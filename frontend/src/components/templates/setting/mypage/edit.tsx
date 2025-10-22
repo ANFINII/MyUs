@@ -40,7 +40,8 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const handlSubmit = async () => {
     handleLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
-    const request: MypageIn = { ...values, banner }
+    const { email, tagManagerId, isAdvertise, content } = values
+    const request: MypageIn = { banner, email, tagManagerId, isAdvertise, content }
     const ret = await putSettingMypage(request)
     if (ret.isErr()) {
       handleLoading(false)
