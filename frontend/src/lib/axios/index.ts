@@ -10,6 +10,10 @@ export const axiosInterceptor = (client: AxiosInstance) => {
     },
     (e: AxiosError) => {
       AxiosErrorLog(e)
+      const status = e.response?.status
+      if (status && (status === 422 || status >= 500)) {
+        return Promise.reject(e.response)
+      }
       return Promise.resolve(e.response)
     },
   )
