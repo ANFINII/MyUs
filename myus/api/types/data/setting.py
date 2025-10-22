@@ -71,8 +71,16 @@ class SettingMyPageData:
     is_advertise: bool
 
 
-class MyPageInData(Schema):
-    banner: str | None
+@dataclass(frozen=True, slots=True)
+class MyPageInData:
+    banner: str
+    email: str
+    tag_manager_id: str
+    content: str
+    is_advertise: bool
+
+
+class SettingMyPageInData(Schema):
     email: str
     tag_manager_id: str
     content: str

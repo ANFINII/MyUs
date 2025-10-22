@@ -40,7 +40,7 @@ class CommentDomain:
             .order_by(order_by_key)
         )
 
-        return objs
+        return list(objs)
 
     @classmethod
     def create(cls, comment_data: CommentInData) -> Comment:
