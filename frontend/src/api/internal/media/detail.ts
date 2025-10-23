@@ -6,25 +6,25 @@ import { VideoDetailOut, MusicDetailOut, ComicDetailOut, PictureDetailOut, BlogD
 import { apiVideo, apiMusic, apiComic, apiPicture, apiBlog, apiChat } from 'api/uri'
 
 export const getVideo = async (ulid: string, req?: Req): Promise<ApiOut<VideoDetailOut>> => {
-  return await apiOut(apiClient.get(apiVideo(ulid), cookieHeader(req)))
+  return await apiOut(apiClient('json').get(apiVideo(ulid), cookieHeader(req)))
 }
 
 export const getMusic = async (ulid: string, req?: Req): Promise<ApiOut<MusicDetailOut>> => {
-  return await apiOut(apiClient.get(apiMusic(ulid), cookieHeader(req)))
+  return await apiOut(apiClient('json').get(apiMusic(ulid), cookieHeader(req)))
 }
 
 export const getComic = async (ulid: string, req?: Req): Promise<ApiOut<ComicDetailOut>> => {
-  return await apiOut(apiClient.get(apiComic(ulid), cookieHeader(req)))
+  return await apiOut(apiClient('json').get(apiComic(ulid), cookieHeader(req)))
 }
 
 export const getPicture = async (ulid: string, req?: Req): Promise<ApiOut<PictureDetailOut>> => {
-  return await apiOut(apiClient.get(apiPicture(ulid), cookieHeader(req)))
+  return await apiOut(apiClient('json').get(apiPicture(ulid), cookieHeader(req)))
 }
 
 export const getBlog = async (ulid: string, req?: Req): Promise<ApiOut<BlogDetailOut>> => {
-  return await apiOut(apiClient.get(apiBlog(ulid), cookieHeader(req)))
+  return await apiOut(apiClient('json').get(apiBlog(ulid), cookieHeader(req)))
 }
 
 export const getChat = async (ulid: string, req?: Req): Promise<ApiOut<ChatDetailOut>> => {
-  return await apiOut(apiClient.get(apiChat(ulid), cookieHeader(req)))
+  return await apiOut(apiClient('json').get(apiChat(ulid), cookieHeader(req)))
 }
