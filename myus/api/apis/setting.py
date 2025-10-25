@@ -3,15 +3,15 @@ from dataclasses import asdict
 from ninja import File, Form, Router, UploadedFile
 
 from api.domain.user import UserDomain
-from api.models import UserNotification
 from api.modules.logger import log
 from api.services.user import get_user, profile_check
 from api.types.data.auth import MessageData
 from api.types.data.common import ErrorData
-from api.types.data.setting import MyPageInData, NotificationInData, ProfileInData, SettingMyPageInData, SettingProfileData, SettingMyPageData, SettingNotificationData, SettingProfileInData
-from api.utils.functions.validation import has_email
-from api.utils.functions.index import create_url, set_attr
 from api.types.data.user import UserInData
+from api.types.data.setting.index import ProfileData, SettingProfileData, MyPageData, SettingMyPageData, SettingNotificationData
+from api.types.data.setting.input import SettingProfileInData, SettingMyPageInData, NotificationInData
+from api.utils.functions.validation import has_email
+from api.utils.functions.index import create_url
 
 
 class SettingProfileAPI:
@@ -69,7 +69,7 @@ class SettingProfileAPI:
 
         birthday = datetime.date(year=input.year, month=input.month, day=input.day)
 
-        profile_data = ProfileInData(
+        profile_data = ProfileData(
             last_name=input.last_name,
             first_name=input.first_name,
             gender=input.gender,
@@ -85,7 +85,8 @@ class SettingProfileAPI:
         try:
             UserDomain.update(user, **asdict(user_data))
             UserDomain.update_profile(user, **asdict(profile_data))
-        except Exception:
+        except Exception as e:
+            log.error("SettingProfileAPI put error", error=e)
             return 400, MessageData(error=True, message="保存に失敗しました!")
 
         return 204, MessageData(error=False, message="保存しました!")
@@ -130,7 +131,7 @@ class SettingMyPageAPI:
         if has_email(input.email):
             return 400, MessageData(error=True, message="メールアドレスの形式が違います!")
 
-        mypage_data = MyPageInData(
+        mypage_data = MyPageData(
             banner=banner if banner else user.mypage.banner,
             email=input.email,
             tag_manager_id=input.tag_manager_id,
@@ -140,7 +141,8 @@ class SettingMyPageAPI:
 
         try:
             UserDomain.update_mypage(user, **asdict(mypage_data))
-        except Exception:
+        except Exception as e:
+            log.error("SettingMyPageAPI put error", error=e)
             return 400, MessageData(error=True, message="保存に失敗しました!")
 
         return 204, MessageData(error=False, message="保存しました!")
@@ -159,38 +161,32 @@ class SettingNotificationAPI:
         if not user:
             return 401, ErrorData(message="Unauthorized")
 
-        user_notification = UserNotification.objects.filter(user=user).first()
-
         data = SettingNotificationData(
-            is_video=user_notification.is_video,
-            is_music=user_notification.is_music,
-            is_comic=user_notification.is_comic,
-            is_picture=user_notification.is_picture,
-            is_blog=user_notification.is_blog,
-            is_chat=user_notification.is_chat,
-            is_follow=user_notification.is_follow,
-            is_reply=user_notification.is_reply,
-            is_like=user_notification.is_like,
-            is_views=user_notification.is_views,
+            is_video=user.notification.is_video,
+            is_music=user.notification.is_music,
+            is_comic=user.notification.is_comic,
+            is_picture=user.notification.is_picture,
+            is_blog=user.notification.is_blog,
+            is_chat=user.notification.is_chat,
+            is_follow=user.notification.is_follow,
+            is_reply=user.notification.is_reply,
+            is_like=user.notification.is_like,
+            is_views=user.notification.is_views,
         )
         return 200, data
 
-    @router.put("", response={204: None, 400: MessageData, 401: ErrorData})
+    @router.put("", response={204: MessageData, 400: MessageData, 401: ErrorData})
     def put(request, input: NotificationInData):
-        log.info("SettingNotificationAPI put")
+        log.info("SettingNotificationAPI put", input=input)
 
         user = get_user(request)
         if not user:
             return 401, ErrorData(message="Unauthorized")
 
-        user_notification = UserNotification.objects.filter(user=user).first()
-
-        data = input.dict()
-        [set_attr(user_notification, key, value) for key, value in data.items()]
-
         try:
-            user_notification.save()
-        except Exception:
+            UserDomain.update_notification(user, **input.dict())
+        except Exception as e:
+            log.error("SettingNotificationAPI put error", error=e)
             return 400, MessageData(error=True, message="保存に失敗しました!")
 
-        return 204, None
+        return 204, MessageData(error=False, message="保存しました!")

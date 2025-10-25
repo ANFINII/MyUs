@@ -1,5 +1,4 @@
 from api.models.user import User
-from api.models import Follow
 from api.types.data.user import AuthorData, MediaUserData, NotificationUserData
 from api.types.union.media import MediaModelType
 from api.utils.functions.index import create_url

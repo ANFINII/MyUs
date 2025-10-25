@@ -6,14 +6,15 @@ from api.services.comment import get_comments
 from api.services.media import get_videos,get_musics, get_comics, get_pictures, get_blogs, get_chats
 from api.services.user import get_user
 from api.types.data.common import ErrorData
-from api.types.data.media.input import VideoDataIn, MusicDataIn, ComicDataIn, PictureDataIn, BlogDataIn, ChatDataIn
 from api.types.data.media.index import HashtagData, MediaCreateData
-from api.types.data.media.index import VideoData, VideoDetailOutData, VideoDetailData
-from api.types.data.media.index import MusicData, MusicDetailOutData, MusicDetailData
-from api.types.data.media.index import ComicData, ComicDetailOutData, ComicDetailData
-from api.types.data.media.index import PictureData, PictureDetailOutData, PictureDetailData
-from api.types.data.media.index import BlogData, BlogDetailOutData, BlogDetailData
-from api.types.data.media.index import ChatData, ChatDetailOutData, ChatDetailData
+from api.types.data.media.index import VideoData, VideoDetailData
+from api.types.data.media.index import MusicData, MusicDetailData
+from api.types.data.media.index import ComicData, ComicDetailData
+from api.types.data.media.index import PictureData, PictureDetailData
+from api.types.data.media.index import BlogData, BlogDetailData
+from api.types.data.media.index import ChatData, ChatDetailData
+from api.types.data.media.input import VideoInData, MusicInData, ComicInData, PictureInData, BlogInData, ChatInData
+from api.types.data.media.output import VideoDetailOutData, MusicDetailOutData, ComicDetailOutData, PictureDetailOutData, BlogDetailOutData, ChatDetailOutData
 from api.utils.enum.index import CommentType
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
@@ -28,7 +29,7 @@ class VideoAPI:
     @router.post("", response={201: MediaCreateData, 401: ErrorData})
     def create(
         request,
-        input: VideoDataIn = Form(...),
+        input: VideoInData = Form(...),
         image: UploadedFile = File(...),
         video: UploadedFile = File(...),
         convert: UploadedFile = File(...),
@@ -92,7 +93,7 @@ class MusicAPI:
     router = Router()
 
     @router.post("", response={201: MediaCreateData, 401: ErrorData})
-    def create(request, input: MusicDataIn = Form(...), music: UploadedFile = File(...)):
+    def create(request, input: MusicInData = Form(...), music: UploadedFile = File(...)):
         log.info("MusicAPI create", input=input, music=music)
 
         author = get_user(request)
@@ -152,7 +153,7 @@ class ComicAPI:
     router = Router()
 
     @router.post("", response={201: MediaCreateData, 401: ErrorData})
-    def create(request, input: ComicDataIn = Form(...), image: UploadedFile = File(...), images: list[UploadedFile] = File(...)):
+    def create(request, input: ComicInData = Form(...), image: UploadedFile = File(...), images: list[UploadedFile] = File(...)):
         log.info("ComicAPI create", input=input, image=image, images=images)
 
         author = get_user(request)
@@ -210,7 +211,7 @@ class PictureAPI:
     router = Router()
 
     @router.post("", response={201: MediaCreateData, 401: ErrorData})
-    def create(request, input: PictureDataIn = Form(...), image: UploadedFile = File(...)):
+    def create(request, input: PictureInData = Form(...), image: UploadedFile = File(...)):
         log.info("PictureAPI create", input=input, image=image)
 
         author = get_user(request)
@@ -268,7 +269,7 @@ class BlogAPI:
     router = Router()
 
     @router.post("", response={201: MediaCreateData, 401: ErrorData})
-    def create(request, input: BlogDataIn = Form(...), image: UploadedFile = File(...)):
+    def create(request, input: BlogInData = Form(...), image: UploadedFile = File(...)):
         log.info("BlogAPI create", input=input, image=image)
 
         author = get_user(request)
@@ -327,7 +328,7 @@ class ChatAPI:
     router = Router()
 
     @router.post("", response={201: MediaCreateData, 401: ErrorData})
-    def create(request, input: ChatDataIn = Form(...)):
+    def create(request, input: ChatInData = Form(...)):
         log.info("ChatAPI create", input=input)
 
         author = get_user(request)
