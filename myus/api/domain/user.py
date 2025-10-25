@@ -19,10 +19,10 @@ class UserDomain:
     @classmethod
     def get(cls, id: int | None = None, ulid: str | None = None) -> User | None:
         if id:
-            user = User.objects.filter(id=id).select_related("profile", "mypage").first()
+            user = User.objects.filter(id=id).select_related("profile", "mypage", "notification").first()
 
         if ulid:
-            user = User.objects.filter(ulid=ulid).select_related("profile", "mypage").first()
+            user = User.objects.filter(ulid=ulid).select_related("profile", "mypage", "notification").first()
 
         if not user:
             return None
@@ -52,6 +52,14 @@ class UserDomain:
 
         [set_attr(user.mypage, key, value) for key, value in kwargs.items()]
         user.mypage.save(update_fields=list(kwargs.keys()))
+
+    @classmethod
+    def update_notification(cls, user: User, **kwargs) -> None:
+        if not kwargs:
+            return
+
+        [set_attr(user.notification, key, value) for key, value in kwargs.items()]
+        user.notification.save(update_fields=list(kwargs.keys()))
 
     # @classmethod
     # def bulk_get(cls, search: str | None = None, limit: int = 100, sort_option: SortOption | None = None) -> list[AuthorData]:

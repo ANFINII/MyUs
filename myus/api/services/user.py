@@ -2,7 +2,7 @@ import jwt
 from django.conf import settings
 from api.models import User
 from api.utils.functions.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
-from api.types.data.setting import SettingProfileInData
+from api.types.data.setting.input import SettingProfileInData
 from api.domain.user import UserDomain
 
 

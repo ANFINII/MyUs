@@ -17,7 +17,7 @@ class SortType(Enum):
 class FilterOption:
     publish: bool = True
     category_id: int = 0
-    search: str = ""
+    search: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -28,7 +28,7 @@ class SortOption:
 
 @dataclass(frozen=True, slots=True)
 class ExcludeOption:
-    id: int = 0
+    id: int | None = None
 
 
 class MediaDomain:

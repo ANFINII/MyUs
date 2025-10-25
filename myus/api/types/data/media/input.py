@@ -1,35 +1,35 @@
 from ninja import Schema
 
 
-class VideoDataIn(Schema):
+class VideoInData(Schema):
     title: str
     content: str
 
 
-class MusicDataIn(Schema):
+class MusicInData(Schema):
     title: str
     content: str
     lyric: str
     download: bool
 
 
-class ComicDataIn(Schema):
+class ComicInData(Schema):
     title: str
     content: str
 
 
-class PictureDataIn(Schema):
+class PictureInData(Schema):
     title: str
     content: str
 
 
-class BlogDataIn(Schema):
+class BlogInData(Schema):
     title: str
     content: str
     richtext: str
 
 
-class ChatDataIn(Schema):
+class ChatInData(Schema):
     title: str
     content: str
     period: str

@@ -224,7 +224,7 @@ def create_mypage(sender, **kwargs):
 class UserNotification(models.Model):
     """UserNotification"""
     id         = models.BigAutoField(primary_key=True)
-    user       = models.OneToOneField(User, on_delete=models.CASCADE)
+    user       = models.OneToOneField(User, on_delete=models.CASCADE, related_name='notification')
     is_video   = models.BooleanField(default=False)
     is_music   = models.BooleanField(default=False)
     is_comic   = models.BooleanField(default=False)

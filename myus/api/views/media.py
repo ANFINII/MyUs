@@ -7,12 +7,18 @@ from rest_framework.views import APIView
 
 from api.domain.media import MediaDomain
 from api.models import Video, Music, Comic, ComicPage, Picture, Blog, Chat
-from api.types.data.media.index import VideoDetailOutData, VideoDetailData
-from api.types.data.media.index import MusicDetailOutData, MusicDetailData
-from api.types.data.media.index import ComicDetailOutData, ComicDetailData
-from api.types.data.media.index import BlogDetailOutData, BlogDetailData
-from api.types.data.media.index import PictureDetailOutData, PictureDetailData
-from api.types.data.media.index import ChatDetailOutData, ChatDetailData
+from api.types.data.media.index import VideoDetailData
+from api.types.data.media.index import  MusicDetailData
+from api.types.data.media.index import ComicDetailData
+from api.types.data.media.index import BlogDetailData
+from api.types.data.media.index import PictureDetailData
+from api.types.data.media.index import ChatDetailData
+from api.types.data.media.output import VideoDetailOutData, VideoDetailData
+from api.types.data.media.output import MusicDetailOutData, MusicDetailData
+from api.types.data.media.output import ComicDetailOutData, ComicDetailData
+from api.types.data.media.output import BlogDetailOutData, BlogDetailData
+from api.types.data.media.output import PictureDetailOutData, PictureDetailData
+from api.types.data.media.output import ChatDetailOutData, ChatDetailData
 from api.services.comment import get_comments
 from api.services.message import get_messages
 from api.services.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats
@@ -140,7 +146,7 @@ class MusicAPI(APIView):
                 content=obj.content,
                 lyric=obj.lyric,
                 music=create_url(obj.music.url),
-                convert=create_url(obj.convert.url),
+                download=obj.download,
                 comments=comments,
                 hashtags=[hashtag.jp_name for hashtag in obj.hashtag.all()],
                 read=obj.read,
