@@ -1,3 +1,9 @@
+export enum Fetch {
+  Save = '保存しました',
+  Create = '作成しました',
+  Delete = '削除しました',
+}
+
 export enum FetchError {
   Error = 'エラーが発生しました',
   Get = 'データの取得に失敗しました',

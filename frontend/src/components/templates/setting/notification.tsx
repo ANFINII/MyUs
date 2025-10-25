@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { UserNotification, UserNotificationOut } from 'types/internal/auth'
 import { getSettingNotification, putSettingNotification } from 'api/internal/setting'
-import { FetchError } from 'utils/constants/enum'
+import { Fetch, FetchError } from 'utils/constants/enum'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -35,6 +35,7 @@ export default function SettingNotification(props: Props): React.JSX.Element {
       return
     }
     handleLoading(false)
+    handleToast(Fetch.Save, false)
   }
 
   const handleReset = async () => {
