@@ -5,10 +5,9 @@ from rest_framework.views import APIView
 
 from api.models import User, Profile, MyPage, UserNotification
 from api.modules.logger import Log
-from api.types.data.setting import SettingProfileData, SettingMyPageData, SettingNotificationData
+from api.types.data.setting.index import SettingProfileData, SettingMyPageData, SettingNotificationData
 from api.services.user import get_user, profile_check
 from api.utils.decorators.auth import auth_user
-from api.utils.enum.response import ApiResponse
 from api.utils.filter_data import DeferData
 from api.utils.functions.validation import has_email
 from api.utils.functions.index import create_url, message, set_attr
