@@ -24,7 +24,7 @@ class CommentDomain:
         return Comment.objects.filter(id=id).first()
 
     @classmethod
-    def bulk_get(cls, type_no: CommentTypeNo, object_id: int, user_id: int) -> list[Comment]:
+    def bulk_get(cls, type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[Comment]:
         filter_obj = dict(type_no=type_no, object_id=object_id)
         subquery = Comment.objects.filter(id=OuterRef("pk"), like__id=user_id)
         queryset = Comment.objects.select_related("author").annotate(is_comment_like=Exists(subquery))
