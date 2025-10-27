@@ -6,7 +6,6 @@ from django.db.models import Q
 from api.models.users import Follow
 from api.models.user import User
 from app.modules.search import get_q_list
-from api.types.data.follow import FollowOutData
 from api.utils.functions.index import set_attr
 
 

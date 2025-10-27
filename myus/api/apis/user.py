@@ -9,7 +9,8 @@ from api.services.notification import get_notification, get_content_object
 from api.services.user import get_user
 from api.types.data.auth import MessageData
 from api.types.data.common import ErrorData
-from api.types.data.follow.index import FollowInData, FollowOutData, FollowUserData
+from api.types.data.follow.index import FollowOutData, FollowUserData
+from api.types.data.follow.input import FollowInData
 from api.types.data.notification import NotificationOutData, NotificationItemData, NotificationUserData, NotificationContentData
 from api.types.data.user import LikeOutData, SearchTagData, UserData, LikeCommentInData, LikeMediaInData
 from api.utils.constant import media_models
@@ -52,7 +53,7 @@ class UserAPI:
         return 200, data
 
     @router.get("/follow", response={200: list[FollowUserData], 401: ErrorData})
-    def get_follows(request, search: str = None):
+    def get_follows(request, search: str | None):
         log.info("UserAPI get_follow_list", search=search)
 
         user = get_user(request)
@@ -64,7 +65,7 @@ class UserAPI:
 
     @router.post("/follow", response={200: FollowOutData, 400: MessageData, 401: ErrorData, 500: MessageData})
     def post_follow_user(request, input: FollowInData):
-        log.info("UserAPI follow_user", ulid=input.ulid, is_follow=input.is_follow)
+        log.info("UserAPI follow_user", input=input)
 
         user = get_user(request)
         if not user:
@@ -82,7 +83,7 @@ class UserAPI:
             return 500, MessageData(error=True, message="フォロー処理に失敗しました!")
 
     @router.get("/follower", response={200: list[FollowUserData], 401: ErrorData})
-    def get_followers(request, search: str = None):
+    def get_followers(request, search: str | None):
         log.info("UserAPI get_follower_list", search=search)
 
         user = get_user(request)
