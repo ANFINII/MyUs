@@ -45,6 +45,12 @@ class MediaUserData:
 
 
 @dataclass(frozen=True, slots=True)
+class SearchTagData:
+    sequence: int
+    name: str
+
+
+@dataclass(frozen=True, slots=True)
 class NotificationUserData:
     avatar: int
     nickname: str

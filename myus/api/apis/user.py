@@ -9,9 +9,9 @@ from api.services.notification import get_notification, get_content_object
 from api.services.user import get_user
 from api.types.data.auth import MessageData
 from api.types.data.common import ErrorData
-from api.types.data.follow import FollowOutData, FollowUserData, FollowInData, SearchTagData
+from api.types.data.follow.index import FollowInData, FollowOutData, FollowUserData
 from api.types.data.notification import NotificationOutData, NotificationItemData, NotificationUserData, NotificationContentData
-from api.types.data.user import LikeOutData, UserData, LikeCommentInData, LikeMediaInData
+from api.types.data.user import LikeOutData, SearchTagData, UserData, LikeCommentInData, LikeMediaInData
 from api.utils.constant import media_models
 from api.utils.functions.index import create_url
 
