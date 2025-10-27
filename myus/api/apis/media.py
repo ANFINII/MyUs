@@ -46,13 +46,13 @@ class VideoAPI:
         return 201, data
 
     @router.get("", response={200: list[VideoData]})
-    def list(request, search: str | None = None):
+    def list(request, search: str | None):
         log.info("VideoAPI list", search=search)
         data = get_videos(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: VideoDetailOutData, 404: ErrorData})
-    def detail(request, ulid: str, search: str | None = None):
+    def detail(request, ulid: str, search: str | None):
         log.info("VideoAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Video, ulid=ulid, publish=True)
@@ -106,13 +106,13 @@ class MusicAPI:
         return 201, data
 
     @router.get("", response={200: list[MusicData]})
-    def list(request, search: str | None = None):
+    def list(request, search: str | None):
         log.info("MusicAPI list", search=search)
         data = get_musics(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: MusicDetailOutData, 404: ErrorData})
-    def detail(request, ulid: str, search: str | None = None):
+    def detail(request, ulid: str, search: str | None):
         log.info("MusicAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Music, ulid=ulid, publish=True)
@@ -166,13 +166,13 @@ class ComicAPI:
         return 201, data
 
     @router.get("", response={200: list[ComicData]})
-    def list(request, search: str | None = None):
+    def list(request, search: str | None):
         log.info("ComicAPI list", search=search)
         data = get_comics(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: ComicDetailOutData, 404: ErrorData})
-    def detail(request, ulid: str, search: str | None = None):
+    def detail(request, ulid: str, search: str | None):
         log.info("ComicAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Comic, ulid=ulid, publish=True)
@@ -224,13 +224,13 @@ class PictureAPI:
         return 201, data
 
     @router.get("", response={200: list[PictureData]})
-    def list(request, search: str | None = None):
+    def list(request, search: str | None):
         log.info("PictureAPI list", search=search)
         data = get_pictures(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: PictureDetailOutData, 404: ErrorData})
-    def detail(request, ulid: str, search: str | None = None):
+    def detail(request, ulid: str, search: str | None):
         log.info("PictureAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Picture, ulid=ulid, publish=True)
@@ -282,13 +282,13 @@ class BlogAPI:
         return 201, data
 
     @router.get("", response={200: list[BlogData]})
-    def list(request, search: str | None = None):
+    def list(request, search: str | None):
         log.info("BlogAPI list", search=search)
         data = get_blogs(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: BlogDetailOutData, 404: ErrorData})
-    def detail(request, ulid: str, search: str | None = None):
+    def detail(request, ulid: str, search: str | None):
         log.info("BlogAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Blog, ulid=ulid, publish=True)
@@ -341,13 +341,13 @@ class ChatAPI:
         return 201, data
 
     @router.get("", response={200: list[ChatData]})
-    def list(request, search: str | None = None):
+    def list(request, search: str | None):
         log.info("ChatAPI list", search=search)
         data = get_chats(50, search)
         return 200, data
 
     @router.get("/{ulid}", response={200: ChatDetailOutData, 404: ErrorData})
-    def detail(request, ulid: str, search: str | None = None):
+    def detail(request, ulid: str, search: str | None):
         log.info("ChatAPI detail", ulid=ulid, search=search)
 
         obj = MediaDomain.get(model=Chat, ulid=ulid, publish=True)

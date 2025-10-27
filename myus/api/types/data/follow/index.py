@@ -21,12 +21,6 @@ class FollowData:
 
 
 @dataclass(frozen=True, slots=True)
-class FollowInData:
-    follower_id: int
-    following_id: int
-
-
-@dataclass(frozen=True, slots=True)
 class FollowOutData:
     is_follow: bool
     follower_count: int
