@@ -3,6 +3,7 @@ from api.domain.media import MediaDomain
 from api.modules.logger import log
 from api.models.media import Video, Music, Comic, Picture, Blog, Chat
 from api.services.comment import get_comments
+from api.services.message import get_messages
 from api.services.media import get_videos,get_musics, get_comics, get_pictures, get_blogs, get_chats
 from api.services.user import get_user
 from api.types.data.common import ErrorData
@@ -354,12 +355,14 @@ class ChatAPI:
             return 404, ErrorData("Not Found")
 
         user = get_user(request)
+        messages = get_messages(chat_id=obj.id)
 
         data = ChatDetailOutData(
             detail=ChatDetailData(
                 ulid=obj.ulid,
                 title=obj.title,
                 content=obj.content,
+                messages=messages,
                 hashtags=[HashtagData(jp_name=hashtag.jp_name) for hashtag in obj.hashtag.all()],
                 read=obj.read,
                 like_count=obj.total_like(),
