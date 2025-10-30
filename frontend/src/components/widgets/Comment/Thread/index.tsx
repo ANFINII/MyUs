@@ -26,8 +26,8 @@ interface Props {
 
 export default function CommentThread(props: Props): React.JSX.Element {
   const { reply, user, setReplys, handleToast } = props
-  const { id, author, text } = reply
-  const { isActive, ulid } = user
+  const { ulid, author, text } = reply
+  const { isActive } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
   const { isLoading, handleLoading } = useIsLoading()
@@ -38,14 +38,14 @@ export default function CommentThread(props: Props): React.JSX.Element {
   const [likeCount, setLikeCount] = useState<number>(reply.likeCount)
   const [commentText, setCommentText] = useState<string>('')
 
-  const disabled = author.ulid !== ulid
+  const disabled = author.ulid !== user.ulid
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
   const handleEditToggle = () => setIsEdit(!isEdit)
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setCommentText(e.target.value)
 
   const handleLike = async () => {
-    const request: LikeCommentIn = { id, isLike: !isLike }
+    const request: LikeCommentIn = { ulid, isLike: !isLike }
     const ret = await postLikeComment(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
@@ -61,26 +61,26 @@ export default function CommentThread(props: Props): React.JSX.Element {
   const handleUpdate = async () => {
     handleLoading(true)
     const text = commentText
-    const ret = await putComment(id, { text })
+    const ret = await putComment(ulid, { text })
     if (ret.isErr()) {
       handleToast(FetchError.Put, true)
       handleLoading(false)
       return
     }
-    setReplys((prev) => prev.map((c) => (c.id === id ? { ...c, text } : c)))
+    setReplys((prev) => prev.map((c) => (c.ulid === ulid ? { ...c, text } : c)))
     handleLoading(false)
     handleEditToggle()
   }
 
   const handleDelete = async () => {
     handleLoading(true)
-    const ret = await deleteComment(id)
+    const ret = await deleteComment(ulid)
     if (ret.isErr()) {
       handleLoading(false)
       handleToast(FetchError.Delete, true)
       return
     }
-    setReplys((prev) => prev.filter((c) => c.id !== id))
+    setReplys((prev) => prev.filter((c) => c.ulid !== ulid))
     handleLoading(false)
     handleModal()
   }

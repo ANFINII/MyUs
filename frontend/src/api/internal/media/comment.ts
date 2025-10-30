@@ -8,10 +8,10 @@ export const postComment = async (request: CommnetIn): Promise<ApiOut<Comment>> 
   return await apiOut(apiClient('json').post(apiComments, camelSnake(request)))
 }
 
-export const putComment = async (id: number, request: CommentUpdateIn): Promise<ApiOut<void>> => {
-  return await apiOut(apiClient('json').put(apiComment(id), request))
+export const putComment = async (ulid: string, request: CommentUpdateIn): Promise<ApiOut<void>> => {
+  return await apiOut(apiClient('json').put(apiComment(ulid), request))
 }
 
-export const deleteComment = async (id: number): Promise<ApiOut<void>> => {
-  return await apiOut(apiClient('json').delete(apiComment(id)))
+export const deleteComment = async (ulid: string): Promise<ApiOut<void>> => {
+  return await apiOut(apiClient('json').delete(apiComment(ulid)))
 }

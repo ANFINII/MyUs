@@ -1,7 +1,8 @@
+import { CommentType } from 'utils/constants/enum'
 import { Author } from './media'
 
 export interface Comment {
-  id: number
+  ulid: string
   text: string
   created: Date
   updated: Date
@@ -12,7 +13,7 @@ export interface Comment {
 }
 
 export interface Reply {
-  id: number
+  ulid: string
   text: string
   created: Date
   updated: Date
@@ -25,8 +26,8 @@ export interface CommnetIn {
   text: string
   typeName: CommentType
   typeNo: CommentTypeNo
-  objectId: number
-  parentId?: number
+  objectUlid: string
+  parentUlid?: string
 }
 
 export interface CommentUpdateIn {

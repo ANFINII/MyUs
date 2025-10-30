@@ -117,14 +117,13 @@ export interface FollowOut {
 }
 
 export interface LikeMediaIn {
-  // ulid: string
-  id: number
+  ulid: string
   mediaType: MediaType
   isLike: boolean
 }
 
 export interface LikeCommentIn {
-  id: number
+  ulid: string
   isLike: boolean
 }
 
