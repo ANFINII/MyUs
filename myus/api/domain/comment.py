@@ -43,8 +43,8 @@ class CommentDomain:
         return list(objs)
 
     @classmethod
-    def create(cls, comment_data: CommentCreateData) -> Comment:
-       return Comment.objects.create(**asdict(comment_data))
+    def create(cls, **kwargs) -> Comment:
+       return Comment.objects.create(**kwargs)
 
     @classmethod
     def update(cls, comment: Comment, **kwargs) -> None:

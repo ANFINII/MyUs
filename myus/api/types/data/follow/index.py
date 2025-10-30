@@ -21,6 +21,13 @@ class FollowData:
 
 
 @dataclass(frozen=True, slots=True)
+class FollowCreateData:
+    follower_id: int
+    following_id: int
+    is_follow: bool
+
+
+@dataclass(frozen=True, slots=True)
 class FollowOutData:
     is_follow: bool
     follower_count: int
