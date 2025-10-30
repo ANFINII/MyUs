@@ -1,3 +1,4 @@
+from dataclasses import asdict
 from api.domain.comment import CommentDomain
 from api.types.data.comment.index import CommentData, ReplyData, CommentCreateData
 from api.utils.enum.index import CommentTypeNo
@@ -33,7 +34,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
 
 
 def create_comment(comment_data: CommentCreateData) -> CommentData:
-    obj = CommentDomain.create(comment_data)
+    obj = CommentDomain.create(**asdict(comment_data))
     data = CommentData(
         ulid=str(obj.ulid),
         text=obj.text,

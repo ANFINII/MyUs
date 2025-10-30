@@ -27,8 +27,8 @@ class SortOption:
 
 class FollowDomain:
     @classmethod
-    def get(cls, follower: User | None, following: User | None) -> Follow | None:
-        return Follow.objects.filter(follower=follower, following=following).first()
+    def get(cls, follower_id: int, following_id: int) -> Follow | None:
+        return Follow.objects.filter(follower_id=follower_id, following_id=following_id).first()
 
     @classmethod
     def get_follows(cls, user_id: int, search: str | None, limit: int) -> list[Follow]:
@@ -63,8 +63,8 @@ class FollowDomain:
         return qs.order_by(order_by_key)[:limit]
 
     @classmethod
-    def create(cls, follower: User, following: User) -> None:
-        Follow.objects.create(follower=follower, following=following, is_follow=True)
+    def create(cls, **kwargs) -> None:
+        Follow.objects.create(**kwargs)
 
     @classmethod
     def update(cls, follow: Follow, **kwargs) -> None:
