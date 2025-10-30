@@ -38,6 +38,14 @@ class ProfileData:
 
 
 @dataclass(frozen=True, slots=True)
+class ProfileCreateData:
+    last_name: str
+    first_name: str
+    gender: str
+    birthday: date
+
+
+@dataclass(frozen=True, slots=True)
 class SettingMyPageData:
     banner: str
     nickname: str

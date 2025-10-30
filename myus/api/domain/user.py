@@ -30,6 +30,10 @@ class UserDomain:
         return user
 
     @classmethod
+    def create(cls, **kwargs) -> User:
+       return User.objects.create_user(**kwargs)
+
+    @classmethod
     def update(cls, user: User, **kwargs) -> None:
         if not kwargs:
             return

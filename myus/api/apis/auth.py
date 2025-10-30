@@ -1,4 +1,5 @@
-import datetime
+from dataclasses import asdict
+from datetime import date
 import jwt
 
 from django.conf import settings
@@ -6,11 +7,13 @@ from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from ninja import Router
 
-from api.models import Profile, User
+from api.domain.user import UserDomain
 from api.modules.logger import log
 from api.services.user import signup_check
 from api.types.data.auth import LoginDataIn, LoginOutData, RefreshOutData, SignUpDataIn, MessageData
 from api.types.data.common import ErrorData
+from api.types.data.setting.index import ProfileCreateData
+from api.types.data.user import UserCreateData
 from api.utils.functions.encrypt import decrypt
 from api.utils.functions.token import access_token, refresh_token
 
@@ -35,7 +38,7 @@ class AuthAPI:
             if not user_id:
                 return 401, ErrorData(message="Invalid token")
 
-            user = User.objects.filter(id=user_id).first()
+            user = UserDomain.get(id=user_id)
             if not user:
                 return 401, ErrorData(message="User not found")
 
@@ -75,7 +78,7 @@ class AuthAPI:
                 log.warning("No user_id in token")
                 return 401, ErrorData(message="Invalid token")
 
-            user = User.objects.filter(id=user_id).first()
+            user = UserDomain.get(id=user_id)
             if not user:
                 log.warning("User not found", user_id=user_id)
                 return 401, ErrorData(message="User not found")
@@ -109,16 +112,14 @@ class AuthAPI:
         if validation:
             return 400, MessageData(error=True, message=validation)
 
-        birthday = datetime.date(year=input.year, month=input.month, day=input.day)
+        user_data = UserCreateData(email=input.email, username=input.username, nickname=input.nickname, password=input.password1)
+        birthday = date(year=input.year, month=input.month, day=input.day)
+
+        profile_data = ProfileCreateData(last_name=input.last_name, first_name=input.first_name, gender=input.gender, birthday=birthday)
 
         try:
-            user = User.objects.create_user(input.email, input.username, input.nickname, input.password1)
-            profile = Profile.objects.get(user=user)
-            profile.last_name = input.last_name
-            profile.first_name = input.first_name
-            profile.gender = input.gender
-            profile.birthday = birthday.isoformat()
-            profile.save()
+            user = UserDomain.create(**asdict(user_data))
+            UserDomain.update_profile(user, **asdict(profile_data))
             return 201, MessageData(error=False, message="アカウント登録が完了しました!")
         except Exception:
             log.error("Signup error")
