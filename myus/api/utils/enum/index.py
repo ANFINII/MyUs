@@ -7,6 +7,15 @@ class GenderType(str, Enum):
     SECRET = "Secret"
 
 
+class MediaType(str, Enum):
+    VIDEO = "Video"
+    MUSIC = "Music"
+    COMIC = "Comic"
+    PICTURE = "Picture"
+    BLOG = "Blog"
+    CHAT = "Chat"
+
+
 class NotificationType(str, Enum):
     VIDEO = "Video"
     MUSIC = "Music"

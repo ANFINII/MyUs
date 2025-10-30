@@ -27,7 +27,7 @@ class SortOption:
 
 class FollowDomain:
     @classmethod
-    def get(cls, follower: User, following: User) -> Follow | None:
+    def get(cls, follower: User | None, following: User | None) -> Follow | None:
         return Follow.objects.filter(follower=follower, following=following).first()
 
     @classmethod

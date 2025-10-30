@@ -1,7 +1,7 @@
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 
-from api.types.data.comment import CommentInData
+from api.types.data.comment.index import CommentCreateData
 from api.domain.comment import CommentDomain
 from api.services.comment import create_comment, get_comments
 from api.services.user import get_user
@@ -26,7 +26,7 @@ class CommentAPI(APIView):
 
         data = request.data
 
-        comment_data = CommentInData(
+        comment_data = CommentCreateData(
             author=user,
             text=data["text"],
             type_no=data["type_no"],

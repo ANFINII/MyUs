@@ -20,10 +20,12 @@ class UserAPI(APIView):
     @auth_user
     def get(self, request) -> DataResponse:
         user = get_user(request)
+        if not user:
+            return ApiResponse.NOT_FOUND.run()
+
         data = UserData(
             avatar=create_url(user.image()),
             ulid=user.ulid,
-            email=user.email,
             nickname=user.nickname,
             is_active=user.is_active,
             is_staff=user.is_staff,

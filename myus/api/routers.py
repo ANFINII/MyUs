@@ -3,6 +3,7 @@ from api.apis.auth import AuthAPI
 from api.apis.user import UserAPI
 from api.apis.media import VideoAPI, MusicAPI, ComicAPI, PictureAPI, BlogAPI, ChatAPI
 from api.apis.setting import SettingProfileAPI, SettingMyPageAPI, SettingNotificationAPI
+from api.apis.comment import CommentAPI
 
 
 api = NinjaAPI(title="MyUs API")
@@ -21,4 +22,4 @@ api.add_router("/media/comic", ComicAPI().router, tags=["Media Comic"])
 api.add_router("/media/picture", PictureAPI().router, tags=["Media Picture"])
 api.add_router("/media/blog", BlogAPI().router, tags=["Media Blog"])
 api.add_router("/media/chat", ChatAPI().router, tags=["Media Chat"])
-# api.add_router("/media/comment", CommentAPI().router, tags=["Media Comment"])
+api.add_router("/media/comment", CommentAPI().router, tags=["Media Comment"])

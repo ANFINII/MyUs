@@ -5,8 +5,8 @@ from api.types.data.user import AuthorData
 
 @dataclass(frozen=True, slots=True)
 class MessageReplyData:
-    id: int
-    parent_id: int
+    ulid: str
+    parent_id: str
     text: str
     created: datetime
     updated: datetime
@@ -15,7 +15,7 @@ class MessageReplyData:
 
 @dataclass(frozen=True, slots=True)
 class MessageData:
-    id: int
+    ulid: str
     text: str
     created: datetime
     updated: datetime

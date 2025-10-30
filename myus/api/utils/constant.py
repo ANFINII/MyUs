@@ -1,17 +1,8 @@
-from enum import Enum
 from api.models import Video, Music, Comic, Picture, Blog, Chat
 from api.models.users import Follow
 from api.models.comment import Comment
 from api.models.message import Message
 
-
-class MediaType(str, Enum):
-    VIDEO = "Video"
-    MUSIC = "Music"
-    COMIC = "Comic"
-    PICTURE = "Picture"
-    BLOG = "Blog"
-    CHAT = "Chat"
 
 media_models = {
     'Video': Video,

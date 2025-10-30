@@ -52,7 +52,7 @@ class SearchTagData:
 
 @dataclass(frozen=True, slots=True)
 class NotificationUserData:
-    avatar: int
+    avatar: str
     nickname: str
 
 
