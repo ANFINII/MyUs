@@ -49,7 +49,7 @@ export const apiChat = (ulid: string) => base + `/media/chat/${ulid}`
 export const apiChatCreate = base + '/media/chat/create'
 
 export const apiComments = base + '/media/comment'
-export const apiComment = (id: number) => base + `/media/comment/${id}`
+export const apiComment = (ulid: string) => base + `/media/comment/${ulid}`
 
 // 外部API
 export const apiAddress = base + '/search'
