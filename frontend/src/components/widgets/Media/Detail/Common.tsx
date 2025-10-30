@@ -6,9 +6,10 @@ import { Comment, CommnetIn } from 'types/internal/comment'
 import { Author, MediaUser } from 'types/internal/media'
 import { postComment } from 'api/internal/media/comment'
 import { postFollow, postLikeMedia } from 'api/internal/user'
-import { CommentType, FetchError } from 'utils/constants/enum'
+import { FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap, mediaTypeMap } from 'utils/constants/map'
 import { capitalize, isActive } from 'utils/functions/common'
+import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import { formatDatetime } from 'utils/functions/datetime'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useUser } from 'components/hooks/useUser'
@@ -72,7 +73,7 @@ export default function MediaDetailCommon(props: Props): React.JSX.Element {
   const [isContentView, setIsContentView] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
   const [formState, setFormState] = useState<MediaDetailState>(initFormState)
-  useEffect(() => setFormState(initFormState), [router.query.id, initFormState])
+  useEffect(() => setFormState(initFormState), [router.query.ulid, initFormState])
 
   const { isLike, isFollow, likeCount, followerCount, text, comments } = formState
   const isFallowDisable = !user || user.ulid === author.ulid
@@ -82,11 +83,11 @@ export default function MediaDetailCommon(props: Props): React.JSX.Element {
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setFormState((prev) => ({ ...prev, text: e.target.value }))
 
   const handleLike = async () => {
-    const id = Number(router.query.id)
+    const ulid = String(router.query.ulid)
     const pathname = capitalize(String(router.pathname.split('/')[2]))
     const mediaType = mediaTypeMap[pathname]
     if (!mediaType) return
-    const request: LikeMediaIn = { id, mediaType, isLike: !isLike }
+    const request: LikeMediaIn = { ulid, mediaType, isLike: !isLike }
     const ret = await postLikeMedia(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
@@ -114,10 +115,11 @@ export default function MediaDetailCommon(props: Props): React.JSX.Element {
 
   const handleMediaComment = async () => {
     handleLoading(true)
-    const typeName = capitalize(String(router.pathname.split('/')[2]))
-    const typeNo = commentTypeNoMap[typeName as CommentType]
-    const objectId = Number(router.query.id)
-    const request: CommnetIn = { text, typeName, typeNo, objectId }
+    const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
+    const typeNo = commentTypeNoMap[typeName]
+    const objectUlid = String(router.query.ulid)
+    // const parentUlid = null
+    const request: CommnetIn = { text, typeName, typeNo, objectUlid }
     const ret = await postComment(request)
     if (ret.isErr()) {
       handleLoading(false)
@@ -179,7 +181,7 @@ export default function MediaDetailCommon(props: Props): React.JSX.Element {
         <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
         <VStack gap="10" className={clsx(style.comment_aria, isCommentView && style.active)}>
           {comments.map((comment) => (
-            <CommentContent key={comment.id} comment={comment} user={user} setFormState={setFormState} handleToast={handleToast} />
+            <CommentContent key={comment.ulid} comment={comment} user={user} setFormState={setFormState} handleToast={handleToast} />
           ))}
         </VStack>
       </VStack>

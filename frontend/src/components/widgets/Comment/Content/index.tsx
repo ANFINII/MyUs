@@ -6,8 +6,9 @@ import { LikeCommentIn, UserMe } from 'types/internal/auth'
 import { Reply, Comment, CommnetIn } from 'types/internal/comment'
 import { postComment, putComment, deleteComment } from 'api/internal/media/comment'
 import { postLikeComment } from 'api/internal/user'
-import { CommentType, FetchError } from 'utils/constants/enum'
+import { FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap } from 'utils/constants/map'
+import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
@@ -33,8 +34,8 @@ export interface Props {
 
 export default function CommentContent(props: Props): React.JSX.Element {
   const { comment, user, setFormState, handleToast } = props
-  const { id, author, text } = comment
-  const { isActive, ulid } = user
+  const { ulid, author, text } = comment
+  const { isActive } = user
 
   const actionButtonRef = useRef<HTMLButtonElement>(null)
   const { isLoading, handleLoading } = useIsLoading()
@@ -49,7 +50,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const [replyText, setReplyText] = useState<string>('')
   const [replys, setReplys] = useState<Reply[]>(comment.replys)
 
-  const disabled = author.ulid !== ulid
+  const disabled = author.ulid !== user.ulid
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
   const handleEditToggle = () => setIsEdit(!isEdit)
@@ -59,7 +60,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const handleReply = (e: ChangeEvent<HTMLTextAreaElement>) => setReplyText(e.target.value)
 
   const handleLike = async () => {
-    const request: LikeCommentIn = { id, isLike: !isLike }
+    const request: LikeCommentIn = { ulid, isLike: !isLike }
     const ret = await postLikeComment(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
@@ -75,11 +76,11 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const handleMediaReply = async () => {
     handleLoading(true)
     const text = replyText
-    const typeName = capitalize(String(router.pathname.split('/')[2]))
-    const typeNo = commentTypeNoMap[typeName as CommentType]
-    const objectId = Number(router.query.id)
-    const parentId = id
-    const request: CommnetIn = { text, typeName, typeNo, objectId, parentId }
+    const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
+    const typeNo = commentTypeNoMap[typeName]
+    const objectUlid = String(router.query.ulid)
+    const parentUlid = ulid
+    const request: CommnetIn = { text, typeName, typeNo, objectUlid, parentUlid }
     const ret = await postComment(request)
     if (ret.isErr()) {
       handleLoading(false)
@@ -94,26 +95,26 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const handleUpdate = async () => {
     handleLoading(true)
     const text = commentText
-    const ret = await putComment(id, { text })
+    const ret = await putComment(ulid, { text })
     if (ret.isErr()) {
       handleToast(FetchError.Put, true)
       handleLoading(false)
       return
     }
-    setFormState((prev) => ({ ...prev, comments: prev.comments.map((c) => (c.id === id ? { ...c, text } : c)) }))
+    setFormState((prev) => ({ ...prev, comments: prev.comments.map((c) => (c.ulid === ulid ? { ...c, text } : c)) }))
     handleLoading(false)
     handleEditToggle()
   }
 
   const handleDelete = async () => {
     handleLoading(true)
-    const ret = await deleteComment(id)
+    const ret = await deleteComment(ulid)
     if (ret.isErr()) {
       handleLoading(false)
       handleToast(FetchError.Delete, true)
       return
     }
-    setFormState((prev) => ({ ...prev, comments: prev.comments.filter((c) => c.id !== id) }))
+    setFormState((prev) => ({ ...prev, comments: prev.comments.filter((c) => c.ulid !== comment.ulid) }))
     handleModal()
   }
 
@@ -149,7 +150,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
       {isThreadView && (
         <VStack gap="5" className={clsx(replys.length > 0 && 'mt_10 ml_50')}>
           {replys.map((reply) => (
-            <CommentThread key={reply.id} reply={reply} user={user} setReplys={setReplys} handleToast={handleToast} />
+            <CommentThread key={reply.ulid} reply={reply} user={user} setReplys={setReplys} handleToast={handleToast} />
           ))}
         </VStack>
       )}
