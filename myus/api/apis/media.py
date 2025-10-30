@@ -4,10 +4,10 @@ from api.modules.logger import log
 from api.models.media import Video, Music, Comic, Picture, Blog, Chat
 from api.services.comment import get_comments
 from api.services.message import get_messages
-from api.services.media import get_videos,get_musics, get_comics, get_pictures, get_blogs, get_chats
+from api.services.media import get_home, get_videos,get_musics, get_comics, get_pictures, get_blogs, get_chats
 from api.services.user import get_user
 from api.types.data.common import ErrorData
-from api.types.data.media.index import HashtagData, MediaCreateData
+from api.types.data.media.index import HomeData, HashtagData, MediaCreateData
 from api.types.data.media.index import VideoData, VideoDetailData
 from api.types.data.media.index import MusicData, MusicDetailData
 from api.types.data.media.index import ComicData, ComicDetailData
@@ -20,6 +20,19 @@ from api.utils.enum.index import CommentType
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_author, get_media_user
+
+
+class HomeAPI:
+    """HomeAPI"""
+
+    router = Router()
+
+    @router.get("", response={200: HomeData})
+    def get(request, search: str | None = None):
+        log.info("HomeAPI get", search=search)
+
+        data = get_home(8, search)
+        return 200, data
 
 
 class VideoAPI:

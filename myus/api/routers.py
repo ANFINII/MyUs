@@ -1,7 +1,7 @@
 from ninja import NinjaAPI
 from api.apis.auth import AuthAPI
 from api.apis.user import UserAPI
-from api.apis.media import VideoAPI, MusicAPI, ComicAPI, PictureAPI, BlogAPI, ChatAPI
+from api.apis.media import HomeAPI, VideoAPI, MusicAPI, ComicAPI, PictureAPI, BlogAPI, ChatAPI
 from api.apis.setting import SettingProfileAPI, SettingMyPageAPI, SettingNotificationAPI
 from api.apis.comment import CommentAPI
 
@@ -15,7 +15,7 @@ api.add_router("/setting/profile", SettingProfileAPI().router, tags=["Setting"])
 api.add_router("/setting/mypage", SettingMyPageAPI().router, tags=["Setting"])
 api.add_router("/setting/notification", SettingNotificationAPI().router, tags=["Setting"])
 
-# api.add_router("/home", HomeAPI().router, tags=["Media Home"])
+api.add_router("/media/home", HomeAPI().router, tags=["Media Home"])
 api.add_router("/media/video", VideoAPI().router, tags=["Media Video"])
 api.add_router("/media/music", MusicAPI().router, tags=["Media Music"])
 api.add_router("/media/comic", ComicAPI().router, tags=["Media Comic"])
