@@ -1,4 +1,5 @@
-import { MediaHome, Search } from 'types/internal/media'
+import { MediaHome } from 'types/internal/media'
+import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import MediaBlog from 'components/widgets/Media/Index/Blog'
@@ -11,12 +12,13 @@ import MediaIndex from 'components/widgets/Media/List/Index'
 
 interface Props {
   mediaHome: MediaHome
-  search?: Search
 }
 
 export default function Homes(props: Props): React.JSX.Element {
-  const { mediaHome, search } = props
+  const { mediaHome } = props
   const { videos, musics, comics, pictures, blogs, chats } = mediaHome
+
+  const search = useSearch([videos, musics, comics, pictures, blogs, chats])
 
   return (
     <Main title="Home" search={search}>
