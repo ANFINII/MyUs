@@ -1,8 +1,8 @@
 from ninja import Router
 
 from api.domain.comment import CommentDomain
+from api.domain.serach_tag import SearchTagDomain
 from api.domain.user import UserDomain
-from api.models import SearchTag
 from api.modules.logger import log
 from api.services.follow import get_follows, get_followers, upsert_follow
 from api.services.notification import get_notification, get_content_object
@@ -47,9 +47,8 @@ class UserAPI:
         if not user:
             return 401, ErrorData(message="Unauthorized")
 
-        search_tags = SearchTag.objects.filter(author=user).order_by("sequence")[:20]
+        search_tags = SearchTagDomain.get(user.id)
         data = [SearchTagData(sequence=tag.sequence, name=tag.name) for tag in search_tags]
-        log.info("Search tags retrieved", user_id=user.id, count=len(data))
         return 200, data
 
     @router.get("/follow", response={200: list[FollowUserData], 401: ErrorData})
