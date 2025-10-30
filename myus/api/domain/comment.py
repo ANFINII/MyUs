@@ -3,7 +3,7 @@ from enum import Enum
 from django.db.models import Exists, OuterRef, Prefetch
 from django.utils import timezone
 from api.models.comment import Comment
-from api.types.data.comment import CommentInData
+from api.types.data.comment.index import CommentCreateData
 from api.utils.enum.index import CommentTypeNo
 from api.utils.functions.index import set_attr
 
@@ -20,8 +20,8 @@ class SortOption:
 
 class CommentDomain:
     @classmethod
-    def get(cls, id: int) -> Comment | None:
-        return Comment.objects.filter(id=id).first()
+    def get(cls, ulid: str) -> Comment | None:
+        return Comment.objects.filter(ulid=ulid).first()
 
     @classmethod
     def bulk_get(cls, type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[Comment]:
@@ -43,7 +43,7 @@ class CommentDomain:
         return list(objs)
 
     @classmethod
-    def create(cls, comment_data: CommentInData) -> Comment:
+    def create(cls, comment_data: CommentCreateData) -> Comment:
        return Comment.objects.create(**asdict(comment_data))
 
     @classmethod

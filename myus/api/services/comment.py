@@ -1,5 +1,5 @@
 from api.domain.comment import CommentDomain
-from api.types.data.comment import CommentData, ReplyData, CommentInData
+from api.types.data.comment.index import CommentData, ReplyData, CommentCreateData
 from api.utils.enum.index import CommentTypeNo
 from api.utils.functions.user import get_author
 
@@ -8,7 +8,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
     objs = CommentDomain.bulk_get(type_no, object_id, user_id)
     data = [
         CommentData(
-            id=c.id,
+            ulid=c.ulid,
             text=c.text,
             created=c.created,
             updated=c.updated,
@@ -32,10 +32,10 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
     return data
 
 
-def create_comment(comment_data: CommentInData) -> CommentData:
+def create_comment(comment_data: CommentCreateData) -> CommentData:
     obj = CommentDomain.create(comment_data)
     data = CommentData(
-        id=obj.id,
+        ulid=str(obj.ulid),
         text=obj.text,
         created=obj.created,
         updated=obj.updated,

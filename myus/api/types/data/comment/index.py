@@ -17,7 +17,7 @@ class ReplyData:
 
 @dataclass(frozen=True, slots=True)
 class CommentData:
-    id: int
+    ulid: str
     text: str
     created: datetime
     updated: datetime
@@ -28,10 +28,10 @@ class CommentData:
 
 
 @dataclass(frozen=True, slots=True)
-class CommentInData:
+class CommentCreateData:
     author: AuthorData
     text: str
-    type_name: CommentType
     type_no: CommentTypeNo
+    type_name: CommentType
     object_id: int
     parent_id: int | None
