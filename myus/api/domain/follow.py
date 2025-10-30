@@ -4,7 +4,6 @@ from functools import reduce
 from operator import and_
 from django.db.models import Q
 from api.models.users import Follow
-from api.models.user import User
 from app.modules.search import get_q_list
 from api.utils.functions.index import set_attr
 
@@ -63,8 +62,8 @@ class FollowDomain:
         return qs.order_by(order_by_key)[:limit]
 
     @classmethod
-    def create(cls, **kwargs) -> None:
-        Follow.objects.create(**kwargs)
+    def create(cls, **kwargs) -> Follow:
+        return Follow.objects.create(**kwargs)
 
     @classmethod
     def update(cls, follow: Follow, **kwargs) -> None:

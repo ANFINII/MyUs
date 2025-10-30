@@ -19,7 +19,7 @@ def get_user(request) -> User | None:
             return None
 
         user = UserDomain.get(id=user_id)
-        if not user.is_active:
+        if user and not user.is_active:
             return None
         return user
     except jwt.ExpiredSignatureError:
