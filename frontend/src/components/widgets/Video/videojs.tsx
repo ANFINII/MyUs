@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect } from 'react'
 import videojs from 'video.js'
 import { PLAYBACK_RATES, MENU_DELAY_MS, SPEED_MENU, QUALITY_MENU, STANDARD_SPEED, MENU_UPDATE_DELAY_MS, AUTO_QUALITY } from './constants'
 import { PlayerOptions, Player, ExtendedPlayer, Component } from './type'
@@ -15,7 +15,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
 
   const videoRef = useRef<HTMLDivElement>(null)
   const playerRef = useRef<Player | null>(null)
-  const [settingsMenu, setSettingsMenu] = useState<boolean>(false)
+  const settingsMenuCreatedRef = useRef<boolean>(false)
 
   useEffect(() => {
     // Video.jsプレーヤーが一度だけ初期化されることを確認
@@ -42,13 +42,31 @@ export default function VideoJS(props: Props): React.JSX.Element {
         const extendedPlayer = player as unknown as ExtendedPlayer
         const playerWithOptions = player as unknown as { options_: { playbackRates?: number[] } }
         playerWithOptions.options_.playbackRates = PLAYBACK_RATES
-        extendedPlayer.hlsQualitySelector({ displayCurrentQuality: false })
-        setTimeout(() => {
-          if (!settingsMenu) {
-            createSettingsMenu(player as unknown as ExtendedPlayer)
-            setSettingsMenu(true)
+        
+        // HLSストリームの品質レベルが読み込まれるのを待つ
+        const initializeQualitySelector = (): void => {
+          extendedPlayer.hlsQualitySelector({ displayCurrentQuality: false })
+          
+          // 設定メニューの作成
+          if (!settingsMenuCreatedRef.current) {
+            setTimeout(() => {
+              createSettingsMenu(extendedPlayer)
+              settingsMenuCreatedRef.current = true
+            }, MENU_DELAY_MS)
           }
-        }, MENU_DELAY_MS)
+        }
+        
+        // HLSストリームの場合、loadedmetadataイベントを待つ
+        if (playerOptions.sources && playerOptions.sources[0]?.type === 'application/x-mpegURL') {
+          player.on('loadedmetadata', () => {
+            // 品質レベルが利用可能になるまで少し待つ
+            setTimeout(initializeQualitySelector, 100)
+          })
+        } else {
+          // 通常の動画の場合はすぐに初期化
+          initializeQualitySelector()
+        }
+        
         onReady?.(player)
       }))
 
@@ -58,7 +76,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
       if (options.autoplay !== undefined) player.autoplay(options.autoplay)
       if (options.sources) player.src(options.sources)
     }
-  }, [options, onReady, settingsMenu])
+  }, [options, onReady])
 
   // カスタム設定メニューを作成する関数
   const createSettingsMenu = (player: ExtendedPlayer): void => {
@@ -169,6 +187,17 @@ export default function VideoJS(props: Props): React.JSX.Element {
         })
       } else if (type === 'quality') {
         const qualityLevels = player.qualityLevels()
+        
+        // 品質レベルがまだ読み込まれていない場合は空のメニューを表示
+        if (!qualityLevels || qualityLevels.length === 0) {
+          const noQualityItem = document.createElement('div')
+          noQualityItem.className = 'vjs-settings-menu-item'
+          noQualityItem.innerHTML = '<span class="vjs-menu-label">品質オプションを読み込み中...</span>'
+          submenuContent.appendChild(noQualityItem)
+          submenuEl.appendChild(submenuContent)
+          return submenuEl
+        }
+        
         const isAuto = Array.from({ length: qualityLevels.length }).every((_, i) => {
           const level = qualityLevels[i]
           return level ? level.enabled : true
@@ -251,6 +280,12 @@ export default function VideoJS(props: Props): React.JSX.Element {
     // 現在の画質ラベルを取得
     const getCurrentQualityLabel = (): string => {
       const qualityLevels = player.qualityLevels()
+      
+      // 品質レベルがまだ読み込まれていない場合
+      if (!qualityLevels || qualityLevels.length === 0) {
+        return AUTO_QUALITY
+      }
+      
       const enabledLevels: number[] = []
       for (let i = 0; i < qualityLevels.length; i++) {
         const level = qualityLevels[i]
@@ -341,8 +376,10 @@ export default function VideoJS(props: Props): React.JSX.Element {
       updateMenuItem(QUALITY_MENU, getCurrentQualityLabel())
     }
 
-    // コンポーネントを登録
-    videojs.registerComponent('SettingsButton', SettingsButton as unknown as ReturnType<typeof videojs.getComponent>)
+    // コンポーネントを登録（既に登録されている場合はスキップ）
+    if (!videojs.getComponent('SettingsButton')) {
+      videojs.registerComponent('SettingsButton', SettingsButton as unknown as ReturnType<typeof videojs.getComponent>)
+    }
     const settingsButton = controlBar.addChild('SettingsButton', {})
 
     // メニューを追加
@@ -370,6 +407,11 @@ export default function VideoJS(props: Props): React.JSX.Element {
       }
     }
     document.addEventListener('click', handleOutsideClick)
+    
+    // プレーヤー破棄時にイベントリスナーをクリーンアップ
+    player.on('dispose', () => {
+      document.removeEventListener('click', handleOutsideClick)
+    })
   }
 
   // 関数コンポーネントのアンマウント時にVideo.jsプレーヤーを破棄
