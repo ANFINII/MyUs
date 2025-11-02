@@ -1,15 +1,10 @@
 from enum import Enum
 
-from rest_framework.status import HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
-
-from api.utils.functions.index import message
-from api.utils.functions.response import DataResponse
-
 
 class ApiResponse(Enum):
-    UNAUTHORIZED = (True, "Un Authorized", HTTP_401_UNAUTHORIZED)
-    NOT_FOUND = (True, "Not Found", HTTP_404_NOT_FOUND)
+    UNAUTHORIZED = (True, "Un Authorized", 401)
+    NOT_FOUND = (True, "Not Found", 404)
 
-    def run(self) -> DataResponse:
+    def run(self) -> dict[str, str | bool | int]:
         is_error, content, status_code = self.value
-        return DataResponse(message(is_error, content), status=status_code)
+        return {"error": is_error, "message": content, "status_code": status_code}

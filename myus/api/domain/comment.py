@@ -1,9 +1,9 @@
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from enum import Enum
 from django.db.models import Exists, OuterRef, Prefetch
 from django.utils import timezone
 from api.models.comment import Comment
-from api.types.data.comment.index import CommentCreateData
+from api.models.user import User
 from api.utils.enum.index import CommentTypeNo
 from api.utils.functions.index import set_attr
 
@@ -54,3 +54,12 @@ class CommentDomain:
         kwargs["updated"] = timezone.now()
         [set_attr(comment, key, value) for key, value in kwargs.items()]
         comment.save(update_fields=list(kwargs.keys()))
+
+    @classmethod
+    def comment_like(cls, model: Comment, user: User) -> bool:
+        is_like = model.like.filter(id=user.id).exists()
+        if is_like:
+            model.like.remove(user)
+        else:
+            model.like.add(user)
+        return not is_like

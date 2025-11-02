@@ -87,9 +87,9 @@ class LikeOutData:
 
 
 class LikeMediaInData(Schema):
-    id: int
+    ulid: str
     media_type: str
 
 
 class LikeCommentInData(Schema):
-    id: int
+    ulid: str

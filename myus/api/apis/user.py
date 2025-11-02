@@ -1,6 +1,7 @@
 from ninja import Router
 
 from api.domain.comment import CommentDomain
+from api.domain.media import MediaDomain
 from api.domain.serach_tag import SearchTagDomain
 from api.domain.user import UserDomain
 from api.modules.logger import log
@@ -51,9 +52,20 @@ class UserAPI:
         data = [SearchTagData(sequence=tag.sequence, name=tag.name) for tag in search_tags]
         return 200, data
 
+    @router.get("/follower", response={200: list[FollowUserData], 401: ErrorData})
+    def get_followers(request, search: str = ""):
+        log.info("UserAPI get_followers", search=search)
+
+        user = get_user(request)
+        if not user:
+            return 401, ErrorData(message="Unauthorized")
+
+        data = get_followers(user.id, search, 100)
+        return 200, data
+
     @router.get("/follow", response={200: list[FollowUserData], 401: ErrorData})
-    def get_follows(request, search: str | None):
-        log.info("UserAPI get_follow_list", search=search)
+    def get_follows(request, search: str = ""):
+        log.info("UserAPI get_follows", search=search)
 
         user = get_user(request)
         if not user:
@@ -62,8 +74,8 @@ class UserAPI:
         data = get_follows(user.id, search, 100)
         return 200, data
 
-    @router.post("/follow", response={200: FollowOutData, 400: MessageData, 401: ErrorData, 500: MessageData})
-    def post_follow_user(request, input: FollowInData):
+    @router.post("/follow/user", response={200: FollowOutData, 400: MessageData, 401: ErrorData, 500: MessageData})
+    def follow_user(request, input: FollowInData):
         log.info("UserAPI follow_user", input=input)
 
         user = get_user(request)
@@ -81,20 +93,9 @@ class UserAPI:
             log.error("Follow error")
             return 500, MessageData(error=True, message="フォロー処理に失敗しました!")
 
-    @router.get("/follower", response={200: list[FollowUserData], 401: ErrorData})
-    def get_followers(request, search: str | None):
-        log.info("UserAPI get_follower_list", search=search)
-
-        user = get_user(request)
-        if not user:
-            return 401, ErrorData(message="Unauthorized")
-
-        data = get_followers(user.id, search, 100)
-        return 200, data
-
     @router.post("/like/media", response={200: LikeOutData, 400: MessageData, 401: ErrorData, 500: MessageData})
     def post_like_media(request, input: LikeMediaInData):
-        log.info("UserAPI like_media", obj_id=input.id, media_type=input.media_type)
+        log.info("UserAPI like_media", input=input)
 
         user = get_user(request)
         if not user:
@@ -104,52 +105,29 @@ class UserAPI:
         if not model:
             return 400, MessageData(error=True, message="無効なメディアタイプです!")
 
-        try:
-            obj = model.objects.get(id=input.id)
-        except model.DoesNotExist:
+        obj = MediaDomain.get(model=model, ulid=input.ulid, publish=True)
+        if not obj:
             return 400, MessageData(error=True, message="メディアが見つかりません!")
 
-        try:
-            is_liked = obj.like.filter(id=user.id).exists()
-            if is_liked:
-                obj.like.remove(user)
-                is_like = False
-            else:
-                obj.like.add(user)
-                is_like = True
-
-            data = LikeOutData(is_like=is_like, like_count=obj.total_like())
-            return 200, data
-        except Exception:
-            log.error("Like media error")
-            return 500, MessageData(error=True, message="いいね処理に失敗しました!")
+        is_like = MediaDomain.media_like(model=obj, user=user)
+        data = LikeOutData(is_like=is_like, like_count=obj.total_like())
+        return 200, data
 
     @router.post("/like/comment", response={200: LikeOutData, 400: MessageData, 401: ErrorData, 404: ErrorData, 500: MessageData})
     def post_like_comment(request, input: LikeCommentInData):
-        log.info("UserAPI like_comment", obj_id=input.id)
+        log.info("UserAPI like_comment", input=input)
 
         user = get_user(request)
         if not user:
             return 401, ErrorData(message="Unauthorized")
 
-        obj = CommentDomain.get(input.id)
+        obj = CommentDomain.get(input.ulid)
         if not obj:
             return 404, ErrorData(message="コメントが見つかりません!")
 
-        try:
-            is_liked = obj.like.filter(id=user.id).exists()
-            if is_liked:
-                obj.like.remove(user)
-                is_like = False
-            else:
-                obj.like.add(user)
-                is_like = True
-
-            data = LikeOutData(is_like=is_like, like_count=obj.total_like())
-            return 200, data
-        except Exception:
-            log.error("Like comment error")
-            return 500, MessageData(error=True, message="いいね処理に失敗しました!")
+        is_like = CommentDomain.comment_like(model=obj, user=user)
+        data = LikeOutData(is_like=is_like, like_count=obj.total_like())
+        return 200, data
 
     @router.get("/notification", response={200: NotificationOutData, 401: ErrorData, 500: MessageData})
     def get_notifications(request):
@@ -159,30 +137,26 @@ class UserAPI:
         if not user:
             return 401, ErrorData(message="Unauthorized")
 
-        try:
-            notification = get_notification(user)
-            data = NotificationOutData(
-                count=notification["count"],
-                datas=[
-                    NotificationItemData(
-                        id=obj.id,
-                        user_from=NotificationUserData(
-                            avatar=create_url(obj.user_from.image()),
-                            nickname=obj.user_from.nickname,
-                        ),
-                        user_to=NotificationUserData(
-                            avatar=create_url(obj.user_to.image()) if obj.user_to else "",
-                            nickname=obj.user_to.nickname if obj.user_to else "",
-                        ),
-                        type_no=obj.type_no,
-                        type_name=obj.type_name,
-                        content_object=NotificationContentData(**get_content_object(obj)),
-                        is_confirmed=obj.is_confirmed,
-                    )
-                    for obj in notification["datas"]
-                ],
-            )
-            return 200, data
-        except Exception:
-            log.error("Get notification error")
-            return 500, MessageData(error=True, message="通知取得に失敗しました!")
+        notification = get_notification(user)
+        data = NotificationOutData(
+            count=notification["count"],
+            datas=[
+                NotificationItemData(
+                    id=obj.id,
+                    user_from=NotificationUserData(
+                        avatar=create_url(obj.user_from.image()),
+                        nickname=obj.user_from.nickname,
+                    ),
+                    user_to=NotificationUserData(
+                        avatar=create_url(obj.user_to.image()) if obj.user_to else "",
+                        nickname=obj.user_to.nickname if obj.user_to else "",
+                    ),
+                    type_no=obj.type_no,
+                    type_name=obj.type_name,
+                    content_object=NotificationContentData(**get_content_object(obj)),
+                    is_confirmed=obj.is_confirmed,
+                )
+                for obj in notification["datas"]
+            ],
+        )
+        return 200, data
