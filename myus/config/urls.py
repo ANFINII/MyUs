@@ -7,9 +7,7 @@ from api.routers import api
 
 
 urlpatterns = [
-    path("api/", include("api.urls")),
-    path("api/ninja/", api.urls),
-    path("api/auth/", include("rest_framework.urls")),
+    path("api/", api.urls),
     path("", include("app.urls")),
     path("setting/", include("django.contrib.auth.urls")),
     path("myus-admin/", admin.site.urls),

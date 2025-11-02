@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from django.db.models import Count, F, Q
 from django.utils import timezone
+from api.models.user import User
 from api.types.union.media import MediaModelType
 from api.utils.functions.search import search_q_list
 from api.utils.functions.index import set_attr
@@ -34,8 +35,7 @@ class ExcludeOption:
 class MediaDomain:
     @classmethod
     def get(cls, model: MediaModelType, ulid: str, publish: bool) -> MediaModelType | None:
-        qs = model.objects.filter(ulid=ulid, publish=publish).first()
-        return qs
+        return model.objects.filter(ulid=ulid, publish=publish).first()
 
     @classmethod
     def bulk_get(cls, model: MediaModelType, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None) -> MediaModelType:
@@ -78,3 +78,12 @@ class MediaDomain:
         kwargs["updated"] = timezone.now()
         [set_attr(model, key, value) for key, value in kwargs.items()]
         model.save(update_fields=list(kwargs.keys()))
+
+    @classmethod
+    def media_like(cls, model: MediaModelType, user: User) -> bool:
+        is_like = model.like.filter(id=user.id).exists()
+        if is_like:
+            model.like.remove(user)
+        else:
+            model.like.add(user)
+        return not is_like

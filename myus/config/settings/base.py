@@ -67,8 +67,6 @@ INSTALLED_APPS += [
 # Add Application
 INSTALLED_APPS += [
     "api.apps.ApiConfig",
-    "rest_framework",
-    "rest_framework_simplejwt",
     "corsheaders",
     "channels",
     "django_quill",
@@ -88,19 +86,8 @@ MIDDLEWARE = [
     "ninja.compatibility.files.fix_request_files_middleware",
 ]
 
-REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        # "rest_framework.permissions.IsAuthenticated",
-        "rest_framework.permissions.AllowAny",
-    ],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ],
-}
-
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=365),
     "ROTATE_REFRESH_TOKENS": True,
