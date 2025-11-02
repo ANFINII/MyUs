@@ -119,12 +119,10 @@ export interface FollowOut {
 export interface LikeMediaIn {
   ulid: string
   mediaType: MediaType
-  isLike: boolean
 }
 
 export interface LikeCommentIn {
   ulid: string
-  isLike: boolean
 }
 
 export interface LikeOut {

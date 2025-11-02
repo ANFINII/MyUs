@@ -45,7 +45,7 @@ export default function CommentThread(props: Props): React.JSX.Element {
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setCommentText(e.target.value)
 
   const handleLike = async () => {
-    const request: LikeCommentIn = { ulid, isLike: !isLike }
+    const request: LikeCommentIn = { ulid }
     const ret = await postLikeComment(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
