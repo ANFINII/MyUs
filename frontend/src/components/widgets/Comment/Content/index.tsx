@@ -60,7 +60,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const handleReply = (e: ChangeEvent<HTMLTextAreaElement>) => setReplyText(e.target.value)
 
   const handleLike = async () => {
-    const request: LikeCommentIn = { ulid, isLike: !isLike }
+    const request: LikeCommentIn = { ulid }
     const ret = await postLikeComment(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value

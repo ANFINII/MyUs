@@ -87,7 +87,7 @@ export default function MediaDetailCommon(props: Props): React.JSX.Element {
     const pathname = capitalize(String(router.pathname.split('/')[2]))
     const mediaType = mediaTypeMap[pathname]
     if (!mediaType) return
-    const request: LikeMediaIn = { ulid, mediaType, isLike: !isLike }
+    const request: LikeMediaIn = { ulid, mediaType }
     const ret = await postLikeMedia(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
