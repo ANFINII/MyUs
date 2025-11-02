@@ -108,22 +108,6 @@ class Video(models.Model):
         verbose_name_plural = "動画リスト"
 ```
 
-### ビュー
-```python
-from rest_framework.views import APIView
-from api.modules.logger import log
-
-class VideoAPI(APIView):
-    def post(self, request) -> Response:
-        log.info("VideoAPI POST - リクエスト開始")
-        try:
-            # 処理
-            return Response(data, status=HTTP_201_CREATED)
-        except Exception as e:
-            log.error("エラー発生", exc=e)
-            return Response({"error": str(e)}, status=HTTP_400_BAD_REQUEST)
-```
-
 ### タイムアウト設定
 - フロントエンド: 60秒（1分）
 - バックエンド: 処理に応じて適切に設定
@@ -156,7 +140,6 @@ async def process_parallel(
 ## セキュリティ
 
 ### 認証・認可
-- JWT認証を使用（`rest_framework_simplejwt`）
 - CSRF保護はJWT使用時は不要
 - 適切な権限クラスを設定
 
