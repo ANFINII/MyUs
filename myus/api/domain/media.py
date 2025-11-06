@@ -75,7 +75,7 @@ class MediaDomain:
         if not kwargs:
             return
 
-        kwargs["updated"] = timezone.now()
+        kwargs["updated"] = timezone.now
         [set_attr(model, key, value) for key, value in kwargs.items()]
         model.save(update_fields=list(kwargs.keys()))
 
