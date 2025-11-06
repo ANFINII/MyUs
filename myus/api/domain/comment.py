@@ -51,7 +51,7 @@ class CommentDomain:
         if not kwargs:
             return
 
-        kwargs["updated"] = timezone.now()
+        kwargs["updated"] = timezone.now
         [set_attr(comment, key, value) for key, value in kwargs.items()]
         comment.save(update_fields=list(kwargs.keys()))
 
