@@ -4,7 +4,7 @@ import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
 import { Follow, FollowIn, FollowOut, LikeCommentIn, LikeMediaIn, LikeOut, NotificationOut, SearchTagOut, UserMe } from 'types/internal/auth'
 import { SearchParms } from 'types/internal/media'
-import { apiFollow, apiFollower, apiLikeComment, apiLikeMedia, apiNotification, apiSearchTag, apiUser } from 'api/uri'
+import { apiFollow, apiFollower, apiFollowUser, apiLikeComment, apiLikeMedia, apiNotification, apiSearchTag, apiUser } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const getUser = async (req?: Req): Promise<ApiOut<UserMe>> => {
@@ -24,7 +24,7 @@ export const getFollower = async (params: SearchParms, req?: Req): Promise<ApiOu
 }
 
 export const postFollow = async (request: FollowIn): Promise<ApiOut<FollowOut>> => {
-  return await apiOut(apiClient('json').post(apiFollow, camelSnake(request)))
+  return await apiOut(apiClient('json').post(apiFollowUser, camelSnake(request)))
 }
 
 export const postLikeMedia = async (request: LikeMediaIn): Promise<ApiOut<LikeOut>> => {
