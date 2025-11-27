@@ -2,8 +2,8 @@ import clsx from 'clsx'
 import style from './Vertical.module.scss'
 
 interface Props {
-  gap?: string
   align?: 'start' | 'center' | 'end' | 'baseline' | 'stretch'
+  gap?: string
   full?: boolean
   wrap?: boolean
   className?: string
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function VStack(props: Props): React.JSX.Element {
-  const { gap = '0', align = 'stretch', full, wrap = false, className, children } = props
+  const { align = 'stretch', gap = '0', full, wrap = false, className, children } = props
 
   return (
     <div className={clsx(style.vertical, style[align], full && style.full, wrap && style.wrap, className)} style={{ gap: `${Number(gap) * 2}px` }}>
