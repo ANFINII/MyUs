@@ -5,30 +5,30 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "channels>=4.3.1",
+    "channels>=4.3.2",
     "channels-redis>=4.3.0",
     "coloredlogs>=15.0.1",
     "daphne>=4.2.1",
-    "django>=5.2.8",
+    "django==6.0",
     "django-cleanup>=9.0.0",
     "django-cors-headers>=4.9.0",
     "django-debug-toolbar>=6.1.0",
     "django-environ>=0.12.0",
-    "django-import-export>=4.3.13",
+    "django-import-export>=4.3.14",
     "django-js-asset>=3.1.2",
-    "django-ninja>=1.4.5",
+    "django-ninja>=1.5.1",
     "django-quill-editor>=0.1.42",
     "django-ulid>=0.0.4",
     "gunicorn>=23.0.0",
     "httpx>=0.28.1",
-    "mypy>=1.18.2",
+    "mypy>=1.19.0",
     "mysqlclient>=2.2.7",
     "pillow>=12.0.0",
     "pycryptodome>=3.23.0",
     "pyjwt>=2.10.1",
     "python-dateutil>=2.9.0.post0",
     "python-ffmpeg-video-streaming>=0.1.16",
-    "stripe>=13.2.0",
+    "stripe>=14.0.1",
 ]
 
 [dependency-groups]
