@@ -1,8 +1,8 @@
 from datetime import datetime
 from dataclasses import dataclass
-from api.types.data.comment.index import CommentData
-from api.types.data.user import AuthorData, MediaUserData
-from api.types.data.auth import MessageData
+from api.src.types.data.comment.index import CommentData
+from api.src.types.data.user import AuthorData, MediaUserData
+from api.src.types.data.auth import MessageData
 
 
 @dataclass(frozen=True, slots=True)

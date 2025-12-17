@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
-from api.models.user import User
-from api.utils.functions.index import set_attr
 from api.models.users import SearchTag
+from api.utils.functions.index import set_attr
 
 
 class SortType(Enum):

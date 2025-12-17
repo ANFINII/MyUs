@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from api.types.data.media.index import VideoData, VideoDetailData
-from api.types.data.media.index import MusicData, MusicDetailData
-from api.types.data.media.index import ComicData, ComicDetailData
-from api.types.data.media.index import PictureData, PictureDetailData
-from api.types.data.media.index import BlogData, BlogDetailData
-from api.types.data.media.index import ChatData, ChatDetailData
+from api.src.types.data.media.index import VideoData, VideoDetailData
+from api.src.types.data.media.index import MusicData, MusicDetailData
+from api.src.types.data.media.index import ComicData, ComicDetailData
+from api.src.types.data.media.index import PictureData, PictureDetailData
+from api.src.types.data.media.index import BlogData, BlogDetailData
+from api.src.types.data.media.index import ChatData, ChatDetailData
 
 
 @dataclass(frozen=True, slots=True)

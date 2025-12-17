@@ -1,19 +1,19 @@
 from ninja import Router
 
-from api.domain.comment import CommentDomain
-from api.domain.media import MediaDomain
-from api.domain.serach_tag import SearchTagDomain
-from api.domain.user import UserDomain
+from api.src.domain.comment import CommentDomain
+from api.src.domain.media import MediaDomain
+from api.src.domain.serach_tag import SearchTagDomain
+from api.src.domain.user import UserDomain
 from api.modules.logger import log
-from api.services.follow import get_follows, get_followers, upsert_follow
-from api.services.notification import get_notification, get_content_object
-from api.services.user import get_user
-from api.types.data.auth import MessageData
-from api.types.data.common import ErrorData
-from api.types.data.follow.index import FollowOutData, FollowUserData
-from api.types.data.follow.input import FollowInData
-from api.types.data.notification import NotificationOutData, NotificationItemData, NotificationUserData, NotificationContentData
-from api.types.data.user import LikeOutData, SearchTagData, UserData, LikeCommentInData, LikeMediaInData
+from api.src.usecase.follow import get_follows, get_followers, upsert_follow
+from api.src.usecase.notification import get_notification, get_content_object
+from api.src.usecase.user import get_user
+from api.src.types.data.auth import MessageData
+from api.src.types.data.common import ErrorData
+from api.src.types.data.follow.index import FollowOutData, FollowUserData
+from api.src.types.data.follow.input import FollowInData
+from api.src.types.data.notification import NotificationOutData, NotificationItemData, NotificationUserData, NotificationContentData
+from api.src.types.data.user import LikeOutData, SearchTagData, UserData, LikeCommentInData, LikeMediaInData
 from api.utils.constant import media_models
 from api.utils.functions.index import create_url
 

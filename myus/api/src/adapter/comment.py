@@ -1,14 +1,14 @@
 from ninja import Router
 from api.modules.logger import log
-from api.domain.comment import CommentDomain
-from api.domain.media import MediaDomain
-from api.services.comment import create_comment, get_comments
-from api.services.user import get_user
-from api.types.data.auth import MessageData
-from api.types.data.comment.index import CommentData, CommentCreateData
-from api.types.data.comment.input import CommentListInData, CommentCreateInData, CommentUpdateInData
-from api.types.data.common import ErrorData
 from api.models.media import Blog
+from api.src.domain.comment import CommentDomain
+from api.src.domain.media import MediaDomain
+from api.src.usecase.comment import create_comment, get_comments
+from api.src.usecase.user import get_user
+from api.src.types.data.auth import MessageData
+from api.src.types.data.comment.index import CommentData, CommentCreateData
+from api.src.types.data.comment.input import CommentListInData, CommentCreateInData, CommentUpdateInData
+from api.src.types.data.common import ErrorData
 
 
 class CommentAPI:

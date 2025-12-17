@@ -2,14 +2,14 @@ import datetime
 from dataclasses import asdict
 from ninja import File, Form, Router, UploadedFile
 
-from api.domain.user import UserDomain
+from api.src.domain.user import UserDomain
 from api.modules.logger import log
-from api.services.user import get_user, profile_check
-from api.types.data.auth import MessageData
-from api.types.data.common import ErrorData
-from api.types.data.user import UserInData
-from api.types.data.setting.index import ProfileData, SettingProfileData, MyPageData, SettingMyPageData, SettingNotificationData
-from api.types.data.setting.input import SettingProfileInData, SettingMyPageInData, NotificationInData
+from api.src.usecase.user import get_user, profile_check
+from api.src.types.data.auth import MessageData
+from api.src.types.data.common import ErrorData
+from api.src.types.data.user import UserInData
+from api.src.types.data.setting.index import ProfileData, SettingProfileData, MyPageData, SettingMyPageData, SettingNotificationData
+from api.src.types.data.setting.input import SettingProfileInData, SettingMyPageInData, NotificationInData
 from api.utils.functions.validation import has_email
 from api.utils.functions.index import create_url
 

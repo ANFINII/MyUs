@@ -1,10 +1,10 @@
 from dataclasses import asdict
 from django.db import transaction
-from api.domain.follow import FilterOption, FollowDomain
-from api.domain.user import UserDomain
-from api.types.data.follow.index import FollowOutData, FollowUserData, FollowCreateData
-from api.utils.functions.index import create_url
 from api.models.user import User
+from api.src.domain.follow import FilterOption, FollowDomain
+from api.src.domain.user import UserDomain
+from api.src.types.data.follow.index import FollowOutData, FollowUserData, FollowCreateData
+from api.utils.functions.index import create_url
 
 
 def get_follows(user_id: int, search: str | None, limit: int) -> list[FollowUserData]:

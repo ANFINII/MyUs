@@ -1,5 +1,5 @@
 from functools import wraps
-from api.services.user import get_user
+from api.src.usecase.user import get_user
 from api.utils.enum.response import ApiResponse
 
 
