@@ -18,7 +18,7 @@ class Message(models.Model):
     ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
     chat    = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="message")
-    parent  = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", blank=True, null=True)
+    parent  = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", null=True)
     text    = models.TextField()
     delta   = QuillField()
     created = models.DateTimeField(auto_now_add=True)
