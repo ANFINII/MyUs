@@ -18,7 +18,7 @@ class NotificationDomain:
             return
 
         [set_attr(notification, key, value) for key, value in kwargs.items()]
-        Notification.save(update_fields=list[str](kwargs.keys()))
+        notification.save(update_fields=list(kwargs.keys()))
 
     @classmethod
     def delete(cls, type_no: NotificationTypeNo, object_id: int) -> None:

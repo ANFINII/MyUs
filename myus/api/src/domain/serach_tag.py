@@ -18,7 +18,7 @@ class SortOption:
 class SearchTagDomain:
     @classmethod
     def get(cls, author_id: int) -> list[SearchTag]:
-        return SearchTag.objects.filter(author_id=author_id).order_by("sequence")[:20]
+        return list(SearchTag.objects.filter(author_id=author_id).order_by("sequence")[:20])
 
     @classmethod
     def create(cls, **kwargs) -> SearchTag:
@@ -30,4 +30,4 @@ class SearchTagDomain:
             return
 
         [set_attr(search_tag, key, value) for key, value in kwargs.items()]
-        SearchTag.save(update_fields=list[str](kwargs.keys()))
+        search_tag.save(update_fields=list(kwargs.keys()))

@@ -38,7 +38,7 @@ class MediaDomain:
         return model.objects.filter(ulid=ulid, publish=publish).first()
 
     @classmethod
-    def bulk_get(cls, model: MediaModelType, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None) -> MediaModelType:
+    def bulk_get(cls, model: MediaModelType, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None) -> list[MediaModelType]:
         q_list: list[Q] = []
         e_list: list[Q] = []
         if filter.publish:
@@ -54,17 +54,17 @@ class MediaDomain:
 
         if filter.search:
             sort = SortOption(is_asc=sort.is_asc, sort_type=SortType.SCORE)
-            score = F('read') + Count('like')*10 + F('read')*Count('like')/(F('read')+1)*20
+            score = F("read") + Count("like")*10 + F("read")*Count("like")/(F("read")+1)*20
             qs = qs.annotate(score=score)
 
         field_name = sort.sort_type.name.lower()
-        order_by_key = field_name if sort.is_asc else f'-{field_name}'
+        order_by_key = field_name if sort.is_asc else f"-{field_name}"
         qs = qs.order_by(order_by_key)
 
         if limit:
             qs = qs[:limit]
 
-        return qs
+        return list(qs)
 
     @classmethod
     def create(cls, model: MediaModelType, **kwargs) -> MediaModelType:

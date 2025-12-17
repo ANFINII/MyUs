@@ -32,7 +32,7 @@ class FollowDomain:
     @classmethod
     def get_follows(cls, user_id: int, search: str | None, limit: int) -> list[Follow]:
         field_name = SortType.CREATED.value
-        order_by_key = field_name if SortOption().is_asc else f'-{field_name}'
+        order_by_key = field_name if SortOption().is_asc else f"-{field_name}"
         qs = Follow.objects.filter(follower_id=user_id, is_follow=True).select_related("following__profile", "following__mypage").distinct()
 
         if search:
@@ -43,12 +43,12 @@ class FollowDomain:
             ])
             qs = qs.filter(query)
 
-        return qs.order_by(order_by_key)[:limit]
+        return list(qs.order_by(order_by_key)[:limit])
 
     @classmethod
     def get_followers(cls, user_id: int, search: str | None, limit: int) -> list[Follow]:
         field_name = SortType.CREATED.value
-        order_by_key = field_name if SortOption().is_asc else f'-{field_name}'
+        order_by_key = field_name if SortOption().is_asc else f"-{field_name}"
         qs = Follow.objects.filter(following_id=user_id, is_follow=True).select_related("follower__profile", "follower__mypage").distinct()
 
         if search:
@@ -59,7 +59,7 @@ class FollowDomain:
             ])
             qs = qs.filter(search_query)
 
-        return qs.order_by(order_by_key)[:limit]
+        return list(qs.order_by(order_by_key)[:limit])
 
     @classmethod
     def create(cls, **kwargs) -> Follow:
