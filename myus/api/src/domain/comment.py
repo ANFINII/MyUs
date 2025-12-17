@@ -29,7 +29,7 @@ class CommentDomain:
         subquery = Comment.objects.filter(id=OuterRef("pk"), like__id=user_id)
         queryset = Comment.objects.select_related("author").annotate(is_comment_like=Exists(subquery))
         field_name = SortType.CREATED.value
-        order_by_key = field_name if SortOption().is_asc else f'-{field_name}'
+        order_by_key = field_name if SortOption().is_asc else f"-{field_name}"
 
         objs = (
             Comment.objects

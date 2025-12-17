@@ -139,10 +139,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         ]
 
 
-class ProfileManager(models.Manager):
-    def get_queryset(self):
-        return super(ProfileManager,self).get_queryset().select_related("user")
-
 class Profile(models.Model):
     """Profile"""
     id           = models.BigAutoField(primary_key=True)
@@ -162,8 +158,6 @@ class Profile(models.Model):
     street       = models.CharField(max_length=255, blank=True)
     introduction = models.TextField()
 
-    objects = ProfileManager()
-
     def __str__(self):
         return self.user.nickname
 
@@ -178,10 +172,6 @@ def create_profile(sender, **kwargs):
         Profile.objects.get_or_create(user=kwargs["instance"])
 
 
-class MyPageManager(models.Manager):
-    def get_queryset(self):
-        return super(MyPageManager,self).get_queryset().select_related("user")
-
 class MyPage(models.Model):
     """MyPage"""
     img             = "../static/img/MyUs_banner.png"
@@ -194,8 +184,6 @@ class MyPage(models.Model):
     following_count = models.IntegerField(verbose_name="follow", default=0)
     tag_manager_id  = models.CharField(max_length=10, blank=True)
     is_advertise    = models.BooleanField(default=True)
-
-    objects = MyPageManager()
 
     def __str__(self):
         return self.user.nickname
@@ -224,7 +212,7 @@ def create_mypage(sender, **kwargs):
 class UserNotification(models.Model):
     """UserNotification"""
     id         = models.BigAutoField(primary_key=True)
-    user       = models.OneToOneField(User, on_delete=models.CASCADE, related_name='notification')
+    user       = models.OneToOneField(User, on_delete=models.CASCADE, related_name="notification")
     is_video   = models.BooleanField(default=False)
     is_music   = models.BooleanField(default=False)
     is_comic   = models.BooleanField(default=False)
@@ -240,20 +228,20 @@ class UserNotification(models.Model):
         return self.user.nickname
 
     class Meta:
-        db_table = 'user_notification'
-        verbose_name_plural = '001 通知設定'
+        db_table = "user_notification"
+        verbose_name_plural = "001 通知設定"
 
 @receiver(post_save, sender=User)
 def create_user_notification(sender, **kwargs):
     """ユーザー作成時に空のuser_notificationも作成する"""
-    if kwargs['created']:
-        UserNotification.objects.get_or_create(user=kwargs['instance'])
+    if kwargs["created"]:
+        UserNotification.objects.get_or_create(user=kwargs["instance"])
 
 
 class UserPlan(models.Model):
     """UserPlan"""
     id           = models.BigAutoField(primary_key=True)
-    user         = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_plan')
+    user         = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_plan")
     plan         = models.ForeignKey(Plan, on_delete=models.CASCADE, default=1)
     customer_id  = models.CharField(max_length=255)
     subscription = models.CharField(max_length=255)
@@ -265,11 +253,11 @@ class UserPlan(models.Model):
         return self.plan.name
 
     class Meta:
-        db_table = 'user_plan'
-        verbose_name_plural = '001 UserPlan'
+        db_table = "user_plan"
+        verbose_name_plural = "001 UserPlan"
 
 @receiver(post_save, sender=User)
 def create_user_plan(sender, **kwargs):
     """ユーザー作成時に空のuser_planも作成する"""
-    if kwargs['created']:
-        UserPlan.objects.get_or_create(user=kwargs['instance'])
+    if kwargs["created"]:
+        UserPlan.objects.get_or_create(user=kwargs["instance"])

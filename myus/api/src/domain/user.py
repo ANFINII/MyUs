@@ -46,6 +46,9 @@ class UserDomain:
         if not kwargs:
             return
 
+        if not hasattr(user, "profile"):
+            return
+
         [set_attr(user.profile, key, value) for key, value in kwargs.items()]
         user.profile.save(update_fields=list(kwargs.keys()))
 
@@ -54,12 +57,18 @@ class UserDomain:
         if not kwargs:
             return
 
+        if not hasattr(user, "mypage"):
+            return
+
         [set_attr(user.mypage, key, value) for key, value in kwargs.items()]
         user.mypage.save(update_fields=list(kwargs.keys()))
 
     @classmethod
     def update_notification(cls, user: User, **kwargs) -> None:
         if not kwargs:
+            return
+
+        if not hasattr(user, "notification"):
             return
 
         [set_attr(user.notification, key, value) for key, value in kwargs.items()]
