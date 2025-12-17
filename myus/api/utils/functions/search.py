@@ -1,8 +1,8 @@
 from functools import reduce
 from operator import and_
 from django.db.models import Q, F, Count
-from api.models.user import User
-from api.models.media import Music
+from api.db.models.user import User
+from api.db.models.media import Music
 
 
 def get_q_list(search: str) -> str:

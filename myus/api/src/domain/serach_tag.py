@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from api.models.users import SearchTag
+from api.db.models.users import SearchTag
 from api.utils.functions.index import set_attr
 
 

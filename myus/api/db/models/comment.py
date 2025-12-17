@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Count
 from django_ulid.models import ulid
-from api.models.user import User
+from api.db.models.user import User
 
 
 class CommentManager(models.Manager):

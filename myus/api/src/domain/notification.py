@@ -1,4 +1,4 @@
-from api.models.notification import Notification
+from api.db.models.notification import Notification
 from api.utils.enum.index import NotificationTypeNo
 from api.utils.functions.index import set_attr
 

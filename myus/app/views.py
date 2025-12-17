@@ -23,9 +23,9 @@ from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from api.models import Profile, MyPage, SearchTag, UserNotification
-from api.models import Notification, Follow, Comment, Advertise, ComicPage
-from api.models import Video, Music, Comic, Picture, Blog, Chat
+from api.db.models import Profile, MyPage, SearchTag, UserNotification
+from api.db.models import Notification, Follow, Comment, Advertise, ComicPage
+from api.db.models import Video, Music, Comic, Picture, Blog, Chat
 from api.utils.constant import model_like_dict, model_comment_dict
 from api.utils.enum.index import NotificationType, NotificationTypeNo, NotificationObjectType
 from api.utils.functions.convert.convert_hls import convert_exe

@@ -2,9 +2,9 @@ from django.db import models
 from django.db.models import Q
 from django_quill.fields import QuillField
 from django_ulid.models import ulid
-from api.models.master import Category, HashTag
-from api.models.base import MediaModel, MediaManager
-from api.models.user import User
+from api.db.models.master import Category, HashTag
+from api.db.models.base import MediaModel, MediaManager
+from api.db.models.user import User
 from api.utils.functions.file import image_upload, video_upload, musics_upload, comic_upload
 
 

@@ -2,8 +2,8 @@ from django.db import models
 from django.db.models import Count
 from django_ulid.models import ulid
 from django_quill.fields import QuillField
-from api.models.user import User
-from api.models.media import Chat
+from api.db.models.user import User
+from api.db.models.media import Chat
 
 
 class MessageManager(models.Manager):

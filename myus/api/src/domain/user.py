@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from api.models.user import User
+from api.db.models.user import User
 from api.utils.functions.index import set_attr
 
 

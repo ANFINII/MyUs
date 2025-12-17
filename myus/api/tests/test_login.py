@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.test import Client
 from django.contrib.auth import authenticate, get_user_model
-from api.models.master import Plan
+from api.db.models.master import Plan
 
 # Create your tests here.
 

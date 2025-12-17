@@ -1,4 +1,4 @@
-from api.models import Video, Music, Comic, Picture, Blog, Chat
+from api.db.models import Video, Music, Comic, Picture, Blog, Chat
 from api.src.domain.media import MediaDomain, FilterOption, SortOption, ExcludeOption
 from api.src.types.data.media.index import HomeData, VideoData, MusicData, ComicData, PictureData, BlogData, ChatData
 from api.utils.functions.index import create_url

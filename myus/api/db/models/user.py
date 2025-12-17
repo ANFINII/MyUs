@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 from django.utils import timezone
 from django_ulid.models import ulid
-from api.models.master import Plan
+from api.db.models.master import Plan
 from api.utils.enum.index import GenderType
 from api.utils.functions.file import user_image
 

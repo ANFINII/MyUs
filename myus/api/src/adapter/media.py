@@ -1,6 +1,6 @@
 from ninja import File, Form, Router, UploadedFile
 from api.src.domain.media import MediaDomain
-from api.models.media import Video, Music, Comic, Picture, Blog, Chat
+from api.db.models.media import Video, Music, Comic, Picture, Blog, Chat
 from api.modules.logger import log
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages

@@ -1,5 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from api.models import Notification, AccessLog
+from api.db.models import Notification, AccessLog
 from api.utils.constant import model_dict
 from api.utils.enum.index import NotificationTypeNo, NotificationObjectType
 

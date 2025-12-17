@@ -172,7 +172,7 @@ addopts = -v --tb=short --strict-markers --reuse-db
 ```python
 import pytest
 from api.modules.logger import log
-from api.models import Video
+from api.db.models import Video
 
 @pytest.mark.django_db
 class TestVideoModel:

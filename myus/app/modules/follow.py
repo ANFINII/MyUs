@@ -1,4 +1,4 @@
-from api.models import Follow, Notification
+from api.db.models import Follow, Notification
 from api.utils.enum.index import NotificationType, NotificationTypeNo, NotificationObjectType
 
 
