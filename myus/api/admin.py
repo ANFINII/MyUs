@@ -6,9 +6,9 @@ from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.admin import GenericTabularInline
-from api.models import User, Profile, MyPage, SearchTag, HashTag, UserNotification
-from api.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
-from api.models import Video, Music, Comic, Picture, Blog, Chat
+from api.db.models import User, Profile, MyPage, SearchTag, HashTag, UserNotification
+from api.db.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
+from api.db.models import Video, Music, Comic, Picture, Blog, Chat
 from api.utils.constant import model_media_comment_dict
 
 

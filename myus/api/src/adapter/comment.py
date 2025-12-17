@@ -1,6 +1,6 @@
 from ninja import Router
 from api.modules.logger import log
-from api.models.media import Blog
+from api.db.models.media import Blog
 from api.src.domain.comment import CommentDomain
 from api.src.domain.media import MediaDomain
 from api.src.usecase.comment import create_comment, get_comments

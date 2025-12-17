@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from django.db.models import Count, F, Q
 from django.utils import timezone
-from api.models.user import User
+from api.db.models.user import User
 from api.src.types.union.media import MediaModelType
 from api.utils.functions.search import search_q_list
 from api.utils.functions.index import set_attr

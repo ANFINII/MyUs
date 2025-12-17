@@ -3,7 +3,7 @@ from enum import Enum
 from functools import reduce
 from operator import and_
 from django.db.models import Q
-from api.models.users import Follow
+from api.db.models.users import Follow
 from api.utils.functions.index import set_attr
 from api.utils.functions.search import get_q_list
 

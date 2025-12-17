@@ -1,6 +1,6 @@
 from dataclasses import asdict
 from django.db import transaction
-from api.models.user import User
+from api.db.models.user import User
 from api.src.domain.follow import FilterOption, FollowDomain
 from api.src.domain.user import UserDomain
 from api.src.types.data.follow.index import FollowOutData, FollowUserData, FollowCreateData

@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count
 from django.template.loader import render_to_string
-from api.models import Plan, MyPage, UserNotification, Follow, Advertise
+from api.db.models import Plan, MyPage, UserNotification, Follow, Advertise
 from api.utils.constant import model_dict, model_pjax, model_create_pjax
 from app.modules.search import SearchData
 

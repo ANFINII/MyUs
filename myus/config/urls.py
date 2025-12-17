@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from api.admin import manage_site
-from api.routers import api
+from api.src.routers import api
 
 
 urlpatterns = [

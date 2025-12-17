@@ -1,6 +1,6 @@
 from django.db import models
 from django_ulid.models import ulid
-from api.models.user import User
+from api.db.models.user import User
 from api.utils.functions.file import image_upload, video_upload
 
 

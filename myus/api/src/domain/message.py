@@ -1,4 +1,4 @@
-from api.models.message import Message
+from api.db.models.message import Message
 
 
 class MessageDomain:
