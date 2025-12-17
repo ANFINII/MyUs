@@ -6,9 +6,9 @@ class Plan(models.Model):
     id            = models.BigAutoField(primary_key=True)
     name          = models.CharField(max_length=30)
     stripe_api_id = models.CharField(max_length=30)
-    price         = models.IntegerField(default=0)
-    max_advertise = models.IntegerField(default=0)
-    description   = models.TextField(blank=True)
+    price         = models.IntegerField()
+    max_advertise = models.IntegerField()
+    description   = models.TextField()
 
     def __str__(self):
         return self.name

@@ -152,7 +152,7 @@ class Profile(models.Model):
     user         = models.OneToOneField(User, on_delete=models.CASCADE)
     last_name    = models.CharField(max_length=50)
     first_name   = models.CharField(max_length=50)
-    birthday     = models.DateField(blank=True, null=True)
+    birthday     = models.DateField(null=True)
     gender       = models.CharField(choices=gender_type, max_length=6)
     phone        = models.CharField(validators=[phone_no], max_length=15, blank=True)
     country_code = models.CharField(max_length=255, default="JP")
@@ -160,7 +160,7 @@ class Profile(models.Model):
     prefecture   = models.CharField(max_length=255, blank=True)
     city         = models.CharField(max_length=255, blank=True)
     street       = models.CharField(max_length=255, blank=True)
-    introduction = models.TextField(blank=True)
+    introduction = models.TextField()
 
     objects = ProfileManager()
 
@@ -189,7 +189,7 @@ class MyPage(models.Model):
     user            = models.OneToOneField(User, on_delete=models.CASCADE)
     banner          = models.ImageField(upload_to=user_image, default=img, blank=True)
     email           = models.EmailField(max_length=255, blank=True)
-    content         = models.TextField(blank=True)
+    content         = models.TextField()
     follower_count  = models.IntegerField(verbose_name="follower", default=0)
     following_count = models.IntegerField(verbose_name="follow", default=0)
     tag_manager_id  = models.CharField(max_length=10, blank=True)

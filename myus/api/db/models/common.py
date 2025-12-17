@@ -8,8 +8,8 @@ class AccessLog(models.Model):
     """AccessLog"""
     id         = models.BigAutoField(primary_key=True)
     ip_address = models.GenericIPAddressField()
-    type       = models.CharField(max_length=7, blank=True)
-    type_id    = models.BigIntegerField(blank=True, null=True)
+    type       = models.CharField(max_length=7)
+    type_id    = models.BigIntegerField()
     created    = models.DateTimeField(auto_now_add=True)
     updated    = models.DateTimeField(auto_now=True)
 

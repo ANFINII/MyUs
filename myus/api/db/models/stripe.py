@@ -6,7 +6,7 @@ class Product(models.Model):
     name              = models.CharField(max_length=100)
     stripe_product_id = models.CharField(max_length=100)
     price             = models.IntegerField()
-    description       = models.TextField(blank=True)
+    description       = models.TextField()
     created           = models.DateTimeField(auto_now_add=True)
     updated           = models.DateTimeField(auto_now=True)
 
