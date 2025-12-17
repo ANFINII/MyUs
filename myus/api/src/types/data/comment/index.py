@@ -1,6 +1,6 @@
 from datetime import datetime
 from dataclasses import dataclass
-from api.types.data.user import AuthorData
+from api.src.types.data.user import AuthorData
 from api.utils.enum.index import CommentTypeNo, CommentType
 
 

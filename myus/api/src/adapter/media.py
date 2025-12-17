@@ -1,21 +1,21 @@
 from ninja import File, Form, Router, UploadedFile
-from api.domain.media import MediaDomain
-from api.modules.logger import log
+from api.src.domain.media import MediaDomain
 from api.models.media import Video, Music, Comic, Picture, Blog, Chat
-from api.services.comment import get_comments
-from api.services.message import get_messages
-from api.services.media import get_home, get_videos,get_musics, get_comics, get_pictures, get_blogs, get_chats
-from api.services.user import get_user
-from api.types.data.common import ErrorData
-from api.types.data.media.index import HomeData, HashtagData, MediaCreateData
-from api.types.data.media.index import VideoData, VideoDetailData
-from api.types.data.media.index import MusicData, MusicDetailData
-from api.types.data.media.index import ComicData, ComicDetailData
-from api.types.data.media.index import PictureData, PictureDetailData
-from api.types.data.media.index import BlogData, BlogDetailData
-from api.types.data.media.index import ChatData, ChatDetailData
-from api.types.data.media.input import VideoInData, MusicInData, ComicInData, PictureInData, BlogInData, ChatInData
-from api.types.data.media.output import VideoDetailOutData, MusicDetailOutData, ComicDetailOutData, PictureDetailOutData, BlogDetailOutData, ChatDetailOutData
+from api.modules.logger import log
+from api.src.usecase.comment import get_comments
+from api.src.usecase.message import get_messages
+from api.src.usecase.media import get_home, get_videos,get_musics, get_comics, get_pictures, get_blogs, get_chats
+from api.src.usecase.user import get_user
+from api.src.types.data.common import ErrorData
+from api.src.types.data.media.index import HomeData, HashtagData, MediaCreateData
+from api.src.types.data.media.index import VideoData, VideoDetailData
+from api.src.types.data.media.index import MusicData, MusicDetailData
+from api.src.types.data.media.index import ComicData, ComicDetailData
+from api.src.types.data.media.index import PictureData, PictureDetailData
+from api.src.types.data.media.index import BlogData, BlogDetailData
+from api.src.types.data.media.index import ChatData, ChatDetailData
+from api.src.types.data.media.input import VideoInData, MusicInData, ComicInData, PictureInData, BlogInData, ChatInData
+from api.src.types.data.media.output import VideoDetailOutData, MusicDetailOutData, ComicDetailOutData, PictureDetailOutData, BlogDetailOutData, ChatDetailOutData
 from api.utils.enum.index import CommentType
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map

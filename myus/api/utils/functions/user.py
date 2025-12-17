@@ -1,8 +1,8 @@
 from api.models.user import User
-from api.types.data.user import AuthorData, MediaUserData, NotificationUserData
-from api.types.union.media import MediaModelType
+from api.src.domain.follow import FollowDomain
+from api.src.types.data.user import AuthorData, MediaUserData, NotificationUserData
+from api.src.types.union.media import MediaModelType
 from api.utils.functions.index import create_url
-from api.domain.follow import FollowDomain
 
 
 def get_author(author: User) -> AuthorData:

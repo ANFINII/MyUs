@@ -1,6 +1,6 @@
 from dataclasses import asdict
-from api.domain.comment import CommentDomain
-from api.types.data.comment.index import CommentData, ReplyData, CommentCreateData
+from api.src.domain.comment import CommentDomain
+from api.src.types.data.comment.index import CommentData, ReplyData, CommentCreateData
 from api.utils.enum.index import CommentTypeNo
 from api.utils.functions.user import get_author
 

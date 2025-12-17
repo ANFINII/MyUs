@@ -7,13 +7,13 @@ from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from ninja import Router
 
-from api.domain.user import UserDomain
+from api.src.domain.user import UserDomain
 from api.modules.logger import log
-from api.services.user import signup_check
-from api.types.data.auth import LoginDataIn, LoginOutData, RefreshOutData, SignUpDataIn, MessageData
-from api.types.data.common import ErrorData
-from api.types.data.setting.index import ProfileCreateData
-from api.types.data.user import UserCreateData
+from api.src.usecase.user import signup_check
+from api.src.types.data.auth import LoginDataIn, LoginOutData, RefreshOutData, SignUpDataIn, MessageData
+from api.src.types.data.common import ErrorData
+from api.src.types.data.setting.index import ProfileCreateData
+from api.src.types.data.user import UserCreateData
 from api.utils.functions.encrypt import decrypt
 from api.utils.functions.token import access_token, refresh_token
 

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from ninja import Schema
-from api.types.data.plan import PlanData
+from api.src.types.data.plan import PlanData
 
 
 @dataclass(frozen=True, slots=True)

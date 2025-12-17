@@ -1,5 +1,5 @@
-from api.domain.message import MessageDomain
-from api.types.data.message import MessageData, MessageReplyData
+from api.src.domain.message import MessageDomain
+from api.src.types.data.message import MessageData, MessageReplyData
 from api.utils.functions.user import get_author
 
 
