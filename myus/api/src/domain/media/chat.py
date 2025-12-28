@@ -1,0 +1,68 @@
+from django.db.models import Count, F, Q
+from django.utils import timezone
+from api.db.models.media import Chat
+from api.db.models.user import User
+from api.src.domain.media.index import FilterOption, SortOption, ExcludeOption, SortType
+from api.utils.functions.search import search_q_list
+from api.utils.functions.index import set_attr
+
+
+class ChatDomain:
+    @classmethod
+    def queryset(cls):
+        return Chat.objects.select_related("author").prefetch_related("like")
+
+    @classmethod
+    def get(cls, ulid: str, publish: bool) -> Chat | None:
+        return cls.queryset().filter(ulid=ulid, publish=publish).first()
+
+    @classmethod
+    def bulk_get(cls, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None) -> list[Chat]:
+        q_list: list[Q] = []
+        e_list: list[Q] = []
+        if filter.publish:
+            q_list.append(Q(publish=filter.publish))
+        if filter.category_id:
+            q_list.append(Q(category_id=filter.category_id))
+        if filter.search:
+            q_list.append(search_q_list(filter.search))
+        if exclude.id:
+            e_list.append(Q(id=exclude.id))
+
+        qs = cls.queryset().filter(*q_list).exclude(*e_list)
+
+        if filter.search:
+            sort = SortOption(is_asc=sort.is_asc, sort_type=SortType.SCORE)
+            score = F("read") + Count("like")*10 + F("read")*Count("like")/(F("read")+1)*20
+            qs = qs.annotate(score=score)
+
+        field_name = sort.sort_type.name.lower()
+        order_by_key = field_name if sort.is_asc else f"-{field_name}"
+        qs = qs.order_by(order_by_key)
+
+        if limit:
+            qs = qs[:limit]
+
+        return list(qs)
+
+    @classmethod
+    def create(cls, **kwargs) -> Chat:
+        return Chat.objects.create(**kwargs)
+
+    @classmethod
+    def update(cls, Chat: Chat, **kwargs) -> None:
+        if not kwargs:
+            return
+
+        kwargs["updated"] = timezone.now
+        [set_attr(Chat, key, value) for key, value in kwargs.items()]
+        Chat.save(update_fields=list(kwargs.keys()))
+
+    @classmethod
+    def like(cls, Chat: Chat, user: User) -> bool:
+        is_like = Chat.like.filter(id=user.id).exists()
+        if is_like:
+            Chat.like.remove(user)
+        else:
+            Chat.like.add(user)
+        return not is_like
