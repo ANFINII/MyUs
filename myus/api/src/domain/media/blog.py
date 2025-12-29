@@ -50,19 +50,19 @@ class BlogDomain:
         return Blog.objects.create(**kwargs)
 
     @classmethod
-    def update(cls, Blog: Blog, **kwargs) -> None:
+    def update(cls, blog: Blog, **kwargs) -> None:
         if not kwargs:
             return
 
-        kwargs["updated"] = timezone.now
-        [set_attr(Blog, key, value) for key, value in kwargs.items()]
-        Blog.save(update_fields=list(kwargs.keys()))
+        kwargs["updated"] = timezone.now()
+        [set_attr(blog, key, value) for key, value in kwargs.items()]
+        blog.save(update_fields=list(kwargs.keys()))
 
     @classmethod
-    def like(cls, Blog: Blog, user: User) -> bool:
-        is_like = Blog.like.filter(id=user.id).exists()
+    def like(cls, blog: Blog, user: User) -> bool:
+        is_like = blog.like.filter(id=user.id).exists()
         if is_like:
-            Blog.like.remove(user)
+            blog.like.remove(user)
         else:
-            Blog.like.add(user)
+            blog.like.add(user)
         return not is_like

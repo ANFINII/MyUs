@@ -1,7 +1,10 @@
 from ninja import File, Form, Router, UploadedFile
-from api.src.domain.media import MediaDomain
-from api.db.models.media import Video, Music, Comic, Picture, Blog, Chat
-from api.modules.logger import log
+from api.src.domain.media.video import VideoDomain
+from api.src.domain.media.music import MusicDomain
+from api.src.domain.media.comic import ComicDomain
+from api.src.domain.media.picture import PictureDomain
+from api.src.domain.media.blog import BlogDomain
+from api.src.domain.media.chat import ChatDomain
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
 from api.src.usecase.media import get_home, get_videos,get_musics, get_comics, get_pictures, get_blogs, get_chats
@@ -20,6 +23,7 @@ from api.utils.enum.index import CommentType
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_author, get_media_user
+from api.modules.logger import log
 
 
 class HomeAPI:
@@ -54,7 +58,7 @@ class VideoAPI:
         if not author:
             return 401, ErrorData("Unauthorized")
 
-        obj = MediaDomain.create(model=Video(), author=author, video=video, **input.dict())
+        obj = VideoDomain.create(author=author, video=video, **input.dict())
         data = MediaCreateData(ulid=str(obj.ulid))
         return 201, data
 
@@ -68,7 +72,7 @@ class VideoAPI:
     def detail(request, ulid: str, search: str = ""):
         log.info("VideoAPI detail", ulid=ulid, search=search)
 
-        obj = MediaDomain.get(model=Video(), ulid=ulid, publish=True)
+        obj = VideoDomain.get(ulid=ulid, publish=True)
         if not obj:
             return 404, ErrorData("Not Found")
 
@@ -114,7 +118,7 @@ class MusicAPI:
         if not author:
             return 401, ErrorData("Unauthorized")
 
-        obj = MediaDomain.create(model=Music(), author=author, music=music, **input.dict())
+        obj = MusicDomain.create(author=author, music=music, **input.dict())
         data = MediaCreateData(ulid=str(obj.ulid))
         return 201, data
 
@@ -128,7 +132,7 @@ class MusicAPI:
     def detail(request, ulid: str, search: str = ""):
         log.info("MusicAPI detail", ulid=ulid, search=search)
 
-        obj = MediaDomain.get(model=Music(), ulid=ulid, publish=True)
+        obj = MusicDomain.get(ulid=ulid, publish=True)
         if not obj:
             return 404, ErrorData("Not Found")
 
@@ -174,7 +178,7 @@ class ComicAPI:
         if not author:
             return 401, ErrorData("Unauthorized")
 
-        obj = MediaDomain.create(model=Comic(), author=author, image=image, **input.dict())
+        obj = ComicDomain.create(author=author, image=image, **input.dict())
         data = MediaCreateData(ulid=str(obj.ulid))
         return 201, data
 
@@ -188,7 +192,7 @@ class ComicAPI:
     def detail(request, ulid: str, search: str = ""):
         log.info("ComicAPI detail", ulid=ulid, search=search)
 
-        obj = MediaDomain.get(model=Comic(), ulid=ulid, publish=True)
+        obj = ComicDomain.get(ulid=ulid, publish=True)
         if not obj:
             return 404, ErrorData("Not Found")
 
@@ -232,7 +236,7 @@ class PictureAPI:
         if not author:
             return 401, ErrorData("Unauthorized")
 
-        obj = MediaDomain.create(model=Picture(), author=author, image=image, **input.dict())
+        obj = PictureDomain.create(author=author, image=image, **input.dict())
         data = MediaCreateData(ulid=str(obj.ulid))
         return 201, data
 
@@ -246,7 +250,7 @@ class PictureAPI:
     def detail(request, ulid: str, search: str = ""):
         log.info("PictureAPI detail", ulid=ulid, search=search)
 
-        obj = MediaDomain.get(model=Picture(), ulid=ulid, publish=True)
+        obj = PictureDomain.get(ulid=ulid, publish=True)
         if not obj:
             return 404, ErrorData("Not Found")
 
@@ -290,7 +294,7 @@ class BlogAPI:
         if not author:
             return 401, ErrorData("Unauthorized")
 
-        obj = MediaDomain.create(model=Blog(), author=author, image=image, **input.dict())
+        obj = BlogDomain.create(author=author, image=image, **input.dict())
         data = MediaCreateData(ulid=str(obj.ulid))
         return 201, data
 
@@ -304,7 +308,7 @@ class BlogAPI:
     def detail(request, ulid: str, search: str = ""):
         log.info("BlogAPI detail", ulid=ulid, search=search)
 
-        obj = MediaDomain.get(model=Blog, ulid=ulid, publish=True)
+        obj = BlogDomain.get(ulid=ulid, publish=True)
         if not obj:
             return 404, ErrorData("Not Found")
 
@@ -349,7 +353,7 @@ class ChatAPI:
         if not author:
             return 401, ErrorData("Unauthorized")
 
-        obj = MediaDomain.create(model=Chat(), author=author, **input.dict())
+        obj = ChatDomain.create(author=author, **input.dict())
         data = MediaCreateData(ulid=str(obj.ulid))
         return 201, data
 
@@ -363,7 +367,7 @@ class ChatAPI:
     def detail(request, ulid: str, search: str = ""):
         log.info("ChatAPI detail", ulid=ulid, search=search)
 
-        obj = MediaDomain.get(model=Chat(), ulid=ulid, publish=True)
+        obj = ChatDomain.get(ulid=ulid, publish=True)
         if not obj:
             return 404, ErrorData("Not Found")
 
