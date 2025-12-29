@@ -2,7 +2,7 @@ from datetime import datetime
 from dataclasses import dataclass
 from api.src.types.data.comment.index import CommentData
 from api.src.types.data.user import AuthorData, MediaUserData
-from api.src.types.data.auth import MessageData
+from api.src.types.data.message import MessageData
 
 
 @dataclass(frozen=True, slots=True)

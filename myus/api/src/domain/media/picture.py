@@ -50,19 +50,19 @@ class PictureDomain:
         return Picture.objects.create(**kwargs)
 
     @classmethod
-    def update(cls, Picture: Picture, **kwargs) -> None:
+    def update(cls, picture: Picture, **kwargs) -> None:
         if not kwargs:
             return
 
-        kwargs["updated"] = timezone.now
-        [set_attr(Picture, key, value) for key, value in kwargs.items()]
-        Picture.save(update_fields=list(kwargs.keys()))
+        kwargs["updated"] = timezone.now()
+        [set_attr(picture, key, value) for key, value in kwargs.items()]
+        picture.save(update_fields=list(kwargs.keys()))
 
     @classmethod
-    def like(cls, Picture: Picture, user: User) -> bool:
-        is_like = Picture.like.filter(id=user.id).exists()
+    def like(cls, picture: Picture, user: User) -> bool:
+        is_like = picture.like.filter(id=user.id).exists()
         if is_like:
-            Picture.like.remove(user)
+            picture.like.remove(user)
         else:
-            Picture.like.add(user)
+            picture.like.add(user)
         return not is_like

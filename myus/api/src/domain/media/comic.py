@@ -50,19 +50,19 @@ class ComicDomain:
         return Comic.objects.create(**kwargs)
 
     @classmethod
-    def update(cls, Comic: Comic, **kwargs) -> None:
+    def update(cls, comic: Comic, **kwargs) -> None:
         if not kwargs:
             return
 
         kwargs["updated"] = timezone.now
-        [set_attr(Comic, key, value) for key, value in kwargs.items()]
-        Comic.save(update_fields=list(kwargs.keys()))
+        [set_attr(comic, key, value) for key, value in kwargs.items()]
+        comic.save(update_fields=list(kwargs.keys()))
 
     @classmethod
-    def like(cls, Comic: Comic, user: User) -> bool:
-        is_like = Comic.like.filter(id=user.id).exists()
+    def like(cls, comic: Comic, user: User) -> bool:
+        is_like = comic.like.filter(id=user.id).exists()
         if is_like:
-            Comic.like.remove(user)
+            comic.like.remove(user)
         else:
-            Comic.like.add(user)
+            comic.like.add(user)
         return not is_like

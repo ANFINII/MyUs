@@ -50,19 +50,19 @@ class ChatDomain:
         return Chat.objects.create(**kwargs)
 
     @classmethod
-    def update(cls, Chat: Chat, **kwargs) -> None:
+    def update(cls, chat: Chat, **kwargs) -> None:
         if not kwargs:
             return
 
-        kwargs["updated"] = timezone.now
-        [set_attr(Chat, key, value) for key, value in kwargs.items()]
-        Chat.save(update_fields=list(kwargs.keys()))
+        kwargs["updated"] = timezone.now()
+        [set_attr(chat, key, value) for key, value in kwargs.items()]
+        chat.save(update_fields=list(kwargs.keys()))
 
     @classmethod
-    def like(cls, Chat: Chat, user: User) -> bool:
-        is_like = Chat.like.filter(id=user.id).exists()
+    def like(cls, chat: Chat, user: User) -> bool:
+        is_like = chat.like.filter(id=user.id).exists()
         if is_like:
-            Chat.like.remove(user)
+            chat.like.remove(user)
         else:
-            Chat.like.add(user)
+            chat.like.add(user)
         return not is_like

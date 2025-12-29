@@ -22,9 +22,6 @@ class VideoQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class VideoManager(models.Manager, MediaManager):
-    def get_queryset(self):
-        return VideoQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like")
 
 class Video(models.Model, MediaModel):
     """Video"""
@@ -43,8 +40,6 @@ class Video(models.Model, MediaModel):
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
-    objects = VideoManager()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -82,9 +77,6 @@ class MusicQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class MusicManager(models.Manager, MediaManager):
-    def get_queryset(self):
-        return MusicQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like")
 
 class Music(models.Model, MediaModel):
     """Music"""
@@ -103,8 +95,6 @@ class Music(models.Model, MediaModel):
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
-    objects = MusicManager()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -135,9 +125,6 @@ class ComicQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class ComicManager(models.Manager, MediaManager):
-    def get_queryset(self):
-        return ComicQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like")
 
 class Comic(models.Model, MediaModel):
     """Comic"""
@@ -154,8 +141,6 @@ class Comic(models.Model, MediaModel):
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
-    objects = ComicManager()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -180,14 +165,11 @@ class ComicPage(models.Model):
     sequence = models.IntegerField()
 
     class Meta:
+        db_table = "comic_page"
+        verbose_name_plural = "03 ComicPage"
         constraints = [
             models.UniqueConstraint(fields=["comic", "sequence"], name="lesson_unique")
         ]
-
-    class Meta:
-        db_table = "comic_page"
-        verbose_name_plural = "03 ComicPage"
-
 
 # Picture
 class PictureQuerySet(models.QuerySet):
@@ -203,9 +185,6 @@ class PictureQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class PictureManager(models.Manager, MediaManager):
-    def get_queryset(self):
-        return PictureQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like")
 
 class Picture(models.Model, MediaModel):
     """Picture"""
@@ -222,8 +201,6 @@ class Picture(models.Model, MediaModel):
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
-    objects = PictureManager()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -255,9 +232,6 @@ class BlogQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class BlogManager(models.Manager, MediaManager):
-    def get_queryset(self):
-        return BlogQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like")
 
 class Blog(models.Model, MediaModel):
     """Blog"""
@@ -276,8 +250,6 @@ class Blog(models.Model, MediaModel):
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
-    objects = BlogManager()
 
     def save(self, *args, **kwargs):
         if self.id is None:
@@ -308,9 +280,6 @@ class ChatQuerySet(models.QuerySet):
             qs = qs.filter(or_lookup).distinct()
         return qs
 
-class ChatManager(models.Manager, MediaManager):
-    def get_queryset(self):
-        return ChatQuerySet(self.model, using=self._db).select_related("author").prefetch_related("like", "message")
 
 class Chat(models.Model):
     """Chat"""
@@ -327,8 +296,6 @@ class Chat(models.Model):
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
-    objects = ChatManager()
 
     def __str__(self):
         return self.title
