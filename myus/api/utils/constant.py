@@ -2,14 +2,16 @@ from api.db.models import Video, Music, Comic, Picture, Blog, Chat
 from api.db.models.users import Follow
 from api.db.models.comment import Comment
 from api.db.models.message import Message
+from api.utils.functions.media import MediaModel
 
 
-media_models = {
+media_models: dict[str, type[MediaModel]] = {
     'Video': Video,
     'Music': Music,
     'Comic': Comic,
     'Picture': Picture,
     'Blog': Blog,
+    'Chat': Chat,
 }
 
 model_list = [Video, Music, Comic, Picture, Blog, Chat]

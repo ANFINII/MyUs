@@ -1,14 +1,14 @@
 from ninja import Router
 from api.modules.logger import log
-from api.db.models.media import Blog
+from api.src.domain.media.blog import BlogDomain
 from api.src.domain.comment import CommentDomain
-from api.src.domain.media import MediaDomain
 from api.src.usecase.comment import create_comment, get_comments
 from api.src.usecase.user import get_user
 from api.src.types.data.auth import MessageData
 from api.src.types.data.comment.index import CommentData, CommentCreateData
 from api.src.types.data.comment.input import CommentListInData, CommentCreateInData, CommentUpdateInData
 from api.src.types.data.common import ErrorData
+from api.utils.functions.user import get_author
 
 
 class CommentAPI:
@@ -39,8 +39,7 @@ class CommentAPI:
         if not user:
             return 401, ErrorData(message="Unauthorized")
 
-        # media_type = media_type_map(input.type_name)
-        obj = MediaDomain.get(model=Blog, ulid=input.object_ulid, publish=True)
+        obj = BlogDomain.get(ulid=input.object_ulid, publish=True)
         if not obj:
             return 400, MessageData(error=True, message="対象メディアが見つかりません")
 
@@ -48,7 +47,7 @@ class CommentAPI:
         parent_id = comment.id if comment else None
 
         comment_data = CommentCreateData(
-            author=user,
+            author=get_author(user),
             text=input.text,
             type_no=input.type_no,
             type_name=input.type_name,

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from ninja import Schema
 from api.src.types.data.plan import PlanData
+from api.utils.enum.index import MediaType
 
 
 @dataclass(frozen=True, slots=True)
@@ -88,7 +89,7 @@ class LikeOutData:
 
 class LikeMediaInData(Schema):
     ulid: str
-    media_type: str
+    media_type: MediaType
 
 
 class LikeCommentInData(Schema):
