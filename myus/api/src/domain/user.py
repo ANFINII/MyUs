@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from api.db.models.comment import Comment
 from api.db.models.user import User
 from api.utils.functions.index import set_attr
 from api.utils.functions.media import MediaModel
@@ -82,4 +83,13 @@ class UserDomain:
             obj.like.remove(user)
         else:
             obj.like.add(user)
+        return not is_like
+
+    @classmethod
+    def comment_like(cls, user: User, model: Comment) -> bool:
+        is_like = model.like.filter(id=user.id).exists()
+        if is_like:
+            model.like.remove(user)
+        else:
+            model.like.add(user)
         return not is_like

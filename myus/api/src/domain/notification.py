@@ -26,7 +26,7 @@ class NotificationDomain:
         notification.delete()
 
 
-    #     NotificationData(
+    #     NotificationOutData(
     #         id=notification.id,
     #         user_from=notification.user_from,
     #         user_to=notification.user_to,

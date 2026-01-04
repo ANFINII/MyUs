@@ -1,11 +1,14 @@
 import jwt
 from django.conf import settings
 from api.db.models import User
-from api.src.types.data.setting.input import SettingProfileInData
+from api.src.domain.comment import CommentDomain
 from api.src.domain.user import UserDomain
+from api.src.types.data.setting.input import SettingProfileInData
+from api.src.types.data.user import LikeOutData, SearchTagData
 from api.utils.enum.index import MediaType
 from api.utils.functions.media import get_media_domain_type
 from api.utils.functions.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
+from myus.api.src.domain.serach_tag import SearchTagDomain
 
 
 def get_user(request) -> User | None:
@@ -92,16 +95,29 @@ def signup_check(user) -> str | None:
     return None
 
 
-def like_media(media_type: MediaType, ulid: str, user: User) -> tuple[bool, int]:
-    is_like = False
-    like_count = 0
+def get_search_tags(author_id: int) -> list[SearchTagData]:
+    objs = SearchTagDomain.bulk_get(author_id)
+    return [SearchTagData(sequence=obj.sequence, name=obj.name) for obj in objs]
 
+
+def like_media(user: User, media_type: MediaType, ulid: str) -> LikeOutData | None:
     domain = get_media_domain_type(media_type)
     obj = domain.get(ulid=ulid, publish=True)
     if not obj:
-        return is_like, like_count
+        return None
 
     is_like = UserDomain.media_like(user, obj)
     like_count = obj.total_like()
 
-    return is_like, like_count
+    return LikeOutData(is_like=is_like, like_count=like_count)
+
+
+def like_comment(user: User, ulid: str) -> LikeOutData | None:
+    obj = CommentDomain.get(ulid)
+    if not obj:
+        return None
+
+    is_like = UserDomain.comment_like(user, obj)
+    like_count = obj.total_like()
+
+    return LikeOutData(is_like=is_like, like_count=like_count)
