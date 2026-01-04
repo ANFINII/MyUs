@@ -2,13 +2,13 @@ import jwt
 from django.conf import settings
 from api.db.models import User
 from api.src.domain.comment import CommentDomain
+from api.src.domain.serach_tag import SearchTagDomain
 from api.src.domain.user import UserDomain
 from api.src.types.data.setting.input import SettingProfileInData
 from api.src.types.data.user import LikeOutData, SearchTagData
 from api.utils.enum.index import MediaType
 from api.utils.functions.media import get_media_domain_type
 from api.utils.functions.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
-from myus.api.src.domain.serach_tag import SearchTagDomain
 
 
 def get_user(request) -> User | None:

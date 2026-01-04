@@ -3,7 +3,6 @@ from enum import Enum
 from django.db.models import Exists, OuterRef, Prefetch
 from django.utils import timezone
 from api.db.models.comment import Comment
-from api.db.models.user import User
 from api.utils.enum.index import CommentTypeNo
 from api.utils.functions.index import set_attr
 

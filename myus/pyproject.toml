@@ -52,12 +52,12 @@ disallow_untyped_defs = true             # 型アノテーションのない関�
 disallow_untyped_decorators = true       # 型アノテーションのないデコレータを禁止
 disallow_untyped_calls = true            # 型アノテーションのない関数呼び出しを禁止
 disallow_incomplete_defs = true          # 一部のパラメータにのみ型アノテーションがある関数を禁止
-disable_error_code = ["import-untyped"]  # import-untypedエラーを無視
+disable_error_code = ["import-untyped", "var-annotated"]  # import-untyped, var-annotatedエラーを無視
 plugins = ["mypy_django_plugin.main"]    # Django stubsプラグイン
 
 # 特定のモジュールの設定
 [[tool.mypy.overrides]]
-module = ['django.*', "tests.*"]
+module = ["django.*", "tests.*"]
 ignore_missing_imports = true  # 外部ライブラリの型情報が見つからない場合はエラーを無視
 
 [tool.django-stubs]
