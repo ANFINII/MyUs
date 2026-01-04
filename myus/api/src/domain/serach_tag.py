@@ -17,7 +17,7 @@ class SortOption:
 
 class SearchTagDomain:
     @classmethod
-    def get(cls, author_id: int) -> list[SearchTag]:
+    def bulk_get(cls, author_id: int) -> list[SearchTag]:
         return list(SearchTag.objects.filter(author_id=author_id).order_by("sequence")[:20])
 
     @classmethod

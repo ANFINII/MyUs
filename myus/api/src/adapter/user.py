@@ -1,12 +1,9 @@
 from ninja import Router
 
 from api.modules.logger import log
-from api.src.domain.comment import CommentDomain
-from api.src.domain.serach_tag import SearchTagDomain
-from api.src.domain.user import UserDomain
 from api.src.usecase.follow import get_follows, get_followers, upsert_follow
 from api.src.usecase.notification import get_notification, get_content_object
-from api.src.usecase.user import get_user, like_media
+from api.src.usecase.user import get_user, get_search_tags, like_comment, like_media
 from api.src.types.data.auth import MessageData
 from api.src.types.data.common import ErrorData
 from api.src.types.data.follow.index import FollowOutData, FollowUserData
@@ -14,7 +11,6 @@ from api.src.types.data.follow.input import FollowInData
 from api.src.types.data.notification import NotificationOutData, NotificationItemData, NotificationUserData, NotificationContentData
 from api.src.types.data.user import LikeOutData, SearchTagData, UserData, LikeCommentInData, LikeMediaInData
 from api.utils.functions.index import create_url
-from api.utils.enum.index import MediaType
 
 
 class UserAPI:
@@ -47,8 +43,7 @@ class UserAPI:
         if not user:
             return 401, ErrorData(message="Unauthorized")
 
-        search_tags = SearchTagDomain.get(user.id)
-        data = [SearchTagData(sequence=tag.sequence, name=tag.name) for tag in search_tags]
+        data = get_search_tags(user.id)
         return 200, data
 
     @router.get("/follower", response={200: list[FollowUserData], 401: ErrorData})
@@ -81,16 +76,11 @@ class UserAPI:
         if not user:
             return 401, ErrorData(message="Unauthorized")
 
-        following = UserDomain.get(ulid=input.ulid)
-        if not following:
+        data = upsert_follow(user, input.ulid, input.is_follow)
+        if not data:
             return 400, MessageData(error=True, message="ユーザーが見つかりません!")
 
-        try:
-            data = upsert_follow(user, following, input.is_follow)
-            return 200, data
-        except Exception:
-            log.error("Follow error")
-            return 500, MessageData(error=True, message="フォロー処理に失敗しました!")
+        return 200, data
 
     @router.post("/like/media", response={200: LikeOutData, 400: MessageData, 401: ErrorData, 500: MessageData})
     def post_like_media(request, input: LikeMediaInData):
@@ -100,10 +90,10 @@ class UserAPI:
         if not user:
             return 401, ErrorData(message="Unauthorized")
 
-        is_like, like_count = like_media(input.media_type, input.ulid, user)
-        data = LikeOutData(is_like=is_like, like_count=like_count)
+        data = like_media(user, input.media_type, input.ulid)
         if not data:
             return 400, MessageData(error=True, message="メディアが見つかりません!")
+
         return 200, data
 
     @router.post("/like/comment", response={200: LikeOutData, 400: MessageData, 401: ErrorData, 404: ErrorData, 500: MessageData})
@@ -114,12 +104,10 @@ class UserAPI:
         if not user:
             return 401, ErrorData(message="Unauthorized")
 
-        obj = CommentDomain.get(input.ulid)
-        if not obj:
-            return 404, ErrorData(message="コメントが見つかりません!")
+        data = like_comment(user, input.ulid)
+        if not data:
+            return 400, MessageData(error=True, message="コメントが見つかりません!")
 
-        is_like = CommentDomain.comment_like(model=obj, user=user)
-        data = LikeOutData(is_like=is_like, like_count=obj.total_like())
         return 200, data
 
     @router.get("/notification", response={200: NotificationOutData, 401: ErrorData, 500: MessageData})

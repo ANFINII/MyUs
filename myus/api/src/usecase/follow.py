@@ -33,7 +33,11 @@ def get_followers(user_id: int, search: str | None, limit: int) -> list[FollowUs
     ]
 
 
-def upsert_follow(follower: User, following: User, is_follow: bool) -> FollowOutData:
+def upsert_follow(follower: User, ulid: str, is_follow: bool) -> FollowOutData | None:
+    following = UserDomain.get(ulid=ulid)
+    if not following:
+        return None
+
     follow = FollowDomain.get(follower.id, following.id)
     follow_data = FollowCreateData(follower_id=follower.id, following_id=following.id, is_follow=is_follow)
     with transaction.atomic():

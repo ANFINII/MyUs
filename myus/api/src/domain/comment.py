@@ -54,12 +54,3 @@ class CommentDomain:
         kwargs["updated"] = timezone.now
         [set_attr(comment, key, value) for key, value in kwargs.items()]
         comment.save(update_fields=list(kwargs.keys()))
-
-    @classmethod
-    def comment_like(cls, model: Comment, user: User) -> bool:
-        is_like = model.like.filter(id=user.id).exists()
-        if is_like:
-            model.like.remove(user)
-        else:
-            model.like.add(user)
-        return not is_like

@@ -76,7 +76,7 @@ class NotificationData:
 
 
 @dataclass(frozen=True, slots=True)
-class NotificationData:
+class NotificationOutData:
     count: int
     datas: list[NotificationData]
 
