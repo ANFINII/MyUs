@@ -3,6 +3,8 @@ from django.conf import settings
 from api.db.models import User
 from api.src.types.data.setting.input import SettingProfileInData
 from api.src.domain.user import UserDomain
+from api.utils.enum.index import MediaType
+from api.utils.functions.media import get_media_domain_type
 from api.utils.functions.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
 
 
@@ -88,3 +90,18 @@ def signup_check(user) -> str | None:
         return "投稿者名は既に登録されています!"
 
     return None
+
+
+def like_media(media_type: MediaType, ulid: str, user: User) -> tuple[bool, int]:
+    is_like = False
+    like_count = 0
+
+    domain = get_media_domain_type(media_type)
+    obj = domain.get(ulid=ulid, publish=True)
+    if not obj:
+        return is_like, like_count
+
+    is_like = UserDomain.media_like(user, obj)
+    like_count = obj.total_like()
+
+    return is_like, like_count
