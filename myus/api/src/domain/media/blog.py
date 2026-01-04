@@ -1,7 +1,6 @@
 from django.db.models import Count, F, Q
 from django.utils import timezone
 from api.db.models.media import Blog
-from api.db.models.user import User
 from api.src.domain.media.index import FilterOption, SortOption, ExcludeOption, SortType
 from api.utils.functions.search import search_q_list
 from api.utils.functions.index import set_attr
@@ -50,19 +49,10 @@ class BlogDomain:
         return Blog.objects.create(**kwargs)
 
     @classmethod
-    def update(cls, blog: Blog, **kwargs) -> None:
+    def update(cls, obj: Blog, **kwargs) -> None:
         if not kwargs:
             return
 
         kwargs["updated"] = timezone.now()
-        [set_attr(blog, key, value) for key, value in kwargs.items()]
-        blog.save(update_fields=list(kwargs.keys()))
-
-    @classmethod
-    def like(cls, blog: Blog, user: User) -> bool:
-        is_like = blog.like.filter(id=user.id).exists()
-        if is_like:
-            blog.like.remove(user)
-        else:
-            blog.like.add(user)
-        return not is_like
+        [set_attr(obj, key, value) for key, value in kwargs.items()]
+        obj.save(update_fields=list(kwargs.keys()))

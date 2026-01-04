@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from api.db.models.user import User
 from api.utils.functions.index import set_attr
+from api.utils.functions.media import MediaModel
 
 
 class SortType(Enum):
@@ -73,3 +74,12 @@ class UserDomain:
 
         [set_attr(user.notification, key, value) for key, value in kwargs.items()]
         user.notification.save(update_fields=list(kwargs.keys()))
+
+    @classmethod
+    def media_like(cls, user: User, obj: MediaModel) -> bool:
+        is_like = obj.like.filter(id=user.id).exists()
+        if is_like:
+            obj.like.remove(user)
+        else:
+            obj.like.add(user)
+        return not is_like
