@@ -50,19 +50,19 @@ class MusicDomain:
         return Music.objects.create(**kwargs)
 
     @classmethod
-    def update(cls, music: Music, **kwargs) -> None:
+    def update(cls, obj: Music, **kwargs) -> None:
         if not kwargs:
             return
 
         kwargs["updated"] = timezone.now()
-        [set_attr(music, key, value) for key, value in kwargs.items()]
-        music.save(update_fields=list(kwargs.keys()))
+        [set_attr(obj, key, value) for key, value in kwargs.items()]
+        obj.save(update_fields=list(kwargs.keys()))
 
     @classmethod
-    def like(cls, music: Music, user: User) -> bool:
-        is_like = music.like.filter(id=user.id).exists()
+    def like(cls, obj: Music, user: User) -> bool:
+        is_like = obj.like.filter(id=user.id).exists()
         if is_like:
-            music.like.remove(user)
+            obj.like.remove(user)
         else:
-            music.like.add(user)
+            obj.like.add(user)
         return not is_like

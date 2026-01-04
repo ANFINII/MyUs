@@ -50,19 +50,19 @@ class VideoDomain:
         return Video.objects.create(**kwargs)
 
     @classmethod
-    def update(cls, video: Video, **kwargs) -> None:
+    def update(cls, obj: Video, **kwargs) -> None:
         if not kwargs:
             return
 
         kwargs["updated"] = timezone.now
-        [set_attr(video, key, value) for key, value in kwargs.items()]
-        video.save(update_fields=list(kwargs.keys()))
+        [set_attr(obj, key, value) for key, value in kwargs.items()]
+        obj.save(update_fields=list(kwargs.keys()))
 
     @classmethod
-    def like(cls, video: Video, user: User) -> bool:
-        is_like = video.like.filter(id=user.id).exists()
+    def like(cls, obj: Video, user: User) -> bool:
+        is_like = obj.like.filter(id=user.id).exists()
         if is_like:
-            video.like.remove(user)
+            obj.like.remove(user)
         else:
-            video.like.add(user)
+            obj.like.add(user)
         return not is_like
