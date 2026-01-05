@@ -27,27 +27,21 @@ export const apiHome = base + '/home'
 
 export const apiVideos = base + '/media/video'
 export const apiVideo = (ulid: string) => base + `/media/video/${ulid}`
-export const apiVideoCreate = base + '/media/video/create'
 
 export const apiMusics = base + '/media/music'
 export const apiMusic = (ulid: string) => base + `/media/music/${ulid}`
-export const apiMusicCreate = base + '/media/music/create'
 
 export const apiComics = base + '/media/comic'
 export const apiComic = (ulid: string) => base + `/media/comic/${ulid}`
-export const apiComicCreate = base + '/media/comic/create'
 
 export const apiPictures = base + '/media/picture'
 export const apiPicture = (ulid: string) => base + `/media/picture/${ulid}`
-export const apiPictureCreate = base + '/media/picture/create'
 
 export const apiBlogs = base + '/media/blog'
 export const apiBlog = (ulid: string) => base + `/media/blog/${ulid}`
-export const apiBlogCreate = base + '/media/blog/create'
 
 export const apiChats = base + '/media/chat'
 export const apiChat = (ulid: string) => base + `/media/chat/${ulid}`
-export const apiChatCreate = base + '/media/chat/create'
 
 export const apiComments = base + '/media/comment'
 export const apiComment = (ulid: string) => base + `/media/comment/${ulid}`

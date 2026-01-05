@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import clsx from 'clsx'
-import QuillCore, { Sources } from 'quill'
+import Quill, { Sources } from 'quill'
 import Delta from 'quill-delta'
 import 'quill/dist/quill.snow.css'
 import 'quill-mention'
@@ -15,16 +15,21 @@ interface Props {
   required?: boolean
   className?: string
   users?: MentionUser[]
-  onChange?: (value: string, delta: Delta, source: Sources, editor: QuillCore) => void
+  onChange?: (value: string, delta: Delta, source: Sources, editor: Quill) => void
 }
 
 export default function QuillEditor(props: Props): React.JSX.Element {
   const { label, value, required = false, className, users, onChange } = props
 
   const hostRef = useRef<HTMLDivElement>(null)
-  const quillRef = useRef<QuillCore | null>(null)
+  const quillRef = useRef<Quill | null>(null)
   const lastHtmlRef = useRef<string>('')
   const suppressChangeRef = useRef<boolean>(false)
+  const onChangeRef = useRef<Props['onChange']>(onChange)
+
+  useEffect(() => {
+    onChangeRef.current = onChange
+  }, [onChange])
 
   const isRequired = required && value === ''
 
@@ -93,11 +98,7 @@ export default function QuillEditor(props: Props): React.JSX.Element {
     const editor = document.createElement('div')
     hostEl.appendChild(editor)
 
-    const quill = new QuillCore(editor, {
-      theme: 'snow',
-      modules,
-      formats,
-    })
+    const quill = new Quill(editor, { theme: 'snow', modules, formats })
     quillRef.current = quill
 
     const initialHtml = value ?? ''
@@ -112,7 +113,7 @@ export default function QuillEditor(props: Props): React.JSX.Element {
       if (suppressChangeRef.current) return
       const html = quill.root.innerHTML
       lastHtmlRef.current = html
-      onChange?.(html, delta, source, quill)
+      onChangeRef.current?.(html, delta, source, quill)
     }
 
     quill.on('text-change', onTextChange)

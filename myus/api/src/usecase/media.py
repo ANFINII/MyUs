@@ -2,7 +2,6 @@ from django.http import HttpRequest
 from ninja import UploadedFile
 
 from api.db.models.user import User
-from api.db.models.media import Video, Music, Comic, Picture, Blog, Chat
 from api.src.domain.media.index import FilterOption, SortOption, ExcludeOption
 from api.src.domain.media.video import VideoDomain
 from api.src.domain.media.music import MusicDomain
