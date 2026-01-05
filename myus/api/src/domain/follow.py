@@ -66,12 +66,12 @@ class FollowDomain:
         return Follow.objects.create(**kwargs)
 
     @classmethod
-    def update(cls, follow: Follow, **kwargs) -> None:
+    def update(cls, obj: Follow, **kwargs) -> None:
         if not kwargs:
             return
 
-        [set_attr(follow, key, value) for key, value in kwargs.items()]
-        follow.save(update_fields=list(kwargs.keys()))
+        [set_attr(obj, key, value) for key, value in kwargs.items()]
+        obj.save(update_fields=list(kwargs.keys()))
 
     @classmethod
     def count(cls, filter: FilterOption) -> int:

@@ -21,60 +21,60 @@ class UserDomain:
     @classmethod
     def get(cls, id: int | None = None, ulid: str | None = None) -> User | None:
         if id:
-            user = User.objects.filter(id=id).select_related("profile", "mypage", "notification").first()
+            obj = User.objects.filter(id=id).select_related("profile", "mypage", "notification").first()
 
         if ulid:
-            user = User.objects.filter(ulid=ulid).select_related("profile", "mypage", "notification").first()
+            obj = User.objects.filter(ulid=ulid).select_related("profile", "mypage", "notification").first()
 
-        if not user:
+        if not obj:
             return None
 
-        return user
+        return obj
 
     @classmethod
     def create(cls, **kwargs) -> User:
        return User.objects.create_user(**kwargs)
 
     @classmethod
-    def update(cls, user: User, **kwargs) -> None:
+    def update(cls, obj: User, **kwargs) -> None:
         if not kwargs:
             return
 
-        [set_attr(user, key, value) for key, value in kwargs.items()]
-        user.save(update_fields=list(kwargs.keys()))
+        [set_attr(obj, key, value) for key, value in kwargs.items()]
+        obj.save(update_fields=list(kwargs.keys()))
 
     @classmethod
-    def update_profile(cls, user: User, **kwargs) -> None:
+    def update_profile(cls, obj: User, **kwargs) -> None:
         if not kwargs:
             return
 
-        if not hasattr(user, "profile"):
+        if not hasattr(obj, "profile"):
             return
 
-        [set_attr(user.profile, key, value) for key, value in kwargs.items()]
-        user.profile.save(update_fields=list(kwargs.keys()))
+        [set_attr(obj.profile, key, value) for key, value in kwargs.items()]
+        obj.profile.save(update_fields=list(kwargs.keys()))
 
     @classmethod
-    def update_mypage(cls, user: User, **kwargs) -> None:
+    def update_mypage(cls, obj: User, **kwargs) -> None:
         if not kwargs:
             return
 
-        if not hasattr(user, "mypage"):
+        if not hasattr(obj, "mypage"):
             return
 
-        [set_attr(user.mypage, key, value) for key, value in kwargs.items()]
-        user.mypage.save(update_fields=list(kwargs.keys()))
+        [set_attr(obj.mypage, key, value) for key, value in kwargs.items()]
+        obj.mypage.save(update_fields=list(kwargs.keys()))
 
     @classmethod
-    def update_notification(cls, user: User, **kwargs) -> None:
+    def update_notification(cls, obj: User, **kwargs) -> None:
         if not kwargs:
             return
 
-        if not hasattr(user, "notification"):
+        if not hasattr(obj, "notification"):
             return
 
-        [set_attr(user.notification, key, value) for key, value in kwargs.items()]
-        user.notification.save(update_fields=list(kwargs.keys()))
+        [set_attr(obj.notification, key, value) for key, value in kwargs.items()]
+        obj.notification.save(update_fields=list(kwargs.keys()))
 
     @classmethod
     def media_like(cls, user: User, obj: MediaModel) -> bool:
@@ -86,10 +86,10 @@ class UserDomain:
         return not is_like
 
     @classmethod
-    def comment_like(cls, user: User, model: Comment) -> bool:
-        is_like = model.like.filter(id=user.id).exists()
+    def comment_like(cls, user: User, obj: Comment) -> bool:
+        is_like = obj.like.filter(id=user.id).exists()
         if is_like:
-            model.like.remove(user)
+            obj.like.remove(user)
         else:
-            model.like.add(user)
+            obj.like.add(user)
         return not is_like

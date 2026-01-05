@@ -13,25 +13,25 @@ class NotificationDomain:
        return Notification.objects.create(**kwargs)
 
     @classmethod
-    def update(cls, notification: Notification, **kwargs) -> None:
+    def update(cls, obj: Notification, **kwargs) -> None:
         if not kwargs:
             return
 
-        [set_attr(notification, key, value) for key, value in kwargs.items()]
-        notification.save(update_fields=list(kwargs.keys()))
+        [set_attr(obj, key, value) for key, value in kwargs.items()]
+        obj.save(update_fields=list(kwargs.keys()))
 
     @classmethod
     def delete(cls, type_no: NotificationTypeNo, object_id: int) -> None:
-        notification = Notification.objects.filter(type_no=type_no, object_id=object_id)
-        notification.delete()
+        obj = Notification.objects.filter(type_no=type_no, object_id=object_id)
+        obj.delete()
 
 
     #     NotificationOutData(
-    #         id=notification.id,
-    #         user_from=notification.user_from,
-    #         user_to=notification.user_to,
-    #         type_no=notification.type_no,
-    #         type_name=notification.type_name,
-    #         object_id=notification.object_id,
-    #         object_type=notification.object_type,
+    #         id=obj.id,
+    #         user_from=obj.user_from,
+    #         user_to=obj.user_to,
+    #         type_no=obj.type_no,
+    #         type_name=obj.type_name,
+    #         object_id=obj.object_id,
+    #         object_type=obj.object_type,
     #     )

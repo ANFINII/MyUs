@@ -46,10 +46,10 @@ class CommentDomain:
        return Comment.objects.create(**kwargs)
 
     @classmethod
-    def update(cls, comment: Comment, **kwargs) -> None:
+    def update(cls, obj: Comment, **kwargs) -> None:
         if not kwargs:
             return
 
         kwargs["updated"] = timezone.now
-        [set_attr(comment, key, value) for key, value in kwargs.items()]
-        comment.save(update_fields=list(kwargs.keys()))
+        [set_attr(obj, key, value) for key, value in kwargs.items()]
+        obj.save(update_fields=list(kwargs.keys()))

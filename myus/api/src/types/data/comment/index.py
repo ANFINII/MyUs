@@ -29,7 +29,7 @@ class CommentData:
 
 @dataclass(frozen=True, slots=True)
 class CommentCreateData:
-    author: AuthorData
+    author_id: int
     text: str
     type_no: CommentTypeNo
     type_name: CommentType
