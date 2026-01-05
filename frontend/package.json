@@ -25,7 +25,6 @@
     "quill-mention": "^4.1.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-quill": "^2.0.0",
     "sass": "^1.96.0",
     "sass-loader": "^16.0.6",
     "video.js": "^8.23.4",
@@ -69,10 +68,6 @@
   "overrides": {
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "eslint": "$eslint",
-    "react-quill": {
-      "react": "$react",
-      "react-dom": "$react-dom"
-    }
+    "eslint": "$eslint"
   }
 }
