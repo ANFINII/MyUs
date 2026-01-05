@@ -1,11 +1,12 @@
 import jwt
 from django.conf import settings
-from api.db.models import User
+from api.db.models.user import User
 from api.src.domain.comment import CommentDomain
 from api.src.domain.serach_tag import SearchTagDomain
 from api.src.domain.user import UserDomain
-from api.src.types.data.setting.input import SettingProfileInData
-from api.src.types.data.user import LikeOutData, SearchTagData
+from api.src.types.data.user import LikeData, SearchTagData
+from api.src.types.schema.auth import SignupIn
+from api.src.types.schema.setting import SettingProfileIn
 from api.utils.enum.index import MediaType
 from api.utils.functions.media import get_media_domain_type
 from api.utils.functions.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
@@ -33,7 +34,7 @@ def get_user(request) -> User | None:
         return None
 
 
-def profile_check(data: SettingProfileInData) -> str | None:
+def profile_check(data: SettingProfileIn) -> str | None:
     if has_email(data.email):
         return "メールアドレスの形式が違います!"
 
@@ -58,24 +59,24 @@ def profile_check(data: SettingProfileInData) -> str | None:
     return None
 
 
-def signup_check(user) -> str | None:
-    password1 = user["password1"]
-    password2 = user["password2"]
+def signup_check(data: SignupIn) -> str | None:
+    password1 = data.password1
+    password2 = data.password2
 
-    if has_email(user["email"]):
+    if has_email(data.email):
         return "メールアドレスの形式が違います!"
 
-    if has_username(user["username"]):
+    if has_username(data.username):
         return "ユーザー名は半角英数字のみ入力できます!"
 
-    if has_number(user["last_name"]):
+    if has_number(data.last_name):
         return "姓に数字が含まれております!"
 
-    if has_number(user["first_name"]):
+    if has_number(data.first_name):
         return "名に数字が含まれております!"
 
-    if has_birthday(int(user["year"]), int(user["month"]), int(user["day"])):
-        return f"{user["year"]}年{user["month"]}月{user["day"]}日は存在しない日付です!"
+    if has_birthday(int(data.year), int(data.month), int(data.day)):
+        return f"{data.year}年{data.month}月{data.day}日は存在しない日付です!"
 
     if password1 != password2:
         return "パスワードが一致していません!"
@@ -83,13 +84,13 @@ def signup_check(user) -> str | None:
     if not has_number(password1) and not has_alphabet(password1):
         return "パスワードは半角8文字以上で英数字を含む必要があります!"
 
-    if User.objects.filter(email=user["email"]).exists():
+    if User.objects.filter(email=data.email).exists():
         return "メールアドレスは既に登録されています!"
 
-    if User.objects.filter(username=user["username"]).exists():
+    if User.objects.filter(username=data.username).exists():
         return "ユーザー名は既に登録されています!"
 
-    if User.objects.filter(nickname=user["nickname"]).exists():
+    if User.objects.filter(nickname=data.nickname).exists():
         return "投稿者名は既に登録されています!"
 
     return None
@@ -100,7 +101,7 @@ def get_search_tags(author_id: int) -> list[SearchTagData]:
     return [SearchTagData(sequence=obj.sequence, name=obj.name) for obj in objs]
 
 
-def like_media(user: User, media_type: MediaType, ulid: str) -> LikeOutData | None:
+def like_media(user: User, media_type: MediaType, ulid: str) -> LikeData | None:
     domain = get_media_domain_type(media_type)
     obj = domain.get(ulid=ulid, publish=True)
     if not obj:
@@ -109,10 +110,10 @@ def like_media(user: User, media_type: MediaType, ulid: str) -> LikeOutData | No
     is_like = UserDomain.media_like(user, obj)
     like_count = obj.total_like()
 
-    return LikeOutData(is_like=is_like, like_count=like_count)
+    return LikeData(is_like=is_like, like_count=like_count)
 
 
-def like_comment(user: User, ulid: str) -> LikeOutData | None:
+def like_comment(user: User, ulid: str) -> LikeData | None:
     obj = CommentDomain.get(ulid)
     if not obj:
         return None
@@ -120,4 +121,4 @@ def like_comment(user: User, ulid: str) -> LikeOutData | None:
     is_like = UserDomain.comment_like(user, obj)
     like_count = obj.total_like()
 
-    return LikeOutData(is_like=is_like, like_count=like_count)
+    return LikeData(is_like=is_like, like_count=like_count)

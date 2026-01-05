@@ -1,7 +1,5 @@
 from dataclasses import dataclass
-from ninja import Schema
 from api.src.types.data.plan import PlanData
-from api.utils.enum.index import MediaType
 
 
 @dataclass(frozen=True, slots=True)
@@ -60,37 +58,6 @@ class SearchTagData:
 
 
 @dataclass(frozen=True, slots=True)
-class NotificationUserData:
-    avatar: str
-    nickname: str
-
-
-@dataclass(frozen=True, slots=True)
-class NotificationData:
-    id: int
-    user_from: NotificationUserData
-    user_to: NotificationUserData
-    type_no: int
-    type_name: str
-    is_confirmed: bool
-
-
-@dataclass(frozen=True, slots=True)
-class NotificationOutData:
-    count: int
-    datas: list[NotificationData]
-
-
-@dataclass(frozen=True, slots=True)
-class LikeOutData:
+class LikeData:
     is_like: bool
     like_count: int
-
-
-class LikeMediaInData(Schema):
-    ulid: str
-    media_type: MediaType
-
-
-class LikeCommentInData(Schema):
-    ulid: str
