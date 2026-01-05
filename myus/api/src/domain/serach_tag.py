@@ -25,9 +25,9 @@ class SearchTagDomain:
        return SearchTag.objects.create(**kwargs)
 
     @classmethod
-    def update(cls, search_tag: SearchTag, **kwargs) -> None:
+    def update(cls, obj: SearchTag, **kwargs) -> None:
         if not kwargs:
             return
 
-        [set_attr(search_tag, key, value) for key, value in kwargs.items()]
-        search_tag.save(update_fields=list(kwargs.keys()))
+        [set_attr(obj, key, value) for key, value in kwargs.items()]
+        obj.save(update_fields=list(kwargs.keys()))

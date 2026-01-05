@@ -8,7 +8,6 @@ from api.src.types.data.auth import MessageData
 from api.src.types.data.comment.index import CommentData, CommentCreateData
 from api.src.types.data.comment.input import CommentListInData, CommentCreateInData, CommentUpdateInData
 from api.src.types.data.common import ErrorData
-from api.utils.functions.user import get_author
 
 
 class CommentAPI:
@@ -47,7 +46,7 @@ class CommentAPI:
         parent_id = comment.id if comment else None
 
         comment_data = CommentCreateData(
-            author=get_author(user),
+            author_id=user.id,
             text=input.text,
             type_no=input.type_no,
             type_name=input.type_name,
