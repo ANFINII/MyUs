@@ -210,10 +210,10 @@ class Log:
             location_str = f"[{' > '.join(location_parts)}]"
             parts.append(f"{Color.BRIGHT_MAGENTA}{location_str}{Color.RESET}")
 
-        kwargs_str = f"{kwargs}"
+        kwargs_str = f"{kwargs}" if kwargs else ""
         level_upper = level.upper()
+        color_code = ColorFormat.LEVEL_COLORS[level_upper]
         if level_upper in ColorFormat.LEVEL_COLORS:
-            color_code = ColorFormat.LEVEL_COLORS[level_upper]
             if msg and kwargs_str:
                 parts.append(f"{color_code}{msg} - {kwargs_str}{Color.RESET}")
             elif msg:
@@ -221,6 +221,7 @@ class Log:
             elif kwargs_str:
                 parts.append(f"{color_code}{kwargs_str}{Color.RESET}")
         else:
+
             parts.append(f"{color_code}{kwargs_str}{Color.RESET}")
 
         return " - ".join(parts)
