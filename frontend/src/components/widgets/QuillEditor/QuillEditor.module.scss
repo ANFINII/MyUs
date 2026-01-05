@@ -4,6 +4,12 @@
   color: rgb(50, 50, 50);
 }
 
+.editor {
+  :global(.ql-container) {
+    font-size: 14px;
+  }
+}
+
 .error_text {
   padding-top: 2px;
   text-indent: 4px;
@@ -12,7 +18,8 @@
 }
 
 .error {
-  > div > div {
+  :global(.ql-container),
+  :global(.ql-editor) {
     color: rgb(0, 0, 0);
     background: rgb(255, 240, 240);
   }
