@@ -221,7 +221,6 @@ class Log:
             elif kwargs_str:
                 parts.append(f"{color_code}{kwargs_str}{Color.RESET}")
         else:
-
             parts.append(f"{color_code}{kwargs_str}{Color.RESET}")
 
         return " - ".join(parts)
