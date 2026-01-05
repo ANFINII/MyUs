@@ -27,12 +27,6 @@ export default function QuillEditor(props: Props): React.JSX.Element {
   const suppressChangeRef = useRef<boolean>(false)
   const onChangeRef = useRef<Props['onChange']>(onChange)
 
-  useEffect(() => {
-    onChangeRef.current = onChange
-  }, [onChange])
-
-  const isRequired = required && value === ''
-
   const mentionSource = useCallback(
     async (search: string, renderItem: (mentionUsers: MentionUser[] | undefined, search: string) => void, mentionChar: string) => {
       let mentionUsers: MentionUser[] | undefined
@@ -87,9 +81,9 @@ export default function QuillEditor(props: Props): React.JSX.Element {
     'mention',
   ]
 
-  const handleLabel = () => {
-    quillRef.current?.focus()
-  }
+  useEffect(() => {
+    onChangeRef.current = onChange
+  }, [onChange])
 
   useEffect(() => {
     const hostEl = hostRef.current
@@ -146,6 +140,9 @@ export default function QuillEditor(props: Props): React.JSX.Element {
       suppressChangeRef.current = false
     }
   }, [value])
+
+  const handleLabel = () => quillRef.current?.focus()
+  const isRequired = required && value === ''
 
   return (
     <VStack gap="2" className={className}>
