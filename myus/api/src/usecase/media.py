@@ -45,7 +45,7 @@ def create_chat(author: User, title: str, content: str, period: int) -> Chat:
     return ChatDomain.create(author=author, title=title, content=content, period=period)
 
 
-def get_home(limit: int, search: str | None) -> HomeData:
+def get_home(limit: int, search: str) -> HomeData:
     data = HomeData(
         videos=get_videos(limit, search),
         musics=get_musics(limit, search),
@@ -57,7 +57,7 @@ def get_home(limit: int, search: str | None) -> HomeData:
     return data
 
 
-def get_recommend(limit: int, search: str | None) -> HomeData:
+def get_recommend(limit: int, search: str) -> HomeData:
     data = HomeData(
         videos=get_videos(limit, search),
         musics=get_musics(limit, search),
@@ -69,7 +69,7 @@ def get_recommend(limit: int, search: str | None) -> HomeData:
     return data
 
 
-def get_videos(limit: int, search: str | None, id: int | None = None) -> list[VideoData]:
+def get_videos(limit: int, search: str, id: int | None = None) -> list[VideoData]:
     objs = VideoDomain.bulk_get(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
 
     data = [VideoData(
@@ -91,7 +91,7 @@ def get_videos(limit: int, search: str | None, id: int | None = None) -> list[Vi
     return data
 
 
-def get_musics(limit: int, search: str | None, id: int | None = None) -> list[MusicData]:
+def get_musics(limit: int, search: str, id: int | None = None) -> list[MusicData]:
     objs = MusicDomain.bulk_get(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
 
     data = [MusicData(
@@ -113,7 +113,7 @@ def get_musics(limit: int, search: str | None, id: int | None = None) -> list[Mu
     return data
 
 
-def get_comics(limit: int, search: str | None, id: int | None = None) -> list[ComicData]:
+def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData]:
     objs = ComicDomain.bulk_get(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
 
     data = [ComicData(
@@ -133,7 +133,7 @@ def get_comics(limit: int, search: str | None, id: int | None = None) -> list[Co
     return data
 
 
-def get_pictures(limit: int, search: str | None, id: int | None = None) -> list[PictureData]:
+def get_pictures(limit: int, search: str, id: int | None = None) -> list[PictureData]:
     objs = PictureDomain.bulk_get(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
 
     data = [PictureData(
@@ -153,7 +153,7 @@ def get_pictures(limit: int, search: str | None, id: int | None = None) -> list[
     return data
 
 
-def get_blogs(limit: int, search: str | None, id: int | None = None) -> list[BlogData]:
+def get_blogs(limit: int, search: str, id: int | None = None) -> list[BlogData]:
     objs = BlogDomain.bulk_get(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
 
     data = [BlogData(
@@ -173,7 +173,7 @@ def get_blogs(limit: int, search: str | None, id: int | None = None) -> list[Blo
     return data
 
 
-def get_chats(limit: int, search: str | None, id: int | None = None) -> list[ChatData]:
+def get_chats(limit: int, search: str, id: int | None = None) -> list[ChatData]:
     objs = ChatDomain.bulk_get(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
 
     data = [ChatData(

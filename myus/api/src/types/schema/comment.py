@@ -14,7 +14,7 @@ class CommentCreateIn(BaseModel):
     type_no: CommentTypeNo
     type_name: CommentType
     object_ulid: str
-    parent_ulid: str | None
+    parent_ulid: str | None = None
 
 
 class CommentUpdateIn(BaseModel):
