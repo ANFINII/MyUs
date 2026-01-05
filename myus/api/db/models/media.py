@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import Q
 from django_quill.fields import QuillField
 from django_ulid.models import ulid
 from api.db.models.master import Category, HashTag
@@ -9,20 +8,6 @@ from api.utils.functions.file import image_upload, video_upload, musics_upload, 
 
 
 # Video
-class VideoQuerySet(models.QuerySet):
-    def search(self, query=None):
-        qs = self
-        if query:
-            or_lookup = (
-                Q(title__icontains=query) |
-                Q(hashtag__jp_name__icontains=query) |
-                Q(author__nickname__icontains=query) |
-                Q(content__icontains=query)
-            )
-            qs = qs.filter(or_lookup).distinct()
-        return qs
-
-
 class Video(models.Model, MediaModel):
     """Video"""
     id       = models.BigAutoField(primary_key=True)
@@ -63,21 +48,6 @@ class Video(models.Model, MediaModel):
 
 
 # Music
-class MusicQuerySet(models.QuerySet):
-    def search(self, query=None):
-        qs = self
-        if query:
-            or_lookup = (
-                Q(title__icontains=query) |
-                Q(hashtag__jp_name__icontains=query) |
-                Q(author__nickname__icontains=query) |
-                Q(content__icontains=query) |
-                Q(lyric__icontains=query)
-            )
-            qs = qs.filter(or_lookup).distinct()
-        return qs
-
-
 class Music(models.Model, MediaModel):
     """Music"""
     id       = models.BigAutoField(primary_key=True)
@@ -112,20 +82,6 @@ class Music(models.Model, MediaModel):
 
 
 # Comic
-class ComicQuerySet(models.QuerySet):
-    def search(self, query=None):
-        qs = self
-        if query:
-            or_lookup = (
-                Q(title__icontains=query) |
-                Q(hashtag__jp_name__icontains=query) |
-                Q(author__nickname__icontains=query) |
-                Q(content__icontains=query)
-            )
-            qs = qs.filter(or_lookup).distinct()
-        return qs
-
-
 class Comic(models.Model, MediaModel):
     """Comic"""
     id       = models.BigAutoField(primary_key=True)
@@ -172,20 +128,6 @@ class ComicPage(models.Model):
         ]
 
 # Picture
-class PictureQuerySet(models.QuerySet):
-    def search(self, query=None):
-        qs = self
-        if query:
-            or_lookup = (
-                Q(title__icontains=query) |
-                Q(hashtag__jp_name__icontains=query) |
-                Q(author__nickname__icontains=query) |
-                Q(content__icontains=query)
-            )
-            qs = qs.filter(or_lookup).distinct()
-        return qs
-
-
 class Picture(models.Model, MediaModel):
     """Picture"""
     id       = models.BigAutoField(primary_key=True)
@@ -218,21 +160,6 @@ class Picture(models.Model, MediaModel):
 
 
 # Blog
-class BlogQuerySet(models.QuerySet):
-    def search(self, query=None):
-        qs = self
-        if query:
-            or_lookup = (
-                Q(title__icontains=query) |
-                Q(hashtag__jp_name__icontains=query) |
-                Q(author__nickname__icontains=query) |
-                Q(content__icontains=query) |
-                Q(richtext__icontains=query)
-            )
-            qs = qs.filter(or_lookup).distinct()
-        return qs
-
-
 class Blog(models.Model, MediaModel):
     """Blog"""
     id       = models.BigAutoField(primary_key=True)
@@ -267,20 +194,6 @@ class Blog(models.Model, MediaModel):
 
 
 # Chat
-class ChatQuerySet(models.QuerySet):
-    def search(self, query=None):
-        qs = self
-        if query:
-            or_lookup = (
-                Q(title__icontains=query) |
-                Q(hashtag__jp_name__icontains=query) |
-                Q(author__nickname__icontains=query) |
-                Q(content__icontains=query)
-            )
-            qs = qs.filter(or_lookup).distinct()
-        return qs
-
-
 class Chat(models.Model):
     """Chat"""
     id       = models.BigAutoField(primary_key=True)

@@ -1,13 +1,6 @@
 from django.db import models
-from django.db.models import Count
 from django_ulid.models import ulid
 from api.db.models.user import User
-
-
-class CommentManager(models.Manager):
-    def get_queryset(self):
-        qs = super(CommentManager,self).get_queryset().annotate(reply_count=Count("reply"))
-        return qs.select_related("author", "parent").prefetch_related("like")
 
 
 class Comment(models.Model):
@@ -24,8 +17,6 @@ class Comment(models.Model):
     deleted   = models.BooleanField(default=False)
     created   = models.DateTimeField(auto_now_add=True)
     updated   = models.DateTimeField(auto_now=True)
-
-    objects = CommentManager()
 
     def __str__(self):
         return str(self.id)
