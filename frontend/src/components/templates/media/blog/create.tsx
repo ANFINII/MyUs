@@ -1,8 +1,8 @@
 import { useState, ChangeEvent } from 'react'
-import { UnprivilegedEditor } from 'react-quill'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { DeltaStatic, Sources } from 'quill'
+import Quill, { Sources } from 'quill'
+import Delta from 'quill-delta'
 import { BlogIn } from 'types/internal/media'
 import { postBlogCreate } from 'api/internal/media/create'
 import { FetchError } from 'utils/constants/enum'
@@ -17,7 +17,7 @@ import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import VStack from 'components/parts/Stack/Vertical'
 
-const Quill = dynamic(() => import('components/widgets/Quill'), { ssr: false })
+const QuillEditor = dynamic(() => import('components/widgets/QuillEditor'), { ssr: false })
 
 export default function BlogCreate(): React.JSX.Element {
   const router = useRouter()
@@ -30,7 +30,7 @@ export default function BlogCreate(): React.JSX.Element {
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
 
-  const handleQuill = (value: string, _delta: DeltaStatic, _source: Sources, editor: UnprivilegedEditor) => {
+  const handleQuill = (value: string, _delta: Delta, _source: Sources, editor: Quill) => {
     const richtext = value.trim() === '<p><br></p>' ? '' : value.trim()
     setValues({ ...values, richtext, delta: JSON.stringify(editor.getContents()) })
   }
@@ -57,7 +57,7 @@ export default function BlogCreate(): React.JSX.Element {
             <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
             <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
             <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
-            <Quill label="本文" value={values.richtext} className="blog" required={isRequired} onChange={handleQuill} />
+            <QuillEditor label="本文" value={values.richtext} className="blog" required={isRequired} onChange={handleQuill} />
           </VStack>
         </form>
       </LoginError>
