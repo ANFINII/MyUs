@@ -12,7 +12,7 @@ class SortType(Enum):
 class FilterOption:
     publish: bool = True
     category_id: int = 0
-    search: str | None = None
+    search: str = ""
 
 
 @dataclass(frozen=True, slots=True)
