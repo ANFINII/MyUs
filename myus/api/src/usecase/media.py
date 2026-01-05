@@ -23,32 +23,32 @@ from api.utils.functions.user import get_author, get_media_user
 
 def create_video(author: User, title: str, content: str, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> MediaCreateData:
     obj = VideoDomain.create(author=author, title=title, content=content, image=image, video=video, convert=convert)
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateData(ulid=str(obj.ulid))
 
 
 def create_music(author: User, title: str, content: str, lyric: str, download: bool, music: UploadedFile) -> MediaCreateData:
     obj = MusicDomain.create(author=author, title=title, content=content, lyric=lyric, download=download, music=music)
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateData(ulid=str(obj.ulid))
 
 
 def create_comic(author: User, title: str, content: str, image: UploadedFile) -> MediaCreateData:
     obj = ComicDomain.create(author=author, title=title, content=content, image=image)
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateData(ulid=str(obj.ulid))
 
 
 def create_picture(author: User, title: str, content: str, image: UploadedFile) -> MediaCreateData:
     obj = PictureDomain.create(author=author, title=title, content=content, image=image)
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateData(ulid=str(obj.ulid))
 
 
 def create_blog(author: User, title: str, content: str, richtext: str, image: UploadedFile) -> MediaCreateData:
     obj = BlogDomain.create(author=author, title=title, content=content, richtext=richtext, image=image)
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateData(ulid=str(obj.ulid))
 
 
 def create_chat(author: User, title: str, content: str, period: str) -> MediaCreateData:
     obj = ChatDomain.create(author=author, title=title, content=content, period=period)
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateData(ulid=str(obj.ulid))
 
 
 def get_home(limit: int, search: str) -> HomeData:
