@@ -10,7 +10,7 @@ from api.src.domain.media.comic import ComicDomain
 from api.src.domain.media.picture import PictureDomain
 from api.src.domain.media.blog import BlogDomain
 from api.src.domain.media.chat import ChatDomain
-from api.src.types.data.media import HomeData, VideoData, MusicData, ComicData, PictureData, BlogData, ChatData, VideoDetailData
+from api.src.types.data.media import HomeData, MediaCreateData, VideoData, MusicData, ComicData, PictureData, BlogData, ChatData
 from api.src.types.data.media import VideoDetailData, MusicDetailData, ComicDetailData, PictureDetailData, BlogDetailData, ChatDetailData, HashtagData
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
@@ -21,28 +21,34 @@ from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_author, get_media_user
 
 
-def create_video(author: User, title: str, content: str, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> Video:
-    return VideoDomain.create(author=author, title=title, content=content, image=image, video=video, convert=convert)
+def create_video(author: User, title: str, content: str, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> MediaCreateData:
+    obj = VideoDomain.create(author=author, title=title, content=content, image=image, video=video, convert=convert)
+    return MediaCreateData(ulid=obj.ulid)
 
 
-def create_music(author: User, title: str, content: str, lyric: str, music: UploadedFile, download: bool) -> Music:
-    return MusicDomain.create(author=author, title=title, content=content, lyric=lyric, music=music, download=download)
+def create_music(author: User, title: str, content: str, lyric: str, download: bool, music: UploadedFile) -> MediaCreateData:
+    obj = MusicDomain.create(author=author, title=title, content=content, lyric=lyric, download=download, music=music)
+    return MediaCreateData(ulid=obj.ulid)
 
 
-def create_comic(author: User, title: str, content: str, image: UploadedFile) -> Comic:
-    return ComicDomain.create(author=author, title=title, content=content, image=image)
+def create_comic(author: User, title: str, content: str, image: UploadedFile) -> MediaCreateData:
+    obj = ComicDomain.create(author=author, title=title, content=content, image=image)
+    return MediaCreateData(ulid=obj.ulid)
 
 
-def create_picture(author: User, title: str, content: str, image: UploadedFile) -> Picture:
-    return PictureDomain.create(author=author, title=title, content=content, image=image)
+def create_picture(author: User, title: str, content: str, image: UploadedFile) -> MediaCreateData:
+    obj = PictureDomain.create(author=author, title=title, content=content, image=image)
+    return MediaCreateData(ulid=obj.ulid)
 
 
-def create_blog(author: User, title: str, content: str, richtext: str, image: UploadedFile) -> Blog:
-    return BlogDomain.create(author=author, title=title, content=content, richtext=richtext, image=image)
+def create_blog(author: User, title: str, content: str, richtext: str, image: UploadedFile) -> MediaCreateData:
+    obj = BlogDomain.create(author=author, title=title, content=content, richtext=richtext, image=image)
+    return MediaCreateData(ulid=obj.ulid)
 
 
-def create_chat(author: User, title: str, content: str, period: int) -> Chat:
-    return ChatDomain.create(author=author, title=title, content=content, period=period)
+def create_chat(author: User, title: str, content: str, period: str) -> MediaCreateData:
+    obj = ChatDomain.create(author=author, title=title, content=content, period=period)
+    return MediaCreateData(ulid=obj.ulid)
 
 
 def get_home(limit: int, search: str) -> HomeData:

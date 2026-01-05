@@ -11,6 +11,11 @@ class HashtagData:
 
 
 @dataclass(frozen=True, slots=True)
+class MediaCreateData:
+    ulid: str
+
+
+@dataclass(frozen=True, slots=True)
 class MediaData:
     ulid: str
     title: str
