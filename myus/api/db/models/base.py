@@ -19,8 +19,3 @@ class MediaModel:
 
     def score(self):
         return int(self.read + self.like.count()*10 + self.read*self.like.count()/(self.read+1)*20)
-
-
-class MediaManager:
-    def search(self, query=None):
-        return self.get_queryset().search(query=query)

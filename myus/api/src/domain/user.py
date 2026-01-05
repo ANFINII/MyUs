@@ -19,12 +19,16 @@ class SortOption:
 
 class UserDomain:
     @classmethod
+    def queryset(cls):
+        return User.objects.select_related("profile", "mypage", "notification")
+
+    @classmethod
     def get(cls, id: int | None = None, ulid: str | None = None) -> User | None:
         if id:
-            obj = User.objects.filter(id=id).select_related("profile", "mypage", "notification").first()
+            obj = cls.queryset().filter(id=id).first()
 
         if ulid:
-            obj = User.objects.filter(ulid=ulid).select_related("profile", "mypage", "notification").first()
+            obj = cls.queryset().filter(ulid=ulid).first()
 
         if not obj:
             return None

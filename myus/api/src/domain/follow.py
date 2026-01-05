@@ -30,10 +30,18 @@ class FollowDomain:
         return Follow.objects.filter(follower_id=follower_id, following_id=following_id).first()
 
     @classmethod
+    def follows_queryset(cls, user_id: int):
+        return Follow.objects.filter(follower_id=user_id, is_follow=True).select_related("following__profile", "following__mypage")
+
+    @classmethod
+    def followers_queryset(cls, user_id: int):
+        return Follow.objects.filter(following_id=user_id, is_follow=True).select_related("follower__profile", "follower__mypage")
+
+    @classmethod
     def get_follows(cls, user_id: int, search: str | None, limit: int) -> list[Follow]:
         field_name = SortType.CREATED.value
         order_by_key = field_name if SortOption().is_asc else f"-{field_name}"
-        qs = Follow.objects.filter(follower_id=user_id, is_follow=True).select_related("following__profile", "following__mypage").distinct()
+        qs = cls.follows_queryset(user_id).distinct()
 
         if search:
             q_list = get_q_list(search)
@@ -49,7 +57,7 @@ class FollowDomain:
     def get_followers(cls, user_id: int, search: str | None, limit: int) -> list[Follow]:
         field_name = SortType.CREATED.value
         order_by_key = field_name if SortOption().is_asc else f"-{field_name}"
-        qs = Follow.objects.filter(following_id=user_id, is_follow=True).select_related("follower__profile", "follower__mypage").distinct()
+        qs = cls.followers_queryset(user_id).distinct()
 
         if search:
             q_list = get_q_list(search)

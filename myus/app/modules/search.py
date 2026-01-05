@@ -19,19 +19,51 @@ def get_q_list(search):
 
 
 class SearchData:
+    def media_query(model, search):
+        """メディア検索用の Q を生成"""
+        q_list = get_q_list(search)
+        if not q_list:
+            return Q()
+        if model == Music:
+            return reduce(and_, [
+                Q(title__icontains=q) |
+                Q(hashtag__jp_name__icontains=q) |
+                Q(author__nickname__icontains=q) |
+                Q(content__icontains=q) |
+                Q(lyric__icontains=q) for q in q_list
+            ])
+        return reduce(and_, [
+            Q(title__icontains=q) |
+            Q(hashtag__jp_name__icontains=q) |
+            Q(author__nickname__icontains=q) |
+            Q(content__icontains=q) for q in q_list
+        ])
+
     def search_index(search):
-        result = [model.objects.search(search)[:8] for model in model_list]
+        result = [
+            model.objects.filter(publish=True).filter(SearchData.media_query(model, search)).distinct()[:8]
+            for model in model_list
+        ]
         queryset_chain = chain(*result)
         return sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
 
     def search_recommend(aggregation_date, search):
         score = F("read") + Count("like")*10 + F("read")*Count("like")/(F("read")+1)*20
-        result = [model.objects.filter(created__gte=aggregation_date).annotate(scr=score).filter(scr__gte=50).search(search)[:8] for model in model_list]
+        result = [
+            model.objects.filter(publish=True, created__gte=aggregation_date)
+            .annotate(scr=score).filter(scr__gte=50)
+            .filter(SearchData.media_query(model, search)).distinct()[:8]
+            for model in model_list
+        ]
         queryset_chain = chain(*result)
         return sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
 
     def search_userpage(author, search):
-        result = [model.objects.filter(author=author, publish=True).search(search) for model in model_list]
+        result = [
+            model.objects.filter(author=author, publish=True)
+            .filter(SearchData.media_query(model, search)).distinct()
+            for model in model_list
+        ]
         queryset_chain = chain(*result)
         return sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
 
