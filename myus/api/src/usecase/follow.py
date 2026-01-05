@@ -3,7 +3,7 @@ from django.db import transaction
 from api.db.models.user import User
 from api.src.domain.follow import FilterOption, FollowDomain
 from api.src.domain.user import UserDomain
-from api.src.types.data.follow.index import FollowOutData, FollowUserData, FollowCreateData
+from api.src.types.data.follow import FollowOutData, FollowUserData, FollowCreateData
 from api.utils.functions.index import create_url
 
 

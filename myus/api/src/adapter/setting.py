@@ -1,15 +1,16 @@
 import datetime
 from dataclasses import asdict
+from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 
-from api.src.domain.user import UserDomain
 from api.modules.logger import log
-from api.src.usecase.user import get_user, profile_check
-from api.src.types.data.auth import MessageData
-from api.src.types.data.common import ErrorData
+from api.src.domain.user import UserDomain
+from api.src.types.data.setting import ProfileData, MyPageData
 from api.src.types.data.user import UserInData
-from api.src.types.data.setting.index import ProfileData, SettingProfileData, MyPageData, SettingMyPageData, SettingNotificationData
-from api.src.types.data.setting.input import SettingProfileInData, SettingMyPageInData, NotificationInData
+from api.src.types.schema.common import ErrorOut, MessageOut
+from api.src.types.schema.setting import SettingProfileIn, SettingMyPageIn, SettingNotificationIn
+from api.src.types.schema.setting import SettingProfileOut, SettingMyPageOut, SettingNotificationOut
+from api.src.usecase.user import get_user, profile_check
 from api.utils.functions.validation import has_email
 from api.utils.functions.index import create_url
 
@@ -19,15 +20,16 @@ class SettingProfileAPI:
 
     router = Router()
 
-    @router.get("", response={200: SettingProfileData, 401: ErrorData})
-    def get(request):
+    @staticmethod
+    @router.get("", response={200: SettingProfileOut, 401: ErrorOut})
+    def get(request: HttpRequest):
         log.info("SettingProfileAPI get")
 
         user = get_user(request)
-        if not user:
-            return 401, ErrorData(message="Unauthorized")
+        if user is None:
+            return 401, ErrorOut(message="Unauthorized")
 
-        data = SettingProfileData(
+        data = SettingProfileOut(
             avatar=create_url(user.image()),
             email=user.email,
             username=user.username,
@@ -46,19 +48,21 @@ class SettingProfileAPI:
             street=user.profile.street,
             introduction=user.profile.introduction,
         )
+
         return 200, data
 
-    @router.put("", response={204: MessageData, 400: MessageData, 401: ErrorData})
-    def put(request, input: SettingProfileInData = Form(...), avatar: UploadedFile = File(None)):
+    @staticmethod
+    @router.put("", response={204: MessageOut, 400: MessageOut, 401: ErrorOut})
+    def put(request: HttpRequest, input: SettingProfileIn = Form(...), avatar: UploadedFile = File(None)):
         log.info("SettingProfileAPI put", input=input)
 
         validation = profile_check(input)
         if validation:
-            return 400, MessageData(error=True, message=validation)
+            return 400, MessageOut(error=True, message=validation)
 
         user = get_user(request)
-        if not user:
-            return 401, ErrorData(message="Unauthorized")
+        if user is None:
+            return 401, ErrorOut(message="Unauthorized")
 
         user_data = UserInData(
             avatar=avatar if avatar else user.avatar,
@@ -87,9 +91,9 @@ class SettingProfileAPI:
             UserDomain.update_profile(user, **asdict(profile_data))
         except Exception as e:
             log.error("SettingProfileAPI put error", error=e)
-            return 400, MessageData(error=True, message="保存に失敗しました!")
+            return 400, MessageOut(error=True, message="保存に失敗しました!")
 
-        return 204, MessageData(error=False, message="保存しました!")
+        return 204, MessageOut(error=False, message="保存しました!")
 
 
 class SettingMyPageAPI:
@@ -97,15 +101,16 @@ class SettingMyPageAPI:
 
     router = Router()
 
-    @router.get("", response={200: SettingMyPageData, 401: ErrorData})
-    def get(request):
+    @staticmethod
+    @router.get("", response={200: SettingMyPageOut, 401: ErrorOut})
+    def get(request: HttpRequest):
         log.info("SettingMyPageAPI get")
 
         user = get_user(request)
-        if not user:
-            return 401, ErrorData(message="Unauthorized")
+        if user is None:
+            return 401, ErrorOut(message="Unauthorized")
 
-        data = SettingMyPageData(
+        data = SettingMyPageOut(
             banner=create_url(user.banner()),
             nickname=user.nickname,
             email=user.mypage.email,
@@ -118,18 +123,20 @@ class SettingMyPageAPI:
             plan_end_date=user.plan_end_date(),
             is_advertise=user.mypage.is_advertise,
         )
+
         return 200, data
 
-    @router.put("", response={204: MessageData, 400: MessageData, 401: ErrorData})
-    def put(request, input: SettingMyPageInData = Form(...), banner: UploadedFile = File(None)):
+    @staticmethod
+    @router.put("", response={204: MessageOut, 400: MessageOut, 401: ErrorOut})
+    def put(request: HttpRequest, input: SettingMyPageIn = Form(...), banner: UploadedFile = File(None)):
         log.info("SettingMyPageAPI put", input=input)
 
         user = get_user(request)
-        if not user:
-            return 401, ErrorData(message="Unauthorized")
+        if user is None:
+            return 401, ErrorOut(message="Unauthorized")
 
         if has_email(input.email):
-            return 400, MessageData(error=True, message="メールアドレスの形式が違います!")
+            return 400, MessageOut(error=True, message="メールアドレスの形式が違います!")
 
         mypage_data = MyPageData(
             banner=banner if banner else user.mypage.banner,
@@ -143,9 +150,9 @@ class SettingMyPageAPI:
             UserDomain.update_mypage(user, **asdict(mypage_data))
         except Exception as e:
             log.error("SettingMyPageAPI put error", error=e)
-            return 400, MessageData(error=True, message="保存に失敗しました!")
+            return 400, MessageOut(error=True, message="保存に失敗しました!")
 
-        return 204, MessageData(error=False, message="保存しました!")
+        return 204, MessageOut(error=False, message="保存しました!")
 
 
 class SettingNotificationAPI:
@@ -153,15 +160,16 @@ class SettingNotificationAPI:
 
     router = Router()
 
-    @router.get("", response={200: SettingNotificationData, 401: ErrorData})
-    def get(request):
+    @staticmethod
+    @router.get("", response={200: SettingNotificationOut, 401: ErrorOut})
+    def get(request: HttpRequest):
         log.info("SettingNotificationAPI get")
 
         user = get_user(request)
-        if not user:
-            return 401, ErrorData(message="Unauthorized")
+        if user is None:
+            return 401, ErrorOut(message="Unauthorized")
 
-        data = SettingNotificationData(
+        data = SettingNotificationOut(
             is_video=user.notification.is_video,
             is_music=user.notification.is_music,
             is_comic=user.notification.is_comic,
@@ -173,20 +181,22 @@ class SettingNotificationAPI:
             is_like=user.notification.is_like,
             is_views=user.notification.is_views,
         )
+
         return 200, data
 
-    @router.put("", response={204: MessageData, 400: MessageData, 401: ErrorData})
-    def put(request, input: NotificationInData):
+    @staticmethod
+    @router.put("", response={204: MessageOut, 400: MessageOut, 401: ErrorOut})
+    def put(request: HttpRequest, input: SettingNotificationIn):
         log.info("SettingNotificationAPI put", input=input)
 
         user = get_user(request)
-        if not user:
-            return 401, ErrorData(message="Unauthorized")
+        if user is None:
+            return 401, ErrorOut(message="Unauthorized")
 
         try:
-            UserDomain.update_notification(user, **input.dict())
+            UserDomain.update_notification(user, **input.model_dump())
         except Exception as e:
             log.error("SettingNotificationAPI put error", error=e)
-            return 400, MessageData(error=True, message="保存に失敗しました!")
+            return 400, MessageOut(error=True, message="保存に失敗しました!")
 
-        return 204, MessageData(error=False, message="保存しました!")
+        return 204, MessageOut(error=False, message="保存しました!")

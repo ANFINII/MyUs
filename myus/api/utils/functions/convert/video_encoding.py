@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Any
 
 from django.conf import settings
-from api.utils.functions.convert.video_converter import VideoConverter
 from api.modules.logger import log
+from api.utils.functions.convert.video_converter import VideoConverter
 
 
 def encode_video(convert_path: str, output_dir: str, save_log: bool = True) -> dict[str, Any]:

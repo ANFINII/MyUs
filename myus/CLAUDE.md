@@ -66,13 +66,13 @@
 - **入力（Input）データ型**: `ninja.Schema` を使用
   - APIリクエストボディのバリデーション用
   - `from ninja import Schema` でインポート
-  - 例: `SignUpDataIn`, `LoginDataIn`, `VideoDataIn`
+  - 例: `SignupDataIn`, `LoginDataIn`, `VideoDataIn`
 
 - **出力（Output）データ型**: `@dataclass` を使用
   - APIレスポンス用のデータクラス
   - `from dataclasses import dataclass` でインポート
   - `@dataclass(frozen=True, slots=True)` を推奨
-  - 例: `LoginOutData`, `VideoData`, `ErrorData`
+  - 例: `LoginOutData`, `VideoData`, `ErrorOut`
 
 ```python
 # 入力用（ninja.Schema）
@@ -92,7 +92,7 @@ class LoginOutData:
     user: UserLoginData
 
 @dataclass(frozen=True, slots=True)
-class ErrorData:
+class ErrorOut:
     message: str
 ```
 
@@ -171,8 +171,9 @@ addopts = -v --tb=short --strict-markers --reuse-db
 ### ユニットテスト
 ```python
 import pytest
-from api.modules.logger import log
+
 from api.db.models import Video
+from api.modules.logger import log
 
 @pytest.mark.django_db
 class TestVideoModel:

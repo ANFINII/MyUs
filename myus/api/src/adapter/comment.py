@@ -1,13 +1,11 @@
+from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
-from api.src.domain.media.blog import BlogDomain
-from api.src.domain.comment import CommentDomain
-from api.src.usecase.comment import create_comment, get_comments
+from api.src.types.schema.comment import CommentCreateIn, CommentListIn, CommentOut, CommentUpdateIn, ReplyOut
+from api.src.types.schema.common import ErrorOut, MessageOut
+from api.src.types.schema.user import AuthorOut
+from api.src.usecase.comment import get_comments, create_comment, update_comment, delete_comment
 from api.src.usecase.user import get_user
-from api.src.types.data.auth import MessageData
-from api.src.types.data.comment.index import CommentData, CommentCreateData
-from api.src.types.data.comment.input import CommentListInData, CommentCreateInData, CommentUpdateInData
-from api.src.types.data.common import ErrorData
 
 
 class CommentAPI:
@@ -15,86 +13,116 @@ class CommentAPI:
 
     router = Router()
 
-    @router.get("", response={200: list[CommentData], 401: ErrorData})
-    def get(request, query: CommentListInData):
+    @staticmethod
+    @router.get("", response={200: list[CommentOut], 401: ErrorOut})
+    def get(request: HttpRequest, query: CommentListIn):
         log.info("CommentAPI get", type_no=query.type_no, object_id=query.object_id)
 
         user = get_user(request)
         if not user:
-            return 401, ErrorData(message="Unauthorized")
+            return 401, ErrorOut(message="Unauthorized")
 
-        data = get_comments(
-            type_no=query.type_no,
-            object_id=query.object_id,
-            user_id=user.id
-        )
+        comments = get_comments(type_no=query.type_no, object_id=query.object_id, user_id=user.id)
+        data = [
+            CommentOut(
+                ulid=x.ulid,
+                text=x.text,
+                created=x.created,
+                updated=x.updated,
+                is_comment_like=x.is_comment_like,
+                like_count=x.like_count,
+                author=AuthorOut(
+                    avatar=x.author.avatar,
+                    ulid=x.author.ulid,
+                    nickname=x.author.nickname,
+                    follower_count=x.author.follower_count,
+                ),
+                replys=[
+                    ReplyOut(
+                        id=r.id,
+                        text=r.text,
+                        created=r.created,
+                        updated=r.updated,
+                        is_comment_like=r.is_comment_like,
+                        like_count=r.like_count,
+                        author=AuthorOut(
+                            avatar=r.author.avatar,
+                            ulid=r.author.ulid,
+                            nickname=r.author.nickname,
+                            follower_count=r.author.follower_count,
+                        ),
+                    )
+                    for r in x.replys
+                ],
+            )
+            for x in comments
+        ]
+
         return 200, data
 
-    @router.post("", response={201: CommentData, 400: MessageData, 401: ErrorData})
-    def post(request, input: CommentCreateInData):
+    @staticmethod
+    @router.post("", response={201: CommentOut, 400: MessageOut, 401: ErrorOut, 500: ErrorOut})
+    def post(request: HttpRequest, input: CommentCreateIn):
         log.info("CommentAPI post", input=input)
 
         user = get_user(request)
         if not user:
-            return 401, ErrorData(message="Unauthorized")
-
-        obj = BlogDomain.get(ulid=input.object_ulid, publish=True)
-        if not obj:
-            return 400, MessageData(error=True, message="対象メディアが見つかりません")
-
-        comment = CommentDomain.get(input.parent_ulid) if input.parent_ulid else None
-        parent_id = comment.id if comment else None
-
-        comment_data = CommentCreateData(
-            author_id=user.id,
-            text=input.text,
-            type_no=input.type_no,
-            type_name=input.type_name,
-            object_id=obj.id,
-            parent_id=parent_id,
-        )
+            return 401, ErrorOut(message="Unauthorized")
 
         try:
-            data = create_comment(comment_data)
+            comment = create_comment(user, input)
+            if comment is None:
+                return 400, MessageOut(error=True, message="コメントの作成に失敗しました")
+
+            data = CommentOut(
+                ulid=comment.ulid,
+                text=comment.text,
+                created=comment.created,
+                updated=comment.updated,
+                is_comment_like=comment.is_comment_like,
+                like_count=comment.like_count,
+                author=AuthorOut(
+                    avatar=comment.author.avatar,
+                    ulid=comment.author.ulid,
+                    nickname=comment.author.nickname,
+                    follower_count=comment.author.follower_count,
+                ),
+                replys=[],
+            )
+
             return 201, data
         except Exception as e:
             log.error("CommentAPI post error", exc=e)
-            return 400, MessageData(error=True, message="コメントの作成に失敗しました")
+            return 500, MessageOut(error=True, message="コメントの作成に失敗しました")
 
-    @router.put("/{comment_ulid}", response={200: MessageData, 400: MessageData, 401: ErrorData, 404: ErrorData})
-    def put(request, comment_ulid: str, input: CommentUpdateInData):
+    @staticmethod
+    @router.put("/{comment_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 500: ErrorOut})
+    def put(request: HttpRequest, comment_ulid: str, input: CommentUpdateIn):
         log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
 
         user = get_user(request)
         if not user:
-            return 401, ErrorData(message="Unauthorized")
-
-        comment = CommentDomain.get(comment_ulid)
-        if not comment:
-            return 404, ErrorData(message="コメントが見つかりません")
+            return 401, ErrorOut(message="Unauthorized")
 
         try:
-            CommentDomain.update(comment, text=input.text)
-            return 200, MessageData(error=False, message="コメントを更新しました")
+            update_comment(comment_ulid, input.text)
+            return 200, MessageOut(error=False, message="コメントを更新しました")
         except Exception as e:
             log.error("CommentAPI put error", exc=e)
-            return 400, MessageData(error=True, message="コメントの更新に失敗しました")
+            return 500, MessageOut(error=True, message="コメントの更新に失敗しました")
 
-    @router.delete("/{comment_ulid}", response={200: MessageData, 400: MessageData, 401: ErrorData, 404: ErrorData})
-    def delete(request, comment_ulid: str):
+    @staticmethod
+    @router.delete("/{comment_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 500: ErrorOut})
+    def delete(request: HttpRequest, comment_ulid: str):
         log.info("CommentAPI delete", comment_ulid=comment_ulid)
 
         user = get_user(request)
         if not user:
-            return 401, ErrorData(message="Unauthorized")
-
-        comment = CommentDomain.get(comment_ulid)
-        if not comment:
-            return 404, ErrorData(message="コメントが見つかりません")
+            return 401, ErrorOut(message="Unauthorized")
 
         try:
-            CommentDomain.update(comment, deleted=True)
-            return 200, MessageData(error=False, message="コメントを削除しました")
+            delete_comment(comment_ulid)
+            return 200, MessageOut(error=False, message="コメントを削除しました")
         except Exception as e:
             log.error("CommentAPI delete error", exc=e)
-            return 400, MessageData(error=True, message="コメントの削除に失敗しました")
+            return 500, MessageOut(error=True, message="コメントの削除に失敗しました")
