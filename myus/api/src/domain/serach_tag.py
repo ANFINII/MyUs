@@ -31,3 +31,4 @@ class SearchTagDomain:
 
         [set_attr(obj, key, value) for key, value in kwargs.items()]
         obj.save(update_fields=list(kwargs.keys()))
+        return

@@ -80,6 +80,7 @@ class FollowDomain:
 
         [set_attr(obj, key, value) for key, value in kwargs.items()]
         obj.save(update_fields=list(kwargs.keys()))
+        return
 
     @classmethod
     def count(cls, filter: FilterOption) -> int:
