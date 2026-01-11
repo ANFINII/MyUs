@@ -29,26 +29,10 @@ class Environment:
     mysql_port: int
     mysql_user: str
     mysql_password: str
-    mysql_root_password: str
-    mysql_conn_max_age: int
-    database_url: str
 
     # Redis
     redis_host: str
     redis_port: int
-    redis_db: int
-    redis_password: str
-    redis_url: str
-
-    # AWS
-    aws_access_key_id: str
-    aws_secret_access_key: str
-    aws_storage_bucket_name: str
-    aws_s3_custom_domain: str
-    aws_s3_region_name: str
-    aws_region_log: str
-    aws_ses_access_key_id: str
-    aws_ses_secret_access_key: str
 
     # Email
     email_host: str
@@ -59,9 +43,6 @@ class Environment:
     # Stripe
     stripe_secret_key: str
     stripe_public_key: str
-    stripe_webhook_secret: str
-    stripe_cli: str
-    stripe_live_mode: bool
 
 
 def load_env(env_path: Path) -> None:
