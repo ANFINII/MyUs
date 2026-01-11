@@ -14,20 +14,16 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 # See https://docs.djangoproject.com/ja/5.2/howto/deployment/checklist/
 
 import os
-import environ
 from datetime import timedelta
+from config.env import BASE_DIR, env
 
-
-BASE_DIR = environ.Path(__file__) - 3
-env = environ.Env()
-env.read_env(os.path.join(BASE_DIR, "envs/django.env"))
 
 # SECURITY WARNING: don"t run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = env.debug
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+SECRET_KEY = env.secret_key
+ALLOWED_HOSTS = env.allowed_hosts
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -39,12 +35,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # MySQL
 DATABASES = {
     "default": {
-        "ENGINE": env("MYSQL_ENGINE"),
-        "NAME": env("MYSQL_DATABASE"),
-        "HOST": env("MYSQL_HOST"),
-        "PORT": env("MYSQL_PORT"),
-        "USER": env("MYSQL_USER"),
-        "PASSWORD": env("MYSQL_PASSWORD"),
+        "ENGINE": env.mysql_engine,
+        "NAME": env.mysql_database,
+        "HOST": env.mysql_host,
+        "PORT": env.mysql_port,
+        "USER": env.mysql_user,
+        "PASSWORD": env.mysql_password,
     }
 }
 
@@ -122,7 +118,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(env("REDIS_HOST"), env("REDIS_PORT"))],
+            "hosts": [(env.redis_host, env.redis_port)],
         },
     },
 }
@@ -136,8 +132,8 @@ AUTHENTICATION_BACKENDS = ["api.backends.MyBackend"]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # CORS
-CSRF_TRUSTED_ORIGINS = (env("CSRF_TRUSTED_ORIGINS").split(","))
-CORS_ALLOWED_ORIGINS = (env("CORS_ALLOWED_ORIGINS").split(","))
+CSRF_TRUSTED_ORIGINS = env.csrf_trusted_origins
+CORS_ALLOWED_ORIGINS = env.cors_allowed_origins
 CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
 
 CORS_ALLOW_HEADERS = (
@@ -168,9 +164,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"),]
-DOMAIN_URL = env("DOMAIN_URL")
-ENCRYPT_KEY = env("ENCRYPT_KEY")
-ENCRYPT_IV = env("ENCRYPT_IV")
+DOMAIN_URL = env.domain_url
+ENCRYPT_KEY = env.encrypt_key
+ENCRYPT_IV = env.encrypt_iv
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -186,14 +182,14 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024 * 1024  # 5GB (POSTデータの上
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240  # フォームフィールドの最大数
 
 # Stripe API keys
-STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
-STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY")
+STRIPE_SECRET_KEY = env.stripe_secret_key
+STRIPE_PUBLIC_KEY = env.stripe_public_key
 
 # Email
-EMAIL_HOST = env("EMAIL_HOST")
-EMAIL_PORT = env("EMAIL_PORT")
-EMAIL_HOST_USER = env("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_HOST = env.email_host
+EMAIL_PORT = env.email_port
+EMAIL_HOST_USER = env.email_host_user
+EMAIL_HOST_PASSWORD = env.email_host_password
 EMAIL_USE_TLS = True
 
 # QUILL
