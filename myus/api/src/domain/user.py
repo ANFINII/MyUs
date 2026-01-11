@@ -79,6 +79,7 @@ class UserDomain:
 
         [set_attr(obj.notification, key, value) for key, value in kwargs.items()]
         obj.notification.save(update_fields=list(kwargs.keys()))
+        return
 
     @classmethod
     def media_like(cls, user: User, obj: MediaModel) -> bool:
