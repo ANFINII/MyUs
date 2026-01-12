@@ -75,7 +75,8 @@ def get_recommend(limit: int, search: str) -> HomeData:
 
 
 def get_videos(limit: int, search: str, id: int | None = None) -> list[VideoData]:
-    objs = VideoDomain.bulk_get(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    ids = VideoDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    objs = VideoDomain.bulk_get(ids=ids)
 
     data = [VideoData(
         ulid=obj.ulid,
@@ -97,7 +98,8 @@ def get_videos(limit: int, search: str, id: int | None = None) -> list[VideoData
 
 
 def get_musics(limit: int, search: str, id: int | None = None) -> list[MusicData]:
-    objs = MusicDomain.bulk_get(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
+    ids = MusicDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    objs = MusicDomain.bulk_get(ids=ids)
 
     data = [MusicData(
         ulid=obj.ulid,
@@ -119,7 +121,8 @@ def get_musics(limit: int, search: str, id: int | None = None) -> list[MusicData
 
 
 def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData]:
-    objs = ComicDomain.bulk_get(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
+    ids = ComicDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    objs = ComicDomain.bulk_get(ids=ids)
 
     data = [ComicData(
         ulid=obj.ulid,
@@ -139,7 +142,8 @@ def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData
 
 
 def get_pictures(limit: int, search: str, id: int | None = None) -> list[PictureData]:
-    objs = PictureDomain.bulk_get(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
+    ids = PictureDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    objs = PictureDomain.bulk_get(ids=ids)
 
     data = [PictureData(
         ulid=obj.ulid,
@@ -159,7 +163,8 @@ def get_pictures(limit: int, search: str, id: int | None = None) -> list[Picture
 
 
 def get_blogs(limit: int, search: str, id: int | None = None) -> list[BlogData]:
-    objs = BlogDomain.bulk_get(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
+    ids = BlogDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    objs = BlogDomain.bulk_get(ids=ids)
 
     data = [BlogData(
         ulid=obj.ulid,
@@ -179,7 +184,8 @@ def get_blogs(limit: int, search: str, id: int | None = None) -> list[BlogData]:
 
 
 def get_chats(limit: int, search: str, id: int | None = None) -> list[ChatData]:
-    objs = ChatDomain.bulk_get(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
+    ids = ChatDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    objs = ChatDomain.bulk_get(ids=ids)
 
     data = [ChatData(
         ulid=obj.ulid,
@@ -200,7 +206,9 @@ def get_chats(limit: int, search: str, id: int | None = None) -> list[ChatData]:
 
 
 def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> VideoDetailData | None:
-    obj = VideoDomain.get(ulid=ulid, publish=publish)
+    ids = VideoDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    objs = VideoDomain.bulk_get(ids=ids)
+    obj = objs[0] if objs else None
     if obj is None:
         return None
 
@@ -232,7 +240,9 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
 
 
 def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> MusicDetailData | None:
-    obj = MusicDomain.get(ulid=ulid, publish=publish)
+    ids = MusicDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    objs = MusicDomain.bulk_get(ids=ids)
+    obj = objs[0] if objs else None
     if obj is None:
         return None
 
@@ -264,7 +274,9 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
 
 
 def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> ComicDetailData | None:
-    obj = ComicDomain.get(ulid=ulid, publish=publish)
+    ids = ComicDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    objs = ComicDomain.bulk_get(ids=ids)
+    obj = objs[0] if objs else None
     if obj is None:
         return None
 
@@ -294,7 +306,9 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
 
 
 def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> BlogDetailData | None:
-    obj = BlogDomain.get(ulid=ulid, publish=publish)
+    ids = BlogDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    objs = BlogDomain.bulk_get(ids=ids)
+    obj = objs[0] if objs else None
     if obj is None:
         return None
 
@@ -325,7 +339,9 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
 
 
 def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) -> PictureDetailData | None:
-    obj = PictureDomain.get(ulid=ulid, publish=publish)
+    ids = PictureDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    objs = PictureDomain.bulk_get(ids=ids)
+    obj = objs[0] if objs else None
     if obj is None:
         return None
 
@@ -354,7 +370,9 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
     return data
 
 def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> ChatDetailData | None:
-    obj = ChatDomain.get(ulid=ulid, publish=publish)
+    ids = ChatDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    objs = ChatDomain.bulk_get(ids=ids)
+    obj = objs[0] if objs else None
     if obj is None:
         return None
 
