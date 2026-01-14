@@ -1,5 +1,5 @@
 from api.db.models.user import User
-from api.src.domain.follow import FollowDomain
+from api.src.domain.follow import FilterOption, FollowDomain, SortOption
 from api.src.types.data.user import AuthorData, MediaUserData
 from api.src.types.data.notification import NotificationUserData
 from api.src.types.union.media import MediaModelType
@@ -17,7 +17,10 @@ def get_author(author: User) -> AuthorData:
 
 
 def get_media_user(obj: MediaModelType, user: User | None) -> MediaUserData:
-    follow = FollowDomain.get(user.id, obj.author.id) if user else None
+    follow = None
+    if user:
+        ids = FollowDomain.get_ids(FilterOption(follower_id=user.id, following_id=obj.author.id), SortOption())
+        follow = FollowDomain.bulk_get(ids)[0] if ids else None
     data = MediaUserData(
         is_like=obj.like.filter(id=user.id).exists() if user else False,
         is_follow=follow.is_follow if follow else False,
