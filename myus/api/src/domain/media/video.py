@@ -48,7 +48,7 @@ class VideoDomain:
         if not ids:
             return []
 
-        objs = list(cls.queryset().filter(id__in=ids))
+        objs = cls.queryset().filter(id__in=ids)
         return sort_ids(objs, ids)
 
     @classmethod

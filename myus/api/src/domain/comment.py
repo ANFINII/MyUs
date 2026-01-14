@@ -4,12 +4,21 @@ from django.db.models import BooleanField, Count, Exists, OuterRef, Prefetch, Q,
 from django.db.models.expressions import BaseExpression
 from django.utils import timezone
 from api.db.models.comment import Comment
+from api.src.domain.index import sort_ids
 from api.utils.enum.index import CommentTypeNo
 from api.utils.functions.index import set_attr
 
 
 class SortType(Enum):
     CREATED = "created"
+
+
+@dataclass(frozen=True, slots=True)
+class FilterOption:
+    ulid: str = ""
+    type_no: CommentTypeNo | None = None
+    object_id: int = 0
+    user_id: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -25,14 +34,28 @@ class CommentDomain:
         return qs.select_related("author", "parent").prefetch_related("like")
 
     @classmethod
-    def get(cls, ulid: str) -> Comment | None:
-        return cls.queryset().filter(ulid=ulid).first()
+    def get_ids(cls, filter: FilterOption, sort: SortOption) -> list[int]:
+        q_list: list[Q] = []
+        if filter.ulid:
+            q_list.append(Q(ulid=filter.ulid))
+        if filter.type_no:
+            q_list.append(Q(type_no=filter.type_no))
+        if filter.object_id:
+            q_list.append(Q(object_id=filter.object_id))
+
+        field_name = sort.sort_type.value
+        order_by_key = field_name if sort.is_asc else f"-{field_name}"
+
+        qs = Comment.objects.filter(parent__isnull=True, deleted=False, *q_list).order_by(order_by_key)
+        return list(qs.values_list("id", flat=True))
 
     @classmethod
-    def bulk_get(cls, type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[Comment]:
-        filter_obj = dict(type_no=type_no, object_id=object_id)
+    def bulk_get(cls, ids: list[int], user_id: int | None = None) -> list[Comment]:
+        if not ids:
+            return []
+
         field_name = SortType.CREATED.value
-        order_by_key = field_name if SortOption().is_asc else f"-{field_name}"
+        order_by_key = f"-{field_name}"
 
         is_comment_like: BaseExpression
         if user_id is None:
@@ -41,7 +64,7 @@ class CommentDomain:
             subquery = Comment.objects.filter(pk=OuterRef("pk"), like__id=user_id)
             is_comment_like = Exists(subquery)
 
-        queryset = (
+        reply_qs = (
             cls.queryset()
             .filter(deleted=False)
             .annotate(is_comment_like=is_comment_like)
@@ -50,13 +73,12 @@ class CommentDomain:
 
         objs = (
             cls.queryset()
-            .filter(parent__isnull=True, deleted=False, **filter_obj)
+            .filter(id__in=ids)
             .annotate(is_comment_like=is_comment_like)
-            .prefetch_related(Prefetch("reply", queryset=queryset))
-            .order_by(order_by_key)
+            .prefetch_related(Prefetch("reply", queryset=reply_qs))
         )
 
-        return list(objs)
+        return sort_ids(objs, ids)
 
     @classmethod
     def create(cls, **kwargs) -> Comment:
