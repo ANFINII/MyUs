@@ -75,7 +75,7 @@ def get_recommend(limit: int, search: str) -> HomeData:
 
 
 def get_videos(limit: int, search: str, id: int | None = None) -> list[VideoData]:
-    ids = VideoDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    ids = VideoDomain.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = VideoDomain.bulk_get(ids=ids)
 
     data = [VideoData(
@@ -98,7 +98,7 @@ def get_videos(limit: int, search: str, id: int | None = None) -> list[VideoData
 
 
 def get_musics(limit: int, search: str, id: int | None = None) -> list[MusicData]:
-    ids = MusicDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    ids = MusicDomain.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = MusicDomain.bulk_get(ids=ids)
 
     data = [MusicData(
@@ -121,7 +121,7 @@ def get_musics(limit: int, search: str, id: int | None = None) -> list[MusicData
 
 
 def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData]:
-    ids = ComicDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    ids = ComicDomain.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = ComicDomain.bulk_get(ids=ids)
 
     data = [ComicData(
@@ -142,7 +142,7 @@ def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData
 
 
 def get_pictures(limit: int, search: str, id: int | None = None) -> list[PictureData]:
-    ids = PictureDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    ids = PictureDomain.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = PictureDomain.bulk_get(ids=ids)
 
     data = [PictureData(
@@ -163,7 +163,7 @@ def get_pictures(limit: int, search: str, id: int | None = None) -> list[Picture
 
 
 def get_blogs(limit: int, search: str, id: int | None = None) -> list[BlogData]:
-    ids = BlogDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    ids = BlogDomain.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = BlogDomain.bulk_get(ids=ids)
 
     data = [BlogData(
@@ -184,7 +184,7 @@ def get_blogs(limit: int, search: str, id: int | None = None) -> list[BlogData]:
 
 
 def get_chats(limit: int, search: str, id: int | None = None) -> list[ChatData]:
-    ids = ChatDomain.get_ids(filter=FilterOption(search=search), exclude=ExcludeOption(id=id), sort=SortOption(), limit=limit)
+    ids = ChatDomain.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = ChatDomain.bulk_get(ids=ids)
 
     data = [ChatData(
@@ -206,7 +206,7 @@ def get_chats(limit: int, search: str, id: int | None = None) -> list[ChatData]:
 
 
 def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> VideoDetailData | None:
-    ids = VideoDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    ids = VideoDomain.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     objs = VideoDomain.bulk_get(ids=ids)
     obj = objs[0] if objs else None
     if obj is None:
@@ -240,7 +240,7 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
 
 
 def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> MusicDetailData | None:
-    ids = MusicDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    ids = MusicDomain.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     objs = MusicDomain.bulk_get(ids=ids)
     obj = objs[0] if objs else None
     if obj is None:
@@ -274,7 +274,7 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
 
 
 def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> ComicDetailData | None:
-    ids = ComicDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    ids = ComicDomain.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     objs = ComicDomain.bulk_get(ids=ids)
     obj = objs[0] if objs else None
     if obj is None:
@@ -306,7 +306,7 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
 
 
 def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> BlogDetailData | None:
-    ids = BlogDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    ids = BlogDomain.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     objs = BlogDomain.bulk_get(ids=ids)
     obj = objs[0] if objs else None
     if obj is None:
@@ -339,7 +339,7 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
 
 
 def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) -> PictureDetailData | None:
-    ids = PictureDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    ids = PictureDomain.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     objs = PictureDomain.bulk_get(ids=ids)
     obj = objs[0] if objs else None
     if obj is None:
@@ -370,7 +370,7 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
     return data
 
 def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> ChatDetailData | None:
-    ids = ChatDomain.get_ids(filter=FilterOption(ulid=ulid, publish=publish), exclude=ExcludeOption(), sort=SortOption())
+    ids = ChatDomain.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     objs = ChatDomain.bulk_get(ids=ids)
     obj = objs[0] if objs else None
     if obj is None:
