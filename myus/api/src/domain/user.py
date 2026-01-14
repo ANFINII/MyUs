@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum
+from django.db.models import Q
 from api.db.models.comment import Comment
 from api.db.models.user import User
+from api.src.domain.index import sort_ids
 from api.utils.functions.index import set_attr
 from api.utils.functions.media import MediaModel
 
@@ -9,6 +11,12 @@ from api.utils.functions.media import MediaModel
 class SortType(Enum):
     CREATED = "date_joined"
     NICKNAME = "nickname"
+
+
+@dataclass(frozen=True, slots=True)
+class FilterOption:
+    id: int = 0
+    ulid: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -23,21 +31,34 @@ class UserDomain:
         return User.objects.select_related("profile", "mypage", "notification")
 
     @classmethod
-    def get(cls, id: int | None = None, ulid: str | None = None) -> User | None:
-        if id:
-            obj = cls.queryset().filter(id=id).first()
+    def get_ids(cls, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+        q_list: list[Q] = []
+        if filter.id:
+            q_list.append(Q(id=filter.id))
+        if filter.ulid:
+            q_list.append(Q(ulid=filter.ulid))
 
-        if ulid:
-            obj = cls.queryset().filter(ulid=ulid).first()
+        field_name = sort.sort_type.value
+        order_by_key = field_name if sort.is_asc else f"-{field_name}"
 
-        if not obj:
-            return None
+        qs = User.objects.filter(*q_list).order_by(order_by_key)
 
-        return obj
+        if limit:
+            qs = qs[:limit]
+
+        return list(qs.values_list("id", flat=True))
+
+    @classmethod
+    def bulk_get(cls, ids: list[int]) -> list[User]:
+        if not ids:
+            return []
+
+        objs = cls.queryset().filter(id__in=ids)
+        return sort_ids(objs, ids)
 
     @classmethod
     def create(cls, **kwargs) -> User:
-       return User.objects.create_user(**kwargs)
+        return User.objects.create_user(**kwargs)
 
     @classmethod
     def update(cls, obj: User, **kwargs) -> None:

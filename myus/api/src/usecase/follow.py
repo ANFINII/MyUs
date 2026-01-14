@@ -1,14 +1,15 @@
 from dataclasses import asdict
 from django.db import transaction
 from api.db.models.user import User
-from api.src.domain.follow import FilterOption, FollowDomain
-from api.src.domain.user import UserDomain
+from api.src.domain.follow import FilterOption, FollowDomain, SortOption
+from api.src.domain.user import FilterOption as UserFilterOption, SortOption as UserSortOption, UserDomain
 from api.src.types.data.follow import FollowOutData, FollowUserData, FollowCreateData
 from api.utils.functions.index import create_url
 
 
 def get_follows(user_id: int, search: str | None, limit: int) -> list[FollowUserData]:
-    objs = FollowDomain.get_follows(user_id, search, limit)
+    ids = FollowDomain.get_ids(FilterOption(follower_id=user_id, search=search or ""), SortOption(), limit)
+    objs = FollowDomain.bulk_get(ids)
     return [
         FollowUserData(
             avatar=create_url(obj.following.avatar.url),
@@ -21,7 +22,8 @@ def get_follows(user_id: int, search: str | None, limit: int) -> list[FollowUser
 
 
 def get_followers(user_id: int, search: str | None, limit: int) -> list[FollowUserData]:
-    objs = FollowDomain.get_followers(user_id, search, limit)
+    ids = FollowDomain.get_ids(FilterOption(following_id=user_id, search=search or ""), SortOption(), limit)
+    objs = FollowDomain.bulk_get(ids)
     return [
         FollowUserData(
             avatar=create_url(obj.follower.avatar.url),
@@ -34,11 +36,13 @@ def get_followers(user_id: int, search: str | None, limit: int) -> list[FollowUs
 
 
 def upsert_follow(follower: User, ulid: str, is_follow: bool) -> FollowOutData | None:
-    following = UserDomain.get(ulid=ulid)
-    if not following:
+    user_ids = UserDomain.get_ids(UserFilterOption(ulid=ulid), UserSortOption())
+    if len(user_ids) == 0:
         return None
 
-    follow = FollowDomain.get(follower.id, following.id)
+    following = UserDomain.bulk_get(user_ids)[0]
+    follow_ids = FollowDomain.get_ids(FilterOption(follower_id=follower.id, following_id=following.id), SortOption())
+    follow = FollowDomain.bulk_get(follow_ids)[0] if follow_ids else None
     follow_data = FollowCreateData(follower_id=follower.id, following_id=following.id, is_follow=is_follow)
     with transaction.atomic():
         if not follow:

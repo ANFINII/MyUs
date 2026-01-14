@@ -48,7 +48,7 @@ class BlogDomain:
         if not ids:
             return []
 
-        objs = list(cls.queryset().filter(id__in=ids))
+        objs = cls.queryset().filter(id__in=ids)
         return sort_ids(objs, ids)
 
     @classmethod
@@ -63,3 +63,4 @@ class BlogDomain:
         kwargs["updated"] = timezone.now()
         [set_attr(obj, key, value) for key, value in kwargs.items()]
         obj.save(update_fields=list(kwargs.keys()))
+        return

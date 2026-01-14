@@ -1,10 +1,11 @@
-from api.src.domain.message import MessageDomain
+from api.src.domain.message import FilterOption, MessageDomain, SortOption
 from api.src.types.data.message import MessageData, MessageReplyData
 from api.utils.functions.user import get_author
 
 
 def get_messages(chat_id: int) -> list[MessageData]:
-    objs = MessageDomain.bulk_get(chat_id, is_parent=True)
+    ids = MessageDomain.get_ids(FilterOption(chat_id=chat_id, is_parent=True), SortOption())
+    objs = MessageDomain.bulk_get(ids)
     data = [
         MessageData(
             ulid=m.ulid,
@@ -18,7 +19,8 @@ def get_messages(chat_id: int) -> list[MessageData]:
 
 
 def get_replys(chat_id: int) -> list[MessageReplyData]:
-    objs = MessageDomain.bulk_get(chat_id, is_parent=False)
+    ids = MessageDomain.get_ids(FilterOption(chat_id=chat_id, is_parent=False), SortOption())
+    objs = MessageDomain.bulk_get(ids)
     data = [
         MessageReplyData(
             ulid=m.ulid,

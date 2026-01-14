@@ -1,8 +1,10 @@
 from dataclasses import asdict
+from api.db.models.comment import Comment
 from api.db.models.user import User
 from api.modules.logger import log
-from api.src.domain.comment import CommentDomain
+from api.src.domain.comment import CommentDomain, FilterOption as CommentFilterOption, SortOption as CommentSortOption
 from api.src.domain.media.blog import BlogDomain
+from api.src.domain.media.index import FilterOption as MediaFilterOption, SortOption as MediaSortOption, ExcludeOption
 from api.src.types.data.comment import CommentData, ReplyData, CommentCreateData
 from api.src.types.schema.comment import CommentCreateIn
 from api.utils.enum.index import CommentTypeNo
@@ -10,7 +12,9 @@ from api.utils.functions.user import get_author
 
 
 def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[CommentData]:
-    objs = CommentDomain.bulk_get(type_no, object_id, user_id)
+    filter_option = CommentFilterOption(type_no=type_no, object_id=object_id, user_id=user_id)
+    ids = CommentDomain.get_ids(filter_option, CommentSortOption())
+    objs = CommentDomain.bulk_get(ids, user_id)
     data = [
         CommentData(
             ulid=c.ulid,
@@ -38,12 +42,21 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
 
 
 def create_comment(user: User, input: CommentCreateIn) -> CommentData | None:
-    media = BlogDomain.get(ulid=input.object_ulid, publish=True)
-    if not media:
+    media_ids = BlogDomain.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption())
+    if len(media_ids) == 0:
+        log.warning("メディアが見つかりませんでした")
         return None
 
-    comment = CommentDomain.get(input.parent_ulid) if input.parent_ulid else None
-    parent_id = comment.id if comment else None
+    media = BlogDomain.bulk_get(media_ids)[0]
+    parent_id = None
+    if input.parent_ulid:
+        ids = CommentDomain.get_ids(CommentFilterOption(ulid=input.parent_ulid), CommentSortOption())
+        if len(ids) == 0:
+            log.warning("親コメントが見つかりませんでした")
+            return None
+
+        comment = CommentDomain.bulk_get(ids)[0]
+        parent_id = comment.id
 
     comment_create_data = CommentCreateData(
         author_id=user.id,
@@ -70,20 +83,23 @@ def create_comment(user: User, input: CommentCreateIn) -> CommentData | None:
 
 
 def update_comment(comment_ulid: str, text: str) -> None:
-    comment = CommentDomain.get(comment_ulid)
-    if comment is None:
+    ids = CommentDomain.get_ids(CommentFilterOption(ulid=comment_ulid), CommentSortOption())
+    if len(ids) == 0:
         log.warning("コメントが見つかりませんでした")
         return None
 
+    comment = CommentDomain.bulk_get(ids)[0]
     CommentDomain.update(comment, text=text)
     return None
 
 
 def delete_comment(comment_ulid: str) -> None:
-    comment = CommentDomain.get(comment_ulid)
-    if comment is None:
+    filter_option = CommentFilterOption(ulid=comment_ulid)
+    ids = CommentDomain.get_ids(filter_option, CommentSortOption())
+    if not ids:
         log.warning("コメントが見つかりませんでした")
         return None
 
+    comment = CommentDomain.bulk_get(ids)[0]
     CommentDomain.update(comment, deleted=True)
     return None

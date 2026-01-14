@@ -1,9 +1,10 @@
 import jwt
 from django.conf import settings
 from api.db.models.user import User
-from api.src.domain.comment import CommentDomain
-from api.src.domain.serach_tag import SearchTagDomain
-from api.src.domain.user import UserDomain
+from api.src.domain.comment import CommentDomain, FilterOption as CommentFilterOption, SortOption as CommentSortOption
+from api.src.domain.serach_tag import SearchTagDomain, FilterOption as SearchTagFilterOption, SortOption as SearchTagSortOption
+from api.src.domain.user import FilterOption, SortOption, UserDomain
+from api.src.domain.media.index import FilterOption as MediaFilterOption, SortOption as MediaSortOption, ExcludeOption
 from api.src.types.data.user import LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingProfileIn
@@ -24,8 +25,12 @@ def get_user(request) -> User | None:
         if not user_id:
             return None
 
-        user = UserDomain.get(id=user_id)
-        if user and not user.is_active:
+        user_ids = UserDomain.get_ids(FilterOption(id=user_id), SortOption())
+        if len(user_ids) == 0:
+            return None
+
+        user = UserDomain.bulk_get(user_ids)[0]
+        if not user.is_active:
             return None
         return user
     except jwt.ExpiredSignatureError:
@@ -97,16 +102,18 @@ def signup_check(data: SignupIn) -> str | None:
 
 
 def get_search_tags(author_id: int) -> list[SearchTagData]:
-    objs = SearchTagDomain.bulk_get(author_id)
+    ids = SearchTagDomain.get_ids(SearchTagFilterOption(author_id=author_id), SearchTagSortOption())
+    objs = SearchTagDomain.bulk_get(ids)
     return [SearchTagData(sequence=obj.sequence, name=obj.name) for obj in objs]
 
 
 def like_media(user: User, media_type: MediaType, ulid: str) -> LikeData | None:
     domain = get_media_domain_type(media_type)
-    obj = domain.get(ulid=ulid, publish=True)
-    if not obj:
+    ids = domain.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption())
+    if len(ids) == 0:
         return None
 
+    obj = domain.bulk_get(ids)[0]
     is_like = UserDomain.media_like(user, obj)
     like_count = obj.total_like()
 
@@ -114,10 +121,11 @@ def like_media(user: User, media_type: MediaType, ulid: str) -> LikeData | None:
 
 
 def like_comment(user: User, ulid: str) -> LikeData | None:
-    obj = CommentDomain.get(ulid)
-    if not obj:
+    ids = CommentDomain.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
+    if len(ids) == 0:
         return None
 
+    obj = CommentDomain.bulk_get(ids)[0]
     is_like = UserDomain.comment_like(user, obj)
     like_count = obj.total_like()
 
