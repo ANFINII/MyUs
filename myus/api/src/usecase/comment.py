@@ -12,7 +12,7 @@ from api.utils.functions.user import get_author
 
 
 def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[CommentData]:
-    filter_option = CommentFilterOption(type_no=type_no, object_id=object_id, user_id=user_id)
+    filter_option = CommentFilterOption(type_no=type_no, object_id=object_id, user_id=user_id, is_parent=True)
     ids = CommentDomain.get_ids(filter_option, CommentSortOption())
     objs = CommentDomain.bulk_get(ids, user_id)
     data = [
@@ -26,7 +26,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
             author=get_author(c.author),
             replys=[
                 ReplyData(
-                    id=r.id,
+                    ulid=r.ulid,
                     text=r.text,
                     created=r.created,
                     updated=r.updated,
@@ -96,7 +96,7 @@ def update_comment(comment_ulid: str, text: str) -> None:
 def delete_comment(comment_ulid: str) -> None:
     filter_option = CommentFilterOption(ulid=comment_ulid)
     ids = CommentDomain.get_ids(filter_option, CommentSortOption())
-    if not ids:
+    if len(ids) == 0:
         log.warning("コメントが見つかりませんでした")
         return None
 
