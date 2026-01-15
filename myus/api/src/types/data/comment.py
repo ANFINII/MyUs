@@ -6,7 +6,7 @@ from api.utils.enum.index import CommentTypeNo, CommentType
 
 @dataclass(frozen=True, slots=True)
 class ReplyData:
-    id: int
+    ulid: str
     text: str
     created: datetime
     updated: datetime

@@ -22,7 +22,7 @@ class CommentUpdateIn(BaseModel):
 
 
 class ReplyOut(BaseModel):
-    id: int
+    ulid: str
     text: str
     created: datetime
     updated: datetime

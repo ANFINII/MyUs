@@ -560,7 +560,7 @@ def convert_comments(objs: list[CommentData]) -> list[CommentOut]:
 def convert_replys(objs: list[ReplyData]) -> list[ReplyOut]:
     data = [
         ReplyOut(
-            id=x.id,
+            ulid=x.ulid,
             text=x.text,
             created=x.created,
             updated=x.updated,

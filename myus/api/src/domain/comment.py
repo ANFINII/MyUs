@@ -19,6 +19,7 @@ class FilterOption:
     type_no: CommentTypeNo | None = None
     object_id: int = 0
     user_id: int | None = None
+    is_parent: bool | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -42,11 +43,12 @@ class CommentDomain:
             q_list.append(Q(type_no=filter.type_no))
         if filter.object_id:
             q_list.append(Q(object_id=filter.object_id))
+        if filter.is_parent:
+            q_list.append(Q(parent__isnull=filter.is_parent))
 
         field_name = sort.sort_type.value
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
-
-        qs = Comment.objects.filter(parent__isnull=True, deleted=False, *q_list).order_by(order_by_key)
+        qs = Comment.objects.filter(deleted=False, *q_list).order_by(order_by_key)
         return list(qs.values_list("id", flat=True))
 
     @classmethod

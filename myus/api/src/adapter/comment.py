@@ -39,7 +39,7 @@ class CommentAPI:
                 ),
                 replys=[
                     ReplyOut(
-                        id=r.id,
+                        ulid=r.ulid,
                         text=r.text,
                         created=r.created,
                         updated=r.updated,
