@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import clsx from 'clsx'
 import ExImage from 'components/parts/ExImage'
 import IconPerson from 'components/parts/Icon/Person'
@@ -15,16 +14,12 @@ interface Props {
 export default function Avatar(props: Props): React.JSX.Element {
   const { src, title, size, color = 'white', className } = props
 
-  const [isError, setIsError] = useState<boolean>(false)
-
-  const handleError = () => setIsError(true)
-
   return (
     <>
-      {isError || src === '' ? (
-        <IconPerson size={size} type="circle" className={clsx(style.avatar, color, className)} />
+      {src ? (
+        <ExImage src={src} title={title} size={size} className={clsx(style.avatar, className)} />
       ) : (
-        <ExImage src={src} title={title} size={size} className={clsx(style.avatar, className)} onError={handleError} />
+        <IconPerson size={size} type="circle" className={clsx(style.avatar, color, className)} />
       )}
     </>
   )
