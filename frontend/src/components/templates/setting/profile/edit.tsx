@@ -11,6 +11,7 @@ import { getAge } from 'utils/functions/user'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
+import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'
@@ -34,6 +35,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { toast, handleToast } = useToast()
+  const { updateUser } = useUser()
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
   const [message, setMessage] = useState<string>('')
@@ -77,6 +79,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
     const data = ret.value
     if (!data.error) handleBack()
     if (data.error) setMessage(data.message)
+    await updateUser()
     handleLoading(false)
   }
 
