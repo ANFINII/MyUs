@@ -22,7 +22,7 @@ export default function MediaBaseContent(props: Props) {
         {title}
       </div>
 
-      <VStack gap="2">
+      <VStack gap="2" className={style.content}>
         <div className={clsx(style.font, style.nickname)}>{nickname}</div>
 
         <HStack gap="4">
