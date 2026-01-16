@@ -13,7 +13,7 @@ export default function MediaDetailRight(props: Props): React.JSX.Element {
 
   return (
     <div className={style.media_detail_right}>
-      <div>
+      <div className={style.advertise}>
         <h2>広告表示</h2>
         <article className="article_list">{/* {% include 'parts/advertise_article_auto.html' %} */}</article>
       </div>
