@@ -1,3 +1,81 @@
+.unpublished {
+  font-size: 18px;
+  color: rgb(255, 0, 0);
+}
+
+.media_detail {
+  display: flex;
+
+  h1 {
+    font-size: 18px;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+}
+
+.media_detail_left {
+  flex: 1;
+  min-width: 400px;
+
+  .media_detail_aria_1 {
+    color: rgb(120, 120, 120);
+  }
+
+  .media_detail_aria_2 {
+    display: flex;
+    color: rgb(100, 100, 100);
+  }
+
+  .media_detail_aria_3 {
+    color: rgb(100, 100, 100);
+  }
+
+  /* コンテンツ説明 */
+  .content_detail_aria {
+    height: 104px;
+    overflow-y: scroll;
+
+    &.active {
+      min-height: 104px;
+      height: fit-content;
+    }
+  }
+
+  .content_detail_p1 {
+    font-size: 14px;
+    margin: 10px 0 0 56px;
+    white-space: pre-wrap;
+  }
+
+  .content_detail_p2 {
+    margin: 4px 4px 4px 0;
+
+    button {
+      width: 122px;
+      height: 38px;
+    }
+  }
+}
+
+.media_detail_right {
+  width: 450px;
+  margin-left: 20px;
+}
+
+.like_form_aria {
+  display: inline;
+}
+
+.like_fill {
+  padding: 0;
+  border: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
 .comment_aria {
   height: 500px;
   padding-bottom: 68px;

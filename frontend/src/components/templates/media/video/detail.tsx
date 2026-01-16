@@ -4,10 +4,8 @@ import { VideoDetailOut } from 'types/internal/media/detail'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
-import VStack from 'components/parts/Stack/Vertical'
 import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
-import MediaSideImage from 'components/widgets/Media/Side/Image'
 import VideoJS from 'components/widgets/Video/videojs'
 
 interface QualityLevels {
@@ -87,14 +85,7 @@ export default function VideoDetail(props: Props): React.JSX.Element {
           </div>
         </div>
         <Divide />
-        <div className="media_detail_grid">
-          <MediaDetailCommon media={{ type: 'video', ...other }} handleToast={handleToast} />
-          <VStack gap="4" className="ml_20">
-            {list.map((media) => (
-              <MediaSideImage key={media.ulid} href={`/media/video/${media.ulid}`} src={media.image} media={media} />
-            ))}
-          </VStack>
-        </div>
+        <MediaDetailCommon media={{ type: 'video', ...other }} list={list} handleToast={handleToast} />
       </MediaDetail>
     </Main>
   )
