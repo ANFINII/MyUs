@@ -3,6 +3,11 @@
   margin: 6px;
 }
 
+.link {
+  width: 100%;
+  text-decoration: none;
+}
+
 .media_title {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -21,23 +26,18 @@
   width: 100%;
   white-space: nowrap;
 
+  .font {
+    height: 16px;
+    font-size: 13px;
+    color: rgb(40, 70, 150);
+  }
+
   .nickname {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
     margin: 0;
     overflow: hidden;
-  }
-
-  .link {
-    width: 100%;
-    text-decoration: none;
-  }
-
-  .font {
-    height: 16px;
-    font-size: 13px;
-    color: rgb(40, 70, 150);
   }
 
   .margin {
