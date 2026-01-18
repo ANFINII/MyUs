@@ -3,7 +3,7 @@ from django_quill.fields import QuillField
 from django_ulid.models import ulid
 from api.db.models.master import Category, HashTag
 from api.db.models.base import MediaModel
-from api.db.models.user import User
+from api.db.models.user import User, Channel
 from api.utils.functions.file import image_upload, video_upload, musics_upload, comic_upload
 
 
@@ -12,6 +12,7 @@ class Video(models.Model, MediaModel):
     """Video"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -52,6 +53,7 @@ class Music(models.Model, MediaModel):
     """Music"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="musics")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -86,6 +88,7 @@ class Comic(models.Model, MediaModel):
     """Comic"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="comics")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -132,6 +135,7 @@ class Picture(models.Model, MediaModel):
     """Picture"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="pictures")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -164,6 +168,7 @@ class Blog(models.Model, MediaModel):
     """Blog"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="blogs")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -198,6 +203,7 @@ class Chat(models.Model):
     """Chat"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="chats")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
