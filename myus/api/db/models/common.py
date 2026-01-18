@@ -59,4 +59,3 @@ class Advertise(models.Model):
     class Meta:
         db_table = "advertise"
         verbose_name_plural = "12 広告設定"
-        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]

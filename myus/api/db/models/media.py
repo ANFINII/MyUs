@@ -46,7 +46,6 @@ class Video(models.Model, MediaModel):
     class Meta:
         db_table = "video"
         verbose_name_plural = "01 Video"
-        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
 
 
 # Music
@@ -82,7 +81,6 @@ class Music(models.Model, MediaModel):
     class Meta:
         db_table = "music"
         verbose_name_plural = "02 Music"
-        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
 
 
 # Comic
@@ -116,7 +114,6 @@ class Comic(models.Model, MediaModel):
     class Meta:
         db_table = "comic"
         verbose_name_plural = "03 Comic"
-        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
 
 
 class ComicPage(models.Model):
@@ -164,7 +161,6 @@ class Picture(models.Model, MediaModel):
     class Meta:
         db_table = "picture"
         verbose_name_plural = "04 Picture"
-        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
 
 
 # Blog
@@ -200,7 +196,6 @@ class Blog(models.Model, MediaModel):
     class Meta:
         db_table = "blog"
         verbose_name_plural = "05 Blog"
-        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
 
 
 # Chat
@@ -242,4 +237,3 @@ class Chat(models.Model):
     class Meta:
         db_table = "chat"
         verbose_name_plural = "06 Chat"
-        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]

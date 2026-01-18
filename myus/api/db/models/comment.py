@@ -33,7 +33,6 @@ class Comment(models.Model):
         db_table = "comment"
         verbose_name_plural = "13 コメント"
         indexes = [
-            models.Index(fields=["ulid"], name="ulid_idx"),
             models.Index(fields=["parent"], name="comment_parent_idx"),
             models.Index(fields=["type_no", "object_id"], name="comment_type_object_idx"),
         ]

@@ -133,7 +133,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_table = "user"
         verbose_name_plural = "001 User"
         indexes = [
-            models.Index(fields=["ulid"], name="ulid_idx"),
             models.Index(fields=["email"], name="email_idx"),
             models.Index(fields=["username"], name="username_idx"),
         ]
@@ -276,14 +275,9 @@ class Channel(models.Model):
     created     = models.DateTimeField(auto_now_add=True)
     updated     = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         db_table = "channel"
         verbose_name_plural = "001 Channel"
-        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
-
-# @receiver(post_save, sender=User)
-# def create_channel(sender, **kwargs):
-#     """ユーザー作成時にデフォルトチャンネルを作成する"""
-#     if kwargs["created"]:
-#         user = kwargs["instance"]
-#         Channel.objects.create(owner=user, name=f"{user.nickname} Channel", is_default=True)

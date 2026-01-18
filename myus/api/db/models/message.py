@@ -36,7 +36,4 @@ class Message(models.Model):
     class Meta:
         db_table = "message"
         verbose_name_plural = "14 メッセージ"
-        indexes = [
-            models.Index(fields=["ulid"], name="ulid_idx"),
-            models.Index(fields=["parent"], name="message_parent_idx"),
-        ]
+        indexes = [models.Index(fields=["parent"], name="message_parent_idx")]
