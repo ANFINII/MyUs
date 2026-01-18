@@ -9,7 +9,7 @@ from django.utils import timezone
 from django_ulid.models import ulid
 from api.db.models.master import Plan
 from api.utils.enum.index import GenderType
-from api.utils.functions.file import user_image, channel_image
+from api.utils.functions.file import user_image
 
 
 class UserManager(BaseUserManager):
@@ -260,24 +260,3 @@ def create_user_plan(sender, **kwargs):
     """ユーザー作成時に空のuser_planも作成する"""
     if kwargs["created"]:
         UserPlan.objects.get_or_create(user=kwargs["instance"])
-
-
-class Channel(models.Model):
-    """Channel"""
-    avater      = "../static/img/channel_icon.png"
-    id          = models.BigAutoField(primary_key=True)
-    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    owner       = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
-    avatar      = models.ImageField(upload_to=channel_image, default=avater, blank=True)
-    name        = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    is_default  = models.BooleanField(default=False)
-    created     = models.DateTimeField(auto_now_add=True)
-    updated     = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        db_table = "channel"
-        verbose_name_plural = "001 Channel"
