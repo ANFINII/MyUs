@@ -3,7 +3,7 @@ from django_quill.fields import QuillField
 from django_ulid.models import ulid
 from api.db.models.master import Category, HashTag
 from api.db.models.base import MediaModel
-from api.db.models.user import User
+from api.db.models.user import User, Channel
 from api.utils.functions.file import image_upload, video_upload, musics_upload, comic_upload
 
 
@@ -12,6 +12,7 @@ class Video(models.Model, MediaModel):
     """Video"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -45,6 +46,7 @@ class Video(models.Model, MediaModel):
     class Meta:
         db_table = "video"
         verbose_name_plural = "01 Video"
+        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
 
 
 # Music
@@ -52,6 +54,7 @@ class Music(models.Model, MediaModel):
     """Music"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="musics")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -79,6 +82,7 @@ class Music(models.Model, MediaModel):
     class Meta:
         db_table = "music"
         verbose_name_plural = "02 Music"
+        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
 
 
 # Comic
@@ -86,6 +90,7 @@ class Comic(models.Model, MediaModel):
     """Comic"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="comics")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -111,6 +116,7 @@ class Comic(models.Model, MediaModel):
     class Meta:
         db_table = "comic"
         verbose_name_plural = "03 Comic"
+        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
 
 
 class ComicPage(models.Model):
@@ -132,6 +138,7 @@ class Picture(models.Model, MediaModel):
     """Picture"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="pictures")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -157,6 +164,7 @@ class Picture(models.Model, MediaModel):
     class Meta:
         db_table = "picture"
         verbose_name_plural = "04 Picture"
+        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
 
 
 # Blog
@@ -164,6 +172,7 @@ class Blog(models.Model, MediaModel):
     """Blog"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="blogs")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -191,6 +200,7 @@ class Blog(models.Model, MediaModel):
     class Meta:
         db_table = "blog"
         verbose_name_plural = "05 Blog"
+        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
 
 
 # Chat
@@ -198,6 +208,7 @@ class Chat(models.Model):
     """Chat"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="chats")
     author   = models.ForeignKey(User, on_delete=models.CASCADE)
     title    = models.CharField(max_length=100)
     content  = models.TextField()
@@ -231,3 +242,4 @@ class Chat(models.Model):
     class Meta:
         db_table = "chat"
         verbose_name_plural = "06 Chat"
+        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]

@@ -9,7 +9,7 @@ from django.utils import timezone
 from django_ulid.models import ulid
 from api.db.models.master import Plan
 from api.utils.enum.index import GenderType
-from api.utils.functions.file import user_image
+from api.utils.functions.file import user_image, channel_image
 
 
 class UserManager(BaseUserManager):
@@ -133,9 +133,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_table = "user"
         verbose_name_plural = "001 User"
         indexes = [
+            models.Index(fields=["ulid"], name="ulid_idx"),
             models.Index(fields=["email"], name="email_idx"),
             models.Index(fields=["username"], name="username_idx"),
-            models.Index(fields=["nickname"], name="nickname_idx"),
         ]
 
 
@@ -163,7 +163,7 @@ class Profile(models.Model):
 
     class Meta:
         db_table = "user_profile"
-        verbose_name_plural = "001 profile"
+        verbose_name_plural = "001 Profile"
 
 @receiver(post_save, sender=User)
 def create_profile(sender, **kwargs):
@@ -261,3 +261,29 @@ def create_user_plan(sender, **kwargs):
     """ユーザー作成時に空のuser_planも作成する"""
     if kwargs["created"]:
         UserPlan.objects.get_or_create(user=kwargs["instance"])
+
+
+class Channel(models.Model):
+    """Channel"""
+    avater      = "../static/img/channel_icon.png"
+    id          = models.BigAutoField(primary_key=True)
+    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    owner       = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
+    avatar      = models.ImageField(upload_to=channel_image, default=avater, blank=True)
+    name        = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    is_default  = models.BooleanField(default=False)
+    created     = models.DateTimeField(auto_now_add=True)
+    updated     = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "channel"
+        verbose_name_plural = "001 Channel"
+        indexes = [models.Index(fields=["ulid"], name="ulid_idx")]
+
+# @receiver(post_save, sender=User)
+# def create_channel(sender, **kwargs):
+#     """ユーザー作成時にデフォルトチャンネルを作成する"""
+#     if kwargs["created"]:
+#         user = kwargs["instance"]
+#         Channel.objects.create(owner=user, name=f"{user.nickname} Channel", is_default=True)
