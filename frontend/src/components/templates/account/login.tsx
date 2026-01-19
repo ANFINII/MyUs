@@ -33,6 +33,7 @@ export default function Login(): React.JSX.Element {
     const request = { username: encrypt(username), password: encrypt(password) }
     handleLoading(true)
     const ret = await postLogin(request)
+    handleLoading(false)
     if (ret.isErr()) return handleToast(FetchError.Error, true)
     const data = ret.value
     if (data) setMessage(data.message)
@@ -40,7 +41,6 @@ export default function Login(): React.JSX.Element {
       await updateUser()
       router.push('/setting/profile')
     }
-    handleLoading(false)
   }
 
   return (
