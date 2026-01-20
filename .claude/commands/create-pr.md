@@ -1,0 +1,50 @@
+# PR作成
+
+現在のブランチから `main` ブランチへのPull Requestを作成します。
+
+## 実行手順
+
+### 1. 事前チェック
+以下を並列で実行して状態を確認：
+- `git status` - 未コミットの変更がないか確認
+- `git log main..HEAD --oneline` - mainからのコミット一覧
+- `git diff main...HEAD --stat` - 変更ファイルの統計
+- `git branch --show-current` - 現在のブランチ名
+
+**中止条件：**
+- mainからのコミットが0件の場合 → 「コミットがありません」と伝えて終了
+- 未コミットの変更がある場合 → 警告を表示し、続行するか確認
+
+### 2. 変更内容の分析
+`git diff main...HEAD` で詳細な差分を取得し、以下を把握：
+- どのファイルが変更されたか
+- 何が追加・削除・修正されたか
+- 変更の目的・意図
+
+### 3. PR作成
+`gh pr create` で以下の形式のPRを作成：
+
+```bash
+gh pr create --title "タイトル" --body "$(cat <<'EOF'
+## Summary
+- 変更の概要を簡潔に箇条書き（1-3項目）
+
+## 変更内容
+具体的な変更点を記載。必要に応じてセクション分け：
+- ファイル名や機能ごとにグループ化
+- コードの変更意図を説明
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+EOF
+)" --base main
+```
+
+### 4. 結果報告
+- 成功時：PRのURLを表示
+- 失敗時：エラー内容と対処法を案内
+
+## gh未インストール時
+```bash
+brew install gh
+gh auth login
+```
