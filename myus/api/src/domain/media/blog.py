@@ -10,7 +10,7 @@ from api.utils.functions.index import set_attr
 class BlogDomain:
     @classmethod
     def queryset(cls):
-        return Blog.objects.select_related("author").prefetch_related("like")
+        return Blog.objects.select_related("channel", "channel__owner").prefetch_related("like")
 
     @classmethod
     def get_ids(cls, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
@@ -45,7 +45,7 @@ class BlogDomain:
 
     @classmethod
     def bulk_get(cls, ids: list[int]) -> list[Blog]:
-        if not ids:
+        if len(ids) == 0:
             return []
 
         objs = cls.queryset().filter(id__in=ids)

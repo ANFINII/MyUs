@@ -40,7 +40,6 @@ class UserDomain:
 
         field_name = sort.sort_type.value
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
-
         qs = User.objects.filter(*q_list).order_by(order_by_key)
 
         if limit:
@@ -50,7 +49,7 @@ class UserDomain:
 
     @classmethod
     def bulk_get(cls, ids: list[int]) -> list[User]:
-        if not ids:
+        if len(ids) == 0:
             return []
 
         objs = cls.queryset().filter(id__in=ids)

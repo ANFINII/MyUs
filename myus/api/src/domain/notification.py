@@ -50,7 +50,7 @@ class NotificationDomain:
 
     @classmethod
     def bulk_get(cls, ids: list[int]) -> list[Notification]:
-        if not ids:
+        if len(ids) == 0:
             return []
 
         objs = cls.queryset().filter(id__in=ids)

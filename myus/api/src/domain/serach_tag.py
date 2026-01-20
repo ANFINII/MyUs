@@ -39,7 +39,7 @@ class SearchTagDomain:
 
     @classmethod
     def bulk_get(cls, ids: list[int]) -> list[SearchTag]:
-        if not ids:
+        if len(ids) == 0:
             return []
 
         objs = list(SearchTag.objects.filter(id__in=ids))

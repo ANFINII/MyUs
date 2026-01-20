@@ -74,7 +74,7 @@ class FollowDomain:
 
     @classmethod
     def bulk_get(cls, ids: list[int]) -> list[Follow]:
-        if not ids:
+        if len(ids) == 0:
             return []
 
         objs = cls.queryset().filter(id__in=ids)
