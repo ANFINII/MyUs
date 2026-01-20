@@ -40,11 +40,9 @@ class ChannelDomain:
         if filter.is_default is not None:
             q_list.append(Q(is_default=filter.is_default))
 
-        qs = Channel.objects.filter(*q_list)
-
         field_name = sort.sort_type.value
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
-        qs = qs.order_by(order_by_key)
+        qs = Channel.objects.filter(*q_list).order_by(order_by_key)
 
         if limit:
             qs = qs[:limit]
@@ -53,7 +51,7 @@ class ChannelDomain:
 
     @classmethod
     def bulk_get(cls, ids: list[int]) -> list[Channel]:
-        if not ids:
+        if len(ids) == 0:
             return []
 
         objs = cls.queryset().filter(id__in=ids)
