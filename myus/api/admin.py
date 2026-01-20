@@ -9,6 +9,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from api.db.models import User, Profile, MyPage, SearchTag, HashTag, UserNotification
 from api.db.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
 from api.db.models import Video, Music, Comic, Picture, Blog, Chat
+from api.db.models.channel import Channel
 from api.utils.constant import model_media_comment_dict
 
 
@@ -155,85 +156,85 @@ class HashTagAdmin(ImportExportModelAdmin):
 
 @admin.register(Video)
 class VideoAdmin(ImportExportModelAdmin):
-    list_display = ("id", "author", "title", "read", "total_like", "comment_count", "score", "publish", "created", "updated")
-    list_select_related = ("author",)
-    search_fields = ("title", "author__nickname", "created")
-    ordering = ("author", "-created")
+    list_display = ("id", "channel", "title", "read", "total_like", "comment_count", "score", "publish", "created", "updated")
+    list_select_related = ("channel",)
+    search_fields = ("title", "channel__owner__nickname", "created")
+    ordering = ("channel", "-created")
     filter_horizontal = ("hashtag", "like")
     readonly_fields = ("total_like", "comment_count", "created", "updated")
     # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("author", "title", "content", "image", "video", "convert", "hashtag", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "image", "video", "convert", "hashtag", "like", "read", "publish")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
 
 @admin.register(Music)
 class MusicAdmin(ImportExportModelAdmin):
-    list_display = ("id", "author", "title", "read", "total_like", "comment_count", "download", "publish", "created", "updated")
-    list_select_related = ("author",)
-    search_fields = ("title", "author__nickname", "created")
-    ordering = ("author", "-created")
+    list_display = ("id", "channel", "title", "read", "total_like", "comment_count", "download", "publish", "created", "updated")
+    list_select_related = ("channel",)
+    search_fields = ("title", "channel__owner__nickname", "created")
+    ordering = ("channel", "-created")
     filter_horizontal = ("hashtag", "like")
     readonly_fields = ("total_like", "comment_count", "created", "updated")
     # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("author", "title", "content", "lyric", "music", "hashtag", "like", "read", "publish", "download")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "lyric", "music", "hashtag", "like", "read", "publish", "download")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
 
 @admin.register(Comic)
 class ComicAdmin(ImportExportModelAdmin):
-    list_display = ("id", "author", "title", "read", "total_like", "comment_count", "publish", "created", "updated")
-    list_select_related = ("author",)
-    search_fields = ("title", "author__nickname", "created")
-    ordering = ("author", "-created")
+    list_display = ("id", "channel", "title", "read", "total_like", "comment_count", "publish", "created", "updated")
+    list_select_related = ("channel",)
+    search_fields = ("title", "channel__owner__nickname", "created")
+    ordering = ("channel", "-created")
     filter_horizontal = ("hashtag", "like")
     readonly_fields = ("total_like", "comment_count", "created", "updated")
     # inlines = [CommentInlineAdmin, ComicPageInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("author", "title", "content", "image", "hashtag", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "image", "hashtag", "like", "read", "publish")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
 
 @admin.register(Picture)
 class PictureAdmin(ImportExportModelAdmin):
-    list_display = ("id", "author", "title", "read", "total_like", "comment_count", "publish", "created", "updated")
-    list_select_related = ("author",)
-    search_fields = ("title", "author__nickname", "created")
-    ordering = ("author", "-created")
+    list_display = ("id", "channel", "title", "read", "total_like", "comment_count", "publish", "created", "updated")
+    list_select_related = ("channel",)
+    search_fields = ("title", "channel__owner__nickname", "created")
+    ordering = ("channel", "-created")
     filter_horizontal = ("hashtag", "like")
     readonly_fields = ("total_like", "comment_count", "created", "updated")
     # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("author", "title", "content", "image", "hashtag", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "image", "hashtag", "like", "read", "publish")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
 
 @admin.register(Blog)
 class BlogAdmin(ImportExportModelAdmin):
-    list_display = ("id", "author", "title", "read", "total_like", "comment_count", "publish", "created", "updated")
-    list_select_related = ("author",)
-    search_fields = ("title", "author__nickname", "created")
-    ordering = ("author", "-created")
+    list_display = ("id", "channel", "title", "read", "total_like", "comment_count", "publish", "created", "updated")
+    list_select_related = ("channel",)
+    search_fields = ("title", "channel__owner__nickname", "created")
+    ordering = ("channel", "-created")
     filter_horizontal = ("hashtag", "like")
     readonly_fields = ("total_like", "comment_count", "created", "updated")
     # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("author", "title", "content", "delta", "image", "hashtag", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "delta", "image", "hashtag", "like", "read", "publish")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -244,17 +245,17 @@ class BlogAdmin(ImportExportModelAdmin):
 
 @admin.register(Chat)
 class ChatAdmin(ImportExportModelAdmin):
-    list_display = ("id", "author", "title", "read", "total_like", "thread_count", "joined_count", "period", "publish", "created", "updated")
-    list_select_related = ("author",)
-    search_fields = ("title", "author__nickname", "created")
-    ordering = ("author", "-created")
+    list_display = ("id", "channel", "title", "read", "total_like", "thread_count", "joined_count", "period", "publish", "created", "updated")
+    list_select_related = ("channel",)
+    search_fields = ("title", "channel__owner__nickname", "created")
+    ordering = ("channel", "-created")
     filter_horizontal = ("hashtag", "like")
     readonly_fields = ("total_like", "thread_count", "joined_count", "created", "updated")
     inlines = [MessageInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("author", "title", "content", "hashtag", "like", "read", "period", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "hashtag", "like", "read", "period", "publish")}),
         ("確認項目", {"fields": ("total_like", "thread_count", "joined_count", "created", "updated")})
     ]
 
@@ -479,10 +480,13 @@ class VideoAdminSite(admin.ModelAdmin, PublishMixin):
 
     def get_queryset(self, request):
         qs = super(VideoAdminSite, self).get_queryset(request).prefetch_related("hashtag", "like")
-        return qs.filter(author=request.user)
+        return qs.filter(channel__owner=request.user)
 
     def save_model(self, request, obj, form, change):
-        obj.author = request.user
+        if not obj.channel_id:
+            channel = Channel.objects.filter(owner=request.user, is_default=True).first()
+            if channel:
+                obj.channel = channel
         super(VideoAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Video, VideoAdminSite)
 
@@ -505,10 +509,13 @@ class MusicAdminSite(admin.ModelAdmin, PublishMixin):
 
     def get_queryset(self, request):
         qs = super(MusicAdminSite, self).get_queryset(request).prefetch_related("hashtag", "like")
-        return qs.filter(author=request.user)
+        return qs.filter(channel__owner=request.user)
 
     def save_model(self, request, obj, form, change):
-        obj.author = request.user
+        if not obj.channel_id:
+            channel = Channel.objects.filter(owner=request.user, is_default=True).first()
+            if channel:
+                obj.channel = channel
         super(MusicAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Music, MusicAdminSite)
 
@@ -531,10 +538,13 @@ class ComicAdminSite(admin.ModelAdmin, PublishMixin):
 
     def get_queryset(self, request):
         qs = super(ComicAdminSite, self).get_queryset(request).prefetch_related("hashtag", "like")
-        return qs.filter(author=request.user)
+        return qs.filter(channel__owner=request.user)
 
     def save_model(self, request, obj, form, change):
-        obj.author = request.user
+        if not obj.channel_id:
+            channel = Channel.objects.filter(owner=request.user, is_default=True).first()
+            if channel:
+                obj.channel = channel
         super(ComicAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Comic, ComicAdminSite)
 
@@ -557,10 +567,13 @@ class PictureAdminSite(admin.ModelAdmin, PublishMixin):
 
     def get_queryset(self, request):
         qs = super(PictureAdminSite, self).get_queryset(request).prefetch_related("hashtag", "like")
-        return qs.filter(author=request.user)
+        return qs.filter(channel__owner=request.user)
 
     def save_model(self, request, obj, form, change):
-        obj.author = request.user
+        if not obj.channel_id:
+            channel = Channel.objects.filter(owner=request.user, is_default=True).first()
+            if channel:
+                obj.channel = channel
         super(PictureAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Picture, PictureAdminSite)
 
@@ -583,10 +596,13 @@ class BlogAdminSite(admin.ModelAdmin, PublishMixin):
 
     def get_queryset(self, request):
         qs = super(BlogAdminSite, self).get_queryset(request).prefetch_related("hashtag", "like")
-        return qs.filter(author=request.user)
+        return qs.filter(channel__owner=request.user)
 
     def save_model(self, request, obj, form, change):
-        obj.author = request.user
+        if not obj.channel_id:
+            channel = Channel.objects.filter(owner=request.user, is_default=True).first()
+            if channel:
+                obj.channel = channel
         obj.richtext = json.loads(request.POST.dict()["delta"])["html"]
         super(BlogAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Blog, BlogAdminSite)
@@ -610,10 +626,13 @@ class ChatAdminSite(admin.ModelAdmin, PublishMixin):
 
     def get_queryset(self, request):
         qs = super(ChatAdminSite, self).get_queryset(request).prefetch_related("hashtag", "like")
-        return qs.filter(author=request.user)
+        return qs.filter(channel__owner=request.user)
 
     def save_model(self, request, obj, form, change):
-        obj.author = request.user
+        if not obj.channel_id:
+            channel = Channel.objects.filter(owner=request.user, is_default=True).first()
+            if channel:
+                obj.channel = channel
         super(ChatAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Chat, ChatAdminSite)
 
