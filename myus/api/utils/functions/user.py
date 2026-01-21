@@ -19,7 +19,7 @@ def get_author(author: User) -> AuthorData:
 def get_media_user(obj: MediaModelType, user: User | None) -> MediaUserData:
     follow = None
     if user:
-        ids = FollowDomain.get_ids(FilterOption(follower_id=user.id, following_id=obj.author.id), SortOption())
+        ids = FollowDomain.get_ids(FilterOption(follower_id=user.id, following_id=obj.channel.owner.id), SortOption())
         follow = FollowDomain.bulk_get(ids)[0] if ids else None
     data = MediaUserData(
         is_like=obj.like.filter(id=user.id).exists() if user else False,

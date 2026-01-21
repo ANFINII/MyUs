@@ -58,14 +58,6 @@ class ChannelDomain:
         return sort_ids(objs, ids)
 
     @classmethod
-    def get_by_ulid(cls, ulid: str) -> Channel | None:
-        return cls.queryset().filter(ulid=ulid).first()
-
-    @classmethod
-    def get_default(cls, owner_id: int) -> Channel | None:
-        return cls.queryset().filter(owner_id=owner_id, is_default=True).first()
-
-    @classmethod
     def create(cls, **kwargs) -> Channel:
         return Channel.objects.create(**kwargs)
 

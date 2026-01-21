@@ -6,7 +6,7 @@ from api.utils.functions.file import channel_image
 
 class Channel(models.Model):
     """Channel"""
-    avater      = "../static/img/channel_icon.png"
+    avater      = "../static/img/user_icon.png"
     id          = models.BigAutoField(primary_key=True)
     ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     owner       = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
