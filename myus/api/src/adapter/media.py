@@ -14,6 +14,7 @@ from api.src.types.schema.media import VideoDetailOut, MusicDetailOut, ComicDeta
 from api.src.types.schema.media import VideoDetailsOut, MusicDetailsOut, ComicDetailsOut, PictureDetailsOut, BlogDetailsOut, ChatDetailsOut
 from api.src.types.schema.message import ChatMessageOut
 from api.src.types.schema.user import AuthorOut, MediaUserOut
+from api.src.usecase.channel import get_channel
 from api.src.usecase.media import create_video, create_music, create_comic, create_blog, create_picture, create_chat
 from api.src.usecase.media import get_home, get_videos, get_musics, get_comics, get_blogs, get_pictures, get_chats
 from api.src.usecase.media import get_video_detail, get_music_detail, get_comic_detail, get_blog_detail, get_picture_detail, get_chat_detail
@@ -49,7 +50,7 @@ class VideoAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
     def create(
         request: HttpRequest,
         input: VideoIn = Form(...),
@@ -59,11 +60,15 @@ class VideoAPI:
     ):
         log.info("VideoAPI create", input=input, image=image, video=video, convert=convert)
 
-        author = get_user(request)
-        if not author:
+        user = get_user(request)
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_video(author=author, title=input.title, content=input.content, image=image, video=video, convert=convert)
+        channel = get_channel(input.channel_ulid)
+        if channel is None:
+            return 400, ErrorOut(message="チャンネルが見つかりません")
+
+        obj = create_video(channel=channel, title=input.title, content=input.content, image=image, video=video, convert=convert)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -115,15 +120,19 @@ class MusicAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
     def create(request: HttpRequest, input: MusicIn = Form(...), music: UploadedFile = File(...)):
         log.info("MusicAPI create", input=input, music=music)
 
-        author = get_user(request)
-        if not author:
+        user = get_user(request)
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_music(author=author, title=input.title, content=input.content, lyric=input.lyric, download=input.download, music=music)
+        channel = get_channel(input.channel_ulid)
+        if channel is None:
+            return 400, ErrorOut(message="チャンネルが見つかりません")
+
+        obj = create_music(channel=channel, title=input.title, content=input.content, lyric=input.lyric, download=input.download, music=music)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -175,15 +184,19 @@ class ComicAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
     def create(request: HttpRequest, input: ComicIn = Form(...), image: UploadedFile = File(...), images: list[UploadedFile] = File(...)):
         log.info("ComicAPI create", input=input, image=image, images=images)
 
-        author = get_user(request)
-        if not author:
+        user = get_user(request)
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_comic(author=author, title=input.title, content=input.content, image=image)
+        channel = get_channel(input.channel_ulid)
+        if channel is None:
+            return 400, ErrorOut(message="チャンネルが見つかりません")
+
+        obj = create_comic(channel=channel, title=input.title, content=input.content, image=image)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -233,15 +246,19 @@ class PictureAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
     def create(request: HttpRequest, input: PictureIn = Form(...), image: UploadedFile = File(...)):
         log.info("PictureAPI create", input=input, image=image)
 
-        author = get_user(request)
-        if not author:
+        user = get_user(request)
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_picture(author=author, title=input.title, content=input.content, image=image)
+        channel = get_channel(input.channel_ulid)
+        if channel is None:
+            return 400, ErrorOut(message="チャンネルが見つかりません")
+
+        obj = create_picture(channel=channel, title=input.title, content=input.content, image=image)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -291,15 +308,19 @@ class BlogAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
     def create(request: HttpRequest, input: BlogIn = Form(...), image: UploadedFile = File(...)):
         log.info("BlogAPI create", input=input, image=image)
 
-        author = get_user(request)
-        if not author:
+        user = get_user(request)
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_blog(author=author, title=input.title, content=input.content, richtext=input.richtext, image=image)
+        channel = get_channel(input.channel_ulid)
+        if channel is None:
+            return 400, ErrorOut(message="チャンネルが見つかりません")
+
+        obj = create_blog(channel=channel, title=input.title, content=input.content, richtext=input.richtext, image=image)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -350,15 +371,19 @@ class ChatAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
     def create(request: HttpRequest, input: ChatIn = Form(...)):
         log.info("ChatAPI create", input=input)
 
-        author = get_user(request)
-        if not author:
+        user = get_user(request)
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_chat(author=author, title=input.title, content=input.content, period=input.period)
+        channel = get_channel(input.channel_ulid)
+        if channel is None:
+            return 400, ErrorOut(message="チャンネルが見つかりません")
+
+        obj = create_chat(channel=channel, title=input.title, content=input.content, period=input.period)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 

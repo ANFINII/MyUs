@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from ninja import UploadedFile
 
-from api.db.models.user import User
+from api.db.models.channel import Channel
 from api.src.domain.media.index import FilterOption, SortOption, ExcludeOption
 from api.src.domain.media.video import VideoDomain
 from api.src.domain.media.music import MusicDomain
@@ -20,33 +20,33 @@ from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_author, get_media_user
 
 
-def create_video(author: User, title: str, content: str, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> MediaCreateData:
-    obj = VideoDomain.create(author=author, title=title, content=content, image=image, video=video, convert=convert)
+def create_video(channel: Channel, title: str, content: str, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> MediaCreateData:
+    obj = VideoDomain.create(channel=channel, title=title, content=content, image=image, video=video, convert=convert)
     return MediaCreateData(ulid=str(obj.ulid))
 
 
-def create_music(author: User, title: str, content: str, lyric: str, download: bool, music: UploadedFile) -> MediaCreateData:
-    obj = MusicDomain.create(author=author, title=title, content=content, lyric=lyric, download=download, music=music)
+def create_music(channel: Channel, title: str, content: str, lyric: str, download: bool, music: UploadedFile) -> MediaCreateData:
+    obj = MusicDomain.create(channel=channel, title=title, content=content, lyric=lyric, download=download, music=music)
     return MediaCreateData(ulid=str(obj.ulid))
 
 
-def create_comic(author: User, title: str, content: str, image: UploadedFile) -> MediaCreateData:
-    obj = ComicDomain.create(author=author, title=title, content=content, image=image)
+def create_comic(channel: Channel, title: str, content: str, image: UploadedFile) -> MediaCreateData:
+    obj = ComicDomain.create(channel=channel, title=title, content=content, image=image)
     return MediaCreateData(ulid=str(obj.ulid))
 
 
-def create_picture(author: User, title: str, content: str, image: UploadedFile) -> MediaCreateData:
-    obj = PictureDomain.create(author=author, title=title, content=content, image=image)
+def create_picture(channel: Channel, title: str, content: str, image: UploadedFile) -> MediaCreateData:
+    obj = PictureDomain.create(channel=channel, title=title, content=content, image=image)
     return MediaCreateData(ulid=str(obj.ulid))
 
 
-def create_blog(author: User, title: str, content: str, richtext: str, image: UploadedFile) -> MediaCreateData:
-    obj = BlogDomain.create(author=author, title=title, content=content, richtext=richtext, image=image)
+def create_blog(channel: Channel, title: str, content: str, richtext: str, image: UploadedFile) -> MediaCreateData:
+    obj = BlogDomain.create(channel=channel, title=title, content=content, richtext=richtext, image=image)
     return MediaCreateData(ulid=str(obj.ulid))
 
 
-def create_chat(author: User, title: str, content: str, period: str) -> MediaCreateData:
-    obj = ChatDomain.create(author=author, title=title, content=content, period=period)
+def create_chat(channel: Channel, title: str, content: str, period: str) -> MediaCreateData:
+    obj = ChatDomain.create(channel=channel, title=title, content=content, period=period)
     return MediaCreateData(ulid=str(obj.ulid))
 
 
@@ -91,7 +91,7 @@ def get_videos(limit: int, search: str, id: int | None = None) -> list[VideoData
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author)
+        author=get_author(obj.channel.owner)
     ) for obj in objs]
 
     return data
@@ -114,7 +114,7 @@ def get_musics(limit: int, search: str, id: int | None = None) -> list[MusicData
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author)
+        author=get_author(obj.channel.owner)
     ) for obj in objs]
 
     return data
@@ -135,7 +135,7 @@ def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author)
+        author=get_author(obj.channel.owner)
     ) for obj in objs]
 
     return data
@@ -156,7 +156,7 @@ def get_pictures(limit: int, search: str, id: int | None = None) -> list[Picture
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author),
+        author=get_author(obj.channel.owner),
     ) for obj in objs]
 
     return data
@@ -177,7 +177,7 @@ def get_blogs(limit: int, search: str, id: int | None = None) -> list[BlogData]:
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author)
+        author=get_author(obj.channel.owner)
     ) for obj in objs]
 
     return data
@@ -199,7 +199,7 @@ def get_chats(limit: int, search: str, id: int | None = None) -> list[ChatData]:
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author)
+        author=get_author(obj.channel.owner)
     ) for obj in objs]
 
     return data
@@ -232,7 +232,7 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author),
+        author=get_author(obj.channel.owner),
         mediaUser=get_media_user(obj, user),
     )
 
@@ -266,7 +266,7 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author),
+        author=get_author(obj.channel.owner),
         mediaUser=get_media_user(obj, user),
     )
 
@@ -298,7 +298,7 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author),
+        author=get_author(obj.channel.owner),
         mediaUser=get_media_user(obj, user),
     )
 
@@ -331,7 +331,7 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author),
+        author=get_author(obj.channel.owner),
         mediaUser=get_media_user(obj, user),
     )
 
@@ -363,7 +363,7 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author),
+        author=get_author(obj.channel.owner),
         mediaUser=get_media_user(obj, user),
     )
 
@@ -394,7 +394,7 @@ def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Ch
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        author=get_author(obj.author),
+        author=get_author(obj.channel.owner),
         mediaUser=get_media_user(obj, user),
     )
 

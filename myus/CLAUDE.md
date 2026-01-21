@@ -25,14 +25,16 @@
   | `log.error()` | エラー情報（スタックトレース付き） |
   | `log.critical()` | 致命的エラー |
 
-- **ログ出力形式**: キーワード引数で構造化データを渡す
+- **ログ出力形式**: 値は必ずキーワード引数で構造化して渡す
   ```python
-  # Good
+  # Good - 値をキーワード引数で構造化
   log.info("処理完了", user_id=123, duration=5.2)
+  log.error("Channel not found", ulid=ulid)
   log.error("変換エラー", exc=e, file_path=input_path)
 
-  # Bad
+  # Bad - f-stringで値を埋め込む
   log.info(f"処理完了: user_id={user_id}")
+  log.error(f"Channel not found: {ulid}")
   ```
 
 ### 3. エラーハンドリング

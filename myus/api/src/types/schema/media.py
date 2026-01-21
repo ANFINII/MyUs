@@ -10,6 +10,7 @@ from api.src.types.schema.user import AuthorOut, MediaUserOut
 class VideoIn(BaseModel):
     title: str
     content: str
+    channel_ulid: str
 
 
 class MusicIn(BaseModel):
@@ -17,28 +18,33 @@ class MusicIn(BaseModel):
     content: str
     lyric: str
     download: bool
+    channel_ulid: str
 
 
 class ComicIn(BaseModel):
     title: str
     content: str
+    channel_ulid: str
 
 
 class PictureIn(BaseModel):
     title: str
     content: str
+    channel_ulid: str
 
 
 class BlogIn(BaseModel):
     title: str
     content: str
     richtext: str
+    channel_ulid: str
 
 
 class ChatIn(BaseModel):
     title: str
     content: str
     period: str
+    channel_ulid: str
 
 
 # Outputs
