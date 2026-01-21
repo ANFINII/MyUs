@@ -2,10 +2,12 @@ from django.http import HttpRequest
 from ninja import Router
 
 from api.modules.logger import log
+from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.common import ErrorOut, MessageOut
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagOut, UserOut
+from api.src.usecase.channel import get_user_channels
 from api.src.usecase.follow import get_follows, get_followers, upsert_follow
 from api.src.usecase.notification import get_notification, get_content_object
 from api.src.usecase.user import get_user, get_search_tags, like_comment, like_media
@@ -174,5 +176,22 @@ class UserAPI:
                 for obj in notification["datas"]
             ],
         )
+
+        return 200, data
+
+    @staticmethod
+    @router.get("/channel", response={200: list[ChannelOut], 401: ErrorOut})
+    def get_channels(request: HttpRequest):
+        log.info("UserAPI get_channels")
+
+        user = get_user(request)
+        if user is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        channels = get_user_channels(user.id)
+        data = [
+            ChannelOut(ulid=str(channel.ulid), name=channel.name, is_default=channel.is_default)
+            for channel in channels
+        ]
 
         return 200, data
