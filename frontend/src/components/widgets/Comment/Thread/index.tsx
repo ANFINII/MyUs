@@ -1,6 +1,6 @@
 import { ChangeEvent, SetStateAction, useRef, useState } from 'react'
-import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { Reply } from 'types/internal/comment'
+import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { putComment, deleteComment } from 'api/internal/media/comment'
 import { postLikeComment } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
