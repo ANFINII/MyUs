@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Follow } from 'types/internal/auth'
+import { Follow } from 'types/internal/user'
 import ExImage from 'components/parts/ExImage'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'

@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
-import { Channel } from 'types/internal/auth'
+import { Channel } from 'types/internal/channle'
 import { MusicIn } from 'types/internal/media'
 import { Option } from 'types/internal/other'
 import { postMusicCreate } from 'api/internal/media/create'

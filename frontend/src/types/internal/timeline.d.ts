@@ -1,4 +1,4 @@
-import { User } from 'types/internal/auth'
+import { User } from 'types/internal/user'
 
 export interface FileType {
   src: string
@@ -36,7 +36,7 @@ export interface TimelineCommentState {
   content: string
 }
 
-export interface TimelineCommentRequest {
+export interface TimelineCommentIn {
   type: number
   content: string
   fileUrls: File[]

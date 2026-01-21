@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react'
-import { UserMe } from 'types/internal/auth'
+import { UserMe } from 'types/internal/user'
 import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
 import TextareaLine from 'components/parts/Input/Textarea/Line'

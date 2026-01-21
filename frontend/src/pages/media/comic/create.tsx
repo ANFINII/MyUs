@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Channel } from 'types/internal/auth'
-import { getChannels } from 'api/internal/user'
+import { Channel } from 'types/internal/channle'
+import { getChannels } from 'api/internal/channel'
 import ComicCreate from 'components/templates/media/comic/create'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
