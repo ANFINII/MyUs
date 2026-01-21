@@ -190,8 +190,8 @@ class UserAPI:
 
         channels = get_user_channels(user.id)
         data = [
-            ChannelOut(ulid=str(channel.ulid), name=channel.name, is_default=channel.is_default)
-            for channel in channels
+            ChannelOut(ulid=str(c.ulid), avatar=create_url(c.avatar), name=c.name, description=c.description, is_default=c.is_default)
+            for c in channels
         ]
 
         return 200, data
