@@ -9,6 +9,7 @@ export const apiLogout = base + '/auth/logout'
 
 // User
 export const apiUser = base + '/user/me'
+export const apiChannel = base + '/user/channel'
 export const apiSearchTag = base + '/user/search_tag'
 export const apiFollower = base + '/user/follower'
 export const apiFollow = base + '/user/follow'

@@ -172,3 +172,9 @@ export interface UserNotification {
 
 export type UserNotificationIn = UserNotification
 export type UserNotificationOut = UserNotification
+
+export interface Channel {
+  ulid: string
+  name: string
+  isDefault: boolean
+}

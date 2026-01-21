@@ -80,6 +80,7 @@ export interface SearchParms {
 }
 
 export interface VideoIn {
+  channelUlid: string
   title: string
   content: string
   image?: File
@@ -87,6 +88,7 @@ export interface VideoIn {
 }
 
 export interface MusicIn {
+  channelUlid: string
   title: string
   content: string
   lyric: string
@@ -95,6 +97,7 @@ export interface MusicIn {
 }
 
 export interface ComicIn {
+  channelUlid: string
   title: string
   content: string
   image?: File
@@ -102,12 +105,14 @@ export interface ComicIn {
 }
 
 export interface PictureIn {
+  channelUlid: string
   title: string
   content: string
   image?: File
 }
 
 export interface BlogIn {
+  channelUlid: string
   title: string
   content: string
   richtext: string
@@ -116,6 +121,7 @@ export interface BlogIn {
 }
 
 export interface ChatIn {
+  channelUlid: string
   title: string
   content: string
   period: string
