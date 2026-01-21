@@ -4,7 +4,7 @@ import { Channel } from 'types/internal/auth'
 import { getChannels } from 'api/internal/user'
 import PictureCreate from 'components/templates/media/picture/create'
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
   const ret = await getChannels(req)
   const channels = ret.isOk() ? ret.value : []

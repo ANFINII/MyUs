@@ -8,7 +8,7 @@ interface Props {
   channels: Channel[]
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
   const ret = await getChannels(req)
   const channels = ret.isOk() ? ret.value : []
