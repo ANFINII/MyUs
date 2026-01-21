@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { ProfileOut } from 'types/internal/auth'
+import { ProfileOut } from 'types/internal/user'
 import { getSettingProfile } from 'api/internal/setting'
 import ErrorCheck from 'components/widgets/Error/Check'
 import SettingProfile from 'components/templates/setting/profile'

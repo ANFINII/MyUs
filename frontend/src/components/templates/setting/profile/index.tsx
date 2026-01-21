@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { ProfileOut } from 'types/internal/auth'
+import { ProfileOut } from 'types/internal/user'
 import { genderMap } from 'utils/constants/map'
 import { getAge, getFullName } from 'utils/functions/user'
 import Main from 'components/layout/Main'

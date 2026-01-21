@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Follow } from 'types/internal/auth'
+import { Follow } from 'types/internal/user'
 import { getFollow } from 'api/internal/user'
 import { searchParams } from 'utils/functions/common'
 import ErrorCheck from 'components/widgets/Error/Check'

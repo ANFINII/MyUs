@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
-import { ProfileOut, ProfileIn } from 'types/internal/auth'
+import { ProfileOut, ProfileIn } from 'types/internal/user'
 import { getAddress } from 'api/external/address'
 import { putSettingProfile } from 'api/internal/setting'
 import { prefectures } from 'utils/constants/address'

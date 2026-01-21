@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { Follow } from 'types/internal/auth'
+import { Follow } from 'types/internal/user'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'

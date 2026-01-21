@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
-import { MypageIn, MypageOut } from 'types/internal/auth'
+import { MypageIn, MypageOut } from 'types/internal/user'
 import { putSettingMypage } from 'api/internal/setting'
 import { FetchError } from 'utils/constants/enum'
 import { useIsLoading } from 'components/hooks/useIsLoading'
