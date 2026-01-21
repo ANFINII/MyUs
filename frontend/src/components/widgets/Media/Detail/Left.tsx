@@ -1,7 +1,7 @@
 import { ChangeEvent, useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
-import { FollowIn, LikeMediaIn } from 'types/internal/auth'
+import { FollowIn, LikeMediaIn } from 'types/internal/user'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { Author, MediaUser } from 'types/internal/media'
 import { postComment } from 'api/internal/media/comment'

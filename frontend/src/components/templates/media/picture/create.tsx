@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
-import { Channel } from 'types/internal/auth'
+import { Channel } from 'types/internal/user'
 import { PictureIn } from 'types/internal/media'
 import { Option } from 'types/internal/other'
 import { postPictureCreate } from 'api/internal/media/create'

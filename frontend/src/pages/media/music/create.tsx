@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Channel } from 'types/internal/auth'
+import { Channel } from 'types/internal/user'
 import { getChannels } from 'api/internal/user'
 import MusicCreate from 'components/templates/media/music/create'
 

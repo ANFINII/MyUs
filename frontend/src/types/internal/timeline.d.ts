@@ -1,4 +1,4 @@
-import { User } from 'types/internal/auth'
+import { User } from 'types/internal/user'
 
 export interface FileType {
   src: string

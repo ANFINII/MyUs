@@ -1,5 +1,5 @@
 import { ChangeEvent, SetStateAction, useRef, useState } from 'react'
-import { LikeCommentIn, UserMe } from 'types/internal/auth'
+import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { Reply } from 'types/internal/comment'
 import { putComment, deleteComment } from 'api/internal/media/comment'
 import { postLikeComment } from 'api/internal/user'

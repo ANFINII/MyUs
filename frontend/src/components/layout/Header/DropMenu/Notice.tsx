@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
-import { Notification, NotificationOut } from 'types/internal/auth'
+import { Notification, NotificationOut } from 'types/internal/user'
 import { getNotification } from 'api/internal/user'
 import { NotificationType } from 'utils/constants/enum'
 import { isActive } from 'utils/functions/common'

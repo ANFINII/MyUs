@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { MypageOut } from 'types/internal/auth'
+import { MypageOut } from 'types/internal/user'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import LoginError from 'components/parts/Error/Login'

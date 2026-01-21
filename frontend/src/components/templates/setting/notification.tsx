@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { UserNotification, UserNotificationOut } from 'types/internal/auth'
+import { UserNotification, UserNotificationOut } from 'types/internal/user'
 import { getSettingNotification, putSettingNotification } from 'api/internal/setting'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import { useIsLoading } from 'components/hooks/useIsLoading'
