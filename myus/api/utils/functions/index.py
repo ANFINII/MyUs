@@ -1,5 +1,6 @@
 from typing import TypeVar
 from config.settings.base import DOMAIN_URL
+from django_ulid.models import ulid
 
 
 T = TypeVar('T')
@@ -8,6 +9,10 @@ V = TypeVar('V')
 
 def is_bool(value: str) -> bool:
     return value.lower() == "true"
+
+
+def new_ulid():
+    return str(ulid.new())
 
 
 def set_attr(obj: T, key: str, value: V) -> dict[str, V]:

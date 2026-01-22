@@ -1,26 +1,21 @@
-def user_image(instance, filename):
-    class_name = type(instance).__name__.lower()
-    return f"images/{class_name}/user_{instance.id}/{filename}"
+from api.utils.functions.index import new_ulid
 
 
-def channel_image(instance, filename):
-    return f"images/channel/channel_{instance.id}/{filename}"
+def avatar_image(type: str, ulid: str, filename: str):
+    return f"images/{type}/{ulid}/{new_ulid()}_{filename}"
 
 
-def image_upload(instance, filename):
-    class_name = type(instance).__name__.lower()
-    return f"images/{class_name}/channel_{instance.channel_id}/object_{instance.id}/{filename}"
+def image_upload(type: str, ulid: str, filename: str):
+    return f"images/{type}/channel_{ulid}/{new_ulid()}_{filename}"
 
 
-def video_upload(instance, filename):
-    class_name = type(instance).__name__.lower()
-    return f"videos/{class_name}/channel_{instance.channel_id}/object_{instance.id}/{filename}"
+def video_upload(type: str, ulid: str, filename: str):
+    return f"videos/{type}/channel_{ulid}/{new_ulid()}_{filename}"
 
 
-def musics_upload(instance, filename):
-    return f"musics/channel_{instance.channel_id}/object_{instance.id}/{filename}"
+def musics_upload(ulid: str, filename: str):
+    return f"musics/channel_{ulid}/{new_ulid()}_{filename}"
 
 
-def comic_upload(instance, filename):
-    comic = instance.comic
-    return f"comics/channel_{comic.channel_id}/object_{comic.id}/{filename}"
+def comic_upload(ulid: str, filename: str):
+    return f"comics/channel_{ulid}/{new_ulid()}_{filename}"
