@@ -47,17 +47,50 @@
 - モデルのフィールドは明示的な型定義
 - QuerySetの型ヒントを適切に使用
 
+### 5. リンターチェック（必須）
+- **Pythonコードを修正したら、必ずmypyでリンターチェックを実行する**
+- 修正したファイルに関連するエラーがあれば修正してから完了とする
+
+```bash
+# myusディレクトリで実行
+mypy api/src/path/to/file.py
+
+# 修正したファイルのエラーのみフィルタする場合
+mypy api/src/path/to/file.py 2>&1 | grep "^api/src/path/to/file.py"
+```
+
 ---
 
 ## コーディング規約
 
-### インポート順序
+### インポート
+- **インポートは必ずファイルの先頭で行う**（関数内でのローカルインポート禁止、`TYPE_CHECKING`禁止）
+- 型ヒントで使用する型も通常通りインポートする
+
+```python
+# Good - ファイル先頭でインポート
+from api.db.models.media import Video, Music
+
+def process(obj: Video | Music) -> str:
+    return obj.title
+
+# Bad - 関数内でのローカルインポート
+def process(obj):
+    from api.db.models.media import Video
+    ...
+
+# Bad - TYPE_CHECKINGは使用しない
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from api.db.models.media import Video
+```
+
+**インポート順序:**
 ```python
 1. 標準ライブラリ
 2. サードパーティライブラリ
 3. Django関連
 4. プロジェクト内モジュール
-5. ローカルインポート
 ```
 
 ### 命名規則
