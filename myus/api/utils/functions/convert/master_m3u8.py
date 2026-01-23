@@ -1,5 +1,6 @@
 class Masterm3u8:
-    def master_360p(file_name):
+    @staticmethod
+    def master_360p(file_name: str) -> str:
         master = (
             "#EXTM3U\n"
             "#EXT-X-VERSION:3\n"
@@ -10,7 +11,8 @@ class Masterm3u8:
         )
         return master
 
-    def master_480p(file_name):
+    @staticmethod
+    def master_480p(file_name: str) -> str:
         master = (
             "#EXTM3U\n"
             "#EXT-X-VERSION:3\n"
@@ -21,7 +23,8 @@ class Masterm3u8:
         )
         return master
 
-    def master_720p(file_name):
+    @staticmethod
+    def master_720p(file_name: str) -> str:
         master = (
             "#EXTM3U\n"
             "#EXT-X-VERSION:3\n"
@@ -34,7 +37,8 @@ class Masterm3u8:
         )
         return master
 
-    def master_1080p(file_name):
+    @staticmethod
+    def master_1080p(file_name: str) -> str:
         master = (
             "#EXTM3U\n"
             "#EXT-X-VERSION:3\n"

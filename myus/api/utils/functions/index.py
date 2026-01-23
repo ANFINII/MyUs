@@ -11,7 +11,7 @@ def is_bool(value: str) -> bool:
     return value.lower() == "true"
 
 
-def new_ulid():
+def new_ulid() -> str:
     return str(ulid.new())
 
 

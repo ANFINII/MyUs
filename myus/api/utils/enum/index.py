@@ -68,3 +68,18 @@ class CommentType(str, Enum):
     COMIC = "Comic"
     PICTURE = "Picture"
     BLOG = "Blog"
+
+
+class ImageType(str, Enum):
+    USER = "user"
+    MYPAGE = "mypage"
+    CHANNEL = "channel"
+    VIDEO = "video"
+    COMIC = "comic"
+    PICTURE = "picture"
+    BLOG = "blog"
+
+
+class VideoType(str, Enum):
+    VIDEO = "video"
+    ADVERTISE = "advertise"

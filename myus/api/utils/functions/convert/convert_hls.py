@@ -4,6 +4,7 @@ import ffmpeg_streaming
 from ffmpeg_streaming import FFProbe, Formats, Bitrate, Representation, Size
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+from api.modules.logger import log
 from api.utils.functions.convert.master_m3u8 import Masterm3u8
 
 # from ffmpeg_streaming import  S3, CloudManager
@@ -13,38 +14,38 @@ from api.utils.functions.convert.master_m3u8 import Masterm3u8
 
 
 """
-    videos/video/user_{instance.author.id}/object_{instance.id}/file_name.mp4
-    videos/video/user_{instance.author.id}/object_{instance.id}/file_name.m3u8
-    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_144p.m3u8
-    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_240p.m3u8
-    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_360p.m3u8
-    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_480p.m3u8
-    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_720p.m3u8
-    videos/video/user_{instance.author.id}/object_{instance.id}/file_name_1080p.m3u8
+    videos/video/channel_{obj.channel.ulid}/ulid.mp4
+    videos/video/channel_{obj.channel.ulid}/ulid.m3u8
+    videos/video/channel_{obj.channel.ulid}/ulid_144p.m3u8
+    videos/video/channel_{obj.channel.ulid}/ulid_240p.m3u8
+    videos/video/channel_{obj.channel.ulid}/ulid_360p.m3u8
+    videos/video/channel_{obj.channel.ulid}/ulid_480p.m3u8
+    videos/video/channel_{obj.channel.ulid}/ulid_720p.m3u8
+    videos/video/channel_{obj.channel.ulid}/ulid_1080p.m3u8
 """
 
 
-def thread_hls(video_file, convert, resolution):
+def thread_hls(video_file: str, convert: Representation, resolution: str) -> None:
     video = ffmpeg_streaming.input(video_file)
     hls = video.hls(Formats.h264(), hls_time=20)
     hls.representations(convert,)
     hls.output(video_file)
-    print(f"{resolution}_hls: {video_file}")
+    log.info("HLS変換完了", resolution=resolution, video_file=video_file)
 
 
-def thread_mp4(video_file, path_dir, resolution):
+def thread_mp4(video_file: str, path_dir: str, resolution: str) -> None:
     file_name = Path(video_file).stem
     video = ffmpeg_streaming.input(f"{path_dir}/{file_name}_{resolution}.m3u8")
     stream = video.stream2file(Formats.h264())
     stream.output(f"{path_dir}/{file_name}.mp4")
-    print(f"{resolution}_mp4: {video_file}")
+    log.info("MP4変換完了", resolution=resolution, video_file=video_file)
 
 
-def convert_exe(video_file, path_dir, start_dir):
+def convert_exe(video_file: str, path_dir: str, start_dir: str) -> dict[str, str]:
     ffprobe = FFProbe(video_file)
     file_name = Path(video_file).stem
     video_height = ffprobe.streams().video().get("height", "unknown")
-    print(f"file_name: {file_name}, video_height: {video_height}")
+    log.info("動画変換開始", file_name=file_name, video_height=video_height)
 
     _144p  = Representation(Size(256, 144), Bitrate(95 * 1024, 64 * 1024))
     _240p  = Representation(Size(426, 240), Bitrate(150 * 1024, 94 * 1024))

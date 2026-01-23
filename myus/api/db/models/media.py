@@ -3,8 +3,9 @@ from django_quill.fields import QuillField
 from django_ulid.models import ulid
 from api.db.models.master import Category, HashTag
 from api.db.models.base import MediaModel
-from api.db.models.user import User, Channel
-from api.utils.functions.file import image_upload, video_upload, musics_upload, comic_upload
+from api.db.models.user import User
+from api.db.models.channel import Channel
+from api.utils.functions.file import image_upload, video_upload, music_upload, comic_upload
 
 
 # Video
@@ -12,13 +13,12 @@ class Video(models.Model, MediaModel):
     """Video"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="videos")
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    image    = models.ImageField(upload_to=image_upload)
-    video    = models.FileField(upload_to=video_upload)
-    convert  = models.FileField(upload_to=video_upload)
+    image    = models.ImageField(upload_to=image_upload, blank=True)
+    video    = models.FileField(upload_to=video_upload, blank=True)
+    convert  = models.FileField(upload_to=video_upload, blank=True)
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name="video_like", blank=True)
@@ -26,22 +26,6 @@ class Video(models.Model, MediaModel):
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            image = self.image
-            video  = self.video
-            convert = self.convert
-            self.image = None
-            self.video  = None
-            self.convert = None
-            super().save(*args, **kwargs)
-            self.image = image
-            self.video  = video
-            self.convert = convert
-            if "force_insert" in kwargs:
-                kwargs.pop("force_insert")
-        super().save(*args, **kwargs)
 
     class Meta:
         db_table = "video"
@@ -53,12 +37,11 @@ class Music(models.Model, MediaModel):
     """Music"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="musics")
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="musics")
     title    = models.CharField(max_length=100)
     content  = models.TextField()
     lyric    = models.TextField()
-    music    = models.FileField(upload_to=musics_upload)
+    music    = models.FileField(upload_to=music_upload, blank=True)
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name="music_like", blank=True)
@@ -67,16 +50,6 @@ class Music(models.Model, MediaModel):
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            music = self.music
-            self.music = None
-            super().save(*args, **kwargs)
-            self.music = music
-            if "force_insert" in kwargs:
-                kwargs.pop("force_insert")
-        super().save(*args, **kwargs)
 
     class Meta:
         db_table = "music"
@@ -88,11 +61,10 @@ class Comic(models.Model, MediaModel):
     """Comic"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="comics")
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="comics")
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    image    = models.ImageField(upload_to=image_upload)
+    image    = models.ImageField(upload_to=image_upload, blank=True)
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name="comic_like", blank=True)
@@ -100,16 +72,6 @@ class Comic(models.Model, MediaModel):
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            image = self.image
-            self.image = None
-            super().save(*args, **kwargs)
-            self.image = image
-            if "force_insert" in kwargs:
-                kwargs.pop("force_insert")
-        super().save(*args, **kwargs)
 
     class Meta:
         db_table = "comic"
@@ -120,7 +82,7 @@ class ComicPage(models.Model):
     """ComicPage"""
     id    = models.BigAutoField(primary_key=True)
     comic = models.ForeignKey(Comic, on_delete=models.CASCADE, related_name="comic")
-    image = models.ImageField(upload_to=comic_upload)
+    image = models.ImageField(upload_to=comic_upload, blank=True)
     sequence = models.IntegerField(default=0)
 
     class Meta:
@@ -135,11 +97,10 @@ class Picture(models.Model, MediaModel):
     """Picture"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="pictures")
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="pictures")
     title    = models.CharField(max_length=100)
     content  = models.TextField()
-    image    = models.ImageField(upload_to=image_upload)
+    image    = models.ImageField(upload_to=image_upload, blank=True)
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name="picture_like", blank=True)
@@ -147,16 +108,6 @@ class Picture(models.Model, MediaModel):
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            image = self.image
-            self.image = None
-            super().save(*args, **kwargs)
-            self.image = image
-            if "force_insert" in kwargs:
-                kwargs.pop("force_insert")
-        super().save(*args, **kwargs)
 
     class Meta:
         db_table = "picture"
@@ -168,13 +119,12 @@ class Blog(models.Model, MediaModel):
     """Blog"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="blogs")
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="blogs")
     title    = models.CharField(max_length=100)
     content  = models.TextField()
     richtext = models.TextField()
     delta    = QuillField()
-    image    = models.ImageField(upload_to=image_upload)
+    image    = models.ImageField(upload_to=image_upload, blank=True)
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, blank=True)
     like     = models.ManyToManyField(User, related_name="blog_like", blank=True)
@@ -182,16 +132,6 @@ class Blog(models.Model, MediaModel):
     publish  = models.BooleanField(default=True)
     created  = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            image = self.image
-            self.image = None
-            super().save(*args, **kwargs)
-            self.image = image
-            if "force_insert" in kwargs:
-                kwargs.pop("force_insert")
-        super().save(*args, **kwargs)
 
     class Meta:
         db_table = "blog"
@@ -203,8 +143,7 @@ class Chat(models.Model):
     """Chat"""
     id       = models.BigAutoField(primary_key=True)
     ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    # channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="chats")
-    author   = models.ForeignKey(User, on_delete=models.CASCADE)
+    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="chats")
     title    = models.CharField(max_length=100)
     content  = models.TextField()
     category = models.ManyToManyField(Category, blank=True)
