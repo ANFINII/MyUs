@@ -1,7 +1,6 @@
 from django.db import models
 from django_ulid.models import ulid
 from api.db.models.user import User
-from api.utils.functions.file import image_upload, video_upload
 
 
 class AccessLog(models.Model):
@@ -31,8 +30,8 @@ class Advertise(models.Model):
     title   = models.CharField(max_length=100)
     url     = models.URLField()
     content = models.TextField()
-    image   = models.ImageField(upload_to=image_upload)
-    video   = models.FileField(upload_to=video_upload)
+    image   = models.ImageField(blank=True)
+    video   = models.FileField(blank=True)
     read    = models.IntegerField(default=0)
     type    = models.CharField(choices=choice, max_length=3)
     period  = models.DateField()
@@ -42,19 +41,6 @@ class Advertise(models.Model):
 
     def __str__(self):
         return self.title
-
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            image = self.image
-            video  = self.video
-            self.image = None
-            self.video  = None
-            super().save(*args, **kwargs)
-            self.image = image
-            self.video  = video
-            if "force_insert" in kwargs:
-                kwargs.pop("force_insert")
-        super().save(*args, **kwargs)
 
     class Meta:
         db_table = "advertise"

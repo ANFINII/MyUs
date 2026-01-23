@@ -1,7 +1,7 @@
 from django.db import models
 from django_ulid.models import ulid
 from api.db.models.user import User
-from api.utils.functions.file import channel_image
+from api.utils.functions.file import avatar_upload
 
 
 class Channel(models.Model):
@@ -10,7 +10,7 @@ class Channel(models.Model):
     id          = models.BigAutoField(primary_key=True)
     ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     owner       = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
-    avatar      = models.ImageField(upload_to=channel_image, default=avater, blank=True)
+    avatar      = models.ImageField(upload_to=avatar_upload, blank=True)
     name        = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     is_default  = models.BooleanField(default=False)

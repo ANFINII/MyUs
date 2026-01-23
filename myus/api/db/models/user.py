@@ -9,7 +9,7 @@ from django.utils import timezone
 from django_ulid.models import ulid
 from api.db.models.master import Plan
 from api.utils.enum.index import GenderType
-from api.utils.functions.file import user_image
+from api.utils.functions.file import avatar_upload
 
 
 class UserManager(BaseUserManager):
@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username    = models.CharField(max_length=20, unique=True)
     nickname    = models.CharField(max_length=80, unique=True)
     email       = models.EmailField(max_length=255, unique=True)
-    avatar      = models.ImageField(upload_to=user_image, default=img, blank=True)
+    avatar      = models.ImageField(upload_to=avatar_upload, blank=True)
     is_active   = models.BooleanField(default=True)
     is_staff    = models.BooleanField(default=False)
     last_login  = models.DateTimeField(auto_now_add=True)
@@ -119,16 +119,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def plan_end_date(self):
         return self.user_plan.end_date
 
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            avatar = self.avatar
-            self.avatar = None
-            super().save(*args, **kwargs)
-            self.avatar = avatar
-            if "force_insert" in kwargs:
-                kwargs.pop("force_insert")
-        super().save(*args, **kwargs)
-
     class Meta:
         db_table = "user"
         verbose_name_plural = "001 User"
@@ -176,7 +166,7 @@ class MyPage(models.Model):
     img             = "../static/img/MyUs_banner.png"
     id              = models.BigAutoField(primary_key=True)
     user            = models.OneToOneField(User, on_delete=models.CASCADE)
-    banner          = models.ImageField(upload_to=user_image, default=img, blank=True)
+    banner          = models.ImageField(upload_to=avatar_upload, blank=True)
     email           = models.EmailField(max_length=255, blank=True)
     content         = models.TextField()
     follower_count  = models.IntegerField(verbose_name="follower", default=0)
@@ -186,16 +176,6 @@ class MyPage(models.Model):
 
     def __str__(self):
         return self.user.nickname
-
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            banner = self.banner
-            self.banner = None
-            super().save(*args, **kwargs)
-            self.banner = banner
-            if "force_insert" in kwargs:
-                kwargs.pop("force_insert")
-        super().save(*args, **kwargs)
 
     class Meta:
         db_table = "user_mypage"

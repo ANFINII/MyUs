@@ -812,17 +812,15 @@ class Knowledge(TemplateView):
 class VideoCreate(CreateView):
     """VideoCreate"""
     model = Video
-    fields = ("title", "content", "image", "convert")
+    fields = ("channel", "title", "content", "image", "convert")
     template_name = "media/video/video_create.html"
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
         form.save()
 
-        obj_id = f"object_{form.instance.id}"
-        user_id = f"user_{form.instance.author.id}"
+        channel_ulid = form.instance.channel.ulid
         media_root = settings.MEDIA_ROOT
-        video_path = os.path.join(media_root, "videos", "videos_video", user_id, obj_id)
+        video_path = os.path.join(media_root, "videos", "video", f"channel_{channel_ulid}")
         video_file = os.path.join(video_path, os.path.basename(f"{form.instance.convert}"))
 
         file_path = convert_exe(video_file, video_path, media_root)
@@ -867,11 +865,10 @@ class VideoDetail(DetailView):
 class MusicCreate(CreateView):
     """MusicCreate"""
     model = Music
-    fields = ("title", "content", "lyric", "music", "download")
+    fields = ("channel", "title", "content", "lyric", "music", "download")
     template_name = "media/music/music_create.html"
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
         return super(MusicCreate, self).form_valid(form)
 
     def get_success_url(self):
@@ -911,11 +908,10 @@ class MusicDetail(DetailView):
 class ComicCreate(CreateView):
     """ComicCreate"""
     model = Comic
-    fields = ("title", "content", "image")
+    fields = ("channel", "title", "content", "image")
     template_name = "media/comic/comic_create.html"
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
         comic_images = self.request.FILES.getlist("comic_image")
         self.object = form.save()
 
@@ -959,11 +955,10 @@ class ComicDetail(DetailView):
 class PictureCreate(CreateView):
     """PictureCreate"""
     model = Picture
-    fields = ("title", "content", "image")
+    fields = ("channel", "title", "content", "image")
     template_name = "media/picture/picture_create.html"
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
         return super(PictureCreate, self).form_valid(form)
 
     def get_success_url(self):
@@ -1007,11 +1002,10 @@ def get_delta(delta, html):
 class BlogCreate(CreateView):
     """BlogCreate"""
     model = Blog
-    fields = ("title", "content", "image", "richtext")
+    fields = ("channel", "title", "content", "image", "richtext")
     template_name = "media/blog/blog_create.html"
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
         delta = self.request.POST["delta"]
         html = self.request.POST["richtext"]
         form.instance.delta = get_delta(delta, html)
@@ -1054,11 +1048,10 @@ class BlogDetail(DetailView):
 class ChatCreate(CreateView):
     """ChatCreate"""
     model = Chat
-    fields = ("title", "content", "period")
+    fields = ("channel", "title", "content", "period")
     template_name = "media/chat/chat_create.html"
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
         return super(ChatCreate, self).form_valid(form)
 
     def get_success_url(self):
