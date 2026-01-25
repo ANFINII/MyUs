@@ -7,7 +7,7 @@ import ErrorCheck from 'components/widgets/Error/Check'
 import Comics from 'components/templates/media/comic/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
-  const translations = await serverSideTranslations(locale as string, ['common'])
+  const translations = await serverSideTranslations(String(locale), ['common'])
   const params = searchParams(query)
   const ret = await getComics(params)
   if (ret.isErr()) return { props: { status: ret.error.status } }
