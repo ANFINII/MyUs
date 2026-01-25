@@ -1,11 +1,11 @@
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
-import BackError from 'components/parts/Error/Back'
+import BackLogin from 'components/parts/Error/Login'
 
 export default function Unauthorized(): React.JSX.Element {
   return (
     <Main title="Unauthorized">
-      <BackError content="ログインしてください" />
+      <BackLogin content="ログインしてください" />
       <Footer />
     </Main>
   )
