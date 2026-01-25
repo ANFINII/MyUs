@@ -1,8 +1,7 @@
 {
-  "header": {
-  },
+  "welcome": "MyUsへようこそ",
+  "header": {},
   "sidebar": {
-    "accounts": {
-    }
+    "accounts": {}
   }
 }

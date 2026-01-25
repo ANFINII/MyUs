@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next'
 import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
@@ -15,6 +16,7 @@ import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
 
 export default function Login(): React.JSX.Element {
+  const { t } = useTranslation('common')
   const router = useRouter()
   const { updateUser } = useUser()
   const { toast, handleToast } = useToast()
@@ -47,7 +49,7 @@ export default function Login(): React.JSX.Element {
     <Main title="ログイン" toast={toast}>
       <article className="article_registration">
         <form method="POST" action="" className="form_account">
-          <h1 className="login_h1">MyUsへようこそ</h1>
+          <h1 className="login_h1">{t('welcome')}</h1>
 
           {message && (
             <ul className="messages_login">
