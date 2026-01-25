@@ -4,7 +4,7 @@ import Custom500 from 'components/widgets/Error/500'
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  return { props: translations }
+  return { props: { ...translations } }
 }
 
 export default function Custom500Page(): React.JSX.Element {

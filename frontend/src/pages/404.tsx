@@ -4,7 +4,7 @@ import Custom404 from 'components/widgets/Error/404'
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  return { props: translations }
+  return { props: { ...translations } }
 }
 
 export default function Custom404Page(): React.JSX.Element {
