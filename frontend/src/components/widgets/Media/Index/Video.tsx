@@ -63,9 +63,7 @@ export default function MediaVideo(props: Props): React.JSX.Element {
             preload: 'metadata',
           }}
         />
-        <div className={style.media_content}>
-          <MediaContent href={`/media/video/${ulid}`} media={media} />
-        </div>
+        <MediaContent href={`/media/video/${ulid}`} media={media} />
       </div>
     </section>
   )
