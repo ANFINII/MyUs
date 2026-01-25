@@ -10,7 +10,6 @@ import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
 import Select from 'components/parts/Input/Select'
@@ -55,17 +54,15 @@ export default function VideoCreate(props: Props): React.JSX.Element {
 
   return (
     <Main title="Video" type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
-      <LoginError margin="mt_20">
-        <form method="POST" action="" encType="multipart/form-data">
-          <VStack gap="8">
-            <Select label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
-            <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
-            <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
-            <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
-            <InputFile label="動画" accept="video/*" required={isRequired} onChange={handleMovie} />
-          </VStack>
-        </form>
-      </LoginError>
+      <form method="POST" action="" encType="multipart/form-data">
+        <VStack gap="8">
+          <Select label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
+          <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
+          <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
+          <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
+          <InputFile label="動画" accept="video/*" required={isRequired} onChange={handleMovie} />
+        </VStack>
+      </form>
     </Main>
   )
 }

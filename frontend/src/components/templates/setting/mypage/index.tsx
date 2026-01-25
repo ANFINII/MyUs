@@ -2,7 +2,6 @@ import { useRouter } from 'next/router'
 import { MypageOut } from 'types/internal/user'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import LoginError from 'components/parts/Error/Login'
 import IconPicture from 'components/parts/Icon/Picture'
 import Toggle from 'components/parts/Input/Toggle'
 import HStack from 'components/parts/Stack/Horizontal'
@@ -30,45 +29,43 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
 
   return (
     <Main title="マイページ設定" type="table" button={button}>
-      <LoginError>
-        <Table>
-          <TableRow label="バナー画像">
-            {mypage.banner !== '' ? (
-              <label htmlFor="account_image" className="mypage_image">
-                <LightBox width=" 270" height="56" src={mypage.banner} title={mypage.nickname} />
-              </label>
-            ) : (
-              <label htmlFor="account_image" className="account_image_edit">
-                <IconPicture size="56" />
-              </label>
-            )}
-          </TableRow>
-          <TableRow isIndent label="投稿者名">
-            {mypage.nickname}
-          </TableRow>
-          <TableRow isIndent label="メールアドレス">
-            {mypage.email}
-          </TableRow>
-          <TableRow isIndent label="フォロー数">
-            {mypage.followingCount}
-          </TableRow>
-          <TableRow isIndent label="フォロワー数">
-            {mypage.followerCount}
-          </TableRow>
-          <TableRow isIndent label="料金プラン">
-            {mypage.plan}
-          </TableRow>
-          <TableRow isIndent label="全体広告">
-            <Toggle isActive={mypage.isAdvertise} disable />
-          </TableRow>
-          <TableRow isIndent label="タグID">
-            GTM{mypage.tagManagerId && '-' + mypage.tagManagerId}
-          </TableRow>
-          <TableRow isIndent label="概要">
-            <div className="pv_4 ws_wrap">{mypage.content}</div>
-          </TableRow>
-        </Table>
-      </LoginError>
+      <Table>
+        <TableRow label="バナー画像">
+          {mypage.banner !== '' ? (
+            <label htmlFor="account_image" className="mypage_image">
+              <LightBox width=" 270" height="56" src={mypage.banner} title={mypage.nickname} />
+            </label>
+          ) : (
+            <label htmlFor="account_image" className="account_image_edit">
+              <IconPicture size="56" />
+            </label>
+          )}
+        </TableRow>
+        <TableRow isIndent label="投稿者名">
+          {mypage.nickname}
+        </TableRow>
+        <TableRow isIndent label="メールアドレス">
+          {mypage.email}
+        </TableRow>
+        <TableRow isIndent label="フォロー数">
+          {mypage.followingCount}
+        </TableRow>
+        <TableRow isIndent label="フォロワー数">
+          {mypage.followerCount}
+        </TableRow>
+        <TableRow isIndent label="料金プラン">
+          {mypage.plan}
+        </TableRow>
+        <TableRow isIndent label="全体広告">
+          <Toggle isActive={mypage.isAdvertise} disable />
+        </TableRow>
+        <TableRow isIndent label="タグID">
+          GTM{mypage.tagManagerId && '-' + mypage.tagManagerId}
+        </TableRow>
+        <TableRow isIndent label="概要">
+          <div className="pv_4 ws_wrap">{mypage.content}</div>
+        </TableRow>
+      </Table>
     </Main>
   )
 }

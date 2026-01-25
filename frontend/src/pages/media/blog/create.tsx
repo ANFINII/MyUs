@@ -2,19 +2,26 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Channel } from 'types/internal/channle'
 import { getChannels } from 'api/internal/channel'
+import ErrorCheck from 'components/widgets/Error/Check'
 import BlogCreate from 'components/templates/media/blog/create'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(locale as string, ['common'])
   const ret = await getChannels(req)
-  const channels = ret.isOk() ? ret.value : []
+  if (ret.isErr()) return { props: { status: ret.error.status } }
+  const channels = ret.value
   return { props: { ...translations, channels } }
 }
 
 interface Props {
+  status: number
   channels: Channel[]
 }
 
 export default function BlogCreatePage(props: Props): React.JSX.Element {
-  return <BlogCreate {...props} />
+  return (
+    <ErrorCheck status={props.status}>
+      <BlogCreate {...props} />
+    </ErrorCheck>
+  )
 }

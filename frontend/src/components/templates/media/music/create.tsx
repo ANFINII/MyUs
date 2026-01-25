@@ -10,7 +10,6 @@ import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import LoginError from 'components/parts/Error/Login'
 import Input from 'components/parts/Input'
 import CheckBox from 'components/parts/Input/CheckBox'
 import InputFile from 'components/parts/Input/File'
@@ -56,20 +55,18 @@ export default function MusicCreate(props: Props): React.JSX.Element {
 
   return (
     <Main title="Music" type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
-      <LoginError margin="mt_20">
-        <form method="POST" action="" encType="multipart/form-data">
-          <VStack gap="8">
-            <Select label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
-            <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
-            <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
-            <Textarea label="歌詞" name="lyric" required={isRequired} onChange={handleText} />
-            <VStack gap="2">
-              <InputFile label="音楽" accept="audio/*" required={isRequired} onChange={handleFile} />
-              <CheckBox label="ダウンロード許可" name="download" defaultChecked onChange={handleCheck} />
-            </VStack>
+      <form method="POST" action="" encType="multipart/form-data">
+        <VStack gap="8">
+          <Select label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
+          <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
+          <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
+          <Textarea label="歌詞" name="lyric" required={isRequired} onChange={handleText} />
+          <VStack gap="2">
+            <InputFile label="音楽" accept="audio/*" required={isRequired} onChange={handleFile} />
+            <CheckBox label="ダウンロード許可" name="download" defaultChecked onChange={handleCheck} />
           </VStack>
-        </form>
-      </LoginError>
+        </VStack>
+      </form>
     </Main>
   )
 }

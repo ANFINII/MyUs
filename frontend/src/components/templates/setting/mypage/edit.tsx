@@ -7,7 +7,6 @@ import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import LoginError from 'components/parts/Error/Login'
 import IconPicture from 'components/parts/Icon/Picture'
 import Input from 'components/parts/Input'
 import InputImage from 'components/parts/Input/Image'
@@ -63,43 +62,41 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
 
   return (
     <Main title="マイページ設定" type="table" toast={toast} button={button}>
-      <LoginError>
-        {message && (
-          <ul className="messages_profile">
-            <li>{message}</li>
-          </ul>
-        )}
+      {message && (
+        <ul className="messages_profile">
+          <li>{message}</li>
+        </ul>
+      )}
 
-        <Table>
-          <TableRow label="バナー画像">
-            <InputImage id="banner" className="account_image_edit" icon={<IconPicture size="56" />} onChange={handleBanner} />
-          </TableRow>
-          <TableRow isIndent label="投稿者名">
-            {values.nickname}
-          </TableRow>
-          <TableRow label="メールアドレス">
-            <Input name="email" value={values.email} maxLength={120} onChange={handleInput} />
-          </TableRow>
-          <TableRow isIndent label="フォロー数">
-            {values.followingCount}
-          </TableRow>
-          <TableRow isIndent label="フォロワー数">
-            {values.followerCount}
-          </TableRow>
-          <TableRow isIndent label="料金プラン">
-            {values.plan}
-          </TableRow>
-          <TableRow isIndent label="全体広告">
-            {values.plan === 'Free' ? <Toggle isActive={values.isAdvertise} disable /> : <Toggle isActive={values.isAdvertise} onClick={handleToggle} />}
-          </TableRow>
-          <TableRow label="タグID">
-            <Input name="tagManagerId" value={values.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleInput} />
-          </TableRow>
-          <TableRow label="概要">
-            <Textarea name="content" defaultValue={values.content} onChange={handleText} />
-          </TableRow>
-        </Table>
-      </LoginError>
+      <Table>
+        <TableRow label="バナー画像">
+          <InputImage id="banner" className="account_image_edit" icon={<IconPicture size="56" />} onChange={handleBanner} />
+        </TableRow>
+        <TableRow isIndent label="投稿者名">
+          {values.nickname}
+        </TableRow>
+        <TableRow label="メールアドレス">
+          <Input name="email" value={values.email} maxLength={120} onChange={handleInput} />
+        </TableRow>
+        <TableRow isIndent label="フォロー数">
+          {values.followingCount}
+        </TableRow>
+        <TableRow isIndent label="フォロワー数">
+          {values.followerCount}
+        </TableRow>
+        <TableRow isIndent label="料金プラン">
+          {values.plan}
+        </TableRow>
+        <TableRow isIndent label="全体広告">
+          {values.plan === 'Free' ? <Toggle isActive={values.isAdvertise} disable /> : <Toggle isActive={values.isAdvertise} onClick={handleToggle} />}
+        </TableRow>
+        <TableRow label="タグID">
+          <Input name="tagManagerId" value={values.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleInput} />
+        </TableRow>
+        <TableRow label="概要">
+          <Textarea name="content" defaultValue={values.content} onChange={handleText} />
+        </TableRow>
+      </Table>
     </Main>
   )
 }
