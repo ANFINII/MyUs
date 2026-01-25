@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
+import { appWithTranslation } from 'next-i18next'
 import { UserProvider } from 'components/provider/UserProvider'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
@@ -23,7 +24,7 @@ import 'styles/internal/audio.scss'
 import 'video.js/dist/video-js.css'
 import 'styles/internal/videojs-myus.scss'
 
-export default function MyApp(props: AppProps) {
+function MyApp(props: AppProps) {
   const { Component, pageProps } = props
   const router = useRouter()
   return (
@@ -36,3 +37,5 @@ export default function MyApp(props: AppProps) {
     </UserProvider>
   )
 }
+
+export default appWithTranslation(MyApp)
