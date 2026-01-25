@@ -6,7 +6,6 @@ import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import LoginError from 'components/parts/Error/Login'
 import Toggle from 'components/parts/Input/Toggle'
 import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
@@ -53,18 +52,16 @@ export default function SettingNotification(props: Props): React.JSX.Element {
 
   return (
     <Main title="通知設定" type="table" toast={toast} button={button}>
-      <LoginError>
-        <Table>
-          <TableRow isIndent label="通知設定">
-            フォローしているユーザの投稿通知などを設定
+      <Table>
+        <TableRow isIndent label="通知設定">
+          フォローしているユーザの投稿通知などを設定
+        </TableRow>
+        {Object.keys(userNotification).map((key) => (
+          <TableRow key={key} isIndent label={`${key.slice(2)}通知`}>
+            <Toggle isActive={values[key as keyof UserNotification]} onClick={() => handleToggle(key as keyof UserNotification)} />
           </TableRow>
-          {Object.keys(userNotification).map((key) => (
-            <TableRow key={key} isIndent label={`${key.slice(2)}通知`}>
-              <Toggle isActive={values[key as keyof UserNotification]} onClick={() => handleToggle(key as keyof UserNotification)} />
-            </TableRow>
-          ))}
-        </Table>
-      </LoginError>
+        ))}
+      </Table>
     </Main>
   )
 }

@@ -14,7 +14,6 @@ import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import LoginError from 'components/parts/Error/Login'
 import ExImage from 'components/parts/ExImage'
 import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
@@ -92,85 +91,83 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
 
   return (
     <Main title="アカウント設定" type="table" toast={toast} button={button}>
-      <LoginError>
-        {message && (
-          <ul className="messages_profile">
-            <li>{message}</li>
-          </ul>
-        )}
+      {message && (
+        <ul className="messages_profile">
+          <li>{message}</li>
+        </ul>
+      )}
 
-        <Table>
-          <TableRow label="アバター画像">
-            <InputImage
-              id="avatar"
-              className="account_image_edit"
-              icon={
-                url ? (
-                  <div className="account_image">
-                    <ExImage src={url} size="56" />
-                  </div>
-                ) : (
-                  <div className="account_image_edit">
-                    <IconPerson size="56" type="square" />
-                  </div>
-                )
-              }
-              onChange={handleAvatar}
-            />
-          </TableRow>
-          <TableRow label="メールアドレス">
-            <Input name="email" value={values.email} maxLength={120} required={isRequired} onChange={handleInput} />
-          </TableRow>
-          <TableRow label="ユーザー名">
-            <Input name="username" value={values.username} maxLength={30} placeholder="英数字" required={isRequired} onChange={handleInput} />
-          </TableRow>
-          <TableRow label="投稿者名">
-            <Input name="nickname" value={values.nickname} maxLength={60} required={isRequired} onChange={handleInput} />
-          </TableRow>
-          <TableRow label="名前">
-            <HStack gap="1" full>
-              <Input name="lastName" value={values.lastName} placeholder="姓" maxLength={30} required={isRequired} onChange={handleInput} />
-              <Input name="firstName" value={values.firstName} placeholder="名" maxLength={30} required={isRequired} onChange={handleInput} />
-            </HStack>
-          </TableRow>
-          <TableRow label="生年月日">
-            <HStack gap="1" full>
-              <Select name="year" value={values.year} options={years} onChange={handleNumberSelect} />
-              <Select name="month" value={values.month} options={months} onChange={handleNumberSelect} />
-              <Select name="day" value={values.day} options={days} onChange={handleNumberSelect} />
-            </HStack>
-          </TableRow>
-          <TableRow isIndent label="年齢">
-            {getAge(values.year, values.month, values.day)}歳
-          </TableRow>
-          <TableRow label="性別">
-            <HStack gap="5" className="pl_4">
-              {Object.entries(GenderType).map(([key, value]) => (
-                <Radio key={key} name="gender" label={genderMap[value]} value={value} checked={value === values.gender} onChange={handleInput} />
-              ))}
-            </HStack>
-          </TableRow>
-          <TableRow label="電話番号">
-            <Input type="tel" name="phone" value={values.phone} maxLength={15} required={isRequired} onChange={handleInput} />
-          </TableRow>
-          <TableRow label="郵便番号">
-            <div className="d_flex">
-              <Input type="tel" name="postalCode" value={values.postalCode} maxLength={8} className="mr_2" required={isRequired} onChange={handleInput} />
-              <Button name="住所自動入力" onClick={handleAutoAddress} />
-            </div>
-          </TableRow>
-          <TableRow label="住所">
-            <HStack gap="1" full>
-              <Select name="prefecture" value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handleSelect} />
-              <Input name="city" value={values.city} placeholder="市区町村" maxLength={255} onChange={handleInput} />
-              <Input name="street" value={values.street} placeholder="町名番地" maxLength={255} onChange={handleInput} />
-            </HStack>
-          </TableRow>
-          <TableRow label="自己紹介">
-            <Textarea name="introduction" defaultValue={values.introduction} onChange={handleText} />
-          </TableRow>
-        </Table>
-      </LoginError>
+      <Table>
+        <TableRow label="アバター画像">
+          <InputImage
+            id="avatar"
+            className="account_image_edit"
+            icon={
+              url ? (
+                <div className="account_image">
+                  <ExImage src={url} size="56" />
+                </div>
+              ) : (
+                <div className="account_image_edit">
+                  <IconPerson size="56" type="square" />
+                </div>
+              )
+            }
+            onChange={handleAvatar}
+          />
+        </TableRow>
+        <TableRow label="メールアドレス">
+          <Input name="email" value={values.email} maxLength={120} required={isRequired} onChange={handleInput} />
+        </TableRow>
+        <TableRow label="ユーザー名">
+          <Input name="username" value={values.username} maxLength={30} placeholder="英数字" required={isRequired} onChange={handleInput} />
+        </TableRow>
+        <TableRow label="投稿者名">
+          <Input name="nickname" value={values.nickname} maxLength={60} required={isRequired} onChange={handleInput} />
+        </TableRow>
+        <TableRow label="名前">
+          <HStack gap="1" full>
+            <Input name="lastName" value={values.lastName} placeholder="姓" maxLength={30} required={isRequired} onChange={handleInput} />
+            <Input name="firstName" value={values.firstName} placeholder="名" maxLength={30} required={isRequired} onChange={handleInput} />
+          </HStack>
+        </TableRow>
+        <TableRow label="生年月日">
+          <HStack gap="1" full>
+            <Select name="year" value={values.year} options={years} onChange={handleNumberSelect} />
+            <Select name="month" value={values.month} options={months} onChange={handleNumberSelect} />
+            <Select name="day" value={values.day} options={days} onChange={handleNumberSelect} />
+          </HStack>
+        </TableRow>
+        <TableRow isIndent label="年齢">
+          {getAge(values.year, values.month, values.day)}歳
+        </TableRow>
+        <TableRow label="性別">
+          <HStack gap="5" className="pl_4">
+            {Object.entries(GenderType).map(([key, value]) => (
+              <Radio key={key} name="gender" label={genderMap[value]} value={value} checked={value === values.gender} onChange={handleInput} />
+            ))}
+          </HStack>
+        </TableRow>
+        <TableRow label="電話番号">
+          <Input type="tel" name="phone" value={values.phone} maxLength={15} required={isRequired} onChange={handleInput} />
+        </TableRow>
+        <TableRow label="郵便番号">
+          <div className="d_flex">
+            <Input type="tel" name="postalCode" value={values.postalCode} maxLength={8} className="mr_2" required={isRequired} onChange={handleInput} />
+            <Button name="住所自動入力" onClick={handleAutoAddress} />
+          </div>
+        </TableRow>
+        <TableRow label="住所">
+          <HStack gap="1" full>
+            <Select name="prefecture" value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handleSelect} />
+            <Input name="city" value={values.city} placeholder="市区町村" maxLength={255} onChange={handleInput} />
+            <Input name="street" value={values.street} placeholder="町名番地" maxLength={255} onChange={handleInput} />
+          </HStack>
+        </TableRow>
+        <TableRow label="自己紹介">
+          <Textarea name="introduction" defaultValue={values.introduction} onChange={handleText} />
+        </TableRow>
+      </Table>
     </Main>
   )
 }

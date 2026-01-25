@@ -1,5 +1,6 @@
 import Custom404 from 'components/widgets/Error/404'
 import Custom500 from 'components/widgets/Error/500'
+import Unauthorized from 'components/widgets/Error/Unauthorized'
 
 interface Props {
   status: number
@@ -11,5 +12,6 @@ export default function ErrorCheck(props: Props): React.JSX.Element {
 
   if (status >= 500) return <Custom500 />
   if (status >= 404) return <Custom404 />
+  if (status === 401) return <Unauthorized />
   return <>{children}</>
 }
