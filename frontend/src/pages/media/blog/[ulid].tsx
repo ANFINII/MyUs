@@ -6,7 +6,7 @@ import ErrorCheck from 'components/widgets/Error/Check'
 import BlogDetail from 'components/templates/media/blog/detail'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
-  const translations = await serverSideTranslations(locale as string, ['common'])
+  const translations = await serverSideTranslations(String(locale), ['common'])
   const ret = await getBlog(String(query.ulid), req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const data = ret.value

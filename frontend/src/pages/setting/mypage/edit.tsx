@@ -6,7 +6,7 @@ import ErrorCheck from 'components/widgets/Error/Check'
 import SettingMyPageEdit from 'components/templates/setting/mypage/edit'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const translations = await serverSideTranslations(locale as string, ['common'])
+  const translations = await serverSideTranslations(String(locale), ['common'])
   const ret = await getSettingMypage(req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const mypage = ret.value

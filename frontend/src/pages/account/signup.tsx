@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Signup from 'components/templates/account/signup'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  const translations = await serverSideTranslations(locale as string, ['common'])
+  const translations = await serverSideTranslations(String(locale), ['common'])
   return { props: { ...translations } }
 }
 

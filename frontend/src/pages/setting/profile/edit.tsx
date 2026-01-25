@@ -6,7 +6,7 @@ import ErrorCheck from 'components/widgets/Error/Check'
 import SettingProfileEdit from 'components/templates/setting/profile/edit'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const translations = await serverSideTranslations(locale as string, ['common'])
+  const translations = await serverSideTranslations(String(locale), ['common'])
   const ret = await getSettingProfile(req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const profile = ret.value
