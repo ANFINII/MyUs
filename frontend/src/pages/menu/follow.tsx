@@ -12,7 +12,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
   const ret = await getFollow(params, req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const datas = ret.value
-  return { props: { datas, ...translations } }
+  return { props: { ...translations, datas } }
 }
 
 interface Props {

@@ -10,7 +10,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   const ret = await getSettingMypage(req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const mypage = ret.value
-  return { props: { mypage, ...translations } }
+  return { props: { ...translations, mypage } }
 }
 
 interface Props {
