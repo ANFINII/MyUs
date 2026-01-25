@@ -12,7 +12,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query }) 
   const ret = await getHome(params)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const mediaHome = ret.value
-  return { props: { mediaHome, ...translations } }
+  return { props: { ...translations, mediaHome } }
 }
 
 interface Props {

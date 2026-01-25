@@ -10,7 +10,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   const ret = await getSettingNotification(req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const userNotification = ret.value
-  return { props: { userNotification, ...translations } }
+  return { props: { ...translations, userNotification } }
 }
 
 interface Props {
