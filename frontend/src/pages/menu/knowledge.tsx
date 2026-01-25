@@ -4,7 +4,7 @@ import Knowledge from 'components/templates/menu/knowledge'
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  return { props: translations }
+  return { props: { ...translations } }
 }
 
 export default function KnowledgePage(): React.JSX.Element {

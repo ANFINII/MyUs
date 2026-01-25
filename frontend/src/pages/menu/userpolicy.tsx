@@ -4,7 +4,7 @@ import UserPolicy from 'components/templates/menu/userpolicy'
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  return { props: translations }
+  return { props: { ...translations } }
 }
 
 export default function UserPolicyPage(): React.JSX.Element {
