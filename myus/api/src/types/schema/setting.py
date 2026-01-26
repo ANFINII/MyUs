@@ -69,8 +69,8 @@ class SettingMyPageOut(BaseModel):
     following_count: int
     tag_manager_id: str
     plan: str
-    plan_start_date: date
-    plan_end_date: date
+    plan_start_date: date | None
+    plan_end_date: date | None
     is_advertise: bool
 
 
