@@ -4,7 +4,7 @@ import { appWithTranslation } from 'next-i18next'
 import { UserProvider } from 'components/provider/UserProvider'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
-import Error from 'components/widgets/Error'
+import Unexpected from 'components/widgets/Error/Unexpected'
 import 'styles/global/reset.scss'
 import 'styles/global/style.scss'
 import 'styles/global/quill/index.scss'
@@ -30,7 +30,7 @@ function MyApp(props: AppProps) {
   return (
     <UserProvider>
       <Layout>
-        <ErrorBoundary fallback={<Error />} resetKeys={[router.pathname]}>
+        <ErrorBoundary fallback={<Unexpected />} resetKeys={[router.pathname]}>
           <Component {...pageProps} />
         </ErrorBoundary>
       </Layout>
