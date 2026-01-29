@@ -4,15 +4,15 @@ from api.utils.functions.index import new_ulid
 
 
 def avatar_path(type: ImageType, ulid: str, filename: str) -> str:
-    return f"images/{type}/{ulid}/{new_ulid()}_{filename}"
+    return f"images/{type.value}/{ulid}/{new_ulid()}_{filename}"
 
 
 def image_path(type: ImageType, ulid: str, filename: str) -> str:
-    return f"images/{type}/channel_{ulid}/{new_ulid()}_{filename}"
+    return f"images/{type.value}/channel_{ulid}/{new_ulid()}_{filename}"
 
 
 def video_path(type: VideoType, ulid: str, filename: str) -> str:
-    return f"videos/{type}/channel_{ulid}/{new_ulid()}_{filename}"
+    return f"videos/{type.value}/channel_{ulid}/{new_ulid()}_{filename}"
 
 
 def musics_path(ulid: str, filename: str) -> str:
