@@ -1,6 +1,6 @@
-import Custom404 from 'components/widgets/Error/Custom404'
-import Custom500 from 'components/widgets/Error/Custom500'
-import Unauthorized from 'components/widgets/Error/Unauthorized'
+import Custom404 from './Custom404'
+import Custom500 from './Custom500'
+import Unauthorized from './Unauthorized'
 import Unexpected from './Unexpected'
 
 interface Props {
