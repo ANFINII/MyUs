@@ -3,8 +3,10 @@ from django.conf import settings
 from api.db.models.user import User
 from api.src.domain.comment import CommentDomain, FilterOption as CommentFilterOption, SortOption as CommentSortOption
 from api.src.domain.serach_tag import SearchTagDomain, FilterOption as SearchTagFilterOption, SortOption as SearchTagSortOption
-from api.src.domain.user import FilterOption, SortOption, UserDomain
 from api.src.domain.media.index import FilterOption as MediaFilterOption, SortOption as MediaSortOption, ExcludeOption
+from api.src.domain.user import FilterOption, SortOption, UserDomain
+# from api.src.domain.user.data import user_data
+# from api.src.domain.user.type import UserData
 from api.src.types.data.user import LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingProfileIn
@@ -15,14 +17,14 @@ from api.utils.functions.validation import has_alphabet, has_username, has_email
 
 def get_user(request) -> User | None:
     token = request.COOKIES.get("access_token")
-    if not token:
+    if token is None:
         return None
 
     key = settings.SECRET_KEY
     try:
         payload = jwt.decode(jwt=token, key=key, algorithms=["HS256"])
         user_id = payload["user_id"]
-        if not user_id:
+        if user_id is None:
             return None
 
         user_ids = UserDomain.get_ids(FilterOption(id=user_id), SortOption())
@@ -39,7 +41,7 @@ def get_user(request) -> User | None:
         return None
 
 
-def profile_check(data: SettingProfileIn) -> str | None:
+def profile_check(data: SettingProfileIn) -> str:
     if has_email(data.email):
         return "メールアドレスの形式が違います!"
 
@@ -61,10 +63,10 @@ def profile_check(data: SettingProfileIn) -> str | None:
     if has_birthday(data.year, data.month, data.day):
         return f"{data.year}年{data.month}月{data.day}日は存在しない日付です!"
 
-    return None
+    return ""
 
 
-def signup_check(data: SignupIn) -> str | None:
+def signup_check(data: SignupIn) -> str:
     password1 = data.password1
     password2 = data.password2
 
@@ -98,7 +100,7 @@ def signup_check(data: SignupIn) -> str | None:
     if User.objects.filter(nickname=data.nickname).exists():
         return "投稿者名は既に登録されています!"
 
-    return None
+    return ""
 
 
 def get_search_tags(author_id: int) -> list[SearchTagData]:
