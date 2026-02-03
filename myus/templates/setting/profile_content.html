@@ -16,9 +16,9 @@
         <td class="td_color td-header">アバター画像</td>
         <td>
           <label for="account_image_input" class="account_image">
-            <a href="{{ user.image }}" data-lightbox="group">
+            <a href="{{ user_image }}" data-lightbox="group">
               <img
-                src="{{ user.image }}"
+                src="{{ user_image }}"
                 title="{{ user.nickname }}"
                 width="56px"
                 height="56xp"
@@ -42,17 +42,17 @@
       </tr>
       <tr>
         <td class="td_color">名前</td>
-        <td class="td_indent">{{ user.full_name }}</td>
+        <td class="td_indent">{{ user_full_name }}</td>
       </tr>
       <tr>
         <td class="td_color">生年月日</td>
         <td class="td_indent">
-          {{ user.year }}年{{ user.month }}月{{ user.day }}日
+          {{ user_year }}年{{ user_month }}月{{ user_day }}日
         </td>
       </tr>
       <tr>
         <td class="td_color">年齢</td>
-        <td class="td_indent">{{ user.age }}歳</td>
+        <td class="td_indent">{{ user_age }}歳</td>
       </tr>
       <tr>
         <td class="td_color">性別</td>
@@ -69,7 +69,7 @@
       <tr>
         <td class="td_color">住所</td>
         <td class="td_indent">
-          {{ user.prefecture }}{{ user.city }}{{ user.street }}
+          {{ user_prefecture }}{{ user_city }}{{ user_street }}
         </td>
       </tr>
       <tr>
