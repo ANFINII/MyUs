@@ -1,11 +1,11 @@
 from django.db import models
 from django_quill.fields import QuillField
 from django_ulid.models import ulid
-from api.db.models.master import Category, HashTag
 from api.db.models.base import MediaModel
-from api.db.models.user import User
 from api.db.models.channel import Channel
-from api.utils.functions.file import image_upload, video_upload, music_upload, comic_upload
+from api.db.models.master import Category, HashTag
+from api.db.models.user import User
+from api.utils.functions.file import comic_upload, image_upload, music_upload, video_upload
 
 
 # Video

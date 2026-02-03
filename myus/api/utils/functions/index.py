@@ -1,6 +1,6 @@
 from typing import TypeVar
-from config.settings.base import DOMAIN_URL
 from django_ulid.models import ulid
+from config.settings.base import DOMAIN_URL
 
 
 T = TypeVar('T')

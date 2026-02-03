@@ -4,7 +4,7 @@ from api.modules.logger import log
 from api.src.types.schema.comment import CommentCreateIn, CommentListIn, CommentOut, CommentUpdateIn, ReplyOut
 from api.src.types.schema.common import ErrorOut, MessageOut
 from api.src.types.schema.user import AuthorOut
-from api.src.usecase.comment import get_comments, create_comment, update_comment, delete_comment
+from api.src.usecase.comment import create_comment, delete_comment, get_comments, update_comment
 from api.src.usecase.user import get_user
 
 

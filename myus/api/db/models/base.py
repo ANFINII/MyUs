@@ -2,6 +2,7 @@ from api.db.models.comment import Comment
 from api.utils.enum.index import CommentType
 from api.utils.functions.map import comment_type_no_map
 
+
 class MediaModel:
     def __str__(self):
         return self.title

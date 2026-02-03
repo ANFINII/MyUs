@@ -1,5 +1,5 @@
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
 from api.src.types.data.comment import CommentData
 from api.src.types.data.message import MessageData
 from api.src.types.data.user import AuthorData, MediaUserData

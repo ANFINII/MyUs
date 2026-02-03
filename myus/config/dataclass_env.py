@@ -1,9 +1,10 @@
 import os
 from dataclasses import fields, is_dataclass
-from dacite import Config, from_dict
 from enum import Enum
 from pathlib import Path
 from typing import Any, TypeVar, cast, get_args, get_origin
+from dacite import Config, from_dict
+
 
 T = TypeVar("T")
 

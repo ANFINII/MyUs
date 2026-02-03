@@ -5,8 +5,9 @@ from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from api.db.models import Chat, Message, Notification
-from api.utils.enum.index import NotificationType, NotificationTypeNo, NotificationObjectType
+from api.utils.enum.index import NotificationObjectType, NotificationType, NotificationTypeNo
 from app.views import get_delta
+
 
 User = get_user_model()
 

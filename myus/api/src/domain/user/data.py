@@ -1,7 +1,7 @@
 from datetime import date
 from django.core.mail import send_mail
-from api.db.models.user import User, Profile, MyPage, UserPlan
-from .type import UserData, ProfileData, MyPageData, UserPlanData
+from api.db.models.user import MyPage, Profile, User, UserPlan
+from .type import MyPageData, ProfileData, UserData, UserPlanData
 
 
 def full_name(profile: Profile) -> str:

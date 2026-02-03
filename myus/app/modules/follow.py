@@ -1,5 +1,5 @@
 from api.db.models import Follow, Notification
-from api.utils.enum.index import NotificationType, NotificationTypeNo, NotificationObjectType
+from api.utils.enum.index import NotificationObjectType, NotificationType, NotificationTypeNo
 
 
 def follow_update_data(follower, following, follow):

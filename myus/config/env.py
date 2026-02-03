@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import TypeVar
 from config.dataclass_env import new
 
+
 T = TypeVar("T")
 
 BASE_DIR = Path(__file__).resolve().parent.parent

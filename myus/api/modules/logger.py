@@ -1,9 +1,9 @@
 import coloredlogs
-import traceback
 import inspect
+import traceback
 from datetime import datetime
 from enum import Enum
-from logging import getLogger, Formatter, StreamHandler, FileHandler, Logger, LogRecord, DEBUG, INFO, WARNING, ERROR, CRITICAL
+from logging import CRITICAL, DEBUG, ERROR, INFO, WARNING, FileHandler, Formatter, Logger, LogRecord, StreamHandler, getLogger
 from pathlib import Path
 from typing import Any, ClassVar, Self
 

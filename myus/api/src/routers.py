@@ -1,9 +1,9 @@
 from ninja import NinjaAPI
 from api.src.adapter.auth import AuthAPI
-from api.src.adapter.user import UserAPI
-from api.src.adapter.media import HomeAPI, VideoAPI, MusicAPI, ComicAPI, PictureAPI, BlogAPI, ChatAPI
-from api.src.adapter.setting import SettingProfileAPI, SettingMyPageAPI, SettingNotificationAPI
 from api.src.adapter.comment import CommentAPI
+from api.src.adapter.media import BlogAPI, ChatAPI, ComicAPI, HomeAPI, MusicAPI, PictureAPI, VideoAPI
+from api.src.adapter.setting import SettingMyPageAPI, SettingNotificationAPI, SettingProfileAPI
+from api.src.adapter.user import UserAPI
 
 
 api = NinjaAPI(title="MyUs API")

@@ -1,6 +1,5 @@
 from django.http import HttpRequest
 from ninja import Router
-
 from api.modules.logger import log
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.common import ErrorOut, MessageOut
@@ -8,9 +7,9 @@ from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagOut, UserOut
 from api.src.usecase.channel import get_user_channels
-from api.src.usecase.follow import get_follows, get_followers, upsert_follow
-from api.src.usecase.notification import get_notification, get_content_object
-from api.src.usecase.user import get_user, get_search_tags, like_comment, like_media
+from api.src.usecase.follow import get_followers, get_follows, upsert_follow
+from api.src.usecase.notification import get_content_object, get_notification
+from api.src.usecase.user import get_search_tags, get_user, like_comment, like_media
 from api.utils.functions.index import create_url
 
 
@@ -25,11 +24,11 @@ class UserAPI:
         log.info("UserAPI get_user_me")
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         data = UserOut(
-            avatar=create_url(user.image()),
+            avatar=create_url(user.avatar),
             ulid=str(user.ulid),
             nickname=user.nickname,
             is_active=user.is_active,
@@ -44,7 +43,7 @@ class UserAPI:
         log.info("UserAPI search_tag")
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         tags = get_search_tags(user.id)
@@ -57,7 +56,7 @@ class UserAPI:
         log.info("UserAPI get_followers", search=search)
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         followers = get_followers(user.id, search, 100)
@@ -80,7 +79,7 @@ class UserAPI:
         log.info("UserAPI get_follows", search=search)
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         follows = get_follows(user.id, search, 100)
@@ -103,11 +102,11 @@ class UserAPI:
         log.info("UserAPI follow_user", input=input)
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         follow = upsert_follow(user, input.ulid, input.is_follow)
-        if not follow:
+        if follow is None:
             return 400, MessageOut(error=True, message="ユーザーが見つかりません!")
 
         data = FollowOut(is_follow=follow.is_follow, follower_count=follow.follower_count)
@@ -119,11 +118,11 @@ class UserAPI:
         log.info("UserAPI like_media", input=input)
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         like = like_media(user, input.media_type, input.ulid)
-        if not like:
+        if like is None:
             return 400, MessageOut(error=True, message="メディアが見つかりません!")
 
         data = LikeOut(is_like=like.is_like, like_count=like.like_count)
@@ -135,11 +134,11 @@ class UserAPI:
         log.info("UserAPI like_comment", input=input)
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         like = like_comment(user, input.ulid)
-        if not like:
+        if like is None:
             return 400, MessageOut(error=True, message="コメントが見つかりません!")
 
         data = LikeOut(is_like=like.is_like, like_count=like.like_count)
@@ -151,7 +150,7 @@ class UserAPI:
         log.info("UserAPI get_notifications")
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         notification = get_notification(user)
@@ -161,11 +160,11 @@ class UserAPI:
                 NotificationItemOut(
                     id=obj.id,
                     user_from=NotificationUserOut(
-                        avatar=create_url(obj.user_from.image()),
+                        avatar=create_url(obj.user_from.avatar),
                         nickname=obj.user_from.nickname,
                     ),
                     user_to=NotificationUserOut(
-                        avatar=create_url(obj.user_to.image()) if obj.user_to else "",
+                        avatar=create_url(obj.user_to.avatar) if obj.user_to else "",
                         nickname=obj.user_to.nickname if obj.user_to else "",
                     ),
                     type_no=obj.type_no,

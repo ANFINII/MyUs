@@ -1,7 +1,7 @@
-from base64 import b64encode, b64decode
+from base64 import b64decode, b64encode
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
-from config.settings.base import ENCRYPT_KEY, ENCRYPT_IV
+from config.settings.base import ENCRYPT_IV, ENCRYPT_KEY
 
 
 KEY = str(ENCRYPT_KEY).encode('utf-8')

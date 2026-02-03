@@ -2,17 +2,15 @@ import jwt
 from django.conf import settings
 from api.db.models.user import User
 from api.src.domain.comment import CommentDomain, FilterOption as CommentFilterOption, SortOption as CommentSortOption
-from api.src.domain.serach_tag import SearchTagDomain, FilterOption as SearchTagFilterOption, SortOption as SearchTagSortOption
-from api.src.domain.media.index import FilterOption as MediaFilterOption, SortOption as MediaSortOption, ExcludeOption
-from api.src.domain.user import FilterOption, SortOption, UserDomain
-# from api.src.domain.user.data import user_data
-# from api.src.domain.user.type import UserData
+from api.src.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
+from api.src.domain.serach_tag import FilterOption as SearchTagFilterOption, SearchTagDomain, SortOption as SearchTagSortOption
+from api.src.domain.user.domain import FilterOption, SortOption, UserDomain
 from api.src.types.data.user import LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingProfileIn
 from api.utils.enum.index import MediaType
 from api.utils.functions.media import get_media_domain_type
-from api.utils.functions.validation import has_alphabet, has_username, has_email, has_phone, has_postal_code, has_number, has_birthday
+from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
 
 def get_user(request) -> User | None:
