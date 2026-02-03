@@ -19,7 +19,7 @@ class CommentAPI:
         log.info("CommentAPI get", type_no=query.type_no, object_id=query.object_id)
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         comments = get_comments(type_no=query.type_no, object_id=query.object_id, user_id=user.id)
@@ -66,7 +66,7 @@ class CommentAPI:
         log.info("CommentAPI post", input=input)
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
@@ -101,7 +101,7 @@ class CommentAPI:
         log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
@@ -117,7 +117,7 @@ class CommentAPI:
         log.info("CommentAPI delete", comment_ulid=comment_ulid)
 
         user = get_user(request)
-        if not user:
+        if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:

@@ -26,6 +26,7 @@ from django.views.generic import View, TemplateView, ListView, DetailView, Creat
 from api.db.models import Profile, MyPage, SearchTag, UserNotification
 from api.db.models import Notification, Follow, Comment, Advertise, ComicPage
 from api.db.models import Video, Music, Comic, Picture, Blog, Chat
+from api.src.domain.user.data import email_user
 from api.utils.constant import model_like_dict, model_comment_dict
 from api.utils.enum.index import NotificationType, NotificationTypeNo, NotificationObjectType
 from api.utils.functions.convert.convert_hls import convert_exe
@@ -120,7 +121,7 @@ def signup_form(request):
             }
             subject = render_to_string("registration/email/account/subject.txt", context)
             message = render_to_string("registration/email/account/message.txt", context)
-            user.email_user(subject, message)
+            email_user(user, subject, message)
             messages.success(request, "本アカウント登録用のメールを送信しました!")
             return redirect("app:login")
         except Exception:
