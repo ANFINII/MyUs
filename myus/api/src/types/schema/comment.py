@@ -1,7 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel
 from api.src.types.schema.user import AuthorOut
-from api.utils.enum.index import CommentTypeNo, CommentType
+from api.utils.enum.index import CommentType, CommentTypeNo
 
 
 class CommentListIn(BaseModel):

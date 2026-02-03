@@ -1,14 +1,14 @@
-import pandas as pd
-import pandas.io.sql as psql
-import numpy as np
+from pprint import pprint
+from urllib.parse import urlparse
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import mysql.connector
-
-from sklearn import datasets, svm
+import numpy as np
+import pandas as pd
+import pandas.io.sql as psql
 from django.db import connections
-from urllib.parse import urlparse
-from pprint import pprint
+from sklearn import datasets, svm
+
 
 # DB情報の設定
 url = urlparse("mysql://anfinii:A5656gu3y!@127.0.0.1:3306/myus_db")

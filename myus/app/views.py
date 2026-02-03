@@ -1,43 +1,39 @@
 import datetime
-import logging
 import json
+import logging
 import os
 import random
 import string
 import stripe
-
-from django.db import IntegrityError
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib.auth.views import PasswordResetCompleteView, PasswordResetConfirmView, PasswordResetDoneView, PasswordResetView
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.signing import TimestampSigner,BadSignature, SignatureExpired, loads, dumps
+from django.core.signing import BadSignature, SignatureExpired, TimestampSigner, dumps, loads
+from django.db import IntegrityError
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
+from django.shortcuts import redirect, render
 from django.template.defaultfilters import linebreaksbr
+from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
-from django.views.generic import View, TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
-
-from api.db.models import Profile, MyPage, SearchTag, UserNotification
-from api.db.models import Notification, Follow, Comment, Advertise, ComicPage
-from api.db.models import Video, Music, Comic, Picture, Blog, Chat
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
+from api.db.models import Advertise, Blog, Chat, Comic, ComicPage, Comment, Follow, Music, MyPage, Notification, Picture, Profile, SearchTag, UserNotification, Video
 from api.src.domain.user.data import email_user
-from api.utils.constant import model_like_dict, model_comment_dict
-from api.utils.enum.index import NotificationType, NotificationTypeNo, NotificationObjectType
+from api.utils.constant import model_comment_dict, model_like_dict
+from api.utils.enum.index import NotificationObjectType, NotificationType, NotificationTypeNo
 from api.utils.functions.convert.convert_hls import convert_exe
-from api.utils.functions.validation import has_username, has_email, has_phone, has_postal_code, has_alphabet, has_number
+from api.utils.functions.validation import has_alphabet, has_email, has_number, has_phone, has_postal_code, has_username
 from app.modules.context_data import ContextData
+from app.modules.follow import follow_update_data
 from app.modules.get_form import get_detail
-from app.modules.pjax import pjax_context
 from app.modules.notification import notification_data, user_notification_update
+from app.modules.pjax import pjax_context
 from app.modules.search import Search
 from app.modules.success_url import success_url
-from app.modules.follow import follow_update_data
 
 
 logger = logging.getLogger(__name__)

@@ -1,11 +1,11 @@
 import os
-import ffmpeg_streaming
-
-from ffmpeg_streaming import FFProbe, Formats, Bitrate, Representation, Size
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+import ffmpeg_streaming
+from ffmpeg_streaming import Bitrate, FFProbe, Formats, Representation, Size
 from api.modules.logger import log
 from api.utils.functions.convert.master_m3u8 import Masterm3u8
+
 
 # from ffmpeg_streaming import  S3, CloudManager
 # s3 = S3(aws_access_key_id="YOUR_KEY_ID", aws_secret_access_key="YOUR_KEY_SECRET", region_name="YOUR_REGION")

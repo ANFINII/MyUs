@@ -1,7 +1,7 @@
 from api.db.models.user import User
 from api.src.domain.follow import FilterOption, FollowDomain, SortOption
-from api.src.types.data.user import AuthorData, MediaUserData
 from api.src.types.data.notification import NotificationUserData
+from api.src.types.data.user import AuthorData, MediaUserData
 from api.src.types.union.media import MediaModelType
 from api.utils.functions.index import create_url
 

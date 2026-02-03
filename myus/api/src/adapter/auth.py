@@ -1,12 +1,10 @@
 from dataclasses import asdict
 from datetime import date
 import jwt
-
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
-
 from api.modules.logger import log
 from api.src.domain.user import UserDomain
 from api.src.types.data.setting import ProfileCreateData

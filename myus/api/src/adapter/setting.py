@@ -2,17 +2,15 @@ import datetime
 from dataclasses import asdict
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
-
 from api.modules.logger import log
 from api.src.domain.user import UserDomain
-from api.src.types.data.setting import ProfileData, MyPageData
+from api.src.types.data.setting import MyPageData, ProfileData
 from api.src.types.data.user import UserInData
 from api.src.types.schema.common import ErrorOut, MessageOut
-from api.src.types.schema.setting import SettingProfileIn, SettingMyPageIn, SettingNotificationIn
-from api.src.types.schema.setting import SettingProfileOut, SettingMyPageOut, SettingNotificationOut
+from api.src.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
 from api.src.usecase.user import get_user, profile_check
-from api.utils.functions.validation import has_email
 from api.utils.functions.index import create_url
+from api.utils.functions.validation import has_email
 
 
 class SettingProfileAPI:

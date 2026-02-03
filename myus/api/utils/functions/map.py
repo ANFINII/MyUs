@@ -1,4 +1,4 @@
-from api.utils.enum.index import CommentTypeNo, CommentType, MediaType
+from api.utils.enum.index import CommentType, CommentTypeNo, MediaType
 
 
 def comment_type_map(type_no: CommentTypeNo) -> CommentType:

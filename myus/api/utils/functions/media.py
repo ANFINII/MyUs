@@ -1,11 +1,11 @@
 from typing import Type, assert_never
 from api.db.models import Video, Music, Comic, Picture, Blog, Chat
-from api.src.domain.media.video import VideoDomain
-from api.src.domain.media.music import MusicDomain
-from api.src.domain.media.comic import ComicDomain
-from api.src.domain.media.picture import PictureDomain
 from api.src.domain.media.blog import BlogDomain
 from api.src.domain.media.chat import ChatDomain
+from api.src.domain.media.comic import ComicDomain
+from api.src.domain.media.music import MusicDomain
+from api.src.domain.media.picture import PictureDomain
+from api.src.domain.media.video import VideoDomain
 from api.utils.enum.index import MediaType
 
 

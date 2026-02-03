@@ -1,7 +1,7 @@
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
 from api.src.types.data.user import AuthorData
-from api.utils.enum.index import CommentTypeNo, CommentType
+from api.utils.enum.index import CommentType, CommentTypeNo
 
 
 @dataclass(frozen=True, slots=True)

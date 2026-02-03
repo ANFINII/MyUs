@@ -2,9 +2,9 @@ from django.db.models import Count, F, Q
 from django.utils import timezone
 from api.db.models.media import Video
 from api.src.domain.index import sort_ids
-from api.src.domain.media.index import FilterOption, SortOption, ExcludeOption, SortType
-from api.utils.functions.search import search_q_list
+from api.src.domain.media.index import ExcludeOption, FilterOption, SortOption, SortType
 from api.utils.functions.index import set_attr
+from api.utils.functions.search import search_q_list
 
 
 class VideoDomain:
