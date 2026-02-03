@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
-from api.src.domain.user import UserDomain
+from api.src.domain.user.domain import UserDomain
 from api.src.types.data.setting import ProfileCreateData
 from api.src.types.data.user import UserCreateData
 from api.src.types.schema.auth import LoginIn, LoginOut, RefreshOut, SignupIn

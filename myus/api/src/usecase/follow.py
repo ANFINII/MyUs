@@ -2,7 +2,7 @@ from dataclasses import asdict
 from django.db import transaction
 from api.db.models.user import User
 from api.src.domain.follow import FilterOption, FollowDomain, SortOption
-from api.src.domain.user import FilterOption as UserFilterOption, SortOption as UserSortOption, UserDomain
+from api.src.domain.user.domain import FilterOption as UserFilterOption, SortOption as UserSortOption, UserDomain
 from api.src.types.data.follow import FollowCreateData, FollowOutData, FollowUserData
 from api.utils.functions.index import create_url
 

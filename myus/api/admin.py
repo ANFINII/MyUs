@@ -7,6 +7,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from django.db.models import Count
 from import_export.admin import ImportExportModelAdmin
 from api.db.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
+from api.db.models import User, Profile, MyPage, SearchTag, HashTag, UserNotification
 from api.db.models import Video, Music, Comic, Picture, Blog, Chat
 from api.db.models.channel import Channel
 from api.utils.constant import model_media_comment_dict
@@ -89,8 +90,8 @@ class ComicPageInlineAdmin(admin.StackedInline):
 
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
-    list_display = ("id", "email", "username", "nickname", "full_name", "birthday", "age", "gender", "plan")
-    search_fields = ("email", "username", "nickname", "full_name", "age", "gender", "plan")
+    list_display = ("id", "email", "username", "nickname")
+    search_fields = ("email", "username", "nickname")
     ordering = ("id",)
     filter_horizontal = ("groups", "user_permissions")
     readonly_fields = ("last_login", "date_joined")

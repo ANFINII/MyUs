@@ -3,7 +3,7 @@ from dataclasses import asdict
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.domain.user import UserDomain
+from api.src.domain.user.domain import UserDomain
 from api.src.types.data.setting import MyPageData, ProfileData
 from api.src.types.data.user import UserInData
 from api.src.types.schema.common import ErrorOut, MessageOut
