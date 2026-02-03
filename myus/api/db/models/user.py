@@ -1,9 +1,7 @@
-from datetime import date
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 from django.utils import timezone
 from django_ulid.models import ulid
@@ -51,7 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email", "nickname"]
+    REQUIRED_FIELDS = ["email"]
 
     def __str__(self):
         return self.nickname
@@ -62,70 +60,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         return True
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        send_mail(subject, message, from_email, [self.email], **kwargs)
-
-    def full_name(self):
-        return self.profile.last_name + " " + self.profile.first_name
-    full_name.short_description = "name"
-
-    def year(self):
-        if self.birthday:
-            return self.profile.birthday.year
-
-    def month(self):
-        if self.birthday:
-            return self.profile.birthday.month
-
-    def day(self):
-        if self.birthday:
-            return self.profile.birthday.day
-
-    def age(self):
-        if self.profile:
-            birthday = self.profile.birthday
-            DAYS_IN_YEAR = 365.2425
-            return int((date.today() - birthday).days / DAYS_IN_YEAR)
-
-    def gender(self):
-        return self.profile.gender
-
-    def birthday(self):
-        return self.profile.birthday
-
-    def prefecture(self):
-        return self.profile.prefecture
-
-    def city(self):
-        return self.profile.city
-
-    def street(self):
-        return self.profile.street
-
-    def image(self):
-        if self.avatar:
-            return self.avatar.url
-
-    def banner(self):
-        if self.mypage.banner:
-            return self.mypage.banner.url
-
-    def plan(self):
-        return self.user_plan.plan.name
-
-    def plan_start_date(self):
-        return self.user_plan.start_date
-
-    def plan_end_date(self):
-        return self.user_plan.end_date
-
     class Meta:
         db_table = "user"
         verbose_name_plural = "001 User"
-        indexes = [
-            models.Index(fields=["email"], name="email_idx"),
-            models.Index(fields=["username"], name="username_idx"),
-        ]
 
 
 class Profile(models.Model):

@@ -5,6 +5,6 @@ from dataclasses import dataclass
 class PlanData:
     name: str
     stripe_api_id: str
-    price: str
+    price: int
     max_advertise: int
-    description: int
+    description: str

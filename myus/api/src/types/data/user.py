@@ -1,14 +1,4 @@
 from dataclasses import dataclass
-from api.src.types.data.plan import PlanData
-
-
-@dataclass(frozen=True, slots=True)
-class UserData:
-    avatar: str
-    ulid: str
-    nickname: str
-    is_active: bool
-    is_staff: bool
 
 
 @dataclass(frozen=True, slots=True)
@@ -25,16 +15,6 @@ class UserInData:
     email: str
     username: str
     nickname: str
-
-
-@dataclass(frozen=True, slots=True)
-class UserPlanData:
-    plan: PlanData
-    customer_id: str
-    subscription: str
-    is_paid: int
-    start_date: int
-    end_date: int
 
 
 @dataclass(frozen=True, slots=True)
