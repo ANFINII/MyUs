@@ -53,6 +53,9 @@
   "eslint.lintTask.enable": true,
   "python.languageServer": "None",
   "python.defaultInterpreterPath": "${workspaceFolder}/myus/.venv/bin/python",
+  "mypy-type-checker.path": ["${workspaceFolder}/myus/.venv/bin/mypy"],
+  "mypy-type-checker.importStrategy": "fromEnvironment",
+  "mypy-type-checker.cwd": "${workspaceFolder}/myus",
   "notebook.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.accessibilitySupport": "off",
 }
