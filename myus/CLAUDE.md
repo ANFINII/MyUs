@@ -53,10 +53,10 @@
 
 ```bash
 # myusディレクトリで実行
-mypy api/src/path/to/file.py
+uv run mypy api/src/path/to/file.py
 
 # 修正したファイルのエラーのみフィルタする場合
-mypy api/src/path/to/file.py 2>&1 | grep "^api/src/path/to/file.py"
+uv run mypy api/src/path/to/file.py 2>&1 | grep "^api/src/path/to/file.py"
 ```
 
 ---
@@ -286,6 +286,60 @@ class UserData:
 
 ---
 
+## Repository層
+
+### インターフェースの入出力
+- **Repositoryの入出力にはdataclassを使用**（Django ORMモデルを直接返さない）
+- 入力: `list[UserData]`などのdataclass
+- 出力: `list[UserData]`などのdataclass
+
+```python
+# Good - dataclassを使用
+class UserInterface(ABC):
+    @abstractmethod
+    def bulk_get(self, ids: list[int]) -> list[UserData]:
+        ...
+
+    @abstractmethod
+    def bulk_save(self, objs: list[UserData]) -> list[UserData]:
+        ...
+
+# Bad - Django ORMモデルを直接返す
+class UserInterface(ABC):
+    @abstractmethod
+    def bulk_get(self, ids: list[int]) -> list[User]:  # NG
+        ...
+```
+
+### Converterパターン
+- Repository実装では、dataclass ↔ Django ORMモデル間の変換関数を使用
+- `unmarshal`: Django ORMモデル → dataclass（読み取り時）
+- `marshal`: dataclass → Django ORMモデル（書き込み時）
+
+```python
+# entity/user/data.py
+
+# Unmarshal (Django model -> dataclass)
+def user_data(user: User) -> UserData:
+    return UserData(
+        id=user.id,
+        username=user.username,
+        ...
+    )
+
+# Marshal (dataclass -> Django model)
+def marshal_user(data: UserData, user: User) -> None:
+    user.username = data.username
+    user.email = data.email
+    ...
+```
+
+### bulk操作
+- `bulk_save`: 新規作成・更新を一括で行う（upsert）
+- 内部でidの有無を判定して`bulk_create`/`bulk_update`を使い分ける
+
+---
+
 ## DBモデル
 
 ```python
@@ -410,6 +464,8 @@ python manage.py migrate --noinput
 ---
 
 ## 更新履歴
+- 2026-02-05: bulk操作をbulk_saveに統一（upsertパターン）
+- 2026-02-04: Repository層のルールを追加（dataclass入出力、Converterパターン、bulk操作の分離）
 - 2026-01-21: コーディング規約を大幅に整理・追加（条件判定、早期リターン、リスト内包表記）
 - 2026-01-21: 型定義ルールを変更（アダプターはPydantic BaseModel、それ以外はdataclass）
 - 2025-10-15: Django Ninjaの型定義ルールを追加
