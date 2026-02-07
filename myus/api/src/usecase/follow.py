@@ -1,8 +1,8 @@
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from django.db import transaction
-from api.db.models.user import User
 from api.src.domain.follow import FilterOption, FollowDomain, SortOption
-from api.src.domain.user.domain import FilterOption as UserFilterOption, SortOption as UserSortOption, UserDomain
+from api.src.domain.interface.user.data import UserData
+from api.src.domain.interface.user.interface import FilterOption as UserFilterOption, SortOption as UserSortOption, UserInterface
 from api.src.types.data.follow import FollowCreateData, FollowOutData, FollowUserData
 from api.utils.functions.index import create_url
 
@@ -35,24 +35,35 @@ def get_followers(user_id: int, search: str | None, limit: int) -> list[FollowUs
     ]
 
 
-def upsert_follow(follower: User, ulid: str, is_follow: bool) -> FollowOutData | None:
-    user_ids = UserDomain.get_ids(UserFilterOption(ulid=ulid), UserSortOption())
+def upsert_follow(follower: UserData, ulid: str, is_follow: bool, repository: UserInterface) -> FollowOutData | None:
+    user_ids = repository.get_ids(UserFilterOption(ulid=ulid), UserSortOption())
     if len(user_ids) == 0:
         return None
 
-    following = UserDomain.bulk_get(user_ids)[0]
+    followings = repository.bulk_get(user_ids)
+    if len(followings) == 0:
+        return None
+
+    following = followings[0]
     follow_ids = FollowDomain.get_ids(FilterOption(follower_id=follower.id, following_id=following.id), SortOption())
-    follow = FollowDomain.bulk_get(follow_ids)[0] if follow_ids else None
+    follow = FollowDomain.bulk_get(follow_ids)[0] if len(follow_ids) > 0 else None
     follow_data = FollowCreateData(follower_id=follower.id, following_id=following.id, is_follow=is_follow)
+
     with transaction.atomic():
-        if not follow:
+        if follow is None:
             FollowDomain.create(**asdict(follow_data))
         else:
             FollowDomain.update(follow, is_follow=is_follow)
 
         follower_count = FollowDomain.count(FilterOption(following_id=following.id))
         following_count = FollowDomain.count(FilterOption(follower_id=follower.id))
-        UserDomain.update_mypage(follower, following_count=following_count)
-        UserDomain.update_mypage(following, follower_count=follower_count)
+
+        follower_mypage = replace(follower.mypage, following_count=following_count)
+        follower = replace(follower, mypage=follower_mypage)
+
+        following_mypage = replace(following.mypage, follower_count=follower_count)
+        following = replace(following, mypage=following_mypage)
+
+        repository.bulk_save([follower, following])
 
     return FollowOutData(is_follow=is_follow, follower_count=follower_count)

@@ -1,14 +1,9 @@
-import datetime
-from dataclasses import asdict
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.domain.user.domain import UserDomain
-from api.src.types.data.setting import MyPageData, ProfileData
-from api.src.types.data.user import UserInData
 from api.src.types.schema.common import ErrorOut, MessageOut
 from api.src.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
-from api.src.usecase.user import get_user, profile_check
+from api.src.usecase.user import get_user, profile_check, update_mypage, update_notification, update_profile
 from api.utils.functions.index import create_url
 from api.utils.functions.validation import has_email
 
@@ -28,16 +23,16 @@ class SettingProfileAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         data = SettingProfileOut(
-            avatar=create_url(user.image()),
+            avatar=create_url(user.avatar),
             email=user.email,
             username=user.username,
             nickname=user.nickname,
             last_name=user.profile.last_name,
             first_name=user.profile.first_name,
-            year=user.year(),
-            month=user.month(),
-            day=user.day(),
-            gender=user.gender(),
+            year=user.profile.birthday.year,
+            month=user.profile.birthday.month,
+            day=user.profile.birthday.day,
+            gender=user.profile.gender,
             phone=user.profile.phone,
             country_code=user.profile.country_code,
             postal_code=user.profile.postal_code,
@@ -62,33 +57,7 @@ class SettingProfileAPI:
         if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        user_data = UserInData(
-            avatar=avatar if avatar else user.avatar,
-            email=input.email,
-            username=input.username,
-            nickname=input.nickname,
-        )
-
-        birthday = datetime.date(year=input.year, month=input.month, day=input.day)
-
-        profile_data = ProfileData(
-            last_name=input.last_name,
-            first_name=input.first_name,
-            gender=input.gender,
-            birthday=birthday,
-            phone=input.phone,
-            postal_code=input.postal_code,
-            prefecture=input.prefecture,
-            city=input.city,
-            street=input.street,
-            introduction=input.introduction,
-        )
-
-        try:
-            UserDomain.update(user, **asdict(user_data))
-            UserDomain.update_profile(user, **asdict(profile_data))
-        except Exception as e:
-            log.error("SettingProfileAPI put error", error=e)
+        if not update_profile(user, input, avatar):
             return 400, MessageOut(error=True, message="保存に失敗しました!")
 
         return 204, MessageOut(error=False, message="保存しました!")
@@ -109,16 +78,16 @@ class SettingMyPageAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         data = SettingMyPageOut(
-            banner=create_url(user.banner()),
+            banner=create_url(user.mypage.banner),
             nickname=user.nickname,
             email=user.mypage.email,
             content=user.mypage.content,
             follower_count=user.mypage.follower_count,
             following_count=user.mypage.following_count,
             tag_manager_id=user.mypage.tag_manager_id,
-            plan=user.plan(),
-            plan_start_date=user.plan_start_date(),
-            plan_end_date=user.plan_end_date(),
+            plan=user.user_plan.plan.name,
+            plan_start_date=user.user_plan.start_date,
+            plan_end_date=user.user_plan.end_date,
             is_advertise=user.mypage.is_advertise,
         )
 
@@ -136,18 +105,7 @@ class SettingMyPageAPI:
         if has_email(input.email):
             return 400, MessageOut(error=True, message="メールアドレスの形式が違います!")
 
-        mypage_data = MyPageData(
-            banner=banner if banner else user.mypage.banner,
-            email=input.email,
-            tag_manager_id=input.tag_manager_id,
-            content=input.content,
-            is_advertise=input.is_advertise,
-        )
-
-        try:
-            UserDomain.update_mypage(user, **asdict(mypage_data))
-        except Exception as e:
-            log.error("SettingMyPageAPI put error", error=e)
+        if not update_mypage(user, input):
             return 400, MessageOut(error=True, message="保存に失敗しました!")
 
         return 204, MessageOut(error=False, message="保存しました!")
@@ -191,10 +149,7 @@ class SettingNotificationAPI:
         if user is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        try:
-            UserDomain.update_notification(user, **input.model_dump())
-        except Exception as e:
-            log.error("SettingNotificationAPI put error", error=e)
+        if not update_notification(user, input):
             return 400, MessageOut(error=True, message="保存に失敗しました!")
 
         return 204, MessageOut(error=False, message="保存しました!")

@@ -1,4 +1,3 @@
-from dataclasses import asdict
 from datetime import date
 import jwt
 from django.conf import settings
@@ -6,9 +5,10 @@ from django.contrib.auth import authenticate
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
-from api.src.domain.user.domain import UserDomain
-from api.src.types.data.setting import ProfileCreateData
-from api.src.types.data.user import UserCreateData
+from api.src.containers import injector
+from api.src.domain.interface.user.data import UserData, ProfileData, MyPageData, UserNotificationData, UserPlanData
+from api.src.domain.interface.user.interface import UserInterface
+from api.src.types.data.plan import PlanData
 from api.src.types.schema.auth import LoginIn, LoginOut, RefreshOut, SignupIn
 from api.src.types.schema.common import ErrorOut, MessageOut
 from api.src.usecase.user import signup_check
@@ -37,11 +37,12 @@ class AuthAPI:
             if not user_id:
                 return 401, ErrorOut(message="Invalid token")
 
-            user = UserDomain.get(id=user_id)
-            if not user:
+            repository = injector.get(UserInterface)
+            users = repository.bulk_get([user_id])
+            if len(users) == 0:
                 return 401, ErrorOut(message="User not found")
 
-            if not user.is_active:
+            if not users[0].is_active:
                 return 400, MessageOut(error=True, message="退会済みです!")
 
             return 200, MessageOut(error=False, message="認証済みです!")
@@ -78,12 +79,13 @@ class AuthAPI:
                 log.warning("No user_id in token")
                 return 401, ErrorOut(message="Invalid token")
 
-            user = UserDomain.get(id=user_id)
-            if not user:
+            repository = injector.get(UserInterface)
+            users = repository.bulk_get([user_id])
+            if len(users) == 0:
                 log.warning("User not found", user_id=user_id)
                 return 401, ErrorOut(message="User not found")
 
-            if not user.is_active:
+            if not users[0].is_active:
                 log.warning("User is not active", user_id=user_id)
                 return 401, ErrorOut(message="User is not active")
 
@@ -113,14 +115,69 @@ class AuthAPI:
         if validation:
             return 400, MessageOut(error=True, message=validation)
 
-        user_data = UserCreateData(email=input.email, username=input.username, nickname=input.nickname, password=input.password1)
-        birthday = date(year=input.year, month=input.month, day=input.day)
-
-        profile_data = ProfileCreateData(last_name=input.last_name, first_name=input.first_name, gender=input.gender, birthday=birthday)
+        user_data = UserData(
+            id=0,
+            ulid="",
+            avatar="",
+            password=input.password1,
+            email=input.email,
+            username=input.username,
+            nickname=input.nickname,
+            is_active=True,
+            is_staff=False,
+            profile=ProfileData(
+                last_name=input.last_name,
+                first_name=input.first_name,
+                gender=input.gender,
+                birthday=date(year=input.year, month=input.month, day=input.day),
+                phone="",
+                country_code="",
+                postal_code="",
+                prefecture="",
+                city="",
+                street="",
+                introduction="",
+            ),
+            mypage=MyPageData(
+                banner="",
+                email="",
+                content="",
+                follower_count=0,
+                following_count=0,
+                tag_manager_id="",
+                is_advertise=False,
+            ),
+            notification=UserNotificationData(
+                is_video=False,
+                is_music=False,
+                is_comic=False,
+                is_picture=False,
+                is_blog=False,
+                is_chat=False,
+                is_follow=True,
+                is_reply=True,
+                is_like=True,
+                is_views=True,
+            ),
+            user_plan=UserPlanData(
+                plan=PlanData(
+                    name="",
+                    stripe_api_id="",
+                    price=0,
+                    max_advertise=0,
+                    description="",
+                ),
+                customer_id="",
+                subscription="",
+                is_paid=False,
+                start_date=None,
+                end_date=None,
+            ),
+        )
 
         try:
-            user = UserDomain.create(**asdict(user_data))
-            UserDomain.update_profile(user, **asdict(profile_data))
+            repository = injector.get(UserInterface)
+            repository.bulk_save(objs=[user_data])
             return 201, MessageOut(error=False, message="アカウント登録が完了しました!")
         except Exception:
             log.error("Signup error")

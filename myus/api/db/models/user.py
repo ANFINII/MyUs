@@ -1,8 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.utils import timezone
 from django_ulid.models import ulid
 from api.db.models.master import Plan
@@ -36,10 +34,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     img         = "../static/img/user_icon.png"
     id          = models.BigAutoField(primary_key=True)
     ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    avatar      = models.ImageField(upload_to=avatar_upload, blank=True)
+    password    = models.CharField(max_length=255)
+    email       = models.EmailField(max_length=255, unique=True)
     username    = models.CharField(max_length=20, unique=True)
     nickname    = models.CharField(max_length=80, unique=True)
-    email       = models.EmailField(max_length=255, unique=True)
-    avatar      = models.ImageField(upload_to=avatar_upload, blank=True)
     is_active   = models.BooleanField(default=True)
     is_staff    = models.BooleanField(default=False)
     last_login  = models.DateTimeField(auto_now_add=True)
@@ -74,7 +73,7 @@ class Profile(models.Model):
     user         = models.OneToOneField(User, on_delete=models.CASCADE)
     last_name    = models.CharField(max_length=50)
     first_name   = models.CharField(max_length=50)
-    birthday     = models.DateField(null=True)
+    birthday     = models.DateField()
     gender       = models.CharField(choices=gender_type, max_length=6)
     phone        = models.CharField(validators=[phone_no], max_length=15, blank=True)
     country_code = models.CharField(max_length=255, default="JP")
@@ -84,18 +83,9 @@ class Profile(models.Model):
     street       = models.CharField(max_length=255, blank=True)
     introduction = models.TextField()
 
-    def __str__(self):
-        return self.user.nickname
-
     class Meta:
         db_table = "user_profile"
         verbose_name_plural = "001 Profile"
-
-@receiver(post_save, sender=User)
-def create_profile(sender, **kwargs):
-    """ユーザー作成時に空のProfileも作成する"""
-    if kwargs["created"]:
-        Profile.objects.get_or_create(user=kwargs["instance"])
 
 
 class MyPage(models.Model):
@@ -111,18 +101,9 @@ class MyPage(models.Model):
     tag_manager_id  = models.CharField(max_length=10, blank=True)
     is_advertise    = models.BooleanField(default=True)
 
-    def __str__(self):
-        return self.user.nickname
-
     class Meta:
         db_table = "user_mypage"
         verbose_name_plural = "001 MyPage"
-
-@receiver(post_save, sender=User)
-def create_mypage(sender, **kwargs):
-    """ユーザー作成時に空のMyPageも作成する"""
-    if kwargs["created"]:
-        MyPage.objects.get_or_create(user=kwargs["instance"])
 
 
 class UserNotification(models.Model):
@@ -140,18 +121,9 @@ class UserNotification(models.Model):
     is_like    = models.BooleanField(default=True)
     is_views   = models.BooleanField(default=True)
 
-    def __str__(self):
-        return self.user.nickname
-
     class Meta:
         db_table = "user_notification"
         verbose_name_plural = "001 通知設定"
-
-@receiver(post_save, sender=User)
-def create_user_notification(sender, **kwargs):
-    """ユーザー作成時に空のuser_notificationも作成する"""
-    if kwargs["created"]:
-        UserNotification.objects.get_or_create(user=kwargs["instance"])
 
 
 class UserPlan(models.Model):
@@ -171,9 +143,3 @@ class UserPlan(models.Model):
     class Meta:
         db_table = "user_plan"
         verbose_name_plural = "001 UserPlan"
-
-@receiver(post_save, sender=User)
-def create_user_plan(sender, **kwargs):
-    """ユーザー作成時に空のuser_planも作成する"""
-    if kwargs["created"]:
-        UserPlan.objects.get_or_create(user=kwargs["instance"])
