@@ -15,14 +15,32 @@ from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.types.data.user import LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
-from api.utils.enum.index import MediaType, ImageType
-from api.utils.functions.file import avatar_path
+from api.utils.enum.index import MediaType
 from api.utils.functions.media import get_media_domain_type
 from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
 
-def get_user(request: HttpRequest) -> UserData | None:
+def get_user_data(user_id: int) -> UserData | None:
     repository = injector.get(UserInterface)
+    user_ids = repository.get_ids(FilterOption(id=user_id))
+    if len(user_ids) == 0:
+        return None
+
+    users = repository.bulk_get(user_ids)
+    return users[0]
+
+
+def bulk_save_user(user: UserData) -> bool:
+    repository = injector.get(UserInterface)
+    try:
+        repository.bulk_save([user])
+        return True
+    except Exception as e:
+        log.error("bulk_save_user error", exc=e)
+        return False
+
+
+def get_user(request: HttpRequest) -> UserData | None:
     token = request.COOKIES.get("access_token")
     if token is None:
         return None
@@ -34,15 +52,10 @@ def get_user(request: HttpRequest) -> UserData | None:
         if user_id is None:
             return None
 
-        user_ids = repository.get_ids(FilterOption(id=user_id))
-        if len(user_ids) == 0:
+        user = get_user_data(user_id)
+        if user is None:
             return None
 
-        users = repository.bulk_get(user_ids)
-        if len(users) == 0:
-            return None
-
-        user = users[0]
         if not user.is_active:
             return None
         return user
@@ -148,16 +161,9 @@ def like_comment(user_id: int, ulid: str) -> LikeData | None:
 
 
 def update_profile(user: UserData, input: SettingProfileIn, avatar: UploadedFile) -> bool:
-    repository = injector.get(UserInterface)
-    ids = repository.get_ids(FilterOption(id=user.id))
-    if len(ids) == 0:
+    obj = get_user_data(user.id)
+    if obj is None:
         return False
-
-    objs = repository.bulk_get(ids)
-    if len(objs) == 0:
-        return False
-
-    obj = objs[0]
 
     profile = ProfileData(
         last_name=input.last_name,
@@ -189,17 +195,10 @@ def update_profile(user: UserData, input: SettingProfileIn, avatar: UploadedFile
         user_plan=obj.user_plan,
     )
 
-    try:
-        repository.bulk_save([user])
-        return True
-    except Exception as e:
-        log.error("update_profile error", exc=e)
-        return False
+    return bulk_save_user(user)
 
 
 def update_mypage(user: UserData, input: SettingMyPageIn) -> bool:
-    repository = injector.get(UserInterface)
-
     mypage = MyPageData(
         banner=user.mypage.banner,
         email=input.email,
@@ -211,18 +210,10 @@ def update_mypage(user: UserData, input: SettingMyPageIn) -> bool:
     )
 
     user = replace(user, mypage=mypage)
-
-    try:
-        repository.bulk_save([user])
-        return True
-    except Exception as e:
-        log.error("update_mypage error", exc=e)
-        return False
+    return bulk_save_user(user)
 
 
 def update_notification(user: UserData, input: SettingNotificationIn) -> bool:
-    repository = injector.get(UserInterface)
-
     notification = UserNotificationData(
         is_video=input.is_video,
         is_music=input.is_music,
@@ -237,9 +228,4 @@ def update_notification(user: UserData, input: SettingNotificationIn) -> bool:
     )
 
     user = replace(user, notification=notification)
-    try:
-        repository.bulk_save([user])
-        return True
-    except Exception as e:
-        log.error("update_notification error", exc=e)
-        return False
+    return bulk_save_user(user)
