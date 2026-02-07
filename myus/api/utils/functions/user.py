@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from api.db.models.user import User
 from api.src.domain.follow import FilterOption, FollowDomain, SortOption
 from api.src.types.data.notification import NotificationUserData
@@ -31,3 +32,7 @@ def get_media_user(obj: MediaModelType, user: User | None) -> MediaUserData:
 def get_notification_user(user: User) -> NotificationUserData:
     data = NotificationUserData(avatar=create_url(user.image()), nickname=user.nickname)
     return data
+
+
+def email_user(user: User, subject: str, message: str, from_email: str | None = None, **kwargs) -> None:
+    send_mail(subject, message, from_email, [user.email], **kwargs)

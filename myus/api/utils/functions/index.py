@@ -1,6 +1,6 @@
 from typing import TypeVar
 from django_ulid.models import ulid
-from config.settings.base import DOMAIN_URL
+from config.settings.base import DOMAIN_URL, MEDIA_URL
 
 
 T = TypeVar('T')
@@ -32,7 +32,7 @@ def set_attr(obj: T, key: str, value: V) -> dict[str, V]:
 
 
 def create_url(path: str) -> str:
-    return f"{DOMAIN_URL}{path}" if path else ""
+    return f"{DOMAIN_URL}{MEDIA_URL}{path}" if path else ""
 
 
 def message(error: bool, message: str) -> dict[str, str | bool]:

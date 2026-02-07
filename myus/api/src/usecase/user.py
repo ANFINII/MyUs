@@ -1,19 +1,28 @@
+import datetime
 import jwt
+from dataclasses import replace
 from django.conf import settings
+from django.http import HttpRequest
+from ninja import UploadedFile
 from api.db.models.user import User
+from api.modules.logger import log
+from api.src.containers import injector
 from api.src.domain.comment import CommentDomain, FilterOption as CommentFilterOption, SortOption as CommentSortOption
 from api.src.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
 from api.src.domain.serach_tag import FilterOption as SearchTagFilterOption, SearchTagDomain, SortOption as SearchTagSortOption
-from api.src.domain.user.domain import FilterOption, SortOption, UserDomain
+from api.src.domain.interface.user.data import MyPageData, ProfileData, UserData, UserNotificationData
+from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.types.data.user import LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
-from api.src.types.schema.setting import SettingProfileIn
-from api.utils.enum.index import MediaType
+from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
+from api.utils.enum.index import MediaType, ImageType
+from api.utils.functions.file import avatar_path
 from api.utils.functions.media import get_media_domain_type
 from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
 
-def get_user(request) -> User | None:
+def get_user(request: HttpRequest) -> UserData | None:
+    repository = injector.get(UserInterface)
     token = request.COOKIES.get("access_token")
     if token is None:
         return None
@@ -25,11 +34,15 @@ def get_user(request) -> User | None:
         if user_id is None:
             return None
 
-        user_ids = UserDomain.get_ids(FilterOption(id=user_id), SortOption())
+        user_ids = repository.get_ids(FilterOption(id=user_id))
         if len(user_ids) == 0:
             return None
 
-        user = UserDomain.bulk_get(user_ids)[0]
+        users = repository.bulk_get(user_ids)
+        if len(users) == 0:
+            return None
+
+        user = users[0]
         if not user.is_active:
             return None
         return user
@@ -107,26 +120,126 @@ def get_search_tags(author_id: int) -> list[SearchTagData]:
     return [SearchTagData(sequence=obj.sequence, name=obj.name) for obj in objs]
 
 
-def like_media(user: User, media_type: MediaType, ulid: str) -> LikeData | None:
+def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeData | None:
+    repository = injector.get(UserInterface)
     domain = get_media_domain_type(media_type)
     ids = domain.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption())
     if len(ids) == 0:
         return None
 
     obj = domain.bulk_get(ids)[0]
-    is_like = UserDomain.media_like(user, obj)
+    is_like = repository.media_like(user_id, obj)
     like_count = obj.total_like()
 
     return LikeData(is_like=is_like, like_count=like_count)
 
 
-def like_comment(user: User, ulid: str) -> LikeData | None:
+def like_comment(user_id: int, ulid: str) -> LikeData | None:
+    repository = injector.get(UserInterface)
     ids = CommentDomain.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
     if len(ids) == 0:
         return None
 
     obj = CommentDomain.bulk_get(ids)[0]
-    is_like = UserDomain.comment_like(user, obj)
+    is_like = repository.comment_like(user_id, obj)
     like_count = obj.total_like()
 
     return LikeData(is_like=is_like, like_count=like_count)
+
+
+def update_profile(user: UserData, input: SettingProfileIn, avatar: UploadedFile) -> bool:
+    repository = injector.get(UserInterface)
+    ids = repository.get_ids(FilterOption(id=user.id))
+    if len(ids) == 0:
+        return False
+
+    objs = repository.bulk_get(ids)
+    if len(objs) == 0:
+        return False
+
+    obj = objs[0]
+
+    profile = ProfileData(
+        last_name=input.last_name,
+        first_name=input.first_name,
+        gender=input.gender,
+        birthday=datetime.date(year=input.year, month=input.month, day=input.day),
+        phone=input.phone,
+        country_code=user.profile.country_code,
+        postal_code=input.postal_code,
+        prefecture=input.prefecture,
+        city=input.city,
+        street=input.street,
+        introduction=input.introduction,
+    )
+
+    user = UserData(
+        id=user.id,
+        ulid=user.ulid,
+        avatar=avatar or obj.avatar,
+        password=obj.password,
+        email=input.email,
+        username=input.username,
+        nickname=input.nickname,
+        is_active=obj.is_active,
+        is_staff=obj.is_staff,
+        profile=profile,
+        mypage=obj.mypage,
+        notification=obj.notification,
+        user_plan=obj.user_plan,
+    )
+
+    try:
+        repository.bulk_save([user])
+        return True
+    except Exception as e:
+        log.error("update_profile error", exc=e)
+        return False
+
+
+def update_mypage(user: UserData, input: SettingMyPageIn) -> bool:
+    repository = injector.get(UserInterface)
+
+    mypage = MyPageData(
+        banner=user.mypage.banner,
+        email=input.email,
+        content=input.content,
+        follower_count=user.mypage.follower_count,
+        following_count=user.mypage.following_count,
+        tag_manager_id=input.tag_manager_id,
+        is_advertise=input.is_advertise,
+    )
+
+    user = replace(user, mypage=mypage)
+
+    try:
+        repository.bulk_save([user])
+        return True
+    except Exception as e:
+        log.error("update_mypage error", exc=e)
+        return False
+
+
+def update_notification(user: UserData, input: SettingNotificationIn) -> bool:
+    repository = injector.get(UserInterface)
+
+    notification = UserNotificationData(
+        is_video=input.is_video,
+        is_music=input.is_music,
+        is_comic=input.is_comic,
+        is_picture=input.is_picture,
+        is_blog=input.is_blog,
+        is_chat=input.is_chat,
+        is_follow=input.is_follow,
+        is_reply=input.is_reply,
+        is_like=input.is_like,
+        is_views=input.is_views,
+    )
+
+    user = replace(user, notification=notification)
+    try:
+        repository.bulk_save([user])
+        return True
+    except Exception as e:
+        log.error("update_notification error", exc=e)
+        return False
