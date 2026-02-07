@@ -12,7 +12,7 @@ from api.src.domain.entity.user._convert import (
     marshal_user_plan,
 )
 from api.src.domain.index import sort_ids
-from api.src.domain.interface.user.data import UserData
+from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
 from api.utils.functions.media import MediaModel
 
@@ -50,7 +50,7 @@ class UserRepository(UserInterface):
 
         return list(qs.values_list("id", flat=True))
 
-    def bulk_get(self, ids: list[int]) -> list[UserData]:
+    def bulk_get(self, ids: list[int]) -> list[UserAllData]:
         if len(ids) == 0:
             return []
 
@@ -58,13 +58,13 @@ class UserRepository(UserInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[UserData]) -> list[UserData]:
+    def bulk_save(self, objs: list[UserAllData]) -> list[UserAllData]:
         if len(objs) == 0:
             return []
 
         with transaction.atomic():
             users = User.objects.bulk_create(
-                [marshal_user(o) for o in objs],
+                [marshal_user(o.user) for o in objs],
                 update_conflicts=True,
                 update_fields=USER_FIELDS,
             )

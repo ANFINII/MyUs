@@ -1,6 +1,5 @@
 from django.http import HttpRequest
 from ninja import UploadedFile
-
 from api.db.models.channel import Channel
 from api.src.domain.media.index import FilterOption, SortOption, ExcludeOption
 from api.src.domain.media.video import VideoDomain
@@ -11,9 +10,9 @@ from api.src.domain.media.blog import BlogDomain
 from api.src.domain.media.chat import ChatDomain
 from api.src.types.data.media import HomeData, MediaCreateData, VideoData, MusicData, ComicData, PictureData, BlogData, ChatData
 from api.src.types.data.media import VideoDetailData, MusicDetailData, ComicDetailData, PictureDetailData, BlogDetailData, ChatDetailData, HashtagData
+from api.src.usecase.auth import auth_check
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
-from api.src.usecase.user import get_user
 from api.utils.enum.index import CommentType
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
@@ -212,8 +211,7 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
     if obj is None:
         return None
 
-    user = get_user(request)
-    user_id = user.id if user else None
+    user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.VIDEO)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
 
@@ -233,7 +231,7 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
         created=obj.created,
         updated=obj.updated,
         author=get_author(obj.channel.owner),
-        mediaUser=get_media_user(obj, user),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data
@@ -246,8 +244,7 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
     if obj is None:
         return None
 
-    user = get_user(request)
-    user_id = user.id if user else None
+    user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.MUSIC)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
 
@@ -267,7 +264,7 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
         created=obj.created,
         updated=obj.updated,
         author=get_author(obj.channel.owner),
-        mediaUser=get_media_user(obj, user),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data
@@ -280,8 +277,7 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
     if obj is None:
         return None
 
-    user = get_user(request)
-    user_id = user.id if user else None
+    user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.COMIC)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
 
@@ -299,7 +295,7 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
         created=obj.created,
         updated=obj.updated,
         author=get_author(obj.channel.owner),
-        mediaUser=get_media_user(obj, user),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data
@@ -312,8 +308,7 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
     if obj is None:
         return None
 
-    user = get_user(request)
-    user_id = user.id if user else None
+    user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.BLOG)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
 
@@ -332,7 +327,7 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
         created=obj.created,
         updated=obj.updated,
         author=get_author(obj.channel.owner),
-        mediaUser=get_media_user(obj, user),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data
@@ -345,8 +340,7 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
     if obj is None:
         return None
 
-    user = get_user(request)
-    user_id = user.id if user else None
+    user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.PICTURE)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
 
@@ -364,7 +358,7 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
         created=obj.created,
         updated=obj.updated,
         author=get_author(obj.channel.owner),
-        mediaUser=get_media_user(obj, user),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data
@@ -376,7 +370,7 @@ def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Ch
     if obj is None:
         return None
 
-    user = get_user(request)
+    user_id = auth_check(request)
     messages = get_messages(chat_id=obj.id)
 
     data = ChatDetailData(
@@ -395,7 +389,7 @@ def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Ch
         created=obj.created,
         updated=obj.updated,
         author=get_author(obj.channel.owner),
-        mediaUser=get_media_user(obj, user),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data

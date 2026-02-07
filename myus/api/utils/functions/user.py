@@ -17,13 +17,13 @@ def get_author(author: User) -> AuthorData:
     return data
 
 
-def get_media_user(obj: MediaModelType, user: User | None) -> MediaUserData:
+def get_media_user(obj: MediaModelType, user_id: int | None) -> MediaUserData:
     follow = None
-    if user:
-        ids = FollowDomain.get_ids(FilterOption(follower_id=user.id, following_id=obj.channel.owner.id), SortOption())
+    if user_id is not None:
+        ids = FollowDomain.get_ids(FilterOption(follower_id=user_id, following_id=obj.channel.owner.id), SortOption())
         follow = FollowDomain.bulk_get(ids)[0] if ids else None
     data = MediaUserData(
-        is_like=obj.like.filter(id=user.id).exists() if user else False,
+        is_like=obj.like.filter(id=user_id).exists() if user_id is not None else False,
         is_follow=follow.is_follow if follow else False,
     )
     return data

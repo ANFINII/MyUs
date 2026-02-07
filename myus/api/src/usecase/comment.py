@@ -41,7 +41,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
     return data
 
 
-def create_comment(user: User, input: CommentCreateIn) -> CommentData | None:
+def create_comment(user_id: int, input: CommentCreateIn) -> CommentData | None:
     media_ids = BlogDomain.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption())
     if len(media_ids) == 0:
         log.warning("メディアが見つかりませんでした")
@@ -59,7 +59,7 @@ def create_comment(user: User, input: CommentCreateIn) -> CommentData | None:
         parent_id = comment.id
 
     comment_create_data = CommentCreateData(
-        author_id=user.id,
+        author_id=user_id,
         text=input.text,
         type_no=input.type_no,
         type_name=input.type_name,

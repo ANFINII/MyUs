@@ -1,17 +1,27 @@
 from django.contrib.auth.hashers import make_password
 from api.db.models.master import Plan
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
-from api.src.domain.interface.user.data import MyPageData, ProfileData, UserData, UserNotificationData, UserPlanData
+from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.src.types.data.plan import PlanData
 
 
 # Django model -> dataclass
-def convert_data(user: User) -> UserData:
+def convert_data(user: User) -> UserAllData:
     assert hasattr(user, "profile"), "Profile is required"
     assert hasattr(user, "mypage"), "Mypage is required"
     assert hasattr(user, "notification"), "Notification is required"
     assert hasattr(user, "user_plan"), "User plan is required"
 
+    return UserAllData(
+        user=user_data(user),
+        profile=profile_data(user.profile),
+        mypage=mypage_data(user.mypage),
+        notification=user_notification_data(user.notification),
+        user_plan=user_plan_data(user.user_plan),
+    )
+
+
+def user_data(user: User) -> UserData:
     return UserData(
         id=user.id,
         ulid=user.ulid,
@@ -22,10 +32,6 @@ def convert_data(user: User) -> UserData:
         nickname=user.nickname,
         is_active=user.is_active,
         is_staff=user.is_staff,
-        profile=profile_data(user.profile),
-        mypage=mypage_data(user.mypage),
-        notification=user_notification_data(user.notification),
-        user_plan=user_plan_data(user.user_plan),
     )
 
 
@@ -107,7 +113,7 @@ def marshal_user(data: UserData) -> User:
     )
 
 
-def marshal_profile(user: User, data: UserData) -> Profile:
+def marshal_profile(user: User, data: UserAllData) -> Profile:
     return Profile(
         user=user,
         last_name=data.profile.last_name,
@@ -124,7 +130,7 @@ def marshal_profile(user: User, data: UserData) -> Profile:
     )
 
 
-def marshal_mypage(user: User, data: UserData) -> MyPage:
+def marshal_mypage(user: User, data: UserAllData) -> MyPage:
     return MyPage(
         user=user,
         email=data.mypage.email,
@@ -136,7 +142,7 @@ def marshal_mypage(user: User, data: UserData) -> MyPage:
     )
 
 
-def marshal_notification(user: User, data: UserData) -> UserNotification:
+def marshal_notification(user: User, data: UserAllData) -> UserNotification:
     return UserNotification(
         user=user,
         is_video=data.notification.is_video,
@@ -152,7 +158,7 @@ def marshal_notification(user: User, data: UserData) -> UserNotification:
     )
 
 
-def marshal_user_plan(user: User, data: UserData) -> UserPlan:
+def marshal_user_plan(user: User, data: UserAllData) -> UserPlan:
     return UserPlan(
         user=user,
         plan=user.user_plan.plan,
