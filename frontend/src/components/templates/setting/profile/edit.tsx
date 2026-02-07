@@ -42,7 +42,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const [values, setValues] = useState<ProfileOut>(profile)
 
   const { years, months, days } = selectDate()
-  const url = avatar ? URL.createObjectURL(avatar) : profile.avatar
+  const avatarUrl = avatar ? URL.createObjectURL(avatar) : profile.avatar
   const handleBack = () => router.push('/setting/profile')
   const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatar(files)
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -103,9 +103,9 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
             id="avatar"
             className="account_image_edit"
             icon={
-              url ? (
+              avatarUrl ? (
                 <div className="account_image">
-                  <ExImage src={url} size="56" />
+                  <ExImage src={avatarUrl} size="56" />
                 </div>
               ) : (
                 <div className="account_image_edit">
