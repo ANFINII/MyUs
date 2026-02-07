@@ -17,7 +17,7 @@ from api.src.domain.interface.user.interface import FilterOption, SortOption, Us
 from api.utils.functions.media import MediaModel
 
 
-USER_FIELDS = [ "avatar", "username", "nickname", "email", "is_active"]
+USER_FIELDS = ["avatar", "username", "nickname", "email", "is_active"]
 PROFILE_FIELDS = [
     "last_name", "first_name", "birthday", "gender", "phone",
     "country_code", "postal_code", "prefecture", "city", "street", "introduction",
