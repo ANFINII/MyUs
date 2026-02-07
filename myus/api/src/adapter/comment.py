@@ -100,8 +100,7 @@ class CommentAPI:
     def put(request: HttpRequest, comment_ulid: str, input: CommentUpdateIn):
         log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
 
-        user = auth_check(request)
-        if user is None:
+        if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
@@ -116,8 +115,7 @@ class CommentAPI:
     def delete(request: HttpRequest, comment_ulid: str):
         log.info("CommentAPI delete", comment_ulid=comment_ulid)
 
-        user = auth_check(request)
-        if user is None:
+        if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:

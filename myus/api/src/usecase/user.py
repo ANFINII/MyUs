@@ -39,31 +39,6 @@ def bulk_save_user(data: UserAllData) -> bool:
         return False
 
 
-def auth_check(request: HttpRequest) -> bool:
-    token = request.COOKIES.get("access_token")
-    if token is None:
-        return False
-
-    key = settings.SECRET_KEY
-    try:
-        payload = jwt.decode(jwt=token, key=key, algorithms=["HS256"])
-        user_id = payload["user_id"]
-        if user_id is None:
-            return False
-
-        data = get_user_data(user_id)
-        if data is None:
-            return False
-
-        if not data.user.is_active:
-            return False
-        return True
-    except jwt.ExpiredSignatureError:
-        return False
-    except jwt.exceptions.DecodeError:
-        return False
-
-
 def profile_check(data: SettingProfileIn) -> str:
     if has_email(data.email):
         return "メールアドレスの形式が違います!"
