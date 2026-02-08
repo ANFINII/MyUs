@@ -7,6 +7,7 @@ import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import ExImage from 'components/parts/ExImage'
 import IconPicture from 'components/parts/Icon/Picture'
 import Input from 'components/parts/Input'
 import InputImage from 'components/parts/Input/Image'
@@ -27,11 +28,12 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()
   const [message, setMessage] = useState<string>('')
-  const [banner, setBanner] = useState<File>()
+  const [bannerFile, setBannerFile] = useState<File>()
   const [values, setValues] = useState<MypageOut>(mypage)
 
+  const bannerUrl = bannerFile ? URL.createObjectURL(bannerFile) : mypage.banner
   const handleBack = () => router.push('/setting/mypage')
-  const handleBanner = (files: File | File[]) => Array.isArray(files) || setBanner(files)
+  const handleBanner = (files: File | File[]) => Array.isArray(files) || setBannerFile(files)
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleToggle = () => setValues({ ...values, isAdvertise: !values.isAdvertise })
@@ -39,8 +41,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const handlSubmit = async () => {
     handleLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
-    const { email, tagManagerId, isAdvertise, content } = values
-    const request: MypageIn = { banner, email, tagManagerId, isAdvertise, content }
+    const request: MypageIn = { ...values, bannerFile }
     const ret = await putSettingMypage(request)
     if (ret.isErr()) {
       handleLoading(false)
@@ -70,7 +71,22 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
 
       <Table>
         <TableRow label="バナー画像">
-          <InputImage id="banner" className="account_image_edit" icon={<IconPicture size="56" />} onChange={handleBanner} />
+          <InputImage
+            id="banner"
+            className="account_image_edit"
+            icon={
+              bannerUrl ? (
+                <div className="account_image">
+                  <ExImage src={bannerUrl} size="56" />
+                </div>
+              ) : (
+                <div className="account_image_edit">
+                  <IconPicture size="56" />
+                </div>
+              )
+            }
+            onChange={handleBanner}
+          />
         </TableRow>
         <TableRow isIndent label="投稿者名">
           {values.nickname}

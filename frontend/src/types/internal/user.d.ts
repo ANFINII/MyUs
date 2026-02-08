@@ -38,7 +38,7 @@ export interface ProfileOut extends User {
 }
 
 export interface ProfileIn {
-  avatar?: File
+  avatarFile?: File
   email: string
   username: string
   nickname: string
@@ -71,7 +71,7 @@ export interface MypageOut {
 }
 
 export interface MypageIn {
-  banner?: File
+  bannerFile?: File
   email: string
   tagManagerId: string
   isAdvertise: boolean
