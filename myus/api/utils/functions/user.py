@@ -9,7 +9,7 @@ from api.utils.functions.index import create_url
 
 def get_author(author: User) -> AuthorData:
     data = AuthorData(
-        avatar=create_url(author.avatar) or "",
+        avatar=create_url(str(author.avatar)) or "",
         ulid=author.ulid,
         nickname=author.nickname,
         follower_count=author.mypage.follower_count,
@@ -30,7 +30,7 @@ def get_media_user(obj: MediaModelType, user_id: int | None) -> MediaUserData:
 
 
 def get_notification_user(user: User) -> NotificationUserData:
-    data = NotificationUserData(avatar=create_url(user.avatar), nickname=user.nickname)
+    data = NotificationUserData(avatar=create_url(str(user.avatar)), nickname=user.nickname)
     return data
 
 
