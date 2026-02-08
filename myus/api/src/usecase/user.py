@@ -1,7 +1,4 @@
 import datetime
-import jwt
-from django.conf import settings
-from django.http import HttpRequest
 from ninja import UploadedFile
 from api.db.models.user import User
 from api.modules.logger import log
@@ -26,7 +23,11 @@ def get_user_data(user_id: int) -> UserAllData | None:
         return None
 
     users = repository.bulk_get(user_ids)
-    return users[0]
+    user = users[0]
+    if not user.user.is_active:
+        return None
+
+    return user
 
 
 def bulk_save_user(data: UserAllData) -> bool:
