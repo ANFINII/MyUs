@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from datetime import date
-from ninja import UploadedFile
 from api.src.types.data.plan import PlanData
 
 
@@ -17,7 +16,7 @@ class UserAllData:
 class UserData:
     id: int
     ulid: str
-    avatar: str | UploadedFile
+    avatar: str
     password: str
     email: str
     username: str
@@ -43,7 +42,7 @@ class ProfileData:
 
 @dataclass(frozen=True, slots=True)
 class MyPageData:
-    banner: str | UploadedFile
+    banner: str
     email: str
     content: str
     follower_count: int

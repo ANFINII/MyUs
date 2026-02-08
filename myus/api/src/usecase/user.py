@@ -1,4 +1,5 @@
 import datetime
+from django.core.files.storage import default_storage
 from ninja import UploadedFile
 from api.db.models.user import User
 from api.modules.logger import log
@@ -11,7 +12,8 @@ from api.src.domain.serach_tag import FilterOption as SearchTagFilterOption, Sea
 from api.src.types.data.user import LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
-from api.utils.enum.index import MediaType
+from api.utils.enum.index import ImageType, MediaType
+from api.utils.functions.file import avatar_path
 from api.utils.functions.media import get_media_domain_type
 from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
@@ -30,13 +32,13 @@ def get_user_data(user_id: int) -> UserAllData | None:
     return user
 
 
-def bulk_save_user(data: UserAllData) -> bool:
+def save_user_data(data: UserAllData) -> bool:
     repository = injector.get(UserInterface)
     try:
         repository.bulk_save([data])
         return True
     except Exception as e:
-        log.error("bulk_save_user error", exc=e)
+        log.error("save_user_data error", exc=e)
         return False
 
 
@@ -135,17 +137,23 @@ def like_comment(user_id: int, ulid: str) -> LikeData | None:
     return LikeData(is_like=is_like, like_count=like_count)
 
 
-def update_profile(user_id: int, input: SettingProfileIn, avatar: UploadedFile) -> bool:
+def save_upload(file: UploadedFile, ulid: str) -> str:
+    path = avatar_path(ImageType.USER, ulid, file.name or "upload")
+    return default_storage.save(path, file)
+
+
+def update_profile(user_id: int, input: SettingProfileIn, avatarFile: UploadedFile) -> bool:
     data = get_user_data(user_id)
     if data is None:
         return False
 
     base = data.user
+    avatar = save_upload(avatarFile, base.ulid) if avatarFile else base.avatar
 
     user = UserData(
         id=base.id,
         ulid=base.ulid,
-        avatar=avatar or base.avatar,
+        avatar=avatar,
         password=base.password,
         email=input.email,
         username=input.username,
@@ -176,16 +184,18 @@ def update_profile(user_id: int, input: SettingProfileIn, avatar: UploadedFile) 
         user_plan=data.user_plan,
     )
 
-    return bulk_save_user(updated_data)
+    return save_user_data(updated_data)
 
 
-def update_mypage(user_id: int, input: SettingMyPageIn, banner: UploadedFile) -> bool:
+def update_mypage(user_id: int, input: SettingMyPageIn, bannerFile: UploadedFile) -> bool:
     data = get_user_data(user_id)
     if data is None:
         return False
 
+    banner = save_upload(bannerFile, data.user.ulid) if bannerFile else data.mypage.banner
+
     mypage = MyPageData(
-        banner=banner or data.mypage.banner,
+        banner=banner,
         email=input.email,
         content=input.content,
         follower_count=data.mypage.follower_count,
@@ -202,7 +212,7 @@ def update_mypage(user_id: int, input: SettingMyPageIn, banner: UploadedFile) ->
         user_plan=data.user_plan,
     )
 
-    return bulk_save_user(updated_data)
+    return save_user_data(updated_data)
 
 
 def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
@@ -231,4 +241,4 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
         user_plan=data.user_plan,
     )
 
-    return bulk_save_user(updated_data)
+    return save_user_data(updated_data)
