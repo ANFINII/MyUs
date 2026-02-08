@@ -38,13 +38,13 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
   const [message, setMessage] = useState<string>('')
-  const [avatar, setAvatar] = useState<File>()
+  const [avatarFile, setAvatarFile] = useState<File>()
   const [values, setValues] = useState<ProfileOut>(profile)
 
   const { years, months, days } = selectDate()
-  const avatarUrl = avatar ? URL.createObjectURL(avatar) : profile.avatar
+  const avatarUrl = avatarFile ? URL.createObjectURL(avatarFile) : profile.avatar
   const handleBack = () => router.push('/setting/profile')
-  const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatar(files)
+  const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatarFile(files)
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -68,7 +68,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
     if (!isRequiredCheck({ email, username, nickname, lastName, firstName, phone, postalCode })) return
     handleLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
-    const request: ProfileIn = { ...values, avatar }
+    const request: ProfileIn = { ...values, avatarFile }
     const ret = await putSettingProfile(request)
     if (ret.isErr()) {
       handleLoading(false)
