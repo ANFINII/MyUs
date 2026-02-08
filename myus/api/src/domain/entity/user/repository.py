@@ -3,14 +3,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
-from api.src.domain.entity.user._convert import (
-    convert_data,
-    marshal_mypage,
-    marshal_notification,
-    marshal_profile,
-    marshal_user,
-    marshal_user_plan,
-)
+from api.src.domain.entity.user._convert import convert_data, marshal_mypage, marshal_notification, marshal_profile, marshal_user, marshal_user_plan
 from api.src.domain.index import sort_ids
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
