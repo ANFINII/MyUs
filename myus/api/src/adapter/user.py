@@ -6,10 +6,11 @@ from api.src.types.schema.common import ErrorOut, MessageOut
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagOut, UserOut
+from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import get_user_channels
 from api.src.usecase.follow import get_followers, get_follows, upsert_follow
 from api.src.usecase.notification import get_content_object, get_notification
-from api.src.usecase.user import get_search_tags, get_user, like_comment, like_media
+from api.src.usecase.user import get_search_tags, get_user_data, like_comment, like_media
 from api.utils.functions.index import create_url
 
 
@@ -19,16 +20,22 @@ class UserAPI:
     router = Router()
 
     @staticmethod
-    @router.get("/me", response={200: UserOut, 401: ErrorOut})
+    @router.get("/me", response={200: UserOut, 401: ErrorOut, 404: ErrorOut})
     def get_user_me(request: HttpRequest):
         log.info("UserAPI get_user_me")
 
-        user = get_user(request)
-        if user is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
+        user_data = get_user_data(user_id)
+        if user_data is None:
+            return 404, ErrorOut(message="Not Found")
+
+        user = user_data.user
+
         data = UserOut(
-            avatar=create_url(user.avatar),
+            avatar=create_url(str(user.avatar)),
             ulid=str(user.ulid),
             nickname=user.nickname,
             is_active=user.is_active,
@@ -42,11 +49,11 @@ class UserAPI:
     def get_search_tag(request: HttpRequest):
         log.info("UserAPI search_tag")
 
-        user = get_user(request)
-        if user is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        tags = get_search_tags(user.id)
+        tags = get_search_tags(user_id)
         data = [SearchTagOut(sequence=x.sequence, name=x.name) for x in tags]
         return 200, data
 
@@ -55,11 +62,11 @@ class UserAPI:
     def get_followers(request: HttpRequest, search: str = ""):
         log.info("UserAPI get_followers", search=search)
 
-        user = get_user(request)
-        if user is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        followers = get_followers(user.id, search, 100)
+        followers = get_followers(user_id, search, 100)
         data = [
             FollowUserOut(
                 avatar=x.avatar,
@@ -78,11 +85,11 @@ class UserAPI:
     def get_follows(request: HttpRequest, search: str = ""):
         log.info("UserAPI get_follows", search=search)
 
-        user = get_user(request)
-        if user is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        follows = get_follows(user.id, search, 100)
+        follows = get_follows(user_id, search, 100)
         data = [
             FollowUserOut(
                 avatar=x.avatar,
@@ -101,11 +108,11 @@ class UserAPI:
     def follow_user(request: HttpRequest, input: FollowIn):
         log.info("UserAPI follow_user", input=input)
 
-        user = get_user(request)
-        if user is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        follow = upsert_follow(user, input.ulid, input.is_follow)
+        follow = upsert_follow(user_id, input.ulid, input.is_follow)
         if follow is None:
             return 400, MessageOut(error=True, message="ユーザーが見つかりません!")
 
@@ -117,11 +124,11 @@ class UserAPI:
     def post_like_media(request: HttpRequest, input: LikeMediaIn):
         log.info("UserAPI like_media", input=input)
 
-        user = get_user(request)
-        if user is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        like = like_media(user, input.media_type, input.ulid)
+        like = like_media(user_id, input.media_type, input.ulid)
         if like is None:
             return 400, MessageOut(error=True, message="メディアが見つかりません!")
 
@@ -133,11 +140,11 @@ class UserAPI:
     def post_like_comment(request: HttpRequest, input: LikeCommentIn):
         log.info("UserAPI like_comment", input=input)
 
-        user = get_user(request)
-        if user is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        like = like_comment(user, input.ulid)
+        like = like_comment(user_id, input.ulid)
         if like is None:
             return 400, MessageOut(error=True, message="コメントが見つかりません!")
 
@@ -149,11 +156,11 @@ class UserAPI:
     def get_notifications(request: HttpRequest):
         log.info("UserAPI get_notifications")
 
-        user = get_user(request)
-        if user is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        notification = get_notification(user)
+        notification = get_notification(user_id)
         data = NotificationOut(
             count=notification["count"],
             datas=[
@@ -183,11 +190,11 @@ class UserAPI:
     def get_channels(request: HttpRequest):
         log.info("UserAPI get_channels")
 
-        user = get_user(request)
-        if user is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channels = get_user_channels(user.id)
+        channels = get_user_channels(user_id)
         data = [
             ChannelOut(ulid=str(c.ulid), avatar=create_url(c.avatar), name=c.name, description=c.description, is_default=c.is_default)
             for c in channels

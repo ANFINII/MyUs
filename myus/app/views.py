@@ -25,8 +25,8 @@ from api.db.models import Advertise, Blog, Chat, Comic, ComicPage, Comment, Foll
 from api.utils.constant import model_comment_dict, model_like_dict
 from api.utils.enum.index import NotificationObjectType, NotificationType, NotificationTypeNo
 from api.utils.functions.convert.convert_hls import convert_exe
-from api.utils.functions.validation import has_alphabet, has_email, has_number, has_phone, has_postal_code, has_username
 from api.utils.functions.user import email_user
+from api.utils.functions.validation import has_alphabet, has_email, has_number, has_phone, has_postal_code, has_username
 from app.modules.context_data import ContextData
 from app.modules.follow import follow_update_data
 from app.modules.get_form import get_detail

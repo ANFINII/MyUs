@@ -1,24 +1,28 @@
 from dataclasses import dataclass
 from datetime import date
-from ninja import UploadedFile
 from api.src.types.data.plan import PlanData
+
+
+@dataclass(frozen=True, slots=True)
+class UserAllData:
+    user: UserData
+    profile: ProfileData
+    mypage: MyPageData
+    notification: UserNotificationData
+    user_plan: UserPlanData
 
 
 @dataclass(frozen=True, slots=True)
 class UserData:
     id: int
     ulid: str
-    avatar: str | UploadedFile
+    avatar: str
     password: str
     email: str
     username: str
     nickname: str
     is_active: bool
     is_staff: bool
-    profile: ProfileData
-    mypage: MyPageData
-    notification: UserNotificationData
-    user_plan: UserPlanData
 
 
 @dataclass(frozen=True, slots=True)

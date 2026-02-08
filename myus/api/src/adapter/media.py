@@ -1,6 +1,5 @@
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
-
 from api.modules.logger import log
 from api.src.types.data.comment import CommentData, ReplyData
 from api.src.types.data.media import VideoData, MusicData, ComicData, PictureData, BlogData, ChatData, HashtagData
@@ -14,11 +13,11 @@ from api.src.types.schema.media import VideoDetailOut, MusicDetailOut, ComicDeta
 from api.src.types.schema.media import VideoDetailsOut, MusicDetailsOut, ComicDetailsOut, PictureDetailsOut, BlogDetailsOut, ChatDetailsOut
 from api.src.types.schema.message import ChatMessageOut
 from api.src.types.schema.user import AuthorOut, MediaUserOut
+from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import get_channel
 from api.src.usecase.media import create_video, create_music, create_comic, create_blog, create_picture, create_chat
 from api.src.usecase.media import get_home, get_videos, get_musics, get_comics, get_blogs, get_pictures, get_chats
 from api.src.usecase.media import get_video_detail, get_music_detail, get_comic_detail, get_blog_detail, get_picture_detail, get_chat_detail
-from api.src.usecase.user import get_user
 
 
 class HomeAPI:
@@ -60,8 +59,7 @@ class VideoAPI:
     ):
         log.info("VideoAPI create", input=input, image=image, video=video, convert=convert)
 
-        user = get_user(request)
-        if user is None:
+        if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
         channel = get_channel(input.channel_ulid)
@@ -124,8 +122,7 @@ class MusicAPI:
     def create(request: HttpRequest, input: MusicIn = Form(...), music: UploadedFile = File(...)):
         log.info("MusicAPI create", input=input, music=music)
 
-        user = get_user(request)
-        if user is None:
+        if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
         channel = get_channel(input.channel_ulid)
@@ -188,8 +185,7 @@ class ComicAPI:
     def create(request: HttpRequest, input: ComicIn = Form(...), image: UploadedFile = File(...), images: list[UploadedFile] = File(...)):
         log.info("ComicAPI create", input=input, image=image, images=images)
 
-        user = get_user(request)
-        if user is None:
+        if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
         channel = get_channel(input.channel_ulid)
@@ -250,8 +246,7 @@ class PictureAPI:
     def create(request: HttpRequest, input: PictureIn = Form(...), image: UploadedFile = File(...)):
         log.info("PictureAPI create", input=input, image=image)
 
-        user = get_user(request)
-        if user is None:
+        if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
         channel = get_channel(input.channel_ulid)
@@ -312,8 +307,7 @@ class BlogAPI:
     def create(request: HttpRequest, input: BlogIn = Form(...), image: UploadedFile = File(...)):
         log.info("BlogAPI create", input=input, image=image)
 
-        user = get_user(request)
-        if user is None:
+        if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
         channel = get_channel(input.channel_ulid)
@@ -375,8 +369,7 @@ class ChatAPI:
     def create(request: HttpRequest, input: ChatIn = Form(...)):
         log.info("ChatAPI create", input=input)
 
-        user = get_user(request)
-        if user is None:
+        if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
         channel = get_channel(input.channel_ulid)

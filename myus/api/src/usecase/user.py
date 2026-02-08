@@ -1,68 +1,45 @@
 import datetime
-import jwt
-from dataclasses import replace
-from django.conf import settings
-from django.http import HttpRequest
+from django.core.files.storage import default_storage
 from ninja import UploadedFile
 from api.db.models.user import User
 from api.modules.logger import log
 from api.src.containers import injector
 from api.src.domain.comment import CommentDomain, FilterOption as CommentFilterOption, SortOption as CommentSortOption
+from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData
+from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
 from api.src.domain.serach_tag import FilterOption as SearchTagFilterOption, SearchTagDomain, SortOption as SearchTagSortOption
-from api.src.domain.interface.user.data import MyPageData, ProfileData, UserData, UserNotificationData
-from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.types.data.user import LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
-from api.utils.enum.index import MediaType
+from api.utils.enum.index import ImageType, MediaType
+from api.utils.functions.file import avatar_path
 from api.utils.functions.media import get_media_domain_type
 from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
 
-def get_user_data(user_id: int) -> UserData | None:
+def get_user_data(user_id: int) -> UserAllData | None:
     repository = injector.get(UserInterface)
     user_ids = repository.get_ids(FilterOption(id=user_id))
     if len(user_ids) == 0:
         return None
 
     users = repository.bulk_get(user_ids)
-    return users[0]
+    user = users[0]
+    if not user.user.is_active:
+        return None
+
+    return user
 
 
-def bulk_save_user(user: UserData) -> bool:
+def save_user_data(data: UserAllData) -> bool:
     repository = injector.get(UserInterface)
     try:
-        repository.bulk_save([user])
+        repository.bulk_save([data])
         return True
     except Exception as e:
-        log.error("bulk_save_user error", exc=e)
+        log.error("save_user_data error", exc=e)
         return False
-
-
-def get_user(request: HttpRequest) -> UserData | None:
-    token = request.COOKIES.get("access_token")
-    if token is None:
-        return None
-
-    key = settings.SECRET_KEY
-    try:
-        payload = jwt.decode(jwt=token, key=key, algorithms=["HS256"])
-        user_id = payload["user_id"]
-        if user_id is None:
-            return None
-
-        user = get_user_data(user_id)
-        if user is None:
-            return None
-
-        if not user.is_active:
-            return None
-        return user
-    except jwt.ExpiredSignatureError:
-        return None
-    except jwt.exceptions.DecodeError:
-        return None
 
 
 def profile_check(data: SettingProfileIn) -> str:
@@ -160,10 +137,30 @@ def like_comment(user_id: int, ulid: str) -> LikeData | None:
     return LikeData(is_like=is_like, like_count=like_count)
 
 
-def update_profile(user: UserData, input: SettingProfileIn, avatar: UploadedFile) -> bool:
-    obj = get_user_data(user.id)
-    if obj is None:
+def save_upload(file: UploadedFile, ulid: str) -> str:
+    path = avatar_path(ImageType.USER, ulid, file.name or "upload")
+    return default_storage.save(path, file)
+
+
+def update_profile(user_id: int, input: SettingProfileIn, avatarFile: UploadedFile) -> bool:
+    data = get_user_data(user_id)
+    if data is None:
         return False
+
+    base = data.user
+    avatar = save_upload(avatarFile, base.ulid) if avatarFile else base.avatar
+
+    user = UserData(
+        id=base.id,
+        ulid=base.ulid,
+        avatar=avatar,
+        password=base.password,
+        email=input.email,
+        username=input.username,
+        nickname=input.nickname,
+        is_active=base.is_active,
+        is_staff=base.is_staff,
+    )
 
     profile = ProfileData(
         last_name=input.last_name,
@@ -171,7 +168,7 @@ def update_profile(user: UserData, input: SettingProfileIn, avatar: UploadedFile
         gender=input.gender,
         birthday=datetime.date(year=input.year, month=input.month, day=input.day),
         phone=input.phone,
-        country_code=user.profile.country_code,
+        country_code="JP",
         postal_code=input.postal_code,
         prefecture=input.prefecture,
         city=input.city,
@@ -179,41 +176,50 @@ def update_profile(user: UserData, input: SettingProfileIn, avatar: UploadedFile
         introduction=input.introduction,
     )
 
-    user = UserData(
-        id=user.id,
-        ulid=user.ulid,
-        avatar=avatar or obj.avatar,
-        password=obj.password,
-        email=input.email,
-        username=input.username,
-        nickname=input.nickname,
-        is_active=obj.is_active,
-        is_staff=obj.is_staff,
+    updated_data = UserAllData(
+        user=user,
         profile=profile,
-        mypage=obj.mypage,
-        notification=obj.notification,
-        user_plan=obj.user_plan,
+        mypage=data.mypage,
+        notification=data.notification,
+        user_plan=data.user_plan,
     )
 
-    return bulk_save_user(user)
+    return save_user_data(updated_data)
 
 
-def update_mypage(user: UserData, input: SettingMyPageIn) -> bool:
+def update_mypage(user_id: int, input: SettingMyPageIn, bannerFile: UploadedFile) -> bool:
+    data = get_user_data(user_id)
+    if data is None:
+        return False
+
+    banner = save_upload(bannerFile, data.user.ulid) if bannerFile else data.mypage.banner
+
     mypage = MyPageData(
-        banner=user.mypage.banner,
+        banner=banner,
         email=input.email,
         content=input.content,
-        follower_count=user.mypage.follower_count,
-        following_count=user.mypage.following_count,
+        follower_count=data.mypage.follower_count,
+        following_count=data.mypage.following_count,
         tag_manager_id=input.tag_manager_id,
         is_advertise=input.is_advertise,
     )
 
-    user = replace(user, mypage=mypage)
-    return bulk_save_user(user)
+    updated_data = UserAllData(
+        user=data.user,
+        profile=data.profile,
+        mypage=mypage,
+        notification=data.notification,
+        user_plan=data.user_plan,
+    )
+
+    return save_user_data(updated_data)
 
 
-def update_notification(user: UserData, input: SettingNotificationIn) -> bool:
+def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
+    data = get_user_data(user_id)
+    if data is None:
+        return False
+
     notification = UserNotificationData(
         is_video=input.is_video,
         is_music=input.is_music,
@@ -227,5 +233,12 @@ def update_notification(user: UserData, input: SettingNotificationIn) -> bool:
         is_views=input.is_views,
     )
 
-    user = replace(user, notification=notification)
-    return bulk_save_user(user)
+    updated_data = UserAllData(
+        user=data.user,
+        profile=data.profile,
+        mypage=data.mypage,
+        notification=notification,
+        user_plan=data.user_plan,
+    )
+
+    return save_user_data(updated_data)

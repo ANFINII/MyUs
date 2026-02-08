@@ -4,8 +4,8 @@ from api.modules.logger import log
 from api.src.types.schema.comment import CommentCreateIn, CommentListIn, CommentOut, CommentUpdateIn, ReplyOut
 from api.src.types.schema.common import ErrorOut, MessageOut
 from api.src.types.schema.user import AuthorOut
+from api.src.usecase.auth import auth_check
 from api.src.usecase.comment import create_comment, delete_comment, get_comments, update_comment
-from api.src.usecase.user import get_user
 
 
 class CommentAPI:
@@ -18,11 +18,11 @@ class CommentAPI:
     def get(request: HttpRequest, query: CommentListIn):
         log.info("CommentAPI get", type_no=query.type_no, object_id=query.object_id)
 
-        user = get_user(request)
-        if user is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        comments = get_comments(type_no=query.type_no, object_id=query.object_id, user_id=user.id)
+        comments = get_comments(type_no=query.type_no, object_id=query.object_id, user_id=user_id)
         data = [
             CommentOut(
                 ulid=x.ulid,
@@ -65,12 +65,12 @@ class CommentAPI:
     def post(request: HttpRequest, input: CommentCreateIn):
         log.info("CommentAPI post", input=input)
 
-        user = get_user(request)
-        if user is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            comment = create_comment(user, input)
+            comment = create_comment(user_id, input)
             if comment is None:
                 return 400, MessageOut(error=True, message="コメントの作成に失敗しました")
 
@@ -100,8 +100,7 @@ class CommentAPI:
     def put(request: HttpRequest, comment_ulid: str, input: CommentUpdateIn):
         log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
 
-        user = get_user(request)
-        if user is None:
+        if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
@@ -116,8 +115,7 @@ class CommentAPI:
     def delete(request: HttpRequest, comment_ulid: str):
         log.info("CommentAPI delete", comment_ulid=comment_ulid)
 
-        user = get_user(request)
-        if user is None:
+        if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:

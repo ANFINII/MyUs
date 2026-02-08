@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
 from api.db.models.comment import Comment
-from api.src.domain.interface.user.data import UserData
+from api.src.domain.interface.user.data import UserAllData
 from api.utils.functions.media import MediaModel
 
 
@@ -29,11 +29,11 @@ class UserInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_get(self, ids: list[int]) -> list[UserData]:
+    def bulk_get(self, ids: list[int]) -> list[UserAllData]:
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[UserData]) -> list[UserData]:
+    def bulk_save(self, objs: list[UserAllData]) -> list[UserAllData]:
         ...
 
     @abstractmethod
