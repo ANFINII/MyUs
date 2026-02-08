@@ -142,13 +142,13 @@ def save_upload(file: UploadedFile, ulid: str) -> str:
     return default_storage.save(path, file)
 
 
-def update_profile(user_id: int, input: SettingProfileIn, avatarFile: UploadedFile) -> bool:
+def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedFile) -> bool:
     data = get_user_data(user_id)
     if data is None:
         return False
 
     base = data.user
-    avatar = save_upload(avatarFile, base.ulid) if avatarFile else base.avatar
+    avatar = save_upload(avatar_file, base.ulid) if avatar_file else base.avatar
 
     user = UserData(
         id=base.id,
@@ -187,12 +187,12 @@ def update_profile(user_id: int, input: SettingProfileIn, avatarFile: UploadedFi
     return save_user_data(updated_data)
 
 
-def update_mypage(user_id: int, input: SettingMyPageIn, bannerFile: UploadedFile) -> bool:
+def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFile) -> bool:
     data = get_user_data(user_id)
     if data is None:
         return False
 
-    banner = save_upload(bannerFile, data.user.ulid) if bannerFile else data.mypage.banner
+    banner = save_upload(banner_file, data.user.ulid) if banner_file else data.mypage.banner
 
     mypage = MyPageData(
         banner=banner,

@@ -114,57 +114,62 @@ def marshal_user(data: UserData) -> User:
 
 
 def marshal_profile(user: User, data: UserAllData) -> Profile:
+    profile = data.profile
     return Profile(
         user=user,
-        last_name=data.profile.last_name,
-        first_name=data.profile.first_name,
-        gender=data.profile.gender,
-        birthday=data.profile.birthday,
-        phone=data.profile.phone,
-        country_code=data.profile.country_code,
-        postal_code=data.profile.postal_code,
-        prefecture=data.profile.prefecture,
-        city=data.profile.city,
-        street=data.profile.street,
-        introduction=data.profile.introduction,
+        last_name=profile.last_name,
+        first_name=profile.first_name,
+        gender=profile.gender,
+        birthday=profile.birthday,
+        phone=profile.phone,
+        country_code=profile.country_code,
+        postal_code=profile.postal_code,
+        prefecture=profile.prefecture,
+        city=profile.city,
+        street=profile.street,
+        introduction=profile.introduction,
     )
 
 
 def marshal_mypage(user: User, data: UserAllData) -> MyPage:
+    mypage = data.mypage
     return MyPage(
         user=user,
-        email=data.mypage.email,
-        content=data.mypage.content,
-        follower_count=data.mypage.follower_count,
-        following_count=data.mypage.following_count,
-        tag_manager_id=data.mypage.tag_manager_id,
-        is_advertise=data.mypage.is_advertise,
+        banner=mypage.banner,
+        email=mypage.email,
+        content=mypage.content,
+        follower_count=mypage.follower_count,
+        following_count=mypage.following_count,
+        tag_manager_id=mypage.tag_manager_id,
+        is_advertise=mypage.is_advertise,
     )
 
 
 def marshal_notification(user: User, data: UserAllData) -> UserNotification:
+    notification = data.notification
     return UserNotification(
         user=user,
-        is_video=data.notification.is_video,
-        is_music=data.notification.is_music,
-        is_comic=data.notification.is_comic,
-        is_picture=data.notification.is_picture,
-        is_blog=data.notification.is_blog,
-        is_chat=data.notification.is_chat,
-        is_follow=data.notification.is_follow,
-        is_reply=data.notification.is_reply,
-        is_like=data.notification.is_like,
-        is_views=data.notification.is_views,
+        is_video=notification.is_video,
+        is_music=notification.is_music,
+        is_comic=notification.is_comic,
+        is_picture=notification.is_picture,
+        is_blog=notification.is_blog,
+        is_chat=notification.is_chat,
+        is_follow=notification.is_follow,
+        is_reply=notification.is_reply,
+        is_like=notification.is_like,
+        is_views=notification.is_views,
     )
 
 
 def marshal_user_plan(user: User, data: UserAllData) -> UserPlan:
+    user_plan = data.user_plan
     return UserPlan(
         user=user,
         plan=user.user_plan.plan,
-        customer_id=data.user_plan.customer_id,
-        subscription=data.user_plan.subscription,
-        is_paid=data.user_plan.is_paid,
-        start_date=data.user_plan.start_date,
-        end_date=data.user_plan.end_date,
+        customer_id=user_plan.customer_id,
+        subscription=user_plan.subscription,
+        is_paid=user_plan.is_paid,
+        start_date=user_plan.start_date,
+        end_date=user_plan.end_date,
     )
