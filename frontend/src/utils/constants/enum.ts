@@ -30,6 +30,7 @@ export enum MediaType {
   Comic = 'Comic',
   Picture = 'Picture',
   Blog = 'Blog',
+  Chat = 'Chat',
 }
 
 export enum NotificationType {
