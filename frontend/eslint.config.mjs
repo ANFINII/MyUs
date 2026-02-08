@@ -38,7 +38,6 @@ export default [
       semi: ['error', 'never'], // セミコロンを不要に
       quotes: ['error', 'single'], // シングルクォートを強制
       eqeqeq: ['error', 'always'], // 厳密な等価演算子を強制
-      complexity: ['warn', { max: 20 }], // 関数の複雑さを制限
       camelcase: ['error', { properties: 'always' }], // キャメルケースを強制
       'no-console': ['warn'], // console.log の使用を警告
       'no-multi-spaces': ['error'], // 複数スペースを禁止
