@@ -54,7 +54,7 @@ class SettingProfileAPI:
 
     @staticmethod
     @router.put("", response={204: MessageOut, 400: MessageOut, 401: ErrorOut})
-    def put(request: HttpRequest, input: SettingProfileIn = Form(...), avatar: UploadedFile = File(None)):
+    def put(request: HttpRequest, input: SettingProfileIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("SettingProfileAPI put", input=input)
 
         validation = profile_check(input)
@@ -65,7 +65,7 @@ class SettingProfileAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not update_profile(user_id, input, avatar):
+        if not update_profile(user_id, input, avatar_file):
             return 400, MessageOut(error=True, message="保存に失敗しました!")
 
         return 204, MessageOut(error=False, message="保存しました!")
@@ -110,7 +110,7 @@ class SettingMyPageAPI:
 
     @staticmethod
     @router.put("", response={204: MessageOut, 400: MessageOut, 401: ErrorOut})
-    def put(request: HttpRequest, input: SettingMyPageIn = Form(...), banner: UploadedFile = File(None)):
+    def put(request: HttpRequest, input: SettingMyPageIn = Form(...), banner_file: UploadedFile = File(None)):
         log.info("SettingMyPageAPI put", input=input)
 
         user_id = auth_check(request)
@@ -120,7 +120,7 @@ class SettingMyPageAPI:
         if has_email(input.email):
             return 400, MessageOut(error=True, message="メールアドレスの形式が違います!")
 
-        if not update_mypage(user_id, input, banner):
+        if not update_mypage(user_id, input, banner_file):
             return 400, MessageOut(error=True, message="保存に失敗しました!")
 
         return 204, MessageOut(error=False, message="保存しました!")
