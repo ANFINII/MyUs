@@ -2,14 +2,6 @@ import { Comment } from 'types/internal/comment'
 import { Author, MediaUser } from 'types/internal/media'
 import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
 
-export interface ChatMessage {
-  ulid: string
-  text: string
-  created: Date
-  updated: Date
-  author: Author
-}
-
 export interface MediaDetail {
   ulid: string
   title: string
@@ -90,4 +82,12 @@ export interface BlogDetailOut {
 export interface ChatDetailOut {
   detail: ChatDetail
   list: Chat[]
+}
+
+export interface ChatMessage {
+  ulid: string
+  text: string
+  created: Date
+  updated: Date
+  author: Author
 }
