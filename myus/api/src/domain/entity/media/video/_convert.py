@@ -14,6 +14,11 @@ def video_data(obj: Video) -> VideoData:
         convert=obj.convert.name if obj.convert else "",
         read=obj.read,
         publish=obj.publish,
+        owner_id=obj.channel.owner_id,
+        created=obj.created,
+        updated=obj.updated,
+        like_count=obj.like.count(),
+        comment_count=obj.comment_count(),
     )
 
 

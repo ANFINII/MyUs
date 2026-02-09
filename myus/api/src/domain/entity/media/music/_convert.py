@@ -14,6 +14,11 @@ def music_data(obj: Music) -> MusicData:
         read=obj.read,
         download=obj.download,
         publish=obj.publish,
+        owner_id=obj.channel.owner_id,
+        created=obj.created,
+        updated=obj.updated,
+        like_count=obj.like.count(),
+        comment_count=obj.comment_count(),
     )
 
 

@@ -162,11 +162,11 @@ class Chat(models.Model):
         return self.like.count()
     total_like.short_description = "like"
 
-    def thread_count(self):
+    def thread_count(self) -> int:
         return self.message.filter(parent__isnull=True).count()
     thread_count.short_description = "thread"
 
-    def joined_count(self):
+    def joined_count(self) -> int:
         return self.message.values_list("author").distinct().count()
     joined_count.short_description = "joined"
 

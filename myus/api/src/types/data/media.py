@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 from api.src.types.data.comment import CommentData
 from api.src.types.data.message import MessageData
 from api.src.types.data.user import AuthorData, MediaUserData
@@ -117,14 +117,14 @@ class BlogDetailData(MediaDetailData):
 class ChatData(MediaData):
     thread: int
     joined: int
-    period: datetime
+    period: date
 
 
 @dataclass(frozen=True, slots=True)
 class ChatDetailData(MediaDetailData):
     thread: int
     joined: int
-    period: datetime
+    period: date
     messages: list[MessageData]
 
 

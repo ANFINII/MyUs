@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass(frozen=True, slots=True)
@@ -13,3 +14,8 @@ class BlogData:
     image: str
     read: int
     publish: bool
+    owner_id: int
+    created: datetime
+    updated: datetime
+    like_count: int
+    comment_count: int

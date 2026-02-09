@@ -1,10 +1,11 @@
 from django.db.models import Count, F, Q
-from django.utils import timezone
 from api.db.models.media import Comic
 from api.src.domain.index import sort_ids
 from api.src.domain.media.index import ExcludeOption, FilterOption, SortOption, SortType
-from api.utils.functions.index import set_attr
 from api.utils.functions.search import search_q_list
+
+
+COMIC_FIELDS = ["channel_id", "title", "content", "image", "read", "publish"]
 
 
 class ComicDomain:
@@ -52,15 +53,14 @@ class ComicDomain:
         return sort_ids(objs, ids)
 
     @classmethod
-    def create(cls, **kwargs) -> Comic:
-        return Comic.objects.create(**kwargs)
+    def bulk_save(cls, objs: list[Comic]) -> list[Comic]:
+        if len(objs) == 0:
+            return []
 
-    @classmethod
-    def update(cls, obj: Comic, **kwargs) -> None:
-        if not kwargs:
-            return
+        Comic.objects.bulk_create(
+            objs,
+            update_conflicts=True,
+            update_fields=COMIC_FIELDS,
+        )
 
-        kwargs["updated"] = timezone.now
-        [set_attr(obj, key, value) for key, value in kwargs.items()]
-        obj.save(update_fields=list(kwargs.keys()))
-        return
+        return cls.bulk_get([o.id for o in objs])
