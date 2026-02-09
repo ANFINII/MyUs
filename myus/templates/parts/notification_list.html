@@ -1,6 +1,6 @@
 {% for notification in notification_list %}
 <li id="notification_aria_link_{{ notification.id }}" class="drop_menu_list">
-  <object notification-id="{{ notification.id }}" csrf="{{ csrf_token }}" class="notification_aria_list">
+  {% comment %} <object notification-id="{{ notification.id }}" csrf="{{ csrf_token }}" class="notification_aria_list">
     <a href="{% url 'app:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" class="pjax_button_userpage">
       <img src="{{ notification.user_from.image }}" title="{{ notification.user_from.nickname }}" class="profile_image">
     </a>
@@ -13,23 +13,23 @@
     {% endif %}
 
     {% if notification.type_name == 'video' %}
-    <a href="{% url 'app:video_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
+    <a href="{% url 'app:video_detail' notification.object_id notification.type_name %}" class="notification_aria_anker">
     {% elif notification.type_name == 'music' %}
-    <a href="{% url 'app:music_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
+    <a href="{% url 'app:music_detail' notification.object_id notification.type_name %}" class="notification_aria_anker">
     {% elif notification.type_name == 'comic' %}
-    <a href="{% url 'app:comic_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
+    <a href="{% url 'app:comic_detail' notification.object_id notification.type_name %}" class="notification_aria_anker">
     {% elif notification.type_name == 'picture' %}
-    <a href="{% url 'app:picture_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
+    <a href="{% url 'app:picture_detail' notification.object_id notification.type_name %}" class="notification_aria_anker">
     {% elif notification.type_name == 'blog' %}
-    <a href="{% url 'app:blog_detail' notification.content_object.id notification.content_object.title %}" class="notification_aria_anker">
+    <a href="{% url 'app:blog_detail' notification.object_id notification.type_name %}" class="notification_aria_anker">
     {% elif notification.type_name == 'chat' %}
-    <a href="{% url 'app:chat_detail' notification.content_object.id %}" class="notification_aria_anker">
+    <a href="{% url 'app:chat_detail' notification.object_id %}" class="notification_aria_anker">
     {% elif notification.type_no >= 7 and notification.type_no <= 9 %}
     <a href="{% url 'app:userpage' notification.user_from.nickname %}" data="{{ notification.user_from.nickname }}" class="notification_aria_anker pjax_button_userpage">
     {% endif %}
       {% if notification.type_no >= 1 and notification.type_no <= 6 %}
-      <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんが{{ notification.content_object.title }}を投稿しました">
-        {{ notification.content_object.title }}
+      <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}さんが{{ notification.type_name }}を投稿しました">
+        {{ notification.type_name }}
       </div>
       {% elif notification.type_no == 7 %}
       <div class="notification_aria_list_1" title="{{ notification.user_from.nickname }}にフォローされました">
@@ -45,28 +45,28 @@
       </div>
       {% elif notification.type_no == 10 %}
         {% if notification.content_object.read >= 1000000000 %}
-        <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10億回閲覧されました">
-          {{ notification.content_object.title }}が10億回閲覧されました
+        <div class="notification_aria_list_1" title="{{ notification.type_name }}が10億回閲覧されました">
+          {{ notification.type_name }}が10億回閲覧されました
         </div>
         {% elif notification.content_object.read >= 100000000 %}
-        <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1億回閲覧されました">
-          {{ notification.content_object.title }}が1億回閲覧されました
+        <div class="notification_aria_list_1" title="{{ notification.type_name }}が1億回閲覧されました">
+          {{ notification.type_name }}が1億回閲覧されました
         </div>
         {% elif notification.content_object.read >= 10000000 %}
-        <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1000万回閲覧されました">
-          {{ notification.content_object.title }}が1000万回閲覧されました
+        <div class="notification_aria_list_1" title="{{ notification.type_name }}が1000万回閲覧されました">
+          {{ notification.type_name }}が1000万回閲覧されました
         </div>
         {% elif notification.content_object.read >= 1000000 %}
-        <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が100万回閲覧されました">
-          {{ notification.content_object.title }}が100万回閲覧されました
+        <div class="notification_aria_list_1" title="{{ notification.type_name }}が100万回閲覧されました">
+          {{ notification.type_name }}が100万回閲覧されました
         </div>
         {% elif notification.content_object.read >= 100000 %}
-        <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が10万回閲覧されました">
-          {{ notification.content_object.title }}が10万回閲覧されました
+        <div class="notification_aria_list_1" title="{{ notification.type_name }}が10万回閲覧されました">
+          {{ notification.type_name }}が10万回閲覧されました
         </div>
         {% elif notification.content_object.read >= 10000 %}
-        <div class="notification_aria_list_1" title="{{ notification.content_object.title }}が1万回閲覧されました">
-          {{ notification.content_object.title }}が1万回閲覧されました
+        <div class="notification_aria_list_1" title="{{ notification.type_name }}が1万回閲覧されました">
+          {{ notification.type_name }}が1万回閲覧されました
         </div>
         {% endif %}
       {% endif %}
@@ -75,6 +75,6 @@
     <form method="POST" action="">
       <i title="閉じる" class="bi-x notification_aria_list_2" style="font-size: 1.41em;"></i>
     </form>
-  </object>
+  </object> {% endcomment %}
 </li>
 {% endfor %}
