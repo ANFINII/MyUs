@@ -12,6 +12,11 @@ def picture_data(obj: Picture) -> PictureData:
         image=obj.image.name if obj.image else "",
         read=obj.read,
         publish=obj.publish,
+        owner_id=obj.channel.owner_id,
+        created=obj.created,
+        updated=obj.updated,
+        like_count=obj.like.count(),
+        comment_count=obj.comment_count(),
     )
 
 

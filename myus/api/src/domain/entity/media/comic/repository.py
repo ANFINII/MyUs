@@ -1,3 +1,4 @@
+from typing import Any
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.media import Comic
@@ -13,7 +14,7 @@ COMIC_FIELDS = ["channel_id", "title", "content", "image", "read", "publish"]
 
 class ComicRepository(ComicInterface):
     def queryset(self) -> QuerySet[Comic]:
-        return Comic.objects.select_related("channel")
+        return Comic.objects.select_related("channel").prefetch_related("like")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []
@@ -57,3 +58,7 @@ class ComicRepository(ComicInterface):
         )
 
         return self.bulk_get([o.id for o in objs])
+
+    def create(self, **kwargs: Any) -> ComicData:
+        obj = Comic.objects.create(**kwargs)
+        return self.bulk_get([obj.id])[0]

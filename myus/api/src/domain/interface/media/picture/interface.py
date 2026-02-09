@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, SortOption
 from api.src.domain.interface.media.picture.data import PictureData
 
@@ -14,4 +15,8 @@ class PictureInterface(ABC):
 
     @abstractmethod
     def bulk_save(self, objs: list[PictureData]) -> list[PictureData]:
+        ...
+
+    @abstractmethod
+    def create(self, **kwargs: Any) -> PictureData:
         ...

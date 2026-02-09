@@ -12,6 +12,12 @@ def chat_data(obj: Chat) -> ChatData:
         read=obj.read,
         period=obj.period,
         publish=obj.publish,
+        owner_id=obj.channel.owner_id,
+        created=obj.created,
+        updated=obj.updated,
+        like_count=obj.like.count(),
+        thread_count=obj.thread_count(),
+        joined_count=obj.joined_count(),
     )
 
 

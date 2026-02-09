@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, SortOption
 from api.src.domain.interface.media.blog.data import BlogData
 
@@ -14,4 +15,8 @@ class BlogInterface(ABC):
 
     @abstractmethod
     def bulk_save(self, objs: list[BlogData]) -> list[BlogData]:
+        ...
+
+    @abstractmethod
+    def create(self, **kwargs: Any) -> BlogData:
         ...

@@ -1,19 +1,18 @@
-from django.db.models import Count, F, Q
-from django.utils import timezone
+from django.db.models import Count, F, Q, QuerySet
 from api.db.models.media import Video
 from api.src.domain.index import sort_ids
 from api.src.domain.media.index import ExcludeOption, FilterOption, SortOption, SortType
-from api.utils.functions.index import set_attr
 from api.utils.functions.search import search_q_list
 
 
+VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "read", "publish"]
+
+
 class VideoDomain:
-    @classmethod
-    def queryset(cls):
+    def queryset(self) -> QuerySet[Video]:
         return Video.objects.select_related("channel", "channel__owner").prefetch_related("like")
 
-    @classmethod
-    def get_ids(cls, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []
         e_list: list[Q] = []
         if filter.ulid:
@@ -43,24 +42,21 @@ class VideoDomain:
 
         return list(qs.values_list("id", flat=True))
 
-    @classmethod
-    def bulk_get(cls, ids: list[int]) -> list[Video]:
+    def bulk_get(self, ids: list[int]) -> list[Video]:
         if len(ids) == 0:
             return []
 
-        objs = cls.queryset().filter(id__in=ids)
+        objs = self.queryset().filter(id__in=ids)
         return sort_ids(objs, ids)
 
-    @classmethod
-    def create(cls, **kwargs) -> Video:
-        return Video.objects.create(**kwargs)
+    def bulk_save(self, objs: list[Video]) -> list[Video]:
+        if len(objs) == 0:
+            return []
 
-    @classmethod
-    def update(cls, obj: Video, **kwargs) -> None:
-        if not kwargs:
-            return
+        Video.objects.bulk_create(
+            objs,
+            update_conflicts=True,
+            update_fields=VIDEO_FIELDS,
+        )
 
-        kwargs["updated"] = timezone.now
-        [set_attr(obj, key, value) for key, value in kwargs.items()]
-        obj.save(update_fields=list(kwargs.keys()))
-        return
+        return self.bulk_get([o.id for o in objs])

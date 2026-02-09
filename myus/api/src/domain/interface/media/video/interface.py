@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, SortOption
 from api.src.domain.interface.media.video.data import VideoData
 
@@ -14,4 +15,8 @@ class VideoInterface(ABC):
 
     @abstractmethod
     def bulk_save(self, objs: list[VideoData]) -> list[VideoData]:
+        ...
+
+    @abstractmethod
+    def create(self, **kwargs: Any) -> VideoData:
         ...

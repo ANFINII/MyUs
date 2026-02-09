@@ -1,10 +1,11 @@
 from django.db.models import Count, F, Q
-from django.utils import timezone
 from api.db.models.media import Music
 from api.src.domain.index import sort_ids
 from api.src.domain.media.index import ExcludeOption, FilterOption, SortOption, SortType
-from api.utils.functions.index import set_attr
 from api.utils.functions.search import search_q_list
+
+
+MUSIC_FIELDS = ["channel_id", "title", "content", "lyric", "music", "read", "download", "publish"]
 
 
 class MusicDomain:
@@ -52,15 +53,14 @@ class MusicDomain:
         return sort_ids(objs, ids)
 
     @classmethod
-    def create(cls, **kwargs) -> Music:
-        return Music.objects.create(**kwargs)
+    def bulk_save(cls, objs: list[Music]) -> list[Music]:
+        if len(objs) == 0:
+            return []
 
-    @classmethod
-    def update(cls, obj: Music, **kwargs) -> None:
-        if not kwargs:
-            return
+        Music.objects.bulk_create(
+            objs,
+            update_conflicts=True,
+            update_fields=MUSIC_FIELDS,
+        )
 
-        kwargs["updated"] = timezone.now()
-        [set_attr(obj, key, value) for key, value in kwargs.items()]
-        obj.save(update_fields=list(kwargs.keys()))
-        return
+        return cls.bulk_get([o.id for o in objs])

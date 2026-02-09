@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 
 
 @dataclass(frozen=True, slots=True)
@@ -12,3 +12,9 @@ class ChatData:
     read: int
     period: date
     publish: bool
+    owner_id: int = 0
+    created: datetime = datetime.min
+    updated: datetime = datetime.min
+    like_count: int = 0
+    thread_count: int = 0
+    joined_count: int = 0
