@@ -5,7 +5,6 @@ from operator import and_
 from django.db.models import Q
 from api.db.models.users import Follow
 from api.src.domain.index import sort_ids
-from api.utils.functions.index import set_attr
 from api.utils.functions.search import get_q_list
 
 
@@ -24,6 +23,9 @@ class SortType(Enum):
 class SortOption:
     is_asc: bool = False
     sort_type: SortType = SortType.CREATED
+
+
+FOLLOW_FIELDS = ["follower_id", "following_id", "is_follow"]
 
 
 class FollowDomain:
@@ -81,17 +83,17 @@ class FollowDomain:
         return sort_ids(objs, ids)
 
     @classmethod
-    def create(cls, **kwargs) -> Follow:
-        return Follow.objects.create(**kwargs)
+    def bulk_save(cls, objs: list[Follow]) -> list[Follow]:
+        if len(objs) == 0:
+            return []
 
-    @classmethod
-    def update(cls, obj: Follow, **kwargs) -> None:
-        if not kwargs:
-            return
+        Follow.objects.bulk_create(
+            objs,
+            update_conflicts=True,
+            update_fields=FOLLOW_FIELDS,
+        )
 
-        [set_attr(obj, key, value) for key, value in kwargs.items()]
-        obj.save(update_fields=list(kwargs.keys()))
-        return
+        return cls.bulk_get([o.id for o in objs])
 
     @classmethod
     def count(cls, filter: FilterOption) -> int:

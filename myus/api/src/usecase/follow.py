@@ -1,5 +1,6 @@
-from dataclasses import asdict, replace
+from dataclasses import replace
 from django.db import transaction
+from api.db.models.users import Follow
 from api.src.domain.follow import FilterOption, FollowDomain, SortOption
 from api.src.domain.interface.user.data import UserData
 from api.src.domain.interface.user.interface import FilterOption as UserFilterOption, SortOption as UserSortOption, UserInterface
@@ -51,9 +52,14 @@ def upsert_follow(follower: UserData, ulid: str, is_follow: bool, repository: Us
 
     with transaction.atomic():
         if follow is None:
-            FollowDomain.create(**asdict(follow_data))
+            FollowDomain.bulk_save([Follow(
+                follower_id=follow_data.follower_id,
+                following_id=follow_data.following_id,
+                is_follow=follow_data.is_follow,
+            )])
         else:
-            FollowDomain.update(follow, is_follow=is_follow)
+            follow.is_follow = is_follow
+            FollowDomain.bulk_save([follow])
 
         follower_count = FollowDomain.count(FilterOption(following_id=following.id))
         following_count = FollowDomain.count(FilterOption(follower_id=follower.id))

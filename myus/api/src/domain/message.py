@@ -1,10 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
 from django.db.models import Q
-from django.utils import timezone
 from api.db.models.message import Message
 from api.src.domain.index import sort_ids
-from api.utils.functions.index import set_attr
 
 
 class SortType(Enum):
@@ -21,6 +19,9 @@ class FilterOption:
 class SortOption:
     is_asc: bool = False
     sort_type: SortType = SortType.CREATED
+
+
+MESSAGE_FIELDS = ["author_id", "chat_id", "parent_id", "text"]
 
 
 class MessageDomain:
@@ -54,15 +55,14 @@ class MessageDomain:
         return sort_ids(objs, ids)
 
     @classmethod
-    def create(cls, **kwargs) -> Message:
-        return Message.objects.create(**kwargs)
+    def bulk_save(cls, objs: list[Message]) -> list[Message]:
+        if len(objs) == 0:
+            return []
 
-    @classmethod
-    def update(cls, obj: Message, **kwargs) -> None:
-        if not kwargs:
-            return
+        Message.objects.bulk_create(
+            objs,
+            update_conflicts=True,
+            update_fields=MESSAGE_FIELDS,
+        )
 
-        kwargs["updated"] = timezone.now
-        [set_attr(obj, key, value) for key, value in kwargs.items()]
-        obj.save(update_fields=list(kwargs.keys()))
-        return
+        return cls.bulk_get([o.id for o in objs])
