@@ -14,8 +14,8 @@ class BlogData:
     image: str
     read: int
     publish: bool
-    owner_id: int = 0
-    created: datetime = datetime.min
-    updated: datetime = datetime.min
-    like_count: int = 0
-    comment_count: int = 0
+    owner_id: int
+    created: datetime
+    updated: datetime
+    like_count: int
+    comment_count: int

@@ -12,9 +12,9 @@ class ChatData:
     read: int
     period: date
     publish: bool
-    owner_id: int = 0
-    created: datetime = datetime.min
-    updated: datetime = datetime.min
-    like_count: int = 0
-    thread_count: int = 0
-    joined_count: int = 0
+    owner_id: int
+    created: datetime
+    updated: datetime
+    like_count: int
+    thread_count: int
+    joined_count: int
