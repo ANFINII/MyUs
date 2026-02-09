@@ -3,7 +3,6 @@ from enum import Enum
 from django.db.models import Q
 from api.db.models.users import SearchTag
 from api.src.domain.index import sort_ids
-from api.utils.functions.index import set_attr
 
 
 class SortType(Enum):
@@ -19,6 +18,9 @@ class FilterOption:
 class SortOption:
     is_asc: bool = True
     sort_type: SortType = SortType.SEQUENCE
+
+
+SEARCH_TAG_FIELDS = ["author_id", "sequence", "name"]
 
 
 class SearchTagDomain:
@@ -46,13 +48,14 @@ class SearchTagDomain:
         return sort_ids(objs, ids)
 
     @classmethod
-    def create(cls, **kwargs) -> SearchTag:
-        return SearchTag.objects.create(**kwargs)
+    def bulk_save(cls, objs: list[SearchTag]) -> list[SearchTag]:
+        if len(objs) == 0:
+            return []
 
-    @classmethod
-    def update(cls, obj: SearchTag, **kwargs) -> None:
-        if not kwargs:
-            return
+        SearchTag.objects.bulk_create(
+            objs,
+            update_conflicts=True,
+            update_fields=SEARCH_TAG_FIELDS,
+        )
 
-        [set_attr(obj, key, value) for key, value in kwargs.items()]
-        obj.save(update_fields=list(kwargs.keys()))
+        return cls.bulk_get([o.id for o in objs])

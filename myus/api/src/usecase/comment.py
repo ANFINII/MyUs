@@ -1,4 +1,3 @@
-from dataclasses import asdict
 from api.db.models.comment import Comment
 from api.db.models.user import User
 from api.modules.logger import log
@@ -67,7 +66,15 @@ def create_comment(user_id: int, input: CommentCreateIn) -> CommentData | None:
         parent_id=parent_id,
     )
 
-    obj = CommentDomain.create(**asdict(comment_create_data))
+    obj = CommentDomain.bulk_save([Comment(
+        author_id=comment_create_data.author_id,
+        text=comment_create_data.text,
+        type_no=comment_create_data.type_no,
+        type_name=comment_create_data.type_name,
+        object_id=comment_create_data.object_id,
+        parent_id=comment_create_data.parent_id,
+    )])[0]
+
     data = CommentData(
         ulid=str(obj.ulid),
         text=obj.text,
@@ -89,7 +96,8 @@ def update_comment(comment_ulid: str, text: str) -> None:
         return None
 
     comment = CommentDomain.bulk_get(ids)[0]
-    CommentDomain.update(comment, text=text)
+    comment.text = text
+    CommentDomain.bulk_save([comment])
     return None
 
 
@@ -101,5 +109,6 @@ def delete_comment(comment_ulid: str) -> None:
         return None
 
     comment = CommentDomain.bulk_get(ids)[0]
-    CommentDomain.update(comment, deleted=True)
+    comment.deleted = True
+    CommentDomain.bulk_save([comment])
     return None

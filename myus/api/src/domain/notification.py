@@ -4,7 +4,6 @@ from django.db.models import Q
 from api.db.models.notification import Notification
 from api.src.domain.index import sort_ids
 from api.utils.enum.index import NotificationTypeNo
-from api.utils.functions.index import set_attr
 
 
 class SortType(Enum):
@@ -22,6 +21,9 @@ class FilterOption:
 class SortOption:
     is_asc: bool = False
     sort_type: SortType = SortType.CREATED
+
+
+NOTIFICATION_FIELDS = ["user_from_id", "user_to_id", "type_no", "type_name", "object_id", "object_type"]
 
 
 class NotificationDomain:
@@ -57,16 +59,17 @@ class NotificationDomain:
         return sort_ids(objs, ids)
 
     @classmethod
-    def create(cls, **kwargs) -> Notification:
-        return Notification.objects.create(**kwargs)
+    def bulk_save(cls, objs: list[Notification]) -> list[Notification]:
+        if len(objs) == 0:
+            return []
 
-    @classmethod
-    def update(cls, obj: Notification, **kwargs) -> None:
-        if not kwargs:
-            return
+        Notification.objects.bulk_create(
+            objs,
+            update_conflicts=True,
+            update_fields=NOTIFICATION_FIELDS,
+        )
 
-        [set_attr(obj, key, value) for key, value in kwargs.items()]
-        obj.save(update_fields=list(kwargs.keys()))
+        return cls.bulk_get([o.id for o in objs])
 
     @classmethod
     def delete(cls, type_no: NotificationTypeNo, object_id: int) -> None:
