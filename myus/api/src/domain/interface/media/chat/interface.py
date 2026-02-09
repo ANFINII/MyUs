@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Any
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, SortOption
 from api.src.domain.interface.media.chat.data import ChatData
 
@@ -15,8 +14,4 @@ class ChatInterface(ABC):
 
     @abstractmethod
     def bulk_save(self, objs: list[ChatData]) -> list[ChatData]:
-        ...
-
-    @abstractmethod
-    def create(self, **kwargs: Any) -> ChatData:
         ...

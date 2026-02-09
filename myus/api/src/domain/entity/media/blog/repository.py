@@ -1,4 +1,3 @@
-from typing import Any
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.media import Blog
@@ -58,7 +57,3 @@ class BlogRepository(BlogInterface):
         )
 
         return self.bulk_get([o.id for o in objs])
-
-    def create(self, **kwargs: Any) -> BlogData:
-        obj = Blog.objects.create(**kwargs)
-        return self.bulk_get([obj.id])[0]
