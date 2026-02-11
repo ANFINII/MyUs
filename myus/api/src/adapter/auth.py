@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
-from api.src.containers import injector
+from api.src.injectors import injector
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserData, UserNotificationData, UserPlanData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.types.data.plan import PlanData
