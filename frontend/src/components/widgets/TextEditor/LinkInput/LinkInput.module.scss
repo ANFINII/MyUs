@@ -1,0 +1,58 @@
+.link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgb(204, 204, 204);
+  background: rgb(250, 250, 250);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  .field {
+    flex: 1;
+    height: 30px;
+    padding: 0 8px;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 3px;
+    font-size: 13px;
+    outline: none;
+
+    &:focus {
+      border-color: rgb(0, 102, 204);
+    }
+  }
+
+  .submit {
+    height: 30px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 3px;
+    background: rgb(0, 102, 204);
+    font-size: 12px;
+    font-weight: 600;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+
+    &:hover {
+      background: rgb(0, 82, 164);
+    }
+  }
+
+  .cancel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    background: transparent;
+    font-size: 14px;
+    color: rgb(102, 102, 102);
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(51, 51, 51);
+      background: rgb(238, 238, 238);
+    }
+  }
+}
