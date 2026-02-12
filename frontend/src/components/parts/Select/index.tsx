@@ -12,10 +12,10 @@ interface Props {
 }
 
 export default function Select(props: Props): React.JSX.Element {
-  const { id, name, value, options, placeholder, className, onChange } = props
+  const { options, placeholder } = props
 
   return (
-    <select id={id} name={name} value={value} onChange={onChange} className={className}>
+    <select {...props}>
       {placeholder && (
         <option value="" hidden>
           {placeholder}
