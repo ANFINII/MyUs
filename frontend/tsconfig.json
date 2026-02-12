@@ -5,9 +5,13 @@
     "moduleResolution": "node",
     "lib": ["dom", "dom.iterable", "esnext"],
     "types": ["@types/react", "@types/react-dom"],
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "baseUrl": "src",
-    "paths": {"api/*": ["api/*"], "lib/*": ["lib/*"], "types/*": ["types/*"]},
+    "paths": {
+      "api/*": ["api/*"],
+      "lib/*": [ "lib/*"],
+      "types/*": ["types/*"]
+    },
     "sourceRoot": "/",
     "sourceMap": true,
     "alwaysStrict": true,
