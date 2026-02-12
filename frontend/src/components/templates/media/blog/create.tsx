@@ -1,4 +1,5 @@
 import { useState, ChangeEvent } from 'react'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { Channel } from 'types/internal/channle'
 import { BlogIn } from 'types/internal/media'
@@ -16,7 +17,7 @@ import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import VStack from 'components/parts/Stack/Vertical'
 
-// const TextEditor = dynamic(() => import('components/widgets/TextEditor'), { ssr: false })
+const TextEditor = dynamic(() => import('components/widgets/TextEditor'), { ssr: false })
 
 interface Props {
   channels: Channel[]
@@ -39,10 +40,10 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
 
-  // const handleRichtext = (html: string) => {
-  //   const richtext = html.trim() === '<p></p>' ? '' : html.trim()
-  //   setValues({ ...values, richtext })
-  // }
+  const handleRichtext = (html: string) => {
+    const richtext = html.trim() === '<p></p>' ? '' : html.trim()
+    setValues({ ...values, richtext })
+  }
 
   const handleForm = async () => {
     const { channelUlid, title, content, richtext, image } = values
@@ -66,7 +67,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
           <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
           <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
-          {/* <TextEditor label="本文" value={values.richtext} className="blog" required={isRequired} onChange={handleRichtext} /> */}
+          <TextEditor label="本文" value={values.richtext} className="blog" required={isRequired} onChange={handleRichtext} />
         </VStack>
       </form>
     </Main>
