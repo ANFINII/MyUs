@@ -15,14 +15,6 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from './TextEditor.module.scss'
 import Toolbar from './Toolbar'
 
-interface Props {
-  label?: string
-  value?: string
-  required?: boolean
-  className?: string
-  onChange?: (html: string) => void
-}
-
 const extensions = [
   StarterKit.configure({ heading: { levels: [1, 2, 3, 4, 5] } }),
   TextStyle,
@@ -35,6 +27,14 @@ const extensions = [
   Subscript,
   Superscript,
 ]
+
+interface Props {
+  label?: string
+  value?: string
+  required?: boolean
+  className?: string
+  onChange?: (html: string) => void
+}
 
 export default function TextEditor(props: Props): React.JSX.Element {
   const { label, value, required = false, className, onChange } = props
