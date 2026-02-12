@@ -12,7 +12,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import InputFile from 'components/parts/Input/File'
-import Select from 'components/parts/Input/Select'
+import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import VStack from 'components/parts/Stack/Vertical'
 
@@ -55,7 +55,7 @@ export default function PictureCreate(props: Props): React.JSX.Element {
     <Main title="Picture" type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <form method="POST" action="">
         <VStack gap="8">
-          <Select label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
+          <SelectBox label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
           <InputFile label="画像" accept="image/*" required={isRequired} onChange={handleFile} />

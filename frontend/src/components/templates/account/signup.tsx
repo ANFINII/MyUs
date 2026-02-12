@@ -13,7 +13,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Radio from 'components/parts/Input/Radio'
-import Select from 'components/parts/Input/Select'
+import SelectBox from 'components/parts/Input/SelectBox'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 
@@ -86,9 +86,9 @@ export default function Signup(): React.JSX.Element {
             <VStack gap="4">
               <p>生年月日</p>
               <HStack gap="2" full>
-                <Select name="year" value={values.year} options={years} onChange={handleSelect} />
-                <Select name="month" value={values.month} options={months} onChange={handleSelect} />
-                <Select name="day" value={values.day} options={days} onChange={handleSelect} />
+                <SelectBox name="year" value={values.year} options={years} onChange={handleSelect} />
+                <SelectBox name="month" value={values.month} options={months} onChange={handleSelect} />
+                <SelectBox name="day" value={values.day} options={days} onChange={handleSelect} />
               </HStack>
             </VStack>
 

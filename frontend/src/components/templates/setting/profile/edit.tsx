@@ -19,7 +19,7 @@ import IconPerson from 'components/parts/Icon/Person'
 import Input from 'components/parts/Input'
 import InputImage from 'components/parts/Input/Image'
 import Radio from 'components/parts/Input/Radio'
-import Select from 'components/parts/Input/Select'
+import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
@@ -133,9 +133,9 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
         </TableRow>
         <TableRow label="生年月日">
           <HStack gap="1" full>
-            <Select name="year" value={values.year} options={years} onChange={handleNumberSelect} />
-            <Select name="month" value={values.month} options={months} onChange={handleNumberSelect} />
-            <Select name="day" value={values.day} options={days} onChange={handleNumberSelect} />
+            <SelectBox name="year" value={values.year} options={years} onChange={handleNumberSelect} />
+            <SelectBox name="month" value={values.month} options={months} onChange={handleNumberSelect} />
+            <SelectBox name="day" value={values.day} options={days} onChange={handleNumberSelect} />
           </HStack>
         </TableRow>
         <TableRow isIndent label="年齢">
@@ -159,7 +159,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
         </TableRow>
         <TableRow label="住所">
           <HStack gap="1" full>
-            <Select name="prefecture" value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handleSelect} />
+            <SelectBox name="prefecture" value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handleSelect} />
             <Input name="city" value={values.city} placeholder="市区町村" maxLength={255} onChange={handleInput} />
             <Input name="street" value={values.street} placeholder="町名番地" maxLength={255} onChange={handleInput} />
           </HStack>
