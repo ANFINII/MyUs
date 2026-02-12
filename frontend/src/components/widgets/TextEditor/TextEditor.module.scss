@@ -1,0 +1,241 @@
+.label {
+  display: block;
+  font-size: 14px;
+  color: rgb(50, 50, 50);
+}
+
+.editor {
+  border: 1px solid rgb(204, 204, 204);
+  border-radius: 5px;
+
+  :global(.tiptap) {
+    min-height: 200px;
+    padding: 12px 15px;
+    overflow-y: auto;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42;
+    tab-size: 4;
+    white-space: pre-wrap;
+    outline: none;
+
+    > * + * {
+      margin-top: 0.75em;
+    }
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      font-size: 2em;
+      font-weight: bold;
+    }
+
+    h2 {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    h3 {
+      font-size: 1.17em;
+      font-weight: bold;
+    }
+
+    h4 {
+      font-size: 1em;
+      font-weight: bold;
+    }
+
+    h5 {
+      font-size: 0.83em;
+      font-weight: bold;
+    }
+
+    h6 {
+      font-size: 0.67em;
+      font-weight: bold;
+    }
+
+    ul {
+      padding-left: 1.5em;
+      list-style-type: disc;
+    }
+
+    ol {
+      padding-left: 1.5em;
+      list-style-type: decimal;
+    }
+
+    blockquote {
+      margin-left: 0;
+      padding-left: 16px;
+      border-left: 4px solid rgb(204, 204, 204);
+    }
+
+    pre {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      padding: 5px 10px;
+      border-radius: 3px;
+      background: rgb(240, 240, 242);
+      font-family: monospace;
+      white-space: pre-wrap;
+
+      code {
+        padding: 0;
+        background: none;
+        font-size: 0.9em;
+        color: inherit;
+      }
+    }
+
+    code {
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      background: rgb(240, 240, 242);
+      font-size: 0.85em;
+    }
+
+    a {
+      color: rgb(0, 102, 204);
+      text-decoration: underline;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    sub {
+      font-size: smaller;
+      vertical-align: sub;
+    }
+
+    sup {
+      font-size: smaller;
+      vertical-align: super;
+    }
+  }
+}
+
+.error {
+  :global(.tiptap) {
+    background: rgb(255, 240, 240);
+    color: rgb(0, 0, 0);
+  }
+}
+
+.error_text {
+  padding-top: 2px;
+  font-size: 12px;
+  text-indent: 4px;
+  color: rgb(255, 0, 0);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 8px;
+  border-bottom: 1px solid rgb(204, 204, 204);
+  border-radius: 5px 5px 0 0;
+  background: rgb(255, 255, 255);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  .group {
+    display: flex;
+    align-items: center;
+    margin-right: 14px;
+  }
+
+  .color_label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 24px;
+    cursor: pointer;
+
+    &:hover .icon {
+      stroke: rgb(0, 102, 204);
+    }
+  }
+
+  .color_input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    width: 28px;
+    height: 24px;
+    padding: 3px 5px;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    color: rgb(68, 68, 68);
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(0, 102, 204);
+    }
+  }
+
+  .button_active {
+    color: rgb(0, 102, 204);
+  }
+
+  .select {
+    height: 28px;
+    padding: 0 4px;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 3px;
+    background: rgb(255, 255, 255);
+    font-size: 12px;
+    color: rgb(68, 68, 68);
+    cursor: pointer;
+  }
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon_link {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 0.5;
+}
+
+.icon_wide {
+  width: 22px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.file_hidden {
+  display: none;
+}
