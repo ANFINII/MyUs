@@ -20,6 +20,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import VStack from 'components/parts/Stack/Vertical'
 
 const QuillEditor = dynamic(() => import('components/widgets/QuillEditor'), { ssr: false })
+const TextEditor = dynamic(() => import('components/widgets/TextEditor'), { ssr: false })
 
 interface Props {
   channels: Channel[]
@@ -47,6 +48,11 @@ export default function BlogCreate(props: Props): React.JSX.Element {
     setValues({ ...values, richtext, delta: JSON.stringify(editor.getContents()) })
   }
 
+  const handleTiptap = (html: string) => {
+    const richtext = html.trim() === '<p></p>' ? '' : html.trim()
+    setValues({ ...values, richtext })
+  }
+
   const handleForm = async () => {
     const { channelUlid, title, content, richtext, image } = values
     if (!isRequiredCheck({ channelUlid, title, content, richtext, image })) return
@@ -69,7 +75,8 @@ export default function BlogCreate(props: Props): React.JSX.Element {
           <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
           <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
-          <QuillEditor label="本文" value={values.richtext} className="blog" required={isRequired} onChange={handleQuill} />
+          <QuillEditor label="本文 (Quill)" value={values.richtext} className="blog" required={isRequired} onChange={handleQuill} />
+          <TextEditor label="本文 (TipTap)" value={values.richtext} className="blog" required={isRequired} onChange={handleTiptap} />
         </VStack>
       </form>
     </Main>
