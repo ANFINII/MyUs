@@ -133,9 +133,9 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
         </TableRow>
         <TableRow label="生年月日">
           <HStack gap="1" full>
-            <SelectBox name="year" value={values.year} options={years} onChange={handleNumberSelect} />
-            <SelectBox name="month" value={values.month} options={months} onChange={handleNumberSelect} />
-            <SelectBox name="day" value={values.day} options={days} onChange={handleNumberSelect} />
+            <SelectBox name="year" value={String(values.year)} options={years} onChange={handleNumberSelect} />
+            <SelectBox name="month" value={String(values.month)} options={months} onChange={handleNumberSelect} />
+            <SelectBox name="day" value={String(values.day)} options={days} onChange={handleNumberSelect} />
           </HStack>
         </TableRow>
         <TableRow isIndent label="年齢">
