@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
 import { Option } from 'types/internal/other'
-import style from './Select.module.scss'
+import style from './SelectBox.module.scss'
 
 interface Props {
   label?: string
@@ -12,7 +12,7 @@ interface Props {
   onChange: (e: ChangeEvent<HTMLSelectElement>) => void
 }
 
-export default function Select(props: Props): React.JSX.Element {
+export default function SelectBox(props: Props): React.JSX.Element {
   const { label, name, value, options, placeholder, className, onChange } = props
 
   return (
