@@ -1,4 +1,4 @@
-import { useRef, useCallback, SetStateAction } from 'react'
+import { useRef, SetStateAction } from 'react'
 import { debounce } from 'lodash'
 
 type ValueType = 'string' | 'number'
@@ -18,19 +18,16 @@ export function useDebounce<V>(Props: Props<V>): OutProps<V> {
 
   const debouncedRef = useRef(debounce((id: number, value: V) => setValues({ [id]: value }), delay)).current
 
-  const debounceChange = useCallback(
-    (onChange: (v: V) => void, value: V, id?: number) => {
-      if (type === 'string') {
-        onChange(value)
-        debouncedRef(id || 0, value)
-      } else if (type === 'number') {
-        const intValue = Number(value)
-        onChange(intValue as V)
-        debouncedRef(id || 0, intValue as V)
-      }
-    },
-    [type, debouncedRef],
-  )
+  const debounceChange = (onChange: (v: V) => void, value: V, id?: number) => {
+    if (type === 'string') {
+      onChange(value)
+      debouncedRef(id || 0, value)
+    } else if (type === 'number') {
+      const intValue = Number(value)
+      onChange(intValue as V)
+      debouncedRef(id || 0, intValue as V)
+    }
+  }
 
   return { debounceChange }
 }
