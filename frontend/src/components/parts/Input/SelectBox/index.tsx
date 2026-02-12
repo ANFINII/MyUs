@@ -1,11 +1,12 @@
 import { ChangeEvent } from 'react'
 import { Option } from 'types/internal/other'
+import Select from 'components/parts/Select'
 import style from './SelectBox.module.scss'
 
 interface Props {
   label?: string
   name?: string
-  value: string | number
+  value: string
   options: Option[]
   placeholder?: string
   className?: string
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export default function SelectBox(props: Props): React.JSX.Element {
-  const { label, name, value, options, placeholder, className, onChange } = props
+  const { label, className } = props
 
   return (
     <div className={className}>
@@ -23,18 +24,7 @@ export default function SelectBox(props: Props): React.JSX.Element {
         </label>
       )}
       <div className={style.select_box}>
-        <select id={label} name={name} value={value} onChange={onChange} className={style.select}>
-          {placeholder && (
-            <option value="" hidden>
-              {placeholder}
-            </option>
-          )}
-          {options.map((option, index) => (
-            <option key={index} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        <Select {...props} id={label} className={style.select} />
       </div>
     </div>
   )

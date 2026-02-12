@@ -86,9 +86,9 @@ export default function Signup(): React.JSX.Element {
             <VStack gap="4">
               <p>生年月日</p>
               <HStack gap="2" full>
-                <SelectBox name="year" value={values.year} options={years} onChange={handleSelect} />
-                <SelectBox name="month" value={values.month} options={months} onChange={handleSelect} />
-                <SelectBox name="day" value={values.day} options={days} onChange={handleSelect} />
+                <SelectBox name="year" value={String(values.year)} options={years} onChange={handleSelect} />
+                <SelectBox name="month" value={String(values.month)} options={months} onChange={handleSelect} />
+                <SelectBox name="day" value={String(values.day)} options={days} onChange={handleSelect} />
               </HStack>
             </VStack>
 
