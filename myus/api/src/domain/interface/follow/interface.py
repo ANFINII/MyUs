@@ -31,7 +31,7 @@ class FollowInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[FollowData]) -> list[FollowData]:
+    def bulk_save(self, objs: list[FollowData]) -> list[int]:
         ...
 
     @abstractmethod

@@ -13,5 +13,5 @@ class MusicInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[MusicData]) -> list[MusicData]:
+    def bulk_save(self, objs: list[MusicData]) -> list[int]:
         ...
