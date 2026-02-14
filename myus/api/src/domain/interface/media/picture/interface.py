@@ -13,5 +13,5 @@ class PictureInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[PictureData]) -> list[PictureData]:
+    def bulk_save(self, objs: list[PictureData]) -> list[int]:
         ...

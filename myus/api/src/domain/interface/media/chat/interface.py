@@ -13,5 +13,5 @@ class ChatInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[ChatData]) -> list[ChatData]:
+    def bulk_save(self, objs: list[ChatData]) -> list[int]:
         ...

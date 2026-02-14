@@ -34,5 +34,5 @@ class CommentInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[CommentData]) -> list[CommentData]:
+    def bulk_save(self, objs: list[CommentData]) -> list[int]:
         ...

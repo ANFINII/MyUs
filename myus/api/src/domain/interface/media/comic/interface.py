@@ -13,5 +13,5 @@ class ComicInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[ComicData]) -> list[ComicData]:
+    def bulk_save(self, objs: list[ComicData]) -> list[int]:
         ...
