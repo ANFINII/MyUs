@@ -3,18 +3,19 @@ from django.core.files.storage import default_storage
 from ninja import UploadedFile
 from api.db.models.user import User
 from api.modules.logger import log
-from api.src.containers import injector
-from api.src.domain.comment import CommentDomain, FilterOption as CommentFilterOption, SortOption as CommentSortOption
+from api.src.injectors.container import injector
+from api.src.domain.interface.search_tag.interface import SearchTagInterface
+from api.src.domain.interface.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
+from api.src.domain.interface.search_tag.interface import FilterOption as SearchTagFilterOption, SortOption as SearchTagSortOption
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
-from api.src.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
-from api.src.domain.serach_tag import FilterOption as SearchTagFilterOption, SearchTagDomain, SortOption as SearchTagSortOption
 from api.src.types.data.user import LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
 from api.utils.enum.index import ImageType, MediaType
 from api.utils.functions.file import avatar_path
-from api.utils.functions.media import get_media_domain_type
+from api.utils.functions.media import get_media_repository
 from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
 
@@ -105,35 +106,31 @@ def signup_check(data: SignupIn) -> str:
 
 
 def get_search_tags(author_id: int) -> list[SearchTagData]:
-    ids = SearchTagDomain.get_ids(SearchTagFilterOption(author_id=author_id), SearchTagSortOption())
-    objs = SearchTagDomain.bulk_get(ids)
+    repository = injector.get(SearchTagInterface)
+    ids = repository.get_ids(SearchTagFilterOption(author_id=author_id), SearchTagSortOption())
+    objs = repository.bulk_get(ids)
     return [SearchTagData(sequence=obj.sequence, name=obj.name) for obj in objs]
 
 
 def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeData | None:
     repository = injector.get(UserInterface)
-    domain = get_media_domain_type(media_type)
-    ids = domain.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption())
+    media_repo = get_media_repository(media_type)
+    ids = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption())
     if len(ids) == 0:
         return None
 
-    obj = domain.bulk_get(ids)[0]
-    is_like = repository.media_like(user_id, obj)
-    like_count = obj.total_like()
-
+    is_like, like_count = repository.media_like(user_id, media_type, ids[0])
     return LikeData(is_like=is_like, like_count=like_count)
 
 
 def like_comment(user_id: int, ulid: str) -> LikeData | None:
     repository = injector.get(UserInterface)
-    ids = CommentDomain.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
+    comment_repo = injector.get(CommentInterface)
+    ids = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
     if len(ids) == 0:
         return None
 
-    obj = CommentDomain.bulk_get(ids)[0]
-    is_like = repository.comment_like(user_id, obj)
-    like_count = obj.total_like()
-
+    is_like, like_count = repository.comment_like(user_id, ids[0])
     return LikeData(is_like=is_like, like_count=like_count)
 
 

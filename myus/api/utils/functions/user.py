@@ -1,6 +1,7 @@
 from django.core.mail import send_mail
 from api.db.models.user import User
-from api.src.domain.follow import FilterOption, FollowDomain, SortOption
+from api.src.domain.entity.follow.repository import FollowRepository
+from api.src.domain.interface.follow.interface import FilterOption, SortOption
 from api.src.types.data.notification import NotificationUserData
 from api.src.types.data.user import AuthorData, MediaUserData
 from api.src.types.union.media import MediaModelType
@@ -18,10 +19,12 @@ def get_author(author: User) -> AuthorData:
 
 
 def get_media_user(obj: MediaModelType, user_id: int | None) -> MediaUserData:
+    repository = FollowRepository()
     follow = None
     if user_id is not None:
-        ids = FollowDomain.get_ids(FilterOption(follower_id=user_id, following_id=obj.channel.owner.id), SortOption())
-        follow = FollowDomain.bulk_get(ids)[0] if ids else None
+        ids = repository.get_ids(FilterOption(follower_id=user_id, following_id=obj.channel.owner.id), SortOption())
+        follows = repository.bulk_get(ids)
+        follow = follows[0] if len(follows) > 0 else None
     data = MediaUserData(
         is_like=obj.like.filter(id=user_id).exists() if user_id is not None else False,
         is_follow=follow.is_follow if follow else False,
