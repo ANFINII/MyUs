@@ -3,19 +3,9 @@ from api.db.models.user import User
 from api.src.domain.entity.follow.repository import FollowRepository
 from api.src.domain.interface.follow.interface import FilterOption, SortOption
 from api.src.types.data.notification import NotificationUserData
-from api.src.types.data.user import AuthorData, MediaUserData
+from api.src.types.data.user import MediaUserData
 from api.src.types.union.media import MediaModelType
 from api.utils.functions.index import create_url
-
-
-def get_author(author: User) -> AuthorData:
-    data = AuthorData(
-        avatar=create_url(str(author.avatar)) or "",
-        ulid=author.ulid,
-        nickname=author.nickname,
-        follower_count=author.mypage.follower_count,
-    )
-    return data
 
 
 def get_media_user(obj: MediaModelType, user_id: int | None) -> MediaUserData:
