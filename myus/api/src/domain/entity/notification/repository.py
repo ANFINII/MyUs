@@ -1,8 +1,8 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.notification import Notification
-from api.src.domain.entity.notification._convert import notification_data, marshal_notification
-from api.src.domain.index import sort_ids
+from api.src.domain.entity.notification._convert import convert_data, marshal_notification
+from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
 from api.utils.enum.index import NotificationTypeNo
@@ -39,19 +39,19 @@ class NotificationRepository(NotificationInterface):
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [notification_data(obj) for obj in sorted_objs]
+        return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[NotificationData]) -> list[NotificationData]:
+    def bulk_save(self, objs: list[NotificationData]) -> list[int]:
         if len(objs) == 0:
             return []
 
-        Notification.objects.bulk_create(
+        save_objs = Notification.objects.bulk_create(
             [marshal_notification(o) for o in objs],
             update_conflicts=True,
             update_fields=NOTIFICATION_FIELDS,
         )
 
-        return self.bulk_get([o.id for o in objs])
+        return [o.id for o in save_objs]
 
     def delete(self, type_no: NotificationTypeNo, object_id: int) -> None:
         Notification.objects.filter(type_no=type_no, object_id=object_id).delete()

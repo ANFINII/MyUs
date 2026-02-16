@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.src.domain.entity.comment._convert import comment_data, marshal_comment
-from api.src.domain.index import sort_ids
+from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
 
@@ -12,7 +12,7 @@ COMMENT_FIELDS = ["author_id", "parent_id", "type_no", "type_name", "object_id",
 
 class CommentRepository(CommentInterface):
     def queryset(self) -> QuerySet[Comment]:
-        return Comment.objects.select_related("author")
+        return Comment.objects.select_related("author").prefetch_related("like")
 
     def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []
@@ -29,7 +29,7 @@ class CommentRepository(CommentInterface):
 
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
-        qs = Comment.objects.filter(*q_list).order_by(order_by_key)
+        qs = Comment.objects.filter(deleted=False, *q_list).order_by(order_by_key)
 
         if limit is not None:
             qs = qs[:limit]
@@ -42,16 +42,21 @@ class CommentRepository(CommentInterface):
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [comment_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[CommentData]) -> list[CommentData]:
+        liked_ids: set[int] = set()
+        if user_id is not None:
+            liked_ids = set(Comment.objects.filter(id__in=ids, like__id=user_id).values_list("id", flat=True))
+
+        return [comment_data(obj, is_comment_like=(obj.id in liked_ids)) for obj in sorted_objs]
+
+    def bulk_save(self, objs: list[CommentData]) -> list[int]:
         if len(objs) == 0:
             return []
 
-        Comment.objects.bulk_create(
+        save_objs = Comment.objects.bulk_create(
             [marshal_comment(o) for o in objs],
             update_conflicts=True,
             update_fields=COMMENT_FIELDS,
         )
 
-        return self.bulk_get([o.id for o in objs])
+        return [o.id for o in save_objs]

@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.users import Follow
 from api.src.domain.entity.follow._convert import follow_data, marshal_follow
-from api.src.domain.index import sort_ids
+from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.follow.data import FollowData
 from api.src.domain.interface.follow.interface import FilterOption, FollowInterface, SortOption
 
@@ -40,17 +40,17 @@ class FollowRepository(FollowInterface):
         sorted_objs = sort_ids(objs, ids)
         return [follow_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[FollowData]) -> list[FollowData]:
+    def bulk_save(self, objs: list[FollowData]) -> list[int]:
         if len(objs) == 0:
             return []
 
-        Follow.objects.bulk_create(
+        save_objs = Follow.objects.bulk_create(
             [marshal_follow(o) for o in objs],
             update_conflicts=True,
             update_fields=FOLLOW_FIELDS,
         )
 
-        return self.bulk_get([o.id for o in objs])
+        return [o.id for o in save_objs]
 
     def count(self, filter: FilterOption) -> int:
         q_list: list[Q] = []
