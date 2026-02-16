@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.media import Blog
 from api.src.domain.entity.media.blog._convert import blog_data, marshal_blog
-from api.src.domain.index import sort_ids
+from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.blog.interface import BlogInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, SortOption
@@ -46,14 +46,14 @@ class BlogRepository(BlogInterface):
         sorted_objs = sort_ids(objs, ids)
         return [blog_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[BlogData]) -> list[BlogData]:
+    def bulk_save(self, objs: list[BlogData]) -> list[int]:
         if len(objs) == 0:
             return []
 
-        Blog.objects.bulk_create(
+        save_objs = Blog.objects.bulk_create(
             [marshal_blog(o) for o in objs],
             update_conflicts=True,
             update_fields=BLOG_FIELDS,
         )
 
-        return self.bulk_get([o.id for o in objs])
+        return [o.id for o in save_objs]

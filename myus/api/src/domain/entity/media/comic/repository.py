@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.media import Comic
 from api.src.domain.entity.media.comic._convert import comic_data, marshal_comic
-from api.src.domain.index import sort_ids
+from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, SortOption
@@ -46,14 +46,14 @@ class ComicRepository(ComicInterface):
         sorted_objs = sort_ids(objs, ids)
         return [comic_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[ComicData]) -> list[ComicData]:
+    def bulk_save(self, objs: list[ComicData]) -> list[int]:
         if len(objs) == 0:
             return []
 
-        Comic.objects.bulk_create(
+        save_objs = Comic.objects.bulk_create(
             [marshal_comic(o) for o in objs],
             update_conflicts=True,
             update_fields=COMIC_FIELDS,
         )
 
-        return self.bulk_get([o.id for o in objs])
+        return [o.id for o in save_objs]

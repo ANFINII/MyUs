@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.media import Video
 from api.src.domain.entity.media.video._convert import marshal_video, video_data
-from api.src.domain.index import sort_ids
+from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.video.interface import VideoInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, SortOption
@@ -46,14 +46,14 @@ class VideoRepository(VideoInterface):
         sorted_objs = sort_ids(objs, ids)
         return [video_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[VideoData]) -> list[VideoData]:
+    def bulk_save(self, objs: list[VideoData]) -> list[int]:
         if len(objs) == 0:
             return []
 
-        Video.objects.bulk_create(
+        save_objs = Video.objects.bulk_create(
             [marshal_video(o) for o in objs],
             update_conflicts=True,
             update_fields=VIDEO_FIELDS,
         )
 
-        return self.bulk_get([o.id for o in objs])
+        return [o.id for o in save_objs]

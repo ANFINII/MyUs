@@ -2,7 +2,7 @@ from api.db.models.notification import Notification
 from api.src.domain.interface.notification.data import NotificationData
 
 
-def notification_data(obj: Notification) -> NotificationData:
+def convert_data(obj: Notification) -> NotificationData:
     return NotificationData(
         id=obj.id,
         user_from_id=obj.user_from_id,
