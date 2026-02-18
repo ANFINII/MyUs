@@ -301,7 +301,7 @@ class UserInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[UserData]) -> list[UserData]:
+    def bulk_save(self, objs: list[UserData]) -> list[int]:
         ...
 
 # Bad - Django ORMモデルを直接返す

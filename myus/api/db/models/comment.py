@@ -21,11 +21,11 @@ class Comment(models.Model):
     def __str__(self):
         return str(self.id)
 
-    def total_like(self):
+    def total_like(self) -> int:
         return self.like.count()
     total_like.short_description = "like"
 
-    def reply_count(self):
+    def reply_count(self) -> int:
         return self.reply.filter(parent=self).count()
     reply_count.short_description = "reply"
 
