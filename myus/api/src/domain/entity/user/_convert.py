@@ -1,8 +1,11 @@
+from typing import assert_never
 from django.contrib.auth.hashers import make_password
+from api.db.models.media import Blog, Chat, Comic, Music, Picture, Video
 from api.db.models.master import Plan
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.src.types.data.plan import PlanData
+from api.utils.enum.index import MediaType
 
 
 # Django model -> dataclass
@@ -97,6 +100,24 @@ def user_plan_data(user_plan: UserPlan) -> UserPlanData:
         start_date=user_plan.start_date,
         end_date=user_plan.end_date,
     )
+
+
+def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[Comic] | type[Picture] | type[Blog] | type[Chat]:
+    match media_type:
+        case MediaType.VIDEO:
+            return Video
+        case MediaType.MUSIC:
+            return Music
+        case MediaType.COMIC:
+            return Comic
+        case MediaType.PICTURE:
+            return Picture
+        case MediaType.BLOG:
+            return Blog
+        case MediaType.CHAT:
+            return Chat
+        case _:
+            assert_never(media_type)
 
 
 # dataclass -> Django model

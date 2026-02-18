@@ -30,9 +30,13 @@ class CommentInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_get(self, ids: list[int], user_id: int | None = None) -> list[CommentData]:
+    def bulk_get(self, ids: list[int]) -> list[CommentData]:
         ...
 
     @abstractmethod
     def bulk_save(self, objs: list[CommentData]) -> list[int]:
+        ...
+
+    @abstractmethod
+    def get_liked_ids(self, ids: list[int], user_id: int) -> list[int]:
         ...

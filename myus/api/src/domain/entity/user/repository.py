@@ -3,11 +3,11 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
-from api.src.domain.entity.user._convert import convert_data, marshal_mypage, marshal_notification, marshal_profile, marshal_user, marshal_user_plan
-from api.src.domain.index import sort_ids
+from api.src.domain.entity.index import sort_ids
+from api.src.domain.entity.user._convert import convert_data, get_media_model, marshal_mypage, marshal_notification, marshal_profile, marshal_user, marshal_user_plan
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
-from api.utils.functions.media import MediaModel
+from api.utils.enum.index import MediaType
 
 
 USER_FIELDS = ["avatar", "username", "nickname", "email", "is_active"]
@@ -51,51 +51,54 @@ class UserRepository(UserInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[UserAllData]) -> list[UserAllData]:
+    def bulk_save(self, objs: list[UserAllData]) -> list[int]:
         if len(objs) == 0:
             return []
 
         with transaction.atomic():
-            users = User.objects.bulk_create(
+            save_objs = User.objects.bulk_create(
                 [marshal_user(o.user) for o in objs],
                 update_conflicts=True,
                 update_fields=USER_FIELDS,
             )
             Profile.objects.bulk_create(
-                [marshal_profile(user, o) for user, o in zip(users, objs)],
+                [marshal_profile(user, o) for user, o in zip(save_objs, objs)],
                 update_conflicts=True,
                 update_fields=PROFILE_FIELDS,
             )
             MyPage.objects.bulk_create(
-                [marshal_mypage(user, o) for user, o in zip(users, objs)],
+                [marshal_mypage(user, o) for user, o in zip(save_objs, objs)],
                 update_conflicts=True,
                 update_fields=MYPAGE_FIELDS,
             )
             UserNotification.objects.bulk_create(
-                [marshal_notification(user, o) for user, o in zip(users, objs)],
+                [marshal_notification(user, o) for user, o in zip(save_objs, objs)],
                 update_conflicts=True,
                 update_fields=NOTIFICATION_FIELDS,
             )
             UserPlan.objects.bulk_create(
-                [marshal_user_plan(user, o) for user, o in zip(users, objs)],
+                [marshal_user_plan(user, o) for user, o in zip(save_objs, objs)],
                 update_conflicts=True,
                 update_fields=USER_PLAN_FIELDS,
             )
 
-        return self.bulk_get([u.id for u in users])
+        return [o.id for o in save_objs]
 
-    def media_like(self, user_id: int, obj: MediaModel) -> bool:
+    def media_like(self, user_id: int, media_type: MediaType, media_id: int) -> tuple[bool, int]:
+        model_class = get_media_model(media_type)
+        obj = model_class.objects.prefetch_related("like").get(id=media_id)
         is_like = obj.like.filter(id=user_id).exists()
         if is_like:
             obj.like.remove(user_id)
         else:
             obj.like.add(user_id)
-        return not is_like
+        return (not is_like, obj.like.count())
 
-    def comment_like(self, user_id: int, obj: Comment) -> bool:
+    def comment_like(self, user_id: int, comment_id: int) -> tuple[bool, int]:
+        obj = Comment.objects.prefetch_related("like").get(id=comment_id)
         is_like = obj.like.filter(id=user_id).exists()
         if is_like:
             obj.like.remove(user_id)
         else:
             obj.like.add(user_id)
-        return not is_like
+        return (not is_like, obj.like.count())
