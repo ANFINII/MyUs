@@ -22,14 +22,12 @@ def convert_data(obj: Comment) -> CommentData:
 def marshal_comment(data: CommentData) -> Comment:
     comment = Comment(
         id=data.id if data.id != 0 else None,
+        ulid=data.ulid,
         author_id=data.author_id,
         parent_id=data.parent_id,
         type_no=data.type_no,
         type_name=data.type_name,
         object_id=data.object_id,
         text=data.text,
-        deleted=data.deleted,
     )
-    if data.ulid:
-        comment.ulid = data.ulid
     return comment
