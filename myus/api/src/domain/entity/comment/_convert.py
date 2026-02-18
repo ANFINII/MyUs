@@ -2,7 +2,7 @@ from api.db.models.comment import Comment
 from api.src.domain.interface.comment.data import CommentData
 
 
-def comment_data(obj: Comment) -> CommentData:
+def convert_data(obj: Comment) -> CommentData:
     return CommentData(
         id=obj.id,
         ulid=obj.ulid,
@@ -13,13 +13,15 @@ def comment_data(obj: Comment) -> CommentData:
         object_id=obj.object_id,
         text=obj.text,
         deleted=obj.deleted,
+        created=obj.created,
+        updated=obj.updated,
+        like_count=obj.total_like(),
     )
 
 
 def marshal_comment(data: CommentData) -> Comment:
-    return Comment(
+    comment = Comment(
         id=data.id if data.id != 0 else None,
-        ulid=data.ulid,
         author_id=data.author_id,
         parent_id=data.parent_id,
         type_no=data.type_no,
@@ -28,3 +30,6 @@ def marshal_comment(data: CommentData) -> Comment:
         text=data.text,
         deleted=data.deleted,
     )
+    if data.ulid:
+        comment.ulid = data.ulid
+    return comment
