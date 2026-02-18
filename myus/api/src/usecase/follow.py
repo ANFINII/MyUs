@@ -1,75 +1,91 @@
 from dataclasses import replace
 from django.db import transaction
-from api.db.models.users import Follow
-from api.src.domain.follow import FilterOption, FollowDomain, SortOption
-from api.src.domain.interface.user.data import UserData
+from api.src.domain.entity.follow.repository import FollowRepository
+from api.src.domain.entity.user.repository import UserRepository
+from api.src.domain.interface.follow.data import FollowData
+from api.src.domain.interface.follow.interface import FilterOption, SortOption
+from api.src.domain.interface.user.data import UserAllData, UserData
 from api.src.domain.interface.user.interface import FilterOption as UserFilterOption, SortOption as UserSortOption, UserInterface
-from api.src.types.data.follow import FollowCreateData, FollowOutData, FollowUserData
+from api.src.types.data.follow import FollowOutData, FollowUserData
 from api.utils.functions.index import create_url
 
 
 def get_follows(user_id: int, search: str | None, limit: int) -> list[FollowUserData]:
-    ids = FollowDomain.get_ids(FilterOption(follower_id=user_id, search=search or ""), SortOption(), limit)
-    objs = FollowDomain.bulk_get(ids)
+    follow_repo = FollowRepository()
+    user_repo = UserRepository()
+
+    ids = follow_repo.get_ids(FilterOption(follower_id=user_id, search=search), SortOption(), limit)
+    follows = follow_repo.bulk_get(ids)
+
+    following_ids = [f.following_id for f in follows]
+    users = user_repo.bulk_get(following_ids)
+
     return [
         FollowUserData(
-            avatar=create_url(obj.following.avatar.url),
-            nickname=obj.following.nickname,
-            introduction=obj.following.profile.introduction,
-            follower_count=obj.following.mypage.follower_count,
-            following_count=obj.following.mypage.following_count,
-        ) for obj in objs
+            avatar=create_url(u.user.avatar),
+            nickname=u.user.nickname,
+            introduction=u.profile.introduction,
+            follower_count=u.mypage.follower_count,
+            following_count=u.mypage.following_count,
+        ) for u in users
     ]
 
 
 def get_followers(user_id: int, search: str | None, limit: int) -> list[FollowUserData]:
-    ids = FollowDomain.get_ids(FilterOption(following_id=user_id, search=search or ""), SortOption(), limit)
-    objs = FollowDomain.bulk_get(ids)
+    follow_repo = FollowRepository()
+    user_repo = UserRepository()
+
+    ids = follow_repo.get_ids(FilterOption(following_id=user_id, search=search), SortOption(), limit)
+    follows = follow_repo.bulk_get(ids)
+
+    follower_ids = [f.follower_id for f in follows]
+    users = user_repo.bulk_get(follower_ids)
+
     return [
         FollowUserData(
-            avatar=create_url(obj.follower.avatar.url),
-            nickname=obj.follower.nickname,
-            introduction=obj.follower.profile.introduction,
-            follower_count=obj.follower.mypage.follower_count,
-            following_count=obj.follower.mypage.following_count,
-        ) for obj in objs
+            avatar=create_url(u.user.avatar),
+            nickname=u.user.nickname,
+            introduction=u.profile.introduction,
+            follower_count=u.mypage.follower_count,
+            following_count=u.mypage.following_count,
+        ) for u in users
     ]
 
 
-def upsert_follow(follower: UserData, ulid: str, is_follow: bool, repository: UserInterface) -> FollowOutData | None:
+def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool, repository: UserInterface) -> FollowOutData | None:
+    follow_repo = FollowRepository()
+
     user_ids = repository.get_ids(UserFilterOption(ulid=ulid), UserSortOption())
     if len(user_ids) == 0:
         return None
 
-    followings = repository.bulk_get(user_ids)
-    if len(followings) == 0:
-        return None
+    following = repository.bulk_get(user_ids)[0]
+    follower_id = follower.user.id
+    following_id = following.user.id
 
-    following = followings[0]
-    follow_ids = FollowDomain.get_ids(FilterOption(follower_id=follower.id, following_id=following.id), SortOption())
-    follow = FollowDomain.bulk_get(follow_ids)[0] if len(follow_ids) > 0 else None
-    follow_data = FollowCreateData(follower_id=follower.id, following_id=following.id, is_follow=is_follow)
+    follow_ids = follow_repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption())
+    follow = follow_repo.bulk_get(follow_ids)[0]
 
     with transaction.atomic():
         if follow is None:
-            FollowDomain.bulk_save([Follow(
-                follower_id=follow_data.follower_id,
-                following_id=follow_data.following_id,
-                is_follow=follow_data.is_follow,
+            follow_repo.bulk_save([FollowData(
+                id=0,
+                follower_id=follower_id,
+                following_id=following_id,
+                is_follow=is_follow,
             )])
         else:
-            follow.is_follow = is_follow
-            FollowDomain.bulk_save([follow])
+            updated_follow = replace(follow, is_follow=is_follow)
+            follow_repo.bulk_save([updated_follow])
 
-        follower_count = FollowDomain.count(FilterOption(following_id=following.id))
-        following_count = FollowDomain.count(FilterOption(follower_id=follower.id))
+        follower_count = follow_repo.count(FilterOption(following_id=following.user.id))
+        following_count = follow_repo.count(FilterOption(follower_id=follower.user.id))
 
         follower_mypage = replace(follower.mypage, following_count=following_count)
-        follower = replace(follower, mypage=follower_mypage)
-
         following_mypage = replace(following.mypage, follower_count=follower_count)
-        following = replace(following, mypage=following_mypage)
 
-        repository.bulk_save([follower, following])
+        updated_follower = replace(follower, mypage=follower_mypage)
+        updated_following = replace(following, mypage=following_mypage)
+        repository.bulk_save([updated_follower, updated_following])
 
     return FollowOutData(is_follow=is_follow, follower_count=follower_count)

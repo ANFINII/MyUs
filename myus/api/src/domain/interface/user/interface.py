@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from api.db.models.comment import Comment
 from api.src.domain.interface.user.data import UserAllData
-from api.utils.functions.media import MediaModel
+from api.utils.enum.index import MediaType
 
 
 class SortType(Enum):
@@ -33,13 +32,13 @@ class UserInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[UserAllData]) -> list[UserAllData]:
+    def bulk_save(self, objs: list[UserAllData]) -> list[int]:
         ...
 
     @abstractmethod
-    def media_like(self, user_id: int, obj: MediaModel) -> bool:
+    def media_like(self, user_id: int, media_type: MediaType, media_id: int) -> tuple[bool, int]:
         ...
 
     @abstractmethod
-    def comment_like(self, user_id: int, obj: Comment) -> bool:
+    def comment_like(self, user_id: int, comment_id: int) -> tuple[bool, int]:
         ...

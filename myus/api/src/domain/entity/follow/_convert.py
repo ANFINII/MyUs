@@ -2,7 +2,7 @@ from api.db.models.users import Follow
 from api.src.domain.interface.follow.data import FollowData
 
 
-def follow_data(obj: Follow) -> FollowData:
+def convert_data(obj: Follow) -> FollowData:
     return FollowData(
         id=obj.id,
         follower_id=obj.follower_id,
