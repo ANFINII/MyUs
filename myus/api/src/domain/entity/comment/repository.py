@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
-from api.src.domain.entity.comment._convert import comment_data, marshal_comment
+from api.src.domain.entity.comment._convert import convert_data, marshal_comment
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
@@ -36,18 +36,13 @@ class CommentRepository(CommentInterface):
 
         return list(qs.values_list("id", flat=True))
 
-    def bulk_get(self, ids: list[int], user_id: int | None = None) -> list[CommentData]:
+    def bulk_get(self, ids: list[int]) -> list[CommentData]:
         if len(ids) == 0:
             return []
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-
-        liked_ids: set[int] = set()
-        if user_id is not None:
-            liked_ids = set(Comment.objects.filter(id__in=ids, like__id=user_id).values_list("id", flat=True))
-
-        return [comment_data(obj, is_comment_like=(obj.id in liked_ids)) for obj in sorted_objs]
+        return [convert_data(obj) for obj in sorted_objs]
 
     def bulk_save(self, objs: list[CommentData]) -> list[int]:
         if len(objs) == 0:
@@ -60,3 +55,10 @@ class CommentRepository(CommentInterface):
         )
 
         return [o.id for o in save_objs]
+
+    def get_liked_ids(self, ids: list[int], user_id: int) -> list[int]:
+        if len(ids) == 0:
+            return []
+
+        liked_ids = set(Comment.objects.filter(id__in=ids, like__id=user_id).values_list("id", flat=True))
+        return list(liked_ids)

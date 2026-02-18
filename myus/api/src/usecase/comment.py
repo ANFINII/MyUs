@@ -1,114 +1,152 @@
-from api.db.models.comment import Comment
-from api.db.models.user import User
+from dataclasses import replace
+from datetime import datetime
 from api.modules.logger import log
-from api.src.domain.comment import CommentDomain, FilterOption as CommentFilterOption, SortOption as CommentSortOption
-from api.src.domain.media.blog import BlogDomain
-from api.src.domain.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
-from api.src.types.data.comment import CommentCreateData, CommentData, ReplyData
+from api.src.domain.entity.comment.repository import CommentRepository
+from api.src.domain.entity.user.repository import UserRepository
+from api.src.domain.interface.comment.data import CommentData, ReplyData
+from api.src.domain.interface.comment.interface import FilterOption, SortOption
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
 from api.src.types.schema.comment import CommentCreateIn
-from api.utils.enum.index import CommentTypeNo
-from api.utils.functions.user import get_author
+from api.src.usecase._convert import get_author
+from api.utils.enum.index import CommentTypeNo, MediaType
+from api.utils.functions.media import get_media_repository
+
+
+def get_comment_data(comment_ulid: str) -> CommentData | None:
+    repository = CommentRepository()
+    ids = repository.get_ids(FilterOption(ulid=comment_ulid), SortOption())
+    if len(ids) == 0:
+        log.warning("コメントが見つかりませんでした")
+        return None
+
+    comment = repository.bulk_get(ids)[0]
+    return comment
+
+
+def save_comment_data(data: CommentData) -> bool:
+    repository = CommentRepository()
+    try:
+        repository.bulk_save([data])
+        return True
+    except Exception as e:
+        log.error("save_comment_data error", exc=e)
+        return False
 
 
 def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[CommentData]:
-    filter_option = CommentFilterOption(type_no=type_no, object_id=object_id, user_id=user_id, is_parent=True)
-    ids = CommentDomain.get_ids(filter_option, CommentSortOption())
-    objs = CommentDomain.bulk_get(ids, user_id)
+    comment_repo = CommentRepository()
+    user_repo = UserRepository()
+
+    parent_ids = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id, is_parent=True), SortOption())
+    parents = comment_repo.bulk_get(parent_ids)
+
+    reply_ids = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id, is_parent=False), SortOption())
+    replies = comment_repo.bulk_get(reply_ids)
+
+    reply_map: dict[int, list[ReplyData]] = {}
+    for r in replies:
+        if r.parent_id is not None:
+            reply_map.setdefault(r.parent_id, []).append(r)
+
+    all_ids = parent_ids + reply_ids
+    liked_ids: set[int] = set()
+    if user_id is not None:
+        liked_ids = set(comment_repo.get_liked_ids(all_ids, user_id))
+
+    all_author_ids = list(set(c.author_id for c in [*parents, *replies]))
+    users = user_repo.bulk_get(all_author_ids)
+    user_map = {u.user.id: u for u in users}
+
     data = [
         CommentData(
             ulid=c.ulid,
             text=c.text,
             created=c.created,
             updated=c.updated,
-            is_comment_like=c.is_comment_like,
-            like_count=c.total_like(),
-            author=get_author(c.author),
+            is_comment_like=c.id in liked_ids,
+            like_count=c.like_count,
+            author=get_author(user_map, c.author_id),
             replys=[
                 ReplyData(
                     ulid=r.ulid,
                     text=r.text,
                     created=r.created,
                     updated=r.updated,
-                    is_comment_like=r.is_comment_like,
-                    like_count=r.total_like(),
-                    author=get_author(r.author),
+                    is_comment_like=r.id in liked_ids,
+                    like_count=r.like_count,
+                    author=get_author(user_map, r.author_id),
                 )
-                for r in c.reply.all() if not r.deleted
+                for r in reply_map.get(c.id, [])
             ],
-        ) for c in objs
+        ) for c in parents
     ]
     return data
 
 
 def create_comment(user_id: int, input: CommentCreateIn) -> CommentData | None:
-    media_ids = BlogDomain.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption())
+    comment_repo = CommentRepository()
+    user_repo = UserRepository()
+    media_repo = get_media_repository(MediaType(input.type_name.value))
+
+    media_ids = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption())
     if len(media_ids) == 0:
         log.warning("メディアが見つかりませんでした")
         return None
 
-    media = BlogDomain.bulk_get(media_ids)[0]
     parent_id = None
     if input.parent_ulid:
-        ids = CommentDomain.get_ids(CommentFilterOption(ulid=input.parent_ulid), CommentSortOption())
-        if len(ids) == 0:
-            log.warning("親コメントが見つかりませんでした")
+        parent_ids = comment_repo.get_ids(FilterOption(ulid=input.parent_ulid), SortOption())
+        if len(parent_ids) == 0:
             return None
 
-        comment = CommentDomain.bulk_get(ids)[0]
-        parent_id = comment.id
+        parent_id = parent_ids[0]
 
-    comment_create_data = CommentCreateData(
+    new_comment = CommentData(
+        id=0,
+        ulid="",
         author_id=user_id,
-        text=input.text,
+        parent_id=parent_id,
         type_no=input.type_no,
         type_name=input.type_name,
-        object_id=media.id,
-        parent_id=parent_id,
+        object_id=media_ids[0],
+        text=input.text,
+        deleted=False,
+        created=datetime.min,
+        updated=datetime.min,
+        like_count=0,
     )
 
-    obj = CommentDomain.bulk_save([Comment(
-        author_id=comment_create_data.author_id,
-        text=comment_create_data.text,
-        type_no=comment_create_data.type_no,
-        type_name=comment_create_data.type_name,
-        object_id=comment_create_data.object_id,
-        parent_id=comment_create_data.parent_id,
-    )])[0]
+    new_ids = comment_repo.bulk_save([new_comment])
+    comment = comment_repo.bulk_get(new_ids)[0]
 
-    data = CommentData(
-        ulid=str(obj.ulid),
-        text=obj.text,
-        created=obj.created,
-        updated=obj.updated,
+    users = user_repo.bulk_get([user_id])
+    user_map = {u.user.id: u for u in users}
+
+    return CommentData(
+        ulid=comment.ulid,
+        text=comment.text,
+        created=comment.created,
+        updated=comment.updated,
         is_comment_like=False,
-        like_count=obj.total_like(),
-        author=get_author(obj.author),
+        like_count=comment.like_count,
+        author=get_author(user_map, comment.author_id),
         replys=[],
     )
 
-    return data
-
 
 def update_comment(comment_ulid: str, text: str) -> None:
-    ids = CommentDomain.get_ids(CommentFilterOption(ulid=comment_ulid), CommentSortOption())
-    if len(ids) == 0:
-        log.warning("コメントが見つかりませんでした")
+    comment = get_comment_data(comment_ulid)
+    if comment is None:
         return None
 
-    comment = CommentDomain.bulk_get(ids)[0]
-    comment.text = text
-    CommentDomain.bulk_save([comment])
+    save_comment_data(replace(comment, text=text))
     return None
 
 
 def delete_comment(comment_ulid: str) -> None:
-    filter_option = CommentFilterOption(ulid=comment_ulid)
-    ids = CommentDomain.get_ids(filter_option, CommentSortOption())
-    if len(ids) == 0:
-        log.warning("コメントが見つかりませんでした")
+    comment = get_comment_data(comment_ulid)
+    if comment is None:
         return None
 
-    comment = CommentDomain.bulk_get(ids)[0]
-    comment.deleted = True
-    CommentDomain.bulk_save([comment])
+    save_comment_data(replace(comment, deleted=True))
     return None
