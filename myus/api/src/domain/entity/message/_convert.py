@@ -2,15 +2,18 @@ from api.db.models.message import Message
 from api.src.domain.interface.message.data import MessageData
 
 
-def message_data(obj: Message) -> MessageData:
+def convert_data(obj: Message) -> MessageData:
     return MessageData(
         id=obj.id,
         ulid=obj.ulid,
         author_id=obj.author_id,
         chat_id=obj.chat_id,
         parent_id=obj.parent_id,
+        parent_ulid=obj.parent.ulid if obj.parent else "",
         text=obj.text,
         delta=obj.delta.html if obj.delta else "",
+        created=obj.created,
+        updated=obj.updated,
     )
 
 
