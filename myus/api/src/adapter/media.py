@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.types.data.comment import CommentData, ReplyData
+from api.src.domain.interface.comment.data import CommentData, ReplyData
 from api.src.types.data.media import VideoData, MusicData, ComicData, PictureData, BlogData, ChatData, HashtagData
 from api.src.types.data.message import MessageData
 from api.src.types.data.user import AuthorData, MediaUserData
