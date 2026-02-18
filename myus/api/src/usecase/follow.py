@@ -59,19 +59,19 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool, repository:
     if len(user_ids) == 0:
         return None
 
-    followings = repository.bulk_get(user_ids)
-    following = followings[0]
+    following = repository.bulk_get(user_ids)[0]
+    follower_id = follower.user.id
+    following_id = following.user.id
 
-    follow_ids = follow_repo.get_ids(FilterOption(follower_id=follower.user.id, following_id=following.user.id), SortOption())
-    follows = follow_repo.bulk_get(follow_ids)
-    follow = follows[0]
+    follow_ids = follow_repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption())
+    follow = follow_repo.bulk_get(follow_ids)[0]
 
     with transaction.atomic():
         if follow is None:
             follow_repo.bulk_save([FollowData(
                 id=0,
-                follower_id=follower.user.id,
-                following_id=following.user.id,
+                follower_id=follower_id,
+                following_id=following_id,
                 is_follow=is_follow,
             )])
         else:
@@ -82,11 +82,10 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool, repository:
         following_count = follow_repo.count(FilterOption(follower_id=follower.user.id))
 
         follower_mypage = replace(follower.mypage, following_count=following_count)
-        updated_follower = replace(follower, mypage=follower_mypage)
-
         following_mypage = replace(following.mypage, follower_count=follower_count)
-        updated_following = replace(following, mypage=following_mypage)
 
+        updated_follower = replace(follower, mypage=follower_mypage)
+        updated_following = replace(following, mypage=following_mypage)
         repository.bulk_save([updated_follower, updated_following])
 
     return FollowOutData(is_follow=is_follow, follower_count=follower_count)
