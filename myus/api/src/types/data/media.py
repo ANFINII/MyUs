@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, datetime
-from api.src.types.data.comment import CommentData
+from api.src.domain.interface.comment.data import CommentData
 from api.src.types.data.message import MessageData
 from api.src.types.data.user import AuthorData, MediaUserData
 
