@@ -6,7 +6,7 @@ from api.src.domain.interface.follow.data import FollowData
 from api.src.domain.interface.follow.interface import FilterOption, SortOption
 from api.src.domain.interface.user.data import UserAllData, UserData
 from api.src.domain.interface.user.interface import FilterOption as UserFilterOption, SortOption as UserSortOption, UserInterface
-from api.src.types.data.follow import FollowCreateData, FollowOutData, FollowUserData
+from api.src.types.data.follow import FollowOutData, FollowUserData
 from api.utils.functions.index import create_url
 
 
@@ -14,21 +14,20 @@ def get_follows(user_id: int, search: str | None, limit: int) -> list[FollowUser
     follow_repo = FollowRepository()
     user_repo = UserRepository()
 
-    ids = follow_repo.get_ids(FilterOption(follower_id=user_id, search=search or ""), SortOption(), limit)
+    ids = follow_repo.get_ids(FilterOption(follower_id=user_id, search=search), SortOption(), limit)
     follows = follow_repo.bulk_get(ids)
 
     following_ids = [f.following_id for f in follows]
     users = user_repo.bulk_get(following_ids)
-    user_map = {u.user.id: u for u in users}
 
     return [
         FollowUserData(
-            avatar=create_url(user_map[f.following_id].user.avatar),
-            nickname=user_map[f.following_id].user.nickname,
-            introduction=user_map[f.following_id].profile.introduction,
-            follower_count=user_map[f.following_id].mypage.follower_count,
-            following_count=user_map[f.following_id].mypage.following_count,
-        ) for f in follows if f.following_id in user_map
+            avatar=create_url(u.user.avatar),
+            nickname=u.user.nickname,
+            introduction=u.profile.introduction,
+            follower_count=u.mypage.follower_count,
+            following_count=u.mypage.following_count,
+        ) for u in users
     ]
 
 
@@ -36,21 +35,20 @@ def get_followers(user_id: int, search: str | None, limit: int) -> list[FollowUs
     follow_repo = FollowRepository()
     user_repo = UserRepository()
 
-    ids = follow_repo.get_ids(FilterOption(following_id=user_id, search=search or ""), SortOption(), limit)
+    ids = follow_repo.get_ids(FilterOption(following_id=user_id, search=search), SortOption(), limit)
     follows = follow_repo.bulk_get(ids)
 
     follower_ids = [f.follower_id for f in follows]
     users = user_repo.bulk_get(follower_ids)
-    user_map = {u.user.id: u for u in users}
 
     return [
         FollowUserData(
-            avatar=create_url(user_map[f.follower_id].user.avatar),
-            nickname=user_map[f.follower_id].user.nickname,
-            introduction=user_map[f.follower_id].profile.introduction,
-            follower_count=user_map[f.follower_id].mypage.follower_count,
-            following_count=user_map[f.follower_id].mypage.following_count,
-        ) for f in follows if f.follower_id in user_map
+            avatar=create_url(u.user.avatar),
+            nickname=u.user.nickname,
+            introduction=u.profile.introduction,
+            follower_count=u.mypage.follower_count,
+            following_count=u.mypage.following_count,
+        ) for u in users
     ]
 
 
@@ -62,22 +60,19 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool, repository:
         return None
 
     followings = repository.bulk_get(user_ids)
-    if len(followings) == 0:
-        return None
-
     following = followings[0]
+
     follow_ids = follow_repo.get_ids(FilterOption(follower_id=follower.user.id, following_id=following.user.id), SortOption())
-    follow_data_list = follow_repo.bulk_get(follow_ids)
-    follow = follow_data_list[0] if len(follow_data_list) > 0 else None
-    follow_create = FollowCreateData(follower_id=follower.user.id, following_id=following.user.id, is_follow=is_follow)
+    follows = follow_repo.bulk_get(follow_ids)
+    follow = follows[0]
 
     with transaction.atomic():
         if follow is None:
             follow_repo.bulk_save([FollowData(
                 id=0,
-                follower_id=follow_create.follower_id,
-                following_id=follow_create.following_id,
-                is_follow=follow_create.is_follow,
+                follower_id=follower.user.id,
+                following_id=following.user.id,
+                is_follow=is_follow,
             )])
         else:
             updated_follow = replace(follow, is_follow=is_follow)
