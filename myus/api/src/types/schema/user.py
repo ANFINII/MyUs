@@ -19,7 +19,7 @@ class AuthorOut(BaseModel):
 
 class MediaUserOut(BaseModel):
     is_like: bool
-    is_follow: bool
+    is_subscribe: bool
 
 
 class SearchTagOut(BaseModel):

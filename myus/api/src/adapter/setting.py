@@ -15,7 +15,7 @@ class SettingProfileAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: SettingProfileOut, 401: ErrorOut})
+    @router.get("", response={200: SettingProfileOut, 401: ErrorOut, 404: ErrorOut})
     def get(request: HttpRequest):
         log.info("SettingProfileAPI get")
 
