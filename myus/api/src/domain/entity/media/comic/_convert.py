@@ -24,6 +24,7 @@ def comic_data(obj: Comic) -> ComicData:
             name=obj.channel.name,
             description=obj.channel.description,
             is_default=obj.channel.is_default,
+            count=obj.channel.count,
         ),
     )
 

@@ -24,6 +24,7 @@ def picture_data(obj: Picture) -> PictureData:
             name=obj.channel.name,
             description=obj.channel.description,
             is_default=obj.channel.is_default,
+            count=obj.channel.count,
         ),
     )
 

@@ -4,12 +4,14 @@ from api.modules.logger import log
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.common import ErrorOut, MessageOut
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
+from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagOut, UserOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import get_user_channels
 from api.src.usecase.follow import get_followers, get_follows, upsert_follow
 from api.src.usecase.notification import get_content_object, get_notification
+from api.src.usecase.subscribe import upsert_subscribe
 from api.src.usecase.user import get_search_tags, get_user_data, like_comment, like_media
 from api.utils.functions.index import create_url
 
@@ -117,6 +119,22 @@ class UserAPI:
             return 400, MessageOut(error=True, message="ユーザーが見つかりません!")
 
         data = FollowOut(is_follow=follow.is_follow, follower_count=follow.follower_count)
+        return 200, data
+
+    @staticmethod
+    @router.post("/subscribe/channel", response={200: SubscribeOut, 400: MessageOut, 401: ErrorOut})
+    def subscribe_channel(request: HttpRequest, input: SubscribeIn):
+        log.info("UserAPI subscribe_channel", input=input)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        subscribe = upsert_subscribe(user_id, input.channel_ulid, input.is_subscribe)
+        if subscribe is None:
+            return 400, MessageOut(error=True, message="チャンネルが見つかりません!")
+
+        data = SubscribeOut(is_subscribe=subscribe.is_subscribe, count=subscribe.count)
         return 200, data
 
     @staticmethod
