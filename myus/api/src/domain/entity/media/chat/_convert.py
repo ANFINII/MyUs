@@ -1,4 +1,5 @@
 from api.db.models.media import Chat
+from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.chat.data import ChatData
 
 
@@ -6,18 +7,25 @@ def chat_data(obj: Chat) -> ChatData:
     return ChatData(
         id=obj.id,
         ulid=obj.ulid,
-        channel_id=obj.channel_id,
         title=obj.title,
         content=obj.content,
         read=obj.read,
         period=obj.period,
         publish=obj.publish,
-        owner_id=obj.channel.owner_id,
         created=obj.created,
         updated=obj.updated,
         like_count=obj.like.count(),
         thread_count=obj.thread_count(),
         joined_count=obj.joined_count(),
+        channel=ChannelData(
+            id=obj.channel.id,
+            ulid=obj.channel.ulid,
+            owner_id=obj.channel.owner_id,
+            avatar=obj.channel.avatar.name if obj.channel.avatar else "",
+            name=obj.channel.name,
+            description=obj.channel.description,
+            is_default=obj.channel.is_default,
+        ),
     )
 
 
@@ -25,7 +33,7 @@ def marshal_chat(data: ChatData) -> Chat:
     return Chat(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid,
-        channel_id=data.channel_id,
+        channel_id=data.channel.id,
         title=data.title,
         content=data.content,
         read=data.read,
