@@ -46,7 +46,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const [isLike, setIsLike] = useState(detail.mediaUser.isLike)
   const [isFollow, setIsFollow] = useState(detail.mediaUser.isFollow)
   const [likeCount, setLikeCount] = useState(detail.likeCount)
-  const [followerCount, setFollowerCount] = useState(detail.author.followerCount)
+  const [followerCount, setFollowerCount] = useState(0)
   const [isModal, setIsModal] = useState(false)
 
   const messageAreaRef = useRef<HTMLDivElement>(null)
@@ -57,7 +57,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const NAV_MIN = 52
   const NAV_MAX_RATIO = 0.5
 
-  const isFallowDisable = !user.isActive || user.ulid === detail.author.ulid
+  const isFallowDisable = !user.isActive || user.ulid === detail.channel.ulid
   const isPeriod = new Date(detail.period) < new Date()
   const isDisabled = isPeriod || !user.isActive
 
@@ -201,7 +201,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }
 
   const handleFollow = async () => {
-    const request: FollowIn = { ulid: detail.author.ulid, isFollow: true }
+    const request: FollowIn = { ulid: detail.channel.ulid, isFollow: true }
     const ret = await postFollow(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
@@ -211,7 +211,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }
 
   const handleDeleteFollow = async () => {
-    const request: FollowIn = { ulid: detail.author.ulid, isFollow: false }
+    const request: FollowIn = { ulid: detail.channel.ulid, isFollow: false }
     const ret = await postFollow(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
@@ -247,9 +247,9 @@ export default function ChatDetail(props: Props): React.JSX.Element {
           {/* コンテンツオーバーレイ */}
           <div className={clsx(style.content_overlay, isContentOpen && style.active)}>
             <div className={style.content_author}>
-              <AvatarLink src={detail.author.avatar} size="m" ulid={detail.author.ulid} nickname={detail.author.nickname} />
+              <AvatarLink src={detail.channel.avatar} size="m" ulid={detail.channel.ulid} nickname={detail.channel.name} />
               <div className={style.content_author_info}>
-                <p>{detail.author.nickname}</p>
+                <p>{detail.channel.name}</p>
                 <time>{formatDatetime(detail.created)}</time>
               </div>
               <div className={style.content_author_follower}>
@@ -316,7 +316,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
           <div className={style.nav_area}>
             {list.map((item) => (
               <div key={item.ulid} className={style.nav_item}>
-                <Avatar src={item.author.avatar} size="m" />
+                <Avatar src={item.channel.avatar} size="m" />
                 <Link href={`/media/chat/${item.ulid}`}>
                   <h3 className={style.nav_item_title} title={item.title}>
                     {item.title}
@@ -398,7 +398,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
         </div>
       </div>
 
-      <FollowDeleteModal open={isModal} onClose={handleModal} loading={false} onAction={handleDeleteFollow} author={detail.author} />
+      <FollowDeleteModal open={isModal} onClose={handleModal} loading={false} onAction={handleDeleteFollow} channel={detail.channel} followerCount={followerCount} />
     </Main>
   )
 }

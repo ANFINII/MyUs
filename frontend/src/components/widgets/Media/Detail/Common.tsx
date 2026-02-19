@@ -1,5 +1,6 @@
+import { Channel } from 'types/internal/channle'
 import { Comment } from 'types/internal/comment'
-import { Author, Blog, MediaUser, Video } from 'types/internal/media'
+import { Blog, MediaUser, Video } from 'types/internal/media'
 import style from './Common.module.scss'
 import MediaDetailLeft from './Left'
 import MediaDetailRight from './Right'
@@ -12,7 +13,7 @@ interface Props {
     likeCount: number
     created: Date
     comments: Comment[]
-    author: Author
+    channel: Channel
     mediaUser: MediaUser
     type: 'video' | 'music' | 'comic' | 'picture' | 'blog'
   }

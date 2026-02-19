@@ -1,8 +1,9 @@
 import { ChangeEvent, useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
+import { Channel } from 'types/internal/channle'
 import { Comment, CommnetIn } from 'types/internal/comment'
-import { Author, MediaUser } from 'types/internal/media'
+import { MediaUser } from 'types/internal/media'
 import { FollowIn, LikeMediaIn } from 'types/internal/user'
 import { postComment } from 'api/internal/media/comment'
 import { postFollow, postLikeMedia } from 'api/internal/user'
@@ -43,7 +44,7 @@ interface Props {
     likeCount: number
     created: Date
     comments: Comment[]
-    author: Author
+    channel: Channel
     mediaUser: MediaUser
     type: 'video' | 'music' | 'comic' | 'picture' | 'blog'
   }
@@ -52,18 +53,18 @@ interface Props {
 
 export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const { media, handleToast } = props
-  const { title, content, read, created, author, mediaUser } = media
+  const { title, content, read, created, channel, mediaUser } = media
 
   const initFormState: MediaDetailState = useMemo(
     () => ({
       isLike: mediaUser.isLike,
       isFollow: mediaUser.isFollow,
       likeCount: media.likeCount,
-      followerCount: author.followerCount,
+      followerCount: 0,
       text: '',
       comments: media.comments,
     }),
-    [mediaUser, author, media.likeCount, media.comments],
+    [mediaUser, media.likeCount, media.comments],
   )
 
   const router = useRouter()
@@ -76,7 +77,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   useEffect(() => setFormState(initFormState), [router.query.ulid, initFormState])
 
   const { isLike, isFollow, likeCount, followerCount, text, comments } = formState
-  const isFallowDisable = !user.isActive || user.ulid === author.ulid
+  const isFallowDisable = !user.isActive || user.ulid === channel.ulid
   const handleModal = () => setIsModal(!isModal)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
@@ -95,7 +96,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   }
 
   const fetchFollow = async (isFollow: boolean) => {
-    const request: FollowIn = { ulid: author.ulid, isFollow }
+    const request: FollowIn = { ulid: channel.ulid, isFollow }
     const ret = await postFollow(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
@@ -150,9 +151,9 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
       <div>
         <HStack gap="4" justify="between">
           <HStack gap="4">
-            <AvatarLink src={author.avatar} size="l" ulid={author.ulid} nickname={author.nickname} />
+            <AvatarLink src={channel.avatar} size="l" ulid={channel.ulid} nickname={channel.name} />
             <VStack gap="2">
-              <p className="fs_14">{author.nickname}</p>
+              <p className="fs_14">{channel.name}</p>
               <p className="fs_14 text_sub">
                 登録者数<span className="ml_8">{followerCount}</span>
               </p>
@@ -189,7 +190,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
           ))}
         </VStack>
       </VStack>
-      <FollowDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleDeleteFollow} author={author} />
+      <FollowDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleDeleteFollow} channel={channel} followerCount={followerCount} />
     </div>
   )
 }

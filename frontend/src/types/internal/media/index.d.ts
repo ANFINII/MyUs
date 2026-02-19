@@ -1,3 +1,5 @@
+import { Channel } from 'types/internal/channle'
+
 export interface Author {
   avatar: string
   ulid: string
@@ -30,7 +32,7 @@ export interface Media {
   publish: boolean
   created: Date
   updated: Date
-  author: Author
+  channel: Channel
   mediaUser: MediaUser
 }
 
