@@ -50,10 +50,16 @@ class VideoRepository(VideoInterface):
         if len(objs) == 0:
             return []
 
-        save_objs = Video.objects.bulk_create(
-            [marshal_video(o) for o in objs],
-            update_conflicts=True,
-            update_fields=VIDEO_FIELDS,
-        )
+        videos = [marshal_video(o) for o in objs]
+        new_objs = [v for v in videos if v.id is None]
+        existing_objs = [v for v in videos if v.id is not None]
 
-        return [o.id for o in save_objs]
+        created_ids: list[int] = []
+        if len(new_objs) > 0:
+            created = Video.objects.bulk_create(new_objs)
+            created_ids = [o.id for o in created]
+
+        if len(existing_objs) > 0:
+            Video.objects.bulk_update(existing_objs, VIDEO_FIELDS)
+
+        return created_ids + [o.id for o in existing_objs]
