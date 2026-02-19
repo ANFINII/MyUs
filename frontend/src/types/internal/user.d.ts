@@ -97,6 +97,16 @@ export interface FollowOut {
   followerCount: number
 }
 
+export interface SubscribeIn {
+  channelUlid: string
+  isSubscribe: boolean
+}
+
+export interface SubscribeOut {
+  isSubscribe: boolean
+  count: number
+}
+
 export interface LikeMediaIn {
   ulid: string
   mediaType: MediaType

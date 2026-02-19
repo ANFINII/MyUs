@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { ChatMessage, ChatDetailOut } from 'types/internal/media/detail'
-import { FollowIn, LikeMediaIn } from 'types/internal/user'
-import { postFollow, postLikeMedia } from 'api/internal/user'
+import { LikeMediaIn, SubscribeIn } from 'types/internal/user'
+import { postLikeMedia, postSubscribe } from 'api/internal/user'
 import { FetchError, MediaType } from 'utils/constants/enum'
 import { camelSnake } from 'utils/functions/convertCase'
 import { formatDatetime } from 'utils/functions/datetime'
@@ -19,7 +19,7 @@ import IconChat from 'components/parts/Icon/Chat'
 import IconCross from 'components/parts/Icon/Cross'
 import IconHand from 'components/parts/Icon/Hand'
 import IconPerson from 'components/parts/Icon/Person'
-import FollowDeleteModal from 'components/widgets/Modal/FollowDelete'
+import SubscribeDeleteModal from 'components/widgets/Modal/SubscribeDelete'
 import style from './detail.module.scss'
 
 interface Props {
@@ -44,9 +44,9 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const [joined, setJoined] = useState(detail.joined)
   const [thread, setThread] = useState(detail.thread)
   const [isLike, setIsLike] = useState(detail.mediaUser.isLike)
-  const [isFollow, setIsFollow] = useState(detail.mediaUser.isFollow)
+  const [isSubscribe, setIsSubscribe] = useState(detail.mediaUser.isSubscribe)
   const [likeCount, setLikeCount] = useState(detail.likeCount)
-  const [followerCount, setFollowerCount] = useState(0)
+  const [subscribeCount, setSubscribeCount] = useState(0)
   const [isModal, setIsModal] = useState(false)
 
   const messageAreaRef = useRef<HTMLDivElement>(null)
@@ -200,25 +200,24 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     setLikeCount(data.likeCount)
   }
 
-  const handleFollow = async () => {
-    const request: FollowIn = { ulid: detail.channel.ulid, isFollow: true }
-    const ret = await postFollow(request)
+  const fetchSubscribe = async (isSubscribe: boolean) => {
+    const request: SubscribeIn = { channelUlid: detail.channel.ulid, isSubscribe }
+    const ret = await postSubscribe(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
-    setIsFollow(data.isFollow)
-    setFollowerCount(data.followerCount)
-    handleToast('フォローしました', false)
+    setIsSubscribe(data.isSubscribe)
+    setSubscribeCount(data.count)
   }
 
-  const handleDeleteFollow = async () => {
-    const request: FollowIn = { ulid: detail.channel.ulid, isFollow: false }
-    const ret = await postFollow(request)
-    if (ret.isErr()) return handleToast(FetchError.Post, true)
-    const data = ret.value
-    setIsFollow(data.isFollow)
-    setFollowerCount(data.followerCount)
+  const handleSubscribe = async () => {
+    await fetchSubscribe(true)
+    handleToast('チャンネルを登録しました', false)
+  }
+
+  const handleDeleteSubscribe = async () => {
+    await fetchSubscribe(false)
     handleModal()
-    handleToast('フォローを解除しました', false)
+    handleToast('チャンネル登録を解除しました', false)
   }
 
   if (!detail.publish) {
@@ -253,11 +252,11 @@ export default function ChatDetail(props: Props): React.JSX.Element {
                 <time>{formatDatetime(detail.created)}</time>
               </div>
               <div className={style.content_author_follower}>
-                登録者数 <span>{followerCount}</span>
+                登録者数 <span>{subscribeCount}</span>
               </div>
               <div className={style.content_author_follow}>
-                {!isFollow && <Button color="green" name="フォローする" disabled={isFallowDisable} onClick={handleFollow} />}
-                {isFollow && <Button color="white" name="フォロー済み" onClick={handleModal} />}
+                {!isSubscribe && <Button color="green" name="チャンネル登録" disabled={isFallowDisable} onClick={handleSubscribe} />}
+                {isSubscribe && <Button color="white" name="登録済み" onClick={handleModal} />}
               </div>
             </div>
             <span className={style.content_expand_toggle} onClick={handleContentExpand}>
@@ -398,7 +397,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
         </div>
       </div>
 
-      <FollowDeleteModal open={isModal} onClose={handleModal} loading={false} onAction={handleDeleteFollow} channel={detail.channel} followerCount={followerCount} />
+      <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={false} onAction={handleDeleteSubscribe} channel={detail.channel} followerCount={subscribeCount} />
     </Main>
   )
 }

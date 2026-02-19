@@ -4,9 +4,9 @@ import clsx from 'clsx'
 import { Channel } from 'types/internal/channle'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { MediaUser } from 'types/internal/media'
-import { FollowIn, LikeMediaIn } from 'types/internal/user'
+import { LikeMediaIn, SubscribeIn } from 'types/internal/user'
 import { postComment } from 'api/internal/media/comment'
-import { postFollow, postLikeMedia } from 'api/internal/user'
+import { postLikeMedia, postSubscribe } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap, mediaTypeMap } from 'utils/constants/map'
 import { capitalize } from 'utils/functions/common'
@@ -23,15 +23,15 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentContent from 'components/widgets/Comment/Content'
 import CommentInput from 'components/widgets/Comment/Input/Input'
-import FollowDeleteModal from 'components/widgets/Modal/FollowDelete'
+import SubscribeDeleteModal from 'components/widgets/Modal/SubscribeDelete'
 import View from 'components/widgets/View'
 import style from './Common.module.scss'
 
 export interface MediaDetailState {
   isLike: boolean
-  isFollow: boolean
+  isSubscribe: boolean
   likeCount: number
-  followerCount: number
+  subscribeCount: number
   text: string
   comments: Comment[]
 }
@@ -58,9 +58,9 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const initFormState: MediaDetailState = useMemo(
     () => ({
       isLike: mediaUser.isLike,
-      isFollow: mediaUser.isFollow,
+      isSubscribe: mediaUser.isSubscribe,
       likeCount: media.likeCount,
-      followerCount: 0,
+      subscribeCount: 0,
       text: '',
       comments: media.comments,
     }),
@@ -76,7 +76,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const [formState, setFormState] = useState<MediaDetailState>(initFormState)
   useEffect(() => setFormState(initFormState), [router.query.ulid, initFormState])
 
-  const { isLike, isFollow, likeCount, followerCount, text, comments } = formState
+  const { isLike, isSubscribe, likeCount, subscribeCount, text, comments } = formState
   const isFallowDisable = !user.isActive || user.ulid === channel.ulid
   const handleModal = () => setIsModal(!isModal)
   const handleContentView = () => setIsContentView(!isContentView)
@@ -95,23 +95,23 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     setFormState((prev) => ({ ...prev, ...data }))
   }
 
-  const fetchFollow = async (isFollow: boolean) => {
-    const request: FollowIn = { ulid: channel.ulid, isFollow }
-    const ret = await postFollow(request)
+  const fetchSubscribe = async (isSubscribe: boolean) => {
+    const request: SubscribeIn = { channelUlid: channel.ulid, isSubscribe }
+    const ret = await postSubscribe(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
-    setFormState((prev) => ({ ...prev, ...data }))
+    setFormState((prev) => ({ ...prev, isSubscribe: data.isSubscribe, subscribeCount: data.count }))
   }
 
-  const handleFollow = async () => {
-    await fetchFollow(true)
-    handleToast('フォローしました', false)
+  const handleSubscribe = async () => {
+    await fetchSubscribe(true)
+    handleToast('チャンネルを登録しました', false)
   }
 
-  const handleDeleteFollow = async () => {
-    await fetchFollow(false)
+  const handleDeleteSubscribe = async () => {
+    await fetchSubscribe(false)
     handleModal()
-    handleToast('フォローを解除しました', false)
+    handleToast('チャンネル登録を解除しました', false)
   }
 
   const handleMediaComment = async () => {
@@ -155,13 +155,13 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
             <VStack gap="2">
               <p className="fs_14">{channel.name}</p>
               <p className="fs_14 text_sub">
-                登録者数<span className="ml_8">{followerCount}</span>
+                登録者数<span className="ml_8">{subscribeCount}</span>
               </p>
             </VStack>
           </HStack>
           <div className={style.content_detail_p2}>
-            {!isFollow && <Button color="green" name="フォローする" disabled={isFallowDisable} onClick={handleFollow} />}
-            {isFollow && <Button color="white" name="フォロー済み" onClick={handleModal} />}
+            {!isSubscribe && <Button color="green" name="登録する" disabled={isFallowDisable} onClick={handleSubscribe} />}
+            {isSubscribe && <Button color="white" name="登録済み" onClick={handleModal} />}
           </div>
         </HStack>
         <div className={style.content_detail_p1}>
@@ -190,7 +190,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
           ))}
         </VStack>
       </VStack>
-      <FollowDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleDeleteFollow} channel={channel} followerCount={followerCount} />
+      <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleDeleteSubscribe} channel={channel} followerCount={subscribeCount} />
     </div>
   )
 }

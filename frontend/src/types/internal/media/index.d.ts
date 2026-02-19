@@ -9,7 +9,7 @@ export interface Author {
 
 export interface MediaUser {
   isLike: boolean
-  isFollow: boolean
+  isSubscribe: boolean
 }
 
 export interface NotificationUser {
