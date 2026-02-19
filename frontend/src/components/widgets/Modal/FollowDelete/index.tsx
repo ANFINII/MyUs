@@ -1,4 +1,4 @@
-import { Author } from 'types/internal/media'
+import { Channel } from 'types/internal/channle'
 import AvatarLink from 'components/parts/Avatar/Link'
 import Modal from 'components/parts/Modal'
 import HStack from 'components/parts/Stack/Horizontal'
@@ -9,11 +9,12 @@ export interface Props {
   onClose: () => void
   onAction: () => void
   loading?: boolean
-  author: Author
+  channel: Channel
+  followerCount: number
 }
 
 export default function FollowDeleteModal(props: Props): React.JSX.Element {
-  const { open, onClose, onAction, loading, author } = props
+  const { open, onClose, onAction, loading, channel, followerCount } = props
 
   return (
     <Modal
@@ -27,11 +28,11 @@ export default function FollowDeleteModal(props: Props): React.JSX.Element {
     >
       <div className="mb_8">こちらのユーザーのフォローを解除しますか？</div>
       <HStack gap="4">
-        <AvatarLink src={author.avatar} size="l" ulid={author.ulid} nickname={author.nickname} />
+        <AvatarLink src={channel.avatar} size="l" ulid={channel.ulid} nickname={channel.name} />
         <VStack gap="2">
-          <p className="fs_14">{author.nickname}</p>
+          <p className="fs_14">{channel.name}</p>
           <p className="fs_14 text_sub">
-            登録者数<span className="ml_8">{author.followerCount}</span>
+            登録者数<span className="ml_8">{followerCount}</span>
           </p>
         </VStack>
       </HStack>

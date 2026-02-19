@@ -13,8 +13,8 @@ interface Props {
 
 export default function MediaBaseContent(props: Props) {
   const { media } = props
-  const { title, read, like, created, author } = media
-  const { nickname } = author
+  const { title, read, like, created, channel } = media
+  const { name } = channel
 
   return (
     <VStack gap="1">
@@ -23,7 +23,7 @@ export default function MediaBaseContent(props: Props) {
       </div>
 
       <VStack gap="2" className={style.content}>
-        <div className={clsx(style.font, style.nickname)}>{nickname}</div>
+        <div className={clsx(style.font, style.nickname)}>{name}</div>
 
         <HStack gap="4">
           <div className={style.font}>

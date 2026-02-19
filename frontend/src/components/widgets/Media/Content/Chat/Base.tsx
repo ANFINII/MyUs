@@ -15,8 +15,8 @@ interface Props {
 
 export default function ChatMediaBaseContent(props: Props): React.JSX.Element {
   const { media } = props
-  const { title, read, like, joined, thread, created, author } = media
-  const { nickname } = author
+  const { title, read, like, joined, thread, created, channel } = media
+  const { name } = channel
 
   return (
     <VStack gap="1">
@@ -25,7 +25,7 @@ export default function ChatMediaBaseContent(props: Props): React.JSX.Element {
       </div>
 
       <VStack gap="2" className={style.content}>
-        <div className={clsx(style.font, style.nickname)}>{nickname}</div>
+        <div className={clsx(style.font, style.nickname)}>{name}</div>
 
         <HStack gap="4">
           <div className={style.font}>

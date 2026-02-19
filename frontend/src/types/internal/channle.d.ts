@@ -1,5 +1,7 @@
 export interface Channel {
-    ulid: string
-    name: string
-    isDefault: boolean
-  }
+  ulid: string
+  avatar: string
+  name: string
+  isDefault: boolean
+  description: string
+}
