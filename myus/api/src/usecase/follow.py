@@ -4,13 +4,13 @@ from api.src.domain.entity.follow.repository import FollowRepository
 from api.src.domain.entity.user.repository import UserRepository
 from api.src.domain.interface.follow.data import FollowData
 from api.src.domain.interface.follow.interface import FilterOption, SortOption
-from api.src.domain.interface.user.data import UserAllData, UserData
+from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption as UserFilterOption, SortOption as UserSortOption, UserInterface
 from api.src.types.data.follow import FollowOutData, FollowUserData
 from api.utils.functions.index import create_url
 
 
-def get_follows(user_id: int, search: str | None, limit: int) -> list[FollowUserData]:
+def get_follows(user_id: int, search: str, limit: int) -> list[FollowUserData]:
     follow_repo = FollowRepository()
     user_repo = UserRepository()
 
@@ -31,7 +31,7 @@ def get_follows(user_id: int, search: str | None, limit: int) -> list[FollowUser
     ]
 
 
-def get_followers(user_id: int, search: str | None, limit: int) -> list[FollowUserData]:
+def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserData]:
     follow_repo = FollowRepository()
     user_repo = UserRepository()
 
@@ -64,7 +64,8 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool, repository:
     following_id = following.user.id
 
     follow_ids = follow_repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption())
-    follow = follow_repo.bulk_get(follow_ids)[0]
+    follows = follow_repo.bulk_get(follow_ids)
+    follow = follows[0] if len(follows) > 0 else None
 
     with transaction.atomic():
         if follow is None:
