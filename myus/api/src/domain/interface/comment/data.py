@@ -24,6 +24,7 @@ class CommentData:
     type_name: str
     object_id: int
     text: str
+    deleted: bool
     created: datetime
     updated: datetime
     is_comment_like: bool

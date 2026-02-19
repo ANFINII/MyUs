@@ -61,7 +61,7 @@ class CommentAPI:
         return 200, data
 
     @staticmethod
-    @router.post("", response={201: CommentOut, 400: MessageOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: CommentOut, 400: MessageOut, 401: ErrorOut, 500: MessageOut})
     def post(request: HttpRequest, input: CommentCreateIn):
         log.info("CommentAPI post", input=input)
 
@@ -96,7 +96,7 @@ class CommentAPI:
             return 500, MessageOut(error=True, message="コメントの作成に失敗しました")
 
     @staticmethod
-    @router.put("/{comment_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/{comment_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 500: MessageOut})
     def put(request: HttpRequest, comment_ulid: str, input: CommentUpdateIn):
         log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
 
@@ -111,7 +111,7 @@ class CommentAPI:
             return 500, MessageOut(error=True, message="コメントの更新に失敗しました")
 
     @staticmethod
-    @router.delete("/{comment_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 500: ErrorOut})
+    @router.delete("/{comment_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 500: MessageOut})
     def delete(request: HttpRequest, comment_ulid: str):
         log.info("CommentAPI delete", comment_ulid=comment_ulid)
 
