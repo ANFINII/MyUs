@@ -12,7 +12,7 @@ COMMENT_FIELDS = ["author_id", "parent_id", "type_no", "type_name", "object_id",
 
 class CommentRepository(CommentInterface):
     def queryset(self) -> QuerySet[Comment]:
-        return Comment.objects.select_related("author").prefetch_related("like")
+        return Comment.objects.prefetch_related("like")
 
     def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []

@@ -2,9 +2,10 @@ from dataclasses import replace
 from datetime import datetime
 from api.modules.logger import log
 from api.src.domain.entity.comment.repository import CommentRepository
-from api.src.domain.interface.comment.data import CommentData, ReplyData
+from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import FilterOption, SortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
+from api.src.types.data.comment import CommentGetData, ReplyData
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.user import get_author_data
 from api.utils.enum.index import CommentTypeNo, MediaType
@@ -32,7 +33,7 @@ def save_comment_data(data: CommentData) -> bool:
         return False
 
 
-def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[CommentData]:
+def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[CommentGetData]:
     comment_repo = CommentRepository()
 
     parent_ids = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id, is_parent=True), SortOption())
@@ -52,9 +53,13 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
         liked_ids = set(comment_repo.get_liked_ids(all_ids, user_id))
 
     data = [
-        replace(
-            c,
+        CommentGetData(
+            ulid=c.ulid,
+            text=c.text,
+            created=c.created,
+            updated=c.updated,
             is_comment_like=c.id in liked_ids,
+            like_count=c.like_count,
             author=get_author_data(c.author_id),
             replys=[
                 ReplyData(
@@ -73,7 +78,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
     return data
 
 
-def create_comment(user_id: int, input: CommentCreateIn) -> CommentData | None:
+def create_comment(user_id: int, input: CommentCreateIn) -> CommentGetData | None:
     comment_repo = CommentRepository()
     media_repo = get_media_repository(MediaType(input.type_name.value))
 
@@ -104,18 +109,19 @@ def create_comment(user_id: int, input: CommentCreateIn) -> CommentData | None:
         deleted=False,
         created=datetime.min,
         updated=datetime.min,
-        is_comment_like=False,
         like_count=0,
-        author=author,
-        replys=[],
     )
 
     new_ids = comment_repo.bulk_save([new_comment])
     comment = comment_repo.bulk_get(new_ids)[0]
 
-    data = replace(
-        comment,
+    data = CommentGetData(
+        ulid=comment.ulid,
+        text=comment.text,
+        created=comment.created,
+        updated=comment.updated,
         is_comment_like=False,
+        like_count=comment.like_count,
         author=author,
         replys=[],
     )

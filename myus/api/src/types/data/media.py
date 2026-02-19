@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import date, datetime
-from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.media.data import HashtagData
+from api.src.types.data.comment import CommentGetData
 from api.src.types.data.message import MessageData
 from api.src.domain.interface.channel.data import ChannelData
 from api.src.types.data.user import MediaUserData
@@ -28,7 +28,7 @@ class VideoDetailData(MediaDetailData):
     image: str
     video: str
     convert: str
-    comments: list[CommentData]
+    comments: list[CommentGetData]
 
 
 @dataclass(frozen=True, slots=True)
@@ -36,26 +36,26 @@ class MusicDetailData(MediaDetailData):
     lyric: str
     music: str
     download: bool
-    comments: list[CommentData]
+    comments: list[CommentGetData]
 
 
 @dataclass(frozen=True, slots=True)
 class ComicDetailData(MediaDetailData):
     image: str
-    comments: list[CommentData]
+    comments: list[CommentGetData]
 
 
 @dataclass(frozen=True, slots=True)
 class PictureDetailData(MediaDetailData):
     image: str
-    comments: list[CommentData]
+    comments: list[CommentGetData]
 
 
 @dataclass(frozen=True, slots=True)
 class BlogDetailData(MediaDetailData):
     richtext: str
     image: str
-    comments: list[CommentData]
+    comments: list[CommentGetData]
 
 
 @dataclass(frozen=True, slots=True)
