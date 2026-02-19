@@ -10,3 +10,4 @@ class ChannelData:
     name: str
     description: str
     is_default: bool
+    count: int

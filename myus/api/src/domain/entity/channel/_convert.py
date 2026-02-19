@@ -11,6 +11,7 @@ def convert_data(obj: Channel) -> ChannelData:
         name=obj.name,
         description=obj.description,
         is_default=obj.is_default,
+        count=obj.count,
     )
 
 
@@ -23,4 +24,5 @@ def marshal_channel(data: ChannelData) -> Channel:
         name=data.name,
         description=data.description,
         is_default=data.is_default,
+        count=data.count,
     )

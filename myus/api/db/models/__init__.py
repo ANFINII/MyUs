@@ -5,5 +5,6 @@ from api.db.models.media import *
 from api.db.models.message import *
 from api.db.models.notification import *
 from api.db.models.stripe import *
+from api.db.models.subscribe import *
 from api.db.models.user import *
 from api.db.models.users import *

@@ -7,7 +7,7 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption
 
 
-CHANNEL_FIELDS = ["owner_id", "avatar", "name", "description", "is_default"]
+CHANNEL_FIELDS = ["owner_id", "avatar", "name", "description", "is_default", "count"]
 
 
 class ChannelRepository(ChannelInterface):

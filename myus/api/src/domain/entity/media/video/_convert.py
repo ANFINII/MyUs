@@ -26,6 +26,7 @@ def video_data(obj: Video) -> VideoData:
             name=obj.channel.name,
             description=obj.channel.description,
             is_default=obj.channel.is_default,
+            count=obj.channel.count,
         ),
     )
 

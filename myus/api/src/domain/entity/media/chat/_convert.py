@@ -25,6 +25,7 @@ def chat_data(obj: Chat) -> ChatData:
             name=obj.channel.name,
             description=obj.channel.description,
             is_default=obj.channel.is_default,
+            count=obj.channel.count,
         ),
     )
 

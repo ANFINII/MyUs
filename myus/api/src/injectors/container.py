@@ -5,9 +5,10 @@ from api.src.injectors.index import (
     MediaModule,
     CommentModule,
     MessageModule,
-    FollowModule,
     SearchTagModule,
     NotificationModule,
+    FollowModule,
+    SubscribeModule,
 )
 
 
@@ -17,9 +18,10 @@ modules: list[Module] = [
     MediaModule(),
     CommentModule(),
     MessageModule(),
-    FollowModule(),
     SearchTagModule(),
     NotificationModule(),
+    FollowModule(),
+    SubscribeModule(),
 ]
 
 injector = Injector(modules)
