@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.domain.interface.comment.data import CommentData, ReplyData
+from api.src.types.data.comment import CommentGetData, ReplyData
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.comic.data import ComicData
@@ -550,7 +550,7 @@ def convert_chats(objs: list[ChatData]) -> list[ChatOut]:
     return data
 
 
-def convert_comments(objs: list[CommentData]) -> list[CommentOut]:
+def convert_comments(objs: list[CommentGetData]) -> list[CommentOut]:
     data = [
         CommentOut(
             ulid=x.ulid,
