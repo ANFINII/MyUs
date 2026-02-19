@@ -9,6 +9,8 @@ from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.data import HashtagData
+from api.src.domain.interface.channel.data import ChannelData
+from api.utils.functions.index import create_url
 from api.src.types.data.message import MessageData
 from api.src.types.data.user import AuthorData, MediaUserData
 from api.src.types.schema.common import ErrorOut
@@ -18,6 +20,7 @@ from api.src.types.schema.media import HomeOut, VideoOut, MusicOut, ComicOut, Pi
 from api.src.types.schema.media import VideoDetailOut, MusicDetailOut, ComicDetailOut, PictureDetailOut, BlogDetailOut, ChatDetailOut
 from api.src.types.schema.media import VideoDetailsOut, MusicDetailsOut, ComicDetailsOut, PictureDetailsOut, BlogDetailsOut, ChatDetailsOut
 from api.src.types.schema.message import ChatMessageOut
+from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.user import AuthorOut, MediaUserOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import get_channel
@@ -109,7 +112,7 @@ class VideoAPI:
                 publish=obj.publish,
                 created=obj.created,
                 updated=obj.updated,
-                author=convert_author(obj.author),
+                channel=convert_channel(obj.channel),
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_videos(objs),
@@ -172,7 +175,7 @@ class MusicAPI:
                 publish=obj.publish,
                 created=obj.created,
                 updated=obj.updated,
-                author=convert_author(obj.author),
+                channel=convert_channel(obj.channel),
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_musics(objs),
@@ -233,7 +236,7 @@ class ComicAPI:
                 publish=obj.publish,
                 created=obj.created,
                 updated=obj.updated,
-                author=convert_author(obj.author),
+                channel=convert_channel(obj.channel),
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_comics(objs),
@@ -294,7 +297,7 @@ class PictureAPI:
                 publish=obj.publish,
                 created=obj.created,
                 updated=obj.updated,
-                author=convert_author(obj.author),
+                channel=convert_channel(obj.channel),
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_pictures(objs),
@@ -356,7 +359,7 @@ class BlogAPI:
                 publish=obj.publish,
                 created=obj.created,
                 updated=obj.updated,
-                author=convert_author(obj.author),
+                channel=convert_channel(obj.channel),
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_blogs(objs),
@@ -419,31 +422,13 @@ class ChatAPI:
                 publish=obj.publish,
                 created=obj.created,
                 updated=obj.updated,
-                author=convert_author(obj.author),
+                channel=convert_channel(obj.channel),
                 mediaUser=convert_media_user(obj.mediaUser),
             ),
             list=convert_chats(objs),
         )
 
         return 200, data
-
-
-def convert_author(obj: AuthorData) -> AuthorOut:
-    data = AuthorOut(
-        avatar=obj.avatar,
-        ulid=obj.ulid,
-        nickname=obj.nickname,
-        follower_count=obj.follower_count,
-    )
-    return data
-
-
-def convert_media_user(obj: MediaUserData) -> MediaUserOut:
-    return MediaUserOut(is_like=obj.is_like, is_follow=obj.is_follow)
-
-
-def convert_hashtags(objs: list[HashtagData]) -> list[HashtagOut]:
-    return [HashtagOut(jp_name=x.jp_name) for x in objs]
 
 
 def convert_videos(objs: list[VideoData]) -> list[VideoOut]:
@@ -461,7 +446,7 @@ def convert_videos(objs: list[VideoData]) -> list[VideoOut]:
             publish=x.publish,
             created=x.created,
             updated=x.updated,
-            author=convert_author(x.author),
+            channel=convert_channel(x.channel),
         ) for x in objs
     ]
     return data
@@ -482,7 +467,7 @@ def convert_musics(objs: list[MusicData]) -> list[MusicOut]:
             publish=x.publish,
             created=x.created,
             updated=x.updated,
-            author=convert_author(x.author),
+            channel=convert_channel(x.channel),
         ) for x in objs
     ]
     return data
@@ -501,7 +486,7 @@ def convert_comics(objs: list[ComicData]) -> list[ComicOut]:
             publish=x.publish,
             created=x.created,
             updated=x.updated,
-            author=convert_author(x.author),
+            channel=convert_channel(x.channel),
         ) for x in objs
     ]
     return data
@@ -520,7 +505,7 @@ def convert_pictures(objs: list[PictureData]) -> list[PictureOut]:
             publish=x.publish,
             created=x.created,
             updated=x.updated,
-            author=convert_author(x.author),
+            channel=convert_channel(x.channel),
         ) for x in objs
     ]
     return data
@@ -539,7 +524,7 @@ def convert_blogs(objs: list[BlogData]) -> list[BlogOut]:
             publish=x.publish,
             created=x.created,
             updated=x.updated,
-            author=convert_author(x.author),
+            channel=convert_channel(x.channel),
         ) for x in objs
     ]
     return data
@@ -559,7 +544,7 @@ def convert_chats(objs: list[ChatData]) -> list[ChatOut]:
             publish=x.publish,
             created=x.created,
             updated=x.updated,
-            author=convert_author(x.author),
+            channel=convert_channel(x.channel),
         ) for x in objs
     ]
     return data
@@ -607,3 +592,31 @@ def convert_messages(objs: list[MessageData]) -> list[ChatMessageOut]:
         ) for m in objs
     ]
     return data
+
+
+def convert_author(obj: AuthorData) -> AuthorOut:
+    data = AuthorOut(
+        avatar=obj.avatar,
+        ulid=obj.ulid,
+        nickname=obj.nickname,
+        follower_count=obj.follower_count,
+    )
+    return data
+
+
+def convert_channel(obj: ChannelData) -> ChannelOut:
+    return ChannelOut(
+        ulid=obj.ulid,
+        avatar=create_url(obj.avatar),
+        name=obj.name,
+        is_default=obj.is_default,
+        description=obj.description,
+    )
+
+
+def convert_media_user(obj: MediaUserData) -> MediaUserOut:
+    return MediaUserOut(is_like=obj.is_like, is_follow=obj.is_follow)
+
+
+def convert_hashtags(objs: list[HashtagData]) -> list[HashtagOut]:
+    return [HashtagOut(jp_name=x.jp_name) for x in objs]
