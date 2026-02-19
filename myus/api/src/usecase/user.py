@@ -23,11 +23,11 @@ from api.utils.functions.validation import has_alphabet, has_birthday, has_email
 
 def get_user_data(user_id: int) -> UserAllData | None:
     repository = injector.get(UserInterface)
-    user_ids = repository.get_ids(FilterOption(id=user_id))
-    if len(user_ids) == 0:
+    ids = repository.get_ids(FilterOption(id=user_id))
+    if len(ids) == 0:
         return None
 
-    users = repository.bulk_get(user_ids)
+    users = repository.bulk_get(ids)
     user = users[0]
     if not user.user.is_active:
         return None
@@ -35,13 +35,14 @@ def get_user_data(user_id: int) -> UserAllData | None:
     return user
 
 
-def get_author_data(author_id: int) -> AuthorData:
+def get_author_data(user_id: int) -> AuthorData:
     repository = injector.get(UserInterface)
-    ids = repository.get_ids(FilterOption(id=author_id))
+    ids = repository.get_ids(FilterOption(id=user_id))
     if len(ids) == 0:
         return AuthorData(avatar="", ulid="", nickname="", follower_count=0)
 
-    user = repository.bulk_get(ids)[0]
+    users = repository.bulk_get(ids)
+    user = users[0]
     data = AuthorData(
         avatar=create_url(user.user.avatar),
         ulid=user.user.ulid,

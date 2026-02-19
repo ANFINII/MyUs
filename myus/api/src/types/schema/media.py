@@ -2,7 +2,8 @@ from datetime import datetime
 from pydantic import BaseModel
 from api.src.types.schema.comment import CommentOut
 from api.src.types.schema.message import ChatMessageOut
-from api.src.types.schema.user import AuthorOut, MediaUserOut
+from api.src.types.schema.channel import ChannelOut
+from api.src.types.schema.user import MediaUserOut
 
 
 # Inputs
@@ -66,7 +67,7 @@ class MediaOut(BaseModel):
     publish: bool
     created: datetime
     updated: datetime
-    author: AuthorOut
+    channel: ChannelOut
 
 
 class MediaDetailOut(BaseModel):
@@ -78,7 +79,7 @@ class MediaDetailOut(BaseModel):
     publish: bool
     created: datetime
     updated: datetime
-    author: AuthorOut
+    channel: ChannelOut
     mediaUser: MediaUserOut
     hashtags: list[HashtagOut]
 
