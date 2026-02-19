@@ -34,7 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     img         = "../static/img/user_icon.png"
     id          = models.BigAutoField(primary_key=True)
     ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    avatar      = models.ImageField(upload_to=avatar_upload, blank=True)
+    avatar      = models.ImageField(upload_to=avatar_upload, default=img, blank=True)
     password    = models.CharField(max_length=255)
     email       = models.EmailField(max_length=255, unique=True)
     username    = models.CharField(max_length=20, unique=True)
@@ -93,7 +93,7 @@ class MyPage(models.Model):
     img             = "../static/img/MyUs_banner.png"
     id              = models.BigAutoField(primary_key=True)
     user            = models.OneToOneField(User, on_delete=models.CASCADE)
-    banner          = models.ImageField(upload_to=avatar_upload, blank=True)
+    banner          = models.ImageField(upload_to=avatar_upload, default=img, blank=True)
     email           = models.EmailField(max_length=255, blank=True)
     content         = models.TextField()
     follower_count  = models.IntegerField(verbose_name="follower", default=0)
