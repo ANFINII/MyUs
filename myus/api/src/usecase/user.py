@@ -1,4 +1,5 @@
 import datetime
+from dataclasses import replace
 from django.core.files.storage import default_storage
 from ninja import UploadedFile
 from api.db.models.user import User
@@ -8,13 +9,14 @@ from api.src.domain.interface.search_tag.interface import SearchTagInterface
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
 from api.src.domain.interface.search_tag.interface import FilterOption as SearchTagFilterOption, SortOption as SearchTagSortOption
-from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData
+from api.src.domain.interface.user.data import ProfileData, UserAllData, UserNotificationData
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
-from api.src.types.data.user import LikeData, SearchTagData
+from api.src.types.data.user import AuthorData, LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
 from api.utils.enum.index import ImageType, MediaType
 from api.utils.functions.file import avatar_path
+from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository
 from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
@@ -31,6 +33,23 @@ def get_user_data(user_id: int) -> UserAllData | None:
         return None
 
     return user
+
+
+def get_author_data(author_id: int) -> AuthorData:
+    repository = injector.get(UserInterface)
+    ids = repository.get_ids(FilterOption(id=author_id))
+    if len(ids) == 0:
+        return AuthorData(avatar="", ulid="", nickname="", follower_count=0)
+
+    user = repository.bulk_get(ids)[0]
+    data = AuthorData(
+        avatar=create_url(user.user.avatar),
+        ulid=user.user.ulid,
+        nickname=user.user.nickname,
+        follower_count=user.mypage.follower_count,
+    )
+
+    return data
 
 
 def save_user_data(data: UserAllData) -> bool:
@@ -147,16 +166,12 @@ def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedF
     base = data.user
     avatar = save_upload(avatar_file, base.ulid) if avatar_file else base.avatar
 
-    user = UserData(
-        id=base.id,
-        ulid=base.ulid,
+    user = replace(
+        base,
         avatar=avatar,
-        password=base.password,
         email=input.email,
         username=input.username,
         nickname=input.nickname,
-        is_active=base.is_active,
-        is_staff=base.is_staff,
     )
 
     profile = ProfileData(
@@ -173,15 +188,9 @@ def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedF
         introduction=input.introduction,
     )
 
-    updated_data = UserAllData(
-        user=user,
-        profile=profile,
-        mypage=data.mypage,
-        notification=data.notification,
-        user_plan=data.user_plan,
-    )
+    save_data = replace(data, user=user, profile=profile)
 
-    return save_user_data(updated_data)
+    return save_user_data(save_data)
 
 
 def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFile) -> bool:
@@ -191,25 +200,18 @@ def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFil
 
     banner = save_upload(banner_file, data.user.ulid) if banner_file else data.mypage.banner
 
-    mypage = MyPageData(
+    mypage = replace(
+        data.mypage,
         banner=banner,
         email=input.email,
         content=input.content,
-        follower_count=data.mypage.follower_count,
-        following_count=data.mypage.following_count,
         tag_manager_id=input.tag_manager_id,
         is_advertise=input.is_advertise,
     )
 
-    updated_data = UserAllData(
-        user=data.user,
-        profile=data.profile,
-        mypage=mypage,
-        notification=data.notification,
-        user_plan=data.user_plan,
-    )
+    save_data = replace(data, mypage=mypage)
 
-    return save_user_data(updated_data)
+    return save_user_data(save_data)
 
 
 def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
@@ -230,12 +232,6 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
         is_views=input.is_views,
     )
 
-    updated_data = UserAllData(
-        user=data.user,
-        profile=data.profile,
-        mypage=data.mypage,
-        notification=notification,
-        user_plan=data.user_plan,
-    )
+    save_data = replace(data, notification=notification)
 
-    return save_user_data(updated_data)
+    return save_user_data(save_data)
