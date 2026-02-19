@@ -3,7 +3,7 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.video.data import VideoData
 
 
-def video_data(obj: Video) -> VideoData:
+def convert_data(obj: Video) -> VideoData:
     return VideoData(
         id=obj.id,
         ulid=obj.ulid,
@@ -31,7 +31,7 @@ def video_data(obj: Video) -> VideoData:
     )
 
 
-def marshal_video(data: VideoData) -> Video:
+def marshal_data(data: VideoData) -> Video:
     return Video(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid,

@@ -11,7 +11,7 @@ def convert_data(obj: Follow) -> FollowData:
     )
 
 
-def marshal_follow(data: FollowData) -> Follow:
+def marshal_data(data: FollowData) -> Follow:
     return Follow(
         id=data.id if data.id != 0 else None,
         follower_id=data.follower_id,

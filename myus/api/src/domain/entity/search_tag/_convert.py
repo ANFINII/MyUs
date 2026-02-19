@@ -11,7 +11,7 @@ def convert_data(obj: SearchTag) -> SearchTagData:
     )
 
 
-def marshal_search_tag(data: SearchTagData) -> SearchTag:
+def marshal_data(data: SearchTagData) -> SearchTag:
     return SearchTag(
         id=data.id if data.id != 0 else None,
         author_id=data.author_id,

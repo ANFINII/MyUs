@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.media import Picture
-from api.src.domain.entity.media.picture._convert import marshal_picture, picture_data
+from api.src.domain.entity.media.picture._convert import convert_data, marshal_data
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.picture.interface import PictureInterface
@@ -44,14 +44,14 @@ class PictureRepository(PictureInterface):
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [picture_data(obj) for obj in sorted_objs]
+        return [convert_data(obj) for obj in sorted_objs]
 
     def bulk_save(self, objs: list[PictureData]) -> list[int]:
         if len(objs) == 0:
             return []
 
         save_objs = Picture.objects.bulk_create(
-            [marshal_picture(o) for o in objs],
+            [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=PICTURE_FIELDS,
         )

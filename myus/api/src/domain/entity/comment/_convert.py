@@ -33,7 +33,7 @@ def author_data(obj: Comment) -> AuthorData:
     )
 
 
-def marshal_comment(data: CommentData) -> Comment:
+def marshal_data(data: CommentData) -> Comment:
     comment = Comment(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid,

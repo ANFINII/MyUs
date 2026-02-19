@@ -3,7 +3,7 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.music.data import MusicData
 
 
-def music_data(obj: Music) -> MusicData:
+def convert_data(obj: Music) -> MusicData:
     return MusicData(
         id=obj.id,
         ulid=obj.ulid,
@@ -31,7 +31,7 @@ def music_data(obj: Music) -> MusicData:
     )
 
 
-def marshal_music(data: MusicData) -> Music:
+def marshal_data(data: MusicData) -> Music:
     return Music(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid,

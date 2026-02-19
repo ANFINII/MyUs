@@ -14,7 +14,7 @@ def convert_data(obj: Notification) -> NotificationData:
     )
 
 
-def marshal_notification(data: NotificationData) -> Notification:
+def marshal_data(data: NotificationData) -> Notification:
     return Notification(
         id=data.id if data.id != 0 else None,
         user_from_id=data.user_from_id,

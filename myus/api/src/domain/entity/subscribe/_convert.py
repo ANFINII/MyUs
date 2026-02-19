@@ -11,7 +11,7 @@ def convert_data(obj: Subscribe) -> SubscribeData:
     )
 
 
-def marshal_subscribe(data: SubscribeData) -> Subscribe:
+def marshal_data(data: SubscribeData) -> Subscribe:
     return Subscribe(
         id=data.id if data.id != 0 else None,
         user_id=data.user_id,

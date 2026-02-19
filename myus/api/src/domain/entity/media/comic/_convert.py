@@ -3,7 +3,7 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.comic.data import ComicData
 
 
-def comic_data(obj: Comic) -> ComicData:
+def convert_data(obj: Comic) -> ComicData:
     return ComicData(
         id=obj.id,
         ulid=obj.ulid,
@@ -29,7 +29,7 @@ def comic_data(obj: Comic) -> ComicData:
     )
 
 
-def marshal_comic(data: ComicData) -> Comic:
+def marshal_data(data: ComicData) -> Comic:
     return Comic(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid,

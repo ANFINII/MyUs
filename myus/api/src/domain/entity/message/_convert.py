@@ -17,7 +17,7 @@ def convert_data(obj: Message) -> MessageData:
     )
 
 
-def marshal_message(data: MessageData) -> Message:
+def marshal_data(data: MessageData) -> Message:
     return Message(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid,

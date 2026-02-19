@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.media import Music
-from api.src.domain.entity.media.music._convert import marshal_music, music_data
+from api.src.domain.entity.media.music._convert import convert_data, marshal_data
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.music.interface import MusicInterface
@@ -44,14 +44,14 @@ class MusicRepository(MusicInterface):
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [music_data(obj) for obj in sorted_objs]
+        return [convert_data(obj) for obj in sorted_objs]
 
     def bulk_save(self, objs: list[MusicData]) -> list[int]:
         if len(objs) == 0:
             return []
 
         save_objs = Music.objects.bulk_create(
-            [marshal_music(o) for o in objs],
+            [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=MUSIC_FIELDS,
         )
