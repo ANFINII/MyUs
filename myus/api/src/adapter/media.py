@@ -615,7 +615,7 @@ def convert_channel(obj: ChannelData) -> ChannelOut:
 
 
 def convert_media_user(obj: MediaUserData) -> MediaUserOut:
-    return MediaUserOut(is_like=obj.is_like, is_follow=obj.is_follow)
+    return MediaUserOut(is_like=obj.is_like, is_subscribe=obj.is_subscribe)
 
 
 def convert_hashtags(objs: list[HashtagData]) -> list[HashtagOut]:

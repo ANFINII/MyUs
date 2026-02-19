@@ -20,7 +20,7 @@ class AuthorData:
 @dataclass(frozen=True, slots=True)
 class MediaUserData:
     is_like: bool
-    is_follow: bool
+    is_subscribe: bool
 
 
 @dataclass(frozen=True, slots=True)
