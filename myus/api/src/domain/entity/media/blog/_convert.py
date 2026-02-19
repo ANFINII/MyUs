@@ -3,7 +3,7 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.blog.data import BlogData
 
 
-def blog_data(obj: Blog) -> BlogData:
+def convert_data(obj: Blog) -> BlogData:
     return BlogData(
         id=obj.id,
         ulid=obj.ulid,
@@ -31,7 +31,7 @@ def blog_data(obj: Blog) -> BlogData:
     )
 
 
-def marshal_blog(data: BlogData) -> Blog:
+def marshal_data(data: BlogData) -> Blog:
     return Blog(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid,

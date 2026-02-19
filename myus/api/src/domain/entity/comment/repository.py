@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
-from api.src.domain.entity.comment._convert import convert_data, marshal_comment
+from api.src.domain.entity.comment._convert import convert_data, marshal_data
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
@@ -49,7 +49,7 @@ class CommentRepository(CommentInterface):
             return []
 
         save_objs = Comment.objects.bulk_create(
-            [marshal_comment(o) for o in objs],
+            [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=COMMENT_FIELDS,
         )

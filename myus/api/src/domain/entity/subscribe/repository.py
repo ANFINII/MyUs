@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.subscribe import Subscribe
-from api.src.domain.entity.subscribe._convert import convert_data, marshal_subscribe
+from api.src.domain.entity.subscribe._convert import convert_data, marshal_data
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.subscribe.data import SubscribeData
 from api.src.domain.interface.subscribe.interface import FilterOption, SubscribeInterface, SortOption
@@ -45,7 +45,7 @@ class SubscribeRepository(SubscribeInterface):
             return []
 
         save_objs = Subscribe.objects.bulk_create(
-            [marshal_subscribe(o) for o in objs],
+            [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=SUBSCRIBE_FIELDS,
         )

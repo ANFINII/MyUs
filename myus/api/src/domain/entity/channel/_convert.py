@@ -15,7 +15,7 @@ def convert_data(obj: Channel) -> ChannelData:
     )
 
 
-def marshal_channel(data: ChannelData) -> Channel:
+def marshal_data(data: ChannelData) -> Channel:
     return Channel(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid,

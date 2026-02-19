@@ -3,7 +3,7 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.picture.data import PictureData
 
 
-def picture_data(obj: Picture) -> PictureData:
+def convert_data(obj: Picture) -> PictureData:
     return PictureData(
         id=obj.id,
         ulid=obj.ulid,
@@ -29,7 +29,7 @@ def picture_data(obj: Picture) -> PictureData:
     )
 
 
-def marshal_picture(data: PictureData) -> Picture:
+def marshal_data(data: PictureData) -> Picture:
     return Picture(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid,

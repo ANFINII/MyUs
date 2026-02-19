@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.users import Follow
-from api.src.domain.entity.follow._convert import convert_data, marshal_follow
+from api.src.domain.entity.follow._convert import convert_data, marshal_data
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.follow.data import FollowData
 from api.src.domain.interface.follow.interface import FilterOption, FollowInterface, SortOption
@@ -45,7 +45,7 @@ class FollowRepository(FollowInterface):
             return []
 
         save_objs = Follow.objects.bulk_create(
-            [marshal_follow(o) for o in objs],
+            [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=FOLLOW_FIELDS,
         )

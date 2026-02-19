@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.media import Chat
-from api.src.domain.entity.media.chat._convert import chat_data, marshal_chat
+from api.src.domain.entity.media.chat._convert import convert_data, marshal_data
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.chat.interface import ChatInterface
@@ -44,14 +44,14 @@ class ChatRepository(ChatInterface):
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [chat_data(obj) for obj in sorted_objs]
+        return [convert_data(obj) for obj in sorted_objs]
 
     def bulk_save(self, objs: list[ChatData]) -> list[int]:
         if len(objs) == 0:
             return []
 
         save_objs = Chat.objects.bulk_create(
-            [marshal_chat(o) for o in objs],
+            [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=CHAT_FIELDS,
         )

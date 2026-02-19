@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.notification import Notification
-from api.src.domain.entity.notification._convert import convert_data, marshal_notification
+from api.src.domain.entity.notification._convert import convert_data, marshal_data
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
@@ -46,7 +46,7 @@ class NotificationRepository(NotificationInterface):
             return []
 
         save_objs = Notification.objects.bulk_create(
-            [marshal_notification(o) for o in objs],
+            [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=NOTIFICATION_FIELDS,
         )

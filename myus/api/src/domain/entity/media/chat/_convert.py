@@ -3,7 +3,7 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.chat.data import ChatData
 
 
-def chat_data(obj: Chat) -> ChatData:
+def convert_data(obj: Chat) -> ChatData:
     return ChatData(
         id=obj.id,
         ulid=obj.ulid,
@@ -30,7 +30,7 @@ def chat_data(obj: Chat) -> ChatData:
     )
 
 
-def marshal_chat(data: ChatData) -> Chat:
+def marshal_data(data: ChatData) -> Chat:
     return Chat(
         id=data.id if data.id != 0 else None,
         ulid=data.ulid,
