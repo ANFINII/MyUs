@@ -1,31 +1,10 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 from api.src.domain.interface.comment.data import CommentData
+from api.src.domain.interface.media.data import HashtagData
 from api.src.types.data.message import MessageData
-from api.src.types.data.user import AuthorData, MediaUserData
-
-
-@dataclass(frozen=True, slots=True)
-class HashtagData:
-    jp_name: str
-
-
-@dataclass(frozen=True, slots=True)
-class MediaCreateData:
-    ulid: str
-
-
-@dataclass(frozen=True, slots=True)
-class MediaData:
-    ulid: str
-    title: str
-    content: str
-    read: int
-    like_count: int
-    publish: bool
-    created: datetime
-    updated: datetime
-    author: AuthorData
+from api.src.domain.interface.channel.data import ChannelData
+from api.src.types.data.user import MediaUserData
 
 
 @dataclass(frozen=True, slots=True)
@@ -39,17 +18,9 @@ class MediaDetailData:
     publish: bool
     created: datetime
     updated: datetime
-    author: AuthorData
+    channel: ChannelData
     mediaUser: MediaUserData
     hashtags: list[HashtagData]
-
-
-@dataclass(frozen=True, slots=True)
-class VideoData(MediaData):
-    image: str
-    video: str
-    convert: str
-    comment_count: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -61,25 +32,11 @@ class VideoDetailData(MediaDetailData):
 
 
 @dataclass(frozen=True, slots=True)
-class MusicData(MediaData):
-    lyric: str
-    music: str
-    download: bool
-    comment_count: int
-
-
-@dataclass(frozen=True, slots=True)
 class MusicDetailData(MediaDetailData):
     lyric: str
     music: str
     download: bool
     comments: list[CommentData]
-
-
-@dataclass(frozen=True, slots=True)
-class ComicData(MediaData):
-    image: str
-    comment_count: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -89,21 +46,9 @@ class ComicDetailData(MediaDetailData):
 
 
 @dataclass(frozen=True, slots=True)
-class PictureData(MediaData):
-    image: str
-    comment_count: int
-
-
-@dataclass(frozen=True, slots=True)
 class PictureDetailData(MediaDetailData):
     image: str
     comments: list[CommentData]
-
-
-@dataclass(frozen=True, slots=True)
-class BlogData(MediaData):
-    image: str
-    comment_count: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -114,25 +59,8 @@ class BlogDetailData(MediaDetailData):
 
 
 @dataclass(frozen=True, slots=True)
-class ChatData(MediaData):
-    thread: int
-    joined: int
-    period: date
-
-
-@dataclass(frozen=True, slots=True)
 class ChatDetailData(MediaDetailData):
     thread: int
     joined: int
     period: date
     messages: list[MessageData]
-
-
-@dataclass(frozen=True, slots=True)
-class HomeData():
-    videos: list[VideoData]
-    musics: list[MusicData]
-    comics: list[ComicData]
-    pictures: list[PictureData]
-    blogs: list[BlogData]
-    chats: list[ChatData]

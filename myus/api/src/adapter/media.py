@@ -2,7 +2,13 @@ from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
 from api.src.domain.interface.comment.data import CommentData, ReplyData
-from api.src.types.data.media import VideoData, MusicData, ComicData, PictureData, BlogData, ChatData, HashtagData
+from api.src.domain.interface.media.video.data import VideoData
+from api.src.domain.interface.media.music.data import MusicData
+from api.src.domain.interface.media.comic.data import ComicData
+from api.src.domain.interface.media.picture.data import PictureData
+from api.src.domain.interface.media.blog.data import BlogData
+from api.src.domain.interface.media.chat.data import ChatData
+from api.src.domain.interface.media.data import HashtagData
 from api.src.types.data.message import MessageData
 from api.src.types.data.user import AuthorData, MediaUserData
 from api.src.types.schema.common import ErrorOut
@@ -66,7 +72,7 @@ class VideoAPI:
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
-        obj = create_video(channel=channel, title=input.title, content=input.content, image=image, video=video, convert=convert)
+        obj = create_video(channel=channel, input=input, image=image, video=video, convert=convert)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -129,7 +135,7 @@ class MusicAPI:
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
-        obj = create_music(channel=channel, title=input.title, content=input.content, lyric=input.lyric, download=input.download, music=music)
+        obj = create_music(channel=channel, input=input, music=music)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -192,7 +198,7 @@ class ComicAPI:
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
-        obj = create_comic(channel=channel, title=input.title, content=input.content, image=image)
+        obj = create_comic(channel=channel, input=input, image=image)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -253,7 +259,7 @@ class PictureAPI:
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
-        obj = create_picture(channel=channel, title=input.title, content=input.content, image=image)
+        obj = create_picture(channel=channel, input=input, image=image)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -314,7 +320,7 @@ class BlogAPI:
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
-        obj = create_blog(channel=channel, title=input.title, content=input.content, richtext=input.richtext, image=image)
+        obj = create_blog(channel=channel, input=input, image=image)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -376,7 +382,7 @@ class ChatAPI:
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
-        obj = create_chat(channel=channel, title=input.title, content=input.content, period=input.period)
+        obj = create_chat(channel=channel, input=input)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -545,8 +551,8 @@ def convert_chats(objs: list[ChatData]) -> list[ChatOut]:
             ulid=x.ulid,
             title=x.title,
             content=x.content,
-            thread=x.thread,
-            joined=x.joined,
+            thread=x.thread_count,
+            joined=x.joined_count,
             period=x.period,
             read=x.read,
             like_count=x.like_count,
