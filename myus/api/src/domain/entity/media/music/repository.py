@@ -46,14 +46,14 @@ class MusicRepository(MusicInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[MusicData]) -> list[int]:
+    def bulk_save(self, objs: list[MusicData]) -> None:
         if len(objs) == 0:
-            return []
+            return None
 
-        save_objs = Music.objects.bulk_create(
+        Music.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=MUSIC_FIELDS,
         )
 
-        return [o.id for o in save_objs]
+        return None

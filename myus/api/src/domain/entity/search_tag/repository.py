@@ -36,14 +36,14 @@ class SearchTagRepository(SearchTagInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[SearchTagData]) -> list[int]:
+    def bulk_save(self, objs: list[SearchTagData]) -> None:
         if len(objs) == 0:
-            return []
+            return None
 
-        save_objs = SearchTag.objects.bulk_create(
+        SearchTag.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=SEARCH_TAG_FIELDS,
         )
 
-        return [o.id for o in save_objs]
+        return None

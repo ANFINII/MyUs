@@ -30,5 +30,5 @@ class MessageInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[MessageData]) -> list[int]:
+    def bulk_save(self, objs: list[MessageData]) -> None:
         ...

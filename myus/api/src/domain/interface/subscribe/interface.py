@@ -31,7 +31,7 @@ class SubscribeInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[SubscribeData]) -> list[int]:
+    def bulk_save(self, objs: list[SubscribeData]) -> None:
         ...
 
     @abstractmethod
