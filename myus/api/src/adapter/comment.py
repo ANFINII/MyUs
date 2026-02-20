@@ -15,14 +15,14 @@ class CommentAPI:
 
     @staticmethod
     @router.get("", response={200: list[CommentOut], 401: ErrorOut})
-    def get(request: HttpRequest, query: CommentListIn):
-        log.info("CommentAPI get", type_no=query.type_no, object_id=query.object_id)
+    def get(request: HttpRequest, input: CommentListIn):
+        log.info("CommentAPI get", type_no=input.type_no, object_id=input.object_id)
 
         user_id = auth_check(request)
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        comments = get_comments(type_no=query.type_no, object_id=query.object_id, user_id=user_id)
+        comments = get_comments(type_no=input.type_no, object_id=input.object_id, user_id=user_id)
         data = [
             CommentOut(
                 ulid=x.ulid,
