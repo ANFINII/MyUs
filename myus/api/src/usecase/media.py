@@ -235,11 +235,7 @@ def get_musics(limit: int, search: str, id: int | None = None) -> list[MusicData
     repository = MusicRepository()
     ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
-
-    data = [replace(o,
-        music=create_url(o.music),
-    ) for o in objs]
-
+    data = [replace(o, music=create_url(o.music)) for o in objs]
     return data
 
 
@@ -247,11 +243,7 @@ def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData
     repository = ComicRepository()
     ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
-
-    data = [replace(o,
-        image=create_url(o.image),
-    ) for o in objs]
-
+    data = [replace(o, image=create_url(o.image)) for o in objs]
     return data
 
 
@@ -259,11 +251,7 @@ def get_pictures(limit: int, search: str, id: int | None = None) -> list[Picture
     repository = PictureRepository()
     ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
-
-    data = [replace(o,
-        image=create_url(o.image),
-    ) for o in objs]
-
+    data = [replace(o, image=create_url(o.image)) for o in objs]
     return data
 
 
@@ -271,11 +259,7 @@ def get_blogs(limit: int, search: str, id: int | None = None) -> list[BlogData]:
     repository = BlogRepository()
     ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
-
-    data = [replace(o,
-        image=create_url(o.image),
-    ) for o in objs]
-
+    data = [replace(o, image=create_url(o.image)) for o in objs]
     return data
 
 
@@ -437,7 +421,7 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
 
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.PICTURE)
-    comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
+    comments = get_comments(type_no=type_no, object_id=e.id, user_id=None)
 
     obj = Picture.objects.prefetch_related("hashtag", "like").get(id=e.id)
 
