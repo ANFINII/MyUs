@@ -32,7 +32,7 @@ class UserInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[UserAllData]) -> list[int]:
+    def bulk_save(self, objs: list[UserAllData]) -> None:
         ...
 
     @abstractmethod

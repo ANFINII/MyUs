@@ -40,17 +40,17 @@ class SubscribeRepository(SubscribeInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[SubscribeData]) -> list[int]:
+    def bulk_save(self, objs: list[SubscribeData]) -> None:
         if len(objs) == 0:
-            return []
+            return None
 
-        save_objs = Subscribe.objects.bulk_create(
+        Subscribe.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=SUBSCRIBE_FIELDS,
         )
 
-        return [o.id for o in save_objs]
+        return None
 
     def count(self, filter: FilterOption) -> int:
         q_list: list[Q] = []

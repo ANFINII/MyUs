@@ -29,5 +29,5 @@ class SearchTagInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[SearchTagData]) -> list[int]:
+    def bulk_save(self, objs: list[SearchTagData]) -> None:
         ...
