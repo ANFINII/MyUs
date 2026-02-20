@@ -11,11 +11,12 @@ class SortType(Enum):
 
 @dataclass(frozen=True, slots=True)
 class FilterOption:
+    id: int = 0
     ulid: str = ""
     type_no: CommentTypeNo | None = None
     object_id: int = 0
-    user_id: int | None = None
-    is_parent: bool | None = None
+    user_id: int = 0
+    is_parent: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -34,7 +35,7 @@ class CommentInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[CommentData]) -> list[int]:
+    def bulk_save(self, objs: list[CommentData]) -> None:
         ...
 
     @abstractmethod

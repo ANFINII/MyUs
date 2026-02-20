@@ -22,9 +22,9 @@ class CommentRepository(CommentInterface):
             q_list.append(Q(type_no=filter.type_no))
         if filter.object_id:
             q_list.append(Q(object_id=filter.object_id))
-        if filter.user_id is not None:
+        if filter.user_id:
             q_list.append(Q(author_id=filter.user_id))
-        if filter.is_parent is not None:
+        if filter.is_parent:
             q_list.append(Q(parent__isnull=filter.is_parent))
 
         field_name = sort.sort_type.name.lower()
@@ -44,17 +44,17 @@ class CommentRepository(CommentInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[CommentData]) -> list[int]:
+    def bulk_save(self, objs: list[CommentData]) -> None:
         if len(objs) == 0:
-            return []
+            return None
 
-        save_objs = Comment.objects.bulk_create(
+        Comment.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=COMMENT_FIELDS,
         )
 
-        return [o.id for o in save_objs]
+        return None
 
     def get_liked_ids(self, ids: list[int], user_id: int) -> list[int]:
         if len(ids) == 0:
