@@ -1,3 +1,4 @@
+from django_ulid.models import ulid
 from api.db.models.channel import Channel
 from api.src.domain.interface.channel.data import ChannelData
 
@@ -18,7 +19,7 @@ def convert_data(obj: Channel) -> ChannelData:
 def marshal_data(data: ChannelData) -> Channel:
     return Channel(
         id=data.id if data.id != 0 else None,
-        ulid=data.ulid,
+        ulid=data.ulid if data.ulid else ulid.new(),
         owner_id=data.owner_id,
         avatar=data.avatar,
         name=data.name,

@@ -1,3 +1,4 @@
+from django_ulid.models import ulid
 from api.db.models.media import Chat
 from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.chat.data import ChatData
@@ -33,7 +34,7 @@ def convert_data(obj: Chat) -> ChatData:
 def marshal_data(data: ChatData) -> Chat:
     return Chat(
         id=data.id if data.id != 0 else None,
-        ulid=data.ulid,
+        ulid=data.ulid if data.ulid else ulid.new(),
         channel_id=data.channel.id,
         title=data.title,
         content=data.content,

@@ -1,3 +1,4 @@
+from django_ulid.models import ulid
 from api.db.models.media import Music
 from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.music.data import MusicData
@@ -34,7 +35,7 @@ def convert_data(obj: Music) -> MusicData:
 def marshal_data(data: MusicData) -> Music:
     return Music(
         id=data.id if data.id != 0 else None,
-        ulid=data.ulid,
+        ulid=data.ulid if data.ulid else ulid.new(),
         channel_id=data.channel.id,
         title=data.title,
         content=data.content,

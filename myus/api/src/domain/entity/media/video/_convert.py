@@ -1,3 +1,4 @@
+from django_ulid.models import ulid
 from api.db.models.media import Video
 from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.video.data import VideoData
@@ -34,7 +35,7 @@ def convert_data(obj: Video) -> VideoData:
 def marshal_data(data: VideoData) -> Video:
     return Video(
         id=data.id if data.id != 0 else None,
-        ulid=data.ulid,
+        ulid=data.ulid if data.ulid else ulid.new(),
         channel_id=data.channel.id,
         title=data.title,
         content=data.content,
