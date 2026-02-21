@@ -6,7 +6,7 @@ from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
 from api.src.injectors import injector
-from api.src.domain.interface.user.data import MyPageData, ProfileData, UserData, UserNotificationData, UserPlanData
+from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.types.data.plan import PlanData
 from api.src.types.schema.auth import LoginIn, LoginOut, RefreshOut, SignupIn
@@ -115,16 +115,18 @@ class AuthAPI:
         if validation:
             return 400, MessageOut(error=True, message=validation)
 
-        user_data = UserData(
-            id=0,
-            ulid="",
-            avatar="",
-            password=input.password1,
-            email=input.email,
-            username=input.username,
-            nickname=input.nickname,
-            is_active=True,
-            is_staff=False,
+        user_data = UserAllData(
+            user=UserData(
+                id=0,
+                ulid="",
+                avatar="",
+                password=input.password1,
+                email=input.email,
+                username=input.username,
+                nickname=input.nickname,
+                is_active=True,
+                is_staff=False,
+            ),
             profile=ProfileData(
                 last_name=input.last_name,
                 first_name=input.first_name,
