@@ -1,3 +1,4 @@
+from django_ulid.models import ulid
 from api.db.models.comment import Comment
 from api.src.domain.interface.comment.data import CommentData
 
@@ -22,7 +23,7 @@ def convert_data(obj: Comment) -> CommentData:
 def marshal_data(data: CommentData) -> Comment:
     comment = Comment(
         id=data.id if data.id != 0 else None,
-        ulid=data.ulid,
+        ulid=data.ulid if data.ulid else ulid.new(),
         author_id=data.author_id,
         parent_id=data.parent_id,
         type_no=data.type_no,
