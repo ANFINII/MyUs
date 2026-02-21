@@ -48,12 +48,10 @@ class ComicRepository(ComicInterface):
 
     def bulk_save(self, objs: list[ComicData]) -> None:
         if len(objs) == 0:
-            return None
+            return
 
         Comic.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=COMIC_FIELDS,
         )
-
-        return None

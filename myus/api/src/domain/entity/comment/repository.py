@@ -46,15 +46,13 @@ class CommentRepository(CommentInterface):
 
     def bulk_save(self, objs: list[CommentData]) -> None:
         if len(objs) == 0:
-            return None
+            return
 
         Comment.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=COMMENT_FIELDS,
         )
-
-        return None
 
     def get_liked_ids(self, ids: list[int], user_id: int) -> list[int]:
         if len(ids) == 0:
