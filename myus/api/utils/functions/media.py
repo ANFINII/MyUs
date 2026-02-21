@@ -1,5 +1,4 @@
 from typing import assert_never
-from api.db.models import Video, Music, Comic, Picture, Blog, Chat
 from api.src.domain.interface.media.blog.interface import BlogInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.comic.interface import ComicInterface
@@ -10,7 +9,6 @@ from api.src.injectors.container import injector
 from api.utils.enum.index import MediaType
 
 
-type MediaModel = Video | Music | Comic | Picture | Blog | Chat
 type MediaInterfaceType = VideoInterface | MusicInterface | ComicInterface | PictureInterface | BlogInterface | ChatInterface
 
 
