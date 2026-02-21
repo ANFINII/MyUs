@@ -13,5 +13,5 @@ class BlogInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[BlogData]) -> list[int]:
+    def bulk_save(self, objs: list[BlogData]) -> None:
         ...

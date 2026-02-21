@@ -51,9 +51,9 @@ class UserRepository(UserInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[UserAllData]) -> list[int]:
+    def bulk_save(self, objs: list[UserAllData]) -> None:
         if len(objs) == 0:
-            return []
+            return
 
         with transaction.atomic():
             save_objs = User.objects.bulk_create(
@@ -81,8 +81,6 @@ class UserRepository(UserInterface):
                 update_conflicts=True,
                 update_fields=USER_PLAN_FIELDS,
             )
-
-        return [o.id for o in save_objs]
 
     def media_like(self, user_id: int, media_type: MediaType, media_id: int) -> tuple[bool, int]:
         model_class = get_media_model(media_type)

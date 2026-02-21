@@ -48,12 +48,10 @@ class VideoRepository(VideoInterface):
 
     def bulk_save(self, objs: list[VideoData]) -> None:
         if len(objs) == 0:
-            return None
+            return
 
         Video.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=VIDEO_FIELDS,
         )
-
-        return None

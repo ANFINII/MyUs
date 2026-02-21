@@ -40,17 +40,15 @@ class ChannelRepository(ChannelInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[ChannelData]) -> list[int]:
+    def bulk_save(self, objs: list[ChannelData]) -> None:
         if len(objs) == 0:
-            return []
+            return
 
-        save_objs = Channel.objects.bulk_create(
+        Channel.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=CHANNEL_FIELDS,
         )
-
-        return [o.id for o in save_objs]
 
     def delete(self, id: int) -> None:
         Channel.objects.filter(id=id).delete()

@@ -46,14 +46,12 @@ class ChatRepository(ChatInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[ChatData]) -> list[int]:
+    def bulk_save(self, objs: list[ChatData]) -> None:
         if len(objs) == 0:
-            return []
+            return
 
-        save_objs = Chat.objects.bulk_create(
+        Chat.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=CHAT_FIELDS,
         )
-
-        return [o.id for o in save_objs]
