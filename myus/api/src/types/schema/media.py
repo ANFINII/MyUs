@@ -63,7 +63,7 @@ class MediaOut(BaseModel):
     title: str
     content: str
     read: int
-    like_count: int
+    like: int
     publish: bool
     created: datetime
     updated: datetime
@@ -75,7 +75,7 @@ class MediaDetailOut(BaseModel):
     title: str
     content: str
     read: int
-    like_count: int
+    like: int
     publish: bool
     created: datetime
     updated: datetime

@@ -14,7 +14,7 @@ class MediaDetailData:
     title: str
     content: str
     read: int
-    like_count: int
+    like: int
     publish: bool
     created: datetime
     updated: datetime

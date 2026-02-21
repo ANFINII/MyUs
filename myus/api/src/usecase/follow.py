@@ -47,17 +47,21 @@ def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserData]
     ]
 
 
-def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool, repository: UserInterface) -> FollowOutData | None:
+def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowOutData | None:
+    user_repo = injector.get(UserInterface)
     follow_repo = injector.get(FollowInterface)
-    user_ids = repository.get_ids(UserFilterOption(ulid=ulid), UserSortOption())
+    user_ids = user_repo.get_ids(UserFilterOption(ulid=ulid), UserSortOption())
     if len(user_ids) == 0:
         return None
 
-    following = repository.bulk_get(user_ids)[0]
+    following = user_repo.bulk_get(user_ids)[0]
     follower_id = follower.user.id
     following_id = following.user.id
 
     follow_ids = follow_repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption())
+    if len(follow_ids) == 0:
+        return None
+
     follows = follow_repo.bulk_get(follow_ids)
     follow = follows[0] if len(follows) > 0 else None
 
@@ -81,6 +85,6 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool, repository:
 
         updated_follower = replace(follower, mypage=follower_mypage)
         updated_following = replace(following, mypage=following_mypage)
-        repository.bulk_save([updated_follower, updated_following])
+        user_repo.bulk_save([updated_follower, updated_following])
 
     return FollowOutData(is_follow=is_follow, follower_count=follower_count)
