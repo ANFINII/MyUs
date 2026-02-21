@@ -9,7 +9,6 @@ from api.src.types.data.comment import CommentGetData, ReplyData
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.user import get_author_data
 from api.utils.enum.index import CommentTypeNo, MediaType
-from api.utils.functions.index import new_ulid
 from api.utils.functions.media import get_media_repository
 
 
@@ -96,10 +95,9 @@ def create_comment(user_id: int, input: CommentCreateIn) -> CommentGetData | Non
         parent_id = parent_ids[0]
 
     author = get_author_data(user_id)
-    create_ulid = new_ulid()
     new_comment = CommentData(
         id=0,
-        ulid=create_ulid,
+        ulid="",
         author_id=user_id,
         parent_id=parent_id,
         type_no=input.type_no,
@@ -112,9 +110,10 @@ def create_comment(user_id: int, input: CommentCreateIn) -> CommentGetData | Non
         like_count=0,
     )
 
-    comment_repo.bulk_save([new_comment])
-    comment = get_comment_data(create_ulid)
-    assert comment is not None, "コメントの作成に失敗しました"
+    new_ids = comment_repo.bulk_save([new_comment])
+    comments = comment_repo.bulk_get(new_ids)
+    assert len(comments) > 0, "コメントの作成に失敗しました"
+    comment = comments[0]
 
     data = CommentGetData(
         ulid=comment.ulid,

@@ -32,7 +32,7 @@ class NotificationInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[NotificationData]) -> None:
+    def bulk_save(self, objs: list[NotificationData]) -> list[int]:
         ...
 
     @abstractmethod

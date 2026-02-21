@@ -31,7 +31,7 @@ from api.src.usecase.auth import auth_check
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
 from api.utils.enum.index import CommentType
-from api.utils.functions.index import create_url, new_ulid
+from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_media_user
 
@@ -39,10 +39,9 @@ from api.utils.functions.user import get_media_user
 def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> MediaCreateData:
     repository = injector.get(VideoInterface)
 
-    create_ulid = new_ulid()
     new_video = VideoData(
         id=0,
-        ulid=create_ulid,
+        ulid="",
         title=input.title,
         content=input.content,
         image=image.name or "",
@@ -58,16 +57,15 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
     )
 
     repository.bulk_save([new_video])
-    return MediaCreateData(ulid=create_ulid)
+    return MediaCreateData(ulid="")
 
 
 def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> MediaCreateData:
     repository = injector.get(MusicInterface)
 
-    create_ulid = new_ulid()
     new_music = MusicData(
         id=0,
-        ulid=create_ulid,
+        ulid="",
         title=input.title,
         content=input.content,
         lyric=input.lyric,
@@ -83,16 +81,15 @@ def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> M
     )
 
     repository.bulk_save([new_music])
-    return MediaCreateData(ulid=create_ulid)
+    return MediaCreateData(ulid="")
 
 
 def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile) -> MediaCreateData:
     repository = injector.get(ComicInterface)
 
-    create_ulid = new_ulid()
     new_comic = ComicData(
         id=0,
-        ulid=create_ulid,
+        ulid="",
         title=input.title,
         content=input.content,
         image=image.name or "",
@@ -106,16 +103,15 @@ def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile) -> M
     )
 
     repository.bulk_save([new_comic])
-    return MediaCreateData(ulid=create_ulid)
+    return MediaCreateData(ulid="")
 
 
 def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) -> MediaCreateData:
     repository = injector.get(PictureInterface)
 
-    create_ulid = new_ulid()
     new_picture = PictureData(
         id=0,
-        ulid=create_ulid,
+        ulid="",
         title=input.title,
         content=input.content,
         image=image.name or "",
@@ -129,16 +125,15 @@ def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) 
     )
 
     repository.bulk_save([new_picture])
-    return MediaCreateData(ulid=create_ulid)
+    return MediaCreateData(ulid="")
 
 
 def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> MediaCreateData:
     repository = injector.get(BlogInterface)
 
-    create_ulid = new_ulid()
     new_blog = BlogData(
         id=0,
-        ulid=create_ulid,
+        ulid="",
         title=input.title,
         content=input.content,
         richtext=input.richtext,
@@ -154,16 +149,15 @@ def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> Med
     )
 
     repository.bulk_save([new_blog])
-    return MediaCreateData(ulid=create_ulid)
+    return MediaCreateData(ulid="")
 
 
 def create_chat(channel: ChannelData, input: ChatIn) -> MediaCreateData:
     repository = injector.get(ChatInterface)
 
-    create_ulid = new_ulid()
     new_chat = ChatData(
         id=0,
-        ulid=create_ulid,
+        ulid="",
         title=input.title,
         content=input.content,
         read=0,
@@ -178,7 +172,7 @@ def create_chat(channel: ChannelData, input: ChatIn) -> MediaCreateData:
     )
 
     repository.bulk_save([new_chat])
-    return MediaCreateData(ulid=create_ulid)
+    return MediaCreateData(ulid="")
 
 
 def get_home(limit: int, search: str) -> HomeData:

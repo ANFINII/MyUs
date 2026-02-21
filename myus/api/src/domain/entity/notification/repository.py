@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.notification import Notification
 from api.src.domain.entity.notification._convert import convert_data, marshal_data
-from api.src.domain.entity.index import sort_ids
+from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
 from api.utils.enum.index import NotificationTypeNo
@@ -41,15 +41,20 @@ class NotificationRepository(NotificationInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[NotificationData]) -> None:
+    def bulk_save(self, objs: list[NotificationData]) -> list[int]:
         if len(objs) == 0:
-            return
+            return []
+
+        models = [marshal_data(o) for o in objs]
+        new_ids = get_new_ids(models, Notification)
 
         Notification.objects.bulk_create(
-            [marshal_data(o) for o in objs],
+            models,
             update_conflicts=True,
             update_fields=NOTIFICATION_FIELDS,
         )
+
+        return new_ids
 
     def delete(self, type_no: NotificationTypeNo, object_id: int) -> None:
         Notification.objects.filter(type_no=type_no, object_id=object_id).delete()
