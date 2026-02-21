@@ -30,5 +30,6 @@ def marshal_data(data: CommentData) -> Comment:
         type_name=data.type_name,
         object_id=data.object_id,
         text=data.text,
+        deleted=data.deleted,
     )
     return comment

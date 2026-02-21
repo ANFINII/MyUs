@@ -84,6 +84,7 @@ def user_notification_data(user_notification: UserNotification) -> UserNotificat
 
 def plan_data(plan: Plan) -> PlanData:
     return PlanData(
+        id=plan.id,
         name=plan.name,
         stripe_api_id=plan.stripe_api_id,
         price=plan.price,
@@ -188,7 +189,7 @@ def marshal_user_plan(user: User, data: UserAllData) -> UserPlan:
     user_plan = data.user_plan
     return UserPlan(
         user=user,
-        plan=user.user_plan.plan,
+        plan_id=user_plan.plan.id if user_plan.plan.id != 0 else 1,
         customer_id=user_plan.customer_id,
         subscription=user_plan.subscription,
         is_paid=user_plan.is_paid,
