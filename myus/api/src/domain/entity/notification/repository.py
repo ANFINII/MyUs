@@ -43,15 +43,13 @@ class NotificationRepository(NotificationInterface):
 
     def bulk_save(self, objs: list[NotificationData]) -> None:
         if len(objs) == 0:
-            return None
+            return
 
         Notification.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=NOTIFICATION_FIELDS,
         )
-
-        return None
 
     def delete(self, type_no: NotificationTypeNo, object_id: int) -> None:
         Notification.objects.filter(type_no=type_no, object_id=object_id).delete()

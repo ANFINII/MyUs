@@ -48,12 +48,10 @@ class PictureRepository(PictureInterface):
 
     def bulk_save(self, objs: list[PictureData]) -> None:
         if len(objs) == 0:
-            return None
+            return
 
         Picture.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=PICTURE_FIELDS,
         )
-
-        return None

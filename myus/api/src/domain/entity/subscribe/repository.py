@@ -42,15 +42,13 @@ class SubscribeRepository(SubscribeInterface):
 
     def bulk_save(self, objs: list[SubscribeData]) -> None:
         if len(objs) == 0:
-            return None
+            return
 
         Subscribe.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=SUBSCRIBE_FIELDS,
         )
-
-        return None
 
     def count(self, filter: FilterOption) -> int:
         q_list: list[Q] = []

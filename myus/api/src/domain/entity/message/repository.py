@@ -40,12 +40,10 @@ class MessageRepository(MessageInterface):
 
     def bulk_save(self, objs: list[MessageData]) -> None:
         if len(objs) == 0:
-            return None
+            return
 
         Message.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=MESSAGE_FIELDS,
         )
-
-        return None

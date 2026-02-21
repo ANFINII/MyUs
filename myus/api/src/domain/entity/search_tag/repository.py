@@ -38,12 +38,10 @@ class SearchTagRepository(SearchTagInterface):
 
     def bulk_save(self, objs: list[SearchTagData]) -> None:
         if len(objs) == 0:
-            return None
+            return
 
         SearchTag.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=SEARCH_TAG_FIELDS,
         )
-
-        return None

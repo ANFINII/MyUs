@@ -48,12 +48,10 @@ class ChatRepository(ChatInterface):
 
     def bulk_save(self, objs: list[ChatData]) -> None:
         if len(objs) == 0:
-            return None
+            return
 
         Chat.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=CHAT_FIELDS,
         )
-
-        return None

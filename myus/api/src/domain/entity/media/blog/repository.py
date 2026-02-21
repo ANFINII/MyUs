@@ -48,12 +48,10 @@ class BlogRepository(BlogInterface):
 
     def bulk_save(self, objs: list[BlogData]) -> None:
         if len(objs) == 0:
-            return None
+            return
 
         Blog.objects.bulk_create(
             [marshal_data(o) for o in objs],
             update_conflicts=True,
             update_fields=BLOG_FIELDS,
         )
-
-        return None
