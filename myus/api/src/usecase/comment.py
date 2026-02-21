@@ -133,16 +133,14 @@ def create_comment(user_id: int, input: CommentCreateIn) -> CommentGetData | Non
 def update_comment(comment_ulid: str, text: str) -> None:
     comment = get_comment_data(comment_ulid)
     if comment is None:
-        return None
+        return
 
     save_comment_data(replace(comment, text=text))
-    return None
 
 
 def delete_comment(comment_ulid: str) -> None:
     comment = get_comment_data(comment_ulid)
     if comment is None:
-        return None
+        return
 
     save_comment_data(replace(comment, deleted=True))
-    return None
