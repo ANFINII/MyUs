@@ -1,3 +1,4 @@
+from django_ulid.models import ulid
 from api.db.models.message import Message
 from api.src.domain.interface.message.data import MessageData
 
@@ -20,7 +21,7 @@ def convert_data(obj: Message) -> MessageData:
 def marshal_data(data: MessageData) -> Message:
     return Message(
         id=data.id if data.id != 0 else None,
-        ulid=data.ulid,
+        ulid=data.ulid if data.ulid else ulid.new(),
         author_id=data.author_id,
         chat_id=data.chat_id,
         parent_id=data.parent_id,

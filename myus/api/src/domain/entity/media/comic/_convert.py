@@ -1,3 +1,4 @@
+from django_ulid.models import ulid
 from api.db.models.media import Comic
 from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.comic.data import ComicData
@@ -32,7 +33,7 @@ def convert_data(obj: Comic) -> ComicData:
 def marshal_data(data: ComicData) -> Comic:
     return Comic(
         id=data.id if data.id != 0 else None,
-        ulid=data.ulid,
+        ulid=data.ulid if data.ulid else ulid.new(),
         channel_id=data.channel.id,
         title=data.title,
         content=data.content,

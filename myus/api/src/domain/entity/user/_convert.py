@@ -1,5 +1,6 @@
 from typing import assert_never
 from django.contrib.auth.hashers import make_password
+from django_ulid.models import ulid
 from api.db.models.media import Blog, Chat, Comic, Music, Picture, Video
 from api.db.models.master import Plan
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
@@ -124,7 +125,7 @@ def get_media_model(media_type: MediaType) -> type[Video] | type[Music] | type[C
 def marshal_user(data: UserData) -> User:
     return User(
         id=data.id if data.id != 0 else None,
-        ulid=data.ulid,
+        ulid=data.ulid if data.ulid else ulid.new(),
         avatar=data.avatar,
         password=make_password(data.password) if data.id == 0 else data.password,
         email=data.email,
