@@ -4,10 +4,10 @@ from api.utils.functions.map import comment_type_no_map
 
 
 class MediaModel:
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
-    def total_like(self):
+    def total_like(self) -> int:
         return self.like.count()
     total_like.short_description = "like"
 
@@ -18,5 +18,5 @@ class MediaModel:
         return objs.count()
     comment_count.short_description = "comment"
 
-    def score(self):
+    def score(self) -> int:
         return int(self.read + self.like.count()*10 + self.read*self.like.count()/(self.read+1)*20)
