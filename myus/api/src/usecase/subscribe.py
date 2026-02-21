@@ -1,18 +1,16 @@
 from dataclasses import replace
 from django.db import transaction
 from api.modules.logger import log
-from api.src.domain.entity.channel.repository import ChannelRepository
-from api.src.domain.entity.subscribe.repository import SubscribeRepository
-from api.src.domain.interface.channel.interface import FilterOption as ChannelFilterOption, SortOption as ChannelSortOption
+from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption as ChannelFilterOption, SortOption as ChannelSortOption
 from api.src.domain.interface.subscribe.data import SubscribeData
-from api.src.domain.interface.subscribe.interface import FilterOption, SortOption
+from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
+from api.src.injectors.container import injector
 from api.src.types.data.subscribe import SubscribeOutData
 
 
 def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> SubscribeOutData | None:
-    channel_repo = ChannelRepository()
-    subscribe_repo = SubscribeRepository()
-
+    channel_repo = injector.get(ChannelInterface)
+    subscribe_repo = injector.get(SubscribeInterface)
     channel_ids = channel_repo.get_ids(ChannelFilterOption(ulid=channel_ulid), ChannelSortOption())
     if len(channel_ids) == 0:
         log.info("チャンネルが見つかりません", ulid=channel_ulid)

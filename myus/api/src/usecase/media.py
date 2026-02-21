@@ -17,12 +17,6 @@ from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.blog.interface import BlogInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.channel.data import ChannelData
-from api.src.domain.entity.media.video.repository import VideoRepository
-from api.src.domain.entity.media.music.repository import MusicRepository
-from api.src.domain.entity.media.comic.repository import ComicRepository
-from api.src.domain.entity.media.picture.repository import PictureRepository
-from api.src.domain.entity.media.blog.repository import BlogRepository
-from api.src.domain.entity.media.chat.repository import ChatRepository
 from api.src.domain.interface.media.index import FilterOption, SortOption, ExcludeOption
 from api.src.injectors.container import injector
 from api.src.types.data.media import VideoDetailData, MusicDetailData, ComicDetailData, PictureDetailData, BlogDetailData, ChatDetailData
@@ -200,7 +194,7 @@ def get_recommend(limit: int, search: str) -> HomeData:
 
 
 def get_videos(limit: int, search: str, id: int | None = None) -> list[VideoData]:
-    repository = VideoRepository()
+    repository = injector.get(VideoInterface)
     ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
 
@@ -214,7 +208,7 @@ def get_videos(limit: int, search: str, id: int | None = None) -> list[VideoData
 
 
 def get_musics(limit: int, search: str, id: int | None = None) -> list[MusicData]:
-    repository = MusicRepository()
+    repository = injector.get(MusicInterface)
     ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, music=create_url(o.music)) for o in objs]
@@ -222,7 +216,7 @@ def get_musics(limit: int, search: str, id: int | None = None) -> list[MusicData
 
 
 def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData]:
-    repository = ComicRepository()
+    repository = injector.get(ComicInterface)
     ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, image=create_url(o.image)) for o in objs]
@@ -230,7 +224,7 @@ def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData
 
 
 def get_pictures(limit: int, search: str, id: int | None = None) -> list[PictureData]:
-    repository = PictureRepository()
+    repository = injector.get(PictureInterface)
     ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, image=create_url(o.image)) for o in objs]
@@ -238,7 +232,7 @@ def get_pictures(limit: int, search: str, id: int | None = None) -> list[Picture
 
 
 def get_blogs(limit: int, search: str, id: int | None = None) -> list[BlogData]:
-    repository = BlogRepository()
+    repository = injector.get(BlogInterface)
     ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, image=create_url(o.image)) for o in objs]
@@ -246,14 +240,14 @@ def get_blogs(limit: int, search: str, id: int | None = None) -> list[BlogData]:
 
 
 def get_chats(limit: int, search: str, id: int | None = None) -> list[ChatData]:
-    repository = ChatRepository()
+    repository = injector.get(ChatInterface)
     ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     return objs
 
 
 def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> VideoDetailData | None:
-    repository = VideoRepository()
+    repository = injector.get(VideoInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     entities = repository.bulk_get(ids=ids)
     e = entities[0] if len(entities) > 0 else None
@@ -289,7 +283,7 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
 
 
 def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> MusicDetailData | None:
-    repository = MusicRepository()
+    repository = injector.get(MusicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     entities = repository.bulk_get(ids=ids)
     e = entities[0] if len(entities) > 0 else None
@@ -325,7 +319,7 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
 
 
 def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> ComicDetailData | None:
-    repository = ComicRepository()
+    repository = injector.get(ComicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     entities = repository.bulk_get(ids=ids)
     e = entities[0] if len(entities) > 0 else None
@@ -359,7 +353,7 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
 
 
 def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> BlogDetailData | None:
-    repository = BlogRepository()
+    repository = injector.get(BlogInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     entities = repository.bulk_get(ids=ids)
     e = entities[0] if len(entities) > 0 else None
@@ -394,7 +388,7 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
 
 
 def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) -> PictureDetailData | None:
-    repository = PictureRepository()
+    repository = injector.get(PictureInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     entities = repository.bulk_get(ids=ids)
     e = entities[0] if len(entities) > 0 else None
@@ -428,7 +422,7 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
 
 
 def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> ChatDetailData | None:
-    repository = ChatRepository()
+    repository = injector.get(ChatInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     entities = repository.bulk_get(ids=ids)
     e = entities[0] if len(entities) > 0 else None

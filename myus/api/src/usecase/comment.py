@@ -1,10 +1,11 @@
 from dataclasses import replace
 from datetime import datetime
 from api.modules.logger import log
-from api.src.domain.entity.comment.repository import CommentRepository
+from api.src.domain.interface.comment.interface import CommentInterface
 from api.src.domain.interface.comment.data import CommentData
-from api.src.domain.interface.comment.interface import FilterOption, SortOption
+from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
+from api.src.injectors.container import injector
 from api.src.types.data.comment import CommentGetData, ReplyData
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.user import get_author_data
@@ -13,7 +14,7 @@ from api.utils.functions.media import get_media_repository
 
 
 def get_comment_data(comment_ulid: str) -> CommentData | None:
-    repository = CommentRepository()
+    repository = injector.get(CommentInterface)
     ids = repository.get_ids(FilterOption(ulid=comment_ulid), SortOption())
     if len(ids) == 0:
         log.warning("コメントが見つかりませんでした")
@@ -24,7 +25,7 @@ def get_comment_data(comment_ulid: str) -> CommentData | None:
 
 
 def save_comment_data(data: CommentData) -> bool:
-    repository = CommentRepository()
+    repository = injector.get(CommentInterface)
     try:
         repository.bulk_save([data])
         return True
@@ -34,11 +35,9 @@ def save_comment_data(data: CommentData) -> bool:
 
 
 def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[CommentGetData]:
-    comment_repo = CommentRepository()
-
+    comment_repo = injector.get(CommentInterface)
     parent_ids = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id, is_parent=True), SortOption())
     comments = comment_repo.bulk_get(parent_ids)
-
     reply_ids = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id, is_parent=False), SortOption())
     replies = comment_repo.bulk_get(reply_ids)
 
@@ -79,9 +78,8 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
 
 
 def create_comment(user_id: int, input: CommentCreateIn) -> CommentGetData | None:
-    comment_repo = CommentRepository()
+    comment_repo = injector.get(CommentInterface)
     media_repo = get_media_repository(MediaType(input.type_name.value))
-
     media_ids = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption())
     if len(media_ids) == 0:
         log.warning("メディアが見つかりませんでした")
