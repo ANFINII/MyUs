@@ -20,7 +20,7 @@ class SubscribeRepository(SubscribeInterface):
             q_list.append(Q(user_id=filter.user_id))
         if filter.channel_id:
             q_list.append(Q(channel_id=filter.channel_id))
-        if filter.is_subscribe is not None:
+        if filter.is_subscribe is not False:
             q_list.append(Q(is_subscribe=filter.is_subscribe))
 
         field_name = sort.sort_type.name.lower()
