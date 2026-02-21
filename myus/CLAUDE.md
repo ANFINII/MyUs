@@ -208,6 +208,26 @@ def process_video(video_id: int) -> Video | None:
     return video
 ```
 
+### return文
+- **戻り値を変数として利用する場合**: `return None` を明示的に記述
+- **ガード節・ループ脱出など変数として利用しない場合**: `return` のみ
+- **関数末尾のreturn**: 戻り値を変数として利用しない場合は不要（省略する）
+
+```python
+# 戻り値を変数として利用する場合 → return None
+def find_user(self, id: int) -> UserData | None:
+    if id == 0:
+        return None  # 呼び出し元で result = find_user(id) のように使う
+    ...
+
+# ガード節で抜ける場合 → return
+def bulk_save(self, objs: list[UserData]) -> None:
+    if len(objs) == 0:
+        return  # 戻り値は使わない、処理を抜けるだけ
+    ...
+    # 関数末尾のreturnは不要
+```
+
 ### enum変換
 - `match-case`を使用
 - 最後に網羅性チェックを追加（`assert_never`推奨、使えない場合は`assert False`）
@@ -301,7 +321,7 @@ class UserInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[UserData]) -> list[int]:
+    def bulk_save(self, objs: list[UserData]) -> None:
         ...
 
 # Bad - Django ORMモデルを直接返す
@@ -464,6 +484,8 @@ python manage.py migrate --noinput
 ---
 
 ## 更新履歴
+- 2026-02-21: return文のルールを追加（明示的return None / ガード節のreturn / 末尾return省略）
+- 2026-02-21: bulk_saveの戻り値を`-> None`に統一
 - 2026-02-05: bulk操作をbulk_saveに統一（upsertパターン）
 - 2026-02-04: Repository層のルールを追加（dataclass入出力、Converterパターン、bulk操作の分離）
 - 2026-01-21: コーディング規約を大幅に整理・追加（条件判定、早期リターン、リスト内包表記）
