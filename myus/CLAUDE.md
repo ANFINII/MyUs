@@ -331,6 +331,27 @@ class UserInterface(ABC):
         ...
 ```
 
+### Usecase層のRepository取得
+- usecase層ではentity（Repository実装）を直接インポートしない
+- injector経由でinterfaceを取得して使用する
+
+```python
+# Good - injector経由でinterfaceを使用
+from api.src.injectors.container import injector
+from api.src.domain.interface.user.interface import UserInterface
+
+def get_user(id: int) -> UserData | None:
+    repository = injector.get(UserInterface)
+    ...
+
+# Bad - entity(Repository実装)を直接インポート
+from api.src.domain.entity.user.repository import UserRepository
+
+def get_user(id: int) -> UserData | None:
+    repository = UserRepository()
+    ...
+```
+
 ### Converterパターン
 - Repository実装では、dataclass ↔ Django ORMモデル間の変換関数を使用
 - `unmarshal`: Django ORMモデル → dataclass（読み取り時）
