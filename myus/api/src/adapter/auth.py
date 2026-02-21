@@ -42,7 +42,7 @@ class AuthAPI:
             if len(users) == 0:
                 return 401, ErrorOut(message="User not found")
 
-            if not users[0].is_active:
+            if not users[0].user.is_active:
                 return 400, MessageOut(error=True, message="退会済みです!")
 
             return 200, MessageOut(error=False, message="認証済みです!")
@@ -85,7 +85,7 @@ class AuthAPI:
                 log.warning("User not found", user_id=user_id)
                 return 401, ErrorOut(message="User not found")
 
-            if not users[0].is_active:
+            if not users[0].user.is_active:
                 log.warning("User is not active", user_id=user_id)
                 return 401, ErrorOut(message="User is not active")
 

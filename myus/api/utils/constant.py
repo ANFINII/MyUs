@@ -1,5 +1,5 @@
-from api.db.models import Video, Music, Comic, Picture, Blog, Chat
 from api.db.models.comment import Comment
+from api.db.models.media import Video, Music, Comic, Picture, Blog, Chat
 from api.db.models.message import Message
 from api.db.models.users import Follow
 
