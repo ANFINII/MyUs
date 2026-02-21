@@ -13,7 +13,7 @@ class SortType(Enum):
 class FilterOption:
     ulid: str = ""
     owner_id: int = 0
-    is_default: bool = True
+    is_default: bool | None = None
 
 
 @dataclass(frozen=True, slots=True)

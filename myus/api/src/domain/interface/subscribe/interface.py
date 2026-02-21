@@ -12,7 +12,7 @@ class SortType(Enum):
 class FilterOption:
     user_id: int = 0
     channel_id: int = 0
-    is_subscribe: bool = False
+    is_subscribe: bool | None = None
 
 
 @dataclass(frozen=True, slots=True)

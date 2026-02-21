@@ -19,7 +19,7 @@ class ComicRepository(ComicInterface):
         q_list: list[Q] = []
         if filter.ulid:
             q_list.append(Q(ulid=filter.ulid))
-        if filter.publish:
+        if filter.publish is not None:
             q_list.append(Q(publish=filter.publish))
         if filter.category_id:
             q_list.append(Q(category__id=filter.category_id))
