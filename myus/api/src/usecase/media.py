@@ -50,8 +50,11 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
         channel=channel,
     )
 
-    repository.bulk_save([new_video])
-    return MediaCreateData(ulid="")
+    new_ids = repository.bulk_save([new_video])
+    assert len(new_ids) == 1, "作成に失敗しました"
+    obj = repository.bulk_get(new_ids)[0]
+
+    return MediaCreateData(ulid=obj.ulid)
 
 
 def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> MediaCreateData:
@@ -74,8 +77,11 @@ def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> M
         channel=channel,
     )
 
-    repository.bulk_save([new_music])
-    return MediaCreateData(ulid="")
+    new_ids = repository.bulk_save([new_music])
+    assert len(new_ids) == 1, "作成に失敗しました"
+    obj = repository.bulk_get(new_ids)[0]
+
+    return MediaCreateData(ulid=obj.ulid)
 
 
 def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile) -> MediaCreateData:
@@ -96,8 +102,11 @@ def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile) -> M
         channel=channel,
     )
 
-    repository.bulk_save([new_comic])
-    return MediaCreateData(ulid="")
+    new_ids = repository.bulk_save([new_comic])
+    assert len(new_ids) == 1, "作成に失敗しました"
+    obj = repository.bulk_get(new_ids)[0]
+
+    return MediaCreateData(ulid=obj.ulid)
 
 
 def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) -> MediaCreateData:
@@ -118,8 +127,11 @@ def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) 
         channel=channel,
     )
 
-    repository.bulk_save([new_picture])
-    return MediaCreateData(ulid="")
+    new_ids = repository.bulk_save([new_picture])
+    assert len(new_ids) == 1, "作成に失敗しました"
+    obj = repository.bulk_get(new_ids)[0]
+
+    return MediaCreateData(ulid=obj.ulid)
 
 
 def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> MediaCreateData:
@@ -142,8 +154,11 @@ def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> Med
         channel=channel,
     )
 
-    repository.bulk_save([new_blog])
-    return MediaCreateData(ulid="")
+    new_ids = repository.bulk_save([new_blog])
+    assert len(new_ids) == 1, "作成に失敗しました"
+    obj = repository.bulk_get(new_ids)[0]
+
+    return MediaCreateData(ulid=obj.ulid)
 
 
 def create_chat(channel: ChannelData, input: ChatIn) -> MediaCreateData:
@@ -165,8 +180,11 @@ def create_chat(channel: ChannelData, input: ChatIn) -> MediaCreateData:
         channel=channel,
     )
 
-    repository.bulk_save([new_chat])
-    return MediaCreateData(ulid="")
+    new_ids = repository.bulk_save([new_chat])
+    assert len(new_ids) == 1, "作成に失敗しました"
+    obj = repository.bulk_get(new_ids)[0]
+
+    return MediaCreateData(ulid=obj.ulid)
 
 
 def get_home(limit: int, search: str) -> HomeData:
