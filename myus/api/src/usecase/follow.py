@@ -1,22 +1,19 @@
 from dataclasses import replace
 from django.db import transaction
-from api.src.domain.entity.follow.repository import FollowRepository
-from api.src.domain.entity.user.repository import UserRepository
 from api.src.domain.interface.follow.data import FollowData
-from api.src.domain.interface.follow.interface import FilterOption, SortOption
+from api.src.domain.interface.follow.interface import FilterOption, FollowInterface, SortOption
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption as UserFilterOption, SortOption as UserSortOption, UserInterface
+from api.src.injectors.container import injector
 from api.src.types.data.follow import FollowOutData, FollowUserData
 from api.utils.functions.index import create_url
 
 
 def get_follows(user_id: int, search: str, limit: int) -> list[FollowUserData]:
-    follow_repo = FollowRepository()
-    user_repo = UserRepository()
-
+    follow_repo = injector.get(FollowInterface)
+    user_repo = injector.get(UserInterface)
     ids = follow_repo.get_ids(FilterOption(follower_id=user_id, search=search), SortOption(), limit)
     follows = follow_repo.bulk_get(ids)
-
     following_ids = [f.following_id for f in follows]
     users = user_repo.bulk_get(following_ids)
 
@@ -32,12 +29,10 @@ def get_follows(user_id: int, search: str, limit: int) -> list[FollowUserData]:
 
 
 def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserData]:
-    follow_repo = FollowRepository()
-    user_repo = UserRepository()
-
+    follow_repo = injector.get(FollowInterface)
+    user_repo = injector.get(UserInterface)
     ids = follow_repo.get_ids(FilterOption(following_id=user_id, search=search), SortOption(), limit)
     follows = follow_repo.bulk_get(ids)
-
     follower_ids = [f.follower_id for f in follows]
     users = user_repo.bulk_get(follower_ids)
 
@@ -53,8 +48,7 @@ def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserData]
 
 
 def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool, repository: UserInterface) -> FollowOutData | None:
-    follow_repo = FollowRepository()
-
+    follow_repo = injector.get(FollowInterface)
     user_ids = repository.get_ids(UserFilterOption(ulid=ulid), UserSortOption())
     if len(user_ids) == 0:
         return None
