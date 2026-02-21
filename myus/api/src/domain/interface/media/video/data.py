@@ -13,9 +13,9 @@ class VideoData:
     video: str
     convert: str
     read: int
+    like: int
     publish: bool
     created: datetime
     updated: datetime
-    like_count: int
     comment_count: int
     channel: ChannelData

@@ -12,10 +12,10 @@ class MusicData:
     lyric: str
     music: str
     read: int
+    like: int
     download: bool
     publish: bool
     created: datetime
     updated: datetime
-    like_count: int
     comment_count: int
     channel: ChannelData

@@ -10,11 +10,11 @@ class ChatData:
     title: str
     content: str
     read: int
+    like: int
     period: date
     publish: bool
     created: datetime
     updated: datetime
-    like_count: int
     thread_count: int
     joined_count: int
     channel: ChannelData
