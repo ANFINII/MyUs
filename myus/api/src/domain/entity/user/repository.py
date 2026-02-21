@@ -59,28 +59,28 @@ class UserRepository(UserInterface):
         new_ids = get_new_ids(models, User)
 
         with transaction.atomic():
-            save_objs = User.objects.bulk_create(
+            User.objects.bulk_create(
                 models,
                 update_conflicts=True,
                 update_fields=USER_FIELDS,
             )
             Profile.objects.bulk_create(
-                [marshal_profile(user, o) for user, o in zip(save_objs, objs)],
+                [marshal_profile(user, o) for user, o in zip(models, objs)],
                 update_conflicts=True,
                 update_fields=PROFILE_FIELDS,
             )
             MyPage.objects.bulk_create(
-                [marshal_mypage(user, o) for user, o in zip(save_objs, objs)],
+                [marshal_mypage(user, o) for user, o in zip(models, objs)],
                 update_conflicts=True,
                 update_fields=MYPAGE_FIELDS,
             )
             UserNotification.objects.bulk_create(
-                [marshal_notification(user, o) for user, o in zip(save_objs, objs)],
+                [marshal_notification(user, o) for user, o in zip(models, objs)],
                 update_conflicts=True,
                 update_fields=NOTIFICATION_FIELDS,
             )
             UserPlan.objects.bulk_create(
-                [marshal_user_plan(user, o) for user, o in zip(save_objs, objs)],
+                [marshal_user_plan(user, o) for user, o in zip(models, objs)],
                 update_conflicts=True,
                 update_fields=USER_PLAN_FIELDS,
             )
