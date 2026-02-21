@@ -13,11 +13,11 @@ def convert_data(obj: Music) -> MusicData:
         lyric=obj.lyric,
         music=obj.music.name if obj.music else "",
         read=obj.read,
+        like=obj.like.count(),
         download=obj.download,
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        like_count=obj.like.count(),
         comment_count=obj.comment_count(),
         channel=ChannelData(
             id=obj.channel.id,

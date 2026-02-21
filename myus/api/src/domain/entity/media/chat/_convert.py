@@ -11,11 +11,11 @@ def convert_data(obj: Chat) -> ChatData:
         title=obj.title,
         content=obj.content,
         read=obj.read,
+        like=obj.like.count(),
         period=obj.period,
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        like_count=obj.like.count(),
         thread_count=obj.thread_count(),
         joined_count=obj.joined_count(),
         channel=ChannelData(

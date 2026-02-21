@@ -14,10 +14,10 @@ def convert_data(obj: Blog) -> BlogData:
         delta=obj.delta.html if obj.delta else "",
         image=obj.image.name if obj.image else "",
         read=obj.read,
+        like=obj.like.count(),
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        like_count=obj.like.count(),
         comment_count=obj.comment_count(),
         channel=ChannelData(
             id=obj.channel.id,

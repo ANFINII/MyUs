@@ -12,10 +12,10 @@ def convert_data(obj: Comic) -> ComicData:
         content=obj.content,
         image=obj.image.name if obj.image else "",
         read=obj.read,
+        like=obj.like.count(),
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        like_count=obj.like.count(),
         comment_count=obj.comment_count(),
         channel=ChannelData(
             id=obj.channel.id,
