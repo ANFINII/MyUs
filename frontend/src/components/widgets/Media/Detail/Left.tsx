@@ -41,7 +41,7 @@ interface Props {
     title: string
     content: string
     read: number
-    likeCount: number
+    like: number
     created: Date
     comments: Comment[]
     channel: Channel
@@ -59,12 +59,12 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     () => ({
       isLike: mediaUser.isLike,
       isSubscribe: mediaUser.isSubscribe,
-      likeCount: media.likeCount,
+      likeCount: media.like,
       subscribeCount: 0,
       text: '',
       comments: media.comments,
     }),
-    [mediaUser, media.likeCount, media.comments],
+    [mediaUser, media.like, media.comments],
   )
 
   const router = useRouter()

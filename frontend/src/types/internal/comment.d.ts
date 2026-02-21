@@ -1,4 +1,4 @@
-import { CommentType } from 'utils/constants/enum'
+import { CommentType, CommentTypeNo } from 'utils/constants/enum'
 import { Author } from './media'
 
 export interface Comment {
