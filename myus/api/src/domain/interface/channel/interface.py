@@ -32,7 +32,7 @@ class ChannelInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[ChannelData]) -> None:
+    def bulk_save(self, objs: list[ChannelData]) -> list[int]:
         ...
 
     @abstractmethod

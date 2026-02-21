@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.src.domain.entity.comment._convert import convert_data, marshal_data
-from api.src.domain.entity.index import sort_ids
+from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
 
@@ -44,15 +44,20 @@ class CommentRepository(CommentInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[CommentData]) -> None:
+    def bulk_save(self, objs: list[CommentData]) -> list[int]:
         if len(objs) == 0:
-            return
+            return []
+
+        models = [marshal_data(o) for o in objs]
+        new_ids = get_new_ids(models, Comment)
 
         Comment.objects.bulk_create(
-            [marshal_data(o) for o in objs],
+            models,
             update_conflicts=True,
             update_fields=COMMENT_FIELDS,
         )
+
+        return new_ids
 
     def get_liked_ids(self, ids: list[int], user_id: int) -> list[int]:
         if len(ids) == 0:

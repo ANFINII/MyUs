@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.channel import Channel
 from api.src.domain.entity.channel._convert import convert_data, marshal_data
-from api.src.domain.entity.index import sort_ids
+from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption
 
@@ -40,15 +40,20 @@ class ChannelRepository(ChannelInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[ChannelData]) -> None:
+    def bulk_save(self, objs: list[ChannelData]) -> list[int]:
         if len(objs) == 0:
-            return
+            return []
+
+        models = [marshal_data(o) for o in objs]
+        new_ids = get_new_ids(models, Channel)
 
         Channel.objects.bulk_create(
-            [marshal_data(o) for o in objs],
+            models,
             update_conflicts=True,
             update_fields=CHANNEL_FIELDS,
         )
+
+        return new_ids
 
     def delete(self, id: int) -> None:
         Channel.objects.filter(id=id).delete()

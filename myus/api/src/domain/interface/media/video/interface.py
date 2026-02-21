@@ -13,5 +13,5 @@ class VideoInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[VideoData]) -> None:
+    def bulk_save(self, objs: list[VideoData]) -> list[int]:
         ...

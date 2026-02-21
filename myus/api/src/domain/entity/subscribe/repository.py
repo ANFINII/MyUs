@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.subscribe import Subscribe
 from api.src.domain.entity.subscribe._convert import convert_data, marshal_data
-from api.src.domain.entity.index import sort_ids
+from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.subscribe.data import SubscribeData
 from api.src.domain.interface.subscribe.interface import FilterOption, SubscribeInterface, SortOption
 
@@ -40,15 +40,20 @@ class SubscribeRepository(SubscribeInterface):
         sorted_objs = sort_ids(objs, ids)
         return [convert_data(obj) for obj in sorted_objs]
 
-    def bulk_save(self, objs: list[SubscribeData]) -> None:
+    def bulk_save(self, objs: list[SubscribeData]) -> list[int]:
         if len(objs) == 0:
-            return
+            return []
+
+        models = [marshal_data(o) for o in objs]
+        new_ids = get_new_ids(models, Subscribe)
 
         Subscribe.objects.bulk_create(
-            [marshal_data(o) for o in objs],
+            models,
             update_conflicts=True,
             update_fields=SUBSCRIBE_FIELDS,
         )
+
+        return new_ids
 
     def count(self, filter: FilterOption) -> int:
         q_list: list[Q] = []
