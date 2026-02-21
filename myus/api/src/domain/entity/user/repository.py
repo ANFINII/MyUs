@@ -55,12 +55,12 @@ class UserRepository(UserInterface):
         if len(objs) == 0:
             return []
 
-        user_models = [marshal_user(o.user) for o in objs]
-        new_ids = get_new_ids(user_models, User)
+        models = [marshal_user(o.user) for o in objs]
+        new_ids = get_new_ids(models, User)
 
         with transaction.atomic():
             save_objs = User.objects.bulk_create(
-                user_models,
+                models,
                 update_conflicts=True,
                 update_fields=USER_FIELDS,
             )

@@ -163,6 +163,7 @@ class AuthAPI:
             ),
             user_plan=UserPlanData(
                 plan=PlanData(
+                    id=0,
                     name="",
                     stripe_api_id="",
                     price=0,
