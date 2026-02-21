@@ -10,7 +10,7 @@ interface Props {
     title: string
     content: string
     read: number
-    likeCount: number
+    like: number
     created: Date
     comments: Comment[]
     channel: Channel

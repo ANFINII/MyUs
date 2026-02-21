@@ -45,7 +45,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const [thread, setThread] = useState(detail.thread)
   const [isLike, setIsLike] = useState(detail.mediaUser.isLike)
   const [isSubscribe, setIsSubscribe] = useState(detail.mediaUser.isSubscribe)
-  const [likeCount, setLikeCount] = useState(detail.likeCount)
+  const [likeCount, setLikeCount] = useState(detail.like)
   const [subscribeCount, setSubscribeCount] = useState(0)
   const [isModal, setIsModal] = useState(false)
 
