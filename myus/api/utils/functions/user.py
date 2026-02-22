@@ -1,22 +1,21 @@
 from django.core.mail import send_mail
 from api.db.models.user import User
-from api.src.domain.entity.subscribe.repository import SubscribeRepository
-from api.src.domain.interface.subscribe.interface import FilterOption, SortOption
+from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
+from api.src.injectors.container import injector
 from api.src.types.data.notification import NotificationUserData
 from api.src.types.data.user import MediaUserData
-from api.src.types.union.media import MediaModelType
 from api.utils.functions.index import create_url
 
 
-def get_media_user(obj: MediaModelType, user_id: int | None) -> MediaUserData:
-    repository = SubscribeRepository()
+def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> MediaUserData:
+    subscribe_repo = injector.get(SubscribeInterface)
     subscribe = None
     if user_id is not None:
-        ids = repository.get_ids(FilterOption(user_id=user_id, channel_id=obj.channel.id), SortOption())
-        subscribes = repository.bulk_get(ids)
+        ids = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel_id), SortOption())
+        subscribes = subscribe_repo.bulk_get(ids)
         subscribe = subscribes[0] if len(subscribes) > 0 else None
     data = MediaUserData(
-        is_like=obj.like.filter(id=user_id).exists() if user_id is not None else False,
+        is_like=is_like,
         is_subscribe=subscribe.is_subscribe if subscribe else False,
     )
     return data

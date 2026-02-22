@@ -15,3 +15,7 @@ class ChatInterface(ABC):
     @abstractmethod
     def bulk_save(self, objs: list[ChatData]) -> list[int]:
         ...
+
+    @abstractmethod
+    def is_liked(self, media_id: int, user_id: int) -> bool:
+        ...
