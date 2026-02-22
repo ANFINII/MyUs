@@ -1,6 +1,5 @@
 from dataclasses import replace
 from datetime import date, datetime
-from django.http import HttpRequest
 from ninja import UploadedFile
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
@@ -20,7 +19,6 @@ from api.src.domain.interface.media.index import FilterOption, SortOption, Exclu
 from api.src.injectors.container import injector
 from api.src.types.data.media import VideoDetailData, MusicDetailData, ComicDetailData, PictureDetailData, BlogDetailData, ChatDetailData
 from api.src.types.schema.media import VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn
-from api.src.usecase.auth import auth_check
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
 from api.utils.enum.index import CommentType
@@ -269,14 +267,13 @@ def get_chats(limit: int, search: str, id: int | None = None) -> list[ChatData]:
     return objs
 
 
-def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> VideoDetailData | None:
+def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> VideoDetailData:
     repository = injector.get(VideoInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
-    user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.VIDEO)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
@@ -303,14 +300,13 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
     return data
 
 
-def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> MusicDetailData | None:
+def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> MusicDetailData:
     repository = injector.get(MusicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
-    user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.MUSIC)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
@@ -337,14 +333,13 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
     return data
 
 
-def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> ComicDetailData | None:
+def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> ComicDetailData:
     repository = injector.get(ComicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
-    user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.COMIC)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
@@ -369,14 +364,13 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
     return data
 
 
-def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> BlogDetailData | None:
+def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> BlogDetailData:
     repository = injector.get(BlogInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
-    user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.BLOG)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
@@ -402,14 +396,13 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
     return data
 
 
-def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) -> PictureDetailData | None:
+def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> PictureDetailData:
     repository = injector.get(PictureInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
-    user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.PICTURE)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=None)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
@@ -434,14 +427,13 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
     return data
 
 
-def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> ChatDetailData | None:
+def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> ChatDetailData:
     repository = injector.get(ChatInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
-    user_id = auth_check(request)
     messages = get_messages(chat_id=obj.id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
