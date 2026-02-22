@@ -13,7 +13,7 @@ COMIC_FIELDS = ["channel_id", "title", "content", "image", "read", "publish"]
 
 class ComicRepository(ComicInterface):
     def queryset(self) -> QuerySet[Comic]:
-        return Comic.objects.select_related("channel").prefetch_related("like")
+        return Comic.objects.select_related("channel").prefetch_related("like", "hashtag")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []

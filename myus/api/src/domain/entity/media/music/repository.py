@@ -13,7 +13,7 @@ MUSIC_FIELDS = ["channel_id", "title", "content", "lyric", "music", "read", "dow
 
 class MusicRepository(MusicInterface):
     def queryset(self) -> QuerySet[Music]:
-        return Music.objects.select_related("channel").prefetch_related("like")
+        return Music.objects.select_related("channel").prefetch_related("like", "hashtag")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []

@@ -13,7 +13,7 @@ BLOG_FIELDS = ["channel_id", "title", "content", "richtext", "image", "read", "p
 
 class BlogRepository(BlogInterface):
     def queryset(self) -> QuerySet[Blog]:
-        return Blog.objects.select_related("channel").prefetch_related("like")
+        return Blog.objects.select_related("channel").prefetch_related("like", "hashtag")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []

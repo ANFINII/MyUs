@@ -6,7 +6,6 @@ from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.chat.data import ChatData
 
-
 @dataclass(frozen=True, slots=True)
 class MediaCreateData:
     ulid: str

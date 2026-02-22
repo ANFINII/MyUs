@@ -9,7 +9,7 @@ from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.chat.data import ChatData
-from api.src.domain.interface.media.data import HomeData, MediaCreateData, HashtagData
+from api.src.domain.interface.media.data import HomeData, MediaCreateData
 from api.src.domain.interface.media.video.interface import VideoInterface
 from api.src.domain.interface.media.music.interface import MusicInterface
 from api.src.domain.interface.media.comic.interface import ComicInterface
@@ -48,6 +48,7 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
         updated=datetime.min,
         comment_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_video])
@@ -75,6 +76,7 @@ def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> M
         updated=datetime.min,
         comment_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_music])
@@ -100,6 +102,7 @@ def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile) -> M
         updated=datetime.min,
         comment_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_comic])
@@ -125,6 +128,7 @@ def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) 
         updated=datetime.min,
         comment_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_picture])
@@ -152,6 +156,7 @@ def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> Med
         updated=datetime.min,
         comment_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_blog])
@@ -178,6 +183,7 @@ def create_chat(channel: ChannelData, input: ChatIn) -> MediaCreateData:
         thread_count=0,
         joined_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_chat])
@@ -276,7 +282,7 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
     type_no = comment_type_no_map(CommentType.VIDEO)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
 
-    obj = Video.objects.prefetch_related("hashtag", "like").get(id=e.id)
+    obj = Video.objects.prefetch_related("like").get(id=e.id)
 
     data = VideoDetailData(
         id=e.id,
@@ -287,7 +293,7 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
         video=create_url(e.video),
         convert=create_url(e.convert),
         comments=comments,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         publish=e.publish,
@@ -312,7 +318,7 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
     type_no = comment_type_no_map(CommentType.MUSIC)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
 
-    obj = Music.objects.prefetch_related("hashtag", "like").get(id=e.id)
+    obj = Music.objects.prefetch_related("like").get(id=e.id)
 
     data = MusicDetailData(
         id=e.id,
@@ -323,7 +329,7 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
         music=create_url(e.music),
         download=e.download,
         comments=comments,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         publish=e.publish,
@@ -348,7 +354,7 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
     type_no = comment_type_no_map(CommentType.COMIC)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
 
-    obj = Comic.objects.prefetch_related("hashtag", "like").get(id=e.id)
+    obj = Comic.objects.prefetch_related("like").get(id=e.id)
 
     data = ComicDetailData(
         id=e.id,
@@ -357,7 +363,7 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
         content=e.content,
         image=create_url(e.image),
         comments=comments,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         publish=e.publish,
@@ -382,7 +388,7 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
     type_no = comment_type_no_map(CommentType.BLOG)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
 
-    obj = Blog.objects.prefetch_related("hashtag", "like").get(id=e.id)
+    obj = Blog.objects.prefetch_related("like").get(id=e.id)
 
     data = BlogDetailData(
         id=e.id,
@@ -392,7 +398,7 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
         richtext=e.richtext,
         image=create_url(e.image),
         comments=comments,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         publish=e.publish,
@@ -417,7 +423,7 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
     type_no = comment_type_no_map(CommentType.PICTURE)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=None)
 
-    obj = Picture.objects.prefetch_related("hashtag", "like").get(id=e.id)
+    obj = Picture.objects.prefetch_related("like").get(id=e.id)
 
     data = PictureDetailData(
         id=e.id,
@@ -426,7 +432,7 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
         content=e.content,
         image=create_url(e.image),
         comments=comments,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         publish=e.publish,
@@ -449,7 +455,8 @@ def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Ch
 
     user_id = auth_check(request)
     messages = get_messages(chat_id=e.id)
-    obj = Chat.objects.prefetch_related("hashtag", "like").get(id=e.id)
+
+    obj = Chat.objects.prefetch_related("like").get(id=e.id)
 
     data = ChatDetailData(
         id=e.id,
@@ -457,7 +464,7 @@ def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Ch
         title=e.title,
         content=e.content,
         messages=messages,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         thread=e.thread_count,
