@@ -88,15 +88,14 @@ class VideoAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: VideoDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: VideoDetailsOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("VideoAPI detail", ulid=ulid, search=search)
 
-        obj = get_video_detail(request=request, ulid=ulid, publish=True)
-        if obj is None:
-            return 404, ErrorOut(message="Not Found")
-
+        user_id = auth_check(request)
+        obj = get_video_detail(user_id=user_id, ulid=ulid, publish=True)
         objs = get_videos(50, search, obj.id)
+
         data = VideoDetailsOut(
             detail=VideoDetailOut(
                 ulid=obj.ulid,
@@ -151,15 +150,14 @@ class MusicAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: MusicDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: MusicDetailsOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("MusicAPI detail", ulid=ulid, search=search)
 
-        obj = get_music_detail(request=request, ulid=ulid, publish=True)
-        if obj is None:
-            return 404, ErrorOut(message="Not Found")
-
+        user_id = auth_check(request)
+        obj = get_music_detail(user_id=user_id, ulid=ulid, publish=True)
         objs = get_musics(50, search, obj.id)
+
         data = MusicDetailsOut(
             detail=MusicDetailOut(
                 ulid=obj.ulid,
@@ -214,15 +212,14 @@ class ComicAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ComicDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: ComicDetailsOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("ComicAPI detail", ulid=ulid, search=search)
 
-        obj = get_comic_detail(request=request, ulid=ulid, publish=True)
-        if obj is None:
-            return 404, ErrorOut(message="Not Found")
-
+        user_id = auth_check(request)
+        obj = get_comic_detail(user_id=user_id, ulid=ulid, publish=True)
         objs = get_comics(50, search, obj.id)
+
         data = ComicDetailsOut(
             detail=ComicDetailOut(
                 ulid=obj.ulid,
@@ -275,15 +272,14 @@ class PictureAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: PictureDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: PictureDetailsOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("PictureAPI detail", ulid=ulid, search=search)
 
-        obj = get_picture_detail(request=request, ulid=ulid, publish=True)
-        if obj is None:
-            return 404, ErrorOut(message="Not Found")
-
+        user_id = auth_check(request)
+        obj = get_picture_detail(user_id=user_id, ulid=ulid, publish=True)
         objs = get_pictures(50, search, obj.id)
+
         data = PictureDetailsOut(
             detail=PictureDetailOut(
                 ulid=obj.ulid,
@@ -336,15 +332,14 @@ class BlogAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: BlogDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: BlogDetailsOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("BlogAPI detail", ulid=ulid, search=search)
 
-        obj = get_blog_detail(request=request, ulid=ulid, publish=True)
-        if not obj:
-            return 404, ErrorOut(message="Not Found")
-
+        user_id = auth_check(request)
+        obj = get_blog_detail(user_id=user_id, ulid=ulid, publish=True)
         objs = get_blogs(50, search, obj.id)
+
         data = BlogDetailsOut(
             detail=BlogDetailOut(
                 ulid=obj.ulid,
@@ -398,15 +393,14 @@ class ChatAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ChatDetailsOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: ChatDetailsOut})
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("ChatAPI detail", ulid=ulid, search=search)
 
-        obj = get_chat_detail(request=request, ulid=ulid, publish=True)
-        if obj is None:
-            return 404, ErrorOut(message="Not Found")
-
+        user_id = auth_check(request)
+        obj = get_chat_detail(user_id=user_id, ulid=ulid, publish=True)
         objs = get_chats(50, search, obj.id)
+
         data = ChatDetailsOut(
             detail=ChatDetailOut(
                 ulid=obj.ulid,
@@ -605,13 +599,14 @@ def convert_author(obj: AuthorData) -> AuthorOut:
 
 
 def convert_channel(obj: ChannelData) -> ChannelOut:
-    return ChannelOut(
+    data = ChannelOut(
         ulid=obj.ulid,
         avatar=create_url(obj.avatar),
         name=obj.name,
         is_default=obj.is_default,
         description=obj.description,
     )
+    return data
 
 
 def convert_media_user(obj: MediaUserData) -> MediaUserOut:
