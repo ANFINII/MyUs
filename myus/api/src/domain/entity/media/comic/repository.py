@@ -60,6 +60,3 @@ class ComicRepository(ComicInterface):
         )
 
         return new_ids
-
-    def is_liked(self, media_id: int, user_id: int) -> bool:
-        return Comic.objects.filter(id=media_id, like__id=user_id).exists()

@@ -2,6 +2,7 @@ from dataclasses import replace
 from datetime import date, datetime
 from django.http import HttpRequest
 from ninja import UploadedFile
+from api.db.models.media import Blog, Chat, Comic, Music, Picture, Video
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.comic.data import ComicData
@@ -280,7 +281,8 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.VIDEO)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+
+    obj = Video.objects.prefetch_related("like").get(id=e.id)
 
     data = VideoDetailData(
         id=e.id,
@@ -298,7 +300,7 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data
@@ -315,7 +317,8 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.MUSIC)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+
+    obj = Music.objects.prefetch_related("like").get(id=e.id)
 
     data = MusicDetailData(
         id=e.id,
@@ -333,7 +336,7 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data
@@ -350,7 +353,8 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.COMIC)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+
+    obj = Comic.objects.prefetch_related("like").get(id=e.id)
 
     data = ComicDetailData(
         id=e.id,
@@ -366,7 +370,7 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data
@@ -383,7 +387,8 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.BLOG)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+
+    obj = Blog.objects.prefetch_related("like").get(id=e.id)
 
     data = BlogDetailData(
         id=e.id,
@@ -400,7 +405,7 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data
@@ -417,7 +422,8 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.PICTURE)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=None)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+
+    obj = Picture.objects.prefetch_related("like").get(id=e.id)
 
     data = PictureDetailData(
         id=e.id,
@@ -433,7 +439,7 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data
@@ -449,7 +455,8 @@ def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Ch
 
     user_id = auth_check(request)
     messages = get_messages(chat_id=e.id)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+
+    obj = Chat.objects.prefetch_related("like").get(id=e.id)
 
     data = ChatDetailData(
         id=e.id,
@@ -467,7 +474,7 @@ def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Ch
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        mediaUser=get_media_user(obj, user_id),
     )
 
     return data

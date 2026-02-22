@@ -60,6 +60,3 @@ class PictureRepository(PictureInterface):
         )
 
         return new_ids
-
-    def is_liked(self, media_id: int, user_id: int) -> bool:
-        return Picture.objects.filter(id=media_id, like__id=user_id).exists()

@@ -15,7 +15,3 @@ class PictureInterface(ABC):
     @abstractmethod
     def bulk_save(self, objs: list[PictureData]) -> list[int]:
         ...
-
-    @abstractmethod
-    def is_liked(self, media_id: int, user_id: int) -> bool:
-        ...
