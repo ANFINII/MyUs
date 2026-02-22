@@ -1,10 +1,26 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 from api.src.domain.interface.media.data import HashtagData
+from api.src.domain.interface.media.video.data import VideoData
+from api.src.domain.interface.media.music.data import MusicData
+from api.src.domain.interface.media.comic.data import ComicData
+from api.src.domain.interface.media.picture.data import PictureData
+from api.src.domain.interface.media.blog.data import BlogData
+from api.src.domain.interface.media.chat.data import ChatData
 from api.src.types.data.comment import CommentGetData
 from api.src.types.data.message import MessageData
 from api.src.domain.interface.channel.data import ChannelData
 from api.src.types.data.user import MediaUserData
+
+
+@dataclass(frozen=True, slots=True)
+class HomeData:
+    videos: list[VideoData]
+    musics: list[MusicData]
+    comics: list[ComicData]
+    pictures: list[PictureData]
+    blogs: list[BlogData]
+    chats: list[ChatData]
 
 
 @dataclass(frozen=True, slots=True)
