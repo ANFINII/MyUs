@@ -272,33 +272,33 @@ def get_chats(limit: int, search: str, id: int | None = None) -> list[ChatData]:
 def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> VideoDetailData | None:
     repository = injector.get(VideoInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
-    entities = repository.bulk_get(ids=ids)
-    e = entities[0] if len(entities) > 0 else None
-    if e is None:
+    objs = repository.bulk_get(ids=ids)
+    obj = objs[0] if len(objs) > 0 else None
+    if obj is None:
         return None
 
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.VIDEO)
-    comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
     data = VideoDetailData(
-        id=e.id,
-        ulid=e.ulid,
-        title=e.title,
-        content=e.content,
-        image=create_url(e.image),
-        video=create_url(e.video),
-        convert=create_url(e.convert),
+        id=obj.id,
+        ulid=obj.ulid,
+        title=obj.title,
+        content=obj.content,
+        image=create_url(obj.image),
+        video=create_url(obj.video),
+        convert=create_url(obj.convert),
         comments=comments,
-        hashtags=e.hashtags,
-        read=e.read,
-        like=e.like,
-        publish=e.publish,
-        created=e.created,
-        updated=e.updated,
-        channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        hashtags=obj.hashtags,
+        read=obj.read,
+        like=obj.like,
+        publish=obj.publish,
+        created=obj.created,
+        updated=obj.updated,
+        channel=obj.channel,
+        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
     )
 
     return data
@@ -307,33 +307,33 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
 def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> MusicDetailData | None:
     repository = injector.get(MusicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
-    entities = repository.bulk_get(ids=ids)
-    e = entities[0] if len(entities) > 0 else None
-    if e is None:
+    objs = repository.bulk_get(ids=ids)
+    obj = objs[0] if len(objs) > 0 else None
+    if obj is None:
         return None
 
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.MUSIC)
-    comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
     data = MusicDetailData(
-        id=e.id,
-        ulid=e.ulid,
-        title=e.title,
-        content=e.content,
-        lyric=e.lyric,
-        music=create_url(e.music),
-        download=e.download,
+        id=obj.id,
+        ulid=obj.ulid,
+        title=obj.title,
+        content=obj.content,
+        lyric=obj.lyric,
+        music=create_url(obj.music),
+        download=obj.download,
         comments=comments,
-        hashtags=e.hashtags,
-        read=e.read,
-        like=e.like,
-        publish=e.publish,
-        created=e.created,
-        updated=e.updated,
-        channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        hashtags=obj.hashtags,
+        read=obj.read,
+        like=obj.like,
+        publish=obj.publish,
+        created=obj.created,
+        updated=obj.updated,
+        channel=obj.channel,
+        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
     )
 
     return data
@@ -342,31 +342,31 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
 def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> ComicDetailData | None:
     repository = injector.get(ComicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
-    entities = repository.bulk_get(ids=ids)
-    e = entities[0] if len(entities) > 0 else None
-    if e is None:
+    objs = repository.bulk_get(ids=ids)
+    obj = objs[0] if len(objs) > 0 else None
+    if obj is None:
         return None
 
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.COMIC)
-    comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
     data = ComicDetailData(
-        id=e.id,
-        ulid=e.ulid,
-        title=e.title,
-        content=e.content,
-        image=create_url(e.image),
+        id=obj.id,
+        ulid=obj.ulid,
+        title=obj.title,
+        content=obj.content,
+        image=create_url(obj.image),
         comments=comments,
-        hashtags=e.hashtags,
-        read=e.read,
-        like=e.like,
-        publish=e.publish,
-        created=e.created,
-        updated=e.updated,
-        channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        hashtags=obj.hashtags,
+        read=obj.read,
+        like=obj.like,
+        publish=obj.publish,
+        created=obj.created,
+        updated=obj.updated,
+        channel=obj.channel,
+        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
     )
 
     return data
@@ -375,32 +375,32 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
 def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> BlogDetailData | None:
     repository = injector.get(BlogInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
-    entities = repository.bulk_get(ids=ids)
-    e = entities[0] if len(entities) > 0 else None
-    if e is None:
+    objs = repository.bulk_get(ids=ids)
+    obj = objs[0] if len(objs) > 0 else None
+    if obj is None:
         return None
 
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.BLOG)
-    comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
     data = BlogDetailData(
-        id=e.id,
-        ulid=e.ulid,
-        title=e.title,
-        content=e.content,
-        richtext=e.richtext,
-        image=create_url(e.image),
+        id=obj.id,
+        ulid=obj.ulid,
+        title=obj.title,
+        content=obj.content,
+        richtext=obj.richtext,
+        image=create_url(obj.image),
         comments=comments,
-        hashtags=e.hashtags,
-        read=e.read,
-        like=e.like,
-        publish=e.publish,
-        created=e.created,
-        updated=e.updated,
-        channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        hashtags=obj.hashtags,
+        read=obj.read,
+        like=obj.like,
+        publish=obj.publish,
+        created=obj.created,
+        updated=obj.updated,
+        channel=obj.channel,
+        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
     )
 
     return data
@@ -409,31 +409,31 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
 def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) -> PictureDetailData | None:
     repository = injector.get(PictureInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
-    entities = repository.bulk_get(ids=ids)
-    e = entities[0] if len(entities) > 0 else None
-    if e is None:
+    objs = repository.bulk_get(ids=ids)
+    obj = objs[0] if len(objs) > 0 else None
+    if obj is None:
         return None
 
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.PICTURE)
-    comments = get_comments(type_no=type_no, object_id=e.id, user_id=None)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=None)
+    is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
     data = PictureDetailData(
-        id=e.id,
-        ulid=e.ulid,
-        title=e.title,
-        content=e.content,
-        image=create_url(e.image),
+        id=obj.id,
+        ulid=obj.ulid,
+        title=obj.title,
+        content=obj.content,
+        image=create_url(obj.image),
         comments=comments,
-        hashtags=e.hashtags,
-        read=e.read,
-        like=e.like,
-        publish=e.publish,
-        created=e.created,
-        updated=e.updated,
-        channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        hashtags=obj.hashtags,
+        read=obj.read,
+        like=obj.like,
+        publish=obj.publish,
+        created=obj.created,
+        updated=obj.updated,
+        channel=obj.channel,
+        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
     )
 
     return data
@@ -442,32 +442,32 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
 def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> ChatDetailData | None:
     repository = injector.get(ChatInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
-    entities = repository.bulk_get(ids=ids)
-    e = entities[0] if len(entities) > 0 else None
-    if e is None:
+    objs = repository.bulk_get(ids=ids)
+    obj = objs[0] if len(objs) > 0 else None
+    if obj is None:
         return None
 
     user_id = auth_check(request)
-    messages = get_messages(chat_id=e.id)
-    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
+    messages = get_messages(chat_id=obj.id)
+    is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
     data = ChatDetailData(
-        id=e.id,
-        ulid=e.ulid,
-        title=e.title,
-        content=e.content,
+        id=obj.id,
+        ulid=obj.ulid,
+        title=obj.title,
+        content=obj.content,
         messages=messages,
-        hashtags=e.hashtags,
-        read=e.read,
-        like=e.like,
-        thread=e.thread_count,
-        joined=e.joined_count,
-        period=e.period,
-        publish=e.publish,
-        created=e.created,
-        updated=e.updated,
-        channel=e.channel,
-        mediaUser=get_media_user(is_like, e.channel.id, user_id),
+        hashtags=obj.hashtags,
+        read=obj.read,
+        like=obj.like,
+        thread=obj.thread_count,
+        joined=obj.joined_count,
+        period=obj.period,
+        publish=obj.publish,
+        created=obj.created,
+        updated=obj.updated,
+        channel=obj.channel,
+        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
     )
 
     return data
