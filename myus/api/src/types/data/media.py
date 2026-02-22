@@ -24,6 +24,11 @@ class HomeData:
 
 
 @dataclass(frozen=True, slots=True)
+class MediaCreateData:
+    ulid: str
+
+
+@dataclass(frozen=True, slots=True)
 class MediaDetailData:
     id: int
     ulid: str
