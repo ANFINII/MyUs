@@ -14,10 +14,12 @@ def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> Media
         ids = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel_id), SortOption())
         subscribes = subscribe_repo.bulk_get(ids)
         subscribe = subscribes[0] if len(subscribes) > 0 else None
+
     data = MediaUserData(
         is_like=is_like,
         is_subscribe=subscribe.is_subscribe if subscribe else False,
     )
+
     return data
 
 
