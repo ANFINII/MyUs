@@ -3,11 +3,12 @@
 ## 基本原則
 
 ### 1. 型ヒント
-- **Python 3.9+の新しい型構文を使用**
+- **Python 3.12+の型構文を使用**
   - `List[str]` → `list[str]`
   - `Dict[str, int]` → `dict[str, int]`
   - `Optional[str]` → `str | None`
   - `Union[str, int]` → `str | int`
+  - 型エイリアスは `type` 文を使用: `type MediaModelType = Video | Music | Comic`
 - `collections.abc`から`Callable`をインポート
 - 型ヒントは可能な限りすべての関数・メソッドに付与
 
@@ -44,7 +45,6 @@
 
 ### 4. Django規約
 - Django固有の書き方は、domain modelとDBモデルの範囲内に限定する
-- モデルのフィールドは明示的な型定義
 - QuerySetの型ヒントを適切に使用
 
 ### 5. リンターチェック（必須）
@@ -329,7 +329,7 @@ class UserInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[UserData]) -> None:
+    def bulk_save(self, objs: list[UserData]) -> list[int]:
         ...
 
 # Bad - Django ORMモデルを直接返す
@@ -361,15 +361,15 @@ def get_user(id: int) -> UserData | None:
 ```
 
 ### Converterパターン
-- Repository実装では、dataclass ↔ Django ORMモデル間の変換関数を使用
-- `unmarshal`: Django ORMモデル → dataclass（読み取り時）
-- `marshal`: dataclass → Django ORMモデル（書き込み時）
+- Repository実装では、`_convert.py`にdataclass ↔ Django ORMモデル間の変換関数を定義
+- `convert_data`: Django ORMモデル → dataclass（読み取り時）
+- `marshal_data`: dataclass → Django ORMモデル（書き込み時）
 
 ```python
-# entity/user/data.py
+# entity/user/_convert.py
 
-# Unmarshal (Django model -> dataclass)
-def user_data(user: User) -> UserData:
+# Convert (Django model -> dataclass)
+def convert_data(user: User) -> UserData:
     return UserData(
         id=user.id,
         username=user.username,
@@ -377,29 +377,33 @@ def user_data(user: User) -> UserData:
     )
 
 # Marshal (dataclass -> Django model)
-def marshal_user(data: UserData, user: User) -> None:
-    user.username = data.username
-    user.email = data.email
-    ...
+def marshal_data(data: UserData) -> User:
+    return User(
+        id=data.id if data.id != 0 else None,
+        username=data.username,
+        email=data.email,
+        ...
+    )
 ```
 
 ### bulk操作
 - `bulk_save`: 新規作成・更新を一括で行う（upsert）
-- 内部でidの有無を判定して`bulk_create`/`bulk_update`を使い分ける
+- `get_new_ids`でid未設定のオブジェクトに新規IDを割り当て
+- `bulk_create(update_conflicts=True)`で一括insert/update
 
 ---
 
 ## DBモデル
 
 ```python
-class Video(models.Model):
-    """動画モデル"""
-    title: str = models.CharField(max_length=255)
-    created_at: datetime = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name = "動画"
-        verbose_name_plural = "動画リスト"
+class Video(models.Model, MediaModel):
+    """Video"""
+    id      = models.BigAutoField(primary_key=True)
+    ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
+    title   = models.CharField(max_length=100)
+    content = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
 ```
 
 ---
@@ -465,8 +469,7 @@ pytest -m "not slow"        # slowマーカー以外
 ## セキュリティ
 
 - CSRF保護はJWT使用時は不要
-- 適切な権限クラスを設定
-- シリアライザーで入力を検証
+- Pydantic BaseModelで入力を検証
 - SQLインジェクション対策（ORMを使用）
 - ファイルタイプの検証
 
@@ -513,9 +516,9 @@ python manage.py migrate --noinput
 ---
 
 ## 更新履歴
+- 2026-02-22: 全体整備（Converter命名・bulk操作・DBモデル例・セキュリティを実装に合わせて修正）
 - 2026-02-22: domain interfaceのdataclassに初期値を設定しないルールを追加
 - 2026-02-21: return文のルールを追加（明示的return None / ガード節のreturn / 末尾return省略）
-- 2026-02-21: bulk_saveの戻り値を`-> None`に統一
 - 2026-02-05: bulk操作をbulk_saveに統一（upsertパターン）
 - 2026-02-04: Repository層のルールを追加（dataclass入出力、Converterパターン、bulk操作の分離）
 - 2026-01-21: コーディング規約を大幅に整理・追加（条件判定、早期リターン、リスト内包表記）
