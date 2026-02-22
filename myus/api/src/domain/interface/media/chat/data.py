@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 from api.src.domain.interface.channel.data import ChannelData
+from api.src.domain.interface.media.data import HashtagData
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,3 +19,4 @@ class ChatData:
     thread_count: int
     joined_count: int
     channel: ChannelData
+    hashtags: list[HashtagData]

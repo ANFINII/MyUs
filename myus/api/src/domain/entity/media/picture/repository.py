@@ -13,7 +13,7 @@ PICTURE_FIELDS = ["channel_id", "title", "content", "image", "read", "publish"]
 
 class PictureRepository(PictureInterface):
     def queryset(self) -> QuerySet[Picture]:
-        return Picture.objects.select_related("channel").prefetch_related("like")
+        return Picture.objects.select_related("channel").prefetch_related("like", "hashtag")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []
@@ -60,3 +60,6 @@ class PictureRepository(PictureInterface):
         )
 
         return new_ids
+
+    def is_liked(self, media_id: int, user_id: int) -> bool:
+        return Picture.objects.filter(id=media_id, like__id=user_id).exists()

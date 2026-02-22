@@ -13,7 +13,7 @@ VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "
 
 class VideoRepository(VideoInterface):
     def queryset(self) -> QuerySet[Video]:
-        return Video.objects.select_related("channel").prefetch_related("like")
+        return Video.objects.select_related("channel").prefetch_related("like", "hashtag")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []
@@ -60,3 +60,6 @@ class VideoRepository(VideoInterface):
         )
 
         return new_ids
+
+    def is_liked(self, media_id: int, user_id: int) -> bool:
+        return Video.objects.filter(id=media_id, like__id=user_id).exists()

@@ -13,7 +13,7 @@ BLOG_FIELDS = ["channel_id", "title", "content", "richtext", "image", "read", "p
 
 class BlogRepository(BlogInterface):
     def queryset(self) -> QuerySet[Blog]:
-        return Blog.objects.select_related("channel").prefetch_related("like")
+        return Blog.objects.select_related("channel").prefetch_related("like", "hashtag")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []
@@ -60,3 +60,6 @@ class BlogRepository(BlogInterface):
         )
 
         return new_ids
+
+    def is_liked(self, media_id: int, user_id: int) -> bool:
+        return Blog.objects.filter(id=media_id, like__id=user_id).exists()

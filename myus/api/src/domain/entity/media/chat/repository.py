@@ -13,7 +13,7 @@ CHAT_FIELDS = ["channel_id", "title", "content", "read", "period", "publish"]
 
 class ChatRepository(ChatInterface):
     def queryset(self) -> QuerySet[Chat]:
-        return Chat.objects.select_related("channel").prefetch_related("like")
+        return Chat.objects.select_related("channel").prefetch_related("like", "hashtag")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []
@@ -60,3 +60,6 @@ class ChatRepository(ChatInterface):
         )
 
         return new_ids
+
+    def is_liked(self, media_id: int, user_id: int) -> bool:
+        return Chat.objects.filter(id=media_id, like__id=user_id).exists()

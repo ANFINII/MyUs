@@ -2,14 +2,13 @@ from dataclasses import replace
 from datetime import date, datetime
 from django.http import HttpRequest
 from ninja import UploadedFile
-from api.db.models.media import Blog, Chat, Comic, Music, Picture, Video
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.chat.data import ChatData
-from api.src.domain.interface.media.data import HomeData, MediaCreateData, HashtagData
+from api.src.domain.interface.media.data import HomeData, MediaCreateData
 from api.src.domain.interface.media.video.interface import VideoInterface
 from api.src.domain.interface.media.music.interface import MusicInterface
 from api.src.domain.interface.media.comic.interface import ComicInterface
@@ -48,6 +47,7 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
         updated=datetime.min,
         comment_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_video])
@@ -75,6 +75,7 @@ def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> M
         updated=datetime.min,
         comment_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_music])
@@ -100,6 +101,7 @@ def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile) -> M
         updated=datetime.min,
         comment_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_comic])
@@ -125,6 +127,7 @@ def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) 
         updated=datetime.min,
         comment_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_picture])
@@ -152,6 +155,7 @@ def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> Med
         updated=datetime.min,
         comment_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_blog])
@@ -178,6 +182,7 @@ def create_chat(channel: ChannelData, input: ChatIn) -> MediaCreateData:
         thread_count=0,
         joined_count=0,
         channel=channel,
+        hashtags=[],
     )
 
     new_ids = repository.bulk_save([new_chat])
@@ -275,8 +280,7 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.VIDEO)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-
-    obj = Video.objects.prefetch_related("hashtag", "like").get(id=e.id)
+    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
 
     data = VideoDetailData(
         id=e.id,
@@ -287,14 +291,14 @@ def get_video_detail(request: HttpRequest, ulid: str, publish: bool = True) -> V
         video=create_url(e.video),
         convert=create_url(e.convert),
         comments=comments,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         publish=e.publish,
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(obj, user_id),
+        mediaUser=get_media_user(is_like, e.channel.id, user_id),
     )
 
     return data
@@ -311,8 +315,7 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.MUSIC)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-
-    obj = Music.objects.prefetch_related("hashtag", "like").get(id=e.id)
+    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
 
     data = MusicDetailData(
         id=e.id,
@@ -323,14 +326,14 @@ def get_music_detail(request: HttpRequest, ulid: str, publish: bool = True) -> M
         music=create_url(e.music),
         download=e.download,
         comments=comments,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         publish=e.publish,
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(obj, user_id),
+        mediaUser=get_media_user(is_like, e.channel.id, user_id),
     )
 
     return data
@@ -347,8 +350,7 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.COMIC)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-
-    obj = Comic.objects.prefetch_related("hashtag", "like").get(id=e.id)
+    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
 
     data = ComicDetailData(
         id=e.id,
@@ -357,14 +359,14 @@ def get_comic_detail(request: HttpRequest, ulid: str, publish: bool = True) -> C
         content=e.content,
         image=create_url(e.image),
         comments=comments,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         publish=e.publish,
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(obj, user_id),
+        mediaUser=get_media_user(is_like, e.channel.id, user_id),
     )
 
     return data
@@ -381,8 +383,7 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.BLOG)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=user_id)
-
-    obj = Blog.objects.prefetch_related("hashtag", "like").get(id=e.id)
+    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
 
     data = BlogDetailData(
         id=e.id,
@@ -392,14 +393,14 @@ def get_blog_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Bl
         richtext=e.richtext,
         image=create_url(e.image),
         comments=comments,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         publish=e.publish,
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(obj, user_id),
+        mediaUser=get_media_user(is_like, e.channel.id, user_id),
     )
 
     return data
@@ -416,8 +417,7 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
     user_id = auth_check(request)
     type_no = comment_type_no_map(CommentType.PICTURE)
     comments = get_comments(type_no=type_no, object_id=e.id, user_id=None)
-
-    obj = Picture.objects.prefetch_related("hashtag", "like").get(id=e.id)
+    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
 
     data = PictureDetailData(
         id=e.id,
@@ -426,14 +426,14 @@ def get_picture_detail(request: HttpRequest, ulid: str, publish: bool = True) ->
         content=e.content,
         image=create_url(e.image),
         comments=comments,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         publish=e.publish,
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(obj, user_id),
+        mediaUser=get_media_user(is_like, e.channel.id, user_id),
     )
 
     return data
@@ -449,7 +449,7 @@ def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Ch
 
     user_id = auth_check(request)
     messages = get_messages(chat_id=e.id)
-    obj = Chat.objects.prefetch_related("hashtag", "like").get(id=e.id)
+    is_like = repository.is_liked(e.id, user_id) if user_id is not None else False
 
     data = ChatDetailData(
         id=e.id,
@@ -457,7 +457,7 @@ def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Ch
         title=e.title,
         content=e.content,
         messages=messages,
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=e.hashtags,
         read=e.read,
         like=e.like,
         thread=e.thread_count,
@@ -467,7 +467,7 @@ def get_chat_detail(request: HttpRequest, ulid: str, publish: bool = True) -> Ch
         created=e.created,
         updated=e.updated,
         channel=e.channel,
-        mediaUser=get_media_user(obj, user_id),
+        mediaUser=get_media_user(is_like, e.channel.id, user_id),
     )
 
     return data

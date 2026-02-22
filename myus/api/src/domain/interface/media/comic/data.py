@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from api.src.domain.interface.channel.data import ChannelData
+from api.src.domain.interface.media.data import HashtagData
 
 
 @dataclass(frozen=True, slots=True)
@@ -17,3 +18,4 @@ class ComicData:
     updated: datetime
     comment_count: int
     channel: ChannelData
+    hashtags: list[HashtagData]

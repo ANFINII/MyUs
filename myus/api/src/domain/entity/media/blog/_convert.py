@@ -1,6 +1,7 @@
 from django_ulid.models import ulid
 from api.db.models.media import Blog
 from api.src.domain.interface.channel.data import ChannelData
+from api.src.domain.interface.media.data import HashtagData
 from api.src.domain.interface.media.blog.data import BlogData
 
 
@@ -29,6 +30,7 @@ def convert_data(obj: Blog) -> BlogData:
             is_default=obj.channel.is_default,
             count=obj.channel.count,
         ),
+        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
     )
 
 
