@@ -293,6 +293,7 @@ class LoginOut(BaseModel):
 ### 内部データ構造: dataclass
 - ドメイン層、ユースケース層などで使用
 - サフィックス: `Data`
+- **domain interface の dataclass にはフィールドの初期値を設定しない**（すべての値を明示的に渡す）
 
 ```python
 from dataclasses import dataclass
@@ -302,6 +303,13 @@ class UserData:
     id: int
     username: str
     email: str
+
+# Bad - domain interfaceのdataclassに初期値を設定
+@dataclass(frozen=True, slots=True)
+class UserData:
+    id: int
+    username: str = ""  # NG
+    tags: list[str] = field(default_factory=list)  # NG
 ```
 
 ---
@@ -505,6 +513,7 @@ python manage.py migrate --noinput
 ---
 
 ## 更新履歴
+- 2026-02-22: domain interfaceのdataclassに初期値を設定しないルールを追加
 - 2026-02-21: return文のルールを追加（明示的return None / ガード節のreturn / 末尾return省略）
 - 2026-02-21: bulk_saveの戻り値を`-> None`に統一
 - 2026-02-05: bulk操作をbulk_saveに統一（upsertパターン）
