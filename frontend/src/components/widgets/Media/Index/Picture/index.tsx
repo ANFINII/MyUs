@@ -1,23 +1,23 @@
 import Link from 'next/link'
-import { Blog } from 'types/internal/media'
+import { Picture } from 'types/internal/media'
 import ExImage from 'components/parts/ExImage'
 import MediaContent from 'components/widgets/Media/Content'
-import style from './Media.module.scss'
+import style from './Picture.module.scss'
 
 interface Props {
-  media: Blog
+  media: Picture
 }
 
-export default function MediaBlog(props: Props): React.JSX.Element {
+export default function MediaPicture(props: Props): React.JSX.Element {
   const { media } = props
   const { ulid, image } = media
 
   return (
     <section className={style.media}>
-      <Link href={`/media/blog/${ulid}`}>
+      <Link href={`/media/picture/${ulid}`}>
         <ExImage src={image} width="270" height="153" className={style.thumbnail} />
       </Link>
-      <MediaContent href={`/media/blog/${ulid}`} media={media} />
+      <MediaContent href={`/media/picture/${ulid}`} media={media} />
     </section>
   )
 }

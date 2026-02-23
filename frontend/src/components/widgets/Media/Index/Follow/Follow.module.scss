@@ -1,0 +1,37 @@
+.media_follow {
+  width: 272px;
+  height: 250px;
+  border: 1px solid rgba(0, 130, 255, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 0.06rem 0 0 rgba(25, 25, 25, 0.07);
+
+  &:hover {
+    background: rgba(200, 230, 255, 0.1);
+  }
+
+  .follow_box {
+    display: block;
+    height: 250px;
+    padding: 6px;
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    cursor: pointer;
+
+    .follow_image {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+    }
+
+    .follow_introduction {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 9;
+      max-width: 272px;
+      font-size: 13px;
+      padding: 6px;
+      overflow: hidden;
+      word-break: break-all;
+    }
+  }
+}
