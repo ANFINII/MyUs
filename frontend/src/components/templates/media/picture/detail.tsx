@@ -20,8 +20,8 @@ export default function PictureDetail(props: Props): React.JSX.Element {
   return (
     <Main metaTitle="Picture" toast={toast}>
       <MediaDetail publish={publish}>
-        <div className={style.media_detail_picture}>
-          <div className={style.media_detail_contents}>
+        <div className={style.media_detail}>
+          <div className={style.contents}>
             <img src={image} alt={other.title} />
           </div>
         </div>

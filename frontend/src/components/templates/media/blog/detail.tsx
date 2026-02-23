@@ -22,7 +22,7 @@ export default function BlogDetail(props: Props): React.JSX.Element {
   return (
     <Main metaTitle="Blog" toast={toast}>
       <MediaDetail publish={publish}>
-        <div className={clsx(style.media_detail_blog, 'quill_content')}>
+        <div className={clsx(style.media_detail, 'quill_content')}>
           <FormatHtml content={richtext} />
         </div>
         <Divide />
