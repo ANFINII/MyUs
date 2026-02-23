@@ -14,8 +14,8 @@ from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.types.data.user import AuthorData, LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
-from api.utils.enum.index import ImageType, MediaType
-from api.utils.functions.file import avatar_path
+from api.utils.enum.index import ImageUpload, MediaType, MediaUpload, UploadType
+from api.utils.functions.file import avatar_path, image_path, musics_path, video_path
 from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository
 from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
@@ -154,8 +154,19 @@ def like_comment(user_id: int, ulid: str) -> LikeData | None:
     return LikeData(is_like=is_like, like_count=like_count)
 
 
-def save_upload(file: UploadedFile, ulid: str) -> str:
-    path = avatar_path(ImageType.USER, ulid, file.name or "upload")
+def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
+    filename = file.name or "upload"
+    match upload_type:
+        case ImageUpload.USER | ImageUpload.CHANNEL:
+            path = avatar_path(upload_type, ulid, filename)
+        case ImageUpload.VIDEO | ImageUpload.COMIC | ImageUpload.PICTURE | ImageUpload.BLOG:
+            path = image_path(upload_type, ulid, filename)
+        case MediaUpload.VIDEO | MediaUpload.ADVERTISE:
+            path = video_path(upload_type, ulid, filename)
+        case MediaUpload.MUSIC:
+            path = musics_path(ulid, filename)
+        case _:
+            assert False, f"未対応のUploadType: {upload_type}"
     return default_storage.save(path, file)
 
 
@@ -165,7 +176,7 @@ def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedF
         return False
 
     base = data.user
-    avatar = save_upload(avatar_file, base.ulid) if avatar_file else base.avatar
+    avatar = save_upload(avatar_file, ImageUpload.USER, base.ulid) if avatar_file else base.avatar
 
     user = replace(
         base,
@@ -199,7 +210,7 @@ def update_mypage(user_id: int, input: SettingMyPageIn, banner_file: UploadedFil
     if data is None:
         return False
 
-    banner = save_upload(banner_file, data.user.ulid) if banner_file else data.mypage.banner
+    banner = save_upload(banner_file, ImageUpload.USER, data.user.ulid) if banner_file else data.mypage.banner
 
     mypage = replace(
         data.mypage,
