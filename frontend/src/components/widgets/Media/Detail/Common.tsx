@@ -18,16 +18,17 @@ interface Props {
     type: 'video' | 'music' | 'comic' | 'picture' | 'blog'
   }
   list: Video[] | Blog[]
+  isAd?: boolean
   handleToast: (content: string, isError: boolean) => void
 }
 
 export default function MediaDetailCommon(props: Props): React.JSX.Element {
-  const { media, list, handleToast } = props
+  const { media, list, isAd, handleToast } = props
 
   return (
     <div className={style.media_detail}>
       <MediaDetailLeft media={media} handleToast={handleToast} />
-      <MediaDetailRight list={list} />
+      <MediaDetailRight isAd={isAd} list={list} />
     </div>
   )
 }
