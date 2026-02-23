@@ -24,7 +24,7 @@ from api.utils.enum.index import CommentType, ImageUpload, MediaUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_media_user
-from api.src.usecase.user import save_upload
+from api.utils.functions.media import save_upload
 
 
 def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> MediaCreateData:
