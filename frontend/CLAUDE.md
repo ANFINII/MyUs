@@ -33,7 +33,7 @@
 - **Props型**: 必ず`Props`のみを使用（`${ComponentName}Props`は使用しない）
 - **状態変数**: `[value, setValue]`の形式
 - **イベントハンドラー**: `handle${EventName}`の形式
-- **boolean変数**: `is${State}`、`has${Feature}`、`should${Action}`
+- **boolean変数**: 基本的に`is${State}`を使用（`should${Action}`も可）
 
 ### スタイル
 - **必ずCSS Modulesを使用**（`.module.scss`）
