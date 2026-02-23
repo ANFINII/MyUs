@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import clsx from 'clsx'
 import style from './AudioPlayer.module.scss'
 
@@ -11,10 +11,11 @@ const formatTime = (seconds: number): string => {
 
 interface Props {
   src: string
+  playbackRate?: number
 }
 
 export default function AudioPlayer(props: Props): React.JSX.Element {
-  const { src } = props
+  const { src, playbackRate = 1 } = props
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
@@ -90,6 +91,11 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
 
   const handlePlay = useCallback(() => setIsPlaying(true), [])
   const handlePause = useCallback(() => setIsPlaying(false), [])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (audio) audio.playbackRate = playbackRate
+  }, [playbackRate])
 
   const playedPercent = duration ? (currentTime / duration) * 100 : 0
 
