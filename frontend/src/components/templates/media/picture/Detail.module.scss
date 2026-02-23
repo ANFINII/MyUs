@@ -1,0 +1,13 @@
+.media_detail_picture {
+  background: rgb(0, 0, 0);
+
+  .media_detail_contents {
+    width: 72%;
+    margin: 0 auto;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+    }
+  }
+}
