@@ -1,0 +1,246 @@
+.player {
+  position: relative;
+  height: 2.5em;
+  text-shadow: 1px 1px 0 rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  border: 1px solid rgb(0, 135, 180);
+  border-radius: 5px 5px 0 0;
+  background: rgb(0, 135, 180);
+  z-index: 40;
+
+  > div {
+    position: absolute;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition: color 0.25s ease, background-color 0.25s ease, opacity 0.5s ease;
+  }
+
+  .playpause {
+    top: 0;
+    left: 0;
+    width: 2.5em;
+    height: 100%;
+    text-align: left;
+    text-indent: -9999px;
+    cursor: pointer;
+    z-index: 2;
+    border-right: 0px solid rgb(0, 135, 180);
+    border-right-color: rgba(255, 255, 255, 0.1);
+
+    &:hover,
+    &:focus {
+      background: rgb(0, 135, 180);
+    }
+
+    .icon {
+      display: block;
+      filter: drop-shadow(1px 1px 0 #000);
+    }
+  }
+
+  // 再生アイコン（三角形）
+  &:not(.playing) .playpause .icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    margin: -0.5em 0 0 -0.25em;
+    border: 0.5em solid transparent;
+    border-right: none;
+    border-left-color: rgb(255, 255, 255);
+  }
+
+  // 一時停止アイコン（二本線）
+  &.playing .playpause .icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.75em;
+    height: 0.75em;
+    margin: -0.375em 0 0 -0.375em;
+
+    &::before,
+    &::after {
+      position: absolute;
+      top: 0;
+      width: 40%;
+      height: 100%;
+      content: "";
+      background: rgb(255, 255, 255);
+    }
+
+    &::before {
+      left: 0;
+    }
+
+    &::after {
+      right: 0;
+    }
+  }
+
+  .time {
+    top: 0;
+    width: 50px;
+    height: 100%;
+    line-height: 38px;
+    text-align: center;
+    font-size: 13px;
+    z-index: 2;
+  }
+
+  .timeCurrent {
+    left: 2.5em;
+    border-left: 0px solid rgb(0, 135, 180);
+    border-left-color: rgba(0, 0, 0, 0.25);
+  }
+
+  .timeDuration {
+    right: 2.5em;
+    border-right: 0px solid rgb(0, 135, 180);
+    border-right-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .bar {
+    top: 50%;
+    left: 85px;
+    right: 83px;
+    height: 9px;
+    margin-top: -4.5px;
+    border-radius: 10px;
+    background: rgb(50, 50, 50);
+    cursor: pointer;
+    z-index: 1;
+
+    div {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+    }
+
+    .barLoaded {
+      background: rgb(225, 240, 255);
+      border-radius: 10px;
+      z-index: 1;
+    }
+
+    .barPlayed {
+      background: linear-gradient(to right, rgb(50, 150, 255) 50%, rgb(255, 0, 130));
+      border-radius: 10px;
+      z-index: 2;
+      box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  .volume {
+    top: 0;
+    right: 0;
+    width: 2.5em;
+    height: 100%;
+    text-align: left;
+    text-indent: -9999px;
+    border-left: 0px solid rgb(0, 135, 180);
+    border-left-color: rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 100;
+
+    &:hover,
+    &:focus {
+      background: rgb(0, 135, 180);
+    }
+
+    .volumeButton {
+      width: 100%;
+      height: 100%;
+
+      .icon {
+        display: block;
+        position: relative;
+        top: 40%;
+        left: 35%;
+        width: 0.313em;
+        height: 0.375em;
+        background: rgb(255, 255, 255);
+        z-index: 1;
+        filter: drop-shadow(1px 1px 0 #000);
+
+        &::before {
+          position: absolute;
+          content: "";
+          top: 50%;
+          right: -0.25em;
+          width: 0;
+          height: 0;
+          margin-top: -0.5em;
+          border: 0.5em solid transparent;
+          border-left: none;
+          border-right-color: rgb(255, 255, 255);
+          z-index: 2;
+        }
+      }
+    }
+
+    &:not(:hover) .volumeAdjust {
+      opacity: 0;
+    }
+
+    &:hover .volumeAdjust {
+      top: auto;
+      bottom: -267%;
+    }
+
+    .volumeAdjust {
+      position: absolute;
+      top: -9999px;
+      left: 0;
+      right: -1px;
+      height: 6.25em;
+      border-radius: 5px;
+      background: rgb(0, 135, 180);
+      cursor: default;
+      box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.15), 1px -1px 1px rgba(0, 0, 0, 0.15);
+
+      > div {
+        position: relative;
+        width: 9px;
+        height: 80%;
+        margin: 30% auto 0;
+        background: rgb(50, 50, 50);
+        border-radius: 10px;
+        cursor: pointer;
+        z-index: 1;
+
+        div {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(to top, rgb(50, 150, 255) 30%, rgb(255, 0, 130));
+          box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5);
+          border-radius: 10px;
+        }
+      }
+    }
+  }
+
+  // 音量波アイコン（ミュートでない時のみ）
+  &:not(.muted) .volumeButton .icon::after {
+    position: absolute;
+    content: "";
+    top: 0.063em;
+    left: 0.563em;
+    width: 0.313em;
+    height: 0.313em;
+    border: 0.25em double #fff;
+    border-width: 0.25em 0.25em 0 0;
+    border-radius: 0 0.938em 0 0;
+    transform: rotate(45deg);
+  }
+}
