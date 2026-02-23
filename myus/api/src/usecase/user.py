@@ -161,7 +161,7 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
             path = avatar_path(upload_type, ulid, filename)
         case ImageUpload.VIDEO | ImageUpload.COMIC | ImageUpload.PICTURE | ImageUpload.BLOG:
             path = image_path(upload_type, ulid, filename)
-        case MediaUpload.VIDEO:
+        case MediaUpload.VIDEO | MediaUpload.ADVERTISE:
             path = video_path(upload_type, ulid, filename)
         case MediaUpload.MUSIC:
             path = musics_path(ulid, filename)
