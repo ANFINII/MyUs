@@ -2,6 +2,7 @@ import { PictureDetailOut } from 'types/internal/media/detail'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
+import LightBox from 'components/widgets/LightBox'
 import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
 import style from './Detail.module.scss'
@@ -22,7 +23,7 @@ export default function PictureDetail(props: Props): React.JSX.Element {
       <MediaDetail publish={publish}>
         <div className={style.media_detail}>
           <div className={style.contents}>
-            <img src={image} alt={other.title} />
+            <LightBox src={image} title={other.title} />
           </div>
         </div>
         <Divide />
