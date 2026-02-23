@@ -1,6 +1,5 @@
 import datetime
 from dataclasses import replace
-from django.core.files.storage import default_storage
 from ninja import UploadedFile
 from api.db.models.user import User
 from api.modules.logger import log
@@ -14,10 +13,9 @@ from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.types.data.user import AuthorData, LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
-from api.utils.enum.index import ImageUpload, MediaType, MediaUpload, UploadType
-from api.utils.functions.file import avatar_path, image_path, musics_path, video_path
+from api.utils.enum.index import ImageUpload, MediaType
 from api.utils.functions.index import create_url
-from api.utils.functions.media import get_media_repository
+from api.utils.functions.media import get_media_repository, save_upload
 from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
 
@@ -152,22 +150,6 @@ def like_comment(user_id: int, ulid: str) -> LikeData | None:
 
     is_like, like_count = repository.comment_like(user_id, ids[0])
     return LikeData(is_like=is_like, like_count=like_count)
-
-
-def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
-    filename = file.name or "upload"
-    match upload_type:
-        case ImageUpload.USER | ImageUpload.CHANNEL:
-            path = avatar_path(upload_type, ulid, filename)
-        case ImageUpload.VIDEO | ImageUpload.COMIC | ImageUpload.PICTURE | ImageUpload.BLOG:
-            path = image_path(upload_type, ulid, filename)
-        case MediaUpload.VIDEO | MediaUpload.ADVERTISE:
-            path = video_path(upload_type, ulid, filename)
-        case MediaUpload.MUSIC:
-            path = musics_path(ulid, filename)
-        case _:
-            assert False, f"未対応のUploadType: {upload_type}"
-    return default_storage.save(path, file)
 
 
 def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedFile) -> bool:

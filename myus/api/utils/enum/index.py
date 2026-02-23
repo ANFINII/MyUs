@@ -84,6 +84,3 @@ class MediaUpload(str, Enum):
     VIDEO = "video"
     MUSIC = "music"
     ADVERTISE = "advertise"
-
-
-type UploadType = ImageUpload | MediaUpload
