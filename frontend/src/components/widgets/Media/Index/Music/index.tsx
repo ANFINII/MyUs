@@ -1,4 +1,5 @@
 import { Music } from 'types/internal/media'
+import AudioPlayer from 'components/widgets/AudioPlayer'
 import MediaContent from 'components/widgets/Media/Content'
 import style from './Music.module.scss'
 
@@ -12,13 +13,8 @@ export default function MediaMusic(props: Props): React.JSX.Element {
 
   return (
     <section className={style.media}>
-      <audio controls controlsList="nodownload" preload="none" className="audio_auto">
-        <source src={music} />
-        <p>ブラウザがaudioに対応しておりません</p>
-      </audio>
-      <div className={style.content}>
-        <MediaContent href={`/media/music/${ulid}`} media={media} />
-      </div>
+      <AudioPlayer src={music} />
+      <MediaContent href={`/media/music/${ulid}`} media={media} />
     </section>
   )
 }
