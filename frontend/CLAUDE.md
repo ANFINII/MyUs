@@ -39,6 +39,7 @@
 - **必ずCSS Modulesを使用**（`.module.scss`）
 - **インラインスタイルは絶対に使用しない**
 - **すべてのスタイルはクラスを定義してSCSSファイルに記載**
+- **SCSSは構造的にネストして定義する**（子要素のクラスは親クラスの中にネストする）
 - 既存のクラスを優先的に使用
 - 動的なスタイルが必要な場合も、可能な限りクラスの切り替えで対応
 
@@ -111,10 +112,41 @@ playerRef.current?.play?.()
   width: 272px;
   height: 153px;
   display: block;
+
+  .thumbnail {
+    object-fit: cover;
+  }
+}
+```
+
+### SCSSの構造的なネスト
+```scss
+// ❌ 悪い例（フラットに定義）
+.container {
+  min-height: 94px;
 }
 
-.thumbnail {
-  object-fit: cover;
+.heading {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.article {
+  display: block;
+}
+
+// ✅ 良い例（親クラスの中にネスト）
+.container {
+  min-height: 94px;
+
+  .heading {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .article {
+    display: block;
+  }
 }
 ```
 
