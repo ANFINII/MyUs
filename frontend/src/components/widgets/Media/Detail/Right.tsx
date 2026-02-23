@@ -1,4 +1,4 @@
-import { Video, Blog } from 'types/internal/media'
+import { Video, Blog, Picture } from 'types/internal/media'
 import Divide from 'components/parts/Divide'
 import VStack from 'components/parts/Stack/Vertical'
 import Advertise from 'components/widgets/Advertise'
@@ -6,7 +6,7 @@ import style from './Common.module.scss'
 import MediaSideImage from '../Side/Image'
 
 interface Props {
-  list: Video[] | Blog[]
+  list: Video[] | Picture[] | Blog[]
   isAd?: boolean
   isChannelAd?: boolean
 }

@@ -1,6 +1,6 @@
 import { Channel } from 'types/internal/channle'
 import { Comment } from 'types/internal/comment'
-import { Blog, MediaUser, Video } from 'types/internal/media'
+import { MediaUser, Video, Picture, Blog } from 'types/internal/media'
 import style from './Common.module.scss'
 import MediaDetailLeft from './Left'
 import MediaDetailRight from './Right'
@@ -17,7 +17,7 @@ interface Props {
     mediaUser: MediaUser
     type: 'video' | 'music' | 'comic' | 'picture' | 'blog'
   }
-  list: Video[] | Blog[]
+  list: Video[] | Picture[] | Blog[]
   isAd?: boolean
   handleToast: (content: string, isError: boolean) => void
 }
