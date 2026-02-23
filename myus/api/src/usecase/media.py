@@ -20,10 +20,11 @@ from api.src.types.data.media import MediaCreateData, HomeData, VideoDetailData,
 from api.src.types.schema.media import VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
-from api.utils.enum.index import CommentType
+from api.utils.enum.index import CommentType, ImageUpload, MediaUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_media_user
+from api.src.usecase.user import save_upload
 
 
 def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> MediaCreateData:
@@ -34,9 +35,9 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
         ulid="",
         title=input.title,
         content=input.content,
-        image=image.name or "",
-        video=video.name or "",
-        convert=convert.name or "",
+        image=save_upload(image, ImageUpload.VIDEO, channel.ulid),
+        video=save_upload(video, MediaUpload.VIDEO, channel.ulid),
+        convert=save_upload(convert, MediaUpload.VIDEO, channel.ulid),
         read=0,
         like=0,
         publish=True,
@@ -63,7 +64,7 @@ def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> M
         title=input.title,
         content=input.content,
         lyric=input.lyric,
-        music=music.name or "",
+        music=save_upload(music, MediaUpload.MUSIC, channel.ulid),
         read=0,
         like=0,
         download=input.download,
@@ -90,7 +91,7 @@ def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile) -> M
         ulid="",
         title=input.title,
         content=input.content,
-        image=image.name or "",
+        image=save_upload(image, ImageUpload.COMIC, channel.ulid),
         read=0,
         like=0,
         publish=True,
@@ -116,7 +117,7 @@ def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) 
         ulid="",
         title=input.title,
         content=input.content,
-        image=image.name or "",
+        image=save_upload(image, ImageUpload.PICTURE, channel.ulid),
         read=0,
         like=0,
         publish=True,
@@ -144,7 +145,7 @@ def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> Med
         content=input.content,
         richtext=input.richtext,
         delta="",
-        image=image.name or "",
+        image=save_upload(image, ImageUpload.BLOG, channel.ulid),
         read=0,
         like=0,
         publish=True,

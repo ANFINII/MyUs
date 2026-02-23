@@ -70,7 +70,7 @@ class CommentType(str, Enum):
     BLOG = "Blog"
 
 
-class ImageType(str, Enum):
+class ImageUpload(str, Enum):
     USER = "user"
     MYPAGE = "mypage"
     CHANNEL = "channel"
@@ -80,6 +80,10 @@ class ImageType(str, Enum):
     BLOG = "blog"
 
 
-class VideoType(str, Enum):
+class MediaUpload(str, Enum):
     VIDEO = "video"
+    MUSIC = "music"
     ADVERTISE = "advertise"
+
+
+type UploadType = ImageUpload | MediaUpload

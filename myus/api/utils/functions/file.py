@@ -1,17 +1,17 @@
 from typing import Any
-from api.utils.enum.index import ImageType, VideoType
+from api.utils.enum.index import ImageUpload, MediaUpload
 from api.utils.functions.index import new_ulid
 
 
-def avatar_path(type: ImageType, ulid: str, filename: str) -> str:
+def avatar_path(type: ImageUpload, ulid: str, filename: str) -> str:
     return f"images/{type.value}/{ulid}/{new_ulid()}_{filename}"
 
 
-def image_path(type: ImageType, ulid: str, filename: str) -> str:
+def image_path(type: ImageUpload, ulid: str, filename: str) -> str:
     return f"images/{type.value}/channel_{ulid}/{new_ulid()}_{filename}"
 
 
-def video_path(type: VideoType, ulid: str, filename: str) -> str:
+def video_path(type: MediaUpload, ulid: str, filename: str) -> str:
     return f"videos/{type.value}/channel_{ulid}/{new_ulid()}_{filename}"
 
 
@@ -24,29 +24,29 @@ def comic_path(ulid: str, filename: str) -> str:
 
 
 def avatar_upload(obj: Any, filename: str) -> str:
-    type_map: dict[str, ImageType] = {
-        "User": ImageType.USER,
-        "MyPage": ImageType.USER,
-        "Channel": ImageType.CHANNEL,
+    type_map: dict[str, ImageUpload] = {
+        "User": ImageUpload.USER,
+        "MyPage": ImageUpload.USER,
+        "Channel": ImageUpload.CHANNEL,
     }
-    image_type = type_map[type(obj).__name__]
+    upload_type = type_map[type(obj).__name__]
     ulid = str(obj.ulid) if hasattr(obj, "ulid") else str(obj.user.ulid)
-    return avatar_path(image_type, ulid, filename)
+    return avatar_path(upload_type, ulid, filename)
 
 
 def image_upload(obj: Any, filename: str) -> str:
-    type_map: dict[str, ImageType] = {
-        "Video": ImageType.VIDEO,
-        "Comic": ImageType.COMIC,
-        "Picture": ImageType.PICTURE,
-        "Blog": ImageType.BLOG,
+    type_map: dict[str, ImageUpload] = {
+        "Video": ImageUpload.VIDEO,
+        "Comic": ImageUpload.COMIC,
+        "Picture": ImageUpload.PICTURE,
+        "Blog": ImageUpload.BLOG,
     }
-    image_type = type_map[type(obj).__name__]
-    return image_path(image_type, str(obj.channel.ulid), filename)
+    upload_type = type_map[type(obj).__name__]
+    return image_path(upload_type, str(obj.channel.ulid), filename)
 
 
 def video_upload(obj: Any, filename: str) -> str:
-    return video_path(VideoType.VIDEO, str(obj.channel.ulid), filename)
+    return video_path(MediaUpload.VIDEO, str(obj.channel.ulid), filename)
 
 
 def music_upload(obj: Any, filename: str) -> str:
