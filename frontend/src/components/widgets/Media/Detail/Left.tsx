@@ -175,12 +175,6 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
       </div>
       <Divide />
 
-      <div className="advertise_aria">
-        <h2>広告表示</h2>
-        <article className="article_list">{/* {% include 'parts/advertise_article.html' %} */}</article>
-      </div>
-      <Divide />
-
       <CommentInput user={user} count={comments.length} loading={isLoading} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <VStack gap="6">
         <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
