@@ -12,6 +12,7 @@ def convert_data(obj: Comic) -> ComicData:
         title=obj.title,
         content=obj.content,
         image=obj.image.name if obj.image else "",
+        pages=[p.image.name for p in obj.comic.all() if p.image],
         read=obj.read,
         like=obj.like.count(),
         publish=obj.publish,
