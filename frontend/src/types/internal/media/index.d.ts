@@ -103,7 +103,7 @@ export interface ComicIn {
   title: string
   content: string
   image?: File
-  images?: File[]
+  pages?: File[]
 }
 
 export interface PictureIn {

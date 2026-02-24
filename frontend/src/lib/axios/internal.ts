@@ -15,6 +15,7 @@ const axiosInstance = (baseURL: string, contentType: ContentType) => {
     },
     timeout: contentType === 'json' ? 2000 : FILE_UPLOAD_TIMEOUT_MS,
     paramsSerializer: { indexes: null },
+    formSerializer: { indexes: null },
   })
   axiosInterceptor(client)
   return client

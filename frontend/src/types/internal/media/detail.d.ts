@@ -30,6 +30,7 @@ export interface MusicDetail extends Music {
 }
 
 export interface ComicDetail extends Comic {
+  pages: string[]
   comments: Comment[]
   hashtags: string[]
 }
