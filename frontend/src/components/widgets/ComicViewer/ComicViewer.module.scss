@@ -1,0 +1,41 @@
+.viewer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  .prev,
+  .next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 48px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    z-index: 1;
+
+    &:hover {
+      color: rgba(255, 255, 255, 1);
+    }
+  }
+
+  .prev {
+    left: 0;
+  }
+
+  .next {
+    right: 0;
+  }
+
+  .page {
+    width: 100%;
+
+    img {
+      width: 100%;
+      display: block;
+    }
+  }
+}

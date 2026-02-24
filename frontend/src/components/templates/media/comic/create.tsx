@@ -36,11 +36,11 @@ export default function ComicCreate(props: Props): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
-  const handleMultiFile = (files: File | File[]) => Array.isArray(files) && setValues({ ...values, images: files })
+  const handleMultiFile = (files: File | File[]) => Array.isArray(files) && setValues({ ...values, pages: files })
 
   const handleForm = async () => {
-    const { channelUlid, title, content, image, images } = values
-    if (!isRequiredCheck({ channelUlid, title, content, image, images })) return
+    const { channelUlid, title, content, image, pages } = values
+    if (!isRequiredCheck({ channelUlid, title, content, image, pages })) return
     handleLoading(true)
     const ret = await postComicCreate(values)
     if (ret.isErr()) {
