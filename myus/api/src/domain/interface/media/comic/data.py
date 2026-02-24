@@ -11,6 +11,7 @@ class ComicData:
     title: str
     content: str
     image: str
+    pages: list[str]
     read: int
     like: int
     publish: bool

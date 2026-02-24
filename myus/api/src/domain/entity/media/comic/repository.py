@@ -1,6 +1,7 @@
-from django.db.models import Q
+from django.db import transaction
+from django.db.models import Prefetch, Q
 from django.db.models.query import QuerySet
-from api.db.models.media import Comic
+from api.db.models.media import Comic, ComicPage
 from api.src.domain.entity.media.comic._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.media.comic.data import ComicData
@@ -13,7 +14,8 @@ COMIC_FIELDS = ["channel_id", "title", "content", "image", "read", "publish"]
 
 class ComicRepository(ComicInterface):
     def queryset(self) -> QuerySet[Comic]:
-        return Comic.objects.select_related("channel").prefetch_related("like", "hashtag")
+        pages_prefetch = Prefetch("comic", queryset=ComicPage.objects.order_by("sequence"))
+        return Comic.objects.select_related("channel").prefetch_related("like", "hashtag", pages_prefetch)
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []
@@ -53,11 +55,17 @@ class ComicRepository(ComicInterface):
         models = [marshal_data(o) for o in objs]
         new_ids = get_new_ids(models, Comic)
 
-        Comic.objects.bulk_create(
-            models,
-            update_conflicts=True,
-            update_fields=COMIC_FIELDS,
-        )
+        with transaction.atomic():
+            Comic.objects.bulk_create(
+                models,
+                update_conflicts=True,
+                update_fields=COMIC_FIELDS,
+            )
+            ComicPage.objects.bulk_create([
+                ComicPage(comic_id=model.id, image=page_path, sequence=seq)
+                for obj, model in zip(objs, models)
+                for seq, page_path in enumerate(obj.pages)
+            ])
 
         return new_ids
 
