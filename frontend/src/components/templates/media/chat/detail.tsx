@@ -22,6 +22,10 @@ import IconPerson from 'components/parts/Icon/Person'
 import SubscribeDeleteModal from 'components/widgets/Modal/SubscribeDelete'
 import style from './detail.module.scss'
 
+function len(s: string): number {
+  return s.length
+}
+
 interface Props {
   data: ChatDetailOut
 }
@@ -33,30 +37,28 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const router = useRouter()
   const { user } = useUser()
   const { toast, handleToast } = useToast()
-
-  const [isContentOpen, setIsContentOpen] = useState(false)
-  const [isContentExpanded, setIsContentExpanded] = useState(false)
-  const [isThreadOpen, setIsThreadOpen] = useState(false)
-  const [selectedMessage, setSelectedMessage] = useState<ChatMessage | null>(null)
-  const [messageText, setMessageText] = useState('')
-  const [replyText, setReplyText] = useState('')
-  const [messages, setMessages] = useState<ChatMessage[]>(detail.messages)
-  const [joined, setJoined] = useState(detail.joined)
-  const [thread, setThread] = useState(detail.thread)
-  const [isLike, setIsLike] = useState(detail.mediaUser.isLike)
-  const [isSubscribe, setIsSubscribe] = useState(detail.mediaUser.isSubscribe)
-  const [likeCount, setLikeCount] = useState(detail.like)
-  const [subscribeCount, setSubscribeCount] = useState(0)
-  const [isModal, setIsModal] = useState(false)
-
-  const messageAreaRef = useRef<HTMLDivElement>(null)
+  const wsRef = useRef<WebSocket | null>(null)
   const navRef = useRef<HTMLDivElement>(null)
   const navWidthRef = useRef(52)
-  const wsRef = useRef<WebSocket | null>(null)
   const isDraggingRef = useRef(false)
+  const messageAreaRef = useRef<HTMLDivElement>(null)
+  const [messages, setMessages] = useState<ChatMessage[]>(detail.messages)
+  const [messageText, setMessageText] = useState<string>('')
+  const [replyText, setReplyText] = useState<string>('')
+  const [selectedMessage, setSelectedMessage] = useState<ChatMessage | null>(null)
+  const [joined, setJoined] = useState<number>(detail.joined)
+  const [thread, setThread] = useState<number>(detail.thread)
+  const [likeCount, setLikeCount] = useState<number>(detail.like)
+  const [subscribeCount, setSubscribeCount] = useState<number>(0)
+  const [isModal, setIsModal] = useState<boolean>(false)
+  const [isContentOpen, setIsContentOpen] = useState<boolean>(false)
+  const [isContentExpanded, setIsContentExpanded] = useState<boolean>(false)
+  const [isThreadOpen, setIsThreadOpen] = useState<boolean>(false)
+  const [isLike, setIsLike] = useState<boolean>(detail.mediaUser.isLike)
+  const [isSubscribe, setIsSubscribe] = useState<boolean>(detail.mediaUser.isSubscribe)
+
   const NAV_MIN = 52
   const NAV_MAX_RATIO = 0.5
-
   const isFallowDisable = !user.isActive || user.ulid === detail.channel.ulid
   const isPeriod = new Date(detail.period) < new Date()
   const isDisabled = isPeriod || !user.isActive
@@ -115,7 +117,8 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }, [])
 
   const handleNavToggle = () => {
-    setNavWidth(navWidthRef.current > NAV_MIN ? NAV_MIN : 240)
+    const half = (window.innerWidth - 72) / 2
+    setNavWidth(navWidthRef.current > NAV_MIN ? NAV_MIN : half)
   }
 
   const handleResizeStart = useCallback(
@@ -396,12 +399,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
           </footer>
         </div>
       </div>
-
       <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={false} onAction={handleDeleteSubscribe} channel={detail.channel} followerCount={subscribeCount} />
     </Main>
   )
-}
-
-function len(s: string): number {
-  return s.length
 }
