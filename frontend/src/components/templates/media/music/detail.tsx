@@ -5,6 +5,7 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import IconDownload from 'components/parts/Icon/Download'
+import SpeedControl from 'components/parts/SpeedControl'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import AudioPlayer from 'components/widgets/AudioPlayer'
@@ -35,11 +36,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
         <VStack gap="8" className={style.media_detail_music}>
           <AudioPlayer src={music} playbackRate={speed} className={style.player} />
           <HStack justify="between">
-            <div className={style.speed}>
-              Speed
-              <input type="range" min="0" max="2" step="0.25" value={speed} onChange={handleSpeed} className={style.range} />
-              <span>{speed}</span>
-            </div>
+            <SpeedControl value={speed} onChange={handleSpeed} />
             {download && (
               <a href={music} download className={style.download}>
                 <IconDownload size="1.5em" />
