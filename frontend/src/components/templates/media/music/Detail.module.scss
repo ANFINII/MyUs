@@ -6,28 +6,6 @@
   }
 }
 
-.speed {
-  display: inline-block;
-  width: 320px;
-  height: 40px;
-  padding: 0 16px;
-  color: rgb(255, 255, 255);
-  font-size: 13px;
-  text-shadow: 1px 1px 0 rgb(0, 0, 0);
-  border: 1px solid rgb(0, 135, 180);
-  border-radius: 5px;
-  background: rgb(0, 135, 180);
-
-  .range {
-    appearance: none;
-    width: 200px;
-    height: 9px;
-    margin: 14px 8px;
-    border-radius: 20px;
-    background: rgb(225, 240, 255);
-  }
-}
-
 .download {
   color: rgb(120, 120, 120);
   text-decoration: none;
