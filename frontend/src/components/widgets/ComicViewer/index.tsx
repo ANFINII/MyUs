@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import clsx from 'clsx'
 import ExImage from 'components/parts/ExImage'
 import IconChevront from 'components/parts/Icon/Chevront'
@@ -20,6 +20,15 @@ export default function ComicViewer(props: Props): React.JSX.Element {
   const handleNext = useCallback(() => {
     setCurrentIndex((prev) => Math.min(prev + 1, pages.length - 1))
   }, [pages.length])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') handlePrev()
+      if (e.key === 'ArrowRight') handleNext()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handlePrev, handleNext])
 
   if (pages.length === 0) return <></>
 
