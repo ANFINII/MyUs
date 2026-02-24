@@ -1,6 +1,42 @@
 .viewer {
   user-select: none;
 
+  &.full {
+    display: flex;
+    flex-direction: column;
+    background: rgb(0, 0, 0);
+
+    .display {
+      flex: 1;
+    }
+
+    .page img {
+      max-height: calc(100vh - 60px);
+    }
+
+    .footer {
+      .counter {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .full_icon {
+        color: rgba(255, 255, 255, 0.4);
+
+        &:hover {
+          color: rgb(0, 100, 255);
+        }
+      }
+
+      .thumbnail {
+        border-color: transparent;
+      }
+
+      .active {
+        border-color: rgb(0, 120, 255);
+      }
+    }
+  }
+
   .display {
     display: flex;
     align-items: center;
@@ -28,24 +64,38 @@
       flex: 0 1 auto;
 
       img {
-        max-width: 100%;
-        max-height: calc(100vh - 168px);
         display: block;
+        max-width: 100%;
+        max-height: calc(100vh - 160px);
       }
     }
   }
 
   .footer {
+    position: relative;
     display: flex;
+    margin-top: 12px;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 10px 0;
 
     .counter {
+      position: absolute;
+      left: 12px;
       font-size: 13px;
       color: rgba(0, 0, 0, 0.5);
       white-space: nowrap;
+    }
+
+    .full_icon {
+      position: absolute;
+      right: 12px;
+      color: rgba(0, 0, 0, 0.4);
+      transition: color 0.2s;
+      cursor: pointer;
+
+      &:hover {
+        color: rgb(0, 100, 255);
+      }
     }
 
     .thumbnails {
@@ -58,9 +108,9 @@
         border: 2px solid transparent;
         border-radius: 3px;
         overflow: hidden;
-        cursor: pointer;
         opacity: 0.4;
         transition: opacity 0.2s, border-color 0.2s;
+        cursor: pointer;
 
         &.active {
           border-color: rgb(0, 120, 255);
@@ -72,10 +122,10 @@
         }
 
         img {
+          display: block;
           width: 100%;
           height: 100%;
           object-fit: cover;
-          display: block;
         }
       }
     }
