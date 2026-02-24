@@ -11,7 +11,6 @@
   width: 320px;
   height: 40px;
   padding: 0 16px;
-  margin: 16px 16px 0 0;
   color: rgb(255, 255, 255);
   font-size: 13px;
   text-shadow: 1px 1px 0 rgb(0, 0, 0);
@@ -36,10 +35,6 @@
   &:hover {
     color: rgb(0, 100, 255);
     cursor: pointer;
-  }
-
-  svg {
-    margin: 12px 0 0 0;
   }
 }
 
