@@ -43,10 +43,12 @@ export default function MusicDetail(props: Props): React.JSX.Element {
             </a>
           )}
         </div>
-
-        <View isView={isLyricView} onView={handleLyricView} content={isLyricView ? '縮小表示' : '拡大表示'} />
-        <div className={clsx(style.lyric, isLyricView && style.active)}>{lyric}</div>
-
+        {lyric && (
+          <>
+            <View isView={isLyricView} onView={handleLyricView} content={isLyricView ? '縮小表示' : '拡大表示'} />
+            <div className={clsx(style.lyric, isLyricView && style.active)}>{lyric}</div>
+          </>
+        )}
         <Divide />
         <MediaDetailCommon media={{ type: 'music', ...other }} list={list} handleToast={handleToast} />
       </MediaDetail>
