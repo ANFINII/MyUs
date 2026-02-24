@@ -76,6 +76,7 @@ class ImageUpload(str, Enum):
     CHANNEL = "channel"
     VIDEO = "video"
     COMIC = "comic"
+    COMIC_PAGE = "comic_page"
     PICTURE = "picture"
     BLOG = "blog"
 

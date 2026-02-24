@@ -189,8 +189,8 @@ class ComicAPI:
 
     @staticmethod
     @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
-    def create(request: HttpRequest, input: ComicIn = Form(...), image: UploadedFile = File(...), images: list[UploadedFile] = File(...)):
-        log.info("ComicAPI create", input=input, image=image, images=images)
+    def create(request: HttpRequest, input: ComicIn = Form(...), image: UploadedFile = File(...), pages: list[UploadedFile] = File(...)):
+        log.info("ComicAPI create", input=input, image=image, pages=pages)
 
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
@@ -199,7 +199,7 @@ class ComicAPI:
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
-        obj = create_comic(channel=channel, input=input, image=image)
+        obj = create_comic(channel=channel, input=input, image=image, pages=pages)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -226,6 +226,7 @@ class ComicAPI:
                 title=obj.title,
                 content=obj.content,
                 image=obj.image,
+                pages=obj.pages,
                 comments=convert_comments(obj.comments),
                 hashtags=convert_hashtags(obj.hashtags),
                 read=obj.read,

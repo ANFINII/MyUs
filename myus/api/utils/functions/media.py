@@ -9,7 +9,7 @@ from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.video.interface import VideoInterface
 from api.src.injectors.container import injector
 from api.utils.enum.index import MediaType, ImageUpload, MediaUpload
-from api.utils.functions.file import avatar_path, image_path, musics_path, video_path
+from api.utils.functions.file import avatar_path, comic_path, image_path, musics_path, video_path
 
 
 type MediaInterfaceType = VideoInterface | MusicInterface | ComicInterface | PictureInterface | BlogInterface | ChatInterface
@@ -41,6 +41,8 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
             path = avatar_path(upload_type, ulid, filename)
         case ImageUpload.VIDEO | ImageUpload.COMIC | ImageUpload.PICTURE | ImageUpload.BLOG:
             path = image_path(upload_type, ulid, filename)
+        case ImageUpload.COMIC_PAGE:
+            path = comic_path(ulid, filename)
         case MediaUpload.VIDEO | MediaUpload.ADVERTISE:
             path = video_path(upload_type, ulid, filename)
         case MediaUpload.MUSIC:
