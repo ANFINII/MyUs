@@ -119,6 +119,7 @@ class ComicOut(MediaOut):
 
 class ComicDetailOut(MediaDetailOut):
     image: str
+    pages: list[str]
     comments: list[CommentOut]
 
 

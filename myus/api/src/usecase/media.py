@@ -83,7 +83,7 @@ def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> M
     return MediaCreateData(ulid=obj.ulid)
 
 
-def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile) -> MediaCreateData:
+def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> MediaCreateData:
     repository = injector.get(ComicInterface)
 
     new_comic = ComicData(
@@ -92,6 +92,7 @@ def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile) -> M
         title=input.title,
         content=input.content,
         image=save_upload(image, ImageUpload.COMIC, channel.ulid),
+        pages=[save_upload(p, ImageUpload.COMIC_PAGE, channel.ulid) for p in pages],
         read=0,
         like=0,
         publish=True,
@@ -240,7 +241,12 @@ def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData
     repository = injector.get(ComicInterface)
     ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
-    data = [replace(o, image=create_url(o.image)) for o in objs]
+
+    data = [replace(o,
+        image=create_url(o.image),
+        pages=[create_url(p) for p in o.pages],
+    ) for o in objs]
+
     return data
 
 
@@ -350,6 +356,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Co
         title=obj.title,
         content=obj.content,
         image=create_url(obj.image),
+        pages=[create_url(p) for p in obj.pages],
         comments=comments,
         hashtags=obj.hashtags,
         read=obj.read,

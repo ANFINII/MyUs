@@ -63,6 +63,7 @@ class MusicDetailData(MediaDetailData):
 @dataclass(frozen=True, slots=True)
 class ComicDetailData(MediaDetailData):
     image: str
+    pages: list[str]
     comments: list[CommentGetData]
 
 
