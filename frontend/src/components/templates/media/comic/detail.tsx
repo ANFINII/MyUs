@@ -19,7 +19,7 @@ export default function ComicDetail(props: Props): React.JSX.Element {
   return (
     <Main metaTitle="Comic" toast={toast}>
       <MediaDetail publish={publish}>
-        <ComicViewer pages={[image, ...pages]} title={other.title} />
+        <ComicViewer pages={[image, ...pages]} />
         <Divide />
         <MediaDetailCommon media={{ type: 'comic', ...other }} list={list} handleToast={handleToast} />
       </MediaDetail>

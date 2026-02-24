@@ -6,11 +6,10 @@ import style from './ComicViewer.module.scss'
 
 interface Props {
   pages: string[]
-  title: string
 }
 
 export default function ComicViewer(props: Props): React.JSX.Element {
-  const { pages, title } = props
+  const { pages } = props
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -31,7 +30,7 @@ export default function ComicViewer(props: Props): React.JSX.Element {
           <IconChevront width="32" height="32" type="left" />
         </div>
         <div className={style.page}>
-          <ExImage src={pages[currentIndex]} title={`${title} - ${currentIndex + 1}`} />
+          <ExImage src={pages[currentIndex]} />
         </div>
         <div className={style.next} onClick={handleNext}>
           <IconChevront width="32" height="32" type="right" />
@@ -44,7 +43,7 @@ export default function ComicViewer(props: Props): React.JSX.Element {
         <div className={style.thumbnails}>
           {pages.map((src, index) => (
             <div key={src} className={clsx(style.thumbnail, index === currentIndex && style.active)} onClick={() => setCurrentIndex(index)}>
-              <ExImage src={src} title={`${title} - ${index + 1}`} />
+              <ExImage src={src} />
             </div>
           ))}
         </div>
