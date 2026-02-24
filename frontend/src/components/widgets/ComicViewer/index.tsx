@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import clsx from 'clsx'
 import ExImage from 'components/parts/ExImage'
 import IconChevront from 'components/parts/Icon/Chevront'
@@ -11,15 +11,10 @@ interface Props {
 export default function ComicViewer(props: Props): React.JSX.Element {
   const { pages } = props
 
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [page, setPage] = useState(0)
 
-  const handlePrev = useCallback(() => {
-    setCurrentIndex((prev) => Math.max(prev - 1, 0))
-  }, [])
-
-  const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => Math.min(prev + 1, pages.length - 1))
-  }, [pages.length])
+  const handlePrev = () => setPage((prev) => Math.max(prev - 1, 0))
+  const handleNext = () => setPage((prev) => Math.min(prev + 1, pages.length - 1))
 
   if (pages.length === 0) return <></>
 
@@ -30,7 +25,7 @@ export default function ComicViewer(props: Props): React.JSX.Element {
           <IconChevront width="32" height="32" type="left" />
         </div>
         <div className={style.page}>
-          <ExImage src={pages[currentIndex]} />
+          <ExImage src={pages[page]} />
         </div>
         <div className={style.next} onClick={handleNext}>
           <IconChevront width="32" height="32" type="right" />
@@ -38,11 +33,11 @@ export default function ComicViewer(props: Props): React.JSX.Element {
       </div>
       <div className={style.footer}>
         <p className={style.counter}>
-          {currentIndex + 1} / {pages.length}
+          {page + 1} / {pages.length}
         </p>
         <div className={style.thumbnails}>
           {pages.map((src, index) => (
-            <div key={src} className={clsx(style.thumbnail, index === currentIndex && style.active)} onClick={() => setCurrentIndex(index)}>
+            <div key={src} className={clsx(style.thumbnail, index === page && style.active)} onClick={() => setPage(index)}>
               <ExImage src={src} />
             </div>
           ))}
