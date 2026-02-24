@@ -31,7 +31,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
     <Main metaTitle="Music" toast={toast}>
       <MediaDetail publish={publish}>
         <div className={style.media_detail_music}>
-          <AudioPlayer src={music} playbackRate={speed} />
+          <AudioPlayer src={music} playbackRate={speed} className={style.player} />
           <div className={style.speed}>
             Speed
             <input type="range" min="0" max="2" step="0.25" value={speed} onChange={handleSpeed} className={style.range} />
