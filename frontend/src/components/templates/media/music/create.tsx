@@ -40,8 +40,8 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, music: files })
 
   const handleForm = async () => {
-    const { channelUlid, title, content, lyric, music } = values
-    if (!isRequiredCheck({ channelUlid, title, content, lyric, music })) return
+    const { channelUlid, title, content, music } = values
+    if (!isRequiredCheck({ channelUlid, title, content, music })) return
     handleLoading(true)
     const ret = await postMusicCreate(values)
     if (ret.isErr()) {
