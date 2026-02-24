@@ -9,6 +9,7 @@ from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.video.interface import VideoInterface
 from api.src.injectors.container import injector
 from api.utils.enum.index import MediaType, ImageUpload, MediaUpload
+from api.utils.functions.convert.audio_converter import is_conversion, save_converted_mp3
 from api.utils.functions.file import avatar_path, comic_path, image_path, musics_path, video_path
 
 
@@ -47,6 +48,8 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
             path = video_path(upload_type, ulid, filename)
         case MediaUpload.MUSIC:
             path = musics_path(ulid, filename)
+            if is_conversion(filename):
+                return save_converted_mp3(file, path)
         case _:
             assert False, f"未対応のUploadType: {upload_type}"
     return default_storage.save(path, file)

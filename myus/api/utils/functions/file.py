@@ -1,5 +1,7 @@
+from pathlib import Path
 from typing import Any
 from api.utils.enum.index import ImageUpload, MediaUpload
+from api.utils.functions.convert.audio_converter import is_conversion
 from api.utils.functions.index import new_ulid
 
 
@@ -16,6 +18,8 @@ def video_path(type: MediaUpload, ulid: str, filename: str) -> str:
 
 
 def musics_path(ulid: str, filename: str) -> str:
+    if is_conversion(filename):
+        filename = Path(filename).with_suffix(".mp3").name
     return f"musics/channel_{ulid}/{new_ulid()}_{filename}"
 
 
