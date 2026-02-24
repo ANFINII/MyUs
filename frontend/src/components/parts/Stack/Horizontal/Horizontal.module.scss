@@ -33,4 +33,24 @@
   &.evenly {
     justify-content: space-evenly;
   }
+
+  &.align_start {
+    align-items: flex-start;
+  }
+
+  &.align_center {
+    align-items: center;
+  }
+
+  &.align_end {
+    align-items: flex-end;
+  }
+
+  &.align_baseline {
+    align-items: baseline;
+  }
+
+  &.align_stretch {
+    align-items: stretch;
+  }
 }
