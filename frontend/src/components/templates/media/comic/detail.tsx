@@ -5,8 +5,6 @@ import Divide from 'components/parts/Divide'
 import ComicViewer from 'components/widgets/ComicViewer'
 import MediaDetail from 'components/widgets/Media/Detail'
 import MediaDetailCommon from 'components/widgets/Media/Detail/Common'
-import style from './Detail.module.scss'
-
 interface Props {
   data: ComicDetailOut
 }
@@ -21,11 +19,7 @@ export default function ComicDetail(props: Props): React.JSX.Element {
   return (
     <Main metaTitle="Comic" toast={toast}>
       <MediaDetail publish={publish}>
-        <div className={style.media_detail}>
-          <div className={style.contents}>
-            <ComicViewer pages={[image, ...pages]} title={other.title} />
-          </div>
-        </div>
+        <ComicViewer pages={[image, ...pages]} title={other.title} />
         <Divide />
         <MediaDetailCommon media={{ type: 'comic', ...other }} list={list} handleToast={handleToast} />
       </MediaDetail>
