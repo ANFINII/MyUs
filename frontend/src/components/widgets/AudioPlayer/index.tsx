@@ -14,10 +14,11 @@ const formatTime = (seconds: number): string => {
 interface Props {
   src: string
   playbackRate?: number
+  className?: string
 }
 
 export default function AudioPlayer(props: Props): React.JSX.Element {
-  const { src, playbackRate = 1 } = props
+  const { src, playbackRate = 1, className } = props
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
@@ -145,7 +146,7 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const playedPercent = duration ? (currentTime / duration) * 100 : 0
 
   return (
-    <div className={clsx(style.player, isPlaying && style.playing, isMuted && style.muted)}>
+    <div className={clsx(style.player, isPlaying && style.playing, isMuted && style.muted, className)}>
       <div className={style.playpause} onClick={handlePlayPause}>
         <span className={style.icon} />
       </div>

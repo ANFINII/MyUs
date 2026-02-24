@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.urls import include, path
 from api.admin import manage_site
 from api.src.routers import api
+from config.views import serve_media
 
 
 urlpatterns = [
@@ -21,4 +22,4 @@ if settings.DEBUG:
     ] + urlpatterns
     """ メディアファイルを扱う時の開発環境時の設定 """
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += [path("media/<path:path>", serve_media)]

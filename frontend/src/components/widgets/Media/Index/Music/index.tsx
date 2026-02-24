@@ -13,7 +13,7 @@ export default function MediaMusic(props: Props): React.JSX.Element {
 
   return (
     <section className={style.media}>
-      <AudioPlayer src={music} />
+      <AudioPlayer src={music} className={style.player} />
       <MediaContent href={`/media/music/${ulid}`} media={media} />
     </section>
   )
