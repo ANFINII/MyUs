@@ -15,7 +15,6 @@ import { formatDatetime } from 'utils/functions/datetime'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
-import Button from 'components/parts/Button'
 import CountLike from 'components/parts/Count/Like'
 import CountRead from 'components/parts/Count/Read'
 import Divide from 'components/parts/Divide'
@@ -24,6 +23,7 @@ import VStack from 'components/parts/Stack/Vertical'
 import CommentContent from 'components/widgets/Comment/Content'
 import CommentInput from 'components/widgets/Comment/Input/Input'
 import SubscribeDeleteModal from 'components/widgets/Modal/SubscribeDelete'
+import SubscribeButton from 'components/widgets/SubscribeButton'
 import View from 'components/widgets/View'
 import style from './Common.module.scss'
 
@@ -95,16 +95,12 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     setFormState((prev) => ({ ...prev, ...data }))
   }
 
-  const fetchSubscribe = async (isSubscribe: boolean) => {
-    const request: SubscribeIn = { channelUlid: channel.ulid, isSubscribe }
+  const handleSubscribe = async () => {
+    const request: SubscribeIn = { channelUlid: channel.ulid, isSubscribe: !isSubscribe }
     const ret = await postSubscribe(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
     setFormState((prev) => ({ ...prev, isSubscribe: data.isSubscribe, subscribeCount: data.count }))
-  }
-
-  const handleSubscribe = async () => {
-    await fetchSubscribe(!isSubscribe)
     if (isSubscribe) handleModal()
     handleToast(isSubscribe ? 'チャンネル登録を解除しました' : 'チャンネルを登録しました', false)
   }
@@ -155,8 +151,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
             </VStack>
           </HStack>
           <div className={style.content_detail_p2}>
-            {!isSubscribe && <Button color="green" name="登録する" disabled={isFallowDisable} onClick={handleSubscribe} />}
-            {isSubscribe && <Button color="white" name="登録済み" onClick={handleModal} />}
+            <SubscribeButton isSubscribe={isSubscribe} disabled={isFallowDisable} onSubscribe={handleSubscribe} onModal={handleModal} />
           </div>
         </HStack>
         <div className={style.content_detail_p1}>

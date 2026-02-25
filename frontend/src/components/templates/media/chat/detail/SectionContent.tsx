@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { ChatDetail } from 'types/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
 import AvatarLink from 'components/parts/Avatar/Link'
-import Button from 'components/parts/Button'
+import SubscribeButton from 'components/widgets/SubscribeButton'
 import style from './detail.module.scss'
 
 interface Props {
@@ -11,17 +11,16 @@ interface Props {
   isContent: boolean
   isContentExpand: boolean
   isFallowDisable: boolean
-  onContent: () => void
-  onContentExpand: () => void
   onModal: () => void
   onSubscribe: () => void
+  onContentExpand: () => void
 }
 
 export default function SectionContent(props: Props): React.JSX.Element {
-  const { detail, subscribeCount, isContent, isContentExpand, isFallowDisable, onContent, onContentExpand, onModal, onSubscribe } = props
+  const { detail, subscribeCount, isContent, isContentExpand, isFallowDisable, onModal, onSubscribe, onContentExpand } = props
 
   return (
-    <div className={clsx(style.content_overlay, isContent && style.active)} onClick={onContent}>
+    <div className={clsx(style.content_overlay, isContent && style.active)}>
       <div className={style.content_author}>
         <AvatarLink src={detail.channel.avatar} size="m" ulid={detail.channel.ulid} nickname={detail.channel.name} />
         <div className={style.detail}>
@@ -29,13 +28,12 @@ export default function SectionContent(props: Props): React.JSX.Element {
             <p>{detail.channel.name}</p>
             <time>{formatDatetime(detail.created)}</time>
           </div>
-          <div className={style.follower}>
+          <div className={style.subscribe_count}>
             登録者数 <span>{subscribeCount}</span>
           </div>
         </div>
-        <div className={style.follow}>
-          {!detail.mediaUser.isSubscribe && <Button color="green" name="チャンネル登録" disabled={isFallowDisable} onClick={onSubscribe} />}
-          {detail.mediaUser.isSubscribe && <Button color="white" name="登録済み" onClick={onModal} />}
+        <div className={style.subscribe}>
+          <SubscribeButton isSubscribe={detail.mediaUser.isSubscribe} disabled={isFallowDisable} onModal={onModal} onSubscribe={onSubscribe} />
         </div>
       </div>
       <span className={style.content_expand_toggle} onClick={onContentExpand}>
