@@ -1,19 +1,25 @@
 import { useRef, useEffect, useCallback } from 'react'
 import { ChatMessage } from 'types/internal/media/detail'
 
+interface OutProps {
+  send: (data: object) => void
+}
+
 interface Props {
   ulid: string | undefined
   onMessage: (message: ChatMessage) => void
   scrollToBottom: () => void
 }
 
-interface OutProps {
-  send: (data: object) => void
-}
-
 export const useChatWebSocket = (props: Props): OutProps => {
   const { ulid, onMessage, scrollToBottom } = props
+
   const wsRef = useRef<WebSocket | null>(null)
+  const onMessageRef = useRef(onMessage)
+  const scrollToBottomRef = useRef(scrollToBottom)
+
+  onMessageRef.current = onMessage
+  scrollToBottomRef.current = scrollToBottom
 
   useEffect(() => {
     if (!ulid) return
@@ -28,23 +34,20 @@ export const useChatWebSocket = (props: Props): OutProps => {
         const data = eventData.message
         const { ulid, text, created, updated, author } = data
         const newMessage: ChatMessage = { ulid, text, created, updated, author }
-        onMessage(newMessage)
-        scrollToBottom()
+        onMessageRef.current(newMessage)
+        scrollToBottomRef.current()
       }
     }
 
     return () => {
       ws.close()
     }
-  }, [ulid, onMessage, scrollToBottom])
+  }, [ulid])
 
-  const send = useCallback(
-    (data: object) => {
-      if (!wsRef.current) return
-      wsRef.current.send(JSON.stringify(data))
-    },
-    [],
-  )
+  const send = useCallback((data: object) => {
+    if (!wsRef.current) return
+    wsRef.current.send(JSON.stringify(data))
+  }, [])
 
   return { send }
 }

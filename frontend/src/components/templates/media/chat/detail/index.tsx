@@ -80,12 +80,9 @@ export default function ChatDetail(props: Props): React.JSX.Element {
 
   useEffect(() => scrollToBottom(), [messages, scrollToBottom])
 
-  const handleWsMessage = useCallback(
-    (newMessage: ChatMessage) => {
-      setFormState((prev) => ({ ...prev, messages: [...prev.messages, newMessage], joined: prev.joined + 1, thread: prev.thread + 1 }))
-    },
-    [],
-  )
+  const handleWsMessage = (newMessage: ChatMessage) => {
+    setFormState((prev) => ({ ...prev, messages: [...prev.messages, newMessage], joined: prev.joined + 1, thread: prev.thread + 1 }))
+  }
 
   const { send } = useChatWebSocket({ ulid: router.query.ulid as string | undefined, onMessage: handleWsMessage, scrollToBottom })
 
