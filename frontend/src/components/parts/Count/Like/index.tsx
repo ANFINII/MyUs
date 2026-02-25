@@ -1,5 +1,5 @@
 import IconHand from 'components/parts/Icon/Hand'
-import style from './CountLike.module.scss'
+import style from './Like.module.scss'
 
 interface Props {
   isLike: boolean
