@@ -19,6 +19,7 @@ import IconChat from 'components/parts/Icon/Chat'
 import IconCross from 'components/parts/Icon/Cross'
 import IconHand from 'components/parts/Icon/Hand'
 import IconPerson from 'components/parts/Icon/Person'
+import IconResize from 'components/parts/Icon/Resize'
 import SubscribeDeleteModal from 'components/widgets/Modal/SubscribeDelete'
 import style from './detail.module.scss'
 
@@ -72,7 +73,6 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const isDraggingRef = useRef(false)
   const messageAreaRef = useRef<HTMLDivElement>(null)
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [isThread, setIsThread] = useState<boolean>(false)
   const [isContent, setIsContent] = useState<boolean>(false)
   const [isContentExpanded, setIsContentExpanded] = useState<boolean>(false)
   const [formState, setFormState] = useState<ChatDetailState>(initFormState)
@@ -81,15 +81,18 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const { messages, message, reply, selectedMessage, joined, thread, likeCount, subscribeCount, isLike, isSubscribe } = formState
   const NAV_MIN = 52
   const NAV_MAX_RATIO = 0.5
-  const isFallowDisable = !user.isActive || user.ulid === detail.channel.ulid
+  const isThread = selectedMessage !== null
   const isPeriod = new Date(detail.period) < new Date()
   const isDisabled = isPeriod || !user.isActive
+  const isFallowDisable = !user.isActive || user.ulid === detail.channel.ulid
 
   const scrollToBottom = useCallback(() => {
     if (messageAreaRef.current) {
       messageAreaRef.current.scrollTop = messageAreaRef.current.scrollHeight
     }
   }, [])
+
+  useEffect(() => scrollToBottom(), [messages, scrollToBottom])
 
   // WebSocket接続
   useEffect(() => {
@@ -116,13 +119,10 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     }
   }, [router.query.ulid, scrollToBottom])
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages, scrollToBottom])
-
+  const handleModal = () => setIsModal(!isModal)
   const handleContentToggle = () => setIsContent(!isContent)
   const handleContentExpand = () => setIsContentExpanded(!isContentExpanded)
-  const handleModal = () => setIsModal(!isModal)
+  const handleThreadToggle = (message: ChatMessage | null = null) => setFormState((prev) => ({ ...prev, selectedMessage: message }))
 
   const setNavWidth = useCallback((width: number) => {
     navWidthRef.current = width
@@ -164,16 +164,6 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     },
     [setNavWidth],
   )
-
-  const handleThreadOpen = (message: ChatMessage) => {
-    setFormState((prev) => ({ ...prev, selectedMessage: message }))
-    setIsThread(true)
-  }
-
-  const handleThreadClose = () => {
-    setIsThread(false)
-    setFormState((prev) => ({ ...prev, selectedMessage: null }))
-  }
 
   const handleMessageSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -249,167 +239,173 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   return (
     <Main metaTitle="Chat" toast={toast}>
       <div className={style.chat_section}>
-        {/* ヘッダー */}
-        <div className={clsx(style.chat_section_header, isThread && style.thread_open)}>
-          <div className={style.content_toggle} onClick={handleContentToggle}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" className={style.content_icon} fill="currentColor" viewBox="0 0 16 16">
-              <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z" />
-              <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z" />
-            </svg>
-            <h1 title={detail.title}>{detail.title}</h1>
-          </div>
-
-          {/* コンテンツオーバーレイ */}
-          <div className={clsx(style.content_overlay, isContent && style.active)}>
-            <div className={style.content_author}>
-              <AvatarLink src={detail.channel.avatar} size="m" ulid={detail.channel.ulid} nickname={detail.channel.name} />
-              <div className={style.content_author_info}>
-                <p>{detail.channel.name}</p>
-                <time>{formatDatetime(detail.created)}</time>
-              </div>
-              <div className={style.content_author_follower}>
-                登録者数 <span>{subscribeCount}</span>
-              </div>
-              <div className={style.content_author_follow}>
-                {!isSubscribe && <Button color="green" name="チャンネル登録" disabled={isFallowDisable} onClick={handleSubscribe} />}
-                {isSubscribe && <Button color="white" name="登録済み" onClick={handleModal} />}
-              </div>
+        {/* ヘッダー行 */}
+        <div className={style.header_row}>
+          <div className={style.chat_section_header}>
+            <div className={style.content_toggle} onClick={handleContentToggle}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" className={style.content_icon} fill="currentColor" viewBox="0 0 16 16">
+                <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z" />
+                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z" />
+              </svg>
+              <h1 title={detail.title}>{detail.title}</h1>
             </div>
-            <span className={style.content_expand_toggle} onClick={handleContentExpand}>
-              {isContentExpanded ? '縮小表示' : '拡大表示'}
-            </span>
-            <div className={clsx(style.content_body, isContentExpanded && style.expanded)}>{detail.content}</div>
-          </div>
 
-          {/* メディア情報 */}
-          <div className={style.media_detail_aria}>
-            <span className={style.stat_item}>
-              <IconCaret size="14" />
-              <span>{detail.read.toLocaleString()}</span>
-            </span>
-            <span className={style.stat_item}>
-              <IconPerson size="14" type="base" />
-              <span>{joined.toLocaleString()}</span>
-            </span>
-            <span className={style.stat_item}>
-              <IconChat size="14" />
-              <span>{thread.toLocaleString()}</span>
-            </span>
-            {user.isActive ? (
-              <button className={style.like_button} onClick={handleLike}>
-                <IconHand size="14" type={isLike ? 'on' : 'off'} />
-                <span>{likeCount.toLocaleString()}</span>
-              </button>
-            ) : (
-              <span className={style.stat_item}>
-                <IconHand size="14" type="off" />
-                <span>{likeCount.toLocaleString()}</span>
+            {/* コンテンツオーバーレイ */}
+            <div className={clsx(style.content_overlay, isContent && style.active)}>
+              <div className={style.content_author}>
+                <AvatarLink src={detail.channel.avatar} size="m" ulid={detail.channel.ulid} nickname={detail.channel.name} />
+                <div className={style.detail}>
+                  <div className={style.info}>
+                    <p>{detail.channel.name}</p>
+                    <time>{formatDatetime(detail.created)}</time>
+                  </div>
+                  <div className={style.follower}>
+                    登録者数 <span>{subscribeCount}</span>
+                  </div>
+                </div>
+                <div className={style.follow}>
+                  {!isSubscribe && <Button color="green" name="チャンネル登録" disabled={isFallowDisable} onClick={handleSubscribe} />}
+                  {isSubscribe && <Button color="white" name="登録済み" onClick={handleModal} />}
+                </div>
+              </div>
+              <span className={style.content_expand_toggle} onClick={handleContentExpand}>
+                {isContentExpanded ? '縮小表示' : '拡大表示'}
               </span>
-            )}
-            <span className={style.stat_item}>
-              <time>期間 {formatDatetime(detail.period)}</time>
-            </span>
-          </div>
-        </div>
+              <div className={clsx(style.content_body, isContentExpanded && style.expanded)}>{detail.content}</div>
+            </div>
 
-        {/* スレッドヘッダー */}
-        <div className={clsx(style.thread_header, isThread && style.active)}>
-          <h2>スレッド</h2>
-          <IconCross size="27" onClick={handleThreadClose} className={style.thread_close} />
-        </div>
-
-        {/* サイドナビ */}
-        <div ref={navRef} className={style.chat_section_nav}>
-          <div className={style.nav_toggle} onClick={handleNavToggle}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path
-                fillRule="evenodd"
-                d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"
-              />
-            </svg>
-          </div>
-          <div className={style.nav_area}>
-            {list.map((item) => (
-              <div key={item.ulid} className={style.nav_item}>
-                <Avatar src={item.channel.avatar} size="m" />
-                <Link href={`/media/chat/${item.ulid}`}>
-                  <h3 className={style.nav_item_title} title={item.title}>
-                    {item.title}
-                  </h3>
-                </Link>
-              </div>
-            ))}
-          </div>
-          <div className={style.nav_resize_handle} onMouseDown={handleResizeStart} />
-        </div>
-
-        {/* メインメッセージエリア */}
-        <div className={clsx(style.chat_section_main, isThread && style.thread_open)}>
-          <div ref={messageAreaRef} className={style.message_area}>
-            {messages.map((message) => (
-              <div key={message.ulid} className={style.message_item}>
-                <AvatarLink src={message.author.avatar} size="m" ulid={message.author.ulid} nickname={message.author.nickname} />
-                <div className={style.message_meta}>
-                  <p>{message.author.nickname}</p>
-                  <time>{formatDatetime(message.created)}</time>
-                </div>
-                <div className={style.message_text} dangerouslySetInnerHTML={{ __html: message.text }} />
-                <div className={style.message_thread_link} onClick={() => handleThreadOpen(message)}>
-                  スレッド表示
-                </div>
-              </div>
-            ))}
-          </div>
-          <footer className={style.chat_footer}>
-            <form onSubmit={handleMessageSubmit}>
-              <div className={style.message_input}>
-                <textarea
-                  className={style.message_textarea}
-                  value={message}
-                  onChange={(e) => setFormState((prev) => ({ ...prev, message: e.target.value }))}
-                  placeholder={isPeriod ? 'チャット期間が過ぎています!' : !user.isActive ? 'チャットするにはログインが必要です!' : 'メッセージを入力...'}
-                  disabled={isDisabled}
-                  rows={1}
-                />
-                <button type="submit" className={style.send_button} disabled={isDisabled || len(message.trim()) === 0}>
-                  <IconCaret size="16" type="right" />
+            {/* メディア情報 */}
+            <div className={style.media_detail_aria}>
+              <span className={style.stat_item}>
+                <IconCaret size="14" />
+                <span>{detail.read.toLocaleString()}</span>
+              </span>
+              <span className={style.stat_item}>
+                <IconPerson size="14" type="base" />
+                <span>{joined.toLocaleString()}</span>
+              </span>
+              <span className={style.stat_item}>
+                <IconChat size="14" />
+                <span>{thread.toLocaleString()}</span>
+              </span>
+              {user.isActive ? (
+                <button className={style.like_button} onClick={handleLike}>
+                  <IconHand size="14" type={isLike ? 'on' : 'off'} />
+                  <span>{likeCount.toLocaleString()}</span>
                 </button>
-              </div>
-            </form>
-          </footer>
+              ) : (
+                <span className={style.stat_item}>
+                  <IconHand size="14" type="off" />
+                  <span>{likeCount.toLocaleString()}</span>
+                </span>
+              )}
+              <span className={style.stat_item}>
+                <time>期間 {formatDatetime(detail.period)}</time>
+              </span>
+            </div>
+          </div>
+
+          {/* スレッドヘッダー */}
+          <div className={clsx(style.thread_header, isThread && style.active)}>
+            <h2>スレッド</h2>
+            <IconCross size="27" onClick={() => handleThreadToggle()} className={style.thread_close} />
+          </div>
         </div>
 
-        {/* スレッドエリア */}
-        <div className={clsx(style.chat_section_thread, isThread && style.active)}>
-          <div className={style.thread_area}>
-            {selectedMessage && (
-              <div className={style.message_item}>
-                <AvatarLink src={selectedMessage.author.avatar} size="m" ulid={selectedMessage.author.ulid} nickname={selectedMessage.author.nickname} />
-                <div className={style.message_meta}>
-                  <p>{selectedMessage.author.nickname}</p>
-                  <time>{formatDatetime(selectedMessage.created)}</time>
+        {/* ボディ行 */}
+        <div className={style.body_row}>
+          {/* サイドナビ */}
+          <div ref={navRef} className={style.chat_section_nav}>
+            <div className={style.nav_toggle} onClick={handleNavToggle}>
+              <IconResize size="16" />
+            </div>
+            <div className={style.nav_area}>
+              {list.map((item) => (
+                <div key={item.ulid} className={style.nav_item}>
+                  <Avatar src={item.channel.avatar} size="40" />
+                  <Link href={`/media/chat/${item.ulid}`}>
+                    <h3 className={style.nav_title} title={item.title}>
+                      {item.title}
+                    </h3>
+                  </Link>
                 </div>
-                <div className={style.message_text} dangerouslySetInnerHTML={{ __html: selectedMessage.text }} />
-              </div>
-            )}
+              ))}
+            </div>
+            <div className={style.nav_resize} onMouseDown={handleResizeStart} />
           </div>
-          <footer className={style.thread_footer}>
-            <form onSubmit={handleReplySubmit}>
-              <div className={style.message_input}>
-                <textarea
-                  className={style.message_textarea}
-                  value={reply}
-                  onChange={(e) => setFormState((prev) => ({ ...prev, reply: e.target.value }))}
-                  placeholder={isPeriod ? 'チャット期間が過ぎています!' : !user.isActive ? 'チャットするにはログインが必要です!' : '返信を入力...'}
-                  disabled={isDisabled}
-                  rows={1}
-                />
-                <button type="submit" className={style.send_button} disabled={isDisabled || len(reply.trim()) === 0}>
-                  <IconCaret size="16" type="right" />
-                </button>
-              </div>
-            </form>
-          </footer>
+
+          {/* メインメッセージエリア */}
+          <div className={style.chat_section_main}>
+            <div ref={messageAreaRef} className={style.message_area}>
+              {messages.map((message) => (
+                <div key={message.ulid} className={style.message_item}>
+                  <AvatarLink src={message.author.avatar} size="m" ulid={message.author.ulid} nickname={message.author.nickname} />
+                  <div className={style.message_content}>
+                    <div className={style.message_meta}>
+                      <p>{message.author.nickname}</p>
+                      <time>{formatDatetime(message.created)}</time>
+                    </div>
+                    <div className={style.message_text} dangerouslySetInnerHTML={{ __html: message.text }} />
+                    <div className={style.message_thread_link} onClick={() => handleThreadToggle(message)}>
+                      スレッド表示
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <footer className={style.chat_footer}>
+              <form onSubmit={handleMessageSubmit}>
+                <div className={style.message_input}>
+                  <textarea
+                    className={style.message_textarea}
+                    value={message}
+                    onChange={(e) => setFormState((prev) => ({ ...prev, message: e.target.value }))}
+                    placeholder={isPeriod ? 'チャット期間が過ぎています!' : !user.isActive ? 'チャットするにはログインが必要です!' : 'メッセージを入力...'}
+                    disabled={isDisabled}
+                    rows={1}
+                  />
+                  <button type="submit" className={style.send_button} disabled={isDisabled || len(message.trim()) === 0}>
+                    <IconCaret size="16" type="right" />
+                  </button>
+                </div>
+              </form>
+            </footer>
+          </div>
+
+          {/* スレッドエリア */}
+          <div className={clsx(style.chat_section_thread, isThread && style.active)}>
+            <div className={style.thread_area}>
+              {selectedMessage && (
+                <div className={style.message_item}>
+                  <AvatarLink src={selectedMessage.author.avatar} size="m" ulid={selectedMessage.author.ulid} nickname={selectedMessage.author.nickname} />
+                  <div className={style.message_content}>
+                    <div className={style.message_meta}>
+                      <p>{selectedMessage.author.nickname}</p>
+                      <time>{formatDatetime(selectedMessage.created)}</time>
+                    </div>
+                    <div className={style.message_text} dangerouslySetInnerHTML={{ __html: selectedMessage.text }} />
+                  </div>
+                </div>
+              )}
+            </div>
+            <footer className={style.thread_footer}>
+              <form onSubmit={handleReplySubmit}>
+                <div className={style.message_input}>
+                  <textarea
+                    className={style.message_textarea}
+                    value={reply}
+                    onChange={(e) => setFormState((prev) => ({ ...prev, reply: e.target.value }))}
+                    placeholder={isPeriod ? 'チャット期間が過ぎています!' : !user.isActive ? 'チャットするにはログインが必要です!' : '返信を入力...'}
+                    disabled={isDisabled}
+                    rows={1}
+                  />
+                  <button type="submit" className={style.send_button} disabled={isDisabled || len(reply.trim()) === 0}>
+                    <IconCaret size="16" type="right" />
+                  </button>
+                </div>
+              </form>
+            </footer>
+          </div>
         </div>
       </div>
       <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={false} onAction={handleDeleteSubscribe} channel={detail.channel} followerCount={subscribeCount} />
