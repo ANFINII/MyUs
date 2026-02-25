@@ -216,14 +216,9 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }
 
   const handleSubscribe = async () => {
-    await fetchSubscribe(true)
-    handleToast('チャンネルを登録しました', false)
-  }
-
-  const handleDeleteSubscribe = async () => {
-    await fetchSubscribe(false)
-    handleModal()
-    handleToast('チャンネル登録を解除しました', false)
+    await fetchSubscribe(!isSubscribe)
+    if (isSubscribe) handleModal()
+    handleToast(isSubscribe ? 'チャンネル登録を解除しました' : 'チャンネルを登録しました', false)
   }
 
   if (!detail.publish) {
@@ -408,7 +403,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
           </div>
         </div>
       </div>
-      <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={false} onAction={handleDeleteSubscribe} channel={detail.channel} followerCount={subscribeCount} />
+      <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={false} onAction={handleSubscribe} channel={detail.channel} followerCount={subscribeCount} />
     </Main>
   )
 }
