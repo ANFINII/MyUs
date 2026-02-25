@@ -11,6 +11,7 @@ import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import SubscribeDeleteModal from 'components/widgets/Modal/SubscribeDelete'
+import SectionContent from './SectionContent'
 import SectionHeader from './SectionHeader'
 import SectionMain from './SectionMain'
 import SectionNav from './SectionNav'
@@ -144,23 +145,20 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     <Main metaTitle="Chat" toast={toast}>
       <div className={style.chat_section}>
         <div className={style.header_row}>
-          <SectionHeader
+          <SectionHeader detail={headerDetail} user={user} isThread={isThread} onContent={handleContent} onLike={handleLike} onThreadClose={handleThread} />
+        </div>
+        <div className={style.body_row}>
+          <SectionContent
             detail={headerDetail}
-            user={user}
             subscribeCount={subscribeCount}
-            isThread={isThread}
             isContent={isContent}
             isContentExpand={isContentExpand}
             isFallowDisable={isFallowDisable}
             onContent={handleContent}
             onContentExpand={handleContentExpand}
-            onLike={handleLike}
-            onSubscribe={handleSubscribe}
             onModal={handleModal}
-            onThreadClose={handleThread}
+            onSubscribe={handleSubscribe}
           />
-        </div>
-        <div className={style.body_row}>
           <SectionNav navRef={navRef} list={list} handleNavToggle={handleNavToggle} handleResizeStart={handleResizeStart} />
           <SectionMain
             messageAreaRef={messageAreaRef}
