@@ -117,16 +117,12 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     setFormState((prev) => ({ ...prev, ...data }))
   }
 
-  const fetchSubscribe = async (isSubscribe: boolean) => {
-    const request: SubscribeIn = { channelUlid: detail.channel.ulid, isSubscribe }
+  const handleSubscribe = async () => {
+    const request: SubscribeIn = { channelUlid: detail.channel.ulid, isSubscribe: !isSubscribe }
     const ret = await postSubscribe(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
     setFormState((prev) => ({ ...prev, isSubscribe: data.isSubscribe, subscribeCount: data.count }))
-  }
-
-  const handleSubscribe = async () => {
-    await fetchSubscribe(!isSubscribe)
     if (isSubscribe) handleModal()
     handleToast(isSubscribe ? 'チャンネル登録を解除しました' : 'チャンネルを登録しました', false)
   }
@@ -154,10 +150,9 @@ export default function ChatDetail(props: Props): React.JSX.Element {
             isContent={isContent}
             isContentExpand={isContentExpand}
             isFallowDisable={isFallowDisable}
-            onContent={handleContent}
-            onContentExpand={handleContentExpand}
             onModal={handleModal}
             onSubscribe={handleSubscribe}
+            onContentExpand={handleContentExpand}
           />
           <SectionNav navRef={navRef} list={list} onNav={handleNav} onResize={handleResize} />
           <SectionMain
