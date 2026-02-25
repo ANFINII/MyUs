@@ -96,14 +96,14 @@ export default function ChatDetail(props: Props): React.JSX.Element {
 
   const handleMessageSubmit = (e: FormEvent) => {
     e.preventDefault()
-    if (message.trim().length === 0) return
+    if (message.replace(/<[^>]*>/g, '').trim().length === 0) return
     send(camelSnake({ command: 'create_message', chatId: detail.ulid, message, delta: '' }))
     setFormState((prev) => ({ ...prev, message: '' }))
   }
 
   const handleReplySubmit = (e: FormEvent) => {
     e.preventDefault()
-    if (!selectedMessage || reply.trim().length === 0) return
+    if (!selectedMessage || reply.replace(/<[^>]*>/g, '').trim().length === 0) return
     send(camelSnake({ command: 'create_reply_message', chatId: detail.ulid, message: reply, delta: '', parentId: selectedMessage.ulid }))
     setFormState((prev) => ({ ...prev, reply: '' }))
   }
@@ -167,9 +167,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
             messageAreaRef={messageAreaRef}
             messages={messages}
             message={message}
-            isPeriod={isPeriod}
             isDisabled={isDisabled}
-            isUserActive={user.isActive}
             handleMessageChange={handleMessageChange}
             handleMessageSubmit={handleMessageSubmit}
             handleThreadToggle={handleThreadToggle}
@@ -177,9 +175,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
           <SectionThread
             selectedMessage={selectedMessage}
             reply={reply}
-            isPeriod={isPeriod}
             isDisabled={isDisabled}
-            isUserActive={user.isActive}
             handleReplyChange={handleReplyChange}
             handleReplySubmit={handleReplySubmit}
           />
