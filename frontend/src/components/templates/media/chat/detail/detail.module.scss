@@ -400,57 +400,6 @@
   }
 }
 
-/* メッセージ入力 */
-.message_input {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  .message_textarea {
-    flex: 1;
-    min-height: 40px;
-    max-height: 120px;
-    padding: 8px 12px;
-    font-size: 14px;
-    border: 1px solid rgb(200, 200, 200);
-    border-radius: 5px;
-    resize: none;
-    outline: none;
-
-    &:focus {
-      border-color: rgb(40, 140, 255);
-    }
-
-    &:disabled {
-      background: rgb(240, 240, 240);
-      cursor: not-allowed;
-    }
-  }
-
-  .send_button {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    background: rgb(40, 140, 255);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-
-    &:disabled {
-      background: rgb(200, 200, 200);
-      cursor: not-allowed;
-    }
-
-    &:hover:not(:disabled) {
-      background: rgb(30, 120, 230);
-    }
-  }
-}
-
 /* chat_section_thread */
 .chat_section_thread {
   display: none;
