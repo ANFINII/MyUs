@@ -6,8 +6,8 @@ const SIDEBAR_LEFT = 72
 
 interface OutProps {
   navRef: React.RefObject<HTMLDivElement | null>
-  handleNavToggle: () => void
-  handleResizeStart: (e: MouseEvent) => void
+  handleNav: () => void
+  handleResize: (e: MouseEvent) => void
 }
 
 export const useNavResize = (): OutProps => {
@@ -22,12 +22,12 @@ export const useNavResize = (): OutProps => {
     }
   }, [])
 
-  const handleNavToggle = () => {
+  const handleNav = () => {
     const half = (window.innerWidth - SIDEBAR_LEFT) / 2
     setNavWidth(navWidthRef.current > NAV_MIN ? NAV_MIN : half)
   }
 
-  const handleResizeStart = useCallback(
+  const handleResize = useCallback(
     (e: MouseEvent) => {
       e.preventDefault()
       isDraggingRef.current = true
@@ -55,5 +55,5 @@ export const useNavResize = (): OutProps => {
     [setNavWidth],
   )
 
-  return { navRef, handleNavToggle, handleResizeStart }
+  return { navRef, handleNav, handleResize }
 }

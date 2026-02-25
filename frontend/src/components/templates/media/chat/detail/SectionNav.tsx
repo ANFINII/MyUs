@@ -8,16 +8,16 @@ import style from './detail.module.scss'
 interface Props {
   navRef: RefObject<HTMLDivElement | null>
   list: Chat[]
-  handleNavToggle: () => void
-  handleResizeStart: (e: MouseEvent) => void
+  onNav: () => void
+  onResize: (e: MouseEvent) => void
 }
 
 export default function SectionNav(props: Props): React.JSX.Element {
-  const { navRef, list, handleNavToggle, handleResizeStart } = props
+  const { navRef, list, onNav, onResize } = props
 
   return (
     <div ref={navRef} className={style.chat_section_nav}>
-      <div className={style.nav_toggle} onClick={handleNavToggle}>
+      <div className={style.nav_toggle} onClick={onNav}>
         <IconResize size="15" />
       </div>
       <div className={style.nav_area}>
@@ -32,7 +32,7 @@ export default function SectionNav(props: Props): React.JSX.Element {
           </div>
         ))}
       </div>
-      <div className={style.nav_resize} onMouseDown={handleResizeStart} />
+      <div className={style.nav_resize} onMouseDown={onResize} />
     </div>
   )
 }

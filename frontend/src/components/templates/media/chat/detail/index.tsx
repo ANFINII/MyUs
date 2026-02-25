@@ -58,7 +58,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const router = useRouter()
   const { user } = useUser()
   const { toast, handleToast } = useToast()
-  const { navRef, handleNavToggle, handleResizeStart } = useNavResize()
+  const { navRef, handleNav, handleResize } = useNavResize()
   const messageAreaRef = useRef<HTMLDivElement>(null)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isContent, setIsContent] = useState<boolean>(false)
@@ -159,7 +159,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
             onModal={handleModal}
             onSubscribe={handleSubscribe}
           />
-          <SectionNav navRef={navRef} list={list} handleNavToggle={handleNavToggle} handleResizeStart={handleResizeStart} />
+          <SectionNav navRef={navRef} list={list} onNav={handleNav} onResize={handleResize} />
           <SectionMain
             messageAreaRef={messageAreaRef}
             messages={messages}
