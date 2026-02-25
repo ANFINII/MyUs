@@ -60,14 +60,14 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   }
 
   return (
-    <Main title="Blog" type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
+    <Main title="Blog" isFooter={false} type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <form method="POST" action="">
         <VStack gap="8">
           <SelectBox label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
           <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
-          <TextEditor label="本文" value={values.richtext} className="blog" required={isRequired} onChange={handleRichtext} />
+          <TextEditor label="本文" value={values.richtext} size="large" required={isRequired} onChange={handleRichtext} />
         </VStack>
       </form>
     </Main>

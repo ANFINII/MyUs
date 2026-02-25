@@ -32,12 +32,13 @@ interface Props {
   label?: string
   value?: string
   required?: boolean
+  size?: 'default' | 'large'
   className?: string
   onChange?: (html: string) => void
 }
 
 export default function TextEditor(props: Props): React.JSX.Element {
-  const { label, value, required = false, className, onChange } = props
+  const { label, value, required = false, size = 'default', className, onChange } = props
 
   const onChangeRef = useRef(onChange)
   const suppressRef = useRef(false)
@@ -80,7 +81,7 @@ export default function TextEditor(props: Props): React.JSX.Element {
         </label>
       )}
       {editor && (
-        <div className={clsx(style.editor, isRequired && style.error)}>
+        <div className={clsx(style.editor, size === 'large' && style.large, isRequired && style.error)}>
           <Toolbar editor={editor} />
           <EditorContent editor={editor} />
         </div>
