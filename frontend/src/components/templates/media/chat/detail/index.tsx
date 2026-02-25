@@ -1,10 +1,12 @@
-import { useState, useRef, useEffect, useCallback, useMemo, FormEvent, MouseEvent } from 'react'
+import { useState, useRef, useEffect, useCallback, useMemo, FormEvent } from 'react'
 import { useRouter } from 'next/router'
 import { ChatMessage, ChatDetailOut } from 'types/internal/media/detail'
 import { LikeMediaIn, SubscribeIn } from 'types/internal/user'
 import { postLikeMedia, postSubscribe } from 'api/internal/user'
 import { FetchError, MediaType } from 'utils/constants/enum'
 import { camelSnake } from 'utils/functions/convertCase'
+import { useChatWebSocket } from 'components/hooks/useChatWebSocket'
+import { useNavResize } from 'components/hooks/useNavResize'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
@@ -55,10 +57,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const router = useRouter()
   const { user } = useUser()
   const { toast, handleToast } = useToast()
-  const wsRef = useRef<WebSocket | null>(null)
-  const navRef = useRef<HTMLDivElement>(null)
-  const navWidthRef = useRef(52)
-  const isDraggingRef = useRef(false)
+  const { navRef, handleNavToggle, handleResizeStart } = useNavResize()
   const messageAreaRef = useRef<HTMLDivElement>(null)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isContent, setIsContent] = useState<boolean>(false)
@@ -67,12 +66,11 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   useEffect(() => setFormState(initFormState), [router.query.ulid, initFormState])
 
   const { messages, message, reply, selectedMessage, joined, thread, likeCount, subscribeCount, isLike, isSubscribe } = formState
-  const NAV_MIN = 52
-  const NAV_MAX_RATIO = 0.5
   const isThread = selectedMessage !== null
   const isPeriod = new Date(detail.period) < new Date()
   const isDisabled = isPeriod || !user.isActive
   const isFallowDisable = !user.isActive || user.ulid === detail.channel.ulid
+  const headerDetail = { ...detail, joined, thread, like: likeCount, mediaUser: { ...detail.mediaUser, isLike, isSubscribe } }
 
   const scrollToBottom = useCallback(() => {
     if (messageAreaRef.current) {
@@ -82,30 +80,14 @@ export default function ChatDetail(props: Props): React.JSX.Element {
 
   useEffect(() => scrollToBottom(), [messages, scrollToBottom])
 
-  // WebSocket接続
-  useEffect(() => {
-    const ulid = router.query.ulid
-    if (!ulid) return
+  const handleWsMessage = useCallback(
+    (newMessage: ChatMessage) => {
+      setFormState((prev) => ({ ...prev, messages: [...prev.messages, newMessage], joined: prev.joined + 1, thread: prev.thread + 1 }))
+    },
+    [],
+  )
 
-    const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
-    const ws = new WebSocket(`${wsScheme}://${window.location.host}/ws/chat/detail/${ulid}`)
-    wsRef.current = ws
-
-    ws.onmessage = (event) => {
-      const eventData = JSON.parse(event.data)
-      if (eventData.command === 'create_message') {
-        const data = eventData.message
-        const { ulid, text, created, updated, author } = data
-        const newMessage: ChatMessage = { ulid, text, created, updated, author }
-        setFormState((prev) => ({ ...prev, messages: [...prev.messages, newMessage], joined: prev.joined + 1, thread: prev.thread + 1 }))
-        scrollToBottom()
-      }
-    }
-
-    return () => {
-      ws.close()
-    }
-  }, [router.query.ulid, scrollToBottom])
+  const { send } = useChatWebSocket({ ulid: router.query.ulid as string | undefined, onMessage: handleWsMessage, scrollToBottom })
 
   const handleModal = () => setIsModal(!isModal)
   const handleContentToggle = () => setIsContent(!isContent)
@@ -115,77 +97,17 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const handleMessageChange = (value: string) => setFormState((prev) => ({ ...prev, message: value }))
   const handleReplyChange = (value: string) => setFormState((prev) => ({ ...prev, reply: value }))
 
-  const setNavWidth = useCallback((width: number) => {
-    navWidthRef.current = width
-    if (navRef.current) {
-      navRef.current.style.width = `${width}px`
-    }
-  }, [])
-
-  const handleNavToggle = () => {
-    const half = (window.innerWidth - 72) / 2
-    setNavWidth(navWidthRef.current > NAV_MIN ? NAV_MIN : half)
-  }
-
-  const handleResizeStart = useCallback(
-    (e: MouseEvent) => {
-      e.preventDefault()
-      isDraggingRef.current = true
-      document.body.style.cursor = 'col-resize'
-      document.body.style.userSelect = 'none'
-
-      const handleMouseMove = (moveEvent: globalThis.MouseEvent) => {
-        if (!isDraggingRef.current) return
-        const sidebarLeft = 72
-        const newWidth = moveEvent.clientX - sidebarLeft
-        const maxWidth = window.innerWidth * NAV_MAX_RATIO
-        setNavWidth(Math.max(NAV_MIN, Math.min(newWidth, maxWidth)))
-      }
-
-      const handleMouseUp = () => {
-        isDraggingRef.current = false
-        document.body.style.cursor = ''
-        document.body.style.userSelect = ''
-        document.removeEventListener('mousemove', handleMouseMove)
-        document.removeEventListener('mouseup', handleMouseUp)
-      }
-
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
-    },
-    [setNavWidth],
-  )
-
   const handleMessageSubmit = (e: FormEvent) => {
     e.preventDefault()
-    if (!wsRef.current || message.trim().length === 0) return
-    wsRef.current.send(
-      JSON.stringify(
-        camelSnake({
-          command: 'create_message',
-          chatId: detail.ulid,
-          message: message,
-          delta: '',
-        }),
-      ),
-    )
+    if (message.trim().length === 0) return
+    send(camelSnake({ command: 'create_message', chatId: detail.ulid, message, delta: '' }))
     setFormState((prev) => ({ ...prev, message: '' }))
   }
 
   const handleReplySubmit = (e: FormEvent) => {
     e.preventDefault()
-    if (!wsRef.current || !selectedMessage || reply.trim().length === 0) return
-    wsRef.current.send(
-      JSON.stringify(
-        camelSnake({
-          command: 'create_reply_message',
-          chatId: detail.ulid,
-          message: reply,
-          delta: '',
-          parentId: selectedMessage.ulid,
-        }),
-      ),
-    )
+    if (!selectedMessage || reply.trim().length === 0) return
+    send(camelSnake({ command: 'create_reply_message', chatId: detail.ulid, message: reply, delta: '', parentId: selectedMessage.ulid }))
     setFormState((prev) => ({ ...prev, reply: '' }))
   }
 
@@ -227,14 +149,9 @@ export default function ChatDetail(props: Props): React.JSX.Element {
       <div className={style.chat_section}>
         <div className={style.header_row}>
           <SectionHeader
-            detail={detail}
+            detail={headerDetail}
             user={user}
-            joined={joined}
-            thread={thread}
-            likeCount={likeCount}
             subscribeCount={subscribeCount}
-            isLike={isLike}
-            isSubscribe={isSubscribe}
             isThread={isThread}
             isContent={isContent}
             isContentExpanded={isContentExpanded}

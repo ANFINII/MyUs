@@ -14,12 +14,7 @@ import style from './detail.module.scss'
 interface Props {
   detail: ChatDetail
   user: UserMe
-  joined: number
-  thread: number
-  likeCount: number
   subscribeCount: number
-  isLike: boolean
-  isSubscribe: boolean
   isThread: boolean
   isContent: boolean
   isContentExpanded: boolean
@@ -36,12 +31,7 @@ export default function SectionHeader(props: Props): React.JSX.Element {
   const {
     detail,
     user,
-    joined,
-    thread,
-    likeCount,
     subscribeCount,
-    isLike,
-    isSubscribe,
     isThread,
     isContent,
     isContentExpanded,
@@ -79,8 +69,8 @@ export default function SectionHeader(props: Props): React.JSX.Element {
               </div>
             </div>
             <div className={style.follow}>
-              {!isSubscribe && <Button color="green" name="チャンネル登録" disabled={isFallowDisable} onClick={handleSubscribe} />}
-              {isSubscribe && <Button color="white" name="登録済み" onClick={handleModal} />}
+              {!detail.mediaUser.isSubscribe && <Button color="green" name="チャンネル登録" disabled={isFallowDisable} onClick={handleSubscribe} />}
+              {detail.mediaUser.isSubscribe && <Button color="white" name="登録済み" onClick={handleModal} />}
             </div>
           </div>
           <span className={style.content_expand_toggle} onClick={handleContentExpand}>
@@ -97,21 +87,21 @@ export default function SectionHeader(props: Props): React.JSX.Element {
           </span>
           <span className={style.stat_item}>
             <IconPerson size="14" type="base" />
-            <span>{joined.toLocaleString()}</span>
+            <span>{detail.joined.toLocaleString()}</span>
           </span>
           <span className={style.stat_item}>
             <IconChat size="14" />
-            <span>{thread.toLocaleString()}</span>
+            <span>{detail.thread.toLocaleString()}</span>
           </span>
           {user.isActive ? (
             <button className={style.like_button} onClick={handleLike}>
-              <IconHand size="14" type={isLike ? 'on' : 'off'} />
-              <span>{likeCount.toLocaleString()}</span>
+              <IconHand size="14" type={detail.mediaUser.isLike ? 'on' : 'off'} />
+              <span>{detail.like.toLocaleString()}</span>
             </button>
           ) : (
             <span className={style.stat_item}>
               <IconHand size="14" type="off" />
-              <span>{likeCount.toLocaleString()}</span>
+              <span>{detail.like.toLocaleString()}</span>
             </span>
           )}
           <span className={style.stat_item}>
