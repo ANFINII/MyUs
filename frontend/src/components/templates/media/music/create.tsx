@@ -54,7 +54,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   }
 
   return (
-    <Main title="Music" isFooter={false} type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
+    <Main title="Music" type="table" toast={toast} isFooter={false} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <SelectBox label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />

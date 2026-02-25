@@ -52,7 +52,7 @@ export default function PictureCreate(props: Props): React.JSX.Element {
   }
 
   return (
-    <Main title="Picture" isFooter={false} type="table" toast={toast} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
+    <Main title="Picture" type="table" toast={toast} isFooter={false} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
       <form method="POST" action="">
         <VStack gap="8">
           <SelectBox label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
