@@ -236,8 +236,8 @@
   .nav_resize {
     position: absolute;
     top: 0;
-    right: -2px;
-    width: 4px;
+    right: 0px;
+    width: 2px;
     height: 100%;
     z-index: 10;
     cursor: col-resize;
@@ -272,6 +272,11 @@
     align-items: center;
     gap: 10px;
     padding: 5px 6px;
+
+    > :first-child {
+      flex-shrink: 0;
+      min-width: 40px;
+    }
 
     &:hover {
       background: rgb(240, 245, 255, 0.8);
