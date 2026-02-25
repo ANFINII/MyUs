@@ -7,6 +7,7 @@ import Button from 'components/parts/Button'
 import IconCaret from 'components/parts/Icon/Caret'
 import IconChat from 'components/parts/Icon/Chat'
 import IconCross from 'components/parts/Icon/Cross'
+import IconDocument from 'components/parts/Icon/Document'
 import IconHand from 'components/parts/Icon/Hand'
 import IconPerson from 'components/parts/Icon/Person'
 import style from './detail.module.scss'
@@ -17,41 +18,24 @@ interface Props {
   subscribeCount: number
   isThread: boolean
   isContent: boolean
-  isContentExpanded: boolean
+  isContentExpand: boolean
   isFallowDisable: boolean
-  handleContentToggle: () => void
-  handleContentExpand: () => void
-  handleLike: () => void
-  handleSubscribe: () => void
-  handleModal: () => void
-  handleThreadClose: () => void
+  onContent: () => void
+  onContentExpand: () => void
+  onLike: () => void
+  onModal: () => void
+  onSubscribe: () => void
+  onThreadClose: () => void
 }
 
 export default function SectionHeader(props: Props): React.JSX.Element {
-  const {
-    detail,
-    user,
-    subscribeCount,
-    isThread,
-    isContent,
-    isContentExpanded,
-    isFallowDisable,
-    handleContentToggle,
-    handleContentExpand,
-    handleLike,
-    handleSubscribe,
-    handleModal,
-    handleThreadClose,
-  } = props
+  const { detail, user, subscribeCount, isThread, isContent, isContentExpand, isFallowDisable, onContent, onContentExpand, onLike, onModal, onSubscribe, onThreadClose } = props
 
   return (
     <>
       <div className={style.chat_section_header}>
-        <div className={style.content_toggle} onClick={handleContentToggle}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" className={style.content_icon} fill="currentColor" viewBox="0 0 16 16">
-            <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z" />
-            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z" />
-          </svg>
+        <div className={style.content_toggle} onClick={onContent}>
+          <IconDocument size="16" className={style.content_icon} />
           <h1 title={detail.title}>{detail.title}</h1>
         </div>
 
@@ -69,14 +53,14 @@ export default function SectionHeader(props: Props): React.JSX.Element {
               </div>
             </div>
             <div className={style.follow}>
-              {!detail.mediaUser.isSubscribe && <Button color="green" name="チャンネル登録" disabled={isFallowDisable} onClick={handleSubscribe} />}
-              {detail.mediaUser.isSubscribe && <Button color="white" name="登録済み" onClick={handleModal} />}
+              {!detail.mediaUser.isSubscribe && <Button color="green" name="チャンネル登録" disabled={isFallowDisable} onClick={onSubscribe} />}
+              {detail.mediaUser.isSubscribe && <Button color="white" name="登録済み" onClick={onModal} />}
             </div>
           </div>
-          <span className={style.content_expand_toggle} onClick={handleContentExpand}>
-            {isContentExpanded ? '縮小表示' : '拡大表示'}
+          <span className={style.content_expand_toggle} onClick={onContentExpand}>
+            {isContentExpand ? '縮小表示' : '拡大表示'}
           </span>
-          <div className={clsx(style.content_body, isContentExpanded && style.expanded)}>{detail.content}</div>
+          <div className={clsx(style.content_body, isContentExpand && style.expanded)}>{detail.content}</div>
         </div>
 
         {/* メディア情報 */}
@@ -94,7 +78,7 @@ export default function SectionHeader(props: Props): React.JSX.Element {
             <span>{detail.thread.toLocaleString()}</span>
           </span>
           {user.isActive ? (
-            <button className={style.like_button} onClick={handleLike}>
+            <button className={style.like_button} onClick={onLike}>
               <IconHand size="14" type={detail.mediaUser.isLike ? 'on' : 'off'} />
               <span>{detail.like.toLocaleString()}</span>
             </button>
@@ -113,7 +97,7 @@ export default function SectionHeader(props: Props): React.JSX.Element {
       {/* スレッドヘッダー */}
       <div className={clsx(style.thread_header, isThread && style.active)}>
         <h2>スレッド</h2>
-        <IconCross size="27" onClick={handleThreadClose} className={style.thread_close} />
+        <IconCross size="27" onClick={onThreadClose} className={style.thread_close} />
       </div>
     </>
   )
