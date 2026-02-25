@@ -9,20 +9,20 @@ interface Props {
   selectedMessage: ChatMessage | null
   reply: string
   isDisabled: boolean
-  handleReplyChange: (value: string) => void
-  handleReplySubmit: (e: FormEvent) => void
+  onChange: (value: string) => void
+  onSubmit: (e: FormEvent) => void
 }
 
 export default function SectionThread(props: Props): React.JSX.Element {
-  const { selectedMessage, reply, isDisabled, handleReplyChange, handleReplySubmit } = props
+  const { selectedMessage, reply, isDisabled, onChange, onSubmit } = props
   const isThread = selectedMessage !== null
 
   return (
     <div className={clsx(style.chat_section_thread, isThread && style.active)}>
       <div className={style.thread_area}>{selectedMessage && <MessageItem message={selectedMessage} />}</div>
       <footer className={style.thread_footer}>
-        <form onSubmit={handleReplySubmit}>
-          <ChatEditor value={reply} onChange={handleReplyChange} disabled={isDisabled} />
+        <form onSubmit={onSubmit}>
+          <ChatEditor value={reply} onChange={onChange} disabled={isDisabled} />
         </form>
       </footer>
     </div>

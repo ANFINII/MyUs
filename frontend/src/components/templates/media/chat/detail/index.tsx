@@ -61,7 +61,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const messageAreaRef = useRef<HTMLDivElement>(null)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isContent, setIsContent] = useState<boolean>(false)
-  const [isContentExpanded, setIsContentExpanded] = useState<boolean>(false)
+  const [isContentExpand, setIsContentExpand] = useState<boolean>(false)
   const [formState, setFormState] = useState<ChatDetailState>(initFormState)
   useEffect(() => setFormState(initFormState), [router.query.ulid, initFormState])
 
@@ -87,12 +87,11 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const { send } = useChatWebSocket({ ulid: router.query.ulid as string | undefined, onMessage: handleWsMessage, scrollToBottom })
 
   const handleModal = () => setIsModal(!isModal)
-  const handleContentToggle = () => setIsContent(!isContent)
-  const handleContentExpand = () => setIsContentExpanded(!isContentExpanded)
-  const handleThreadToggle = (message: ChatMessage | null = null) => setFormState((prev) => ({ ...prev, selectedMessage: message }))
-  const handleThreadClose = () => handleThreadToggle()
-  const handleMessageChange = (value: string) => setFormState((prev) => ({ ...prev, message: value }))
-  const handleReplyChange = (value: string) => setFormState((prev) => ({ ...prev, reply: value }))
+  const handleContent = () => setIsContent(!isContent)
+  const handleContentExpand = () => setIsContentExpand(!isContentExpand)
+  const handleThread = (message: ChatMessage | null = null) => setFormState((prev) => ({ ...prev, selectedMessage: message }))
+  const handleMessage = (value: string) => setFormState((prev) => ({ ...prev, message: value }))
+  const handleReply = (value: string) => setFormState((prev) => ({ ...prev, reply: value }))
 
   const handleMessageSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -151,14 +150,14 @@ export default function ChatDetail(props: Props): React.JSX.Element {
             subscribeCount={subscribeCount}
             isThread={isThread}
             isContent={isContent}
-            isContentExpanded={isContentExpanded}
+            isContentExpand={isContentExpand}
             isFallowDisable={isFallowDisable}
-            handleContentToggle={handleContentToggle}
-            handleContentExpand={handleContentExpand}
-            handleLike={handleLike}
-            handleSubscribe={handleSubscribe}
-            handleModal={handleModal}
-            handleThreadClose={handleThreadClose}
+            onContent={handleContent}
+            onContentExpand={handleContentExpand}
+            onLike={handleLike}
+            onSubscribe={handleSubscribe}
+            onModal={handleModal}
+            onThreadClose={handleThread}
           />
         </div>
         <div className={style.body_row}>
@@ -168,17 +167,11 @@ export default function ChatDetail(props: Props): React.JSX.Element {
             messages={messages}
             message={message}
             isDisabled={isDisabled}
-            handleMessageChange={handleMessageChange}
-            handleMessageSubmit={handleMessageSubmit}
-            handleThreadToggle={handleThreadToggle}
+            onThread={handleThread}
+            onChange={handleMessage}
+            onSubmit={handleMessageSubmit}
           />
-          <SectionThread
-            selectedMessage={selectedMessage}
-            reply={reply}
-            isDisabled={isDisabled}
-            handleReplyChange={handleReplyChange}
-            handleReplySubmit={handleReplySubmit}
-          />
+          <SectionThread selectedMessage={selectedMessage} reply={reply} isDisabled={isDisabled} onChange={handleReply} onSubmit={handleReplySubmit} />
         </div>
       </div>
       <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={false} onAction={handleSubscribe} channel={detail.channel} followerCount={subscribeCount} />

@@ -5,11 +5,11 @@ import style from './detail.module.scss'
 
 interface Props {
   message: ChatMessage
-  onThreadToggle?: (message: ChatMessage) => void
+  onThread?: (message: ChatMessage) => void
 }
 
 export default function MessageItem(props: Props): React.JSX.Element {
-  const { message, onThreadToggle } = props
+  const { message, onThread } = props
 
   return (
     <div className={style.message_item}>
@@ -20,8 +20,8 @@ export default function MessageItem(props: Props): React.JSX.Element {
           <time>{formatDatetime(message.created)}</time>
         </div>
         <div className={style.message_text} dangerouslySetInnerHTML={{ __html: message.text }} />
-        {onThreadToggle && (
-          <div className={style.message_thread_link} onClick={() => onThreadToggle(message)}>
+        {onThread && (
+          <div className={style.message_thread_link} onClick={() => onThread(message)}>
             スレッド表示
           </div>
         )}

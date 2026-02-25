@@ -9,24 +9,24 @@ interface Props {
   messages: ChatMessage[]
   message: string
   isDisabled: boolean
-  handleMessageChange: (value: string) => void
-  handleMessageSubmit: (e: FormEvent) => void
-  handleThreadToggle: (message: ChatMessage) => void
+  onThread: (message: ChatMessage) => void
+  onChange: (value: string) => void
+  onSubmit: (e: FormEvent) => void
 }
 
 export default function SectionMain(props: Props): React.JSX.Element {
-  const { messageAreaRef, messages, message, isDisabled, handleMessageChange, handleMessageSubmit, handleThreadToggle } = props
+  const { messageAreaRef, messages, message, isDisabled, onThread, onChange, onSubmit } = props
 
   return (
     <div className={style.chat_section_main}>
       <div ref={messageAreaRef} className={style.message_area}>
         {messages.map((msg) => (
-          <MessageItem key={msg.ulid} message={msg} onThreadToggle={handleThreadToggle} />
+          <MessageItem key={msg.ulid} message={msg} onThread={onThread} />
         ))}
       </div>
       <footer className={style.chat_footer}>
-        <form onSubmit={handleMessageSubmit}>
-          <ChatEditor value={message} onChange={handleMessageChange} disabled={isDisabled} />
+        <form onSubmit={onSubmit}>
+          <ChatEditor value={message} onChange={onChange} disabled={isDisabled} />
         </form>
       </footer>
     </div>
