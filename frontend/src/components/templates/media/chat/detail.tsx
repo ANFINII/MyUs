@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, ChangeEvent, FormEvent, MouseEvent } from 'react'
+import { useState, useRef, useEffect, useCallback, useMemo, FormEvent, MouseEvent } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
@@ -26,6 +26,19 @@ function len(s: string): number {
   return s.length
 }
 
+interface ChatDetailState {
+  messages: ChatMessage[]
+  message: string
+  reply: string
+  selectedMessage: ChatMessage | null
+  joined: number
+  thread: number
+  likeCount: number
+  subscribeCount: number
+  isLike: boolean
+  isSubscribe: boolean
+}
+
 interface Props {
   data: ChatDetailOut
 }
@@ -33,6 +46,22 @@ interface Props {
 export default function ChatDetail(props: Props): React.JSX.Element {
   const { data } = props
   const { detail, list } = data
+
+  const initFormState: ChatDetailState = useMemo(
+    () => ({
+      messages: detail.messages,
+      message: '',
+      reply: '',
+      selectedMessage: null,
+      joined: detail.joined,
+      thread: detail.thread,
+      likeCount: detail.like,
+      subscribeCount: 0,
+      isLike: detail.mediaUser.isLike,
+      isSubscribe: detail.mediaUser.isSubscribe,
+    }),
+    [detail],
+  )
 
   const router = useRouter()
   const { user } = useUser()
@@ -42,21 +71,14 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const navWidthRef = useRef(52)
   const isDraggingRef = useRef(false)
   const messageAreaRef = useRef<HTMLDivElement>(null)
-  const [messages, setMessages] = useState<ChatMessage[]>(detail.messages)
-  const [messageText, setMessageText] = useState<string>('')
-  const [replyText, setReplyText] = useState<string>('')
-  const [selectedMessage, setSelectedMessage] = useState<ChatMessage | null>(null)
-  const [joined, setJoined] = useState<number>(detail.joined)
-  const [thread, setThread] = useState<number>(detail.thread)
-  const [likeCount, setLikeCount] = useState<number>(detail.like)
-  const [subscribeCount, setSubscribeCount] = useState<number>(0)
   const [isModal, setIsModal] = useState<boolean>(false)
-  const [isContentOpen, setIsContentOpen] = useState<boolean>(false)
+  const [isThread, setIsThread] = useState<boolean>(false)
+  const [isContent, setIsContent] = useState<boolean>(false)
   const [isContentExpanded, setIsContentExpanded] = useState<boolean>(false)
-  const [isThreadOpen, setIsThreadOpen] = useState<boolean>(false)
-  const [isLike, setIsLike] = useState<boolean>(detail.mediaUser.isLike)
-  const [isSubscribe, setIsSubscribe] = useState<boolean>(detail.mediaUser.isSubscribe)
+  const [formState, setFormState] = useState<ChatDetailState>(initFormState)
+  useEffect(() => setFormState(initFormState), [router.query.ulid, initFormState])
 
+  const { messages, message, reply, selectedMessage, joined, thread, likeCount, subscribeCount, isLike, isSubscribe } = formState
   const NAV_MIN = 52
   const NAV_MAX_RATIO = 0.5
   const isFallowDisable = !user.isActive || user.ulid === detail.channel.ulid
@@ -79,19 +101,12 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     wsRef.current = ws
 
     ws.onmessage = (event) => {
-      const data = JSON.parse(event.data)
-      if (data.command === 'create_message') {
-        const response = data.message
-        const newMessage: ChatMessage = {
-          ulid: response.ulid,
-          text: response.text,
-          created: response.created,
-          updated: response.updated,
-          author: response.author,
-        }
-        setMessages((prev) => [...prev, newMessage])
-        setJoined(response.joined)
-        setThread(response.thread)
+      const eventData = JSON.parse(event.data)
+      if (eventData.command === 'create_message') {
+        const data = eventData.message
+        const { ulid, text, created, updated, author } = data
+        const newMessage: ChatMessage = { ulid, text, created, updated, author }
+        setFormState((prev) => ({ ...prev, messages: [...prev.messages, newMessage], joined: prev.joined + 1, thread: prev.thread + 1 }))
         scrollToBottom()
       }
     }
@@ -105,7 +120,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     scrollToBottom()
   }, [messages, scrollToBottom])
 
-  const handleContentToggle = () => setIsContentOpen(!isContentOpen)
+  const handleContentToggle = () => setIsContent(!isContent)
   const handleContentExpand = () => setIsContentExpanded(!isContentExpanded)
   const handleModal = () => setIsModal(!isModal)
 
@@ -151,46 +166,46 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   )
 
   const handleThreadOpen = (message: ChatMessage) => {
-    setSelectedMessage(message)
-    setIsThreadOpen(true)
+    setFormState((prev) => ({ ...prev, selectedMessage: message }))
+    setIsThread(true)
   }
 
   const handleThreadClose = () => {
-    setIsThreadOpen(false)
-    setSelectedMessage(null)
+    setIsThread(false)
+    setFormState((prev) => ({ ...prev, selectedMessage: null }))
   }
 
   const handleMessageSubmit = (e: FormEvent) => {
     e.preventDefault()
-    if (!wsRef.current || len(messageText.trim()) === 0) return
+    if (!wsRef.current || len(message.trim()) === 0) return
     wsRef.current.send(
       JSON.stringify(
         camelSnake({
           command: 'create_message',
           chatId: detail.ulid,
-          message: messageText,
+          message: message,
           delta: '',
         }),
       ),
     )
-    setMessageText('')
+    setFormState((prev) => ({ ...prev, message: '' }))
   }
 
   const handleReplySubmit = (e: FormEvent) => {
     e.preventDefault()
-    if (!wsRef.current || !selectedMessage || len(replyText.trim()) === 0) return
+    if (!wsRef.current || !selectedMessage || len(reply.trim()) === 0) return
     wsRef.current.send(
       JSON.stringify(
         camelSnake({
           command: 'create_reply_message',
           chatId: detail.ulid,
-          message: replyText,
+          message: reply,
           delta: '',
           parentId: selectedMessage.ulid,
         }),
       ),
     )
-    setReplyText('')
+    setFormState((prev) => ({ ...prev, reply: '' }))
   }
 
   const handleLike = async () => {
@@ -199,8 +214,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     const ret = await postLikeMedia(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
-    setIsLike(data.isLike)
-    setLikeCount(data.likeCount)
+    setFormState((prev) => ({ ...prev, ...data }))
   }
 
   const fetchSubscribe = async (isSubscribe: boolean) => {
@@ -208,8 +222,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     const ret = await postSubscribe(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
-    setIsSubscribe(data.isSubscribe)
-    setSubscribeCount(data.count)
+    setFormState((prev) => ({ ...prev, isSubscribe: data.isSubscribe, subscribeCount: data.count }))
   }
 
   const handleSubscribe = async () => {
@@ -237,7 +250,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     <Main metaTitle="Chat" toast={toast}>
       <div className={style.chat_section}>
         {/* ヘッダー */}
-        <div className={clsx(style.chat_section_header, isThreadOpen && style.thread_open)}>
+        <div className={clsx(style.chat_section_header, isThread && style.thread_open)}>
           <div className={style.content_toggle} onClick={handleContentToggle}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" className={style.content_icon} fill="currentColor" viewBox="0 0 16 16">
               <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z" />
@@ -247,7 +260,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
           </div>
 
           {/* コンテンツオーバーレイ */}
-          <div className={clsx(style.content_overlay, isContentOpen && style.active)}>
+          <div className={clsx(style.content_overlay, isContent && style.active)}>
             <div className={style.content_author}>
               <AvatarLink src={detail.channel.avatar} size="m" ulid={detail.channel.ulid} nickname={detail.channel.name} />
               <div className={style.content_author_info}>
@@ -300,7 +313,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
         </div>
 
         {/* スレッドヘッダー */}
-        <div className={clsx(style.thread_header, isThreadOpen && style.active)}>
+        <div className={clsx(style.thread_header, isThread && style.active)}>
           <h2>スレッド</h2>
           <IconCross size="27" onClick={handleThreadClose} className={style.thread_close} />
         </div>
@@ -331,7 +344,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
         </div>
 
         {/* メインメッセージエリア */}
-        <div className={clsx(style.chat_section_main, isThreadOpen && style.thread_open)}>
+        <div className={clsx(style.chat_section_main, isThread && style.thread_open)}>
           <div ref={messageAreaRef} className={style.message_area}>
             {messages.map((message) => (
               <div key={message.ulid} className={style.message_item}>
@@ -352,13 +365,13 @@ export default function ChatDetail(props: Props): React.JSX.Element {
               <div className={style.message_input}>
                 <textarea
                   className={style.message_textarea}
-                  value={messageText}
-                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setMessageText(e.target.value)}
+                  value={message}
+                  onChange={(e) => setFormState((prev) => ({ ...prev, message: e.target.value }))}
                   placeholder={isPeriod ? 'チャット期間が過ぎています!' : !user.isActive ? 'チャットするにはログインが必要です!' : 'メッセージを入力...'}
                   disabled={isDisabled}
                   rows={1}
                 />
-                <button type="submit" className={style.send_button} disabled={isDisabled || len(messageText.trim()) === 0}>
+                <button type="submit" className={style.send_button} disabled={isDisabled || len(message.trim()) === 0}>
                   <IconCaret size="16" type="right" />
                 </button>
               </div>
@@ -367,7 +380,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
         </div>
 
         {/* スレッドエリア */}
-        <div className={clsx(style.chat_section_thread, isThreadOpen && style.active)}>
+        <div className={clsx(style.chat_section_thread, isThread && style.active)}>
           <div className={style.thread_area}>
             {selectedMessage && (
               <div className={style.message_item}>
@@ -385,13 +398,13 @@ export default function ChatDetail(props: Props): React.JSX.Element {
               <div className={style.message_input}>
                 <textarea
                   className={style.message_textarea}
-                  value={replyText}
-                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setReplyText(e.target.value)}
+                  value={reply}
+                  onChange={(e) => setFormState((prev) => ({ ...prev, reply: e.target.value }))}
                   placeholder={isPeriod ? 'チャット期間が過ぎています!' : !user.isActive ? 'チャットするにはログインが必要です!' : '返信を入力...'}
                   disabled={isDisabled}
                   rows={1}
                 />
-                <button type="submit" className={style.send_button} disabled={isDisabled || len(replyText.trim()) === 0}>
+                <button type="submit" className={style.send_button} disabled={isDisabled || len(reply.trim()) === 0}>
                   <IconCaret size="16" type="right" />
                 </button>
               </div>
