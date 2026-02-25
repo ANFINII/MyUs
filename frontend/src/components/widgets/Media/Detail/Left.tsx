@@ -104,14 +104,9 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   }
 
   const handleSubscribe = async () => {
-    await fetchSubscribe(true)
-    handleToast('チャンネルを登録しました', false)
-  }
-
-  const handleDeleteSubscribe = async () => {
-    await fetchSubscribe(false)
-    handleModal()
-    handleToast('チャンネル登録を解除しました', false)
+    await fetchSubscribe(!isSubscribe)
+    if (isSubscribe) handleModal()
+    handleToast(isSubscribe ? 'チャンネル登録を解除しました' : 'チャンネルを登録しました', false)
   }
 
   const handleMediaComment = async () => {
@@ -184,7 +179,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
           ))}
         </VStack>
       </VStack>
-      <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleDeleteSubscribe} channel={channel} followerCount={subscribeCount} />
+      <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleSubscribe} channel={channel} followerCount={subscribeCount} />
     </div>
   )
 }
