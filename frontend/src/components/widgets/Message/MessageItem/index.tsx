@@ -10,8 +10,8 @@ import AvatarLink from 'components/parts/Avatar/Link'
 import IconEdit from 'components/parts/Icon/Edit'
 import IconLink from 'components/parts/Icon/Link'
 import IconTrash from 'components/parts/Icon/Trash'
-import Modal from 'components/parts/Modal'
 import HStack from 'components/parts/Stack/Horizontal'
+import MessageDeleteModal from 'components/widgets/Modal/MessageDelete'
 import ChatEditor from '../ChatEditor'
 import style from './MessageItem.module.scss'
 
@@ -81,17 +81,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
           <time>{formatDatetime(message.created)}</time>
         </div>
         {isEdit ? (
-          <div className={style.message_edit}>
-            <ChatEditor value={editText} onChange={setEditText} />
-            <div className={style.message_edit_actions}>
-              <button className={style.edit_cancel} onClick={handleEditCancel}>
-                キャンセル
-              </button>
-              <button className={style.edit_save} onClick={handleEditSubmit}>
-                保存
-              </button>
-            </div>
-          </div>
+          <ChatEditor value={editText} onChange={setEditText} onCancel={handleEditCancel} onSave={handleEditSubmit} />
         ) : (
           <div className={style.message_text} dangerouslySetInnerHTML={{ __html: message.text }} />
         )}
@@ -111,17 +101,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
       <div className={clsx(style.message_action, isMenu && style.visible)}>
         <ActionButton open={isMenu} onMenu={handleMenu} actionItems={actionItems} />
       </div>
-      <Modal
-        open={isModal}
-        onClose={handleModal}
-        title="メッセージの削除"
-        actions={[
-          { name: '削除', color: 'red', onClick: handleDelete },
-          { name: 'キャンセル', color: 'white', onClick: handleModal },
-        ]}
-      >
-        <p>このメッセージを削除しますか？</p>
-      </Modal>
+      <MessageDeleteModal open={isModal} onClose={handleModal} onAction={handleDelete} message={message} />
     </div>
   )
 }

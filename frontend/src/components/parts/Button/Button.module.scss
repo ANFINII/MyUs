@@ -29,12 +29,12 @@
   }
 
   &.white {
-    color: rgb(50, 50, 50);
+    color: rgb(100, 100, 100);
     border: 1px solid rgb(200, 200, 200);
     background: rgb(255, 255, 255);
 
     &:hover {
-      background: rgb(245, 245, 245);
+      background: rgb(248, 248, 248);
     }
 
     &:active {
@@ -70,15 +70,15 @@
 
   &.blue {
     color: rgb(255, 255, 255);
-    border: 1px solid rgb(20, 120, 250);
-    background: rgb(20, 120, 250);
+    border: 1px solid rgb(40, 130, 255);
+    background: rgb(40, 130, 255);
 
     &:hover {
-      background: rgb(20, 110, 230);
+      background: rgb(30, 120, 240);
     }
 
     &:active {
-      background: rgb(20, 90, 210);
+      background: rgb(20, 110, 220);
     }
 
     &:disabled {
@@ -110,15 +110,15 @@
 
   &.red {
     color: rgb(255, 255, 255);
-    border: 1px solid rgb(230, 55, 70);
-    background: rgb(230, 55, 70);
+    border: 1px solid rgb(240, 60, 70);
+    background: rgb(240, 60, 70);
 
     &:hover {
-      background: rgb(210, 55, 60);
+      background: rgb(230, 50, 60);
     }
 
     &:active {
-      background: rgb(190, 55, 40);
+      background: rgb(210, 40, 40);
     }
 
     &:disabled {
