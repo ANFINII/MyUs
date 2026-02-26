@@ -115,29 +115,6 @@
       }
     }
 
-    .send_button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      padding: 0;
-      margin-left: auto;
-      border: none;
-      border-radius: 4px;
-      color: white;
-      background: rgb(40, 140, 255);
-      cursor: pointer;
-
-      &:disabled {
-        background: rgb(200, 200, 200);
-      }
-
-      &:hover:not(:disabled) {
-        background: rgb(30, 120, 230);
-      }
-    }
-
     .edit_actions {
       margin-left: auto;
     }
