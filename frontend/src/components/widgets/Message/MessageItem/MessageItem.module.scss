@@ -100,43 +100,6 @@
       }
     }
 
-    .message_edit {
-      .message_edit_actions {
-        display: flex;
-        gap: 8px;
-        margin-top: 4px;
-        justify-content: flex-end;
-
-        .edit_cancel {
-          padding: 4px 12px;
-          font-size: 13px;
-          border: 1px solid rgb(200, 200, 200);
-          border-radius: 4px;
-          background: rgb(255, 255, 255);
-          color: rgb(100, 100, 100);
-          cursor: pointer;
-
-          &:hover {
-            background: rgb(245, 245, 245);
-          }
-        }
-
-        .edit_save {
-          padding: 4px 12px;
-          font-size: 13px;
-          border: none;
-          border-radius: 4px;
-          background: rgb(40, 140, 255);
-          color: rgb(255, 255, 255);
-          cursor: pointer;
-
-          &:hover {
-            background: rgb(30, 120, 230);
-          }
-        }
-      }
-    }
-
     .message_thread_row {
       display: flex;
       align-items: center;

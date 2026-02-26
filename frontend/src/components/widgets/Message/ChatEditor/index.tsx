@@ -5,8 +5,10 @@ import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import clsx from 'clsx'
 import { useRecording } from 'components/hooks/useRecording'
+import Button from 'components/parts/Button'
 import IconCaret from 'components/parts/Icon/Caret'
 import IconMic from 'components/parts/Icon/Mic'
+import HStack from 'components/parts/Stack/Horizontal'
 import Toolbar, { ToolbarConfig } from 'components/widgets/TextEditor/Toolbar'
 import style from './ChatEditor.module.scss'
 
@@ -26,10 +28,12 @@ interface Props {
   value: string
   disabled?: boolean
   onChange?: (html: string) => void
+  onCancel?: () => void
+  onSave?: () => void
 }
 
 export default function ChatEditor(props: Props): React.JSX.Element {
-  const { value, disabled = false, onChange } = props
+  const { value, disabled = false, onChange, onCancel, onSave } = props
 
   const onChangeRef = useRef(onChange)
   const suppressRef = useRef(false)
@@ -67,9 +71,12 @@ export default function ChatEditor(props: Props): React.JSX.Element {
     editor.setEditable(!disabled)
   }, [editor, disabled])
 
-  const handleSpeechResult = useCallback((transcript: string) => {
-    editor?.commands.insertContent(transcript)
-  }, [editor])
+  const handleSpeechResult = useCallback(
+    (transcript: string) => {
+      editor?.commands.insertContent(transcript)
+    },
+    [editor],
+  )
 
   const { isRecording, isSpeaking, isSupported, handleToggle } = useRecording({ onResult: handleSpeechResult })
 
@@ -89,9 +96,16 @@ export default function ChatEditor(props: Props): React.JSX.Element {
             <IconMic size="16" />
           </button>
         )}
-        <button type="submit" className={style.send_button} disabled={disabled || isEmpty}>
-          <IconCaret size="16" type="right" />
-        </button>
+        {onCancel && onSave ? (
+          <HStack gap="2" className={style.edit_actions}>
+            <Button name="キャンセル" color="white" size="s" onClick={onSave} />
+            <Button name="保存" color="blue" size="s" onClick={onSave} disabled={isEmpty} />
+          </HStack>
+        ) : (
+          <button type="submit" className={style.send_button} disabled={disabled || isEmpty}>
+            <IconCaret size="16" type="right" />
+          </button>
+        )}
       </div>
     </div>
   )
