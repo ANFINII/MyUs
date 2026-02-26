@@ -8,7 +8,7 @@
   z-index: 50;
 
   .button_1 {
-    width: 48px;
+    width: 52px;
   }
 
   .button_2 {
@@ -16,7 +16,7 @@
 
     &.active {
       display: block;
-      width: 48px;
+      width: 52px;
     }
   }
 
@@ -35,7 +35,7 @@
   }
 
   .tags {
-    width: calc(100vw - 166px);
+    width: calc(100vw - 170px);
     line-height: 1.8;
     overflow-x: scroll;
     overflow-y: hidden;
@@ -43,7 +43,7 @@
     scrollbar-width: none; /* Firefoxでスクロールバーを非表示 */
 
     &.active {
-      width: calc(100vw - 408px);
+      width: calc(100vw - 416px);
     }
 
     a {
