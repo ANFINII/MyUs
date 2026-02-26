@@ -45,24 +45,29 @@ class MessageAPI:
             # WebSocket broadcast
             channel_layer = get_channel_layer()
             if channel_layer is not None:
+                is_reply = len(input.parent_ulid) > 0
+                command = "create_reply_message" if is_reply else "create_message"
+                broadcast_message: dict[str, object] = {
+                    "ulid": message.ulid,
+                    "text": message.text,
+                    "created": message.created.isoformat(),
+                    "updated": message.updated.isoformat(),
+                    "author": {
+                        "avatar": message.author.avatar,
+                        "ulid": message.author.ulid,
+                        "nickname": message.author.nickname,
+                        "follower_count": message.author.follower_count,
+                    },
+                }
+                if is_reply:
+                    broadcast_message["parent_ulid"] = input.parent_ulid
                 async_to_sync(channel_layer.group_send)(
                     f"chat_detail_{input.chat_ulid}",
                     {
                         "type": "chat_message",
                         "message": {
-                            "command": "create_message",
-                            "message": {
-                                "ulid": message.ulid,
-                                "text": message.text,
-                                "created": message.created.isoformat(),
-                                "updated": message.updated.isoformat(),
-                                "author": {
-                                    "avatar": message.author.avatar,
-                                    "ulid": message.author.ulid,
-                                    "nickname": message.author.nickname,
-                                    "follower_count": message.author.follower_count,
-                                },
-                            },
+                            "command": command,
+                            "message": broadcast_message,
                         },
                     },
                 )
@@ -101,30 +106,69 @@ class MessageAPI:
         return 200, data
 
     @staticmethod
-    @router.put("/{message_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 500: MessageOut})
+    @router.put("/{message_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 403: ErrorOut, 500: MessageOut})
     def put(request: HttpRequest, message_ulid: str, input: MessageUpdateIn):
         log.info("MessageAPI put", message_ulid=message_ulid, input=input)
 
-        if auth_check(request) is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            update_message(message_ulid, input.text)
+            result = update_message(user_id, message_ulid, input.text)
+            if result is None:
+                return 403, ErrorOut(message="Forbidden")
+
+            channel_layer = get_channel_layer()
+            if channel_layer is not None:
+                async_to_sync(channel_layer.group_send)(
+                    f"chat_detail_{input.chat_ulid}",
+                    {
+                        "type": "chat_message",
+                        "message": {
+                            "command": "update_message",
+                            "message": {
+                                "ulid": message_ulid,
+                                "text": input.text,
+                            },
+                        },
+                    },
+                )
+
             return 200, MessageOut(error=False, message="メッセージを更新しました")
         except Exception as e:
             log.error("MessageAPI put error", exc=e)
             return 500, MessageOut(error=True, message="メッセージの更新に失敗しました")
 
     @staticmethod
-    @router.delete("/{message_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 500: MessageOut})
+    @router.delete("/{message_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 403: ErrorOut, 500: MessageOut})
     def delete(request: HttpRequest, message_ulid: str):
         log.info("MessageAPI delete", message_ulid=message_ulid)
 
-        if auth_check(request) is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            delete_message(message_ulid)
+            chat_ulid = delete_message(user_id, message_ulid)
+            if chat_ulid is None:
+                return 403, ErrorOut(message="Forbidden")
+
+            channel_layer = get_channel_layer()
+            if channel_layer is not None:
+                async_to_sync(channel_layer.group_send)(
+                    f"chat_detail_{chat_ulid}",
+                    {
+                        "type": "chat_message",
+                        "message": {
+                            "command": "delete_message",
+                            "message": {
+                                "ulid": message_ulid,
+                            },
+                        },
+                    },
+                )
+
             return 200, MessageOut(error=False, message="メッセージを削除しました")
         except Exception as e:
             log.error("MessageAPI delete error", exc=e)
