@@ -1,0 +1,30 @@
+.message {
+  padding: 12px;
+  border-radius: 8px;
+
+  &:hover {
+    background: rgb(245, 245, 245);
+  }
+
+  .message_info {
+    margin-bottom: 3px;
+    line-height: 1;
+    white-space: nowrap;
+
+    span {
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    time {
+      font-size: 12px;
+      color: rgb(120, 120, 120);
+    }
+  }
+
+  .text {
+    font-size: 14px;
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
+}
