@@ -7,7 +7,7 @@ import IconChat from 'components/parts/Icon/Chat'
 import IconDocument from 'components/parts/Icon/Document'
 import IconPerson from 'components/parts/Icon/Person'
 import HStack from 'components/parts/Stack/Horizontal'
-import style from './detail.module.scss'
+import style from './SectionHeader.module.scss'
 
 interface Props {
   detail: ChatDetail
