@@ -48,5 +48,8 @@ export const apiChat = (ulid: string) => base + `/media/chat/${ulid}`
 export const apiComments = base + '/media/comment'
 export const apiComment = (ulid: string) => base + `/media/comment/${ulid}`
 
+export const apiMessages = base + '/media/message'
+export const apiMessage = (ulid: string) => base + `/media/message/${ulid}`
+
 // 外部API
 export const apiAddress = base + '/search'
