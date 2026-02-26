@@ -67,7 +67,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
           <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
           <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
-          <TextEditor label="本文" value={values.richtext} size="large" required={isRequired} onChange={handleRichtext} />
+          <TextEditor label="本文" value={values.richtext} required={isRequired} onChange={handleRichtext} />
         </VStack>
       </form>
     </Main>
