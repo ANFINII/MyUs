@@ -10,6 +10,7 @@ class MessageCreateIn(BaseModel):
 
 
 class MessageUpdateIn(BaseModel):
+    chat_ulid: str
     text: str
 
 
