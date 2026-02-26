@@ -1,9 +1,9 @@
 import { FormEvent, RefObject } from 'react'
 import { ChatMessage } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
-import ChatEditor from './ChatEditor'
-import MessageItem from './MessageItem'
-import style from './detail.module.scss'
+import ChatEditor from '../ChatEditor'
+import MessageItem from '../MessageItem'
+import style from './SectionMain.module.scss'
 
 interface Props {
   user: UserMe

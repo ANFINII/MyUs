@@ -3,9 +3,9 @@ import clsx from 'clsx'
 import { ChatMessage, ChatReply } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
 import IconCross from 'components/parts/Icon/Cross'
-import ChatEditor from './ChatEditor'
-import MessageItem from './MessageItem'
-import style from './detail.module.scss'
+import ChatEditor from '../ChatEditor'
+import MessageItem from '../MessageItem'
+import style from './SectionThread.module.scss'
 
 interface Props {
   user: UserMe

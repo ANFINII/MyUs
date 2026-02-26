@@ -3,7 +3,7 @@ import { ChatDetail } from 'types/internal/media/detail'
 import { formatDatetime } from 'utils/functions/datetime'
 import AvatarLink from 'components/parts/Avatar/Link'
 import SubscribeButton from 'components/widgets/SubscribeButton'
-import style from './detail.module.scss'
+import style from './SectionContent.module.scss'
 
 interface Props {
   detail: ChatDetail

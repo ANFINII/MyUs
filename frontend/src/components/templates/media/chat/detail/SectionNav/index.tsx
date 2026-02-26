@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Chat } from 'types/internal/media'
 import Avatar from 'components/parts/Avatar'
 import IconResize from 'components/parts/Icon/Resize'
-import style from './detail.module.scss'
+import style from './SectionNav.module.scss'
 
 interface Props {
   navRef: RefObject<HTMLDivElement | null>
