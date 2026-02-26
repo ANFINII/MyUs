@@ -1,4 +1,4 @@
-import { useState, useRef, SetStateAction, ChangeEvent, Dispatch } from 'react'
+import { useState, SetStateAction, ChangeEvent, Dispatch } from 'react'
 import router from 'next/router'
 import clsx from 'clsx'
 import { capitalize } from 'lodash'
@@ -10,6 +10,7 @@ import { FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap } from 'utils/constants/map'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import { useIsLoading } from 'components/hooks/useIsLoading'
+import ActionButton from 'components/parts/Action/Button'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
 import IconEdit from 'components/parts/Icon/Edit'
@@ -19,7 +20,6 @@ import VStack from 'components/parts/Stack/Vertical'
 import { MediaDetailState } from 'components/widgets/Media/Detail/Left'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
 import View from 'components/widgets/View'
-import CommentAction from '../Action'
 import CommentInfo from '../Info'
 import ReplyInput from '../ReplyInput'
 import CommentThread from '../Thread'
@@ -37,7 +37,6 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const { ulid, author, text } = comment
   const { isActive } = user
 
-  const actionButtonRef = useRef<HTMLButtonElement>(null)
   const { isLoading, handleLoading } = useIsLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -143,7 +142,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
             <ReplyInput user={user} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleMediaReply} onCancel={handleReplyCancel} />
           </VStack>
         </HStack>
-        <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
+        <ActionButton open={isMenu} onMenu={handleMenu} isRound disabled={disabled} actionItems={actionItems} />
         <CommentDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleDelete} comment={comment} />
       </HStack>
 

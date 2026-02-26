@@ -1,8 +1,8 @@
 import { useRef } from 'react'
 import clsx from 'clsx'
-import ActionList, { ActionItem } from 'components/parts/ActionList'
 import IconDots from 'components/parts/Icon/Dots'
 import style from './ActionButton.module.scss'
+import ActionList, { ActionItem } from '../List'
 
 interface Props {
   open: boolean
