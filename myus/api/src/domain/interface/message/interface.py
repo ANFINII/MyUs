@@ -11,7 +11,9 @@ class SortType(Enum):
 @dataclass(frozen=True, slots=True)
 class FilterOption:
     chat_id: int = 0
-    is_parent: bool = True
+    message_ulid: str = ""
+    parent_ulid: str = ""
+    is_parent: bool | None = True
 
 
 @dataclass(frozen=True, slots=True)
@@ -31,4 +33,8 @@ class MessageInterface(ABC):
 
     @abstractmethod
     def bulk_save(self, objs: list[MessageData]) -> list[int]:
+        ...
+
+    @abstractmethod
+    def delete(self, message_id: int) -> None:
         ...
