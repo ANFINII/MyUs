@@ -581,6 +581,7 @@ def convert_messages(objs: list[MessageData]) -> list[ChatMessageOut]:
         ChatMessageOut(
             ulid=m.ulid,
             text=m.text,
+            reply_count=m.reply_count,
             created=m.created,
             updated=m.updated,
             author=convert_author(m.author),

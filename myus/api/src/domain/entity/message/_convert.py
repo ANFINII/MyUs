@@ -13,6 +13,7 @@ def convert_data(obj: Message) -> MessageData:
         parent_ulid=obj.parent.ulid if obj.parent else "",
         text=obj.text,
         delta=obj.delta.html if obj.delta else "",
+        reply_count=getattr(obj, "reply_count", 0),
         created=obj.created,
         updated=obj.updated,
     )

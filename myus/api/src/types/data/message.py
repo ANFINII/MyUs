@@ -17,6 +17,7 @@ class MessageReplyData:
 class MessageData:
     ulid: str
     text: str
+    reply_count: int
     created: datetime
     updated: datetime
     author: AuthorData

@@ -22,6 +22,7 @@ def get_messages(chat_id: int) -> list[MessageData]:
         MessageData(
             ulid=m.ulid,
             text=m.text,
+            reply_count=m.reply_count,
             created=m.created,
             updated=m.updated,
             author=get_author_data(m.author_id),
@@ -86,6 +87,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         parent_ulid=parent_ulid,
         text=text,
         delta="",
+        reply_count=0,
         created=datetime.min,
         updated=datetime.min,
     )
@@ -113,6 +115,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
     data = MessageData(
         ulid=message.ulid,
         text=message.text,
+        reply_count=0,
         created=message.created,
         updated=message.updated,
         author=author,
@@ -156,6 +159,7 @@ def update_message(user_id: int, message_ulid: str, text: str) -> MessageData | 
     data = MessageData(
         ulid=updated.ulid,
         text=updated.text,
+        reply_count=updated.reply_count,
         created=updated.created,
         updated=updated.updated,
         author=get_author_data(updated.author_id),
