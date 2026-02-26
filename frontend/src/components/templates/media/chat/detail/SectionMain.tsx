@@ -22,12 +22,10 @@ export default function SectionMain(props: Props): React.JSX.Element {
   const { user, messageAreaRef, messages, message, isDisabled, onThread, onChange, onSubmit, onEdit, onDelete } = props
 
   return (
-    <div className={style.chat_section_main}>
-      <div ref={messageAreaRef} className={style.message_area}>
-        {messages.map((msg) => (
-          <MessageItem key={msg.ulid} user={user} message={msg} isDisabled={isDisabled} onThread={onThread} onEdit={onEdit} onDelete={onDelete} />
-        ))}
-      </div>
+    <div ref={messageAreaRef} className={style.chat_section_main}>
+      {messages.map((msg) => (
+        <MessageItem key={msg.ulid} user={user} message={msg} isDisabled={isDisabled} onThread={onThread} onEdit={onEdit} onDelete={onDelete} />
+      ))}
       <footer className={style.chat_footer}>
         <form onSubmit={onSubmit}>
           <ChatEditor value={message} onChange={onChange} disabled={isDisabled} />

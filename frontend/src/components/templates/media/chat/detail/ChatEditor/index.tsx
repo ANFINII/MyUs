@@ -4,7 +4,9 @@ import Underline from '@tiptap/extension-underline'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import clsx from 'clsx'
+import { useRecording } from 'components/hooks/useRecording'
 import IconCaret from 'components/parts/Icon/Caret'
+import IconMic from 'components/parts/Icon/Mic'
 import Toolbar, { ToolbarConfig } from 'components/widgets/TextEditor/Toolbar'
 import style from './ChatEditor.module.scss'
 
@@ -65,6 +67,12 @@ export default function ChatEditor(props: Props): React.JSX.Element {
     editor.setEditable(!disabled)
   }, [editor, disabled])
 
+  const handleSpeechResult = useCallback((transcript: string) => {
+    editor?.commands.insertContent(transcript)
+  }, [editor])
+
+  const { isRecording, isSpeaking, isSupported, handleToggle } = useRecording({ onResult: handleSpeechResult })
+
   const isEmpty = value.replace(/<[^>]*>/g, '').trim().length === 0
 
   return (
@@ -76,6 +84,11 @@ export default function ChatEditor(props: Props): React.JSX.Element {
         </>
       )}
       <div className={style.actions}>
+        {isSupported && (
+          <button type="button" className={clsx(style.mic_button, isRecording && style.recording, isSpeaking && style.speaking)} onClick={handleToggle}>
+            <IconMic size="16" />
+          </button>
+        )}
         <button type="submit" className={style.send_button} disabled={disabled || isEmpty}>
           <IconCaret size="16" type="right" />
         </button>

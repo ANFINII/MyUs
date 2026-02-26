@@ -89,10 +89,19 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   useEffect(() => {
     if (threadInitRef.current || !threadUlid) return
     const target = messages.find((m) => m.ulid === threadUlid)
-    if (target) {
-      threadInitRef.current = true
-      handleThread(target)
-    }
+    if (!target) return
+
+    threadInitRef.current = true
+    getReplies(target.ulid).then((ret) => {
+      if (ret.isOk()) {
+        const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, parentUlid: target.ulid }))
+        setFormState((prev) => ({
+          ...prev,
+          selectedMessage: target,
+          replies: { ...prev.replies, [target.ulid]: replyData },
+        }))
+      }
+    })
   }, [threadUlid, messages])
 
   const handleWsCreateMessage = (newMessage: ChatMessage) => {
