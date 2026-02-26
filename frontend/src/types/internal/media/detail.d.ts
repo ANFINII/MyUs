@@ -89,6 +89,7 @@ export interface ChatDetailOut {
 export interface ChatMessage {
   ulid: string
   text: string
+  replyCount: number
   created: Date
   updated: Date
   author: Author

@@ -41,13 +41,13 @@ export const useChatWebSocket = (props: Props): void => {
       switch (eventData.command) {
         case WsCommand.CreateMessage: {
           const { ulid, text, created, updated, author } = data
-          onCreateMessageRef.current({ ulid, text, created, updated, author })
+          onCreateMessageRef.current({ ulid, text, replyCount: 0, created, updated, author })
           scrollToBottomRef.current()
           break
         }
         case WsCommand.CreateReplyMessage: {
           const { ulid, text, created, updated, author, parent_ulid: parentUlid } = data
-          onCreateReplyRef.current({ ulid, text, created, updated, author, parentUlid })
+          onCreateReplyRef.current({ ulid, text, replyCount: 0, created, updated, author, parentUlid })
           break
         }
         case WsCommand.UpdateMessage: {
