@@ -32,6 +32,7 @@ class MessageAPI:
             data = ChatMessageOut(
                 ulid=message.ulid,
                 text=message.text,
+                reply_count=0,
                 created=message.created,
                 updated=message.updated,
                 author=AuthorOut(
