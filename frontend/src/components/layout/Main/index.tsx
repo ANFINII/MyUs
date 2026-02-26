@@ -9,15 +9,16 @@ interface Props {
   title?: string
   metaTitle?: string
   meta?: MetaType
+  type?: 'defalt' | 'table'
   search?: Search
   toast?: ToastType
-  type?: 'defalt' | 'table'
+  isFooter?: boolean
   button?: React.ReactNode
   children: React.ReactNode
 }
 
 export default function Main(props: Props): React.JSX.Element {
-  const { title, metaTitle, meta, search, toast, type = 'defalt', button, children } = props
+  const { title, metaTitle, meta, type = 'defalt', search, toast, isFooter = true, button, children } = props
 
   const { user } = useUser()
 
@@ -45,7 +46,7 @@ export default function Main(props: Props): React.JSX.Element {
             {button && user.isActive && <div className="ml_8">{button}</div>}
           </div>
           <article className="mv_24">{children}</article>
-          <Footer />
+          {isFooter && <Footer />}
         </>
       )}
       <Toast {...toast} />
