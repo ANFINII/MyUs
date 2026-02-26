@@ -1,41 +1,63 @@
-import { useRef, useEffect, useCallback } from 'react'
-import { ChatMessage } from 'types/internal/media/detail'
-
-interface OutProps {
-  send: (data: object) => void
-}
+import { useRef, useEffect } from 'react'
+import { API_URL } from 'lib/config'
+import { ChatMessage, ChatReply } from 'types/internal/media/detail'
+import { WsCommand } from 'utils/constants/enum'
 
 interface Props {
   ulid: string | undefined
-  onMessage: (message: ChatMessage) => void
+  onCreateMessage: (message: ChatMessage) => void
+  onCreateReply: (reply: ChatReply) => void
+  onUpdateMessage: (ulid: string, text: string) => void
+  onDeleteMessage: (ulid: string) => void
   scrollToBottom: () => void
 }
 
-export const useChatWebSocket = (props: Props): OutProps => {
-  const { ulid, onMessage, scrollToBottom } = props
+export const useChatWebSocket = (props: Props): void => {
+  const { ulid, onCreateMessage, onCreateReply, onUpdateMessage, onDeleteMessage, scrollToBottom } = props
 
-  const wsRef = useRef<WebSocket | null>(null)
-  const onMessageRef = useRef(onMessage)
+  const onCreateMessageRef = useRef(onCreateMessage)
+  const onCreateReplyRef = useRef(onCreateReply)
+  const onUpdateMessageRef = useRef(onUpdateMessage)
+  const onDeleteMessageRef = useRef(onDeleteMessage)
   const scrollToBottomRef = useRef(scrollToBottom)
 
-  onMessageRef.current = onMessage
+  onCreateMessageRef.current = onCreateMessage
+  onCreateReplyRef.current = onCreateReply
+  onUpdateMessageRef.current = onUpdateMessage
+  onDeleteMessageRef.current = onDeleteMessage
   scrollToBottomRef.current = scrollToBottom
 
   useEffect(() => {
     if (!ulid) return
 
-    const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
-    const ws = new WebSocket(`${wsScheme}://${window.location.host}/ws/chat/detail/${ulid}`)
-    wsRef.current = ws
+    const apiUrl = new URL(API_URL)
+    const wsScheme = apiUrl.protocol === 'https:' ? 'wss' : 'ws'
+    const ws = new WebSocket(`${wsScheme}://${apiUrl.host}/ws/chat/detail/${ulid}`)
 
     ws.onmessage = (event) => {
       const eventData = JSON.parse(event.data)
-      if (eventData.command === 'create_message') {
-        const data = eventData.message
-        const { ulid, text, created, updated, author } = data
-        const newMessage: ChatMessage = { ulid, text, created, updated, author }
-        onMessageRef.current(newMessage)
-        scrollToBottomRef.current()
+      const data = eventData.message
+
+      switch (eventData.command) {
+        case WsCommand.CreateMessage: {
+          const { ulid, text, created, updated, author } = data
+          onCreateMessageRef.current({ ulid, text, created, updated, author })
+          scrollToBottomRef.current()
+          break
+        }
+        case WsCommand.CreateReplyMessage: {
+          const { ulid, text, created, updated, author, parent_ulid: parentUlid } = data
+          onCreateReplyRef.current({ ulid, text, created, updated, author, parentUlid })
+          break
+        }
+        case WsCommand.UpdateMessage: {
+          onUpdateMessageRef.current(data.ulid, data.text)
+          break
+        }
+        case WsCommand.DeleteMessage: {
+          onDeleteMessageRef.current(data.ulid)
+          break
+        }
       }
     }
 
@@ -43,11 +65,4 @@ export const useChatWebSocket = (props: Props): OutProps => {
       ws.close()
     }
   }, [ulid])
-
-  const send = useCallback((data: object) => {
-    if (!wsRef.current) return
-    wsRef.current.send(JSON.stringify(data))
-  }, [])
-
-  return { send }
 }
