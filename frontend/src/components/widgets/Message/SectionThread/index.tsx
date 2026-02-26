@@ -4,8 +4,8 @@ import { ChatMessage, ChatReply } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
 import IconCross from 'components/parts/Icon/Cross'
 import ChatEditor from '../ChatEditor'
-import style from './SectionThread.module.scss'
 import MessageItem from '../MessageItem'
+import style from './SectionThread.module.scss'
 
 interface Props {
   user: UserMe
