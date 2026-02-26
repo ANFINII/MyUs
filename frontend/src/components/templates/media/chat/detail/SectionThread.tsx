@@ -38,12 +38,12 @@ export default function SectionThread(props: Props): React.JSX.Element {
         {replies.map((r) => (
           <MessageItem key={r.ulid} user={user} message={r} isDisabled={isDisabled} onEdit={onEdit} onDelete={onDelete} />
         ))}
+        <footer className={style.thread_footer}>
+          <form onSubmit={onSubmit}>
+            <ChatEditor value={reply} onChange={onChange} disabled={isDisabled} />
+          </form>
+        </footer>
       </div>
-      <footer className={style.thread_footer}>
-        <form onSubmit={onSubmit}>
-          <ChatEditor value={reply} onChange={onChange} disabled={isDisabled} />
-        </form>
-      </footer>
     </div>
   )
 }
