@@ -1,21 +1,30 @@
 .editor {
+  min-width: 0;
   border: 1px solid rgb(200, 200, 200);
   border-radius: 5px;
   background: rgb(255, 255, 255);
+  overflow: hidden;
 
   &:focus-within {
     border-color: rgb(160, 160, 160);
     box-shadow: 0 3px 1px -1px rgba(26, 26, 26, 0.07);
   }
 
+  > :first-child > :first-child {
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
   :global(.tiptap) {
     min-height: 40px;
     max-height: 40vh;
     padding: 8px 12px;
-    overflow-y: auto;
     font-size: 14px;
     line-height: 1.42;
     outline: none;
+    overflow-y: auto;
+    word-break: break-word;
+    overflow-wrap: break-word;
 
     > * + * {
       margin-top: 0.5em;
@@ -75,59 +84,74 @@
   .actions {
     display: flex;
     padding: 4px;
-  }
 
-  .mic_button {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border: none;
-    border-radius: 4px;
-    color: rgb(100, 100, 100);
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-
-    &:hover {
-      background: rgb(240, 240, 240);
+    button {
+      flex-shrink: 0;
     }
 
-    &.recording {
-      color: rgb(40, 140, 255);
+    .mic_button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: none;
+      border-radius: 4px;
+      color: rgb(100, 100, 100);
+      background: transparent;
+      cursor: pointer;
+
+      &:hover {
+        background: rgb(240, 240, 240);
+      }
+
+      &.recording {
+        color: rgb(40, 140, 255);
+      }
+
+      &.speaking {
+        animation: pulse 1.5s ease-in-out infinite;
+      }
     }
 
-    &.speaking {
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-  }
+    .send_button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      margin-left: auto;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      background: rgb(40, 140, 255);
+      cursor: pointer;
 
-  .send_button {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    margin-left: auto;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    background: rgb(40, 140, 255);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+      &:disabled {
+        background: rgb(200, 200, 200);
+      }
 
-    &:disabled {
-      background: rgb(200, 200, 200);
-    }
-
-    &:hover:not(:disabled) {
-      background: rgb(30, 120, 230);
+      &:hover:not(:disabled) {
+        background: rgb(30, 120, 230);
+      }
     }
   }
 
   &.disabled {
     background: rgb(240, 240, 240);
     pointer-events: none;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
   }
 }

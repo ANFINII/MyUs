@@ -1,3 +1,5 @@
+@use '../scrollbar';
+
 .content_overlay {
   display: none;
 
@@ -10,8 +12,8 @@
     height: 100%;
     background: rgb(255, 255, 255);
     overflow-y: auto;
-    white-space: nowrap;
     z-index: 60;
+    @include scrollbar.scrollbar;
   }
 
   .content_author {
@@ -76,62 +78,10 @@
     font-size: 14px;
     color: rgb(33, 37, 41);
     overflow-y: scroll;
-    white-space: nowrap;
-  }
+    @include scrollbar.scrollbar;
 
-  &::-webkit-scrollbar {
-    width: 9px;
-    height: 9px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0);
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0);
-    border-radius: 10px;
-  }
-
-  &:hover::-webkit-scrollbar-thumb {
-    background: rgb(192, 192, 192);
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: rgb(160, 160, 160);
-  }
-
-  &::-webkit-scrollbar-thumb:active {
-    background: rgb(130, 130, 130);
-  }
-
-  .content_body {
-    &::-webkit-scrollbar {
-      width: 9px;
-      height: 9px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0);
-      border-radius: 10px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0);
-      border-radius: 10px;
-    }
-
-    &:hover::-webkit-scrollbar-thumb {
-      background: rgb(192, 192, 192);
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: rgb(160, 160, 160);
-    }
-
-    &::-webkit-scrollbar-thumb:active {
-      background: rgb(130, 130, 130);
+    &.expanded {
+      height: auto;
     }
   }
 }
