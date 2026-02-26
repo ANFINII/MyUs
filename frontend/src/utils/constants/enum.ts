@@ -61,3 +61,10 @@ export enum CommentType {
   Picture = 'Picture',
   Blog = 'Blog',
 }
+
+export enum WsCommand {
+  CreateMessage = 'create_message',
+  CreateReplyMessage = 'create_reply_message',
+  UpdateMessage = 'update_message',
+  DeleteMessage = 'delete_message',
+}

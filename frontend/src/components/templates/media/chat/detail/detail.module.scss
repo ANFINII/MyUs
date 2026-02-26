@@ -1,27 +1,34 @@
 /* .mainのpadding: 16pxを打ち消してフル表示 */
 .chat_section {
-  display: flex;
-  flex-direction: column;
   overflow-y: hidden;
   height: calc(100vh - 82px);
   margin: -16px;
 }
 
-.header_row {
+.body_row {
   display: flex;
-  flex-shrink: 0;
+  height: 100%;
 }
 
-.body_row {
+.main_column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+
+.main_body {
   position: relative;
   display: flex;
+  flex-direction: column;
   flex: 1;
   min-height: 0;
 }
 
 /* chat_section_header */
 .chat_section_header {
-  flex: 1;
+  flex-shrink: 0;
   min-width: 0;
   min-height: 55px;
   height: fit-content;
@@ -145,42 +152,7 @@
   }
 }
 
-/* thread_header */
-.thread_header {
-  display: none;
-  padding: 5px 0 5px 8px;
-  color: rgb(100, 100, 100);
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-
-  &.active {
-    display: flex;
-    flex: 1;
-    min-width: 0;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  h2 {
-    height: fit-content;
-    margin: 0;
-    font-size: 15px;
-    font-weight: 500;
-    color: rgb(100, 100, 100);
-    white-space: nowrap;
-  }
-
-  .thread_close {
-    max-width: 30px;
-    margin-right: 4px;
-    color: rgb(100, 100, 100);
-    cursor: pointer;
-
-    &:hover {
-      color: rgb(0, 100, 255);
-    }
-  }
-}
+/* thread_header（chat_section_thread内） */
 
 /* chat_section_nav */
 .chat_section_nav {
@@ -266,7 +238,7 @@
   flex-direction: column;
   flex: 1;
   min-width: 0;
-  height: 100%;
+  min-height: 0;
   margin: 0;
 
   .message_area {
@@ -286,11 +258,11 @@
 
 /* メッセージアイテム */
 .message_item {
+  position: relative;
   display: flex;
   gap: 10px;
   height: fit-content;
   padding: 8px;
-  overflow: hidden;
 
   > :first-child {
     flex-shrink: 0;
@@ -330,6 +302,43 @@
       }
     }
 
+    .message_edit {
+      .message_edit_actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+        justify-content: flex-end;
+
+        .edit_cancel {
+          padding: 4px 12px;
+          font-size: 13px;
+          border: 1px solid rgb(200, 200, 200);
+          border-radius: 4px;
+          background: rgb(255, 255, 255);
+          color: rgb(100, 100, 100);
+          cursor: pointer;
+
+          &:hover {
+            background: rgb(245, 245, 245);
+          }
+        }
+
+        .edit_save {
+          padding: 4px 12px;
+          font-size: 13px;
+          border: none;
+          border-radius: 4px;
+          background: rgb(40, 140, 255);
+          color: rgb(255, 255, 255);
+          cursor: pointer;
+
+          &:hover {
+            background: rgb(30, 120, 230);
+          }
+        }
+      }
+    }
+
     .message_thread_link {
       display: block;
       min-width: 200px;
@@ -358,6 +367,45 @@
       }
     }
   }
+
+  .message_action {
+    position: relative;
+    flex-shrink: 0;
+
+    .action_button {
+      display: flex;
+      height: min-content;
+      padding: 8px;
+      justify-content: flex-end;
+      border: none;
+      outline: none;
+      background: none;
+      text-decoration: none;
+      color: rgb(80, 80, 80);
+      cursor: pointer;
+
+      &:hover {
+        border-radius: 50px;
+        background: rgb(240, 240, 240);
+      }
+
+      &:active {
+        background: rgb(230, 230, 230);
+      }
+
+      &:disabled {
+        color: rgb(180, 180, 180);
+        background: rgb(255, 255, 255);
+        cursor: default;
+      }
+    }
+
+    .action_list {
+      position: absolute;
+      top: 40px;
+      right: 0;
+    }
+  }
 }
 
 /* chat_section_thread */
@@ -371,6 +419,36 @@
     flex-direction: column;
     flex: 1;
     min-width: 0;
+  }
+
+  .thread_header {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0 5px 8px;
+    color: rgb(100, 100, 100);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    h2 {
+      height: fit-content;
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: rgb(100, 100, 100);
+      white-space: nowrap;
+    }
+
+    .thread_close {
+      max-width: 30px;
+      margin-right: 4px;
+      color: rgb(100, 100, 100);
+      cursor: pointer;
+
+      &:hover {
+        color: rgb(0, 100, 255);
+      }
+    }
   }
 
   .thread_area {
