@@ -6,11 +6,11 @@ import StarterKit from '@tiptap/starter-kit'
 import clsx from 'clsx'
 import { useRecording } from 'components/hooks/useRecording'
 import Button from 'components/parts/Button'
-import IconCaret from 'components/parts/Icon/Caret'
 import IconMic from 'components/parts/Icon/Mic'
 import HStack from 'components/parts/Stack/Horizontal'
 import Toolbar, { ToolbarConfig } from 'components/widgets/TextEditor/Toolbar'
 import style from './ChatEditor.module.scss'
+import SendButton from '../SendButton'
 
 const extensions = [StarterKit.configure({ heading: false }), Link.configure({ openOnClick: false }), Underline]
 
@@ -102,9 +102,7 @@ export default function ChatEditor(props: Props): React.JSX.Element {
             <Button name="保存" color="blue" size="s" onClick={onSave} disabled={isEmpty} />
           </HStack>
         ) : (
-          <button type="submit" className={style.send_button} disabled={disabled || isEmpty}>
-            <IconCaret size="16" type="right" />
-          </button>
+          <SendButton disabled={disabled || isEmpty} />
         )}
       </div>
     </div>

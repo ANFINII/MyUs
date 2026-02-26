@@ -1,0 +1,28 @@
+.send_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin-left: auto;
+  color: rgb(255, 255, 255);
+  border-radius: 4px;
+  border: 1px solid rgb(40, 130, 255);
+  background: rgb(40, 130, 255);
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(30, 120, 240);
+  }
+
+  &:active {
+    background: rgb(20, 110, 220);
+  }
+
+  &:disabled {
+    border: 1px solid rgb(150, 200, 255);
+    background: rgb(150, 200, 255);
+    cursor: initial;
+  }
+}
