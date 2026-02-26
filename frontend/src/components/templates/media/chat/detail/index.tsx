@@ -7,6 +7,7 @@ import { postLikeMedia, postSubscribe } from 'api/internal/user'
 import { FetchError, MediaType } from 'utils/constants/enum'
 import { useChatWebSocket } from 'components/hooks/useChatWebSocket'
 import { useNavResize } from 'components/hooks/useNavResize'
+import { useThreadResize } from 'components/hooks/useThreadResize'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
@@ -61,6 +62,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const { user } = useUser()
   const { toast, handleToast } = useToast()
   const { navRef, handleNav, handleResize } = useNavResize()
+  const { threadRef, resetThreadWidth, handleThreadResize } = useThreadResize()
   const messageAreaRef = useRef<HTMLDivElement>(null)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isContent, setIsContent] = useState<boolean>(false)
@@ -95,6 +97,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
       if (existing.some((r) => r.ulid === newReply.ulid)) return prev
       return {
         ...prev,
+        messages: prev.messages.map((m) => (m.ulid === newReply.parentUlid ? { ...m, replyCount: m.replyCount + 1 } : m)),
         replies: {
           ...prev.replies,
           [newReply.parentUlid]: [...existing, newReply],
@@ -114,11 +117,16 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }
 
   const handleWsDeleteMessage = (ulid: string) => {
-    setFormState((prev) => ({
-      ...prev,
-      messages: prev.messages.filter((m) => m.ulid !== ulid),
-      replies: Object.fromEntries(Object.entries(prev.replies).map(([key, list]) => [key, list.filter((r) => r.ulid !== ulid)])),
-    }))
+    setFormState((prev) => {
+      const parentUlid = Object.entries(prev.replies).find(([, list]) => list.some((r) => r.ulid === ulid))?.[0]
+      return {
+        ...prev,
+        messages: parentUlid
+          ? prev.messages.map((m) => (m.ulid === parentUlid ? { ...m, replyCount: Math.max(0, m.replyCount - 1) } : m)).filter((m) => m.ulid !== ulid)
+          : prev.messages.filter((m) => m.ulid !== ulid),
+        replies: Object.fromEntries(Object.entries(prev.replies).map(([key, list]) => [key, list.filter((r) => r.ulid !== ulid)])),
+      }
+    })
   }
 
   useChatWebSocket({
@@ -137,7 +145,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const handleReply = (value: string) => setFormState((prev) => ({ ...prev, reply: value }))
 
   const handleThread = async (message: ChatMessage | null = null) => {
-    if (message !== null) {
+    if (message !== null && message.ulid !== selectedMessage?.ulid) {
       const ret = await getReplies(message.ulid)
       if (ret.isOk()) {
         const replyData: ChatReply[] = ret.value.map((r) => ({ ...r, parentUlid: message.ulid }))
@@ -149,7 +157,8 @@ export default function ChatDetail(props: Props): React.JSX.Element {
         return
       }
     }
-    setFormState((prev) => ({ ...prev, selectedMessage: message }))
+    resetThreadWidth()
+    setFormState((prev) => ({ ...prev, selectedMessage: message !== null && message.ulid === prev.selectedMessage?.ulid ? null : message }))
   }
 
   const handleEditMessage = async (ulid: string, text: string) => {
@@ -243,12 +252,14 @@ export default function ChatDetail(props: Props): React.JSX.Element {
             </div>
           </div>
           <SectionThread
+            threadRef={threadRef}
             selectedMessage={selectedMessage}
             replies={selectedMessage ? replies[selectedMessage.ulid] ?? [] : []}
             reply={reply}
             user={user}
             isDisabled={isDisabled}
             onClose={() => handleThread()}
+            onResize={handleThreadResize}
             onChange={handleReply}
             onSubmit={handleReplySubmit}
             onEdit={handleEditMessage}

@@ -1,13 +1,16 @@
 import { useState, useRef } from 'react'
+import clsx from 'clsx'
 import { ChatMessage } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
 import { formatDatetime } from 'utils/functions/datetime'
-import ActionList, { ActionItem } from 'components/parts/ActionList'
+import { ActionItem } from 'components/parts/ActionList'
 import AvatarLink from 'components/parts/Avatar/Link'
-import IconDots from 'components/parts/Icon/Dots'
 import IconEdit from 'components/parts/Icon/Edit'
+import IconLink from 'components/parts/Icon/Link'
 import IconTrash from 'components/parts/Icon/Trash'
 import Modal from 'components/parts/Modal'
+import HStack from 'components/parts/Stack/Horizontal'
+import CommentAction from 'components/widgets/Comment/Action'
 import ChatEditor from './ChatEditor'
 import style from './detail.module.scss'
 
@@ -30,7 +33,6 @@ export default function MessageItem(props: Props): React.JSX.Element {
   const actionRef = useRef<HTMLButtonElement>(null)
 
   const isOwner = user !== undefined && message.author.ulid === user.ulid
-  const disabled = !isOwner || isDisabled
 
   const handleMenu = () => setIsMenu(!isMenu)
   const handleModal = () => setIsModal(!isModal)
@@ -53,9 +55,19 @@ export default function MessageItem(props: Props): React.JSX.Element {
     setIsModal(false)
   }
 
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}${window.location.pathname}`
+    navigator.clipboard.writeText(url)
+  }
+
   const actionItems: ActionItem[] = [
-    { icon: <IconEdit size="16" />, label: '編集', onClick: handleEditStart },
-    { icon: <IconTrash size="16" />, label: '削除', onClick: handleModal, danger: true },
+    { icon: <IconLink size="16" />, label: 'コピー', onClick: handleCopyLink },
+    ...(isOwner && !isDisabled
+      ? [
+          { icon: <IconEdit size="16" />, label: '編集', onClick: handleEditStart },
+          { icon: <IconTrash size="16" />, label: '削除', onClick: handleModal, danger: true },
+        ]
+      : []),
   ]
 
   return (
@@ -82,21 +94,21 @@ export default function MessageItem(props: Props): React.JSX.Element {
           <div className={style.message_text} dangerouslySetInnerHTML={{ __html: message.text }} />
         )}
         {onThread && !isEdit && (
-          <div className={style.message_thread_link} onClick={() => onThread(message)}>
-            スレッド表示
+          <div className={style.message_thread_row}>
+            <span className={style.message_thread_link} onClick={() => onThread(message)}>
+              スレッド表示
+            </span>
+            <HStack gap="1" className={style.message_thread_count}>
+              <span>返信</span>
+              <span>{message.replyCount}</span>
+              <span>件</span>
+            </HStack>
           </div>
         )}
       </div>
-      {onEdit && onDelete && (
-        <div className={style.message_action}>
-          <button ref={actionRef} className={style.action_button} disabled={disabled} onClick={handleMenu}>
-            <IconDots size="18" />
-          </button>
-          <div className={style.action_list}>
-            <ActionList triggerRef={actionRef} open={isMenu} onClose={handleMenu} items={actionItems} />
-          </div>
-        </div>
-      )}
+      <div className={clsx(style.message_action, isMenu && style.visible)}>
+        <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionRef} disabled={false} actionItems={actionItems} />
+      </div>
       <Modal
         open={isModal}
         onClose={handleModal}

@@ -1,4 +1,4 @@
-import { FormEvent } from 'react'
+import { FormEvent, MouseEvent, RefObject } from 'react'
 import clsx from 'clsx'
 import { ChatMessage, ChatReply } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
@@ -13,7 +13,9 @@ interface Props {
   replies: ChatReply[]
   reply: string
   isDisabled: boolean
+  threadRef: RefObject<HTMLDivElement | null>
   onClose: () => void
+  onResize: (e: MouseEvent) => void
   onChange: (value: string) => void
   onSubmit: (e: FormEvent) => void
   onEdit: (ulid: string, text: string) => void
@@ -21,11 +23,12 @@ interface Props {
 }
 
 export default function SectionThread(props: Props): React.JSX.Element {
-  const { user, selectedMessage, replies, reply, isDisabled, onClose, onChange, onSubmit, onEdit, onDelete } = props
+  const { user, selectedMessage, replies, reply, isDisabled, threadRef, onClose, onResize, onChange, onSubmit, onEdit, onDelete } = props
   const isThread = selectedMessage !== null
 
   return (
-    <div className={clsx(style.chat_section_thread, isThread && style.active)}>
+    <div ref={threadRef} className={clsx(style.chat_section_thread, isThread && style.active)}>
+      <div className={style.thread_resize} onMouseDown={onResize} />
       <div className={style.thread_header}>
         <h2>スレッド</h2>
         <IconCross size="27" onClick={onClose} className={style.thread_close} />
