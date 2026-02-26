@@ -18,8 +18,14 @@ class MessageRepository(MessageInterface):
         q_list: list[Q] = []
         if filter.chat_id:
             q_list.append(Q(chat_id=filter.chat_id))
-        if filter.is_parent:
+        if filter.message_ulid:
+            q_list.append(Q(ulid=filter.message_ulid))
+        if filter.parent_ulid:
+            q_list.append(Q(parent__ulid=filter.parent_ulid))
+        if filter.is_parent is True:
             q_list.append(Q(parent__isnull=True))
+        elif filter.is_parent is False:
+            q_list.append(Q(parent__isnull=False))
 
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
@@ -52,3 +58,6 @@ class MessageRepository(MessageInterface):
         )
 
         return new_ids
+
+    def delete(self, message_id: int) -> None:
+        Message.objects.filter(id=message_id).delete()

@@ -2,6 +2,7 @@ from ninja import NinjaAPI
 from api.src.adapter.auth import AuthAPI
 from api.src.adapter.comment import CommentAPI
 from api.src.adapter.media import BlogAPI, ChatAPI, ComicAPI, HomeAPI, MusicAPI, PictureAPI, VideoAPI
+from api.src.adapter.message import MessageAPI
 from api.src.adapter.setting import SettingMyPageAPI, SettingNotificationAPI, SettingProfileAPI
 from api.src.adapter.user import UserAPI
 
@@ -23,3 +24,4 @@ api.add_router("/media/picture", PictureAPI().router, tags=["Media Picture"])
 api.add_router("/media/blog", BlogAPI().router, tags=["Media Blog"])
 api.add_router("/media/chat", ChatAPI().router, tags=["Media Chat"])
 api.add_router("/media/comment", CommentAPI().router, tags=["Media Comment"])
+api.add_router("/media/message", MessageAPI().router, tags=["Media Message"])
