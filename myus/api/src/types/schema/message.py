@@ -26,6 +26,7 @@ class ChatMessageReplyOut(BaseModel):
 class ChatMessageOut(BaseModel):
     ulid: str
     text: str
+    reply_count: int
     created: datetime
     updated: datetime
     author: AuthorOut
