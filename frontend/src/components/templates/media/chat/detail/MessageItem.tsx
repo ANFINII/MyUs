@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { ChatMessage } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
@@ -26,11 +27,14 @@ interface Props {
 export default function MessageItem(props: Props): React.JSX.Element {
   const { user, message, isDisabled = false, onThread, onEdit, onDelete } = props
 
+  const router = useRouter()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [editText, setEditText] = useState<string>(message.text)
 
+  const chatUlid = String(router.query.ulid)
+  const threadPath = `/media/chat/${chatUlid}/thread/${message.ulid}`
   const isOwner = user !== undefined && message.author.ulid === user.ulid
 
   const handleMenu = () => setIsMenu(!isMenu)
@@ -55,8 +59,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
   }
 
   const handleCopyLink = () => {
-    const url = `${window.location.origin}${window.location.pathname}`
-    navigator.clipboard.writeText(url)
+    navigator.clipboard.writeText(`${window.location.origin}${threadPath}`)
   }
 
   const actionItems: ActionItem[] = [

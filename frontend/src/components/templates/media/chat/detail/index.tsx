@@ -35,10 +35,11 @@ interface ChatDetailState {
 
 interface Props {
   data: ChatDetailOut
+  threadUlid?: string
 }
 
 export default function ChatDetail(props: Props): React.JSX.Element {
-  const { data } = props
+  const { data, threadUlid } = props
   const { detail, list } = data
 
   const initFormState: ChatDetailState = useMemo(
@@ -84,6 +85,16 @@ export default function ChatDetail(props: Props): React.JSX.Element {
 
   useEffect(() => scrollToBottom(), [messages, scrollToBottom])
 
+  const threadInitRef = useRef<boolean>(false)
+  useEffect(() => {
+    if (threadInitRef.current || !threadUlid) return
+    const target = messages.find((m) => m.ulid === threadUlid)
+    if (target) {
+      threadInitRef.current = true
+      handleThread(target)
+    }
+  }, [threadUlid, messages])
+
   const handleWsCreateMessage = (newMessage: ChatMessage) => {
     setFormState((prev) => {
       if (prev.messages.some((m) => m.ulid === newMessage.ulid)) return prev
@@ -110,9 +121,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     setFormState((prev) => ({
       ...prev,
       messages: prev.messages.map((m) => (m.ulid === ulid ? { ...m, text } : m)),
-      replies: Object.fromEntries(
-        Object.entries(prev.replies).map(([key, list]) => [key, list.map((r) => (r.ulid === ulid ? { ...r, text } : r))]),
-      ),
+      replies: Object.fromEntries(Object.entries(prev.replies).map(([key, list]) => [key, list.map((r) => (r.ulid === ulid ? { ...r, text } : r))])),
     }))
   }
 
@@ -145,6 +154,8 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const handleReply = (value: string) => setFormState((prev) => ({ ...prev, reply: value }))
 
   const handleThread = async (message: ChatMessage | null = null) => {
+    const chatUlid = router.query.ulid as string
+    const chatPath = { pathname: '/media/chat/[ulid]', query: { ulid: chatUlid } }
     if (message !== null && message.ulid !== selectedMessage?.ulid) {
       const ret = await getReplies(message.ulid)
       if (ret.isOk()) {
@@ -154,11 +165,13 @@ export default function ChatDetail(props: Props): React.JSX.Element {
           selectedMessage: message,
           replies: { ...prev.replies, [message.ulid]: replyData },
         }))
+        router.replace(chatPath, `/media/chat/${chatUlid}/thread/${message.ulid}`, { shallow: true })
         return
       }
     }
     resetThreadWidth()
     setFormState((prev) => ({ ...prev, selectedMessage: message !== null && message.ulid === prev.selectedMessage?.ulid ? null : message }))
+    router.replace(chatPath, `/media/chat/${chatUlid}`, { shallow: true })
   }
 
   const handleEditMessage = async (ulid: string, text: string) => {
@@ -254,7 +267,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
           <SectionThread
             threadRef={threadRef}
             selectedMessage={selectedMessage}
-            replies={selectedMessage ? replies[selectedMessage.ulid] ?? [] : []}
+            replies={selectedMessage ? (replies[selectedMessage.ulid] ?? []) : []}
             reply={reply}
             user={user}
             isDisabled={isDisabled}
