@@ -260,7 +260,7 @@
   display: flex;
   gap: 10px;
   height: fit-content;
-  padding: 8px;
+  padding: 8px 16px;
   transition: background 0.1s;
 
   > :first-child {
@@ -355,16 +355,16 @@
       font-size: 12px;
       font-weight: bold;
       text-decoration: none;
-      color: rgb(40, 140, 255);
+      color: rgb(20, 100, 180);
       border: 1px solid rgba(255, 255, 255, 0);
       border-radius: 5px;
       transition: border 0.1s, background 0.1s;
+      user-select: none;
       cursor: pointer;
 
       &:hover {
-        color: rgb(40, 140, 255);
-        border: 1px solid rgba(170, 210, 255, 0.8);
-        background: rgb(255, 255, 255);
+        color: rgb(20, 100, 180);
+        border: 1px solid rgba(20, 100, 180, 0.5);
       }
     }
 
@@ -381,7 +381,7 @@
     opacity: 0;
     transition: opacity 0.1s;
     border: 1px solid rgb(210, 210, 210);
-    border-radius: 6px;
+    border-radius: 5px;
     background: rgb(255, 255, 255);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 

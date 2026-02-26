@@ -1,16 +1,16 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import clsx from 'clsx'
 import { ChatMessage } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
 import { formatDatetime } from 'utils/functions/datetime'
-import { ActionItem } from 'components/parts/ActionList'
+import ActionButton from 'components/parts/Action/Button'
+import { ActionItem } from 'components/parts/Action/List'
 import AvatarLink from 'components/parts/Avatar/Link'
 import IconEdit from 'components/parts/Icon/Edit'
 import IconLink from 'components/parts/Icon/Link'
 import IconTrash from 'components/parts/Icon/Trash'
 import Modal from 'components/parts/Modal'
 import HStack from 'components/parts/Stack/Horizontal'
-import CommentAction from 'components/widgets/Comment/Action'
 import ChatEditor from './ChatEditor'
 import style from './detail.module.scss'
 
@@ -30,7 +30,6 @@ export default function MessageItem(props: Props): React.JSX.Element {
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [editText, setEditText] = useState<string>(message.text)
-  const actionRef = useRef<HTMLButtonElement>(null)
 
   const isOwner = user !== undefined && message.author.ulid === user.ulid
 
@@ -107,7 +106,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
         )}
       </div>
       <div className={clsx(style.message_action, isMenu && style.visible)}>
-        <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionRef} disabled={false} actionItems={actionItems} />
+        <ActionButton open={isMenu} onMenu={handleMenu} actionItems={actionItems} />
       </div>
       <Modal
         open={isModal}

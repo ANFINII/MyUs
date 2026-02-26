@@ -1,10 +1,11 @@
-import { ChangeEvent, SetStateAction, useRef, useState } from 'react'
+import { ChangeEvent, SetStateAction, useState } from 'react'
 import { Reply } from 'types/internal/comment'
 import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { putComment, deleteComment } from 'api/internal/media/comment'
 import { postLikeComment } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
 import { useIsLoading } from 'components/hooks/useIsLoading'
+import ActionButton from 'components/parts/Action/Button'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
 import IconEdit from 'components/parts/Icon/Edit'
@@ -12,7 +13,6 @@ import IconTrash from 'components/parts/Icon/Trash'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
-import CommentAction from '../Action'
 import CommentInfo from '../Info'
 import CommentUpdate from '../Update'
 import style from './Thread.module.scss'
@@ -29,7 +29,6 @@ export default function CommentThread(props: Props): React.JSX.Element {
   const { ulid, author, text } = reply
   const { isActive } = user
 
-  const actionButtonRef = useRef<HTMLButtonElement>(null)
   const { isLoading, handleLoading } = useIsLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -99,7 +98,7 @@ export default function CommentThread(props: Props): React.JSX.Element {
           <CountLike isLike={isLike} disable={!isActive} count={likeCount} onClick={handleLike} />
         </div>
       </VStack>
-      <CommentAction open={isMenu} onMenu={handleMenu} actionRef={actionButtonRef} disabled={disabled} actionItems={actionItems} />
+      <ActionButton open={isMenu} onMenu={handleMenu} isRound disabled={disabled} actionItems={actionItems} />
       <CommentDeleteModal open={isModal} onClose={handleModal} onAction={handleDelete} loading={isLoading} comment={reply} />
     </HStack>
   )
