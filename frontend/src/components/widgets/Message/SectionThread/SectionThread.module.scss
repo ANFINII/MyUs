@@ -1,4 +1,4 @@
-@use '../scrollbar';
+@use 'styles/global/mixin/scrollbar';
 
 .chat_section_thread {
   position: relative;
@@ -50,10 +50,11 @@
       max-width: 30px;
       margin-right: 4px;
       color: rgb(100, 100, 100);
+      border-radius: 5px;
       cursor: pointer;
 
       &:hover {
-        color: rgb(0, 100, 255);
+        background: rgb(240, 240, 240);
       }
     }
   }
