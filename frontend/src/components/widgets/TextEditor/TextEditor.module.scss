@@ -1,3 +1,5 @@
+@use 'styles/global/mixin/tiptap';
+
 .label {
   display: block;
   font-size: 14px;
@@ -28,10 +30,7 @@
       margin-top: 0.75em;
     }
 
-    p {
-      margin: 0;
-      padding: 0;
-    }
+    @include tiptap.tiptap;
 
     h1 {
       font-size: 2em;
@@ -61,51 +60,6 @@
     h6 {
       font-size: 0.67em;
       font-weight: bold;
-    }
-
-    ul {
-      padding-left: 1.5em;
-      list-style-type: disc;
-    }
-
-    ol {
-      padding-left: 1.5em;
-      list-style-type: decimal;
-    }
-
-    blockquote {
-      margin-left: 0;
-      padding-left: 16px;
-      border-left: 4px solid rgb(204, 204, 204);
-    }
-
-    pre {
-      margin-top: 5px;
-      margin-bottom: 5px;
-      padding: 5px 10px;
-      border-radius: 3px;
-      background: rgb(240, 240, 242);
-      font-family: monospace;
-      white-space: pre-wrap;
-
-      code {
-        padding: 0;
-        background: none;
-        font-size: 0.9em;
-        color: inherit;
-      }
-    }
-
-    code {
-      padding: 0.2em 0.4em;
-      border-radius: 3px;
-      background: rgb(240, 240, 242);
-      font-size: 0.85em;
-    }
-
-    a {
-      color: rgb(0, 102, 204);
-      text-decoration: underline;
     }
 
     img {
@@ -159,12 +113,13 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
     cursor: pointer;
 
-    &:hover .icon {
-      stroke: rgb(0, 102, 204);
+    &:hover {
+      background: rgb(240, 240, 240);
     }
   }
 
@@ -181,10 +136,11 @@
     align-items: center;
     justify-content: center;
     vertical-align: middle;
-    width: 28px;
-    height: 24px;
-    padding: 3px 5px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
     border: none;
+    border-radius: 4px;
     background: transparent;
     font-size: 13px;
     font-weight: 600;
@@ -193,7 +149,8 @@
     cursor: pointer;
 
     &:hover {
-      color: rgb(0, 102, 204);
+      background: rgb(240, 240, 240);
+      color: inherit;
     }
   }
 

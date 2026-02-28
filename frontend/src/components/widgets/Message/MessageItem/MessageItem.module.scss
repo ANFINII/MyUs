@@ -12,7 +12,20 @@
   }
 
   &:hover {
-    background: rgba(240, 248, 255, 0.8);
+    background: rgb(235, 245, 255);
+
+    .message_content .message_text pre,
+    .message_content .message_text > code {
+      background: rgba(240, 240, 242, 0.5);
+    }
+
+    .message_content .message_text blockquote {
+      border-left-color: rgba(200, 200, 200, 0.5);
+    }
+
+    .message_content .message_text pre code {
+      background: none;
+    }
   }
 
   .message_content {
