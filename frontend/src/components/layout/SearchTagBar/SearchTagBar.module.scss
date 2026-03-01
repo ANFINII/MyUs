@@ -7,11 +7,7 @@
   background: rgb(240, 240, 240);
   z-index: 50;
 
-  .button_1 {
-    width: 52px;
-  }
-
-  .button_2 {
+  .button {
     display: none;
 
     &.active {
@@ -40,7 +36,7 @@
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
-    scrollbar-width: none; /* Firefoxでスクロールバーを非表示 */
+    scrollbar-width: none;
 
     &.active {
       width: calc(100vw - 416px);
@@ -50,10 +46,10 @@
       font-size: 14px;
       color: rgb(100, 100, 100);
       text-decoration: none;
-    }
 
-    a:hover {
-      color: rgb(0, 130, 255);
+      &:hover {
+        color: rgb(0, 130, 255);
+      }
     }
   }
 
@@ -71,6 +67,55 @@
     &:active {
       color: rgb(0, 130, 255);
       background: rgb(210, 210, 210);
+    }
+  }
+
+  .tag_item {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 14px;
+    color: rgb(100, 100, 100);
+    white-space: nowrap;
+    user-select: none;
+
+    &.dragging {
+      opacity: 0.4;
+    }
+
+    &.drag_over {
+      border-left: 2px solid rgb(0, 130, 255);
+    }
+  }
+
+  .tag_name {
+    font-size: 14px;
+    color: rgb(100, 100, 100);
+  }
+
+  .drag_handle {
+    display: flex;
+    color: rgb(160, 160, 160);
+    align-items: center;
+    cursor: grab;
+
+    &:hover {
+      color: rgb(100, 100, 100);
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  .delete_button {
+    color: rgb(160, 160, 160);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(220, 50, 50);
     }
   }
 }
