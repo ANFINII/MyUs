@@ -1,0 +1,9 @@
+.hashtag {
+  font-size: 14px;
+  color: rgb(100, 100, 100);
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(0, 130, 255);
+  }
+}

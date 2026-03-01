@@ -33,6 +33,15 @@ export enum MediaType {
   Chat = 'Chat',
 }
 
+export enum MediaPath {
+  Video = 'video',
+  Music = 'music',
+  Comic = 'comic',
+  Picture = 'picture',
+  Blog = 'blog',
+  Chat = 'chat',
+}
+
 export enum NotificationType {
   Video = 'Video',
   Music = 'Music',
