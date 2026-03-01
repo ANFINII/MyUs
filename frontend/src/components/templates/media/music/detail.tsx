@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import clsx from 'clsx'
 import { MusicDetailOut } from 'types/internal/media/detail'
+import { MediaPath } from 'utils/constants/enum'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -51,7 +52,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
           </>
         )}
         <Divide />
-        <MediaDetailCommon media={{ type: 'music', ...other }} list={list} handleToast={handleToast} />
+        <MediaDetailCommon media={{ mediaPath: MediaPath.Music, ...other }} list={list} handleToast={handleToast} />
       </MediaDetail>
     </Main>
   )

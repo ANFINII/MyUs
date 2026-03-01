@@ -2,6 +2,7 @@ import { Channel } from 'types/internal/channle'
 import { Comment } from 'types/internal/comment'
 import { MediaUser, Video, Music, Picture, Blog } from 'types/internal/media'
 import { Hashtag } from 'types/internal/media/detail'
+import { MediaPath } from 'utils/constants/enum'
 import style from './Common.module.scss'
 import MediaDetailLeft from './Left'
 import MediaDetailRight from './Right'
@@ -17,7 +18,7 @@ interface Props {
     hashtags: Hashtag[]
     channel: Channel
     mediaUser: MediaUser
-    type: 'video' | 'music' | 'comic' | 'picture' | 'blog'
+    mediaPath: MediaPath
   }
   list: Video[] | Music[] | Picture[] | Blog[]
   isAd?: boolean

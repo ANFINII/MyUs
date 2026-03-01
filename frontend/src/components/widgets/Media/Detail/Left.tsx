@@ -1,5 +1,4 @@
 import { ChangeEvent, useState, useEffect, useMemo } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { Channel } from 'types/internal/channle'
@@ -9,7 +8,7 @@ import { Hashtag } from 'types/internal/media/detail'
 import { LikeMediaIn, SubscribeIn } from 'types/internal/user'
 import { postComment } from 'api/internal/media/comment'
 import { postLikeMedia, postSubscribe } from 'api/internal/user'
-import { FetchError } from 'utils/constants/enum'
+import { FetchError, MediaPath } from 'utils/constants/enum'
 import { commentTypeNoMap, mediaTypeMap } from 'utils/constants/map'
 import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
@@ -24,6 +23,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentContent from 'components/widgets/Comment/Content'
 import CommentInput from 'components/widgets/Comment/Input/Input'
+import Hashtags from 'components/widgets/Media/Hashtags'
 import SubscribeDeleteModal from 'components/widgets/Modal/SubscribeDelete'
 import SubscribeButton from 'components/widgets/SubscribeButton'
 import View from 'components/widgets/View'
@@ -49,7 +49,7 @@ interface Props {
     hashtags: Hashtag[]
     channel: Channel
     mediaUser: MediaUser
-    type: 'video' | 'music' | 'comic' | 'picture' | 'blog'
+    mediaPath: MediaPath
   }
   handleToast: (content: string, isError: boolean) => void
 }
@@ -137,13 +137,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
           <CountLike isLike={isLike} disable={!user.isActive} count={likeCount} onClick={handleLike} />
         </div>
 
-        <HStack gap="4" wrap className={style.hashtag}>
-          {media.hashtags.map((hashtag) => (
-            <Link key={hashtag.jpName} href={`/media/${media.type}?search=${hashtag.jpName}`} className={style.link}>
-              #{hashtag.jpName}
-            </Link>
-          ))}
-        </HStack>
+        <Hashtags hashtags={media.hashtags} mediaPath={media.mediaPath} />
       </VStack>
 
       <Divide />

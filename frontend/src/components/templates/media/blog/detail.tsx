@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import { BlogDetailOut } from 'types/internal/media/detail'
+import { MediaPath } from 'utils/constants/enum'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -26,7 +27,7 @@ export default function BlogDetail(props: Props): React.JSX.Element {
           <FormatHtml content={richtext} />
         </div>
         <Divide />
-        <MediaDetailCommon media={{ type: 'blog', ...other }} list={list} handleToast={handleToast} />
+        <MediaDetailCommon media={{ mediaPath: MediaPath.Blog, ...other }} list={list} handleToast={handleToast} />
       </MediaDetail>
     </Main>
   )

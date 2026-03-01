@@ -1,4 +1,5 @@
 import { PictureDetailOut } from 'types/internal/media/detail'
+import { MediaPath } from 'utils/constants/enum'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -27,7 +28,7 @@ export default function PictureDetail(props: Props): React.JSX.Element {
           </div>
         </div>
         <Divide />
-        <MediaDetailCommon media={{ type: 'picture', ...other }} list={list} handleToast={handleToast} />
+        <MediaDetailCommon media={{ mediaPath: MediaPath.Picture, ...other }} list={list} handleToast={handleToast} />
       </MediaDetail>
     </Main>
   )
