@@ -3,7 +3,8 @@ import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
 import { SearchParms } from 'types/internal/media'
-import { Follow, FollowIn, FollowOut, LikeCommentIn, LikeMediaIn, LikeOut, NotificationOut, SearchTagOut, SubscribeIn, SubscribeOut, UserMe } from 'types/internal/user'
+import { MessageOut } from 'types/internal/other'
+import { Follow, FollowIn, FollowOut, LikeCommentIn, LikeMediaIn, LikeOut, NotificationOut, SearchTagIn, SearchTagOut, SubscribeIn, SubscribeOut, UserMe } from 'types/internal/user'
 import { apiFollow, apiFollower, apiFollowUser, apiLikeComment, apiLikeMedia, apiNotification, apiSearchTag, apiSubscribeChannel, apiUser } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
@@ -13,6 +14,10 @@ export const getUser = async (req?: Req): Promise<ApiOut<UserMe>> => {
 
 export const getSearchTag = async (req?: Req): Promise<ApiOut<SearchTagOut[]>> => {
   return await apiOut(apiClient('json').get(apiSearchTag, cookieHeader(req)))
+}
+
+export const putSearchTag = async (tags: SearchTagIn[]): Promise<ApiOut<MessageOut>> => {
+  return await apiOut(apiClient('json').put(apiSearchTag, camelSnake(tags)))
 }
 
 export const getFollow = async (params: SearchParms, req?: Req): Promise<ApiOut<Follow[]>> => {
