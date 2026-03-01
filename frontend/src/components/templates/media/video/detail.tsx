@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import Player from 'video.js/dist/types/player'
 import { VideoDetailOut } from 'types/internal/media/detail'
+import { MediaPath } from 'utils/constants/enum'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -85,7 +86,7 @@ export default function VideoDetail(props: Props): React.JSX.Element {
           </div>
         </div>
         <Divide />
-        <MediaDetailCommon media={{ type: 'video', ...other }} list={list} handleToast={handleToast} />
+        <MediaDetailCommon media={{ mediaPath: MediaPath.Video, ...other }} list={list} handleToast={handleToast} />
       </MediaDetail>
     </Main>
   )

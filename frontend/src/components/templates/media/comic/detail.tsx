@@ -1,4 +1,5 @@
 import { ComicDetailOut } from 'types/internal/media/detail'
+import { MediaPath } from 'utils/constants/enum'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -21,7 +22,7 @@ export default function ComicDetail(props: Props): React.JSX.Element {
       <MediaDetail publish={publish}>
         <ComicViewer pages={[image, ...pages]} />
         <Divide />
-        <MediaDetailCommon media={{ type: 'comic', ...other }} list={list} handleToast={handleToast} />
+        <MediaDetailCommon media={{ mediaPath: MediaPath.Comic, ...other }} list={list} handleToast={handleToast} />
       </MediaDetail>
     </Main>
   )
