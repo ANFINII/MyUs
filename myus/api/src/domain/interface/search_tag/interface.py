@@ -31,3 +31,7 @@ class SearchTagInterface(ABC):
     @abstractmethod
     def bulk_save(self, objs: list[SearchTagData]) -> list[int]:
         ...
+
+    @abstractmethod
+    def bulk_delete(self, author_id: int, exclude_ids: list[int]) -> None:
+        ...
