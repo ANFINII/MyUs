@@ -33,5 +33,5 @@ class SearchTagInterface(ABC):
         ...
 
     @abstractmethod
-    def bulk_delete(self, author_id: int, exclude_ids: list[int]) -> None:
+    def bulk_delete(self, ids: list[int]) -> None:
         ...

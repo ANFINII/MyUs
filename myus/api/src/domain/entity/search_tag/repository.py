@@ -51,8 +51,7 @@ class SearchTagRepository(SearchTagInterface):
 
         return new_ids
 
-    def bulk_delete(self, author_id: int, exclude_ids: list[int]) -> None:
-        qs = SearchTag.objects.filter(author_id=author_id)
-        if len(exclude_ids) > 0:
-            qs = qs.exclude(id__in=exclude_ids)
-        qs.delete()
+    def bulk_delete(self, ids: list[int]) -> None:
+        if len(ids) == 0:
+            return
+        SearchTag.objects.filter(id__in=ids).delete()

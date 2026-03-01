@@ -6,13 +6,13 @@ from api.src.types.schema.common import ErrorOut, MessageOut
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationItemOut, NotificationOut, NotificationUserOut
-from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagOut, UserOut
+from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import get_user_channels
 from api.src.usecase.follow import get_followers, get_follows, upsert_follow
 from api.src.usecase.notification import get_content_object, get_notification
 from api.src.usecase.subscribe import upsert_subscribe
-from api.src.usecase.user import get_search_tags, get_user_data, like_comment, like_media
+from api.src.usecase.user import get_search_tags, get_user_data, like_comment, like_media, update_search_tags
 from api.utils.functions.index import create_url
 
 
@@ -58,6 +58,21 @@ class UserAPI:
         tags = get_search_tags(user_id)
         data = [SearchTagOut(sequence=x.sequence, name=x.name) for x in tags]
         return 200, data
+
+    @staticmethod
+    @router.put("/search_tag", response={200: MessageOut, 401: ErrorOut})
+    def put_search_tag(request: HttpRequest, input: list[SearchTagIn]):
+        log.info("UserAPI put_search_tag")
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        result = update_search_tags(user_id, input)
+        if not result:
+            return 200, MessageOut(error=True, message="更新に失敗しました")
+
+        return 200, MessageOut(error=False, message="更新しました")
 
     @staticmethod
     @router.get("/follower", response={200: list[FollowUserOut], 401: ErrorOut})
