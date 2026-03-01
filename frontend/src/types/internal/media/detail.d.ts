@@ -1,7 +1,8 @@
 import { Channel } from 'types/internal/channle'
 import { Comment } from 'types/internal/comment'
-import { Author, MediaUser } from 'types/internal/media'
+import { MediaUser } from 'types/internal/media'
 import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
+import { Author } from 'types/internal/user'
 
 export interface Hashtag {
   jpName: string
