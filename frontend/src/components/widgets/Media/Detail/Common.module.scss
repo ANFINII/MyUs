@@ -28,8 +28,16 @@
     color: rgb(100, 100, 100);
   }
 
-  .media_detail_aria_3 {
-    color: rgb(100, 100, 100);
+  .hashtag {
+    .link {
+      font-size: 14px;
+      color: rgb(100, 100, 100);
+      text-decoration: none;
+
+      &:hover {
+        color: rgb(0, 130, 255);
+      }
+    }
   }
 
   /* コンテンツ説明 */
