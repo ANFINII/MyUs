@@ -34,6 +34,8 @@
       align-items: center;
       gap: 10px;
       padding: 5px 6px;
+      text-decoration: none;
+      cursor: pointer;
 
       > :first-child {
         flex-shrink: 0;
@@ -42,11 +44,6 @@
 
       &:hover {
         background: rgb(240, 245, 255, 0.8);
-      }
-
-      a {
-        text-decoration: none;
-        min-width: 0;
       }
 
       .nav_title {

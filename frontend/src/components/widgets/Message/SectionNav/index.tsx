@@ -1,5 +1,5 @@
 import { MouseEvent, RefObject } from 'react'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { Chat } from 'types/internal/media'
 import Avatar from 'components/parts/Avatar'
 import IconResize from 'components/parts/Icon/Resize'
@@ -15,6 +15,10 @@ interface Props {
 export default function SectionNav(props: Props): React.JSX.Element {
   const { navRef, list, onNav, onResize } = props
 
+  const router = useRouter()
+
+  const handleRouter = (ulid: string) => router.push(`/media/chat/${ulid}`)
+
   return (
     <div ref={navRef} className={style.chat_section_nav}>
       <div className={style.nav_toggle} onClick={onNav}>
@@ -22,13 +26,11 @@ export default function SectionNav(props: Props): React.JSX.Element {
       </div>
       <div className={style.nav_area}>
         {list.map((item) => (
-          <div key={item.ulid} className={style.nav_item}>
+          <div key={item.ulid} className={style.nav_item} onClick={() => handleRouter(item.ulid)}>
             <Avatar src={item.channel.avatar} size="40" />
-            <Link href={`/media/chat/${item.ulid}`}>
-              <h3 className={style.nav_title} title={item.title}>
-                {item.title}
-              </h3>
-            </Link>
+            <h3 className={style.nav_title} title={item.title}>
+              {item.title}
+            </h3>
           </div>
         ))}
       </div>
