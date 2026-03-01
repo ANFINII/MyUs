@@ -6,6 +6,20 @@
   line-height: 1.2;
   cursor: pointer;
 
+  .flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spinner {
+    position: absolute;
+  }
+
+  .invisible {
+    color: transparent;
+  }
+
   &.emerald {
     background: rgb(0, 175, 170);
 
