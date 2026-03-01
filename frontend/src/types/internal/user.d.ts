@@ -1,4 +1,3 @@
-import { NotificationUser } from 'types/internal/media'
 import { GenderType, MediaType, NotificationType } from 'utils/constants/enum'
 
 export interface UserMe {
@@ -19,6 +18,19 @@ export interface User {
   isStaff: boolean
   lastLogin: string
   dateJoined: string
+}
+
+export interface Author {
+  avatar: string
+  ulid: string
+  nickname: string
+  followerCount: number
+}
+
+export interface NotificationUser {
+  avatar: string
+  ulid: string
+  nickname: string
 }
 
 export interface ProfileOut extends User {

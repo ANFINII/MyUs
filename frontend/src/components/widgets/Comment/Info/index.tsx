@@ -1,4 +1,4 @@
-import { Author } from 'types/internal/media'
+import { Author } from 'types/internal/user'
 import { formatDatetime } from 'utils/functions/datetime'
 import style from './Info.module.scss'
 

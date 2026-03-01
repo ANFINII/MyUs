@@ -1,4 +1,4 @@
-import { Author } from 'types/internal/media'
+import { Author } from 'types/internal/user'
 import { formatDatetime } from 'utils/functions/datetime'
 import Avatar from 'components/parts/Avatar'
 import Modal from 'components/parts/Modal'

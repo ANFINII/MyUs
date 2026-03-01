@@ -1,21 +1,8 @@
 import { Channel } from 'types/internal/channle'
 
-export interface Author {
-  avatar: string
-  ulid: string
-  nickname: string
-  followerCount: number
-}
-
 export interface MediaUser {
   isLike: boolean
   isSubscribe: boolean
-}
-
-export interface NotificationUser {
-  avatar: string
-  ulid: string
-  nickname: string
 }
 
 export interface Search {
@@ -27,8 +14,8 @@ export interface Media {
   ulid: string
   title: string
   content: string
-  like: number
   read: number
+  like: number
   publish: boolean
   created: Date
   updated: Date

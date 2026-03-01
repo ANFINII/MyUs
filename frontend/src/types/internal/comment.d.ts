@@ -1,5 +1,5 @@
+import { Author } from 'types/internal/user'
 import { CommentType, CommentTypeNo } from 'utils/constants/enum'
-import { Author } from './media'
 
 export interface Comment {
   ulid: string
