@@ -1,9 +1,11 @@
 import datetime
 from dataclasses import replace
+from django.db import transaction
 from ninja import UploadedFile
 from api.db.models.user import User
 from api.modules.logger import log
 from api.src.injectors.container import injector
+from api.src.domain.interface.search_tag.data import SearchTagData as DomainSearchTagData
 from api.src.domain.interface.search_tag.interface import SearchTagInterface
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
@@ -13,6 +15,7 @@ from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.types.data.user import AuthorData, LikeData, SearchTagData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
+from api.src.types.schema.user import SearchTagIn
 from api.utils.enum.index import ImageUpload, MediaType
 from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository, save_upload
@@ -128,6 +131,32 @@ def get_search_tags(author_id: int) -> list[SearchTagData]:
     ids = repository.get_ids(SearchTagFilterOption(author_id=author_id), SearchTagSortOption())
     objs = repository.bulk_get(ids)
     return [SearchTagData(sequence=obj.sequence, name=obj.name) for obj in objs]
+
+
+def update_search_tags(author_id: int, tags: list[SearchTagIn]) -> bool:
+    repository = injector.get(SearchTagInterface)
+    ids = repository.get_ids(SearchTagFilterOption(author_id=author_id), SearchTagSortOption(), limit=None)
+    existing = repository.bulk_get(ids)
+    name_map: dict[str, int] = {obj.name: obj.id for obj in existing}
+
+    save_objs: list[DomainSearchTagData] = []
+    keep_ids: set[int] = set()
+    for tag in tags:
+        existing_id = name_map.get(tag.name, 0)
+        if existing_id != 0:
+            keep_ids.add(existing_id)
+        save_objs.append(DomainSearchTagData(id=existing_id, author_id=author_id, sequence=tag.sequence, name=tag.name))
+
+    delete_ids = [id for id in ids if id not in keep_ids]
+
+    try:
+        with transaction.atomic():
+            repository.bulk_delete(delete_ids)
+            repository.bulk_save(save_objs)
+        return True
+    except Exception as e:
+        log.error("update_search_tags error", exc=e)
+        return False
 
 
 def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeData | None:

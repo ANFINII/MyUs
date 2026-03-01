@@ -22,6 +22,11 @@ class MediaUserOut(BaseModel):
     is_subscribe: bool
 
 
+class SearchTagIn(BaseModel):
+    sequence: int
+    name: str
+
+
 class SearchTagOut(BaseModel):
     sequence: int
     name: str
