@@ -121,6 +121,11 @@ export interface LikeOut {
   likeCount: number
 }
 
+export interface SearchTagIn {
+  sequence: number
+  name: string
+}
+
 export interface SearchTagOut {
   sequence: number
   name: string
