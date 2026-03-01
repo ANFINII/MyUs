@@ -1,10 +1,25 @@
 .button {
+  width: 52px;
   height: 26px;
   font-size: 14px;
   color: rgb(255, 255, 255);
   border: 0px;
   line-height: 1.2;
   cursor: pointer;
+
+  .flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spinner {
+    position: absolute;
+  }
+
+  .invisible {
+    color: transparent;
+  }
 
   &.emerald {
     background: rgb(0, 175, 170);
