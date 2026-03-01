@@ -1,6 +1,7 @@
 import { Channel } from 'types/internal/channle'
 import { Comment } from 'types/internal/comment'
 import { MediaUser, Video, Music, Picture, Blog } from 'types/internal/media'
+import { Hashtag } from 'types/internal/media/detail'
 import style from './Common.module.scss'
 import MediaDetailLeft from './Left'
 import MediaDetailRight from './Right'
@@ -13,6 +14,7 @@ interface Props {
     like: number
     created: Date
     comments: Comment[]
+    hashtags: Hashtag[]
     channel: Channel
     mediaUser: MediaUser
     type: 'video' | 'music' | 'comic' | 'picture' | 'blog'

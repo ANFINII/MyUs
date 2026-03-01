@@ -3,6 +3,10 @@ import { Comment } from 'types/internal/comment'
 import { Author, MediaUser } from 'types/internal/media'
 import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
 
+export interface Hashtag {
+  jpName: string
+}
+
 export interface MediaDetail {
   ulid: string
   title: string
@@ -13,6 +17,7 @@ export interface MediaDetail {
   created: Date
   updated: Date
   channel: Channel
+  hashtags: Hashtag[]
   mediaUser: MediaUser
 }
 
@@ -21,30 +26,30 @@ export interface VideoDetail extends MediaDetail {
   video: string
   convert: string
   comments: Comment[]
-  hashtags: string[]
 }
 
-export interface MusicDetail extends Music {
+export interface MusicDetail extends MediaDetail {
+  music: string
+  lyric: string
+  download: boolean
   comments: Comment[]
-  hashtags: string[]
 }
 
-export interface ComicDetail extends Comic {
+export interface ComicDetail extends MediaDetail {
+  image: string
   pages: string[]
   comments: Comment[]
-  hashtags: string[]
 }
 
-export interface PictureDetail extends Picture {
+export interface PictureDetail extends MediaDetail {
+  image: string
   comments: Comment[]
-  hashtags: string[]
 }
 
 export interface BlogDetail extends MediaDetail {
   image: str
   richtext: str
   comments: Comment[]
-  hashtags: string[]
 }
 
 export interface ChatDetail extends MediaDetail {
@@ -53,7 +58,6 @@ export interface ChatDetail extends MediaDetail {
   thread: number
   period: Date
   messages: ChatMessage[]
-  hashtags: string[]
 }
 
 export interface VideoDetailOut {

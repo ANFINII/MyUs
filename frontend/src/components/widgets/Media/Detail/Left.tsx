@@ -1,9 +1,11 @@
 import { ChangeEvent, useState, useEffect, useMemo } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { Channel } from 'types/internal/channle'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { MediaUser } from 'types/internal/media'
+import { Hashtag } from 'types/internal/media/detail'
 import { LikeMediaIn, SubscribeIn } from 'types/internal/user'
 import { postComment } from 'api/internal/media/comment'
 import { postLikeMedia, postSubscribe } from 'api/internal/user'
@@ -44,6 +46,7 @@ interface Props {
     like: number
     created: Date
     comments: Comment[]
+    hashtags: Hashtag[]
     channel: Channel
     mediaUser: MediaUser
     type: 'video' | 'music' | 'comic' | 'picture' | 'blog'
@@ -134,7 +137,13 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
           <CountLike isLike={isLike} disable={!user.isActive} count={likeCount} onClick={handleLike} />
         </div>
 
-        <div className={style.media_detail_aria_3}>{/* {% include 'parts/common/hashtag.html' %} */}</div>
+        <HStack gap="4" wrap className={style.hashtag}>
+          {media.hashtags.map((hashtag) => (
+            <Link key={hashtag.jpName} href={`/media/${media.type}?search=${hashtag.jpName}`} className={style.link}>
+              #{hashtag.jpName}
+            </Link>
+          ))}
+        </HStack>
       </VStack>
 
       <Divide />
