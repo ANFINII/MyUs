@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.media import Video
 from api.src.domain.entity.media.video._convert import convert_data, marshal_data
-from api.src.domain.entity.index import get_new_ids, sort_ids
+from api.src.domain.entity.index import filter_search, get_new_ids, sort_ids
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.video.interface import VideoInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, SortOption
@@ -24,11 +24,11 @@ class VideoRepository(VideoInterface):
         if filter.category_id:
             q_list.append(Q(category__id=filter.category_id))
         if filter.search:
-            q_list.append(Q(title__icontains=filter.search))
+            q_list.append(filter_search(filter.search))
 
         field_name = sort.sort_type.name.lower()
         order_by_key = field_name if sort.is_asc else f"-{field_name}"
-        qs = Video.objects.filter(*q_list).order_by(order_by_key)
+        qs = Video.objects.filter(*q_list).distinct().order_by(order_by_key)
 
         if exclude.id is not None:
             qs = qs.exclude(id=exclude.id)

@@ -1,6 +1,6 @@
 from typing import TypeVar
 from django.db import connection
-from django.db.models import Model
+from django.db.models import Model, Q
 
 
 T = TypeVar("T", bound=Model)
@@ -9,6 +9,10 @@ T = TypeVar("T", bound=Model)
 def sort_ids(objs: list[T], ids: list[int]) -> list[T]:
     obj_map = {obj.pk: obj for obj in objs}
     return [obj_map[id] for id in ids]
+
+
+def filter_search(search: str) -> Q:
+    return Q(title__icontains=search) | Q(hashtag__jp_name__icontains=search)
 
 
 def allocate_ids(model: type[Model], num: int) -> list[int]:
