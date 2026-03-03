@@ -7,13 +7,14 @@ import ActionList, { ActionItem } from '../List'
 interface Props {
   open: boolean
   onMenu: () => void
+  size?: 's' | 'm' | 'l'
   isRound?: boolean
   disabled?: boolean
   actionItems: ActionItem[]
 }
 
 export default function ActionButton(props: Props): React.JSX.Element {
-  const { open, onMenu, isRound = false, disabled = false, actionItems } = props
+  const { open, onMenu, size = 'm', isRound = false, disabled = false, actionItems } = props
 
   const actionRef = useRef<HTMLButtonElement>(null)
 
@@ -23,7 +24,7 @@ export default function ActionButton(props: Props): React.JSX.Element {
         <IconDots size="18" />
       </button>
       <div className={style.action_list}>
-        <ActionList triggerRef={actionRef} open={open} onClose={onMenu} items={actionItems} />
+        <ActionList open={open} onClose={onMenu} size={size} triggerRef={actionRef} items={actionItems} />
       </div>
     </div>
   )

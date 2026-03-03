@@ -142,7 +142,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
             <ReplyInput user={user} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleMediaReply} onCancel={handleReplyCancel} />
           </VStack>
         </HStack>
-        <ActionButton open={isMenu} onMenu={handleMenu} isRound disabled={disabled} actionItems={actionItems} />
+        <ActionButton open={isMenu} onMenu={handleMenu} size="s" isRound disabled={disabled} actionItems={actionItems} />
         <CommentDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleDelete} comment={comment} />
       </HStack>
 

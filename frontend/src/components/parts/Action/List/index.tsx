@@ -11,14 +11,15 @@ export interface ActionItem {
 }
 
 interface Props {
-  triggerRef: RefObject<HTMLElement | null>
   open: boolean
   onClose?: () => void
+  size?: 's' | 'm' | 'l'
+  triggerRef: RefObject<HTMLElement | null>
   items: ActionItem[]
 }
 
 export default function ActionList(props: Props): React.JSX.Element {
-  const { triggerRef, open, onClose, items } = props
+  const { open, onClose, size = 'm', triggerRef, items } = props
 
   const actionRef = useRef<HTMLDivElement>(null)
   useClickOutside({ actionRef, triggerRef, isActive: open, onClick: () => onClose?.() })
@@ -31,7 +32,7 @@ export default function ActionList(props: Props): React.JSX.Element {
   return (
     <>
       {open && (
-        <div ref={actionRef} className={style.action_list}>
+        <div ref={actionRef} className={clsx(style.action_list, style[size])}>
           {items.map((item, index) => (
             <button key={index} className={clsx(style.item, item.danger && style.danger)} onClick={handleItemClick(item)}>
               <span className={style.icon}>{item.icon}</span>
