@@ -28,8 +28,9 @@
 
   .action_list {
     position: absolute;
-    top: 32px;
-    right: 0;
+    top: 0;
+    right: 100%;
+    margin-right: 4px;
   }
 
   &.isRound {
@@ -39,10 +40,6 @@
       &:hover {
         border-radius: 50px;
       }
-    }
-
-    .action_list {
-      top: 40px;
     }
   }
 }
