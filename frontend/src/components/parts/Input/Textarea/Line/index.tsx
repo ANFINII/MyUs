@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef } from 'react'
+import { ChangeEvent, KeyboardEvent, useEffect, useRef } from 'react'
 import clsx from 'clsx'
 import style from './Line.module.scss'
 
@@ -15,10 +15,11 @@ interface Props {
   disabled?: boolean
   focus?: boolean
   onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
+  onSubmit?: () => void
 }
 
 export default function TextareaLine(props: Props): React.JSX.Element {
-  const { label, value, className, height, focus, onChange } = props
+  const { label, value, className, height, focus, onChange, onSubmit } = props
 
   const ref = useRef<HTMLTextAreaElement>(null)
 
@@ -40,5 +41,12 @@ export default function TextareaLine(props: Props): React.JSX.Element {
     onChange?.(e)
   }
 
-  return <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} className={clsx(style.line, className)} />
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault()
+      onSubmit?.()
+    }
+  }
+
+  return <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} onKeyDown={handleKeyDown} className={clsx(style.line, className)} />
 }

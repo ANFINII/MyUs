@@ -16,7 +16,7 @@ export default function CommentUpdate(props: Props): React.JSX.Element {
 
   return (
     <VStack gap="4">
-      <TextareaLine name="text" placeholder="コメント入力" focus value={value} onChange={onChange} />
+      <TextareaLine name="text" placeholder="コメント入力" focus value={value} onChange={onChange} onSubmit={onSubmit} />
       <HStack gap="4" justify="end">
         <Button size="s" name="キャンセル" onClick={onCancel} />
         <Button size="s" color="green" name="更新" disabled={value.trim() === ''} onClick={onSubmit} />

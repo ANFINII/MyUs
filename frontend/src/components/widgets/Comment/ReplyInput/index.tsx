@@ -24,7 +24,7 @@ export default function ReplyInput(props: Props): React.JSX.Element {
         <HStack gap="4">
           <AvatarLink src={user.avatar} size="s" ulid={user.ulid} nickname={user.nickname} className="m_2" />
           <VStack gap="4" className="w_full">
-            <TextareaLine name="text" placeholder="コメント入力" value={value} onChange={onChange} />
+            <TextareaLine name="text" placeholder="コメント入力" value={value} onChange={onChange} onSubmit={onSubmit} />
             <HStack gap="4" justify="end">
               <Button size="s" name="キャンセル" onClick={onCancel} />
               <Button size="s" color="blue" name="返信" disabled={value.trim() === ''} onClick={onSubmit} />
