@@ -50,10 +50,6 @@ class ChatIn(BaseModel):
 
 # Outputs
 
-class HashtagOut(BaseModel):
-    jp_name: str
-
-
 class MediaCreateOut(BaseModel):
     ulid: str
 
@@ -68,6 +64,10 @@ class MediaOut(BaseModel):
     created: datetime
     updated: datetime
     channel: ChannelOut
+
+
+class HashtagOut(BaseModel):
+    jp_name: str
 
 
 class MediaDetailOut(BaseModel):

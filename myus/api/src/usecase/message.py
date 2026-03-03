@@ -151,8 +151,8 @@ def update_message(user_id: int, message_ulid: str, text: str) -> MessageData | 
         return None
 
     message_repo = injector.get(MessageInterface)
-    updated_ids = message_repo.bulk_save([replace(message, text=text)])
-    messages = message_repo.bulk_get(updated_ids)
+    message_repo.bulk_save([replace(message, text=text)])
+    messages = message_repo.bulk_get([message.id])
     assert len(messages) == 1, "データが見つかりませんでした"
     updated = messages[0]
 
