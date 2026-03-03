@@ -27,7 +27,7 @@ export default function CommentInput(props: Props): React.JSX.Element {
         <HStack gap="4">
           <AvatarLink src={user.avatar} ulid={user.ulid} nickname={user.nickname} />
           {user.isActive ? (
-            <TextareaLine name="text" placeholder="コメント入力" value={value} onChange={onChange} />
+            <TextareaLine name="text" placeholder="コメント入力" value={value} onChange={onChange} onSubmit={onClick} />
           ) : (
             <TextareaLine name="text" placeholder="コメントするにはログインが必要です!" disabled />
           )}

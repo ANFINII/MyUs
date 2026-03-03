@@ -36,11 +36,29 @@ export default function ChatEditor(props: Props): React.JSX.Element {
   const { value, disabled = false, onChange, onCancel, onSave } = props
 
   const onChangeRef = useRef(onChange)
+  const onSaveRef = useRef(onSave)
   const suppressRef = useRef(false)
 
   useEffect(() => {
     onChangeRef.current = onChange
   }, [onChange])
+
+  useEffect(() => {
+    onSaveRef.current = onSave
+  }, [onSave])
+
+  const handleKeyDown = useCallback((_view: unknown, event: KeyboardEvent) => {
+    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+      if (onSaveRef.current) {
+        onSaveRef.current()
+      } else {
+        const form = (event.target as HTMLElement).closest('form')
+        form?.requestSubmit()
+      }
+      return true
+    }
+    return false
+  }, [])
 
   const handleUpdate = useCallback(({ editor: e }: { editor: { getHTML: () => string } }) => {
     if (suppressRef.current) return
@@ -52,6 +70,7 @@ export default function ChatEditor(props: Props): React.JSX.Element {
     content: value || '',
     immediatelyRender: false,
     editable: !disabled,
+    editorProps: { handleKeyDown },
     onUpdate: handleUpdate,
   })
 
