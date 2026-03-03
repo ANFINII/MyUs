@@ -1,5 +1,4 @@
 import js from '@eslint/js'
-import stylisticTs from '@stylistic/eslint-plugin-ts'
 import tsEsLintPlugin from '@typescript-eslint/eslint-plugin'
 import nextPlugin from '@next/eslint-plugin-next'
 import importPlugin from 'eslint-plugin-import'
@@ -32,7 +31,6 @@ export default [
       'import': importPlugin,
       'unused-imports': unusedPlugin,
       '@typescript-eslint': tsEsLintPlugin,
-      '@stylistic/ts': stylisticTs,
     },
     rules: {
       semi: ['error', 'never'], // セミコロンを不要に
