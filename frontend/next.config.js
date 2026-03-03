@@ -2,15 +2,8 @@
 
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   reactCompiler: true,
   basePath: '',
-  images: {
-    domains: ['www.google.com'],
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   async redirects() {
     return [{ source: '/', destination: '/', permanent: true }]
   },
@@ -22,7 +15,10 @@ module.exports = {
   ...nextConfig,
   i18n,
   images: {
-    domains: ['127.0.0.1', 'my-us.vercel.app'],
-    formats: ['image/avif', 'image/webp']
+    remotePatterns: [
+      { protocol: 'http', hostname: '127.0.0.1' },
+      { protocol: 'https', hostname: 'my-us.vercel.app' },
+    ],
+    formats: ['image/avif', 'image/webp'],
   },
 }
