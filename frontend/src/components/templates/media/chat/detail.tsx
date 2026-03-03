@@ -187,6 +187,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     const request: MessageUpdateIn = { chatUlid: detail.ulid, text }
     const ret = await putMessage(ulid, request)
     if (ret.isErr()) return handleToast(FetchError.Put, true)
+    handleWsUpdateMessage(ulid, text)
   }
 
   const handleDeleteMessage = async (ulid: string) => {
