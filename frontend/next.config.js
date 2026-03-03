@@ -3,9 +3,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    reactCompiler: true,
-  },
+  reactCompiler: true,
   basePath: '',
   images: {
     domains: ['www.google.com'],
