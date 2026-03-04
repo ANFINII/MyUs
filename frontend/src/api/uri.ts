@@ -18,6 +18,7 @@ export const apiSubscribeChannel = base + '/user/subscribe/channel'
 export const apiLikeMedia = base + '/user/like/media'
 export const apiLikeComment = base + '/user/like/comment'
 export const apiNotification = base + '/user/notification'
+export const apiUserPage = (ulid: string) => base + `/user/userpage/${ulid}`
 
 // Setting
 export const apiSettingProfile = base + '/setting/profile'

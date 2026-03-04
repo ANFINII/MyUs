@@ -4,8 +4,22 @@ import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
 import { SearchParms } from 'types/internal/media'
 import { MessageOut } from 'types/internal/other'
-import { Follow, FollowIn, FollowOut, LikeCommentIn, LikeMediaIn, LikeOut, NotificationOut, SearchTagIn, SearchTagOut, SubscribeIn, SubscribeOut, UserMe } from 'types/internal/user'
-import { apiFollow, apiFollower, apiFollowUser, apiLikeComment, apiLikeMedia, apiNotification, apiSearchTag, apiSubscribeChannel, apiUser } from 'api/uri'
+import {
+  Follow,
+  FollowIn,
+  FollowOut,
+  LikeCommentIn,
+  LikeMediaIn,
+  LikeOut,
+  NotificationOut,
+  SearchTagIn,
+  SearchTagOut,
+  SubscribeIn,
+  SubscribeOut,
+  UserMe,
+} from 'types/internal/user'
+import { UserPage } from 'types/internal/userpage'
+import { apiFollow, apiFollower, apiFollowUser, apiLikeComment, apiLikeMedia, apiNotification, apiSearchTag, apiSubscribeChannel, apiUser, apiUserPage } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const getUser = async (req?: Req): Promise<ApiOut<UserMe>> => {
@@ -46,4 +60,8 @@ export const postLikeComment = async (request: LikeCommentIn): Promise<ApiOut<Li
 
 export const getNotification = async (req?: Req): Promise<ApiOut<NotificationOut>> => {
   return await apiOut(apiClient('json').get(apiNotification, cookieHeader(req)))
+}
+
+export const getUserPage = async (ulid: string, req?: Req): Promise<ApiOut<UserPage>> => {
+  return await apiOut(apiClient('json').get(apiUserPage(ulid), cookieHeader(req)))
 }
