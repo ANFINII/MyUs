@@ -18,7 +18,7 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const handleEdit = () => router.push('/setting/mypage/edit')
-  const handleUserPage = () => router.push(`/userpage/${mypage.nickname}`)
+  const handleUserPage = () => router.push(`/userpage/${mypage.ulid}`)
 
   const button = (
     <HStack gap="4">
