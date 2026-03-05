@@ -39,7 +39,4 @@ def is_following(follower_id: int, following_id: int) -> bool:
         return False
 
     follows = follow_repo.bulk_get(ids)
-    if len(follows) == 0:
-        return False
-
     return follows[0].is_follow
