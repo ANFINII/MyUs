@@ -1,0 +1,18 @@
+from pydantic import BaseModel
+from api.src.types.schema.media import VideoOut, MusicOut, ComicOut, PictureOut, BlogOut, ChatOut
+
+
+class UserPageOut(BaseModel):
+    avatar: str
+    banner: str
+    nickname: str
+    content: str
+    follower_count: int
+    following_count: int
+    is_follow: bool
+    videos: list[VideoOut]
+    musics: list[MusicOut]
+    comics: list[ComicOut]
+    pictures: list[PictureOut]
+    blogs: list[BlogOut]
+    chats: list[ChatOut]
