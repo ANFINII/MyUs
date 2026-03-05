@@ -131,7 +131,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
     <div>
       <HStack>
         <HStack gap="4" className="w_full">
-          <AvatarLink src={author.avatar} ulid={author.ulid} nickname={author.nickname} />
+          <AvatarLink src={author.avatar} ulid={author.ulid} title={author.nickname} />
           <VStack gap="4" className="w_full">
             {!isEdit ? <CommentInfo comment={comment} /> : <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
             <HStack gap="4" className="fs_12">
