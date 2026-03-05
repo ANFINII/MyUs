@@ -94,6 +94,7 @@ class SettingMyPageAPI:
 
         data = SettingMyPageOut(
             banner=create_url(str(mypage.banner)),
+            ulid=user_data.user.ulid,
             nickname=user_data.user.nickname,
             email=mypage.email,
             content=mypage.content,
