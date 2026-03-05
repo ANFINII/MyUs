@@ -21,8 +21,8 @@ class ChatRepository(ChatInterface):
             q_list.append(Q(ulid=filter.ulid))
         if filter.publish is not None:
             q_list.append(Q(publish=filter.publish))
-        if filter.author_id:
-            q_list.append(Q(channel__owner_id=filter.author_id))
+        if filter.owner_id:
+            q_list.append(Q(channel__owner_id=filter.owner_id))
         if filter.category_id:
             q_list.append(Q(category__id=filter.category_id))
         if filter.search:
