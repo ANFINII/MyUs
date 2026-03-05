@@ -24,6 +24,7 @@ def convert_data(obj: Music) -> MusicData:
             id=obj.channel.id,
             ulid=obj.channel.ulid,
             owner_id=obj.channel.owner_id,
+            owner_ulid=obj.channel.owner.ulid,
             avatar=obj.channel.avatar.name if obj.channel.avatar else "",
             name=obj.channel.name,
             description=obj.channel.description,
