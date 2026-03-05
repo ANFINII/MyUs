@@ -62,31 +62,6 @@
     }
   }
 
-  .tabs {
-    display: flex;
-    justify-content: center;
-
-    a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 120px;
-      height: 40px;
-      color: rgb(50, 50, 50);
-      text-decoration: none;
-      border-bottom: 2px solid transparent;
-      transition: all 20ms 0s ease;
-      cursor: pointer;
-
-      &:hover,
-      &.active {
-        color: rgb(0, 85, 215);
-        background: rgb(220, 235, 255);
-        border-bottom: 2px solid rgb(0, 85, 215);
-      }
-    }
-  }
-
   .hr {
     margin: 0 0 16px 0;
   }
