@@ -71,6 +71,7 @@ export interface ProfileIn {
 
 export interface MypageOut {
   banner: string
+  ulid: string
   nickname: string
   email: string
   followerCount: number
