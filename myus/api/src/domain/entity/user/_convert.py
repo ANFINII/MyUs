@@ -36,6 +36,7 @@ def user_data(user: User) -> UserData:
         nickname=user.nickname,
         is_active=user.is_active,
         is_staff=user.is_staff,
+        date_joined=user.date_joined,
     )
 
 

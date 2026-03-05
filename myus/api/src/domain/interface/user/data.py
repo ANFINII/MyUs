@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from api.src.types.data.plan import PlanData
 
 
@@ -23,6 +23,7 @@ class UserData:
     nickname: str
     is_active: bool
     is_staff: bool
+    date_joined: datetime
 
 
 @dataclass(frozen=True, slots=True)
