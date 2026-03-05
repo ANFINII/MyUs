@@ -15,7 +15,7 @@ COMIC_FIELDS = ["channel_id", "title", "content", "image", "read", "publish"]
 class ComicRepository(ComicInterface):
     def queryset(self) -> QuerySet[Comic]:
         pages_prefetch = Prefetch("comic", queryset=ComicPage.objects.order_by("sequence"))
-        return Comic.objects.select_related("channel").prefetch_related("like", "hashtag", pages_prefetch)
+        return Comic.objects.select_related("channel", "channel__owner").prefetch_related("like", "hashtag", pages_prefetch)
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []
@@ -23,6 +23,8 @@ class ComicRepository(ComicInterface):
             q_list.append(Q(ulid=filter.ulid))
         if filter.publish is not None:
             q_list.append(Q(publish=filter.publish))
+        if filter.author_id:
+            q_list.append(Q(channel__owner_id=filter.author_id))
         if filter.category_id:
             q_list.append(Q(category__id=filter.category_id))
         if filter.search:

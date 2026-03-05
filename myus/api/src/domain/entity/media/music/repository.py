@@ -13,7 +13,7 @@ MUSIC_FIELDS = ["channel_id", "title", "content", "lyric", "music", "read", "dow
 
 class MusicRepository(MusicInterface):
     def queryset(self) -> QuerySet[Music]:
-        return Music.objects.select_related("channel").prefetch_related("like", "hashtag")
+        return Music.objects.select_related("channel", "channel__owner").prefetch_related("like", "hashtag")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []
@@ -21,6 +21,8 @@ class MusicRepository(MusicInterface):
             q_list.append(Q(ulid=filter.ulid))
         if filter.publish is not None:
             q_list.append(Q(publish=filter.publish))
+        if filter.author_id:
+            q_list.append(Q(channel__owner_id=filter.author_id))
         if filter.category_id:
             q_list.append(Q(category__id=filter.category_id))
         if filter.search:
