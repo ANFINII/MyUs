@@ -35,7 +35,7 @@ export default function SectionContent(props: Props): React.JSX.Element {
       )}
       <HStack gap="4" justify="between">
         <HStack gap="4">
-          <AvatarLink src={channel.avatar} size="l" ulid={channel.ulid} nickname={channel.name} />
+          <AvatarLink size="l" src={channel.avatar} ulid={channel.ownerUlid} title={channel.name} />
           <VStack gap="2">
             <p className="fs_14">{channel.name}</p>
             <p className="fs_14 text_sub">

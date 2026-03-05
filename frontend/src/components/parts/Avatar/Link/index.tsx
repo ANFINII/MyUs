@@ -4,21 +4,21 @@ import Avatar from 'components/parts/Avatar'
 import style from './AvatarLink.module.scss'
 
 interface Props {
-  src: string
   size?: 's' | 'm' | 'l'
+  src: string
   ulid: string
-  nickname: string
+  title: string
   className?: string
 }
 
 export default function AvatarLink(props: Props): React.JSX.Element {
-  const { src, size = 'm', ulid, nickname, className } = props
+  const { src, size = 'm', ulid, title, className } = props
 
   const sizeValue = size === 's' ? '36' : size === 'm' ? '40' : '48'
 
   return (
     <Link href={`/userpage/${ulid}`} className={className}>
-      <Avatar src={src} title={nickname} size={sizeValue} color="grey" className={clsx(style.avatar, style[size])} />
+      <Avatar src={src} title={title} size={sizeValue} color="grey" className={clsx(style.avatar, style[size])} />
     </Link>
   )
 }

@@ -74,7 +74,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
 
   return (
     <div className={style.message_item}>
-      <AvatarLink src={message.author.avatar} size="m" ulid={message.author.ulid} nickname={message.author.nickname} />
+      <AvatarLink src={message.author.avatar} ulid={message.author.ulid} title={message.author.nickname} />
       <div className={style.message_content}>
         <div className={style.message_meta}>
           <p>{message.author.nickname}</p>

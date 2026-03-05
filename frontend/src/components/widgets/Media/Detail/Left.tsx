@@ -80,7 +80,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   useEffect(() => setFormState(initFormState), [router.query.ulid, initFormState])
 
   const { isLike, isSubscribe, likeCount, subscribeCount, text, comments } = formState
-  const isFallowDisable = !user.isActive || user.ulid === channel.ulid
+  const isFallowDisable = !user.isActive || user.ulid === channel.ownerUlid
   const handleModal = () => setIsModal(!isModal)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
@@ -145,7 +145,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
       <div>
         <HStack gap="4" justify="between">
           <HStack gap="4">
-            <AvatarLink src={channel.avatar} size="l" ulid={channel.ulid} nickname={channel.name} />
+            <AvatarLink size="l" src={channel.avatar} ulid={channel.ownerUlid} title={channel.name} />
             <VStack gap="2">
               <p className="fs_14">{channel.name}</p>
               <p className="fs_14 text_sub">
