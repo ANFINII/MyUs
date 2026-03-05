@@ -16,7 +16,10 @@ import MediaVideo from 'components/widgets/Media/Index/Video'
 import MediaIndex from 'components/widgets/Media/List/Index'
 import style from './UserPage.module.scss'
 
-type TabKey = 'posts' | 'info'
+const enum TabKey {
+  Posts = 'posts',
+  Info = 'info',
+}
 
 interface Props {
   ulid: string
@@ -28,16 +31,16 @@ export default function Userpage(props: Props): React.JSX.Element {
   const { avatar, banner, nickname, email, content, dateJoined, videos, musics, comics, pictures, blogs, chats } = userPage
 
   const { user } = useUser()
-  const [isFollow, setIsFollow] = useState(userPage.isFollow)
-  const [followerCount, setFollowerCount] = useState(userPage.followerCount)
-  const [selectedTab, setSelectedTab] = useState<TabKey>('posts')
+  const [isFollow, setIsFollow] = useState<boolean>(userPage.isFollow)
+  const [followerCount, setFollowerCount] = useState<number>(userPage.followerCount)
+  const [selected, setSelected] = useState<TabKey>(TabKey.Posts)
 
   const isSelf = user.isActive && user.nickname === nickname
   const formattedDate = new Date(dateJoined).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
 
   const tabItems: TabItem<TabKey>[] = [
-    { key: 'posts', label: '投稿' },
-    { key: 'info', label: '情報' },
+    { key: TabKey.Posts, label: '投稿' },
+    { key: TabKey.Info, label: '情報' },
   ]
 
   const handleFollow = async () => {
@@ -68,12 +71,12 @@ export default function Userpage(props: Props): React.JSX.Element {
           </span>
         </div>
 
-        <Tabs items={tabItems} selected={selectedTab} onSelect={(key) => setSelectedTab(key)} />
+        <Tabs items={tabItems} selected={selected} onSelect={setSelected} />
 
         <hr className={style.hr} />
       </div>
 
-      {selectedTab === 'posts' && (
+      {selected === TabKey.Posts && (
         <>
           <MediaIndex title="Video">
             {videos?.map((media) => (
@@ -118,7 +121,7 @@ export default function Userpage(props: Props): React.JSX.Element {
         </>
       )}
 
-      {selectedTab === 'info' && (
+      {selected === TabKey.Info && (
         <div className={style.information}>
           <h1>チャンネル情報</h1>
           <p className={style.info_label}>概要</p>
