@@ -1,4 +1,4 @@
-import { Channel } from 'types/internal/channle'
+import { Channel } from 'types/internal/channel'
 import { Comment } from 'types/internal/comment'
 import { MediaUser, Video, Music, Picture, Blog } from 'types/internal/media'
 import { Hashtag } from 'types/internal/media/detail'
