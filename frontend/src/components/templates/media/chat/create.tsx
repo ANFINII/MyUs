@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
-import { Channel } from 'types/internal/channle'
+import { Channel } from 'types/internal/channel'
 import { ChatIn } from 'types/internal/media'
 import { Option } from 'types/internal/other'
 import { postChatCreate } from 'api/internal/media/create'

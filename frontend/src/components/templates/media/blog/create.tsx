@@ -1,7 +1,7 @@
 import { useState, ChangeEvent } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { Channel } from 'types/internal/channle'
+import { Channel } from 'types/internal/channel'
 import { BlogIn } from 'types/internal/media'
 import { Option } from 'types/internal/other'
 import { postBlogCreate } from 'api/internal/media/create'

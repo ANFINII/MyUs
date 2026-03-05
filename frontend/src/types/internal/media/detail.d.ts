@@ -1,4 +1,4 @@
-import { Channel } from 'types/internal/channle'
+import { Channel } from 'types/internal/channel'
 import { Comment } from 'types/internal/comment'
 import { MediaUser } from 'types/internal/media'
 import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'

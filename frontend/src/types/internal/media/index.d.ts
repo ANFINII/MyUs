@@ -1,4 +1,4 @@
-import { Channel } from 'types/internal/channle'
+import { Channel } from 'types/internal/channel'
 
 export interface MediaUser {
   isLike: boolean

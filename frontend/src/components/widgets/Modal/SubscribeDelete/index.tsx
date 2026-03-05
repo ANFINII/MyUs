@@ -1,4 +1,4 @@
-import { Channel } from 'types/internal/channle'
+import { Channel } from 'types/internal/channel'
 import AvatarLink from 'components/parts/Avatar/Link'
 import Modal from 'components/parts/Modal'
 import HStack from 'components/parts/Stack/Horizontal'

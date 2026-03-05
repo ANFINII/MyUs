@@ -1,7 +1,7 @@
 import { ChangeEvent, useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
-import { Channel } from 'types/internal/channle'
+import { Channel } from 'types/internal/channel'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { MediaUser } from 'types/internal/media'
 import { Hashtag } from 'types/internal/media/detail'

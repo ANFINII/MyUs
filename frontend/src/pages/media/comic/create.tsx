@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Channel } from 'types/internal/channle'
+import { Channel } from 'types/internal/channel'
 import { getChannels } from 'api/internal/channel'
 import ErrorCheck from 'components/widgets/Error/Check'
 import ComicCreate from 'components/templates/media/comic/create'
