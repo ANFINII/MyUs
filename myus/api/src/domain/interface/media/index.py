@@ -12,7 +12,7 @@ class SortType(Enum):
 class FilterOption:
     ulid: str = ""
     publish: bool | None = None
-    author_id: int = 0
+    owner_id: int = 0
     category_id: int = 0
     search: str = ""
 
