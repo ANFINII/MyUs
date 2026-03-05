@@ -603,6 +603,7 @@ def convert_author(obj: AuthorData) -> AuthorOut:
 def convert_channel(obj: ChannelData) -> ChannelOut:
     data = ChannelOut(
         ulid=obj.ulid,
+        owner_ulid=obj.owner_ulid,
         avatar=create_url(obj.avatar),
         name=obj.name,
         is_default=obj.is_default,
