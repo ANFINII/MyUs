@@ -5,6 +5,7 @@ import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import ExImage from 'components/parts/ExImage'
+import Tabs, { TabItem } from 'components/parts/Tabs'
 import FollowButton from 'components/widgets/FollowButton'
 import MediaBlog from 'components/widgets/Media/Index/Blog'
 import MediaChat from 'components/widgets/Media/Index/Chat'
@@ -15,7 +16,10 @@ import MediaVideo from 'components/widgets/Media/Index/Video'
 import MediaIndex from 'components/widgets/Media/List/Index'
 import style from './UserPage.module.scss'
 
-type TabType = 'posts' | 'info'
+const enum TabKey {
+  Posts = 'posts',
+  Info = 'info',
+}
 
 interface Props {
   ulid: string
@@ -27,20 +31,24 @@ export default function Userpage(props: Props): React.JSX.Element {
   const { avatar, banner, nickname, email, content, dateJoined, videos, musics, comics, pictures, blogs, chats } = userPage
 
   const { user } = useUser()
-  const [isFollow, setIsFollow] = useState(userPage.isFollow)
-  const [followerCount, setFollowerCount] = useState(userPage.followerCount)
-  const [activeTab, setActiveTab] = useState<TabType>('posts')
-
-  const handleFollow = async () => {
-    const ret = await postFollow({ ulid, isFollow: !isFollow })
-    if (ret.isOk()) {
-      setIsFollow(ret.value.isFollow)
-      setFollowerCount(ret.value.followerCount)
-    }
-  }
+  const [isFollow, setIsFollow] = useState<boolean>(userPage.isFollow)
+  const [followerCount, setFollowerCount] = useState<number>(userPage.followerCount)
+  const [selected, setSelected] = useState<TabKey>(TabKey.Posts)
 
   const isSelf = user.isActive && user.nickname === nickname
   const formattedDate = new Date(dateJoined).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+
+  const tabItems: TabItem<TabKey>[] = [
+    { key: TabKey.Posts, label: '投稿' },
+    { key: TabKey.Info, label: '情報' },
+  ]
+
+  const handleFollow = async () => {
+    const ret = await postFollow({ ulid, isFollow: !isFollow })
+    if (ret.isErr()) return
+    setIsFollow(ret.value.isFollow)
+    setFollowerCount(ret.value.followerCount)
+  }
 
   return (
     <Main metaTitle={`${nickname} - MyUs`}>
@@ -63,19 +71,12 @@ export default function Userpage(props: Props): React.JSX.Element {
           </span>
         </div>
 
-        <div className={style.tabs}>
-          <a className={activeTab === 'posts' ? style.active : ''} onClick={() => setActiveTab('posts')}>
-            投稿
-          </a>
-          <a className={activeTab === 'info' ? style.active : ''} onClick={() => setActiveTab('info')}>
-            情報
-          </a>
-        </div>
+        <Tabs items={tabItems} selected={selected} onSelect={setSelected} />
 
         <hr className={style.hr} />
       </div>
 
-      {activeTab === 'posts' && (
+      {selected === TabKey.Posts && (
         <>
           <MediaIndex title="Video">
             {videos?.map((media) => (
@@ -120,7 +121,7 @@ export default function Userpage(props: Props): React.JSX.Element {
         </>
       )}
 
-      {activeTab === 'info' && (
+      {selected === TabKey.Info && (
         <div className={style.information}>
           <h1>チャンネル情報</h1>
           <p className={style.info_label}>概要</p>
