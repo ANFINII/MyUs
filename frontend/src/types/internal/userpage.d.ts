@@ -4,7 +4,9 @@ export interface UserPage {
   avatar: string
   banner: string
   nickname: string
+  email: string
   content: string
+  dateJoined: string
   followerCount: number
   followingCount: number
   isFollow: boolean

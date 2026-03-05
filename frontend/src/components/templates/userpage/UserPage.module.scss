@@ -1,47 +1,108 @@
 .userpage {
   .banner {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
 
     img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
     }
   }
 
-  .profile {
+  .author {
     display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
+    align-items: flex-start;
+    margin: 15px 30px;
 
     .avatar {
       width: 80px;
       height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
       flex-shrink: 0;
+      background: rgb(200, 200, 200);
+      border-radius: 50%;
     }
 
-    .info {
+    .author_info {
       display: flex;
       flex-direction: column;
-      gap: 4px;
       flex: 1;
+      padding-left: 15px;
 
       .nickname {
-        font-size: 20px;
-        font-weight: bold;
+        height: 36px;
+        font-size: 22px;
+        white-space: nowrap;
       }
 
-      .counts {
-        display: flex;
-        gap: 16px;
+      .follower {
+        height: 22px;
         font-size: 14px;
-        color: #666;
+        white-space: nowrap;
+      }
+
+      .following {
+        height: 22px;
+        font-size: 14px;
+        white-space: nowrap;
       }
     }
+
+    .follow_button {
+      display: flex;
+      flex-shrink: 0;
+      padding: 2px 2px 0 0;
+      justify-content: flex-end;
+
+      button {
+        width: 122px;
+        height: 36px;
+      }
+    }
+  }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 120px;
+      height: 40px;
+      color: rgb(50, 50, 50);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: all 20ms 0s ease;
+      cursor: pointer;
+
+      &:hover,
+      &.active {
+        color: rgb(0, 85, 215);
+        background: rgb(220, 235, 255);
+        border-bottom: 2px solid rgb(0, 85, 215);
+      }
+    }
+  }
+
+  .hr {
+    margin: 0 0 16px 0;
+  }
+}
+
+.information {
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .info_label {
+    margin: 24px 0 8px 0;
+  }
+
+  .info_content {
+    margin: 0 0 50px 0;
   }
 }
