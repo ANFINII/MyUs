@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 import jwt
 from django.conf import settings
 from django.contrib.auth import authenticate
@@ -126,6 +126,7 @@ class AuthAPI:
                 nickname=input.nickname,
                 is_active=True,
                 is_staff=False,
+                date_joined=datetime.now(),
             ),
             profile=ProfileData(
                 last_name=input.last_name,
