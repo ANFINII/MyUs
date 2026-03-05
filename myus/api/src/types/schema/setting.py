@@ -62,6 +62,7 @@ class SettingProfileOut(BaseModel):
 
 class SettingMyPageOut(BaseModel):
     banner: str
+    ulid: str
     nickname: str
     email: str
     content: str
