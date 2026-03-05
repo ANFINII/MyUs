@@ -1,18 +1,21 @@
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
+from api.src.adapter.media import convert_videos, convert_musics, convert_comics, convert_pictures, convert_blogs, convert_chats
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.common import ErrorOut, MessageOut
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
+from api.src.types.schema.userpage import UserPageOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import get_user_channels
 from api.src.usecase.follow import get_followers, get_follows, upsert_follow
 from api.src.usecase.notification import get_content_object, get_notification
 from api.src.usecase.subscribe import upsert_subscribe
 from api.src.usecase.user import get_search_tags, get_user_data, like_comment, like_media, update_search_tags
+from api.src.usecase.userpage import get_userpage_user, get_userpage_media, is_following
 from api.utils.functions.index import create_url
 
 
@@ -229,8 +232,46 @@ class UserAPI:
 
         channels = get_user_channels(user_id)
         data = [
-            ChannelOut(ulid=str(c.ulid), avatar=create_url(c.avatar), name=c.name, description=c.description, is_default=c.is_default)
+            ChannelOut(
+                ulid=str(c.ulid),
+                owner_ulid=c.owner_ulid,
+                avatar=create_url(c.avatar),
+                name=c.name,
+                description=c.description,
+                is_default=c.is_default,
+            )
             for c in channels
         ]
+
+        return 200, data
+
+    @staticmethod
+    @router.get("/userpage/{ulid}", response={200: UserPageOut, 404: ErrorOut})
+    def get_userpage(request: HttpRequest, ulid: str):
+        log.info("UserAPI get_userpage", ulid=ulid)
+
+        user = get_userpage_user(ulid)
+        if user is None:
+            return 404, ErrorOut(message="ユーザーが見つかりません")
+
+        media = get_userpage_media(8, "", user.user.id)
+        user_id = auth_check(request)
+        is_follow = is_following(user_id, user.user.id) if user_id is not None else False
+
+        data = UserPageOut(
+            avatar=create_url(user.user.avatar),
+            banner=create_url(user.mypage.banner),
+            nickname=user.user.nickname,
+            content=user.mypage.content,
+            follower_count=user.mypage.follower_count,
+            following_count=user.mypage.following_count,
+            is_follow=is_follow,
+            videos=convert_videos(media.videos),
+            musics=convert_musics(media.musics),
+            comics=convert_comics(media.comics),
+            pictures=convert_pictures(media.pictures),
+            blogs=convert_blogs(media.blogs),
+            chats=convert_chats(media.chats),
+        )
 
         return 200, data

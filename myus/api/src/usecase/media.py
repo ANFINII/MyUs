@@ -215,9 +215,9 @@ def get_recommend(limit: int, search: str) -> HomeData:
     return data
 
 
-def get_videos(limit: int, search: str, id: int | None = None) -> list[VideoData]:
+def get_videos(limit: int, search: str, id: int | None = None, owner_id: int = 0) -> list[VideoData]:
     repository = injector.get(VideoInterface)
-    ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
+    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
 
     data = [replace(o,
@@ -229,17 +229,17 @@ def get_videos(limit: int, search: str, id: int | None = None) -> list[VideoData
     return data
 
 
-def get_musics(limit: int, search: str, id: int | None = None) -> list[MusicData]:
+def get_musics(limit: int, search: str, id: int | None = None, owner_id: int = 0) -> list[MusicData]:
     repository = injector.get(MusicInterface)
-    ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
+    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, music=create_url(o.music)) for o in objs]
     return data
 
 
-def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData]:
+def get_comics(limit: int, search: str, id: int | None = None, owner_id: int = 0) -> list[ComicData]:
     repository = injector.get(ComicInterface)
-    ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
+    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
 
     data = [replace(o,
@@ -250,25 +250,25 @@ def get_comics(limit: int, search: str, id: int | None = None) -> list[ComicData
     return data
 
 
-def get_pictures(limit: int, search: str, id: int | None = None) -> list[PictureData]:
+def get_pictures(limit: int, search: str, id: int | None = None, owner_id: int = 0) -> list[PictureData]:
     repository = injector.get(PictureInterface)
-    ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
+    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, image=create_url(o.image)) for o in objs]
     return data
 
 
-def get_blogs(limit: int, search: str, id: int | None = None) -> list[BlogData]:
+def get_blogs(limit: int, search: str, id: int | None = None, owner_id: int = 0) -> list[BlogData]:
     repository = injector.get(BlogInterface)
-    ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
+    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, image=create_url(o.image)) for o in objs]
     return data
 
 
-def get_chats(limit: int, search: str, id: int | None = None) -> list[ChatData]:
+def get_chats(limit: int, search: str, id: int | None = None, owner_id: int = 0) -> list[ChatData]:
     repository = injector.get(ChatInterface)
-    ids = repository.get_ids(FilterOption(search=search), ExcludeOption(id=id), SortOption(), limit)
+    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id), ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     return objs
 
