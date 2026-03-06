@@ -1,4 +1,3 @@
-/* メインコンテンツ */
 .main {
   position: relative;
   top: 82px;
@@ -9,13 +8,13 @@
   overflow-x: hidden;
   overflow-y: auto;
 
-  .main_header {
+  .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
-  .main_title {
+  .title {
     display: inline-block;
     height: 30px;
     font-size: 24px;
@@ -28,13 +27,21 @@
     }
   }
 
-  .main_search_message {
+  .search_message {
     display: inline-block;
     list-style: none;
     padding: 0;
     margin: 0 0 0 8px;
     font-size: 14px;
     color: rgb(33, 37, 41);
+  }
+
+  .button {
+    margin-left: 8px;
+  }
+
+  .article {
+    margin: 24px 0;
   }
 
   p textarea {
