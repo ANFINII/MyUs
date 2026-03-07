@@ -1,3 +1,5 @@
+@use 'styles/global/mixin/scrollbar';
+
 .unpublished {
   font-size: 18px;
   color: rgb(255, 0, 0);
@@ -81,6 +83,7 @@
   height: 500px;
   padding-bottom: 68px;
   overflow-y: scroll;
+  @include scrollbar.scrollbar;
 
   &.active {
     min-height: 500px;

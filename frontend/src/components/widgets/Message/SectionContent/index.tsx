@@ -50,7 +50,7 @@ export default function SectionContent(props: Props): React.JSX.Element {
       <div className={style.content_detail}>
         <VStack gap="2">
           <View isView={isContentExpand} onView={onContentExpand} content={isContentExpand ? '縮小表示' : '拡大表示'} />
-          <div className={clsx(style.content_body, isContentExpand && style.active_body)}>
+          <div className={clsx(style.content_body, isContentExpand && style.active)}>
             <p>{content}</p>
           </div>
         </VStack>
