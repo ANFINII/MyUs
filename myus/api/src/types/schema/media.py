@@ -88,7 +88,6 @@ class VideoOut(MediaOut):
     image: str
     video: str
     convert: str
-    comment_count: int
 
 
 class VideoDetailOut(MediaDetailOut):
@@ -102,7 +101,6 @@ class MusicOut(MediaOut):
     lyric: str
     music: str
     download: bool
-    comment_count: int
 
 
 class MusicDetailOut(MediaDetailOut):
@@ -114,7 +112,6 @@ class MusicDetailOut(MediaDetailOut):
 
 class ComicOut(MediaOut):
     image: str
-    comment_count: int
 
 
 class ComicDetailOut(MediaDetailOut):
@@ -125,7 +122,6 @@ class ComicDetailOut(MediaDetailOut):
 
 class PictureOut(MediaOut):
     image: str
-    comment_count: int
 
 
 class PictureDetailOut(MediaDetailOut):
@@ -135,7 +131,6 @@ class PictureDetailOut(MediaDetailOut):
 
 class BlogOut(MediaOut):
     image: str
-    comment_count: int
 
 
 class BlogDetailOut(MediaDetailOut):

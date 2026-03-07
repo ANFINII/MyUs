@@ -19,7 +19,6 @@ def convert_data(obj: Blog) -> BlogData:
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
-        comment_count=obj.comment_count(),
         channel=ChannelData(
             id=obj.channel.id,
             ulid=obj.channel.ulid,

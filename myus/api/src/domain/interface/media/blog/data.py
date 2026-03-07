@@ -18,6 +18,5 @@ class BlogData:
     publish: bool
     created: datetime
     updated: datetime
-    comment_count: int
     channel: ChannelData
     hashtags: list[HashtagData]
