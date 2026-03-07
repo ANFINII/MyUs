@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { postLogout } from 'api/internal/auth'
-import { isActive } from 'utils/functions/common'
 import { useUser } from 'components/hooks/useUser'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconCredit from 'components/parts/Icon/Credit'
 import IconGrid from 'components/parts/Icon/Grid'
 import IconPerson from 'components/parts/Icon/Person'
-import DropMenuItem from 'components/parts/NavItem/DropMenuItem'
+import MenuItem from 'components/parts/NavItem/MenuItem'
+import style from './DropMenu.module.scss'
 
 interface Props {
   open: boolean
@@ -20,12 +20,12 @@ export default function DropMenuProfile(props: Props): React.JSX.Element {
   const router = useRouter()
   const { user, resetUser } = useUser()
 
-  const handleClick = (url: string) => {
+  const handleRouter = (url: string) => {
     router.push(url)
     onClose()
   }
 
-  const handleLogin = () => router.push('/account/login')
+  const handleLogin = () => handleRouter('/account/login')
 
   const handleLogout = async () => {
     await handleLogin()
@@ -46,15 +46,15 @@ export default function DropMenuProfile(props: Props): React.JSX.Element {
   }
 
   return (
-    <nav className={clsx('drop_menu drop_menu_profile', isActive(open))}>
+    <nav className={clsx(style.drop_menu, open && style.active)}>
       <ul>
-        <DropMenuItem label="アカウント" icon={<IconPerson size="1.5em" type="circle" />} onClick={() => handleClick('/setting/profile')} />
-        <DropMenuItem label="マイページ" icon={<IconPerson size="1.5em" type="square" />} onClick={() => handleClick('/setting/mypage')} />
-        <DropMenuItem label="投稿管理" icon={<IconGrid size="1.5em" />} onClick={handleManagement} />
-        <DropMenuItem label="料金プラン" icon={<IconCredit size="1.5em" />} onClick={() => handleClick('/setting/payment')} />
-        <DropMenuItem label="退会処理" icon={<IconPerson size="1.5em" type="cross" />} onClick={() => handleClick('/setting/withdrawal')} />
-        <DropMenuItem label="ログイン" icon={<IconArrow size="1.5em" type="in" />} onClick={handleLogin} />
-        <DropMenuItem label="ログアウト" icon={<IconArrow size="1.5em" type="out" />} onClick={handleLogout} />
+        <MenuItem label="アカウント" icon={<IconPerson size="1.5em" type="circle" />} className={style.item} onClick={() => handleRouter('/setting/profile')} />
+        <MenuItem label="マイページ" icon={<IconPerson size="1.5em" type="square" />} className={style.item} onClick={() => handleRouter('/setting/mypage')} />
+        <MenuItem label="投稿管理" icon={<IconGrid size="1.5em" />} className={style.item} onClick={handleManagement} />
+        <MenuItem label="料金プラン" icon={<IconCredit size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/payment')} />
+        <MenuItem label="退会処理" icon={<IconPerson size="1.5em" type="cross" />} className={style.item} onClick={() => handleRouter('/setting/withdrawal')} />
+        <MenuItem label="ログイン" icon={<IconArrow size="1.5em" type="in" />} className={style.item} onClick={handleLogin} />
+        <MenuItem label="ログアウト" icon={<IconArrow size="1.5em" type="out" />} className={style.item} onClick={handleLogout} />
       </ul>
     </nav>
   )
