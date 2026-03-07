@@ -4,11 +4,16 @@
   width: 72px;
   height: calc(100% - 56px);
   background: rgb(0, 0, 80);
-  z-index: 60; /* headerよりは小さく */
+  user-select: none;
+  z-index: 60;
 
   .sidebar_color {
-    div:hover,
-    &.active div {
+    &:hover {
+      color: rgb(255, 255, 255);
+      cursor: pointer;
+    }
+
+    &.active {
       color: rgb(255, 255, 255);
       cursor: pointer;
     }
