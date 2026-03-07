@@ -23,4 +23,3 @@ if settings.DEBUG:
     """ メディアファイルを扱う時の開発環境時の設定 """
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += [path("media/<path:path>", serve_media)]
-    urlpatterns += [path("silk/", include("silk.urls", namespace="silk"))]

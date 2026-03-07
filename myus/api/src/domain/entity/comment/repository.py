@@ -1,12 +1,10 @@
-from django.db.models import Count, Q
+from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.src.domain.entity.comment._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
-from api.utils.enum.index import CommentType
-from api.utils.functions.map import comment_type_no_map
 
 
 COMMENT_FIELDS = ["author_id", "parent_id", "type_no", "type_name", "object_id", "text", "deleted"]
@@ -67,16 +65,3 @@ class CommentRepository(CommentInterface):
 
         liked_ids = set(Comment.objects.filter(id__in=ids, like__id=user_id).values_list("id", flat=True))
         return list(liked_ids)
-
-    def counts(self, object_ids: list[int], comment_type: CommentType) -> dict[int, int]:
-        if len(object_ids) == 0:
-            return {}
-
-        type_no = comment_type_no_map(comment_type)
-        qs = (
-            Comment.objects.filter(type_no=type_no, object_id__in=object_ids)
-            .values("object_id")
-            .annotate(count=Count("id"))
-        )
-
-        return {obj["object_id"]: obj["count"] for obj in qs}

@@ -132,11 +132,7 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        follower = get_user_data(user_id)
-        if follower is None:
-            return 400, MessageOut(error=True, message="ユーザーが見つかりません!")
-
-        follow = upsert_follow(follower, input.ulid, input.is_follow)
+        follow = upsert_follow(user_id, input.ulid, input.is_follow)
         if follow is None:
             return 400, MessageOut(error=True, message="ユーザーが見つかりません!")
 
