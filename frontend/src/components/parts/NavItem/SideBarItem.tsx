@@ -1,23 +1,18 @@
-import { useRouter } from 'next/router'
-import clsx from 'clsx'
 import NavItem from 'components/parts/NavItem'
 
 interface Props {
-  url: string
   label: string
   icon: React.ReactNode
+  className?: string
+  onClick: () => void
 }
 
 export default function SideBarItem(props: Props): React.JSX.Element {
-  const { url, label, icon } = props
-
-  const router = useRouter()
-  const isActive = router.pathname === url
-  const handleRouter = () => router.push(url)
+  const { label, icon, className, onClick } = props
 
   return (
-    <NavItem className={clsx('sidebar_color', { active: isActive })}>
-      <div onClick={handleRouter}>
+    <NavItem className={className}>
+      <div onClick={onClick}>
         {icon}
         <p className="us_none">{label}</p>
       </div>
