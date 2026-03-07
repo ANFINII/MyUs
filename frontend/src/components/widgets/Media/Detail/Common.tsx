@@ -31,7 +31,7 @@ export default function MediaDetailCommon(props: Props): React.JSX.Element {
   return (
     <div className={style.media_detail}>
       <MediaDetailLeft media={media} handleToast={handleToast} />
-      <MediaDetailRight isAd={isAd} list={list} />
+      <MediaDetailRight list={list} mediaPath={media.mediaPath} isAd={isAd} />
     </div>
   )
 }
