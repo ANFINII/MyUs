@@ -6,8 +6,8 @@ import IconComic from 'components/parts/Icon/Comic'
 import IconMusic from 'components/parts/Icon/Music'
 import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
-import SideBarItem from 'components/parts/NavItem/SideBarItem'
 import style from './SideBar.module.scss'
+import SideBarItem from './SideBarItem'
 
 export default function SideBar(): React.JSX.Element {
   const router = useRouter()

@@ -4,6 +4,7 @@
   width: 72px;
   height: calc(100% - 56px);
   background: rgb(0, 0, 80);
+  user-select: none;
   z-index: 60;
 
   .sidebar_color {
