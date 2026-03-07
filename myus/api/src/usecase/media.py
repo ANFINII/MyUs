@@ -43,7 +43,6 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
         publish=True,
         created=datetime.min,
         updated=datetime.min,
-        comment_count=0,
         channel=channel,
         hashtags=[],
     )
@@ -71,7 +70,6 @@ def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> M
         publish=True,
         created=datetime.min,
         updated=datetime.min,
-        comment_count=0,
         channel=channel,
         hashtags=[],
     )
@@ -98,7 +96,6 @@ def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile, page
         publish=True,
         created=datetime.min,
         updated=datetime.min,
-        comment_count=0,
         channel=channel,
         hashtags=[],
     )
@@ -124,7 +121,6 @@ def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) 
         publish=True,
         created=datetime.min,
         updated=datetime.min,
-        comment_count=0,
         channel=channel,
         hashtags=[],
     )
@@ -152,7 +148,6 @@ def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> Med
         publish=True,
         created=datetime.min,
         updated=datetime.min,
-        comment_count=0,
         channel=channel,
         hashtags=[],
     )
