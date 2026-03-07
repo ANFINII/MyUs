@@ -1,0 +1,67 @@
+.side_menu {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  color: rgb(50, 50, 50);
+  background: rgb(255, 255, 255);
+  overflow-y: auto;
+  transition: all 0.2s;
+  z-index: 100;
+
+  &.active {
+    left: 0;
+    box-shadow: 6px 0 25px rgba(0, 100, 255, 0.2);
+  }
+
+  .close {
+    display: block;
+    height: 56px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+
+    &:hover {
+      background: rgb(220, 240, 255);
+    }
+
+    svg {
+      margin: 3px 16px 0 16px;
+      color: rgb(0, 70, 175);
+    }
+  }
+
+  .item {
+    padding: 12px 0;
+    margin: 0;
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(0, 100, 255);
+      background: rgb(220, 240, 255);
+    }
+
+    svg {
+      color: rgb(0, 70, 175);
+    }
+  }
+
+  .footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+
+  svg {
+    float: left;
+    margin: 0 16px;
+  }
+}
