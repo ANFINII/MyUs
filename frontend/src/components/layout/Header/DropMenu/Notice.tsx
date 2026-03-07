@@ -4,11 +4,13 @@ import clsx from 'clsx'
 import { Notification, NotificationOut } from 'types/internal/user'
 import { getNotification } from 'api/internal/user'
 import { NotificationType } from 'utils/constants/enum'
-import { isActive } from 'utils/functions/common'
 import { useUser } from 'components/hooks/useUser'
+import AvatarLink from 'components/parts/Avatar/Link'
 import IconBell from 'components/parts/Icon/Bell'
-import DropMenuItem from 'components/parts/NavItem/DropMenuItem'
-import NotificationItem from 'components/parts/NavItem/NotificationItem'
+import IconCircle from 'components/parts/Icon/Circle'
+import NavItem from 'components/parts/NavItem'
+import MenuItem from 'components/parts/NavItem/MenuItem'
+import style from './DropMenu.module.scss'
 
 interface Props {
   open: boolean
@@ -52,7 +54,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     const threshold = thresholds.find((t) => read >= t.limit)
     return (
       threshold && (
-        <div className="notification_aria_list_1" title={`${title}が${threshold.message}`}>
+        <div className={style.content} title={`${title}が${threshold.message}`}>
           {title}が{threshold.message}
         </div>
       )
@@ -71,39 +73,46 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   }
 
   return (
-    <nav className={clsx('drop_menu', 'drop_menu_notice', isActive(open))}>
+    <nav className={clsx(style.drop_menu, style.drop_menu_notice, open && style.active)}>
       <ul>
-        <DropMenuItem label="通知設定" icon={<IconBell size="1.5em" />} onClick={() => handleRouter('/setting/notification')} />
+        <MenuItem label="通知設定" icon={<IconBell size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/notification')} />
         {notifications?.datas?.map((notification) => {
-          const { id, typeName, userFrom, contentObject } = notification
+          const { id, typeName, userFrom, contentObject, isConfirmed } = notification
           const { avatar, ulid, nickname } = userFrom
           const { title, text, read } = contentObject
           return (
-            <NotificationItem key={id} avatar={avatar} ulid={ulid} nickname={nickname} isConfirmed={notification.isConfirmed} onClick={handleClick(typeName, notification)}>
-              <>
-                {otherObjs.includes(typeName) && (
-                  <div className="notification_aria_list_1" title={`${nickname}が${title}を投稿しました`}>
-                    {title}
-                  </div>
-                )}
-                {typeName === NotificationType.Follow && (
-                  <div className="notification_aria_list_1" title={`${nickname}にフォローされました`}>
-                    {nickname}にフォローされました
-                  </div>
-                )}
-                {typeName === NotificationType.Like && (
-                  <div className="notification_aria_list_1" title={`${text}が${nickname}にいいねされました`}>
-                    {text}が{nickname}にいいねされました
-                  </div>
-                )}
-                {typeName === NotificationType.Reply && (
-                  <div className="notification_aria_list_1" title={`${nickname}から返信がありました ${text}`}>
-                    {text}
-                  </div>
-                )}
-                {typeName === NotificationType.Views && <>{readNotification(read, title)}</>}
-              </>
-            </NotificationItem>
+            <NavItem key={id}>
+              <div className={style.notice_item}>
+                <AvatarLink src={avatar} ulid={ulid} title={nickname} />
+                {!isConfirmed && <IconCircle size="6" className={style.circle} />}
+                <div className={style.anker} onClick={handleClick(typeName, notification)}>
+                  {otherObjs.includes(typeName) && (
+                    <div className={style.content} title={`${nickname}が${title}を投稿しました`}>
+                      {title}
+                    </div>
+                  )}
+                  {typeName === NotificationType.Follow && (
+                    <div className={style.content} title={`${nickname}にフォローされました`}>
+                      {nickname}にフォローされました
+                    </div>
+                  )}
+                  {typeName === NotificationType.Like && (
+                    <div className={style.content} title={`${text}が${nickname}にいいねされました`}>
+                      {text}が{nickname}にいいねされました
+                    </div>
+                  )}
+                  {typeName === NotificationType.Reply && (
+                    <div className={style.content} title={`${nickname}から返信がありました ${text}`}>
+                      {text}
+                    </div>
+                  )}
+                  {typeName === NotificationType.Views && <>{readNotification(read, title)}</>}
+                </div>
+                <form method="POST">
+                  <i title="閉じる" className={style.close} style={{ fontSize: '1.41em' }}></i>
+                </form>
+              </div>
+            </NavItem>
           )
         })}
       </ul>

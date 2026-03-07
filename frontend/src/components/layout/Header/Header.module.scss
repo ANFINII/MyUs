@@ -1,0 +1,157 @@
+.header {
+  position: fixed;
+  grid-column: 1/-1;
+  grid-row: 1/2;
+  top: 0;
+  width: 100%;
+  height: 56px;
+  color: rgb(255, 255, 255);
+  background: linear-gradient(60deg, rgb(0, 0, 50) 0%, rgb(10, 115, 120) 60%, rgb(255, 0, 130) 100%);
+  z-index: 70;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background: rgb(0, 60, 255);
+  }
+
+  &.loading::after {
+    animation: loading 5s forwards;
+  }
+
+  .nav {
+    display: grid;
+    grid-template-columns: 4.5em 7.5em minmax(9.5em, 1fr) 3em 3em 3em 3em;
+    grid-template-rows: 2.5em;
+    align-items: center;
+    text-align: center;
+    padding: 8px 0;
+
+    .nav_1 {
+      position: relative;
+      grid-column: 1/2;
+    }
+
+    .nav_2 {
+      position: relative;
+      grid-column: 2/3;
+      justify-self: flex-start;
+
+      h1 {
+        font-family: 'Libre Caslon Display', serif;
+        font-size: 1.8em;
+        font-weight: 100;
+        margin: auto;
+      }
+    }
+
+    .nav_3 {
+      grid-column: 3/4;
+    }
+
+    .nav_4 {
+      position: relative;
+      grid-column: 4/5;
+    }
+
+    .nav_5 {
+      position: relative;
+      grid-column: 5/6;
+    }
+
+    .nav_6 {
+      position: relative;
+      grid-column: 6/7;
+    }
+
+    .nav_7 {
+      position: relative;
+      grid-column: 7/8;
+      justify-self: center;
+    }
+  }
+
+  .color {
+    &:hover,
+    &.active {
+      color: rgb(255, 220, 0);
+      cursor: pointer;
+    }
+  }
+
+  .color_MyUs {
+    &:hover {
+      color: rgb(0, 239, 239);
+      cursor: pointer;
+    }
+  }
+
+  .search_box {
+    display: flex;
+    justify-content: center;
+  }
+
+  .bell {
+    &.active {
+      position: relative;
+      margin: -27px 0 0 0;
+    }
+  }
+
+  .exclamation {
+    display: none;
+
+    &.active {
+      display: block;
+      margin: -43px 0 0 25px;
+      color: rgb(255, 220, 0);
+    }
+  }
+
+  @media screen and (max-width: 668px) {
+    .nav {
+      grid-template-columns: 4.5em 5.5em minmax(9.5em, 1fr) 2.5em 2.5em 2.5em 2.5em;
+    }
+  }
+}
+
+@keyframes loading {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.side_menu_cover {
+  position: fixed;
+  display: none;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.2s;
+  z-index: 90;
+
+  &.active {
+    display: block;
+    background: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.drop_back_cover {
+  position: fixed;
+  display: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.2s;
+  z-index: 80;
+
+  &.active {
+    display: block;
+  }
+}
