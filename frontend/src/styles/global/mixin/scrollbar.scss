@@ -25,4 +25,22 @@
   &::-webkit-scrollbar-thumb:active {
     background: rgb(130, 130, 130);
   }
+
+  /* スクロールバー firefox */
+  * {
+    scrollbar-width: thin; /* 細さ */
+    scrollbar-color: rgb(255, 255, 255) rgba(255, 255, 255, 0); /* つまみの色 軌道の色 */
+  }
+
+  *:hover {
+    scrollbar-color: rgb(180, 180, 180) rgba(255, 255, 255, 0); /* つまみの色 軌道の色 */
+  }
+
+  *:active {
+    scrollbar-color: rgb(120, 120, 120) rgba(255, 255, 255, 0); /* つまみの色 軌道の色 */
+  }
+
+  * {
+    box-sizing: border-box;
+  }
 }

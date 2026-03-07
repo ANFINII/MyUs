@@ -1,3 +1,5 @@
+@use 'styles/global/mixin/scrollbar';
+
 .drop_open {
   display: block;
   margin: 0;
@@ -55,6 +57,7 @@
 
 .drop_menu_notice {
   height: 337px;
+  @include scrollbar.scrollbar;
 }
 
 .notice_item {
@@ -121,8 +124,8 @@
     color: rgb(120, 120, 120);
 
     &:hover {
-      cursor: pointer;
       color: rgb(0, 100, 255);
+      cursor: pointer;
     }
   }
 }
