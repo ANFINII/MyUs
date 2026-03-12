@@ -4,6 +4,7 @@ from api.src.domain.interface.comment.data import CommentData
 
 
 def convert_data(obj: Comment) -> CommentData:
+    assert hasattr(obj, "like_count"), "like_count is required"
     return CommentData(
         id=obj.id,
         ulid=obj.ulid,
@@ -16,7 +17,7 @@ def convert_data(obj: Comment) -> CommentData:
         deleted=obj.deleted,
         created=obj.created,
         updated=obj.updated,
-        like_count=obj.total_like(),
+        like_count=obj.like_count,
     )
 
 
