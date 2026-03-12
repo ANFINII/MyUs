@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
 from api.src.domain.entity.comment._convert import convert_data, marshal_data
@@ -12,7 +12,7 @@ COMMENT_FIELDS = ["author_id", "parent_id", "type_no", "type_name", "object_id",
 
 class CommentRepository(CommentInterface):
     def queryset(self) -> QuerySet[Comment]:
-        return Comment.objects.prefetch_related("like")
+        return Comment.objects.select_related("author", "parent").annotate(like_count=Count("like"))
 
     def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
         q_list: list[Q] = []
@@ -24,7 +24,7 @@ class CommentRepository(CommentInterface):
             q_list.append(Q(object_id=filter.object_id))
         if filter.user_id:
             q_list.append(Q(author_id=filter.user_id))
-        if filter.is_parent:
+        if filter.is_parent is not None:
             q_list.append(Q(parent__isnull=filter.is_parent))
 
         field_name = sort.sort_type.name.lower()

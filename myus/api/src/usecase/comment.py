@@ -1,15 +1,17 @@
 from dataclasses import replace
 from datetime import datetime
 from api.modules.logger import log
-from api.src.domain.interface.comment.interface import CommentInterface
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
+from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
 from api.src.types.data.comment import CommentGetData, ReplyData
+from api.src.types.data.user import AuthorData
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.user import get_author_data
 from api.utils.enum.index import CommentTypeNo, MediaType
+from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository
 
 
@@ -34,22 +36,42 @@ def save_comment_data(data: CommentData) -> bool:
         return False
 
 
+def get_author_data_map(ids: list[int]) -> dict[int, AuthorData]:
+    if len(ids) == 0:
+        return {}
+
+    repository = injector.get(UserInterface)
+    authors = repository.bulk_get(ids)
+    author_map: dict[int, AuthorData] = {}
+    for author in authors:
+        author_map[author.user.id] = AuthorData(
+            avatar=create_url(author.user.avatar),
+            ulid=author.user.ulid,
+            nickname=author.user.nickname,
+            follower_count=author.mypage.follower_count,
+        )
+
+    return author_map
+
+
 def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[CommentGetData]:
     comment_repo = injector.get(CommentInterface)
-    parent_ids = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id, is_parent=True), SortOption())
-    comments = comment_repo.bulk_get(parent_ids)
-    reply_ids = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id, is_parent=False), SortOption())
-    replies = comment_repo.bulk_get(reply_ids)
+    ids = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id), SortOption())
+    all_comments = comment_repo.bulk_get(ids)
+
+    comments = [c for c in all_comments if c.parent_id is None]
+    replies = [c for c in all_comments if c.parent_id is not None]
+    author_ids = list({c.author_id for c in comments} | {r.author_id for r in replies})
+    author_map = get_author_data_map(author_ids)
 
     reply_map: dict[int, list[CommentData]] = {}
     for r in replies:
         if r.parent_id is not None:
             reply_map.setdefault(r.parent_id, []).append(r)
 
-    all_ids = parent_ids + reply_ids
     liked_ids: set[int] = set()
     if user_id is not None:
-        liked_ids = set(comment_repo.get_liked_ids(all_ids, user_id))
+        liked_ids = set(comment_repo.get_liked_ids(ids, user_id))
 
     data = [
         CommentGetData(
@@ -59,7 +81,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
             updated=c.updated,
             is_comment_like=c.id in liked_ids,
             like_count=c.like_count,
-            author=get_author_data(c.author_id),
+            author=author_map[c.author_id],
             replys=[
                 ReplyData(
                     ulid=r.ulid,
@@ -68,7 +90,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
                     updated=r.updated,
                     is_comment_like=r.id in liked_ids,
                     like_count=r.like_count,
-                    author=get_author_data(r.author_id),
+                    author=author_map[r.author_id],
                 )
                 for r in reply_map.get(c.id, [])
             ],

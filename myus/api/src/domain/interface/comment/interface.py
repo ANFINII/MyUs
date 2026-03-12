@@ -16,7 +16,7 @@ class FilterOption:
     type_no: CommentTypeNo | None = None
     object_id: int = 0
     user_id: int = 0
-    is_parent: bool = False
+    is_parent: bool | None = None
 
 
 @dataclass(frozen=True, slots=True)
