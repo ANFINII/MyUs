@@ -19,7 +19,7 @@ export const apiLikeMedia = base + '/user/like/media'
 export const apiLikeComment = base + '/user/like/comment'
 export const apiNotification = base + '/user/notification'
 export const apiUserPage = (ulid: string) => base + `/user/userpage/${ulid}`
-export const apiUserPageMedia = (ulid: string, channelUlid?: string) => base + `/user/userpage/${ulid}/media` + (channelUlid ? `?channel_ulid=${channelUlid}` : '')
+export const apiUserPageMedia = (ulid: string, channelUlid: string) => base + `/user/userpage/${ulid}/media/?channel_ulid=${channelUlid}`
 
 // Setting
 export const apiSettingProfile = base + '/setting/profile'

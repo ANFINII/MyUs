@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { UserPage } from 'types/internal/userpage'
-import { getUserPage } from 'api/internal/user'
+import { UserPage, UserPageMedia } from 'types/internal/userpage'
+import { getUserPage, getUserPageMedia } from 'api/internal/user'
 import ErrorCheck from 'components/widgets/Error/Check'
 import Userpage from 'components/templates/userpage'
 
@@ -11,13 +11,20 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   const ret = await getUserPage(ulid, req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const userPage = ret.value
-  return { props: { ...translations, ulid, userPage } }
+
+  const initMedia: UserPageMedia = { videos: [], musics: [], comics: [], pictures: [], blogs: [], chats: [] }
+  const channelUlid = userPage.channels.find((c) => c.isDefault)!.ulid
+  const mediaRet = await getUserPageMedia(ulid, channelUlid)
+  const media = mediaRet.isOk() ? mediaRet.value : initMedia
+
+  return { props: { ...translations, ulid, userPage, media } }
 }
 
 interface Props {
   status: number
   ulid: string
   userPage: UserPage
+  media: UserPageMedia
 }
 
 export default function UserpagePage(props: Props): React.JSX.Element {

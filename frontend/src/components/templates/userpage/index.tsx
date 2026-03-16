@@ -1,10 +1,12 @@
-import { useState } from 'react'
-import { UserPage } from 'types/internal/userpage'
-import { postFollow } from 'api/internal/user'
+import { ChangeEvent, useState } from 'react'
+import { Option } from 'types/internal/other'
+import { UserPage, UserPageMedia } from 'types/internal/userpage'
+import { getUserPageMedia, postFollow } from 'api/internal/user'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import ExImage from 'components/parts/ExImage'
+import SelectBox from 'components/parts/Input/SelectBox'
 import Tabs, { TabItem } from 'components/parts/Tabs'
 import FollowButton from 'components/widgets/FollowButton'
 import MediaBlog from 'components/widgets/Media/Index/Blog'
@@ -24,19 +26,23 @@ const enum TabKey {
 interface Props {
   ulid: string
   userPage: UserPage
+  media: UserPageMedia
 }
 
 export default function Userpage(props: Props): React.JSX.Element {
-  const { ulid, userPage } = props
-  const { avatar, banner, nickname, email, content, dateJoined, videos, musics, comics, pictures, blogs, chats } = userPage
+  const { ulid, userPage, media } = props
+  const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
 
   const { user } = useUser()
   const [isFollow, setIsFollow] = useState<boolean>(userPage.isFollow)
   const [followerCount, setFollowerCount] = useState<number>(userPage.followerCount)
-  const [selected, setSelected] = useState<TabKey>(TabKey.Posts)
+  const [channelUlid, setChannelUlid] = useState<string>(channels.find((c) => c.isDefault)!.ulid)
+  const [selectedTab, setSelectedTab] = useState<TabKey>(TabKey.Posts)
+  const [newMedia, setNewMedia] = useState<UserPageMedia>(media)
 
   const isSelf = user.isActive && user.nickname === nickname
   const formattedDate = new Date(dateJoined).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
 
   const tabItems: TabItem<TabKey>[] = [
     { key: TabKey.Posts, label: '投稿' },
@@ -48,6 +54,15 @@ export default function Userpage(props: Props): React.JSX.Element {
     if (ret.isErr()) return
     setIsFollow(ret.value.isFollow)
     setFollowerCount(ret.value.followerCount)
+  }
+
+  const handleChannelSelect = async (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedlUlid = e.target.value
+    if (selectedlUlid === channelUlid) return
+    const ret = await getUserPageMedia(ulid, selectedlUlid)
+    if (ret.isErr()) return
+    setChannelUlid(selectedlUlid)
+    setNewMedia(ret.value)
   }
 
   return (
@@ -71,57 +86,59 @@ export default function Userpage(props: Props): React.JSX.Element {
           </span>
         </div>
 
-        <Tabs items={tabItems} selected={selected} onSelect={setSelected} />
+        <Tabs items={tabItems} selected={selectedTab} onSelect={setSelectedTab} />
 
         <hr className={style.hr} />
       </div>
 
-      {selected === TabKey.Posts && (
+      {selectedTab === TabKey.Posts && (
         <>
+          <SelectBox label="チャンネル" value={channelUlid} options={channelOptions} className={style.channel} onChange={handleChannelSelect} />
+
           <MediaIndex title="Video">
-            {videos?.map((media) => (
-              <MediaVideo key={media.ulid} media={media} />
+            {newMedia.videos.map((item) => (
+              <MediaVideo key={item.ulid} media={item} />
             ))}
           </MediaIndex>
 
           <Divide />
           <MediaIndex title="Music">
-            {musics?.map((media) => (
-              <MediaMusic key={media.ulid} media={media} />
+            {newMedia.musics.map((item) => (
+              <MediaMusic key={item.ulid} media={item} />
             ))}
           </MediaIndex>
 
           <Divide />
           <MediaIndex title="Comic">
-            {comics?.map((media) => (
-              <MediaComic key={media.ulid} media={media} />
+            {newMedia.comics.map((item) => (
+              <MediaComic key={item.ulid} media={item} />
             ))}
           </MediaIndex>
 
           <Divide />
           <MediaIndex title="Picture">
-            {pictures?.map((media) => (
-              <MediaPicture key={media.ulid} media={media} />
+            {newMedia.pictures.map((item) => (
+              <MediaPicture key={item.ulid} media={item} />
             ))}
           </MediaIndex>
 
           <Divide />
           <MediaIndex title="Blog">
-            {blogs?.map((media) => (
-              <MediaBlog key={media.ulid} media={media} />
+            {newMedia.blogs.map((item) => (
+              <MediaBlog key={item.ulid} media={item} />
             ))}
           </MediaIndex>
 
           <Divide />
           <MediaIndex title="Chat">
-            {chats?.map((media) => (
-              <MediaChat key={media.ulid} media={media} />
+            {newMedia.chats.map((item) => (
+              <MediaChat key={item.ulid} media={item} />
             ))}
           </MediaIndex>
         </>
       )}
 
-      {selected === TabKey.Info && (
+      {selectedTab === TabKey.Info && (
         <div className={style.information}>
           <h1>チャンネル情報</h1>
           <p className={style.info_label}>概要</p>
