@@ -19,7 +19,19 @@ import {
   UserMe,
 } from 'types/internal/user'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
-import { apiFollow, apiFollower, apiFollowUser, apiLikeComment, apiLikeMedia, apiNotification, apiSearchTag, apiSubscribeChannel, apiUser, apiUserPage, apiUserPageMedia } from 'api/uri'
+import {
+  apiFollow,
+  apiFollower,
+  apiFollowUser,
+  apiLikeComment,
+  apiLikeMedia,
+  apiNotification,
+  apiSearchTag,
+  apiSubscribeChannel,
+  apiUser,
+  apiUserPage,
+  apiUserPageMedia,
+} from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const getUser = async (req?: Req): Promise<ApiOut<UserMe>> => {
