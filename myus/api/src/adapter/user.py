@@ -8,9 +8,9 @@ from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
-from api.src.types.schema.userpage import UserPageOut
+from api.src.types.schema.userpage import UserPageMediaOut, UserPageOut
 from api.src.usecase.auth import auth_check
-from api.src.usecase.channel import get_user_channels
+from api.src.usecase.channel import get_channel, get_user_channels
 from api.src.usecase.follow import get_followers, get_follows, upsert_follow
 from api.src.usecase.notification import get_content_object, get_notification
 from api.src.usecase.subscribe import upsert_subscribe
@@ -132,7 +132,11 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        follow = upsert_follow(user_id, input.ulid, input.is_follow)
+        follower = get_user_data(user_id)
+        if follower is None:
+            return 400, MessageOut(error=True, message="ユーザーが見つかりません!")
+
+        follow = upsert_follow(follower, input.ulid, input.is_follow)
         if follow is None:
             return 400, MessageOut(error=True, message="ユーザーが見つかりません!")
 
@@ -254,7 +258,7 @@ class UserAPI:
         if user is None:
             return 404, ErrorOut(message="ユーザーが見つかりません")
 
-        media = get_userpage_media(8, "", user.user.id)
+        channels = get_user_channels(user.user.id)
         user_id = auth_check(request)
         is_follow = is_following(user_id, user.user.id) if user_id is not None else False
 
@@ -268,6 +272,40 @@ class UserAPI:
             follower_count=user.mypage.follower_count,
             following_count=user.mypage.following_count,
             is_follow=is_follow,
+            channels=[
+                ChannelOut(
+                    ulid=str(c.ulid),
+                    owner_ulid=c.owner_ulid,
+                    avatar=create_url(c.avatar),
+                    name=c.name,
+                    description=c.description,
+                    is_default=c.is_default,
+                )
+                for c in channels
+            ],
+        )
+
+        return 200, data
+
+    @staticmethod
+    @router.get("/userpage/{ulid}/media", response={200: UserPageMediaOut, 404: ErrorOut})
+    def get_userpage_media(request: HttpRequest, ulid: str, channel_ulid: str = ""):
+        log.info("UserAPI get_userpage_media", ulid=ulid, channel_ulid=channel_ulid)
+
+        user = get_userpage_user(ulid)
+        if user is None:
+            return 404, ErrorOut(message="ユーザーが見つかりません")
+
+        channel_id = 0
+        if channel_ulid:
+            channel = get_channel(channel_ulid)
+            if channel is None:
+                return 404, ErrorOut(message="チャンネルが見つかりません")
+            channel_id = channel.id
+
+        media = get_userpage_media(8, "", user.user.id, channel_id=channel_id)
+
+        data = UserPageMediaOut(
             videos=convert_videos(media.videos),
             musics=convert_musics(media.musics),
             comics=convert_comics(media.comics),
