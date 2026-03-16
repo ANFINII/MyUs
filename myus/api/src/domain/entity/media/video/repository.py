@@ -23,6 +23,8 @@ class VideoRepository(VideoInterface):
             q_list.append(Q(publish=filter.publish))
         if filter.owner_id:
             q_list.append(Q(channel__owner_id=filter.owner_id))
+        if filter.channel_id:
+            q_list.append(Q(channel_id=filter.channel_id))
         if filter.category_id:
             q_list.append(Q(category__id=filter.category_id))
         if filter.search:
