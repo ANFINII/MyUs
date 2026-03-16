@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
+import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
+import { Option } from 'types/internal/other'
 import { UserPage } from 'types/internal/userpage'
-import { postFollow } from 'api/internal/user'
+import { getUserPageMedia, postFollow } from 'api/internal/user'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import ExImage from 'components/parts/ExImage'
+import SelectBox from 'components/parts/Input/SelectBox'
 import Tabs, { TabItem } from 'components/parts/Tabs'
 import FollowButton from 'components/widgets/FollowButton'
 import MediaBlog from 'components/widgets/Media/Index/Blog'
@@ -28,12 +31,21 @@ interface Props {
 
 export default function Userpage(props: Props): React.JSX.Element {
   const { ulid, userPage } = props
-  const { avatar, banner, nickname, email, content, dateJoined, videos, musics, comics, pictures, blogs, chats } = userPage
+  const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
 
   const { user } = useUser()
   const [isFollow, setIsFollow] = useState<boolean>(userPage.isFollow)
   const [followerCount, setFollowerCount] = useState<number>(userPage.followerCount)
   const [selected, setSelected] = useState<TabKey>(TabKey.Posts)
+
+  const defaultChannelUlid = channels.find((c) => c.isDefault)?.ulid ?? ''
+  const [selectedChannelUlid, setSelectedChannelUlid] = useState<string>(defaultChannelUlid)
+  const [videos, setVideos] = useState<Video[]>(userPage.videos)
+  const [musics, setMusics] = useState<Music[]>(userPage.musics)
+  const [comics, setComics] = useState<Comic[]>(userPage.comics)
+  const [pictures, setPictures] = useState<Picture[]>(userPage.pictures)
+  const [blogs, setBlogs] = useState<Blog[]>(userPage.blogs)
+  const [chats, setChats] = useState<Chat[]>(userPage.chats)
 
   const isSelf = user.isActive && user.nickname === nickname
   const formattedDate = new Date(dateJoined).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -48,6 +60,23 @@ export default function Userpage(props: Props): React.JSX.Element {
     if (ret.isErr()) return
     setIsFollow(ret.value.isFollow)
     setFollowerCount(ret.value.followerCount)
+  }
+
+  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+
+  const handleChannelSelect = async (e: ChangeEvent<HTMLSelectElement>) => {
+    const channelUlid = e.target.value
+    if (channelUlid === selectedChannelUlid) return
+    setSelectedChannelUlid(channelUlid)
+
+    const ret = await getUserPageMedia(ulid, channelUlid)
+    if (ret.isErr()) return
+    setVideos(ret.value.videos)
+    setMusics(ret.value.musics)
+    setComics(ret.value.comics)
+    setPictures(ret.value.pictures)
+    setBlogs(ret.value.blogs)
+    setChats(ret.value.chats)
   }
 
   return (
@@ -78,6 +107,8 @@ export default function Userpage(props: Props): React.JSX.Element {
 
       {selected === TabKey.Posts && (
         <>
+          <SelectBox label="チャンネル" value={selectedChannelUlid} options={channelOptions} className={style.channel_selector} onChange={handleChannelSelect} />
+
           <MediaIndex title="Video">
             {videos?.map((media) => (
               <MediaVideo key={media.ulid} media={media} />
