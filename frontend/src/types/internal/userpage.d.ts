@@ -1,3 +1,4 @@
+import { Channel } from 'types/internal/channel'
 import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
 
 export interface UserPage {
@@ -10,6 +11,16 @@ export interface UserPage {
   followerCount: number
   followingCount: number
   isFollow: boolean
+  channels: Channel[]
+  videos: Video[]
+  musics: Music[]
+  comics: Comic[]
+  pictures: Picture[]
+  blogs: Blog[]
+  chats: Chat[]
+}
+
+export interface UserPageMedia {
   videos: Video[]
   musics: Music[]
   comics: Comic[]

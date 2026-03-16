@@ -18,8 +18,8 @@ import {
   SubscribeOut,
   UserMe,
 } from 'types/internal/user'
-import { UserPage } from 'types/internal/userpage'
-import { apiFollow, apiFollower, apiFollowUser, apiLikeComment, apiLikeMedia, apiNotification, apiSearchTag, apiSubscribeChannel, apiUser, apiUserPage } from 'api/uri'
+import { UserPage, UserPageMedia } from 'types/internal/userpage'
+import { apiFollow, apiFollower, apiFollowUser, apiLikeComment, apiLikeMedia, apiNotification, apiSearchTag, apiSubscribeChannel, apiUser, apiUserPage, apiUserPageMedia } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const getUser = async (req?: Req): Promise<ApiOut<UserMe>> => {
@@ -64,4 +64,8 @@ export const getNotification = async (req?: Req): Promise<ApiOut<NotificationOut
 
 export const getUserPage = async (ulid: string, req?: Req): Promise<ApiOut<UserPage>> => {
   return await apiOut(apiClient('json').get(apiUserPage(ulid), cookieHeader(req)))
+}
+
+export const getUserPageMedia = async (ulid: string, channelUlid?: string): Promise<ApiOut<UserPageMedia>> => {
+  return await apiOut(apiClient('json').get(apiUserPageMedia(ulid, channelUlid)))
 }
