@@ -78,6 +78,6 @@ export const getUserPage = async (ulid: string, req?: Req): Promise<ApiOut<UserP
   return await apiOut(apiClient('json').get(apiUserPage(ulid), cookieHeader(req)))
 }
 
-export const getUserPageMedia = async (ulid: string, channelUlid: string): Promise<ApiOut<UserPageMedia>> => {
-  return await apiOut(apiClient('json').get(apiUserPageMedia(ulid, channelUlid)))
+export const getUserPageMedia = async (ulid: string, channelUlid: string, req?: Req): Promise<ApiOut<UserPageMedia>> => {
+  return await apiOut(apiClient('json').get(apiUserPageMedia(ulid, channelUlid), cookieHeader(req)))
 }

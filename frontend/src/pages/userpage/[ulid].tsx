@@ -14,7 +14,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
 
   const initMedia: UserPageMedia = { videos: [], musics: [], comics: [], pictures: [], blogs: [], chats: [] }
   const channelUlid = userPage.channels.find((c) => c.isDefault)!.ulid
-  const mediaRet = await getUserPageMedia(ulid, channelUlid)
+  const mediaRet = await getUserPageMedia(ulid, channelUlid, req)
   const media = mediaRet.isOk() ? mediaRet.value : initMedia
 
   return { props: { ...translations, ulid, userPage, media } }
