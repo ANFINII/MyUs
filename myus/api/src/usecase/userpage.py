@@ -20,14 +20,14 @@ def get_userpage_user(ulid: str) -> UserAllData | None:
     return user
 
 
-def get_userpage_media(limit: int, search: str, owner_id: int) -> HomeData:
+def get_userpage_media(limit: int, search: str, owner_id: int, channel_id: int = 0) -> HomeData:
     data = HomeData(
-        videos=get_videos(limit, search, owner_id=owner_id),
-        musics=get_musics(limit, search, owner_id=owner_id),
-        comics=get_comics(limit, search, owner_id=owner_id),
-        pictures=get_pictures(limit, search, owner_id=owner_id),
-        blogs=get_blogs(limit, search, owner_id=owner_id),
-        chats=get_chats(limit, search, owner_id=owner_id),
+        videos=get_videos(limit, search, owner_id=owner_id, channel_id=channel_id),
+        musics=get_musics(limit, search, owner_id=owner_id, channel_id=channel_id),
+        comics=get_comics(limit, search, owner_id=owner_id, channel_id=channel_id),
+        pictures=get_pictures(limit, search, owner_id=owner_id, channel_id=channel_id),
+        blogs=get_blogs(limit, search, owner_id=owner_id, channel_id=channel_id),
+        chats=get_chats(limit, search, owner_id=owner_id, channel_id=channel_id),
     )
     return data
 
