@@ -12,12 +12,6 @@ export interface UserPage {
   followingCount: number
   isFollow: boolean
   channels: Channel[]
-  videos: Video[]
-  musics: Music[]
-  comics: Comic[]
-  pictures: Picture[]
-  blogs: Blog[]
-  chats: Chat[]
 }
 
 export interface UserPageMedia {
