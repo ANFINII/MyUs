@@ -86,3 +86,8 @@ class SettingNotificationOut(BaseModel):
     is_reply: bool
     is_like: bool
     is_views: bool
+
+
+class SettingChannelIn(BaseModel):
+    name: str
+    description: str

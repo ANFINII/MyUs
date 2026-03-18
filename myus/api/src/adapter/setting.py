@@ -2,8 +2,9 @@ from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
 from api.src.types.schema.common import ErrorOut, MessageOut
-from api.src.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
+from api.src.types.schema.setting import SettingChannelIn, SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
 from api.src.usecase.auth import auth_check
+from api.src.usecase.channel import update_channel
 from api.src.usecase.user import get_user_data, profile_check, update_mypage, update_notification, update_profile
 from api.utils.functions.index import create_url
 from api.utils.functions.validation import has_email
@@ -122,6 +123,26 @@ class SettingMyPageAPI:
             return 400, MessageOut(error=True, message="メールアドレスの形式が違います!")
 
         if not update_mypage(user_id, input, banner_file):
+            return 400, MessageOut(error=True, message="保存に失敗しました!")
+
+        return 204, MessageOut(error=False, message="保存しました!")
+
+
+class SettingChannelAPI:
+    """チャンネル設定API"""
+
+    router = Router()
+
+    @staticmethod
+    @router.put("/{ulid}", response={204: MessageOut, 400: MessageOut, 401: ErrorOut})
+    def put(request: HttpRequest, ulid: str, input: SettingChannelIn = Form(...), avatar_file: UploadedFile = File(None)):
+        log.info("SettingChannelAPI put", ulid=ulid, input=input)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        if not update_channel(user_id, ulid, input, avatar_file):
             return 400, MessageOut(error=True, message="保存に失敗しました!")
 
         return 204, MessageOut(error=False, message="保存しました!")
