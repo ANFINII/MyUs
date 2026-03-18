@@ -1,24 +1,37 @@
+import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
+import { Channel } from 'types/internal/channel'
+import { Option } from 'types/internal/other'
 import { MypageOut } from 'types/internal/user'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import IconPerson from 'components/parts/Icon/Person'
 import IconPicture from 'components/parts/Icon/Picture'
+import SelectBox from 'components/parts/Input/SelectBox'
 import Toggle from 'components/parts/Input/Toggle'
 import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
 import LightBox from 'components/widgets/LightBox'
+import style from './MyPage.module.scss'
 
 interface Props {
   mypage: MypageOut
+  channels: Channel[]
 }
 
 export default function SettingMyPage(props: Props): React.JSX.Element {
-  const { mypage } = props
+  const { mypage, channels } = props
 
   const router = useRouter()
+  const [channelUlid, setChannelUlid] = useState<string>(channels.find((c) => c.isDefault)!.ulid)
+
   const handleEdit = () => router.push('/setting/mypage/edit')
   const handleUserPage = () => router.push(`/userpage/${mypage.ulid}`)
+  const handleSelectChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)
+
+  const channel = channels.find((c) => c.ulid === channelUlid)
+  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
 
   const button = (
     <HStack gap="4">
@@ -65,6 +78,32 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
         <TableRow isIndent label="概要">
           <div className="pv_4 ws_wrap">{mypage.content}</div>
         </TableRow>
+      </Table>
+
+      <SelectBox value={channelUlid} options={channelOptions} onChange={handleSelectChannel} className={style.channel} />
+
+      <Table>
+        {channel && (
+          <>
+            <TableRow label="アバター">
+              {channel.avatar !== '' ? (
+                <label className="account_image">
+                  <LightBox size="56" src={channel.avatar} title={channel.name} />
+                </label>
+              ) : (
+                <label className="account_image_edit">
+                  <IconPerson size="56" type="square" />
+                </label>
+              )}
+            </TableRow>
+            <TableRow isIndent label="チャンネル名">
+              {channel.name}
+            </TableRow>
+            <TableRow isIndent label="概要">
+              <div className="pv_4 ws_wrap">{channel.description}</div>
+            </TableRow>
+          </>
+        )}
       </Table>
     </Main>
   )
