@@ -17,6 +17,7 @@ import MediaMusic from 'components/widgets/Media/Index/Music'
 import MediaPicture from 'components/widgets/Media/Index/Picture'
 import MediaVideo from 'components/widgets/Media/Index/Video'
 import MediaIndex from 'components/widgets/Media/List/Index'
+import FollowDeleteModal from 'components/widgets/Modal/FollowDelete'
 import style from './UserPage.module.scss'
 
 const enum TabKey {
@@ -35,6 +36,7 @@ export default function Userpage(props: Props): React.JSX.Element {
   const { avatar, banner, nickname, email, dateJoined, channels } = userPage
 
   const { user } = useUser()
+  const [isModal, setIsModal] = useState<boolean>(false)
   const [isFollow, setIsFollow] = useState<boolean>(userPage.isFollow)
   const [followerCount, setFollowerCount] = useState<number>(userPage.followerCount)
   const [channelUlid, setChannelUlid] = useState<string>(channels.find((c) => c.isDefault)!.ulid)
@@ -51,11 +53,18 @@ export default function Userpage(props: Props): React.JSX.Element {
     { key: TabKey.Posts, label: '投稿' },
   ]
 
+  const handleModal = () => setIsModal(!isModal)
+
   const handleFollow = async () => {
+    if (isFollow && !isModal) {
+      handleModal()
+      return
+    }
     const ret = await postFollow({ ulid, isFollow: !isFollow })
     if (ret.isErr()) return
     setIsFollow(ret.value.isFollow)
     setFollowerCount(ret.value.followerCount)
+    if (isModal) handleModal()
   }
 
   const handleChannelSelect = async (e: ChangeEvent<HTMLSelectElement>) => {
@@ -150,6 +159,7 @@ export default function Userpage(props: Props): React.JSX.Element {
           </MediaIndex>
         </>
       )}
+      <FollowDeleteModal open={isModal} onClose={handleModal} onAction={handleFollow} avatar={avatar} ulid={ulid} nickname={nickname} followerCount={followerCount} />
     </Main>
   )
 }
