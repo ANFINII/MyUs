@@ -7,6 +7,7 @@ import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import ExImage from 'components/parts/ExImage'
 import SelectBox from 'components/parts/Input/SelectBox'
+import HStack from 'components/parts/Stack/Horizontal'
 import Tabs, { TabItem } from 'components/parts/Tabs'
 import FollowButton from 'components/widgets/FollowButton'
 import MediaBlog from 'components/widgets/Media/Index/Blog'
@@ -19,8 +20,8 @@ import MediaIndex from 'components/widgets/Media/List/Index'
 import style from './UserPage.module.scss'
 
 const enum TabKey {
-  Posts = 'posts',
   Info = 'info',
+  Posts = 'posts',
 }
 
 interface Props {
@@ -31,22 +32,23 @@ interface Props {
 
 export default function Userpage(props: Props): React.JSX.Element {
   const { ulid, userPage, media } = props
-  const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
+  const { avatar, banner, nickname, email, dateJoined, channels } = userPage
 
   const { user } = useUser()
   const [isFollow, setIsFollow] = useState<boolean>(userPage.isFollow)
   const [followerCount, setFollowerCount] = useState<number>(userPage.followerCount)
   const [channelUlid, setChannelUlid] = useState<string>(channels.find((c) => c.isDefault)!.ulid)
-  const [selectedTab, setSelectedTab] = useState<TabKey>(TabKey.Posts)
+  const [selectedTab, setSelectedTab] = useState<TabKey>(TabKey.Info)
   const [newMedia, setNewMedia] = useState<UserPageMedia>(media)
 
   const isSelf = user.isActive && user.nickname === nickname
   const formattedDate = new Date(dateJoined).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const selectedChannel = channels.find((c) => c.ulid === channelUlid)
 
   const tabItems: TabItem<TabKey>[] = [
-    { key: TabKey.Posts, label: '投稿' },
     { key: TabKey.Info, label: '情報' },
+    { key: TabKey.Posts, label: '投稿' },
   ]
 
   const handleFollow = async () => {
@@ -72,29 +74,40 @@ export default function Userpage(props: Props): React.JSX.Element {
           <ExImage src={banner} title={nickname} />
         </figure>
 
-        <div className={style.author}>
-          <ExImage src={avatar} title={nickname} className={style.avatar} />
-          <div className={style.author_info}>
-            <span className={style.nickname} title={nickname}>
-              {nickname}
+        <HStack align="start" justify="between">
+          <div className={style.author}>
+            <ExImage src={avatar} title={nickname} className={style.avatar} />
+            <div className={style.author_info}>
+              <span className={style.nickname} title={nickname}>
+                {nickname}
+              </span>
+              <span className={style.follower}>フォロワー数 {followerCount}</span>
+              <span className={style.following}>フォロー数 {userPage.followingCount}</span>
+            </div>
+            <span className={style.follow_button}>
+              <FollowButton isFollow={isFollow} disabled={isSelf || !user.isActive} onClick={handleFollow} />
             </span>
-            <span className={style.follower}>フォロワー数 {followerCount}</span>
-            <span className={style.following}>フォロー数 {userPage.followingCount}</span>
           </div>
-          <span className={style.follow_button}>
-            <FollowButton isFollow={isFollow} disabled={isSelf || !user.isActive} onClick={handleFollow} />
-          </span>
-        </div>
+          <SelectBox label="チャンネル" value={channelUlid} options={channelOptions} className={style.channel} onChange={handleChannelSelect} />
+        </HStack>
 
         <Tabs items={tabItems} selected={selectedTab} onSelect={setSelectedTab} />
 
         <hr className={style.hr} />
       </div>
 
+      {selectedTab === TabKey.Info && (
+        <div className={style.information}>
+          <h1>チャンネル情報</h1>
+          <p className={style.info_label}>概要</p>
+          <p className={style.info_content}>{selectedChannel?.description}</p>
+          <p>メール：{email}</p>
+          <p>登録日：{formattedDate}</p>
+        </div>
+      )}
+
       {selectedTab === TabKey.Posts && (
         <>
-          <SelectBox label="チャンネル" value={channelUlid} options={channelOptions} className={style.channel} onChange={handleChannelSelect} />
-
           <MediaIndex title="Video">
             {newMedia.videos.map((item) => (
               <MediaVideo key={item.ulid} media={item} />
@@ -136,16 +149,6 @@ export default function Userpage(props: Props): React.JSX.Element {
             ))}
           </MediaIndex>
         </>
-      )}
-
-      {selectedTab === TabKey.Info && (
-        <div className={style.information}>
-          <h1>チャンネル情報</h1>
-          <p className={style.info_label}>概要</p>
-          <p className={style.info_content}>{content}</p>
-          <p>メール：{email}</p>
-          <p>登録日：{formattedDate}</p>
-        </div>
       )}
     </Main>
   )

@@ -19,7 +19,8 @@
   .author {
     display: flex;
     align-items: flex-start;
-    margin: 15px 30px;
+    margin: 10px;
+    gap: 16px;
 
     .avatar {
       width: 80px;
@@ -32,21 +33,14 @@
     .author_info {
       display: flex;
       flex-direction: column;
-      flex: 1;
-      padding-left: 15px;
 
       .nickname {
-        height: 36px;
+        height: 32px;
         font-size: 22px;
         white-space: nowrap;
       }
 
-      .follower {
-        height: 22px;
-        font-size: 14px;
-        white-space: nowrap;
-      }
-
+      .follower,
       .following {
         height: 22px;
         font-size: 14px;
@@ -57,12 +51,11 @@
     .follow_button {
       display: flex;
       flex-shrink: 0;
-      padding: 2px 2px 0 0;
-      justify-content: flex-end;
+      align-items: center;
 
       button {
         width: 122px;
-        height: 36px;
+        margin-top: 4px;
       }
     }
   }
@@ -73,8 +66,9 @@
 }
 
 .channel {
-  max-width: 240px;
-  margin-bottom: 16px;
+  flex-shrink: 0;
+  width: 200px;
+  margin: 10px;
 }
 
 .information {
