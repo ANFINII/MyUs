@@ -6,3 +6,9 @@ export interface Channel {
   isDefault: boolean
   description: string
 }
+
+export interface ChannelIn {
+  name: string
+  avatarFile?: File
+  description: string
+}

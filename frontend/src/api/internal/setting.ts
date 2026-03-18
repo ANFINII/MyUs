@@ -2,9 +2,10 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
+import { ChannelIn } from 'types/internal/channel'
 import { MessageOut } from 'types/internal/other'
 import { ProfileOut, ProfileIn, MypageOut, MypageIn, UserNotificationOut, UserNotificationIn } from 'types/internal/user'
-import { apiSettingProfile, apiSettingMypage, apiSettingNotification } from 'api/uri'
+import { apiSettingProfile, apiSettingMypage, apiSettingNotification, apiSettingChannel } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const getSettingProfile = async (req?: Req): Promise<ApiOut<ProfileOut>> => {
@@ -29,4 +30,8 @@ export const getSettingNotification = async (req?: Req): Promise<ApiOut<UserNoti
 
 export const putSettingNotification = async (request: UserNotificationIn): Promise<ApiOut<void>> => {
   return await apiOut(apiClient('json').put(apiSettingNotification, camelSnake(request)))
+}
+
+export const putSettingChannel = async (ulid: string, request: ChannelIn): Promise<ApiOut<MessageOut>> => {
+  return await apiOut(apiClient('form').put(apiSettingChannel(ulid), camelSnake(request)))
 }
