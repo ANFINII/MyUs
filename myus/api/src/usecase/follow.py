@@ -3,7 +3,7 @@ from django.db import transaction
 from api.src.domain.interface.follow.data import FollowData
 from api.src.domain.interface.follow.interface import FilterOption, FollowInterface, SortOption
 from api.src.domain.interface.user.data import UserAllData
-from api.src.domain.interface.user.interface import FilterOption as UserFilterOption, SortOption as UserSortOption, UserInterface
+from api.src.domain.interface.user.interface import FilterOption as UserFilterOption, UserInterface
 from api.src.injectors.container import injector
 from api.src.types.data.follow import FollowOutData, FollowUserData
 from api.utils.functions.index import create_url
@@ -50,7 +50,7 @@ def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserData]
 def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowOutData | None:
     user_repo = injector.get(UserInterface)
     follow_repo = injector.get(FollowInterface)
-    user_ids = user_repo.get_ids(UserFilterOption(ulid=ulid), UserSortOption())
+    user_ids = user_repo.get_ids(UserFilterOption(ulid=ulid))
     if len(user_ids) == 0:
         return None
 
@@ -59,9 +59,6 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowOu
     following_id = following.user.id
 
     follow_ids = follow_repo.get_ids(FilterOption(follower_id=follower_id, following_id=following_id), SortOption())
-    if len(follow_ids) == 0:
-        return None
-
     follows = follow_repo.bulk_get(follow_ids)
     follow = follows[0] if len(follows) > 0 else None
 
