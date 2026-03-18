@@ -11,7 +11,7 @@ export default function FollowButton(props: Props): React.JSX.Element {
 
   return (
     <>
-      {isFollow && <Button color="red" name="解除する" onClick={onClick} />}
+      {isFollow && <Button color="white" name="フォロー済み" onClick={onClick} />}
       {!isFollow && <Button color="green" name="フォローする" disabled={disabled} onClick={onClick} />}
     </>
   )
