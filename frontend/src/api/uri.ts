@@ -25,6 +25,7 @@ export const apiUserPageMedia = (ulid: string, channelUlid: string) => base + `/
 export const apiSettingProfile = base + '/setting/profile'
 export const apiSettingMypage = base + '/setting/mypage'
 export const apiSettingNotification = base + '/setting/notification'
+export const apiSettingChannel = (ulid: string) => base + `/setting/channel/${ulid}`
 
 // Media
 export const apiHome = base + '/home'
