@@ -1,6 +1,8 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { Channel } from 'types/internal/channel'
 import { MypageOut } from 'types/internal/user'
+import { getChannels } from 'api/internal/channel'
 import { getSettingMypage } from 'api/internal/setting'
 import ErrorCheck from 'components/widgets/Error/Check'
 import SettingMyPage from 'components/templates/setting/mypage'
@@ -10,12 +12,15 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   const ret = await getSettingMypage(req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const mypage = ret.value
-  return { props: { ...translations, mypage } }
+  const channelsRet = await getChannels(req)
+  const channels = channelsRet.isOk() ? channelsRet.value : []
+  return { props: { ...translations, mypage, channels } }
 }
 
 interface Props {
   status: number
   mypage: MypageOut
+  channels: Channel[]
 }
 
 export default function SettingMypagePage(props: Props): React.JSX.Element {
