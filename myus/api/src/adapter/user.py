@@ -14,7 +14,8 @@ from api.src.usecase.channel import get_channel_data, get_user_channels
 from api.src.usecase.follow import get_followers, get_follows, upsert_follow
 from api.src.usecase.notification import get_content_object, get_notification
 from api.src.usecase.subscribe import upsert_subscribe
-from api.src.usecase.user import get_search_tags, get_user_data, like_comment, like_media, update_search_tags
+from api.src.usecase.search_tag import get_search_tag_data, update_search_tags
+from api.src.usecase.user import get_user_data, like_comment, like_media
 from api.src.usecase.userpage import get_userpage_media, is_following
 from api.utils.functions.index import create_url
 
@@ -58,7 +59,7 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        tags = get_search_tags(user_id)
+        tags = get_search_tag_data(user_id)
         data = [SearchTagOut(sequence=x.sequence, name=x.name) for x in tags]
         return 200, data
 

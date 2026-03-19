@@ -1,21 +1,16 @@
 import datetime
 from dataclasses import replace
-from django.db import transaction
 from ninja import UploadedFile
 from api.db.models.user import User
 from api.modules.logger import log
 from api.src.injectors.container import injector
-from api.src.domain.interface.search_tag.data import SearchTagData as DomainSearchTagData
-from api.src.domain.interface.search_tag.interface import SearchTagInterface
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
-from api.src.domain.interface.search_tag.interface import FilterOption as SearchTagFilterOption, SortOption as SearchTagSortOption
 from api.src.domain.interface.user.data import ProfileData, UserAllData, UserNotificationData
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
-from api.src.types.data.user import AuthorData, LikeData, SearchTagData
+from api.src.types.data.user import AuthorData, LikeData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
-from api.src.types.schema.user import SearchTagIn
 from api.utils.enum.index import ImageUpload, MediaType
 from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository, save_upload
@@ -36,6 +31,16 @@ def get_user_data(user_id: int = 0, ulid: str = "") -> UserAllData | None:
     return user
 
 
+def save_user_data(data: UserAllData) -> bool:
+    repository = injector.get(UserInterface)
+    try:
+        repository.bulk_save([data])
+        return True
+    except Exception as e:
+        log.error("save_user_data error", exc=e)
+        return False
+
+
 def get_author_data(user_id: int) -> AuthorData:
     repository = injector.get(UserInterface)
     ids = repository.get_ids(FilterOption(id=user_id))
@@ -52,133 +57,6 @@ def get_author_data(user_id: int) -> AuthorData:
     )
 
     return data
-
-
-def save_user_data(data: UserAllData) -> bool:
-    repository = injector.get(UserInterface)
-    try:
-        repository.bulk_save([data])
-        return True
-    except Exception as e:
-        log.error("save_user_data error", exc=e)
-        return False
-
-
-def profile_check(data: SettingProfileIn) -> str:
-    if has_email(data.email):
-        return "メールアドレスの形式が違います!"
-
-    if has_username(data.username):
-        return "ユーザー名は半角英数字のみ入力できます!"
-
-    if has_number(data.last_name):
-        return "姓に数字が含まれております!"
-
-    if has_number(data.first_name):
-        return "名に数字が含まれております!"
-
-    if has_phone(data.phone):
-        return "電話番号の形式が違います!"
-
-    if has_postal_code(data.postal_code):
-        return "郵便番号の形式が違います!"
-
-    if has_birthday(data.year, data.month, data.day):
-        return f"{data.year}年{data.month}月{data.day}日は存在しない日付です!"
-
-    return ""
-
-
-def signup_check(data: SignupIn) -> str:
-    password1 = data.password1
-    password2 = data.password2
-
-    if has_email(data.email):
-        return "メールアドレスの形式が違います!"
-
-    if has_username(data.username):
-        return "ユーザー名は半角英数字のみ入力できます!"
-
-    if has_number(data.last_name):
-        return "姓に数字が含まれております!"
-
-    if has_number(data.first_name):
-        return "名に数字が含まれております!"
-
-    if has_birthday(int(data.year), int(data.month), int(data.day)):
-        return f"{data.year}年{data.month}月{data.day}日は存在しない日付です!"
-
-    if password1 != password2:
-        return "パスワードが一致していません!"
-
-    if not has_number(password1) and not has_alphabet(password1):
-        return "パスワードは半角8文字以上で英数字を含む必要があります!"
-
-    if User.objects.filter(email=data.email).exists():
-        return "メールアドレスは既に登録されています!"
-
-    if User.objects.filter(username=data.username).exists():
-        return "ユーザー名は既に登録されています!"
-
-    if User.objects.filter(nickname=data.nickname).exists():
-        return "投稿者名は既に登録されています!"
-
-    return ""
-
-
-def get_search_tags(author_id: int) -> list[SearchTagData]:
-    repository = injector.get(SearchTagInterface)
-    ids = repository.get_ids(SearchTagFilterOption(author_id=author_id), SearchTagSortOption())
-    objs = repository.bulk_get(ids)
-    return [SearchTagData(sequence=obj.sequence, name=obj.name) for obj in objs]
-
-
-def update_search_tags(author_id: int, tags: list[SearchTagIn]) -> bool:
-    repository = injector.get(SearchTagInterface)
-    ids = repository.get_ids(SearchTagFilterOption(author_id=author_id), SearchTagSortOption(), limit=None)
-    existing = repository.bulk_get(ids)
-    name_map: dict[str, int] = {obj.name: obj.id for obj in existing}
-
-    save_objs: list[DomainSearchTagData] = []
-    keep_ids: set[int] = set()
-    for tag in tags:
-        existing_id = name_map.get(tag.name, 0)
-        if existing_id != 0:
-            keep_ids.add(existing_id)
-        save_objs.append(DomainSearchTagData(id=existing_id, author_id=author_id, sequence=tag.sequence, name=tag.name))
-
-    delete_ids = [id for id in ids if id not in keep_ids]
-
-    try:
-        with transaction.atomic():
-            repository.bulk_delete(delete_ids)
-            repository.bulk_save(save_objs)
-        return True
-    except Exception as e:
-        log.error("update_search_tags error", exc=e)
-        return False
-
-
-def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeData | None:
-    repository = injector.get(UserInterface)
-    media_repo = get_media_repository(media_type)
-    ids = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption())
-    if len(ids) == 0:
-        return None
-
-    is_like, like_count = repository.media_like(user_id, media_type, ids[0])
-    return LikeData(is_like=is_like, like_count=like_count)
-
-
-def like_comment(user_id: int, ulid: str) -> LikeData | None:
-    repository = injector.get(UserInterface)
-    comment_repo = injector.get(CommentInterface)
-    ids = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
-    if len(ids) == 0:
-        return None
-
-    is_like, like_count = repository.comment_like(user_id, ids[0])
-    return LikeData(is_like=is_like, like_count=like_count)
 
 
 def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedFile) -> bool:
@@ -258,3 +136,87 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
     save_data = replace(data, notification=notification)
 
     return save_user_data(save_data)
+
+
+def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeData | None:
+    repository = injector.get(UserInterface)
+    media_repo = get_media_repository(media_type)
+    ids = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption())
+    if len(ids) == 0:
+        return None
+
+    is_like, like_count = repository.media_like(user_id, media_type, ids[0])
+    return LikeData(is_like=is_like, like_count=like_count)
+
+
+def like_comment(user_id: int, ulid: str) -> LikeData | None:
+    repository = injector.get(UserInterface)
+    comment_repo = injector.get(CommentInterface)
+    ids = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
+    if len(ids) == 0:
+        return None
+
+    is_like, like_count = repository.comment_like(user_id, ids[0])
+    return LikeData(is_like=is_like, like_count=like_count)
+
+
+def profile_check(data: SettingProfileIn) -> str:
+    if has_email(data.email):
+        return "メールアドレスの形式が違います!"
+
+    if has_username(data.username):
+        return "ユーザー名は半角英数字のみ入力できます!"
+
+    if has_number(data.last_name):
+        return "姓に数字が含まれております!"
+
+    if has_number(data.first_name):
+        return "名に数字が含まれております!"
+
+    if has_phone(data.phone):
+        return "電話番号の形式が違います!"
+
+    if has_postal_code(data.postal_code):
+        return "郵便番号の形式が違います!"
+
+    if has_birthday(data.year, data.month, data.day):
+        return f"{data.year}年{data.month}月{data.day}日は存在しない日付です!"
+
+    return ""
+
+
+def signup_check(data: SignupIn) -> str:
+    password1 = data.password1
+    password2 = data.password2
+
+    if has_email(data.email):
+        return "メールアドレスの形式が違います!"
+
+    if has_username(data.username):
+        return "ユーザー名は半角英数字のみ入力できます!"
+
+    if has_number(data.last_name):
+        return "姓に数字が含まれております!"
+
+    if has_number(data.first_name):
+        return "名に数字が含まれております!"
+
+    if has_birthday(int(data.year), int(data.month), int(data.day)):
+        return f"{data.year}年{data.month}月{data.day}日は存在しない日付です!"
+
+    if password1 != password2:
+        return "パスワードが一致していません!"
+
+    if not has_number(password1) and not has_alphabet(password1):
+        return "パスワードは半角8文字以上で英数字を含む必要があります!"
+
+    if User.objects.filter(email=data.email).exists():
+        return "メールアドレスは既に登録されています!"
+
+    if User.objects.filter(username=data.username).exists():
+        return "ユーザー名は既に登録されています!"
+
+    if User.objects.filter(nickname=data.nickname).exists():
+        return "投稿者名は既に登録されています!"
+
+    return ""
