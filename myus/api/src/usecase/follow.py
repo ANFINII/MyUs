@@ -54,6 +54,7 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowOu
     following = get_user_data(ulid=ulid)
     if following is None:
         return None
+
     follower_id = follower.user.id
     following_id = following.user.id
 

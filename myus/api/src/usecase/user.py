@@ -24,11 +24,7 @@ def get_user_data(user_id: int = 0, ulid: str = "") -> UserAllData | None:
         return None
 
     users = repository.bulk_get(ids)
-    user = users[0]
-    if not user.user.is_active:
-        return None
-
-    return user
+    return users[0]
 
 
 def save_user_data(data: UserAllData) -> bool:
@@ -42,13 +38,10 @@ def save_user_data(data: UserAllData) -> bool:
 
 
 def get_author_data(user_id: int) -> AuthorData:
-    repository = injector.get(UserInterface)
-    ids = repository.get_ids(FilterOption(id=user_id))
-    if len(ids) == 0:
+    user = get_user_data(user_id=user_id)
+    if user is None:
         return AuthorData(avatar="", ulid="", nickname="", follower_count=0)
 
-    users = repository.bulk_get(ids)
-    user = users[0]
     data = AuthorData(
         avatar=create_url(user.user.avatar),
         ulid=user.user.ulid,

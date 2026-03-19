@@ -14,6 +14,7 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Sub
     channel = get_channel_data(channel_ulid)
     if channel is None:
         return None
+
     subscribe_ids = subscribe_repo.get_ids(FilterOption(user_id=user_id, channel_id=channel.id), SortOption())
     subscribes = subscribe_repo.bulk_get(subscribe_ids)
     subscribe = subscribes[0] if len(subscribes) > 0 else None
