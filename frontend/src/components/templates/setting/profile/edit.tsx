@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { ProfileOut, ProfileIn } from 'types/internal/user'
 import { getAddress } from 'api/external/address'
@@ -8,6 +8,7 @@ import { FetchError, GenderType } from 'utils/constants/enum'
 import { genderMap } from 'utils/constants/map'
 import { selectDate } from 'utils/functions/datetime'
 import { getAge } from 'utils/functions/user'
+import { useApiError } from 'components/hooks/useApiError'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -34,11 +35,11 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const { profile } = props
 
   const router = useRouter()
-  const { toast, handleToast } = useToast()
   const { updateUser } = useUser()
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [message, setMessage] = useState<string>('')
+  const { toast, handleToast } = useToast()
+  const { message, setMessage, handleError } = useApiError({ handleToast })
   const [avatarFile, setAvatarFile] = useState<File>()
   const [values, setValues] = useState<ProfileOut>(profile)
 
@@ -71,14 +72,10 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: ProfileIn = { ...values, avatarFile }
     const ret = await putSettingProfile(request)
+    handleLoading(false)
     if (ret.isErr()) {
       const message = ret.error.message
-      if (message) {
-        setMessage(message)
-      } else {
-        handleToast(FetchError.Put, true)
-      }
-      handleLoading(false)
+      handleError(FetchError.Put, message)
       return
     }
     await updateUser()

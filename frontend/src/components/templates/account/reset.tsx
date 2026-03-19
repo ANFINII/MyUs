@@ -1,7 +1,8 @@
-import { useState, ChangeEvent } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { postReset } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
+import { useApiError } from 'components/hooks/useApiError'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -13,10 +14,10 @@ import VStack from 'components/parts/Stack/Vertical'
 
 export default function Reset(): React.JSX.Element {
   const router = useRouter()
-  const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [message, setMessage] = useState<string>('')
+  const { toast, handleToast } = useToast()
+  const { message, handleError } = useApiError({ handleToast })
   const [email, setEmail] = useState<string>('')
 
   const handleBack = () => router.push('/account/login')
@@ -26,17 +27,12 @@ export default function Reset(): React.JSX.Element {
     if (!isRequiredCheck({ email })) return
     handleLoading(true)
     const ret = await postReset(email)
+    handleLoading(false)
     if (ret.isErr()) {
       const message = ret.error.message
-      if (message) {
-        setMessage(message)
-      } else {
-        handleToast(FetchError.Error, true)
-      }
-      handleLoading(false)
+      handleError(FetchError.Error, message)
       return
     }
-    handleLoading(false)
   }
 
   return (

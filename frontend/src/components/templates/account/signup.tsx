@@ -1,10 +1,11 @@
-import { useState, ChangeEvent } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { SignupIn } from 'types/internal/auth'
 import { postSignup } from 'api/internal/auth'
 import { FetchError, GenderType } from 'utils/constants/enum'
 import { genderMap } from 'utils/constants/map'
 import { nowDate, selectDate } from 'utils/functions/datetime'
+import { useApiError } from 'components/hooks/useApiError'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -33,10 +34,10 @@ const initSignup: SignupIn = {
 
 export default function Signup(): React.JSX.Element {
   const router = useRouter()
-  const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [message, setMessage] = useState<string>('')
+  const { toast, handleToast } = useToast()
+  const { message, handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<SignupIn>(initSignup)
 
   const { years, months, days } = selectDate()
@@ -49,14 +50,10 @@ export default function Signup(): React.JSX.Element {
     if (!isRequiredCheck({ email, username, nickname, lastName, firstName, password1, password2 })) return
     handleLoading(true)
     const ret = await postSignup(values)
+    handleLoading(false)
     if (ret.isErr()) {
       const message = ret.error.message
-      if (message) {
-        setMessage(message)
-      } else {
-        handleToast(FetchError.Post, true)
-      }
-      handleLoading(false)
+      handleError(FetchError.Post, message)
       return
     }
     handleBack()
