@@ -13,6 +13,27 @@ from api.src.usecase.user import get_author_data
 from api.utils.enum.index import NotificationObjectType, NotificationType, NotificationTypeNo
 
 
+def get_message_data(message_ulid: str) -> MessageDomainData | None:
+    message_repo = injector.get(MessageInterface)
+    ids = message_repo.get_ids(FilterOption(message_ulid=message_ulid, is_parent=None), SortOption())
+    if len(ids) == 0:
+        log.warning("メッセージが見つかりませんでした", message_ulid=message_ulid)
+        return None
+
+    messages = message_repo.bulk_get(ids)
+    return messages[0]
+
+
+def save_message_data(data: MessageDomainData) -> bool:
+    message_repo = injector.get(MessageInterface)
+    try:
+        message_repo.bulk_save([data])
+        return True
+    except Exception as e:
+        log.error("save_message_data error", exc=e)
+        return False
+
+
 def get_messages(chat_id: int) -> list[MessageData]:
     message_repo = injector.get(MessageInterface)
     ids = message_repo.get_ids(FilterOption(chat_id=chat_id, is_parent=True), SortOption(is_asc=True))
@@ -47,17 +68,6 @@ def get_replys(chat_id: int) -> list[MessageReplyData]:
         ) for m in messages
     ]
     return data
-
-
-def get_message_domain_data(message_ulid: str) -> MessageDomainData | None:
-    message_repo = injector.get(MessageInterface)
-    ids = message_repo.get_ids(FilterOption(message_ulid=message_ulid, is_parent=None), SortOption())
-    if len(ids) == 0:
-        log.warning("メッセージが見つかりませんでした", message_ulid=message_ulid)
-        return None
-
-    messages = message_repo.bulk_get(ids)
-    return messages[0]
 
 
 def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) -> MessageData | None:
@@ -142,7 +152,7 @@ def get_replies(message_ulid: str) -> list[MessageReplyData]:
 
 
 def update_message(user_id: int, message_ulid: str, text: str) -> MessageData | None:
-    message = get_message_domain_data(message_ulid)
+    message = get_message_data(message_ulid)
     if message is None:
         return None
 
@@ -150,25 +160,21 @@ def update_message(user_id: int, message_ulid: str, text: str) -> MessageData | 
         log.warning("メッセージの編集権限がありません", message_ulid=message_ulid, user_id=user_id)
         return None
 
-    message_repo = injector.get(MessageInterface)
-    message_repo.bulk_save([replace(message, text=text)])
-    messages = message_repo.bulk_get([message.id])
-    assert len(messages) == 1, "データが見つかりませんでした"
-    updated = messages[0]
+    save_message_data(replace(message, text=text))
 
     data = MessageData(
-        ulid=updated.ulid,
-        text=updated.text,
-        reply_count=updated.reply_count,
-        created=updated.created,
-        updated=updated.updated,
-        author=get_author_data(updated.author_id),
+        ulid=message.ulid,
+        text=text,
+        reply_count=message.reply_count,
+        created=message.created,
+        updated=message.updated,
+        author=get_author_data(message.author_id),
     )
     return data
 
 
 def delete_message(user_id: int, message_ulid: str) -> str | None:
-    message = get_message_domain_data(message_ulid)
+    message = get_message_data(message_ulid)
     if message is None:
         return None
 
