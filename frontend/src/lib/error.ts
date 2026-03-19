@@ -15,7 +15,8 @@ export const apiOut = async <T>(apiCall: Promise<AxiosResponse<T>>): Promise<Api
     return ok(res.data)
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      return err({ status: e.response?.status ?? 500, message: e.message })
+      const data = e.response?.data
+      return err({ status: e.response?.status ?? 500, message: data.message })
     }
     return err({ status: 500, message: 'Unknown Error' })
   }

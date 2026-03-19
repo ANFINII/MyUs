@@ -72,15 +72,17 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
     const request: ProfileIn = { ...values, avatarFile }
     const ret = await putSettingProfile(request)
     if (ret.isErr()) {
+      const error = ret.error
+      if (error.message) {
+        setMessage(error.message)
+      } else {
+        handleToast(FetchError.Put, true)
+      }
       handleLoading(false)
-      handleToast(FetchError.Put, true)
       return
     }
-    const data = ret.value
-    if (!data.error) handleBack()
-    if (data.error) setMessage(data.message)
     await updateUser()
-    handleLoading(false)
+    handleBack()
   }
 
   const button = (
