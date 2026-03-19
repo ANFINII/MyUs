@@ -3,7 +3,7 @@ from channels.layers import get_channel_layer
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
-from api.src.types.schema.common import ErrorOut, MessageOut
+from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.message import ChatMessageOut, ChatMessageReplyOut, MessageCreateIn, MessageUpdateIn
 from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
@@ -16,7 +16,7 @@ class MessageAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: ChatMessageOut, 400: MessageOut, 401: ErrorOut, 500: MessageOut})
+    @router.post("", response={201: ChatMessageOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: MessageCreateIn):
         log.info("MessageAPI post", input=input)
 
@@ -27,7 +27,7 @@ class MessageAPI:
         try:
             message = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
             if message is None:
-                return 400, MessageOut(error=True, message="メッセージの作成に失敗しました")
+                return 400, ErrorOut(message="メッセージの作成に失敗しました")
 
             data = ChatMessageOut(
                 ulid=message.ulid,
@@ -76,7 +76,7 @@ class MessageAPI:
             return 201, data
         except Exception as e:
             log.error("MessageAPI post error", exc=e)
-            return 500, MessageOut(error=True, message="メッセージの作成に失敗しました")
+            return 500, ErrorOut(message="メッセージの作成に失敗しました")
 
     @staticmethod
     @router.get("/{message_ulid}", response={200: list[ChatMessageReplyOut], 401: ErrorOut})
@@ -107,7 +107,7 @@ class MessageAPI:
         return 200, data
 
     @staticmethod
-    @router.put("/{message_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 403: ErrorOut, 500: MessageOut})
+    @router.put("/{message_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, message_ulid: str, input: MessageUpdateIn):
         log.info("MessageAPI put", message_ulid=message_ulid, input=input)
 
@@ -136,13 +136,13 @@ class MessageAPI:
                     },
                 )
 
-            return 200, MessageOut(error=False, message="メッセージを更新しました")
+            return 200, ErrorOut(message="メッセージを更新しました")
         except Exception as e:
             log.error("MessageAPI put error", exc=e)
-            return 500, MessageOut(error=True, message="メッセージの更新に失敗しました")
+            return 500, ErrorOut(message="メッセージの更新に失敗しました")
 
     @staticmethod
-    @router.delete("/{message_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 403: ErrorOut, 500: MessageOut})
+    @router.delete("/{message_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, message_ulid: str):
         log.info("MessageAPI delete", message_ulid=message_ulid)
 
@@ -170,7 +170,7 @@ class MessageAPI:
                     },
                 )
 
-            return 200, MessageOut(error=False, message="メッセージを削除しました")
+            return 200, ErrorOut(message="メッセージを削除しました")
         except Exception as e:
             log.error("MessageAPI delete error", exc=e)
-            return 500, MessageOut(error=True, message="メッセージの削除に失敗しました")
+            return 500, ErrorOut(message="メッセージの削除に失敗しました")

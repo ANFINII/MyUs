@@ -3,7 +3,7 @@ from ninja import Router
 from api.modules.logger import log
 from api.src.adapter.media import convert_videos, convert_musics, convert_comics, convert_pictures, convert_blogs, convert_chats
 from api.src.types.schema.channel import ChannelOut
-from api.src.types.schema.common import ErrorOut, MessageOut
+from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationItemOut, NotificationOut, NotificationUserOut
@@ -63,7 +63,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.put("/search_tag", response={200: MessageOut, 401: ErrorOut})
+    @router.put("/search_tag", response={200: ErrorOut, 401: ErrorOut})
     def put_search_tag(request: HttpRequest, input: list[SearchTagIn]):
         log.info("UserAPI put_search_tag")
 
@@ -73,9 +73,9 @@ class UserAPI:
 
         result = update_search_tags(user_id, input)
         if not result:
-            return 200, MessageOut(error=True, message="更新に失敗しました")
+            return 200, ErrorOut(message="更新に失敗しました")
 
-        return 200, MessageOut(error=False, message="更新しました")
+        return 200, ErrorOut(message="更新しました")
 
     @staticmethod
     @router.get("/follower", response={200: list[FollowUserOut], 401: ErrorOut})
@@ -124,7 +124,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.post("/follow/user", response={200: FollowOut, 400: MessageOut, 401: ErrorOut, 500: MessageOut})
+    @router.post("/follow/user", response={200: FollowOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def follow_user(request: HttpRequest, input: FollowIn):
         log.info("UserAPI follow_user", input=input)
 
@@ -134,17 +134,17 @@ class UserAPI:
 
         follower = get_user_data(user_id)
         if follower is None:
-            return 400, MessageOut(error=True, message="ユーザーが見つかりません!")
+            return 400, ErrorOut(message="ユーザーが見つかりません!")
 
         follow = upsert_follow(follower, input.ulid, input.is_follow)
         if follow is None:
-            return 400, MessageOut(error=True, message="ユーザーが見つかりません!")
+            return 400, ErrorOut(message="ユーザーが見つかりません!")
 
         data = FollowOut(is_follow=follow.is_follow, follower_count=follow.follower_count)
         return 200, data
 
     @staticmethod
-    @router.post("/subscribe/channel", response={200: SubscribeOut, 400: MessageOut, 401: ErrorOut})
+    @router.post("/subscribe/channel", response={200: SubscribeOut, 400: ErrorOut, 401: ErrorOut})
     def subscribe_channel(request: HttpRequest, input: SubscribeIn):
         log.info("UserAPI subscribe_channel", input=input)
 
@@ -154,13 +154,13 @@ class UserAPI:
 
         subscribe = upsert_subscribe(user_id, input.channel_ulid, input.is_subscribe)
         if subscribe is None:
-            return 400, MessageOut(error=True, message="チャンネルが見つかりません!")
+            return 400, ErrorOut(message="チャンネルが見つかりません!")
 
         data = SubscribeOut(is_subscribe=subscribe.is_subscribe, count=subscribe.count)
         return 200, data
 
     @staticmethod
-    @router.post("/like/media", response={200: LikeOut, 400: MessageOut, 401: ErrorOut, 500: MessageOut})
+    @router.post("/like/media", response={200: LikeOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def post_like_media(request: HttpRequest, input: LikeMediaIn):
         log.info("UserAPI like_media", input=input)
 
@@ -170,13 +170,13 @@ class UserAPI:
 
         like = like_media(user_id, input.media_type, input.ulid)
         if like is None:
-            return 400, MessageOut(error=True, message="メディアが見つかりません!")
+            return 400, ErrorOut(message="メディアが見つかりません!")
 
         data = LikeOut(is_like=like.is_like, like_count=like.like_count)
         return 200, data
 
     @staticmethod
-    @router.post("/like/comment", response={200: LikeOut, 400: MessageOut, 401: ErrorOut, 404: ErrorOut, 500: MessageOut})
+    @router.post("/like/comment", response={200: LikeOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def post_like_comment(request: HttpRequest, input: LikeCommentIn):
         log.info("UserAPI like_comment", input=input)
 
@@ -186,13 +186,13 @@ class UserAPI:
 
         like = like_comment(user_id, input.ulid)
         if like is None:
-            return 400, MessageOut(error=True, message="コメントが見つかりません!")
+            return 400, ErrorOut(message="コメントが見つかりません!")
 
         data = LikeOut(is_like=like.is_like, like_count=like.like_count)
         return 200, data
 
     @staticmethod
-    @router.get("/notification", response={200: NotificationOut, 401: ErrorOut, 500: MessageOut})
+    @router.get("/notification", response={200: NotificationOut, 401: ErrorOut, 500: ErrorOut})
     def get_notifications(request: HttpRequest):
         log.info("UserAPI get_notifications")
 

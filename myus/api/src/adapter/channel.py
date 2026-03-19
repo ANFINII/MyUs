@@ -2,7 +2,7 @@ from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
 from api.src.types.schema.channel import ChannelIn, ChannelOut
-from api.src.types.schema.common import ErrorOut, MessageOut
+from api.src.types.schema.common import ErrorOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import get_user_channels, update_user_channel
 from api.utils.functions.index import create_url
@@ -38,7 +38,7 @@ class ChannelAPI:
         return 200, data
 
     @staticmethod
-    @router.put("/{ulid}", response={204: MessageOut, 400: MessageOut, 401: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ChannelIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("ChannelAPI put", ulid=ulid, input=input)
 
@@ -47,6 +47,6 @@ class ChannelAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         if not update_user_channel(user_id, ulid, input, avatar_file):
-            return 400, MessageOut(error=True, message="保存に失敗しました!")
+            return 400, ErrorOut(message="保存に失敗しました!")
 
-        return 204, MessageOut(error=False, message="保存しました!")
+        return 204, ErrorOut(message="保存しました!")
