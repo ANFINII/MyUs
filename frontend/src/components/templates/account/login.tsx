@@ -1,10 +1,11 @@
-import { useState, ChangeEvent } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
+import { useApiError } from 'components/hooks/useApiError'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -19,34 +20,31 @@ export default function Login(): React.JSX.Element {
   const { t } = useTranslation('common')
   const router = useRouter()
   const { updateUser } = useUser()
-  const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
-  const [message, setMessage] = useState<string>('')
+  const { toast, handleToast } = useToast()
+  const { message, handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<LoginIn>({ username: '', password: '' })
 
-  const handleSignup = () => router.push('/account/signup')
+  const handleProfile = () => router.push('/setting/profile')
   const handleReset = () => router.push('/account/reset')
+  const handleSignup = () => router.push('/account/signup')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   const handleSubmit = async () => {
     const { username, password } = values
     if (!isRequiredCheck({ username, password })) return
-    const request = { username: encrypt(username), password: encrypt(password) }
     handleLoading(true)
+    const request = { username: encrypt(username), password: encrypt(password) }
     const ret = await postLogin(request)
     handleLoading(false)
     if (ret.isErr()) {
       const message = ret.error.message
-      if (message) {
-        setMessage(message)
-      } else {
-        handleToast(FetchError.Error, true)
-      }
+      handleError(FetchError.Error, message)
       return
     }
     await updateUser()
-    router.push('/setting/profile')
+    handleProfile()
   }
 
   return (

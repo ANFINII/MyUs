@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { ChannelIn, Channel } from 'types/internal/channel'
 import { Option } from 'types/internal/other'
@@ -6,6 +6,7 @@ import { MypageIn, MypageOut } from 'types/internal/user'
 import { putChannel } from 'api/internal/channel'
 import { putSettingMypage } from 'api/internal/setting'
 import { FetchError } from 'utils/constants/enum'
+import { useApiError } from 'components/hooks/useApiError'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -32,9 +33,9 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const { mypage, channels } = props
 
   const router = useRouter()
-  const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()
-  const [message, setMessage] = useState<string>('')
+  const { toast, handleToast } = useToast()
+  const { message, handleError } = useApiError({ handleToast })
   const [bannerFile, setBannerFile] = useState<File>()
   const [mypageValues, setMypageValues] = useState<MypageOut>(mypage)
   const [avatarFile, setAvatarFile] = useState<File>()
@@ -73,11 +74,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
     const ret = await putSettingMypage(request)
     if (ret.isErr()) {
       const message = ret.error.message
-      if (message) {
-        setMessage(message)
-      } else {
-        handleToast(FetchError.Put, true)
-      }
+      handleError(FetchError.Put, message)
       handleLoading(false)
       return
     }
@@ -86,11 +83,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
     const channelRet = await putChannel(channelUlid, channelRequest)
     if (channelRet.isErr()) {
       const message = channelRet.error.message
-      if (message) {
-        setMessage(message)
-      } else {
-        handleToast(FetchError.Put, true)
-      }
+      handleError(FetchError.Put, message)
       handleLoading(false)
       return
     }
