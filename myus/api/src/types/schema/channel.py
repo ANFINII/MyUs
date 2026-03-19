@@ -1,6 +1,11 @@
 from pydantic import BaseModel
 
 
+class ChannelIn(BaseModel):
+    name: str
+    description: str
+
+
 class ChannelOut(BaseModel):
     ulid: str
     owner_ulid: str

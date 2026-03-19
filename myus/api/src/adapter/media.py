@@ -23,7 +23,7 @@ from api.src.types.schema.message import ChatMessageOut
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.user import AuthorOut, MediaUserOut
 from api.src.usecase.auth import auth_check
-from api.src.usecase.channel import get_channel
+from api.src.usecase.channel import get_channel_data
 from api.src.usecase.media import create_video, create_music, create_comic, create_blog, create_picture, create_chat
 from api.src.usecase.media import get_home, get_videos, get_musics, get_comics, get_blogs, get_pictures, get_chats
 from api.src.usecase.media import get_video_detail, get_music_detail, get_comic_detail, get_blog_detail, get_picture_detail, get_chat_detail
@@ -71,7 +71,7 @@ class VideoAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel(input.channel_ulid)
+        channel = get_channel_data(input.channel_ulid)
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
@@ -133,7 +133,7 @@ class MusicAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel(input.channel_ulid)
+        channel = get_channel_data(input.channel_ulid)
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
@@ -195,7 +195,7 @@ class ComicAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel(input.channel_ulid)
+        channel = get_channel_data(input.channel_ulid)
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
@@ -256,7 +256,7 @@ class PictureAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel(input.channel_ulid)
+        channel = get_channel_data(input.channel_ulid)
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
@@ -316,7 +316,7 @@ class BlogAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel(input.channel_ulid)
+        channel = get_channel_data(input.channel_ulid)
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
@@ -377,7 +377,7 @@ class ChatAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel(input.channel_ulid)
+        channel = get_channel_data(input.channel_ulid)
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 

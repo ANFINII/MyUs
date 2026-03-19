@@ -10,7 +10,7 @@ from api.src.types.schema.notification import NotificationContentOut, Notificati
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
 from api.src.types.schema.userpage import UserPageMediaOut, UserPageOut
 from api.src.usecase.auth import auth_check
-from api.src.usecase.channel import get_channel, get_user_channels
+from api.src.usecase.channel import get_channel_data, get_user_channels
 from api.src.usecase.follow import get_followers, get_follows, upsert_follow
 from api.src.usecase.notification import get_content_object, get_notification
 from api.src.usecase.subscribe import upsert_subscribe
@@ -226,30 +226,6 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/channel", response={200: list[ChannelOut], 401: ErrorOut})
-    def get_channels(request: HttpRequest):
-        log.info("UserAPI get_channels")
-
-        user_id = auth_check(request)
-        if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
-
-        channels = get_user_channels(user_id)
-        data = [
-            ChannelOut(
-                ulid=str(c.ulid),
-                owner_ulid=c.owner_ulid,
-                avatar=create_url(c.avatar),
-                name=c.name,
-                description=c.description,
-                is_default=c.is_default,
-            )
-            for c in channels
-        ]
-
-        return 200, data
-
-    @staticmethod
     @router.get("/userpage/{ulid}", response={200: UserPageOut, 404: ErrorOut})
     def get_userpage(request: HttpRequest, ulid: str):
         log.info("UserAPI get_userpage", ulid=ulid)
@@ -298,7 +274,7 @@ class UserAPI:
 
         channel_id = 0
         if channel_ulid:
-            channel = get_channel(channel_ulid)
+            channel = get_channel_data(channel_ulid)
             if channel is None:
                 return 404, ErrorOut(message="チャンネルが見つかりません")
             channel_id = channel.id

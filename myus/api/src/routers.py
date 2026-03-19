@@ -3,7 +3,8 @@ from api.src.adapter.auth import AuthAPI
 from api.src.adapter.comment import CommentAPI
 from api.src.adapter.media import BlogAPI, ChatAPI, ComicAPI, HomeAPI, MusicAPI, PictureAPI, VideoAPI
 from api.src.adapter.message import MessageAPI
-from api.src.adapter.setting import SettingChannelAPI, SettingMyPageAPI, SettingNotificationAPI, SettingProfileAPI
+from api.src.adapter.channel import ChannelAPI
+from api.src.adapter.setting import SettingMyPageAPI, SettingNotificationAPI, SettingProfileAPI
 from api.src.adapter.user import UserAPI
 
 
@@ -14,9 +15,9 @@ api.add_router("/user", UserAPI().router, tags=["user"])
 
 api.add_router("/setting/profile", SettingProfileAPI().router, tags=["Setting"])
 api.add_router("/setting/mypage", SettingMyPageAPI().router, tags=["Setting"])
-api.add_router("/setting/channel", SettingChannelAPI().router, tags=["Setting"])
 api.add_router("/setting/notification", SettingNotificationAPI().router, tags=["Setting"])
 
+api.add_router("/channel", ChannelAPI().router, tags=["Channel"])
 api.add_router("/media/home", HomeAPI().router, tags=["Media Home"])
 api.add_router("/media/video", VideoAPI().router, tags=["Media Video"])
 api.add_router("/media/music", MusicAPI().router, tags=["Media Music"])
