@@ -3,13 +3,11 @@
   font-size: 15px;
   border: 1px solid rgb(0, 125, 0);
   border-radius: 5px;
-  border-collapse: collapse;
-  overflow-y: hidden;
+  border-spacing: 0;
+  overflow: hidden;
 
-  tr {
-    &:not(:first-child) {
-      border-top: 1px solid rgb(0, 125, 0);
-    }
+  tr:not(:first-child) td {
+    border-top: 1px solid rgb(0, 125, 0);
   }
 
   td {
