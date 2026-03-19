@@ -26,9 +26,16 @@ export default function Reset(): React.JSX.Element {
     if (!isRequiredCheck({ email })) return
     handleLoading(true)
     const ret = await postReset(email)
-    if (ret.isErr()) return handleToast(FetchError.Error, true)
-    const data = ret.value
-    if (data) setMessage(data.message)
+    if (ret.isErr()) {
+      const message = ret.error.message
+      if (message) {
+        setMessage(message)
+      } else {
+        handleToast(FetchError.Error, true)
+      }
+      handleLoading(false)
+      return
+    }
     handleLoading(false)
   }
 
