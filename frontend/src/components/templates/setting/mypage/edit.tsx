@@ -20,7 +20,7 @@ import Toggle from 'components/parts/Input/Toggle'
 import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
-import style from './MyPage.module.scss'
+import style from '../Setting.module.scss'
 
 interface Props {
   mypage: MypageOut
@@ -104,7 +104,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   return (
     <Main title="マイページ設定" type="table" toast={toast} button={button}>
       {message && (
-        <ul className="messages_profile">
+        <ul className={style.messages_profile}>
           <li>{message}</li>
         </ul>
       )}
@@ -113,14 +113,14 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
         <TableRow label="バナー画像">
           <InputImage
             id="banner"
-            className="account_image_edit"
+            className={style.account_image_edit}
             icon={
               bannerUrl ? (
-                <div className="mypage_image">
+                <div className={style.mypage_image}>
                   <ExImage src={bannerUrl} width="270" height="56" />
                 </div>
               ) : (
-                <div className="account_image_edit">
+                <div className={style.account_image_edit}>
                   <IconPicture size="56" />
                 </div>
               )
@@ -160,14 +160,14 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
         <TableRow label="アバター画像">
           <InputImage
             id="avatar"
-            className="account_image_edit"
+            className={style.account_image_edit}
             icon={
               avatarUrl ? (
-                <div className="account_image">
+                <div className={style.account_image}>
                   <ExImage src={avatarUrl} size="56" />
                 </div>
               ) : (
-                <div className="account_image_edit">
+                <div className={style.account_image_edit}>
                   <IconPerson size="56" type="square" />
                 </div>
               )

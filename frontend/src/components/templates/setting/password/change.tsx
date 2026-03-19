@@ -4,6 +4,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../Setting.module.scss'
 
 export default function PasswordChange(): React.JSX.Element {
   const router = useRouter()
@@ -11,9 +12,9 @@ export default function PasswordChange(): React.JSX.Element {
 
   return (
     <Main title="パスワード変更">
-      <article className="article_pass">
-        <form method="POST" action="" className="form_account">
-          <ul className="messages_password_change">
+      <article className={style.article_pass}>
+        <form method="POST" action="" className={style.form_account}>
+          <ul className={style.messages_password_change}>
             <li>{/* { form.old_password.errors } */}</li>
             <li>{/* { form.new_password2.errors } */}</li>
           </ul>

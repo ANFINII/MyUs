@@ -13,7 +13,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
 import LightBox from 'components/widgets/LightBox'
-import style from './MyPage.module.scss'
+import style from '../Setting.module.scss'
 
 interface Props {
   mypage: MypageOut
@@ -45,11 +45,11 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
       <Table>
         <TableRow label="バナー画像">
           {mypage.banner !== '' ? (
-            <label htmlFor="account_image" className="mypage_image">
+            <label htmlFor="account_image" className={style.mypage_image}>
               <LightBox width=" 270" height="56" src={mypage.banner} title={mypage.nickname} />
             </label>
           ) : (
-            <label htmlFor="account_image" className="account_image_edit">
+            <label htmlFor="account_image" className={style.account_image_edit}>
               <IconPicture size="56" />
             </label>
           )}
@@ -87,11 +87,11 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
           <>
             <TableRow label="アバター">
               {channel.avatar !== '' ? (
-                <label className="account_image">
+                <label className={style.account_image}>
                   <LightBox size="56" src={channel.avatar} title={channel.name} />
                 </label>
               ) : (
-                <label className="account_image_edit">
+                <label className={style.account_image_edit}>
                   <IconPerson size="56" type="square" />
                 </label>
               )}

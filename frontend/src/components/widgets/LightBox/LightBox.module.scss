@@ -23,6 +23,10 @@
       transition: all 0.5s ease-in-out;
       object-fit: contain;
       cursor: auto;
+
+      &:hover {
+        border-color: rgb(50, 50, 50);
+      }
     }
 
     .cross {

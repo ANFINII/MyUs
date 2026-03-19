@@ -4,6 +4,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../Setting.module.scss'
 
 export default function Withdrawal(): React.JSX.Element {
   const router = useRouter()
@@ -17,10 +18,10 @@ export default function Withdrawal(): React.JSX.Element {
 
   return (
     <Main title="退会処理">
-      <article className="article_pass">
-        <form method="POST" action="" className="form_account">
+      <article className={style.article_pass}>
+        <form method="POST" action="" className={style.form_account}>
           {messages && (
-            <ul className="messages_password_change">
+            <ul className={style.messages_password_change}>
               <li>{messages}</li>
             </ul>
           )}
