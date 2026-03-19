@@ -4,6 +4,7 @@ import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../Setting.module.scss'
 
 export default function WithdrawalConfirm(): React.JSX.Element {
   const router = useRouter()
@@ -11,8 +12,8 @@ export default function WithdrawalConfirm(): React.JSX.Element {
 
   return (
     <Main title="退会処理">
-      <article className="article_pass">
-        <form method="POST" action="" className="form_account">
+      <article className={style.article_pass}>
+        <form method="POST" action="" className={style.form_account}>
           <VStack gap="8">
             <p className="red">本当に退会しますか？</p>
             <Input type="password" name="password2" placeholder="パスワード" minLength={8} maxLength={16} required />

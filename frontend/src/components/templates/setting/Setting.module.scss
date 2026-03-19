@@ -1,0 +1,91 @@
+@mixin image_border() {
+  img {
+    border: 4px solid rgb(200, 200, 200);
+    border-radius: 5px;
+
+    &:hover {
+      border-color: rgb(100, 220, 150);
+    }
+  }
+}
+
+@mixin messages {
+  list-style: none;
+  font-size: 14px;
+  color: rgb(255, 0, 0);
+}
+
+.messages_profile {
+  grid-column: 1/-1;
+  grid-row: 2/3;
+  height: 20px;
+  padding: 0;
+  margin: -20px 0 0 0;
+  @include messages;
+}
+
+.mypage_image {
+  display: block;
+  width: 270px;
+  height: 56px;
+  @include image_border();
+}
+
+.account_image {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 15px;
+  @include image_border();
+}
+
+.account_image_edit {
+  width: 56px;
+  color: rgb(200, 200, 200);
+
+  &:hover {
+    color: rgb(100, 220, 150);
+    cursor: pointer;
+  }
+
+  input {
+    display: none;
+  }
+}
+
+.article_pass {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto 1fr;
+  grid-gap: 3px;
+  margin-top: 16px;
+}
+
+.form_account {
+  width: 100%;
+  max-width: 380px;
+  padding: 15px;
+  margin: auto;
+
+  .checkbox {
+    font-weight: 400;
+  }
+}
+
+.messages_password_change {
+  grid-column: 1/2;
+  grid-row: 2/3;
+  height: 0.8em;
+  padding: 0 0 50px 0;
+  @include messages;
+}
+
+.password_done {
+  padding: 50px 15px;
+}
+
+.channel {
+  width: 200px;
+  margin: 10px 0;
+  flex-shrink: 0;
+}

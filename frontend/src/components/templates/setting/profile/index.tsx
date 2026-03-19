@@ -9,6 +9,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
 import LightBox from 'components/widgets/LightBox'
+import style from '../Setting.module.scss'
 
 interface Props {
   profile: ProfileOut
@@ -33,11 +34,11 @@ export default function SettingProfile(props: Props): React.JSX.Element {
       <Table>
         <TableRow label="アバター画像">
           {profile.avatar !== '' ? (
-            <label className="account_image">
+            <label className={style.account_image}>
               <LightBox size="56" src={profile.avatar} title={profile.nickname} />
             </label>
           ) : (
-            <label className="account_image_edit">
+            <label className={style.account_image_edit}>
               <IconPerson size="56" type="square" />
             </label>
           )}

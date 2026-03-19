@@ -24,6 +24,7 @@ import Textarea from 'components/parts/Input/Textarea'
 import HStack from 'components/parts/Stack/Horizontal'
 import Table from 'components/parts/Table'
 import TableRow from 'components/parts/Table/Row'
+import style from '../Setting.module.scss'
 
 interface Props {
   profile: ProfileOut
@@ -92,7 +93,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   return (
     <Main title="アカウント設定" type="table" toast={toast} button={button}>
       {message && (
-        <ul className="messages_profile">
+        <ul className={style.messages_profile}>
           <li>{message}</li>
         </ul>
       )}
@@ -101,14 +102,14 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
         <TableRow label="アバター画像">
           <InputImage
             id="avatar"
-            className="account_image_edit"
+            className={style.account_image_edit}
             icon={
               avatarUrl ? (
-                <div className="account_image">
+                <div className={style.account_image}>
                   <ExImage src={avatarUrl} size="56" />
                 </div>
               ) : (
-                <div className="account_image_edit">
+                <div className={style.account_image_edit}>
                   <IconPerson size="56" type="square" />
                 </div>
               )
