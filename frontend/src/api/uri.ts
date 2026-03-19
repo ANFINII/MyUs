@@ -9,7 +9,6 @@ export const apiLogout = base + '/auth/logout'
 
 // User
 export const apiUser = base + '/user/me'
-export const apiChannel = base + '/user/channel'
 export const apiSearchTag = base + '/user/search_tag'
 export const apiFollower = base + '/user/follower'
 export const apiFollow = base + '/user/follow'
@@ -25,7 +24,10 @@ export const apiUserPageMedia = (ulid: string, channelUlid: string) => base + `/
 export const apiSettingProfile = base + '/setting/profile'
 export const apiSettingMypage = base + '/setting/mypage'
 export const apiSettingNotification = base + '/setting/notification'
-export const apiSettingChannel = (ulid: string) => base + `/setting/channel/${ulid}`
+
+// Channel
+export const apiChannels = base + '/channel'
+export const apiChannel = (ulid: string) => base + `/channel/${ulid}`
 
 // Media
 export const apiHome = base + '/home'
