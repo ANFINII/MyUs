@@ -11,8 +11,8 @@ export default function SideBarItem(props: Props): React.JSX.Element {
   const { label, icon, className, onClick } = props
 
   return (
-    <NavItem className={className}>
-      <div onClick={onClick}>
+    <NavItem className={className} onClick={onClick}>
+      <div>
         {icon}
         <p>{label}</p>
       </div>
