@@ -3,7 +3,7 @@ import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
 import { SearchParms } from 'types/internal/media'
-import { MessageOut } from 'types/internal/other'
+import { ErrorOut } from 'types/internal/other'
 import {
   Follow,
   FollowIn,
@@ -42,7 +42,7 @@ export const getSearchTag = async (req?: Req): Promise<ApiOut<SearchTagOut[]>> =
   return await apiOut(apiClient('json').get(apiSearchTag, cookieHeader(req)))
 }
 
-export const putSearchTag = async (tags: SearchTagIn[]): Promise<ApiOut<MessageOut>> => {
+export const putSearchTag = async (tags: SearchTagIn[]): Promise<ApiOut<ErrorOut>> => {
   return await apiOut(apiClient('json').put(apiSearchTag, camelSnake(tags)))
 }
 

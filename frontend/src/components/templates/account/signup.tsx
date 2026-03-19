@@ -49,11 +49,17 @@ export default function Signup(): React.JSX.Element {
     if (!isRequiredCheck({ email, username, nickname, lastName, firstName, password1, password2 })) return
     handleLoading(true)
     const ret = await postSignup(values)
-    if (ret.isErr()) return handleToast(FetchError.Post, true)
-    const data = ret.value
-    if (data) setMessage(data.message)
-    if (!data?.error) handleBack()
-    handleLoading(false)
+    if (ret.isErr()) {
+      const message = ret.error.message
+      if (message) {
+        setMessage(message)
+      } else {
+        handleToast(FetchError.Post, true)
+      }
+      handleLoading(false)
+      return
+    }
+    handleBack()
   }
 
   return (
