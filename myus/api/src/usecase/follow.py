@@ -3,9 +3,10 @@ from django.db import transaction
 from api.src.domain.interface.follow.data import FollowData
 from api.src.domain.interface.follow.interface import FilterOption, FollowInterface, SortOption
 from api.src.domain.interface.user.data import UserAllData
-from api.src.domain.interface.user.interface import FilterOption as UserFilterOption, UserInterface
+from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
 from api.src.types.data.follow import FollowOutData, FollowUserData
+from api.src.usecase.user import get_user_data
 from api.utils.functions.index import create_url
 
 
@@ -50,11 +51,9 @@ def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserData]
 def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowOutData | None:
     user_repo = injector.get(UserInterface)
     follow_repo = injector.get(FollowInterface)
-    user_ids = user_repo.get_ids(UserFilterOption(ulid=ulid))
-    if len(user_ids) == 0:
+    following = get_user_data(ulid=ulid)
+    if following is None:
         return None
-
-    following = user_repo.bulk_get(user_ids)[0]
     follower_id = follower.user.id
     following_id = following.user.id
 
