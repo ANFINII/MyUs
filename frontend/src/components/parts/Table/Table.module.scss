@@ -1,12 +1,9 @@
 .table {
-  display: block;
-  grid-column: 1/-1;
-  grid-row: 3/4;
-  border-spacing: 0px;
-  border-collapse: collapse;
+  width: 100%;
   font-size: 15px;
   border: 1px solid rgb(0, 125, 0);
   border-radius: 5px;
+  border-collapse: collapse;
   overflow-y: hidden;
 
   tr {
@@ -17,28 +14,19 @@
 
   td {
     height: 39px;
-    width: 100%;
+  }
+
+  .label {
+    width: 125px;
     min-width: 125px;
-    vertical-align: middle;
+    padding: 8px;
+    vertical-align: top;
+    background: rgb(190, 250, 210);
+    border-right: 1px solid rgb(0, 125, 0);
+  }
 
-    &.td_color {
-      width: 125px;
-      padding: 8px;
-      align-content: flex-start;
-      background: rgb(190, 250, 210);
-    }
-
-    &.td_indent {
-      padding: 0 0 0 8px;
-      white-space: nowrap;
-    }
-
-    &.td_no {
-      padding: 1px;
-    }
-
-    &:not(:last-child) {
-      border-right: 1px solid rgb(0, 125, 0);
-    }
+  .indent {
+    padding-left: 8px;
+    white-space: nowrap;
   }
 }
