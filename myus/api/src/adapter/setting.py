@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.types.schema.common import ErrorOut, MessageOut
+from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.user import get_user_data, profile_check, update_mypage, update_notification, update_profile
@@ -53,22 +53,22 @@ class SettingProfileAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: MessageOut, 400: MessageOut, 401: ErrorOut})
+    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
     def put(request: HttpRequest, input: SettingProfileIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("SettingProfileAPI put", input=input)
 
         validation = profile_check(input)
         if validation:
-            return 400, MessageOut(error=True, message=validation)
+            return 400, ErrorOut(message=validation)
 
         user_id = auth_check(request)
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         if not update_profile(user_id, input, avatar_file):
-            return 400, MessageOut(error=True, message="保存に失敗しました!")
+            return 400, ErrorOut(message="保存に失敗しました!")
 
-        return 204, MessageOut(error=False, message="保存しました!")
+        return 204, ErrorOut(message="保存しました!")
 
 
 class SettingMyPageAPI:
@@ -110,7 +110,7 @@ class SettingMyPageAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: MessageOut, 400: MessageOut, 401: ErrorOut})
+    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
     def put(request: HttpRequest, input: SettingMyPageIn = Form(...), banner_file: UploadedFile = File(None)):
         log.info("SettingMyPageAPI put", input=input)
 
@@ -119,12 +119,12 @@ class SettingMyPageAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         if has_email(input.email):
-            return 400, MessageOut(error=True, message="メールアドレスの形式が違います!")
+            return 400, ErrorOut(message="メールアドレスの形式が違います!")
 
         if not update_mypage(user_id, input, banner_file):
-            return 400, MessageOut(error=True, message="保存に失敗しました!")
+            return 400, ErrorOut(message="保存に失敗しました!")
 
-        return 204, MessageOut(error=False, message="保存しました!")
+        return 204, ErrorOut(message="保存しました!")
 
 
 
@@ -165,7 +165,7 @@ class SettingNotificationAPI:
         return 200, data
 
     @staticmethod
-    @router.put("", response={204: MessageOut, 400: MessageOut, 401: ErrorOut})
+    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
     def put(request: HttpRequest, input: SettingNotificationIn):
         log.info("SettingNotificationAPI put", input=input)
 
@@ -174,6 +174,6 @@ class SettingNotificationAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         if not update_notification(user_id, input):
-            return 400, MessageOut(error=True, message="保存に失敗しました!")
+            return 400, ErrorOut(message="保存に失敗しました!")
 
-        return 204, MessageOut(error=False, message="保存しました!")
+        return 204, ErrorOut(message="保存しました!")

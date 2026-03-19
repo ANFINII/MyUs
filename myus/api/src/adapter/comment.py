@@ -2,7 +2,7 @@ from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
 from api.src.types.schema.comment import CommentCreateIn, CommentListIn, CommentOut, CommentUpdateIn, ReplyOut
-from api.src.types.schema.common import ErrorOut, MessageOut
+from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.comment import create_comment, delete_comment, get_comments, update_comment
@@ -61,7 +61,7 @@ class CommentAPI:
         return 200, data
 
     @staticmethod
-    @router.post("", response={201: CommentOut, 400: MessageOut, 401: ErrorOut, 500: MessageOut})
+    @router.post("", response={201: CommentOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: CommentCreateIn):
         log.info("CommentAPI post", input=input)
 
@@ -72,7 +72,7 @@ class CommentAPI:
         try:
             comment = create_comment(user_id, input)
             if comment is None:
-                return 400, MessageOut(error=True, message="コメントの作成に失敗しました")
+                return 400, ErrorOut(message="コメントの作成に失敗しました")
 
             data = CommentOut(
                 ulid=comment.ulid,
@@ -93,10 +93,10 @@ class CommentAPI:
             return 201, data
         except Exception as e:
             log.error("CommentAPI post error", exc=e)
-            return 500, MessageOut(error=True, message="コメントの作成に失敗しました")
+            return 500, ErrorOut(message="コメントの作成に失敗しました")
 
     @staticmethod
-    @router.put("/{comment_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 500: MessageOut})
+    @router.put("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, comment_ulid: str, input: CommentUpdateIn):
         log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
 
@@ -105,13 +105,13 @@ class CommentAPI:
 
         try:
             update_comment(comment_ulid, input.text)
-            return 200, MessageOut(error=False, message="コメントを更新しました")
+            return 200, ErrorOut(message="コメントを更新しました")
         except Exception as e:
             log.error("CommentAPI put error", exc=e)
-            return 500, MessageOut(error=True, message="コメントの更新に失敗しました")
+            return 500, ErrorOut(message="コメントの更新に失敗しました")
 
     @staticmethod
-    @router.delete("/{comment_ulid}", response={200: MessageOut, 400: MessageOut, 401: ErrorOut, 500: MessageOut})
+    @router.delete("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, comment_ulid: str):
         log.info("CommentAPI delete", comment_ulid=comment_ulid)
 
@@ -120,7 +120,7 @@ class CommentAPI:
 
         try:
             delete_comment(comment_ulid)
-            return 200, MessageOut(error=False, message="コメントを削除しました")
+            return 200, ErrorOut(message="コメントを削除しました")
         except Exception as e:
             log.error("CommentAPI delete error", exc=e)
-            return 500, MessageOut(error=True, message="コメントの削除に失敗しました")
+            return 500, ErrorOut(message="コメントの削除に失敗しました")
