@@ -22,9 +22,9 @@ from api.utils.functions.media import get_media_repository, save_upload
 from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username
 
 
-def get_user_data(user_id: int) -> UserAllData | None:
+def get_user_data(user_id: int = 0, ulid: str = "") -> UserAllData | None:
     repository = injector.get(UserInterface)
-    ids = repository.get_ids(FilterOption(id=user_id))
+    ids = repository.get_ids(FilterOption(id=user_id, ulid=ulid))
     if len(ids) == 0:
         return None
 

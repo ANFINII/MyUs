@@ -1,23 +1,7 @@
 from api.src.domain.interface.follow.interface import FilterOption as FollowFilterOption, FollowInterface, SortOption as FollowSortOption
-from api.src.domain.interface.user.data import UserAllData
-from api.src.domain.interface.user.interface import FilterOption as UserFilterOption, UserInterface
 from api.src.injectors.container import injector
 from api.src.types.data.media import HomeData
 from api.src.usecase.media import get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats
-
-
-def get_userpage_user(ulid: str) -> UserAllData | None:
-    repository = injector.get(UserInterface)
-    ids = repository.get_ids(UserFilterOption(ulid=ulid))
-    if len(ids) == 0:
-        return None
-
-    users = repository.bulk_get(ids)
-    user = users[0]
-    if not user.user.is_active:
-        return None
-
-    return user
 
 
 def get_userpage_media(limit: int, search: str, owner_id: int, channel_id: int = 0) -> HomeData:

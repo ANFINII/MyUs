@@ -23,7 +23,7 @@ class SettingProfileAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        user_data = get_user_data(user_id)
+        user_data = get_user_data(user_id=user_id)
         if user_data is None:
             return 404, ErrorOut(message="Not Found")
 
@@ -85,7 +85,7 @@ class SettingMyPageAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        user_data = get_user_data(user_id)
+        user_data = get_user_data(user_id=user_id)
         if user_data is None:
             return 404, ErrorOut(message="Not Found")
 
@@ -143,7 +143,7 @@ class SettingNotificationAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        user_data = get_user_data(user_id)
+        user_data = get_user_data(user_id=user_id)
         if user_data is None:
             return 404, ErrorOut(message="Not Found")
 
