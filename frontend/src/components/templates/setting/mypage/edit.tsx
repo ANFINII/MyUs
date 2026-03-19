@@ -3,7 +3,8 @@ import { useRouter } from 'next/router'
 import { ChannelIn, Channel } from 'types/internal/channel'
 import { Option } from 'types/internal/other'
 import { MypageIn, MypageOut } from 'types/internal/user'
-import { putSettingChannel, putSettingMypage } from 'api/internal/setting'
+import { putChannel } from 'api/internal/channel'
+import { putSettingMypage } from 'api/internal/setting'
 import { FetchError } from 'utils/constants/enum'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useToast } from 'components/hooks/useToast'
@@ -82,7 +83,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
     }
 
     const channelRequest: ChannelIn = { name: channel.name, description: channel.description, avatarFile }
-    const channelRet = await putSettingChannel(channelUlid, channelRequest)
+    const channelRet = await putChannel(channelUlid, channelRequest)
     if (channelRet.isErr()) {
       const error = channelRet.error
       if (error.message) {
