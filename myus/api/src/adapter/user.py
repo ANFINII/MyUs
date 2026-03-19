@@ -15,7 +15,7 @@ from api.src.usecase.follow import get_followers, get_follows, upsert_follow
 from api.src.usecase.notification import get_content_object, get_notification
 from api.src.usecase.subscribe import upsert_subscribe
 from api.src.usecase.user import get_search_tags, get_user_data, like_comment, like_media, update_search_tags
-from api.src.usecase.userpage import get_userpage_user, get_userpage_media, is_following
+from api.src.usecase.userpage import get_userpage_media, is_following
 from api.utils.functions.index import create_url
 
 
@@ -33,7 +33,7 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        user_data = get_user_data(user_id)
+        user_data = get_user_data(user_id=user_id)
         if user_data is None:
             return 404, ErrorOut(message="Not Found")
 
@@ -132,7 +132,7 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        follower = get_user_data(user_id)
+        follower = get_user_data(user_id=user_id)
         if follower is None:
             return 400, ErrorOut(message="ユーザーが見つかりません!")
 
@@ -230,7 +230,7 @@ class UserAPI:
     def get_userpage(request: HttpRequest, ulid: str):
         log.info("UserAPI get_userpage", ulid=ulid)
 
-        user = get_userpage_user(ulid)
+        user = get_user_data(ulid=ulid)
         if user is None:
             return 404, ErrorOut(message="ユーザーが見つかりません")
 
@@ -268,7 +268,7 @@ class UserAPI:
     def get_userpage_media(request: HttpRequest, ulid: str, channel_ulid: str = ""):
         log.info("UserAPI get_userpage_media", ulid=ulid, channel_ulid=channel_ulid)
 
-        user = get_userpage_user(ulid)
+        user = get_user_data(ulid=ulid)
         if user is None:
             return 404, ErrorOut(message="ユーザーが見つかりません")
 
