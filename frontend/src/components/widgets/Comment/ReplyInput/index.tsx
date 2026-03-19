@@ -21,7 +21,7 @@ export default function ReplyInput(props: Props): React.JSX.Element {
   return (
     <>
       {open && (
-        <HStack gap="4">
+        <HStack gap="4" align="start">
           <AvatarLink size="s" src={user.avatar} ulid={user.ulid} title={user.nickname} className="m_2" />
           <VStack gap="4" className="w_full">
             <TextareaLine name="text" placeholder="コメント入力" value={value} onChange={onChange} onSubmit={onSubmit} />
