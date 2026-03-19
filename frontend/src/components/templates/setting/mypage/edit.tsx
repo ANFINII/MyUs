@@ -69,16 +69,14 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
     handleLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: MypageIn = { ...mypageValues, bannerFile }
-    const mypageRet = await putSettingMypage(request)
-    if (mypageRet.isErr()) {
-      handleLoading(false)
-      handleToast(FetchError.Put, true)
-      return
-    }
-
-    const mypageData = mypageRet.value
-    if (mypageData.error) {
-      setMessage(mypageData.message)
+    const ret = await putSettingMypage(request)
+    if (ret.isErr()) {
+      const error = ret.error
+      if (error.message) {
+        setMessage(error.message)
+      } else {
+        handleToast(FetchError.Put, true)
+      }
       handleLoading(false)
       return
     }
@@ -86,12 +84,16 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
     const channelRequest: ChannelIn = { name: channel.name, description: channel.description, avatarFile }
     const channelRet = await putSettingChannel(channelUlid, channelRequest)
     if (channelRet.isErr()) {
+      const error = channelRet.error
+      if (error.message) {
+        setMessage(error.message)
+      } else {
+        handleToast(FetchError.Put, true)
+      }
       handleLoading(false)
-      handleToast(FetchError.Put, true)
       return
     }
     handleBack()
-    handleLoading(false)
   }
 
   const button = (
