@@ -30,9 +30,9 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
 
   const router = useRouter()
-  const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
+  const { toast, handleToast } = useToast()
   const [values, setValues] = useState<BlogIn>({ channelUlid, title: '', content: '', richtext: '', delta: '' })
 
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })

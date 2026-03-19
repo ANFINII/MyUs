@@ -18,8 +18,8 @@ interface Props {
 export default function SettingNotification(props: Props): React.JSX.Element {
   const { userNotification } = props
 
-  const { toast, handleToast } = useToast()
   const { isLoading, handleLoading } = useIsLoading()
+  const { toast, handleToast } = useToast()
   const [values, setValues] = useState<UserNotification>(userNotification)
 
   const handleToggle = (key: keyof UserNotification) => setValues((prev) => ({ ...prev, [key]: !prev[key] }))
