@@ -2,8 +2,7 @@ export interface AnyObject {
   [key: string]: any
 }
 
-export interface MessageOut {
-  error: boolean
+export interface ErrorOut {
   message: string
 }
 

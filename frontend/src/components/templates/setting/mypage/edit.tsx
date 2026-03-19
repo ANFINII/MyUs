@@ -72,9 +72,9 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
     const request: MypageIn = { ...mypageValues, bannerFile }
     const ret = await putSettingMypage(request)
     if (ret.isErr()) {
-      const error = ret.error
-      if (error.message) {
-        setMessage(error.message)
+      const message = ret.error.message
+      if (message) {
+        setMessage(message)
       } else {
         handleToast(FetchError.Put, true)
       }
@@ -85,9 +85,9 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
     const channelRequest: ChannelIn = { name: channel.name, description: channel.description, avatarFile }
     const channelRet = await putChannel(channelUlid, channelRequest)
     if (channelRet.isErr()) {
-      const error = channelRet.error
-      if (error.message) {
-        setMessage(error.message)
+      const message = channelRet.error.message
+      if (message) {
+        setMessage(message)
       } else {
         handleToast(FetchError.Put, true)
       }

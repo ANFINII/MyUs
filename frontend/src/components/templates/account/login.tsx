@@ -36,13 +36,17 @@ export default function Login(): React.JSX.Element {
     handleLoading(true)
     const ret = await postLogin(request)
     handleLoading(false)
-    if (ret.isErr()) return handleToast(FetchError.Error, true)
-    const data = ret.value
-    if (data) setMessage(data.message)
-    if (!data?.error) {
-      await updateUser()
-      router.push('/setting/profile')
+    if (ret.isErr()) {
+      const message = ret.error.message
+      if (message) {
+        setMessage(message)
+      } else {
+        handleToast(FetchError.Error, true)
+      }
+      return
     }
+    await updateUser()
+    router.push('/setting/profile')
   }
 
   return (
