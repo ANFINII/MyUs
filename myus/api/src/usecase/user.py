@@ -24,11 +24,7 @@ def get_user_data(user_id: int = 0, ulid: str = "") -> UserAllData | None:
         return None
 
     users = repository.bulk_get(ids)
-    user = users[0]
-    if not user.user.is_active:
-        return None
-
-    return user
+    return users[0]
 
 
 def save_user_data(data: UserAllData) -> bool:
