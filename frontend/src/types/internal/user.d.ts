@@ -146,6 +146,7 @@ export interface SearchTagOut {
 
 export interface ContentObject {
   id: number
+  ulid: string
   title: string
   text: string
   read: number
