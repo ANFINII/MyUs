@@ -83,7 +83,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
           return (
             <NavItem key={id}>
               <div className={style.notice_item}>
-                <AvatarLink src={avatar} ulid={ulid} title={nickname} />
+                <AvatarLink src={avatar} ulid={ulid} title={nickname} size="s" />
                 {!isConfirmed && <IconCircle size="6" className={style.circle} />}
                 <div className={style.anker} onClick={handleClick(typeName, notification)}>
                   {otherObjs.includes(typeName) && (
