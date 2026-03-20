@@ -74,12 +74,14 @@
   }
 
   a {
+    align-self: center;
     color: rgb(33, 37, 41);
     text-decoration: none;
   }
 
   .circle {
-    margin: 0;
+    margin-top: 5px;
+    margin-left: -5px;
     fill: rgb(255, 100, 100);
   }
 
@@ -100,12 +102,14 @@
     display: -webkit-box;
     grid-column: 3/5;
     grid-row: 1/2;
+    align-self: center;
     padding: 1px 0;
     font-size: 12px;
     overflow: hidden;
     word-break: break-all;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    cursor: pointer;
   }
 
   &:hover .content {
