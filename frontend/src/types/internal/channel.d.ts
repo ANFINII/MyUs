@@ -5,6 +5,7 @@ export interface Channel {
   name: string
   isDefault: boolean
   description: string
+  count: number
 }
 
 export interface ChannelIn {

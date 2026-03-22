@@ -145,7 +145,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
         <TableRow label="タグID">
           <Input name="tagManagerId" value={mypageValues.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleMypageInput} />
         </TableRow>
-        <TableRow label="概要">
+        <TableRow label="内容">
           <Textarea name="content" defaultValue={mypageValues.content} onChange={handleMypageText} />
         </TableRow>
       </Table>
@@ -174,7 +174,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
         <TableRow label="チャンネル名">
           <Input name="name" value={channel.name} maxLength={50} onChange={handleChannelInput} />
         </TableRow>
-        <TableRow label="概要">
+        <TableRow label="説明">
           <Textarea name="description" defaultValue={channel.description} onChange={handleChannelText} />
         </TableRow>
       </Table>
