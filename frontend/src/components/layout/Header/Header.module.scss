@@ -93,6 +93,14 @@
     justify-content: center;
   }
 
+  .account {
+    border-radius: 50%;
+
+    &.active {
+      outline: 1px solid rgb(255, 220, 0);
+    }
+  }
+
   .bell {
     &.active {
       position: relative;

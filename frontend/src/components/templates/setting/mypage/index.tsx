@@ -75,7 +75,7 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
         <TableRow isIndent label="タグID">
           GTM{mypage.tagManagerId && '-' + mypage.tagManagerId}
         </TableRow>
-        <TableRow isIndent label="概要">
+        <TableRow isIndent label="内容">
           <div className="pv_4 ws_wrap">{mypage.content}</div>
         </TableRow>
       </Table>
@@ -99,7 +99,7 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
             <TableRow isIndent label="チャンネル名">
               {channel.name}
             </TableRow>
-            <TableRow isIndent label="概要">
+            <TableRow isIndent label="説明">
               <div className="pv_4 ws_wrap">{channel.description}</div>
             </TableRow>
           </>

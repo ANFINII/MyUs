@@ -33,7 +33,7 @@ interface Props {
 
 export default function Userpage(props: Props): React.JSX.Element {
   const { ulid, userPage, media } = props
-  const { avatar, banner, nickname, email, dateJoined, channels } = userPage
+  const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
 
   const { user } = useUser()
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -107,11 +107,28 @@ export default function Userpage(props: Props): React.JSX.Element {
 
       {selectedTab === TabKey.Info && (
         <div className={style.information}>
-          <h1>チャンネル情報</h1>
-          <p className={style.info_label}>概要</p>
-          <p className={style.info_content}>{selectedChannel?.description}</p>
-          <p>メール：{email}</p>
-          <p>登録日：{formattedDate}</p>
+          <section className={style.section}>
+            <h2>オーナー情報</h2>
+            <p className={style.info_item}>メール：{email}</p>
+            <p className={style.info_item}>登録日：{formattedDate}</p>
+            <p className={style.info_label}>内容</p>
+            <p className={style.info_content}>{content}</p>
+          </section>
+
+          <section className={style.section}>
+            <h2>チャンネル情報</h2>
+            {selectedChannel && (
+              <div className={style.channel_info}>
+                <ExImage src={selectedChannel.avatar} title={selectedChannel.name} className={style.channel_avatar} />
+                <div className={style.channel_detail}>
+                  <span className={style.channel_name}>{selectedChannel.name}</span>
+                  <span className={style.channel_count}>登録者数 {selectedChannel.count}</span>
+                </div>
+              </div>
+            )}
+            <p className={style.info_label}>説明</p>
+            <p className={style.info_content}>{selectedChannel?.description}</p>
+          </section>
         </div>
       )}
 
