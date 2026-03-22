@@ -31,6 +31,7 @@ class ChannelAPI:
                 name=c.name,
                 description=c.description,
                 is_default=c.is_default,
+                count=c.count,
             )
             for c in channels
         ]
