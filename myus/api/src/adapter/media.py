@@ -603,6 +603,7 @@ def convert_channel(obj: ChannelData) -> ChannelOut:
         name=obj.name,
         is_default=obj.is_default,
         description=obj.description,
+        count=obj.count,
     )
     return data
 

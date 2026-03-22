@@ -13,3 +13,4 @@ class ChannelOut(BaseModel):
     name: str
     is_default: bool
     description: str
+    count: int
