@@ -1,11 +1,17 @@
+from typing import Any
+
 from django.db.models import Q
 from django.db.models.query import QuerySet
+from api.db.models.comment import Comment
+from api.db.models.media import Video, Music, Comic, Picture, Blog, Chat
+from api.db.models.message import Message
 from api.db.models.notification import Notification
+from api.db.models.users import Follow
 from api.src.domain.entity.notification._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
-from api.utils.enum.index import NotificationTypeNo
+from api.utils.enum.index import NotificationObjectType, NotificationTypeNo
 
 
 NOTIFICATION_FIELDS = ["user_from_id", "user_to_id", "type_no", "type_name", "object_id", "object_type"]
@@ -39,7 +45,34 @@ class NotificationRepository(NotificationInterface):
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+
+        groups: dict[str, list[int]] = {}
+        for n in sorted_objs:
+            groups.setdefault(n.object_type, []).append(n.object_id)
+
+        content_map: dict[str, Any] = {}
+        for object_type, obj_ids in groups.items():
+            match object_type:
+                case NotificationObjectType.VIDEO:
+                    content_map.update({f"{object_type}:{o.id}": o for o in Video.objects.filter(id__in=obj_ids)})
+                case NotificationObjectType.MUSIC:
+                    content_map.update({f"{object_type}:{o.id}": o for o in Music.objects.filter(id__in=obj_ids)})
+                case NotificationObjectType.COMIC:
+                    content_map.update({f"{object_type}:{o.id}": o for o in Comic.objects.filter(id__in=obj_ids)})
+                case NotificationObjectType.PICTURE:
+                    content_map.update({f"{object_type}:{o.id}": o for o in Picture.objects.filter(id__in=obj_ids)})
+                case NotificationObjectType.BLOG:
+                    content_map.update({f"{object_type}:{o.id}": o for o in Blog.objects.filter(id__in=obj_ids)})
+                case NotificationObjectType.CHAT:
+                    content_map.update({f"{object_type}:{o.id}": o for o in Chat.objects.filter(id__in=obj_ids)})
+                case NotificationObjectType.FOLLOW:
+                    content_map.update({f"{object_type}:{o.id}": o for o in Follow.objects.filter(id__in=obj_ids)})
+                case NotificationObjectType.COMMENT:
+                    content_map.update({f"{object_type}:{o.id}": o for o in Comment.objects.filter(id__in=obj_ids)})
+                case NotificationObjectType.MESSAGE:
+                    content_map.update({f"{object_type}:{o.id}": o for o in Message.objects.filter(id__in=obj_ids)})
+
+        return [convert_data(obj, content_map.get(f"{obj.object_type}:{obj.object_id}")) for obj in sorted_objs]
 
     def bulk_save(self, objs: list[NotificationData]) -> list[int]:
         if len(objs) == 0:

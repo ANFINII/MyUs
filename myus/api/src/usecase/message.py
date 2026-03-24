@@ -5,7 +5,7 @@ from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
 from api.src.domain.interface.message.data import MessageData as MessageDomainData
 from api.src.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
-from api.src.domain.interface.notification.data import NotificationData
+from api.src.domain.interface.notification.data import NotificationContentData, NotificationData
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.injectors.container import injector
 from api.src.types.data.message import MessageData, MessageReplyData
@@ -119,6 +119,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
                 type_name=NotificationType.REPLY,
                 object_id=message.id,
                 object_type=NotificationObjectType.MESSAGE,
+                content=NotificationContentData(id=0, ulid="", title="", text="", read=0),
             )
             notification_repo.bulk_save([notification])
 

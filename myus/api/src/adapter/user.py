@@ -12,7 +12,7 @@ from api.src.types.schema.userpage import UserPageMediaOut, UserPageOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import get_channel_data, get_user_channels
 from api.src.usecase.follow import get_followers, get_follows, upsert_follow
-from api.src.usecase.notification import get_content_object, get_notification
+from api.src.usecase.notification import get_notification
 from api.src.usecase.subscribe import upsert_subscribe
 from api.src.usecase.search_tag import get_search_tag_data, update_search_tags
 from api.src.usecase.user import get_user_data, like_comment, like_media
@@ -203,24 +203,32 @@ class UserAPI:
 
         notification = get_notification(user_id)
         data = NotificationOut(
-            count=notification["count"],
+            count=notification.count,
             datas=[
                 NotificationItemOut(
-                    id=obj.id,
+                    id=item.id,
                     user_from=NotificationUserOut(
-                        avatar=create_url(obj.user_from.avatar),
-                        nickname=obj.user_from.nickname,
+                        avatar=item.user_from.avatar,
+                        ulid=item.user_from.ulid,
+                        nickname=item.user_from.nickname,
                     ),
                     user_to=NotificationUserOut(
-                        avatar=create_url(obj.user_to.avatar) if obj.user_to else "",
-                        nickname=obj.user_to.nickname if obj.user_to else "",
+                        avatar=item.user_to.avatar if item.user_to else "",
+                        ulid=item.user_to.ulid if item.user_to else "",
+                        nickname=item.user_to.nickname if item.user_to else "",
                     ),
-                    type_no=obj.type_no,
-                    type_name=obj.type_name,
-                    content_object=NotificationContentOut(**get_content_object(obj)),
-                    is_confirmed=obj.is_confirmed,
+                    type_no=item.type_no,
+                    type_name=item.type_name,
+                    content_object=NotificationContentOut(
+                        id=item.content_object.id,
+                        ulid=item.content_object.ulid,
+                        title=item.content_object.title,
+                        text=item.content_object.text,
+                        read=item.content_object.read,
+                    ),
+                    is_confirmed=item.is_confirmed,
                 )
-                for obj in notification["datas"]
+                for item in notification.datas
             ],
         )
 
