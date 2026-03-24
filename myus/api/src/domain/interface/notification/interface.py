@@ -11,9 +11,12 @@ class SortType(Enum):
 
 @dataclass(frozen=True, slots=True)
 class FilterOption:
+    ulid: str = ""
     type_no: NotificationTypeNo | None = None
     object_id: int = 0
     user_to_id: int = 0
+    confirmed_user_id: int = 0
+    exclude_user_id: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -37,4 +40,12 @@ class NotificationInterface(ABC):
 
     @abstractmethod
     def delete(self, type_no: NotificationTypeNo, object_id: int) -> None:
+        ...
+
+    @abstractmethod
+    def confirm(self, ulid: str, user_id: int) -> None:
+        ...
+
+    @abstractmethod
+    def delete_by_user(self, ulid: str, user_id: int) -> None:
         ...

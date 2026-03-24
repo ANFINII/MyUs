@@ -113,6 +113,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
             notification_repo = injector.get(NotificationInterface)
             notification = NotificationData(
                 id=0,
+                ulid="",
                 user_from_id=user_id,
                 user_to_id=parent_messages[0].author_id,
                 type_no=NotificationTypeNo.REPLY,

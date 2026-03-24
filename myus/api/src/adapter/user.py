@@ -6,13 +6,13 @@ from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
 from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
-from api.src.types.schema.notification import NotificationContentOut, NotificationItemOut, NotificationOut, NotificationUserOut
+from api.src.types.schema.notification import NotificationContentOut, NotificationIn, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
 from api.src.types.schema.userpage import UserPageMediaOut, UserPageOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import get_channel_data, get_user_channels
 from api.src.usecase.follow import get_followers, get_follows, upsert_follow
-from api.src.usecase.notification import get_notification
+from api.src.usecase.notification import get_notification, notification_confirm, notification_delete
 from api.src.usecase.subscribe import upsert_subscribe
 from api.src.usecase.search_tag import get_search_tag_data, update_search_tags
 from api.src.usecase.user import get_user_data, like_comment, like_media
@@ -206,7 +206,7 @@ class UserAPI:
             count=notification.count,
             datas=[
                 NotificationItemOut(
-                    id=item.id,
+                    ulid=item.ulid,
                     user_from=NotificationUserOut(
                         avatar=item.user_from.avatar,
                         ulid=item.user_from.ulid,
@@ -233,6 +233,30 @@ class UserAPI:
         )
 
         return 200, data
+
+    @staticmethod
+    @router.post("/notification/confirmed", response={200: ErrorOut, 401: ErrorOut})
+    def post_notification_confirmed(request: HttpRequest, input: NotificationIn):
+        log.info("UserAPI post_notification_confirmed", ulid=input.ulid)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        notification_confirm(user_id, input.ulid)
+        return 200, ErrorOut(message="OK")
+
+    @staticmethod
+    @router.post("/notification/deleted", response={200: ErrorOut, 401: ErrorOut})
+    def post_notification_deleted(request: HttpRequest, input: NotificationIn):
+        log.info("UserAPI post_notification_deleted", ulid=input.ulid)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        notification_delete(user_id, input.ulid)
+        return 200, ErrorOut(message="OK")
 
     @staticmethod
     @router.get("/userpage/{ulid}", response={200: UserPageOut, 404: ErrorOut})

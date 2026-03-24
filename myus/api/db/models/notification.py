@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django_ulid.models import ulid
 from api.db.models.user import User
 from api.utils.constant import notification_type_model
 
@@ -8,6 +9,7 @@ from api.utils.constant import notification_type_model
 class Notification(models.Model):
     """Notification"""
     id          = models.BigAutoField(primary_key=True)
+    ulid        = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     user_from   = models.ForeignKey(User, related_name="user_from", on_delete=models.CASCADE)
     user_to     = models.ForeignKey(User, related_name="user_to", on_delete=models.CASCADE, null=True)
     type_no     = models.IntegerField()

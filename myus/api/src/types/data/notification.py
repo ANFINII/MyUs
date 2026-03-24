@@ -11,7 +11,7 @@ class NotificationUserData:
 
 @dataclass(frozen=True, slots=True)
 class NotificationItemData:
-    id: int
+    ulid: str
     user_from: NotificationUserData
     user_to: NotificationUserData | None
     type_no: int

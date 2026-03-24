@@ -1,6 +1,10 @@
 from pydantic import BaseModel
 
 
+class NotificationIn(BaseModel):
+    ulid: str
+
+
 class NotificationUserOut(BaseModel):
     avatar: str
     ulid: str
@@ -16,7 +20,7 @@ class NotificationContentOut(BaseModel):
 
 
 class NotificationItemOut(BaseModel):
-    id: int
+    ulid: str
     user_from: NotificationUserOut
     user_to: NotificationUserOut
     type_no: int

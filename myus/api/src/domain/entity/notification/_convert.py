@@ -1,16 +1,18 @@
 from typing import Any
 
 from django.utils.html import strip_tags
+from django_ulid.models import ulid
 
 from api.db.models.notification import Notification
 from api.src.domain.interface.notification.data import NotificationContentData, NotificationData
 
 
-def convert_data(obj: Notification, content_obj: Any | None = None) -> NotificationData:
+def convert_data(obj: Notification, content_obj: Any | None) -> NotificationData:
     content = get_content(content_obj)
 
     return NotificationData(
         id=obj.id,
+        ulid=str(obj.ulid),
         user_from_id=obj.user_from_id,
         user_to_id=obj.user_to_id or 0,
         type_no=obj.type_no,
@@ -37,6 +39,7 @@ def get_content(obj: Any | None) -> NotificationContentData:
 def marshal_data(data: NotificationData) -> Notification:
     return Notification(
         id=data.id if data.id != 0 else None,
+        ulid=data.ulid if data.ulid else ulid.new(),
         user_from_id=data.user_from_id,
         user_to_id=data.user_to_id,
         type_no=data.type_no,
