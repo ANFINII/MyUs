@@ -64,7 +64,6 @@
   display: flex;
   align-items: center;
   height: 48px;
-  padding: 0 0 0 11px;
 
   &:hover {
     background: rgb(255, 230, 200);
@@ -75,11 +74,20 @@
     text-decoration: none;
   }
 
-  .circle {
-    align-self: flex-start;
-    margin-top: 4px;
-    margin-left: -2px;
-    fill: rgb(255, 100, 100);
+  .avatar {
+    display: flex;
+    align-items: flex-start;
+    margin: 0 10px;
+
+    .circle {
+      margin: 0;
+      fill: rgb(255, 100, 100);
+    }
+
+    .hidden {
+      margin: 0;
+      visibility: hidden;
+    }
   }
 
   .anker {
