@@ -153,7 +153,7 @@ export interface ContentObject {
 }
 
 export interface Notification {
-  id: number
+  ulid: string
   userFrom: NotificationUser
   userTo: NotificationUser
   typeNo: number

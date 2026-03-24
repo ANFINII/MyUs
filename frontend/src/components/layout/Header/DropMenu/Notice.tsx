@@ -63,14 +63,11 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   }
 
   const handleClick = (typeName: NotificationType, notification: Notification) => () => {
-    const { id, contentObject, userFrom } = notification
-    postNotificationConfirmed(id)
+    const { ulid, contentObject, userFrom } = notification
+    postNotificationConfirmed(ulid)
     setNotifications((prev) => {
       if (prev === undefined) return prev
-      return {
-        ...prev,
-        datas: prev.datas.map((n) => (n.id === id ? { ...n, isConfirmed: true } : n)),
-      }
+      return { ...prev, datas: prev.datas.map((n) => (n.ulid === ulid ? { ...n, isConfirmed: true } : n)) }
     })
     if (typeName === NotificationType.Video) handleRouter(`/video/detail/${contentObject.id}`)
     if (typeName === NotificationType.Music) handleRouter(`/music/detail/${contentObject.id}`)
@@ -81,12 +78,12 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     if (mediaObjs.includes(typeName)) handleRouter(`/userpage/${userFrom.ulid}`)
   }
 
-  const handleDelete = (notificationId: number) => (e: React.MouseEvent) => {
+  const handleDelete = (ulid: string) => (e: React.MouseEvent) => {
     e.stopPropagation()
-    postNotificationDeleted(notificationId)
+    postNotificationDeleted(ulid)
     setNotifications((prev) => {
       if (prev === undefined) return prev
-      const datas = prev.datas.filter((n) => n.id !== notificationId)
+      const datas = prev.datas.filter((n) => n.ulid !== ulid)
       return { count: datas.length, datas }
     })
   }
@@ -96,14 +93,14 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
       <ul>
         <MenuItem label="通知設定" icon={<IconBell size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/notification')} />
         {notifications?.datas?.map((notification) => {
-          const { id, typeName, userFrom, contentObject, isConfirmed } = notification
-          const { avatar, ulid, nickname } = userFrom
+          const { ulid, typeName, userFrom, contentObject, isConfirmed } = notification
+          const { avatar, nickname } = userFrom
           const { title, text, read } = contentObject
           return (
-            <NavItem key={id}>
+            <NavItem key={ulid}>
               <div className={style.notice_item}>
                 <div className={style.avatar}>
-                  <AvatarLink src={avatar} ulid={ulid} title={nickname} size="s" />
+                  <AvatarLink src={avatar} ulid={userFrom.ulid} title={nickname} size="s" />
                   <IconCircle size="6" className={isConfirmed ? style.hidden : style.circle} />
                 </div>
                 <div className={style.anker} onClick={handleClick(typeName, notification)}>
@@ -129,7 +126,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
                   )}
                   {typeName === NotificationType.Views && <>{readNotification(read, title)}</>}
                 </div>
-                <span title="閉じる" className={style.close} onClick={handleDelete(id)}>
+                <span title="閉じる" className={style.close} onClick={handleDelete(ulid)}>
                   <IconCross size="18" className={style.close_icon} />
                 </span>
               </div>
