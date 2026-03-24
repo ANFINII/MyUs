@@ -1,8 +1,14 @@
+from typing import Any
+
+from django.utils.html import strip_tags
+
 from api.db.models.notification import Notification
-from api.src.domain.interface.notification.data import NotificationData
+from api.src.domain.interface.notification.data import NotificationContentData, NotificationData
 
 
-def convert_data(obj: Notification) -> NotificationData:
+def convert_data(obj: Notification, content_obj: Any | None = None) -> NotificationData:
+    content = get_content(content_obj)
+
     return NotificationData(
         id=obj.id,
         user_from_id=obj.user_from_id,
@@ -11,6 +17,20 @@ def convert_data(obj: Notification) -> NotificationData:
         type_name=obj.type_name,
         object_id=obj.object_id,
         object_type=obj.object_type,
+        content=content,
+    )
+
+
+def get_content(obj: Any | None) -> NotificationContentData:
+    if obj is None:
+        return NotificationContentData(id=0, ulid="", title="", text="", read=0)
+
+    return NotificationContentData(
+        id=0,
+        ulid=str(getattr(obj, "ulid", "")),
+        title=str(getattr(obj, "title", "")),
+        text=strip_tags(str(getattr(obj, "text", getattr(obj, "content", "")))),
+        read=int(getattr(obj, "read", 0)),
     )
 
 

@@ -3,11 +3,16 @@ from pydantic import BaseModel
 
 class NotificationUserOut(BaseModel):
     avatar: str
+    ulid: str
     nickname: str
 
 
 class NotificationContentOut(BaseModel):
     id: int
+    ulid: str
+    title: str
+    text: str
+    read: int
 
 
 class NotificationItemOut(BaseModel):
