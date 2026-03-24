@@ -1,54 +1,63 @@
-from django.db.models import Exists, OuterRef
-from api.db.models import Follow, Notification, UserNotification
-from api.utils.constant import notification_type_no
-from api.utils.functions.index import set_attr
+from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
+from api.src.domain.interface.user.interface import UserInterface
+from api.src.injectors.container import injector
+from api.src.types.data.notification import NotificationContentData, NotificationItemData, NotificationOutData, NotificationUserData
+from api.utils.enum.index import NotificationTypeNo
+from api.utils.functions.index import create_url
 
 
-def get_notification(user_id: int):
-    fields_1 = ["is_video", "is_music", "is_comic", "is_picture", "is_blog", "is_chat"]
-    fields_2 = ["is_follow", "is_like", "is_reply", "is_views"]
+def get_notification(user_id: int) -> NotificationOutData:
+    repository = injector.get(NotificationInterface)
+    ids = repository.get_ids(FilterOption(user_to_id=user_id), SortOption())
+    notifications = repository.bulk_get(ids)
 
-    user_notification = UserNotification.objects.get(user_id=user_id)
-    notification_no_list_1 = [notification_type_no[field] for field in fields_1 if getattr(user_notification, field)]
-    notification_no_list_2 = [notification_type_no[field] for field in fields_2 if getattr(user_notification, field)]
+    user_ids = list({n.user_from_id for n in notifications} | {n.user_to_id for n in notifications if n.user_to_id != 0})
+    user_map = get_notification_user_map(user_ids)
 
-    notification_none = Notification.objects.none()
-    notification_union_1, notification_union_2 = notification_none, notification_none
-    notification_confirmed_list = []
-    confirmed_kwargs = {"id": OuterRef("pk"), "confirmed": user_id}
-    subquery = Notification.objects.filter(**confirmed_kwargs)
-    following_list = Follow.objects.filter(follower_id=user_id).values_list("following_id", "created")
+    items: list[NotificationItemData] = []
+    for n in notifications:
+        user_from = user_map.get(n.user_from_id)
+        if user_from is None:
+            continue
 
-    for id, dates in following_list:
-        notification_qs_1 = Notification.objects.filter(user_from__in=[id], user_to=None, type_no__in=notification_no_list_1, created__gt=dates).annotate(is_confirmed=Exists(subquery)).exclude(deleted=user_id)
-        notification_union_2 = notification_qs_1.select_related("user_from")
-        notification_union_1 = notification_union_1.union(notification_union_2)
-        notification_confirmed_list += notification_qs_1.exclude(confirmed=user_id)
-    notification_qs_2 = Notification.objects.filter(user_to_id=user_id, type_no__in=notification_no_list_2).annotate(is_confirmed=Exists(subquery)).exclude(deleted=user_id).select_related("user_from")
+        user_to = user_map.get(n.user_to_id)
 
-    context = {
-        "count": len(notification_confirmed_list) + notification_qs_2.exclude(confirmed=user_id).count(),
-        "datas": notification_union_1.union(notification_qs_2).order_by("-created"),
-    }
-    return context
+        item = NotificationItemData(
+            id=n.id,
+            user_from=user_from,
+            user_to=user_to,
+            type_no=n.type_no,
+            type_name=n.type_name,
+            content_object=NotificationContentData(
+                id=n.object_id,
+                ulid=n.content.ulid,
+                title=n.content.title,
+                text=n.content.text,
+                read=n.content.read,
+            ),
+            is_confirmed=False,
+        )
+        items.append(item)
 
-
-def user_notification_update(is_notification, notification_type, notification_obj):
-    attribute_name = f"is_{notification_type}"
-    is_bool = is_notification != "True"
-    if hasattr(notification_obj, attribute_name):
-        set_attr(notification_obj, attribute_name, is_bool)
-        notification_obj.save(update_fields=[attribute_name])
+    return NotificationOutData(count=len(items), datas=items)
 
 
-def get_content_object(notification: Notification) -> dict:
-    obj_list = ["video", "music", "comic", "picture", "blog", "chat"]
-    data = {"id": notification.object_id}
+def get_notification_user_map(user_ids: list[int]) -> dict[int, NotificationUserData]:
+    if len(user_ids) == 0:
+        return {}
 
-    # if notification.type_name in obj_list:
-    #     data.update({
-    #         "title": notification.content_object.title,
-    #         "text": notification.content_object.text,
-    #         "read": notification.content_object.read,
-    #     })
-    return data
+    user_repo = injector.get(UserInterface)
+    users = user_repo.bulk_get(user_ids)
+    user_map: dict[int, NotificationUserData] = {}
+    for user in users:
+        user_map[user.user.id] = NotificationUserData(
+            avatar=create_url(user.user.avatar),
+            ulid=user.user.ulid,
+            nickname=user.user.nickname,
+        )
+    return user_map
+
+
+def delete_notification(type_no: NotificationTypeNo, object_id: int) -> None:
+    repository = injector.get(NotificationInterface)
+    repository.delete(type_no, object_id)
