@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { Notification, NotificationOut } from 'types/internal/user'
-import { getNotification } from 'api/internal/user'
+import { getNotification, postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
 import { NotificationType } from 'utils/constants/enum'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
 import IconBell from 'components/parts/Icon/Bell'
 import IconCircle from 'components/parts/Icon/Circle'
+import IconCross from 'components/parts/Icon/Cross'
 import NavItem from 'components/parts/NavItem'
 import MenuItem from 'components/parts/NavItem/MenuItem'
 import style from './DropMenu.module.scss'
@@ -62,7 +63,15 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   }
 
   const handleClick = (typeName: NotificationType, notification: Notification) => () => {
-    const { contentObject, userFrom } = notification
+    const { id, contentObject, userFrom } = notification
+    postNotificationConfirmed(id)
+    setNotifications((prev) => {
+      if (prev === undefined) return prev
+      return {
+        ...prev,
+        datas: prev.datas.map((n) => (n.id === id ? { ...n, isConfirmed: true } : n)),
+      }
+    })
     if (typeName === NotificationType.Video) handleRouter(`/video/detail/${contentObject.id}`)
     if (typeName === NotificationType.Music) handleRouter(`/music/detail/${contentObject.id}`)
     if (typeName === NotificationType.Comic) handleRouter(`/comic/detail/${contentObject.id}`)
@@ -70,6 +79,16 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     if (typeName === NotificationType.Blog) handleRouter(`/blog/detail/${contentObject.id}`)
     if (typeName === NotificationType.Chat) handleRouter(`/chat/detail/${contentObject.id}`)
     if (mediaObjs.includes(typeName)) handleRouter(`/userpage/${userFrom.ulid}`)
+  }
+
+  const handleDelete = (notificationId: number) => (e: React.MouseEvent) => {
+    e.stopPropagation()
+    postNotificationDeleted(notificationId)
+    setNotifications((prev) => {
+      if (prev === undefined) return prev
+      const datas = prev.datas.filter((n) => n.id !== notificationId)
+      return { count: datas.length, datas }
+    })
   }
 
   return (
@@ -108,9 +127,9 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
                   )}
                   {typeName === NotificationType.Views && <>{readNotification(read, title)}</>}
                 </div>
-                <form method="POST">
-                  <i title="閉じる" className={style.close} style={{ fontSize: '1.41em' }}></i>
-                </form>
+                <span title="閉じる" className={style.close} onClick={handleDelete(id)}>
+                  <IconCross size="18" className={style.close_icon} />
+                </span>
               </div>
             </NavItem>
           )

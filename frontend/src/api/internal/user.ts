@@ -26,6 +26,8 @@ import {
   apiLikeComment,
   apiLikeMedia,
   apiNotification,
+  apiNotificationConfirmed,
+  apiNotificationDeleted,
   apiSearchTag,
   apiSubscribeChannel,
   apiUser,
@@ -72,6 +74,14 @@ export const postLikeComment = async (request: LikeCommentIn): Promise<ApiOut<Li
 
 export const getNotification = async (req?: Req): Promise<ApiOut<NotificationOut>> => {
   return await apiOut(apiClient('json').get(apiNotification, cookieHeader(req)))
+}
+
+export const postNotificationConfirmed = async (notificationId: number): Promise<ApiOut<ErrorOut>> => {
+  return await apiOut(apiClient('json').post(apiNotificationConfirmed, camelSnake({ notificationId })))
+}
+
+export const postNotificationDeleted = async (notificationId: number): Promise<ApiOut<ErrorOut>> => {
+  return await apiOut(apiClient('json').post(apiNotificationDeleted, camelSnake({ notificationId })))
 }
 
 export const getUserPage = async (ulid: string, req?: Req): Promise<ApiOut<UserPage>> => {
