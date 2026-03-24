@@ -135,7 +135,7 @@ export default function SearchTagBar(): React.JSX.Element {
                       </span>
                       <span className={styles.tag_name}>{tag.name}</span>
                       <span className={styles.delete_button} onClick={() => handleDelete(index)}>
-                        <IconCross size="14" />
+                        <IconCross size="18" />
                       </span>
                     </div>
                   ))
