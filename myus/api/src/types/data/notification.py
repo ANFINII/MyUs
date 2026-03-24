@@ -1,22 +1,19 @@
 from dataclasses import dataclass
+from api.src.domain.interface.notification.data import NotificationContentData as NotificationContentData
 
 
 @dataclass(frozen=True, slots=True)
 class NotificationUserData:
     avatar: str
+    ulid: str
     nickname: str
-
-
-@dataclass(frozen=True, slots=True)
-class NotificationContentData:
-    id: int
 
 
 @dataclass(frozen=True, slots=True)
 class NotificationItemData:
     id: int
     user_from: NotificationUserData
-    user_to: NotificationUserData
+    user_to: NotificationUserData | None
     type_no: int
     type_name: str
     content_object: NotificationContentData
