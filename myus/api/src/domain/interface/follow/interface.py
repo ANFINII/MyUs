@@ -12,6 +12,7 @@ class SortType(Enum):
 class FilterOption:
     follower_id: int = 0
     following_id: int = 0
+    is_follow: bool | None = None
     search: str = ""
 
 
