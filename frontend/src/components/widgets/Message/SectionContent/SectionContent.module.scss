@@ -18,11 +18,11 @@
   }
 
   .subscribe {
-    margin: 4px 4px 4px 0;
+    display: flex;
+    align-self: flex-start;
 
     button {
       width: 122px;
-      height: 38px;
     }
   }
 

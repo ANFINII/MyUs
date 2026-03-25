@@ -33,16 +33,16 @@ export default function SectionContent(props: Props): React.JSX.Element {
           <Divide />
         </>
       )}
-      <HStack gap="4" justify="between">
-        <HStack gap="4">
-          <AvatarLink size="l" src={channel.avatar} ulid={channel.ownerUlid} title={channel.name} />
-          <VStack gap="2">
-            <p className="fs_14">{channel.name}</p>
+      <HStack gap="4">
+        <AvatarLink size="l" src={channel.avatar} ulid={channel.ownerUlid} title={channel.name} />
+        <VStack gap="2">
+          <p className="fs_14">{channel.name}</p>
+          <HStack gap="4">
             <p className="fs_14 text_sub">
               登録者数<span className="ml_8">{subscribeCount}</span>
             </p>
-          </VStack>
-        </HStack>
+          </HStack>
+        </VStack>
         <div className={style.subscribe}>
           <SubscribeButton isSubscribe={mediaUser.isSubscribe} disabled={isFallowDisable} onModal={onModal} onSubscribe={onSubscribe} />
         </div>
