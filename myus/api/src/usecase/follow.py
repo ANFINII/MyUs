@@ -74,8 +74,8 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowOu
             updated_follow = replace(follow, is_follow=is_follow)
             follow_repo.bulk_save([updated_follow])
 
-        follower_count = follow_repo.count(FilterOption(following_id=following.user.id))
-        following_count = follow_repo.count(FilterOption(follower_id=follower.user.id))
+        follower_count = follow_repo.count(FilterOption(following_id=following.user.id, is_follow=True))
+        following_count = follow_repo.count(FilterOption(follower_id=follower.user.id, is_follow=True))
 
         follower_mypage = replace(follower.mypage, following_count=following_count)
         following_mypage = replace(following.mypage, follower_count=follower_count)

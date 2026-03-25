@@ -20,6 +20,8 @@ class FollowRepository(FollowInterface):
             q_list.append(Q(follower_id=filter.follower_id))
         if filter.following_id:
             q_list.append(Q(following_id=filter.following_id))
+        if filter.is_follow is not None:
+            q_list.append(Q(is_follow=filter.is_follow))
         if filter.search:
             q_list.append(Q(following__nickname__icontains=filter.search))
 
@@ -61,6 +63,8 @@ class FollowRepository(FollowInterface):
             q_list.append(Q(follower_id=filter.follower_id))
         if filter.following_id:
             q_list.append(Q(following_id=filter.following_id))
+        if filter.is_follow is not None:
+            q_list.append(Q(is_follow=filter.is_follow))
         if filter.search:
             q_list.append(Q(following__nickname__icontains=filter.search))
 
