@@ -43,7 +43,7 @@ export default function SectionThread(props: Props): React.JSX.Element {
         )}
         {replies.map((r, index) => (
           <div key={r.ulid}>
-            <DateDivider created={r.created} prevCreated={index === 0 ? selectedMessage?.created ?? null : replies[index - 1].created} />
+            <DateDivider created={r.created} prevCreated={index === 0 ? (selectedMessage?.created ?? null) : (replies[index - 1]?.created ?? null)} />
             <MessageItem user={user} message={r} isDisabled={isDisabled} onEdit={onEdit} onDelete={onDelete} />
           </div>
         ))}

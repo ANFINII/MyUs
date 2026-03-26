@@ -26,7 +26,7 @@ export default function SectionMain(props: Props): React.JSX.Element {
     <div ref={messageAreaRef} className={style.chat_section_main}>
       {messages.map((msg, index) => (
         <div key={msg.ulid}>
-          <DateDivider created={msg.created} prevCreated={index > 0 ? messages[index - 1].created : null} />
+          <DateDivider created={msg.created} prevCreated={index > 0 ? (messages[index - 1]?.created ?? null) : null} />
           <MessageItem user={user} message={msg} isDisabled={isDisabled} onThread={onThread} onEdit={onEdit} onDelete={onDelete} />
         </div>
       ))}
