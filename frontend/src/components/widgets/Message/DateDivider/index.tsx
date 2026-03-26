@@ -16,5 +16,5 @@ export default function DateDivider(props: Props): React.JSX.Element {
 
   if (currentDate === prevDate) return <></>
 
-  return <Divide label={formatDate(created)} height="thin" marginV="mv_16" marginH="mh_12" />
+  return <Divide label={formatDate(created)} height="thin" marginV="mv_8" marginH="mh_12" />
 }

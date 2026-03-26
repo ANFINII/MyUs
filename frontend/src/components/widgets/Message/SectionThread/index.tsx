@@ -38,7 +38,7 @@ export default function SectionThread(props: Props): React.JSX.Element {
         {selectedMessage && (
           <>
             <MessageItem user={user} message={selectedMessage} isDisabled={isDisabled} onEdit={onEdit} onDelete={onDelete} />
-            <Divide label="返信" height="thin" marginV="mv_8" marginH="mh_12" />
+            <Divide label="返信" position="left" height="thin" marginV="mv_8" marginH="mh_8" />
           </>
         )}
         {replies.map((r) => (
