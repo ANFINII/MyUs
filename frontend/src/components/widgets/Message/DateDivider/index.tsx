@@ -1,22 +1,20 @@
 import { formatDate } from 'utils/functions/datetime'
-import style from './DateDivider.module.scss'
+import Divide from 'components/parts/Divide'
 
 interface Props {
   created: Date
-  prevCreated: Date | null
+  prevCreated?: Date
 }
 
-export default function DateDivider(props: Props): React.JSX.Element | null {
+export default function DateDivider(props: Props): React.JSX.Element {
   const { created, prevCreated } = props
 
+  if (prevCreated === undefined) return <></>
+
   const currentDate = new Date(created).toDateString()
-  const prevDate = prevCreated ? new Date(prevCreated).toDateString() : ''
+  const prevDate = new Date(prevCreated).toDateString()
 
-  if (currentDate === prevDate) return null
+  if (currentDate === prevDate) return <></>
 
-  return (
-    <div className={style.date_divider}>
-      <span className={style.label}>{formatDate(created)}</span>
-    </div>
-  )
+  return <Divide label={formatDate(created)} height="thin" marginV="mv_16" marginH="mh_12" />
 }

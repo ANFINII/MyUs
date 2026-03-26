@@ -1,5 +1,85 @@
 .hr {
-  height: 2px;
   border: none;
   background: rgb(230, 230, 230);
+}
+
+.labeled {
+  display: flex;
+  align-items: center;
+
+  .label {
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: bold;
+    color: rgb(120, 120, 120);
+    white-space: nowrap;
+  }
+}
+
+.line {
+  flex: 1;
+  background: rgb(230, 230, 230);
+}
+
+.thin {
+  height: 1px;
+}
+
+.normal {
+  height: 2px;
+}
+
+.mv_0 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.mv_4 {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.mv_8 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.mv_16 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.mv_20 {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.mv_24 {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.mh_0 {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.mh_4 {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.mh_8 {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.mh_12 {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+.mh_16 {
+  margin-left: 16px;
+  margin-right: 16px;
 }

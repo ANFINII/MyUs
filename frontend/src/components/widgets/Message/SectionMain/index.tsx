@@ -1,4 +1,4 @@
-import { FormEvent, RefObject } from 'react'
+import { RefObject } from 'react'
 import { ChatMessage } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
 import ChatEditor from '../ChatEditor'
@@ -14,7 +14,7 @@ interface Props {
   isDisabled: boolean
   onThread: (message: ChatMessage) => void
   onChange: (value: string) => void
-  onSubmit: (e: FormEvent) => void
+  onSubmit: (e: React.SubmitEvent) => void
   onEdit: (ulid: string, text: string) => void
   onDelete: (ulid: string) => void
 }
@@ -26,7 +26,7 @@ export default function SectionMain(props: Props): React.JSX.Element {
     <div ref={messageAreaRef} className={style.chat_section_main}>
       {messages.map((msg, index) => (
         <div key={msg.ulid}>
-          <DateDivider created={msg.created} prevCreated={index > 0 ? (messages[index - 1]?.created ?? null) : null} />
+          <DateDivider created={msg.created} prevCreated={index > 0 ? messages[index - 1]?.created : undefined} />
           <MessageItem user={user} message={msg} isDisabled={isDisabled} onThread={onThread} onEdit={onEdit} onDelete={onDelete} />
         </div>
       ))}

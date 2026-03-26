@@ -1,10 +1,10 @@
-import { FormEvent, MouseEvent, RefObject } from 'react'
+import { MouseEvent, RefObject } from 'react'
 import clsx from 'clsx'
 import { ChatMessage, ChatReply } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
+import Divide from 'components/parts/Divide'
 import IconCross from 'components/parts/Icon/Cross'
 import ChatEditor from '../ChatEditor'
-import DateDivider from '../DateDivider'
 import MessageItem from '../MessageItem'
 import style from './SectionThread.module.scss'
 
@@ -18,7 +18,7 @@ interface Props {
   onClose: () => void
   onResize: (e: MouseEvent) => void
   onChange: (value: string) => void
-  onSubmit: (e: FormEvent) => void
+  onSubmit: (e: React.SubmitEvent) => void
   onEdit: (ulid: string, text: string) => void
   onDelete: (ulid: string) => void
 }
@@ -37,15 +37,12 @@ export default function SectionThread(props: Props): React.JSX.Element {
       <div className={style.thread_area}>
         {selectedMessage && (
           <>
-            <DateDivider created={selectedMessage.created} prevCreated={null} />
             <MessageItem user={user} message={selectedMessage} isDisabled={isDisabled} onEdit={onEdit} onDelete={onDelete} />
+            <Divide label="返信" height="thin" marginV="mv_8" marginH="mh_12" />
           </>
         )}
-        {replies.map((r, index) => (
-          <div key={r.ulid}>
-            <DateDivider created={r.created} prevCreated={index === 0 ? (selectedMessage?.created ?? null) : (replies[index - 1]?.created ?? null)} />
-            <MessageItem user={user} message={r} isDisabled={isDisabled} onEdit={onEdit} onDelete={onDelete} />
-          </div>
+        {replies.map((r) => (
+          <MessageItem key={r.ulid} user={user} message={r} isDisabled={isDisabled} onEdit={onEdit} onDelete={onDelete} />
         ))}
         <footer className={style.thread_footer}>
           <form onSubmit={onSubmit}>
