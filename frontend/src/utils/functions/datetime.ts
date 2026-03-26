@@ -40,6 +40,22 @@ export const formatDatetime = (datetime: Date): string => {
   })
 }
 
+export const formatDate = (datetime: Date): string => {
+  const date = new Date(datetime)
+  const today = new Date()
+
+  if (date.toDateString() === today.toDateString()) {
+    return '今日'
+  }
+
+  return date.toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'short',
+  })
+}
+
 export const formatTimeAgo = (datetime: Date): string => {
   const now = new Date()
   const date = new Date(datetime)

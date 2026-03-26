@@ -2,6 +2,7 @@ import { FormEvent, RefObject } from 'react'
 import { ChatMessage } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
 import ChatEditor from '../ChatEditor'
+import DateDivider from '../DateDivider'
 import MessageItem from '../MessageItem'
 import style from './SectionMain.module.scss'
 
@@ -23,8 +24,11 @@ export default function SectionMain(props: Props): React.JSX.Element {
 
   return (
     <div ref={messageAreaRef} className={style.chat_section_main}>
-      {messages.map((msg) => (
-        <MessageItem key={msg.ulid} user={user} message={msg} isDisabled={isDisabled} onThread={onThread} onEdit={onEdit} onDelete={onDelete} />
+      {messages.map((msg, index) => (
+        <div key={msg.ulid}>
+          <DateDivider created={msg.created} prevCreated={index > 0 ? messages[index - 1].created : null} />
+          <MessageItem user={user} message={msg} isDisabled={isDisabled} onThread={onThread} onEdit={onEdit} onDelete={onDelete} />
+        </div>
       ))}
       <footer className={style.chat_footer}>
         <form onSubmit={onSubmit}>
