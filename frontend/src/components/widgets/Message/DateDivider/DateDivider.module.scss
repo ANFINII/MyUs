@@ -1,0 +1,21 @@
+.date_divider {
+  display: flex;
+  align-items: center;
+  margin: 12px;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgb(220, 220, 220);
+  }
+
+  .label {
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: bold;
+    color: rgb(120, 120, 120);
+    white-space: nowrap;
+  }
+}

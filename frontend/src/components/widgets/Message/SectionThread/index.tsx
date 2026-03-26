@@ -4,6 +4,7 @@ import { ChatMessage, ChatReply } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
 import IconCross from 'components/parts/Icon/Cross'
 import ChatEditor from '../ChatEditor'
+import DateDivider from '../DateDivider'
 import MessageItem from '../MessageItem'
 import style from './SectionThread.module.scss'
 
@@ -34,9 +35,17 @@ export default function SectionThread(props: Props): React.JSX.Element {
         <IconCross size="27" onClick={onClose} className={style.thread_close} />
       </div>
       <div className={style.thread_area}>
-        {selectedMessage && <MessageItem user={user} message={selectedMessage} isDisabled={isDisabled} onEdit={onEdit} onDelete={onDelete} />}
-        {replies.map((r) => (
-          <MessageItem key={r.ulid} user={user} message={r} isDisabled={isDisabled} onEdit={onEdit} onDelete={onDelete} />
+        {selectedMessage && (
+          <>
+            <DateDivider created={selectedMessage.created} prevCreated={null} />
+            <MessageItem user={user} message={selectedMessage} isDisabled={isDisabled} onEdit={onEdit} onDelete={onDelete} />
+          </>
+        )}
+        {replies.map((r, index) => (
+          <div key={r.ulid}>
+            <DateDivider created={r.created} prevCreated={index === 0 ? (selectedMessage?.created ?? null) : (replies[index - 1]?.created ?? null)} />
+            <MessageItem user={user} message={r} isDisabled={isDisabled} onEdit={onEdit} onDelete={onDelete} />
+          </div>
         ))}
         <footer className={style.thread_footer}>
           <form onSubmit={onSubmit}>
