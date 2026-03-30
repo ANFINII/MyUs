@@ -12,7 +12,8 @@
     cursor: pointer;
 
     &:focus-visible {
-      outline: 1px auto rgb(40, 130, 250);
+      outline: none;
+      border-color: rgb(40, 130, 250);
     }
   }
 
