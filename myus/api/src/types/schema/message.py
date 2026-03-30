@@ -14,7 +14,7 @@ class MessageUpdateIn(BaseModel):
     text: str
 
 
-class ChatMessageReplyOut(BaseModel):
+class MessageReplyOut(BaseModel):
     ulid: str
     parent_id: str
     text: str
@@ -23,7 +23,7 @@ class ChatMessageReplyOut(BaseModel):
     author: AuthorOut
 
 
-class ChatMessageOut(BaseModel):
+class MessageOut(BaseModel):
     ulid: str
     text: str
     reply_count: int

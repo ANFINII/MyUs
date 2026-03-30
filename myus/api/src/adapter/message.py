@@ -1,12 +1,11 @@
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
 from api.src.types.schema.common import ErrorOut
-from api.src.types.schema.message import ChatMessageOut, ChatMessageReplyOut, MessageCreateIn, MessageUpdateIn
+from api.src.types.schema.message import MessageOut, MessageReplyOut, MessageCreateIn, MessageUpdateIn
 from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
+from api.src.usecase.broadcast import broadcast_create_message, broadcast_delete_message, broadcast_update_message
 from api.src.usecase.message import create_message, delete_message, get_replies, update_message
 
 
@@ -16,7 +15,7 @@ class MessageAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: ChatMessageOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: MessageOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: MessageCreateIn):
         log.info("MessageAPI post", input=input)
 
@@ -29,7 +28,7 @@ class MessageAPI:
             if message is None:
                 return 400, ErrorOut(message="メッセージの作成に失敗しました")
 
-            data = ChatMessageOut(
+            data = MessageOut(
                 ulid=message.ulid,
                 text=message.text,
                 reply_count=0,
@@ -43,35 +42,7 @@ class MessageAPI:
                 ),
             )
 
-            # WebSocket broadcast
-            channel_layer = get_channel_layer()
-            if channel_layer is not None:
-                is_reply = len(input.parent_ulid) > 0
-                command = "create_reply_message" if is_reply else "create_message"
-                broadcast_message: dict[str, object] = {
-                    "ulid": message.ulid,
-                    "text": message.text,
-                    "created": message.created.isoformat(),
-                    "updated": message.updated.isoformat(),
-                    "author": {
-                        "avatar": message.author.avatar,
-                        "ulid": message.author.ulid,
-                        "nickname": message.author.nickname,
-                        "follower_count": message.author.follower_count,
-                    },
-                }
-                if is_reply:
-                    broadcast_message["parent_ulid"] = input.parent_ulid
-                async_to_sync(channel_layer.group_send)(
-                    f"chat_detail_{input.chat_ulid}",
-                    {
-                        "type": "chat_message",
-                        "message": {
-                            "command": command,
-                            "message": broadcast_message,
-                        },
-                    },
-                )
+            broadcast_create_message(input.chat_ulid, message, input.parent_ulid)
 
             return 201, data
         except Exception as e:
@@ -79,7 +50,7 @@ class MessageAPI:
             return 500, ErrorOut(message="メッセージの作成に失敗しました")
 
     @staticmethod
-    @router.get("/{message_ulid}", response={200: list[ChatMessageReplyOut], 401: ErrorOut})
+    @router.get("/{message_ulid}", response={200: list[MessageReplyOut], 401: ErrorOut})
     def get(request: HttpRequest, message_ulid: str):
         log.info("MessageAPI get", message_ulid=message_ulid)
 
@@ -88,7 +59,7 @@ class MessageAPI:
 
         replies = get_replies(message_ulid)
         data = [
-            ChatMessageReplyOut(
+            MessageReplyOut(
                 ulid=r.ulid,
                 parent_id=r.parent_id,
                 text=r.text,
@@ -120,21 +91,7 @@ class MessageAPI:
             if result is None:
                 return 403, ErrorOut(message="Forbidden")
 
-            channel_layer = get_channel_layer()
-            if channel_layer is not None:
-                async_to_sync(channel_layer.group_send)(
-                    f"chat_detail_{input.chat_ulid}",
-                    {
-                        "type": "chat_message",
-                        "message": {
-                            "command": "update_message",
-                            "message": {
-                                "ulid": message_ulid,
-                                "text": input.text,
-                            },
-                        },
-                    },
-                )
+            broadcast_update_message(input.chat_ulid, message_ulid, input.text)
 
             return 200, ErrorOut(message="メッセージを更新しました")
         except Exception as e:
@@ -155,20 +112,7 @@ class MessageAPI:
             if chat_ulid is None:
                 return 403, ErrorOut(message="Forbidden")
 
-            channel_layer = get_channel_layer()
-            if channel_layer is not None:
-                async_to_sync(channel_layer.group_send)(
-                    f"chat_detail_{chat_ulid}",
-                    {
-                        "type": "chat_message",
-                        "message": {
-                            "command": "delete_message",
-                            "message": {
-                                "ulid": message_ulid,
-                            },
-                        },
-                    },
-                )
+            broadcast_delete_message(chat_ulid, message_ulid)
 
             return 200, ErrorOut(message="メッセージを削除しました")
         except Exception as e:
