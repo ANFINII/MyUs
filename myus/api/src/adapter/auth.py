@@ -6,9 +6,8 @@ from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
 from api.src.injectors import injector
-from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
+from api.src.domain.interface.user.data import MyPageData, PlanData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.src.domain.interface.user.interface import UserInterface
-from api.src.types.dto.plan import PlanData
 from api.src.types.schema.auth import LoginIn, LoginOut, RefreshOut, SignupIn
 from api.src.types.schema.common import ErrorOut
 from api.src.usecase.user import signup_check

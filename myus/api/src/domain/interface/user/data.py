@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from datetime import date, datetime
-from api.src.types.dto.plan import PlanData
 
 
 @dataclass(frozen=True, slots=True)
@@ -64,6 +63,16 @@ class UserNotificationData:
     is_reply: bool
     is_like: bool
     is_views: bool
+
+
+@dataclass(frozen=True, slots=True)
+class PlanData:
+    id: int
+    name: str
+    stripe_api_id: str
+    price: int
+    max_advertise: int
+    description: str
 
 
 @dataclass(frozen=True, slots=True)
