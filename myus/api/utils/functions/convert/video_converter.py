@@ -45,10 +45,10 @@ class VideoConverter:
 
     # 最適化プロファイル（品質と速度のバランス調整）
     PROFILES = {
-        '240p': OptimizedProfile('240p', 426, 240, '350k', '500k', '700k', '48k', 'p7', 30, 60),
-        '480p': OptimizedProfile('480p', 854, 480, '1200k', '1800k', '2400k', '96k', 'p7', 28, 60),
-        '720p': OptimizedProfile('720p', 1280, 720, '2500k', '3750k', '5000k', '128k', 'p7', 26, 60),
-        '1080p': OptimizedProfile('1080p', 1920, 1080, '5000k', '7500k', '10000k', '192k', 'p7', 25, 60),
+        '240p': OptimizedProfile('240p', 426, 240, '350k', '500k', '700k', '48k', 'p7', 30, 48),
+        '480p': OptimizedProfile('480p', 854, 480, '1200k', '1800k', '2400k', '96k', 'p7', 28, 48),
+        '720p': OptimizedProfile('720p', 1280, 720, '2500k', '3750k', '5000k', '128k', 'p7', 26, 48),
+        '1080p': OptimizedProfile('1080p', 1920, 1080, '5000k', '7500k', '10000k', '192k', 'p7', 25, 48),
     }
 
     # ハードウェアアクセラレーター定義
@@ -358,7 +358,7 @@ class VideoConverter:
         # HLS出力設定（最適化）
         cmd.extend([
             '-f', 'hls',
-            '-hls_time', '6',  # セグメント時間を増やす
+            '-hls_time', '2',  # セグメント時間を短くして品質切り替えを高速化
             '-hls_list_size', '0',
             '-hls_segment_type', 'mpegts',
             '-hls_flags', 'independent_segments',  # temp_file削除して高速化
