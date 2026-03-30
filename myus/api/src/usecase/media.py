@@ -27,7 +27,7 @@ from api.utils.functions.user import get_media_user
 from api.utils.functions.media import save_upload
 
 
-def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile, convert: UploadedFile | None) -> MediaCreateData:
+def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> MediaCreateData:
     repository = injector.get(VideoInterface)
 
     new_video = VideoData(
@@ -37,7 +37,7 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
         content=input.content,
         image=save_upload(image, ImageUpload.VIDEO, channel.ulid),
         video=save_upload(video, MediaUpload.VIDEO, channel.ulid),
-        convert=save_upload(convert, MediaUpload.VIDEO, channel.ulid) if convert is not None else "",
+        convert=save_upload(convert, MediaUpload.VIDEO, channel.ulid),
         read=0,
         like=0,
         publish=True,
