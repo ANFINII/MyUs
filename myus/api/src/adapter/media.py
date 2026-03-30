@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.types.data.comment import CommentGetData, ReplyData
+from api.src.types.dto.comment import CommentGetData, ReplyData
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.comic.data import ComicData
@@ -11,8 +11,8 @@ from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.data import HashtagData
 from api.src.domain.interface.channel.data import ChannelData
 from api.utils.functions.index import create_url
-from api.src.types.data.message import MessageData
-from api.src.types.data.user import AuthorData, MediaUserData
+from api.src.types.dto.message import MessageData
+from api.src.types.dto.user import AuthorData, MediaUserData
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.comment import CommentOut, ReplyOut
 from api.src.types.schema.media import VideoIn, MusicIn, ComicIn,PictureIn, BlogIn, ChatIn

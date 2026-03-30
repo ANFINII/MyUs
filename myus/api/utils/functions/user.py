@@ -2,8 +2,8 @@ from django.core.mail import send_mail
 from api.db.models.user import User
 from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from api.src.injectors.container import injector
-from api.src.types.data.notification import NotificationUserData
-from api.src.types.data.user import MediaUserData
+from api.src.types.dto.notification import NotificationUserData
+from api.src.types.dto.user import MediaUserData
 from api.utils.functions.index import create_url
 
 

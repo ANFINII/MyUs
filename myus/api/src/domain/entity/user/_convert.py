@@ -5,7 +5,7 @@ from api.db.models.media import Blog, Chat, Comic, Music, Picture, Video
 from api.db.models.master import Plan
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
-from api.src.types.data.plan import PlanData
+from api.src.types.dto.plan import PlanData
 from api.utils.enum.index import MediaType
 
 

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, datetime
-from api.src.types.data.plan import PlanData
+from api.src.types.dto.plan import PlanData
 
 
 @dataclass(frozen=True, slots=True)

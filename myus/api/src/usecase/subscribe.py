@@ -4,7 +4,7 @@ from api.src.domain.interface.channel.interface import ChannelInterface
 from api.src.domain.interface.subscribe.data import SubscribeData
 from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from api.src.injectors.container import injector
-from api.src.types.data.subscribe import SubscribeOutData
+from api.src.types.dto.subscribe import SubscribeOutData
 from api.src.usecase.channel import get_channel_data
 
 
