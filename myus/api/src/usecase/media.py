@@ -31,7 +31,7 @@ from api.utils.functions.media import save_upload
 def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile) -> MediaCreateDTO:
     repository = injector.get(VideoInterface)
     video_path = save_upload(video, MediaUpload.VIDEO, channel.ulid)
-    convert_path = convert_video(video_path)
+    convert_video = convert_video(video_path)
 
     new_video = VideoData(
         id=0,
@@ -39,8 +39,8 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
         title=input.title,
         content=input.content,
         image=save_upload(image, ImageUpload.VIDEO, channel.ulid),
-        video=video_path,
-        convert=convert_path,
+        video=convert_video.video,
+        convert=convert_video.convert,
         read=0,
         like=0,
         publish=True,

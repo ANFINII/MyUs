@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 import time
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 from django.conf import settings
@@ -9,18 +10,28 @@ from api.modules.logger import log
 from api.utils.functions.convert.video_converter import VideoConverter
 
 
-def convert_video(video_path: str) -> str:
-    """保存済み動画ファイルをエンコードし、変換済みファイルの相対パスを返す"""
-    absolute_path = os.path.join(settings.MEDIA_ROOT, video_path)
-    output_dir = os.path.dirname(absolute_path)
+@dataclass(frozen=True, slots=True)
+class VideoConvert:
+    video: str
+    convert: str
+
+
+def convert_video(video_path: str) -> VideoConvert:
+    """保存済み動画をエンコードし、master.m3u8とconvert.mp4の相対パスを返す"""
+    convert_path = os.path.join(settings.MEDIA_ROOT, video_path)
+    output_dir = os.path.dirname(convert_path)
+    video_dir = os.path.dirname(video_path)
+    video_name = os.path.splitext(os.path.basename(video_path))[0]
 
     try:
-        encode_video(convert_path=absolute_path, output_dir=output_dir)
-        convert_filename = os.path.splitext(os.path.basename(video_path))[0] + "_convert.mp4"
-        return os.path.join(os.path.dirname(video_path), convert_filename)
+        encode_video(convert_path=convert_path, output_dir=output_dir)
+        return VideoConvert(
+            video=os.path.join(video_dir, f"{video_name}_master.m3u8"),
+            convert=os.path.join(video_dir, f"{video_name}_convert.mp4"),
+        )
     except Exception as e:
         log.error("動画エンコードエラー", exc=e, video_path=video_path)
-        return ""
+        return VideoConvert(video="", convert="")
 
 
 def encode_video(convert_path: str, output_dir: str, save_log: bool = True) -> dict[str, Any]:
