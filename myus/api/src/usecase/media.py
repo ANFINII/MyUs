@@ -24,14 +24,13 @@ from api.utils.enum.index import CommentType, ImageUpload, MediaUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_media_user
-from api.utils.functions.convert.video_encoding import convert_video
+from api.utils.functions.convert.encode_worker import EncodeWorker
 from api.utils.functions.media import save_upload
 
 
 def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile) -> MediaCreateDTO:
     repository = injector.get(VideoInterface)
     video_path = save_upload(video, MediaUpload.VIDEO, channel.ulid)
-    convert_video = convert_video(video_path)
 
     new_video = VideoData(
         id=0,
@@ -39,11 +38,11 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
         title=input.title,
         content=input.content,
         image=save_upload(image, ImageUpload.VIDEO, channel.ulid),
-        video=convert_video.video,
-        convert=convert_video.convert,
+        video=video_path,
+        convert="",
         read=0,
         like=0,
-        publish=True,
+        publish=False,
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
@@ -53,6 +52,7 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
     new_ids = repository.bulk_save([new_video])
     assert len(new_ids) == 1, "作成に失敗しました"
     obj = repository.bulk_get(new_ids)[0]
+    EncodeWorker.submit_video(obj.id, video_path)
 
     return MediaCreateDTO(ulid=obj.ulid)
 
@@ -215,7 +215,8 @@ def get_recommend(limit: int, search: str) -> HomeDTO:
 
 def get_videos(limit: int, search: str, id: int | None = None, owner_id: int = 0, channel_id: int = 0) -> list[VideoData]:
     repository = injector.get(VideoInterface)
-    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id, channel_id=channel_id), ExcludeOption(id=id), SortOption(), limit)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
 
     data = [replace(o,
@@ -229,7 +230,8 @@ def get_videos(limit: int, search: str, id: int | None = None, owner_id: int = 0
 
 def get_musics(limit: int, search: str, id: int | None = None, owner_id: int = 0, channel_id: int = 0) -> list[MusicData]:
     repository = injector.get(MusicInterface)
-    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id, channel_id=channel_id), ExcludeOption(id=id), SortOption(), limit)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, music=create_url(o.music)) for o in objs]
     return data
@@ -237,7 +239,8 @@ def get_musics(limit: int, search: str, id: int | None = None, owner_id: int = 0
 
 def get_comics(limit: int, search: str, id: int | None = None, owner_id: int = 0, channel_id: int = 0) -> list[ComicData]:
     repository = injector.get(ComicInterface)
-    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id, channel_id=channel_id), ExcludeOption(id=id), SortOption(), limit)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
 
     data = [replace(o,
@@ -250,7 +253,8 @@ def get_comics(limit: int, search: str, id: int | None = None, owner_id: int = 0
 
 def get_pictures(limit: int, search: str, id: int | None = None, owner_id: int = 0, channel_id: int = 0) -> list[PictureData]:
     repository = injector.get(PictureInterface)
-    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id, channel_id=channel_id), ExcludeOption(id=id), SortOption(), limit)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, image=create_url(o.image)) for o in objs]
     return data
@@ -258,7 +262,8 @@ def get_pictures(limit: int, search: str, id: int | None = None, owner_id: int =
 
 def get_blogs(limit: int, search: str, id: int | None = None, owner_id: int = 0, channel_id: int = 0) -> list[BlogData]:
     repository = injector.get(BlogInterface)
-    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id, channel_id=channel_id), ExcludeOption(id=id), SortOption(), limit)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, image=create_url(o.image)) for o in objs]
     return data
@@ -266,7 +271,8 @@ def get_blogs(limit: int, search: str, id: int | None = None, owner_id: int = 0,
 
 def get_chats(limit: int, search: str, id: int | None = None, owner_id: int = 0, channel_id: int = 0) -> list[ChatData]:
     repository = injector.get(ChatInterface)
-    ids = repository.get_ids(FilterOption(search=search, owner_id=owner_id, channel_id=channel_id), ExcludeOption(id=id), SortOption(), limit)
+    filter = FilterOption(search=search, publish=True, owner_id=owner_id, channel_id=channel_id)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), SortOption(), limit)
     objs = repository.bulk_get(ids=ids)
     return objs
 
