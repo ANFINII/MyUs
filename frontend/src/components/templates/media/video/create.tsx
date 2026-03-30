@@ -1,5 +1,4 @@
 import { useState, ChangeEvent } from 'react'
-import { useRouter } from 'next/router'
 import { Channel } from 'types/internal/channel'
 import { VideoIn } from 'types/internal/media'
 import { Option } from 'types/internal/other'
@@ -26,10 +25,10 @@ export default function VideoCreate(props: Props): React.JSX.Element {
   const channelUlid = channels.find((c) => c.isDefault)?.ulid ?? ''
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
 
-  const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
+  const [formKey, setFormKey] = useState(0)
   const [values, setValues] = useState<VideoIn>({ channelUlid, title: '', content: '' })
 
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -43,18 +42,19 @@ export default function VideoCreate(props: Props): React.JSX.Element {
     if (!isRequiredCheck({ channelUlid, title, content, image, video })) return
     handleLoading(true)
     const ret = await postVideoCreate(values)
+    handleLoading(false)
     if (ret.isErr()) {
       handleToast(FetchError.Post, true)
-      handleLoading(false)
       return
     }
-    router.push(`/media/video/${ret.value.ulid}`)
-    handleLoading(false)
+    setValues({ channelUlid, title: '', content: '' })
+    setFormKey((prev) => prev + 1)
+    handleToast('動画を作成中です。完了まで時間がかかる場合があります', false)
   }
 
   return (
     <Main title="Video" type="table" toast={toast} isFooter={false} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
-      <form method="POST" action="" encType="multipart/form-data">
+      <form key={formKey} method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <SelectBox label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
