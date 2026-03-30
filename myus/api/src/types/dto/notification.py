@@ -3,17 +3,17 @@ from api.src.domain.interface.notification.data import NotificationContentData a
 
 
 @dataclass(frozen=True, slots=True)
-class NotificationUserData:
+class NotificationUserDTO:
     avatar: str
     ulid: str
     nickname: str
 
 
 @dataclass(frozen=True, slots=True)
-class NotificationItemData:
+class NotificationItemDTO:
     ulid: str
-    user_from: NotificationUserData
-    user_to: NotificationUserData | None
+    user_from: NotificationUserDTO
+    user_to: NotificationUserDTO | None
     type_no: int
     type_name: str
     content_object: NotificationContentData
@@ -21,6 +21,6 @@ class NotificationItemData:
 
 
 @dataclass(frozen=True, slots=True)
-class NotificationOutData:
+class NotificationOutDTO:
     count: int
-    datas: list[NotificationItemData]
+    datas: list[NotificationItemDTO]

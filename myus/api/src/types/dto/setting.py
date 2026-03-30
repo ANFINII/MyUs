@@ -3,7 +3,7 @@ from datetime import date
 
 
 @dataclass(frozen=True, slots=True)
-class SettingProfileData:
+class SettingProfileDTO:
     avatar: str
     email: str
     username: str
@@ -24,7 +24,7 @@ class SettingProfileData:
 
 
 @dataclass(frozen=True, slots=True)
-class ProfileData:
+class ProfileDTO:
     last_name: str
     first_name: str
     gender: str
@@ -38,7 +38,7 @@ class ProfileData:
 
 
 @dataclass(frozen=True, slots=True)
-class SettingMyPageData:
+class SettingMyPageDTO:
     banner: str
     nickname: str
     email: str
@@ -53,7 +53,7 @@ class SettingMyPageData:
 
 
 @dataclass(frozen=True, slots=True)
-class MyPageData:
+class MyPageDTO:
     banner: str
     email: str
     tag_manager_id: str
@@ -62,7 +62,7 @@ class MyPageData:
 
 
 @dataclass(frozen=True, slots=True)
-class SettingNotificationData:
+class SettingNotificationDTO:
     is_video: bool
     is_music: bool
     is_comic: bool

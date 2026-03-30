@@ -2,6 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)
-class SubscribeOutData:
+class SubscribeOutDTO:
     is_subscribe: bool
     count: int

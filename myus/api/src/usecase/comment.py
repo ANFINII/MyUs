@@ -6,8 +6,8 @@ from api.src.domain.interface.comment.interface import CommentInterface, FilterO
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
-from api.src.types.dto.comment import CommentGetData, ReplyData
-from api.src.types.dto.user import AuthorData
+from api.src.types.dto.comment import CommentGetDTO, ReplyDTO
+from api.src.types.dto.user import AuthorDTO
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.user import get_author_data
 from api.utils.enum.index import CommentTypeNo, MediaType
@@ -36,15 +36,15 @@ def save_comment_data(data: CommentData) -> bool:
         return False
 
 
-def get_author_data_map(ids: list[int]) -> dict[int, AuthorData]:
+def get_author_data_map(ids: list[int]) -> dict[int, AuthorDTO]:
     if len(ids) == 0:
         return {}
 
     repository = injector.get(UserInterface)
     authors = repository.bulk_get(ids)
-    author_map: dict[int, AuthorData] = {}
+    author_map: dict[int, AuthorDTO] = {}
     for author in authors:
-        author_map[author.user.id] = AuthorData(
+        author_map[author.user.id] = AuthorDTO(
             avatar=create_url(author.user.avatar),
             ulid=author.user.ulid,
             nickname=author.user.nickname,
@@ -54,7 +54,7 @@ def get_author_data_map(ids: list[int]) -> dict[int, AuthorData]:
     return author_map
 
 
-def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[CommentGetData]:
+def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) -> list[CommentGetDTO]:
     comment_repo = injector.get(CommentInterface)
     ids = comment_repo.get_ids(FilterOption(type_no=type_no, object_id=object_id), SortOption())
     all_comments = comment_repo.bulk_get(ids)
@@ -74,7 +74,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
         liked_ids = set(comment_repo.get_liked_ids(ids, user_id))
 
     data = [
-        CommentGetData(
+        CommentGetDTO(
             ulid=c.ulid,
             text=c.text,
             created=c.created,
@@ -83,7 +83,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
             like_count=c.like_count,
             author=author_map[c.author_id],
             replys=[
-                ReplyData(
+                ReplyDTO(
                     ulid=r.ulid,
                     text=r.text,
                     created=r.created,
@@ -99,7 +99,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
     return data
 
 
-def create_comment(user_id: int, input: CommentCreateIn) -> CommentGetData | None:
+def create_comment(user_id: int, input: CommentCreateIn) -> CommentGetDTO | None:
     comment_repo = injector.get(CommentInterface)
     media_repo = get_media_repository(MediaType(input.type_name.value))
     media_ids = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption())
@@ -135,7 +135,7 @@ def create_comment(user_id: int, input: CommentCreateIn) -> CommentGetData | Non
     assert len(comments) > 0, "コメントの作成に失敗しました"
     comment = comments[0]
 
-    data = CommentGetData(
+    data = CommentGetDTO(
         ulid=comment.ulid,
         text=comment.text,
         created=comment.created,

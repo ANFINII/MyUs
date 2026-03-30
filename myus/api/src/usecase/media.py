@@ -16,7 +16,7 @@ from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.media.index import FilterOption, SortOption, ExcludeOption
 from api.src.injectors.container import injector
-from api.src.types.dto.media import MediaCreateData, HomeData, VideoDetailData, MusicDetailData, ComicDetailData, PictureDetailData, BlogDetailData, ChatDetailData
+from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, ComicDetailDTO, PictureDetailDTO, BlogDetailDTO, ChatDetailDTO
 from api.src.types.schema.media import VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
@@ -27,7 +27,7 @@ from api.utils.functions.user import get_media_user
 from api.utils.functions.media import save_upload
 
 
-def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> MediaCreateData:
+def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> MediaCreateDTO:
     repository = injector.get(VideoInterface)
 
     new_video = VideoData(
@@ -51,10 +51,10 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
     assert len(new_ids) == 1, "作成に失敗しました"
     obj = repository.bulk_get(new_ids)[0]
 
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateDTO(ulid=obj.ulid)
 
 
-def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> MediaCreateData:
+def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> MediaCreateDTO:
     repository = injector.get(MusicInterface)
 
     new_music = MusicData(
@@ -78,10 +78,10 @@ def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> M
     assert len(new_ids) == 1, "作成に失敗しました"
     obj = repository.bulk_get(new_ids)[0]
 
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateDTO(ulid=obj.ulid)
 
 
-def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> MediaCreateData:
+def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> MediaCreateDTO:
     repository = injector.get(ComicInterface)
 
     new_comic = ComicData(
@@ -104,10 +104,10 @@ def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile, page
     assert len(new_ids) == 1, "作成に失敗しました"
     obj = repository.bulk_get(new_ids)[0]
 
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateDTO(ulid=obj.ulid)
 
 
-def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) -> MediaCreateData:
+def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) -> MediaCreateDTO:
     repository = injector.get(PictureInterface)
 
     new_picture = PictureData(
@@ -129,10 +129,10 @@ def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) 
     assert len(new_ids) == 1, "作成に失敗しました"
     obj = repository.bulk_get(new_ids)[0]
 
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateDTO(ulid=obj.ulid)
 
 
-def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> MediaCreateData:
+def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> MediaCreateDTO:
     repository = injector.get(BlogInterface)
 
     new_blog = BlogData(
@@ -156,10 +156,10 @@ def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> Med
     assert len(new_ids) == 1, "作成に失敗しました"
     obj = repository.bulk_get(new_ids)[0]
 
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateDTO(ulid=obj.ulid)
 
 
-def create_chat(channel: ChannelData, input: ChatIn) -> MediaCreateData:
+def create_chat(channel: ChannelData, input: ChatIn) -> MediaCreateDTO:
     repository = injector.get(ChatInterface)
 
     new_chat = ChatData(
@@ -183,11 +183,11 @@ def create_chat(channel: ChannelData, input: ChatIn) -> MediaCreateData:
     assert len(new_ids) == 1, "作成に失敗しました"
     obj = repository.bulk_get(new_ids)[0]
 
-    return MediaCreateData(ulid=obj.ulid)
+    return MediaCreateDTO(ulid=obj.ulid)
 
 
-def get_home(limit: int, search: str) -> HomeData:
-    data = HomeData(
+def get_home(limit: int, search: str) -> HomeDTO:
+    data = HomeDTO(
         videos=get_videos(limit, search),
         musics=get_musics(limit, search),
         comics=get_comics(limit, search),
@@ -198,8 +198,8 @@ def get_home(limit: int, search: str) -> HomeData:
     return data
 
 
-def get_recommend(limit: int, search: str) -> HomeData:
-    data = HomeData(
+def get_recommend(limit: int, search: str) -> HomeDTO:
+    data = HomeDTO(
         videos=get_videos(limit, search),
         musics=get_musics(limit, search),
         comics=get_comics(limit, search),
@@ -268,7 +268,7 @@ def get_chats(limit: int, search: str, id: int | None = None, owner_id: int = 0,
     return objs
 
 
-def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> VideoDetailData:
+def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> VideoDetailDTO:
     repository = injector.get(VideoInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
@@ -279,7 +279,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Vi
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    data = VideoDetailData(
+    data = VideoDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
@@ -301,7 +301,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Vi
     return data
 
 
-def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> MusicDetailData:
+def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> MusicDetailDTO:
     repository = injector.get(MusicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
@@ -312,7 +312,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Mu
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    data = MusicDetailData(
+    data = MusicDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
@@ -334,7 +334,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Mu
     return data
 
 
-def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> ComicDetailData:
+def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> ComicDetailDTO:
     repository = injector.get(ComicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
@@ -345,7 +345,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Co
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    data = ComicDetailData(
+    data = ComicDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
@@ -366,7 +366,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Co
     return data
 
 
-def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> BlogDetailData:
+def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> BlogDetailDTO:
     repository = injector.get(BlogInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
@@ -377,7 +377,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Blo
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    data = BlogDetailData(
+    data = BlogDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
@@ -398,7 +398,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Blo
     return data
 
 
-def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> PictureDetailData:
+def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> PictureDetailDTO:
     repository = injector.get(PictureInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
@@ -409,7 +409,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=None)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    data = PictureDetailData(
+    data = PictureDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
@@ -429,7 +429,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     return data
 
 
-def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> ChatDetailData:
+def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> ChatDetailDTO:
     repository = injector.get(ChatInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
     assert len(ids) == 1, "データが見つかりませんでした"
@@ -439,7 +439,7 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Cha
     messages = get_messages(chat_id=obj.id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    data = ChatDetailData(
+    data = ChatDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,

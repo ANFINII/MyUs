@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 @dataclass(frozen=True, slots=True)
-class FollowUserData:
+class FollowUserDTO:
     avatar: str
     nickname: str
     introduction: str
@@ -12,16 +12,16 @@ class FollowUserData:
 
 
 @dataclass(frozen=True, slots=True)
-class FollowData:
+class FollowDTO:
     id: int
-    follower: FollowUserData
-    following: FollowUserData
+    follower: FollowUserDTO
+    following: FollowUserDTO
     created: datetime
     is_follow: bool
 
 
 
 @dataclass(frozen=True, slots=True)
-class FollowOutData:
+class FollowOutDTO:
     is_follow: bool
     follower_count: int

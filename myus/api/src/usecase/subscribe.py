@@ -4,11 +4,11 @@ from api.src.domain.interface.channel.interface import ChannelInterface
 from api.src.domain.interface.subscribe.data import SubscribeData
 from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from api.src.injectors.container import injector
-from api.src.types.dto.subscribe import SubscribeOutData
+from api.src.types.dto.subscribe import SubscribeOutDTO
 from api.src.usecase.channel import get_channel_data
 
 
-def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> SubscribeOutData | None:
+def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> SubscribeOutDTO | None:
     channel_repo = injector.get(ChannelInterface)
     subscribe_repo = injector.get(SubscribeInterface)
     channel = get_channel_data(channel_ulid)
@@ -35,4 +35,4 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Sub
         updated_channel = replace(channel, count=count)
         channel_repo.bulk_save([updated_channel])
 
-    return SubscribeOutData(is_subscribe=is_subscribe, count=count)
+    return SubscribeOutDTO(is_subscribe=is_subscribe, count=count)

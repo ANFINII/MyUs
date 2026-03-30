@@ -5,12 +5,12 @@ from api.src.domain.interface.follow.interface import FilterOption, FollowInterf
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
-from api.src.types.dto.follow import FollowOutData, FollowUserData
+from api.src.types.dto.follow import FollowOutDTO, FollowUserDTO
 from api.src.usecase.user import get_user_data
 from api.utils.functions.index import create_url
 
 
-def get_follows(user_id: int, search: str, limit: int) -> list[FollowUserData]:
+def get_follows(user_id: int, search: str, limit: int) -> list[FollowUserDTO]:
     follow_repo = injector.get(FollowInterface)
     user_repo = injector.get(UserInterface)
     ids = follow_repo.get_ids(FilterOption(follower_id=user_id, search=search), SortOption(), limit)
@@ -19,7 +19,7 @@ def get_follows(user_id: int, search: str, limit: int) -> list[FollowUserData]:
     users = user_repo.bulk_get(following_ids)
 
     return [
-        FollowUserData(
+        FollowUserDTO(
             avatar=create_url(u.user.avatar),
             nickname=u.user.nickname,
             introduction=u.profile.introduction,
@@ -29,7 +29,7 @@ def get_follows(user_id: int, search: str, limit: int) -> list[FollowUserData]:
     ]
 
 
-def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserData]:
+def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserDTO]:
     follow_repo = injector.get(FollowInterface)
     user_repo = injector.get(UserInterface)
     ids = follow_repo.get_ids(FilterOption(following_id=user_id, search=search), SortOption(), limit)
@@ -38,7 +38,7 @@ def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserData]
     users = user_repo.bulk_get(follower_ids)
 
     return [
-        FollowUserData(
+        FollowUserDTO(
             avatar=create_url(u.user.avatar),
             nickname=u.user.nickname,
             introduction=u.profile.introduction,
@@ -48,7 +48,7 @@ def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserData]
     ]
 
 
-def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowOutData | None:
+def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowOutDTO | None:
     user_repo = injector.get(UserInterface)
     follow_repo = injector.get(FollowInterface)
     following = get_user_data(ulid=ulid)
@@ -84,4 +84,4 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowOu
         updated_following = replace(following, mypage=following_mypage)
         user_repo.bulk_save([updated_follower, updated_following])
 
-    return FollowOutData(is_follow=is_follow, follower_count=follower_count)
+    return FollowOutDTO(is_follow=is_follow, follower_count=follower_count)

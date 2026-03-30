@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)
-class UserInData:
+class UserInDTO:
     avatar: str | None
     email: str
     username: str
@@ -10,7 +10,7 @@ class UserInData:
 
 
 @dataclass(frozen=True, slots=True)
-class AuthorData:
+class AuthorDTO:
     avatar: str
     ulid: str
     nickname: str
@@ -18,18 +18,18 @@ class AuthorData:
 
 
 @dataclass(frozen=True, slots=True)
-class MediaUserData:
+class MediaUserDTO:
     is_like: bool
     is_subscribe: bool
 
 
 @dataclass(frozen=True, slots=True)
-class SearchTagData:
+class SearchTagDTO:
     sequence: int
     name: str
 
 
 @dataclass(frozen=True, slots=True)
-class LikeData:
+class LikeDTO:
     is_like: bool
     like_count: int

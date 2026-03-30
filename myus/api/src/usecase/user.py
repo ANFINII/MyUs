@@ -8,7 +8,7 @@ from api.src.domain.interface.comment.interface import CommentInterface, FilterO
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
 from api.src.domain.interface.user.data import ProfileData, UserAllData, UserNotificationData
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
-from api.src.types.dto.user import AuthorData, LikeData
+from api.src.types.dto.user import AuthorDTO, LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
 from api.utils.enum.index import ImageUpload, MediaType
@@ -37,12 +37,12 @@ def save_user_data(data: UserAllData) -> bool:
         return False
 
 
-def get_author_data(user_id: int) -> AuthorData:
+def get_author_data(user_id: int) -> AuthorDTO:
     user = get_user_data(user_id=user_id)
     if user is None:
-        return AuthorData(avatar="", ulid="", nickname="", follower_count=0)
+        return AuthorDTO(avatar="", ulid="", nickname="", follower_count=0)
 
-    data = AuthorData(
+    data = AuthorDTO(
         avatar=create_url(user.user.avatar),
         ulid=user.user.ulid,
         nickname=user.user.nickname,
@@ -131,7 +131,7 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
     return save_user_data(save_data)
 
 
-def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeData | None:
+def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeDTO | None:
     repository = injector.get(UserInterface)
     media_repo = get_media_repository(media_type)
     ids = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption())
@@ -139,10 +139,10 @@ def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeData | Non
         return None
 
     is_like, like_count = repository.media_like(user_id, media_type, ids[0])
-    return LikeData(is_like=is_like, like_count=like_count)
+    return LikeDTO(is_like=is_like, like_count=like_count)
 
 
-def like_comment(user_id: int, ulid: str) -> LikeData | None:
+def like_comment(user_id: int, ulid: str) -> LikeDTO | None:
     repository = injector.get(UserInterface)
     comment_repo = injector.get(CommentInterface)
     ids = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
@@ -150,7 +150,7 @@ def like_comment(user_id: int, ulid: str) -> LikeData | None:
         return None
 
     is_like, like_count = repository.comment_like(user_id, ids[0])
-    return LikeData(is_like=is_like, like_count=like_count)
+    return LikeDTO(is_like=is_like, like_count=like_count)
 
 
 def profile_check(data: SettingProfileIn) -> str:

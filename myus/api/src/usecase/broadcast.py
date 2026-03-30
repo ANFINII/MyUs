@@ -2,7 +2,7 @@ from dataclasses import asdict, dataclass
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from api.modules.logger import log
-from api.src.types.dto.message import MessageData
+from api.src.types.dto.message import MessageDTO
 
 
 @dataclass(frozen=True, slots=True)
@@ -51,7 +51,7 @@ def _send_to_group(group_name: str, command: str, message: dict[str, object]) ->
     )
 
 
-def _build_message_payload(data: MessageData) -> MessagePayload:
+def _build_message_payload(data: MessageDTO) -> MessagePayload:
     return MessagePayload(
         ulid=data.ulid,
         text=data.text,
@@ -66,7 +66,7 @@ def _build_message_payload(data: MessageData) -> MessagePayload:
     )
 
 
-def broadcast_create_message(chat_ulid: str, data: MessageData, parent_ulid: str) -> None:
+def broadcast_create_message(chat_ulid: str, data: MessageDTO, parent_ulid: str) -> None:
     is_reply = len(parent_ulid) > 0
     command = "create_reply_message" if is_reply else "create_message"
     payload: dict[str, object] = asdict(_build_message_payload(data))
