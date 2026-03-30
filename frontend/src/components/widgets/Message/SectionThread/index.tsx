@@ -46,7 +46,7 @@ export default function SectionThread(props: Props): React.JSX.Element {
         ))}
         <footer className={style.thread_footer}>
           <form onSubmit={onSubmit}>
-            <ChatEditor value={reply} onChange={onChange} disabled={isDisabled} />
+            <ChatEditor value={reply} onChange={onChange} disabled={isDisabled} placeholder={isDisabled ? 'ログインが必要です' : ''} />
           </form>
         </footer>
       </div>
