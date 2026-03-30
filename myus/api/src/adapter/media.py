@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.types.dto.comment import CommentGetData, ReplyData
+from api.src.types.dto.comment import CommentGetDTO, ReplyDTO
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.comic.data import ComicData
@@ -11,8 +11,8 @@ from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.data import HashtagData
 from api.src.domain.interface.channel.data import ChannelData
 from api.utils.functions.index import create_url
-from api.src.types.dto.message import MessageData
-from api.src.types.dto.user import AuthorData, MediaUserData
+from api.src.types.dto.message import MessageDTO
+from api.src.types.dto.user import AuthorDTO, MediaUserDTO
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.comment import CommentOut, ReplyOut
 from api.src.types.schema.media import VideoIn, MusicIn, ComicIn,PictureIn, BlogIn, ChatIn
@@ -540,7 +540,7 @@ def convert_chats(objs: list[ChatData]) -> list[ChatOut]:
     return data
 
 
-def convert_comments(objs: list[CommentGetData]) -> list[CommentOut]:
+def convert_comments(objs: list[CommentGetDTO]) -> list[CommentOut]:
     data = [
         CommentOut(
             ulid=x.ulid,
@@ -556,7 +556,7 @@ def convert_comments(objs: list[CommentGetData]) -> list[CommentOut]:
     return data
 
 
-def convert_replys(objs: list[ReplyData]) -> list[ReplyOut]:
+def convert_replys(objs: list[ReplyDTO]) -> list[ReplyOut]:
     data = [
         ReplyOut(
             ulid=x.ulid,
@@ -571,7 +571,7 @@ def convert_replys(objs: list[ReplyData]) -> list[ReplyOut]:
     return data
 
 
-def convert_messages(objs: list[MessageData]) -> list[MessageOut]:
+def convert_messages(objs: list[MessageDTO]) -> list[MessageOut]:
     data = [
         MessageOut(
             ulid=m.ulid,
@@ -585,7 +585,7 @@ def convert_messages(objs: list[MessageData]) -> list[MessageOut]:
     return data
 
 
-def convert_author(obj: AuthorData) -> AuthorOut:
+def convert_author(obj: AuthorDTO) -> AuthorOut:
     data = AuthorOut(
         avatar=obj.avatar,
         ulid=obj.ulid,
@@ -608,7 +608,7 @@ def convert_channel(obj: ChannelData) -> ChannelOut:
     return data
 
 
-def convert_media_user(obj: MediaUserData) -> MediaUserOut:
+def convert_media_user(obj: MediaUserDTO) -> MediaUserOut:
     return MediaUserOut(is_like=obj.is_like, is_subscribe=obj.is_subscribe)
 
 

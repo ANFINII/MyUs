@@ -2,12 +2,12 @@ from django.core.mail import send_mail
 from api.db.models.user import User
 from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from api.src.injectors.container import injector
-from api.src.types.dto.notification import NotificationUserData
-from api.src.types.dto.user import MediaUserData
+from api.src.types.dto.notification import NotificationUserDTO
+from api.src.types.dto.user import MediaUserDTO
 from api.utils.functions.index import create_url
 
 
-def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> MediaUserData:
+def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> MediaUserDTO:
     subscribe_repo = injector.get(SubscribeInterface)
     subscribe = None
     if user_id is not None:
@@ -15,7 +15,7 @@ def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> Media
         subscribes = subscribe_repo.bulk_get(ids)
         subscribe = subscribes[0] if len(subscribes) > 0 else None
 
-    data = MediaUserData(
+    data = MediaUserDTO(
         is_like=is_like,
         is_subscribe=subscribe.is_subscribe if subscribe else False,
     )
@@ -23,8 +23,8 @@ def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> Media
     return data
 
 
-def get_notification_user(user: User) -> NotificationUserData:
-    data = NotificationUserData(avatar=create_url(str(user.avatar)), nickname=user.nickname)
+def get_notification_user(user: User) -> NotificationUserDTO:
+    data = NotificationUserDTO(avatar=create_url(str(user.avatar)), ulid=user.ulid, nickname=user.nickname)
     return data
 
 

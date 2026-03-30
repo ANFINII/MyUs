@@ -8,7 +8,7 @@ from api.src.domain.interface.message.interface import FilterOption, MessageInte
 from api.src.domain.interface.notification.data import NotificationContentData, NotificationData
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.injectors.container import injector
-from api.src.types.dto.message import MessageData, MessageReplyData
+from api.src.types.dto.message import MessageDTO, MessageReplyDTO
 from api.src.usecase.user import get_author_data
 from api.utils.enum.index import NotificationObjectType, NotificationType, NotificationTypeNo
 
@@ -34,13 +34,13 @@ def save_message_data(data: MessageDomainData) -> bool:
         return False
 
 
-def get_messages(chat_id: int) -> list[MessageData]:
+def get_messages(chat_id: int) -> list[MessageDTO]:
     message_repo = injector.get(MessageInterface)
     ids = message_repo.get_ids(FilterOption(chat_id=chat_id, is_parent=True), SortOption(is_asc=True))
     messages = message_repo.bulk_get(ids)
 
     data = [
-        MessageData(
+        MessageDTO(
             ulid=m.ulid,
             text=m.text,
             reply_count=m.reply_count,
@@ -52,13 +52,13 @@ def get_messages(chat_id: int) -> list[MessageData]:
     return data
 
 
-def get_replies(message_ulid: str) -> list[MessageReplyData]:
+def get_replies(message_ulid: str) -> list[MessageReplyDTO]:
     message_repo = injector.get(MessageInterface)
     ids = message_repo.get_ids(FilterOption(parent_ulid=message_ulid, is_parent=False), SortOption(is_asc=True))
     messages = message_repo.bulk_get(ids)
 
     data = [
-        MessageReplyData(
+        MessageReplyDTO(
             ulid=m.ulid,
             parent_id=m.parent_ulid,
             text=m.text,
@@ -70,7 +70,7 @@ def get_replies(message_ulid: str) -> list[MessageReplyData]:
     return data
 
 
-def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) -> MessageData | None:
+def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) -> MessageDTO | None:
     chat_repo = injector.get(ChatInterface)
     chat_ids = chat_repo.get_ids(MediaFilterOption(ulid=chat_ulid, publish=True), ExcludeOption(), MediaSortOption())
     if len(chat_ids) == 0:
@@ -124,7 +124,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
             )
             notification_repo.bulk_save([notification])
 
-    data = MessageData(
+    data = MessageDTO(
         ulid=message.ulid,
         text=message.text,
         reply_count=0,
@@ -135,7 +135,7 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
     return data
 
 
-def update_message(user_id: int, message_ulid: str, text: str) -> MessageData | None:
+def update_message(user_id: int, message_ulid: str, text: str) -> MessageDTO | None:
     message = get_message_data(message_ulid)
     if message is None:
         return None
@@ -146,7 +146,7 @@ def update_message(user_id: int, message_ulid: str, text: str) -> MessageData | 
 
     save_message_data(replace(message, text=text))
 
-    data = MessageData(
+    data = MessageDTO(
         ulid=message.ulid,
         text=text,
         reply_count=message.reply_count,

@@ -2,7 +2,7 @@ from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
-from api.src.types.dto.notification import NotificationContentData, NotificationItemData, NotificationOutData, NotificationUserData
+from api.src.types.dto.notification import NotificationContentData, NotificationItemDTO, NotificationOutDTO, NotificationUserDTO
 from api.utils.functions.index import create_url
 
 
@@ -15,14 +15,14 @@ def get_notification_data(ulid: str = "", user_to_id: int = 0, exclude_user_id: 
     return repository.bulk_get(ids)
 
 
-def get_notification_user_map(user_ids: list[int]) -> dict[int, NotificationUserData]:
+def get_notification_user_map(user_ids: list[int]) -> dict[int, NotificationUserDTO]:
     if len(user_ids) == 0:
         return {}
 
     repository = injector.get(UserInterface)
     users = repository.bulk_get(user_ids)
     return {
-        user.user.id: NotificationUserData(
+        user.user.id: NotificationUserDTO(
             avatar=create_url(user.user.avatar),
             ulid=user.user.ulid,
             nickname=user.user.nickname,
@@ -31,7 +31,7 @@ def get_notification_user_map(user_ids: list[int]) -> dict[int, NotificationUser
     }
 
 
-def get_notification(user_id: int) -> NotificationOutData:
+def get_notification(user_id: int) -> NotificationOutDTO:
     repository = injector.get(NotificationInterface)
     objs = get_notification_data(user_to_id=user_id, exclude_user_id=user_id)
     confirmed_ids = set(repository.get_ids(FilterOption(confirmed_user_id=user_id), SortOption()))
@@ -39,13 +39,13 @@ def get_notification(user_id: int) -> NotificationOutData:
     user_ids = list({n.user_from_id for n in objs} | {n.user_to_id for n in objs if n.user_to_id != 0})
     user_map = get_notification_user_map(user_ids)
 
-    items: list[NotificationItemData] = []
+    items: list[NotificationItemDTO] = []
     for o in objs:
         user_from = user_map.get(o.user_from_id)
         if user_from is None:
             continue
 
-        item = NotificationItemData(
+        item = NotificationItemDTO(
             ulid=o.ulid,
             user_from=user_from,
             user_to=user_map.get(o.user_to_id),
@@ -62,7 +62,7 @@ def get_notification(user_id: int) -> NotificationOutData:
         )
         items.append(item)
 
-    return NotificationOutData(count=len(items), datas=items)
+    return NotificationOutDTO(count=len(items), datas=items)
 
 
 def notification_confirm(user_id: int, ulid: str) -> None:

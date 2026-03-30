@@ -7,14 +7,14 @@ from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.chat.data import ChatData
-from api.src.types.dto.comment import CommentGetData
-from api.src.types.dto.message import MessageData
+from api.src.types.dto.comment import CommentGetDTO
+from api.src.types.dto.message import MessageDTO
 from api.src.domain.interface.channel.data import ChannelData
-from api.src.types.dto.user import MediaUserData
+from api.src.types.dto.user import MediaUserDTO
 
 
 @dataclass(frozen=True, slots=True)
-class HomeData:
+class HomeDTO:
     videos: list[VideoData]
     musics: list[MusicData]
     comics: list[ComicData]
@@ -24,12 +24,12 @@ class HomeData:
 
 
 @dataclass(frozen=True, slots=True)
-class MediaCreateData:
+class MediaCreateDTO:
     ulid: str
 
 
 @dataclass(frozen=True, slots=True)
-class MediaDetailData:
+class MediaDetailDTO:
     id: int
     ulid: str
     title: str
@@ -40,49 +40,49 @@ class MediaDetailData:
     created: datetime
     updated: datetime
     channel: ChannelData
-    mediaUser: MediaUserData
+    mediaUser: MediaUserDTO
     hashtags: list[HashtagData]
 
 
 @dataclass(frozen=True, slots=True)
-class VideoDetailData(MediaDetailData):
+class VideoDetailDTO(MediaDetailDTO):
     image: str
     video: str
     convert: str
-    comments: list[CommentGetData]
+    comments: list[CommentGetDTO]
 
 
 @dataclass(frozen=True, slots=True)
-class MusicDetailData(MediaDetailData):
+class MusicDetailDTO(MediaDetailDTO):
     lyric: str
     music: str
     download: bool
-    comments: list[CommentGetData]
+    comments: list[CommentGetDTO]
 
 
 @dataclass(frozen=True, slots=True)
-class ComicDetailData(MediaDetailData):
+class ComicDetailDTO(MediaDetailDTO):
     image: str
     pages: list[str]
-    comments: list[CommentGetData]
+    comments: list[CommentGetDTO]
 
 
 @dataclass(frozen=True, slots=True)
-class PictureDetailData(MediaDetailData):
+class PictureDetailDTO(MediaDetailDTO):
     image: str
-    comments: list[CommentGetData]
+    comments: list[CommentGetDTO]
 
 
 @dataclass(frozen=True, slots=True)
-class BlogDetailData(MediaDetailData):
+class BlogDetailDTO(MediaDetailDTO):
     richtext: str
     image: str
-    comments: list[CommentGetData]
+    comments: list[CommentGetDTO]
 
 
 @dataclass(frozen=True, slots=True)
-class ChatDetailData(MediaDetailData):
+class ChatDetailDTO(MediaDetailDTO):
     thread: int
     joined: int
     period: date
-    messages: list[MessageData]
+    messages: list[MessageDTO]
