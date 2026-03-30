@@ -28,6 +28,14 @@
     word-break: break-word;
     overflow-wrap: break-word;
 
+    :global(p.is-editor-empty:first-child::before) {
+      float: left;
+      height: 0;
+      color: rgb(160, 160, 160);
+      pointer-events: none;
+      content: attr(data-placeholder);
+    }
+
     > * + * {
       margin-top: 0.5em;
     }

@@ -32,7 +32,7 @@ export default function SectionMain(props: Props): React.JSX.Element {
       ))}
       <footer className={style.chat_footer}>
         <form onSubmit={onSubmit}>
-          <ChatEditor value={message} onChange={onChange} disabled={isDisabled} />
+          <ChatEditor value={message} onChange={onChange} disabled={isDisabled} placeholder={isDisabled ? 'ログインが必要です' : ''} />
         </form>
       </footer>
     </div>

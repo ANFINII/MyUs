@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import Link from '@tiptap/extension-link'
+import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -12,7 +13,7 @@ import Toolbar, { ToolbarConfig } from 'components/widgets/TextEditor/Toolbar'
 import style from './ChatEditor.module.scss'
 import SendButton from '../SendButton'
 
-const extensions = [StarterKit.configure({ heading: false }), Link.configure({ openOnClick: false }), Underline]
+const baseExtensions = [StarterKit.configure({ heading: false }), Link.configure({ openOnClick: false }), Underline]
 
 const toolbarConfig: ToolbarConfig = {
   heading: false,
@@ -27,13 +28,14 @@ const toolbarConfig: ToolbarConfig = {
 interface Props {
   value: string
   disabled?: boolean
+  placeholder?: string
   onChange?: (html: string) => void
   onCancel?: () => void
   onSave?: () => void
 }
 
 export default function ChatEditor(props: Props): React.JSX.Element {
-  const { value, disabled = false, onChange, onCancel, onSave } = props
+  const { value, disabled = false, placeholder, onChange, onCancel, onSave } = props
 
   const onChangeRef = useRef(onChange)
   const onSaveRef = useRef(onSave)
@@ -64,6 +66,8 @@ export default function ChatEditor(props: Props): React.JSX.Element {
     if (suppressRef.current) return
     onChangeRef.current?.(e.getHTML())
   }, [])
+
+  const extensions = [...baseExtensions, Placeholder.configure({ placeholder, showOnlyWhenEditable: false })]
 
   const editor = useEditor({
     extensions,
