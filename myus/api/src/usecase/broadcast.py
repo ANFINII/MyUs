@@ -2,7 +2,7 @@ from dataclasses import asdict, dataclass
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from api.modules.logger import log
-from api.src.types.data.message import MessageData
+from api.src.types.dto.message import MessageData
 
 
 @dataclass(frozen=True, slots=True)

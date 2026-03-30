@@ -2,7 +2,7 @@ from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
-from api.src.types.data.notification import NotificationContentData, NotificationItemData, NotificationOutData, NotificationUserData
+from api.src.types.dto.notification import NotificationContentData, NotificationItemData, NotificationOutData, NotificationUserData
 from api.utils.functions.index import create_url
 
 

@@ -1,6 +1,6 @@
 from api.src.domain.interface.follow.interface import FilterOption as FollowFilterOption, FollowInterface, SortOption as FollowSortOption
 from api.src.injectors.container import injector
-from api.src.types.data.media import HomeData
+from api.src.types.dto.media import HomeData
 from api.src.usecase.media import get_videos, get_musics, get_comics, get_pictures, get_blogs, get_chats
 
 

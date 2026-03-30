@@ -8,7 +8,7 @@ from api.src.domain.interface.message.interface import FilterOption, MessageInte
 from api.src.domain.interface.notification.data import NotificationContentData, NotificationData
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.injectors.container import injector
-from api.src.types.data.message import MessageData, MessageReplyData
+from api.src.types.dto.message import MessageData, MessageReplyData
 from api.src.usecase.user import get_author_data
 from api.utils.enum.index import NotificationObjectType, NotificationType, NotificationTypeNo
 

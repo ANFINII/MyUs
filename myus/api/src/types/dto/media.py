@@ -7,10 +7,10 @@ from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.chat.data import ChatData
-from api.src.types.data.comment import CommentGetData
-from api.src.types.data.message import MessageData
+from api.src.types.dto.comment import CommentGetData
+from api.src.types.dto.message import MessageData
 from api.src.domain.interface.channel.data import ChannelData
-from api.src.types.data.user import MediaUserData
+from api.src.types.dto.user import MediaUserData
 
 
 @dataclass(frozen=True, slots=True)

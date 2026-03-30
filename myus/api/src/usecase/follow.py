@@ -5,7 +5,7 @@ from api.src.domain.interface.follow.interface import FilterOption, FollowInterf
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
-from api.src.types.data.follow import FollowOutData, FollowUserData
+from api.src.types.dto.follow import FollowOutData, FollowUserData
 from api.src.usecase.user import get_user_data
 from api.utils.functions.index import create_url
 

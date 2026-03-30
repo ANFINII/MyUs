@@ -8,7 +8,7 @@ from api.src.domain.interface.comment.interface import CommentInterface, FilterO
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
 from api.src.domain.interface.user.data import ProfileData, UserAllData, UserNotificationData
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
-from api.src.types.data.user import AuthorData, LikeData
+from api.src.types.dto.user import AuthorData, LikeData
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
 from api.utils.enum.index import ImageUpload, MediaType
