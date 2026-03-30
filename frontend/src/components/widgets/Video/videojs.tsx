@@ -30,21 +30,13 @@ export default function VideoJS(props: Props): React.JSX.Element {
       if ('src' in playerOptions && !playerOptions.sources) {
         const src = playerOptions.src as string
         const isHLSSource = src.includes('.m3u8')
-        playerOptions.sources = [
-          {
-            src,
-            type: isHLSSource ? 'application/x-mpegURL' : 'video/mp4',
-          },
-        ]
+        playerOptions.sources = [{ src, type: isHLSSource ? 'application/x-mpegURL' : 'video/mp4' }]
         delete (playerOptions as Record<string, unknown>).src
         // HLSの品質切り替えを高速化
         if (isHLSSource) {
-          ;(playerOptions as Record<string, unknown>).html5 = {
-            vhs: {
-              fastQualityChange: true,
-              smoothQualityChange: true,
-            },
-          }
+          Object.assign(playerOptions, {
+            html5: { vhs: { fastQualityChange: true, smoothQualityChange: true } },
+          })
         }
       }
 
