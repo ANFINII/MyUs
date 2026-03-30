@@ -29,24 +29,25 @@ export default function VideoJS(props: Props): React.JSX.Element {
       const playerOptions = { controls: true, fluid: true, ...options }
       if ('src' in playerOptions && !playerOptions.sources) {
         const src = playerOptions.src as string
-        playerOptions.sources = [
-          {
-            src,
-            type: src.includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4',
-          },
-        ]
+        const isHLSSource = src.includes('.m3u8')
+        playerOptions.sources = [{ src, type: isHLSSource ? 'application/x-mpegURL' : 'video/mp4' }]
         delete (playerOptions as Record<string, unknown>).src
+        // HLSの品質切り替えを高速化
+        if (isHLSSource) {
+          Object.assign(playerOptions, {
+            html5: { vhs: { fastQualityChange: true, smoothQualityChange: true } },
+          })
+        }
       }
 
       const player = (playerRef.current = videojs(videoElement, playerOptions, () => {
         const extendedPlayer = player as unknown as ExtendedPlayer
         const playerWithOptions = player as unknown as { options_: { playbackRates?: number[] } }
         playerWithOptions.options_.playbackRates = PLAYBACK_RATES
-        
+
         // HLSストリームの品質レベルが読み込まれるのを待つ
         const initializeQualitySelector = (): void => {
           extendedPlayer.hlsQualitySelector({ displayCurrentQuality: false })
-          
           // 設定メニューの作成
           if (!settingsMenuCreatedRef.current) {
             setTimeout(() => {
@@ -55,18 +56,18 @@ export default function VideoJS(props: Props): React.JSX.Element {
             }, MENU_DELAY_MS)
           }
         }
-        
-        // HLSストリームの場合、loadedmetadataイベントを待つ
-        if (playerOptions.sources && playerOptions.sources[0]?.type === 'application/x-mpegURL') {
+
+        const isHLS = playerOptions.sources?.[0]?.type === 'application/x-mpegURL'
+        if (isHLS) {
           player.on('loadedmetadata', () => {
-            // 品質レベルが利用可能になるまで少し待つ
             setTimeout(initializeQualitySelector, 100)
           })
-        } else {
-          // 通常の動画の場合はすぐに初期化
-          initializeQualitySelector()
+        } else if (!settingsMenuCreatedRef.current) {
+          setTimeout(() => {
+            createSettingsMenu(extendedPlayer, false)
+            settingsMenuCreatedRef.current = true
+          }, MENU_DELAY_MS)
         }
-        
         onReady?.(player)
       }))
 
@@ -79,7 +80,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
   }, [options, onReady])
 
   // カスタム設定メニューを作成する関数
-  const createSettingsMenu = (player: ExtendedPlayer): void => {
+  const createSettingsMenu = (player: ExtendedPlayer, showQuality: boolean = true): void => {
     const controlBar = player.controlBar
     const playerEl = player.el()
 
@@ -142,9 +143,11 @@ export default function VideoJS(props: Props): React.JSX.Element {
       const speedItem = createMenuItem(SPEED_MENU, getCurrentSpeedLabel(), () => showSubmenu('speed'))
       menuContent.appendChild(speedItem)
 
-      // 画質メニューアイテム
-      const qualityItem = createMenuItem(QUALITY_MENU, getCurrentQualityLabel(), () => showSubmenu('quality'))
-      menuContent.appendChild(qualityItem)
+      // 画質メニューアイテム（HLSの場合のみ）
+      if (showQuality) {
+        const qualityItem = createMenuItem(QUALITY_MENU, getCurrentQualityLabel(), () => showSubmenu('quality'))
+        menuContent.appendChild(qualityItem)
+      }
       menuEl.appendChild(menuContent)
       return menuEl
     }
@@ -187,7 +190,6 @@ export default function VideoJS(props: Props): React.JSX.Element {
         })
       } else if (type === 'quality') {
         const qualityLevels = player.qualityLevels()
-        
         // 品質レベルがまだ読み込まれていない場合は空のメニューを表示
         if (!qualityLevels || qualityLevels.length === 0) {
           const noQualityItem = document.createElement('div')
@@ -197,7 +199,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
           submenuEl.appendChild(submenuContent)
           return submenuEl
         }
-        
+
         const isAuto = Array.from({ length: qualityLevels.length }).every((_, i) => {
           const level = qualityLevels[i]
           return level ? level.enabled : true
@@ -231,6 +233,8 @@ export default function VideoJS(props: Props): React.JSX.Element {
                 level.enabled = level.height === option.height
               }
             }
+            // 現在位置にシークしてバッファをフラッシュし即座に切り替え
+            player.currentTime(player.currentTime())
             updateSubmenuSelection(type)
             updateMainMenuLabel()
             hideSubmenu(type)
@@ -252,6 +256,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
             const level = qualityLevels[i]
             if (level) level.enabled = true
           }
+          player.currentTime(player.currentTime())
           updateSubmenuSelection(type)
           updateMainMenuLabel()
           hideSubmenu(type)
@@ -280,12 +285,10 @@ export default function VideoJS(props: Props): React.JSX.Element {
     // 現在の画質ラベルを取得
     const getCurrentQualityLabel = (): string => {
       const qualityLevels = player.qualityLevels()
-      
       // 品質レベルがまだ読み込まれていない場合
       if (!qualityLevels || qualityLevels.length === 0) {
         return AUTO_QUALITY
       }
-      
       const enabledLevels: number[] = []
       for (let i = 0; i < qualityLevels.length; i++) {
         const level = qualityLevels[i]
@@ -383,7 +386,10 @@ export default function VideoJS(props: Props): React.JSX.Element {
     const settingsButton = controlBar.addChild('SettingsButton', {})
 
     // メニューを追加
-    const menus = [createMainMenu(), createSubmenu('speed'), createSubmenu('quality')]
+    const menus = [createMainMenu(), createSubmenu('speed')]
+    if (showQuality) {
+      menus.push(createSubmenu('quality'))
+    }
     menus.forEach((menu) => playerEl.appendChild(menu))
 
     // フルスクリーンボタンの前に配置
@@ -407,7 +413,6 @@ export default function VideoJS(props: Props): React.JSX.Element {
       }
     }
     document.addEventListener('click', handleOutsideClick)
-    
     // プレーヤー破棄時にイベントリスナーをクリーンアップ
     player.on('dispose', () => {
       document.removeEventListener('click', handleOutsideClick)
