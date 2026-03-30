@@ -9,6 +9,20 @@ from api.modules.logger import log
 from api.utils.functions.convert.video_converter import VideoConverter
 
 
+def convert_video(video_path: str) -> str:
+    """保存済み動画ファイルをエンコードし、変換済みファイルの相対パスを返す"""
+    absolute_path = os.path.join(settings.MEDIA_ROOT, video_path)
+    output_dir = os.path.dirname(absolute_path)
+
+    try:
+        encode_video(convert_path=absolute_path, output_dir=output_dir)
+        convert_filename = os.path.splitext(os.path.basename(video_path))[0] + "_convert.mp4"
+        return os.path.join(os.path.dirname(video_path), convert_filename)
+    except Exception as e:
+        log.error("動画エンコードエラー", exc=e, video_path=video_path)
+        return ""
+
+
 def encode_video(convert_path: str, output_dir: str, save_log: bool = True) -> dict[str, Any]:
     """
     動画をエンコードして統計情報を返す

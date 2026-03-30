@@ -64,9 +64,8 @@ class VideoAPI:
         input: VideoIn = Form(...),
         image: UploadedFile = File(...),
         video: UploadedFile = File(...),
-        convert: UploadedFile = File(...),
     ):
-        log.info("VideoAPI create", input=input, image=image, video=video, convert=convert)
+        log.info("VideoAPI create", input=input, image=image, video=video)
 
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
@@ -75,7 +74,7 @@ class VideoAPI:
         if channel is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
 
-        obj = create_video(channel=channel, input=input, image=image, video=video, convert=convert)
+        obj = create_video(channel=channel, input=input, image=image, video=video)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
