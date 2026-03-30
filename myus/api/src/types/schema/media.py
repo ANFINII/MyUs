@@ -1,7 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel
 from api.src.types.schema.comment import CommentOut
-from api.src.types.schema.message import ChatMessageOut
+from api.src.types.schema.message import MessageOut
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.user import MediaUserOut
 
@@ -149,7 +149,7 @@ class ChatDetailOut(MediaDetailOut):
     thread: int
     joined: int
     period: datetime
-    messages: list[ChatMessageOut]
+    messages: list[MessageOut]
 
 
 class HomeOut(BaseModel):

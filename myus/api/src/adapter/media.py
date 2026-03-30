@@ -19,7 +19,7 @@ from api.src.types.schema.media import VideoIn, MusicIn, ComicIn,PictureIn, Blog
 from api.src.types.schema.media import HomeOut, VideoOut, MusicOut, ComicOut, PictureOut, BlogOut, ChatOut, MediaCreateOut, HashtagOut
 from api.src.types.schema.media import VideoDetailOut, MusicDetailOut, ComicDetailOut, PictureDetailOut, BlogDetailOut, ChatDetailOut
 from api.src.types.schema.media import VideoDetailsOut, MusicDetailsOut, ComicDetailsOut, PictureDetailsOut, BlogDetailsOut, ChatDetailsOut
-from api.src.types.schema.message import ChatMessageOut
+from api.src.types.schema.message import MessageOut
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.user import AuthorOut, MediaUserOut
 from api.src.usecase.auth import auth_check
@@ -571,9 +571,9 @@ def convert_replys(objs: list[ReplyData]) -> list[ReplyOut]:
     return data
 
 
-def convert_messages(objs: list[MessageData]) -> list[ChatMessageOut]:
+def convert_messages(objs: list[MessageData]) -> list[MessageOut]:
     data = [
-        ChatMessageOut(
+        MessageOut(
             ulid=m.ulid,
             text=m.text,
             reply_count=m.reply_count,
