@@ -24,11 +24,14 @@ from api.utils.enum.index import CommentType, ImageUpload, MediaUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_media_user
+from api.utils.functions.convert.video_encoding import convert_video
 from api.utils.functions.media import save_upload
 
 
-def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile, convert: UploadedFile) -> MediaCreateDTO:
+def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile) -> MediaCreateDTO:
     repository = injector.get(VideoInterface)
+    video_path = save_upload(video, MediaUpload.VIDEO, channel.ulid)
+    convert_path = convert_video(video_path)
 
     new_video = VideoData(
         id=0,
@@ -36,8 +39,8 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
         title=input.title,
         content=input.content,
         image=save_upload(image, ImageUpload.VIDEO, channel.ulid),
-        video=save_upload(video, MediaUpload.VIDEO, channel.ulid),
-        convert=save_upload(convert, MediaUpload.VIDEO, channel.ulid),
+        video=video_path,
+        convert=convert_path,
         read=0,
         like=0,
         publish=True,
