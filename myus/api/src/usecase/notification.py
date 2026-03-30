@@ -2,7 +2,7 @@ from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
-from api.src.types.dto.notification import NotificationContentData, NotificationItemDTO, NotificationOutDTO, NotificationUserDTO
+from api.src.types.dto.notification import NotificationContentData, NotificationItemDTO, NotificationDTO, NotificationUserDTO
 from api.utils.functions.index import create_url
 
 
@@ -31,7 +31,7 @@ def get_notification_user_map(user_ids: list[int]) -> dict[int, NotificationUser
     }
 
 
-def get_notification(user_id: int) -> NotificationOutDTO:
+def get_notification(user_id: int) -> NotificationDTO:
     repository = injector.get(NotificationInterface)
     objs = get_notification_data(user_to_id=user_id, exclude_user_id=user_id)
     confirmed_ids = set(repository.get_ids(FilterOption(confirmed_user_id=user_id), SortOption()))
@@ -62,7 +62,7 @@ def get_notification(user_id: int) -> NotificationOutDTO:
         )
         items.append(item)
 
-    return NotificationOutDTO(count=len(items), datas=items)
+    return NotificationDTO(count=len(items), datas=items)
 
 
 def notification_confirm(user_id: int, ulid: str) -> None:
