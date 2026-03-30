@@ -15,7 +15,7 @@ class ReplyDTO:
 
 
 @dataclass(frozen=True, slots=True)
-class CommentGetDTO:
+class CommentDTO:
     ulid: str
     text: str
     created: datetime

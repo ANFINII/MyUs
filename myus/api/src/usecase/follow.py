@@ -5,7 +5,7 @@ from api.src.domain.interface.follow.interface import FilterOption, FollowInterf
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
-from api.src.types.dto.follow import FollowOutDTO, FollowUserDTO
+from api.src.types.dto.follow import FollowDTO, FollowUserDTO
 from api.src.usecase.user import get_user_data
 from api.utils.functions.index import create_url
 
@@ -48,7 +48,7 @@ def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserDTO]:
     ]
 
 
-def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowOutDTO | None:
+def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowDTO | None:
     user_repo = injector.get(UserInterface)
     follow_repo = injector.get(FollowInterface)
     following = get_user_data(ulid=ulid)
@@ -84,4 +84,4 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowOu
         updated_following = replace(following, mypage=following_mypage)
         user_repo.bulk_save([updated_follower, updated_following])
 
-    return FollowOutDTO(is_follow=is_follow, follower_count=follower_count)
+    return FollowDTO(is_follow=is_follow, follower_count=follower_count)
