@@ -1,6 +1,7 @@
 from dataclasses import replace
 from datetime import date, datetime
 from ninja import UploadedFile
+from api.modules.logger import log
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.comic.data import ComicData
@@ -25,6 +26,7 @@ from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_media_user
 from api.utils.functions.convert.encode_worker import EncodeWorker
+from api.utils.functions.convert.video_encoding import convert_video
 from api.utils.functions.media import save_upload
 
 
@@ -52,7 +54,17 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
     new_ids = repository.bulk_save([new_video])
     assert len(new_ids) == 1, "作成に失敗しました"
     obj = repository.bulk_get(new_ids)[0]
-    EncodeWorker.submit_video(obj.id, video_path)
+
+    def encode_task() -> None:
+        result = convert_video(video_path)
+        videos = repository.bulk_get([obj.id])
+        if len(videos) == 0:
+            log.warning("動画が見つかりません", video_id=obj.id)
+            return
+        updated = replace(videos[0], video=result.video, convert=result.convert, publish=input.publish)
+        repository.bulk_save([updated])
+
+    EncodeWorker.submit(encode_task)
 
     return MediaCreateDTO(ulid=obj.ulid)
 
@@ -70,7 +82,7 @@ def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> M
         read=0,
         like=0,
         download=input.download,
-        publish=True,
+        publish=input.publish,
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
@@ -96,7 +108,7 @@ def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile, page
         pages=[save_upload(p, ImageUpload.COMIC_PAGE, channel.ulid) for p in pages],
         read=0,
         like=0,
-        publish=True,
+        publish=input.publish,
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
@@ -121,7 +133,7 @@ def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) 
         image=save_upload(image, ImageUpload.PICTURE, channel.ulid),
         read=0,
         like=0,
-        publish=True,
+        publish=input.publish,
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
@@ -148,7 +160,7 @@ def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> Med
         image=save_upload(image, ImageUpload.BLOG, channel.ulid),
         read=0,
         like=0,
-        publish=True,
+        publish=input.publish,
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
@@ -173,7 +185,7 @@ def create_chat(channel: ChannelData, input: ChatIn) -> MediaCreateDTO:
         read=0,
         like=0,
         period=date.fromisoformat(input.period),
-        publish=True,
+        publish=input.publish,
         created=datetime.min,
         updated=datetime.min,
         thread_count=0,
