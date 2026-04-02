@@ -11,16 +11,6 @@
   user-select: none;
   cursor: pointer;
 
-  &.active {
-    border-color: rgb(40, 130, 250);
-    background: rgb(245, 250, 255);
-  }
-
-  &.disable {
-    opacity: 0.5;
-    cursor: default;
-  }
-
   .label {
     font-size: 14px;
     color: rgb(50, 50, 50);
@@ -32,7 +22,17 @@
     color: rgb(0, 40, 80);
   }
 
-  &.active .toggle {
-    color: rgb(10, 110, 250);
+  &.active {
+    border-color: rgb(40, 130, 250);
+    background: rgb(245, 250, 255);
+
+    .toggle {
+      color: rgb(10, 110, 250);
+    }
+  }
+
+  &.disable {
+    opacity: 0.5;
+    cursor: default;
   }
 }
