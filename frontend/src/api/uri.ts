@@ -13,7 +13,6 @@ export const apiSearchTag = base + '/user/search_tag'
 export const apiFollower = base + '/user/follower'
 export const apiFollow = base + '/user/follow'
 export const apiFollowUser = base + '/user/follow/user'
-export const apiSubscribeChannel = base + '/user/subscribe/channel'
 export const apiLikeMedia = base + '/user/like/media'
 export const apiLikeComment = base + '/user/like/comment'
 export const apiNotification = base + '/user/notification'
@@ -30,6 +29,7 @@ export const apiSettingNotification = base + '/setting/notification'
 // Channel
 export const apiChannels = base + '/channel'
 export const apiChannel = (ulid: string) => base + `/channel/${ulid}`
+export const apiChannelSubscribe = base + '/channel/subscribe'
 
 // Media
 export const apiHome = base + '/home'

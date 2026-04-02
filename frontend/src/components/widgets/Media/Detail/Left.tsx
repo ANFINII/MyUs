@@ -1,13 +1,14 @@
 import { ChangeEvent, useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
-import { Channel } from 'types/internal/channel'
+import { Channel, SubscribeIn } from 'types/internal/channel'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { MediaUser } from 'types/internal/media'
 import { Hashtag } from 'types/internal/media/detail'
-import { LikeMediaIn, SubscribeIn } from 'types/internal/user'
+import { LikeMediaIn } from 'types/internal/user'
+import { postSubscribeChannel } from 'api/internal/channel'
 import { postComment } from 'api/internal/media/comment'
-import { postLikeMedia, postSubscribe } from 'api/internal/user'
+import { postLikeMedia } from 'api/internal/user'
 import { FetchError, MediaPath } from 'utils/constants/enum'
 import { commentTypeNoMap, mediaTypeMap } from 'utils/constants/map'
 import { capitalize } from 'utils/functions/common'
@@ -100,7 +101,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
 
   const handleSubscribe = async () => {
     const request: SubscribeIn = { channelUlid: channel.ulid, isSubscribe: !isSubscribe }
-    const ret = await postSubscribe(request)
+    const ret = await postSubscribeChannel(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
     setFormState((prev) => ({ ...prev, isSubscribe: data.isSubscribe, subscribeCount: data.count }))

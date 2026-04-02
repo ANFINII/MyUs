@@ -13,3 +13,13 @@ export interface ChannelIn {
   avatarFile?: File
   description: string
 }
+
+export interface SubscribeIn {
+  channelUlid: string
+  isSubscribe: boolean
+}
+
+export interface SubscribeOut {
+  isSubscribe: boolean
+  count: number
+}
