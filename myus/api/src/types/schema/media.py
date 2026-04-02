@@ -10,12 +10,14 @@ from api.src.types.schema.user import MediaUserOut
 
 class VideoIn(BaseModel):
     channel_ulid: str
+    publish: bool
     title: str
     content: str
 
 
 class MusicIn(BaseModel):
     channel_ulid: str
+    publish: bool
     title: str
     content: str
     lyric: str
@@ -24,18 +26,21 @@ class MusicIn(BaseModel):
 
 class ComicIn(BaseModel):
     channel_ulid: str
+    publish: bool
     title: str
     content: str
 
 
 class PictureIn(BaseModel):
     channel_ulid: str
+    publish: bool
     title: str
     content: str
 
 
 class BlogIn(BaseModel):
     channel_ulid: str
+    publish: bool
     title: str
     content: str
     richtext: str
@@ -43,6 +48,7 @@ class BlogIn(BaseModel):
 
 class ChatIn(BaseModel):
     channel_ulid: str
+    publish: bool
     title: str
     content: str
     period: str
