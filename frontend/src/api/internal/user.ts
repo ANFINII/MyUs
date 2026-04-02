@@ -4,20 +4,7 @@ import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
 import { SearchParms } from 'types/internal/media'
 import { ErrorOut } from 'types/internal/other'
-import {
-  Follow,
-  FollowIn,
-  FollowOut,
-  LikeCommentIn,
-  LikeMediaIn,
-  LikeOut,
-  NotificationOut,
-  SearchTagIn,
-  SearchTagOut,
-  SubscribeIn,
-  SubscribeOut,
-  UserMe,
-} from 'types/internal/user'
+import { Follow, FollowIn, FollowOut, LikeCommentIn, LikeMediaIn, LikeOut, NotificationOut, SearchTagIn, SearchTagOut, UserMe } from 'types/internal/user'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import {
   apiFollow,
@@ -29,7 +16,6 @@ import {
   apiNotificationConfirmed,
   apiNotificationDeleted,
   apiSearchTag,
-  apiSubscribeChannel,
   apiUser,
   apiUserPage,
   apiUserPageMedia,
@@ -58,10 +44,6 @@ export const getFollower = async (params: SearchParms, req?: Req): Promise<ApiOu
 
 export const postFollow = async (request: FollowIn): Promise<ApiOut<FollowOut>> => {
   return await apiOut(apiClient('json').post(apiFollowUser, camelSnake(request)))
-}
-
-export const postSubscribe = async (request: SubscribeIn): Promise<ApiOut<SubscribeOut>> => {
-  return await apiOut(apiClient('json').post(apiSubscribeChannel, camelSnake(request)))
 }
 
 export const postLikeMedia = async (request: LikeMediaIn): Promise<ApiOut<LikeOut>> => {
