@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect, useCallback, useMemo, FormEvent } from 'react'
 import { useRouter } from 'next/router'
+import { SubscribeIn } from 'types/internal/channel'
 import { ChatMessage, ChatReply, ChatDetailOut, MessageCreateIn, MessageUpdateIn } from 'types/internal/media/detail'
-import { LikeMediaIn, SubscribeIn } from 'types/internal/user'
+import { LikeMediaIn } from 'types/internal/user'
+import { postSubscribeChannel } from 'api/internal/channel'
 import { postMessage, getReplies, putMessage, deleteMessage } from 'api/internal/media/message'
-import { postLikeMedia, postSubscribe } from 'api/internal/user'
+import { postLikeMedia } from 'api/internal/user'
 import { FetchError, MediaType } from 'utils/constants/enum'
 import { useChatWebSocket } from 'components/hooks/useChatWebSocket'
 import { useNavResize } from 'components/hooks/useNavResize'
@@ -224,7 +226,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
 
   const handleSubscribe = async () => {
     const request: SubscribeIn = { channelUlid: detail.channel.ulid, isSubscribe: !isSubscribe }
-    const ret = await postSubscribe(request)
+    const ret = await postSubscribeChannel(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)
     const data = ret.value
     setFormState((prev) => ({ ...prev, isSubscribe: data.isSubscribe, subscribeCount: data.count }))
