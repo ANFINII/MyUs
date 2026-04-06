@@ -5,7 +5,6 @@ from api.src.adapter.media import convert_videos, convert_musics, convert_comics
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
-from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.types.schema.notification import NotificationContentOut, NotificationIn, NotificationItemOut, NotificationOut, NotificationUserOut
 from api.src.types.schema.user import LikeCommentIn, LikeMediaIn, LikeOut, SearchTagIn, SearchTagOut, UserOut
 from api.src.types.schema.userpage import UserPageMediaOut, UserPageOut
@@ -13,7 +12,6 @@ from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import get_channel_data, get_user_channels
 from api.src.usecase.follow import get_followers, get_follows, upsert_follow
 from api.src.usecase.notification import get_notification, notification_confirm, notification_delete
-from api.src.usecase.subscribe import upsert_subscribe
 from api.src.usecase.search_tag import get_search_tag_data, update_search_tags
 from api.src.usecase.user import get_user_data, like_comment, like_media
 from api.src.usecase.userpage import get_userpage_media, is_following
@@ -142,22 +140,6 @@ class UserAPI:
             return 400, ErrorOut(message="ユーザーが見つかりません!")
 
         data = FollowOut(is_follow=follow.is_follow, follower_count=follow.follower_count)
-        return 200, data
-
-    @staticmethod
-    @router.post("/subscribe/channel", response={200: SubscribeOut, 400: ErrorOut, 401: ErrorOut})
-    def subscribe_channel(request: HttpRequest, input: SubscribeIn):
-        log.info("UserAPI subscribe_channel", input=input)
-
-        user_id = auth_check(request)
-        if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
-
-        subscribe = upsert_subscribe(user_id, input.channel_ulid, input.is_subscribe)
-        if subscribe is None:
-            return 400, ErrorOut(message="チャンネルが見つかりません!")
-
-        data = SubscribeOut(is_subscribe=subscribe.is_subscribe, count=subscribe.count)
         return 200, data
 
     @staticmethod
