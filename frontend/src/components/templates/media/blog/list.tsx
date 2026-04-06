@@ -15,7 +15,7 @@ export default function Blogs(props: Props): React.JSX.Element {
 
   return (
     <Main title="Blog" search={search}>
-      <CardList cards={datas} Content={BlogCard} />
+      <CardList items={datas} Content={BlogCard} />
     </Main>
   )
 }

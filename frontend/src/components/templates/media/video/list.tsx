@@ -15,7 +15,7 @@ export default function Videos(props: Props): React.JSX.Element {
 
   return (
     <Main title="Video" search={search}>
-      <CardList cards={datas} Content={VideoCard} />
+      <CardList items={datas} Content={VideoCard} />
     </Main>
   )
 }

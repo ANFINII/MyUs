@@ -6,12 +6,12 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from './Channel.module.scss'
 
 interface Props {
-  data: Channel
+  item: Channel
 }
 
 export default function ChannelCard(props: Props): React.JSX.Element {
-  const { data } = props
-  const { ulid, ownerUlid, avatar, name, description, count } = data
+  const { item } = props
+  const { ulid, ownerUlid, avatar, name, description, count } = item
 
   return (
     <section className={style.card}>

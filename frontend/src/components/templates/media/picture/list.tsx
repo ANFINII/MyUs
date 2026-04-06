@@ -15,7 +15,7 @@ export default function Pictures(props: Props): React.JSX.Element {
 
   return (
     <Main title="Picture" search={search}>
-      <CardList cards={datas} Content={PictureCard} />
+      <CardList items={datas} Content={PictureCard} />
     </Main>
   )
 }
