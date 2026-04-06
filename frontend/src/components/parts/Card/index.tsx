@@ -1,4 +1,4 @@
-import clsx from 'utils/functions/clsx'
+import cx from 'utils/functions/cx'
 import style from './Card.module.scss'
 
 interface Props {
@@ -9,5 +9,5 @@ interface Props {
 export default function Card(props: Props): React.JSX.Element {
   const { className, children } = props
 
-  return <section className={clsx(style.card, className)}>{children}</section>
+  return <section className={cx(style.card, className)}>{children}</section>
 }
