@@ -13,7 +13,7 @@ import Tabs, { TabItem } from 'components/parts/Tabs'
 import BlogCard from 'components/widgets/Card/Blog'
 import ChatCard from 'components/widgets/Card/Chat'
 import ComicCard from 'components/widgets/Card/Comic'
-import IndexCardList from 'components/widgets/Card/IndexCardList'
+import CardIndexList from 'components/widgets/Card/IndexList'
 import MusicCard from 'components/widgets/Card/Music'
 import PictureCard from 'components/widgets/Card/Picture'
 import VideoCard from 'components/widgets/Card/Video'
@@ -137,46 +137,46 @@ export default function Userpage(props: Props): React.JSX.Element {
 
       {selectedTab === TabKey.Posts && (
         <>
-          <IndexCardList title="Video">
+          <CardIndexList title="Video">
             {newMedia.videos.map((item) => (
               <VideoCard key={item.ulid} item={item} />
             ))}
-          </IndexCardList>
+          </CardIndexList>
 
           <Divide />
-          <IndexCardList title="Music">
+          <CardIndexList title="Music">
             {newMedia.musics.map((item) => (
               <MusicCard key={item.ulid} item={item} />
             ))}
-          </IndexCardList>
+          </CardIndexList>
 
           <Divide />
-          <IndexCardList title="Comic">
+          <CardIndexList title="Comic">
             {newMedia.comics.map((item) => (
               <ComicCard key={item.ulid} item={item} />
             ))}
-          </IndexCardList>
+          </CardIndexList>
 
           <Divide />
-          <IndexCardList title="Picture">
+          <CardIndexList title="Picture">
             {newMedia.pictures.map((item) => (
               <PictureCard key={item.ulid} item={item} />
             ))}
-          </IndexCardList>
+          </CardIndexList>
 
           <Divide />
-          <IndexCardList title="Blog">
+          <CardIndexList title="Blog">
             {newMedia.blogs.map((item) => (
               <BlogCard key={item.ulid} item={item} />
             ))}
-          </IndexCardList>
+          </CardIndexList>
 
           <Divide />
-          <IndexCardList title="Chat">
+          <CardIndexList title="Chat">
             {newMedia.chats.map((item) => (
               <ChatCard key={item.ulid} item={item} />
             ))}
-          </IndexCardList>
+          </CardIndexList>
         </>
       )}
       <FollowDeleteModal open={isModal} onClose={handleModal} onAction={handleFollow} avatar={avatar} ulid={ulid} nickname={nickname} followerCount={followerCount} />

@@ -5,7 +5,7 @@ import Divide from 'components/parts/Divide'
 import BlogCard from 'components/widgets/Card/Blog'
 import ChatCard from 'components/widgets/Card/Chat'
 import ComicCard from 'components/widgets/Card/Comic'
-import IndexCardList from 'components/widgets/Card/IndexCardList'
+import CardIndexList from 'components/widgets/Card/IndexList'
 import MusicCard from 'components/widgets/Card/Music'
 import PictureCard from 'components/widgets/Card/Picture'
 import VideoCard from 'components/widgets/Card/Video'
@@ -23,46 +23,46 @@ export default function Homes(props: Props): React.JSX.Element {
   return (
     <Main title="Home" search={search}>
       <Divide />
-      <IndexCardList title="Video">
+      <CardIndexList title="Video">
         {videos?.map((media) => (
           <VideoCard key={media.ulid} item={media} />
         ))}
-      </IndexCardList>
+      </CardIndexList>
 
       <Divide />
-      <IndexCardList title="Music">
+      <CardIndexList title="Music">
         {musics?.map((media) => (
           <MusicCard key={media.ulid} item={media} />
         ))}
-      </IndexCardList>
+      </CardIndexList>
 
       <Divide />
-      <IndexCardList title="Comic">
+      <CardIndexList title="Comic">
         {comics?.map((media) => (
           <ComicCard key={media.ulid} item={media} />
         ))}
-      </IndexCardList>
+      </CardIndexList>
 
       <Divide />
-      <IndexCardList title="Picture">
+      <CardIndexList title="Picture">
         {pictures?.map((media) => (
           <PictureCard key={media.ulid} item={media} />
         ))}
-      </IndexCardList>
+      </CardIndexList>
 
       <Divide />
-      <IndexCardList title="Blog">
+      <CardIndexList title="Blog">
         {blogs?.map((media) => (
           <BlogCard key={media.ulid} item={media} />
         ))}
-      </IndexCardList>
+      </CardIndexList>
 
       <Divide />
-      <IndexCardList title="Chat">
+      <CardIndexList title="Chat">
         {chats?.map((media) => (
           <ChatCard key={media.ulid} item={media} />
         ))}
-      </IndexCardList>
+      </CardIndexList>
     </Main>
   )
 }
