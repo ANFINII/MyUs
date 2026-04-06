@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import Spinner, { SpinnerColor } from 'components/parts/Spinner'
 import style from './Square.module.scss'
 
@@ -23,7 +23,7 @@ export default function ButtonSquare(props: Props): React.JSX.Element {
   }
 
   return (
-    <button {...props} type={type} disabled={disabled || loading} className={clsx(style.button, style[color], className)}>
+    <button {...props} type={type} disabled={disabled || loading} className={cx(style.button, style[color], className)}>
       <span className={style.flex}>
         {loading && <Spinner color={spinnerColor(color)} size="s" className={style.spinner} />}
         <span className={loading ? style.invisible : undefined}>{name}</span>

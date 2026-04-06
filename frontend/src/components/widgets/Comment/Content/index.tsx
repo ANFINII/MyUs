@@ -1,6 +1,5 @@
 import { useState, SetStateAction, ChangeEvent, Dispatch } from 'react'
 import router from 'next/router'
-import clsx from 'clsx'
 import { capitalize } from 'lodash'
 import { Reply, Comment, CommnetIn } from 'types/internal/comment'
 import { LikeCommentIn, UserMe } from 'types/internal/user'
@@ -9,6 +8,7 @@ import { postLikeComment } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap } from 'utils/constants/map'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
+import cx from 'utils/functions/cx'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import ActionButton from 'components/parts/Action/Button'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -147,7 +147,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
       </HStack>
 
       {isThreadView && (
-        <VStack gap="5" className={clsx(replys.length > 0 && 'mt_10 ml_50')}>
+        <VStack gap="5" className={cx(replys.length > 0 && 'mt_10 ml_50')}>
           {replys.map((reply) => (
             <CommentThread key={reply.ulid} reply={reply} user={user} setReplys={setReplys} handleToast={handleToast} />
           ))}

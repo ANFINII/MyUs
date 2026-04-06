@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import { useAutoFocus } from 'components/hooks/useAutoFocus'
 import VStack from 'components/parts/Stack/Vertical'
 import style from './Input.module.scss'
@@ -45,7 +45,7 @@ export default function Input(props: Props): React.JSX.Element {
           {label}
         </label>
       )}
-      <input {...props} id={label} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={clsx(style.input, isRequired && style.error)} />
+      <input {...props} id={label} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={cx(style.input, isRequired && style.error)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
       {isErrorText && <p className={style.error_text}>{errorText}</p>}
     </VStack>

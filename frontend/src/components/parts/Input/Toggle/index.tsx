@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import IconToggle from 'components/parts/Icon/Toggle'
 import style from './Toggle.module.scss'
 
@@ -12,7 +12,7 @@ export default function Toggle(props: Props): React.JSX.Element {
   const { isActive, disable = false, onClick } = props
 
   return (
-    <div className={clsx(style.toggle, isActive ? style.active : '', disable ? style.disable : '')} onClick={onClick}>
+    <div className={cx(style.toggle, isActive ? style.active : '', disable ? style.disable : '')} onClick={onClick}>
       {isActive ? <IconToggle size="25" type="on" /> : <IconToggle size="25" type="off" />}
     </div>
   )

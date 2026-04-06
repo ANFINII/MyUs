@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import style from './Spinner.module.scss'
 
 export type SpinnerColor = 'white' | 'gray' | 'blue'
@@ -12,5 +12,5 @@ interface Props {
 export default function Spinner(props: Props): React.JSX.Element {
   const { color = 'white', size = 'm', className = '' } = props
 
-  return <span className={clsx(style.spinner, style[color], style[size], className)}></span>
+  return <span className={cx(style.spinner, style[color], style[size], className)}></span>
 }

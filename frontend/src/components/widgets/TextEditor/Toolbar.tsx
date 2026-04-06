@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Editor } from '@tiptap/react'
-import clsx from 'clsx'
 import { Option } from 'types/internal/other'
+import cx from 'utils/functions/cx'
 import Select from 'components/parts/Select'
 import IconBlockquote from './Icon/Blockquote'
 import IconBold from './Icon/Bold'
@@ -86,7 +86,7 @@ export default function Toolbar(props: Props): React.JSX.Element {
     { label: 'Justify', value: 'justify' },
   ]
 
-  const btnClass = (isActive: boolean) => clsx(style.button, isActive && style.button_active)
+  const btnClass = (isActive: boolean) => cx(style.button, isActive && style.button_active)
 
   const handleHeading = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value

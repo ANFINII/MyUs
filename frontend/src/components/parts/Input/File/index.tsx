@@ -1,5 +1,5 @@
 import { ChangeEvent, useRef, useState } from 'react'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../Input.module.scss'
 
@@ -43,7 +43,7 @@ export default function InputFile(props: Props): React.JSX.Element {
         </label>
       )}
       <input id={label} ref={inputEl} type="file" accept={accept} onChange={handleChange} multiple={multiple} hidden />
-      <input placeholder="ファイル選択..." value={fileNames.join(', ')} required={required} onClick={handleClick} className={clsx(style.input, isRequired && style.error)} />
+      <input placeholder="ファイル選択..." value={fileNames.join(', ')} required={required} onClick={handleClick} className={cx(style.input, isRequired && style.error)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
       {isErrorText && <p className={style.error_text}>{errorText}</p>}
     </VStack>

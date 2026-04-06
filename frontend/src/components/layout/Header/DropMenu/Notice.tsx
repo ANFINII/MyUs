@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import clsx from 'clsx'
 import { Notification, NotificationOut } from 'types/internal/user'
 import { getNotification, postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
 import { NotificationType } from 'utils/constants/enum'
+import cx from 'utils/functions/cx'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
 import IconBell from 'components/parts/Icon/Bell'
@@ -89,7 +89,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   }
 
   return (
-    <nav className={clsx(style.drop_menu, style.drop_menu_notice, open && style.active)}>
+    <nav className={cx(style.drop_menu, style.drop_menu_notice, open && style.active)}>
       <ul>
         <MenuItem label="通知設定" icon={<IconBell size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/notification')} />
         {notifications?.datas?.map((notification) => {

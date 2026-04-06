@@ -4,7 +4,7 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import { useRecording } from 'components/hooks/useRecording'
 import Button from 'components/parts/Button'
 import IconMic from 'components/parts/Icon/Mic'
@@ -106,7 +106,7 @@ export default function ChatEditor(props: Props): React.JSX.Element {
   const isEmpty = value.replace(/<[^>]*>/g, '').trim().length === 0
 
   return (
-    <div className={clsx(style.editor, disabled && style.disabled)}>
+    <div className={cx(style.editor, disabled && style.disabled)}>
       {editor && (
         <>
           <Toolbar editor={editor} toolbarConfig={toolbarConfig} />
@@ -115,7 +115,7 @@ export default function ChatEditor(props: Props): React.JSX.Element {
       )}
       <div className={style.actions}>
         {isSupported && (
-          <button type="button" className={clsx(style.mic_button, isRecording && style.recording, isSpeaking && style.speaking)} onClick={handleToggle}>
+          <button type="button" className={cx(style.mic_button, isRecording && style.recording, isSpeaking && style.speaking)} onClick={handleToggle}>
             <IconMic size="16" />
           </button>
         )}

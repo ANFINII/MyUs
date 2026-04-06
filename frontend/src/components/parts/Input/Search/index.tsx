@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import style from './Search.module.scss'
 
 interface Props {
@@ -21,7 +21,7 @@ export default function Search(props: Props): React.JSX.Element {
   }
 
   return (
-    <div className={clsx(style.searchbar, className)}>
+    <div className={cx(style.searchbar, className)}>
       <input type="search" name="search" placeholder="検索..." value={value} onChange={onChange} onKeyDown={handleKeyDown} className={style.input} />
       <button onClick={handleSearch} className={style.icon}>
         <i className="fas fa-search"></i>

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
@@ -33,7 +33,7 @@ export default function SideBar(): React.JSX.Element {
               key={item.path}
               label={item.label}
               icon={item.icon}
-              className={clsx(style.sidebar_color, isActive(item.path) && style.active)}
+              className={cx(style.sidebar_color, isActive(item.path) && style.active)}
               onClick={handleRouter(item.path)}
             />
           ))}

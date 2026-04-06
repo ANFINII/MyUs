@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import ExImage from 'components/parts/ExImage'
 import IconPerson from 'components/parts/Icon/Person'
 import style from './Avatar.module.scss'
@@ -17,9 +17,9 @@ export default function Avatar(props: Props): React.JSX.Element {
   return (
     <>
       {src ? (
-        <ExImage src={src} title={title} size={size} className={clsx(style.avatar, className)} />
+        <ExImage src={src} title={title} size={size} className={cx(style.avatar, className)} />
       ) : (
-        <IconPerson size={size} type="circle" className={clsx(style.avatar, color, className)} />
+        <IconPerson size={size} type="circle" className={cx(style.avatar, color, className)} />
       )}
     </>
   )

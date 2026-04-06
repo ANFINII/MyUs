@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import style from './AudioPlayer.module.scss'
 
 const PLAY_EVENT = 'audioplayer:play'
@@ -146,16 +146,16 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const playedPercent = duration ? (currentTime / duration) * 100 : 0
 
   return (
-    <div className={clsx(style.player, isPlaying && style.playing, isMuted && style.muted, className)}>
+    <div className={cx(style.player, isPlaying && style.playing, isMuted && style.muted, className)}>
       <div className={style.playpause} onClick={handlePlayPause}>
         <span className={style.icon} />
       </div>
-      <div className={clsx(style.time, style.timeCurrent)}>{formatTime(currentTime)}</div>
+      <div className={cx(style.time, style.timeCurrent)}>{formatTime(currentTime)}</div>
       <div className={style.bar} ref={barRef} onMouseDown={handleBarMouseDown}>
         <div className={style.barLoaded} style={{ width: `${loaded}%` }} />
         <div className={style.barPlayed} style={{ width: `${playedPercent}%` }} />
       </div>
-      <div className={clsx(style.time, style.timeDuration)}>{formatTime(duration)}</div>
+      <div className={cx(style.time, style.timeDuration)}>{formatTime(duration)}</div>
       <div className={style.volume}>
         <div className={style.volumeButton} onClick={handleMuteToggle}>
           <span className={style.icon} />

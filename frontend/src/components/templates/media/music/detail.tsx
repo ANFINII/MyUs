@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react'
-import clsx from 'clsx'
 import { MusicDetailOut } from 'types/internal/media/detail'
 import { MediaPath } from 'utils/constants/enum'
+import cx from 'utils/functions/cx'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -48,7 +48,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
         {lyric && (
           <>
             <View isView={isLyricView} onView={handleLyricView} content={isLyricView ? '縮小表示' : '拡大表示'} />
-            <div className={clsx(style.lyric, isLyricView && style.active)}>{lyric}</div>
+            <div className={cx(style.lyric, isLyricView && style.active)}>{lyric}</div>
           </>
         )}
         <Divide />

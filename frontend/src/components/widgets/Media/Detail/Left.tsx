@@ -1,6 +1,5 @@
 import { ChangeEvent, useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
-import clsx from 'clsx'
 import { Channel, SubscribeIn } from 'types/internal/channel'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { MediaUser } from 'types/internal/media'
@@ -13,6 +12,7 @@ import { FetchError, MediaPath } from 'utils/constants/enum'
 import { commentTypeNoMap, mediaTypeMap } from 'utils/constants/map'
 import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
+import cx from 'utils/functions/cx'
 import { formatDatetime } from 'utils/functions/datetime'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useUser } from 'components/hooks/useUser'
@@ -161,7 +161,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
         <div className={style.content_detail_p1}>
           <VStack gap="2">
             <View isView={isContentView} onView={handleContentView} content={isContentView ? '縮小表示' : '拡大表示'} />
-            <div className={clsx(style.content_detail_aria, isContentView && style.active)}>
+            <div className={cx(style.content_detail_aria, isContentView && style.active)}>
               <p>{content}</p>
             </div>
           </VStack>
@@ -172,7 +172,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
       <CommentInput user={user} count={comments.length} loading={isLoading} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <VStack gap="6">
         <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
-        <VStack gap="10" className={clsx(style.comment_aria, isCommentView && style.active)}>
+        <VStack gap="10" className={cx(style.comment_aria, isCommentView && style.active)}>
           {comments.map((comment) => (
             <CommentContent key={comment.ulid} comment={comment} user={user} setFormState={setFormState} handleToast={handleToast} />
           ))}

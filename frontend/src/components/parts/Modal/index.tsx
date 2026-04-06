@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import Button from 'components/parts/Button'
 import IconCross from 'components/parts/Icon/Cross'
 import style from './Modal.module.scss'
@@ -29,8 +29,8 @@ export default function Modal(props: Props): React.JSX.Element {
     <>
       {open &&
         createPortal(
-          <div className={clsx(style.modal, className)} aria-modal="true">
-            <div className={clsx(style.container, style[size])}>
+          <div className={cx(style.modal, className)} aria-modal="true">
+            <div className={cx(style.container, style[size])}>
               <header className={style.header}>
                 <h2 className={style.title}>{title}</h2>
                 <button className={style.close} onClick={onClose}>

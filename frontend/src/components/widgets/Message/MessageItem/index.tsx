@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import clsx from 'clsx'
 import { ChatMessage } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
+import cx from 'utils/functions/cx'
 import { formatDatetime } from 'utils/functions/datetime'
 import ActionButton from 'components/parts/Action/Button'
 import { ActionItem } from 'components/parts/Action/List'
@@ -98,7 +98,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
           </div>
         )}
       </div>
-      <div className={clsx(style.message_action, isMenu && style.visible)}>
+      <div className={cx(style.message_action, isMenu && style.visible)}>
         <ActionButton open={isMenu} onMenu={handleMenu} actionItems={actionItems} />
       </div>
       <MessageDeleteModal open={isModal} onClose={handleModal} onAction={handleDelete} message={message} />

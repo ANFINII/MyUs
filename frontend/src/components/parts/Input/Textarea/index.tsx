@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, useRef, useEffect } from 'react'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import VStack from 'components/parts/Stack/Vertical'
 import style from './Textarea.module.scss'
 
@@ -54,7 +54,7 @@ export default function Textarea(props: Props): React.JSX.Element {
           {label}
         </label>
       )}
-      <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} className={clsx(style.textarea, isRequired && style.error)} />
+      <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} className={cx(style.textarea, isRequired && style.error)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
       {isErrorText && <p className={style.error_text}>{errorText}</p>}
     </VStack>

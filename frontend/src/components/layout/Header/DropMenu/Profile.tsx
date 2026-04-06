@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import clsx from 'clsx'
 import { postLogout } from 'api/internal/auth'
+import cx from 'utils/functions/cx'
 import { useUser } from 'components/hooks/useUser'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconCredit from 'components/parts/Icon/Credit'
@@ -46,7 +46,7 @@ export default function DropMenuProfile(props: Props): React.JSX.Element {
   }
 
   return (
-    <nav className={clsx(style.drop_menu, open && style.active)}>
+    <nav className={cx(style.drop_menu, open && style.active)}>
       <ul>
         <MenuItem label="アカウント" icon={<IconPerson size="1.5em" type="circle" />} className={style.item} onClick={() => handleRouter('/setting/profile')} />
         <MenuItem label="マイページ" icon={<IconPerson size="1.5em" type="square" />} className={style.item} onClick={() => handleRouter('/setting/mypage')} />

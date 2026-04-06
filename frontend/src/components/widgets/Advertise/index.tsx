@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import VStack from 'components/parts/Stack/Vertical'
 import style from './Advertise.module.scss'
 
@@ -11,7 +11,7 @@ export default function Advertise(props: Props): React.JSX.Element {
   const { isChannelAd, className } = props
 
   return (
-    <div className={clsx(style.advertise, className)}>
+    <div className={cx(style.advertise, className)}>
       <h2 className={style.heading}>広告表示</h2>
       <VStack gap="4">
         <section>

@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect, ChangeEvent } from 'react'
 import Link from 'next/link'
-import clsx from 'clsx'
 import { SearchTagOut } from 'types/internal/user'
 import { getSearchTag, putSearchTag } from 'api/internal/user'
+import cx from 'utils/functions/cx'
 import { useUser } from 'components/hooks/useUser'
 import ButtonSquare from 'components/parts/Button/Square'
 import IconChevront from 'components/parts/Icon/Chevront'
@@ -111,18 +111,18 @@ export default function SearchTagBar(): React.JSX.Element {
               maxLength={30}
               value={inputTag}
               disabled={!user.isActive}
-              className={clsx(styles.input, isSearchtag && styles.active)}
+              className={cx(styles.input, isSearchtag && styles.active)}
               onChange={handleInput}
             />
-            <ButtonSquare color="sakura" name="追加" className={clsx(styles.button, isSearchtag && styles.active)} onClick={handleAdd} />
+            <ButtonSquare color="sakura" name="追加" className={cx(styles.button, isSearchtag && styles.active)} onClick={handleAdd} />
           </HStack>
-          <div ref={scrollRef} className={clsx(styles.tags, isSearchtag && styles.active)}>
+          <div ref={scrollRef} className={cx(styles.tags, isSearchtag && styles.active)}>
             <HStack gap="2.5">
               {isSearchtag
                 ? editTags.map((tag, index) => (
                     <div
                       key={tag.name}
-                      className={clsx(styles.tag_item, dragIndex === index && styles.dragging, dragOverIndex === index && styles.drag_over)}
+                      className={cx(styles.tag_item, dragIndex === index && styles.dragging, dragOverIndex === index && styles.drag_over)}
                       draggable
                       onDragStart={() => handleDragStart(index)}
                       onDragOver={(e) => handleDrag(e, index)}
