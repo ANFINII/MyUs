@@ -1,5 +1,5 @@
 import { Chat } from 'types/internal/media'
-import clsx from 'utils/functions/clsx'
+import cx from 'utils/functions/cx'
 import { formatTimeAgo } from 'utils/functions/datetime'
 import IconCaret from 'components/parts/Icon/Caret'
 import IconChat from 'components/parts/Icon/Chat'
@@ -25,7 +25,7 @@ export default function CardChatMediaContentBase(props: Props): React.JSX.Elemen
       </div>
 
       <VStack gap="2" className={style.content}>
-        <div className={clsx(style.font, style.nickname)}>{name}</div>
+        <div className={cx(style.font, style.nickname)}>{name}</div>
 
         <HStack gap="4">
           <div className={style.font}>
