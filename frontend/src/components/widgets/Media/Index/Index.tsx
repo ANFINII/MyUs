@@ -1,4 +1,4 @@
-import style from './MediaList.module.scss'
+import style from './MediaIndex.module.scss'
 
 interface Props {
   title: string
