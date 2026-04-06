@@ -1,11 +1,25 @@
 from dataclasses import replace
 from django.db import transaction
+from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.channel.interface import ChannelInterface
 from api.src.domain.interface.subscribe.data import SubscribeData
 from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.subscribe import SubscribeDTO
 from api.src.usecase.channel import get_channel_data
+
+
+def get_subscribe_channels(user_id: int) -> list[ChannelData]:
+    channel_repo = injector.get(ChannelInterface)
+    subscribe_repo = injector.get(SubscribeInterface)
+    subscribe_ids = subscribe_repo.get_ids(FilterOption(user_id=user_id, is_subscribe=True), SortOption())
+    if len(subscribe_ids) == 0:
+        return []
+
+    subscribes = subscribe_repo.bulk_get(subscribe_ids)
+    channel_ids = [s.channel_id for s in subscribes]
+    channels = channel_repo.bulk_get(channel_ids)
+    return channels
 
 
 def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> SubscribeDTO | None:
