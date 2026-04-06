@@ -1,11 +1,11 @@
-import style from './IndexCardList.module.scss'
+import style from './CardIndexList.module.scss'
 
 interface Props {
   title: string
   children: React.ReactNode
 }
 
-export default function IndexCardList(props: Props): React.JSX.Element {
+export default function CardIndexList(props: Props): React.JSX.Element {
   const { title, children } = props
 
   return (
