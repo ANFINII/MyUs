@@ -3,7 +3,7 @@ import { Media } from 'types/internal/media'
 import AvatarLink from 'components/parts/Avatar/Link'
 import HStack from 'components/parts/Stack/Horizontal'
 import CardMediaBaseContent from './Base'
-import style from './CardMediaContent.module.scss'
+import style from './Content.module.scss'
 
 interface Props<Media> {
   href: string

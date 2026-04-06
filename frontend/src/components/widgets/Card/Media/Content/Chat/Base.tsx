@@ -7,7 +7,7 @@ import IconHand from 'components/parts/Icon/Hand'
 import IconPerson from 'components/parts/Icon/Person'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
-import style from '../CardMediaContent.module.scss'
+import style from '../Content.module.scss'
 
 interface Props {
   media: Chat

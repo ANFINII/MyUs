@@ -4,7 +4,7 @@ import videojs from 'video.js'
 import { Video } from 'types/internal/media'
 import VideoJS from 'components/widgets/Video/videojs'
 import style from './Video.module.scss'
-import CardMediaContent from '../Media/Content'
+import CardMediaContent from '../Content'
 
 type Player = ReturnType<typeof videojs>
 
