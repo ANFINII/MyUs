@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useRouter } from 'next/router'
 import videojs from 'video.js'
 import { Video } from 'types/internal/media'
+import Card from 'components/parts/Card'
 import VideoJS from 'components/widgets/Video/videojs'
 import style from './Video.module.scss'
 import CardMediaContent from '../Content'
@@ -47,7 +48,7 @@ export default function VideoCard(props: Props): React.JSX.Element {
   }
 
   return (
-    <section className={style.card}>
+    <Card className={style.card}>
       <div className="video video_auto" onClick={handleClick} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <VideoJS
           onReady={handlePlayerReady}
@@ -65,6 +66,6 @@ export default function VideoCard(props: Props): React.JSX.Element {
         />
         <CardMediaContent href={`/media/video/${ulid}`} media={item} />
       </div>
-    </section>
+    </Card>
   )
 }

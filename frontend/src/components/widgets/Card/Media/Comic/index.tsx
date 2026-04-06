@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Comic } from 'types/internal/media'
+import Card from 'components/parts/Card'
 import ExImage from 'components/parts/ExImage'
 import style from './Comic.module.scss'
 import CardMediaContent from '../Content'
@@ -13,11 +14,11 @@ export default function ComicCard(props: Props): React.JSX.Element {
   const { ulid, image } = item
 
   return (
-    <section className={style.card}>
+    <Card className={style.card}>
       <Link href={`/media/comic/${ulid}`}>
         <ExImage src={image} width="270" height="153" className={style.thumbnail} />
       </Link>
       <CardMediaContent href={`/media/comic/${ulid}`} media={item} />
-    </section>
+    </Card>
   )
 }

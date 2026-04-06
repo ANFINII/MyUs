@@ -1,5 +1,5 @@
-import clsx from 'clsx'
 import { Chat } from 'types/internal/media'
+import clsx from 'utils/functions/clsx'
 import { formatTimeAgo } from 'utils/functions/datetime'
 import IconCaret from 'components/parts/Icon/Caret'
 import IconChat from 'components/parts/Icon/Chat'
