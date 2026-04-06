@@ -8,12 +8,12 @@ interface Props {
   data: Picture
 }
 
-export default function MediaPicture(props: Props): React.JSX.Element {
+export default function PictureCard(props: Props): React.JSX.Element {
   const { data } = props
   const { ulid, image } = data
 
   return (
-    <section className={style.media}>
+    <section className={style.card}>
       <Link href={`/media/picture/${ulid}`}>
         <ExImage src={image} width="270" height="153" className={style.thumbnail} />
       </Link>

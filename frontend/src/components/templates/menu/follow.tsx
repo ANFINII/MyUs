@@ -3,7 +3,7 @@ import { Follow } from 'types/internal/user'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import MediaFollow from 'components/widgets/Card/Follow'
+import FollowCard from 'components/widgets/Card/Follow'
 import CardList from 'components/widgets/Card/List'
 
 interface Props {
@@ -22,7 +22,7 @@ export default function Follows(props: Props): React.JSX.Element {
         <Button color="blue" size="s" name="フォロワー" onClick={() => router.push('/menu/follower')} />
         <span className="ml_16">フォロー数：{datas.length}</span>
       </div>
-      <CardList cards={datas} Content={MediaFollow} />
+      <CardList cards={datas} Content={FollowCard} />
     </Main>
   )
 }

@@ -7,12 +7,12 @@ interface Props {
   data: Music
 }
 
-export default function MediaMusic(props: Props): React.JSX.Element {
+export default function MusicCard(props: Props): React.JSX.Element {
   const { data } = props
   const { ulid, music } = data
 
   return (
-    <section className={style.media}>
+    <section className={style.card}>
       <AudioPlayer src={music} className={style.player} />
       <MediaContent href={`/media/music/${ulid}`} media={data} />
     </section>

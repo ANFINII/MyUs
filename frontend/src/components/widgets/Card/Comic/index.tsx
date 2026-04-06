@@ -8,12 +8,12 @@ interface Props {
   data: Comic
 }
 
-export default function MediaComic(props: Props): React.JSX.Element {
+export default function ComicCard(props: Props): React.JSX.Element {
   const { data } = props
   const { ulid, image } = data
 
   return (
-    <section className={style.media}>
+    <section className={style.card}>
       <Link href={`/media/comic/${ulid}`}>
         <ExImage src={image} width="270" height="153" className={style.thumbnail} />
       </Link>

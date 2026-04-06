@@ -2,7 +2,7 @@ import { Picture } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import CardList from 'components/widgets/Card/List'
-import MediaPicture from 'components/widgets/Card/Picture'
+import PictureCard from 'components/widgets/Card/Picture'
 
 interface Props {
   datas: Picture[]
@@ -15,7 +15,7 @@ export default function Pictures(props: Props): React.JSX.Element {
 
   return (
     <Main title="Picture" search={search}>
-      <CardList cards={datas} Content={MediaPicture} />
+      <CardList cards={datas} Content={PictureCard} />
     </Main>
   )
 }

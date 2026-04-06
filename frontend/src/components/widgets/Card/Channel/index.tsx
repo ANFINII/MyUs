@@ -9,7 +9,7 @@ interface Props {
   data: Channel
 }
 
-export default function MediaChannel(props: Props): React.JSX.Element {
+export default function ChannelCard(props: Props): React.JSX.Element {
   const { data } = props
   const { ulid, ownerUlid, avatar, name, description, count } = data
 

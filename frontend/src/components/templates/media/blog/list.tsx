@@ -1,7 +1,7 @@
 import { Blog } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
-import MediaBlog from 'components/widgets/Card/Blog'
+import BlogCard from 'components/widgets/Card/Blog'
 import CardList from 'components/widgets/Card/List'
 
 interface Props {
@@ -15,7 +15,7 @@ export default function Blogs(props: Props): React.JSX.Element {
 
   return (
     <Main title="Blog" search={search}>
-      <CardList cards={datas} Content={MediaBlog} />
+      <CardList cards={datas} Content={BlogCard} />
     </Main>
   )
 }
