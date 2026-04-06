@@ -2,15 +2,18 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "lib": ["dom", "dom.iterable", "esnext"],
     "types": ["@types/react", "@types/react-dom"],
     "jsx": "react-jsx",
-    "baseUrl": "src",
     "paths": {
-      "api/*": ["api/*"],
-      "lib/*": [ "lib/*"],
-      "types/*": ["types/*"]
+      "api/*": ["./src/api/*"],
+      "components/*": ["./src/components/*"],
+      "lib/*": ["./src/lib/*"],
+      "pages/*": ["./src/pages/*"],
+      "styles/*": ["./src/styles/*"],
+      "types/*": ["./src/types/*"],
+      "utils/*": ["./src/utils/*"]
     },
     "sourceRoot": "/",
     "sourceMap": true,

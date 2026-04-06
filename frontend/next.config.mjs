@@ -1,18 +1,14 @@
 /** @type {import('next').NextConfig} */
 
-const nextConfig = {
+import { createRequire } from 'module'
+
+const require = createRequire(import.meta.url)
+const { i18n } = require('./next-i18next.config.js')
+
+export default {
   reactStrictMode: true,
   reactCompiler: true,
   basePath: '',
-  async redirects() {
-    return [{ source: '/', destination: '/', permanent: true }]
-  },
-}
-
-const { i18n } = require('./next-i18next.config')
-
-module.exports = {
-  ...nextConfig,
   i18n,
   images: {
     remotePatterns: [
