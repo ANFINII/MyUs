@@ -23,7 +23,6 @@ from api.src.types.schema.message import MessageOut
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.user import AuthorOut, MediaUserOut
 from api.src.usecase.auth import auth_check
-from api.src.usecase.channel import get_channel_data
 from api.src.usecase.media import create_video, create_music, create_comic, create_blog, create_picture, create_chat
 from api.src.usecase.media import get_home, get_videos, get_musics, get_comics, get_blogs, get_pictures, get_chats
 from api.src.usecase.media import get_video_detail, get_music_detail, get_comic_detail, get_blog_detail, get_picture_detail, get_chat_detail
@@ -70,11 +69,9 @@ class VideoAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel_data(input.channel_ulid)
-        if channel is None:
+        obj = create_video(input=input, image=image, video=video)
+        if obj is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
-
-        obj = create_video(channel=channel, input=input, image=image, video=video)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -132,11 +129,9 @@ class MusicAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel_data(input.channel_ulid)
-        if channel is None:
+        obj = create_music(input=input, music=music)
+        if obj is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
-
-        obj = create_music(channel=channel, input=input, music=music)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -194,11 +189,9 @@ class ComicAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel_data(input.channel_ulid)
-        if channel is None:
+        obj = create_comic(input=input, image=image, pages=pages)
+        if obj is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
-
-        obj = create_comic(channel=channel, input=input, image=image, pages=pages)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -255,11 +248,9 @@ class PictureAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel_data(input.channel_ulid)
-        if channel is None:
+        obj = create_picture(input=input, image=image)
+        if obj is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
-
-        obj = create_picture(channel=channel, input=input, image=image)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -315,11 +306,9 @@ class BlogAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel_data(input.channel_ulid)
-        if channel is None:
+        obj = create_blog(input=input, image=image)
+        if obj is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
-
-        obj = create_blog(channel=channel, input=input, image=image)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -376,11 +365,9 @@ class ChatAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channel = get_channel_data(input.channel_ulid)
-        if channel is None:
+        obj = create_chat(input=input)
+        if obj is None:
             return 400, ErrorOut(message="チャンネルが見つかりません")
-
-        obj = create_chat(channel=channel, input=input)
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
