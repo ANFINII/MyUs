@@ -1,8 +1,8 @@
 import { Chat } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
+import MediaChat from 'components/widgets/Card/Chat'
 import CardList from 'components/widgets/Card/List'
-import MediaChat from 'components/widgets/Media/Index/Chat'
 
 interface Props {
   datas: Chat[]

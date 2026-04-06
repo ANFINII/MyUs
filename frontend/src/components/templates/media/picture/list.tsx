@@ -2,7 +2,7 @@ import { Picture } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import CardList from 'components/widgets/Card/List'
-import MediaPicture from 'components/widgets/Media/Index/Picture'
+import MediaPicture from 'components/widgets/Card/Picture'
 
 interface Props {
   datas: Picture[]

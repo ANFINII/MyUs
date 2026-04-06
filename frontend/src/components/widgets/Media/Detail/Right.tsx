@@ -3,7 +3,7 @@ import { MediaPath } from 'utils/constants/enum'
 import Divide from 'components/parts/Divide'
 import VStack from 'components/parts/Stack/Vertical'
 import Advertise from 'components/widgets/Advertise'
-import MediaMusic from 'components/widgets/Media/Index/Music'
+import MediaMusic from 'components/widgets/Card/Music'
 import style from './Common.module.scss'
 import MediaSideImage from '../Side/Image'
 
