@@ -64,7 +64,7 @@ export default [
       'unused-imports/no-unused-imports': 'error', // 未使用のimportを禁止
       'import/order': ['error',
         {
-          groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
+          groups: ['builtin', 'external', 'internal', ['sibling', 'index'], 'parent'],
           alphabetize: { order: 'asc', caseInsensitive: false },
           'newlines-between': 'never',
           pathGroupsExcludedImportTypes: ['builtin'],

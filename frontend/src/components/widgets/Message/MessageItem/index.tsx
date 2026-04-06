@@ -12,8 +12,8 @@ import IconLink from 'components/parts/Icon/Link'
 import IconTrash from 'components/parts/Icon/Trash'
 import HStack from 'components/parts/Stack/Horizontal'
 import MessageDeleteModal from 'components/widgets/Modal/MessageDelete'
-import ChatEditor from '../ChatEditor'
 import style from './MessageItem.module.scss'
+import ChatEditor from '../ChatEditor'
 
 interface Props {
   user?: UserMe

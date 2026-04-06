@@ -13,9 +13,9 @@ import IconTrash from 'components/parts/Icon/Trash'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentDeleteModal from 'components/widgets/Modal/CommentDelete'
+import style from './Thread.module.scss'
 import CommentInfo from '../Info'
 import CommentUpdate from '../Update'
-import style from './Thread.module.scss'
 
 interface Props {
   reply: Reply

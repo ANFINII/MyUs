@@ -2,8 +2,8 @@ import Link from 'next/link'
 import { Chat } from 'types/internal/media'
 import AvatarLink from 'components/parts/Avatar/Link'
 import HStack from 'components/parts/Stack/Horizontal'
-import style from '../Content.module.scss'
 import CardChatMediaContentBase from './Base'
+import style from '../Content.module.scss'
 
 interface Props {
   href: string
