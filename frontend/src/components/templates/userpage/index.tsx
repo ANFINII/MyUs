@@ -139,42 +139,42 @@ export default function Userpage(props: Props): React.JSX.Element {
         <>
           <IndexCardList title="Video">
             {newMedia.videos.map((item) => (
-              <VideoCard key={item.ulid} data={item} />
+              <VideoCard key={item.ulid} item={item} />
             ))}
           </IndexCardList>
 
           <Divide />
           <IndexCardList title="Music">
             {newMedia.musics.map((item) => (
-              <MusicCard key={item.ulid} data={item} />
+              <MusicCard key={item.ulid} item={item} />
             ))}
           </IndexCardList>
 
           <Divide />
           <IndexCardList title="Comic">
             {newMedia.comics.map((item) => (
-              <ComicCard key={item.ulid} data={item} />
+              <ComicCard key={item.ulid} item={item} />
             ))}
           </IndexCardList>
 
           <Divide />
           <IndexCardList title="Picture">
             {newMedia.pictures.map((item) => (
-              <PictureCard key={item.ulid} data={item} />
+              <PictureCard key={item.ulid} item={item} />
             ))}
           </IndexCardList>
 
           <Divide />
           <IndexCardList title="Blog">
             {newMedia.blogs.map((item) => (
-              <BlogCard key={item.ulid} data={item} />
+              <BlogCard key={item.ulid} item={item} />
             ))}
           </IndexCardList>
 
           <Divide />
           <IndexCardList title="Chat">
             {newMedia.chats.map((item) => (
-              <ChatCard key={item.ulid} data={item} />
+              <ChatCard key={item.ulid} item={item} />
             ))}
           </IndexCardList>
         </>

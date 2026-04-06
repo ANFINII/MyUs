@@ -15,7 +15,7 @@ export default function Comics(props: Props): React.JSX.Element {
 
   return (
     <Main title="Comic" search={search}>
-      <CardList cards={datas} Content={ComicCard} />
+      <CardList items={datas} Content={ComicCard} />
     </Main>
   )
 }

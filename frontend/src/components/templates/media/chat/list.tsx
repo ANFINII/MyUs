@@ -15,7 +15,7 @@ export default function Chats(props: Props): React.JSX.Element {
 
   return (
     <Main title="Chat" search={search}>
-      <CardList cards={datas} Content={ChatCard} />
+      <CardList items={datas} Content={ChatCard} />
     </Main>
   )
 }

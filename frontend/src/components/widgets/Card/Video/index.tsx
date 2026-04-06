@@ -9,12 +9,12 @@ import style from './Video.module.scss'
 type Player = ReturnType<typeof videojs>
 
 interface Props {
-  data: Video
+  item: Video
 }
 
 export default function VideoCard(props: Props): React.JSX.Element {
-  const { data } = props
-  const { ulid, image, convert } = data
+  const { item } = props
+  const { ulid, image, convert } = item
 
   const router = useRouter()
   const playerRef = useRef<Player | null>(null)
@@ -63,7 +63,7 @@ export default function VideoCard(props: Props): React.JSX.Element {
             preload: 'metadata',
           }}
         />
-        <MediaContent href={`/media/video/${ulid}`} media={data} />
+        <MediaContent href={`/media/video/${ulid}`} media={item} />
       </div>
     </section>
   )

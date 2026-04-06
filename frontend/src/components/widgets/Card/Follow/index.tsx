@@ -6,12 +6,12 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from './Follow.module.scss'
 
 interface Props {
-  data: Follow
+  item: Follow
 }
 
 export default function FollowCard(props: Props): React.JSX.Element {
-  const { data } = props
-  const { avatar, ulid, nickname, introduction, followerCount, followingCount } = data
+  const { item } = props
+  const { avatar, ulid, nickname, introduction, followerCount, followingCount } = item
 
   return (
     <section key={ulid} className={style.card}>

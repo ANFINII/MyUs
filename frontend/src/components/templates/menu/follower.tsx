@@ -22,7 +22,7 @@ export default function Followers(props: Props): React.JSX.Element {
         <Button color="blue" size="s" name="フォロー" onClick={() => router.push('/menu/follow')} />
         <span className="ml_16">フォロワー数：{datas.length}</span>
       </div>
-      <CardList cards={datas} Content={FollowCard} />
+      <CardList items={datas} Content={FollowCard} />
     </Main>
   )
 }

@@ -15,7 +15,7 @@ export default function Musics(props: Props): React.JSX.Element {
 
   return (
     <Main title="Music" search={search}>
-      <CardList cards={datas} Content={MusicCard} />
+      <CardList items={datas} Content={MusicCard} />
     </Main>
   )
 }

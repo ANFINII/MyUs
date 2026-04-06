@@ -5,19 +5,19 @@ import MediaContent from 'components/widgets/Media/Content'
 import style from './Comic.module.scss'
 
 interface Props {
-  data: Comic
+  item: Comic
 }
 
 export default function ComicCard(props: Props): React.JSX.Element {
-  const { data } = props
-  const { ulid, image } = data
+  const { item } = props
+  const { ulid, image } = item
 
   return (
     <section className={style.card}>
       <Link href={`/media/comic/${ulid}`}>
         <ExImage src={image} width="270" height="153" className={style.thumbnail} />
       </Link>
-      <MediaContent href={`/media/comic/${ulid}`} media={data} />
+      <MediaContent href={`/media/comic/${ulid}`} media={item} />
     </section>
   )
 }

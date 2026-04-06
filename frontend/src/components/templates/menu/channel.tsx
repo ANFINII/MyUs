@@ -15,7 +15,7 @@ export default function Channels(props: Props): React.JSX.Element {
       <div className="mt_16">
         <span>登録チャンネル数：{datas.length}</span>
       </div>
-      <CardList cards={datas} Content={ChannelCard} />
+      <CardList items={datas} Content={ChannelCard} />
     </Main>
   )
 }

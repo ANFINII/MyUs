@@ -28,7 +28,7 @@ export default function MediaDetailRight(props: Props): React.JSX.Element {
       <VStack gap="4">
         {list.map((media) =>
           isMusicMedia(media) ? (
-            <MusicCard key={media.ulid} data={media} />
+            <MusicCard key={media.ulid} item={media} />
           ) : (
             <MediaSideImage key={media.ulid} href={`/media/${mediaPath}/${media.ulid}`} src={media.image} media={media} />
           ),
