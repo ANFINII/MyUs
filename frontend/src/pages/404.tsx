@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import Custom404 from 'components/widgets/Error/Custom404'
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {

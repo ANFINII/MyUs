@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import UserPolicy from 'components/templates/menu/userpolicy'
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {

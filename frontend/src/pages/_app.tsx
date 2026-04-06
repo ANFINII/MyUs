@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
-import { appWithTranslation } from 'next-i18next'
+import { appWithTranslation } from 'next-i18next/pages'
 import { UserProvider } from 'components/provider/UserProvider'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
