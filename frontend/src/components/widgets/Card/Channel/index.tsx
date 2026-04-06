@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Channel } from 'types/internal/channel'
+import Card from 'components/parts/Card'
 import ExImage from 'components/parts/ExImage'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
@@ -14,7 +15,7 @@ export default function ChannelCard(props: Props): React.JSX.Element {
   const { ulid, ownerUlid, avatar, name, description, count } = item
 
   return (
-    <section className={style.card}>
+    <Card className={style.card}>
       <Link href={`/userpage/${ownerUlid}?channel=${ulid}`} className={style.box}>
         <HStack gap="5">
           <ExImage src={avatar} title={name} className={style.image} />
@@ -27,6 +28,6 @@ export default function ChannelCard(props: Props): React.JSX.Element {
           {description}
         </div>
       </Link>
-    </section>
+    </Card>
   )
 }
