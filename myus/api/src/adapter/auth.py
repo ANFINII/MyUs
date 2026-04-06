@@ -1,17 +1,12 @@
-from datetime import date, datetime
 import jwt
 from django.conf import settings
-from django.contrib.auth import authenticate
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
-from api.src.injectors import injector
-from api.src.domain.interface.user.data import MyPageData, PlanData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
-from api.src.domain.interface.user.interface import UserInterface
 from api.src.types.schema.auth import LoginIn, LoginOut, RefreshOut, SignupIn
 from api.src.types.schema.common import ErrorOut
+from api.src.usecase.auth import login_user, signup_user, verify_user
 from api.src.usecase.user import signup_check
-from api.utils.functions.encrypt import decrypt
 from api.utils.functions.token import access_token, refresh_token
 
 
@@ -25,24 +20,19 @@ class AuthAPI:
     def auth(request: HttpRequest):
         log.info("AuthAPI auth")
 
-        access_token = request.COOKIES.get("access_token")
-        if not access_token:
+        token = request.COOKIES.get("access_token")
+        if not token:
             return 401, ErrorOut(message="Unauthorized")
 
         key = settings.SECRET_KEY
         try:
-            payload = jwt.decode(jwt=access_token, key=key, algorithms=["HS256"])
+            payload = jwt.decode(jwt=token, key=key, algorithms=["HS256"])
             user_id = payload.get("user_id")
             if not user_id:
                 return 401, ErrorOut(message="Invalid token")
 
-            repository = injector.get(UserInterface)
-            users = repository.bulk_get([user_id])
-            if len(users) == 0:
-                return 401, ErrorOut(message="User not found")
-
-            if not users[0].user.is_active:
-                return 400, ErrorOut(message="退会済みです!")
+            if not verify_user(user_id):
+                return 401, ErrorOut(message="Unauthorized")
 
             return 200, ErrorOut(message="認証済みです!")
         except jwt.ExpiredSignatureError:
@@ -57,14 +47,14 @@ class AuthAPI:
     def refresh(request: HttpRequest, response: HttpResponse):
         log.info("AuthAPI refresh")
 
-        refresh_token = request.COOKIES.get("refresh_token")
-        if not refresh_token:
+        token = request.COOKIES.get("refresh_token")
+        if not token:
             log.warning("No refresh token in cookies")
             return 401, ErrorOut(message="Refresh token not found")
 
         try:
             payload = jwt.decode(
-                jwt=refresh_token,
+                jwt=token,
                 key=settings.SECRET_KEY,
                 algorithms=["HS256"]
             )
@@ -78,15 +68,9 @@ class AuthAPI:
                 log.warning("No user_id in token")
                 return 401, ErrorOut(message="Invalid token")
 
-            repository = injector.get(UserInterface)
-            users = repository.bulk_get([user_id])
-            if len(users) == 0:
-                log.warning("User not found", user_id=user_id)
-                return 401, ErrorOut(message="User not found")
-
-            if not users[0].user.is_active:
-                log.warning("User is not active", user_id=user_id)
-                return 401, ErrorOut(message="User is not active")
+            if not verify_user(user_id):
+                log.warning("User verification failed", user_id=user_id)
+                return 401, ErrorOut(message="Unauthorized")
 
             access = access_token(user_id)
 
@@ -114,103 +98,23 @@ class AuthAPI:
         if validation:
             return 400, ErrorOut(message=validation)
 
-        user_data = UserAllData(
-            user=UserData(
-                id=0,
-                ulid="",
-                avatar="",
-                password=input.password1,
-                email=input.email,
-                username=input.username,
-                nickname=input.nickname,
-                is_active=True,
-                is_staff=False,
-                date_joined=datetime.now(),
-            ),
-            profile=ProfileData(
-                last_name=input.last_name,
-                first_name=input.first_name,
-                gender=input.gender,
-                birthday=date(year=input.year, month=input.month, day=input.day),
-                phone="",
-                country_code="",
-                postal_code="",
-                prefecture="",
-                city="",
-                street="",
-                introduction="",
-            ),
-            mypage=MyPageData(
-                banner="",
-                email="",
-                content="",
-                follower_count=0,
-                following_count=0,
-                tag_manager_id="",
-                is_advertise=False,
-            ),
-            notification=UserNotificationData(
-                is_video=False,
-                is_music=False,
-                is_comic=False,
-                is_picture=False,
-                is_blog=False,
-                is_chat=False,
-                is_follow=True,
-                is_reply=True,
-                is_like=True,
-                is_views=True,
-            ),
-            user_plan=UserPlanData(
-                plan=PlanData(
-                    id=0,
-                    name="",
-                    stripe_api_id="",
-                    price=0,
-                    max_advertise=0,
-                    description="",
-                ),
-                customer_id="",
-                subscription="",
-                is_paid=False,
-                start_date=None,
-                end_date=None,
-            ),
-        )
-
-        try:
-            repository = injector.get(UserInterface)
-            repository.bulk_save(objs=[user_data])
-            return 201, ErrorOut(message="アカウント登録が完了しました!")
-        except Exception:
-            log.error("Signup error")
+        if not signup_user(input):
             return 500, ErrorOut(message="アカウント登録に失敗しました!")
+
+        return 201, ErrorOut(message="アカウント登録が完了しました!")
 
     @staticmethod
     @router.post("/login", response={200: LoginOut, 400: ErrorOut, 500: ErrorOut})
     def login(request: HttpRequest, response: HttpResponse, input: LoginIn):
         log.info("AuthAPI login", username=input.username)
 
-        try:
-            username = decrypt(input.username)
-            password = decrypt(input.password)
-        except Exception:
-            log.error("Decrypt error")
-            return 500, ErrorOut(message="認証エラーが発生しました!")
-
-        user = authenticate(username=username, password=password)
-        if not user:
-            user = authenticate(email=username, password=password)
-
-        if not user:
+        user_id = login_user(input.username, input.password)
+        if user_id is None:
             return 400, ErrorOut(message="ID又はパスワードが違います!")
 
-        if not user.is_active:
-            return 400, ErrorOut(message="退会済みのユーザーです!")
-
         try:
-            access = access_token(user.id)
-            refresh = refresh_token(user.id)
+            access = access_token(user_id)
+            refresh = refresh_token(user_id)
         except Exception:
             log.error("Token generation error")
             return 500, ErrorOut(message="認証トークンの生成に失敗しました!")
