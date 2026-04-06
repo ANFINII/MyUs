@@ -1,6 +1,6 @@
 import { Channel } from 'types/internal/channel'
 import Main from 'components/layout/Main'
-import MediaChannel from 'components/widgets/Card/Channel'
+import ChannelCard from 'components/widgets/Card/Channel'
 import CardList from 'components/widgets/Card/List'
 
 interface Props {
@@ -15,7 +15,7 @@ export default function Channels(props: Props): React.JSX.Element {
       <div className="mt_16">
         <span>登録チャンネル数：{datas.length}</span>
       </div>
-      <CardList cards={datas} Content={MediaChannel} />
+      <CardList cards={datas} Content={ChannelCard} />
     </Main>
   )
 }

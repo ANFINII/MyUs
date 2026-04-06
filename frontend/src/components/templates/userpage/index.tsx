@@ -10,13 +10,13 @@ import ExImage from 'components/parts/ExImage'
 import SelectBox from 'components/parts/Input/SelectBox'
 import HStack from 'components/parts/Stack/Horizontal'
 import Tabs, { TabItem } from 'components/parts/Tabs'
-import MediaBlog from 'components/widgets/Card/Blog'
-import MediaChat from 'components/widgets/Card/Chat'
-import MediaComic from 'components/widgets/Card/Comic'
+import BlogCard from 'components/widgets/Card/Blog'
+import ChatCard from 'components/widgets/Card/Chat'
+import ComicCard from 'components/widgets/Card/Comic'
 import MediaIndex from 'components/widgets/Card/Index'
-import MediaMusic from 'components/widgets/Card/Music'
-import MediaPicture from 'components/widgets/Card/Picture'
-import MediaVideo from 'components/widgets/Card/Video'
+import MusicCard from 'components/widgets/Card/Music'
+import PictureCard from 'components/widgets/Card/Picture'
+import VideoCard from 'components/widgets/Card/Video'
 import FollowButton from 'components/widgets/FollowButton'
 import FollowDeleteModal from 'components/widgets/Modal/FollowDelete'
 import style from './UserPage.module.scss'
@@ -139,42 +139,42 @@ export default function Userpage(props: Props): React.JSX.Element {
         <>
           <MediaIndex title="Video">
             {newMedia.videos.map((item) => (
-              <MediaVideo key={item.ulid} data={item} />
+              <VideoCard key={item.ulid} data={item} />
             ))}
           </MediaIndex>
 
           <Divide />
           <MediaIndex title="Music">
             {newMedia.musics.map((item) => (
-              <MediaMusic key={item.ulid} data={item} />
+              <MusicCard key={item.ulid} data={item} />
             ))}
           </MediaIndex>
 
           <Divide />
           <MediaIndex title="Comic">
             {newMedia.comics.map((item) => (
-              <MediaComic key={item.ulid} data={item} />
+              <ComicCard key={item.ulid} data={item} />
             ))}
           </MediaIndex>
 
           <Divide />
           <MediaIndex title="Picture">
             {newMedia.pictures.map((item) => (
-              <MediaPicture key={item.ulid} data={item} />
+              <PictureCard key={item.ulid} data={item} />
             ))}
           </MediaIndex>
 
           <Divide />
           <MediaIndex title="Blog">
             {newMedia.blogs.map((item) => (
-              <MediaBlog key={item.ulid} data={item} />
+              <BlogCard key={item.ulid} data={item} />
             ))}
           </MediaIndex>
 
           <Divide />
           <MediaIndex title="Chat">
             {newMedia.chats.map((item) => (
-              <MediaChat key={item.ulid} data={item} />
+              <ChatCard key={item.ulid} data={item} />
             ))}
           </MediaIndex>
         </>

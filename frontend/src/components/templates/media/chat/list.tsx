@@ -1,7 +1,7 @@
 import { Chat } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
-import MediaChat from 'components/widgets/Card/Chat'
+import ChatCard from 'components/widgets/Card/Chat'
 import CardList from 'components/widgets/Card/List'
 
 interface Props {
@@ -15,7 +15,7 @@ export default function Chats(props: Props): React.JSX.Element {
 
   return (
     <Main title="Chat" search={search}>
-      <CardList cards={datas} Content={MediaChat} />
+      <CardList cards={datas} Content={ChatCard} />
     </Main>
   )
 }

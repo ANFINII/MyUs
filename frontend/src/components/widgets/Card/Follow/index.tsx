@@ -9,7 +9,7 @@ interface Props {
   data: Follow
 }
 
-export default function MediaFollow(props: Props): React.JSX.Element {
+export default function FollowCard(props: Props): React.JSX.Element {
   const { data } = props
   const { avatar, ulid, nickname, introduction, followerCount, followingCount } = data
 

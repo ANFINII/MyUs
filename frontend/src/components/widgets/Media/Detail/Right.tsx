@@ -3,7 +3,7 @@ import { MediaPath } from 'utils/constants/enum'
 import Divide from 'components/parts/Divide'
 import VStack from 'components/parts/Stack/Vertical'
 import Advertise from 'components/widgets/Advertise'
-import MediaMusic from 'components/widgets/Card/Music'
+import MusicCard from 'components/widgets/Card/Music'
 import style from './Common.module.scss'
 import MediaSideImage from '../Side/Image'
 
@@ -28,7 +28,7 @@ export default function MediaDetailRight(props: Props): React.JSX.Element {
       <VStack gap="4">
         {list.map((media) =>
           isMusicMedia(media) ? (
-            <MediaMusic key={media.ulid} data={media} />
+            <MusicCard key={media.ulid} data={media} />
           ) : (
             <MediaSideImage key={media.ulid} href={`/media/${mediaPath}/${media.ulid}`} src={media.image} media={media} />
           ),

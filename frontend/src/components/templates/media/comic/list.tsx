@@ -1,7 +1,7 @@
 import { Comic } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
-import MediaComic from 'components/widgets/Card/Comic'
+import ComicCard from 'components/widgets/Card/Comic'
 import CardList from 'components/widgets/Card/List'
 
 interface Props {
@@ -15,7 +15,7 @@ export default function Comics(props: Props): React.JSX.Element {
 
   return (
     <Main title="Comic" search={search}>
-      <CardList cards={datas} Content={MediaComic} />
+      <CardList cards={datas} Content={ComicCard} />
     </Main>
   )
 }

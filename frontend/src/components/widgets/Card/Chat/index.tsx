@@ -6,12 +6,12 @@ interface Props {
   data: Chat
 }
 
-export default function MediaChat(props: Props): React.JSX.Element {
+export default function ChatCard(props: Props): React.JSX.Element {
   const { data } = props
   const { ulid } = data
 
   return (
-    <section className={style.media}>
+    <section className={style.card}>
       <ChatMediaContent href={`/media/chat/${ulid}`} media={data} />
     </section>
   )

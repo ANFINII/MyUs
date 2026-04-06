@@ -12,7 +12,7 @@ interface Props {
   data: Video
 }
 
-export default function MediaVideo(props: Props): React.JSX.Element {
+export default function VideoCard(props: Props): React.JSX.Element {
   const { data } = props
   const { ulid, image, convert } = data
 
@@ -47,7 +47,7 @@ export default function MediaVideo(props: Props): React.JSX.Element {
   }
 
   return (
-    <section className={style.media}>
+    <section className={style.card}>
       <div className="video video_auto" onClick={handleClick} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <VideoJS
           onReady={handlePlayerReady}
