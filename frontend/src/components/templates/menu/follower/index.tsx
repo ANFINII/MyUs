@@ -4,7 +4,7 @@ import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import MediaFollow from 'components/widgets/Media/Index/Follow'
-import FollowList from 'components/widgets/Media/List/Follow'
+import MediaList from 'components/widgets/Media/List/Media'
 
 interface Props {
   datas: Follow[]
@@ -22,7 +22,7 @@ export default function Followers(props: Props): React.JSX.Element {
         <Button color="blue" size="s" name="フォロー" onClick={() => router.push('/menu/follow')} />
         <span className="ml_16">フォロワー数：{datas.length}</span>
       </div>
-      <FollowList medias={datas} MediaComponent={MediaFollow} />
+      <MediaList medias={datas} MediaComponent={MediaFollow} />
     </Main>
   )
 }
