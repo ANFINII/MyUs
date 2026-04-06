@@ -5,10 +5,10 @@ import Divide from 'components/parts/Divide'
 import MediaBlog from 'components/widgets/Media/Index/Blog'
 import MediaChat from 'components/widgets/Media/Index/Chat'
 import MediaComic from 'components/widgets/Media/Index/Comic'
+import MediaIndex from 'components/widgets/Media/Index/Index'
 import MediaMusic from 'components/widgets/Media/Index/Music'
 import MediaPicture from 'components/widgets/Media/Index/Picture'
 import MediaVideo from 'components/widgets/Media/Index/Video'
-import MediaIndex from 'components/widgets/Media/List/Index'
 
 interface Props {
   mediaHome: MediaHome
