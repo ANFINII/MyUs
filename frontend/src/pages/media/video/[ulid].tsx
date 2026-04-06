@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { VideoDetailOut } from 'types/internal/media/detail'
 import { getVideo } from 'api/internal/media/detail'
 import ErrorCheck from 'components/widgets/Error/Check'

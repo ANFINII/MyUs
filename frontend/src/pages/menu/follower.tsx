@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { Follow } from 'types/internal/user'
 import { getFollower } from 'api/internal/user'
 import { searchParams } from 'utils/functions/common'

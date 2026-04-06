@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { ChatDetailOut } from 'types/internal/media/detail'
 import { getChat } from 'api/internal/media/detail'
 import ErrorCheck from 'components/widgets/Error/Check'

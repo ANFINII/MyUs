@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import Signup from 'components/templates/account/signup'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {

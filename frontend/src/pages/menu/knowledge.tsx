@@ -1,5 +1,5 @@
 import { GetStaticProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import Knowledge from 'components/templates/menu/knowledge'
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {

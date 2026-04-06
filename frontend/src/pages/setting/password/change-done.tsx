@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { getUser } from 'api/internal/user'
 import ErrorCheck from 'components/widgets/Error/Check'
 import PasswordChangeDone from 'components/templates/setting/password/change-done'

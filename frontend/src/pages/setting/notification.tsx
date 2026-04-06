@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { UserNotificationOut } from 'types/internal/user'
 import { getSettingNotification } from 'api/internal/setting'
 import ErrorCheck from 'components/widgets/Error/Check'
