@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Media } from 'types/internal/media'
 import ExImage from 'components/parts/ExImage'
 import HStack from 'components/parts/Stack/Horizontal'
-import MediaBaseContent from 'components/widgets/Media/Content/Base'
+import CardMediaContentBase from 'components/widgets/Card/Media/Content/Base'
 import style from './Side.module.scss'
 
 interface Props {
@@ -19,7 +19,7 @@ export default function MediaSideImage(props: Props): React.JSX.Element {
       <Link href={href} className={style.link}>
         <HStack gap="4">
           <ExImage src={src} width="192" height="100" className={style.thumbnail} />
-          <MediaBaseContent media={media} />
+          <CardMediaContentBase media={media} />
         </HStack>
       </Link>
     </section>

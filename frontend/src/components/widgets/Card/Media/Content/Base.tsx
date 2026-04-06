@@ -5,13 +5,13 @@ import IconCaret from 'components/parts/Icon/Caret'
 import IconHand from 'components/parts/Icon/Hand'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
-import style from './MediaContent.module.scss'
+import style from './CardMediaContent.module.scss'
 
 interface Props {
   media: Media
 }
 
-export default function MediaBaseContent(props: Props) {
+export default function CardMediaContentBase(props: Props) {
   const { media } = props
   const { title, read, like, created, channel } = media
   const { name } = channel
