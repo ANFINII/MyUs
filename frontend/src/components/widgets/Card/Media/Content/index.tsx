@@ -1,16 +1,16 @@
 import Link from 'next/link'
-import { Chat } from 'types/internal/media'
+import { Media } from 'types/internal/media'
 import AvatarLink from 'components/parts/Avatar/Link'
 import HStack from 'components/parts/Stack/Horizontal'
-import ChatMediaBaseContent from './Base'
-import style from '../MediaContent.module.scss'
+import CardMediaBaseContent from './Base'
+import style from './CardMediaContent.module.scss'
 
-interface Props {
+interface Props<Media> {
   href: string
-  media: Chat
+  media: Media
 }
 
-export default function ChatMediaContent(props: Props): React.JSX.Element {
+export default function CardMediaContent(props: Props<Media>) {
   const { href, media } = props
   const { channel } = media
   const { avatar, ownerUlid, name } = channel
@@ -21,7 +21,7 @@ export default function ChatMediaContent(props: Props): React.JSX.Element {
       <Link href={href} className={style.link}>
         <HStack gap="4" className="p_6">
           <div className="mr_36" />
-          <ChatMediaBaseContent media={media} />
+          <CardMediaBaseContent media={media} />
         </HStack>
       </Link>
     </div>

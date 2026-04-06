@@ -2,9 +2,9 @@ import { useRef } from 'react'
 import { useRouter } from 'next/router'
 import videojs from 'video.js'
 import { Video } from 'types/internal/media'
-import MediaContent from 'components/widgets/Media/Content'
 import VideoJS from 'components/widgets/Video/videojs'
 import style from './Video.module.scss'
+import CardMediaContent from '../Media/Content'
 
 type Player = ReturnType<typeof videojs>
 
@@ -63,7 +63,7 @@ export default function VideoCard(props: Props): React.JSX.Element {
             preload: 'metadata',
           }}
         />
-        <MediaContent href={`/media/video/${ulid}`} media={item} />
+        <CardMediaContent href={`/media/video/${ulid}`} media={item} />
       </div>
     </section>
   )

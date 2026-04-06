@@ -7,13 +7,13 @@ import IconHand from 'components/parts/Icon/Hand'
 import IconPerson from 'components/parts/Icon/Person'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
-import style from '../MediaContent.module.scss'
+import style from '../CardMediaContent.module.scss'
 
 interface Props {
   media: Chat
 }
 
-export default function ChatMediaBaseContent(props: Props): React.JSX.Element {
+export default function CardChatMediaContentBase(props: Props): React.JSX.Element {
   const { media } = props
   const { title, read, like, joined, thread, created, channel } = media
   const { name } = channel
