@@ -14,10 +14,10 @@ export default function FollowCard(props: Props): React.JSX.Element {
   const { avatar, ulid, nickname, introduction, followerCount, followingCount } = data
 
   return (
-    <section key={ulid} className={style.media_follow}>
-      <Link href={`/userpage/${ulid}`} className={style.follow_box}>
+    <section key={ulid} className={style.card}>
+      <Link href={`/userpage/${ulid}`} className={style.box}>
         <HStack gap="5">
-          <ExImage src={avatar} title={nickname} className={style.follow_image} />
+          <ExImage src={avatar} title={nickname} className={style.image} />
           <VStack gap="1" className="fs_12">
             <span title={nickname}>{nickname}</span>
             <span>フォロワー数：{followerCount}</span>
@@ -26,7 +26,7 @@ export default function FollowCard(props: Props): React.JSX.Element {
             </span>
           </VStack>
         </HStack>
-        <div title={introduction} className={style.follow_introduction}>
+        <div title={introduction} className={style.introduction}>
           {introduction}
         </div>
       </Link>
