@@ -1,7 +1,7 @@
 import { MouseEvent, RefObject } from 'react'
-import clsx from 'clsx'
 import { ChatMessage, ChatReply } from 'types/internal/media/detail'
 import { UserMe } from 'types/internal/user'
+import cx from 'utils/functions/cx'
 import Divide from 'components/parts/Divide'
 import IconCross from 'components/parts/Icon/Cross'
 import style from './SectionThread.module.scss'
@@ -28,7 +28,7 @@ export default function SectionThread(props: Props): React.JSX.Element {
   const isThread = selectedMessage !== null
 
   return (
-    <div ref={threadRef} className={clsx(style.chat_section_thread, isThread && style.active)}>
+    <div ref={threadRef} className={cx(style.chat_section_thread, isThread && style.active)}>
       <div className={style.thread_resize} onMouseDown={onResize} />
       <div className={style.thread_header}>
         <h2>スレッド</h2>

@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import style from '../Table.module.scss'
 
 interface Props {
@@ -14,7 +14,7 @@ export default function TableRow(props: Props): React.JSX.Element {
   return (
     <tr className={className}>
       <td className={style.label}>{label}</td>
-      <td className={clsx(isIndent && style.indent)}>{children}</td>
+      <td className={cx(isIndent && style.indent)}>{children}</td>
     </tr>
   )
 }

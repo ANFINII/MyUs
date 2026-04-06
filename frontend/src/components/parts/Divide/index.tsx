@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import style from './Divide.module.scss'
 
 interface Props {
@@ -15,13 +15,13 @@ export default function Divide(props: Props): React.JSX.Element {
 
   if (label) {
     return (
-      <div className={clsx(style.labeled, style[marginV], style[marginH], className)}>
-        {position === 'center' && <span className={clsx(style.line, style[height])} />}
+      <div className={cx(style.labeled, style[marginV], style[marginH], className)}>
+        {position === 'center' && <span className={cx(style.line, style[height])} />}
         <span className={style.label}>{label}</span>
-        <span className={clsx(style.line, style[height])} />
+        <span className={cx(style.line, style[height])} />
       </div>
     )
   }
 
-  return <hr className={clsx(style.hr, style[height], style[marginV], style[marginH], className)} />
+  return <hr className={cx(style.hr, style[height], style[marginV], style[marginH], className)} />
 }

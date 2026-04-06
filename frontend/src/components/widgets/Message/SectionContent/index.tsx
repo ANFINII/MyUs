@@ -1,6 +1,6 @@
-import clsx from 'clsx'
 import { ChatDetail } from 'types/internal/media/detail'
 import { MediaPath } from 'utils/constants/enum'
+import cx from 'utils/functions/cx'
 import AvatarLink from 'components/parts/Avatar/Link'
 import Divide from 'components/parts/Divide'
 import HStack from 'components/parts/Stack/Horizontal'
@@ -26,7 +26,7 @@ export default function SectionContent(props: Props): React.JSX.Element {
   const { content, channel, hashtags, mediaUser } = detail
 
   return (
-    <div className={clsx(style.content, isContent && style.active)}>
+    <div className={cx(style.content, isContent && style.active)}>
       {hashtags.length > 0 && (
         <>
           <Hashtags hashtags={hashtags} mediaPath={MediaPath.Chat} />
@@ -50,7 +50,7 @@ export default function SectionContent(props: Props): React.JSX.Element {
       <div className={style.content_detail}>
         <VStack gap="2">
           <View isView={isContentExpand} onView={onContentExpand} content={isContentExpand ? '縮小表示' : '拡大表示'} />
-          <div className={clsx(style.content_body, isContentExpand && style.active)}>
+          <div className={cx(style.content_body, isContentExpand && style.active)}>
             <p>{content}</p>
           </div>
         </VStack>

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import Avatar from 'components/parts/Avatar'
 import style from './AvatarLink.module.scss'
 
@@ -18,7 +18,7 @@ export default function AvatarLink(props: Props): React.JSX.Element {
 
   return (
     <Link href={`/userpage/${ulid}`} className={className}>
-      <Avatar src={src} title={title} size={sizeValue} color="grey" className={clsx(style.avatar, style[size])} />
+      <Avatar src={src} title={title} size={sizeValue} color="grey" className={cx(style.avatar, style[size])} />
     </Link>
   )
 }

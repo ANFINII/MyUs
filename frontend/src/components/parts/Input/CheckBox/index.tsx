@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import style from './CheckBox.module.scss'
 
 interface Props {
@@ -16,7 +16,7 @@ export default function CheckBox(props: Props): React.JSX.Element {
   const { label, id, className = '' } = props
 
   return (
-    <div className={clsx(style.checkbox, className)}>
+    <div className={cx(style.checkbox, className)}>
       <input {...props} type="checkbox" id={id || label} className={style.input} />
       <label htmlFor={id || label} className={style.label}>
         {label}

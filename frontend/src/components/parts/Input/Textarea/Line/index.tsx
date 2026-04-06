@@ -1,5 +1,5 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useRef } from 'react'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import style from './Line.module.scss'
 
 interface Props {
@@ -48,5 +48,5 @@ export default function TextareaLine(props: Props): React.JSX.Element {
     }
   }
 
-  return <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} onKeyDown={handleKeyDown} className={clsx(style.line, className)} />
+  return <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} onKeyDown={handleKeyDown} className={cx(style.line, className)} />
 }

@@ -1,5 +1,5 @@
 import router from 'next/router'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
@@ -23,7 +23,7 @@ export default function DropMenuCloud(props: Props): React.JSX.Element {
   }
 
   return (
-    <nav className={clsx(style.drop_menu, open && style.active)}>
+    <nav className={cx(style.drop_menu, open && style.active)}>
       <ul>
         <MenuItem label="Videoアップロード" icon={<IconVideo size="1.5em" />} className={style.item} onClick={() => handleRouter('video')} />
         <MenuItem label="Musicアップロード" icon={<IconMusic size="1.5em" />} className={style.item} onClick={() => handleRouter('music')} />

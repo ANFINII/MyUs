@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import style from './Radio.module.scss'
 
 interface Props {
@@ -16,7 +16,7 @@ export default function Radio(props: Props): React.JSX.Element {
   const { label, id, value, className = '' } = props
 
   return (
-    <div className={clsx(style.radio, className)}>
+    <div className={cx(style.radio, className)}>
       <input {...props} type="radio" id={id || value} />
       <label htmlFor={id || value} className={style.label}>
         {label}

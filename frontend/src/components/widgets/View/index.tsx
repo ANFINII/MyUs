@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import IconCaret from 'components/parts/Icon/Caret'
 import style from './View.module.scss'
 
@@ -14,7 +14,7 @@ export default function View(props: Props): React.JSX.Element {
   const { isView, onView, size = 'm', content, color = 'light' } = props
 
   return (
-    <label className={clsx(style.view, isView && style.active, style[size], style[color])} onClick={onView}>
+    <label className={cx(style.view, isView && style.active, style[size], style[color])} onClick={onView}>
       <div className={style.icon}>
         <IconCaret size="16" type={isView ? 'down' : 'right'} />
       </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 
 interface Props {
   src?: string
@@ -22,5 +22,5 @@ export default function ExImage(props: Props): React.JSX.Element {
   const handleError = () => setImageSrc(undefined)
   if (!imageSrc) return <img src="/image/no_image.png" width={width || size} height={height || size} className={className} />
 
-  return <img {...props} width={width || size} height={height || size} className={clsx('cursor_p', className)} onError={handleError} />
+  return <img {...props} width={width || size} height={height || size} className={cx('cursor_p', className)} onError={handleError} />
 }

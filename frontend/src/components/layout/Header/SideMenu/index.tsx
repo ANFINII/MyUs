@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import ExImage from 'components/parts/ExImage'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconFile from 'components/parts/Icon/File'
@@ -28,7 +28,7 @@ export default function SideMenu(props: Props): React.JSX.Element {
   }
 
   return (
-    <aside className={clsx(style.side_menu, open && style.active)}>
+    <aside className={cx(style.side_menu, open && style.active)}>
       <nav>
         <NavItem className={style.close} icon={<IconArrow size="1.5em" type="left" />} onClick={onClose}>
           <ExImage src="/image/MyUs.png" size="30" />

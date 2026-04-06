@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import clsx from 'clsx'
 import Quill, { Sources } from 'quill'
 import Delta from 'quill-delta'
 import 'quill/dist/quill.snow.css'
 import 'quill-mention'
 import 'quill-mention/dist/quill.mention.css'
 import { MentionUser } from 'types/internal/timeline'
+import cx from 'utils/functions/cx'
 import VStack from 'components/parts/Stack/Vertical'
 import style from './QuillEditor.module.scss'
 
@@ -151,7 +151,7 @@ export default function QuillEditor(props: Props): React.JSX.Element {
           {label}
         </label>
       )}
-      <div ref={hostRef} className={clsx(style.editor, isRequired && style.error)} />
+      <div ref={hostRef} className={cx(style.editor, isRequired && style.error)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
     </VStack>
   )

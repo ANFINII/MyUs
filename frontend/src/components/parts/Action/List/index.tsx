@@ -1,5 +1,5 @@
 import { useRef, RefObject } from 'react'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import { useClickOutside } from 'components/hooks/useClickOutside'
 import style from './ActionList.module.scss'
 
@@ -32,9 +32,9 @@ export default function ActionList(props: Props): React.JSX.Element {
   return (
     <>
       {open && (
-        <div ref={actionRef} className={clsx(style.action_list, style[size])}>
+        <div ref={actionRef} className={cx(style.action_list, style[size])}>
           {items.map((item, index) => (
-            <button key={index} className={clsx(style.item, item.danger && style.danger)} onClick={handleItemClick(item)}>
+            <button key={index} className={cx(style.item, item.danger && style.danger)} onClick={handleItemClick(item)}>
               <span className={style.icon}>{item.icon}</span>
               <span>{item.label}</span>
             </button>

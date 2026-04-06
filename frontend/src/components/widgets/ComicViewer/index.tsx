@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import ExImage from 'components/parts/ExImage'
 import IconChevront from 'components/parts/Icon/Chevront'
 import IconFullscreen from 'components/parts/Icon/Fullscreen'
@@ -49,7 +49,7 @@ export default function ComicViewer(props: Props): React.JSX.Element {
   if (pages.length === 0) return <></>
 
   return (
-    <div ref={viewerRef} className={clsx(style.viewer, isFull && style.full)}>
+    <div ref={viewerRef} className={cx(style.viewer, isFull && style.full)}>
       <div className={style.display}>
         <div className={style.prev} onClick={handlePrev}>
           <IconChevront width="32" height="32" type="left" />
@@ -71,7 +71,7 @@ export default function ComicViewer(props: Props): React.JSX.Element {
         </p>
         <div className={style.thumbnails}>
           {pages.map((src, index) => (
-            <div key={src} className={clsx(style.thumbnail, index === page && style.active)} onClick={() => setPage(index)}>
+            <div key={src} className={cx(style.thumbnail, index === page && style.active)} onClick={() => setPage(index)}>
               <ExImage src={src} />
             </div>
           ))}

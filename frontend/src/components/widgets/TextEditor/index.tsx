@@ -10,7 +10,7 @@ import { TextStyle } from '@tiptap/extension-text-style'
 import Underline from '@tiptap/extension-underline'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import VStack from 'components/parts/Stack/Vertical'
 import style from './TextEditor.module.scss'
 import Toolbar from './Toolbar'
@@ -80,7 +80,7 @@ export default function TextEditor(props: Props): React.JSX.Element {
         </label>
       )}
       {editor && (
-        <div className={clsx(style.editor, isRequired && style.error)}>
+        <div className={cx(style.editor, isRequired && style.error)}>
           <Toolbar editor={editor} />
           <EditorContent editor={editor} />
         </div>

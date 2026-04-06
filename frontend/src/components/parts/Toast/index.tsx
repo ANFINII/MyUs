@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import clsx from 'clsx'
+import cx from 'utils/functions/cx'
 import style from './Toast.module.scss'
 import IconCross from '../Icon/Cross'
 
@@ -22,8 +22,8 @@ export default function Toast(props: Props): React.JSX.Element {
   const handleClose = () => setIsToast && setIsToast(false)
 
   return (
-    <div className={clsx(style.cover, isToast ? style.active : '')}>
-      <div className={clsx(style.toast, isError ? style.error : '')}>
+    <div className={cx(style.cover, isToast ? style.active : '')}>
+      <div className={cx(style.toast, isError ? style.error : '')}>
         <span className={style.content}>{content}</span>
         <span className={style.cross} onClick={handleClose}>
           <IconCross size="22" />
