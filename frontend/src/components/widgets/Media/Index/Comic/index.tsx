@@ -5,19 +5,19 @@ import MediaContent from 'components/widgets/Media/Content'
 import style from './Comic.module.scss'
 
 interface Props {
-  media: Comic
+  data: Comic
 }
 
 export default function MediaComic(props: Props): React.JSX.Element {
-  const { media } = props
-  const { ulid, image } = media
+  const { data } = props
+  const { ulid, image } = data
 
   return (
     <section className={style.media}>
       <Link href={`/media/comic/${ulid}`}>
         <ExImage src={image} width="270" height="153" className={style.thumbnail} />
       </Link>
-      <MediaContent href={`/media/comic/${ulid}`} media={media} />
+      <MediaContent href={`/media/comic/${ulid}`} media={data} />
     </section>
   )
 }

@@ -4,17 +4,17 @@ import MediaContent from 'components/widgets/Media/Content'
 import style from './Music.module.scss'
 
 interface Props {
-  media: Music
+  data: Music
 }
 
 export default function MediaMusic(props: Props): React.JSX.Element {
-  const { media } = props
-  const { ulid, music } = media
+  const { data } = props
+  const { ulid, music } = data
 
   return (
     <section className={style.media}>
       <AudioPlayer src={music} className={style.player} />
-      <MediaContent href={`/media/music/${ulid}`} media={media} />
+      <MediaContent href={`/media/music/${ulid}`} media={data} />
     </section>
   )
 }

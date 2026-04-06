@@ -3,16 +3,16 @@ import ChatMediaContent from 'components/widgets/Media/Content/Chat'
 import style from './Chat.module.scss'
 
 interface Props {
-  media: Chat
+  data: Chat
 }
 
 export default function MediaChat(props: Props): React.JSX.Element {
-  const { media } = props
-  const { ulid } = media
+  const { data } = props
+  const { ulid } = data
 
   return (
     <section className={style.media}>
-      <ChatMediaContent href={`/media/chat/${ulid}`} media={media} />
+      <ChatMediaContent href={`/media/chat/${ulid}`} media={data} />
     </section>
   )
 }

@@ -6,12 +6,12 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from './Channel.module.scss'
 
 interface Props {
-  media: Channel
+  data: Channel
 }
 
 export default function MediaChannel(props: Props): React.JSX.Element {
-  const { media } = props
-  const { ulid, ownerUlid, avatar, name, description, count } = media
+  const { data } = props
+  const { ulid, ownerUlid, avatar, name, description, count } = data
 
   return (
     <section className={style.media_channel}>
