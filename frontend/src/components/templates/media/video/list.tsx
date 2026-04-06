@@ -1,8 +1,8 @@
 import { Video } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
+import CardList from 'components/widgets/Card/List'
 import MediaVideo from 'components/widgets/Media/Index/Video'
-import MediaList from 'components/widgets/Media/List/Media'
 
 interface Props {
   datas: Video[]
@@ -15,7 +15,7 @@ export default function Videos(props: Props): React.JSX.Element {
 
   return (
     <Main title="Video" search={search}>
-      <MediaList medias={datas} MediaComponent={MediaVideo} />
+      <CardList cards={datas} Content={MediaVideo} />
     </Main>
   )
 }

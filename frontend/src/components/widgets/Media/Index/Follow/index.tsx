@@ -6,12 +6,12 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from './Follow.module.scss'
 
 interface Props {
-  media: Follow
+  data: Follow
 }
 
 export default function MediaFollow(props: Props): React.JSX.Element {
-  const { media } = props
-  const { avatar, ulid, nickname, introduction, followerCount, followingCount } = media
+  const { data } = props
+  const { avatar, ulid, nickname, introduction, followerCount, followingCount } = data
 
   return (
     <section key={ulid} className={style.media_follow}>

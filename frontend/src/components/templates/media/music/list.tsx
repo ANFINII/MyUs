@@ -1,8 +1,8 @@
 import { Music } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
+import CardList from 'components/widgets/Card/List'
 import MediaMusic from 'components/widgets/Media/Index/Music'
-import MediaList from 'components/widgets/Media/List/Media'
 
 interface Props {
   datas: Music[]
@@ -15,7 +15,7 @@ export default function Musics(props: Props): React.JSX.Element {
 
   return (
     <Main title="Music" search={search}>
-      <MediaList medias={datas} MediaComponent={MediaMusic} />
+      <CardList cards={datas} Content={MediaMusic} />
     </Main>
   )
 }

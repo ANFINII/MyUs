@@ -1,4 +1,4 @@
-.media_list {
+.card_list {
   position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(auto, 272px));
@@ -9,7 +9,7 @@
 
 /* 668pxまでの幅の場合に適応される  */
 @media screen and (max-width: 668px) {
-  .media_list {
+  .card_list {
     place-content: center;
   }
 }
