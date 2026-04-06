@@ -5,7 +5,7 @@ import Divide from 'components/parts/Divide'
 import BlogCard from 'components/widgets/Card/Blog'
 import ChatCard from 'components/widgets/Card/Chat'
 import ComicCard from 'components/widgets/Card/Comic'
-import MediaIndex from 'components/widgets/Card/Index'
+import IndexCardList from 'components/widgets/Card/IndexCardList'
 import MusicCard from 'components/widgets/Card/Music'
 import PictureCard from 'components/widgets/Card/Picture'
 import VideoCard from 'components/widgets/Card/Video'
@@ -23,46 +23,46 @@ export default function Homes(props: Props): React.JSX.Element {
   return (
     <Main title="Home" search={search}>
       <Divide />
-      <MediaIndex title="Video">
+      <IndexCardList title="Video">
         {videos?.map((media) => (
           <VideoCard key={media.ulid} data={media} />
         ))}
-      </MediaIndex>
+      </IndexCardList>
 
       <Divide />
-      <MediaIndex title="Music">
+      <IndexCardList title="Music">
         {musics?.map((media) => (
           <MusicCard key={media.ulid} data={media} />
         ))}
-      </MediaIndex>
+      </IndexCardList>
 
       <Divide />
-      <MediaIndex title="Comic">
+      <IndexCardList title="Comic">
         {comics?.map((media) => (
           <ComicCard key={media.ulid} data={media} />
         ))}
-      </MediaIndex>
+      </IndexCardList>
 
       <Divide />
-      <MediaIndex title="Picture">
+      <IndexCardList title="Picture">
         {pictures?.map((media) => (
           <PictureCard key={media.ulid} data={media} />
         ))}
-      </MediaIndex>
+      </IndexCardList>
 
       <Divide />
-      <MediaIndex title="Blog">
+      <IndexCardList title="Blog">
         {blogs?.map((media) => (
           <BlogCard key={media.ulid} data={media} />
         ))}
-      </MediaIndex>
+      </IndexCardList>
 
       <Divide />
-      <MediaIndex title="Chat">
+      <IndexCardList title="Chat">
         {chats?.map((media) => (
           <ChatCard key={media.ulid} data={media} />
         ))}
-      </MediaIndex>
+      </IndexCardList>
     </Main>
   )
 }
