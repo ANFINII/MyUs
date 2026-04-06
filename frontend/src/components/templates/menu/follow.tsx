@@ -3,8 +3,8 @@ import { Follow } from 'types/internal/user'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import MediaFollow from 'components/widgets/Card/Follow'
 import CardList from 'components/widgets/Card/List'
-import MediaFollow from 'components/widgets/Media/Index/Follow'
 
 interface Props {
   datas: Follow[]

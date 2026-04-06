@@ -1,8 +1,8 @@
 import { Blog } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
+import MediaBlog from 'components/widgets/Card/Blog'
 import CardList from 'components/widgets/Card/List'
-import MediaBlog from 'components/widgets/Media/Index/Blog'
 
 interface Props {
   datas: Blog[]

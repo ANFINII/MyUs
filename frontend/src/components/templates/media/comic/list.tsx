@@ -1,8 +1,8 @@
 import { Comic } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
+import MediaComic from 'components/widgets/Card/Comic'
 import CardList from 'components/widgets/Card/List'
-import MediaComic from 'components/widgets/Media/Index/Comic'
 
 interface Props {
   datas: Comic[]

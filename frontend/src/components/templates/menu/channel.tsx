@@ -1,7 +1,7 @@
 import { Channel } from 'types/internal/channel'
 import Main from 'components/layout/Main'
+import MediaChannel from 'components/widgets/Card/Channel'
 import CardList from 'components/widgets/Card/List'
-import MediaChannel from 'components/widgets/Menu/Channel'
 
 interface Props {
   datas: Channel[]
