@@ -4,6 +4,7 @@ import ExImage from 'components/parts/ExImage'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconFile from 'components/parts/Icon/File'
 import IconGlobe from 'components/parts/Icon/Globe'
+import IconGrid from 'components/parts/Icon/Grid'
 import IconHouse from 'components/parts/Icon/House'
 import IconLightning from 'components/parts/Icon/Lightning'
 import IconPerson from 'components/parts/Icon/Person'
@@ -37,6 +38,7 @@ export default function SideMenu(props: Props): React.JSX.Element {
           <MenuItem label="ホーム" icon={<IconHouse size="1.5em" />} className={style.item} onClick={handleClick('/')} />
           <MenuItem label="急上昇" icon={<IconLightning size="1.5em" type="defalt" />} className={style.item} onClick={handleClick('/recommend')} />
           <MenuItem label="フォロー" icon={<IconPerson size="1.5em" type="check" />} className={style.item} onClick={handleClick('/menu/follow')} />
+          <MenuItem label="チャンネル" icon={<IconGrid size="1.5em" />} className={style.item} onClick={handleClick('/menu/channel')} />
         </ul>
 
         <ul className={style.footer}>
