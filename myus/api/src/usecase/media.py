@@ -19,6 +19,7 @@ from api.src.domain.interface.media.index import FilterOption, SortOption, Exclu
 from api.src.injectors.container import injector
 from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, ComicDetailDTO, PictureDetailDTO, BlogDetailDTO, ChatDetailDTO
 from api.src.types.schema.media import VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn
+from api.src.usecase.channel import get_channel_data
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
 from api.utils.enum.index import CommentType, ImageUpload, MediaUpload
@@ -30,7 +31,11 @@ from api.utils.functions.convert.video_encoding import convert_video
 from api.utils.functions.media import save_upload
 
 
-def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, video: UploadedFile) -> MediaCreateDTO:
+def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> MediaCreateDTO | None:
+    channel = get_channel_data(input.channel_ulid)
+    if channel is None:
+        return None
+
     repository = injector.get(VideoInterface)
     video_path = save_upload(video, MediaUpload.VIDEO, channel.ulid)
 
@@ -69,7 +74,11 @@ def create_video(channel: ChannelData, input: VideoIn, image: UploadedFile, vide
     return MediaCreateDTO(ulid=obj.ulid)
 
 
-def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> MediaCreateDTO:
+def create_music(input: MusicIn, music: UploadedFile) -> MediaCreateDTO | None:
+    channel = get_channel_data(input.channel_ulid)
+    if channel is None:
+        return None
+
     repository = injector.get(MusicInterface)
 
     new_music = MusicData(
@@ -96,7 +105,11 @@ def create_music(channel: ChannelData, input: MusicIn, music: UploadedFile) -> M
     return MediaCreateDTO(ulid=obj.ulid)
 
 
-def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> MediaCreateDTO:
+def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> MediaCreateDTO | None:
+    channel = get_channel_data(input.channel_ulid)
+    if channel is None:
+        return None
+
     repository = injector.get(ComicInterface)
 
     new_comic = ComicData(
@@ -122,7 +135,11 @@ def create_comic(channel: ChannelData, input: ComicIn, image: UploadedFile, page
     return MediaCreateDTO(ulid=obj.ulid)
 
 
-def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) -> MediaCreateDTO:
+def create_picture(input: PictureIn, image: UploadedFile) -> MediaCreateDTO | None:
+    channel = get_channel_data(input.channel_ulid)
+    if channel is None:
+        return None
+
     repository = injector.get(PictureInterface)
 
     new_picture = PictureData(
@@ -147,7 +164,11 @@ def create_picture(channel: ChannelData, input: PictureIn, image: UploadedFile) 
     return MediaCreateDTO(ulid=obj.ulid)
 
 
-def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> MediaCreateDTO:
+def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
+    channel = get_channel_data(input.channel_ulid)
+    if channel is None:
+        return None
+
     repository = injector.get(BlogInterface)
 
     new_blog = BlogData(
@@ -174,7 +195,11 @@ def create_blog(channel: ChannelData, input: BlogIn, image: UploadedFile) -> Med
     return MediaCreateDTO(ulid=obj.ulid)
 
 
-def create_chat(channel: ChannelData, input: ChatIn) -> MediaCreateDTO:
+def create_chat(input: ChatIn) -> MediaCreateDTO | None:
+    channel = get_channel_data(input.channel_ulid)
+    if channel is None:
+        return None
+
     repository = injector.get(ChatInterface)
 
     new_chat = ChatData(
