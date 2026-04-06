@@ -1,7 +1,7 @@
 import { Music } from 'types/internal/media'
 import AudioPlayer from 'components/widgets/AudioPlayer'
 import style from './Music.module.scss'
-import CardMediaContent from '../Media/Content'
+import CardMediaContent from '../Content'
 
 interface Props {
   item: Music

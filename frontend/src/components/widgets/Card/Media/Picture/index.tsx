@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Picture } from 'types/internal/media'
 import ExImage from 'components/parts/ExImage'
 import style from './Picture.module.scss'
-import CardMediaContent from '../Media/Content'
+import CardMediaContent from '../Content'
 
 interface Props {
   item: Picture

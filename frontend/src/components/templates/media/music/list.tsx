@@ -2,7 +2,7 @@ import { Music } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import CardList from 'components/widgets/Card/List'
-import MusicCard from 'components/widgets/Card/Music'
+import MusicCard from 'components/widgets/Card/Media/Music'
 
 interface Props {
   datas: Music[]

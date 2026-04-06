@@ -2,7 +2,7 @@ import { Video } from 'types/internal/media'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import CardList from 'components/widgets/Card/List'
-import VideoCard from 'components/widgets/Card/Video'
+import VideoCard from 'components/widgets/Card/Media/Video'
 
 interface Props {
   datas: Video[]

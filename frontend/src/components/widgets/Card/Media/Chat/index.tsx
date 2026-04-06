@@ -1,6 +1,6 @@
 import { Chat } from 'types/internal/media'
 import style from './Chat.module.scss'
-import CardChatMediaContent from '../Media/Content/Chat'
+import CardChatMediaContent from '../Content/Chat'
 
 interface Props {
   item: Chat
