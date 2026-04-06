@@ -1,4 +1,4 @@
-.media_channel {
+.card {
   width: 272px;
   height: 250px;
   border: 1px solid rgba(0, 130, 255, 0.5);
@@ -9,7 +9,7 @@
     background: rgba(200, 230, 255, 0.1);
   }
 
-  .channel_box {
+  .box {
     display: block;
     height: 250px;
     padding: 6px;
@@ -17,13 +17,13 @@
     text-decoration: none;
     cursor: pointer;
 
-    .channel_image {
+    .image {
       width: 56px;
       height: 56px;
       border-radius: 50%;
     }
 
-    .channel_description {
+    .description {
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 9;
