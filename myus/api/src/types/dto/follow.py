@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True, slots=True)
 class FollowUserDTO:
+    ulid: str
     avatar: str
     nickname: str
     introduction: str

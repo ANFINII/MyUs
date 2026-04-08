@@ -20,6 +20,7 @@ def get_follows(user_id: int, search: str, limit: int) -> list[FollowUserDTO]:
 
     return [
         FollowUserDTO(
+            ulid=u.user.ulid,
             avatar=create_url(u.user.avatar),
             nickname=u.user.nickname,
             introduction=u.profile.introduction,
@@ -39,6 +40,7 @@ def get_followers(user_id: int, search: str, limit: int) -> list[FollowUserDTO]:
 
     return [
         FollowUserDTO(
+            ulid=u.user.ulid,
             avatar=create_url(u.user.avatar),
             nickname=u.user.nickname,
             introduction=u.profile.introduction,
