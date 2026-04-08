@@ -14,7 +14,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
 
   const initMedia: UserPageMedia = { videos: [], musics: [], comics: [], pictures: [], blogs: [], chats: [] }
   const queryChannel = typeof query.channel === 'string' ? query.channel : undefined
-  const channelUlid = userPage.channels.find((c) => c.ulid === queryChannel || c.isDefault)!.ulid
+  const channel = userPage.channels.find((c) => c.ulid === queryChannel) || userPage.channels.find((c) => c.isDefault)
+  const channelUlid = channel!.ulid
   const mediaRet = await getUserPageMedia(ulid, channelUlid, req)
   const media = mediaRet.isOk() ? mediaRet.value : initMedia
 
