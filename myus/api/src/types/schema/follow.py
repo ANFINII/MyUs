@@ -7,6 +7,7 @@ class FollowIn(BaseModel):
 
 
 class FollowUserOut(BaseModel):
+    ulid: str
     avatar: str
     nickname: str
     introduction: str

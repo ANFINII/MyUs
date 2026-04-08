@@ -88,6 +88,7 @@ class UserAPI:
         followers = get_followers(user_id, search, 100)
         data = [
             FollowUserOut(
+                ulid=x.ulid,
                 avatar=x.avatar,
                 nickname=x.nickname,
                 introduction=x.introduction,
@@ -111,6 +112,7 @@ class UserAPI:
         follows = get_follows(user_id, search, 100)
         data = [
             FollowUserOut(
+                ulid=x.ulid,
                 avatar=x.avatar,
                 nickname=x.nickname,
                 introduction=x.introduction,
