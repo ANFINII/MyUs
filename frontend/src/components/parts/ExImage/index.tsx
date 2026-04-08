@@ -17,10 +17,11 @@ interface Props {
 export default function ExImage(props: Props): React.JSX.Element {
   const { src, width, height, size, className } = props
 
-  const [imageSrc, setImageSrc] = useState(src)
+  const [errorSrc, setErrorSrc] = useState<string>()
 
-  const handleError = () => setImageSrc(undefined)
-  if (!imageSrc) return <img src="/image/no_image.png" width={width || size} height={height || size} className={className} />
+  const handleError = () => setErrorSrc(src)
+
+  if (!src || src === errorSrc) return <img src="/image/no_image.png" width={width || size} height={height || size} className={className} />
 
   return <img {...props} width={width || size} height={height || size} className={cx('cursor_p', className)} onError={handleError} />
 }
