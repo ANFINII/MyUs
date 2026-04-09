@@ -32,13 +32,12 @@ class ComicRepository(ComicInterface):
             q_list.append(filter_recommend())
         if filter.search:
             q_list.append(filter_search(filter.search))
+        if exclude.id:
+            q_list.append(~Q(id=exclude.id))
 
         qs = Comic.objects.filter(*q_list).distinct()
         qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend)
         qs = qs.order_by(order_by_key)
-
-        if exclude.id is not None:
-            qs = qs.exclude(id=exclude.id)
 
         if limit is not None:
             qs = qs[:limit]

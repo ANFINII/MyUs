@@ -30,4 +30,4 @@ class SortOption:
 
 @dataclass(frozen=True, slots=True)
 class ExcludeOption:
-    id: int | None = None
+    id: int = 0
