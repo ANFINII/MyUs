@@ -24,7 +24,7 @@ from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.user import AuthorOut, MediaUserOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.media import create_video, create_music, create_comic, create_blog, create_picture, create_chat
-from api.src.usecase.media import get_home, get_videos, get_musics, get_comics, get_blogs, get_pictures, get_chats
+from api.src.usecase.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_blogs, get_pictures, get_chats
 from api.src.usecase.media import get_video_detail, get_music_detail, get_comic_detail, get_blog_detail, get_picture_detail, get_chat_detail
 
 
@@ -46,6 +46,29 @@ class HomeAPI:
             pictures=convert_pictures(home.pictures),
             blogs=convert_blogs(home.blogs),
             chats=convert_chats(home.chats),
+        )
+
+        return 200, data
+
+
+class RecommendAPI:
+    """RecommendAPI"""
+
+    router = Router()
+
+    @staticmethod
+    @router.get("", response={200: HomeOut})
+    def get(request: HttpRequest, search: str = ""):
+        log.info("RecommendAPI get", search=search)
+
+        recommend = get_recommend(8, search)
+        data = HomeOut(
+            videos=convert_videos(recommend.videos),
+            musics=convert_musics(recommend.musics),
+            comics=convert_comics(recommend.comics),
+            pictures=convert_pictures(recommend.pictures),
+            blogs=convert_blogs(recommend.blogs),
+            chats=convert_chats(recommend.chats),
         )
 
         return 200, data

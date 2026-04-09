@@ -297,7 +297,7 @@ class UserAPI:
                 return 404, ErrorOut(message="チャンネルが見つかりません")
             channel_id = channel.id
 
-        media = get_userpage_media(8, "", user.user.id, channel_id=channel_id)
+        media = get_userpage_media(8, "", channel_id=channel_id)
 
         data = UserPageMediaOut(
             videos=convert_videos(media.videos),

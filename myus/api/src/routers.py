@@ -1,7 +1,7 @@
 from ninja import NinjaAPI
 from api.src.adapter.auth import AuthAPI
 from api.src.adapter.comment import CommentAPI
-from api.src.adapter.media import BlogAPI, ChatAPI, ComicAPI, HomeAPI, MusicAPI, PictureAPI, VideoAPI
+from api.src.adapter.media import BlogAPI, ChatAPI, ComicAPI, HomeAPI, MusicAPI, PictureAPI, RecommendAPI, VideoAPI
 from api.src.adapter.message import MessageAPI
 from api.src.adapter.channel import ChannelAPI
 from api.src.adapter.setting import SettingMyPageAPI, SettingNotificationAPI, SettingProfileAPI
@@ -19,6 +19,7 @@ api.add_router("/setting/notification", SettingNotificationAPI().router, tags=["
 
 api.add_router("/channel", ChannelAPI().router, tags=["Channel"])
 api.add_router("/media/home", HomeAPI().router, tags=["Media Home"])
+api.add_router("/media/recommend", RecommendAPI().router, tags=["Media Recommend"])
 api.add_router("/media/video", VideoAPI().router, tags=["Media Video"])
 api.add_router("/media/music", MusicAPI().router, tags=["Media Music"])
 api.add_router("/media/comic", ComicAPI().router, tags=["Media Comic"])
