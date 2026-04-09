@@ -32,7 +32,8 @@ export const apiChannelSubscribe = base + '/channel/subscribe'
 export const apiChannel = (ulid: string) => base + `/channel/${ulid}`
 
 // Media
-export const apiHome = base + '/home'
+export const apiHome = base + '/media/home'
+export const apiRecommend = base + '/media/recommend'
 
 export const apiVideos = base + '/media/video'
 export const apiVideo = (ulid: string) => base + `/media/video/${ulid}`

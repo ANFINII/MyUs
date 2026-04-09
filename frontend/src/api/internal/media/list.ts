@@ -3,10 +3,14 @@ import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
 import { SearchParms, MediaHome, Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
-import { apiHome, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats } from 'api/uri'
+import { apiHome, apiRecommend, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats } from 'api/uri'
 
 export const getHome = async (params: SearchParms, req?: Req): Promise<ApiOut<MediaHome>> => {
   return await apiOut(apiClient('json').get(apiHome, cookieHeader(req, params)))
+}
+
+export const getRecommend = async (params: SearchParms, req?: Req): Promise<ApiOut<MediaHome>> => {
+  return await apiOut(apiClient('json').get(apiRecommend, cookieHeader(req, params)))
 }
 
 export const getVideos = async (params: SearchParms, req?: Req): Promise<ApiOut<Video[]>> => {

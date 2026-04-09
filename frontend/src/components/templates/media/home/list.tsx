@@ -11,17 +11,18 @@ import PictureCard from 'components/widgets/Card/Media/Picture'
 import VideoCard from 'components/widgets/Card/Media/Video'
 
 interface Props {
+  title: string
   mediaHome: MediaHome
 }
 
 export default function Homes(props: Props): React.JSX.Element {
-  const { mediaHome } = props
+  const { title, mediaHome } = props
   const { videos, musics, comics, pictures, blogs, chats } = mediaHome
 
   const search = useSearch([videos, musics, comics, pictures, blogs, chats])
 
   return (
-    <Main title="Home" search={search}>
+    <Main title={title} search={search}>
       <Divide />
       <CardIndexList title="Video">
         {videos?.map((media) => (

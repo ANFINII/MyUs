@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { MediaHome } from 'types/internal/media'
-import { getHome } from 'api/internal/media/list'
+import { getRecommend } from 'api/internal/media/list'
 import { searchParams } from 'utils/functions/common'
 import ErrorCheck from 'components/widgets/Error/Check'
 import Homes from 'components/templates/media/home/list'
@@ -9,7 +9,7 @@ import Homes from 'components/templates/media/home/list'
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
   const params = searchParams(query)
-  const ret = await getHome(params)
+  const ret = await getRecommend(params)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const mediaHome = ret.value
   return { props: { ...translations, mediaHome } }
@@ -20,10 +20,10 @@ interface Props {
   mediaHome: MediaHome
 }
 
-export default function HomesPage(props: Props): React.JSX.Element {
+export default function RecommendPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
-      <Homes title="Home" {...props} />
+      <Homes title="Recommend" {...props} />
     </ErrorCheck>
   )
 }
