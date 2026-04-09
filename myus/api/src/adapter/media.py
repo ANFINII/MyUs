@@ -113,7 +113,7 @@ class VideoAPI:
 
         user_id = auth_check(request)
         obj = get_video_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs = get_videos(50, search, id=obj.id)
+        objs = get_videos(50, search, obj.id)
 
         data = VideoDetailsOut(
             detail=VideoDetailOut(
@@ -173,7 +173,7 @@ class MusicAPI:
 
         user_id = auth_check(request)
         obj = get_music_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs = get_musics(50, search, id=obj.id)
+        objs = get_musics(50, search, obj.id)
 
         data = MusicDetailsOut(
             detail=MusicDetailOut(
@@ -233,7 +233,7 @@ class ComicAPI:
 
         user_id = auth_check(request)
         obj = get_comic_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs = get_comics(50, search, id=obj.id)
+        objs = get_comics(50, search, obj.id)
 
         data = ComicDetailsOut(
             detail=ComicDetailOut(
@@ -292,7 +292,7 @@ class PictureAPI:
 
         user_id = auth_check(request)
         obj = get_picture_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs = get_pictures(50, search, id=obj.id)
+        objs = get_pictures(50, search, obj.id)
 
         data = PictureDetailsOut(
             detail=PictureDetailOut(
@@ -350,7 +350,7 @@ class BlogAPI:
 
         user_id = auth_check(request)
         obj = get_blog_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs = get_blogs(50, search, id=obj.id)
+        objs = get_blogs(50, search, obj.id)
 
         data = BlogDetailsOut(
             detail=BlogDetailOut(
@@ -409,7 +409,7 @@ class ChatAPI:
 
         user_id = auth_check(request)
         obj = get_chat_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs = get_chats(50, search, id=obj.id)
+        objs = get_chats(50, search, obj.id)
 
         data = ChatDetailsOut(
             detail=ChatDetailOut(
