@@ -28,6 +28,7 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
 
   const handleEdit = () => router.push('/setting/mypage/edit')
   const handleUserPage = () => router.push(`/userpage/${mypage.ulid}`)
+  const handleCreateChannel = () => router.push('/setting/mypage/channel/create')
   const handleSelectChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)
 
   const channel = channels.find((c) => c.ulid === channelUlid)
@@ -80,7 +81,10 @@ export default function SettingMyPage(props: Props): React.JSX.Element {
         </TableRow>
       </Table>
 
-      <SelectBox value={channelUlid} options={channelOptions} onChange={handleSelectChannel} className={style.channel} />
+      <HStack gap="8" justify="between" className={style.channel_area}>
+        <SelectBox value={channelUlid} options={channelOptions} onChange={handleSelectChannel} className={style.channel} />
+        <Button color="green" size="s" name="チャンネル作成" onClick={handleCreateChannel} />
+      </HStack>
 
       <Table>
         {channel && (
