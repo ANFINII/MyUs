@@ -3,7 +3,7 @@ from django_ulid.models import ulid
 from ninja import UploadedFile
 from api.modules.logger import log
 from api.src.domain.interface.channel.data import ChannelData
-from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption, SortType
+from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption
 from api.src.injectors.container import injector
 from api.src.types.schema.channel import ChannelIn
 from api.utils.enum.index import ImageUpload
