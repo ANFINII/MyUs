@@ -14,6 +14,10 @@ export interface ChannelIn {
   description: string
 }
 
+export interface ChannelCreateOut {
+  ulid: string
+}
+
 export interface SubscribeIn {
   channelUlid: string
   isSubscribe: boolean
