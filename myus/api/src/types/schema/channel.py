@@ -14,3 +14,7 @@ class ChannelOut(BaseModel):
     is_default: bool
     description: str
     count: int
+
+
+class ChannelCreateOut(BaseModel):
+    ulid: str
