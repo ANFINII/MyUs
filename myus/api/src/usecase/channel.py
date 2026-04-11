@@ -1,8 +1,9 @@
 from dataclasses import replace
+from django_ulid.models import ulid
 from ninja import UploadedFile
 from api.modules.logger import log
 from api.src.domain.interface.channel.data import ChannelData
-from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption
+from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption, SortType
 from api.src.injectors.container import injector
 from api.src.types.schema.channel import ChannelIn
 from api.utils.enum.index import ImageUpload
@@ -37,8 +38,32 @@ def get_user_channels(owner_id: int) -> list[ChannelData]:
         log.warning("Channel not found", owner_id=owner_id)
         return []
 
-    data = repository.bulk_get(ids)
-    return data
+    return repository.bulk_get(ids)
+
+
+def create_user_channel(user_id: int, input: ChannelIn, avatar_file: UploadedFile) -> str | None:
+    repository = injector.get(ChannelInterface)
+    new_ulid = str(ulid.new())
+    avatar = save_upload(avatar_file, ImageUpload.CHANNEL, new_ulid) if avatar_file else ""
+
+    data = ChannelData(
+        id=0,
+        ulid=new_ulid,
+        owner_id=user_id,
+        owner_ulid="",
+        avatar=avatar,
+        name=input.name,
+        description=input.description,
+        is_default=False,
+        count=0,
+    )
+
+    try:
+        repository.bulk_save([data])
+        return new_ulid
+    except Exception as e:
+        log.error("create_user_channel error", exc=e)
+        return None
 
 
 def update_user_channel(user_id: int, ulid: str, input: ChannelIn, avatar_file: UploadedFile) -> bool:

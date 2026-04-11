@@ -5,8 +5,7 @@ from api.src.domain.interface.channel.data import ChannelData
 
 
 class SortType(Enum):
-    CREATED = auto()
-    UPDATED = auto()
+    ID = auto()
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,8 +17,8 @@ class FilterOption:
 
 @dataclass(frozen=True, slots=True)
 class SortOption:
-    is_asc: bool = False
-    sort_type: SortType = SortType.CREATED
+    is_asc: bool = True
+    sort_type: SortType = SortType.ID
 
 
 class ChannelInterface(ABC):

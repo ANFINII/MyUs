@@ -1,11 +1,11 @@
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.types.schema.channel import ChannelIn, ChannelOut
+from api.src.types.schema.channel import ChannelCreateOut, ChannelIn, ChannelOut
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.usecase.auth import auth_check
-from api.src.usecase.channel import get_user_channels, update_user_channel
+from api.src.usecase.channel import create_user_channel, get_user_channels, update_user_channel
 from api.src.usecase.subscribe import get_subscribe_channels, upsert_subscribe
 from api.utils.functions.index import create_url
 
@@ -80,6 +80,21 @@ class ChannelAPI:
 
         data = SubscribeOut(is_subscribe=subscribe.is_subscribe, count=subscribe.count)
         return 200, data
+
+    @staticmethod
+    @router.post("", response={201: ChannelCreateOut, 400: ErrorOut, 401: ErrorOut})
+    def post(request: HttpRequest, input: ChannelIn = Form(...), avatar_file: UploadedFile = File(None)):
+        log.info("ChannelAPI post", input=input)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        new_ulid = create_user_channel(user_id, input, avatar_file)
+        if new_ulid is None:
+            return 400, ErrorOut(message="作成に失敗しました!")
+
+        return 201, ChannelCreateOut(ulid=new_ulid)
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
