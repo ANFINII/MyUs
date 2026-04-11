@@ -27,6 +27,7 @@ export const apiSettingMypage = base + '/setting/mypage'
 export const apiSettingNotification = base + '/setting/notification'
 
 // Channel
+export const apiChannelCreate = base + '/channel'
 export const apiChannelUser = base + '/channel/user'
 export const apiChannelSubscribe = base + '/channel/subscribe'
 export const apiChannel = (ulid: string) => base + `/channel/${ulid}`

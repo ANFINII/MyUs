@@ -2,13 +2,17 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
-import { Channel, ChannelIn, SubscribeIn, SubscribeOut } from 'types/internal/channel'
+import { Channel, ChannelCreateOut, ChannelIn, SubscribeIn, SubscribeOut } from 'types/internal/channel'
 import { ErrorOut } from 'types/internal/other'
-import { apiChannel, apiChannelUser, apiChannelSubscribe } from 'api/uri'
+import { apiChannel, apiChannelCreate, apiChannelUser, apiChannelSubscribe } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const getChannels = async (req?: Req): Promise<ApiOut<Channel[]>> => {
   return await apiOut(apiClient('json').get(apiChannelUser, cookieHeader(req)))
+}
+
+export const postChannel = async (request: ChannelIn): Promise<ApiOut<ChannelCreateOut>> => {
+  return await apiOut(apiClient('form').post(apiChannelCreate, camelSnake(request)))
 }
 
 export const putChannel = async (ulid: string, request: ChannelIn): Promise<ApiOut<ErrorOut>> => {
