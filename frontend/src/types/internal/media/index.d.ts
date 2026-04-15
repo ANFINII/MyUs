@@ -121,3 +121,9 @@ export interface ChatIn {
   content: string
   period: string
 }
+
+export interface VideoUpdateIn {
+  title: string
+  content: string
+  publish: boolean
+}
