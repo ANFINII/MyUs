@@ -94,7 +94,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       sortable: true,
       sortValue: (v) => v.read,
       className: style.narrow,
-      cellClassName: style.number,
+      cellClass: style.number,
       render: (v) => v.read,
     },
     {
@@ -103,7 +103,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       sortable: true,
       sortValue: (v) => v.like,
       className: style.narrow,
-      cellClassName: style.number,
+      cellClass: style.number,
       render: (v) => v.like,
     },
     {
@@ -112,8 +112,13 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       sortable: true,
       sortValue: (v) => (v.publish ? 1 : 0),
       className: style.narrow,
-      cellClassName: style.publish,
-      render: (v) => <Toggle isActive={v.publish} disable />,
+      headerClass: style.center,
+      cellClass: style.publish,
+      render: (v) => (
+        <div className={style.publish_inner}>
+          <Toggle isActive={v.publish} disable />
+        </div>
+      ),
     },
     {
       key: 'actions',
