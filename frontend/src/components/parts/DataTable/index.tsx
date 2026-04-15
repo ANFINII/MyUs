@@ -11,7 +11,8 @@ export interface Column<T> {
   sortValue?: (row: T) => string | number
   render: (row: T) => React.ReactNode
   className?: string
-  cellClassName?: string
+  headerClass?: string
+  cellClass?: string
 }
 
 interface Props<T> {
@@ -59,10 +60,10 @@ export default function DataTable<T>(props: Props<T>): React.JSX.Element {
   return (
     <div className={style.data_table}>
       <table className={style.table}>
-        <thead>
+        <thead className={style.thead}>
           <tr>
             {columns.map((column) => (
-              <th key={column.key} className={column.className}>
+              <th key={column.key} className={cx(style.th, column.className, column.headerClass)}>
                 {column.sortable ? (
                   <button type="button" className={style.sort_button} onClick={() => handleSort(column.key)}>
                     {column.header}
@@ -77,9 +78,9 @@ export default function DataTable<T>(props: Props<T>): React.JSX.Element {
         </thead>
         <tbody>
           {sortedDatas.map((row) => (
-            <tr key={rowKey(row)}>
+            <tr key={rowKey(row)} className={style.tr}>
               {columns.map((column) => (
-                <td key={column.key} className={cx(column.className, column.cellClassName)}>
+                <td key={column.key} className={cx(style.td, column.className, column.cellClass)}>
                   {column.render(row)}
                 </td>
               ))}
