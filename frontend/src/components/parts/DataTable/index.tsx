@@ -57,7 +57,7 @@ export default function DataTable<T>(props: Props<T>): React.JSX.Element {
   }
 
   return (
-    <div className={style.table_wrap}>
+    <div className={style.data_table}>
       <table className={style.table}>
         <thead>
           <tr>
