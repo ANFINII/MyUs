@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import cx from 'utils/functions/cx'
 import style from './DataTable.module.scss'
 
+type SortOrder = 'asc' | 'desc'
+
 export interface Column<T> {
   key: string
   header: string
@@ -17,8 +19,6 @@ interface Props<T> {
   columns: Column<T>[]
   rowKey: (row: T) => string
 }
-
-type SortOrder = 'asc' | 'desc'
 
 export default function DataTable<T>(props: Props<T>): React.JSX.Element {
   const { datas, columns, rowKey } = props
