@@ -1,0 +1,60 @@
+.manage {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter {
+  width: 240px;
+}
+
+.thumbnail {
+  width: 120px;
+
+  img {
+    width: 96px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+}
+
+.title {
+  max-width: 240px;
+}
+
+.content {
+  max-width: 280px;
+  color: rgb(90, 90, 90);
+}
+
+.datetime {
+  width: 140px;
+  color: rgb(90, 90, 90);
+}
+
+.narrow {
+  width: 56px;
+  text-align: center;
+}
+
+.number {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.publish {
+  display: flex;
+  justify-content: center;
+}
+
+.actions {
+  width: 116px;
+  text-align: center;
+}
+
+.actions_inner {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}

@@ -5,7 +5,7 @@ import { Video } from 'types/internal/media'
 import { getChannels } from 'api/internal/channel'
 import { getManageVideo } from 'api/internal/manage/video'
 import ErrorCheck from 'components/widgets/Error/Check'
-import ManageVideoEdit from 'components/templates/setting/manage/media/video/edit'
+import ManageVideoEdit from 'components/templates/manage/media/video/edit'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, params, req }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])

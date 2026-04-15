@@ -6,6 +6,7 @@ import { getChannels } from 'api/internal/channel'
 import { getManageVideos } from 'api/internal/manage/video'
 import { searchParams } from 'utils/functions/common'
 import ErrorCheck from 'components/widgets/Error/Check'
+import ManageVideos from 'components/templates/manage/media/video'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
@@ -27,8 +28,7 @@ interface Props {
 export default function ManageVideosPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
-      <></>
-      {/* <ManageVideos {...props} /> */}
+      <ManageVideos {...props} />
     </ErrorCheck>
   )
 }
