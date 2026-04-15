@@ -7,8 +7,9 @@ interface Props {
   value: string
   options: Option[]
   placeholder?: string
+  disabled?: boolean
   className?: string
-  onChange: (e: ChangeEvent<HTMLSelectElement>) => void
+  onChange?: (e: ChangeEvent<HTMLSelectElement>) => void
 }
 
 export default function Select(props: Props): React.JSX.Element {
