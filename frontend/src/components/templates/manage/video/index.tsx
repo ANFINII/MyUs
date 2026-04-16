@@ -86,20 +86,12 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       cell: (v) => v.content,
     },
     {
-      key: 'created',
-      header: '投稿日時',
-      sortable: true,
-      sortValue: (v) => new Date(v.created).getTime(),
-      className: style.datetime,
-      cell: (v) => formatDatetime(v.created),
-    },
-    {
       key: 'read',
       header: '再生',
       align: 'right',
       sortable: true,
       sortValue: (v) => v.read,
-      className: style.narrow,
+      className: style.normal,
       cellClass: style.number,
       cell: (v) => v.read,
     },
@@ -109,7 +101,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       align: 'right',
       sortable: true,
       sortValue: (v) => v.like,
-      className: style.narrow,
+      className: style.normal,
       cellClass: style.number,
       cell: (v) => v.like,
     },
@@ -126,6 +118,14 @@ export default function ManageVideos(props: Props): React.JSX.Element {
           <Toggle isActive={v.publish} disable />
         </div>
       ),
+    },
+    {
+      key: 'created',
+      header: '投稿日時',
+      sortable: true,
+      sortValue: (v) => new Date(v.created).getTime(),
+      className: style.datetime,
+      cell: (v) => formatDatetime(v.created),
     },
   ]
 
