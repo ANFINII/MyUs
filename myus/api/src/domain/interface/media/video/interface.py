@@ -21,5 +21,5 @@ class VideoInterface(ABC):
         ...
 
     @abstractmethod
-    def delete(self, id: int) -> None:
+    def bulk_delete(self, ids: list[int]) -> None:
         ...

@@ -3,7 +3,7 @@ from ninja import Router
 from api.modules.logger import log
 from api.src.adapter.media import convert_videos
 from api.src.types.schema.common import ErrorOut
-from api.src.types.schema.media import VideoOut, VideoUpdateIn
+from api.src.types.schema.media import BulkDeleteIn, VideoOut, VideoUpdateIn
 from api.src.usecase.auth import auth_check
 from api.src.usecase.manage.media import delete_manage_video, get_manage_video, get_manage_videos, update_manage_video
 
@@ -55,15 +55,15 @@ class ManageVideoAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
-    def delete(request: HttpRequest, ulid: str):
-        log.info("ManageVideoAPI delete", ulid=ulid)
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    def delete(request: HttpRequest, input: BulkDeleteIn):
+        log.info("ManageVideoAPI delete", ulids=input.ulids)
 
         user_id = auth_check(request)
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not delete_manage_video(user_id, ulid):
+        if not delete_manage_video(user_id, input.ulids):
             return 400, ErrorOut(message="削除に失敗しました!")
 
         return 204, ErrorOut(message="削除しました!")

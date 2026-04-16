@@ -59,20 +59,19 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn) -> bool:
         return False
 
 
-def delete_manage_video(user_id: int, ulid: str) -> bool:
+def delete_manage_video(user_id: int, ulids: list[str]) -> bool:
     repository = injector.get(VideoInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption())
-    if len(ids) == 0:
-        log.error("Video not found", ulid=ulid)
-        return False
+    delete_ids: list[int] = []
 
-    obj = repository.bulk_get(ids)[0]
-    if obj.channel.owner_id != user_id:
-        log.error("Video owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return False
+    for ulid in ulids:
+        ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption())
+        if len(ids) == 0:
+            log.error("Video not found or owner mismatch", ulid=ulid, user_id=user_id)
+            return False
+        delete_ids.append(ids[0])
 
     try:
-        repository.delete(obj.id)
+        repository.bulk_delete(delete_ids)
         return True
     except Exception as e:
         log.error("delete_manage_video error", exc=e)
