@@ -19,6 +19,6 @@ export const putManageVideo = async (ulid: string, request: VideoUpdateIn): Prom
   return await apiOut(apiClient('json').put(apiManageVideo(ulid), camelSnake(request)))
 }
 
-export const deleteManageVideo = async (ulid: string): Promise<ApiOut<ErrorOut>> => {
-  return await apiOut(apiClient('json').delete(apiManageVideo(ulid)))
+export const deleteManageVideos = async (ulids: string[]): Promise<ApiOut<ErrorOut>> => {
+  return await apiOut(apiClient('json').delete(apiManageVideos, { data: { ulids } }))
 }

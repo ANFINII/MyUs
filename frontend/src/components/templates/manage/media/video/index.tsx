@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { Channel } from 'types/internal/channel'
 import { Video } from 'types/internal/media'
 import { Option } from 'types/internal/other'
-import { deleteManageVideo } from 'api/internal/manage/video'
+import { deleteManageVideos } from 'api/internal/manage/video'
 import { FetchError } from 'utils/constants/enum'
 import { formatDatetime } from 'utils/functions/datetime'
 import { useApiError } from 'components/hooks/useApiError'
@@ -30,25 +30,27 @@ export default function ManageVideos(props: Props): React.JSX.Element {
   const { isLoading, handleLoading } = useIsLoading()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
-  const [deleteTarget, setDeleteTarget] = useState<Video | null>(null)
-  const [channelUlid, setChannelUlid] = useState<string>(channels[0]?.ulid ?? '')
+  const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false)
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
+  const [channelUlid, setChannelUlid] = useState<string>(channels[0]?.ulid ?? '')
 
-  const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)
+  const handleDelete = () => setIsDeleteModal(!isDeleteModal)
   const handleEdit = (video: Video) => router.push(`/manage/media/video/edit/${video.ulid}`)
-  const handleDeleteOpen = (video: Video) => setDeleteTarget(video)
-  const handleDeleteClose = () => setDeleteTarget(null)
+  const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)
 
   const handleDeleteSubmit = async () => {
-    if (!deleteTarget) return
+    const ulids = Array.from(selectedKeys)
+    if (ulids.length === 0) return
+
     handleLoading(true)
-    const ret = await deleteManageVideo(deleteTarget.ulid)
+    const ret = await deleteManageVideos(ulids)
     handleLoading(false)
     if (ret.isErr()) {
       handleError(FetchError.Delete, ret.error.message)
       return
     }
-    handleDeleteClose()
+    setSelectedKeys(new Set())
+    handleDelete()
     router.replace(router.asPath)
   }
 
@@ -125,12 +127,6 @@ export default function ManageVideos(props: Props): React.JSX.Element {
         </div>
       ),
     },
-    {
-      key: 'actions',
-      header: '操作',
-      className: style.actions,
-      render: (v) => <Button color="red" size="s" name="削除" onClick={() => handleDeleteOpen(v)} />,
-    },
   ]
 
   return (
@@ -139,17 +135,27 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       type="table"
       toast={toast}
       isFooter={false}
-      button={<SelectBox value={channelUlid} options={channelOptions} className={style.filter} onChange={handleChannel} />}
+      button={
+        <div className={style.header_actions}>
+          {selectedKeys.size > 0 && (
+            <>
+              <span className={style.selected_count}>{selectedKeys.size}件選択</span>
+              <Button color="red" size="s" name="一括削除" onClick={handleDelete} />
+            </>
+          )}
+          <SelectBox value={channelUlid} options={channelOptions} className={style.filter} onChange={handleChannel} />
+        </div>
+      }
     >
       <div className={style.manage}>
         <DataTable datas={channelDatas} columns={columns} rowKey={(v) => v.ulid} selectable selectedKeys={selectedKeys} onSelection={setSelectedKeys} />
       </div>
       <DeleteModal
-        open={deleteTarget !== null}
+        open={isDeleteModal}
         title="動画の削除"
-        content={`「${deleteTarget?.title ?? ''}」を削除しますか？`}
+        content={`${selectedKeys.size}件の動画を削除しますか？`}
         loading={isLoading}
-        onClose={handleDeleteClose}
+        onClose={handleDelete}
         onAction={handleDeleteSubmit}
       />
     </Main>
