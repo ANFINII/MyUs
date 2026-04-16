@@ -23,10 +23,11 @@ interface Props<T> {
   selectable?: boolean
   selectedKeys?: Set<string>
   onSelection?: (selectedKeys: Set<string>) => void
+  footer?: React.ReactNode
 }
 
 export default function DataTable<T>(props: Props<T>): React.JSX.Element {
-  const { datas, columns, rowKey, selectable, selectedKeys, onSelection } = props
+  const { datas, columns, rowKey, selectable, selectedKeys, onSelection, footer } = props
 
   const [sortKey, setSortKey] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
@@ -138,6 +139,7 @@ export default function DataTable<T>(props: Props<T>): React.JSX.Element {
         </tbody>
       </table>
       {datas.length === 0 && <div className={style.empty}>データがありません</div>}
+      {footer}
     </div>
   )
 }
