@@ -1,99 +1,30 @@
-# Claude Code バックエンド開発ルール
+# バックエンド開発ルール
 
-## 基本原則
+## 型ヒント
 
-### 1. 型ヒント
-- **Python 3.12+の型構文を使用**
-  - `List[str]` → `list[str]`
-  - `Dict[str, int]` → `dict[str, int]`
-  - `Optional[str]` → `str | None`
-  - `Union[str, int]` → `str | int`
-  - 型エイリアスは `type` 文を使用: `type MediaModelType = Video | Music | Comic`
-- `collections.abc`から`Callable`をインポート
-- 型ヒントは可能な限りすべての関数・メソッドに付与
+- Python 3.12+の型構文を使用（`list[str]`, `str | None`, `type`文）
+- `Callable`は`collections.abc`からインポート
+- すべての関数・メソッドに型ヒントを付与
 
-### 2. ロギング
-- **必ず`api.modules.logger`を使用**（`print()`禁止）
-  ```python
-  from api.modules.logger import log
-  ```
-- **ログレベルの使い分け**
-  | レベル | 用途 |
-  |--------|------|
-  | `log.debug()` | デバッグ情報 |
-  | `log.info()` | 重要な処理の開始・完了 |
-  | `log.warning()` | 警告（フォールバック処理など） |
-  | `log.error()` | エラー情報（スタックトレース付き） |
-  | `log.critical()` | 致命的エラー |
+## ロギング
 
-- **ログ出力形式**: 値は必ずキーワード引数で構造化して渡す
-  ```python
-  # Good - 値をキーワード引数で構造化
-  log.info("処理完了", user_id=123, duration=5.2)
-  log.error("Channel not found", ulid=ulid)
-  log.error("変換エラー", exc=e, file_path=input_path)
+- `print()`禁止、`api.modules.logger`の`log`を使用
+- 値はキーワード引数で構造化: `log.info("処理完了", user_id=123)`
+- エラーログには`exc=e`を渡す
 
-  # Bad - f-stringで値を埋め込む
-  log.info(f"処理完了: user_id={user_id}")
-  log.error(f"Channel not found: {ulid}")
-  ```
+| レベル | 用途 |
+|--------|------|
+| `log.info()` | 処理の開始・完了、正常系ガード節 |
+| `log.warning()` | 警告、軽度の異常系ガード節 |
+| `log.error()` | エラー、危険度が高いガード節 |
 
-### 3. エラーハンドリング
-- 例外は適切にキャッチして処理
-- エラーログには`exc=e`を渡してスタックトレースを含める
-- ユーザーへのエラーメッセージは具体的かつ分かりやすく
+## インポート
 
-### 4. Django規約
-- Django固有の書き方は、domain modelとDBモデルの範囲内に限定する
-- QuerySetの型ヒントを適切に使用
+- ファイルの先頭で行う（ローカルインポート禁止、`TYPE_CHECKING`禁止）
+- 順序: 標準ライブラリ → サードパーティ → Django → プロジェクト内
 
-### 5. リンターチェック（必須）
-- **Pythonコードを修正したら、必ずmypyでリンターチェックを実行する**
-- 修正したファイルに関連するエラーがあれば修正してから完了とする
+## 命名規則
 
-```bash
-# myusディレクトリで実行
-uv run mypy api/src/path/to/file.py
-
-# 修正したファイルのエラーのみフィルタする場合
-uv run mypy api/src/path/to/file.py 2>&1 | grep "^api/src/path/to/file.py"
-```
-
----
-
-## コーディング規約
-
-### インポート
-- **インポートは必ずファイルの先頭で行う**（関数内でのローカルインポート禁止、`TYPE_CHECKING`禁止）
-- 型ヒントで使用する型も通常通りインポートする
-
-```python
-# Good - ファイル先頭でインポート
-from api.db.models.media import Video, Music
-
-def process(obj: Video | Music) -> str:
-    return obj.title
-
-# Bad - 関数内でのローカルインポート
-def process(obj):
-    from api.db.models.media import Video
-    ...
-
-# Bad - TYPE_CHECKINGは使用しない
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from api.db.models.media import Video
-```
-
-**インポート順序:**
-```python
-1. 標準ライブラリ
-2. サードパーティライブラリ
-3. Django関連
-4. プロジェクト内モジュール
-```
-
-### 命名規則
 | 対象 | 規則 | 例 |
 |------|------|-----|
 | 変数・関数 | snake_case | `user_name`, `get_user()` |
@@ -102,426 +33,100 @@ if TYPE_CHECKING:
 | プライベート | 先頭に`_` | `_internal_method()` |
 | Django Model | 単数形 | `User`, `Video` |
 
-### 条件判定
+## 条件判定
 
-#### リスト/辞書/文字列の空チェック: `len()`を使用
-```python
-# Good
-if len(items) > 0:
-    process(items)
-if len(items) == 0:
-    return []
+- 空チェック: `len(items) == 0`（truthy判定は使わない）
+- None判定: `is None` / `is not None`
+- ブール値: 直接評価（`if enabled:`）
+- 存在チェック: `in`演算子
+- 型チェック: `isinstance()`
 
-# Bad
-if items:
-    process(items)
-```
+## return文
 
-#### Noneの判定: `is None` / `is not None`
-```python
-# Good
-if value is None:
-    return default
+- 戻り値を変数として利用する場合: `return None`を明示
+- ガード節・ループ脱出: `return`のみ
+- 関数末尾: 戻り値を利用しない場合は省略
 
-# Bad
-if value == None:
-    return default
-```
+## enum変換
 
-#### ブール値の判定: 直接評価
-```python
-# Good
-if enabled:
-    run()
-
-# Bad
-if enabled == True:
-    run()
-```
-
-#### 存在チェック: `in` 演算子
-```python
-# Good
-if key in data:
-    value = data[key]
-
-# Bad
-if data.get(key) is not None:
-    value = data[key]
-```
-
-#### 型チェック: `isinstance()`
-```python
-# Good
-if isinstance(obj, str):
-    process_string(obj)
-
-# Bad
-if type(obj) == str:
-    process_string(obj)
-```
-
-### リスト内包表記
-シンプルな場合のみ使用、複雑ならfor文
-```python
-# Good - シンプルな変換
-names = [user.name for user in users]
-active_ids = [u.id for u in users if u.is_active]
-
-# Bad - 複雑すぎる
-result = [process(x) for x in items if x.is_valid and x.status == Status.ACTIVE and x.created_at > threshold]
-
-# Good - 複雑な場合はfor文
-result = []
-for x in items:
-    if not x.is_valid:
-        continue
-    if x.status != Status.ACTIVE:
-        continue
-    result.append(process(x))
-```
-
-### 早期リターン
-ガード節でログを出力する
-| 状況 | ログレベル |
-|------|-----------|
-| 正常系 | `log.info` |
-| 軽度の異常系 | `log.warning` |
-| 危険度が高い | `log.error` |
-
-```python
-def process_video(video_id: int) -> Video | None:
-    video = Video.objects.filter(id=video_id).first()
-
-    if video is None:
-        log.info("動画が見つかりません", video_id=video_id)
-        return None
-
-    if video.status == VideoStatus.PROCESSING:
-        log.warning("動画は処理中です", video_id=video_id)
-        return None
-
-    if video.is_deleted:
-        log.error("削除済み動画へのアクセス", video_id=video_id)
-        return None
-
-    return video
-```
-
-### return文
-- **戻り値を変数として利用する場合**: `return None` を明示的に記述
-- **ガード節・ループ脱出など変数として利用しない場合**: `return` のみ
-- **関数末尾のreturn**: 戻り値を変数として利用しない場合は不要（省略する）
-
-```python
-# 戻り値を変数として利用する場合 → return None
-def find_user(self, id: int) -> UserData | None:
-    if id == 0:
-        return None  # 呼び出し元で result = find_user(id) のように使う
-    ...
-
-# ガード節で抜ける場合 → return
-def bulk_save(self, objs: list[UserData]) -> None:
-    if len(objs) == 0:
-        return  # 戻り値は使わない、処理を抜けるだけ
-    ...
-    # 関数末尾のreturnは不要
-```
-
-### enum変換
 - `match-case`を使用
-- 最後に網羅性チェックを追加（`assert_never`推奨、使えない場合は`assert False`）
+- 網羅性チェック: `assert_never`推奨
 
-```python
-from enum import Enum
-from typing import assert_never
+## リスト内包表記
 
-class MediaType(Enum):
-    VIDEO = "video"
-    MUSIC = "music"
-    COMIC = "comic"
+- シンプルな変換のみ使用、複雑ならfor文
 
-def get_media_label(media_type: MediaType) -> str:
-    match media_type:
-        case MediaType.VIDEO:
-            return "動画"
-        case MediaType.MUSIC:
-            return "音楽"
-        case MediaType.COMIC:
-            return "漫画"
-        case _:
-            assert_never(media_type)  # または assert False, f"不正な値: {media_type}"
-```
+## 例外処理
 
-### 非同期処理
-- 可能な限り`async/await`を活用
-- `asyncio`を使用した並列処理で高速化
-- セマフォを使用してリソース制限
+- 素の`except:`や`except Exception:`でのキャッチは禁止（想定する例外型を明示する）
+- やむを得ず広くキャッチする場合は`log.error`でスタックトレースを残す
+- adapter層でのみユーザー向けエラーメッセージを返す（usecase/domain層はbool or 例外で伝搬）
 
-```python
-import asyncio
-from collections.abc import Callable, Awaitable
+## 文字列
 
-async def process_parallel(
-    items: list[str],
-    processor: Callable[[str], Awaitable[dict]]
-) -> list[dict]:
-    tasks = [processor(item) for item in items]
-    return await asyncio.gather(*tasks)
-```
-
----
+- f-stringを使用（`.format()`や`%`は使わない）
+- ただしログ出力ではf-stringを使わず、キーワード引数で渡す（ロギングセクション参照）
 
 ## 型定義
 
 ### アダプター（API）: Pydantic BaseModel
-- APIリクエスト/レスポンスのバリデーション用
-- サフィックス: 入力に`In`、出力に`Out`
-
-```python
-from pydantic import BaseModel
-
-class LoginIn(BaseModel):
-    username: str
-    password: str
-
-class LoginOut(BaseModel):
-    access: str
-    refresh: str
-```
+- サフィックス: 入力`In`、出力`Out`
 
 ### 内部データ構造: dataclass
-- ドメイン層、ユースケース層などで使用
+- `@dataclass(frozen=True, slots=True)`
 - サフィックス: `Data`
-- **domain interface の dataclass にはフィールドの初期値を設定しない**（すべての値を明示的に渡す）
+- domain interfaceのdataclassにはフィールドの初期値を設定しない
 
-```python
-from dataclasses import dataclass
+## アーキテクチャ
 
-@dataclass(frozen=True, slots=True)
-class UserData:
-    id: int
-    username: str
-    email: str
-
-# Bad - domain interfaceのdataclassに初期値を設定
-@dataclass(frozen=True, slots=True)
-class UserData:
-    id: int
-    username: str = ""  # NG
-    tags: list[str] = field(default_factory=list)  # NG
-```
-
----
-
-## Repository層
-
-### インターフェースの入出力
-- **Repositoryの入出力にはdataclassを使用**（Django ORMモデルを直接返さない）
-- 入力: `list[UserData]`などのdataclass
-- 出力: `list[UserData]`などのdataclass
-
-```python
-# Good - dataclassを使用
-class UserInterface(ABC):
-    @abstractmethod
-    def bulk_get(self, ids: list[int]) -> list[UserData]:
-        ...
-
-    @abstractmethod
-    def bulk_save(self, objs: list[UserData]) -> list[int]:
-        ...
-
-# Bad - Django ORMモデルを直接返す
-class UserInterface(ABC):
-    @abstractmethod
-    def bulk_get(self, ids: list[int]) -> list[User]:  # NG
-        ...
-```
-
-### Usecase層のRepository取得
-- usecase層ではentity（Repository実装）を直接インポートしない
-- injector経由でinterfaceを取得して使用する
-
-```python
-# Good - injector経由でinterfaceを使用
-from api.src.injectors.container import injector
-from api.src.domain.interface.user.interface import UserInterface
-
-def get_user(id: int) -> UserData | None:
-    repository = injector.get(UserInterface)
-    ...
-
-# Bad - entity(Repository実装)を直接インポート
-from api.src.domain.entity.user.repository import UserRepository
-
-def get_user(id: int) -> UserData | None:
-    repository = UserRepository()
-    ...
-```
+### Repository層
+- 入出力はdataclass（Django ORMモデルを直接返さない）
+- usecase層ではinjector経由でinterfaceを取得（entityを直接インポートしない）
 
 ### Converterパターン
-- Repository実装では、`_convert.py`にdataclass ↔ Django ORMモデル間の変換関数を定義
-- `convert_data`: Django ORMモデル → dataclass（読み取り時）
-- `marshal_data`: dataclass → Django ORMモデル（書き込み時）
-
-```python
-# entity/user/_convert.py
-
-# Convert (Django model -> dataclass)
-def convert_data(user: User) -> UserData:
-    return UserData(
-        id=user.id,
-        username=user.username,
-        ...
-    )
-
-# Marshal (dataclass -> Django model)
-def marshal_data(data: UserData) -> User:
-    return User(
-        id=data.id if data.id != 0 else None,
-        username=data.username,
-        email=data.email,
-        ...
-    )
-```
+- `_convert.py`に変換関数を定義
+- `convert_data`: Django ORM → dataclass
+- `marshal_data`: dataclass → Django ORM
 
 ### bulk操作
-- `bulk_save`: 新規作成・更新を一括で行う（upsert）
-- `get_new_ids`でid未設定のオブジェクトに新規IDを割り当て
-- `bulk_create(update_conflicts=True)`で一括insert/update
+- `bulk_save`: upsert（`bulk_create(update_conflicts=True)`）
+- `get_new_ids`でid未設定オブジェクトに新規ID割り当て
 
----
+## 層の責務
 
-## DBモデル
+| 層 | 責務 | 依存してよいもの |
+|------|------|------|
+| adapter | HTTPリクエスト/レスポンス変換、認証チェック | usecase, schema |
+| usecase | ビジネスロジック、複数repositoryの協調 | interface（injector経由） |
+| domain/interface | 抽象定義（ABC, dataclass） | なし |
+| domain/entity | Repository実装、DBアクセス | Django ORM, interface |
 
-```python
-class Video(models.Model, MediaModel):
-    """Video"""
-    id      = models.BigAutoField(primary_key=True)
-    ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
-    title   = models.CharField(max_length=100)
-    content = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-```
-
----
+- adapter → usecase → interface の方向にのみ依存する
+- usecase層からadapter層の型（`HttpRequest`等）をインポートしない
+- domain/interface層は他の層に依存しない（純粋なPython）
 
 ## パフォーマンス
 
-### データベース
-- `select_related()`と`prefetch_related()`でN+1問題を回避
+- `select_related()`/`prefetch_related()`でN+1回避
 - 必要なフィールドのみ`only()`で取得
-- インデックスを適切に設定
-
-### キャッシング
-- `@lru_cache`でメソッドの結果をキャッシュ
-- Redisを使用したキャッシュ戦略
-
----
+- QuerySetは遅延評価されるため、評価タイミングを意識する
 
 ## テスト
 
-**必ずpytestを使用**（Django標準のTestCaseは使わない）
+- pytestを使用（Django TestCase不可）
+- `@pytest.mark.django_db`でDB接続
 
-### 基本構成
-```python
-import pytest
-from api.db.models import Video
+## リンターチェック（必須）
 
-@pytest.mark.django_db
-class TestVideoModel:
-    def test_create_video(self):
-        video = Video.objects.create(title="Test")
-        assert video.title == "Test"
-```
+コードを書いた後、必ず実行:
 
-### フィクスチャ
-```python
-# conftest.py
-import pytest
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
-
-@pytest.fixture
-def user():
-    return User.objects.create_user(
-        email="test@example.com",
-        username="testuser",
-        nickname="Test User",
-        password="testpassword"
-    )
-```
-
-### 実行コマンド
 ```bash
-pytest                      # すべて実行
-pytest -v                   # 詳細出力
-pytest --cov=api            # カバレッジ付き
-pytest -n auto              # 並列実行
-pytest -m "not slow"        # slowマーカー以外
+uv run mypy api/src/path/to/file.py
 ```
-
----
-
-## セキュリティ
-
-- CSRF保護はJWT使用時は不要
-- Pydantic BaseModelで入力を検証
-- SQLインジェクション対策（ORMを使用）
-- ファイルタイプの検証
-
----
-
-## プロジェクト固有
-
-### 動画処理
-- `VideoConverter`クラスを使用
-- ハードウェアアクセラレーションを活用
-- 複数解像度の並列生成
-
-### 通知システム
-- WebSocketを使用したリアルタイム通知
-- `channels`フレームワークを活用
-
-### メディアファイル
-- `MEDIA_ROOT`配下に適切に整理
-- サムネイル自動生成
-
-### タイムアウト
-- フロントエンド: 60秒
-- バックエンド: 処理に応じて適切に設定
-
----
-
-## 運用
-
-### マイグレーション
-```bash
-python manage.py makemigrations --name descriptive_name
-python manage.py showmigrations
-python manage.py sqlmigrate app_name 0001
-```
-
-### デプロイメント
-- `.env`ファイルで環境変数管理
-- シークレットキーは絶対にコミットしない
-```bash
-python manage.py collectstatic --noinput
-python manage.py migrate --noinput
-```
-
----
 
 ## 更新履歴
-- 2026-02-22: 全体整備（Converter命名・bulk操作・DBモデル例・セキュリティを実装に合わせて修正）
-- 2026-02-22: domain interfaceのdataclassに初期値を設定しないルールを追加
-- 2026-02-21: return文のルールを追加（明示的return None / ガード節のreturn / 末尾return省略）
-- 2026-02-05: bulk操作をbulk_saveに統一（upsertパターン）
-- 2026-02-04: Repository層のルールを追加（dataclass入出力、Converterパターン、bulk操作の分離）
-- 2026-01-21: コーディング規約を大幅に整理・追加（条件判定、早期リターン、リスト内包表記）
-- 2026-01-21: 型定義ルールを変更（アダプターはPydantic BaseModel、それ以外はdataclass）
-- 2025-10-15: Django Ninjaの型定義ルールを追加
 - 2025-09-29: 初版作成
+- 2026-01-21: コーディング規約整理、型定義ルール変更
+- 2026-02-04: Repository層ルール追加
+- 2026-02-22: 全体整備、domain interface初期値禁止ルール追加
+- 2026-04-16: docs/に一元化、構成整理

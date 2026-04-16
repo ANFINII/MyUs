@@ -1,27 +1,48 @@
-# Claude Code フロントエンド開発ルール
+# フロントエンド開発ルール
 
-## 基本原則
+## TypeScript
 
-### 1. TypeScript厳格モード
-- **絶対にany型を使用しない**
-- すべての変数、関数の引数、戻り値に適切な型を定義する
-- 型推論が効く場合でも、複雑な型は明示的に定義する
+- any型は使用しない
+- すべての関数の引数・戻り値に型を定義する
+- `undefined`/`null`の可能性がある値は`?.`や`??`でチェックする
+- console.logは使用しない（エラーはサイレント処理またはUI通知）
 
-### 2. エラーハンドリング
-- `undefined`や`null`の可能性がある場合は必ずチェックする
-- オプショナルチェーン（`?.`）や Nullish Coalescing（`??`）を活用
-- try-catchブロックではエラーを適切に処理し、console.logは使用しない
+## React/Next.js
 
-### 3. React/Next.js規約
-- 関数コンポーネントを使用（クラスコンポーネントは使用しない）
-- カスタムフックは`use`プレフィックスを付ける
-- コンポーネント名はPascalCase、その他の関数はcamelCase
-- 関数コンポーネントの引数は分割代入せず、propsとして受け取ってから内部で展開する
+- 関数コンポーネントのみ使用
+- コンポーネント名はPascalCase、関数はcamelCase
+- カスタムフックは`use`プレフィックス
+- Propsは分割代入せず`props`で受け取り、内部で展開する
 
-## コーディング規約
-
-### インポート順序
 ```typescript
+export default function Component(props: Props): React.JSX.Element {
+  const { value, onChange } = props
+}
+```
+
+## 命名規則
+
+| 対象 | 規則 | 例 |
+|------|------|-----|
+| Props型 | `Props`のみ | `interface Props {}` |
+| 状態変数 | `[value, setValue]` | `[count, setCount]` |
+| イベントハンドラー | `handle${Event}` | `handleSubmit` |
+| boolean変数 | `is${State}` | `isLoading`, `isOpen` |
+
+## useState
+
+- 必ず型引数を指定する
+
+```typescript
+const [count, setCount] = useState<number>(0)
+const [name, setName] = useState<string>('')
+const [items, setItems] = useState<Item[]>([])
+const [user, setUser] = useState<User | null>(null)
+```
+
+## インポート順序
+
+```
 1. React関連
 2. 外部ライブラリ
 3. 内部型定義
@@ -29,118 +50,46 @@
 5. スタイル
 ```
 
-### 命名規則
-- **Props型**: 必ず`Props`のみを使用（`${ComponentName}Props`は使用しない）
-- **状態変数**: `[value, setValue]`の形式
-- **イベントハンドラー**: `handle${EventName}`の形式
-- **boolean変数**: 基本的に`is${State}`を使用（`should${Action}`も可）
+## 非同期処理
 
-### スタイル
-- 詳細は [CSS/SCSSコーディングルール](css.md) を参照
-- **必ずCSS Modulesを使用**（`.module.scss`）
-- **インラインスタイルは絶対に使用しない**
+- API呼び出しは`async/await`で記述する
+- エラーハンドリングは`Result`型（`isErr()`）パターンで行う
+- ローディング状態は`useIsLoading`フックで管理する
 
-## 品質管理
+## コンポーネント設計
 
-### ESLint/Prettier遵守
-- **必ずLinterのチェックを実行すること（`npm run lint`）**
-- すべてのESLintエラーを解決
-- ファイル末尾に改行を追加
-- セミコロンなし（設定による）
-- トレーリングカンマを使用
+- 1ファイル1コンポーネント（default export）
+- ロジックが複雑になったらカスタムフックに切り出す
+- `pages/`はデータ取得（`getServerSideProps`等）とテンプレート呼び出しのみ
+- `templates/`にページの実装を置く
 
-### 型安全性
-```typescript
-// ❌ 悪い例
-const playerRef = useRef<any>(null)
-const handleClick = (e: any) => {}
+## ディレクトリ構成の責務
 
-// ✅ 良い例
-type Player = ReturnType<typeof videojs>
-const playerRef = useRef<Player | null>(null)
-const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {}
-```
-
-### コンポーネントのProps受け取り方
-```typescript
-// ❌ 悪い例
-export default function VideoJS({ options, onReady }: Props): React.JSX.Element {
-  // ...
-}
-
-// ✅ 良い例
-export default function VideoJS(props: Props): React.JSX.Element {
-  const { options, onReady } = props
-  // ...
-}
-```
-
-### Null/Undefinedチェック
-```typescript
-// ❌ 悪い例
-playerRef.current.play()
-
-// ✅ 良い例
-if (playerRef.current && playerRef.current.play) {
-  playerRef.current.play()
-}
-// または
-playerRef.current?.play?.()
-```
+| ディレクトリ | 責務 |
+|------|------|
+| `pages/` | ルーティング、SSRデータ取得 |
+| `templates/` | ページの実装、状態管理 |
+| `widgets/` | 複合コンポーネント（Modal, Card等） |
+| `parts/` | 汎用UIコンポーネント（Button, Input等） |
+| `hooks/` | カスタムフック |
+| `api/` | APIクライアント関数 |
+| `types/` | 型定義 |
+| `utils/` | ユーティリティ関数 |
 
 ## スタイル
 
-CSS/SCSSのルールは [CSS/SCSSコーディングルール](css.md) を参照。
+[SCSSコーディングルール](css.md) を参照。
 
-## プロジェクト固有ルール
+## リンターチェック（必須）
 
-### video.js使用時
-- Player型は`ReturnType<typeof videojs>`を使用
-- `any`型の代わりに適切な型定義を探す
-- プレーヤーの存在確認を必ず行う
+コードを書いた後、必ず `npm run lint` を実行する。
 
-### Media関連コンポーネント
-- 既存のスタイルを活用
-- デザインシステムを崩さない
-- レスポンシブデザインを考慮
-
-### パフォーマンス
-- 不要な再レンダリングを避ける（useCallback、useMemoの適切な使用）
-- 大きなコンポーネントは適切に分割
-- 画像は適切なサイズと形式を使用
-
-## デバッグとエラー処理
-
-### console使用禁止
-```typescript
-// ❌ 悪い例
-console.log('Error:', error)
-
-// ✅ 良い例
-// エラーはサイレントに処理するか、適切なエラーハンドリングを実装
-.catch(() => {
-  // Handle error silently or show user-friendly message
-})
-```
-
-### 開発時の確認事項
-1. TypeScriptエラーが0件であること
-2. ESLintエラーが0件であること
-3. ビルドが成功すること
-4. 実行時エラーがないこと
-5. コメントアウトは日本語であること
-
-## コンポーネント作成チェックリスト
-
-- [ ] TypeScript型定義が完全
-- [ ] any型を使用していない
-- [ ] Propsインターフェースを定義
-- [ ] エラーハンドリングを実装
-- [ ] ESLintエラーなし
-- [ ] 既存のスタイルを活用
-- [ ] レスポンシブ対応
-- [ ] パフォーマンス最適化
+### 確認事項
+1. TypeScriptエラーが0件
+2. ESLintエラーが0件
+3. コメントは日本語で記述
 
 ## 更新履歴
 - 2024-08-21: 初版作成
-- 2025-08-21: Props名の統一ルール、関数コンポーネントの引数展開ルール、Linterチェックの必須化を追加
+- 2025-08-21: Props名統一、引数展開ルール、Linterチェック必須化
+- 2026-04-16: useState型引数必須、docs/に一元化、構成整理
