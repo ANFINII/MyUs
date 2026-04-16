@@ -39,8 +39,10 @@
       gap: 4px;
       width: 100%;
       padding: 0;
-      background: none;
       border: none;
+      background: none;
+      color: inherit;
+      font: inherit;
       cursor: pointer;
 
       &:hover {
