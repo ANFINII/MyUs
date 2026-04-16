@@ -16,7 +16,7 @@ import ExImage from 'components/parts/ExImage'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Toggle from 'components/parts/Input/Toggle'
 import DeleteModal from 'components/widgets/Modal/Delete'
-import style from './Video.module.scss'
+import style from '../Manage.module.scss'
 
 interface Props {
   datas: Video[]
@@ -35,7 +35,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
   const [channelUlid, setChannelUlid] = useState<string>(channels[0]?.ulid ?? '')
 
   const handleDelete = () => setIsDeleteModal(!isDeleteModal)
-  const handleEdit = (video: Video) => router.push(`/manage/media/video/edit/${video.ulid}`)
+  const handleEdit = (video: Video) => router.push(`/manage/video/${video.ulid}`)
   const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)
 
   const handleDeleteSubmit = async () => {
@@ -82,8 +82,6 @@ export default function ManageVideos(props: Props): React.JSX.Element {
     {
       key: 'content',
       header: '内容',
-      sortable: true,
-      sortValue: (v) => v.content,
       className: style.content,
       cell: (v) => v.content,
     },

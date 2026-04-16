@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslation
 import { Channel } from 'types/internal/channel'
 import { getChannels } from 'api/internal/channel'
 import ErrorCheck from 'components/widgets/Error/Check'
-import ChatCreate from 'components/templates/media/chat/create'
+import BlogCreate from 'components/templates/manage/blog/create'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
@@ -18,10 +18,10 @@ interface Props {
   channels: Channel[]
 }
 
-export default function ChatCreatePage(props: Props): React.JSX.Element {
+export default function BlogCreatePage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
-      <ChatCreate {...props} />
+      <BlogCreate {...props} />
     </ErrorCheck>
   )
 }

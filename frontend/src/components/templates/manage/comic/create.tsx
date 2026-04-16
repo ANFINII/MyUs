@@ -1,8 +1,8 @@
 import { useState, ChangeEvent } from 'react'
 import { Channel } from 'types/internal/channel'
-import { PictureIn } from 'types/internal/media'
+import { ComicIn } from 'types/internal/media'
 import { Option } from 'types/internal/other'
-import { postPictureCreate } from 'api/internal/media/create'
+import { postComicCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -20,7 +20,7 @@ interface Props {
   channels: Channel[]
 }
 
-export default function PictureCreate(props: Props): React.JSX.Element {
+export default function ComicCreate(props: Props): React.JSX.Element {
   const { channels } = props
 
   const channelUlid = channels.find((c) => c.isDefault)?.ulid ?? ''
@@ -29,19 +29,20 @@ export default function PictureCreate(props: Props): React.JSX.Element {
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<PictureIn>({ channelUlid, publish: true, title: '', content: '' })
+  const [values, setValues] = useState<ComicIn>({ channelUlid, publish: true, title: '', content: '' })
 
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
+  const handleMultiFile = (files: File | File[]) => Array.isArray(files) && setValues({ ...values, pages: files })
 
   const handleForm = async () => {
-    const { channelUlid, title, content, image } = values
-    if (!isRequiredCheck({ channelUlid, title, content, image })) return
+    const { channelUlid, title, content, image, pages } = values
+    if (!isRequiredCheck({ channelUlid, title, content, image, pages })) return
     handleLoading(true)
-    const ret = await postPictureCreate(values)
+    const ret = await postComicCreate(values)
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(FetchError.Post, true)
@@ -52,14 +53,15 @@ export default function PictureCreate(props: Props): React.JSX.Element {
   }
 
   return (
-    <Main title="Picture" type="table" toast={toast} isFooter={false} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
-      <form method="POST" action="">
+    <Main title="Comic" type="table" toast={toast} isFooter={false} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
+      <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
           <SelectBox label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
-          <InputFile label="画像" accept="image/*" required={isRequired} onChange={handleFile} />
+          <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
+          <InputFile label="ページ画像" accept="image/*" required={isRequired} multiple onChange={handleMultiFile} />
         </VStack>
       </form>
     </Main>

@@ -1,8 +1,8 @@
 import { useState, ChangeEvent } from 'react'
 import { Channel } from 'types/internal/channel'
-import { ComicIn } from 'types/internal/media'
+import { VideoIn } from 'types/internal/media'
 import { Option } from 'types/internal/other'
-import { postComicCreate } from 'api/internal/media/create'
+import { postVideoCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -20,7 +20,7 @@ interface Props {
   channels: Channel[]
 }
 
-export default function ComicCreate(props: Props): React.JSX.Element {
+export default function VideoCreate(props: Props): React.JSX.Element {
   const { channels } = props
 
   const channelUlid = channels.find((c) => c.isDefault)?.ulid ?? ''
@@ -29,39 +29,41 @@ export default function ComicCreate(props: Props): React.JSX.Element {
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<ComicIn>({ channelUlid, publish: true, title: '', content: '' })
+  const [formKey, setFormKey] = useState(0)
+  const [values, setValues] = useState<VideoIn>({ channelUlid, publish: true, title: '', content: '' })
 
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
-  const handleMultiFile = (files: File | File[]) => Array.isArray(files) && setValues({ ...values, pages: files })
+  const handleMovie = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, video: files })
 
   const handleForm = async () => {
-    const { channelUlid, title, content, image, pages } = values
-    if (!isRequiredCheck({ channelUlid, title, content, image, pages })) return
+    const { channelUlid, title, content, image, video } = values
+    if (!isRequiredCheck({ channelUlid, title, content, image, video })) return
     handleLoading(true)
-    const ret = await postComicCreate(values)
+    const ret = await postVideoCreate(values)
     handleLoading(false)
     if (ret.isErr()) {
       handleToast(FetchError.Post, true)
       return
     }
     setValues({ channelUlid, publish: true, title: '', content: '' })
-    handleToast('作成しました', false)
+    setFormKey((prev) => prev + 1)
+    handleToast('作成中です。完了まで時間がかかる場合があります', false)
   }
 
   return (
-    <Main title="Comic" type="table" toast={toast} isFooter={false} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
-      <form method="POST" action="" encType="multipart/form-data">
+    <Main title="Video" type="table" toast={toast} isFooter={false} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
+      <form key={formKey} method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
           <SelectBox label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
           <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
           <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
-          <InputFile label="ページ画像" accept="image/*" required={isRequired} multiple onChange={handleMultiFile} />
+          <InputFile label="動画" accept="video/*" required={isRequired} onChange={handleMovie} />
         </VStack>
       </form>
     </Main>
