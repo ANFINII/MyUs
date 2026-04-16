@@ -32,6 +32,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
   const { handleError } = useApiError({ handleToast })
   const [deleteTarget, setDeleteTarget] = useState<Video | null>(null)
   const [channelUlid, setChannelUlid] = useState<string>(channels[0]?.ulid ?? '')
+  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
 
   const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)
   const handleEdit = (video: Video) => router.push(`/manage/media/video/edit/${video.ulid}`)
@@ -134,9 +135,15 @@ export default function ManageVideos(props: Props): React.JSX.Element {
   ]
 
   return (
-    <Main title="動画管理" type="table" toast={toast} button={<SelectBox value={channelUlid} options={channelOptions} className={style.filter} onChange={handleChannel} />}>
+    <Main
+      title="動画管理"
+      type="table"
+      toast={toast}
+      isFooter={false}
+      button={<SelectBox value={channelUlid} options={channelOptions} className={style.filter} onChange={handleChannel} />}
+    >
       <div className={style.manage}>
-        <DataTable datas={channelDatas} columns={columns} rowKey={(v) => v.ulid} />
+        <DataTable datas={channelDatas} columns={columns} rowKey={(v) => v.ulid} selectable selectedKeys={selectedKeys} onSelection={setSelectedKeys} />
       </div>
       <DeleteModal
         open={deleteTarget !== null}
