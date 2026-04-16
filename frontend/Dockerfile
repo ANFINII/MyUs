@@ -1,4 +1,6 @@
-FROM node:16.17.0-alpine
+FROM node:20-alpine
+RUN corepack enable
 WORKDIR /frontend
 COPY . .
-RUN npm run build
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
