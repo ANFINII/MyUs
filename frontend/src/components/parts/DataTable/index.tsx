@@ -7,9 +7,10 @@ type SortOrder = 'asc' | 'desc'
 export interface Column<T> {
   key: string
   header: string
+  align?: 'left' | 'center' | 'right'
   sortable?: boolean
   sortValue?: (row: T) => string | number
-  render: (row: T) => React.ReactNode
+  cell: (row: T) => React.ReactNode
   className?: string
   headerClass?: string
   cellClass?: string
@@ -93,7 +94,17 @@ export default function DataTable<T>(props: Props<T>): React.JSX.Element {
               </th>
             )}
             {columns.map((column) => (
-              <th key={column.key} className={cx(style.th, column.className, column.headerClass)}>
+              <th
+                key={column.key}
+                className={cx(
+                  style.th,
+                  column.className,
+                  column.headerClass,
+                  column.cellClass,
+                  column.align === 'right' && style.th_right,
+                  column.align === 'center' && style.th_center,
+                )}
+              >
                 {column.sortable ? (
                   <button type="button" className={style.sort_button} onClick={() => handleSort(column.key)}>
                     {column.header}
@@ -118,7 +129,7 @@ export default function DataTable<T>(props: Props<T>): React.JSX.Element {
                 )}
                 {columns.map((column) => (
                   <td key={column.key} className={cx(style.td, column.className, column.cellClass)}>
-                    {column.render(row)}
+                    {column.cell(row)}
                   </td>
                 ))}
               </tr>
