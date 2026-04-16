@@ -6,7 +6,7 @@ import { getChannels } from 'api/internal/channel'
 import { getManageVideos } from 'api/internal/manage/video'
 import { searchParams } from 'utils/functions/common'
 import ErrorCheck from 'components/widgets/Error/Check'
-import ManageVideos from 'components/templates/manage/media/video'
+import ManageVideos from 'components/templates/manage/video'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])

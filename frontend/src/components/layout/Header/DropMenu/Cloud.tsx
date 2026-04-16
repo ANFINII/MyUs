@@ -18,7 +18,7 @@ export default function DropMenuCloud(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
   const handleRouter = (media: string) => {
-    router.push(`/media/${media}/create`)
+    router.push(`/manage/${media}/create`)
     onClose()
   }
 

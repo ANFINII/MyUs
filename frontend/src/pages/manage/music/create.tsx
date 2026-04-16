@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslation
 import { Channel } from 'types/internal/channel'
 import { getChannels } from 'api/internal/channel'
 import ErrorCheck from 'components/widgets/Error/Check'
-import PictureCreate from 'components/templates/media/picture/create'
+import MusicCreate from 'components/templates/manage/music/create'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
@@ -18,10 +18,10 @@ interface Props {
   channels: Channel[]
 }
 
-export default function PictureCreatePage(props: Props): React.JSX.Element {
+export default function MusicCreatePage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
-      <PictureCreate {...props} />
+      <MusicCreate {...props} />
     </ErrorCheck>
   )
 }

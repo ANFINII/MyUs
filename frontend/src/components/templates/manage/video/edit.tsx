@@ -35,7 +35,7 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
   const { handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<VideoUpdateIn>({ title: data.title, content: data.content, publish: data.publish })
 
-  const handleBack = () => router.push('/manage/media/video')
+  const handleBack = () => router.push('/manage/video')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
