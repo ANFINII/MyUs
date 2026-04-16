@@ -36,12 +36,9 @@
 - **boolean変数**: 基本的に`is${State}`を使用（`should${Action}`も可）
 
 ### スタイル
+- 詳細は [CSS/SCSSコーディングルール](css.md) を参照
 - **必ずCSS Modulesを使用**（`.module.scss`）
 - **インラインスタイルは絶対に使用しない**
-- **すべてのスタイルはクラスを定義してSCSSファイルに記載**
-- **SCSSは構造的にネストして定義する**（子要素のクラスは親クラスの中にネストする）
-- 既存のクラスを優先的に使用
-- 動的なスタイルが必要な場合も、可能な限りクラスの切り替えで対応
 
 ## 品質管理
 
@@ -91,75 +88,9 @@ if (playerRef.current && playerRef.current.play) {
 playerRef.current?.play?.()
 ```
 
-## スタイル記述の例
+## スタイル
 
-### ❌ 悪い例
-```tsx
-<div style={{ width: 272, height: 153, display: 'block' }}>
-  <img style={{ objectFit: 'cover' }} />
-</div>
-```
-
-### ✅ 良い例
-```tsx
-// Component.tsx
-<div className={styles.videoContainer}>
-  <img className={styles.thumbnail} />
-</div>
-
-// Component.module.scss
-.videoContainer {
-  width: 272px;
-  height: 153px;
-  display: block;
-
-  .thumbnail {
-    object-fit: cover;
-  }
-}
-```
-
-### SCSSの構造的なネスト
-```scss
-// ❌ 悪い例（フラットに定義）
-.container {
-  min-height: 94px;
-}
-
-.heading {
-  font-size: 16px;
-  margin-bottom: 12px;
-}
-
-.article {
-  display: block;
-}
-
-// ✅ 良い例（親クラスの中にネスト）
-.container {
-  min-height: 94px;
-
-  .heading {
-    font-size: 16px;
-    margin-bottom: 12px;
-  }
-
-  .article {
-    display: block;
-  }
-}
-```
-
-### 動的スタイルの扱い
-```tsx
-// ❌ 悪い例
-<div style={{ display: isHovered ? 'block' : 'none' }}>
-
-// ✅ 良い例
-<div className={cx(styles.content, { [styles.visible]: isHovered })}>
-// または
-<div className={isHovered ? styles.contentVisible : styles.contentHidden}>
-```
+CSS/SCSSのルールは [CSS/SCSSコーディングルール](css.md) を参照。
 
 ## プロジェクト固有ルール
 
