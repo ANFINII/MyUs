@@ -52,12 +52,16 @@
   max-width: 280px;
 }
 
-.datetime {
-  width: 100px;
+.narrow {
+  width: 80px;
 }
 
-.narrow {
-  width: 56px;
+.normal {
+  width: 140px;
+}
+
+.datetime {
+  width: 120px;
 }
 
 .center {
@@ -71,9 +75,9 @@
 
 .publish {
   text-align: center;
-}
 
-.publish_inner {
-  display: inline-flex;
-  align-items: center;
+  .publish_inner {
+    display: inline-flex;
+    align-items: center;
+  }
 }
