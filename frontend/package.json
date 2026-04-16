@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "test": "jest",
-    "prebuild": "npm run lint",
+    "prebuild": "pnpm run lint",
     "lint": "eslint src",
     "format": "eslint --fix src"
   },
@@ -57,6 +57,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/video.js": "^7.3.58",
+    "@typescript-eslint/eslint-plugin": "^8.58.2",
     "@typescript-eslint/parser": "^8.46.3",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.4",
@@ -80,5 +81,12 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "$eslint"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }
