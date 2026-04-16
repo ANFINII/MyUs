@@ -1,76 +1,94 @@
 .data_table {
+  overflow-x: auto;
   border: 1px solid rgb(220, 220, 220);
   border-radius: 5px;
-  overflow-x: auto;
 
   .table {
-    border-collapse: collapse;
     width: 100%;
     font-size: 13px;
+    border-collapse: collapse;
 
     .thead {
       background: rgb(245, 245, 245);
     }
   }
-}
 
-.checkbox {
-  width: 32px;
-  max-width: 32px;
-  text-align: center;
-  vertical-align: middle;
-  padding: 4px 0;
-}
+  .checkbox {
+    width: 32px;
+    max-width: 32px;
+    padding: 4px 0;
+    text-align: center;
+    vertical-align: middle;
+  }
 
-.th,
-.td {
-  padding: 4px 8px;
-  vertical-align: middle;
-  white-space: nowrap;
-}
+  .th,
+  .td {
+    padding: 4px 8px;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
 
-.th {
-  text-align: left;
-  font-weight: 500;
-  border-bottom: 1px solid rgb(220, 220, 220);
+  .th {
+    font-weight: 500;
+    text-align: left;
+    border-bottom: 1px solid rgb(220, 220, 220);
 
-  .sort_button {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 0;
-    border: none;
-    background: none;
-    color: inherit;
-    font: inherit;
-    cursor: pointer;
+    .sort_button {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      width: 100%;
+      padding: 0;
+      border: none;
+      background: none;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+
+      &:hover {
+        color: rgb(50, 110, 200);
+      }
+
+      .sort_mark {
+        font-size: 11px;
+        color: rgb(130, 130, 130);
+      }
+    }
+
+  }
+
+  .th_right {
+    text-align: right;
+
+    .sort_button {
+      justify-content: flex-end;
+    }
+  }
+
+  .th_center {
+    text-align: center;
+
+    .sort_button {
+      justify-content: center;
+    }
+  }
+
+  .td {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .tr {
+    border-bottom: 1px solid rgb(235, 235, 235);
 
     &:hover {
-      color: rgb(50, 110, 200);
-    }
-
-    .sort_mark {
-      font-size: 11px;
-      color: rgb(130, 130, 130);
+      background: rgb(250, 250, 250);
     }
   }
-}
 
-.td {
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-.tr {
-  border-bottom: 1px solid rgb(235, 235, 235);
-
-  &:hover {
-    background: rgb(250, 250, 250);
+  .empty {
+    padding: 40px;
+    text-align: center;
+    color: rgb(150, 150, 150);
   }
-}
-
-.empty {
-  padding: 40px;
-  text-align: center;
-  color: rgb(150, 150, 150);
 }

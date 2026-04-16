@@ -65,7 +65,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       key: 'thumbnail',
       header: 'サムネイル',
       className: style.thumbnail,
-      render: (v) => v.image && <ExImage src={v.image} width="96" height="54" />,
+      cell: (v) => v.image && <ExImage src={v.image} width="96" height="54" />,
     },
     {
       key: 'title',
@@ -73,7 +73,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       sortable: true,
       sortValue: (v) => v.title,
       className: style.title,
-      render: (v) => (
+      cell: (v) => (
         <a className={style.title_link} onClick={() => handleEdit(v)}>
           {v.title}
         </a>
@@ -85,7 +85,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       sortable: true,
       sortValue: (v) => v.content,
       className: style.content,
-      render: (v) => v.content,
+      cell: (v) => v.content,
     },
     {
       key: 'created',
@@ -93,35 +93,37 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       sortable: true,
       sortValue: (v) => new Date(v.created).getTime(),
       className: style.datetime,
-      render: (v) => formatDatetime(v.created),
+      cell: (v) => formatDatetime(v.created),
     },
     {
       key: 'read',
       header: '再生',
+      align: 'right',
       sortable: true,
       sortValue: (v) => v.read,
       className: style.narrow,
       cellClass: style.number,
-      render: (v) => v.read,
+      cell: (v) => v.read,
     },
     {
       key: 'like',
       header: 'いいね',
+      align: 'right',
       sortable: true,
       sortValue: (v) => v.like,
       className: style.narrow,
       cellClass: style.number,
-      render: (v) => v.like,
+      cell: (v) => v.like,
     },
     {
       key: 'publish',
       header: '公開',
+      align: 'center',
       sortable: true,
       sortValue: (v) => (v.publish ? 1 : 0),
       className: style.narrow,
-      headerClass: style.center,
       cellClass: style.publish,
-      render: (v) => (
+      cell: (v) => (
         <div className={style.publish_inner}>
           <Toggle isActive={v.publish} disable />
         </div>
