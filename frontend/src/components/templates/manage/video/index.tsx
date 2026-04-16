@@ -16,7 +16,7 @@ import ExImage from 'components/parts/ExImage'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Toggle from 'components/parts/Input/Toggle'
 import DeleteModal from 'components/widgets/Modal/Delete'
-import style from '../Manage.module.scss'
+import style from '../Media.module.scss'
 
 interface Props {
   datas: Video[]
