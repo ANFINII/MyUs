@@ -4,6 +4,18 @@
   gap: 16px;
 }
 
+.header_actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .selected_count {
+    font-size: 13px;
+    color: rgb(80, 80, 80);
+    white-space: nowrap;
+  }
+}
+
 .filter {
   width: 240px;
 }
@@ -64,9 +76,4 @@
 .publish_inner {
   display: inline-flex;
   align-items: center;
-}
-
-.actions {
-  width: 64px;
-  text-align: center;
 }
