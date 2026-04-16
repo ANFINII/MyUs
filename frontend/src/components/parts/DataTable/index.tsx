@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import cx from 'utils/functions/cx'
 import style from './DataTable.module.scss'
 
@@ -19,10 +19,13 @@ interface Props<T> {
   datas: T[]
   columns: Column<T>[]
   rowKey: (row: T) => string
+  selectable?: boolean
+  selectedKeys?: Set<string>
+  onSelection?: (selectedKeys: Set<string>) => void
 }
 
 export default function DataTable<T>(props: Props<T>): React.JSX.Element {
-  const { datas, columns, rowKey } = props
+  const { datas, columns, rowKey, selectable, selectedKeys, onSelection } = props
 
   const [sortKey, setSortKey] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
@@ -36,7 +39,7 @@ export default function DataTable<T>(props: Props<T>): React.JSX.Element {
     setSortOrder('desc')
   }
 
-  const sortedDatas = useMemo(() => {
+  const sortedDatas = (() => {
     if (sortKey === null) return datas
     const column = columns.find((c) => c.key === sortKey)
     if (!column || !column.sortValue) return datas
@@ -50,11 +53,33 @@ export default function DataTable<T>(props: Props<T>): React.JSX.Element {
       return 0
     })
     return copied
-  }, [datas, columns, sortKey, sortOrder])
+  })()
 
   const sortMark = (key: string): string => {
     if (sortKey !== key) return ''
     return sortOrder === 'asc' ? '↑' : '↓'
+  }
+
+  const isAllSelected = datas.length > 0 && selectedKeys?.size === datas.length
+
+  const handleSelectAll = () => {
+    if (!onSelection) return
+    if (isAllSelected) {
+      onSelection(new Set())
+      return
+    }
+    onSelection(new Set(datas.map((row) => rowKey(row))))
+  }
+
+  const handleSelectRow = (key: string) => {
+    if (!onSelection || !selectedKeys) return
+    const next = new Set(selectedKeys)
+    if (next.has(key)) {
+      next.delete(key)
+    } else {
+      next.add(key)
+    }
+    onSelection(next)
   }
 
   return (
@@ -62,6 +87,11 @@ export default function DataTable<T>(props: Props<T>): React.JSX.Element {
       <table className={style.table}>
         <thead className={style.thead}>
           <tr>
+            {selectable && (
+              <th className={cx(style.th, style.checkbox)}>
+                <input type="checkbox" checked={isAllSelected} onChange={handleSelectAll} />
+              </th>
+            )}
             {columns.map((column) => (
               <th key={column.key} className={cx(style.th, column.className, column.headerClass)}>
                 {column.sortable ? (
@@ -77,15 +107,23 @@ export default function DataTable<T>(props: Props<T>): React.JSX.Element {
           </tr>
         </thead>
         <tbody>
-          {sortedDatas.map((row) => (
-            <tr key={rowKey(row)} className={style.tr}>
-              {columns.map((column) => (
-                <td key={column.key} className={cx(style.td, column.className, column.cellClass)}>
-                  {column.render(row)}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {sortedDatas.map((row) => {
+            const key = rowKey(row)
+            return (
+              <tr key={key} className={style.tr}>
+                {selectable && (
+                  <td className={cx(style.td, style.checkbox)}>
+                    <input type="checkbox" checked={selectedKeys?.has(key) ?? false} onChange={() => handleSelectRow(key)} />
+                  </td>
+                )}
+                {columns.map((column) => (
+                  <td key={column.key} className={cx(style.td, column.className, column.cellClass)}>
+                    {column.render(row)}
+                  </td>
+                ))}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
       {datas.length === 0 && <div className={style.empty}>データがありません</div>}
