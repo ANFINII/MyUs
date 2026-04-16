@@ -19,3 +19,7 @@ class VideoInterface(ABC):
     @abstractmethod
     def is_liked(self, media_id: int, user_id: int) -> bool:
         ...
+
+    @abstractmethod
+    def delete(self, id: int) -> None:
+        ...

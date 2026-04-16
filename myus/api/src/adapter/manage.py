@@ -1,0 +1,69 @@
+from django.http import HttpRequest
+from ninja import Router
+from api.modules.logger import log
+from api.src.adapter.media import convert_videos
+from api.src.types.schema.common import ErrorOut
+from api.src.types.schema.media import VideoOut, VideoUpdateIn
+from api.src.usecase.auth import auth_check
+from api.src.usecase.manage.media import delete_manage_video, get_manage_video, get_manage_videos, update_manage_video
+
+
+class ManageVideoAPI:
+    """ManageVideoAPI"""
+
+    router = Router()
+
+    @staticmethod
+    @router.get("", response={200: list[VideoOut], 401: ErrorOut})
+    def list(request: HttpRequest, search: str = ""):
+        log.info("ManageVideoAPI list", search=search)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        objs = get_manage_videos(user_id, search)
+        return 200, convert_videos(objs)
+
+    @staticmethod
+    @router.get("/{ulid}", response={200: VideoOut, 401: ErrorOut, 404: ErrorOut})
+    def get(request: HttpRequest, ulid: str):
+        log.info("ManageVideoAPI get", ulid=ulid)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        obj = get_manage_video(user_id, ulid)
+        if obj is None:
+            return 404, ErrorOut(message="Video not found")
+
+        return 200, convert_videos([obj])[0]
+
+    @staticmethod
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    def put(request: HttpRequest, ulid: str, input: VideoUpdateIn):
+        log.info("ManageVideoAPI put", ulid=ulid, input=input)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        if not update_manage_video(user_id, ulid, input):
+            return 400, ErrorOut(message="保存に失敗しました!")
+
+        return 204, ErrorOut(message="保存しました!")
+
+    @staticmethod
+    @router.delete("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    def delete(request: HttpRequest, ulid: str):
+        log.info("ManageVideoAPI delete", ulid=ulid)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        if not delete_manage_video(user_id, ulid):
+            return 400, ErrorOut(message="削除に失敗しました!")
+
+        return 204, ErrorOut(message="削除しました!")

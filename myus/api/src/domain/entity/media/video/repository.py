@@ -22,6 +22,8 @@ class VideoRepository(VideoInterface):
             q_list.append(Q(ulid=filter.ulid))
         if filter.publish is not None:
             q_list.append(Q(publish=filter.publish))
+        if filter.owner_id:
+            q_list.append(Q(channel__owner_id=filter.owner_id))
         if filter.channel_id:
             q_list.append(Q(channel_id=filter.channel_id))
         if filter.category_id:
@@ -67,3 +69,6 @@ class VideoRepository(VideoInterface):
 
     def is_liked(self, media_id: int, user_id: int) -> bool:
         return Video.objects.filter(id=media_id, like__id=user_id).exists()
+
+    def delete(self, id: int) -> None:
+        Video.objects.filter(id=id).delete()
