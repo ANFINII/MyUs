@@ -60,6 +60,10 @@ class VideoUpdateIn(BaseModel):
     publish: bool
 
 
+class BulkDeleteIn(BaseModel):
+    ulids: list[str]
+
+
 # Outputs
 
 class MediaCreateOut(BaseModel):
