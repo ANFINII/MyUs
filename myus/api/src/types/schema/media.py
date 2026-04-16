@@ -54,6 +54,12 @@ class ChatIn(BaseModel):
     period: str
 
 
+class VideoUpdateIn(BaseModel):
+    title: str
+    content: str
+    publish: bool
+
+
 # Outputs
 
 class MediaCreateOut(BaseModel):

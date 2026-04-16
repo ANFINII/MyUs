@@ -16,6 +16,7 @@ class SortType(Enum):
 class FilterOption:
     ulid: str = ""
     publish: bool | None = None
+    owner_id: int = 0
     channel_id: int = 0
     category_id: int = 0
     is_recommend: bool = False
