@@ -1,0 +1,24 @@
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  font-size: 13px;
+  color: rgb(60, 60, 60);
+  background: none;
+  border: 1px solid rgb(220, 220, 220);
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover:not(.active) {
+    background: rgb(245, 245, 245);
+  }
+
+  &.active {
+    color: rgb(255, 255, 255);
+    background: rgb(0, 120, 255);
+    border-color: rgb(0, 120, 255);
+  }
+}
