@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'next-i18next/pages'
 import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
