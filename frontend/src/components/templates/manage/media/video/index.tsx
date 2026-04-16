@@ -71,7 +71,11 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       sortable: true,
       sortValue: (v) => v.title,
       className: style.title,
-      render: (v) => v.title,
+      render: (v) => (
+        <a className={style.title_link} onClick={() => handleEdit(v)}>
+          {v.title}
+        </a>
+      ),
     },
     {
       key: 'content',
@@ -125,12 +129,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       key: 'actions',
       header: '操作',
       className: style.actions,
-      render: (v) => (
-        <div className={style.actions_inner}>
-          <Button color="blue" size="s" name="編集" onClick={() => handleEdit(v)} />
-          <Button color="red" size="s" name="削除" onClick={() => handleDeleteOpen(v)} />
-        </div>
-      ),
+      render: (v) => <Button color="red" size="s" name="削除" onClick={() => handleDeleteOpen(v)} />,
     },
   ]
 

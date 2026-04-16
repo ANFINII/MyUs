@@ -24,6 +24,15 @@
 .title {
   min-width: 160px;
   max-width: 240px;
+
+  .title_link {
+    color: rgb(50, 110, 200);
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .content {
@@ -58,12 +67,6 @@
 }
 
 .actions {
-  width: 116px;
+  width: 64px;
   text-align: center;
-}
-
-.actions_inner {
-  display: flex;
-  justify-content: center;
-  gap: 4px;
 }
