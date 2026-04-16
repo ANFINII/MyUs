@@ -8,6 +8,7 @@ import { FetchError } from 'utils/constants/enum'
 import { formatDatetime } from 'utils/functions/datetime'
 import { useApiError } from 'components/hooks/useApiError'
 import { useIsLoading } from 'components/hooks/useIsLoading'
+import { usePagination } from 'components/hooks/usePagination'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -15,6 +16,7 @@ import DataTable, { Column } from 'components/parts/DataTable'
 import ExImage from 'components/parts/ExImage'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Toggle from 'components/parts/Input/Toggle'
+import Pagination from 'components/parts/Pagination'
 import DeleteModal from 'components/widgets/Modal/Delete'
 import style from '../Media.module.scss'
 
@@ -26,6 +28,8 @@ interface Props {
 export default function ManageVideos(props: Props): React.JSX.Element {
   const { datas, channels } = props
 
+  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
   const { toast, handleToast } = useToast()
@@ -33,6 +37,8 @@ export default function ManageVideos(props: Props): React.JSX.Element {
   const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false)
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
   const [channelUlid, setChannelUlid] = useState<string>(channels[0]?.ulid ?? '')
+  const channelDatas = useMemo(() => datas.filter((v) => v.channel.ulid === channelUlid), [datas, channelUlid])
+  const { currentPage, totalPages, pageDatas, handlePage } = usePagination(channelDatas, 50)
 
   const handleDelete = () => setIsDeleteModal(!isDeleteModal)
   const handleEdit = (video: Video) => router.push(`/manage/video/${video.ulid}`)
@@ -53,12 +59,6 @@ export default function ManageVideos(props: Props): React.JSX.Element {
     handleDelete()
     router.replace(router.asPath)
   }
-
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-
-  const channelDatas = useMemo(() => {
-    return datas.filter((v) => v.channel.ulid === channelUlid)
-  }, [datas, channelUlid])
 
   const columns: Column<Video>[] = [
     {
@@ -148,7 +148,15 @@ export default function ManageVideos(props: Props): React.JSX.Element {
       }
     >
       <div className={style.manage}>
-        <DataTable datas={channelDatas} columns={columns} rowKey={(v) => v.ulid} selectable selectedKeys={selectedKeys} onSelection={setSelectedKeys} />
+        <DataTable
+          datas={pageDatas}
+          columns={columns}
+          rowKey={(v) => v.ulid}
+          selectable
+          selectedKeys={selectedKeys}
+          onSelection={setSelectedKeys}
+          footer={<Pagination currentPage={currentPage} totalPages={totalPages} onChange={handlePage} />}
+        />
       </div>
       <DeleteModal
         open={isDeleteModal}
