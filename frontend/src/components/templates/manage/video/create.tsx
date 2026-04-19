@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { Channel } from 'types/internal/channel'
-import { VideoIn } from 'types/internal/media/manage'
+import { VideoIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
 import { postVideoCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
