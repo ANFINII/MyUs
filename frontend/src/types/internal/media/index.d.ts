@@ -62,3 +62,7 @@ export interface MediaHome {
   blogs: Blog[]
   chats: Chat[]
 }
+
+export interface SearchParms {
+  search?: string
+}
