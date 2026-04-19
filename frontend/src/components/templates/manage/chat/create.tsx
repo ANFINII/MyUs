@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { Channel } from 'types/internal/channel'
-import { ChatIn } from 'types/internal/media'
+import { ChatIn } from 'types/internal/media/manage'
 import { Option } from 'types/internal/other'
 import { postChatCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
