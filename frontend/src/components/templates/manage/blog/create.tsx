@@ -1,7 +1,7 @@
 import { useState, ChangeEvent } from 'react'
 import dynamic from 'next/dynamic'
 import { Channel } from 'types/internal/channel'
-import { BlogIn } from 'types/internal/media/manage'
+import { BlogIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
 import { postBlogCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'

@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { Channel } from 'types/internal/channel'
-import { ComicIn } from 'types/internal/media/manage'
+import { ComicIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
 import { postComicCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
