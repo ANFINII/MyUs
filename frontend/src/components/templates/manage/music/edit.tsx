@@ -1,10 +1,10 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import { Channel } from 'types/internal/channel'
-import { VideoUpdateIn } from 'types/internal/media/input'
-import { Video } from 'types/internal/media/output'
+import { MusicUpdateIn } from 'types/internal/media/input'
+import { Music } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
-import { putManageVideo } from 'api/internal/manage/video'
+import { putManageMusic } from 'api/internal/manage/music'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
 import { useIsLoading } from 'components/hooks/useIsLoading'
@@ -13,6 +13,7 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import CheckBox from 'components/parts/Input/CheckBox'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
@@ -20,11 +21,11 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 
 interface Props {
-  data: Video
+  data: Music
   channels: Channel[]
 }
 
-export default function ManageVideoEdit(props: Props): React.JSX.Element {
+export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const { data, channels } = props
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
@@ -34,18 +35,19 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
-  const [values, setValues] = useState<VideoUpdateIn>({ ...data })
+  const [values, setValues] = useState<MusicUpdateIn>({ ...data })
 
-  const handleBack = () => router.push('/manage/video')
+  const handleBack = () => router.push('/manage/music')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
 
   const handleForm = async () => {
-    const { title, content } = values
-    if (!isRequiredCheck({ title, content })) return
+    const { title, content, lyric } = values
+    if (!isRequiredCheck({ title, content, lyric })) return
     handleLoading(true)
-    const ret = await putManageVideo(data.ulid, values)
+    const ret = await putManageMusic(data.ulid, values)
     handleLoading(false)
     if (ret.isErr()) {
       handleError(FetchError.Put, ret.error.message)
@@ -62,13 +64,15 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="動画編集" type="table" toast={toast} isFooter={false} button={button}>
+    <Main title="音楽編集" type="table" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
           <SelectBox label="チャンネル" name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <Input label="タイトル" name="title" value={values.title} required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" value={values.content} required={isRequired} onChange={handleText} />
+          <Textarea label="歌詞" name="lyric" value={values.lyric} required={isRequired} onChange={handleText} />
+          <CheckBox label="ダウンロード許可" name="download" checked={values.download} onChange={handleCheck} />
         </VStack>
       </form>
     </Main>
