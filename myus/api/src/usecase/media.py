@@ -17,7 +17,7 @@ from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import FilterOption, SortOption, SortType, ExcludeOption
 from api.src.injectors.container import injector
 from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, ComicDetailDTO, PictureDetailDTO, BlogDetailDTO, ChatDetailDTO
-from api.src.types.schema.media import VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn
+from api.src.types.schema.media.input import VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn
 from api.src.usecase.channel import get_channel_data
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages

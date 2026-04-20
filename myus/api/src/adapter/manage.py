@@ -3,7 +3,8 @@ from ninja import Router
 from api.modules.logger import log
 from api.src.adapter.media import convert_videos
 from api.src.types.schema.common import ErrorOut
-from api.src.types.schema.media import BulkDeleteIn, VideoOut, VideoUpdateIn
+from api.src.types.schema.media.input import BulkDeleteIn, VideoUpdateIn
+from api.src.types.schema.media.output import VideoOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.manage.media import delete_manage_video, get_manage_video, get_manage_videos, update_manage_video
 
