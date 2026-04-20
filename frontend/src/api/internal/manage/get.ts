@@ -2,8 +2,21 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
-import { Blog, Comic, Music, Picture, SearchParams, Video } from 'types/internal/media/output'
-import { apiManageBlog, apiManageBlogs, apiManageComic, apiManageComics, apiManageMusic, apiManageMusics, apiManagePicture, apiManagePictures, apiManageVideo, apiManageVideos } from 'api/uri'
+import { SearchParams, Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media/output'
+import {
+  apiManageBlog,
+  apiManageBlogs,
+  apiManageChat,
+  apiManageChats,
+  apiManageComic,
+  apiManageComics,
+  apiManageMusic,
+  apiManageMusics,
+  apiManagePicture,
+  apiManagePictures,
+  apiManageVideo,
+  apiManageVideos,
+} from 'api/uri'
 
 export const getManageVideos = async (params: SearchParams, req?: Req): Promise<ApiOut<Video[]>> => {
   return await apiOut(apiClient('json').get(apiManageVideos, cookieHeader(req, params)))
@@ -25,6 +38,10 @@ export const getManageBlogs = async (params: SearchParams, req?: Req): Promise<A
   return await apiOut(apiClient('json').get(apiManageBlogs, cookieHeader(req, params)))
 }
 
+export const getManageChats = async (params: SearchParams, req?: Req): Promise<ApiOut<Chat[]>> => {
+  return await apiOut(apiClient('json').get(apiManageChats, cookieHeader(req, params)))
+}
+
 export const getManageVideo = async (ulid: string, req?: Req): Promise<ApiOut<Video>> => {
   return await apiOut(apiClient('json').get(apiManageVideo(ulid), cookieHeader(req)))
 }
@@ -43,4 +60,8 @@ export const getManagePicture = async (ulid: string, req?: Req): Promise<ApiOut<
 
 export const getManageBlog = async (ulid: string, req?: Req): Promise<ApiOut<Blog>> => {
   return await apiOut(apiClient('json').get(apiManageBlog(ulid), cookieHeader(req)))
+}
+
+export const getManageChat = async (ulid: string, req?: Req): Promise<ApiOut<Chat>> => {
+  return await apiOut(apiClient('json').get(apiManageChat(ulid), cookieHeader(req)))
 }
