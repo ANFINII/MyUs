@@ -1,6 +1,6 @@
 import { Channel } from 'types/internal/channel'
 import { Comment } from 'types/internal/comment'
-import { ChatMessage } from 'types/internal/message/output'
+import { ChatMessage } from 'types/internal/message'
 
 export interface Search {
   name?: string

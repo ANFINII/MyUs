@@ -1,5 +1,5 @@
 import { RefObject } from 'react'
-import { ChatMessage } from 'types/internal/message/output'
+import { ChatMessage } from 'types/internal/message'
 import { UserMe } from 'types/internal/user'
 import style from './SectionMain.module.scss'
 import ChatEditor from '../ChatEditor'

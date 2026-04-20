@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { ChatMessage } from 'types/internal/message/output'
+import { ChatMessage } from 'types/internal/message'
 import { UserMe } from 'types/internal/user'
 import cx from 'utils/functions/cx'
 import { formatDatetime } from 'utils/functions/datetime'
