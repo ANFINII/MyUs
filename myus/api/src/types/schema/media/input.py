@@ -53,5 +53,13 @@ class VideoUpdateIn(BaseModel):
     publish: bool
 
 
+class MusicUpdateIn(BaseModel):
+    title: str
+    content: str
+    lyric: str
+    download: bool
+    publish: bool
+
+
 class BulkDeleteIn(BaseModel):
     ulids: list[str]
