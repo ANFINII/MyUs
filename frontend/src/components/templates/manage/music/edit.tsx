@@ -13,6 +13,7 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import CheckBox from 'components/parts/Input/CheckBox'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
@@ -34,19 +35,13 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
-  const [values, setValues] = useState<MusicUpdateIn>({
-    title: data.title,
-    content: data.content,
-    lyric: data.lyric,
-    download: data.download,
-    publish: data.publish,
-  })
+  const [values, setValues] = useState<MusicUpdateIn>({ ...data })
 
   const handleBack = () => router.push('/manage/music')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
-  const handleDownload = () => setValues({ ...values, download: !values.download })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
 
   const handleForm = async () => {
     const { title, content, lyric } = values
@@ -73,11 +68,11 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
-          <ToggleCard label="ダウンロード許可" isActive={values.download} onClick={handleDownload} />
           <SelectBox label="チャンネル" name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <Input label="タイトル" name="title" value={values.title} required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" value={values.content} required={isRequired} onChange={handleText} />
           <Textarea label="歌詞" name="lyric" value={values.lyric} required={isRequired} onChange={handleText} />
+          <CheckBox label="ダウンロード許可" name="download" checked={values.download} onChange={handleCheck} />
         </VStack>
       </form>
     </Main>
