@@ -80,5 +80,12 @@ class BlogUpdateIn(BaseModel):
     publish: bool
 
 
+class ChatUpdateIn(BaseModel):
+    title: str
+    content: str
+    period: str
+    publish: bool
+
+
 class BulkDeleteIn(BaseModel):
     ulids: list[str]
