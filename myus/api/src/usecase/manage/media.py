@@ -1,4 +1,5 @@
 from dataclasses import replace
+from ninja import UploadedFile
 from api.modules.logger import log
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.video.interface import VideoInterface
@@ -11,7 +12,9 @@ from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.index import FilterOption, SortOption, ExcludeOption
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import ComicUpdateIn, MusicUpdateIn, PictureUpdateIn, VideoUpdateIn
+from api.utils.enum.index import ImageUpload
 from api.utils.functions.index import create_url
+from api.utils.functions.media import save_upload
 
 
 def get_manage_videos(user_id: int, search: str) -> list[VideoData]:
@@ -44,7 +47,7 @@ def get_manage_video(user_id: int, ulid: str) -> VideoData | None:
     )
 
 
-def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn) -> bool:
+def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> bool:
     repository = injector.get(VideoInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption())
     if len(ids) == 0:
@@ -57,6 +60,9 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn) -> bool:
         return False
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
+    if image is not None:
+        update_data = replace(update_data, image=save_upload(image, ImageUpload.VIDEO, obj.channel.ulid))
+
     try:
         repository.bulk_save([update_data])
         return True
@@ -172,7 +178,7 @@ def get_manage_comic(user_id: int, ulid: str) -> ComicData | None:
     )
 
 
-def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn) -> bool:
+def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> bool:
     repository = injector.get(ComicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption())
     if len(ids) == 0:
@@ -185,6 +191,9 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn) -> bool:
         return False
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
+    if image is not None:
+        update_data = replace(update_data, image=save_upload(image, ImageUpload.COMIC, obj.channel.ulid))
+
     try:
         repository.bulk_save([update_data])
         return True
@@ -233,7 +242,7 @@ def get_manage_picture(user_id: int, ulid: str) -> PictureData | None:
     return replace(obj, image=create_url(obj.image))
 
 
-def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn) -> bool:
+def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> bool:
     repository = injector.get(PictureInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption())
     if len(ids) == 0:
@@ -246,6 +255,9 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn) -> bo
         return False
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
+    if image is not None:
+        update_data = replace(update_data, image=save_upload(image, ImageUpload.PICTURE, obj.channel.ulid))
+
     try:
         repository.bulk_save([update_data])
         return True
