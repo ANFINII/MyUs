@@ -9,15 +9,15 @@ export const genderMap: Record<GenderType, GenderView> = {
 export const mediaTypeMap: Record<string, MediaType> = {
   Video: MediaType.Video,
   Music: MediaType.Music,
+  Blog: MediaType.Blog,
   Comic: MediaType.Comic,
   Picture: MediaType.Picture,
-  Blog: MediaType.Blog,
 }
 
 export const commentTypeNoMap: Record<CommentType, CommentTypeNo> = {
   [CommentType.Video]: CommentTypeNo.Video,
   [CommentType.Music]: CommentTypeNo.Music,
+  [CommentType.Blog]: CommentTypeNo.Blog,
   [CommentType.Comic]: CommentTypeNo.Comic,
   [CommentType.Picture]: CommentTypeNo.Picture,
-  [CommentType.Blog]: CommentTypeNo.Blog,
 }

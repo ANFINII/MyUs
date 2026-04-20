@@ -151,6 +151,13 @@ export default function Userpage(props: Props): React.JSX.Element {
           </CardIndexList>
 
           <Divide />
+          <CardIndexList title="Blog">
+            {newMedia.blogs.map((item) => (
+              <BlogCard key={item.ulid} item={item} />
+            ))}
+          </CardIndexList>
+
+          <Divide />
           <CardIndexList title="Comic">
             {newMedia.comics.map((item) => (
               <ComicCard key={item.ulid} item={item} />
@@ -161,13 +168,6 @@ export default function Userpage(props: Props): React.JSX.Element {
           <CardIndexList title="Picture">
             {newMedia.pictures.map((item) => (
               <PictureCard key={item.ulid} item={item} />
-            ))}
-          </CardIndexList>
-
-          <Divide />
-          <CardIndexList title="Blog">
-            {newMedia.blogs.map((item) => (
-              <BlogCard key={item.ulid} item={item} />
             ))}
           </CardIndexList>
 

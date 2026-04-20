@@ -27,27 +27,27 @@ export enum GenderView {
 export enum MediaType {
   Video = 'Video',
   Music = 'Music',
+  Blog = 'Blog',
   Comic = 'Comic',
   Picture = 'Picture',
-  Blog = 'Blog',
   Chat = 'Chat',
 }
 
 export enum MediaPath {
   Video = 'video',
   Music = 'music',
+  Blog = 'blog',
   Comic = 'comic',
   Picture = 'picture',
-  Blog = 'blog',
   Chat = 'chat',
 }
 
 export enum NotificationType {
   Video = 'Video',
   Music = 'Music',
+  Blog = 'Blog',
   Comic = 'Comic',
   Picture = 'Picture',
-  Blog = 'Blog',
   Chat = 'Chat',
   Follow = 'Follow',
   Like = 'Like',
@@ -58,17 +58,17 @@ export enum NotificationType {
 export enum CommentTypeNo {
   Video = 1,
   Music = 2,
-  Comic = 3,
-  Picture = 4,
-  Blog = 5,
+  Blog = 3,
+  Comic = 4,
+  Picture = 5,
 }
 
 export enum CommentType {
   Video = 'Video',
   Music = 'Music',
+  Blog = 'Blog',
   Comic = 'Comic',
   Picture = 'Picture',
-  Blog = 'Blog',
 }
 
 export enum WsCommand {

@@ -1,6 +1,6 @@
 import { Channel } from 'types/internal/channel'
 import { Comment } from 'types/internal/comment'
-import { MediaUser, Video, Music, Picture, Blog } from 'types/internal/media/output'
+import { MediaUser, Video, Music, Blog, Picture } from 'types/internal/media/output'
 import { Hashtag } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import style from './Common.module.scss'
@@ -20,7 +20,7 @@ interface Props {
     mediaUser: MediaUser
     mediaPath: MediaPath
   }
-  list: Video[] | Music[] | Picture[] | Blog[]
+  list: Video[] | Music[] | Blog[] | Picture[]
   isAd?: boolean
   handleToast: (content: string, isError: boolean) => void
 }

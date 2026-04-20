@@ -7,12 +7,12 @@ export const commentTypeNameEnum = (typeName: string) => {
       return CommentType.Video
     case CommentType.Music:
       return CommentType.Music
+    case CommentType.Blog:
+      return CommentType.Blog
     case CommentType.Comic:
       return CommentType.Comic
     case CommentType.Picture:
       return CommentType.Picture
-    case CommentType.Blog:
-      return CommentType.Blog
     default:
       return assertUnexpected(typeName)
   }
