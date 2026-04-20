@@ -67,5 +67,11 @@ class ComicUpdateIn(BaseModel):
     publish: bool
 
 
+class PictureUpdateIn(BaseModel):
+    title: str
+    content: str
+    publish: bool
+
+
 class BulkDeleteIn(BaseModel):
     ulids: list[str]
