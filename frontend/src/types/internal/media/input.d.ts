@@ -88,3 +88,10 @@ export interface BlogUpdateIn {
   publish: boolean
   image?: File
 }
+
+export interface ChatUpdateIn {
+  title: string
+  content: string
+  period: string
+  publish: boolean
+}

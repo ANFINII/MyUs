@@ -76,5 +76,8 @@ export const apiManagePicture = (ulid: string) => base + `/manage/media/picture/
 export const apiManageBlogs = base + '/manage/media/blog'
 export const apiManageBlog = (ulid: string) => base + `/manage/media/blog/${ulid}`
 
+export const apiManageChats = base + '/manage/media/chat'
+export const apiManageChat = (ulid: string) => base + `/manage/media/chat/${ulid}`
+
 // 外部API
 export const apiAddress = base + '/search'

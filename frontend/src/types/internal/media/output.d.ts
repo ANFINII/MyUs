@@ -76,6 +76,7 @@ export interface Chat extends Media {
   read: number
   joined: number
   thread: number
+  period: Date
 }
 
 export interface MediaHome {
