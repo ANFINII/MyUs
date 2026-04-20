@@ -62,6 +62,7 @@ class PictureOut(MediaOut):
 
 class BlogOut(MediaOut):
     image: str
+    richtext: str
 
 
 class ChatOut(MediaOut):

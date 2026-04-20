@@ -9,9 +9,11 @@ from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.picture.interface import PictureInterface
+from api.src.domain.interface.media.blog.data import BlogData
+from api.src.domain.interface.media.blog.interface import BlogInterface
 from api.src.domain.interface.media.index import FilterOption, SortOption, ExcludeOption
 from api.src.injectors.container import injector
-from api.src.types.schema.media.input import ComicUpdateIn, MusicUpdateIn, PictureUpdateIn, VideoUpdateIn
+from api.src.types.schema.media.input import BlogUpdateIn, ComicUpdateIn, MusicUpdateIn, PictureUpdateIn, VideoUpdateIn
 from api.utils.enum.index import ImageUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import save_upload
@@ -282,4 +284,68 @@ def delete_manage_picture(user_id: int, ulids: list[str]) -> bool:
         return True
     except Exception as e:
         log.error("delete_manage_picture error", exc=e)
+        return False
+
+
+def get_manage_blogs(user_id: int, search: str) -> list[BlogData]:
+    repository = injector.get(BlogInterface)
+    filter = FilterOption(search=search, owner_id=user_id)
+    ids = repository.get_ids(filter, ExcludeOption(), SortOption())
+    objs = repository.bulk_get(ids=ids)
+
+    data = [replace(o, image=create_url(o.image)) for o in objs]
+    return data
+
+
+def get_manage_blog(user_id: int, ulid: str) -> BlogData | None:
+    repository = injector.get(BlogInterface)
+    ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption())
+    if len(ids) == 0:
+        log.info("Blog not found", ulid=ulid, user_id=user_id)
+        return None
+
+    obj = repository.bulk_get(ids)[0]
+    return replace(obj, image=create_url(obj.image))
+
+
+def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> bool:
+    repository = injector.get(BlogInterface)
+    ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption())
+    if len(ids) == 0:
+        log.error("Blog not found", ulid=ulid)
+        return False
+
+    obj = repository.bulk_get(ids)[0]
+    if obj.channel.owner_id != user_id:
+        log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+        return False
+
+    update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish)
+    if image is not None:
+        update_data = replace(update_data, image=save_upload(image, ImageUpload.BLOG, obj.channel.ulid))
+
+    try:
+        repository.bulk_save([update_data])
+        return True
+    except Exception as e:
+        log.error("update_manage_blog error", exc=e)
+        return False
+
+
+def delete_manage_blog(user_id: int, ulids: list[str]) -> bool:
+    repository = injector.get(BlogInterface)
+    delete_ids: list[int] = []
+
+    for ulid in ulids:
+        ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption())
+        if len(ids) == 0:
+            log.error("Blog not found or owner mismatch", ulid=ulid, user_id=user_id)
+            return False
+        delete_ids.append(ids[0])
+
+    try:
+        repository.bulk_delete(delete_ids)
+        return True
+    except Exception as e:
+        log.error("delete_manage_blog error", exc=e)
         return False

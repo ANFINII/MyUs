@@ -1,7 +1,7 @@
 from ninja import NinjaAPI
 from api.src.adapter.auth import AuthAPI
 from api.src.adapter.comment import CommentAPI
-from api.src.adapter.manage import ManageComicAPI, ManageMusicAPI, ManagePictureAPI, ManageVideoAPI
+from api.src.adapter.manage import ManageBlogAPI, ManageComicAPI, ManageMusicAPI, ManagePictureAPI, ManageVideoAPI
 from api.src.adapter.media import BlogAPI, ChatAPI, ComicAPI, HomeAPI, MusicAPI, PictureAPI, RecommendAPI, VideoAPI
 from api.src.adapter.message import MessageAPI
 from api.src.adapter.channel import ChannelAPI
@@ -22,6 +22,7 @@ api.add_router("/manage/media/video", ManageVideoAPI().router, tags=["Manage Vid
 api.add_router("/manage/media/music", ManageMusicAPI().router, tags=["Manage Music"])
 api.add_router("/manage/media/comic", ManageComicAPI().router, tags=["Manage Comic"])
 api.add_router("/manage/media/picture", ManagePictureAPI().router, tags=["Manage Picture"])
+api.add_router("/manage/media/blog", ManageBlogAPI().router, tags=["Manage Blog"])
 
 api.add_router("/channel", ChannelAPI().router, tags=["Channel"])
 api.add_router("/media/home", HomeAPI().router, tags=["Media Home"])
