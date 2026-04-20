@@ -15,10 +15,10 @@ from api.src.types.dto.message import MessageDTO
 from api.src.types.dto.user import AuthorDTO, MediaUserDTO
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.comment import CommentOut, ReplyOut
-from api.src.types.schema.media import VideoIn, MusicIn, ComicIn,PictureIn, BlogIn, ChatIn
-from api.src.types.schema.media import HomeOut, VideoOut, MusicOut, ComicOut, PictureOut, BlogOut, ChatOut, MediaCreateOut, HashtagOut
-from api.src.types.schema.media import VideoDetailOut, MusicDetailOut, ComicDetailOut, PictureDetailOut, BlogDetailOut, ChatDetailOut
-from api.src.types.schema.media import VideoDetailsOut, MusicDetailsOut, ComicDetailsOut, PictureDetailsOut, BlogDetailsOut, ChatDetailsOut
+from api.src.types.schema.media.input import VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn
+from api.src.types.schema.media.output import HomeOut, VideoOut, MusicOut, ComicOut, PictureOut, BlogOut, ChatOut, MediaCreateOut, HashtagOut
+from api.src.types.schema.media.output import VideoDetailOut, MusicDetailOut, ComicDetailOut, PictureDetailOut, BlogDetailOut, ChatDetailOut
+from api.src.types.schema.media.output import VideoDetailsOut, MusicDetailsOut, ComicDetailsOut, PictureDetailsOut, BlogDetailsOut, ChatDetailsOut
 from api.src.types.schema.message import MessageOut
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.user import AuthorOut, MediaUserOut

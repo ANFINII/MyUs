@@ -4,7 +4,7 @@ from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.video.interface import VideoInterface
 from api.src.domain.interface.media.index import FilterOption, SortOption, ExcludeOption
 from api.src.injectors.container import injector
-from api.src.types.schema.media import VideoUpdateIn
+from api.src.types.schema.media.input import VideoUpdateIn
 from api.utils.functions.index import create_url
 
 

@@ -6,66 +6,6 @@ from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.user import MediaUserOut
 
 
-# Inputs
-
-class VideoIn(BaseModel):
-    channel_ulid: str
-    publish: bool
-    title: str
-    content: str
-
-
-class MusicIn(BaseModel):
-    channel_ulid: str
-    publish: bool
-    title: str
-    content: str
-    lyric: str
-    download: bool
-
-
-class ComicIn(BaseModel):
-    channel_ulid: str
-    publish: bool
-    title: str
-    content: str
-
-
-class PictureIn(BaseModel):
-    channel_ulid: str
-    publish: bool
-    title: str
-    content: str
-
-
-class BlogIn(BaseModel):
-    channel_ulid: str
-    publish: bool
-    title: str
-    content: str
-    richtext: str
-
-
-class ChatIn(BaseModel):
-    channel_ulid: str
-    publish: bool
-    title: str
-    content: str
-    period: str
-
-
-class VideoUpdateIn(BaseModel):
-    title: str
-    content: str
-    publish: bool
-
-
-class BulkDeleteIn(BaseModel):
-    ulids: list[str]
-
-
-# Outputs
-
 class MediaCreateOut(BaseModel):
     ulid: str
 
@@ -106,66 +46,28 @@ class VideoOut(MediaOut):
     convert: str
 
 
-class VideoDetailOut(MediaDetailOut):
-    image: str
-    video: str
-    convert: str
-    comments: list[CommentOut]
-
-
 class MusicOut(MediaOut):
     lyric: str
     music: str
     download: bool
 
 
-class MusicDetailOut(MediaDetailOut):
-    lyric: str
-    music: str
-    download: bool
-    comments: list[CommentOut]
-
-
 class ComicOut(MediaOut):
     image: str
-
-
-class ComicDetailOut(MediaDetailOut):
-    image: str
-    pages: list[str]
-    comments: list[CommentOut]
 
 
 class PictureOut(MediaOut):
     image: str
 
 
-class PictureDetailOut(MediaDetailOut):
-    image: str
-    comments: list[CommentOut]
-
-
 class BlogOut(MediaOut):
     image: str
-
-
-class BlogDetailOut(MediaDetailOut):
-    richtext: str
-    image: str
-    comments: list[CommentOut]
 
 
 class ChatOut(MediaOut):
     thread: int
     joined: int
     period: datetime
-
-
-class ChatDetailOut(MediaDetailOut):
-    thread: int
-    joined: int
-    period: datetime
-    messages: list[MessageOut]
 
 
 class HomeOut(BaseModel):
@@ -175,6 +77,44 @@ class HomeOut(BaseModel):
     pictures: list[PictureOut]
     blogs: list[BlogOut]
     chats: list[ChatOut]
+
+
+class VideoDetailOut(MediaDetailOut):
+    image: str
+    video: str
+    convert: str
+    comments: list[CommentOut]
+
+
+class MusicDetailOut(MediaDetailOut):
+    lyric: str
+    music: str
+    download: bool
+    comments: list[CommentOut]
+
+
+class ComicDetailOut(MediaDetailOut):
+    image: str
+    pages: list[str]
+    comments: list[CommentOut]
+
+
+class PictureDetailOut(MediaDetailOut):
+    image: str
+    comments: list[CommentOut]
+
+
+class BlogDetailOut(MediaDetailOut):
+    richtext: str
+    image: str
+    comments: list[CommentOut]
+
+
+class ChatDetailOut(MediaDetailOut):
+    thread: int
+    joined: int
+    period: datetime
+    messages: list[MessageOut]
 
 
 class VideoDetailsOut(BaseModel):
