@@ -42,14 +42,14 @@ export const apiVideo = (ulid: string) => base + `/media/video/${ulid}`
 export const apiMusics = base + '/media/music'
 export const apiMusic = (ulid: string) => base + `/media/music/${ulid}`
 
+export const apiBlogs = base + '/media/blog'
+export const apiBlog = (ulid: string) => base + `/media/blog/${ulid}`
+
 export const apiComics = base + '/media/comic'
 export const apiComic = (ulid: string) => base + `/media/comic/${ulid}`
 
 export const apiPictures = base + '/media/picture'
 export const apiPicture = (ulid: string) => base + `/media/picture/${ulid}`
-
-export const apiBlogs = base + '/media/blog'
-export const apiBlog = (ulid: string) => base + `/media/blog/${ulid}`
 
 export const apiChats = base + '/media/chat'
 export const apiChat = (ulid: string) => base + `/media/chat/${ulid}`
@@ -67,14 +67,14 @@ export const apiManageVideo = (ulid: string) => base + `/manage/media/video/${ul
 export const apiManageMusics = base + '/manage/media/music'
 export const apiManageMusic = (ulid: string) => base + `/manage/media/music/${ulid}`
 
+export const apiManageBlogs = base + '/manage/media/blog'
+export const apiManageBlog = (ulid: string) => base + `/manage/media/blog/${ulid}`
+
 export const apiManageComics = base + '/manage/media/comic'
 export const apiManageComic = (ulid: string) => base + `/manage/media/comic/${ulid}`
 
 export const apiManagePictures = base + '/manage/media/picture'
 export const apiManagePicture = (ulid: string) => base + `/manage/media/picture/${ulid}`
-
-export const apiManageBlogs = base + '/manage/media/blog'
-export const apiManageBlog = (ulid: string) => base + `/manage/media/blog/${ulid}`
 
 export const apiManageChats = base + '/manage/media/chat'
 export const apiManageChat = (ulid: string) => base + `/manage/media/chat/${ulid}`

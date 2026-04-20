@@ -18,9 +18,9 @@ export default function SideBar(): React.JSX.Element {
   const sideBarItems = [
     { path: '/media/video', label: 'Video', icon: <IconVideo size="25" /> },
     { path: '/media/music', label: 'Music', icon: <IconMusic size="25" /> },
+    { path: '/media/blog', label: 'Blog', icon: <IconBlog size="25" /> },
     { path: '/media/comic', label: 'Comic', icon: <IconComic size="25" /> },
     { path: '/media/picture', label: 'Picture', icon: <IconPicture size="25" /> },
-    { path: '/media/blog', label: 'Blog', icon: <IconBlog size="25" /> },
     { path: '/media/chat', label: 'Chat', icon: <IconChat size="25" /> },
   ]
 

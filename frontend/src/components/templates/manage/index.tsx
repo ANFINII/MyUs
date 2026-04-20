@@ -11,9 +11,9 @@ import style from './Manage.module.scss'
 const menus = [
   { label: 'Video', icon: <IconVideo size="2em" />, path: 'video' },
   { label: 'Music', icon: <IconMusic size="2em" />, path: 'music' },
+  { label: 'Blog', icon: <IconBlog size="2em" />, path: 'blog' },
   { label: 'Comic', icon: <IconComic size="2em" />, path: 'comic' },
   { label: 'Picture', icon: <IconPicture size="2em" />, path: 'picture' },
-  { label: 'Blog', icon: <IconBlog size="2em" />, path: 'blog' },
   { label: 'Chat', icon: <IconChat size="2em" />, path: 'chat' },
 ]
 
