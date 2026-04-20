@@ -1,6 +1,6 @@
 import { MouseEvent, RefObject } from 'react'
 import { useRouter } from 'next/router'
-import { Chat } from 'types/internal/media'
+import { Chat } from 'types/internal/media/output'
 import Avatar from 'components/parts/Avatar'
 import IconResize from 'components/parts/Icon/Resize'
 import style from './SectionNav.module.scss'

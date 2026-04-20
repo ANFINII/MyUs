@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useRouter } from 'next/router'
 import videojs from 'video.js'
-import { Video } from 'types/internal/media'
+import { Video } from 'types/internal/media/output'
 import Card from 'components/parts/Card'
 import VideoJS from 'components/widgets/Video/videojs'
 import style from './Video.module.scss'

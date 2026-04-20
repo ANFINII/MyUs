@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { Channel } from 'types/internal/channel'
-import { Video } from 'types/internal/media'
+import { Video } from 'types/internal/media/output'
 import { getChannels } from 'api/internal/channel'
 import { getManageVideo } from 'api/internal/manage/video'
 import ErrorCheck from 'components/widgets/Error/Check'

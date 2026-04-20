@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react'
 import { API_URL } from 'lib/config'
-import { ChatMessage, ChatReply } from 'types/internal/media/detail'
+import { ChatMessage, ChatReply } from 'types/internal/media/output'
 import { WsCommand } from 'utils/constants/enum'
 
 interface Props {

@@ -1,4 +1,4 @@
-import { Search } from 'types/internal/media'
+import { Search } from 'types/internal/media/output'
 import { ToastType, MetaType } from 'types/internal/other'
 import { useUser } from 'components/hooks/useUser'
 import Footer from 'components/layout/Footer'

@@ -1,4 +1,4 @@
-import { ChatDetail } from 'types/internal/media/detail'
+import { ChatDetail } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
 import AvatarLink from 'components/parts/Avatar/Link'

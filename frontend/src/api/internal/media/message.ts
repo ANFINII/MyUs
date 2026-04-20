@@ -1,6 +1,6 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
-import { ChatMessage, MessageCreateIn, MessageUpdateIn } from 'types/internal/media/detail'
+import { ChatMessage, MessageCreateIn, MessageUpdateIn } from 'types/internal/media/output'
 import { apiMessages, apiMessage } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 

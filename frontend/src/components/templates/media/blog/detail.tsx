@@ -1,4 +1,4 @@
-import { BlogDetailOut } from 'types/internal/media/detail'
+import { BlogDetailOut } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
 import { useToast } from 'components/hooks/useToast'

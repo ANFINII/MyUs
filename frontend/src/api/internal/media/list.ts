@@ -2,7 +2,7 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
-import { SearchParms, MediaHome, Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
+import { SearchParms, MediaHome, Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media/output'
 import { apiHome, apiRecommend, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats } from 'api/uri'
 
 export const getHome = async (params: SearchParms, req?: Req): Promise<ApiOut<MediaHome>> => {

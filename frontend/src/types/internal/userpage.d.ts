@@ -1,5 +1,5 @@
 import { Channel } from 'types/internal/channel'
-import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
+import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media/output'
 
 export interface UserPage {
   avatar: string

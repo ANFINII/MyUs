@@ -1,4 +1,4 @@
-import { Music } from 'types/internal/media'
+import { Music } from 'types/internal/media/output'
 import Card from 'components/parts/Card'
 import AudioPlayer from 'components/widgets/AudioPlayer'
 import style from './Music.module.scss'

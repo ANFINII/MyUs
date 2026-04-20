@@ -1,8 +1,33 @@
 import { Channel } from 'types/internal/channel'
 import { Comment } from 'types/internal/comment'
-import { MediaUser } from 'types/internal/media'
-import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
 import { Author } from 'types/internal/user'
+
+export interface Search {
+  name?: string
+  count: number
+}
+
+export interface SearchParms {
+  search?: string
+}
+
+export interface MediaUser {
+  isLike: boolean
+  isSubscribe: boolean
+}
+
+export interface Media {
+  ulid: string
+  title: string
+  content: string
+  read: number
+  like: number
+  publish: boolean
+  created: Date
+  updated: Date
+  channel: Channel
+  mediaUser: MediaUser
+}
 
 export interface Hashtag {
   jpName: string
@@ -20,6 +45,46 @@ export interface MediaDetail {
   channel: Channel
   hashtags: Hashtag[]
   mediaUser: MediaUser
+}
+
+export interface Video extends Media {
+  image: string
+  video: string
+  convert: string
+}
+
+export interface Music extends Media {
+  music: string
+  lyric: string
+  download: boolean
+}
+
+export interface Comic extends Media {
+  image: string
+}
+
+export interface Picture extends Media {
+  image: string
+}
+
+export interface Blog extends Media {
+  image: string
+  richtext: string
+}
+
+export interface Chat extends Media {
+  read: number
+  joined: number
+  thread: number
+}
+
+export interface MediaHome {
+  videos: Video[]
+  musics: Music[]
+  comics: Comic[]
+  pictures: Picture[]
+  blogs: Blog[]
+  chats: Chat[]
 }
 
 export interface VideoDetail extends MediaDetail {
@@ -48,8 +113,8 @@ export interface PictureDetail extends MediaDetail {
 }
 
 export interface BlogDetail extends MediaDetail {
-  image: str
-  richtext: str
+  image: string
+  richtext: string
   comments: Comment[]
 }
 

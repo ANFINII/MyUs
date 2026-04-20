@@ -1,4 +1,4 @@
-import { ComicDetailOut } from 'types/internal/media/detail'
+import { ComicDetailOut } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'

@@ -1,7 +1,7 @@
 import { ChangeEvent, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Channel } from 'types/internal/channel'
-import { Video } from 'types/internal/media'
+import { Video } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { deleteManageVideos } from 'api/internal/manage/video'
 import { FetchError } from 'utils/constants/enum'

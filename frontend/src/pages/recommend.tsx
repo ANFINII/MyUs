@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { MediaHome } from 'types/internal/media'
+import { MediaHome } from 'types/internal/media/output'
 import { getRecommend } from 'api/internal/media/list'
 import { searchParams } from 'utils/functions/common'
 import ErrorCheck from 'components/widgets/Error/Check'

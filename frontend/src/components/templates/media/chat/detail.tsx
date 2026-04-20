@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo, FormEvent } from 'react'
 import { useRouter } from 'next/router'
 import { SubscribeIn } from 'types/internal/channel'
-import { ChatMessage, ChatReply, ChatDetailOut, MessageCreateIn, MessageUpdateIn } from 'types/internal/media/detail'
+import { ChatMessage, ChatReply, ChatDetailOut, MessageCreateIn, MessageUpdateIn } from 'types/internal/media/output'
 import { LikeMediaIn } from 'types/internal/user'
 import { postSubscribeChannel } from 'api/internal/channel'
 import { postMessage, getReplies, putMessage, deleteMessage } from 'api/internal/media/message'

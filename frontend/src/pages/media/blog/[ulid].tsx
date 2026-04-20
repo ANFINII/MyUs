@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { BlogDetailOut } from 'types/internal/media/detail'
+import { BlogDetailOut } from 'types/internal/media/output'
 import { getBlog } from 'api/internal/media/detail'
 import ErrorCheck from 'components/widgets/Error/Check'
 import BlogDetail from 'components/templates/media/blog/detail'
