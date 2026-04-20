@@ -67,5 +67,8 @@ export const apiManageVideo = (ulid: string) => base + `/manage/media/video/${ul
 export const apiManageMusics = base + '/manage/media/music'
 export const apiManageMusic = (ulid: string) => base + `/manage/media/music/${ulid}`
 
+export const apiManageComics = base + '/manage/media/comic'
+export const apiManageComic = (ulid: string) => base + `/manage/media/comic/${ulid}`
+
 // 外部API
 export const apiAddress = base + '/search'
