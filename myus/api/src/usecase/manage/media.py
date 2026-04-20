@@ -1,4 +1,5 @@
 from dataclasses import replace
+from datetime import date
 from ninja import UploadedFile
 from api.modules.logger import log
 from api.src.domain.interface.media.video.data import VideoData
@@ -11,9 +12,11 @@ from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.blog.interface import BlogInterface
+from api.src.domain.interface.media.chat.data import ChatData
+from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import FilterOption, SortOption, ExcludeOption
 from api.src.injectors.container import injector
-from api.src.types.schema.media.input import BlogUpdateIn, ComicUpdateIn, MusicUpdateIn, PictureUpdateIn, VideoUpdateIn
+from api.src.types.schema.media.input import BlogUpdateIn, ChatUpdateIn, ComicUpdateIn, MusicUpdateIn, PictureUpdateIn, VideoUpdateIn
 from api.utils.enum.index import ImageUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import save_upload
@@ -348,4 +351,61 @@ def delete_manage_blog(user_id: int, ulids: list[str]) -> bool:
         return True
     except Exception as e:
         log.error("delete_manage_blog error", exc=e)
+        return False
+
+
+def get_manage_chats(user_id: int, search: str) -> list[ChatData]:
+    repository = injector.get(ChatInterface)
+    filter = FilterOption(search=search, owner_id=user_id)
+    ids = repository.get_ids(filter, ExcludeOption(), SortOption())
+    return repository.bulk_get(ids=ids)
+
+
+def get_manage_chat(user_id: int, ulid: str) -> ChatData | None:
+    repository = injector.get(ChatInterface)
+    ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption())
+    if len(ids) == 0:
+        log.info("Chat not found", ulid=ulid, user_id=user_id)
+        return None
+
+    return repository.bulk_get(ids)[0]
+
+
+def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> bool:
+    repository = injector.get(ChatInterface)
+    ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption())
+    if len(ids) == 0:
+        log.error("Chat not found", ulid=ulid)
+        return False
+
+    obj = repository.bulk_get(ids)[0]
+    if obj.channel.owner_id != user_id:
+        log.error("Chat owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
+        return False
+
+    update_data = replace(obj, title=input.title, content=input.content, period=date.fromisoformat(input.period), publish=input.publish)
+    try:
+        repository.bulk_save([update_data])
+        return True
+    except Exception as e:
+        log.error("update_manage_chat error", exc=e)
+        return False
+
+
+def delete_manage_chat(user_id: int, ulids: list[str]) -> bool:
+    repository = injector.get(ChatInterface)
+    delete_ids: list[int] = []
+
+    for ulid in ulids:
+        ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption())
+        if len(ids) == 0:
+            log.error("Chat not found or owner mismatch", ulid=ulid, user_id=user_id)
+            return False
+        delete_ids.append(ids[0])
+
+    try:
+        repository.bulk_delete(delete_ids)
+        return True
+    except Exception as e:
+        log.error("delete_manage_chat error", exc=e)
         return False

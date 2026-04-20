@@ -22,6 +22,8 @@ class ChatRepository(ChatInterface):
             q_list.append(Q(ulid=filter.ulid))
         if filter.publish is not None:
             q_list.append(Q(publish=filter.publish))
+        if filter.owner_id:
+            q_list.append(Q(channel__owner_id=filter.owner_id))
         if filter.channel_id:
             q_list.append(Q(channel_id=filter.channel_id))
         if filter.category_id:
@@ -64,6 +66,9 @@ class ChatRepository(ChatInterface):
         )
 
         return new_ids
+
+    def bulk_delete(self, ids: list[int]) -> None:
+        Chat.objects.filter(id__in=ids).delete()
 
     def is_liked(self, media_id: int, user_id: int) -> bool:
         return Chat.objects.filter(id=media_id, like__id=user_id).exists()
