@@ -1,5 +1,5 @@
 import { Channel } from 'types/internal/channel'
-import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media/output'
+import { Video, Music, Blog, Comic, Picture, Chat } from 'types/internal/media/output'
 
 export interface UserPage {
   avatar: string
@@ -17,8 +17,8 @@ export interface UserPage {
 export interface UserPageMedia {
   videos: Video[]
   musics: Music[]
+  blogs: Blog[]
   comics: Comic[]
   pictures: Picture[]
-  blogs: Blog[]
   chats: Chat[]
 }
