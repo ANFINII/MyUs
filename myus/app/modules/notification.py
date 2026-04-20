@@ -5,7 +5,7 @@ from api.utils.functions.index import set_attr
 
 
 def notification_data(user):
-    fields_1 = ["is_video", "is_music", "is_comic", "is_picture", "is_blog", "is_chat"]
+    fields_1 = ["is_video", "is_music", "is_blog", "is_comic", "is_picture", "is_chat"]
     fields_2 = ["is_follow", "is_like", "is_reply", "is_views"]
 
     user_notification = UserNotification.objects.get(user=user)

@@ -2,7 +2,7 @@ from datetime import date, datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count, Exists, OuterRef
 from api.db.models import Plan, MyPage, SearchTag, UserNotification, Follow, Comment
-from api.db.models import Video, Music, Comic, Picture, Blog, Chat, Advertise
+from api.db.models import Video, Music, Blog, Comic, Picture, Chat, Advertise
 from api.utils.constant import model_dict, model_media_comment_no_dict
 from app.modules.notification import notification_data
 

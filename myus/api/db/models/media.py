@@ -56,64 +56,6 @@ class Music(models.Model, MediaModel):
         verbose_name_plural = "02 Music"
 
 
-# Comic
-class Comic(models.Model, MediaModel):
-    """Comic"""
-    id       = models.BigAutoField(primary_key=True)
-    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="comics")
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
-    category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name="comic_like", blank=True)
-    read     = models.IntegerField(default=0)
-    publish  = models.BooleanField(default=True)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = "comic"
-        verbose_name_plural = "03 Comic"
-
-
-class ComicPage(models.Model):
-    """ComicPage"""
-    id    = models.BigAutoField(primary_key=True)
-    comic = models.ForeignKey(Comic, on_delete=models.CASCADE, related_name="comic")
-    image = models.ImageField(upload_to=comic_upload, max_length=255, blank=True)
-    sequence = models.IntegerField(default=0)
-
-    class Meta:
-        db_table = "comic_page"
-        verbose_name_plural = "03 ComicPage"
-        constraints = [
-            models.UniqueConstraint(fields=["comic", "sequence"], name="lesson_unique")
-        ]
-
-# Picture
-class Picture(models.Model, MediaModel):
-    """Picture"""
-    id       = models.BigAutoField(primary_key=True)
-    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
-    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="pictures")
-    title    = models.CharField(max_length=100)
-    content  = models.TextField()
-    image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
-    category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
-    like     = models.ManyToManyField(User, related_name="picture_like", blank=True)
-    read     = models.IntegerField(default=0)
-    publish  = models.BooleanField(default=True)
-    created  = models.DateTimeField(auto_now_add=True)
-    updated  = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = "picture"
-        verbose_name_plural = "04 Picture"
-
-
 # Blog
 class Blog(models.Model, MediaModel):
     """Blog"""
@@ -135,7 +77,66 @@ class Blog(models.Model, MediaModel):
 
     class Meta:
         db_table = "blog"
-        verbose_name_plural = "05 Blog"
+        verbose_name_plural = "03 Blog"
+
+
+# Comic
+class Comic(models.Model, MediaModel):
+    """Comic"""
+    id       = models.BigAutoField(primary_key=True)
+    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="comics")
+    title    = models.CharField(max_length=100)
+    content  = models.TextField()
+    image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    category = models.ManyToManyField(Category, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    like     = models.ManyToManyField(User, related_name="comic_like", blank=True)
+    read     = models.IntegerField(default=0)
+    publish  = models.BooleanField(default=True)
+    created  = models.DateTimeField(auto_now_add=True)
+    updated  = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "comic"
+        verbose_name_plural = "04 Comic"
+
+
+class ComicPage(models.Model):
+    """ComicPage"""
+    id    = models.BigAutoField(primary_key=True)
+    comic = models.ForeignKey(Comic, on_delete=models.CASCADE, related_name="comic")
+    image = models.ImageField(upload_to=comic_upload, max_length=255, blank=True)
+    sequence = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = "comic_page"
+        verbose_name_plural = "04 ComicPage"
+        constraints = [
+            models.UniqueConstraint(fields=["comic", "sequence"], name="lesson_unique")
+        ]
+
+
+# Picture
+class Picture(models.Model, MediaModel):
+    """Picture"""
+    id       = models.BigAutoField(primary_key=True)
+    ulid     = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    channel  = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name="pictures")
+    title    = models.CharField(max_length=100)
+    content  = models.TextField()
+    image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
+    category = models.ManyToManyField(Category, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    like     = models.ManyToManyField(User, related_name="picture_like", blank=True)
+    read     = models.IntegerField(default=0)
+    publish  = models.BooleanField(default=True)
+    created  = models.DateTimeField(auto_now_add=True)
+    updated  = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "picture"
+        verbose_name_plural = "05 Picture"
 
 
 # Chat
