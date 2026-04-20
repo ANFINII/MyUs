@@ -18,7 +18,7 @@ interface Props {
   onClose: () => void
 }
 
-const mediaObjs = [NotificationType.Video, NotificationType.Music, NotificationType.Comic, NotificationType.Picture, NotificationType.Blog, NotificationType.Chat]
+const mediaObjs = [NotificationType.Video, NotificationType.Music, NotificationType.Blog, NotificationType.Comic, NotificationType.Picture, NotificationType.Chat]
 const otherObjs = [NotificationType.Follow, NotificationType.Like, NotificationType.Reply, NotificationType.Views]
 
 export default function DropMenuNotice(props: Props): React.JSX.Element {
@@ -71,9 +71,9 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     })
     if (typeName === NotificationType.Video) handleRouter(`/video/detail/${contentObject.id}`)
     if (typeName === NotificationType.Music) handleRouter(`/music/detail/${contentObject.id}`)
+    if (typeName === NotificationType.Blog) handleRouter(`/blog/detail/${contentObject.id}`)
     if (typeName === NotificationType.Comic) handleRouter(`/comic/detail/${contentObject.id}`)
     if (typeName === NotificationType.Picture) handleRouter(`/picture/detail/${contentObject.id}`)
-    if (typeName === NotificationType.Blog) handleRouter(`/blog/detail/${contentObject.id}`)
     if (typeName === NotificationType.Chat) handleRouter(`/chat/detail/${contentObject.id}`)
     if (mediaObjs.includes(typeName)) handleRouter(`/userpage/${userFrom.ulid}`)
   }

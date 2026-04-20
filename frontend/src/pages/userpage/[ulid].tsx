@@ -12,7 +12,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const userPage = ret.value
 
-  const initMedia: UserPageMedia = { videos: [], musics: [], comics: [], pictures: [], blogs: [], chats: [] }
+  const initMedia: UserPageMedia = { videos: [], musics: [], blogs: [], comics: [], pictures: [], chats: [] }
   const queryChannel = typeof query.channel === 'string' ? query.channel : undefined
   const channel = userPage.channels.find((c) => c.ulid === queryChannel) || userPage.channels.find((c) => c.isDefault)
   const channelUlid = channel!.ulid

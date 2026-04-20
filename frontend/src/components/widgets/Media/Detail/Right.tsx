@@ -1,4 +1,4 @@
-import { Video, Music, Blog, Picture, Comic } from 'types/internal/media/output'
+import { Video, Music, Blog, Comic, Picture } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import Divide from 'components/parts/Divide'
 import VStack from 'components/parts/Stack/Vertical'
@@ -7,12 +7,12 @@ import MusicCard from 'components/widgets/Card/Media/Music'
 import style from './Common.module.scss'
 import MediaSideImage from '../Side/Image'
 
-type MediaItem = Video | Music | Comic | Picture | Blog
+type MediaItem = Video | Music | Blog | Comic | Picture
 
 const isMusicMedia = (media: MediaItem): media is Music => 'music' in media
 
 interface Props {
-  list: Video[] | Music[] | Comic[] | Picture[] | Blog[]
+  list: Video[] | Music[] | Blog[] | Comic[] | Picture[]
   mediaPath: MediaPath
   isAd?: boolean
   isChannelAd?: boolean

@@ -17,9 +17,9 @@ interface Props {
 
 export default function Homes(props: Props): React.JSX.Element {
   const { title, mediaHome } = props
-  const { videos, musics, comics, pictures, blogs, chats } = mediaHome
+  const { videos, musics, blogs, comics, pictures, chats } = mediaHome
 
-  const search = useSearch([videos, musics, comics, pictures, blogs, chats])
+  const search = useSearch([videos, musics, blogs, comics, pictures, chats])
 
   return (
     <Main title={title} search={search}>
@@ -38,6 +38,13 @@ export default function Homes(props: Props): React.JSX.Element {
       </CardIndexList>
 
       <Divide />
+      <CardIndexList title="Blog">
+        {blogs?.map((media) => (
+          <BlogCard key={media.ulid} item={media} />
+        ))}
+      </CardIndexList>
+
+      <Divide />
       <CardIndexList title="Comic">
         {comics?.map((media) => (
           <ComicCard key={media.ulid} item={media} />
@@ -48,13 +55,6 @@ export default function Homes(props: Props): React.JSX.Element {
       <CardIndexList title="Picture">
         {pictures?.map((media) => (
           <PictureCard key={media.ulid} item={media} />
-        ))}
-      </CardIndexList>
-
-      <Divide />
-      <CardIndexList title="Blog">
-        {blogs?.map((media) => (
-          <BlogCard key={media.ulid} item={media} />
         ))}
       </CardIndexList>
 

@@ -2,8 +2,8 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
-import { SearchParams, MediaHome, Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media/output'
-import { apiHome, apiRecommend, apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats } from 'api/uri'
+import { SearchParams, MediaHome, Video, Music, Blog, Comic, Picture, Chat } from 'types/internal/media/output'
+import { apiHome, apiRecommend, apiVideos, apiMusics, apiBlogs, apiComics, apiPictures, apiChats } from 'api/uri'
 
 export const getHome = async (params: SearchParams, req?: Req): Promise<ApiOut<MediaHome>> => {
   return await apiOut(apiClient('json').get(apiHome, cookieHeader(req, params)))
@@ -21,16 +21,16 @@ export const getMusics = async (params: SearchParams, req?: Req): Promise<ApiOut
   return await apiOut(apiClient('json').get(apiMusics, cookieHeader(req, params)))
 }
 
+export const getBlogs = async (params: SearchParams, req?: Req): Promise<ApiOut<Blog[]>> => {
+  return await apiOut(apiClient('json').get(apiBlogs, cookieHeader(req, params)))
+}
+
 export const getComics = async (params: SearchParams, req?: Req): Promise<ApiOut<Comic[]>> => {
   return await apiOut(apiClient('json').get(apiComics, cookieHeader(req, params)))
 }
 
 export const getPictures = async (params: SearchParams, req?: Req): Promise<ApiOut<Picture[]>> => {
   return await apiOut(apiClient('json').get(apiPictures, cookieHeader(req, params)))
-}
-
-export const getBlogs = async (params: SearchParams, req?: Req): Promise<ApiOut<Blog[]>> => {
-  return await apiOut(apiClient('json').get(apiBlogs, cookieHeader(req, params)))
 }
 
 export const getChats = async (params: SearchParams, req?: Req): Promise<ApiOut<Chat[]>> => {
