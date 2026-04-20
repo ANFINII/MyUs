@@ -1,13 +1,17 @@
 import { Channel } from 'types/internal/channel'
 
-export interface MediaUser {
-  isLike: boolean
-  isSubscribe: boolean
-}
-
 export interface Search {
   name?: string
   count: number
+}
+
+export interface SearchParms {
+  search?: string
+}
+
+export interface MediaUser {
+  isLike: boolean
+  isSubscribe: boolean
 }
 
 export interface Media {
