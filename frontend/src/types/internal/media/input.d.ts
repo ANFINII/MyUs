@@ -65,3 +65,9 @@ export interface MusicUpdateIn {
   download: boolean
   publish: boolean
 }
+
+export interface ComicUpdateIn {
+  title: string
+  content: string
+  publish: boolean
+}
