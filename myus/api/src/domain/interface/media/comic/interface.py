@@ -17,5 +17,9 @@ class ComicInterface(ABC):
         ...
 
     @abstractmethod
+    def bulk_delete(self, ids: list[int]) -> None:
+        ...
+
+    @abstractmethod
     def is_liked(self, media_id: int, user_id: int) -> bool:
         ...

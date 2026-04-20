@@ -67,8 +67,8 @@ class VideoRepository(VideoInterface):
 
         return new_ids
 
-    def is_liked(self, media_id: int, user_id: int) -> bool:
-        return Video.objects.filter(id=media_id, like__id=user_id).exists()
-
     def bulk_delete(self, ids: list[int]) -> None:
         Video.objects.filter(id__in=ids).delete()
+
+    def is_liked(self, media_id: int, user_id: int) -> bool:
+        return Video.objects.filter(id=media_id, like__id=user_id).exists()

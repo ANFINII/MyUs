@@ -61,5 +61,11 @@ class MusicUpdateIn(BaseModel):
     publish: bool
 
 
+class ComicUpdateIn(BaseModel):
+    title: str
+    content: str
+    publish: bool
+
+
 class BulkDeleteIn(BaseModel):
     ulids: list[str]

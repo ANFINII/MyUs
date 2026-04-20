@@ -24,6 +24,8 @@ class ComicRepository(ComicInterface):
             q_list.append(Q(ulid=filter.ulid))
         if filter.publish is not None:
             q_list.append(Q(publish=filter.publish))
+        if filter.owner_id:
+            q_list.append(Q(channel__owner_id=filter.owner_id))
         if filter.channel_id:
             q_list.append(Q(channel_id=filter.channel_id))
         if filter.category_id:
@@ -58,6 +60,7 @@ class ComicRepository(ComicInterface):
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_new_ids(models, Comic)
+        new_id_set = set(new_ids)
 
         with transaction.atomic():
             Comic.objects.bulk_create(
@@ -68,10 +71,14 @@ class ComicRepository(ComicInterface):
             ComicPage.objects.bulk_create([
                 ComicPage(comic_id=model.id, image=page_path, sequence=seq)
                 for obj, model in zip(objs, models)
+                if model.id in new_id_set
                 for seq, page_path in enumerate(obj.pages)
             ])
 
         return new_ids
+
+    def bulk_delete(self, ids: list[int]) -> None:
+        Comic.objects.filter(id__in=ids).delete()
 
     def is_liked(self, media_id: int, user_id: int) -> bool:
         return Comic.objects.filter(id=media_id, like__id=user_id).exists()
