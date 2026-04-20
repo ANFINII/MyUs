@@ -10,18 +10,18 @@ class GenderType(str, Enum):
 class MediaType(str, Enum):
     VIDEO = "Video"
     MUSIC = "Music"
+    BLOG = "Blog"
     COMIC = "Comic"
     PICTURE = "Picture"
-    BLOG = "Blog"
     CHAT = "Chat"
 
 
 class NotificationType(str, Enum):
     VIDEO = "Video"
     MUSIC = "Music"
+    BLOG = "Blog"
     COMIC = "Comic"
     PICTURE = "Picture"
-    BLOG = "Blog"
     CHAT = "Chat"
     FOLLOW = "Follow"
     LIKE = "Like"
@@ -32,9 +32,9 @@ class NotificationType(str, Enum):
 class NotificationTypeNo(int, Enum):
     VIDEO = 1
     MUSIC = 2
-    COMIC = 3
-    PICTURE = 4
-    BLOG = 5
+    BLOG = 3
+    COMIC = 4
+    PICTURE = 5
     CHAT = 6
     FOLLOW = 7
     LIKE = 8
@@ -45,9 +45,9 @@ class NotificationTypeNo(int, Enum):
 class NotificationObjectType(str, Enum):
     VIDEO = "Video"
     MUSIC = "Music"
+    BLOG = "Blog"
     COMIC = "Comic"
     PICTURE = "Picture"
-    BLOG = "Blog"
     CHAT = "Chat"
     FOLLOW = "Follow"
     COMMENT = "Comment"
@@ -57,17 +57,17 @@ class NotificationObjectType(str, Enum):
 class CommentTypeNo(int, Enum):
     VIDEO = 1
     MUSIC = 2
-    COMIC = 3
-    PICTURE = 4
-    BLOG = 5
+    BLOG = 3
+    COMIC = 4
+    PICTURE = 5
 
 
 class CommentType(str, Enum):
     VIDEO = "Video"
     MUSIC = "Music"
+    BLOG = "Blog"
     COMIC = "Comic"
     PICTURE = "Picture"
-    BLOG = "Blog"
 
 
 class ImageUpload(str, Enum):
@@ -75,10 +75,10 @@ class ImageUpload(str, Enum):
     MYPAGE = "mypage"
     CHANNEL = "channel"
     VIDEO = "video"
+    BLOG = "blog"
     COMIC = "comic"
     COMIC_PAGE = "comic_page"
     PICTURE = "picture"
-    BLOG = "blog"
 
 
 class MediaUpload(str, Enum):

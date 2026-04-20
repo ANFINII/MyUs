@@ -65,9 +65,9 @@ model_media_comment_dict = {
 model_media_comment_no_dict = {
     "video"  : 1,
     "music"  : 2,
-    "blog"   : 5,
-    "comic"  : 3,
-    "picture": 4,
+    "blog"   : 3,
+    "comic"  : 4,
+    "picture": 5,
 }
 
 model_comment_dict = {
@@ -81,9 +81,9 @@ model_comment_dict = {
 notification_type_no = {
     "is_video"  : 1,
     "is_music"  : 2,
-    "is_blog"   : 5,
-    "is_comic"  : 3,
-    "is_picture": 4,
+    "is_blog"   : 3,
+    "is_comic"  : 4,
+    "is_picture": 5,
     "is_chat"   : 6,
     "is_follow" : 7,
     "is_like"   : 8,
