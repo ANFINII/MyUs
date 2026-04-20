@@ -1,3 +1,7 @@
+export interface SearchParms {
+  search?: string
+}
+
 export interface VideoIn {
   channelUlid: string
   publish: boolean
