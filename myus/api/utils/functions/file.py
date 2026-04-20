@@ -41,9 +41,9 @@ def avatar_upload(obj: Any, filename: str) -> str:
 def image_upload(obj: Any, filename: str) -> str:
     type_map: dict[str, ImageUpload] = {
         "Video": ImageUpload.VIDEO,
+        "Blog": ImageUpload.BLOG,
         "Comic": ImageUpload.COMIC,
         "Picture": ImageUpload.PICTURE,
-        "Blog": ImageUpload.BLOG,
     }
     upload_type = type_map[type(obj).__name__]
     return image_path(upload_type, str(obj.channel.ulid), filename)

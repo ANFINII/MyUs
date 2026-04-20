@@ -40,7 +40,7 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
     match upload_type:
         case ImageUpload.USER | ImageUpload.CHANNEL:
             path = avatar_path(upload_type, ulid, filename)
-        case ImageUpload.VIDEO | ImageUpload.COMIC | ImageUpload.PICTURE | ImageUpload.BLOG:
+        case ImageUpload.VIDEO | ImageUpload.BLOG | ImageUpload.COMIC | ImageUpload.PICTURE:
             path = image_path(upload_type, ulid, filename)
         case ImageUpload.COMIC_PAGE:
             path = comic_path(ulid, filename)

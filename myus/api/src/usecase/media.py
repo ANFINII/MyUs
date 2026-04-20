@@ -104,6 +104,37 @@ def create_music(input: MusicIn, music: UploadedFile) -> MediaCreateDTO | None:
     return MediaCreateDTO(ulid=obj.ulid)
 
 
+def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
+    channel = get_channel_data(input.channel_ulid)
+    if channel is None:
+        return None
+
+    repository = injector.get(BlogInterface)
+
+    new_blog = BlogData(
+        id=0,
+        ulid="",
+        title=input.title,
+        content=input.content,
+        richtext=input.richtext,
+        delta="",
+        image=save_upload(image, ImageUpload.BLOG, channel.ulid),
+        read=0,
+        like=0,
+        publish=input.publish,
+        created=datetime.min,
+        updated=datetime.min,
+        channel=channel,
+        hashtags=[],
+    )
+
+    new_ids = repository.bulk_save([new_blog])
+    assert len(new_ids) == 1, "作成に失敗しました"
+    obj = repository.bulk_get(new_ids)[0]
+
+    return MediaCreateDTO(ulid=obj.ulid)
+
+
 def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> MediaCreateDTO | None:
     channel = get_channel_data(input.channel_ulid)
     if channel is None:
@@ -157,37 +188,6 @@ def create_picture(input: PictureIn, image: UploadedFile) -> MediaCreateDTO | No
     )
 
     new_ids = repository.bulk_save([new_picture])
-    assert len(new_ids) == 1, "作成に失敗しました"
-    obj = repository.bulk_get(new_ids)[0]
-
-    return MediaCreateDTO(ulid=obj.ulid)
-
-
-def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
-    if channel is None:
-        return None
-
-    repository = injector.get(BlogInterface)
-
-    new_blog = BlogData(
-        id=0,
-        ulid="",
-        title=input.title,
-        content=input.content,
-        richtext=input.richtext,
-        delta="",
-        image=save_upload(image, ImageUpload.BLOG, channel.ulid),
-        read=0,
-        like=0,
-        publish=input.publish,
-        created=datetime.min,
-        updated=datetime.min,
-        channel=channel,
-        hashtags=[],
-    )
-
-    new_ids = repository.bulk_save([new_blog])
     assert len(new_ids) == 1, "作成に失敗しました"
     obj = repository.bulk_get(new_ids)[0]
 
@@ -275,6 +275,16 @@ def get_musics(limit: int, search: str, id: int = 0, channel_id: int = 0, is_rec
     return data
 
 
+def get_blogs(limit: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False) -> list[BlogData]:
+    repository = injector.get(BlogInterface)
+    filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
+    sort = SortOption(sort_type=SortType.SCORE)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, limit)
+    objs = repository.bulk_get(ids=ids)
+    data = [replace(o, image=create_url(o.image)) for o in objs]
+    return data
+
+
 def get_comics(limit: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False) -> list[ComicData]:
     repository = injector.get(ComicInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
@@ -292,16 +302,6 @@ def get_comics(limit: int, search: str, id: int = 0, channel_id: int = 0, is_rec
 
 def get_pictures(limit: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False) -> list[PictureData]:
     repository = injector.get(PictureInterface)
-    filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
-    sort = SortOption(sort_type=SortType.SCORE)
-    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, limit)
-    objs = repository.bulk_get(ids=ids)
-    data = [replace(o, image=create_url(o.image)) for o in objs]
-    return data
-
-
-def get_blogs(limit: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False) -> list[BlogData]:
-    repository = injector.get(BlogInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
     ids = repository.get_ids(filter, ExcludeOption(id=id), sort, limit)
@@ -385,38 +385,6 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Mu
     return data
 
 
-def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> ComicDetailDTO:
-    repository = injector.get(ComicInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
-    assert len(ids) == 1, "データが見つかりませんでした"
-    objs = repository.bulk_get(ids=ids)
-    obj = objs[0]
-
-    type_no = comment_type_no_map(CommentType.COMIC)
-    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
-    is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
-
-    data = ComicDetailDTO(
-        id=obj.id,
-        ulid=obj.ulid,
-        title=obj.title,
-        content=obj.content,
-        image=create_url(obj.image),
-        pages=[create_url(p) for p in obj.pages],
-        comments=comments,
-        hashtags=obj.hashtags,
-        read=obj.read,
-        like=obj.like,
-        publish=obj.publish,
-        created=obj.created,
-        updated=obj.updated,
-        channel=obj.channel,
-        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
-    )
-
-    return data
-
-
 def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> BlogDetailDTO:
     repository = injector.get(BlogInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
@@ -435,6 +403,38 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Blo
         content=obj.content,
         richtext=obj.richtext,
         image=create_url(obj.image),
+        comments=comments,
+        hashtags=obj.hashtags,
+        read=obj.read,
+        like=obj.like,
+        publish=obj.publish,
+        created=obj.created,
+        updated=obj.updated,
+        channel=obj.channel,
+        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
+    )
+
+    return data
+
+
+def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> ComicDetailDTO:
+    repository = injector.get(ComicInterface)
+    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
+    assert len(ids) == 1, "データが見つかりませんでした"
+    objs = repository.bulk_get(ids=ids)
+    obj = objs[0]
+
+    type_no = comment_type_no_map(CommentType.COMIC)
+    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
+
+    data = ComicDetailDTO(
+        id=obj.id,
+        ulid=obj.ulid,
+        title=obj.title,
+        content=obj.content,
+        image=create_url(obj.image),
+        pages=[create_url(p) for p in obj.pages],
         comments=comments,
         hashtags=obj.hashtags,
         read=obj.read,

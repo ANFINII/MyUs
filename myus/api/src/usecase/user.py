@@ -116,9 +116,9 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
     notification = UserNotificationData(
         is_video=input.is_video,
         is_music=input.is_music,
+        is_blog=input.is_blog,
         is_comic=input.is_comic,
         is_picture=input.is_picture,
-        is_blog=input.is_blog,
         is_chat=input.is_chat,
         is_follow=input.is_follow,
         is_reply=input.is_reply,

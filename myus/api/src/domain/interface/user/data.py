@@ -55,9 +55,9 @@ class MyPageData:
 class UserNotificationData:
     is_video: bool
     is_music: bool
+    is_blog: bool
     is_comic: bool
     is_picture: bool
-    is_blog: bool
     is_chat: bool
     is_follow: bool
     is_reply: bool

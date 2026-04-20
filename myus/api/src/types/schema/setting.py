@@ -30,9 +30,9 @@ class SettingMyPageIn(BaseModel):
 class SettingNotificationIn(BaseModel):
     is_video: bool
     is_music: bool
+    is_blog: bool
     is_comic: bool
     is_picture: bool
-    is_blog: bool
     is_chat: bool
     is_follow: bool
     is_reply: bool
@@ -78,9 +78,9 @@ class SettingMyPageOut(BaseModel):
 class SettingNotificationOut(BaseModel):
     is_video: bool
     is_music: bool
+    is_blog: bool
     is_comic: bool
     is_picture: bool
-    is_blog: bool
     is_chat: bool
     is_follow: bool
     is_reply: bool
