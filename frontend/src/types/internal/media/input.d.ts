@@ -80,3 +80,11 @@ export interface PictureUpdateIn {
   publish: boolean
   image?: File
 }
+
+export interface BlogUpdateIn {
+  title: string
+  content: string
+  richtext: string
+  publish: boolean
+  image?: File
+}
