@@ -56,6 +56,7 @@ export interface VideoUpdateIn {
   title: string
   content: string
   publish: boolean
+  image?: File
 }
 
 export interface MusicUpdateIn {
@@ -70,10 +71,12 @@ export interface ComicUpdateIn {
   title: string
   content: string
   publish: boolean
+  image?: File
 }
 
 export interface PictureUpdateIn {
   title: string
   content: string
   publish: boolean
+  image?: File
 }

@@ -13,6 +13,7 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import InputFile from 'components/parts/Input/File'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
@@ -34,12 +35,13 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
-  const [values, setValues] = useState<VideoUpdateIn>({ ...data })
+  const [values, setValues] = useState<VideoUpdateIn>({ title: data.title, content: data.content, publish: data.publish })
 
   const handleBack = () => router.push('/manage/video')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
 
   const handleForm = async () => {
     const { title, content } = values
@@ -69,6 +71,7 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
           <SelectBox label="チャンネル" name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
           <Input label="タイトル" name="title" value={values.title} required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" value={values.content} required={isRequired} onChange={handleText} />
+          <InputFile label="サムネイル" accept="image/*" onChange={handleFile} />
         </VStack>
       </form>
     </Main>
