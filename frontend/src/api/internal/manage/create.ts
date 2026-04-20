@@ -1,7 +1,7 @@
 import { apiClient } from 'lib/axios/internal'
 import { apiOut, ApiOut } from 'lib/error'
-import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media'
 import { VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn } from 'types/internal/media/input'
+import { Video, Music, Comic, Picture, Blog, Chat } from 'types/internal/media/output'
 import { apiVideos, apiMusics, apiComics, apiPictures, apiBlogs, apiChats } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 

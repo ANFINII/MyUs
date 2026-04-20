@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { Music } from 'types/internal/media'
+import { Music } from 'types/internal/media/output'
 import { getMusics } from 'api/internal/media/list'
 import { searchParams } from 'utils/functions/common'
 import ErrorCheck from 'components/widgets/Error/Check'

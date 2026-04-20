@@ -1,4 +1,4 @@
-import { MediaHome } from 'types/internal/media'
+import { MediaHome } from 'types/internal/media/output'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'

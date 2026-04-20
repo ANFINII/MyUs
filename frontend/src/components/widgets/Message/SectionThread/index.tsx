@@ -1,5 +1,5 @@
 import { MouseEvent, RefObject } from 'react'
-import { ChatMessage, ChatReply } from 'types/internal/media/detail'
+import { ChatMessage, ChatReply } from 'types/internal/media/output'
 import { UserMe } from 'types/internal/user'
 import cx from 'utils/functions/cx'
 import Divide from 'components/parts/Divide'

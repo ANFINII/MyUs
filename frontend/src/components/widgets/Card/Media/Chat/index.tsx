@@ -1,4 +1,4 @@
-import { Chat } from 'types/internal/media'
+import { Chat } from 'types/internal/media/output'
 import Card from 'components/parts/Card'
 import style from './Chat.module.scss'
 import CardChatMediaContent from '../Content/Chat'

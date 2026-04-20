@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Media } from 'types/internal/media'
+import { Media } from 'types/internal/media/output'
 import AvatarLink from 'components/parts/Avatar/Link'
 import HStack from 'components/parts/Stack/Horizontal'
 import CardMediaContentBase from './Base'

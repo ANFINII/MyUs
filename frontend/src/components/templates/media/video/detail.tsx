@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import Player from 'video.js/dist/types/player'
-import { VideoDetailOut } from 'types/internal/media/detail'
+import { VideoDetailOut } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'

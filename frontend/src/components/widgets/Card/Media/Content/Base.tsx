@@ -1,4 +1,4 @@
-import { Media } from 'types/internal/media'
+import { Media } from 'types/internal/media/output'
 import cx from 'utils/functions/cx'
 import { formatTimeAgo } from 'utils/functions/datetime'
 import IconCaret from 'components/parts/Icon/Caret'

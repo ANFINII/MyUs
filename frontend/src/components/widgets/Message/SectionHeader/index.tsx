@@ -1,4 +1,4 @@
-import { ChatDetail } from 'types/internal/media/detail'
+import { ChatDetail } from 'types/internal/media/output'
 import { UserMe } from 'types/internal/user'
 import { formatDatetime } from 'utils/functions/datetime'
 import CountLike from 'components/parts/Count/Like'

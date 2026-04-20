@@ -1,4 +1,4 @@
-import { Blog } from 'types/internal/media'
+import { Blog } from 'types/internal/media/output'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import CardList from 'components/widgets/Card/List'

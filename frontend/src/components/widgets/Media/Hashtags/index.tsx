@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { Hashtag } from 'types/internal/media/detail'
+import { Hashtag } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import HStack from 'components/parts/Stack/Horizontal'
 import style from './Hashtags.module.scss'

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { Search } from 'types/internal/media'
+import { Search } from 'types/internal/media/output'
 
 export function useSearch(datas: unknown[]): Search {
   const router = useRouter()

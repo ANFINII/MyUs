@@ -1,4 +1,4 @@
-import { Video, Music, Blog, Picture, Comic } from 'types/internal/media'
+import { Video, Music, Blog, Picture, Comic } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import Divide from 'components/parts/Divide'
 import VStack from 'components/parts/Stack/Vertical'
