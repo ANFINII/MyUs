@@ -50,15 +50,17 @@ export default function SettingNotification(props: Props): React.JSX.Element {
     </HStack>
   )
 
+  const notificationKeys: (keyof UserNotification)[] = ['isVideo', 'isMusic', 'isBlog', 'isComic', 'isPicture', 'isChat', 'isFollow', 'isReply', 'isLike', 'isViews']
+
   return (
     <Main title="通知設定" type="table" toast={toast} button={button}>
       <Table>
         <TableRow isIndent label="通知設定">
           フォローしているユーザの投稿通知などを設定
         </TableRow>
-        {Object.keys(userNotification).map((key) => (
+        {notificationKeys.map((key) => (
           <TableRow key={key} isIndent label={`${key.slice(2)}通知`}>
-            <Toggle isActive={values[key as keyof UserNotification]} onClick={() => handleToggle(key as keyof UserNotification)} />
+            <Toggle isActive={values[key]} onClick={() => handleToggle(key)} />
           </TableRow>
         ))}
       </Table>

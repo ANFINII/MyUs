@@ -59,17 +59,17 @@ export interface Music extends Media {
   download: boolean
 }
 
+export interface Blog extends Media {
+  image: string
+  richtext: string
+}
+
 export interface Comic extends Media {
   image: string
 }
 
 export interface Picture extends Media {
   image: string
-}
-
-export interface Blog extends Media {
-  image: string
-  richtext: string
 }
 
 export interface Chat extends Media {
@@ -82,9 +82,9 @@ export interface Chat extends Media {
 export interface MediaHome {
   videos: Video[]
   musics: Music[]
+  blogs: Blog[]
   comics: Comic[]
   pictures: Picture[]
-  blogs: Blog[]
   chats: Chat[]
 }
 
@@ -102,6 +102,12 @@ export interface MusicDetail extends MediaDetail {
   comments: Comment[]
 }
 
+export interface BlogDetail extends MediaDetail {
+  image: string
+  richtext: string
+  comments: Comment[]
+}
+
 export interface ComicDetail extends MediaDetail {
   image: string
   pages: string[]
@@ -110,12 +116,6 @@ export interface ComicDetail extends MediaDetail {
 
 export interface PictureDetail extends MediaDetail {
   image: string
-  comments: Comment[]
-}
-
-export interface BlogDetail extends MediaDetail {
-  image: string
-  richtext: string
   comments: Comment[]
 }
 
@@ -137,6 +137,11 @@ export interface MusicDetailOut {
   list: Music[]
 }
 
+export interface BlogDetailOut {
+  detail: BlogDetail
+  list: Blog[]
+}
+
 export interface ComicDetailOut {
   detail: ComicDetail
   list: Comic[]
@@ -145,11 +150,6 @@ export interface ComicDetailOut {
 export interface PictureDetailOut {
   detail: PictureDetail
   list: Picture[]
-}
-
-export interface BlogDetailOut {
-  detail: BlogDetail
-  list: Blog[]
 }
 
 export interface ChatDetailOut {

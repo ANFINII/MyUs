@@ -160,9 +160,9 @@ export interface NotificationOut {
 export interface UserNotification {
   isVideo: boolean
   isMusic: boolean
+  isBlog: boolean
   isComic: boolean
   isPicture: boolean
-  isBlog: boolean
   isChat: boolean
   isFollow: boolean
   isReply: boolean

@@ -17,6 +17,16 @@ export interface MusicIn {
   music?: File
 }
 
+export interface BlogIn {
+  channelUlid: string
+  publish: boolean
+  title: string
+  content: string
+  richtext: string
+  delta: string
+  image?: File
+}
+
 export interface ComicIn {
   channelUlid: string
   publish: boolean
@@ -31,16 +41,6 @@ export interface PictureIn {
   publish: boolean
   title: string
   content: string
-  image?: File
-}
-
-export interface BlogIn {
-  channelUlid: string
-  publish: boolean
-  title: string
-  content: string
-  richtext: string
-  delta: string
   image?: File
 }
 
@@ -67,6 +67,14 @@ export interface MusicUpdateIn {
   publish: boolean
 }
 
+export interface BlogUpdateIn {
+  title: string
+  content: string
+  richtext: string
+  publish: boolean
+  image?: File
+}
+
 export interface ComicUpdateIn {
   title: string
   content: string
@@ -77,14 +85,6 @@ export interface ComicUpdateIn {
 export interface PictureUpdateIn {
   title: string
   content: string
-  publish: boolean
-  image?: File
-}
-
-export interface BlogUpdateIn {
-  title: string
-  content: string
-  richtext: string
   publish: boolean
   image?: File
 }
