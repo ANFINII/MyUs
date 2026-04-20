@@ -1,0 +1,85 @@
+import { useState, ChangeEvent } from 'react'
+import { useRouter } from 'next/router'
+import { Channel } from 'types/internal/channel'
+import { MusicUpdateIn } from 'types/internal/media/input'
+import { Music } from 'types/internal/media/output'
+import { Option } from 'types/internal/other'
+import { putManageMusic } from 'api/internal/manage/music'
+import { FetchError } from 'utils/constants/enum'
+import { useApiError } from 'components/hooks/useApiError'
+import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useRequired } from 'components/hooks/useRequired'
+import { useToast } from 'components/hooks/useToast'
+import Main from 'components/layout/Main'
+import Button from 'components/parts/Button'
+import Input from 'components/parts/Input'
+import SelectBox from 'components/parts/Input/SelectBox'
+import Textarea from 'components/parts/Input/Textarea'
+import ToggleCard from 'components/parts/Input/ToggleCard'
+import HStack from 'components/parts/Stack/Horizontal'
+import VStack from 'components/parts/Stack/Vertical'
+
+interface Props {
+  data: Music
+  channels: Channel[]
+}
+
+export default function ManageMusicEdit(props: Props): React.JSX.Element {
+  const { data, channels } = props
+
+  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+
+  const router = useRouter()
+  const { isLoading, handleLoading } = useIsLoading()
+  const { isRequired, isRequiredCheck } = useRequired()
+  const { toast, handleToast } = useToast()
+  const { handleError } = useApiError({ handleToast })
+  const [values, setValues] = useState<MusicUpdateIn>({
+    title: data.title,
+    content: data.content,
+    lyric: data.lyric,
+    download: data.download,
+    publish: data.publish,
+  })
+
+  const handleBack = () => router.push('/manage/music')
+  const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handleDownload = () => setValues({ ...values, download: !values.download })
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+
+  const handleForm = async () => {
+    const { title, content, lyric } = values
+    if (!isRequiredCheck({ title, content, lyric })) return
+    handleLoading(true)
+    const ret = await putManageMusic(data.ulid, values)
+    handleLoading(false)
+    if (ret.isErr()) {
+      handleError(FetchError.Put, ret.error.message)
+      return
+    }
+    handleToast('保存しました', false)
+  }
+
+  const button = (
+    <HStack gap="4">
+      <Button color="green" size="s" name="保存する" loading={isLoading} onClick={handleForm} />
+      <Button color="blue" size="s" name="戻る" onClick={handleBack} />
+    </HStack>
+  )
+
+  return (
+    <Main title="音楽編集" type="table" toast={toast} isFooter={false} button={button}>
+      <form method="POST" action="" encType="multipart/form-data">
+        <VStack gap="8">
+          <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
+          <ToggleCard label="ダウンロード許可" isActive={values.download} onClick={handleDownload} />
+          <SelectBox label="チャンネル" name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
+          <Input label="タイトル" name="title" value={values.title} required={isRequired} onChange={handleInput} />
+          <Textarea label="内容" name="content" value={values.content} required={isRequired} onChange={handleText} />
+          <Textarea label="歌詞" name="lyric" value={values.lyric} required={isRequired} onChange={handleText} />
+        </VStack>
+      </form>
+    </Main>
+  )
+}

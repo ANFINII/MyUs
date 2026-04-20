@@ -57,3 +57,11 @@ export interface VideoUpdateIn {
   content: string
   publish: boolean
 }
+
+export interface MusicUpdateIn {
+  title: string
+  content: string
+  lyric: string
+  download: boolean
+  publish: boolean
+}
