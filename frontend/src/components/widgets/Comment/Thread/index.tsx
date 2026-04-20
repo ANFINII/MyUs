@@ -1,7 +1,7 @@
 import { ChangeEvent, SetStateAction, useState } from 'react'
 import { Reply } from 'types/internal/comment'
 import { LikeCommentIn, UserMe } from 'types/internal/user'
-import { putComment, deleteComment } from 'api/internal/media/comment'
+import { putComment, deleteComment } from 'api/internal/comment'
 import { postLikeComment } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
 import { useIsLoading } from 'components/hooks/useIsLoading'
