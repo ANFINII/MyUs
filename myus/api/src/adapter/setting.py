@@ -152,9 +152,9 @@ class SettingNotificationAPI:
         data = SettingNotificationOut(
             is_video=notification.is_video,
             is_music=notification.is_music,
+            is_blog=notification.is_blog,
             is_comic=notification.is_comic,
             is_picture=notification.is_picture,
-            is_blog=notification.is_blog,
             is_chat=notification.is_chat,
             is_follow=notification.is_follow,
             is_reply=notification.is_reply,

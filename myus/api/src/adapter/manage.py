@@ -138,6 +138,67 @@ class ManageMusicAPI:
         return 204, ErrorOut(message="削除しました!")
 
 
+class ManageBlogAPI:
+    """ManageBlogAPI"""
+
+    router = Router()
+
+    @staticmethod
+    @router.get("", response={200: list[BlogOut], 401: ErrorOut})
+    def list(request: HttpRequest, search: str = ""):
+        log.info("ManageBlogAPI list", search=search)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        objs = get_manage_blogs(user_id, search)
+        return 200, convert_blogs(objs)
+
+    @staticmethod
+    @router.get("/{ulid}", response={200: BlogOut, 401: ErrorOut, 404: ErrorOut})
+    def get(request: HttpRequest, ulid: str):
+        log.info("ManageBlogAPI get", ulid=ulid)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        obj = get_manage_blog(user_id, ulid)
+        if obj is None:
+            return 404, ErrorOut(message="Blog not found")
+
+        return 200, convert_blogs([obj])[0]
+
+    @staticmethod
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    def put(request: HttpRequest, ulid: str, input: BlogUpdateIn = Form(...), image: UploadedFile | None = File(None)):
+        log.info("ManageBlogAPI put", ulid=ulid, input=input, image=image)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        if not update_manage_blog(user_id, ulid, input, image):
+            return 400, ErrorOut(message="保存に失敗しました!")
+
+        return 204, ErrorOut(message="保存しました!")
+
+    @staticmethod
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    def delete(request: HttpRequest, input: BulkDeleteIn):
+        log.info("ManageBlogAPI delete", ulids=input.ulids)
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        if not delete_manage_blog(user_id, input.ulids):
+            return 400, ErrorOut(message="削除に失敗しました!")
+
+        return 204, ErrorOut(message="削除しました!")
+
+
 class ManageComicAPI:
     """ManageComicAPI"""
 
@@ -255,67 +316,6 @@ class ManagePictureAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         if not delete_manage_picture(user_id, input.ulids):
-            return 400, ErrorOut(message="削除に失敗しました!")
-
-        return 204, ErrorOut(message="削除しました!")
-
-
-class ManageBlogAPI:
-    """ManageBlogAPI"""
-
-    router = Router()
-
-    @staticmethod
-    @router.get("", response={200: list[BlogOut], 401: ErrorOut})
-    def list(request: HttpRequest, search: str = ""):
-        log.info("ManageBlogAPI list", search=search)
-
-        user_id = auth_check(request)
-        if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
-
-        objs = get_manage_blogs(user_id, search)
-        return 200, convert_blogs(objs)
-
-    @staticmethod
-    @router.get("/{ulid}", response={200: BlogOut, 401: ErrorOut, 404: ErrorOut})
-    def get(request: HttpRequest, ulid: str):
-        log.info("ManageBlogAPI get", ulid=ulid)
-
-        user_id = auth_check(request)
-        if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
-
-        obj = get_manage_blog(user_id, ulid)
-        if obj is None:
-            return 404, ErrorOut(message="Blog not found")
-
-        return 200, convert_blogs([obj])[0]
-
-    @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
-    def put(request: HttpRequest, ulid: str, input: BlogUpdateIn = Form(...), image: UploadedFile | None = File(None)):
-        log.info("ManageBlogAPI put", ulid=ulid, input=input, image=image)
-
-        user_id = auth_check(request)
-        if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
-
-        if not update_manage_blog(user_id, ulid, input, image):
-            return 400, ErrorOut(message="保存に失敗しました!")
-
-        return 204, ErrorOut(message="保存しました!")
-
-    @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
-    def delete(request: HttpRequest, input: BulkDeleteIn):
-        log.info("ManageBlogAPI delete", ulids=input.ulids)
-
-        user_id = auth_check(request)
-        if user_id is None:
-            return 401, ErrorOut(message="Unauthorized")
-
-        if not delete_manage_blog(user_id, input.ulids):
             return 400, ErrorOut(message="削除に失敗しました!")
 
         return 204, ErrorOut(message="削除しました!")

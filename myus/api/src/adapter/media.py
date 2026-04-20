@@ -199,6 +199,65 @@ class MusicAPI:
         return 200, data
 
 
+class BlogAPI:
+    """BlogAPI"""
+
+    router = Router()
+
+    @staticmethod
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
+    def create(request: HttpRequest, input: BlogIn = Form(...), image: UploadedFile = File(...)):
+        log.info("BlogAPI create", input=input, image=image)
+
+        if auth_check(request) is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        obj = create_blog(input=input, image=image)
+        if obj is None:
+            return 400, ErrorOut(message="チャンネルが見つかりません")
+        data = MediaCreateOut(ulid=obj.ulid)
+        return 201, data
+
+    @staticmethod
+    @router.get("", response={200: list[BlogOut]})
+    def list(request: HttpRequest, search: str = ""):
+        log.info("BlogAPI list", search=search)
+        objs = get_blogs(50, search)
+        data = convert_blogs(objs)
+        return 200, data
+
+    @staticmethod
+    @router.get("/{ulid}", response={200: BlogDetailsOut})
+    def detail(request: HttpRequest, ulid: str, search: str = ""):
+        log.info("BlogAPI detail", ulid=ulid, search=search)
+
+        user_id = auth_check(request)
+        obj = get_blog_detail(user_id=user_id, ulid=ulid, publish=True)
+        objs = get_blogs(50, search, obj.id)
+
+        data = BlogDetailsOut(
+            detail=BlogDetailOut(
+                ulid=obj.ulid,
+                title=obj.title,
+                content=obj.content,
+                richtext=obj.richtext,
+                image=obj.image,
+                comments=convert_comments(obj.comments),
+                hashtags=convert_hashtags(obj.hashtags),
+                read=obj.read,
+                like=obj.like,
+                publish=obj.publish,
+                created=obj.created,
+                updated=obj.updated,
+                channel=convert_channel(obj.channel),
+                mediaUser=convert_media_user(obj.mediaUser),
+            ),
+            list=convert_blogs(objs),
+        )
+
+        return 200, data
+
+
 class ComicAPI:
     """ComicAPI"""
 
@@ -316,65 +375,6 @@ class PictureAPI:
         return 200, data
 
 
-class BlogAPI:
-    """BlogAPI"""
-
-    router = Router()
-
-    @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
-    def create(request: HttpRequest, input: BlogIn = Form(...), image: UploadedFile = File(...)):
-        log.info("BlogAPI create", input=input, image=image)
-
-        if auth_check(request) is None:
-            return 401, ErrorOut(message="Unauthorized")
-
-        obj = create_blog(input=input, image=image)
-        if obj is None:
-            return 400, ErrorOut(message="チャンネルが見つかりません")
-        data = MediaCreateOut(ulid=obj.ulid)
-        return 201, data
-
-    @staticmethod
-    @router.get("", response={200: list[BlogOut]})
-    def list(request: HttpRequest, search: str = ""):
-        log.info("BlogAPI list", search=search)
-        objs = get_blogs(50, search)
-        data = convert_blogs(objs)
-        return 200, data
-
-    @staticmethod
-    @router.get("/{ulid}", response={200: BlogDetailsOut})
-    def detail(request: HttpRequest, ulid: str, search: str = ""):
-        log.info("BlogAPI detail", ulid=ulid, search=search)
-
-        user_id = auth_check(request)
-        obj = get_blog_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs = get_blogs(50, search, obj.id)
-
-        data = BlogDetailsOut(
-            detail=BlogDetailOut(
-                ulid=obj.ulid,
-                title=obj.title,
-                content=obj.content,
-                richtext=obj.richtext,
-                image=obj.image,
-                comments=convert_comments(obj.comments),
-                hashtags=convert_hashtags(obj.hashtags),
-                read=obj.read,
-                like=obj.like,
-                publish=obj.publish,
-                created=obj.created,
-                updated=obj.updated,
-                channel=convert_channel(obj.channel),
-                mediaUser=convert_media_user(obj.mediaUser),
-            ),
-            list=convert_blogs(objs),
-        )
-
-        return 200, data
-
-
 class ChatAPI:
     """ChatAPI"""
 
@@ -475,6 +475,25 @@ def convert_musics(objs: list[MusicData]) -> list[MusicOut]:
     return data
 
 
+def convert_blogs(objs: list[BlogData]) -> list[BlogOut]:
+    data = [
+        BlogOut(
+            ulid=x.ulid,
+            title=x.title,
+            content=x.content,
+            image=x.image,
+            richtext=x.richtext,
+            read=x.read,
+            like=x.like,
+            publish=x.publish,
+            created=x.created,
+            updated=x.updated,
+            channel=convert_channel(x.channel),
+        ) for x in objs
+    ]
+    return data
+
+
 def convert_comics(objs: list[ComicData]) -> list[ComicOut]:
     data = [
         ComicOut(
@@ -500,25 +519,6 @@ def convert_pictures(objs: list[PictureData]) -> list[PictureOut]:
             title=x.title,
             content=x.content,
             image=x.image,
-            read=x.read,
-            like=x.like,
-            publish=x.publish,
-            created=x.created,
-            updated=x.updated,
-            channel=convert_channel(x.channel),
-        ) for x in objs
-    ]
-    return data
-
-
-def convert_blogs(objs: list[BlogData]) -> list[BlogOut]:
-    data = [
-        BlogOut(
-            ulid=x.ulid,
-            title=x.title,
-            content=x.content,
-            image=x.image,
-            richtext=x.richtext,
             read=x.read,
             like=x.like,
             publish=x.publish,
