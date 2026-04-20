@@ -3,9 +3,9 @@ from datetime import date, datetime
 from api.src.domain.interface.media.data import HashtagData
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
+from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.picture.data import PictureData
-from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.types.dto.comment import CommentDTO
 from api.src.types.dto.message import MessageDTO
@@ -17,9 +17,9 @@ from api.src.types.dto.user import MediaUserDTO
 class HomeDTO:
     videos: list[VideoData]
     musics: list[MusicData]
+    blogs: list[BlogData]
     comics: list[ComicData]
     pictures: list[PictureData]
-    blogs: list[BlogData]
     chats: list[ChatData]
 
 
@@ -61,6 +61,13 @@ class MusicDetailDTO(MediaDetailDTO):
 
 
 @dataclass(frozen=True, slots=True)
+class BlogDetailDTO(MediaDetailDTO):
+    richtext: str
+    image: str
+    comments: list[CommentDTO]
+
+
+@dataclass(frozen=True, slots=True)
 class ComicDetailDTO(MediaDetailDTO):
     image: str
     pages: list[str]
@@ -69,13 +76,6 @@ class ComicDetailDTO(MediaDetailDTO):
 
 @dataclass(frozen=True, slots=True)
 class PictureDetailDTO(MediaDetailDTO):
-    image: str
-    comments: list[CommentDTO]
-
-
-@dataclass(frozen=True, slots=True)
-class BlogDetailDTO(MediaDetailDTO):
-    richtext: str
     image: str
     comments: list[CommentDTO]
 

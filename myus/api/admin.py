@@ -8,7 +8,7 @@ from django.db.models import Count
 from import_export.admin import ImportExportModelAdmin
 from api.db.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
 from api.db.models import User, Profile, MyPage, SearchTag, HashTag, UserNotification
-from api.db.models import Video, Music, Comic, Picture, Blog, Chat
+from api.db.models import Video, Music, Blog, Comic, Picture, Chat
 from api.db.models.channel import Channel
 from api.utils.constant import model_media_comment_dict
 

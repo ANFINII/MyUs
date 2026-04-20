@@ -4,20 +4,20 @@ from ninja import UploadedFile
 from api.modules.logger import log
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
+from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.picture.data import PictureData
-from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.video.interface import VideoInterface
 from api.src.domain.interface.media.music.interface import MusicInterface
+from api.src.domain.interface.media.blog.interface import BlogInterface
 from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.interface import PictureInterface
-from api.src.domain.interface.media.blog.interface import BlogInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import FilterOption, SortOption, SortType, ExcludeOption
 from api.src.injectors.container import injector
-from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, ComicDetailDTO, PictureDetailDTO, BlogDetailDTO, ChatDetailDTO
-from api.src.types.schema.media.input import VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn
+from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO
+from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn
 from api.src.usecase.channel import get_channel_data
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
@@ -229,9 +229,9 @@ def get_home(limit: int, search: str) -> HomeDTO:
     data = HomeDTO(
         videos=get_videos(limit, search),
         musics=get_musics(limit, search),
+        blogs=get_blogs(limit, search),
         comics=get_comics(limit, search),
         pictures=get_pictures(limit, search),
-        blogs=get_blogs(limit, search),
         chats=get_chats(limit, search),
     )
     return data
@@ -241,9 +241,9 @@ def get_recommend(limit: int, search: str) -> HomeDTO:
     data = HomeDTO(
         videos=get_videos(limit, search, is_recommend=True),
         musics=get_musics(limit, search, is_recommend=True),
+        blogs=get_blogs(limit, search, is_recommend=True),
         comics=get_comics(limit, search, is_recommend=True),
         pictures=get_pictures(limit, search, is_recommend=True),
-        blogs=get_blogs(limit, search, is_recommend=True),
         chats=get_chats(limit, search, is_recommend=True),
     )
     return data

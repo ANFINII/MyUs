@@ -52,17 +52,17 @@ class MusicOut(MediaOut):
     download: bool
 
 
+class BlogOut(MediaOut):
+    image: str
+    richtext: str
+
+
 class ComicOut(MediaOut):
     image: str
 
 
 class PictureOut(MediaOut):
     image: str
-
-
-class BlogOut(MediaOut):
-    image: str
-    richtext: str
 
 
 class ChatOut(MediaOut):
@@ -74,9 +74,9 @@ class ChatOut(MediaOut):
 class HomeOut(BaseModel):
     videos: list[VideoOut]
     musics: list[MusicOut]
+    blogs: list[BlogOut]
     comics: list[ComicOut]
     pictures: list[PictureOut]
-    blogs: list[BlogOut]
     chats: list[ChatOut]
 
 
@@ -94,6 +94,12 @@ class MusicDetailOut(MediaDetailOut):
     comments: list[CommentOut]
 
 
+class BlogDetailOut(MediaDetailOut):
+    richtext: str
+    image: str
+    comments: list[CommentOut]
+
+
 class ComicDetailOut(MediaDetailOut):
     image: str
     pages: list[str]
@@ -101,12 +107,6 @@ class ComicDetailOut(MediaDetailOut):
 
 
 class PictureDetailOut(MediaDetailOut):
-    image: str
-    comments: list[CommentOut]
-
-
-class BlogDetailOut(MediaDetailOut):
-    richtext: str
     image: str
     comments: list[CommentOut]
 
@@ -128,6 +128,11 @@ class MusicDetailsOut(BaseModel):
     list: list[MusicOut]
 
 
+class BlogDetailsOut(BaseModel):
+    detail: BlogDetailOut
+    list: list[BlogOut]
+
+
 class ComicDetailsOut(BaseModel):
     detail: ComicDetailOut
     list: list[ComicOut]
@@ -136,11 +141,6 @@ class ComicDetailsOut(BaseModel):
 class PictureDetailsOut(BaseModel):
     detail: PictureDetailOut
     list: list[PictureOut]
-
-
-class BlogDetailsOut(BaseModel):
-    detail: BlogDetailOut
-    list: list[BlogOut]
 
 
 class ChatDetailsOut(BaseModel):
