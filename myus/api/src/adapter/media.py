@@ -518,6 +518,7 @@ def convert_blogs(objs: list[BlogData]) -> list[BlogOut]:
             title=x.title,
             content=x.content,
             image=x.image,
+            richtext=x.richtext,
             read=x.read,
             like=x.like,
             publish=x.publish,

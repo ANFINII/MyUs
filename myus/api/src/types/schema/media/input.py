@@ -73,5 +73,12 @@ class PictureUpdateIn(BaseModel):
     publish: bool
 
 
+class BlogUpdateIn(BaseModel):
+    title: str
+    content: str
+    richtext: str
+    publish: bool
+
+
 class BulkDeleteIn(BaseModel):
     ulids: list[str]
