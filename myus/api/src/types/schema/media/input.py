@@ -17,6 +17,14 @@ class MusicIn(BaseModel):
     download: bool
 
 
+class BlogIn(BaseModel):
+    channel_ulid: str
+    publish: bool
+    title: str
+    content: str
+    richtext: str
+
+
 class ComicIn(BaseModel):
     channel_ulid: str
     publish: bool
@@ -29,14 +37,6 @@ class PictureIn(BaseModel):
     publish: bool
     title: str
     content: str
-
-
-class BlogIn(BaseModel):
-    channel_ulid: str
-    publish: bool
-    title: str
-    content: str
-    richtext: str
 
 
 class ChatIn(BaseModel):
@@ -61,6 +61,13 @@ class MusicUpdateIn(BaseModel):
     publish: bool
 
 
+class BlogUpdateIn(BaseModel):
+    title: str
+    content: str
+    richtext: str
+    publish: bool
+
+
 class ComicUpdateIn(BaseModel):
     title: str
     content: str
@@ -70,13 +77,6 @@ class ComicUpdateIn(BaseModel):
 class PictureUpdateIn(BaseModel):
     title: str
     content: str
-    publish: bool
-
-
-class BlogUpdateIn(BaseModel):
-    title: str
-    content: str
-    richtext: str
     publish: bool
 
 

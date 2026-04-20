@@ -4,9 +4,9 @@ from api.modules.logger import log
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
+from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.picture.data import PictureData
-from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.data import HashtagData
 from api.src.domain.interface.channel.data import ChannelData
@@ -15,17 +15,17 @@ from api.src.types.dto.message import MessageDTO
 from api.src.types.dto.user import AuthorDTO, MediaUserDTO
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.comment import CommentOut, ReplyOut
-from api.src.types.schema.media.input import VideoIn, MusicIn, ComicIn, PictureIn, BlogIn, ChatIn
-from api.src.types.schema.media.output import HomeOut, VideoOut, MusicOut, ComicOut, PictureOut, BlogOut, ChatOut, MediaCreateOut, HashtagOut
-from api.src.types.schema.media.output import VideoDetailOut, MusicDetailOut, ComicDetailOut, PictureDetailOut, BlogDetailOut, ChatDetailOut
-from api.src.types.schema.media.output import VideoDetailsOut, MusicDetailsOut, ComicDetailsOut, PictureDetailsOut, BlogDetailsOut, ChatDetailsOut
+from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn
+from api.src.types.schema.media.output import HomeOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut, MediaCreateOut, HashtagOut
+from api.src.types.schema.media.output import VideoDetailOut, MusicDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut
+from api.src.types.schema.media.output import VideoDetailsOut, MusicDetailsOut, BlogDetailsOut, ComicDetailsOut, PictureDetailsOut, ChatDetailsOut
 from api.src.types.schema.message import MessageOut
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.user import AuthorOut, MediaUserOut
 from api.src.usecase.auth import auth_check
-from api.src.usecase.media import create_video, create_music, create_comic, create_blog, create_picture, create_chat
-from api.src.usecase.media import get_home, get_recommend, get_videos, get_musics, get_comics, get_blogs, get_pictures, get_chats
-from api.src.usecase.media import get_video_detail, get_music_detail, get_comic_detail, get_blog_detail, get_picture_detail, get_chat_detail
+from api.src.usecase.media import create_video, create_music, create_blog, create_comic, create_picture, create_chat
+from api.src.usecase.media import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
+from api.src.usecase.media import get_video_detail, get_music_detail, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
 
 
 class HomeAPI:
@@ -42,9 +42,9 @@ class HomeAPI:
         data = HomeOut(
             videos=convert_videos(home.videos),
             musics=convert_musics(home.musics),
+            blogs=convert_blogs(home.blogs),
             comics=convert_comics(home.comics),
             pictures=convert_pictures(home.pictures),
-            blogs=convert_blogs(home.blogs),
             chats=convert_chats(home.chats),
         )
 
@@ -65,9 +65,9 @@ class RecommendAPI:
         data = HomeOut(
             videos=convert_videos(recommend.videos),
             musics=convert_musics(recommend.musics),
+            blogs=convert_blogs(recommend.blogs),
             comics=convert_comics(recommend.comics),
             pictures=convert_pictures(recommend.pictures),
-            blogs=convert_blogs(recommend.blogs),
             chats=convert_chats(recommend.chats),
         )
 

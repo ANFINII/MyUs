@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
-from api.src.adapter.media import convert_videos, convert_musics, convert_comics, convert_pictures, convert_blogs, convert_chats
+from api.src.adapter.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
@@ -302,9 +302,9 @@ class UserAPI:
         data = UserPageMediaOut(
             videos=convert_videos(media.videos),
             musics=convert_musics(media.musics),
+            blogs=convert_blogs(media.blogs),
             comics=convert_comics(media.comics),
             pictures=convert_pictures(media.pictures),
-            blogs=convert_blogs(media.blogs),
             chats=convert_chats(media.chats),
         )
 

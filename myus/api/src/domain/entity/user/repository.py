@@ -17,7 +17,7 @@ PROFILE_FIELDS = [
 ]
 MYPAGE_FIELDS = ["banner", "email", "content", "follower_count", "following_count", "tag_manager_id", "is_advertise"]
 NOTIFICATION_FIELDS = [
-    "is_video", "is_music", "is_comic", "is_picture", "is_blog",
+    "is_video", "is_music", "is_blog", "is_comic", "is_picture",
     "is_chat", "is_follow", "is_reply", "is_like", "is_views",
 ]
 USER_PLAN_FIELDS = ["customer_id", "subscription", "is_paid", "start_date", "end_date"]

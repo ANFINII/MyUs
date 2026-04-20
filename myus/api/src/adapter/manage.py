@@ -1,12 +1,19 @@
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
-from api.src.adapter.media import convert_blogs, convert_chats, convert_comics, convert_musics, convert_pictures, convert_videos
+from api.src.adapter.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
 from api.src.types.schema.common import ErrorOut
-from api.src.types.schema.media.input import BlogUpdateIn, BulkDeleteIn, ChatUpdateIn, ComicUpdateIn, MusicUpdateIn, PictureUpdateIn, VideoUpdateIn
-from api.src.types.schema.media.output import BlogOut, ChatOut, ComicOut, MusicOut, PictureOut, VideoOut
+from api.src.types.schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
+from api.src.types.schema.media.output import VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut
 from api.src.usecase.auth import auth_check
-from api.src.usecase.manage.media import delete_manage_blog, delete_manage_chat, delete_manage_comic, delete_manage_music, delete_manage_picture, delete_manage_video, get_manage_blog, get_manage_blogs, get_manage_chat, get_manage_chats, get_manage_comic, get_manage_comics, get_manage_music, get_manage_musics, get_manage_picture, get_manage_pictures, get_manage_video, get_manage_videos, update_manage_blog, update_manage_chat, update_manage_comic, update_manage_music, update_manage_picture, update_manage_video
+from api.src.usecase.manage.media import (
+    get_manage_videos, get_manage_video, update_manage_video, delete_manage_video,
+    get_manage_musics, get_manage_music, update_manage_music, delete_manage_music,
+    get_manage_blogs, get_manage_blog, update_manage_blog, delete_manage_blog,
+    get_manage_comics, get_manage_comic, update_manage_comic, delete_manage_comic,
+    get_manage_pictures, get_manage_picture, update_manage_picture, delete_manage_picture,
+    get_manage_chats, get_manage_chat, update_manage_chat, delete_manage_chat,
+)
 
 
 class ManageVideoAPI:

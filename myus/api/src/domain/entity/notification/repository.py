@@ -3,7 +3,7 @@ from typing import Any
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.comment import Comment
-from api.db.models.media import Video, Music, Comic, Picture, Blog, Chat
+from api.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from api.db.models.message import Message
 from api.db.models.notification import Notification
 from api.db.models.users import Follow
