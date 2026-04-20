@@ -3,12 +3,12 @@ import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
 import { VideoUpdateIn } from 'types/internal/media/input'
-import { SearchParms, Video } from 'types/internal/media/output'
+import { SearchParams, Video } from 'types/internal/media/output'
 import { ErrorOut } from 'types/internal/other'
 import { apiManageVideo, apiManageVideos } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
-export const getManageVideos = async (params: SearchParms, req?: Req): Promise<ApiOut<Video[]>> => {
+export const getManageVideos = async (params: SearchParams, req?: Req): Promise<ApiOut<Video[]>> => {
   return await apiOut(apiClient('json').get(apiManageVideos, cookieHeader(req, params)))
 }
 

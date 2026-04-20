@@ -2,7 +2,7 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
-import { SearchParms } from 'types/internal/media/output'
+import { SearchParams } from 'types/internal/media/output'
 import { ErrorOut } from 'types/internal/other'
 import { Follow, FollowIn, FollowOut, LikeCommentIn, LikeMediaIn, LikeOut, NotificationOut, SearchTagIn, SearchTagOut, UserMe } from 'types/internal/user'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
@@ -34,11 +34,11 @@ export const putSearchTag = async (tags: SearchTagIn[]): Promise<ApiOut<ErrorOut
   return await apiOut(apiClient('json').put(apiSearchTag, camelSnake(tags)))
 }
 
-export const getFollow = async (params: SearchParms, req?: Req): Promise<ApiOut<Follow[]>> => {
+export const getFollow = async (params: SearchParams, req?: Req): Promise<ApiOut<Follow[]>> => {
   return await apiOut(apiClient('json').get(apiFollow, cookieHeader(req, params)))
 }
 
-export const getFollower = async (params: SearchParms, req?: Req): Promise<ApiOut<Follow[]>> => {
+export const getFollower = async (params: SearchParams, req?: Req): Promise<ApiOut<Follow[]>> => {
   return await apiOut(apiClient('json').get(apiFollower, cookieHeader(req, params)))
 }
 

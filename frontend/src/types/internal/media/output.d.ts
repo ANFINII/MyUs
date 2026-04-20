@@ -7,7 +7,7 @@ export interface Search {
   count: number
 }
 
-export interface SearchParms {
+export interface SearchParams {
   search?: string
 }
 
