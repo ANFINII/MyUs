@@ -71,3 +71,9 @@ export interface ComicUpdateIn {
   content: string
   publish: boolean
 }
+
+export interface PictureUpdateIn {
+  title: string
+  content: string
+  publish: boolean
+}
