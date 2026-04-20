@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslation
 import { Channel } from 'types/internal/channel'
 import { Music } from 'types/internal/media/output'
 import { getChannels } from 'api/internal/channel'
-import { getManageMusics } from 'api/internal/manage/music'
+import { getManageMusics } from 'api/internal/manage/get'
 import { searchParams } from 'utils/functions/common'
 import ErrorCheck from 'components/widgets/Error/Check'
 import ManageMusics from 'components/templates/manage/music'

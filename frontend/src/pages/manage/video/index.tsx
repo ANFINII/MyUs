@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslation
 import { Channel } from 'types/internal/channel'
 import { Video } from 'types/internal/media/output'
 import { getChannels } from 'api/internal/channel'
-import { getManageVideos } from 'api/internal/manage/video'
+import { getManageVideos } from 'api/internal/manage/get'
 import { searchParams } from 'utils/functions/common'
 import ErrorCheck from 'components/widgets/Error/Check'
 import ManageVideos from 'components/templates/manage/video'
