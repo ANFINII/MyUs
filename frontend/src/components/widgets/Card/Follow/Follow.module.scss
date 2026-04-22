@@ -1,10 +1,9 @@
 .card {
-  width: 272px;
-  height: 250px;
-  border: 1px solid rgba(0, 130, 255, 0.5);
+  width: 312px;
 
   &:hover {
     background: rgba(200, 230, 255, 0.1);
+    border: 1px solid rgba(0, 130, 255, 0.5);
   }
 
   .box {
