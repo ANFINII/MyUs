@@ -13,10 +13,37 @@
 - コンポーネント名はPascalCase、関数はcamelCase
 - カスタムフックは`use`プレフィックス
 - Propsは分割代入せず`props`で受け取り、内部で展開する
+- `interface Props`は`export default function`の直前に定義する（コンポーネントのシグネチャと型定義が視覚的に隣接するように）
 
 ```typescript
+interface Props {
+  value: string
+  onChange: (value: string) => void
+}
+
 export default function Component(props: Props): React.JSX.Element {
   const { value, onChange } = props
+}
+```
+
+他の型定義（ユニオン型・補助型など）は`interface Props`より上に書く。
+
+```typescript
+type AlertType = 'info' | 'warning' | 'error'
+
+const iconMap = {
+  info: IconInfo,
+  warning: IconWarning,
+  error: IconError,
+}
+
+interface Props {
+  type?: AlertType
+  children: React.ReactNode
+}
+
+export default function Alert(props: Props): React.JSX.Element {
+  // ...
 }
 ```
 
@@ -93,3 +120,4 @@ const [user, setUser] = useState<User | null>(null)
 - 2024-08-21: 初版作成
 - 2025-08-21: Props名統一、引数展開ルール、Linterチェック必須化
 - 2026-04-16: useState型引数必須、docs/に一元化、構成整理
+- 2026-04-22: `interface Props`はコンポーネント関数の直前配置ルール追加
