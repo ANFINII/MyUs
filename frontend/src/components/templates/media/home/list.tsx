@@ -19,7 +19,8 @@ export default function Homes(props: Props): React.JSX.Element {
   const { title, mediaHome } = props
   const { videos, musics, blogs, comics, pictures, chats } = mediaHome
 
-  const search = useSearch([videos, musics, blogs, comics, pictures, chats])
+  const count = videos.length + musics.length + blogs.length + comics.length + pictures.length + chats.length
+  const search = useSearch(count)
 
   return (
     <Main title={title} search={search}>
