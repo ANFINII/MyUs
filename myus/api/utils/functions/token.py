@@ -21,3 +21,13 @@ def refresh_token(user_id: int) -> str:
         "iat": datetime.datetime.now(datetime.timezone.utc),
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
+
+
+def signup_token(email: str) -> str:
+    payload = {
+        "email": email,
+        "type": "signup",
+        "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=12),
+        "iat": datetime.datetime.now(datetime.timezone.utc),
+    }
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
