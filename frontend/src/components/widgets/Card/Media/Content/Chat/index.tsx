@@ -16,11 +16,11 @@ export default function CardChatMediaContent(props: Props): React.JSX.Element {
   const { avatar, ownerUlid, name } = channel
 
   return (
-    <Link href={href} className={style.content}>
-      <HStack gap="4" align="start">
-        <AvatarLink src={avatar} ulid={ownerUlid} title={name} className={style.avatar} />
+    <HStack gap="4" align="start" className={style.content}>
+      <AvatarLink src={avatar} ulid={ownerUlid} title={name} className={style.avatar} />
+      <Link href={href} className={style.main}>
         <CardChatMediaContentBase media={media} />
-      </HStack>
-    </Link>
+      </Link>
+    </HStack>
   )
 }

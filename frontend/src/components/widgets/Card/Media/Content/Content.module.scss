@@ -1,6 +1,10 @@
 .content {
-  display: block;
   width: 100%;
   padding: 6px;
-  text-decoration: none;
+
+  .main {
+    flex: 1;
+    min-width: 0;
+    text-decoration: none;
+  }
 }

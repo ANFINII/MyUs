@@ -64,8 +64,8 @@ export default function VideoCard(props: Props): React.JSX.Element {
             preload: 'metadata',
           }}
         />
-        <CardMediaContent href={`/media/video/${ulid}`} media={item} />
       </div>
+      <CardMediaContent href={`/media/video/${ulid}`} media={item} />
     </Card>
   )
 }
