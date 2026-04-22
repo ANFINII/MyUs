@@ -5,7 +5,7 @@ import IconCaret from 'components/parts/Icon/Caret'
 import IconHand from 'components/parts/Icon/Hand'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
-import style from './Content.module.scss'
+import style from './ContentBase.module.scss'
 
 interface Props {
   media: Media
@@ -17,7 +17,7 @@ export default function CardMediaContentBase(props: Props) {
   const { name } = channel
 
   return (
-    <VStack gap="1">
+    <VStack className={style.content_base}>
       <div title={title} className={style.media_title}>
         {title}
       </div>

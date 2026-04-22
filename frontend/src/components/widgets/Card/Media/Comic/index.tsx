@@ -16,7 +16,7 @@ export default function ComicCard(props: Props): React.JSX.Element {
   return (
     <Card className={style.card}>
       <Link href={`/media/comic/${ulid}`}>
-        <ExImage src={image} width="270" height="153" className={style.thumbnail} />
+        <ExImage src={image} width="312" height="195" className={style.thumbnail} />
       </Link>
       <CardMediaContent href={`/media/comic/${ulid}`} media={item} />
     </Card>
