@@ -49,14 +49,12 @@ export default function Signup(): React.JSX.Element {
     if (!router.isReady) return
     const token = router.query.token
     if (typeof token !== 'string' || token === '') {
-      handleToast(FetchError.Get, true)
       router.push('/account/login')
       return
     }
     const verify = async () => {
       const ret = await getSignupVerify(token)
       if (ret.isErr()) {
-        handleToast(FetchError.Get, true)
         router.push('/account/login')
         return
       }
@@ -64,8 +62,7 @@ export default function Signup(): React.JSX.Element {
       setIsVerified(true)
     }
     verify()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady, router.query.token])
+  }, [router])
 
   const handleSubmit = async () => {
     const { email, username, nickname, lastName, firstName, password1, password2 } = values
