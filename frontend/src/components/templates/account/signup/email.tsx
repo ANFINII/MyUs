@@ -28,7 +28,7 @@ export default function SignupEmail(): React.JSX.Element {
     const ret = await postSignupEmail(email)
     handleLoading(false)
     if (ret.isErr()) {
-      handleToast(FetchError.Error, true)
+      handleToast(ret.error.message ?? FetchError.Error, true)
       return
     }
     handleToast('メールを送信しました!', false)
