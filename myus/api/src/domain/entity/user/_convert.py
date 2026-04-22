@@ -1,7 +1,7 @@
 from typing import assert_never
 from django.contrib.auth.hashers import make_password
 from django_ulid.models import ulid
-from api.db.models.media import Blog, Chat, Comic, Music, Picture, Video
+from api.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from api.db.models.master import Plan
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from api.src.domain.interface.user.data import MyPageData, PlanData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData

@@ -63,12 +63,12 @@ class NotificationRepository(NotificationInterface):
                     content_map.update({f"{object_type}:{o.id}": o for o in Video.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.MUSIC:
                     content_map.update({f"{object_type}:{o.id}": o for o in Music.objects.filter(id__in=obj_ids)})
+                case NotificationObjectType.BLOG:
+                    content_map.update({f"{object_type}:{o.id}": o for o in Blog.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.COMIC:
                     content_map.update({f"{object_type}:{o.id}": o for o in Comic.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.PICTURE:
                     content_map.update({f"{object_type}:{o.id}": o for o in Picture.objects.filter(id__in=obj_ids)})
-                case NotificationObjectType.BLOG:
-                    content_map.update({f"{object_type}:{o.id}": o for o in Blog.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.CHAT:
                     content_map.update({f"{object_type}:{o.id}": o for o in Chat.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.FOLLOW:
