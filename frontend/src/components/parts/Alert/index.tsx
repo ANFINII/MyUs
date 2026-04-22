@@ -20,10 +20,11 @@ interface Props {
 
 export default function Alert(props: Props): React.JSX.Element {
   const { type = 'info', className, children } = props
+
   const Icon = iconMap[type]
 
   return (
-    <div className={cx(style.alert, style[type], className)} role={type === 'error' ? 'alert' : 'note'}>
+    <div className={cx(style.alert, style[type], className)}>
       <span className={style.icon}>
         <Icon size="16" />
       </span>
