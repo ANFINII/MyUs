@@ -102,9 +102,9 @@ def signup_user(input: SignupIn) -> bool:
         notification=UserNotificationData(
             is_video=False,
             is_music=False,
+            is_blog=False,
             is_comic=False,
             is_picture=False,
-            is_blog=False,
             is_chat=False,
             is_follow=True,
             is_reply=True,
