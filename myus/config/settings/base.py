@@ -165,6 +165,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"),]
 DOMAIN_URL = env.domain_url
+FRONTEND_URL = env.frontend_url
 ENCRYPT_KEY = env.encrypt_key
 ENCRYPT_IV = env.encrypt_iv
 

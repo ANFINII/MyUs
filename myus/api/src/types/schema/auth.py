@@ -2,7 +2,12 @@ from pydantic import BaseModel
 from api.utils.enum.index import GenderType
 
 
+class SignupEmailIn(BaseModel):
+    email: str
+
+
 class SignupIn(BaseModel):
+    token: str
     email: str
     username: str
     nickname: str
@@ -19,6 +24,10 @@ class SignupIn(BaseModel):
 class LoginIn(BaseModel):
     username: str
     password: str
+
+
+class SignupVerifyOut(BaseModel):
+    email: str
 
 
 class LoginOut(BaseModel):

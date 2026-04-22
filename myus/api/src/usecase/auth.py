@@ -2,13 +2,18 @@ import jwt
 from datetime import date, datetime
 from django.conf import settings
 from django.contrib.auth import authenticate
+from django.core.mail import send_mail
 from django.http import HttpRequest
+from django.template.loader import render_to_string
+from api.db.models.user import User
 from api.modules.logger import log
 from api.src.domain.interface.user.data import MyPageData, PlanData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.auth import SignupIn
 from api.utils.functions.encrypt import decrypt
+from api.utils.functions.token import signup_token
+from api.utils.functions.validation import has_email
 
 
 def auth_check(request: HttpRequest) -> int | None:
@@ -61,6 +66,55 @@ def login_user(username: str, password: str) -> int | None:
         return None
 
     return user.id
+
+
+def signup_send_email(email: str) -> str:
+    if has_email(email):
+        return "メールアドレスの形式が違います!"
+
+    if User.objects.filter(email=email).exists():
+        return "メールアドレスは既に登録されています!"
+
+    token = signup_token(email)
+    subject = render_to_string("registration/email/account/subject.txt").strip()
+    message = render_to_string(
+        "registration/email/account/message.txt",
+        {"frontend_url": settings.FRONTEND_URL, "token": token},
+    )
+
+    try:
+        send_mail(subject, message, None, [email])
+    except Exception as e:
+        log.error("Signup email send error", exc=e)
+        return "メールの送信に失敗しました!"
+
+    if settings.DEBUG:
+        url = f"{settings.FRONTEND_URL}/account/signup?token={token}"
+        log.info("Signup verify URL (dev)", url=url)
+
+    return ""
+
+
+def signup_verify_token(token: str) -> str | None:
+    try:
+        payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        log.warning("Signup token expired")
+        return None
+    except jwt.exceptions.DecodeError:
+        log.warning("Signup token decode error")
+        return None
+
+    if payload.get("type") != "signup":
+        log.warning("Invalid signup token type")
+        return None
+
+    email = payload.get("email")
+    if not isinstance(email, str) or len(email) == 0:
+        log.warning("Invalid signup token email")
+        return None
+
+    return email
 
 
 def signup_user(input: SignupIn) -> bool:
@@ -132,6 +186,6 @@ def signup_user(input: SignupIn) -> bool:
         repository = injector.get(UserInterface)
         repository.bulk_save(objs=[user_data])
         return True
-    except Exception:
-        log.error("Signup error")
+    except Exception as e:
+        log.error("Signup error", exc=e)
         return False

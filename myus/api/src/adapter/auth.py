@@ -3,9 +3,9 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
-from api.src.types.schema.auth import LoginIn, LoginOut, RefreshOut, SignupIn
+from api.src.types.schema.auth import LoginIn, LoginOut, RefreshOut, SignupEmailIn, SignupIn, SignupVerifyOut
 from api.src.types.schema.common import ErrorOut
-from api.src.usecase.auth import login_user, signup_user, verify_user
+from api.src.usecase.auth import login_user, signup_send_email, signup_user, signup_verify_token, verify_user
 from api.src.usecase.user import signup_check
 from api.utils.functions.token import access_token, refresh_token
 
@@ -90,12 +90,44 @@ class AuthAPI:
         return 200, RefreshOut(access=access)
 
     @staticmethod
+    @router.post("/signup/email", response={200: ErrorOut, 400: ErrorOut, 500: ErrorOut})
+    def signup_email(request: HttpRequest, input: SignupEmailIn):
+        log.info("AuthAPI signup_email", email=input.email)
+
+        validation = signup_send_email(input.email)
+        if validation:
+            return 400, ErrorOut(message=validation)
+
+        return 200, ErrorOut(message="メールを送信しました!")
+
+    @staticmethod
+    @router.get("/signup/verify", response={200: SignupVerifyOut, 401: ErrorOut})
+    def signup_verify(request: HttpRequest, token: str):
+        log.info("AuthAPI signup_verify")
+
+        email = signup_verify_token(token)
+        if email is None:
+            return 401, ErrorOut(message="リンクの有効期限が切れています!")
+
+        return 200, SignupVerifyOut(email=email)
+
+    @staticmethod
     @router.post("/signup", response={201: ErrorOut, 400: ErrorOut, 500: ErrorOut})
     def signup(request: HttpRequest, input: SignupIn):
-        log.info("AuthAPI signup", input=input)
+        log.info("AuthAPI signup", email=input.email, username=input.username)
+
+        token_email = signup_verify_token(input.token)
+        if token_email is None:
+            log.warning("Signup token invalid")
+            return 400, ErrorOut(message="リンクの有効期限が切れています!")
+
+        if token_email != input.email:
+            log.warning("Signup email mismatch", token_email=token_email, input_email=input.email)
+            return 400, ErrorOut(message="メールアドレスが一致しません!")
 
         validation = signup_check(input)
         if validation:
+            log.warning("Signup validation failed", message=validation)
             return 400, ErrorOut(message=validation)
 
         if not signup_user(input):
