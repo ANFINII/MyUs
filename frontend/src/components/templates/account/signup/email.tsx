@@ -12,7 +12,7 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
 
-export default function Signup(): React.JSX.Element {
+export default function SignupEmail(): React.JSX.Element {
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()

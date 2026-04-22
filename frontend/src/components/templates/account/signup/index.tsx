@@ -32,7 +32,7 @@ const initSignup: SignupIn = {
   gender: GenderType.Male,
 }
 
-export default function SignupComplete(): React.JSX.Element {
+export default function Signup(): React.JSX.Element {
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
