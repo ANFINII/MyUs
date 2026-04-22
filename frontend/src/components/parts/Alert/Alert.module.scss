@@ -1,0 +1,39 @@
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  border: 1px solid transparent;
+  border-radius: 5px;
+
+  &.info {
+    color: rgb(30, 90, 180);
+    border-color: rgb(200, 220, 250);
+    background: rgb(235, 245, 255);
+  }
+
+  &.warning {
+    color: rgb(150, 100, 10);
+    border-color: rgb(240, 210, 120);
+    background: rgb(255, 248, 225);
+  }
+
+  &.error {
+    color: rgb(180, 40, 55);
+    border-color: rgb(240, 180, 180);
+    background: rgb(255, 240, 240);
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  .content {
+    flex: 1;
+  }
+}
