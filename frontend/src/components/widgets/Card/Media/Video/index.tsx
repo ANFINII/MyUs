@@ -55,8 +55,8 @@ export default function VideoCard(props: Props): React.JSX.Element {
           options={{
             src: convert,
             poster: image,
-            width: 272,
-            height: 153,
+            width: 312,
+            height: 195,
             muted: true,
             controls: false,
             autoplay: false,

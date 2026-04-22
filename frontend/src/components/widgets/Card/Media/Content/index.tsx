@@ -16,14 +16,11 @@ export default function CardMediaContent(props: Props<Media>) {
   const { avatar, ownerUlid, name } = channel
 
   return (
-    <div>
-      <AvatarLink src={avatar} ulid={ownerUlid} title={name} className={style.avatar} />
-      <Link href={href} className={style.link}>
-        <HStack gap="4" className="p_6">
-          <div className="mr_36" />
-          <CardMediaContentBase media={media} />
-        </HStack>
-      </Link>
-    </div>
+    <Link href={href} className={style.content}>
+      <HStack gap="4" align="start">
+        <AvatarLink src={avatar} ulid={ownerUlid} title={name} className={style.avatar} />
+        <CardMediaContentBase media={media} />
+      </HStack>
+    </Link>
   )
 }

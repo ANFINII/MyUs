@@ -16,7 +16,7 @@ export default function BlogCard(props: Props): React.JSX.Element {
   return (
     <Card className={style.card}>
       <Link href={`/media/blog/${ulid}`}>
-        <ExImage src={image} width="270" height="153" className={style.thumbnail} />
+        <ExImage src={image} width="312" height="195" className={style.thumbnail} />
       </Link>
       <CardMediaContent href={`/media/blog/${ulid}`} media={item} />
     </Card>
