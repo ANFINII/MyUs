@@ -24,7 +24,7 @@ interface Props {
 }
 
 export default function Input(props: Props): React.JSX.Element {
-  const { label, errorText, value, className, error = false, required = false, autoFocus, onChange } = props
+  const { label, errorText, value, className, error = false, required = false, disabled = false, autoFocus, onChange } = props
 
   const inputFocus = useAutoFocus()
   const [isValue, setIsValue] = useState<boolean>(false)
@@ -45,7 +45,7 @@ export default function Input(props: Props): React.JSX.Element {
           {label}
         </label>
       )}
-      <input {...props} id={label} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={cx(style.input, isRequired && style.error)} />
+      <input {...props} id={label} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={cx(style.input, isRequired && style.error, disabled && style.disabled)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
       {isErrorText && <p className={style.error_text}>{errorText}</p>}
     </VStack>

@@ -28,7 +28,7 @@ export default function Login(): React.JSX.Element {
 
   const handleProfile = () => router.push('/setting/profile')
   const handleReset = () => router.push('/account/reset')
-  const handleSignup = () => router.push('/account/signup')
+  const handleSignup = () => router.push('/account/signup/email')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   const handleSubmit = async () => {

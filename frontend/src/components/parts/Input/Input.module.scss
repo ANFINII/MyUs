@@ -8,6 +8,8 @@
   background: rgb(255, 255, 255);
 
   &.disabled {
+    color: rgb(120, 120, 120);
+    border-color: rgb(220, 220, 220);
     background: rgb(240, 240, 240);
   }
 

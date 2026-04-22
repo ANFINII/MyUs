@@ -4,6 +4,8 @@ const base = '/api'
 export const apiAuth = base + '/auth'
 export const apiRefresh = base + '/auth/refresh'
 export const apiSignup = base + '/auth/signup'
+export const apiSignupEmail = base + '/auth/signup/email'
+export const apiSignupVerify = base + '/auth/signup/verify'
 export const apiLogin = base + '/auth/login'
 export const apiLogout = base + '/auth/logout'
 

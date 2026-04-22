@@ -6,6 +6,7 @@ export interface LoginIn {
 }
 
 export interface SignupIn {
+  token: string
   email: string
   username: string
   nickname: string
@@ -17,4 +18,8 @@ export interface SignupIn {
   month: number
   day: number
   gender: GenderType
+}
+
+export interface SignupVerifyOut {
+  email: string
 }
