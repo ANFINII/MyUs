@@ -14,7 +14,7 @@ export default function Followers(props: Props): React.JSX.Element {
   const { datas } = props
 
   const router = useRouter()
-  const search = useSearch(datas)
+  const search = useSearch(datas.length)
 
   return (
     <Main title="Follower" search={search}>

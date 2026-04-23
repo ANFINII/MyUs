@@ -9,6 +9,8 @@ export interface Search {
 
 export interface SearchParams {
   search?: string
+  limit?: number
+  offset?: number
 }
 
 export interface MediaUser {
@@ -86,6 +88,36 @@ export interface MediaHome {
   comics: Comic[]
   pictures: Picture[]
   chats: Chat[]
+}
+
+export interface VideoList {
+  datas: Video[]
+  total: number
+}
+
+export interface MusicList {
+  datas: Music[]
+  total: number
+}
+
+export interface BlogList {
+  datas: Blog[]
+  total: number
+}
+
+export interface ComicList {
+  datas: Comic[]
+  total: number
+}
+
+export interface PictureList {
+  datas: Picture[]
+  total: number
+}
+
+export interface ChatList {
+  datas: Chat[]
+  total: number
 }
 
 export interface VideoDetail extends MediaDetail {
