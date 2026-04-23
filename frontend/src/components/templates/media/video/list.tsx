@@ -21,7 +21,7 @@ export default function Videos(props: Props): React.JSX.Element {
   return (
     <Main title="Video" search={search}>
       <CardList items={datas} Content={VideoCard} />
-      <Pagination currentPage={currentPage} totalPages={totalPages} onChange={handlePage} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} margin="mv_40" onChange={handlePage} />
     </Main>
   )
 }

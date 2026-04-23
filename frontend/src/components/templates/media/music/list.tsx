@@ -21,7 +21,7 @@ export default function Musics(props: Props): React.JSX.Element {
   return (
     <Main title="Music" search={search}>
       <CardList items={datas} Content={MusicCard} />
-      <Pagination currentPage={currentPage} totalPages={totalPages} onChange={handlePage} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} margin="mv_40" onChange={handlePage} />
     </Main>
   )
 }

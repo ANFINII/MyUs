@@ -21,7 +21,7 @@ export default function Chats(props: Props): React.JSX.Element {
   return (
     <Main title="Chat" search={search}>
       <CardList items={datas} Content={ChatCard} />
-      <Pagination currentPage={currentPage} totalPages={totalPages} onChange={handlePage} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} margin="mv_40" onChange={handlePage} />
     </Main>
   )
 }
