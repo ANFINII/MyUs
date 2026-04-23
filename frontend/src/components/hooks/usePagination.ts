@@ -1,25 +1,21 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/router'
+import { PAGE_SIZE } from 'utils/functions/common'
 
-interface UsePaginationResult<T> {
+interface ServerPagination {
   currentPage: number
   totalPages: number
-  pageDatas: T[]
   handlePage: (page: number) => void
 }
 
-export const usePagination = <T>(datas: T[], pageSize: number): UsePaginationResult<T> => {
-  const [currentPage, setCurrentPage] = useState<number>(1)
+export function usePagination(total: number, page: number): ServerPagination {
+  const router = useRouter()
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
 
-  useEffect(() => setCurrentPage(1), [datas])
+  const handlePage = (p: number) => {
+    router.push({ pathname: router.pathname, query: { ...router.query, page: p } })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
-  const totalPages = Math.ceil(datas.length / pageSize)
-
-  const pageDatas = useMemo(() => {
-    const start = (currentPage - 1) * pageSize
-    return datas.slice(start, start + pageSize)
-  }, [datas, currentPage, pageSize])
-
-  const handlePage = (page: number) => setCurrentPage(page)
-
-  return { currentPage, totalPages, pageDatas, handlePage }
+  return { currentPage, totalPages, handlePage }
 }

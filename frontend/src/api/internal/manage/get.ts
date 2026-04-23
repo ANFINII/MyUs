@@ -2,6 +2,7 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
+import { VideoList, MusicList, BlogList, ComicList, PictureList, ChatList } from 'types/internal/media/output'
 import { SearchParams, Video, Music, Blog, Comic, Picture, Chat } from 'types/internal/media/output'
 import {
   apiManageVideos,
@@ -18,27 +19,27 @@ import {
   apiManageChat,
 } from 'api/uri'
 
-export const getManageVideos = async (params: SearchParams, req?: Req): Promise<ApiOut<Video[]>> => {
+export const getManageVideos = async (params: SearchParams, req?: Req): Promise<ApiOut<VideoList>> => {
   return await apiOut(apiClient('json').get(apiManageVideos, cookieHeader(req, params)))
 }
 
-export const getManageMusics = async (params: SearchParams, req?: Req): Promise<ApiOut<Music[]>> => {
+export const getManageMusics = async (params: SearchParams, req?: Req): Promise<ApiOut<MusicList>> => {
   return await apiOut(apiClient('json').get(apiManageMusics, cookieHeader(req, params)))
 }
 
-export const getManageBlogs = async (params: SearchParams, req?: Req): Promise<ApiOut<Blog[]>> => {
+export const getManageBlogs = async (params: SearchParams, req?: Req): Promise<ApiOut<BlogList>> => {
   return await apiOut(apiClient('json').get(apiManageBlogs, cookieHeader(req, params)))
 }
 
-export const getManageComics = async (params: SearchParams, req?: Req): Promise<ApiOut<Comic[]>> => {
+export const getManageComics = async (params: SearchParams, req?: Req): Promise<ApiOut<ComicList>> => {
   return await apiOut(apiClient('json').get(apiManageComics, cookieHeader(req, params)))
 }
 
-export const getManagePictures = async (params: SearchParams, req?: Req): Promise<ApiOut<Picture[]>> => {
+export const getManagePictures = async (params: SearchParams, req?: Req): Promise<ApiOut<PictureList>> => {
   return await apiOut(apiClient('json').get(apiManagePictures, cookieHeader(req, params)))
 }
 
-export const getManageChats = async (params: SearchParams, req?: Req): Promise<ApiOut<Chat[]>> => {
+export const getManageChats = async (params: SearchParams, req?: Req): Promise<ApiOut<ChatList>> => {
   return await apiOut(apiClient('json').get(apiManageChats, cookieHeader(req, params)))
 }
 
