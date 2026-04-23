@@ -5,7 +5,7 @@ from django.db.models.functions import Now
 from django.db.models.query import QuerySet
 from django.utils import timezone
 from api.db.models.subscribe import Subscribe
-from api.src.domain.interface.media.index import ExcludeOption, FilterOption, RECOMMEND_DAYS, SortOption, SortType
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption, RECOMMEND_DAYS, SortOption, SortType, SUBSCRIBE_BOOST
 
 T = TypeVar("T", bound=Model)
 
@@ -45,6 +45,12 @@ def filter_q_list(filter: FilterOption, exclude: ExcludeOption | None = None) ->
     return q_list
 
 
+def distinct_queryset(qs: QuerySet[T], filter: FilterOption) -> QuerySet[T]:
+    if filter.search or filter.is_recommend or filter.category_id:
+        return qs.distinct()
+    return qs
+
+
 def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False, user_id: int | None = None) -> tuple[QuerySet[T], str]:
     if sort.sort_type == SortType.SCORE:
         like_count = Count("like")
@@ -55,7 +61,7 @@ def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False,
             base = F("read") + like_count * 10 + F("read") * like_count / (F("read") + 1) * 20
             if user_id is not None:
                 is_subscribed = Exists(Subscribe.objects.filter(user_id=user_id, channel=OuterRef("channel"), is_subscribe=True))
-                multiplier = Case(When(is_subscribed, then=Value(2.0)), default=Value(1.0), output_field=FloatField())
+                multiplier = Case(When(is_subscribed, then=Value(SUBSCRIBE_BOOST)), default=Value(1.0), output_field=FloatField())
                 score_expr = ExpressionWrapper(base * multiplier, output_field=FloatField())
             else:
                 score_expr = ExpressionWrapper(base, output_field=FloatField())

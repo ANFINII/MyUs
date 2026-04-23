@@ -2,7 +2,7 @@ from django.db.models.query import QuerySet
 from api.db.models.media import Chat
 from api.src.domain.entity.media.chat._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
-from api.src.domain.entity.media.index import filter_q_list, sort_queryset
+from api.src.domain.entity.media.index import distinct_queryset, filter_q_list, sort_queryset
 from api.src.domain.interface.media.chat.data import ChatData
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
@@ -16,7 +16,8 @@ class ChatRepository(ChatInterface):
         return Chat.objects.select_related("channel", "channel__owner").prefetch_related("like", "hashtag")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
-        qs = Chat.objects.filter(*filter_q_list(filter, exclude)).distinct()
+        qs = Chat.objects.filter(*filter_q_list(filter, exclude))
+        qs = distinct_queryset(qs, filter)
         qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend, user_id)
         qs = qs.order_by(order_by_key)
         qs = qs[page.offset:page.offset + page.limit]
@@ -49,7 +50,8 @@ class ChatRepository(ChatInterface):
         Chat.objects.filter(id__in=ids).delete()
 
     def count(self, filter: FilterOption) -> int:
-        return Chat.objects.filter(*filter_q_list(filter)).distinct().count()
+        qs = Chat.objects.filter(*filter_q_list(filter))
+        return distinct_queryset(qs, filter).count()
 
     def is_liked(self, media_id: int, user_id: int) -> bool:
         return Chat.objects.filter(id=media_id, like__id=user_id).exists()

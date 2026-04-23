@@ -2,7 +2,7 @@ from django.db.models.query import QuerySet
 from api.db.models.media import Music
 from api.src.domain.entity.media.music._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
-from api.src.domain.entity.media.index import filter_q_list, sort_queryset
+from api.src.domain.entity.media.index import distinct_queryset, filter_q_list, sort_queryset
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.music.interface import MusicInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
@@ -16,7 +16,8 @@ class MusicRepository(MusicInterface):
         return Music.objects.select_related("channel", "channel__owner").prefetch_related("like", "hashtag")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
-        qs = Music.objects.filter(*filter_q_list(filter, exclude)).distinct()
+        qs = Music.objects.filter(*filter_q_list(filter, exclude))
+        qs = distinct_queryset(qs, filter)
         qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend, user_id)
         qs = qs.order_by(order_by_key)
         qs = qs[page.offset:page.offset + page.limit]
@@ -49,7 +50,8 @@ class MusicRepository(MusicInterface):
         Music.objects.filter(id__in=ids).delete()
 
     def count(self, filter: FilterOption) -> int:
-        return Music.objects.filter(*filter_q_list(filter)).distinct().count()
+        qs = Music.objects.filter(*filter_q_list(filter))
+        return distinct_queryset(qs, filter).count()
 
     def is_liked(self, media_id: int, user_id: int) -> bool:
         return Music.objects.filter(id=media_id, like__id=user_id).exists()

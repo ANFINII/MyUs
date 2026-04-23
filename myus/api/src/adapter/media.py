@@ -23,6 +23,7 @@ from api.src.types.schema.media.output import VideoDetailsOut, MusicDetailsOut, 
 from api.src.types.schema.message import MessageOut
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.user import AuthorOut, MediaUserOut
+from api.src.domain.interface.media.index import PAGE_SIZE
 from api.src.usecase.auth import auth_check
 from api.src.usecase.media import create_video, create_music, create_blog, create_comic, create_picture, create_chat
 from api.src.usecase.media import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
@@ -101,7 +102,7 @@ class VideoAPI:
 
     @staticmethod
     @router.get("", response={200: VideoListOut})
-    def list(request: HttpRequest, search: str = "", limit: int = 24, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("VideoAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_videos(limit, offset, search, user_id=user_id)
@@ -162,7 +163,7 @@ class MusicAPI:
 
     @staticmethod
     @router.get("", response={200: MusicListOut})
-    def list(request: HttpRequest, search: str = "", limit: int = 24, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("MusicAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_musics(limit, offset, search, user_id=user_id)
@@ -223,7 +224,7 @@ class BlogAPI:
 
     @staticmethod
     @router.get("", response={200: BlogListOut})
-    def list(request: HttpRequest, search: str = "", limit: int = 24, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("BlogAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_blogs(limit, offset, search, user_id=user_id)
@@ -283,7 +284,7 @@ class ComicAPI:
 
     @staticmethod
     @router.get("", response={200: ComicListOut})
-    def list(request: HttpRequest, search: str = "", limit: int = 24, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ComicAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_comics(limit, offset, search, user_id=user_id)
@@ -343,7 +344,7 @@ class PictureAPI:
 
     @staticmethod
     @router.get("", response={200: PictureListOut})
-    def list(request: HttpRequest, search: str = "", limit: int = 24, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("PictureAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_pictures(limit, offset, search, user_id=user_id)
@@ -402,7 +403,7 @@ class ChatAPI:
 
     @staticmethod
     @router.get("", response={200: ChatListOut})
-    def list(request: HttpRequest, search: str = "", limit: int = 24, offset: int = 0):
+    def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ChatAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_chats(limit, offset, search, user_id=user_id)
