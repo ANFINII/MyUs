@@ -3,7 +3,7 @@ from datetime import datetime
 from api.modules.logger import log
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
-from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
@@ -102,7 +102,7 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
 def create_comment(user_id: int, input: CommentCreateIn) -> CommentDTO | None:
     comment_repo = injector.get(CommentInterface)
     media_repo = get_media_repository(MediaType(input.type_name.value))
-    media_ids = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption())
+    media_ids = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
     if len(media_ids) == 0:
         log.warning("メディアが見つかりませんでした")
         return None

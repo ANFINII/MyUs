@@ -5,6 +5,8 @@ from api.src.adapter.media import convert_videos, convert_musics, convert_blogs,
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from api.src.types.schema.media.output import VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut
+from api.src.types.schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
+from api.src.domain.interface.media.index import PAGE_SIZE
 from api.src.usecase.auth import auth_check
 from api.src.usecase.manage.media import (
     get_manage_videos, get_manage_video, update_manage_video, delete_manage_video,
@@ -22,16 +24,16 @@ class ManageVideoAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: list[VideoOut], 401: ErrorOut})
-    def list(request: HttpRequest, search: str = ""):
-        log.info("ManageVideoAPI list", search=search)
+    @router.get("", response={200: VideoListOut, 401: ErrorOut})
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+        log.info("ManageVideoAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id = auth_check(request)
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs = get_manage_videos(user_id, search)
-        return 200, convert_videos(objs)
+        objs, total = get_manage_videos(user_id, search, channel, limit, offset)
+        return 200, VideoListOut(datas=convert_videos(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: VideoOut, 401: ErrorOut, 404: ErrorOut})
@@ -83,16 +85,16 @@ class ManageMusicAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: list[MusicOut], 401: ErrorOut})
-    def list(request: HttpRequest, search: str = ""):
-        log.info("ManageMusicAPI list", search=search)
+    @router.get("", response={200: MusicListOut, 401: ErrorOut})
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+        log.info("ManageMusicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id = auth_check(request)
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs = get_manage_musics(user_id, search)
-        return 200, convert_musics(objs)
+        objs, total = get_manage_musics(user_id, search, channel, limit, offset)
+        return 200, MusicListOut(datas=convert_musics(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: MusicOut, 401: ErrorOut, 404: ErrorOut})
@@ -144,16 +146,16 @@ class ManageBlogAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: list[BlogOut], 401: ErrorOut})
-    def list(request: HttpRequest, search: str = ""):
-        log.info("ManageBlogAPI list", search=search)
+    @router.get("", response={200: BlogListOut, 401: ErrorOut})
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+        log.info("ManageBlogAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id = auth_check(request)
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs = get_manage_blogs(user_id, search)
-        return 200, convert_blogs(objs)
+        objs, total = get_manage_blogs(user_id, search, channel, limit, offset)
+        return 200, BlogListOut(datas=convert_blogs(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: BlogOut, 401: ErrorOut, 404: ErrorOut})
@@ -205,16 +207,16 @@ class ManageComicAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: list[ComicOut], 401: ErrorOut})
-    def list(request: HttpRequest, search: str = ""):
-        log.info("ManageComicAPI list", search=search)
+    @router.get("", response={200: ComicListOut, 401: ErrorOut})
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+        log.info("ManageComicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id = auth_check(request)
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs = get_manage_comics(user_id, search)
-        return 200, convert_comics(objs)
+        objs, total = get_manage_comics(user_id, search, channel, limit, offset)
+        return 200, ComicListOut(datas=convert_comics(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: ComicOut, 401: ErrorOut, 404: ErrorOut})
@@ -266,16 +268,16 @@ class ManagePictureAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: list[PictureOut], 401: ErrorOut})
-    def list(request: HttpRequest, search: str = ""):
-        log.info("ManagePictureAPI list", search=search)
+    @router.get("", response={200: PictureListOut, 401: ErrorOut})
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+        log.info("ManagePictureAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id = auth_check(request)
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs = get_manage_pictures(user_id, search)
-        return 200, convert_pictures(objs)
+        objs, total = get_manage_pictures(user_id, search, channel, limit, offset)
+        return 200, PictureListOut(datas=convert_pictures(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: PictureOut, 401: ErrorOut, 404: ErrorOut})
@@ -327,16 +329,16 @@ class ManageChatAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: list[ChatOut], 401: ErrorOut})
-    def list(request: HttpRequest, search: str = ""):
-        log.info("ManageChatAPI list", search=search)
+    @router.get("", response={200: ChatListOut, 401: ErrorOut})
+    def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
+        log.info("ManageChatAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
         user_id = auth_check(request)
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs = get_manage_chats(user_id, search)
-        return 200, convert_chats(objs)
+        objs, total = get_manage_chats(user_id, search, channel, limit, offset)
+        return 200, ChatListOut(datas=convert_chats(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: ChatOut, 401: ErrorOut, 404: ErrorOut})

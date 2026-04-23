@@ -14,7 +14,7 @@ from api.src.domain.interface.media.blog.interface import BlogInterface
 from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
-from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption, SortType
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption, SortType
 from api.src.injectors.container import injector
 from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO
 from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn
@@ -226,26 +226,26 @@ def create_chat(input: ChatIn) -> MediaCreateDTO | None:
 
 
 def get_home(limit: int, search: str) -> HomeDTO:
-    videos, _ = get_videos(limit, 0, search)
-    musics, _ = get_musics(limit, 0, search)
-    blogs, _ = get_blogs(limit, 0, search)
-    comics, _ = get_comics(limit, 0, search)
-    pictures, _ = get_pictures(limit, 0, search)
-    chats, _ = get_chats(limit, 0, search)
+    videos, _ = get_videos(search, limit=limit)
+    musics, _ = get_musics(search, limit=limit)
+    blogs, _ = get_blogs(search, limit=limit)
+    comics, _ = get_comics(search, limit=limit)
+    pictures, _ = get_pictures(search, limit=limit)
+    chats, _ = get_chats(search, limit=limit)
     return HomeDTO(videos=videos, musics=musics, blogs=blogs, comics=comics, pictures=pictures, chats=chats)
 
 
 def get_recommend(limit: int, search: str) -> HomeDTO:
-    videos, _ = get_videos(limit, 0, search, is_recommend=True)
-    musics, _ = get_musics(limit, 0, search, is_recommend=True)
-    blogs, _ = get_blogs(limit, 0, search, is_recommend=True)
-    comics, _ = get_comics(limit, 0, search, is_recommend=True)
-    pictures, _ = get_pictures(limit, 0, search, is_recommend=True)
-    chats, _ = get_chats(limit, 0, search, is_recommend=True)
+    videos, _ = get_videos(search, is_recommend=True, limit=limit)
+    musics, _ = get_musics(search, is_recommend=True, limit=limit)
+    blogs, _ = get_blogs(search, is_recommend=True, limit=limit)
+    comics, _ = get_comics(search, is_recommend=True, limit=limit)
+    pictures, _ = get_pictures(search, is_recommend=True, limit=limit)
+    chats, _ = get_chats(search, is_recommend=True, limit=limit)
     return HomeDTO(videos=videos, musics=musics, blogs=blogs, comics=comics, pictures=pictures, chats=chats)
 
 
-def get_videos(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[VideoData], int]:
+def get_videos(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[VideoData], int]:
     repository = injector.get(VideoInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
@@ -262,7 +262,7 @@ def get_videos(limit: int, offset: int, search: str, id: int = 0, channel_id: in
     return data, total
 
 
-def get_musics(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[MusicData], int]:
+def get_musics(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[MusicData], int]:
     repository = injector.get(MusicInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
@@ -273,7 +273,7 @@ def get_musics(limit: int, offset: int, search: str, id: int = 0, channel_id: in
     return data, total
 
 
-def get_blogs(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[BlogData], int]:
+def get_blogs(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[BlogData], int]:
     repository = injector.get(BlogInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
@@ -284,7 +284,7 @@ def get_blogs(limit: int, offset: int, search: str, id: int = 0, channel_id: int
     return data, total
 
 
-def get_comics(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[ComicData], int]:
+def get_comics(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[ComicData], int]:
     repository = injector.get(ComicInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
@@ -300,7 +300,7 @@ def get_comics(limit: int, offset: int, search: str, id: int = 0, channel_id: in
     return data, total
 
 
-def get_pictures(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[PictureData], int]:
+def get_pictures(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[PictureData], int]:
     repository = injector.get(PictureInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
@@ -311,7 +311,7 @@ def get_pictures(limit: int, offset: int, search: str, id: int = 0, channel_id: 
     return data, total
 
 
-def get_chats(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[ChatData], int]:
+def get_chats(search: str, id: int = 0, channel_id: int = 0, user_id: int | None = None, is_recommend: bool = False, limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[ChatData], int]:
     repository = injector.get(ChatInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)

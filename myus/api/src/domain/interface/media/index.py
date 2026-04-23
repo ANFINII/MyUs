@@ -20,6 +20,7 @@ class FilterOption:
     publish: bool | None = None
     owner_id: int = 0
     channel_id: int = 0
+    channel_ulid: str = ""
     category_id: int = 0
     is_recommend: bool = False
     search: str = ""
