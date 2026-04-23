@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
   if (channelsRet.isErr()) return { props: { status: channelsRet.error.status } }
   const channels = channelsRet.value
 
-  const channel = query.channel?.toString() || channels[0]?.ulid || ''
+  const channel = query.channel?.toString() || channels[0]!.ulid
   const videosRet = await getManageVideos({ search, channel, limit, offset }, req)
   if (videosRet.isErr()) return { props: { status: videosRet.error.status } }
   const { datas, total } = videosRet.value

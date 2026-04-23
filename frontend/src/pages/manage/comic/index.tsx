@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
   if (channelsRet.isErr()) return { props: { status: channelsRet.error.status } }
   const channels = channelsRet.value
 
-  const channel = query.channel?.toString() || channels[0]?.ulid || ''
+  const channel = query.channel?.toString() || channels[0]!.ulid
   const comicsRet = await getManageComics({ search, channel, limit, offset }, req)
   if (comicsRet.isErr()) return { props: { status: comicsRet.error.status } }
   const { datas, total } = comicsRet.value

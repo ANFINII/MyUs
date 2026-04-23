@@ -38,8 +38,6 @@ export default function ManageComics(props: Props): React.JSX.Element {
   const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false)
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
 
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const channelUlid = router.query.channel?.toString() || channels[0]?.ulid || ''
   const handleDelete = () => setIsDeleteModal(!isDeleteModal)
   const handleEdit = (comic: Comic) => router.push(`/manage/comic/${comic.ulid}`)
 
@@ -62,6 +60,9 @@ export default function ManageComics(props: Props): React.JSX.Element {
     handleDelete()
     router.replace(router.asPath)
   }
+
+  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const channelUlid = router.query.channel?.toString() || channels[0]!.ulid
 
   const columns: Column<Comic>[] = [
     {

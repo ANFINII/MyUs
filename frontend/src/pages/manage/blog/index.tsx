@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
   if (channelsRet.isErr()) return { props: { status: channelsRet.error.status } }
   const channels = channelsRet.value
 
-  const channel = query.channel?.toString() || channels[0]?.ulid || ''
+  const channel = query.channel?.toString() || channels[0]!.ulid
   const blogsRet = await getManageBlogs({ search, channel, limit, offset }, req)
   if (blogsRet.isErr()) return { props: { status: blogsRet.error.status } }
   const { datas, total } = blogsRet.value

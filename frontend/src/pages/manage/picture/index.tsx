@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
   if (channelsRet.isErr()) return { props: { status: channelsRet.error.status } }
   const channels = channelsRet.value
 
-  const channel = query.channel?.toString() || channels[0]?.ulid || ''
+  const channel = query.channel?.toString() || channels[0]!.ulid
   const picturesRet = await getManagePictures({ search, channel, limit, offset }, req)
   if (picturesRet.isErr()) return { props: { status: picturesRet.error.status } }
   const { datas, total } = picturesRet.value

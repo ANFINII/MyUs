@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
   if (channelsRet.isErr()) return { props: { status: channelsRet.error.status } }
   const channels = channelsRet.value
 
-  const channel = query.channel?.toString() || channels[0]?.ulid || ''
+  const channel = query.channel?.toString() || channels[0]!.ulid
   const musicsRet = await getManageMusics({ search, channel, limit, offset }, req)
   if (musicsRet.isErr()) return { props: { status: musicsRet.error.status } }
   const { datas, total } = musicsRet.value
