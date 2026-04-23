@@ -21,7 +21,7 @@ export default function Blogs(props: Props): React.JSX.Element {
   return (
     <Main title="Blog" search={search}>
       <CardList items={datas} Content={BlogCard} />
-      <Pagination currentPage={currentPage} totalPages={totalPages} onChange={handlePage} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} margin="mv_40" onChange={handlePage} />
     </Main>
   )
 }

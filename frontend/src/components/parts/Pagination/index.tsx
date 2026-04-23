@@ -1,3 +1,4 @@
+import cx from 'utils/functions/cx'
 import ArrowButton from './ArrowButton'
 import PageButton from './PageButton'
 import style from './Pagination.module.scss'
@@ -16,14 +17,17 @@ const calcPages = (current: number, total: number): (number | '...')[] => {
   return pages
 }
 
+type marinType = 'mv_16' | 'mv_24' | 'mv_32' | 'mv_40'
+
 interface Props {
   currentPage: number
   totalPages: number
+  margin?: marinType
   onChange: (page: number) => void
 }
 
 export default function Pagination(props: Props): React.JSX.Element | null {
-  const { currentPage, totalPages, onChange } = props
+  const { currentPage, totalPages, margin = 'mv_16', onChange } = props
 
   const pages = calcPages(currentPage, totalPages)
   const handlePrev = () => onChange(currentPage - 1)
@@ -31,7 +35,7 @@ export default function Pagination(props: Props): React.JSX.Element | null {
   const handlePage = (page: number) => () => onChange(page)
 
   return (
-    <nav className={style.pagination}>
+    <nav className={cx(style.pagination, margin)}>
       <ArrowButton type="left" disabled={currentPage === 1} onClick={handlePrev} />
       {pages.map((page, i) =>
         page === '...' ? (

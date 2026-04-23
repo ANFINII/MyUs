@@ -21,7 +21,7 @@ export default function Comics(props: Props): React.JSX.Element {
   return (
     <Main title="Comic" search={search}>
       <CardList items={datas} Content={ComicCard} />
-      <Pagination currentPage={currentPage} totalPages={totalPages} onChange={handlePage} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} margin="mv_40" onChange={handlePage} />
     </Main>
   )
 }
