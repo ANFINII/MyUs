@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack --hostname 127.0.0.1",
+    "clean": "rm -rf .next",
     "build": "next build",
     "start": "next start",
     "test": "jest",

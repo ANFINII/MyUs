@@ -15,8 +15,6 @@
       "types/*": ["./src/types/*"],
       "utils/*": ["./src/utils/*"]
     },
-    "sourceRoot": "/",
-    "sourceMap": true,
     "alwaysStrict": true,
     "allowJs": false,
     "allowUnusedLabels": false,
@@ -25,7 +23,6 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "incremental": true,
-    "inlineSources": true,
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
