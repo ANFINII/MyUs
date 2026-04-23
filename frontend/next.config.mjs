@@ -5,7 +5,7 @@ const { i18n } = require('./next-i18next.config.js')
 
 export default {
   reactStrictMode: true,
-  reactCompiler: process.env.NODE_ENV === 'production',
+  reactCompiler: true,
   basePath: '',
   i18n,
   images: {
