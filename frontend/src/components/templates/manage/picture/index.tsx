@@ -1,4 +1,4 @@
-import { ChangeEvent, useMemo, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Channel } from 'types/internal/channel'
 import { Picture } from 'types/internal/media/output'
@@ -22,27 +22,30 @@ import style from '../Media.module.scss'
 
 interface Props {
   datas: Picture[]
+  total: number
+  page: number
   channels: Channel[]
 }
 
 export default function ManagePictures(props: Props): React.JSX.Element {
-  const { datas, channels } = props
-
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const { datas, total, page, channels } = props
 
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
+  const { currentPage, totalPages, handlePage } = usePagination(total, page)
   const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false)
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
-  const [channelUlid, setChannelUlid] = useState<string>(channels[0]?.ulid ?? '')
-  const channelDatas = useMemo(() => datas.filter((p) => p.channel.ulid === channelUlid), [datas, channelUlid])
-  const { currentPage, totalPages, pageDatas, handlePage } = usePagination(channelDatas, 50)
 
+  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const channelUlid = router.query.channel?.toString() || channels[0]?.ulid || ''
   const handleDelete = () => setIsDeleteModal(!isDeleteModal)
   const handleEdit = (picture: Picture) => router.push(`/manage/picture/${picture.ulid}`)
-  const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)
+
+  const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => {
+    router.push({ pathname: router.pathname, query: { ...router.query, channel: e.target.value, page: 1 } })
+  }
 
   const handleDeleteSubmit = async () => {
     const ulids = Array.from(selectedKeys)
@@ -149,7 +152,7 @@ export default function ManagePictures(props: Props): React.JSX.Element {
     >
       <div className={style.manage}>
         <DataTable
-          datas={pageDatas}
+          datas={datas}
           columns={columns}
           rowKey={(p) => p.ulid}
           selectable

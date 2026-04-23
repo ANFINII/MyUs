@@ -11,6 +11,7 @@ export interface SearchParams {
   search?: string
   limit?: number
   offset?: number
+  channel?: string
 }
 
 export interface MediaUser {
