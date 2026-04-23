@@ -26,6 +26,14 @@ export const getUser = async (req?: Req): Promise<ApiOut<UserMe>> => {
   return await apiOut(apiClient('json').get(apiUser, cookieHeader(req)))
 }
 
+export const getUserPage = async (ulid: string, req?: Req): Promise<ApiOut<UserPage>> => {
+  return await apiOut(apiClient('json').get(apiUserPage(ulid), cookieHeader(req)))
+}
+
+export const getUserPageMedia = async (ulid: string, channelUlid: string, req?: Req): Promise<ApiOut<UserPageMedia>> => {
+  return await apiOut(apiClient('json').get(apiUserPageMedia(ulid, channelUlid), cookieHeader(req)))
+}
+
 export const getSearchTag = async (req?: Req): Promise<ApiOut<SearchTagOut[]>> => {
   return await apiOut(apiClient('json').get(apiSearchTag, cookieHeader(req)))
 }
@@ -64,12 +72,4 @@ export const postNotificationConfirmed = async (ulid: string): Promise<ApiOut<Er
 
 export const postNotificationDeleted = async (ulid: string): Promise<ApiOut<ErrorOut>> => {
   return await apiOut(apiClient('json').post(apiNotificationDeleted, camelSnake({ ulid })))
-}
-
-export const getUserPage = async (ulid: string, req?: Req): Promise<ApiOut<UserPage>> => {
-  return await apiOut(apiClient('json').get(apiUserPage(ulid), cookieHeader(req)))
-}
-
-export const getUserPageMedia = async (ulid: string, channelUlid: string, req?: Req): Promise<ApiOut<UserPageMedia>> => {
-  return await apiOut(apiClient('json').get(apiUserPageMedia(ulid, channelUlid), cookieHeader(req)))
 }

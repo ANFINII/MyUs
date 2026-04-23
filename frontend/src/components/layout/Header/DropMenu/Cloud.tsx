@@ -23,7 +23,7 @@ export default function DropMenuCloud(props: Props): React.JSX.Element {
 
   const handleManage = () => {
     if (user.isStaff) router.push('http://127.0.0.1:8000/myus-admin')
-    if (user.isActive) router.push('/manage')
+    router.push('/manage')
     onClose()
   }
 
