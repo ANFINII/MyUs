@@ -34,6 +34,8 @@ def filter_q_list(filter: FilterOption, exclude: ExcludeOption | None = None) ->
         q_list.append(Q(channel__owner_id=filter.owner_id))
     if filter.channel_id:
         q_list.append(Q(channel_id=filter.channel_id))
+    if filter.channel_ulid:
+        q_list.append(Q(channel__ulid=filter.channel_ulid))
     if filter.category_id:
         q_list.append(Q(category__id=filter.category_id))
     if filter.is_recommend:

@@ -2,7 +2,7 @@ from dataclasses import replace
 from datetime import datetime
 from api.modules.logger import log
 from api.src.domain.interface.media.chat.interface import ChatInterface
-from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from api.src.domain.interface.message.data import MessageData as MessageDomainData
 from api.src.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
 from api.src.domain.interface.notification.data import NotificationContentData, NotificationData
@@ -72,7 +72,7 @@ def get_replies(message_ulid: str) -> list[MessageReplyDTO]:
 
 def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) -> MessageDTO | None:
     chat_repo = injector.get(ChatInterface)
-    chat_ids = chat_repo.get_ids(MediaFilterOption(ulid=chat_ulid, publish=True), ExcludeOption(), MediaSortOption())
+    chat_ids = chat_repo.get_ids(MediaFilterOption(ulid=chat_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
     if len(chat_ids) == 0:
         log.warning("チャットが見つかりませんでした", chat_ulid=chat_ulid)
         return None

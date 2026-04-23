@@ -105,7 +105,7 @@ class VideoAPI:
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("VideoAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
-        objs, total = get_videos(limit, offset, search, user_id=user_id)
+        objs, total = get_videos(search, user_id=user_id, limit=limit, offset=offset)
         data = VideoListOut(datas=convert_videos(objs), total=total)
         return 200, data
 
@@ -116,7 +116,7 @@ class VideoAPI:
 
         user_id = auth_check(request)
         obj = get_video_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs, _ = get_videos(50, 0, search, obj.id)
+        objs, _ = get_videos(search, obj.id)
 
         data = VideoDetailsOut(
             detail=VideoDetailOut(
@@ -166,7 +166,7 @@ class MusicAPI:
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("MusicAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
-        objs, total = get_musics(limit, offset, search, user_id=user_id)
+        objs, total = get_musics(search, user_id=user_id, limit=limit, offset=offset)
         data = MusicListOut(datas=convert_musics(objs), total=total)
         return 200, data
 
@@ -177,7 +177,7 @@ class MusicAPI:
 
         user_id = auth_check(request)
         obj = get_music_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs, _ = get_musics(50, 0, search, obj.id)
+        objs, _ = get_musics(search, obj.id)
 
         data = MusicDetailsOut(
             detail=MusicDetailOut(
@@ -227,7 +227,7 @@ class BlogAPI:
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("BlogAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
-        objs, total = get_blogs(limit, offset, search, user_id=user_id)
+        objs, total = get_blogs(search, user_id=user_id, limit=limit, offset=offset)
         data = BlogListOut(datas=convert_blogs(objs), total=total)
         return 200, data
 
@@ -238,7 +238,7 @@ class BlogAPI:
 
         user_id = auth_check(request)
         obj = get_blog_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs, _ = get_blogs(50, 0, search, obj.id)
+        objs, _ = get_blogs(search, obj.id)
 
         data = BlogDetailsOut(
             detail=BlogDetailOut(
@@ -287,7 +287,7 @@ class ComicAPI:
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ComicAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
-        objs, total = get_comics(limit, offset, search, user_id=user_id)
+        objs, total = get_comics(search, user_id=user_id, limit=limit, offset=offset)
         data = ComicListOut(datas=convert_comics(objs), total=total)
         return 200, data
 
@@ -298,7 +298,7 @@ class ComicAPI:
 
         user_id = auth_check(request)
         obj = get_comic_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs, _ = get_comics(50, 0, search, obj.id)
+        objs, _ = get_comics(search, obj.id)
 
         data = ComicDetailsOut(
             detail=ComicDetailOut(
@@ -347,7 +347,7 @@ class PictureAPI:
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("PictureAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
-        objs, total = get_pictures(limit, offset, search, user_id=user_id)
+        objs, total = get_pictures(search, user_id=user_id, limit=limit, offset=offset)
         data = PictureListOut(datas=convert_pictures(objs), total=total)
         return 200, data
 
@@ -358,7 +358,7 @@ class PictureAPI:
 
         user_id = auth_check(request)
         obj = get_picture_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs, _ = get_pictures(50, 0, search, obj.id)
+        objs, _ = get_pictures(search, obj.id)
 
         data = PictureDetailsOut(
             detail=PictureDetailOut(
@@ -406,7 +406,7 @@ class ChatAPI:
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ChatAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
-        objs, total = get_chats(limit, offset, search, user_id=user_id)
+        objs, total = get_chats(search, user_id=user_id, limit=limit, offset=offset)
         data = ChatListOut(datas=convert_chats(objs), total=total)
         return 200, data
 
@@ -417,7 +417,7 @@ class ChatAPI:
 
         user_id = auth_check(request)
         obj = get_chat_detail(user_id=user_id, ulid=ulid, publish=True)
-        objs, _ = get_chats(50, 0, search, obj.id)
+        objs, _ = get_chats(search, obj.id)
 
         data = ChatDetailsOut(
             detail=ChatDetailOut(

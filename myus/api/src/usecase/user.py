@@ -5,7 +5,7 @@ from api.db.models.user import User
 from api.modules.logger import log
 from api.src.injectors.container import injector
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
-from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, SortOption as MediaSortOption
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from api.src.domain.interface.user.data import ProfileData, UserAllData, UserNotificationData
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.types.dto.user import AuthorDTO, LikeDTO
@@ -134,7 +134,7 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
 def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeDTO | None:
     repository = injector.get(UserInterface)
     media_repo = get_media_repository(media_type)
-    ids = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption())
+    ids = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
     if len(ids) == 0:
         return None
 
