@@ -1,12 +1,11 @@
-from django.db.models import Q
 from django.db.models.query import QuerySet
 from api.db.models.media import Picture
 from api.src.domain.entity.media.picture._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
-from api.src.domain.entity.media.index import filter_recommend, filter_search, sort_queryset
+from api.src.domain.entity.media.index import filter_q_list, sort_queryset
 from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.picture.interface import PictureInterface
-from api.src.domain.interface.media.index import ExcludeOption, FilterOption, SortOption
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 
 
 PICTURE_FIELDS = ["channel_id", "title", "content", "image", "read", "publish"]
@@ -16,32 +15,11 @@ class PictureRepository(PictureInterface):
     def queryset(self) -> QuerySet[Picture]:
         return Picture.objects.select_related("channel", "channel__owner").prefetch_related("like", "hashtag")
 
-    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
-        q_list: list[Q] = []
-        if filter.ulid:
-            q_list.append(Q(ulid=filter.ulid))
-        if filter.publish is not None:
-            q_list.append(Q(publish=filter.publish))
-        if filter.owner_id:
-            q_list.append(Q(channel__owner_id=filter.owner_id))
-        if filter.channel_id:
-            q_list.append(Q(channel_id=filter.channel_id))
-        if filter.category_id:
-            q_list.append(Q(category__id=filter.category_id))
-        if filter.is_recommend:
-            q_list.append(filter_recommend())
-        if filter.search:
-            q_list.append(filter_search(filter.search))
-        if exclude.id:
-            q_list.append(~Q(id=exclude.id))
-
-        qs = Picture.objects.filter(*q_list).distinct()
-        qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend)
+    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
+        qs = Picture.objects.filter(*filter_q_list(filter, exclude)).distinct()
+        qs, order_by_key = sort_queryset(qs, sort, filter.is_recommend, user_id)
         qs = qs.order_by(order_by_key)
-
-        if limit is not None:
-            qs = qs[:limit]
-
+        qs = qs[page.offset:page.offset + page.limit]
         return list(qs.values_list("id", flat=True))
 
     def bulk_get(self, ids: list[int]) -> list[PictureData]:
@@ -69,6 +47,9 @@ class PictureRepository(PictureInterface):
 
     def bulk_delete(self, ids: list[int]) -> None:
         Picture.objects.filter(id__in=ids).delete()
+
+    def count(self, filter: FilterOption) -> int:
+        return Picture.objects.filter(*filter_q_list(filter)).distinct().count()
 
     def is_liked(self, media_id: int, user_id: int) -> bool:
         return Picture.objects.filter(id=media_id, like__id=user_id).exists()

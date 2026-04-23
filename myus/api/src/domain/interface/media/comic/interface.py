@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
-from api.src.domain.interface.media.index import ExcludeOption, FilterOption, SortOption
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.domain.interface.media.comic.data import ComicData
 
 
 class ComicInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
         ...
 
     @abstractmethod
@@ -18,6 +18,10 @@ class ComicInterface(ABC):
 
     @abstractmethod
     def bulk_delete(self, ids: list[int]) -> None:
+        ...
+
+    @abstractmethod
+    def count(self, filter: FilterOption) -> int:
         ...
 
     @abstractmethod

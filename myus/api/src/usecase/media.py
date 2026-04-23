@@ -14,7 +14,7 @@ from api.src.domain.interface.media.blog.interface import BlogInterface
 from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
-from api.src.domain.interface.media.index import FilterOption, SortOption, SortType, ExcludeOption
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption, SortType
 from api.src.injectors.container import injector
 from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO
 from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn
@@ -226,34 +226,31 @@ def create_chat(input: ChatIn) -> MediaCreateDTO | None:
 
 
 def get_home(limit: int, search: str) -> HomeDTO:
-    data = HomeDTO(
-        videos=get_videos(limit, search),
-        musics=get_musics(limit, search),
-        blogs=get_blogs(limit, search),
-        comics=get_comics(limit, search),
-        pictures=get_pictures(limit, search),
-        chats=get_chats(limit, search),
-    )
-    return data
+    videos, _ = get_videos(limit, 0, search)
+    musics, _ = get_musics(limit, 0, search)
+    blogs, _ = get_blogs(limit, 0, search)
+    comics, _ = get_comics(limit, 0, search)
+    pictures, _ = get_pictures(limit, 0, search)
+    chats, _ = get_chats(limit, 0, search)
+    return HomeDTO(videos=videos, musics=musics, blogs=blogs, comics=comics, pictures=pictures, chats=chats)
 
 
 def get_recommend(limit: int, search: str) -> HomeDTO:
-    data = HomeDTO(
-        videos=get_videos(limit, search, is_recommend=True),
-        musics=get_musics(limit, search, is_recommend=True),
-        blogs=get_blogs(limit, search, is_recommend=True),
-        comics=get_comics(limit, search, is_recommend=True),
-        pictures=get_pictures(limit, search, is_recommend=True),
-        chats=get_chats(limit, search, is_recommend=True),
-    )
-    return data
+    videos, _ = get_videos(limit, 0, search, is_recommend=True)
+    musics, _ = get_musics(limit, 0, search, is_recommend=True)
+    blogs, _ = get_blogs(limit, 0, search, is_recommend=True)
+    comics, _ = get_comics(limit, 0, search, is_recommend=True)
+    pictures, _ = get_pictures(limit, 0, search, is_recommend=True)
+    chats, _ = get_chats(limit, 0, search, is_recommend=True)
+    return HomeDTO(videos=videos, musics=musics, blogs=blogs, comics=comics, pictures=pictures, chats=chats)
 
 
-def get_videos(limit: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False) -> list[VideoData]:
+def get_videos(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[VideoData], int]:
     repository = injector.get(VideoInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, limit)
+    total = repository.count(filter)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     objs = repository.bulk_get(ids=ids)
 
     data = [replace(o,
@@ -262,34 +259,37 @@ def get_videos(limit: int, search: str, id: int = 0, channel_id: int = 0, is_rec
         convert=create_url(o.convert),
     ) for o in objs]
 
-    return data
+    return data, total
 
 
-def get_musics(limit: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False) -> list[MusicData]:
+def get_musics(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[MusicData], int]:
     repository = injector.get(MusicInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, limit)
+    total = repository.count(filter)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, music=create_url(o.music)) for o in objs]
-    return data
+    return data, total
 
 
-def get_blogs(limit: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False) -> list[BlogData]:
+def get_blogs(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[BlogData], int]:
     repository = injector.get(BlogInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, limit)
+    total = repository.count(filter)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, image=create_url(o.image)) for o in objs]
-    return data
+    return data, total
 
 
-def get_comics(limit: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False) -> list[ComicData]:
+def get_comics(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[ComicData], int]:
     repository = injector.get(ComicInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, limit)
+    total = repository.count(filter)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     objs = repository.bulk_get(ids=ids)
 
     data = [replace(o,
@@ -297,31 +297,33 @@ def get_comics(limit: int, search: str, id: int = 0, channel_id: int = 0, is_rec
         pages=[create_url(p) for p in o.pages],
     ) for o in objs]
 
-    return data
+    return data, total
 
 
-def get_pictures(limit: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False) -> list[PictureData]:
+def get_pictures(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[PictureData], int]:
     repository = injector.get(PictureInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, limit)
+    total = repository.count(filter)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     objs = repository.bulk_get(ids=ids)
     data = [replace(o, image=create_url(o.image)) for o in objs]
-    return data
+    return data, total
 
 
-def get_chats(limit: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False) -> list[ChatData]:
+def get_chats(limit: int, offset: int, search: str, id: int = 0, channel_id: int = 0, is_recommend: bool = False, user_id: int | None = None) -> tuple[list[ChatData], int]:
     repository = injector.get(ChatInterface)
     filter = FilterOption(search=search, publish=True, channel_id=channel_id, is_recommend=is_recommend)
     sort = SortOption(sort_type=SortType.SCORE)
-    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, limit)
+    total = repository.count(filter)
+    ids = repository.get_ids(filter, ExcludeOption(id=id), sort, PageOption(limit=limit, offset=offset), user_id)
     objs = repository.bulk_get(ids=ids)
-    return objs
+    return objs, total
 
 
 def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> VideoDetailDTO:
     repository = injector.get(VideoInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
+    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
@@ -354,7 +356,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Vi
 
 def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> MusicDetailDTO:
     repository = injector.get(MusicInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
+    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
@@ -387,7 +389,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Mu
 
 def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> BlogDetailDTO:
     repository = injector.get(BlogInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
+    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
@@ -419,7 +421,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Blo
 
 def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> ComicDetailDTO:
     repository = injector.get(ComicInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
+    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
@@ -451,7 +453,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Co
 
 def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> PictureDetailDTO:
     repository = injector.get(PictureInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
+    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
@@ -482,7 +484,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
 
 def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> ChatDetailDTO:
     repository = injector.get(ChatInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption())
+    ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     assert len(ids) == 1, "データが見つかりませんでした"
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]

@@ -32,3 +32,9 @@ class SortOption:
 @dataclass(frozen=True, slots=True)
 class ExcludeOption:
     id: int = 0
+
+
+@dataclass(frozen=True, slots=True)
+class PageOption:
+    limit: int = 50
+    offset: int = 0

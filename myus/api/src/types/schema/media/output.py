@@ -71,6 +71,36 @@ class ChatOut(MediaOut):
     period: datetime
 
 
+class VideoListOut(BaseModel):
+    datas: list[VideoOut]
+    total: int
+
+
+class MusicListOut(BaseModel):
+    datas: list[MusicOut]
+    total: int
+
+
+class BlogListOut(BaseModel):
+    datas: list[BlogOut]
+    total: int
+
+
+class ComicListOut(BaseModel):
+    datas: list[ComicOut]
+    total: int
+
+
+class PictureListOut(BaseModel):
+    datas: list[PictureOut]
+    total: int
+
+
+class ChatListOut(BaseModel):
+    datas: list[ChatOut]
+    total: int
+
+
 class HomeOut(BaseModel):
     videos: list[VideoOut]
     musics: list[MusicOut]
