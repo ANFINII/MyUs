@@ -43,14 +43,14 @@ export default function SettingNotification(props: Props): React.JSX.Element {
     setValues(ret.value)
   }
 
+  const notificationKeys: (keyof UserNotification)[] = ['isVideo', 'isMusic', 'isBlog', 'isComic', 'isPicture', 'isChat', 'isFollow', 'isReply', 'isLike', 'isViews']
+
   const button = (
     <HStack gap="4">
       <Button color="green" size="s" name="保存" loading={isLoading} onClick={handleSubmit} />
       <Button color="blue" size="s" name="リセット" onClick={handleReset} />
     </HStack>
   )
-
-  const notificationKeys: (keyof UserNotification)[] = ['isVideo', 'isMusic', 'isBlog', 'isComic', 'isPicture', 'isChat', 'isFollow', 'isReply', 'isLike', 'isViews']
 
   return (
     <Main title="通知設定" type="table" toast={toast} button={button}>
