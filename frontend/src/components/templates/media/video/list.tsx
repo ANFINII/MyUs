@@ -1,7 +1,6 @@
-import { useRouter } from 'next/router'
 import { Video } from 'types/internal/media/output'
-import { PAGE_SIZE } from 'utils/functions/common'
 import { useSearch } from 'components/hooks/useSearch'
+import { useServerPagination } from 'components/hooks/useServerPagination'
 import Main from 'components/layout/Main'
 import Pagination from 'components/parts/Pagination'
 import CardList from 'components/widgets/Card/List'
@@ -16,18 +15,13 @@ interface Props {
 export default function Videos(props: Props): React.JSX.Element {
   const { datas, total, page } = props
 
-  const router = useRouter()
   const search = useSearch(total)
-  const totalPages = Math.ceil(total / PAGE_SIZE)
-
-  const handlePage = (p: number) => {
-    router.push({ pathname: router.pathname, query: { ...router.query, page: p } })
-  }
+  const { currentPage, totalPages, handlePage } = useServerPagination(total, page)
 
   return (
     <Main title="Video" search={search}>
       <CardList items={datas} Content={VideoCard} />
-      <Pagination currentPage={page} totalPages={totalPages} onChange={handlePage} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} onChange={handlePage} />
     </Main>
   )
 }
