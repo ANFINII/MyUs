@@ -2,8 +2,10 @@ from dataclasses import dataclass
 from enum import Enum, auto
 
 
+DEFAULT_PAGE_SIZE = 50
 RECOMMEND_DAYS = 200
 RECOMMEND_MIN_SCORE = 10.0
+SUBSCRIBE_BOOST = 2.0
 
 
 class SortType(Enum):
@@ -36,5 +38,5 @@ class ExcludeOption:
 
 @dataclass(frozen=True, slots=True)
 class PageOption:
-    limit: int = 50
+    limit: int = DEFAULT_PAGE_SIZE
     offset: int = 0
