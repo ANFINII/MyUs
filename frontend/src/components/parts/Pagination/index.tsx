@@ -17,12 +17,12 @@ const calcPages = (current: number, total: number): (number | '...')[] => {
   return pages
 }
 
-type marinType = 'mv_16' | 'mv_24' | 'mv_32' | 'mv_40'
+type marginType = 'mv_16' | 'mv_24' | 'mv_32' | 'mv_40'
 
 interface Props {
   currentPage: number
   totalPages: number
-  margin?: marinType
+  margin?: marginType
   onChange: (page: number) => void
 }
 
