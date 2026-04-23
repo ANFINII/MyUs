@@ -1,5 +1,3 @@
-/** @type {import('next').NextConfig} */
-
 import { createRequire } from 'module'
 
 const require = createRequire(import.meta.url)
@@ -7,7 +5,7 @@ const { i18n } = require('./next-i18next.config.js')
 
 export default {
   reactStrictMode: true,
-  reactCompiler: true,
+  reactCompiler: process.env.NODE_ENV === 'production',
   basePath: '',
   i18n,
   images: {
