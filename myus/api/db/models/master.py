@@ -1,4 +1,5 @@
 from django.db import models
+from django_ulid.models import ulid
 
 
 class Plan(models.Model):
@@ -35,13 +36,27 @@ class Category(models.Model):
 
 class HashTag(models.Model):
     """HashTag"""
-    id      = models.BigAutoField(primary_key=True)
-    jp_name = models.CharField(max_length=30)
-    en_name = models.CharField(max_length=60)
+    id   = models.BigAutoField(primary_key=True)
+    ulid = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
+    name = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
-        return self.jp_name
+        return self.name
 
     class Meta:
         db_table = "hashtag"
         verbose_name_plural = "001 ハッシュタグ"
+
+
+class NgWord(models.Model):
+    """NgWord"""
+    id      = models.BigAutoField(primary_key=True)
+    word    = models.CharField(max_length=30, unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.word
+
+    class Meta:
+        db_table = "ng_word"
+        verbose_name_plural = "001 NGワード"
