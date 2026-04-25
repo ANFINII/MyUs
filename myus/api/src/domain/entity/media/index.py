@@ -21,7 +21,7 @@ def filter_recommend() -> Q:
 
 
 def filter_search(search: str) -> Q:
-    return Q(title__icontains=search) | Q(hashtag__jp_name=search)
+    return Q(title__icontains=search) | Q(hashtag__name=search)
 
 
 def filter_q_list(filter: FilterOption, exclude: ExcludeOption | None = None) -> list[Q]:

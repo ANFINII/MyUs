@@ -29,7 +29,7 @@ def convert_data(obj: Comic) -> ComicData:
             is_default=obj.channel.is_default,
             count=obj.channel.count,
         ),
-        hashtags=[HashtagData(jp_name=h.jp_name) for h in obj.hashtag.all()],
+        hashtags=[HashtagData(id=h.id, ulid=h.ulid, name=h.name) for h in obj.hashtag.all()],
     )
 
 

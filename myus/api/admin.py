@@ -7,7 +7,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from django.db.models import Count
 from import_export.admin import ImportExportModelAdmin
 from api.db.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
-from api.db.models import User, Profile, MyPage, SearchTag, HashTag, UserNotification
+from api.db.models import User, Profile, MyPage, SearchTag, HashTag, NgWord, UserNotification
 from api.db.models import Video, Music, Blog, Comic, Picture, Chat
 from api.db.models.channel import Channel
 from api.utils.constant import model_media_comment_dict
@@ -139,19 +139,32 @@ class SearchTagAdmin(ImportExportModelAdmin):
 
 @admin.register(HashTag)
 class HashTagAdmin(ImportExportModelAdmin):
-    list_display = ("id", "jp_name", "en_name")
-    list_editable = ("jp_name", "en_name")
-    search_fields = ("jp_name", "en_name")
+    list_display = ("id", "ulid", "name")
+    list_editable = ("name",)
+    search_fields = ("ulid", "name")
     ordering = ("id",)
+    readonly_fields = ("ulid",)
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("jp_name", "en_name")}),
+        ("編集項目", {"fields": ("name",)}),
+        ("確認項目", {"fields": ("ulid",)}),
     ]
 
-    def save_model(self, request, obj, form, change):
-        obj.author = request.user
-        super(HashTagAdmin, self).save_model(request, obj, form, change)
+
+@admin.register(NgWord)
+class NgWordAdmin(ImportExportModelAdmin):
+    list_display = ("id", "word", "created")
+    list_editable = ("word",)
+    search_fields = ("word",)
+    ordering = ("id",)
+    readonly_fields = ("created",)
+
+    # 詳細画面
+    fieldsets = [
+        ("編集項目", {"fields": ("word",)}),
+        ("確認項目", {"fields": ("created",)}),
+    ]
 
 
 @admin.register(Video)
@@ -160,13 +173,13 @@ class VideoAdmin(ImportExportModelAdmin):
     list_select_related = ("channel",)
     search_fields = ("title", "channel__owner__nickname", "created")
     ordering = ("channel", "-created")
-    filter_horizontal = ("hashtag", "like")
+    filter_horizontal = ("like",)
     readonly_fields = ("total_like", "comment_count", "created", "updated")
     # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "image", "video", "convert", "hashtag", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "image", "video", "convert", "like", "read", "publish")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -432,13 +445,13 @@ manage_site.register(SearchTag, SearchTagAdminSite)
 
 
 class HashTagAdminSite(admin.ModelAdmin):
-    list_display = ("id", "jp_name", "en_name")
-    search_fields = ("jp_name", "en_name")
+    list_display = ("id", "ulid", "name")
+    search_fields = ("ulid", "name")
     ordering = ("id",)
 
     # 詳細画面
     fieldsets = [
-        ("確認項目", {"fields": ("jp_name", "en_name")}),
+        ("確認項目", {"fields": ("ulid", "name")}),
     ]
 
     def has_add_permission(self, request):
@@ -468,13 +481,12 @@ class VideoAdminSite(admin.ModelAdmin, PublishMixin):
     search_fields = ("title", "created")
     ordering = ("-created",)
     actions = ("published", "unpublished")
-    filter_horizontal = ("hashtag",)
     readonly_fields = ("read", "total_like", "comment_count", "created", "updated")
     # inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "image", "video", "convert", "hashtag", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "image", "video", "convert", "publish")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 
