@@ -25,9 +25,8 @@ def validate_name(name: str, ng_words: list[str]) -> bool:
         return False
     if ALLOWED_PATTERN.match(name) is None:
         return False
-    for ng in ng_words:
-        if ng in name:
-            return False
+    if any(ng in name for ng in ng_words):
+        return False
     return True
 
 
