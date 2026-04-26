@@ -1,7 +1,7 @@
 from django_ulid.models import ulid
 from api.db.models.media import Music
 from api.src.domain.interface.channel.data import ChannelData
-from api.src.domain.interface.media.data import HashtagData
+from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.media.music.data import MusicData
 
 
@@ -30,7 +30,7 @@ def convert_data(obj: Music) -> MusicData:
             is_default=obj.channel.is_default,
             count=obj.channel.count,
         ),
-        hashtags=[HashtagData(id=h.id, ulid=h.ulid, name=h.name) for h in obj.hashtag.all()],
+        hashtags=[HashtagData(id=mh.hashtag.id, ulid=mh.hashtag.ulid, name=mh.hashtag.name) for mh in obj.music_hashtags.all()],
     )
 
 
