@@ -33,7 +33,8 @@ export interface Media {
 }
 
 export interface Hashtag {
-  jpName: string
+  ulid: string
+  name: string
 }
 
 export interface MediaDetail {
