@@ -3,7 +3,8 @@ from django_quill.fields import QuillField
 from django_ulid.models import ulid
 from api.db.models.base import MediaModel
 from api.db.models.channel import Channel
-from api.db.models.master import Category, HashTag
+from api.db.models.hashtag import HashTag, VideoHashtag, MusicHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
+from api.db.models.master import Category
 from api.db.models.user import User
 from api.utils.functions.file import comic_upload, image_upload, music_upload, video_upload
 
@@ -20,7 +21,7 @@ class Video(models.Model, MediaModel):
     video    = models.FileField(upload_to=video_upload, max_length=255, blank=True)
     convert  = models.FileField(upload_to=video_upload, max_length=255, blank=True)
     category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, through=VideoHashtag, blank=True)
     like     = models.ManyToManyField(User, related_name="video_like", blank=True)
     read     = models.IntegerField(default=0)
     publish  = models.BooleanField(default=True)
@@ -43,7 +44,7 @@ class Music(models.Model, MediaModel):
     lyric    = models.TextField()
     music    = models.FileField(upload_to=music_upload, max_length=255, blank=True)
     category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, through=MusicHashtag, blank=True)
     like     = models.ManyToManyField(User, related_name="music_like", blank=True)
     read     = models.IntegerField(default=0)
     download = models.BooleanField(default=True)
@@ -68,7 +69,7 @@ class Blog(models.Model, MediaModel):
     delta    = QuillField()
     image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
     category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, through=BlogHashtag, blank=True)
     like     = models.ManyToManyField(User, related_name="blog_like", blank=True)
     read     = models.IntegerField(default=0)
     publish  = models.BooleanField(default=True)
@@ -90,7 +91,7 @@ class Comic(models.Model, MediaModel):
     content  = models.TextField()
     image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
     category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, through=ComicHashtag, blank=True)
     like     = models.ManyToManyField(User, related_name="comic_like", blank=True)
     read     = models.IntegerField(default=0)
     publish  = models.BooleanField(default=True)
@@ -127,7 +128,7 @@ class Picture(models.Model, MediaModel):
     content  = models.TextField()
     image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
     category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, through=PictureHashtag, blank=True)
     like     = models.ManyToManyField(User, related_name="picture_like", blank=True)
     read     = models.IntegerField(default=0)
     publish  = models.BooleanField(default=True)
@@ -148,7 +149,7 @@ class Chat(models.Model):
     title    = models.CharField(max_length=100)
     content  = models.TextField()
     category = models.ManyToManyField(Category, blank=True)
-    hashtag  = models.ManyToManyField(HashTag, blank=True)
+    hashtag  = models.ManyToManyField(HashTag, through=ChatHashtag, blank=True)
     like     = models.ManyToManyField(User, related_name="chat_like", blank=True)
     read     = models.IntegerField(default=0)
     period   = models.DateField()
