@@ -83,6 +83,16 @@
 - 入出力はdataclass（Django ORMモデルを直接返さない）
 - usecase層ではinjector経由でinterfaceを取得（entityを直接インポートしない）
 
+### Interface層（抽象クラス）
+- **既存Interfaceの「シグネチャ・命名・構成」に必ず準拠**（独自設計禁止）
+- 雛形: `api/src/domain/interface/search_tag/interface.py` を参照
+- 必須メソッド: `get_ids(filter, sort, limit)` / `bulk_get(ids)` の読み取り2点
+- 任意メソッド（usecaseで必要になったときに追加）: `bulk_save` / `bulk_delete` / `count`
+- 必須型: `FilterOption` / `SortOption` dataclass + `SortType` enum
+- メソッド追加時は既存パターンと **完全に同じシグネチャ・引数名** を使う（独自シグネチャ禁止）
+- 「使わないから書く」「使うから簡略化する」のどちらも禁止：使う分だけ既存の形で書く
+- private メソッド（`_` プレフィックス）を Interface に宣言しない（抽象化は公開 API のみ。private ヘルパーは Repository 実装側に置く）
+
 ### Converterパターン
 - `_convert.py`に変換関数を定義
 - `convert_data`: Django ORM → dataclass
