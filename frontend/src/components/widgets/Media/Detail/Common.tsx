@@ -9,6 +9,7 @@ import MediaDetailRight from './Right'
 
 interface Props {
   media: {
+    ulid: string
     title: string
     content: string
     read: number
