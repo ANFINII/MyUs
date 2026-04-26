@@ -56,6 +56,8 @@ export const apiPicture = (ulid: string) => base + `/media/picture/${ulid}`
 export const apiChats = base + '/media/chat'
 export const apiChat = (ulid: string) => base + `/media/chat/${ulid}`
 
+export const apiMediaHashtag = base + '/media/hashtag'
+
 export const apiComments = base + '/media/comment'
 export const apiComment = (ulid: string) => base + `/media/comment/${ulid}`
 
