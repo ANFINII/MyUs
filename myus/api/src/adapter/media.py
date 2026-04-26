@@ -8,7 +8,7 @@ from api.src.domain.interface.media.blog.data import BlogData
 from api.src.domain.interface.media.comic.data import ComicData
 from api.src.domain.interface.media.picture.data import PictureData
 from api.src.domain.interface.media.chat.data import ChatData
-from api.src.domain.interface.media.data import HashtagData
+from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.channel.data import ChannelData
 from api.utils.functions.index import create_url
 from api.src.types.dto.message import MessageDTO
@@ -631,4 +631,4 @@ def convert_media_user(obj: MediaUserDTO) -> MediaUserOut:
 
 
 def convert_hashtags(objs: list[HashtagData]) -> list[HashtagOut]:
-    return [HashtagOut(jp_name=x.jp_name) for x in objs]
+    return [HashtagOut(ulid=x.ulid, name=x.name) for x in objs]
