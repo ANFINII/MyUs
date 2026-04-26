@@ -190,13 +190,13 @@ class MusicAdmin(ImportExportModelAdmin):
     list_select_related = ("channel",)
     search_fields = ("title", "channel__owner__nickname", "created")
     ordering = ("channel", "-created")
-    filter_horizontal = ("hashtag", "like")
+    filter_horizontal = ("like",)
     readonly_fields = ("total_like", "comment_count", "created", "updated")
     # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "lyric", "music", "hashtag", "like", "read", "publish", "download")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "lyric", "music", "like", "read", "publish", "download")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -207,13 +207,13 @@ class ComicAdmin(ImportExportModelAdmin):
     list_select_related = ("channel",)
     search_fields = ("title", "channel__owner__nickname", "created")
     ordering = ("channel", "-created")
-    filter_horizontal = ("hashtag", "like")
+    filter_horizontal = ("like",)
     readonly_fields = ("total_like", "comment_count", "created", "updated")
     # inlines = [CommentInlineAdmin, ComicPageInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "image", "hashtag", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "image", "like", "read", "publish")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -224,13 +224,13 @@ class PictureAdmin(ImportExportModelAdmin):
     list_select_related = ("channel",)
     search_fields = ("title", "channel__owner__nickname", "created")
     ordering = ("channel", "-created")
-    filter_horizontal = ("hashtag", "like")
+    filter_horizontal = ("like",)
     readonly_fields = ("total_like", "comment_count", "created", "updated")
     # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "image", "hashtag", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "image", "like", "read", "publish")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -241,13 +241,13 @@ class BlogAdmin(ImportExportModelAdmin):
     list_select_related = ("channel",)
     search_fields = ("title", "channel__owner__nickname", "created")
     ordering = ("channel", "-created")
-    filter_horizontal = ("hashtag", "like")
+    filter_horizontal = ("like",)
     readonly_fields = ("total_like", "comment_count", "created", "updated")
     # inlines = [CommentInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "delta", "image", "hashtag", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "delta", "image", "like", "read", "publish")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
 
@@ -262,13 +262,13 @@ class ChatAdmin(ImportExportModelAdmin):
     list_select_related = ("channel",)
     search_fields = ("title", "channel__owner__nickname", "created")
     ordering = ("channel", "-created")
-    filter_horizontal = ("hashtag", "like")
+    filter_horizontal = ("like",)
     readonly_fields = ("total_like", "thread_count", "joined_count", "created", "updated")
     inlines = [MessageInlineAdmin]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "hashtag", "like", "read", "period", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "like", "read", "period", "publish")}),
         ("確認項目", {"fields": ("total_like", "thread_count", "joined_count", "created", "updated")})
     ]
 
@@ -509,13 +509,12 @@ class MusicAdminSite(admin.ModelAdmin, PublishMixin):
     search_fields = ("title", "created")
     ordering = ("-created",)
     actions = ("published", "unpublished")
-    filter_horizontal = ("hashtag",)
     readonly_fields = ("read", "total_like", "comment_count", "created", "updated")
     # inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "lyric", "music", "hashtag", "download", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "lyric", "music", "download", "publish")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 
@@ -538,13 +537,12 @@ class ComicAdminSite(admin.ModelAdmin, PublishMixin):
     search_fields = ("title", "created")
     ordering = ("-created",)
     actions = ("published", "unpublished")
-    filter_horizontal = ("hashtag",)
     readonly_fields = ("read", "total_like", "comment_count", "created", "updated")
     # inlines = [CommentInline, ComicPageInline]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "image", "hashtag", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "image", "publish")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 
@@ -567,13 +565,12 @@ class PictureAdminSite(admin.ModelAdmin, PublishMixin):
     search_fields = ("title", "created")
     ordering = ("-created",)
     actions = ("published", "unpublished")
-    filter_horizontal = ("hashtag",)
     readonly_fields = ("read", "total_like", "comment_count", "created", "updated")
     # inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "image", "hashtag", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "image", "publish")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 
@@ -596,13 +593,12 @@ class BlogAdminSite(admin.ModelAdmin, PublishMixin):
     search_fields = ("title", "created")
     ordering = ("-created",)
     actions = ("published", "unpublished")
-    filter_horizontal = ("hashtag",)
     readonly_fields = ("read", "total_like", "comment_count", "created", "updated")
     # inlines = [CommentInline]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "delta", "image", "hashtag", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "delta", "image", "publish")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 
@@ -626,13 +622,12 @@ class ChatAdminSite(admin.ModelAdmin, PublishMixin):
     search_fields = ("title", "created")
     ordering = ("-created",)
     actions = ("published", "unpublished")
-    filter_horizontal = ("hashtag",)
     readonly_fields = ("read", "total_like", "thread_count", "joined_count", "created", "updated")
     inlines = [MessageInline]
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "hashtag", "period", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "period", "publish")}),
         ("確認項目", {"fields": ("read", "total_like", "thread_count", "joined_count", "created", "updated")})
     ]
 
