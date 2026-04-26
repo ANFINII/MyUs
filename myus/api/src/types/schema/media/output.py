@@ -23,7 +23,8 @@ class MediaOut(BaseModel):
 
 
 class HashtagOut(BaseModel):
-    jp_name: str
+    ulid: str
+    name: str
 
 
 class MediaDetailOut(BaseModel):

@@ -1,6 +1,7 @@
 from ninja import NinjaAPI
 from api.src.adapter.auth import AuthAPI
 from api.src.adapter.comment import CommentAPI
+from api.src.adapter.hashtag import MediaHashtagAPI
 from api.src.adapter.manage import ManageVideoAPI, ManageMusicAPI, ManageBlogAPI, ManageComicAPI, ManagePictureAPI, ManageChatAPI
 from api.src.adapter.media import HomeAPI, RecommendAPI, VideoAPI, MusicAPI, BlogAPI, ComicAPI, PictureAPI, ChatAPI
 from api.src.adapter.message import MessageAPI
@@ -34,5 +35,6 @@ api.add_router("/media/blog", BlogAPI().router, tags=["Media Blog"])
 api.add_router("/media/comic", ComicAPI().router, tags=["Media Comic"])
 api.add_router("/media/picture", PictureAPI().router, tags=["Media Picture"])
 api.add_router("/media/chat", ChatAPI().router, tags=["Media Chat"])
+api.add_router("/media/hashtag", MediaHashtagAPI().router, tags=["Media Hashtag"])
 api.add_router("/media/comment", CommentAPI().router, tags=["Media Comment"])
 api.add_router("/media/message", MessageAPI().router, tags=["Media Message"])

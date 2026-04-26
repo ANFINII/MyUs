@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, datetime
-from api.src.domain.interface.media.data import HashtagData
+from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.blog.data import BlogData

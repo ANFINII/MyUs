@@ -5,10 +5,12 @@ from api.src.injectors.index import (
     MediaModule,
     CommentModule,
     MessageModule,
+    HashtagModule,
     SearchTagModule,
     NotificationModule,
     FollowModule,
     SubscribeModule,
+    NgWordModule,
 )
 
 
@@ -18,10 +20,12 @@ modules: list[Module] = [
     MediaModule(),
     CommentModule(),
     MessageModule(),
+    HashtagModule(),
     SearchTagModule(),
     NotificationModule(),
     FollowModule(),
     SubscribeModule(),
+    NgWordModule(),
 ]
 
 injector = Injector(modules)
