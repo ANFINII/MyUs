@@ -1,7 +1,7 @@
 from django_ulid.models import ulid
 from api.db.models.media import Picture
 from api.src.domain.interface.channel.data import ChannelData
-from api.src.domain.interface.media.data import HashtagData
+from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.media.picture.data import PictureData
 
 
@@ -28,7 +28,7 @@ def convert_data(obj: Picture) -> PictureData:
             is_default=obj.channel.is_default,
             count=obj.channel.count,
         ),
-        hashtags=[HashtagData(id=h.id, ulid=h.ulid, name=h.name) for h in obj.hashtag.all()],
+        hashtags=[HashtagData(id=t.hashtag.id, ulid=t.hashtag.ulid, name=t.hashtag.name) for t in obj.picture_hashtags.all()],
     )
 
 
