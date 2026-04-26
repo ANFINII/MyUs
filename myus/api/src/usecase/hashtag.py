@@ -1,23 +1,17 @@
 import re
-from dataclasses import dataclass
 from api.modules.logger import log
 from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.domain.interface.ng_word.interface import FilterOption as NgWordFilterOption, NgWordInterface, SortOption as NgWordSortOption
 from api.src.injectors.container import injector
+from api.src.types.dto.hashtag import HashtagDTO
 from api.utils.enum.index import MediaType
 from api.utils.functions.media import get_media_repository
 
 
 HASHTAG_MAX_LENGTH = 30
 ALLOWED_PATTERN = re.compile(r"^[ぁ-んァ-ヶー一-龯a-zA-Z]+$")
-
-
-@dataclass(frozen=True, slots=True)
-class HashtagInput:
-    ulid: str
-    name: str
 
 
 def normalize_name(name: str) -> str:
@@ -43,7 +37,7 @@ def _load_ng_words() -> list[str]:
     return [n.word for n in repo.bulk_get(ids)]
 
 
-def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagInput]) -> bool:
+def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> bool:
     media_repo = get_media_repository(media_type)
     hashtag_repo = injector.get(HashtagInterface)
     media_ids = media_repo.get_ids(FilterOption(ulid=media_ulid), ExcludeOption(), SortOption(), PageOption())

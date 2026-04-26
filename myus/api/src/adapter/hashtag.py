@@ -1,10 +1,11 @@
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
+from api.src.types.dto.hashtag import HashtagDTO
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.hashtag import MediaHashtagsUpdateIn
 from api.src.usecase.auth import auth_check
-from api.src.usecase.hashtag import HashtagInput, update_media_hashtags
+from api.src.usecase.hashtag import update_media_hashtags
 
 
 class MediaHashtagAPI:
@@ -21,7 +22,7 @@ class MediaHashtagAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        hashtags = [HashtagInput(ulid=h.ulid, name=h.name) for h in input.hashtags]
+        hashtags = [HashtagDTO(ulid=h.ulid, name=h.name) for h in input.hashtags]
         if not update_media_hashtags(user_id, input.media_type, input.media_ulid, hashtags):
             return 400, ErrorOut(message="保存に失敗しました!")
 
