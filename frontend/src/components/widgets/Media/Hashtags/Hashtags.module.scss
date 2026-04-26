@@ -7,3 +7,51 @@
     color: rgb(0, 130, 255);
   }
 }
+
+.edit_button {
+  display: inline-flex;
+  align-items: center;
+  color: rgb(130, 130, 130);
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(0, 130, 255);
+  }
+}
+
+.edit_area {
+  padding: 8px;
+  border: 1px solid rgb(220, 220, 220);
+  border-radius: 6px;
+
+  .input {
+    flex: 1;
+  }
+
+  .edit_chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    font-size: 13px;
+    color: rgb(60, 60, 60);
+    background-color: rgb(240, 245, 255);
+    border: 1px solid rgb(180, 200, 230);
+    border-radius: 12px;
+  }
+
+  .delete_button {
+    display: inline-flex;
+    align-items: center;
+    color: rgb(160, 160, 160);
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(220, 60, 60);
+    }
+  }
+
+  .edit_actions {
+    justify-content: flex-end;
+  }
+}
