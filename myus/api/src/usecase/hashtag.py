@@ -31,7 +31,7 @@ def validate_name(name: str, ng_words: list[str]) -> bool:
     return True
 
 
-def _load_ng_words() -> list[str]:
+def get_ng_words() -> list[str]:
     repo = injector.get(NgWordInterface)
     ids = repo.get_ids(NgWordFilterOption(), NgWordSortOption())
     return [n.word for n in repo.bulk_get(ids)]
@@ -57,7 +57,7 @@ def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, 
         for tag in hashtag_repo.bulk_get(existing_ids):
             ulid_data_map[tag.ulid] = tag
 
-    ng_words = _load_ng_words()
+    ng_words = get_ng_words()
     seen_name: set[str] = set()
     update_hashtags: list[HashtagData] = []
 
