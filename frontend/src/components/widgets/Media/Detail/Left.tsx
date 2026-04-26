@@ -37,10 +37,12 @@ export interface MediaDetailState {
   subscribeCount: number
   text: string
   comments: Comment[]
+  hashtags: Hashtag[]
 }
 
 interface Props {
   media: {
+    ulid: string
     title: string
     content: string
     read: number
@@ -67,8 +69,9 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
       subscribeCount: 0,
       text: '',
       comments: media.comments,
+      hashtags: media.hashtags,
     }),
-    [mediaUser, media.like, media.comments],
+    [mediaUser, media.like, media.comments, media.hashtags],
   )
 
   const router = useRouter()
@@ -80,11 +83,13 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const [formState, setFormState] = useState<MediaDetailState>(initFormState)
   useEffect(() => setFormState(initFormState), [router.query.ulid, initFormState])
 
-  const { isLike, isSubscribe, likeCount, subscribeCount, text, comments } = formState
+  const { isLike, isSubscribe, likeCount, subscribeCount, text, comments, hashtags } = formState
+  const isOwner = user.isActive && user.ulid === channel.ownerUlid
   const isFallowDisable = !user.isActive || user.ulid === channel.ownerUlid
   const handleModal = () => setIsModal(!isModal)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
+  const handleHashtags = (hashtags: Hashtag[]) => setFormState((prev) => ({ ...prev, hashtags }))
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setFormState((prev) => ({ ...prev, text: e.target.value }))
 
   const handleLike = async () => {
@@ -138,7 +143,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
           <CountLike isLike={isLike} disable={!user.isActive} count={likeCount} onClick={handleLike} />
         </div>
 
-        <Hashtags hashtags={media.hashtags} mediaPath={media.mediaPath} />
+        <Hashtags hashtags={hashtags} mediaPath={media.mediaPath} mediaUlid={media.ulid} isOwner={isOwner} onUpdate={handleHashtags} onToast={handleToast} />
       </VStack>
 
       <Divide />
