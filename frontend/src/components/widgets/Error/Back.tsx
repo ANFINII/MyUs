@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import cx from 'utils/functions/cx'
 import Button from 'components/parts/Button'
 import style from './Error.module.scss'
 
@@ -23,8 +22,8 @@ export default function BackError(props: Props): React.JSX.Element {
 
   return (
     <>
-      <h2 className={cx(style.error, 'mt_24')}>{content}</h2>
-      <Button name="戻る" className="mt_24 w_80" onClick={handleBack} />
+      <h2 className={style.error}>{content}</h2>
+      <Button name="戻る" className={style.button} onClick={handleBack} />
     </>
   )
 }
