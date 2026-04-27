@@ -10,7 +10,6 @@ import IconBell from 'components/parts/Icon/Bell'
 import IconCircle from 'components/parts/Icon/Circle'
 import IconCross from 'components/parts/Icon/Cross'
 import NavItem from 'components/parts/NavItem'
-import MenuItem from 'components/parts/NavItem/MenuItem'
 import style from './DropMenu.module.scss'
 
 interface Props {
@@ -91,7 +90,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   return (
     <nav className={cx(style.drop_menu, style.drop_menu_notice, open && style.active)}>
       <ul>
-        <MenuItem label="通知設定" icon={<IconBell size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/notification')} />
+        <NavItem label="通知設定" icon={<IconBell size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/notification')} />
         {notifications?.datas?.map((notification) => {
           const { ulid, typeName, userFrom, contentObject, isConfirmed } = notification
           const { avatar, nickname } = userFrom

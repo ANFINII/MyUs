@@ -8,7 +8,7 @@ import IconGrid from 'components/parts/Icon/Grid'
 import IconMusic from 'components/parts/Icon/Music'
 import IconPicture from 'components/parts/Icon/Picture'
 import IconVideo from 'components/parts/Icon/Video'
-import MenuItem from 'components/parts/NavItem/MenuItem'
+import NavItem from 'components/parts/NavItem'
 import style from './DropMenu.module.scss'
 
 interface Props {
@@ -35,13 +35,13 @@ export default function DropMenuCloud(props: Props): React.JSX.Element {
   return (
     <nav className={cx(style.drop_menu, open && style.active)}>
       <ul>
-        <MenuItem label="投稿管理" icon={<IconGrid size="1.5em" />} className={style.item} onClick={() => handleManage()} />
-        <MenuItem label="Videoアップロード" icon={<IconVideo size="1.5em" />} className={style.item} onClick={() => handleRouter('video')} />
-        <MenuItem label="Musicアップロード" icon={<IconMusic size="1.5em" />} className={style.item} onClick={() => handleRouter('music')} />
-        <MenuItem label="Blogアップロード" icon={<IconBlog size="1.5em" />} className={style.item} onClick={() => handleRouter('blog')} />
-        <MenuItem label="Comicアップロード" icon={<IconComic size="1.5em" />} className={style.item} onClick={() => handleRouter('comic')} />
-        <MenuItem label="Pictureアップロード" icon={<IconPicture size="1.5em" />} className={style.item} onClick={() => handleRouter('picture')} />
-        <MenuItem label="Chatアップロード" icon={<IconChat size="1.5em" />} className={style.item} onClick={() => handleRouter('chat')} />
+        <NavItem label="投稿管理" icon={<IconGrid size="1.5em" />} className={style.item} onClick={() => handleManage()} />
+        <NavItem label="Videoアップロード" icon={<IconVideo size="1.5em" />} className={style.item} onClick={() => handleRouter('video')} />
+        <NavItem label="Musicアップロード" icon={<IconMusic size="1.5em" />} className={style.item} onClick={() => handleRouter('music')} />
+        <NavItem label="Blogアップロード" icon={<IconBlog size="1.5em" />} className={style.item} onClick={() => handleRouter('blog')} />
+        <NavItem label="Comicアップロード" icon={<IconComic size="1.5em" />} className={style.item} onClick={() => handleRouter('comic')} />
+        <NavItem label="Pictureアップロード" icon={<IconPicture size="1.5em" />} className={style.item} onClick={() => handleRouter('picture')} />
+        <NavItem label="Chatアップロード" icon={<IconChat size="1.5em" />} className={style.item} onClick={() => handleRouter('chat')} />
       </ul>
     </nav>
   )
