@@ -6,6 +6,8 @@ from api.src.domain.interface.media.blog.data import BlogData
 
 
 def convert_data(obj: Blog) -> BlogData:
+    category = obj.category.first()
+    assert category is not None, "Category is required"
     return BlogData(
         id=obj.id,
         ulid=obj.ulid,
@@ -30,6 +32,7 @@ def convert_data(obj: Blog) -> BlogData:
             is_default=obj.channel.is_default,
             count=obj.channel.count,
         ),
+        category_ulid=category.ulid,
         hashtags=[HashtagData(id=bh.hashtag.id, ulid=bh.hashtag.ulid, name=bh.hashtag.name) for bh in obj.blog_hashtags.all()],
     )
 

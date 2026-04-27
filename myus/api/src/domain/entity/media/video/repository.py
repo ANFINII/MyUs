@@ -13,7 +13,7 @@ VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "
 
 class VideoRepository(VideoInterface):
     def queryset(self) -> QuerySet[Video]:
-        return Video.objects.select_related("channel", "channel__owner").prefetch_related("like", "hashtag")
+        return Video.objects.select_related("channel", "channel__owner").prefetch_related("like", "hashtag", "category")
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
         qs = Video.objects.filter(*filter_q_list(filter, exclude))

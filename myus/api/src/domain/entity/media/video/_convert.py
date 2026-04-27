@@ -6,6 +6,8 @@ from api.src.domain.interface.media.video.data import VideoData
 
 
 def convert_data(obj: Video) -> VideoData:
+    category = obj.category.first()
+    assert category is not None, "Category is required"
     return VideoData(
         id=obj.id,
         ulid=obj.ulid,
@@ -30,6 +32,7 @@ def convert_data(obj: Video) -> VideoData:
             is_default=obj.channel.is_default,
             count=obj.channel.count,
         ),
+        category_ulid=category.ulid,
         hashtags=[HashtagData(id=t.hashtag.id, ulid=t.hashtag.ulid, name=t.hashtag.name) for t in obj.video_hashtags.all()],
     )
 

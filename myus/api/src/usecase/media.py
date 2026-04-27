@@ -38,7 +38,6 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Me
     if channel is None:
         return None
 
-    repository = injector.get(VideoInterface)
     video_path = save_upload(video, MediaUpload.VIDEO, channel.ulid)
 
     new_video = VideoData(
@@ -55,9 +54,11 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Me
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
+        category_ulid="",
         hashtags=[],
     )
 
+    repository = injector.get(VideoInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
@@ -87,8 +88,6 @@ def create_music(input: MusicIn, music: UploadedFile) -> MediaCreateDTO | None:
     if channel is None:
         return None
 
-    repository = injector.get(MusicInterface)
-
     new_music = MusicData(
         id=0,
         ulid="",
@@ -103,9 +102,11 @@ def create_music(input: MusicIn, music: UploadedFile) -> MediaCreateDTO | None:
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
+        category_ulid="",
         hashtags=[],
     )
 
+    repository = injector.get(MusicInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
@@ -123,8 +124,6 @@ def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
     if channel is None:
         return None
 
-    repository = injector.get(BlogInterface)
-
     new_blog = BlogData(
         id=0,
         ulid="",
@@ -139,9 +138,11 @@ def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
+        category_ulid="",
         hashtags=[],
     )
 
+    repository = injector.get(BlogInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
@@ -159,8 +160,6 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
     if channel is None:
         return None
 
-    repository = injector.get(ComicInterface)
-
     new_comic = ComicData(
         id=0,
         ulid="",
@@ -174,9 +173,11 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
+        category_ulid="",
         hashtags=[],
     )
 
+    repository = injector.get(ComicInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
@@ -194,8 +195,6 @@ def create_picture(input: PictureIn, image: UploadedFile) -> MediaCreateDTO | No
     if channel is None:
         return None
 
-    repository = injector.get(PictureInterface)
-
     new_picture = PictureData(
         id=0,
         ulid="",
@@ -208,9 +207,11 @@ def create_picture(input: PictureIn, image: UploadedFile) -> MediaCreateDTO | No
         created=datetime.min,
         updated=datetime.min,
         channel=channel,
+        category_ulid="",
         hashtags=[],
     )
 
+    repository = injector.get(PictureInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
@@ -228,8 +229,6 @@ def create_chat(input: ChatIn) -> MediaCreateDTO | None:
     if channel is None:
         return None
 
-    repository = injector.get(ChatInterface)
-
     new_chat = ChatData(
         id=0,
         ulid="",
@@ -244,9 +243,11 @@ def create_chat(input: ChatIn) -> MediaCreateDTO | None:
         thread_count=0,
         joined_count=0,
         channel=channel,
+        category_ulid="",
         hashtags=[],
     )
 
+    repository = injector.get(ChatInterface)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 

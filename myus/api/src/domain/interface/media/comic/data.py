@@ -18,4 +18,5 @@ class ComicData:
     created: datetime
     updated: datetime
     channel: ChannelData
+    category_ulid: str
     hashtags: list[HashtagData]

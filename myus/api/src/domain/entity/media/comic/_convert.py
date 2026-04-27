@@ -6,6 +6,8 @@ from api.src.domain.interface.media.comic.data import ComicData
 
 
 def convert_data(obj: Comic) -> ComicData:
+    category = obj.category.first()
+    assert category is not None, "Category is required"
     return ComicData(
         id=obj.id,
         ulid=obj.ulid,
@@ -29,6 +31,7 @@ def convert_data(obj: Comic) -> ComicData:
             is_default=obj.channel.is_default,
             count=obj.channel.count,
         ),
+        category_ulid=category.ulid,
         hashtags=[HashtagData(id=ch.hashtag.id, ulid=ch.hashtag.ulid, name=ch.hashtag.name) for ch in obj.comic_hashtags.all()],
     )
 
