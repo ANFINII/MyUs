@@ -2,7 +2,6 @@ import { ChangeEvent } from 'react'
 import { Option } from 'types/internal/other'
 import cx from 'utils/functions/cx'
 import Select from 'components/parts/Select'
-import VStack from 'components/parts/Stack/Vertical'
 import style from './SelectBox.module.scss'
 
 interface Props {
@@ -23,7 +22,7 @@ export default function SelectBox(props: Props): React.JSX.Element {
   const isRequired = required && !value
 
   return (
-    <VStack gap="2" className={className}>
+    <div className={cx(style.box, className)}>
       {label && (
         <label htmlFor={label} className={style.label}>
           {label}
@@ -33,6 +32,6 @@ export default function SelectBox(props: Props): React.JSX.Element {
         <Select {...rest} value={value} id={label} className={cx(style.select, isRequired && style.error)} />
       </div>
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
-    </VStack>
+    </div>
   )
 }

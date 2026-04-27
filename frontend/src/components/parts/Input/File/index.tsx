@@ -1,6 +1,5 @@
 import { ChangeEvent, useRef, useState } from 'react'
 import cx from 'utils/functions/cx'
-import VStack from 'components/parts/Stack/Vertical'
 import style from '../Input.module.scss'
 
 interface Props {
@@ -36,7 +35,7 @@ export default function InputFile(props: Props): React.JSX.Element {
   }
 
   return (
-    <VStack gap="2" className={className}>
+    <div className={cx(style.box, className)}>
       {label && (
         <label htmlFor={label} className={style.label}>
           {label}
@@ -46,6 +45,6 @@ export default function InputFile(props: Props): React.JSX.Element {
       <input placeholder="ファイル選択..." value={fileNames.join(', ')} required={required} onClick={handleClick} className={cx(style.input, isRequired && style.error)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
       {isErrorText && <p className={style.error_text}>{errorText}</p>}
-    </VStack>
+    </div>
   )
 }
