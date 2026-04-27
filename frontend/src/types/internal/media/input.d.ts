@@ -19,6 +19,7 @@ export interface MusicIn {
 
 export interface BlogIn {
   channelUlid: string
+  categoryUlid: string
   publish: boolean
   title: string
   content: string
