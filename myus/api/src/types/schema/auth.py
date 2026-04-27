@@ -32,6 +32,10 @@ class PasswordChangeIn(BaseModel):
     new_password2: str
 
 
+class WithdrawalIn(BaseModel):
+    password: str
+
+
 class SignupVerifyOut(BaseModel):
     email: str
 
