@@ -8,6 +8,7 @@ export const apiSignupEmail = base + '/auth/signup/email'
 export const apiSignupVerify = base + '/auth/signup/verify'
 export const apiLogin = base + '/auth/login'
 export const apiLogout = base + '/auth/logout'
+export const apiPasswordChange = base + '/auth/password/change'
 
 // User
 export const apiUser = base + '/user/me'

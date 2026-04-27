@@ -1,6 +1,11 @@
 import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
+import { postPasswordChange } from 'api/internal/auth'
+import { FetchError } from 'utils/constants/enum'
+import { encrypt } from 'utils/functions/encrypt'
+import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
+import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -16,19 +21,38 @@ interface Values {
 
 export default function PasswordChange(): React.JSX.Element {
   const router = useRouter()
+  const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
+  const { toast, handleToast } = useToast()
   const [values, setValues] = useState<Values>({ oldPassword: '', newPassword1: '', newPassword2: '' })
 
   const handleBack = () => router.push('/setting/profile')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { oldPassword, newPassword1, newPassword2 } = values
     if (!isRequiredCheck({ oldPassword, newPassword1, newPassword2 })) return
+    if (newPassword1 !== newPassword2) {
+      handleToast('新規パスワードが一致しません', true)
+      return
+    }
+    handleLoading(true)
+    const request = {
+      oldPassword: encrypt(oldPassword),
+      newPassword1: encrypt(newPassword1),
+      newPassword2: encrypt(newPassword2),
+    }
+    const ret = await postPasswordChange(request)
+    handleLoading(false)
+    if (ret.isErr()) {
+      handleToast(FetchError.Post, true)
+      return
+    }
+    router.push('/setting/password/change-done')
   }
 
   return (
-    <Main title="パスワード変更">
+    <Main title="パスワード変更" toast={toast}>
       <article className={style.article_pass}>
         <form method="POST" action="" className={style.form_account}>
           <VStack gap="8">
@@ -65,7 +89,7 @@ export default function PasswordChange(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="green" size="l" name="変更する" onClick={handleSubmit} />
+            <Button color="green" size="l" name="変更する" loading={isLoading} onClick={handleSubmit} />
             <Button color="blue" size="l" name="戻る" onClick={handleBack} />
           </VStack>
         </form>
