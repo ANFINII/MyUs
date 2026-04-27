@@ -1,4 +1,5 @@
 import { useState, ChangeEvent } from 'react'
+import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { VideoIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
@@ -18,19 +19,21 @@ import VStack from 'components/parts/Stack/Vertical'
 
 interface Props {
   channels: Channel[]
+  categories: Category[]
 }
 
 export default function VideoCreate(props: Props): React.JSX.Element {
-  const { channels } = props
+  const { channels, categories } = props
 
   const channelUlid = channels.find((c) => c.isDefault)?.ulid ?? ''
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions: Option[] = [{ label: '未選択', value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
   const [formKey, setFormKey] = useState(0)
-  const [values, setValues] = useState<VideoIn>({ channelUlid, publish: true, title: '', content: '' })
+  const [values, setValues] = useState<VideoIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '' })
 
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -40,8 +43,8 @@ export default function VideoCreate(props: Props): React.JSX.Element {
   const handleMovie = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, video: files })
 
   const handleForm = async () => {
-    const { channelUlid, title, content, image, video } = values
-    if (!isRequiredCheck({ channelUlid, title, content, image, video })) return
+    const { channelUlid, categoryUlid, title, content, image, video } = values
+    if (!isRequiredCheck({ channelUlid, categoryUlid, title, content, image, video })) return
     handleLoading(true)
     const ret = await postVideoCreate(values)
     handleLoading(false)
@@ -49,7 +52,7 @@ export default function VideoCreate(props: Props): React.JSX.Element {
       handleToast(FetchError.Post, true)
       return
     }
-    setValues({ channelUlid, publish: true, title: '', content: '' })
+    setValues({ channelUlid, categoryUlid: '', publish: true, title: '', content: '' })
     setFormKey((prev) => prev + 1)
     handleToast('作成中です。完了まで時間がかかる場合があります', false)
   }
@@ -60,6 +63,7 @@ export default function VideoCreate(props: Props): React.JSX.Element {
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
           <SelectBox label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
+          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required={isRequired} onChange={handleSelect} />
           <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
           <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />

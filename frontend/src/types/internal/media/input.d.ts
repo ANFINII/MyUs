@@ -1,98 +1,69 @@
-export interface VideoIn {
-  channelUlid: string
-  publish: boolean
-  title: string
-  content: string
-  image?: File
-  video?: File
-}
-
-export interface MusicIn {
-  channelUlid: string
-  publish: boolean
-  title: string
-  content: string
-  lyric: string
-  download: boolean
-  music?: File
-}
-
-export interface BlogIn {
+export interface MediaIn {
   channelUlid: string
   categoryUlid: string
   publish: boolean
   title: string
   content: string
+}
+
+export interface MediaUpdateIn {
+  title: string
+  content: string
+  publish: boolean
+}
+
+export interface VideoIn extends MediaIn {
+  image?: File
+  video?: File
+}
+
+export interface MusicIn extends MediaIn {
+  lyric: string
+  download: boolean
+  music?: File
+}
+
+export interface BlogIn extends MediaIn {
   richtext: string
   delta: string
   image?: File
 }
 
-export interface ComicIn {
-  channelUlid: string
-  publish: boolean
-  title: string
-  content: string
+export interface ComicIn extends MediaIn {
   image?: File
   pages?: File[]
 }
 
-export interface PictureIn {
-  channelUlid: string
-  publish: boolean
-  title: string
-  content: string
+export interface PictureIn extends MediaIn {
   image?: File
 }
 
-export interface ChatIn {
-  channelUlid: string
-  publish: boolean
-  title: string
-  content: string
+export interface ChatIn extends MediaIn {
   period: string
 }
 
-export interface VideoUpdateIn {
-  title: string
-  content: string
-  publish: boolean
+export interface VideoUpdateIn extends MediaUpdateIn {
   image?: File
 }
 
-export interface MusicUpdateIn {
-  title: string
-  content: string
+export interface MusicUpdateIn extends MediaUpdateIn {
   lyric: string
   download: boolean
-  publish: boolean
 }
 
-export interface BlogUpdateIn {
-  title: string
-  content: string
+export interface BlogUpdateIn extends MediaUpdateIn {
   richtext: string
-  publish: boolean
   image?: File
 }
 
-export interface ComicUpdateIn {
-  title: string
-  content: string
-  publish: boolean
+export interface ComicUpdateIn extends MediaUpdateIn {
   image?: File
 }
 
-export interface PictureUpdateIn {
-  title: string
-  content: string
-  publish: boolean
+export interface PictureUpdateIn extends MediaUpdateIn {
   image?: File
 }
 
-export interface ChatUpdateIn {
-  title: string
-  content: string
+export interface ChatUpdateIn extends MediaUpdateIn {
   period: string
-  publish: boolean
 }
