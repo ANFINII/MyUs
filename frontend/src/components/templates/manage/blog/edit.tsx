@@ -1,6 +1,7 @@
 import { useState, ChangeEvent } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
+import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { BlogUpdateIn } from 'types/internal/media/input'
 import { Blog } from 'types/internal/media/output'
@@ -26,22 +27,25 @@ const TextEditor = dynamic(() => import('components/widgets/TextEditor'), { ssr:
 interface Props {
   data: Blog
   channels: Channel[]
+  categories: Category[]
 }
 
 export default function ManageBlogEdit(props: Props): React.JSX.Element {
-  const { data, channels } = props
+  const { data, channels, categories } = props
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions: Option[] = [{ label: '未選択', value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
-  const [values, setValues] = useState<BlogUpdateIn>({ title: data.title, content: data.content, richtext: data.richtext, publish: data.publish })
+  const [values, setValues] = useState<BlogUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, richtext: data.richtext, publish: data.publish })
 
   const handleBack = () => router.push('/manage/blog')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleFile = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
@@ -52,8 +56,8 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   }
 
   const handleForm = async () => {
-    const { title, content, richtext } = values
-    if (!isRequiredCheck({ title, content, richtext })) return
+    const { categoryUlid, title, content, richtext } = values
+    if (!isRequiredCheck({ categoryUlid, title, content, richtext })) return
     handleLoading(true)
     const ret = await putManageBlog(data.ulid, values)
     handleLoading(false)
@@ -77,6 +81,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
           <SelectBox label="チャンネル" name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
+          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required={isRequired} onChange={handleSelect} />
           <Input label="タイトル" name="title" value={values.title} required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" value={values.content} required={isRequired} onChange={handleText} />
           <InputFile label="サムネイル" accept="image/*" onChange={handleFile} />

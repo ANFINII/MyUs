@@ -29,6 +29,7 @@ export interface Media {
   created: Date
   updated: Date
   channel: Channel
+  categoryUlid: string
   mediaUser: MediaUser
 }
 
