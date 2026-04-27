@@ -1,6 +1,6 @@
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
-import BackError from 'components/parts/Error/Back'
+import BackError from 'components/widgets/Error/Back'
 
 export default function Custom500(): React.JSX.Element {
   return (
