@@ -9,7 +9,6 @@ import IconHouse from 'components/parts/Icon/House'
 import IconLightning from 'components/parts/Icon/Lightning'
 import IconPerson from 'components/parts/Icon/Person'
 import NavItem from 'components/parts/NavItem'
-import MenuItem from 'components/parts/NavItem/MenuItem'
 import style from './SideMenu.module.scss'
 
 interface Props {
@@ -35,15 +34,15 @@ export default function SideMenu(props: Props): React.JSX.Element {
         </NavItem>
 
         <ul>
-          <MenuItem label="ホーム" icon={<IconHouse size="1.5em" />} className={style.item} onClick={handleClick('/')} />
-          <MenuItem label="急上昇" icon={<IconLightning size="1.5em" type="defalt" />} className={style.item} onClick={handleClick('/recommend')} />
-          <MenuItem label="フォロー" icon={<IconPerson size="1.5em" type="check" />} className={style.item} onClick={handleClick('/menu/follow')} />
-          <MenuItem label="チャンネル" icon={<IconGrid size="1.5em" />} className={style.item} onClick={handleClick('/menu/channel')} />
+          <NavItem label="ホーム" icon={<IconHouse size="1.5em" />} className={style.item} onClick={handleClick('/')} />
+          <NavItem label="急上昇" icon={<IconLightning size="1.5em" type="defalt" />} className={style.item} onClick={handleClick('/recommend')} />
+          <NavItem label="フォロー" icon={<IconPerson size="1.5em" type="check" />} className={style.item} onClick={handleClick('/menu/follow')} />
+          <NavItem label="チャンネル" icon={<IconGrid size="1.5em" />} className={style.item} onClick={handleClick('/menu/channel')} />
         </ul>
 
         <ul className={style.footer}>
-          <MenuItem label="利用規約" icon={<IconFile size="1.5em" type="earmark" />} className={style.item} onClick={handleClick('/menu/userpolicy')} />
-          <MenuItem label="Knowledge Base" icon={<IconGlobe size="1.5em" />} className={style.item} onClick={handleClick('/menu/knowledge')} />
+          <NavItem label="利用規約" icon={<IconFile size="1.5em" type="earmark" />} className={style.item} onClick={handleClick('/menu/userpolicy')} />
+          <NavItem label="Knowledge Base" icon={<IconGlobe size="1.5em" />} className={style.item} onClick={handleClick('/menu/knowledge')} />
         </ul>
       </nav>
     </aside>
