@@ -3,15 +3,27 @@ from ninja import Router
 from api.modules.logger import log
 from api.src.types.dto.hashtag import HashtagDTO
 from api.src.types.schema.common import ErrorOut
-from api.src.types.schema.hashtag import MediaHashtagsUpdateIn
+from api.src.types.schema.hashtag import HashtagOut, MediaHashtagsUpdateIn
 from api.src.usecase.auth import auth_check
-from api.src.usecase.hashtag import update_media_hashtags
+from api.src.usecase.hashtag import get_master_hashtags, update_media_hashtags
 
 
 class MediaHashtagAPI:
     """MediaHashtagAPI"""
 
     router = Router()
+
+    @staticmethod
+    @router.get("", response={200: list[HashtagOut], 401: ErrorOut})
+    def get(request: HttpRequest):
+        log.info("MediaHashtagAPI get")
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        hashtags = get_master_hashtags()
+        return 200, [HashtagOut(ulid=h.ulid, name=h.name) for h in hashtags]
 
     @staticmethod
     @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})

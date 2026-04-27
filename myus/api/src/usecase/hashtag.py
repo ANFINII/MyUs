@@ -1,7 +1,7 @@
 import re
 from api.modules.logger import log
 from api.src.domain.interface.hashtag.data import HashtagData
-from api.src.domain.interface.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption
+from api.src.domain.interface.hashtag.interface import FilterOption as HashtagFilterOption, HashtagInterface, SortOption as HashtagSortOption, SortType as HashtagSortType
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PageOption, SortOption
 from api.src.domain.interface.ng_word.interface import FilterOption as NgWordFilterOption, NgWordInterface, SortOption as NgWordSortOption
 from api.src.injectors.container import injector
@@ -28,6 +28,12 @@ def validate_name(name: str, ng_words: list[str]) -> bool:
     if any(ng in name for ng in ng_words):
         return False
     return True
+
+
+def get_master_hashtags() -> list[HashtagDTO]:
+    repo = injector.get(HashtagInterface)
+    ids = repo.get_ids(HashtagFilterOption(), HashtagSortOption(is_asc=True, sort_type=HashtagSortType.NAME))
+    return [HashtagDTO(ulid=h.ulid, name=h.name) for h in repo.bulk_get(ids)]
 
 
 def get_ng_words() -> list[str]:
