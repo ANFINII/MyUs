@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import dynamic from 'next/dynamic'
+import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { BlogIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
@@ -21,18 +22,20 @@ const TextEditor = dynamic(() => import('components/widgets/TextEditor'), { ssr:
 
 interface Props {
   channels: Channel[]
+  categories: Category[]
 }
 
 export default function BlogCreate(props: Props): React.JSX.Element {
-  const { channels } = props
+  const { channels, categories } = props
 
   const channelUlid = channels.find((c) => c.isDefault)?.ulid ?? ''
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions: Option[] = [{ label: '未選択', value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<BlogIn>({ channelUlid, publish: true, title: '', content: '', richtext: '', delta: '' })
+  const [values, setValues] = useState<BlogIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', richtext: '', delta: '' })
 
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -46,8 +49,8 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   }
 
   const handleForm = async () => {
-    const { channelUlid, title, content, richtext, image } = values
-    if (!isRequiredCheck({ channelUlid, title, content, richtext, image })) return
+    const { channelUlid, categoryUlid, title, content, richtext, image } = values
+    if (!isRequiredCheck({ channelUlid, categoryUlid, title, content, richtext, image })) return
     handleLoading(true)
     const ret = await postBlogCreate(values)
     handleLoading(false)
@@ -55,7 +58,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
       handleToast(FetchError.Post, true)
       return
     }
-    setValues({ channelUlid, publish: true, title: '', content: '', richtext: '', delta: '' })
+    setValues({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', richtext: '', delta: '' })
     handleToast('作成しました', false)
   }
 
@@ -65,6 +68,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
           <SelectBox label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
+          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} onChange={handleSelect} />
           <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
           <InputFile label="サムネイル" accept="image/*" required={isRequired} onChange={handleFile} />
