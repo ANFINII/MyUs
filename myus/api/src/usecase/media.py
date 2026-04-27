@@ -1,7 +1,10 @@
 from dataclasses import replace
 from datetime import date, datetime
+from django.db import transaction
 from ninja import UploadedFile
 from api.modules.logger import log
+from api.src.domain.interface.category.data import CategoryData
+from api.src.domain.interface.category.interface import CategoryInterface
 from api.src.domain.interface.media.video.data import VideoData
 from api.src.domain.interface.media.music.data import MusicData
 from api.src.domain.interface.media.blog.data import BlogData
@@ -21,7 +24,7 @@ from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, 
 from api.src.usecase.channel import get_channel_data
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
-from api.utils.enum.index import CommentType, ImageUpload, MediaUpload
+from api.utils.enum.index import CommentType, ImageUpload, MediaType, MediaUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_media_user
@@ -128,10 +131,15 @@ def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
         hashtags=[],
     )
 
-    new_ids = repository.bulk_save([new_blog])
-    assert len(new_ids) == 1, "作成に失敗しました"
-    obj = repository.bulk_get(new_ids)[0]
+    category_repo = injector.get(CategoryInterface)
+    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
+    with transaction.atomic():
+        new_ids = repository.bulk_save([new_blog])
+        assert len(new_ids) == 1, "作成に失敗しました"
+        category_repo.bulk_save(MediaType.BLOG, new_ids[0], categories)
+
+    obj = repository.bulk_get(new_ids)[0]
     return MediaCreateDTO(ulid=obj.ulid)
 
 

@@ -19,6 +19,7 @@ class MusicIn(BaseModel):
 
 class BlogIn(BaseModel):
     channel_ulid: str
+    category_ulid: str
     publish: bool
     title: str
     content: str
