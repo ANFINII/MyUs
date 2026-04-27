@@ -25,7 +25,7 @@ interface Props {
 export default function VideoCreate(props: Props): React.JSX.Element {
   const { channels, categories } = props
 
-  const channelUlid = channels.find((c) => c.isDefault)?.ulid ?? ''
+  const channelUlid = channels.find((c) => c.isDefault)!.ulid
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: '未選択', value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
