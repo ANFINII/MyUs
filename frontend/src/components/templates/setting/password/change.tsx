@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
+import { PasswordChangeIn } from 'types/internal/auth'
 import { postPasswordChange } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
@@ -13,18 +14,12 @@ import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../Setting.module.scss'
 
-interface Values {
-  oldPassword: string
-  newPassword1: string
-  newPassword2: string
-}
-
 export default function PasswordChange(): React.JSX.Element {
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<Values>({ oldPassword: '', newPassword1: '', newPassword2: '' })
+  const [values, setValues] = useState<PasswordChangeIn>({ oldPassword: '', newPassword1: '', newPassword2: '' })
 
   const handleBack = () => router.push('/setting/profile')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -37,7 +32,7 @@ export default function PasswordChange(): React.JSX.Element {
       return
     }
     handleLoading(true)
-    const request = {
+    const request: PasswordChangeIn = {
       oldPassword: encrypt(oldPassword),
       newPassword1: encrypt(newPassword1),
       newPassword2: encrypt(newPassword2),
