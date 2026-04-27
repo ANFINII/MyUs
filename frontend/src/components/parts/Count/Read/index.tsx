@@ -11,7 +11,7 @@ export default function CountRead(props: Props): React.JSX.Element {
   return (
     <div className={style.count}>
       <div className={style.icon}>
-        <IconCaret size="16" className="mr_8" />
+        <IconCaret size="16" />
       </div>
       <span>{read}</span>
     </div>
