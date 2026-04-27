@@ -9,6 +9,7 @@ export const apiSignupVerify = base + '/auth/signup/verify'
 export const apiLogin = base + '/auth/login'
 export const apiLogout = base + '/auth/logout'
 export const apiPasswordChange = base + '/auth/password/change'
+export const apiWithdrawal = base + '/auth/withdrawal'
 
 // User
 export const apiUser = base + '/user/me'

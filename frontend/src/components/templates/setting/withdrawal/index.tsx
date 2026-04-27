@@ -2,42 +2,28 @@ import { useRouter } from 'next/router'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
 import style from '../Setting.module.scss'
 
 export default function Withdrawal(): React.JSX.Element {
   const router = useRouter()
   const handleBack = () => router.push('/')
-  const handleWithdrawal = () => router.push('/setting/withdrawal/confirm')
-
-  const messages = false
-  const message = '退会URL'
-  const tokenSigned = false
-  const expiredSeconds = 60
+  const handleNext = () => router.push('/setting/withdrawal/confirm')
 
   return (
     <Main title="退会処理">
       <article className={style.article_pass}>
-        <form method="POST" action="" className={style.form_account}>
-          {messages && (
-            <ul className={style.messages_password_change}>
-              <li>{messages}</li>
-            </ul>
-          )}
-
-          <VStack gap="12">
-            <p>{expiredSeconds}秒有効なURLを生成します</p>
-            <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} required />
+        <div className={style.form_account}>
+          <VStack gap="8" className="ws_nowrap">
+            <p>退会するとアカウントが利用できなくなります！</p>
+            <p className="red">この操作は取り消しできません。</p>
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="green" size="l" name="退会URL生成" />
-            {tokenSigned && <Button color="red" size="l" name="退会する" onClick={handleWithdrawal} />}
-            {message && <Button color="red" size="l" name={message} />}
+            <Button color="red" size="l" name="退会画面に進む" onClick={handleNext} />
             <Button color="blue" size="l" name="ホーム" onClick={handleBack} />
           </VStack>
-        </form>
+        </div>
       </article>
       <Footer />
     </Main>

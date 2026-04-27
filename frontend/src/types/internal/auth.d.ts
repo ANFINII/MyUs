@@ -29,3 +29,7 @@ export interface PasswordChangeIn {
   newPassword1: string
   newPassword2: string
 }
+
+export interface WithdrawalIn {
+  password: string
+}

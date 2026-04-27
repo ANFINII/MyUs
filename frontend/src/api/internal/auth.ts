@@ -1,7 +1,7 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
-import { LoginIn, PasswordChangeIn, SignupIn, SignupVerifyOut } from 'types/internal/auth'
-import { apiLogin, apiLogout, apiPasswordChange, apiSignup, apiSignupEmail, apiSignupVerify } from 'api/uri'
+import { LoginIn, PasswordChangeIn, SignupIn, SignupVerifyOut, WithdrawalIn } from 'types/internal/auth'
+import { apiLogin, apiLogout, apiPasswordChange, apiSignup, apiSignupEmail, apiSignupVerify, apiWithdrawal } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const postLogin = async (request: LoginIn): Promise<ApiOut<void>> => {
@@ -30,4 +30,8 @@ export const postReset = async (email: string): Promise<ApiOut<void>> => {
 
 export const postPasswordChange = async (request: PasswordChangeIn): Promise<ApiOut<void>> => {
   return await apiOut(apiClient('json').post(apiPasswordChange, camelSnake(request)))
+}
+
+export const postWithdrawal = async (request: WithdrawalIn): Promise<ApiOut<void>> => {
+  return await apiOut(apiClient('json').post(apiWithdrawal, request))
 }
