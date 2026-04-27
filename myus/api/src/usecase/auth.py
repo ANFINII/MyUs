@@ -1,7 +1,9 @@
 import jwt
+from dataclasses import replace
 from datetime import date, datetime
 from django.conf import settings
 from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.http import HttpRequest
 from django.template.loader import render_to_string
@@ -10,7 +12,7 @@ from api.modules.logger import log
 from api.src.domain.interface.user.data import MyPageData, PlanData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
-from api.src.types.schema.auth import SignupIn
+from api.src.types.schema.auth import PasswordChangeIn, SignupIn
 from api.utils.functions.encrypt import decrypt
 from api.utils.functions.token import signup_token
 from api.utils.functions.validation import has_email
@@ -189,3 +191,43 @@ def signup_user(input: SignupIn) -> bool:
     except Exception as e:
         log.error("Signup error", exc=e)
         return False
+
+
+PASSWORD_MIN_LENGTH = 8
+PASSWORD_MAX_LENGTH = 16
+
+
+def change_password(user_id: int, input: PasswordChangeIn) -> str:
+    try:
+        old_password = decrypt(input.old_password)
+        new_password1 = decrypt(input.new_password1)
+        new_password2 = decrypt(input.new_password2)
+    except Exception:
+        log.error("Decrypt error")
+        return "復号に失敗しました!"
+
+    if new_password1 != new_password2:
+        return "新規パスワードが一致しません!"
+
+    if len(new_password1) < PASSWORD_MIN_LENGTH or len(new_password1) > PASSWORD_MAX_LENGTH:
+        return "新規パスワードは英数字8~16文字で入力してください!"
+
+    repository = injector.get(UserInterface)
+    users = repository.bulk_get([user_id])
+    if len(users) == 0:
+        log.error("User not found", user_id=user_id)
+        return "ユーザーが見つかりません!"
+
+    user_data = users[0]
+    if not check_password(old_password, user_data.user.password):
+        return "現在のパスワードが違います!"
+
+    new_user = replace(user_data.user, password=make_password(new_password1))
+    new_data = replace(user_data, user=new_user)
+
+    try:
+        repository.bulk_save([new_data])
+        return ""
+    except Exception as e:
+        log.error("change_password error", exc=e)
+        return "パスワードの変更に失敗しました!"

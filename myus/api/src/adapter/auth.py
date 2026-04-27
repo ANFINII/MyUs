@@ -3,9 +3,9 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
-from api.src.types.schema.auth import LoginIn, LoginOut, RefreshOut, SignupEmailIn, SignupIn, SignupVerifyOut
+from api.src.types.schema.auth import LoginIn, LoginOut, PasswordChangeIn, RefreshOut, SignupEmailIn, SignupIn, SignupVerifyOut
 from api.src.types.schema.common import ErrorOut
-from api.src.usecase.auth import login_user, signup_send_email, signup_user, signup_verify_token, verify_user
+from api.src.usecase.auth import auth_check, change_password, login_user, signup_send_email, signup_user, signup_verify_token, verify_user
 from api.src.usecase.user import signup_check
 from api.utils.functions.token import access_token, refresh_token
 
@@ -157,6 +157,21 @@ class AuthAPI:
         response.set_cookie("refresh_token", refresh, max_age=60 * 60 * 24 * 30, httponly=True)
 
         return 200, LoginOut(access=access, refresh=refresh)
+
+    @staticmethod
+    @router.post("/password/change", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    def password_change(request: HttpRequest, input: PasswordChangeIn):
+        log.info("AuthAPI password_change")
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        validation = change_password(user_id, input)
+        if validation:
+            return 400, ErrorOut(message=validation)
+
+        return 204, ErrorOut(message="パスワードを変更しました!")
 
     @staticmethod
     @router.post("/logout", response={204: None, 500: ErrorOut})

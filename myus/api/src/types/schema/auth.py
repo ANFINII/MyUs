@@ -26,6 +26,12 @@ class LoginIn(BaseModel):
     password: str
 
 
+class PasswordChangeIn(BaseModel):
+    old_password: str
+    new_password1: str
+    new_password2: str
+
+
 class SignupVerifyOut(BaseModel):
     email: str
 
