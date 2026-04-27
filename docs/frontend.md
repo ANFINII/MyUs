@@ -103,6 +103,50 @@ const [user, setUser] = useState<User | null>(null)
 | `types/` | 型定義 |
 | `utils/` | ユーティリティ関数 |
 
+## 依存方向
+
+`parts/` ← `widgets/` ← `templates/` ← `pages/` の片方向のみ依存する。逆方向や同階層への依存は禁止。
+
+### parts は独立性を持つ
+
+- `parts/` 配下のコンポーネントは他の `parts/` を import しない（最下層UIとしてそれ単体で動作する）
+- レイアウト（縦並び・間隔等）は `VStack` / `HStack` などの parts に頼らず、自前の `<div>` + CSS（`display: flex` / `gap` 等）で実現する
+- 例外: `Icon` などの純粋表示用 parts は他 parts から import してよい（循環依存を作らない範囲）
+- `widgets/` / `templates/` から parts を呼ぶ・複数 parts を組み合わせるのは正常な使い方
+
+```typescript
+// ❌ NG: parts/Input が他 parts に依存
+import VStack from 'components/parts/Stack/Vertical'
+return <VStack gap="2">...</VStack>
+
+// ✅ OK: 自前の div + CSS
+return <div className={style.box}>...</div>
+// .box { display: flex; flex-direction: column; gap: 4px; }
+```
+
+### parts の CSS も独立性を持つ
+
+- `parts/` の `.module.scss` はグローバル CSS や共有 mixin / 変数に依存しない（その scss 単体で完結する）
+- `styles/` 配下の `@use` / `@import` を行わない、`:global(...)` も使わない、`className="text_sub"` 等のグローバルユーティリティクラスを使用しない
+- 必要な値（色・サイズ等）はその場で `rgb(...)` や `px` を直接記述する
+- 例外: SCSS の標準モジュール（`@use 'sass:math'` 等）はビルトインなので使用可
+- `widgets/` / `templates/` ではグローバル CSS / 共有 mixin の利用を許容（ページ単位の構成のため）
+
+```scss
+/* ❌ NG: parts の scss がグローバルに依存 */
+@use 'styles/global/mixin/tiptap';
+.box {
+  @include tiptap.tiptap;
+}
+
+/* ✅ OK: parts の scss は単体で完結 */
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+```
+
 ## スタイル
 
 [SCSSコーディングルール](css.md) を参照。
@@ -121,3 +165,4 @@ const [user, setUser] = useState<User | null>(null)
 - 2025-08-21: Props名統一、引数展開ルール、Linterチェック必須化
 - 2026-04-16: useState型引数必須、docs/に一元化、構成整理
 - 2026-04-22: `interface Props`はコンポーネント関数の直前配置ルール追加
+- 2026-04-27: 依存方向ルール追加（`parts/` は他 parts / グローバル CSS に依存せず単体で動作する）
