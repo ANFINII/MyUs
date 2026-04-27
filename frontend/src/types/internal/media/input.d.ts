@@ -6,12 +6,6 @@ export interface MediaIn {
   content: string
 }
 
-export interface MediaUpdateIn {
-  title: string
-  content: string
-  publish: boolean
-}
-
 export interface VideoIn extends MediaIn {
   image?: File
   video?: File
@@ -40,6 +34,13 @@ export interface PictureIn extends MediaIn {
 
 export interface ChatIn extends MediaIn {
   period: string
+}
+
+export interface MediaUpdateIn {
+  categoryUlid: string
+  title: string
+  content: string
+  publish: boolean
 }
 
 export interface VideoUpdateIn extends MediaUpdateIn {

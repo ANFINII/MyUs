@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
+import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { MusicUpdateIn } from 'types/internal/media/input'
 import { Music } from 'types/internal/media/output'
@@ -23,12 +24,14 @@ import VStack from 'components/parts/Stack/Vertical'
 interface Props {
   data: Music
   channels: Channel[]
+  categories: Category[]
 }
 
 export default function ManageMusicEdit(props: Props): React.JSX.Element {
-  const { data, channels } = props
+  const { data, channels, categories } = props
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions: Option[] = [{ label: '未選択', value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
@@ -39,13 +42,14 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
 
   const handleBack = () => router.push('/manage/music')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
+  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
 
   const handleForm = async () => {
-    const { title, content, lyric } = values
-    if (!isRequiredCheck({ title, content, lyric })) return
+    const { categoryUlid, title, content, lyric } = values
+    if (!isRequiredCheck({ categoryUlid, title, content, lyric })) return
     handleLoading(true)
     const ret = await putManageMusic(data.ulid, values)
     handleLoading(false)
@@ -69,6 +73,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
           <SelectBox label="チャンネル" name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
+          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required={isRequired} onChange={handleSelect} />
           <Input label="タイトル" name="title" value={values.title} required={isRequired} onChange={handleInput} />
           <Textarea label="内容" name="content" value={values.content} required={isRequired} onChange={handleText} />
           <Textarea label="歌詞" name="lyric" value={values.lyric} required={isRequired} onChange={handleText} />
