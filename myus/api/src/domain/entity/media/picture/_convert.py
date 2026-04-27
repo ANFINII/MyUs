@@ -6,6 +6,8 @@ from api.src.domain.interface.media.picture.data import PictureData
 
 
 def convert_data(obj: Picture) -> PictureData:
+    category = obj.category.first()
+    assert category is not None, "Category is required"
     return PictureData(
         id=obj.id,
         ulid=obj.ulid,
@@ -28,6 +30,7 @@ def convert_data(obj: Picture) -> PictureData:
             is_default=obj.channel.is_default,
             count=obj.channel.count,
         ),
+        category_ulid=category.ulid,
         hashtags=[HashtagData(id=t.hashtag.id, ulid=t.hashtag.ulid, name=t.hashtag.name) for t in obj.picture_hashtags.all()],
     )
 

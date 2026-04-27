@@ -20,6 +20,7 @@ class MediaOut(BaseModel):
     created: datetime
     updated: datetime
     channel: ChannelOut
+    category_ulid: str
 
 
 class HashtagOut(BaseModel):

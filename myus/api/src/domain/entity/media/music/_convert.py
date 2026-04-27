@@ -6,6 +6,8 @@ from api.src.domain.interface.media.music.data import MusicData
 
 
 def convert_data(obj: Music) -> MusicData:
+    category = obj.category.first()
+    assert category is not None, "Category is required"
     return MusicData(
         id=obj.id,
         ulid=obj.ulid,
@@ -30,6 +32,7 @@ def convert_data(obj: Music) -> MusicData:
             is_default=obj.channel.is_default,
             count=obj.channel.count,
         ),
+        category_ulid=category.ulid,
         hashtags=[HashtagData(id=mh.hashtag.id, ulid=mh.hashtag.ulid, name=mh.hashtag.name) for mh in obj.music_hashtags.all()],
     )
 

@@ -458,6 +458,7 @@ def convert_videos(objs: list[VideoData]) -> list[VideoOut]:
             created=x.created,
             updated=x.updated,
             channel=convert_channel(x.channel),
+            category_ulid=x.category_ulid,
         ) for x in objs
     ]
     return data
@@ -478,6 +479,7 @@ def convert_musics(objs: list[MusicData]) -> list[MusicOut]:
             created=x.created,
             updated=x.updated,
             channel=convert_channel(x.channel),
+            category_ulid=x.category_ulid,
         ) for x in objs
     ]
     return data
@@ -497,6 +499,7 @@ def convert_blogs(objs: list[BlogData]) -> list[BlogOut]:
             created=x.created,
             updated=x.updated,
             channel=convert_channel(x.channel),
+            category_ulid=x.category_ulid,
         ) for x in objs
     ]
     return data
@@ -515,6 +518,7 @@ def convert_comics(objs: list[ComicData]) -> list[ComicOut]:
             created=x.created,
             updated=x.updated,
             channel=convert_channel(x.channel),
+            category_ulid=x.category_ulid,
         ) for x in objs
     ]
     return data
@@ -533,6 +537,7 @@ def convert_pictures(objs: list[PictureData]) -> list[PictureOut]:
             created=x.created,
             updated=x.updated,
             channel=convert_channel(x.channel),
+            category_ulid=x.category_ulid,
         ) for x in objs
     ]
     return data
@@ -553,6 +558,7 @@ def convert_chats(objs: list[ChatData]) -> list[ChatOut]:
             created=x.created,
             updated=x.updated,
             channel=convert_channel(x.channel),
+            category_ulid=x.category_ulid,
         ) for x in objs
     ]
     return data
