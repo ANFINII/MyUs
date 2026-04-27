@@ -10,6 +10,7 @@ import IconCross from 'components/parts/Icon/Cross'
 import IconEdit from 'components/parts/Icon/Edit'
 import IconGrip from 'components/parts/Icon/Grip'
 import Input from 'components/parts/Input'
+import Spinner from 'components/parts/Spinner'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import style from './Hashtags.module.scss'
@@ -43,6 +44,7 @@ export default function Hashtags(props: Props): React.JSX.Element {
   const router = useRouter()
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isMasterLoading, setIsMasterLoading] = useState<boolean>(false)
   const [editTags, setEditTags] = useState<Hashtag[]>([])
   const [inputTag, setInputTag] = useState<string>('')
   const [dragIndex, setDragIndex] = useState<number | null>(null)
@@ -63,8 +65,13 @@ export default function Hashtags(props: Props): React.JSX.Element {
     setEditTags([...hashtags])
     setInputTag('')
     setIsEdit(true)
+    setIsMasterLoading(true)
     const ret = await getHashtags()
-    if (ret.isErr()) return
+    setIsMasterLoading(false)
+    if (ret.isErr()) {
+      onToast?.('候補の取得に失敗しました', true)
+      return
+    }
     setMaster(ret.value)
   }
 
@@ -83,10 +90,6 @@ export default function Hashtags(props: Props): React.JSX.Element {
   }
 
   const handleAddNew = () => {
-    if (!showNewRow) {
-      onToast?.('使用できない文字が含まれています', true)
-      return
-    }
     setEditTags([...editTags, { ulid: '', name: normalizedInput }])
     setInputTag('')
   }
@@ -135,21 +138,29 @@ export default function Hashtags(props: Props): React.JSX.Element {
       <VStack gap="2" className={style.edit_area}>
         <Input placeholder="タグ名" maxLength={HASHTAG_MAX_LENGTH} value={inputTag} onChange={handleInput} className={style.input} />
         <VStack gap="1" className={style.master_list}>
-          {showNewRow && (
-            <HStack gap="2" justify="between" className={style.master_row}>
-              <span className={style.master_name}>
-                #{normalizedInput} <span className={style.new_label}>(新規)</span>
-              </span>
-              <Button size="s" color="blue" name="追加" onClick={handleAddNew} />
+          {isMasterLoading ? (
+            <HStack justify="center" className={style.loading}>
+              <Spinner color="gray" size="s" />
             </HStack>
+          ) : (
+            <>
+              {showNewRow && (
+                <HStack gap="2" justify="between" className={style.master_row}>
+                  <span className={style.master_name}>
+                    #{normalizedInput} <span className={style.new_label}>(新規)</span>
+                  </span>
+                  <Button size="s" color="blue" name="追加" onClick={handleAddNew} />
+                </HStack>
+              )}
+              {filteredMaster.map((m) => (
+                <HStack key={m.ulid} gap="2" justify="between" className={style.master_row}>
+                  <span className={style.master_name}>#{m.name}</span>
+                  <Button size="s" color="blue" name="追加" onClick={() => handleAddMaster(m)} />
+                </HStack>
+              ))}
+              {!showNewRow && filteredMaster.length === 0 && <span className={style.empty}>候補なし</span>}
+            </>
           )}
-          {filteredMaster.map((m) => (
-            <HStack key={m.ulid} gap="2" justify="between" className={style.master_row}>
-              <span className={style.master_name}>#{m.name}</span>
-              <Button size="s" color="blue" name="追加" onClick={() => handleAddMaster(m)} />
-            </HStack>
-          ))}
-          {!showNewRow && filteredMaster.length === 0 && <span className={style.empty}>候補なし</span>}
         </VStack>
         <HStack gap="4" wrap>
           {editTags.map((tag, index) => (
@@ -174,7 +185,7 @@ export default function Hashtags(props: Props): React.JSX.Element {
           ))}
         </HStack>
         <HStack gap="2" className={style.edit_actions}>
-          <Button size="s" name="キャンセル" onClick={handleCancel} />
+          <Button size="s" name="キャンセル" disabled={isLoading} onClick={handleCancel} />
           <Button size="s" color="green" name="保存" loading={isLoading} onClick={handleSave} />
         </HStack>
       </VStack>
