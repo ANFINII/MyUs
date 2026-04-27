@@ -5,6 +5,11 @@ export interface HashtagItem {
   name: string
 }
 
+export interface HashtagOut {
+  ulid: string
+  name: string
+}
+
 export interface MediaHashtagsUpdateIn {
   mediaType: MediaType
   mediaUlid: string
