@@ -111,7 +111,6 @@ const [user, setUser] = useState<User | null>(null)
 
 - `parts/` 配下のコンポーネントは他の `parts/` を import しない（最下層UIとしてそれ単体で動作する）
 - レイアウト（縦並び・間隔等）は `VStack` / `HStack` などの parts に頼らず、自前の `<div>` + CSS（`display: flex` / `gap` 等）で実現する
-- 例外: `Icon` などの純粋表示用 parts は他 parts から import してよい（循環依存を作らない範囲）
 - `widgets/` / `templates/` から parts を呼ぶ・複数 parts を組み合わせるのは正常な使い方
 
 ```typescript
@@ -123,6 +122,17 @@ return <VStack gap="2">...</VStack>
 return <div className={style.box}>...</div>
 // .box { display: flex; flex-direction: column; gap: 4px; }
 ```
+
+#### 例外として許容されるケース
+
+以下のパターンは「parts → parts」依存でも例外として許容する。レビュー時の判断基準にする。
+
+1. **純粋表示用 parts への依存**: `Icon` / `Spinner` / `ExImage` 等、state を持たず描画だけする parts は他 parts から import してよい
+2. **同ファミリ内の派生**: `Avatar/Link` が `Avatar` を呼ぶ、`Button/Square` が `Button` の補助 parts を共有する等、同コンポーネントファミリのサブバリアント
+3. **同サブツリーのプリミティブ取り込み**: `Input/SelectBox` が `Input/Select` を内部で使う等、同フォルダ階層の下位 parts への限定依存
+4. **合成 UI として例外的に parts に置く部品**: `Modal` のような汎用合成 UI で、内部にクローズ用 `Button` 等の小さな部品を含むケース（移動候補ではあるが許容）
+
+判定は「循環依存を作らないか」「最下層 UI の独立性を本質的に壊さないか」を基準にする。
 
 ### parts の CSS も独立性を持つ
 
@@ -166,3 +176,4 @@ return <div className={style.box}>...</div>
 - 2026-04-16: useState型引数必須、docs/に一元化、構成整理
 - 2026-04-22: `interface Props`はコンポーネント関数の直前配置ルール追加
 - 2026-04-27: 依存方向ルール追加（`parts/` は他 parts / グローバル CSS に依存せず単体で動作する）
+- 2026-04-27: parts 独立性の例外ケース 4 種を明文化（純粋表示用・同ファミリ派生・同サブツリー・汎用合成 UI）
