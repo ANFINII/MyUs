@@ -1,5 +1,6 @@
 from injector import Module, provider
 from api.src.domain.entity.user.repository import UserRepository
+from api.src.domain.entity.category.repository import CategoryRepository
 from api.src.domain.entity.channel.repository import ChannelRepository
 from api.src.domain.entity.media.video.repository import VideoRepository
 from api.src.domain.entity.media.music.repository import MusicRepository
@@ -16,6 +17,7 @@ from api.src.domain.entity.ng_word.repository import NgWordRepository
 from api.src.domain.entity.search_tag.repository import SearchTagRepository
 from api.src.domain.entity.notification.repository import NotificationRepository
 from api.src.domain.interface.user.interface import UserInterface
+from api.src.domain.interface.category.interface import CategoryInterface
 from api.src.domain.interface.channel.interface import ChannelInterface
 from api.src.domain.interface.media.video.interface import VideoInterface
 from api.src.domain.interface.media.music.interface import MusicInterface
@@ -69,6 +71,12 @@ class MediaModule(Module):
     @provider
     def provide_chat_repository(self) -> ChatInterface:
         return ChatRepository()
+
+
+class CategoryModule(Module):
+    @provider
+    def provide_category_repository(self) -> CategoryInterface:
+        return CategoryRepository()
 
 
 class HashtagModule(Module):
