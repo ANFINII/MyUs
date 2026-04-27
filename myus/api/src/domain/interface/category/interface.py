@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from api.src.domain.interface.category.data import CategoryData
+from api.utils.enum.index import MediaType
 
 
 class SortType(Enum):
@@ -27,4 +28,8 @@ class CategoryInterface(ABC):
 
     @abstractmethod
     def bulk_get(self, ids: list[int]) -> list[CategoryData]:
+        ...
+
+    @abstractmethod
+    def bulk_save(self, media_type: MediaType, media_id: int, objs: list[CategoryData]) -> list[int]:
         ...
