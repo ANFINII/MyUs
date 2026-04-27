@@ -1,4 +1,5 @@
 from django.db import models
+from django_ulid.models import ulid
 
 
 class Plan(models.Model):
@@ -22,6 +23,7 @@ class Plan(models.Model):
 class Category(models.Model):
     """Category"""
     id      = models.BigAutoField(primary_key=True)
+    ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     jp_name = models.CharField(max_length=120)
     en_name = models.CharField(max_length=120)
 
