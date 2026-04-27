@@ -1,6 +1,5 @@
 import { ChangeEvent, useState, useRef, useEffect } from 'react'
 import cx from 'utils/functions/cx'
-import VStack from 'components/parts/Stack/Vertical'
 import style from './Textarea.module.scss'
 
 interface Props {
@@ -48,7 +47,7 @@ export default function Textarea(props: Props): React.JSX.Element {
   }
 
   return (
-    <VStack gap="2" className={className}>
+    <div className={cx(style.box, className)}>
       {label && (
         <label htmlFor={label} className={style.label}>
           {label}
@@ -57,6 +56,6 @@ export default function Textarea(props: Props): React.JSX.Element {
       <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} className={cx(style.textarea, isRequired && style.error)} />
       {isRequired && <p className={style.error_text}>※必須入力です！</p>}
       {isErrorText && <p className={style.error_text}>{errorText}</p>}
-    </VStack>
+    </div>
   )
 }
