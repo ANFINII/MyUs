@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class VideoIn(BaseModel):
     channel_ulid: str
+    category_ulid: str
     publish: bool
     title: str
     content: str
@@ -10,6 +11,7 @@ class VideoIn(BaseModel):
 
 class MusicIn(BaseModel):
     channel_ulid: str
+    category_ulid: str
     publish: bool
     title: str
     content: str
@@ -28,6 +30,7 @@ class BlogIn(BaseModel):
 
 class ComicIn(BaseModel):
     channel_ulid: str
+    category_ulid: str
     publish: bool
     title: str
     content: str
@@ -35,6 +38,7 @@ class ComicIn(BaseModel):
 
 class PictureIn(BaseModel):
     channel_ulid: str
+    category_ulid: str
     publish: bool
     title: str
     content: str
@@ -42,6 +46,7 @@ class PictureIn(BaseModel):
 
 class ChatIn(BaseModel):
     channel_ulid: str
+    category_ulid: str
     publish: bool
     title: str
     content: str
