@@ -58,8 +58,14 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Me
         hashtags=[],
     )
 
-    new_ids = repository.bulk_save([new_video])
-    assert len(new_ids) == 1, "作成に失敗しました"
+    category_repo = injector.get(CategoryInterface)
+    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
+
+    with transaction.atomic():
+        new_ids = repository.bulk_save([new_video])
+        assert len(new_ids) == 1, "作成に失敗しました"
+        category_repo.bulk_save(MediaType.VIDEO, new_ids[0], categories)
+
     obj = repository.bulk_get(new_ids)[0]
 
     def encode_task() -> None:
@@ -100,10 +106,15 @@ def create_music(input: MusicIn, music: UploadedFile) -> MediaCreateDTO | None:
         hashtags=[],
     )
 
-    new_ids = repository.bulk_save([new_music])
-    assert len(new_ids) == 1, "作成に失敗しました"
-    obj = repository.bulk_get(new_ids)[0]
+    category_repo = injector.get(CategoryInterface)
+    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
+    with transaction.atomic():
+        new_ids = repository.bulk_save([new_music])
+        assert len(new_ids) == 1, "作成に失敗しました"
+        category_repo.bulk_save(MediaType.MUSIC, new_ids[0], categories)
+
+    obj = repository.bulk_get(new_ids)[0]
     return MediaCreateDTO(ulid=obj.ulid)
 
 
@@ -166,10 +177,15 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
         hashtags=[],
     )
 
-    new_ids = repository.bulk_save([new_comic])
-    assert len(new_ids) == 1, "作成に失敗しました"
-    obj = repository.bulk_get(new_ids)[0]
+    category_repo = injector.get(CategoryInterface)
+    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
+    with transaction.atomic():
+        new_ids = repository.bulk_save([new_comic])
+        assert len(new_ids) == 1, "作成に失敗しました"
+        category_repo.bulk_save(MediaType.COMIC, new_ids[0], categories)
+
+    obj = repository.bulk_get(new_ids)[0]
     return MediaCreateDTO(ulid=obj.ulid)
 
 
@@ -195,10 +211,15 @@ def create_picture(input: PictureIn, image: UploadedFile) -> MediaCreateDTO | No
         hashtags=[],
     )
 
-    new_ids = repository.bulk_save([new_picture])
-    assert len(new_ids) == 1, "作成に失敗しました"
-    obj = repository.bulk_get(new_ids)[0]
+    category_repo = injector.get(CategoryInterface)
+    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
+    with transaction.atomic():
+        new_ids = repository.bulk_save([new_picture])
+        assert len(new_ids) == 1, "作成に失敗しました"
+        category_repo.bulk_save(MediaType.PICTURE, new_ids[0], categories)
+
+    obj = repository.bulk_get(new_ids)[0]
     return MediaCreateDTO(ulid=obj.ulid)
 
 
@@ -226,10 +247,15 @@ def create_chat(input: ChatIn) -> MediaCreateDTO | None:
         hashtags=[],
     )
 
-    new_ids = repository.bulk_save([new_chat])
-    assert len(new_ids) == 1, "作成に失敗しました"
-    obj = repository.bulk_get(new_ids)[0]
+    category_repo = injector.get(CategoryInterface)
+    categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
+    with transaction.atomic():
+        new_ids = repository.bulk_save([new_chat])
+        assert len(new_ids) == 1, "作成に失敗しました"
+        category_repo.bulk_save(MediaType.CHAT, new_ids[0], categories)
+
+    obj = repository.bulk_get(new_ids)[0]
     return MediaCreateDTO(ulid=obj.ulid)
 
 
