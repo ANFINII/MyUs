@@ -1,5 +1,6 @@
 export interface VideoIn {
   channelUlid: string
+  categoryUlid: string
   publish: boolean
   title: string
   content: string
@@ -9,6 +10,7 @@ export interface VideoIn {
 
 export interface MusicIn {
   channelUlid: string
+  categoryUlid: string
   publish: boolean
   title: string
   content: string
@@ -30,6 +32,7 @@ export interface BlogIn {
 
 export interface ComicIn {
   channelUlid: string
+  categoryUlid: string
   publish: boolean
   title: string
   content: string
@@ -39,6 +42,7 @@ export interface ComicIn {
 
 export interface PictureIn {
   channelUlid: string
+  categoryUlid: string
   publish: boolean
   title: string
   content: string
@@ -47,6 +51,7 @@ export interface PictureIn {
 
 export interface ChatIn {
   channelUlid: string
+  categoryUlid: string
   publish: boolean
   title: string
   content: string
