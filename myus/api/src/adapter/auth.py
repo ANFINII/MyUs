@@ -3,9 +3,9 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
-from api.src.types.schema.auth import LoginIn, LoginOut, PasswordChangeIn, RefreshOut, SignupEmailIn, SignupIn, SignupVerifyOut
+from api.src.types.schema.auth import LoginIn, LoginOut, PasswordChangeIn, RefreshOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
 from api.src.types.schema.common import ErrorOut
-from api.src.usecase.auth import auth_check, change_password, login_user, signup_send_email, signup_user, signup_verify_token, verify_user
+from api.src.usecase.auth import auth_check, change_password, login_user, signup_send_email, signup_user, signup_verify_token, verify_user, withdraw_user
 from api.src.usecase.user import signup_check
 from api.utils.functions.token import access_token, refresh_token
 
@@ -172,6 +172,23 @@ class AuthAPI:
             return 400, ErrorOut(message=validation)
 
         return 204, ErrorOut(message="パスワードを変更しました!")
+
+    @staticmethod
+    @router.post("/withdrawal", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    def withdrawal(request: HttpRequest, response: HttpResponse, input: WithdrawalIn):
+        log.info("AuthAPI withdrawal")
+
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        validation = withdraw_user(user_id, input)
+        if validation:
+            return 400, ErrorOut(message=validation)
+
+        response.delete_cookie("access_token")
+        response.delete_cookie("refresh_token")
+        return 204, ErrorOut(message="退会しました!")
 
     @staticmethod
     @router.post("/logout", response={204: None, 500: ErrorOut})

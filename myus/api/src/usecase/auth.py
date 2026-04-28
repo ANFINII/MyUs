@@ -12,7 +12,7 @@ from api.modules.logger import log
 from api.src.domain.interface.user.data import MyPageData, PlanData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
-from api.src.types.schema.auth import PasswordChangeIn, SignupIn
+from api.src.types.schema.auth import PasswordChangeIn, SignupIn, WithdrawalIn
 from api.utils.functions.encrypt import decrypt
 from api.utils.functions.token import signup_token
 from api.utils.functions.validation import has_email
@@ -231,3 +231,31 @@ def change_password(user_id: int, input: PasswordChangeIn) -> str:
     except Exception as e:
         log.error("change_password error", exc=e)
         return "パスワードの変更に失敗しました!"
+
+
+def withdraw_user(user_id: int, input: WithdrawalIn) -> str:
+    try:
+        password = decrypt(input.password)
+    except Exception:
+        log.error("Decrypt error")
+        return "復号に失敗しました!"
+
+    repository = injector.get(UserInterface)
+    users = repository.bulk_get([user_id])
+    if len(users) == 0:
+        log.error("User not found", user_id=user_id)
+        return "ユーザーが見つかりません!"
+
+    user_data = users[0]
+    if not check_password(password, user_data.user.password):
+        return "パスワードが違います!"
+
+    new_user = replace(user_data.user, is_active=False)
+    new_data = replace(user_data, user=new_user)
+
+    try:
+        repository.bulk_save([new_data])
+        return ""
+    except Exception as e:
+        log.error("withdraw_user error", exc=e)
+        return "退会処理に失敗しました!"
