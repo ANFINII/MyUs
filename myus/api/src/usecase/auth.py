@@ -7,14 +7,13 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.http import HttpRequest
 from django.template.loader import render_to_string
-from api.db.models.user import User
 from api.modules.logger import log
 from api.src.domain.interface.user.data import MyPageData, PlanData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
-from api.src.domain.interface.user.interface import UserInterface
+from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.injectors.container import injector
-from api.src.types.schema.auth import PasswordChangeIn, SignupIn, WithdrawalIn
+from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn
 from api.utils.functions.encrypt import decrypt
-from api.utils.functions.token import signup_token
+from api.utils.functions.token import password_reset_token, signup_token
 from api.utils.functions.validation import has_email
 
 
@@ -74,7 +73,9 @@ def signup_send_email(email: str) -> str:
     if has_email(email):
         return "メールアドレスの形式が違います!"
 
-    if User.objects.filter(email=email).exists():
+    repository = injector.get(UserInterface)
+    user_ids = repository.get_ids(FilterOption(email=email))
+    if len(user_ids) > 0:
         return "メールアドレスは既に登録されています!"
 
     token = signup_token(email)
@@ -231,6 +232,104 @@ def change_password(user_id: int, input: PasswordChangeIn) -> str:
     except Exception as e:
         log.error("change_password error", exc=e)
         return "パスワードの変更に失敗しました!"
+
+
+def password_reset_send_email(email: str) -> str:
+    if has_email(email):
+        return "メールアドレスの形式が違います!"
+
+    repository = injector.get(UserInterface)
+    user_ids = repository.get_ids(FilterOption(email=email))
+    if len(user_ids) == 0:
+        return ""
+
+    users = repository.bulk_get(user_ids)
+    user_data = users[0]
+    if not user_data.user.is_active:
+        return ""
+
+    token = password_reset_token(user_data.user.id, email)
+    subject = render_to_string("registration/email/reset/subject.txt").strip()
+    message = render_to_string(
+        "registration/email/reset/message.txt",
+        {"frontend_url": settings.FRONTEND_URL, "token": token, "nickname": user_data.user.nickname},
+    )
+
+    try:
+        send_mail(subject, message, None, [email])
+    except Exception as e:
+        log.error("Password reset email send error", exc=e)
+        return "メールの送信に失敗しました!"
+
+    if settings.DEBUG:
+        url = f"{settings.FRONTEND_URL}/account/reset/confirm?token={token}"
+        log.info("Password reset URL (dev)", url=url)
+
+    return ""
+
+
+def password_reset_verify_token(token: str) -> tuple[int, str] | None:
+    try:
+        payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        log.warning("Password reset token expired")
+        return None
+    except jwt.exceptions.DecodeError:
+        log.warning("Password reset token decode error")
+        return None
+
+    if payload.get("type") != "password_reset":
+        log.warning("Invalid password reset token type")
+        return None
+
+    user_id = payload.get("user_id")
+    if not isinstance(user_id, int):
+        log.warning("Invalid password reset token user_id")
+        return None
+
+    email = payload.get("email")
+    if not isinstance(email, str) or len(email) == 0:
+        log.warning("Invalid password reset token email")
+        return None
+
+    return (user_id, email)
+
+
+def reset_password(input: PasswordResetIn) -> str:
+    result = password_reset_verify_token(input.token)
+    if result is None:
+        return "リンクの有効期限が切れています!"
+    user_id, _ = result
+
+    try:
+        new_password1 = decrypt(input.new_password1)
+        new_password2 = decrypt(input.new_password2)
+    except Exception:
+        log.error("Decrypt error")
+        return "復号に失敗しました!"
+
+    if new_password1 != new_password2:
+        return "新規パスワードが一致しません!"
+
+    if len(new_password1) < PASSWORD_MIN_LENGTH or len(new_password1) > PASSWORD_MAX_LENGTH:
+        return "新規パスワードは英数字8~16文字で入力してください!"
+
+    repository = injector.get(UserInterface)
+    users = repository.bulk_get([user_id])
+    if len(users) == 0:
+        log.error("User not found", user_id=user_id)
+        return "ユーザーが見つかりません!"
+
+    user_data = users[0]
+    new_user = replace(user_data.user, password=make_password(new_password1))
+    new_data = replace(user_data, user=new_user)
+
+    try:
+        repository.bulk_save([new_data])
+        return ""
+    except Exception as e:
+        log.error("reset_password error", exc=e)
+        return "パスワードのリセットに失敗しました!"
 
 
 def withdraw_user(user_id: int, input: WithdrawalIn) -> str:

@@ -36,7 +36,21 @@ class WithdrawalIn(BaseModel):
     password: str
 
 
+class PasswordResetEmailIn(BaseModel):
+    email: str
+
+
+class PasswordResetIn(BaseModel):
+    token: str
+    new_password1: str
+    new_password2: str
+
+
 class SignupVerifyOut(BaseModel):
+    email: str
+
+
+class PasswordResetVerifyOut(BaseModel):
     email: str
 
 

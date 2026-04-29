@@ -31,3 +31,14 @@ def signup_token(email: str) -> str:
         "iat": datetime.datetime.now(datetime.timezone.utc),
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
+
+
+def password_reset_token(user_id: int, email: str) -> str:
+    payload = {
+        "user_id": user_id,
+        "email": email,
+        "type": "password_reset",
+        "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1),
+        "iat": datetime.datetime.now(datetime.timezone.utc),
+    }
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
