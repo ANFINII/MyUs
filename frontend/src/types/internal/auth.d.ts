@@ -30,6 +30,16 @@ export interface PasswordChangeIn {
   newPassword2: string
 }
 
+export interface PasswordResetIn {
+  token: string
+  newPassword1: string
+  newPassword2: string
+}
+
+export interface PasswordResetVerifyOut {
+  email: string
+}
+
 export interface WithdrawalIn {
   password: string
 }
