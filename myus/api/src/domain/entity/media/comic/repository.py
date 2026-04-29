@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.db.models import Prefetch
+from django.db.models import Count, Prefetch
 from django.db.models.query import QuerySet
 from api.db.models.media import Comic, ComicPage
 from api.src.domain.entity.media.comic._convert import convert_data, marshal_data
@@ -16,7 +16,7 @@ COMIC_FIELDS = ["channel_id", "title", "content", "image", "read", "publish"]
 class ComicRepository(ComicInterface):
     def queryset(self) -> QuerySet[Comic]:
         pages_prefetch = Prefetch("comic", queryset=ComicPage.objects.order_by("sequence"))
-        return Comic.objects.select_related("channel", "channel__owner").prefetch_related("like", "hashtag", "category", pages_prefetch)
+        return Comic.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category", pages_prefetch).annotate(like_count=Count("like"))
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
         qs = Comic.objects.filter(*filter_q_list(filter, exclude))

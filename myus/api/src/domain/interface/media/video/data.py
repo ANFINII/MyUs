@@ -18,6 +18,6 @@ class VideoData:
     publish: bool
     created: datetime
     updated: datetime
-    channel: ChannelData
     category_ulid: str
+    channel: ChannelData
     hashtags: list[HashtagData]

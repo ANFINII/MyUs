@@ -6,7 +6,8 @@ from api.src.domain.interface.media.blog.data import BlogData
 
 
 def convert_data(obj: Blog) -> BlogData:
-    category = obj.category.first()
+    assert hasattr(obj, "like_count"), "like_count is required"
+    category = next(iter(obj.category.all()), None)
     assert category is not None, "Category is required"
     return BlogData(
         id=obj.id,
@@ -17,10 +18,11 @@ def convert_data(obj: Blog) -> BlogData:
         delta=obj.delta.html if obj.delta else "",
         image=obj.image.name if obj.image else "",
         read=obj.read,
-        like=obj.like.count(),
+        like=obj.like_count,
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
+        category_ulid=category.ulid,
         channel=ChannelData(
             id=obj.channel.id,
             ulid=obj.channel.ulid,
@@ -32,8 +34,7 @@ def convert_data(obj: Blog) -> BlogData:
             is_default=obj.channel.is_default,
             count=obj.channel.count,
         ),
-        category_ulid=category.ulid,
-        hashtags=[HashtagData(id=bh.hashtag.id, ulid=bh.hashtag.ulid, name=bh.hashtag.name) for bh in obj.blog_hashtags.all()],
+        hashtags=[HashtagData(id=t.id, ulid=t.ulid, name=t.name) for t in obj.hashtag.all()],
     )
 
 

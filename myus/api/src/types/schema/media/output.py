@@ -19,8 +19,8 @@ class MediaOut(BaseModel):
     publish: bool
     created: datetime
     updated: datetime
-    channel: ChannelOut
     category_ulid: str
+    channel: ChannelOut
 
 
 class HashtagOut(BaseModel):
