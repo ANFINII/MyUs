@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.db.models.query import QuerySet
 from api.db.models.media import Video
 from api.src.domain.entity.media.video._convert import convert_data, marshal_data
@@ -13,7 +14,7 @@ VIDEO_FIELDS = ["channel_id", "title", "content", "image", "video", "convert", "
 
 class VideoRepository(VideoInterface):
     def queryset(self) -> QuerySet[Video]:
-        return Video.objects.select_related("channel", "channel__owner").prefetch_related("like", "hashtag", "category")
+        return Video.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(like_count=Count("like"))
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
         qs = Video.objects.filter(*filter_q_list(filter, exclude))

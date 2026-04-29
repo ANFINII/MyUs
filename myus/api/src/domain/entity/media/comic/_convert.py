@@ -6,7 +6,8 @@ from api.src.domain.interface.media.comic.data import ComicData
 
 
 def convert_data(obj: Comic) -> ComicData:
-    category = obj.category.first()
+    assert hasattr(obj, "like_count"), "like_count is required"
+    category = next(iter(obj.category.all()), None)
     assert category is not None, "Category is required"
     return ComicData(
         id=obj.id,
@@ -16,10 +17,11 @@ def convert_data(obj: Comic) -> ComicData:
         image=obj.image.name if obj.image else "",
         pages=[p.image.name for p in obj.comic.all() if p.image],
         read=obj.read,
-        like=obj.like.count(),
+        like=obj.like_count,
         publish=obj.publish,
         created=obj.created,
         updated=obj.updated,
+        category_ulid=category.ulid,
         channel=ChannelData(
             id=obj.channel.id,
             ulid=obj.channel.ulid,
@@ -31,8 +33,7 @@ def convert_data(obj: Comic) -> ComicData:
             is_default=obj.channel.is_default,
             count=obj.channel.count,
         ),
-        category_ulid=category.ulid,
-        hashtags=[HashtagData(id=ch.hashtag.id, ulid=ch.hashtag.ulid, name=ch.hashtag.name) for ch in obj.comic_hashtags.all()],
+        hashtags=[HashtagData(id=t.id, ulid=t.ulid, name=t.name) for t in obj.hashtag.all()],
     )
 
 

@@ -18,6 +18,6 @@ class ChatData:
     updated: datetime
     thread_count: int
     joined_count: int
-    channel: ChannelData
     category_ulid: str
+    channel: ChannelData
     hashtags: list[HashtagData]

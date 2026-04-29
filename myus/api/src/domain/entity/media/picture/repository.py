@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.db.models.query import QuerySet
 from api.db.models.media import Picture
 from api.src.domain.entity.media.picture._convert import convert_data, marshal_data
@@ -13,7 +14,7 @@ PICTURE_FIELDS = ["channel_id", "title", "content", "image", "read", "publish"]
 
 class PictureRepository(PictureInterface):
     def queryset(self) -> QuerySet[Picture]:
-        return Picture.objects.select_related("channel", "channel__owner").prefetch_related("like", "hashtag", "category")
+        return Picture.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(like_count=Count("like"))
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
         qs = Picture.objects.filter(*filter_q_list(filter, exclude))
