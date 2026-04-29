@@ -3,9 +3,9 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from ninja import Router
 from api.modules.logger import log
-from api.src.types.schema.auth import LoginIn, LoginOut, PasswordChangeIn, RefreshOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
+from api.src.types.schema.auth import LoginIn, LoginOut, PasswordChangeIn, PasswordResetEmailIn, PasswordResetIn, PasswordResetVerifyOut, RefreshOut, SignupEmailIn, SignupIn, SignupVerifyOut, WithdrawalIn
 from api.src.types.schema.common import ErrorOut
-from api.src.usecase.auth import auth_check, change_password, login_user, signup_send_email, signup_user, signup_verify_token, verify_user, withdraw_user
+from api.src.usecase.auth import auth_check, change_password, login_user, password_reset_send_email, password_reset_verify_token, reset_password, signup_send_email, signup_user, signup_verify_token, verify_user, withdraw_user
 from api.src.usecase.user import signup_check
 from api.utils.functions.token import access_token, refresh_token
 
@@ -172,6 +172,39 @@ class AuthAPI:
             return 400, ErrorOut(message=validation)
 
         return 204, ErrorOut(message="パスワードを変更しました!")
+
+    @staticmethod
+    @router.post("/password/reset/email", response={200: ErrorOut, 400: ErrorOut, 500: ErrorOut})
+    def password_reset_email(request: HttpRequest, input: PasswordResetEmailIn):
+        log.info("AuthAPI password_reset_email", email=input.email)
+
+        validation = password_reset_send_email(input.email)
+        if validation:
+            return 400, ErrorOut(message=validation)
+
+        return 200, ErrorOut(message="メールを送信しました!")
+
+    @staticmethod
+    @router.get("/password/reset/verify", response={200: PasswordResetVerifyOut, 401: ErrorOut})
+    def password_reset_verify(request: HttpRequest, token: str):
+        log.info("AuthAPI password_reset_verify")
+
+        email = password_reset_verify_token(token)
+        if email is None:
+            return 401, ErrorOut(message="リンクの有効期限が切れています!")
+
+        return 200, PasswordResetVerifyOut(email=email)
+
+    @staticmethod
+    @router.post("/password/reset", response={204: ErrorOut, 400: ErrorOut})
+    def password_reset(request: HttpRequest, input: PasswordResetIn):
+        log.info("AuthAPI password_reset")
+
+        validation = reset_password(input)
+        if validation:
+            return 400, ErrorOut(message=validation)
+
+        return 204, ErrorOut(message="パスワードをリセットしました!")
 
     @staticmethod
     @router.post("/withdrawal", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})

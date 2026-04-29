@@ -33,6 +33,8 @@ class UserRepository(UserInterface):
             q_list.append(Q(id=filter.id))
         if filter.ulid:
             q_list.append(Q(ulid=filter.ulid))
+        if filter.email:
+            q_list.append(Q(email=filter.email))
 
         qs = User.objects.filter(*q_list)
 

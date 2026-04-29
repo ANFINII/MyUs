@@ -14,6 +14,7 @@ class SortType(Enum):
 class FilterOption:
     id: int = 0
     ulid: str = ""
+    email: str = ""
 
 
 @dataclass(frozen=True, slots=True)

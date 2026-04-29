@@ -1,9 +1,10 @@
-{{ user.nickname }} 様
+{{ nickname }} 様
 
-下記URLリンクよりサイトにアクセスの上、新しいパスワードを再設定してください。
+下記URLから新しいパスワードを再設定してください。
+このリンクは1時間有効です。
 
-再設定用URL
-{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uid token %}
+パスワード再設定用URL
+{{ frontend_url }}/account/reset/confirm?token={{ token }}
 
 パスワードリセットに関するリクエストを行っていない場合、このメールを無視してください。
 
