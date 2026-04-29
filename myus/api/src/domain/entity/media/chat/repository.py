@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db.models.query import QuerySet
 from api.db.models.media import Chat
 from api.src.domain.entity.media.chat._convert import convert_data, marshal_data
@@ -14,7 +14,11 @@ CHAT_FIELDS = ["channel_id", "title", "content", "read", "period", "publish"]
 
 class ChatRepository(ChatInterface):
     def queryset(self) -> QuerySet[Chat]:
-        return Chat.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(like_count=Count("like"))
+        return Chat.objects.select_related("channel", "channel__owner").prefetch_related("hashtag", "category").annotate(
+            like_count=Count("like", distinct=True),
+            thread_total=Count("message", distinct=True, filter=Q(message__parent__isnull=True)),
+            joined_total=Count("message__author", distinct=True),
+        )
 
     def get_ids(self, filter: FilterOption, exclude: ExcludeOption, sort: SortOption, page: PageOption, user_id: int | None = None) -> list[int]:
         qs = Chat.objects.filter(*filter_q_list(filter, exclude))
