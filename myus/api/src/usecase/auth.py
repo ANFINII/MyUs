@@ -7,7 +7,6 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.http import HttpRequest
 from django.template.loader import render_to_string
-from api.db.models.user import User
 from api.modules.logger import log
 from api.src.domain.interface.user.data import MyPageData, PlanData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
@@ -74,7 +73,9 @@ def signup_send_email(email: str) -> str:
     if has_email(email):
         return "メールアドレスの形式が違います!"
 
-    if User.objects.filter(email=email).exists():
+    repository = injector.get(UserInterface)
+    user_ids = repository.get_ids(FilterOption(email=email))
+    if len(user_ids) > 0:
         return "メールアドレスは既に登録されています!"
 
     token = signup_token(email)
@@ -240,12 +241,12 @@ def password_reset_send_email(email: str) -> str:
     repository = injector.get(UserInterface)
     user_ids = repository.get_ids(FilterOption(email=email))
     if len(user_ids) == 0:
-        return "メールアドレスが登録されていません!"
+        return ""
 
     users = repository.bulk_get(user_ids)
     user_data = users[0]
     if not user_data.user.is_active:
-        return "メールアドレスが登録されていません!"
+        return ""
 
     token = password_reset_token(user_data.user.id, email)
     subject = render_to_string("registration/email/reset/subject.txt").strip()
@@ -267,7 +268,7 @@ def password_reset_send_email(email: str) -> str:
     return ""
 
 
-def password_reset_verify_token(token: str) -> str | None:
+def password_reset_verify_token(token: str) -> tuple[int, str] | None:
     try:
         payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
@@ -281,32 +282,24 @@ def password_reset_verify_token(token: str) -> str | None:
         log.warning("Invalid password reset token type")
         return None
 
+    user_id = payload.get("user_id")
+    if not isinstance(user_id, int):
+        log.warning("Invalid password reset token user_id")
+        return None
+
     email = payload.get("email")
     if not isinstance(email, str) or len(email) == 0:
         log.warning("Invalid password reset token email")
         return None
 
-    return email
+    return (user_id, email)
 
 
 def reset_password(input: PasswordResetIn) -> str:
-    try:
-        payload = jwt.decode(jwt=input.token, key=settings.SECRET_KEY, algorithms=["HS256"])
-    except jwt.ExpiredSignatureError:
-        log.warning("Password reset token expired")
+    result = password_reset_verify_token(input.token)
+    if result is None:
         return "リンクの有効期限が切れています!"
-    except jwt.exceptions.DecodeError:
-        log.warning("Password reset token decode error")
-        return "リンクが不正です!"
-
-    if payload.get("type") != "password_reset":
-        log.warning("Invalid password reset token type")
-        return "リンクが不正です!"
-
-    user_id = payload.get("user_id")
-    if not isinstance(user_id, int):
-        log.warning("Invalid password reset token user_id")
-        return "リンクが不正です!"
+    user_id, _ = result
 
     try:
         new_password1 = decrypt(input.new_password1)

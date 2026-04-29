@@ -189,10 +189,11 @@ class AuthAPI:
     def password_reset_verify(request: HttpRequest, token: str):
         log.info("AuthAPI password_reset_verify")
 
-        email = password_reset_verify_token(token)
-        if email is None:
+        result = password_reset_verify_token(token)
+        if result is None:
             return 401, ErrorOut(message="リンクの有効期限が切れています!")
 
+        _, email = result
         return 200, PasswordResetVerifyOut(email=email)
 
     @staticmethod
