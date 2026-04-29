@@ -1,13 +1,13 @@
 import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
-import { postReset } from 'api/internal/auth'
+import { postPasswordResetEmail } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
-import { useApiError } from 'components/hooks/useApiError'
 import { useIsLoading } from 'components/hooks/useIsLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
+import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
@@ -17,7 +17,6 @@ export default function Reset(): React.JSX.Element {
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
-  const { message, handleError } = useApiError({ handleToast })
   const [email, setEmail] = useState<string>('')
 
   const handleBack = () => router.push('/account/login')
@@ -26,13 +25,13 @@ export default function Reset(): React.JSX.Element {
   const handleSubmit = async () => {
     if (!isRequiredCheck({ email })) return
     handleLoading(true)
-    const ret = await postReset(email)
+    const ret = await postPasswordResetEmail(email)
     handleLoading(false)
     if (ret.isErr()) {
-      const message = ret.error.message
-      handleError(FetchError.Error, message)
+      handleToast(ret.error.message ?? FetchError.Error, true)
       return
     }
+    handleToast('メールを送信しました!', false)
   }
 
   return (
@@ -40,14 +39,10 @@ export default function Reset(): React.JSX.Element {
       <article className="article_registration">
         <form method="POST" action="" className="form_account">
           <h1 className="login_h1">パスワードリセット</h1>
-
-          {message && (
-            <ul className="messages_login">
-              <li>{message}</li>
-            </ul>
-          )}
-
-          <Input type="email" placeholder="メールアドレス" required={isRequired} onChange={handleInput} />
+          <VStack gap="8">
+            <Input type="email" name="email" placeholder="メールアドレス" maxLength={255} required={isRequired} onChange={handleInput} />
+            <Alert type="info">メールアドレス宛にパスワード再設定用リンクを送信します。</Alert>
+          </VStack>
 
           <VStack gap="12" className="mv_40">
             <Button color="green" size="l" name="送信" type="submit" loading={isLoading} onClick={handleSubmit} />
