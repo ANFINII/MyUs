@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, assert_never
 
 from django.db.models import Q
 from django.db.models.query import QuerySet
@@ -52,31 +52,33 @@ class NotificationRepository(NotificationInterface):
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
 
-        groups: dict[str, list[int]] = {}
+        groups: dict[NotificationObjectType, list[int]] = {}
         for n in sorted_objs:
-            groups.setdefault(n.object_type, []).append(n.object_id)
+            groups.setdefault(NotificationObjectType(n.object_type), []).append(n.object_id)
 
         content_map: dict[str, Any] = {}
         for object_type, obj_ids in groups.items():
             match object_type:
                 case NotificationObjectType.VIDEO:
-                    content_map.update({f"{object_type}:{o.id}": o for o in Video.objects.filter(id__in=obj_ids)})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Video.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.MUSIC:
-                    content_map.update({f"{object_type}:{o.id}": o for o in Music.objects.filter(id__in=obj_ids)})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Music.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.BLOG:
-                    content_map.update({f"{object_type}:{o.id}": o for o in Blog.objects.filter(id__in=obj_ids)})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Blog.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.COMIC:
-                    content_map.update({f"{object_type}:{o.id}": o for o in Comic.objects.filter(id__in=obj_ids)})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Comic.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.PICTURE:
-                    content_map.update({f"{object_type}:{o.id}": o for o in Picture.objects.filter(id__in=obj_ids)})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Picture.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.CHAT:
-                    content_map.update({f"{object_type}:{o.id}": o for o in Chat.objects.filter(id__in=obj_ids)})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Chat.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.FOLLOW:
-                    content_map.update({f"{object_type}:{o.id}": o for o in Follow.objects.filter(id__in=obj_ids)})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Follow.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.COMMENT:
-                    content_map.update({f"{object_type}:{o.id}": o for o in Comment.objects.filter(id__in=obj_ids)})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Comment.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.MESSAGE:
-                    content_map.update({f"{object_type}:{o.id}": o for o in Message.objects.filter(id__in=obj_ids)})
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in Message.objects.filter(id__in=obj_ids)})
+                case _:
+                    assert_never(object_type)
 
         return [
             convert_data(obj, content_map.get(f"{obj.object_type}:{obj.object_id}"))
