@@ -28,8 +28,8 @@ export interface Media {
   publish: boolean
   created: Date
   updated: Date
-  channel: Channel
   categoryUlid: string
+  channel: Channel
   mediaUser: MediaUser
 }
 
