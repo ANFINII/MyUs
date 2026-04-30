@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import Main from 'components/layout/Main'
+import IconAdvertise from 'components/parts/Icon/Advertise'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
@@ -15,6 +16,7 @@ const menus = [
   { label: 'Comic', icon: <IconComic size="2em" />, path: 'comic' },
   { label: 'Picture', icon: <IconPicture size="2em" />, path: 'picture' },
   { label: 'Chat', icon: <IconChat size="2em" />, path: 'chat' },
+  { label: 'Advertise', icon: <IconAdvertise size="2em" />, path: 'advertise' },
 ]
 
 export default function Manage(): React.JSX.Element {
