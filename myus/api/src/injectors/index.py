@@ -8,6 +8,7 @@ from api.src.domain.entity.media.blog.repository import BlogRepository
 from api.src.domain.entity.media.comic.repository import ComicRepository
 from api.src.domain.entity.media.picture.repository import PictureRepository
 from api.src.domain.entity.media.chat.repository import ChatRepository
+from api.src.domain.entity.advertise.repository import AdvertiseRepository
 from api.src.domain.entity.comment.repository import CommentRepository
 from api.src.domain.entity.message.repository import MessageRepository
 from api.src.domain.entity.follow.repository import FollowRepository
@@ -25,6 +26,7 @@ from api.src.domain.interface.media.blog.interface import BlogInterface
 from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
+from api.src.domain.interface.advertise.interface import AdvertiseInterface
 from api.src.domain.interface.comment.interface import CommentInterface
 from api.src.domain.interface.message.interface import MessageInterface
 from api.src.domain.interface.follow.interface import FollowInterface
@@ -125,3 +127,9 @@ class SubscribeModule(Module):
     @provider
     def provide_subscribe_repository(self) -> SubscribeInterface:
         return SubscribeRepository()
+
+
+class AdvertiseModule(Module):
+    @provider
+    def provide_advertise_repository(self) -> AdvertiseInterface:
+        return AdvertiseRepository()
