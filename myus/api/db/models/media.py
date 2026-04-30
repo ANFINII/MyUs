@@ -1,5 +1,4 @@
 from django.db import models
-from django_quill.fields import QuillField
 from django_ulid.models import ulid
 from api.db.models.base import MediaModel
 from api.db.models.channel import Channel
@@ -66,7 +65,6 @@ class Blog(models.Model, MediaModel):
     title    = models.CharField(max_length=100)
     content  = models.TextField()
     richtext = models.TextField()
-    delta    = QuillField()
     image    = models.ImageField(upload_to=image_upload, max_length=255, blank=True)
     category = models.ManyToManyField(Category, blank=True)
     hashtag  = models.ManyToManyField(HashTag, through=BlogHashtag, blank=True)

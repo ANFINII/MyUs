@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models import Count
-from django_quill.fields import QuillField
 from django_ulid.models import ulid
 from api.db.models.media import Chat
 from api.db.models.user import User
@@ -20,7 +19,6 @@ class Message(models.Model):
     chat    = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="message")
     parent  = models.ForeignKey("self", on_delete=models.CASCADE, related_name="reply", null=True)
     text    = models.TextField()
-    delta   = QuillField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

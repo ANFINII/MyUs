@@ -96,7 +96,6 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         parent_id=parent_id,
         parent_ulid=parent_ulid,
         text=text,
-        delta="",
         reply_count=0,
         created=datetime.min,
         updated=datetime.min,

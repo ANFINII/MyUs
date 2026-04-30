@@ -130,7 +130,6 @@ def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
         title=input.title,
         content=input.content,
         richtext=input.richtext,
-        delta="",
         image=save_upload(image, ImageUpload.BLOG, channel.ulid),
         read=0,
         like=0,

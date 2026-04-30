@@ -11,7 +11,6 @@ class BlogData:
     title: str
     content: str
     richtext: str
-    delta: str
     image: str
     read: int
     like: int

@@ -65,7 +65,6 @@ INSTALLED_APPS += [
     "api.apps.ApiConfig",
     "corsheaders",
     "channels",
-    "django_quill",
     "django_cleanup",
     "import_export",
 ]
@@ -192,20 +191,3 @@ EMAIL_PORT = env.email_port
 EMAIL_HOST_USER = env.email_host_user
 EMAIL_HOST_PASSWORD = env.email_host_password
 EMAIL_USE_TLS = True
-
-# QUILL
-QUILL_CONFIGS = {
-    "default": {
-        "theme": "snow",
-        "modules": {
-            "syntax": True,
-            "toolbar": [
-                [{"header": [1, 2, 3, 4, 5, 6, False]}],
-                [{"color": []}, {"background": []}, {"align": []}],
-                [{"indent": "-1"}, {"indent": "+1"}, {"list": "ordered"}, {"list": "bullet"}],
-                ["bold", "italic", "underline", "strike", "formula", {"script": "super"}, {"script": "sub"}],
-                ["code-block", "blockquote", "link", "image"],
-            ]
-        }
-    }
-}

@@ -15,7 +15,6 @@ def convert_data(obj: Blog) -> BlogData:
         title=obj.title,
         content=obj.content,
         richtext=obj.richtext,
-        delta=obj.delta.html if obj.delta else "",
         image=obj.image.name if obj.image else "",
         read=obj.read,
         like=obj.like_count,

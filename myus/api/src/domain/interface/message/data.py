@@ -11,7 +11,6 @@ class MessageData:
     parent_id: int | None
     parent_ulid: str
     text: str
-    delta: str
     reply_count: int
     created: datetime
     updated: datetime

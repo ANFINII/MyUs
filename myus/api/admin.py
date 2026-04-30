@@ -1,4 +1,3 @@
-import json
 from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.contrib.auth.forms import AuthenticationForm
@@ -247,13 +246,9 @@ class BlogAdmin(ImportExportModelAdmin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("channel", "title", "content", "delta", "image", "like", "read", "publish")}),
+        ("編集項目", {"fields": ("channel", "title", "content", "richtext", "image", "like", "read", "publish")}),
         ("確認項目", {"fields": ("total_like", "comment_count", "created", "updated")})
     ]
-
-    def save_model(self, request, obj, form, change):
-        obj.richtext = json.loads(request.POST.dict()["delta"])["html"]
-        super(BlogAdmin, self).save_model(request, obj, form, change)
 
 
 @admin.register(Chat)
@@ -598,7 +593,7 @@ class BlogAdminSite(admin.ModelAdmin, PublishMixin):
 
     # 詳細画面
     fieldsets = [
-        ("編集項目", {"fields": ("title", "content", "delta", "image", "publish")}),
+        ("編集項目", {"fields": ("title", "content", "richtext", "image", "publish")}),
         ("確認項目", {"fields": ("read", "total_like", "comment_count", "created", "updated")})
     ]
 
@@ -611,7 +606,6 @@ class BlogAdminSite(admin.ModelAdmin, PublishMixin):
             channel = Channel.objects.filter(owner=request.user, is_default=True).first()
             if channel:
                 obj.channel = channel
-        obj.richtext = json.loads(request.POST.dict()["delta"])["html"]
         super(BlogAdminSite, self).save_model(request, obj, form, change)
 manage_site.register(Blog, BlogAdminSite)
 
