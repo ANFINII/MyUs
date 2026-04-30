@@ -1,8 +1,8 @@
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
+from api.src.adapter.advertise import convert_advertises
 from api.src.adapter.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
-from api.src.domain.interface.advertise.data import AdvertiseData
 from api.src.types.schema.advertise import AdvertiseIn, AdvertiseListOut, AdvertiseOut, AdvertiseUpdateIn
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.media.input import BulkDeleteIn, VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
@@ -461,23 +461,3 @@ class ManageAdvertiseAPI:
             return 400, ErrorOut(message="削除に失敗しました!")
 
         return 204, ErrorOut(message="削除しました!")
-
-
-def convert_advertises(objs: list[AdvertiseData]) -> list[AdvertiseOut]:
-    return [
-        AdvertiseOut(
-            ulid=o.ulid,
-            title=o.title,
-            url=o.url,
-            content=o.content,
-            image=o.image,
-            video=o.video,
-            read=o.read,
-            type=o.type,
-            period=o.period,
-            publish=o.publish,
-            created=o.created,
-            updated=o.updated,
-        )
-        for o in objs
-    ]

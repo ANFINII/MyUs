@@ -1,4 +1,5 @@
 from ninja import NinjaAPI
+from api.src.adapter.advertise import AdvertiseAPI
 from api.src.adapter.auth import AuthAPI
 from api.src.adapter.category import CategoryAPI
 from api.src.adapter.comment import CommentAPI
@@ -42,3 +43,5 @@ api.add_router("/media/category", CategoryAPI().router, tags=["Media Category"])
 api.add_router("/media/hashtag", MediaHashtagAPI().router, tags=["Media Hashtag"])
 api.add_router("/media/comment", CommentAPI().router, tags=["Media Comment"])
 api.add_router("/media/message", MessageAPI().router, tags=["Media Message"])
+
+api.add_router("/advertise", AdvertiseAPI().router, tags=["Advertise"])
