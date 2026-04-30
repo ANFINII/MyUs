@@ -1,25 +1,27 @@
-FROM python:3.11
+FROM python:3.14-slim
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONPATH /code
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/code \
+    UV_LINK_MODE=copy \
+    UV_PROJECT_ENVIRONMENT=/opt/venv \
+    PATH=/opt/venv/bin:$PATH
 
-RUN mkdir /code
-WORKDIR /code
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
 
 RUN apt-get update \
-  && apt-get install -y build-essential \
-  && apt-get install -y default-libmysqlclient-dev \
-  && apt-get install -y git \
-  && apt-get install -y libgraphviz-dev graphviz pkg-config \
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && apt-get install -y --no-install-recommends \
+    build-essential \
+    default-libmysqlclient-dev \
+    pkg-config \
+    ffmpeg \
   && rm -rf /var/lib/apt/lists/*
 
-COPY /myus/requirements /code/requirements
-RUN pip install --upgrade pip
-RUN pip install -r /code/requirements/dev.txt
+WORKDIR /code
 
-ADD . /code/
-EXPOSE 8056
+COPY myus/pyproject.toml myus/uv.lock ./
+RUN uv sync --frozen --no-install-project
 
-# CMD cd /myus && uvicorn app.main:app --reload --port=$PORT --host=0.0.0.0 --log-level debug
+COPY myus/ ./
+
+EXPOSE 8000
