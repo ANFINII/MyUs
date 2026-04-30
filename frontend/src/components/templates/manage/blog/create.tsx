@@ -35,7 +35,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
   const { isLoading, handleLoading } = useIsLoading()
   const { isRequired, isRequiredCheck } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<BlogIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', richtext: '', delta: '' })
+  const [values, setValues] = useState<BlogIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', richtext: '' })
 
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -58,7 +58,7 @@ export default function BlogCreate(props: Props): React.JSX.Element {
       handleToast(FetchError.Post, true)
       return
     }
-    setValues({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', richtext: '', delta: '' })
+    setValues({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', richtext: '' })
     handleToast('作成しました', false)
   }
 

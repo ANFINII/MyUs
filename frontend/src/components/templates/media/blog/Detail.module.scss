@@ -1,4 +1,8 @@
+@use 'styles/global/mixin/tiptap';
+
 .media_detail {
   height: auto;
   background: rgb(255, 255, 255);
+
+  @include tiptap.tiptap;
 }

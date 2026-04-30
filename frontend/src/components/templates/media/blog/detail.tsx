@@ -1,6 +1,5 @@
 import { BlogDetailOut } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
-import cx from 'utils/functions/cx'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -23,7 +22,7 @@ export default function BlogDetail(props: Props): React.JSX.Element {
   return (
     <Main metaTitle="Blog" toast={toast}>
       <MediaDetail publish={publish}>
-        <div className={cx(style.media_detail, 'quill_content')}>
+        <div className={style.media_detail}>
           <FormatHtml content={richtext} />
         </div>
         <Divide />
