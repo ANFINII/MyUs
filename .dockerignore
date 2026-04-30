@@ -1,0 +1,32 @@
+.git
+.gitignore
+.vscode
+.claude
+.mypy_cache
+.dockerignore
+docker-compose.yml
+docs
+image
+logs
+mysql/data
+nginx
+readme.md
+
+# Python
+**/.venv
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/.pytest_cache
+**/.ruff_cache
+**/.mypy_cache
+
+# Node / Next.js (frontend は別 Dockerfile)
+frontend
+**/node_modules
+**/.next
+**/.turbo
+
+# 環境ファイル（ビルドに含めない。実行時は env_file で渡す）
+**/*.env
+!**/sample.env

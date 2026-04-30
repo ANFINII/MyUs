@@ -20,8 +20,7 @@ services:
 
   mysql:
     container_name: myus_mysql
-    image: mysql:latest
-    platform: linux/arm64/v8
+    image: mysql:8.4
     restart: always
     volumes:
       - ./mysql/data:/var/lib/mysql
@@ -36,12 +35,12 @@ services:
 
   myus_redis:
     container_name: myus_redis
-    image: redis:5.0
+    image: redis:7-alpine
     env_file:
       - ./myus/envs/redis.env
     ports:
       - "6356:6379"
-    command: redis-server --requirepass redis1234
+    command: sh -c 'redis-server --requirepass "$$REDIS_PASSWORD"'
     networks:
       - myus_network
 
