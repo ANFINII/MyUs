@@ -44,4 +44,5 @@ class Notification(models.Model):
         indexes = [
             models.Index(fields=["user_from", "user_to"], name="notification_from_to_idx"),
             models.Index(fields=["type_no", "object_id"], name="notification_type_object_idx"),
+            models.Index(fields=["user_to", "-created"], name="notification_to_created_idx"),
         ]

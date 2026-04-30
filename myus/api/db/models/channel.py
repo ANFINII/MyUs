@@ -24,3 +24,4 @@ class Channel(models.Model):
     class Meta:
         db_table = "channel"
         verbose_name_plural = "Channel"
+        indexes = [models.Index(fields=["owner", "is_default"], name="channel_owner_default_idx")]

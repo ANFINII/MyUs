@@ -17,6 +17,7 @@ class SearchTag(models.Model):
     class Meta:
         db_table = "searchtag"
         verbose_name_plural = "08 検索タグ"
+        indexes = [models.Index(fields=["author", "sequence"], name="searchtag_author_seq_idx")]
 
 
 class Follow(models.Model):
