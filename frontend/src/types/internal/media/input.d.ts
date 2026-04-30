@@ -19,7 +19,6 @@ export interface MusicIn extends MediaIn {
 
 export interface BlogIn extends MediaIn {
   richtext: string
-  delta: string
   image?: File
 }
 
