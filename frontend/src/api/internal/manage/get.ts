@@ -2,6 +2,7 @@ import { apiClient } from 'lib/axios/internal'
 import { cookieHeader } from 'lib/config'
 import { ApiOut, apiOut } from 'lib/error'
 import { Req } from 'types/global'
+import { Advertise, AdvertiseList, AdvertiseSearchParams } from 'types/internal/advertise'
 import { VideoList, MusicList, BlogList, ComicList, PictureList, ChatList } from 'types/internal/media/output'
 import { SearchParams, Video, Music, Blog, Comic, Picture, Chat } from 'types/internal/media/output'
 import {
@@ -17,6 +18,8 @@ import {
   apiManagePicture,
   apiManageChats,
   apiManageChat,
+  apiManageAdvertises,
+  apiManageAdvertise,
 } from 'api/uri'
 
 export const getManageVideos = async (params: SearchParams, req?: Req): Promise<ApiOut<VideoList>> => {
@@ -65,4 +68,12 @@ export const getManagePicture = async (ulid: string, req?: Req): Promise<ApiOut<
 
 export const getManageChat = async (ulid: string, req?: Req): Promise<ApiOut<Chat>> => {
   return await apiOut(apiClient('json').get(apiManageChat(ulid), cookieHeader(req)))
+}
+
+export const getManageAdvertises = async (params: AdvertiseSearchParams, req?: Req): Promise<ApiOut<AdvertiseList>> => {
+  return await apiOut(apiClient('json').get(apiManageAdvertises, cookieHeader(req, params)))
+}
+
+export const getManageAdvertise = async (ulid: string, req?: Req): Promise<ApiOut<Advertise>> => {
+  return await apiOut(apiClient('json').get(apiManageAdvertise(ulid), cookieHeader(req)))
 }
