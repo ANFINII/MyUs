@@ -1,8 +1,9 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
+import { AdvertiseUpdateIn } from 'types/internal/advertise'
 import { VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn } from 'types/internal/media/input'
 import { ErrorOut } from 'types/internal/other'
-import { apiManageVideo, apiManageMusic, apiManageBlog, apiManageComic, apiManagePicture, apiManageChat } from 'api/uri'
+import { apiManageVideo, apiManageMusic, apiManageBlog, apiManageComic, apiManagePicture, apiManageChat, apiManageAdvertise } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
 export const putManageVideo = async (ulid: string, request: VideoUpdateIn): Promise<ApiOut<ErrorOut>> => {
@@ -27,4 +28,8 @@ export const putManagePicture = async (ulid: string, request: PictureUpdateIn): 
 
 export const putManageChat = async (ulid: string, request: ChatUpdateIn): Promise<ApiOut<ErrorOut>> => {
   return await apiOut(apiClient('json').put(apiManageChat(ulid), camelSnake(request)))
+}
+
+export const putManageAdvertise = async (ulid: string, request: AdvertiseUpdateIn): Promise<ApiOut<ErrorOut>> => {
+  return await apiOut(apiClient('form').put(apiManageAdvertise(ulid), camelSnake(request)))
 }
