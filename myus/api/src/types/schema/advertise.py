@@ -36,3 +36,7 @@ class AdvertiseOut(BaseModel):
 class AdvertiseListOut(BaseModel):
     datas: list[AdvertiseOut]
     total: int
+
+
+class AdvertiseReadOut(BaseModel):
+    read: int
