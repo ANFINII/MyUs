@@ -79,6 +79,7 @@ class ImageUpload(str, Enum):
     COMIC = "comic"
     COMIC_PAGE = "comic_page"
     PICTURE = "picture"
+    ADVERTISE = "advertise"
 
 
 class MediaUpload(str, Enum):

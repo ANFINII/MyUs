@@ -1,6 +1,7 @@
 from django.db import models
 from django_ulid.models import ulid
 from api.db.models.user import User
+from api.utils.functions.file import advertise_image_upload, advertise_video_upload
 
 
 class AccessLog(models.Model):
@@ -30,11 +31,11 @@ class Advertise(models.Model):
     title   = models.CharField(max_length=100)
     url     = models.URLField()
     content = models.TextField()
-    image   = models.ImageField(blank=True)
-    video   = models.FileField(blank=True)
+    image   = models.ImageField(upload_to=advertise_image_upload, max_length=255, blank=True)
+    video   = models.FileField(upload_to=advertise_video_upload, max_length=255, blank=True)
     read    = models.IntegerField(default=0)
-    type    = models.CharField(choices=choice, max_length=3)
-    period  = models.DateField()
+    type    = models.CharField(choices=choice, max_length=3, default="one")
+    period  = models.DateField(blank=True, null=True)
     publish = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

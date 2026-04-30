@@ -3,7 +3,7 @@ from api.src.adapter.auth import AuthAPI
 from api.src.adapter.category import CategoryAPI
 from api.src.adapter.comment import CommentAPI
 from api.src.adapter.hashtag import MediaHashtagAPI
-from api.src.adapter.manage import ManageVideoAPI, ManageMusicAPI, ManageBlogAPI, ManageComicAPI, ManagePictureAPI, ManageChatAPI
+from api.src.adapter.manage import ManageVideoAPI, ManageMusicAPI, ManageBlogAPI, ManageComicAPI, ManagePictureAPI, ManageChatAPI, ManageAdvertiseAPI
 from api.src.adapter.media import HomeAPI, RecommendAPI, VideoAPI, MusicAPI, BlogAPI, ComicAPI, PictureAPI, ChatAPI
 from api.src.adapter.message import MessageAPI
 from api.src.adapter.channel import ChannelAPI
@@ -26,6 +26,7 @@ api.add_router("/manage/media/blog", ManageBlogAPI().router, tags=["Manage Blog"
 api.add_router("/manage/media/comic", ManageComicAPI().router, tags=["Manage Comic"])
 api.add_router("/manage/media/picture", ManagePictureAPI().router, tags=["Manage Picture"])
 api.add_router("/manage/media/chat", ManageChatAPI().router, tags=["Manage Chat"])
+api.add_router("/manage/advertise", ManageAdvertiseAPI().router, tags=["Manage Advertise"])
 
 api.add_router("/channel", ChannelAPI().router, tags=["Channel"])
 api.add_router("/media/home", HomeAPI().router, tags=["Media Home"])

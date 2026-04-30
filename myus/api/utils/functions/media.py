@@ -10,7 +10,7 @@ from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.injectors.container import injector
 from api.utils.enum.index import MediaType, ImageUpload, MediaUpload
 from api.utils.functions.convert.audio_converter import is_conversion, save_converted_mp3
-from api.utils.functions.file import avatar_path, comic_path, image_path, musics_path, video_path
+from api.utils.functions.file import advertise_image_path, advertise_video_path, avatar_path, comic_path, image_path, musics_path, video_path
 
 
 type MediaInterfaceType = VideoInterface | MusicInterface | BlogInterface | ComicInterface | PictureInterface | ChatInterface
@@ -44,8 +44,12 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
             path = image_path(upload_type, ulid, filename)
         case ImageUpload.COMIC_PAGE:
             path = comic_path(ulid, filename)
-        case MediaUpload.VIDEO | MediaUpload.ADVERTISE:
+        case ImageUpload.ADVERTISE:
+            path = advertise_image_path(ulid, filename)
+        case MediaUpload.VIDEO:
             path = video_path(upload_type, ulid, filename)
+        case MediaUpload.ADVERTISE:
+            path = advertise_video_path(ulid, filename)
         case MediaUpload.MUSIC:
             path = musics_path(ulid, filename)
             if is_conversion(filename):

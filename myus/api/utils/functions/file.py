@@ -27,6 +27,14 @@ def comic_path(ulid: str, filename: str) -> str:
     return f"comics/channel_{ulid}/{new_ulid()}_{filename}"
 
 
+def advertise_image_path(ulid: str, filename: str) -> str:
+    return f"images/advertise/user_{ulid}/{new_ulid()}_{filename}"
+
+
+def advertise_video_path(ulid: str, filename: str) -> str:
+    return f"videos/advertise/user_{ulid}/{new_ulid()}_{filename}"
+
+
 def avatar_upload(obj: Any, filename: str) -> str:
     type_map: dict[str, ImageUpload] = {
         "User": ImageUpload.USER,
@@ -59,3 +67,11 @@ def music_upload(obj: Any, filename: str) -> str:
 
 def comic_upload(obj: Any, filename: str) -> str:
     return comic_path(str(obj.channel.ulid), filename)
+
+
+def advertise_image_upload(obj: Any, filename: str) -> str:
+    return advertise_image_path(str(obj.author.ulid), filename)
+
+
+def advertise_video_upload(obj: Any, filename: str) -> str:
+    return advertise_video_path(str(obj.author.ulid), filename)
