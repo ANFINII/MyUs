@@ -30,6 +30,10 @@ class Video(models.Model, MediaModel):
     class Meta:
         db_table = "video"
         verbose_name_plural = "01 Video"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="video_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="video_publish_created_idx"),
+        ]
 
 
 # Music
@@ -54,6 +58,10 @@ class Music(models.Model, MediaModel):
     class Meta:
         db_table = "music"
         verbose_name_plural = "02 Music"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="music_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="music_publish_created_idx"),
+        ]
 
 
 # Blog
@@ -77,6 +85,10 @@ class Blog(models.Model, MediaModel):
     class Meta:
         db_table = "blog"
         verbose_name_plural = "03 Blog"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="blog_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="blog_publish_created_idx"),
+        ]
 
 
 # Comic
@@ -99,6 +111,10 @@ class Comic(models.Model, MediaModel):
     class Meta:
         db_table = "comic"
         verbose_name_plural = "04 Comic"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="comic_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="comic_publish_created_idx"),
+        ]
 
 
 class ComicPage(models.Model):
@@ -136,6 +152,10 @@ class Picture(models.Model, MediaModel):
     class Meta:
         db_table = "picture"
         verbose_name_plural = "05 Picture"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="picture_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="picture_publish_created_idx"),
+        ]
 
 
 # Chat
@@ -176,3 +196,7 @@ class Chat(models.Model):
     class Meta:
         db_table = "chat"
         verbose_name_plural = "06 Chat"
+        indexes = [
+            models.Index(fields=["channel", "publish"], name="chat_channel_publish_idx"),
+            models.Index(fields=["publish", "-created"], name="chat_publish_created_idx"),
+        ]
