@@ -391,18 +391,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-quill-editor"
-version = "0.1.42"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/dc/64/53ab5800e25b02947ff38cd06c0a97088f753994622a10ce1b493ec5bc91/django_quill_editor-0.1.42.tar.gz", hash = "sha256:c25ed551459f1aef6582671f426ee57e42e59d0959bca4e544ea8c92a4a5c941", size = 23620, upload-time = "2024-09-20T06:15:58.998Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/77/b2/f8b02e7bea89766a00f03d2ae260969bbe608e5797595f3bfcad29845a2d/django_quill_editor-0.1.42-py3-none-any.whl", hash = "sha256:fc145148a282c20d2072952971c45be82f80901115061a031bc9f74d54602b93", size = 31607, upload-time = "2024-09-20T06:15:56.941Z" },
-]
-
-[[package]]
 name = "django-stubs"
 version = "5.2.8"
 source = { registry = "https://pypi.org/simple" }
@@ -656,7 +644,6 @@ dependencies = [
     { name = "django-import-export" },
     { name = "django-js-asset" },
     { name = "django-ninja" },
-    { name = "django-quill-editor" },
     { name = "django-ulid" },
     { name = "gunicorn" },
     { name = "httpx" },
@@ -695,7 +682,6 @@ requires-dist = [
     { name = "django-import-export", specifier = ">=4.3.14" },
     { name = "django-js-asset", specifier = ">=3.1.2" },
     { name = "django-ninja", specifier = ">=1.5.1" },
-    { name = "django-quill-editor", specifier = ">=0.1.42" },
     { name = "django-ulid", specifier = ">=0.0.4" },
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "httpx", specifier = ">=0.28.1" },
