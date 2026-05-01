@@ -7,6 +7,12 @@
     display: block;
     font-size: 14px;
     color: rgb(50, 50, 50);
+
+    .required {
+      margin-left: 4px;
+      font-family: sans-serif;
+      color: rgb(220, 0, 0);
+    }
   }
 
   .select_box {

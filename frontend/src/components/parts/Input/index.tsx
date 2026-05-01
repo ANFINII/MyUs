@@ -5,16 +5,15 @@ import style from './Input.module.scss'
 
 interface Props {
   label?: string
-  errorText?: string
+  value?: string
   type?: string
   name?: string
-  value?: string
   defaultValue?: string
   placeholder?: string
+  error?: string
   className?: string
   minLength?: number
   maxLength?: number
-  error?: boolean
   required?: boolean
   disabled?: boolean
   autoFocus?: boolean
@@ -23,13 +22,12 @@ interface Props {
 }
 
 export default function Input(props: Props): React.JSX.Element {
-  const { label, errorText, value, className, error = false, required = false, disabled = false, autoFocus, onChange } = props
+  const { label, error, className, required = false, disabled = false, autoFocus, onChange, ...rest } = props
 
   const inputFocus = useAutoFocus()
   const [isValue, setIsValue] = useState<boolean>(false)
 
-  const isRequired = required && !isValue && !value
-  const isErrorText = !isRequired && error
+  const isError = !!error || (error === '' && required && !isValue && !rest.value)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -42,11 +40,19 @@ export default function Input(props: Props): React.JSX.Element {
       {label && (
         <label htmlFor={label} className={style.label}>
           {label}
+          {required && <span className={style.required}>*</span>}
         </label>
       )}
-      <input {...props} id={label} onChange={handleChange} ref={autoFocus ? inputFocus : undefined} className={cx(style.input, isRequired && style.error, disabled && style.disabled)} />
-      {isRequired && <p className={style.error_text}>※必須入力です！</p>}
-      {isErrorText && <p className={style.error_text}>{errorText}</p>}
+      <input
+        {...rest}
+        id={label}
+        required={required}
+        disabled={disabled}
+        onChange={handleChange}
+        ref={autoFocus ? inputFocus : undefined}
+        className={cx(style.input, isError && style.error, disabled && style.disabled)}
+      />
+      {error && <p className={style.error_text}>{error}</p>}
     </div>
   )
 }

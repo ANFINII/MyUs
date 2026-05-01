@@ -31,13 +31,14 @@ const extensions = [
 interface Props {
   label?: string
   value?: string
-  required?: boolean
+  error?: string
   className?: string
+  required?: boolean
   onChange?: (html: string) => void
 }
 
 export default function TextEditor(props: Props): React.JSX.Element {
-  const { label, value, required = false, className, onChange } = props
+  const { label, value, error, className, required = false, onChange } = props
 
   const onChangeRef = useRef(onChange)
   const suppressRef = useRef(false)
@@ -70,22 +71,23 @@ export default function TextEditor(props: Props): React.JSX.Element {
   }, [editor, value])
 
   const handleLabel = () => editor?.commands.focus()
-  const isRequired = required && value === ''
+  const isError = !!error || (error === '' && required && !value)
 
   return (
     <VStack gap="2" className={className}>
       {label && (
         <label className={style.label} onClick={handleLabel}>
           {label}
+          {required && <span className={style.required}>*</span>}
         </label>
       )}
       {editor && (
-        <div className={cx(style.editor, isRequired && style.error)}>
+        <div className={cx(style.editor, isError && style.error)}>
           <Toolbar editor={editor} />
           <EditorContent editor={editor} />
         </div>
       )}
-      {isRequired && <p className={style.error_text}>※必須入力です！</p>}
+      {error && <p className={style.error_text}>{error}</p>}
     </VStack>
   )
 }
