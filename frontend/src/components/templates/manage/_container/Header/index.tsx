@@ -9,12 +9,12 @@ interface Props {
   count: number
   ulid: string
   options: Option[]
-  onDelete: () => void
+  onModal: () => void
   onChange: (e: ChangeEvent<HTMLSelectElement>) => void
 }
 
 export default function ManageHeader(props: Props): React.JSX.Element {
-  const { count, ulid, options, onDelete, onChange } = props
+  const { count, ulid, options, onModal, onChange } = props
 
   const router = useRouter()
 
@@ -23,7 +23,7 @@ export default function ManageHeader(props: Props): React.JSX.Element {
       {count > 0 && (
         <>
           <span className={style.count}>{count}件選択</span>
-          <Button color="red" size="s" name="一括削除" onClick={onDelete} />
+          <Button color="red" size="s" name="一括削除" onClick={onModal} />
         </>
       )}
       <Button color="blue" size="s" name="投稿管理" onClick={() => router.push('/manage')} />
