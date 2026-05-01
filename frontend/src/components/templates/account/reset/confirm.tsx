@@ -11,8 +11,8 @@ import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import Password from 'components/parts/Input/Password'
 import VStack from 'components/parts/Stack/Vertical'
-import Password from 'components/widgets/Password'
 
 export default function ResetConfirm(): React.JSX.Element {
   const router = useRouter()

@@ -10,8 +10,8 @@ import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
+import Password from 'components/parts/Input/Password'
 import VStack from 'components/parts/Stack/Vertical'
-import Password from 'components/widgets/Password'
 import style from '../Setting.module.scss'
 
 export default function PasswordChange(): React.JSX.Element {

@@ -12,11 +12,11 @@ import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import Password from 'components/parts/Input/Password'
 import Radio from 'components/parts/Input/Radio'
 import SelectBox from 'components/parts/Input/SelectBox'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
-import Password from 'components/widgets/Password'
 
 const initSignup: SignupIn = {
   token: '',

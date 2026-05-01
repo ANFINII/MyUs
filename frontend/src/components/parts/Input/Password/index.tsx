@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react'
-import Input from 'components/parts/Input'
+import Input from '..'
 
 interface Props {
   value?: string
