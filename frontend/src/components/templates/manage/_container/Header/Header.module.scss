@@ -1,0 +1,15 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .count {
+    font-size: 13px;
+    color: rgb(80, 80, 80);
+    white-space: nowrap;
+  }
+
+  .filter {
+    width: 240px;
+  }
+}
