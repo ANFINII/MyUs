@@ -144,7 +144,7 @@ export default function ManageMusics(props: Props): React.JSX.Element {
       type="table"
       toast={toast}
       isFooter={false}
-      button={<ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onDelete={handleModal} onChange={handleChannel} />}
+      button={<ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onModal={handleModal} onChange={handleChannel} />}
     >
       <ManageTable
         table={{ datas, columns, rowKey: (m) => m.ulid }}
