@@ -16,6 +16,7 @@ import Radio from 'components/parts/Input/Radio'
 import SelectBox from 'components/parts/Input/SelectBox'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import Password from 'components/widgets/Password'
 
 const initSignup: SignupIn = {
   token: '',
@@ -97,8 +98,8 @@ export default function Signup(): React.JSX.Element {
                 <Input name="username" placeholder="ユーザー名(英数字)" maxLength={20} required error={error} onChange={handleInput} />
                 <Input name="nickname" placeholder="投稿者名" maxLength={80} required error={error} onChange={handleInput} />
                 <Input type="email" name="email" value={values.email} disabled maxLength={255} />
-                <Input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minLength={8} maxLength={16} required error={error} onChange={handleInput} />
-                <Input type="password" name="password2" placeholder="パスワード(確認用)" minLength={8} maxLength={16} required error={error} onChange={handleInput} />
+                <Password name="password1" placeholder="パスワード(英数字8~16文字)" error={error} onChange={handleInput} />
+                <Password name="password2" placeholder="パスワード(確認用)" error={error} onChange={handleInput} />
 
                 <VStack gap="4">
                   <p>生年月日</p>

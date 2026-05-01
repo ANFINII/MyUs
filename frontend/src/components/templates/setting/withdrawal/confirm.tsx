@@ -11,8 +11,8 @@ import { useUser } from 'components/hooks/useUser'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
+import Password from 'components/widgets/Password'
 import style from '../Setting.module.scss'
 
 export default function WithdrawalConfirm(): React.JSX.Element {
@@ -48,7 +48,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
         <form method="POST" action="" className={style.form_account}>
           <VStack gap="8">
             <p className="red">本当に退会しますか？</p>
-            <Input type="password" name="password" minLength={8} maxLength={16} placeholder="パスワード" value={values.password} required error={error} onChange={handleInput} />
+            <Password value={values.password} name="password" placeholder="パスワード" error={error} onChange={handleInput} />
           </VStack>
 
           <VStack gap="12" className="mv_40">

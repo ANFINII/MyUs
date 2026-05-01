@@ -10,8 +10,8 @@ import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
+import Password from 'components/widgets/Password'
 import style from '../Setting.module.scss'
 
 export default function PasswordChange(): React.JSX.Element {
@@ -19,23 +19,23 @@ export default function PasswordChange(): React.JSX.Element {
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
-  const [values, setValues] = useState<PasswordChangeIn>({ oldPassword: '', newPassword1: '', newPassword2: '' })
+  const [values, setValues] = useState<PasswordChangeIn>({ oldPassword: '', password1: '', password2: '' })
 
   const handleBack = () => router.push('/setting/profile')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   const handleSubmit = async () => {
-    const { oldPassword, newPassword1, newPassword2 } = values
-    if (!validate({ oldPassword, newPassword1, newPassword2 })) return
-    if (newPassword1 !== newPassword2) {
+    const { oldPassword, password1, password2 } = values
+    if (!validate({ oldPassword, password1, password2 })) return
+    if (password1 !== password2) {
       handleToast('新規パスワードが一致しません', true)
       return
     }
     handleLoading(true)
     const request: PasswordChangeIn = {
       oldPassword: encrypt(oldPassword),
-      newPassword1: encrypt(newPassword1),
-      newPassword2: encrypt(newPassword2),
+      password1: encrypt(password1),
+      password2: encrypt(password2),
     }
     const ret = await postPasswordChange(request)
     handleLoading(false)
@@ -51,39 +51,9 @@ export default function PasswordChange(): React.JSX.Element {
       <article className={style.article_pass}>
         <form method="POST" action="" className={style.form_account}>
           <VStack gap="8">
-            <Input
-              type="password"
-              name="oldPassword"
-              minLength={8}
-              maxLength={16}
-              placeholder="現在パスワード"
-              value={values.oldPassword}
-              required
-              error={error}
-              onChange={handleInput}
-            />
-            <Input
-              type="password"
-              name="newPassword1"
-              minLength={8}
-              maxLength={16}
-              placeholder="新規パスワード(英数字8~16文字)"
-              value={values.newPassword1}
-              required
-              error={error}
-              onChange={handleInput}
-            />
-            <Input
-              type="password"
-              name="newPassword2"
-              minLength={8}
-              maxLength={16}
-              placeholder="新規パスワード(確認用)"
-              value={values.newPassword2}
-              required
-              error={error}
-              onChange={handleInput}
-            />
+            <Password value={values.oldPassword} name="oldPassword" placeholder="現在パスワード" error={error} onChange={handleInput} />
+            <Password value={values.password1} name="password1" placeholder="パスワード(英数字8~16文字)" error={error} onChange={handleInput} />
+            <Password value={values.password2} name="password2" placeholder="パスワード(確認用)" error={error} onChange={handleInput} />
           </VStack>
 
           <VStack gap="12" className="mv_40">
