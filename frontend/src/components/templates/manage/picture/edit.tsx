@@ -68,7 +68,7 @@ export default function ManagePictureEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="画像編集" type="table" toast={toast} isFooter={false} button={button}>
+    <Main title="Picture" type="table" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />

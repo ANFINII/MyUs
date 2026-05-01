@@ -133,7 +133,7 @@ export default function ManageComics(props: Props): React.JSX.Element {
 
   return (
     <Main
-      title="漫画管理"
+      title="Comic"
       type="table"
       toast={toast}
       isFooter={false}
