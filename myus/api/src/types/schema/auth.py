@@ -2,6 +2,20 @@ from pydantic import BaseModel
 from api.utils.enum.index import GenderType
 
 
+class LoginIn(BaseModel):
+    username: str
+    password: str
+
+
+class LoginOut(BaseModel):
+    access: str
+    refresh: str
+
+
+class RefreshOut(BaseModel):
+    access: str
+
+
 class SignupEmailIn(BaseModel):
     email: str
 
@@ -21,19 +35,14 @@ class SignupIn(BaseModel):
     gender: GenderType
 
 
-class LoginIn(BaseModel):
-    username: str
-    password: str
+class SignupVerifyOut(BaseModel):
+    email: str
 
 
 class PasswordChangeIn(BaseModel):
     old_password: str
-    new_password1: str
-    new_password2: str
-
-
-class WithdrawalIn(BaseModel):
-    password: str
+    password1: str
+    password2: str
 
 
 class PasswordResetEmailIn(BaseModel):
@@ -42,22 +51,13 @@ class PasswordResetEmailIn(BaseModel):
 
 class PasswordResetIn(BaseModel):
     token: str
-    new_password1: str
-    new_password2: str
-
-
-class SignupVerifyOut(BaseModel):
-    email: str
+    password1: str
+    password2: str
 
 
 class PasswordResetVerifyOut(BaseModel):
     email: str
 
 
-class LoginOut(BaseModel):
-    access: str
-    refresh: str
-
-
-class RefreshOut(BaseModel):
-    access: str
+class WithdrawalIn(BaseModel):
+    password: str
