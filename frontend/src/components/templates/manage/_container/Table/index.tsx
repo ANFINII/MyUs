@@ -1,7 +1,7 @@
 import DataTable, { Column } from 'components/parts/DataTable'
 import Pagination from 'components/parts/Pagination'
 import DeleteModal from 'components/widgets/Modal/Delete'
-import style from './List.module.scss'
+import style from './Table.module.scss'
 
 interface Props<T> {
   table: {
@@ -27,7 +27,7 @@ interface Props<T> {
   }
 }
 
-export default function ManageList<T>(props: Props<T>): React.JSX.Element {
+export default function ManageTable<T>(props: Props<T>): React.JSX.Element {
   const { table, selection, pagination, deletion } = props
 
   return (
