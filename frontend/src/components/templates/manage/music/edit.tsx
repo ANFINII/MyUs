@@ -48,8 +48,8 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   const handleCheck = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.checked })
 
   const handleForm = async () => {
-    const { categoryUlid, title, content, lyric } = values
-    if (!validate({ categoryUlid, title, content, lyric })) return
+    const { categoryUlid, title, content } = values
+    if (!validate({ categoryUlid, title, content })) return
     handleLoading(true)
     const ret = await putManageMusic(data.ulid, values)
     handleLoading(false)
@@ -76,7 +76,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
           <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label="タイトル" name="title" value={values.title} required error={error} onChange={handleInput} />
           <Textarea label="内容" name="content" value={values.content} required error={error} onChange={handleText} />
-          <Textarea label="歌詞" name="lyric" value={values.lyric} required error={error} onChange={handleText} />
+          <Textarea label="歌詞" name="lyric" value={values.lyric} onChange={handleText} />
           <CheckBox label="ダウンロード許可" name="download" checked={values.download} onChange={handleCheck} />
         </VStack>
       </form>

@@ -65,7 +65,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
           <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label="タイトル" name="title" required error={error} onChange={handleInput} />
           <Textarea label="内容" name="content" required error={error} onChange={handleText} />
-          <Textarea label="歌詞" name="lyric" required error={error} onChange={handleText} />
+          <Textarea label="歌詞" name="lyric" onChange={handleText} />
           <VStack gap="2">
             <InputFile label="音楽" accept="audio/*" required error={error} onChange={handleFile} />
             <CheckBox label="ダウンロード許可" name="download" defaultChecked onChange={handleCheck} />
