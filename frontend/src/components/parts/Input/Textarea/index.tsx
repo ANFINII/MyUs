@@ -4,14 +4,13 @@ import style from './Textarea.module.scss'
 
 interface Props {
   label?: string
-  errorText?: string
-  name?: string
   value?: string
+  name?: string
   defaultValue?: string
   placeholder?: string
+  error?: string
   className?: string
   height?: number
-  error?: boolean
   required?: boolean
   disabled?: boolean
   focus?: boolean
@@ -19,13 +18,12 @@ interface Props {
 }
 
 export default function Textarea(props: Props): React.JSX.Element {
-  const { label, errorText, value, className, height, error = false, required = false, focus, onChange } = props
+  const { label, value, error, className, height, required = false, focus, onChange, ...rest } = props
 
   const ref = useRef<HTMLTextAreaElement>(null)
   const [isValue, setIsValue] = useState<boolean>(false)
 
-  const isRequired = required && !isValue
-  const isErrorText = !isRequired && error
+  const isError = !!error || (error === '' && required && !isValue && !value)
 
   const adjustHeight = (height?: number) => {
     if (ref.current) {
@@ -51,11 +49,11 @@ export default function Textarea(props: Props): React.JSX.Element {
       {label && (
         <label htmlFor={label} className={style.label}>
           {label}
+          {required && <span className={style.required}>*</span>}
         </label>
       )}
-      <textarea {...props} id={label} ref={ref} value={value} onChange={handleChange} className={cx(style.textarea, isRequired && style.error)} />
-      {isRequired && <p className={style.error_text}>※必須入力です！</p>}
-      {isErrorText && <p className={style.error_text}>{errorText}</p>}
+      <textarea {...rest} id={label} ref={ref} value={value} required={required} onChange={handleChange} className={cx(style.textarea, isError && style.error)} />
+      {error && <p className={style.error_text}>{error}</p>}
     </div>
   )
 }

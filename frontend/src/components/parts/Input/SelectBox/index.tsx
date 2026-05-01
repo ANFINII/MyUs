@@ -6,32 +6,34 @@ import style from './SelectBox.module.scss'
 
 interface Props {
   label?: string
-  name?: string
   value: string
-  options: Option[]
+  name?: string
   placeholder?: string
+  error?: string
+  className?: string
+  options: Option[]
   required?: boolean
   disabled?: boolean
-  className?: string
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void
 }
 
 export default function SelectBox(props: Props): React.JSX.Element {
-  const { label, value, required = false, className, ...rest } = props
+  const { label, value, error, className, required = false, ...rest } = props
 
-  const isRequired = required && !value
+  const isError = !!error || (error === '' && required && !value)
 
   return (
     <div className={cx(style.box, className)}>
       {label && (
         <label htmlFor={label} className={style.label}>
           {label}
+          {required && <span className={style.required}>*</span>}
         </label>
       )}
       <div className={style.select_box}>
-        <Select {...rest} value={value} id={label} className={cx(style.select, isRequired && style.error)} />
+        <Select {...rest} value={value} id={label} className={cx(style.select, isError && style.error)} />
       </div>
-      {isRequired && <p className={style.error_text}>※必須入力です！</p>}
+      {error && <p className={style.error_text}>{error}</p>}
     </div>
   )
 }
