@@ -1,4 +1,4 @@
-import { useLoading } from 'components/hooks/useLoading'
+import { usePageLoading } from 'components/hooks/usePageLoading'
 import Header from 'components/layout/Header'
 import SearchTagBar from 'components/layout/SearchTagBar'
 import SideBar from 'components/layout/SideBar'
@@ -11,7 +11,7 @@ interface Props {
 export default function Layout(props: Props): React.JSX.Element {
   const { children } = props
 
-  const { loading } = useLoading()
+  const { loading } = usePageLoading()
 
   return (
     <div className={style.layout}>
