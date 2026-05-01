@@ -76,7 +76,7 @@ export default function ManagePictureEdit(props: Props): React.JSX.Element {
           <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label="タイトル" name="title" value={values.title} required error={error} onChange={handleInput} />
           <Textarea label="内容" name="content" value={values.content} required error={error} onChange={handleText} />
-          <InputFile label="画像" accept="image/*" onChange={handleFile} />
+          <InputFile label="画像" accept="image/*" required error={error} onChange={handleFile} />
         </VStack>
       </form>
     </Main>
