@@ -7,7 +7,7 @@ import { deleteManageChats } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
 import { formatDate, formatDatetime } from 'utils/functions/datetime'
 import { useApiError } from 'components/hooks/useApiError'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -28,7 +28,7 @@ export default function ManageChats(props: Props): React.JSX.Element {
   const { datas, total, page, channels } = props
 
   const router = useRouter()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
@@ -154,7 +154,7 @@ export default function ManageChats(props: Props): React.JSX.Element {
         table={{ datas, columns, rowKey: (c) => c.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
         pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
-        deletion={{ label: 'チャット', open: isDeleteModal, loading: isLoading, onClose: handleDelete, onAction: handleDeleteSubmit }}
+        deletion={{ label: 'チャット', open: isDeleteModal, loading, onClose: handleDelete, onAction: handleDeleteSubmit }}
       />
     </Main>
   )

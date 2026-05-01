@@ -4,7 +4,7 @@ import { PasswordChangeIn } from 'types/internal/auth'
 import { postPasswordChange } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
@@ -16,7 +16,7 @@ import style from '../Setting.module.scss'
 
 export default function PasswordChange(): React.JSX.Element {
   const router = useRouter()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<PasswordChangeIn>({ oldPassword: '', newPassword1: '', newPassword2: '' })
@@ -87,7 +87,7 @@ export default function PasswordChange(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="green" size="l" name="変更する" loading={isLoading} onClick={handleSubmit} />
+            <Button color="green" size="l" name="変更する" loading={loading} onClick={handleSubmit} />
             <Button color="blue" size="l" name="戻る" onClick={handleBack} />
           </VStack>
         </form>

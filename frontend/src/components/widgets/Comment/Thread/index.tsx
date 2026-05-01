@@ -4,7 +4,7 @@ import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { putComment, deleteComment } from 'api/internal/comment'
 import { postLikeComment } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import ActionButton from 'components/parts/Action/Button'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
@@ -29,7 +29,7 @@ export default function CommentThread(props: Props): React.JSX.Element {
   const { ulid, author, text } = reply
   const { isActive } = user
 
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -99,7 +99,7 @@ export default function CommentThread(props: Props): React.JSX.Element {
         </div>
       </VStack>
       <ActionButton open={isMenu} onMenu={handleMenu} isRound disabled={disabled} actionItems={actionItems} />
-      <CommentDeleteModal open={isModal} onClose={handleModal} onAction={handleDelete} loading={isLoading} comment={reply} />
+      <CommentDeleteModal open={isModal} onClose={handleModal} onAction={handleDelete} loading={loading} comment={reply} />
     </HStack>
   )
 }

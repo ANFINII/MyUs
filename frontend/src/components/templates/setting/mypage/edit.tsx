@@ -7,7 +7,7 @@ import { putChannel } from 'api/internal/channel'
 import { putSettingMypage } from 'api/internal/setting'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -33,7 +33,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const { mypage, channels } = props
 
   const router = useRouter()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })
   const [bannerFile, setBannerFile] = useState<File>()
@@ -92,7 +92,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name="登録" loading={isLoading} onClick={handleSubmit} />
+      <Button color="green" size="s" name="登録" loading={loading} onClick={handleSubmit} />
       <Button color="blue" size="s" name="戻る" onClick={handleBack} />
     </HStack>
   )

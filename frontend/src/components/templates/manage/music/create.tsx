@@ -5,7 +5,7 @@ import { MusicIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
 import { postMusicCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -30,7 +30,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: '未選択', value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<MusicIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', lyric: '', download: true })
@@ -57,7 +57,7 @@ export default function MusicCreate(props: Props): React.JSX.Element {
   }
 
   return (
-    <Main title="Music" type="table" toast={toast} isFooter={false} button={<Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />}>
+    <Main title="Music" type="table" toast={toast} isFooter={false} button={<Button color="green" size="s" name="作成する" loading={loading} onClick={handleForm} />}>
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />

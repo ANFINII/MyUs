@@ -9,7 +9,7 @@ import { genderMap } from 'utils/constants/map'
 import { selectDate } from 'utils/functions/datetime'
 import { getAge } from 'utils/functions/user'
 import { useApiError } from 'components/hooks/useApiError'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
@@ -36,7 +36,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { updateUser } = useUser()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { message, setMessage, handleError } = useApiError({ handleToast })
@@ -84,7 +84,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name="登録" loading={isLoading} onClick={handlSubmit} />
+      <Button color="green" size="s" name="登録" loading={loading} onClick={handlSubmit} />
       <Button color="blue" size="s" name="戻る" onClick={handleBack} />
     </HStack>
   )
