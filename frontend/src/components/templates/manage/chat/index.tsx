@@ -154,7 +154,7 @@ export default function ManageChats(props: Props): React.JSX.Element {
         table={{ datas, columns, rowKey: (c) => c.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
         pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
-        deletion={{ label: 'チャット', open: isDeleteModal, loading, onClose: handleDelete, onAction: handleDeleteSubmit }}
+        deletion={{ open: isDeleteModal, loading, onClose: handleDelete, onAction: handleDeleteSubmit }}
       />
     </Main>
   )

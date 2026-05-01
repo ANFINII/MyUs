@@ -146,7 +146,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
         table={{ datas, columns, rowKey: (a) => a.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
         pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
-        deletion={{ label: '広告', open: isDeleteModal, loading, onClose: handleDelete, onAction: handleDeleteSubmit }}
+        deletion={{ open: isDeleteModal, loading, onClose: handleDelete, onAction: handleDeleteSubmit }}
       />
     </Main>
   )

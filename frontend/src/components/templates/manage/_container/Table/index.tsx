@@ -19,7 +19,6 @@ interface Props<T> {
     onChange: (page: number) => void
   }
   deletion: {
-    label: string
     open: boolean
     loading: boolean
     onClose: () => void
@@ -45,8 +44,8 @@ export default function ManageTable<T>(props: Props<T>): React.JSX.Element {
       </div>
       <DeleteModal
         open={deletion.open}
-        title={`${deletion.label}の削除`}
-        content={`${selection.keys.size}件の${deletion.label}を削除しますか？`}
+        title="データの削除"
+        content={`${selection.keys.size}件のデータを削除しますか？`}
         loading={deletion.loading}
         onClose={deletion.onClose}
         onAction={deletion.onAction}
