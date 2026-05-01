@@ -35,10 +35,10 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
-  const [values, setValues] = useState<ChatUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, period: formatDate(data.period), publish: data.publish })
+  const [values, setValues] = useState<ChatUpdateIn>({ ...data, period: formatDate(data.period) })
 
   const handleBack = () => router.push('/manage/chat')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
@@ -48,7 +48,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
 
   const handleForm = async () => {
     const { categoryUlid, title, content, period } = values
-    if (!isRequiredCheck({ categoryUlid, title, content, period })) return
+    if (!validate({ categoryUlid, title, content, period })) return
     handleLoading(true)
     const ret = await putManageChat(data.ulid, values)
     handleLoading(false)
@@ -72,10 +72,10 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
           <SelectBox label="チャンネル" name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
-          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required={isRequired} onChange={handleSelect} />
-          <Input label="タイトル" name="title" value={values.title} required={isRequired} onChange={handleInput} />
-          <Textarea label="内容" name="content" value={values.content} required={isRequired} onChange={handleText} />
-          <Input label="期間" name="period" value={values.period} required={isRequired} onChange={handleInput} />
+          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
+          <Input label="タイトル" name="title" value={values.title} required error={error} onChange={handleInput} />
+          <Textarea label="内容" name="content" value={values.content} required error={error} onChange={handleText} />
+          <Input label="期間" name="period" value={values.period} required error={error} onChange={handleInput} />
         </VStack>
       </form>
     </Main>

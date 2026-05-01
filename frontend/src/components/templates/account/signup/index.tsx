@@ -35,7 +35,7 @@ const initSignup: SignupIn = {
 export default function Signup(): React.JSX.Element {
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<SignupIn>(initSignup)
   const [isVerified, setIsVerified] = useState<boolean>(false)
@@ -66,7 +66,7 @@ export default function Signup(): React.JSX.Element {
 
   const handleSubmit = async () => {
     const { email, username, nickname, lastName, firstName, password1, password2 } = values
-    if (!isRequiredCheck({ email, username, nickname, lastName, firstName, password1, password2 })) return
+    if (!validate({ email, username, nickname, lastName, firstName, password1, password2 })) return
     handleLoading(true)
     const ret = await postSignup(values)
     handleLoading(false)
@@ -89,16 +89,16 @@ export default function Signup(): React.JSX.Element {
                 <VStack gap="4">
                   <p>名前</p>
                   <div className="name_group">
-                    <Input name="lastName" placeholder="姓" maxLength={30} required={isRequired} onChange={handleInput} />
-                    <Input name="firstName" placeholder="名" maxLength={30} required={isRequired} onChange={handleInput} />
+                    <Input name="lastName" placeholder="姓" maxLength={30} required error={error} onChange={handleInput} />
+                    <Input name="firstName" placeholder="名" maxLength={30} required error={error} onChange={handleInput} />
                   </div>
                 </VStack>
 
-                <Input name="username" placeholder="ユーザー名(英数字)" maxLength={20} required={isRequired} onChange={handleInput} />
-                <Input name="nickname" placeholder="投稿者名" maxLength={80} required={isRequired} onChange={handleInput} />
+                <Input name="username" placeholder="ユーザー名(英数字)" maxLength={20} required error={error} onChange={handleInput} />
+                <Input name="nickname" placeholder="投稿者名" maxLength={80} required error={error} onChange={handleInput} />
                 <Input type="email" name="email" value={values.email} disabled maxLength={255} />
-                <Input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minLength={8} maxLength={16} required={isRequired} onChange={handleInput} />
-                <Input type="password" name="password2" placeholder="パスワード(確認用)" minLength={8} maxLength={16} required={isRequired} onChange={handleInput} />
+                <Input type="password" name="password1" placeholder="パスワード(英数字8~16文字)" minLength={8} maxLength={16} required error={error} onChange={handleInput} />
+                <Input type="password" name="password2" placeholder="パスワード(確認用)" minLength={8} maxLength={16} required error={error} onChange={handleInput} />
 
                 <VStack gap="4">
                   <p>生年月日</p>

@@ -37,7 +37,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const router = useRouter()
   const { updateUser } = useUser()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { message, setMessage, handleError } = useApiError({ handleToast })
   const [avatarFile, setAvatarFile] = useState<File>()
@@ -67,7 +67,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
 
   const handlSubmit = async () => {
     const { email, username, nickname, lastName, firstName, phone, postalCode } = values
-    if (!isRequiredCheck({ email, username, nickname, lastName, firstName, phone, postalCode })) return
+    if (!validate({ email, username, nickname, lastName, firstName, phone, postalCode })) return
     handleLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 200))
     const request: ProfileIn = { ...values, avatarFile }
@@ -117,18 +117,18 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
           />
         </TableRow>
         <TableRow label="メールアドレス">
-          <Input name="email" value={values.email} maxLength={120} required={isRequired} onChange={handleInput} />
+          <Input name="email" value={values.email} maxLength={120} required error={error} onChange={handleInput} />
         </TableRow>
         <TableRow label="ユーザー名">
-          <Input name="username" value={values.username} maxLength={30} placeholder="英数字" required={isRequired} onChange={handleInput} />
+          <Input name="username" value={values.username} maxLength={30} placeholder="英数字" required error={error} onChange={handleInput} />
         </TableRow>
         <TableRow label="投稿者名">
-          <Input name="nickname" value={values.nickname} maxLength={60} required={isRequired} onChange={handleInput} />
+          <Input name="nickname" value={values.nickname} maxLength={60} required error={error} onChange={handleInput} />
         </TableRow>
         <TableRow label="名前">
           <HStack gap="1" full>
-            <Input name="lastName" value={values.lastName} placeholder="姓" maxLength={30} required={isRequired} onChange={handleInput} />
-            <Input name="firstName" value={values.firstName} placeholder="名" maxLength={30} required={isRequired} onChange={handleInput} />
+            <Input name="lastName" value={values.lastName} placeholder="姓" maxLength={30} required error={error} onChange={handleInput} />
+            <Input name="firstName" value={values.firstName} placeholder="名" maxLength={30} required error={error} onChange={handleInput} />
           </HStack>
         </TableRow>
         <TableRow label="生年月日">
@@ -149,11 +149,11 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
           </HStack>
         </TableRow>
         <TableRow label="電話番号">
-          <Input type="tel" name="phone" value={values.phone} maxLength={15} required={isRequired} onChange={handleInput} />
+          <Input type="tel" name="phone" value={values.phone} maxLength={15} required error={error} onChange={handleInput} />
         </TableRow>
         <TableRow label="郵便番号">
           <div className="d_flex">
-            <Input type="tel" name="postalCode" value={values.postalCode} maxLength={8} className="mr_2" required={isRequired} onChange={handleInput} />
+            <Input type="tel" name="postalCode" value={values.postalCode} maxLength={8} className="mr_2" required error={error} onChange={handleInput} />
             <Button name="住所自動入力" onClick={handleAutoAddress} />
           </div>
         </TableRow>

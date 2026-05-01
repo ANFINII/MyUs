@@ -19,7 +19,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
   const router = useRouter()
   const { resetUser } = useUser()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<WithdrawalIn>({ password: '' })
 
@@ -28,7 +28,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
 
   const handleSubmit = async () => {
     const { password } = values
-    if (!isRequiredCheck({ password })) return
+    if (!validate({ password })) return
 
     handleLoading(true)
     const request: WithdrawalIn = { password: encrypt(password) }
@@ -48,16 +48,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
         <form method="POST" action="" className={style.form_account}>
           <VStack gap="8">
             <p className="red">本当に退会しますか？</p>
-            <Input
-              type="password"
-              name="password"
-              minLength={8}
-              maxLength={16}
-              placeholder="パスワード"
-              value={values.password}
-              required={isRequired}
-              onChange={handleInput}
-            />
+            <Input type="password" name="password" minLength={8} maxLength={16} placeholder="パスワード" value={values.password} required error={error} onChange={handleInput} />
           </VStack>
 
           <VStack gap="12" className="mv_40">

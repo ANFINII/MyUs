@@ -30,7 +30,7 @@ export default function ChatCreate(props: Props): React.JSX.Element {
   const categoryOptions: Option[] = [{ label: '未選択', value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<ChatIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', period: '' })
 
@@ -41,7 +41,7 @@ export default function ChatCreate(props: Props): React.JSX.Element {
 
   const handleForm = async () => {
     const { channelUlid, categoryUlid, title, content, period } = values
-    if (!isRequiredCheck({ channelUlid, categoryUlid, title, content, period })) return
+    if (!validate({ channelUlid, categoryUlid, title, content, period })) return
     handleLoading(true)
     const ret = await postChatCreate(values)
     handleLoading(false)
@@ -59,10 +59,10 @@ export default function ChatCreate(props: Props): React.JSX.Element {
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
           <SelectBox label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
-          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required={isRequired} onChange={handleSelect} />
-          <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
-          <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
-          <Input label="期間" name="period" placeholder={`${nowDate.year}-12-31`} required={isRequired} onChange={handleInput} />
+          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
+          <Input label="タイトル" name="title" required error={error} onChange={handleInput} />
+          <Textarea label="内容" name="content" required error={error} onChange={handleText} />
+          <Input label="期間" name="period" placeholder={`${nowDate.year}-12-31`} required error={error} onChange={handleInput} />
         </VStack>
       </form>
     </Main>

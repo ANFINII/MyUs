@@ -1,5 +1,6 @@
 import { ChangeEvent, useState, useRef, useEffect } from 'react'
 import cx from 'utils/functions/cx'
+import { isEmpty } from 'utils/functions/validation'
 import style from './Textarea.module.scss'
 
 interface Props {
@@ -23,7 +24,7 @@ export default function Textarea(props: Props): React.JSX.Element {
   const ref = useRef<HTMLTextAreaElement>(null)
   const [isValue, setIsValue] = useState<boolean>(false)
 
-  const isError = !!error || (error === '' && required && !isValue && !value)
+  const isError = !!error || (error === '' && required && !isValue && isEmpty(value))
 
   const adjustHeight = (height?: number) => {
     if (ref.current) {
@@ -40,7 +41,7 @@ export default function Textarea(props: Props): React.JSX.Element {
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     adjustHeight()
-    setIsValue(e.target.value !== '')
+    setIsValue(!isEmpty(e.target.value))
     onChange?.(e)
   }
 

@@ -18,7 +18,7 @@ import VStack from 'components/parts/Stack/Vertical'
 export default function AdvertiseCreate(): React.JSX.Element {
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<AdvertiseIn>({ title: '', url: '', content: '', publish: true, period: null })
 
@@ -32,7 +32,7 @@ export default function AdvertiseCreate(): React.JSX.Element {
 
   const handleForm = async () => {
     const { title, url, content, image } = values
-    if (!isRequiredCheck({ title, url, content, image })) return
+    if (!validate({ title, url, content, image })) return
     handleLoading(true)
     const ret = await postAdvertiseCreate(values)
     handleLoading(false)
@@ -56,11 +56,11 @@ export default function AdvertiseCreate(): React.JSX.Element {
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
-          <Input label="タイトル" name="title" required={isRequired} onChange={handleInput} />
-          <Input label="リンク URL" name="url" type="url" required={isRequired} onChange={handleInput} />
-          <Textarea label="内容" name="content" required={isRequired} onChange={handleText} />
+          <Input label="タイトル" name="title" required error={error} onChange={handleInput} />
+          <Input label="リンク URL" name="url" type="url" required error={error} onChange={handleInput} />
+          <Textarea label="内容" name="content" required error={error} onChange={handleText} />
           <Input label="表示期限" name="period" type="date" onChange={handlePeriod} />
-          <InputFile label="画像（必須）" accept="image/*" required={isRequired} onChange={handleImage} />
+          <InputFile label="画像（必須）" accept="image/*" required error={error} onChange={handleImage} />
           <InputFile label="動画（任意）" accept="video/*" onChange={handleVideo} />
         </VStack>
       </form>

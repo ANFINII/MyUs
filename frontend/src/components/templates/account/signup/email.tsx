@@ -15,7 +15,7 @@ import VStack from 'components/parts/Stack/Vertical'
 export default function SignupEmail(): React.JSX.Element {
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [email, setEmail] = useState<string>('')
 
@@ -23,7 +23,7 @@ export default function SignupEmail(): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)
 
   const handleSubmit = async () => {
-    if (!isRequiredCheck({ email })) return
+    if (!validate({ email })) return
     handleLoading(true)
     const ret = await postSignupEmail(email)
     handleLoading(false)
@@ -41,7 +41,7 @@ export default function SignupEmail(): React.JSX.Element {
           <h1 className="signup_h1">アカウント登録</h1>
 
           <VStack gap="8">
-            <Input type="email" name="email" placeholder="メールアドレス" maxLength={255} required={isRequired} onChange={handleInput} />
+            <Input type="email" name="email" placeholder="メールアドレス" maxLength={255} required error={error} onChange={handleInput} />
             <Alert type="info">
               メールアドレス宛に本登録用リンクを送信します。
               <br />

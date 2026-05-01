@@ -26,7 +26,7 @@ const initChannel: ChannelIn = {
 export default function ChannelCreate(): React.JSX.Element {
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })
   const [avatarFile, setAvatarFile] = useState<File>()
@@ -41,7 +41,7 @@ export default function ChannelCreate(): React.JSX.Element {
 
   const handleSubmit = async () => {
     const { name } = values
-    if (!isRequiredCheck({ name })) return
+    if (!validate({ name })) return
     handleLoading(true)
     const ret = await postChannel({ ...values, avatarFile })
     handleLoading(false)
@@ -86,7 +86,7 @@ export default function ChannelCreate(): React.JSX.Element {
               />
             </VStack>
 
-            <Input name="name" placeholder="チャンネル名" maxLength={50} required={isRequired} onChange={handleInput} />
+            <Input name="name" placeholder="チャンネル名" maxLength={50} required error={error} onChange={handleInput} />
             <Textarea name="description" placeholder="説明" onChange={handleText} />
           </VStack>
 

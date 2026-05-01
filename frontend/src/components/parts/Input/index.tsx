@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState } from 'react'
 import cx from 'utils/functions/cx'
+import { isEmpty } from 'utils/functions/validation'
 import { useAutoFocus } from 'components/hooks/useAutoFocus'
 import style from './Input.module.scss'
 
@@ -27,11 +28,10 @@ export default function Input(props: Props): React.JSX.Element {
   const inputFocus = useAutoFocus()
   const [isValue, setIsValue] = useState<boolean>(false)
 
-  const isError = !!error || (error === '' && required && !isValue && !rest.value)
+  const isError = !!error || (error === '' && required && !isValue && isEmpty(rest.value))
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setIsValue(value !== '')
+    setIsValue(!isEmpty(e.target.value))
     onChange?.(e)
   }
 
