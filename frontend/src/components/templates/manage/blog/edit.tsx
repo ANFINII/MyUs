@@ -84,7 +84,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
           <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label="タイトル" name="title" value={values.title} required error={error} onChange={handleInput} />
           <Textarea label="内容" name="content" value={values.content} required error={error} onChange={handleText} />
-          <InputFile label="サムネイル" accept="image/*" onChange={handleFile} />
+          <InputFile label="サムネイル" accept="image/*" required error={error} onChange={handleFile} />
           <TextEditor label="本文" value={values.richtext} required error={error} onChange={handleRichtext} />
         </VStack>
       </form>

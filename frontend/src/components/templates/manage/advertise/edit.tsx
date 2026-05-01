@@ -67,7 +67,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
           <Input label="リンク URL" name="url" type="url" value={values.url} required error={error} onChange={handleInput} />
           <Textarea label="内容" name="content" value={values.content} required error={error} onChange={handleText} />
           <Input label="表示期限" name="period" type="date" value={values.period ?? ''} onChange={handlePeriod} />
-          <InputFile label="画像" accept="image/*" onChange={handleImage} />
+          <InputFile label="画像" accept="image/*" required error={error} onChange={handleImage} />
           <InputFile label="動画" accept="video/*" onChange={handleVideo} />
         </VStack>
       </form>
