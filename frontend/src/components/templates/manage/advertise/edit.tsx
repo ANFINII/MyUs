@@ -28,13 +28,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
-  const [values, setValues] = useState<AdvertiseUpdateIn>({
-    title: data.title,
-    url: data.url,
-    content: data.content,
-    publish: data.publish,
-    period: data.period,
-  })
+  const [values, setValues] = useState<AdvertiseUpdateIn>({ title: data.title, url: data.url, content: data.content, publish: data.publish, period: data.period })
 
   const handleBack = () => router.push('/manage/advertise')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })

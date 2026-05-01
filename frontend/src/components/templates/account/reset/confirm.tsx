@@ -84,7 +84,8 @@ export default function ResetConfirm(): React.JSX.Element {
                   maxLength={16}
                   placeholder="新規パスワード(英数字8~16文字)"
                   value={values.newPassword1}
-                  required error={error}
+                  required
+                  error={error}
                   onChange={handleInput}
                 />
                 <Input
@@ -94,7 +95,8 @@ export default function ResetConfirm(): React.JSX.Element {
                   maxLength={16}
                   placeholder="新規パスワード(確認用)"
                   value={values.newPassword2}
-                  required error={error}
+                  required
+                  error={error}
                   onChange={handleInput}
                 />
               </VStack>

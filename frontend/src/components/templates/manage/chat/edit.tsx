@@ -38,7 +38,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
-  const [values, setValues] = useState<ChatUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, period: formatDate(data.period), publish: data.publish })
+  const [values, setValues] = useState<ChatUpdateIn>({ ...data, period: formatDate(data.period) })
 
   const handleBack = () => router.push('/manage/chat')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
