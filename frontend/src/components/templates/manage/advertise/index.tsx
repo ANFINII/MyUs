@@ -32,10 +32,10 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
-  const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false)
+  const [isModal, setIsModal] = useState<boolean>(false)
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
 
-  const handleDelete = () => setIsDeleteModal(!isDeleteModal)
+  const handleModal = () => setIsModal(!isModal)
   const handleEdit = (advertise: Advertise) => router.push(`/manage/advertise/${advertise.ulid}`)
   const handleCreate = () => router.push('/manage/advertise/create')
 
@@ -51,7 +51,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
       return
     }
     setSelectedKeys(new Set())
-    handleDelete()
+    handleModal()
     router.replace(router.asPath)
   }
 
@@ -134,7 +134,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
           {selectedKeys.size > 0 && (
             <>
               <span className={style.selected_count}>{selectedKeys.size}件選択</span>
-              <Button color="red" size="s" name="一括削除" onClick={handleDelete} />
+              <Button color="red" size="s" name="一括削除" onClick={handleModal} />
             </>
           )}
           <Button color="blue" size="s" name="投稿管理" onClick={() => router.push('/manage')} />
@@ -146,7 +146,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
         table={{ datas, columns, rowKey: (a) => a.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
         pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
-        deletion={{ open: isDeleteModal, loading, onClose: handleDelete, onAction: handleDeleteSubmit }}
+        deletion={{ open: isModal, loading, onClose: handleModal, onAction: handleDeleteSubmit }}
       />
     </Main>
   )

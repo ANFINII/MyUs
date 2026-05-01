@@ -33,10 +33,10 @@ export default function ManagePictures(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
-  const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false)
+  const [isModal, setIsModal] = useState<boolean>(false)
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
 
-  const handleDelete = () => setIsDeleteModal(!isDeleteModal)
+  const handleModal = () => setIsModal(!isModal)
   const handleEdit = (picture: Picture) => router.push(`/manage/picture/${picture.ulid}`)
 
   const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -55,7 +55,7 @@ export default function ManagePictures(props: Props): React.JSX.Element {
       return
     }
     setSelectedKeys(new Set())
-    handleDelete()
+    handleModal()
     router.replace(router.asPath)
   }
 
@@ -137,13 +137,13 @@ export default function ManagePictures(props: Props): React.JSX.Element {
       type="table"
       toast={toast}
       isFooter={false}
-      button={<ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onDelete={handleDelete} onChange={handleChannel} />}
+      button={<ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onDelete={handleModal} onChange={handleChannel} />}
     >
       <ManageTable
         table={{ datas, columns, rowKey: (p) => p.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
         pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
-        deletion={{ open: isDeleteModal, loading, onClose: handleDelete, onAction: handleDeleteSubmit }}
+        deletion={{ open: isModal, loading, onClose: handleModal, onAction: handleDeleteSubmit }}
       />
     </Main>
   )
