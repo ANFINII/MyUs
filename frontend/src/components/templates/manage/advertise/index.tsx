@@ -138,6 +138,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
               <Button color="red" size="s" name="一括削除" onClick={handleDelete} />
             </>
           )}
+          <Button color="blue" size="s" name="投稿管理" onClick={() => router.push('/manage')} />
           <Button color="green" size="s" name={`作成 (${total}/${ADVERTISE_LIMIT})`} disabled={isLimitReached} onClick={handleCreate} />
         </div>
       }

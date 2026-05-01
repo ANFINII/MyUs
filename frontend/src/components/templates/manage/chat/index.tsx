@@ -11,13 +11,11 @@ import { useIsLoading } from 'components/hooks/useIsLoading'
 import { usePagination } from 'components/hooks/usePagination'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
-import Button from 'components/parts/Button'
-import DataTable, { Column } from 'components/parts/DataTable'
-import SelectBox from 'components/parts/Input/SelectBox'
+import { Column } from 'components/parts/DataTable'
 import Toggle from 'components/parts/Input/Toggle'
-import Pagination from 'components/parts/Pagination'
-import DeleteModal from 'components/widgets/Modal/Delete'
 import style from '../Media.module.scss'
+import ManageHeader from '../_container/Header'
+import ManageList from '../_container/List'
 
 interface Props {
   datas: Chat[]
@@ -150,36 +148,13 @@ export default function ManageChats(props: Props): React.JSX.Element {
       type="table"
       toast={toast}
       isFooter={false}
-      button={
-        <div className={style.header_actions}>
-          {selectedKeys.size > 0 && (
-            <>
-              <span className={style.selected_count}>{selectedKeys.size}件選択</span>
-              <Button color="red" size="s" name="一括削除" onClick={handleDelete} />
-            </>
-          )}
-          <SelectBox value={channelUlid} options={channelOptions} className={style.filter} onChange={handleChannel} />
-        </div>
-      }
+      button={<ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onDelete={handleDelete} onChange={handleChannel} />}
     >
-      <div className={style.manage}>
-        <DataTable
-          datas={datas}
-          columns={columns}
-          rowKey={(c) => c.ulid}
-          selectable
-          selectedKeys={selectedKeys}
-          onSelection={setSelectedKeys}
-          footer={<Pagination currentPage={currentPage} totalPages={totalPages} onChange={handlePage} />}
-        />
-      </div>
-      <DeleteModal
-        open={isDeleteModal}
-        title="チャットの削除"
-        content={`${selectedKeys.size}件のチャットを削除しますか？`}
-        loading={isLoading}
-        onClose={handleDelete}
-        onAction={handleDeleteSubmit}
+      <ManageList<Chat>
+        table={{ datas, columns, rowKey: (c) => c.ulid }}
+        selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
+        pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
+        deletion={{ label: 'チャット', open: isDeleteModal, loading: isLoading, onClose: handleDelete, onAction: handleDeleteSubmit }}
       />
     </Main>
   )
