@@ -21,7 +21,7 @@ export default function Login(): React.JSX.Element {
   const router = useRouter()
   const { updateUser } = useUser()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<LoginIn>({ username: '', password: '' })
@@ -33,7 +33,7 @@ export default function Login(): React.JSX.Element {
 
   const handleSubmit = async () => {
     const { username, password } = values
-    if (!isRequiredCheck({ username, password })) return
+    if (!validate({ username, password })) return
     handleLoading(true)
     const request = { username: encrypt(username), password: encrypt(password) }
     const ret = await postLogin(request)
@@ -60,8 +60,8 @@ export default function Login(): React.JSX.Element {
           )}
 
           <VStack gap="8">
-            <Input type="text" name="username" placeholder="ユーザー名 or メールアドレス" required={isRequired} onChange={handleInput} />
-            <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} required={isRequired} onChange={handleInput} />
+            <Input type="text" name="username" placeholder="ユーザー名 or メールアドレス" required error={error} onChange={handleInput} />
+            <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} required error={error} onChange={handleInput} />
             <p className="password_reset" onClick={handleReset}>
               パスワードをリセット
             </p>

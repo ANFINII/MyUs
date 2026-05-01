@@ -17,7 +17,7 @@ import style from '../Setting.module.scss'
 export default function PasswordChange(): React.JSX.Element {
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<PasswordChangeIn>({ oldPassword: '', newPassword1: '', newPassword2: '' })
 
@@ -26,7 +26,7 @@ export default function PasswordChange(): React.JSX.Element {
 
   const handleSubmit = async () => {
     const { oldPassword, newPassword1, newPassword2 } = values
-    if (!isRequiredCheck({ oldPassword, newPassword1, newPassword2 })) return
+    if (!validate({ oldPassword, newPassword1, newPassword2 })) return
     if (newPassword1 !== newPassword2) {
       handleToast('新規パスワードが一致しません', true)
       return
@@ -58,7 +58,7 @@ export default function PasswordChange(): React.JSX.Element {
               maxLength={16}
               placeholder="現在パスワード"
               value={values.oldPassword}
-              required={isRequired}
+              required error={error}
               onChange={handleInput}
             />
             <Input
@@ -68,7 +68,7 @@ export default function PasswordChange(): React.JSX.Element {
               maxLength={16}
               placeholder="新規パスワード(英数字8~16文字)"
               value={values.newPassword1}
-              required={isRequired}
+              required error={error}
               onChange={handleInput}
             />
             <Input
@@ -78,7 +78,7 @@ export default function PasswordChange(): React.JSX.Element {
               maxLength={16}
               placeholder="新規パスワード(確認用)"
               value={values.newPassword2}
-              required={isRequired}
+              required error={error}
               onChange={handleInput}
             />
           </VStack>

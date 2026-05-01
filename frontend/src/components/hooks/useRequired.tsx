@@ -1,18 +1,18 @@
 import { useState } from 'react'
 
 interface OutProps {
-  isRequired: boolean
-  isRequiredCheck: (values: Record<string, unknown>) => boolean
+  error?: string
+  validate: (values: Record<string, unknown>) => boolean
 }
 
 export const useRequired = (): OutProps => {
-  const [isRequired, setIsRequired] = useState(false)
+  const [error, setError] = useState<string | undefined>(undefined)
 
-  const isRequiredCheck = (values: Record<string, unknown>): boolean => {
+  const validate = (values: Record<string, unknown>): boolean => {
     const isFalsy = Object.values(values).some((value) => !value)
-    setIsRequired(isFalsy)
+    setError(isFalsy ? '' : undefined)
     return !isFalsy
   }
 
-  return { isRequired, isRequiredCheck }
+  return { error, validate }
 }

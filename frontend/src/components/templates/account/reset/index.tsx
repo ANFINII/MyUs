@@ -15,7 +15,7 @@ import VStack from 'components/parts/Stack/Vertical'
 export default function Reset(): React.JSX.Element {
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [email, setEmail] = useState<string>('')
 
@@ -23,7 +23,7 @@ export default function Reset(): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)
 
   const handleSubmit = async () => {
-    if (!isRequiredCheck({ email })) return
+    if (!validate({ email })) return
     handleLoading(true)
     const ret = await postPasswordResetEmail(email)
     handleLoading(false)
@@ -40,7 +40,7 @@ export default function Reset(): React.JSX.Element {
         <form method="POST" action="" className="form_account">
           <h1 className="login_h1">パスワードリセット</h1>
           <VStack gap="8">
-            <Input type="email" name="email" placeholder="メールアドレス" maxLength={255} required={isRequired} onChange={handleInput} />
+            <Input type="email" name="email" placeholder="メールアドレス" maxLength={255} required error={error} onChange={handleInput} />
             <Alert type="info">メールアドレス宛にパスワード再設定用リンクを送信します。</Alert>
           </VStack>
 

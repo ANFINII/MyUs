@@ -19,7 +19,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
   const router = useRouter()
   const { resetUser } = useUser()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<WithdrawalIn>({ password: '' })
 
@@ -28,7 +28,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
 
   const handleSubmit = async () => {
     const { password } = values
-    if (!isRequiredCheck({ password })) return
+    if (!validate({ password })) return
 
     handleLoading(true)
     const request: WithdrawalIn = { password: encrypt(password) }
@@ -55,7 +55,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
               maxLength={16}
               placeholder="パスワード"
               value={values.password}
-              required={isRequired}
+              required error={error}
               onChange={handleInput}
             />
           </VStack>

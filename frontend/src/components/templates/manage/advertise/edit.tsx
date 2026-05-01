@@ -25,7 +25,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<AdvertiseUpdateIn>({
@@ -46,7 +46,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
 
   const handleForm = async () => {
     const { title, url, content } = values
-    if (!isRequiredCheck({ title, url, content })) return
+    if (!validate({ title, url, content })) return
     handleLoading(true)
     const ret = await putManageAdvertise(data.ulid, values)
     handleLoading(false)
@@ -69,9 +69,9 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
-          <Input label="タイトル" name="title" value={values.title} required={isRequired} onChange={handleInput} />
-          <Input label="リンク URL" name="url" type="url" value={values.url} required={isRequired} onChange={handleInput} />
-          <Textarea label="内容" name="content" value={values.content} required={isRequired} onChange={handleText} />
+          <Input label="タイトル" name="title" value={values.title} required error={error} onChange={handleInput} />
+          <Input label="リンク URL" name="url" type="url" value={values.url} required error={error} onChange={handleInput} />
+          <Textarea label="内容" name="content" value={values.content} required error={error} onChange={handleText} />
           <Input label="表示期限" name="period" type="date" value={values.period ?? ''} onChange={handlePeriod} />
           <InputFile label="画像" accept="image/*" onChange={handleImage} />
           <InputFile label="動画" accept="video/*" onChange={handleVideo} />

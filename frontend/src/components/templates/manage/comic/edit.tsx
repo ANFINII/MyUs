@@ -35,7 +35,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish })
@@ -49,7 +49,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
 
   const handleForm = async () => {
     const { categoryUlid, title, content } = values
-    if (!isRequiredCheck({ categoryUlid, title, content })) return
+    if (!validate({ categoryUlid, title, content })) return
     handleLoading(true)
     const ret = await putManageComic(data.ulid, values)
     handleLoading(false)
@@ -73,9 +73,9 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
           <SelectBox label="チャンネル" name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
-          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required={isRequired} onChange={handleSelect} />
-          <Input label="タイトル" name="title" value={values.title} required={isRequired} onChange={handleInput} />
-          <Textarea label="内容" name="content" value={values.content} required={isRequired} onChange={handleText} />
+          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
+          <Input label="タイトル" name="title" value={values.title} required error={error} onChange={handleInput} />
+          <Textarea label="内容" name="content" value={values.content} required error={error} onChange={handleText} />
           <InputFile label="サムネイル" accept="image/*" onChange={handleFile} />
         </VStack>
       </form>

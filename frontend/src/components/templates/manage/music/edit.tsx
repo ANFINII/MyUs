@@ -35,7 +35,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<MusicUpdateIn>({ ...data })
@@ -49,7 +49,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
 
   const handleForm = async () => {
     const { categoryUlid, title, content, lyric } = values
-    if (!isRequiredCheck({ categoryUlid, title, content, lyric })) return
+    if (!validate({ categoryUlid, title, content, lyric })) return
     handleLoading(true)
     const ret = await putManageMusic(data.ulid, values)
     handleLoading(false)
@@ -73,10 +73,10 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
           <SelectBox label="チャンネル" name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
-          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required={isRequired} onChange={handleSelect} />
-          <Input label="タイトル" name="title" value={values.title} required={isRequired} onChange={handleInput} />
-          <Textarea label="内容" name="content" value={values.content} required={isRequired} onChange={handleText} />
-          <Textarea label="歌詞" name="lyric" value={values.lyric} required={isRequired} onChange={handleText} />
+          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
+          <Input label="タイトル" name="title" value={values.title} required error={error} onChange={handleInput} />
+          <Textarea label="内容" name="content" value={values.content} required error={error} onChange={handleText} />
+          <Textarea label="歌詞" name="lyric" value={values.lyric} required error={error} onChange={handleText} />
           <CheckBox label="ダウンロード許可" name="download" checked={values.download} onChange={handleCheck} />
         </VStack>
       </form>

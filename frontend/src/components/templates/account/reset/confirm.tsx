@@ -16,7 +16,7 @@ import VStack from 'components/parts/Stack/Vertical'
 export default function ResetConfirm(): React.JSX.Element {
   const router = useRouter()
   const { isLoading, handleLoading } = useIsLoading()
-  const { isRequired, isRequiredCheck } = useRequired()
+  const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [email, setEmail] = useState<string>('')
   const [isVerified, setIsVerified] = useState<boolean>(false)
@@ -47,7 +47,7 @@ export default function ResetConfirm(): React.JSX.Element {
 
   const handleSubmit = async () => {
     const { newPassword1, newPassword2 } = values
-    if (!isRequiredCheck({ newPassword1, newPassword2 })) return
+    if (!validate({ newPassword1, newPassword2 })) return
     if (newPassword1 !== newPassword2) {
       handleToast('新規パスワードが一致しません', true)
       return
@@ -84,7 +84,7 @@ export default function ResetConfirm(): React.JSX.Element {
                   maxLength={16}
                   placeholder="新規パスワード(英数字8~16文字)"
                   value={values.newPassword1}
-                  required={isRequired}
+                  required error={error}
                   onChange={handleInput}
                 />
                 <Input
@@ -94,7 +94,7 @@ export default function ResetConfirm(): React.JSX.Element {
                   maxLength={16}
                   placeholder="新規パスワード(確認用)"
                   value={values.newPassword2}
-                  required={isRequired}
+                  required error={error}
                   onChange={handleInput}
                 />
               </VStack>
