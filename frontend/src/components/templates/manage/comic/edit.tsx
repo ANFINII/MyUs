@@ -8,7 +8,7 @@ import { Option } from 'types/internal/other'
 import { putManageComic } from 'api/internal/manage/update'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -34,7 +34,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
   const categoryOptions: Option[] = [{ label: '未選択', value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const router = useRouter()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
@@ -62,7 +62,7 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name="保存する" loading={isLoading} onClick={handleForm} />
+      <Button color="green" size="s" name="保存する" loading={loading} onClick={handleForm} />
       <Button color="blue" size="s" name="戻る" onClick={handleBack} />
     </HStack>
   )

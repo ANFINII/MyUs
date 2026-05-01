@@ -4,7 +4,7 @@ import { Advertise, AdvertiseUpdateIn } from 'types/internal/advertise'
 import { putManageAdvertise } from 'api/internal/manage/update'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -24,7 +24,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
   const { data } = props
 
   const router = useRouter()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
@@ -53,7 +53,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name="保存する" loading={isLoading} onClick={handleForm} />
+      <Button color="green" size="s" name="保存する" loading={loading} onClick={handleForm} />
       <Button color="blue" size="s" name="戻る" onClick={handleBack} />
     </HStack>
   )

@@ -9,7 +9,7 @@ import { FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap } from 'utils/constants/map'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import ActionButton from 'components/parts/Action/Button'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
@@ -37,7 +37,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const { ulid, author, text } = comment
   const { isActive } = user
 
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -143,7 +143,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
           </VStack>
         </HStack>
         <ActionButton open={isMenu} onMenu={handleMenu} size="s" isRound disabled={disabled} actionItems={actionItems} />
-        <CommentDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleDelete} comment={comment} />
+        <CommentDeleteModal open={isModal} onClose={handleModal} loading={loading} onAction={handleDelete} comment={comment} />
       </HStack>
 
       {isThreadView && (

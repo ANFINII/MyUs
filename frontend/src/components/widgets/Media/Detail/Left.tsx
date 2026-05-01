@@ -14,7 +14,7 @@ import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
 import { formatDatetime } from 'utils/functions/datetime'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
@@ -76,7 +76,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { user } = useUser()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isContentView, setIsContentView] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
@@ -174,7 +174,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
       </div>
       <Divide />
 
-      <CommentInput user={user} count={comments.length} loading={isLoading} value={text} onChange={handleComment} onClick={handleMediaComment} />
+      <CommentInput user={user} count={comments.length} loading={loading} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <VStack gap="6">
         <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
         <VStack gap="10" className={cx(style.comment_aria, isCommentView && style.active)}>
@@ -183,7 +183,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
           ))}
         </VStack>
       </VStack>
-      <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleSubscribe} channel={channel} followerCount={subscribeCount} />
+      <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={loading} onAction={handleSubscribe} channel={channel} followerCount={subscribeCount} />
     </div>
   )
 }

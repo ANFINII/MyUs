@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { AdvertiseIn } from 'types/internal/advertise'
 import { postAdvertiseCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -17,7 +17,7 @@ import VStack from 'components/parts/Stack/Vertical'
 
 export default function AdvertiseCreate(): React.JSX.Element {
   const router = useRouter()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<AdvertiseIn>({ title: '', url: '', content: '', publish: true, period: null })
@@ -46,7 +46,7 @@ export default function AdvertiseCreate(): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name="作成する" loading={isLoading} onClick={handleForm} />
+      <Button color="green" size="s" name="作成する" loading={loading} onClick={handleForm} />
       <Button color="blue" size="s" name="戻る" onClick={handleBack} />
     </HStack>
   )
@@ -60,8 +60,8 @@ export default function AdvertiseCreate(): React.JSX.Element {
           <Input label="リンク URL" name="url" type="url" required error={error} onChange={handleInput} />
           <Textarea label="内容" name="content" required error={error} onChange={handleText} />
           <Input label="表示期限" name="period" type="date" onChange={handlePeriod} />
-          <InputFile label="画像（必須）" accept="image/*" required error={error} onChange={handleImage} />
-          <InputFile label="動画（任意）" accept="video/*" onChange={handleVideo} />
+          <InputFile label="画像" accept="image/*" required error={error} onChange={handleImage} />
+          <InputFile label="動画" accept="video/*" onChange={handleVideo} />
         </VStack>
       </form>
     </Main>

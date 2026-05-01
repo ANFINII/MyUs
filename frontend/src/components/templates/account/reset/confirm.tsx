@@ -4,7 +4,7 @@ import { PasswordResetIn } from 'types/internal/auth'
 import { getPasswordResetVerify, postPasswordReset } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
@@ -15,7 +15,7 @@ import VStack from 'components/parts/Stack/Vertical'
 
 export default function ResetConfirm(): React.JSX.Element {
   const router = useRouter()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [email, setEmail] = useState<string>('')
@@ -102,7 +102,7 @@ export default function ResetConfirm(): React.JSX.Element {
               </VStack>
 
               <VStack gap="12" className="mv_40">
-                <Button color="green" size="l" name="再設定" type="submit" loading={isLoading} onClick={handleSubmit} />
+                <Button color="green" size="l" name="再設定" type="submit" loading={loading} onClick={handleSubmit} />
                 <Button color="blue" size="l" name="戻る" onClick={handleBack} />
               </VStack>
             </>

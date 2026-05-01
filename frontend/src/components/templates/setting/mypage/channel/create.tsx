@@ -4,7 +4,7 @@ import { ChannelIn } from 'types/internal/channel'
 import { postChannel } from 'api/internal/channel'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
@@ -25,7 +25,7 @@ const initChannel: ChannelIn = {
 
 export default function ChannelCreate(): React.JSX.Element {
   const router = useRouter()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })
@@ -91,7 +91,7 @@ export default function ChannelCreate(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="green" size="l" name="作成" type="submit" loading={isLoading} onClick={handleSubmit} />
+            <Button color="green" size="l" name="作成" type="submit" loading={loading} onClick={handleSubmit} />
             <Button color="blue" size="l" name="戻る" onClick={handleBack} />
           </VStack>
         </form>

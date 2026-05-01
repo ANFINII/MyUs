@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { UserNotification, UserNotificationOut } from 'types/internal/user'
 import { getSettingNotification, putSettingNotification } from 'api/internal/setting'
 import { Fetch, FetchError } from 'utils/constants/enum'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -18,7 +18,7 @@ interface Props {
 export default function SettingNotification(props: Props): React.JSX.Element {
   const { userNotification } = props
 
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<UserNotification>(userNotification)
 
@@ -47,7 +47,7 @@ export default function SettingNotification(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name="保存" loading={isLoading} onClick={handleSubmit} />
+      <Button color="green" size="s" name="保存" loading={loading} onClick={handleSubmit} />
       <Button color="blue" size="s" name="リセット" onClick={handleReset} />
     </HStack>
   )

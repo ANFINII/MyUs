@@ -6,7 +6,7 @@ import { postLogin } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
 import { useApiError } from 'components/hooks/useApiError'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
@@ -20,7 +20,7 @@ export default function Login(): React.JSX.Element {
   const { t } = useTranslation('common')
   const router = useRouter()
   const { updateUser } = useUser()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })
@@ -68,7 +68,7 @@ export default function Login(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="blue" size="l" name="ログイン" type="submit" loading={isLoading} onClick={handleSubmit} />
+            <Button color="blue" size="l" name="ログイン" type="submit" loading={loading} onClick={handleSubmit} />
             <Button color="green" size="l" name="アカウント登録" onClick={handleSignup} />
           </VStack>
         </form>

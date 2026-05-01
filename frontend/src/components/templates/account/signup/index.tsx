@@ -5,7 +5,7 @@ import { getSignupVerify, postSignup } from 'api/internal/auth'
 import { FetchError, GenderType } from 'utils/constants/enum'
 import { genderMap } from 'utils/constants/map'
 import { nowDate, selectDate } from 'utils/functions/datetime'
-import { useIsLoading } from 'components/hooks/useIsLoading'
+import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
@@ -34,7 +34,7 @@ const initSignup: SignupIn = {
 
 export default function Signup(): React.JSX.Element {
   const router = useRouter()
-  const { isLoading, handleLoading } = useIsLoading()
+  const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<SignupIn>(initSignup)
@@ -120,7 +120,7 @@ export default function Signup(): React.JSX.Element {
               </VStack>
 
               <VStack gap="12" className="mv_40">
-                <Button color="green" size="l" name="アカウント登録" type="submit" loading={isLoading} onClick={handleSubmit} />
+                <Button color="green" size="l" name="アカウント登録" type="submit" loading={loading} onClick={handleSubmit} />
                 <Button color="blue" size="l" name="戻る" onClick={handleBack} />
               </VStack>
             </>
