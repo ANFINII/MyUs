@@ -1,4 +1,4 @@
-import { createPortal } from 'react-dom'
+import { useEffect, useRef } from 'react'
 import cx from 'utils/functions/cx'
 import Button from 'components/parts/Button'
 import IconCross from 'components/parts/Icon/Cross'
@@ -25,30 +25,42 @@ export interface Props {
 export default function Modal(props: Props): React.JSX.Element {
   const { open, onClose, title, children, actions, size = 'm', className } = props
 
+  const ref = useRef<HTMLDialogElement>(null)
+
+  useEffect(() => {
+    const dialog = ref.current
+    if (!dialog) return
+    if (open && !dialog.open) dialog.showModal()
+    else if (!open && dialog.open) dialog.close()
+  }, [open])
+
+  const handleBack = (e: React.MouseEvent<HTMLDialogElement>) => {
+    if (e.target === ref.current) onClose()
+  }
+
+  const handleCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => {
+    e.preventDefault()
+    onClose()
+  }
+
   return (
-    <>
-      {open &&
-        createPortal(
-          <div className={cx(style.modal, className)} aria-modal="true">
-            <div className={cx(style.container, style[size])}>
-              <header className={style.header}>
-                <h2 className={style.title}>{title}</h2>
-                <button className={style.close} onClick={onClose}>
-                  <IconCross size="25" />
-                </button>
-              </header>
-              <div className={style.content}>{children}</div>
-              {actions && (
-                <footer className={style.footer}>
-                  {[...actions].reverse().map((action, index) => (
-                    <Button key={index} {...action} />
-                  ))}
-                </footer>
-              )}
-            </div>
-          </div>,
-          document.body,
+    <dialog ref={ref} className={cx(style.modal, className)} onClick={handleBack} onCancel={handleCancel}>
+      <div className={cx(style.container, style[size])}>
+        <header className={style.header}>
+          <h2 className={style.title}>{title}</h2>
+          <button className={style.close} onClick={onClose}>
+            <IconCross size="25" />
+          </button>
+        </header>
+        <div className={style.content}>{children}</div>
+        {actions && (
+          <footer className={style.footer}>
+            {[...actions].reverse().map((action, index) => (
+              <Button key={index} {...action} />
+            ))}
+          </footer>
         )}
-    </>
+      </div>
+    </dialog>
   )
 }
