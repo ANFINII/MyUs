@@ -10,12 +10,11 @@ import { usePagination } from 'components/hooks/usePagination'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
-import DataTable, { Column } from 'components/parts/DataTable'
+import { Column } from 'components/parts/DataTable'
 import ExImage from 'components/parts/ExImage'
 import Toggle from 'components/parts/Input/Toggle'
-import Pagination from 'components/parts/Pagination'
-import DeleteModal from 'components/widgets/Modal/Delete'
 import style from '../Media.module.scss'
+import ManageTable from '../_container/Table'
 
 interface Props {
   datas: Advertise[]
@@ -143,24 +142,11 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
         </div>
       }
     >
-      <div className={style.manage}>
-        <DataTable
-          datas={datas}
-          columns={columns}
-          rowKey={(a) => a.ulid}
-          selectable
-          selectedKeys={selectedKeys}
-          onSelection={setSelectedKeys}
-          footer={<Pagination currentPage={currentPage} totalPages={totalPages} onChange={handlePage} />}
-        />
-      </div>
-      <DeleteModal
-        open={isDeleteModal}
-        title="広告の削除"
-        content={`${selectedKeys.size}件の広告を削除しますか？`}
-        loading={isLoading}
-        onClose={handleDelete}
-        onAction={handleDeleteSubmit}
+      <ManageTable
+        table={{ datas, columns, rowKey: (a) => a.ulid }}
+        selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
+        pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
+        deletion={{ label: '広告', open: isDeleteModal, loading: isLoading, onClose: handleDelete, onAction: handleDeleteSubmit }}
       />
     </Main>
   )

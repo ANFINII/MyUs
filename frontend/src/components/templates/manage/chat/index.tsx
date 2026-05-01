@@ -15,7 +15,7 @@ import { Column } from 'components/parts/DataTable'
 import Toggle from 'components/parts/Input/Toggle'
 import style from '../Media.module.scss'
 import ManageHeader from '../_container/Header'
-import ManageList from '../_container/List'
+import ManageTable from '../_container/Table'
 
 interface Props {
   datas: Chat[]
@@ -150,7 +150,7 @@ export default function ManageChats(props: Props): React.JSX.Element {
       isFooter={false}
       button={<ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onDelete={handleDelete} onChange={handleChannel} />}
     >
-      <ManageList<Chat>
+      <ManageTable
         table={{ datas, columns, rowKey: (c) => c.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
         pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
