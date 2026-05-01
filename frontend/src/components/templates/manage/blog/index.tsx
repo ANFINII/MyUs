@@ -143,7 +143,7 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
         table={{ datas, columns, rowKey: (b) => b.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
         pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
-        deletion={{ label: 'ブログ', open: isDeleteModal, loading, onClose: handleDelete, onAction: handleDeleteSubmit }}
+        deletion={{ open: isDeleteModal, loading, onClose: handleDelete, onAction: handleDeleteSubmit }}
       />
     </Main>
   )

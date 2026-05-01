@@ -143,7 +143,7 @@ export default function ManageComics(props: Props): React.JSX.Element {
         table={{ datas, columns, rowKey: (c) => c.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
         pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
-        deletion={{ label: '漫画', open: isDeleteModal, loading, onClose: handleDelete, onAction: handleDeleteSubmit }}
+        deletion={{ open: isDeleteModal, loading, onClose: handleDelete, onAction: handleDeleteSubmit }}
       />
     </Main>
   )
