@@ -27,7 +27,7 @@ export default function ManageHeader(props: Props): React.JSX.Element {
         </>
       )}
       <Button color="blue" size="s" name="投稿管理" onClick={() => router.push('/manage')} />
-      <SelectBox value={ulid} options={options} className={style.filter} onChange={onChange} />
+      <SelectBox value={ulid} options={options} className={style.select_box} onChange={onChange} />
     </div>
   )
 }

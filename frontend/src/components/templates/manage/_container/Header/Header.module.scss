@@ -1,7 +1,7 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 
   .count {
     font-size: 13px;
@@ -9,7 +9,7 @@
     white-space: nowrap;
   }
 
-  .filter {
-    width: 240px;
+  .select_box {
+    width: 200px;
   }
 }
