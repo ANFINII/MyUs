@@ -140,7 +140,7 @@ export default function ManageMusics(props: Props): React.JSX.Element {
 
   return (
     <Main
-      title="音楽管理"
+      title="Music"
       type="table"
       toast={toast}
       isFooter={false}

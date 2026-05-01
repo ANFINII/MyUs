@@ -133,7 +133,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
 
   return (
     <Main
-      title="動画管理"
+      title="Video"
       type="table"
       toast={toast}
       isFooter={false}

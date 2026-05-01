@@ -144,7 +144,7 @@ export default function ManageChats(props: Props): React.JSX.Element {
 
   return (
     <Main
-      title="チャット管理"
+      title="Chat"
       type="table"
       toast={toast}
       isFooter={false}

@@ -133,7 +133,7 @@ export default function ManagePictures(props: Props): React.JSX.Element {
 
   return (
     <Main
-      title="画像管理"
+      title="Picture"
       type="table"
       toast={toast}
       isFooter={false}

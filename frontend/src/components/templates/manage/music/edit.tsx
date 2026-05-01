@@ -68,7 +68,7 @@ export default function ManageMusicEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="音楽編集" type="table" toast={toast} isFooter={false} button={button}>
+    <Main title="Music" type="table" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />

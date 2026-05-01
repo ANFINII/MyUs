@@ -68,7 +68,7 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="動画編集" type="table" toast={toast} isFooter={false} button={button}>
+    <Main title="Video" type="table" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />

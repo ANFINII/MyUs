@@ -76,7 +76,7 @@ export default function ManageBlogEdit(props: Props): React.JSX.Element {
   )
 
   return (
-    <Main title="ブログ編集" type="table" toast={toast} isFooter={false} button={button}>
+    <Main title="Blog" type="table" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="">
         <VStack gap="8">
           <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />

@@ -133,7 +133,7 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
 
   return (
     <Main
-      title="ブログ管理"
+      title="Blog"
       type="table"
       toast={toast}
       isFooter={false}

@@ -125,7 +125,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
 
   return (
     <Main
-      title="広告管理"
+      title="Advertise"
       type="table"
       toast={toast}
       isFooter={false}
@@ -138,7 +138,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
             </>
           )}
           <Button color="blue" size="s" name="投稿管理" onClick={() => router.push('/manage')} />
-          <Button color="green" size="s" name={`作成 (${total}/${ADVERTISE_LIMIT})`} disabled={isLimitReached} onClick={handleCreate} />
+          <Button color="green" size="s" name="新規作成" disabled={isLimitReached} onClick={handleCreate} />
         </div>
       }
     >
