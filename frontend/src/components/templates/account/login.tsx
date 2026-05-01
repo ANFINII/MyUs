@@ -14,6 +14,7 @@ import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import Password from 'components/parts/Input/Password'
 import VStack from 'components/parts/Stack/Vertical'
 
 export default function Login(): React.JSX.Element {
@@ -61,7 +62,7 @@ export default function Login(): React.JSX.Element {
 
           <VStack gap="8">
             <Input type="text" name="username" placeholder="ユーザー名 or メールアドレス" required error={error} onChange={handleInput} />
-            <Input type="password" name="password" placeholder="パスワード" minLength={8} maxLength={16} required error={error} onChange={handleInput} />
+            <Password name="password" placeholder="パスワード" error={error} onChange={handleInput} />
             <p className="password_reset" onClick={handleReset}>
               パスワードをリセット
             </p>

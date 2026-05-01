@@ -26,14 +26,14 @@ export interface SignupVerifyOut {
 
 export interface PasswordChangeIn {
   oldPassword: string
-  newPassword1: string
-  newPassword2: string
+  password1: string
+  password2: string
 }
 
 export interface PasswordResetIn {
   token: string
-  newPassword1: string
-  newPassword2: string
+  password1: string
+  password2: string
 }
 
 export interface PasswordResetVerifyOut {
