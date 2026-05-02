@@ -5,13 +5,13 @@ import { ChatIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
 import { postChatCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
-import { nowDate } from 'utils/functions/datetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import DatePicker from 'components/parts/Input/DatePicker'
 import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
@@ -38,6 +38,7 @@ export default function ChatCreate(props: Props): React.JSX.Element {
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
+  const handlePeriod = (period: string) => setValues({ ...values, period })
 
   const handleForm = async () => {
     const { channelUlid, categoryUlid, title, content, period } = values
@@ -62,7 +63,7 @@ export default function ChatCreate(props: Props): React.JSX.Element {
           <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
           <Input label="タイトル" name="title" required error={error} onChange={handleInput} />
           <Textarea label="内容" name="content" required error={error} onChange={handleText} />
-          <Input label="期間" name="period" placeholder={`${nowDate.year}-12-31`} required error={error} onChange={handleInput} />
+          <DatePicker label="期間" name="period" value={values.period} required error={error} onChange={handlePeriod} />
         </VStack>
       </form>
     </Main>

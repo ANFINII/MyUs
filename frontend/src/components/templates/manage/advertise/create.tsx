@@ -9,6 +9,7 @@ import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
+import DatePicker from 'components/parts/Input/DatePicker'
 import InputFile from 'components/parts/Input/File'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
@@ -26,7 +27,7 @@ export default function AdvertiseCreate(): React.JSX.Element {
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })
-  const handlePeriod = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, period: e.target.value || null })
+  const handlePeriod = (period: string) => setValues({ ...values, period: period || null })
   const handleImage = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, image: files })
   const handleVideo = (files: File | File[]) => Array.isArray(files) || setValues({ ...values, video: files })
 
@@ -59,9 +60,9 @@ export default function AdvertiseCreate(): React.JSX.Element {
           <Input label="タイトル" name="title" required error={error} onChange={handleInput} />
           <Input label="リンク URL" name="url" type="url" required error={error} onChange={handleInput} />
           <Textarea label="内容" name="content" required error={error} onChange={handleText} />
-          <Input label="表示期限" name="period" type="date" onChange={handlePeriod} />
           <InputFile label="画像" accept="image/*" required error={error} onChange={handleImage} />
           <InputFile label="動画" accept="video/*" onChange={handleVideo} />
+          <DatePicker label="期間" name="period" value={values.period ?? ''} onChange={handlePeriod} />
         </VStack>
       </form>
     </Main>
