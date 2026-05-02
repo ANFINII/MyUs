@@ -6,7 +6,6 @@ import style from './DatePicker.module.scss'
 
 interface DayCell {
   date: Date
-  isCurrentMonth: boolean
   isDisabled: boolean
 }
 
@@ -31,7 +30,7 @@ const fromIsoDate = (iso?: string): Date | undefined => {
 
 const isSameDate = (a: Date, b: Date): boolean => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
 
-const buildMonthGrid = (year: number, month: number, min?: Date, max?: Date): DayCell[] => {
+const buildMonthGrid = (year: number, month: number, min?: Date, max?: Date): (DayCell | null)[] => {
   const startDay = new Date(year, month, 1).getDay()
   const lastDay = new Date(year, month + 1, 0).getDate()
   const isDisabled = (d: Date): boolean => {
@@ -39,21 +38,13 @@ const buildMonthGrid = (year: number, month: number, min?: Date, max?: Date): Da
     if (max && d > max) return true
     return false
   }
-  const cells: DayCell[] = []
-  for (let i = startDay; i > 0; i--) {
-    const d = new Date(year, month, 1 - i)
-    cells.push({ date: d, isCurrentMonth: false, isDisabled: isDisabled(d) })
-  }
+  const cells: (DayCell | null)[] = []
+  for (let i = 0; i < startDay; i++) cells.push(null)
   for (let i = 1; i <= lastDay; i++) {
     const d = new Date(year, month, i)
-    cells.push({ date: d, isCurrentMonth: true, isDisabled: isDisabled(d) })
+    cells.push({ date: d, isDisabled: isDisabled(d) })
   }
-  let nextDay = 1
-  while (cells.length < 42) {
-    const d = new Date(year, month + 1, nextDay)
-    cells.push({ date: d, isCurrentMonth: false, isDisabled: isDisabled(d) })
-    nextDay++
-  }
+  while (cells.length < 42) cells.push(null)
   return cells
 }
 
@@ -115,25 +106,19 @@ export default function DatePicker(props: Props): React.JSX.Element {
   const handleToggle = () => setIsOpen((prev) => !prev)
 
   const handlePrev = () => {
-    if (viewMonth === 0) {
-      setViewMonth(11)
-      setViewYear(viewYear - 1)
-    } else {
-      setViewMonth(viewMonth - 1)
-    }
+    const d = new Date(viewYear, viewMonth - 1, 1)
+    setViewYear(d.getFullYear())
+    setViewMonth(d.getMonth())
   }
 
   const handleNext = () => {
-    if (viewMonth === 11) {
-      setViewMonth(0)
-      setViewYear(viewYear + 1)
-    } else {
-      setViewMonth(viewMonth + 1)
-    }
+    const d = new Date(viewYear, viewMonth + 1, 1)
+    setViewYear(d.getFullYear())
+    setViewMonth(d.getMonth())
   }
 
   const handleSelect = (cell: DayCell) => {
-    if (cell.isDisabled || !cell.isCurrentMonth) return
+    if (cell.isDisabled) return
     onChange?.(toIsoDate(cell.date))
     setIsOpen(false)
   }
@@ -171,7 +156,7 @@ export default function DatePicker(props: Props): React.JSX.Element {
             </div>
             <div className={style.grid}>
               {cells.map((cell, i) => {
-                if (!cell.isCurrentMonth) return <span key={i} className={style.empty} />
+                if (!cell) return <span key={i} className={style.empty} />
                 const day = cell.date.getDay()
                 const isToday = isSameDate(cell.date, today)
                 const isSelected = !!selected && isSameDate(cell.date, selected)
