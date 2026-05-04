@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
+import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import VStack from 'components/parts/Stack/Vertical'
-import style from '../Setting.module.scss'
 
 export default function Withdrawal(): React.JSX.Element {
   const router = useRouter()
@@ -11,12 +11,16 @@ export default function Withdrawal(): React.JSX.Element {
   const handleNext = () => router.push('/setting/withdrawal/confirm')
 
   return (
-    <Main title="退会処理">
-      <article className={style.article_pass}>
-        <div className={style.form_account}>
-          <VStack gap="8" className="ws_nowrap">
-            <p>退会するとアカウントが利用できなくなります！</p>
-            <p className="red">この操作は取り消しできません。</p>
+    <Main metaTitle="退会処理">
+      <article className="article_registration">
+        <div className="form_account">
+          <h1 className="login_h1">退会処理</h1>
+          <VStack gap="8">
+            <Alert type="error">
+              退会するとアカウントが利用できなくなります！
+              <br />
+              この操作は取り消しできません。
+            </Alert>
           </VStack>
 
           <VStack gap="12" className="mv_40">
