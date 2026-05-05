@@ -11,6 +11,7 @@ import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../Account.module.scss'
 
 export default function SignupEmail(): React.JSX.Element {
   const router = useRouter()
@@ -36,10 +37,9 @@ export default function SignupEmail(): React.JSX.Element {
 
   return (
     <Main metaTitle="アカウント登録" toast={toast}>
-      <article className="article_registration">
-        <form method="POST" action="" className="form_account">
-          <h1 className="signup_h1">アカウント登録</h1>
-
+      <article className={style.account}>
+        <form method="POST" action="" className={style.form}>
+          <h1 className={style.signup_title}>アカウント登録</h1>
           <VStack gap="8">
             <Input type="email" name="email" placeholder="メールアドレス" maxLength={255} required error={error} onChange={handleInput} />
             <Alert type="info">

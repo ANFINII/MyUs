@@ -13,6 +13,7 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Password from 'components/parts/Input/Password'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../Account.module.scss'
 
 export default function ResetConfirm(): React.JSX.Element {
   const router = useRouter()
@@ -70,10 +71,9 @@ export default function ResetConfirm(): React.JSX.Element {
 
   return (
     <Main metaTitle="パスワード再設定" toast={toast}>
-      <article className="article_registration">
-        <form method="POST" action="" className="form_account">
-          <h1 className="login_h1">パスワード再設定</h1>
-
+      <article className={style.account}>
+        <form method="POST" action="" className={style.form}>
+          <h1 className={style.title}>パスワード再設定</h1>
           {isVerified && (
             <>
               <VStack gap="8">

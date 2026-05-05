@@ -55,10 +55,9 @@ export default function ChannelCreate(): React.JSX.Element {
 
   return (
     <Main metaTitle="チャンネル作成" toast={toast}>
-      <article className="article_registration">
-        <form method="POST" action="" className="form_account">
-          <h1 className="signup_h1">チャンネル作成</h1>
-
+      <article className={style.account}>
+        <form method="POST" action="" className={style.form}>
+          <h1 className={style.signup_title}>チャンネル作成</h1>
           {message && (
             <ul className="messages_signup">
               <li>{message}</li>

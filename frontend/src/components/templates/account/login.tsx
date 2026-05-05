@@ -16,6 +16,7 @@ import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import Password from 'components/parts/Input/Password'
 import VStack from 'components/parts/Stack/Vertical'
+import style from './Account.module.scss'
 
 export default function Login(): React.JSX.Element {
   const { t } = useTranslation('common')
@@ -50,10 +51,9 @@ export default function Login(): React.JSX.Element {
 
   return (
     <Main title="ログイン" toast={toast}>
-      <article className="article_registration">
-        <form method="POST" action="" className="form_account">
-          <h1 className="login_h1">{t('welcome')}</h1>
-
+      <article className={style.account}>
+        <form method="POST" action="" className={style.form}>
+          <h1 className={style.title}>{t('welcome')}</h1>
           {message && (
             <ul className="messages_login">
               <li>{message}</li>

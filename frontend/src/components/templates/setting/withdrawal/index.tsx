@@ -4,6 +4,7 @@ import Main from 'components/layout/Main'
 import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../../account/Account.module.scss'
 
 export default function Withdrawal(): React.JSX.Element {
   const router = useRouter()
@@ -12,9 +13,9 @@ export default function Withdrawal(): React.JSX.Element {
 
   return (
     <Main metaTitle="退会処理">
-      <article className="article_registration">
-        <div className="form_account">
-          <h1 className="login_h1">退会処理</h1>
+      <article className={style.account}>
+        <div className={style.form}>
+          <h1 className={style.title}>退会処理</h1>
           <VStack gap="8">
             <Alert type="error">
               退会するとアカウントが利用できなくなります！
