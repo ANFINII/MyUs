@@ -14,7 +14,7 @@ import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import Password from 'components/parts/Input/Password'
 import VStack from 'components/parts/Stack/Vertical'
-import style from '../../account/Account.module.scss'
+import style from '../Account.module.scss'
 
 export default function WithdrawalConfirm(): React.JSX.Element {
   const router = useRouter()
@@ -24,7 +24,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<WithdrawalIn>({ password: '' })
 
-  const handleBack = () => router.push('/setting/withdrawal')
+  const handleBack = () => router.push('/account/withdrawal')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   const handleSubmit = async () => {

@@ -4,12 +4,12 @@ import Main from 'components/layout/Main'
 import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import VStack from 'components/parts/Stack/Vertical'
-import style from '../../account/Account.module.scss'
+import style from '../Account.module.scss'
 
 export default function Withdrawal(): React.JSX.Element {
   const router = useRouter()
   const handleBack = () => router.push('/')
-  const handleNext = () => router.push('/setting/withdrawal/confirm')
+  const handleNext = () => router.push('/account/withdrawal/confirm')
 
   return (
     <Main metaTitle="退会処理">

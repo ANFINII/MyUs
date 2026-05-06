@@ -39,7 +39,7 @@ export default function DropMenuProfile(props: Props): React.JSX.Element {
         <NavItem label="アカウント" icon={<IconPerson size="1.5em" type="circle" />} className={style.item} onClick={() => handleRouter('/setting/profile')} />
         <NavItem label="マイページ" icon={<IconPerson size="1.5em" type="square" />} className={style.item} onClick={() => handleRouter('/setting/mypage')} />
         <NavItem label="料金プラン" icon={<IconCredit size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/payment')} />
-        <NavItem label="退会処理" icon={<IconPerson size="1.5em" type="cross" />} className={style.item} onClick={() => handleRouter('/setting/withdrawal')} />
+        <NavItem label="退会処理" icon={<IconPerson size="1.5em" type="cross" />} className={style.item} onClick={() => handleRouter('/account/withdrawal')} />
         <NavItem label="ログイン" icon={<IconArrow size="1.5em" type="in" />} className={style.item} onClick={handleLogin} />
         <NavItem label="ログアウト" icon={<IconArrow size="1.5em" type="out" />} className={style.item} onClick={handleLogout} />
       </ul>
