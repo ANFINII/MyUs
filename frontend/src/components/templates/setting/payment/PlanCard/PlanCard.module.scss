@@ -1,0 +1,66 @@
+.plan {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 20px 20px;
+  border: 1px solid rgb(220, 220, 220);
+  border-radius: 6px;
+  background: rgb(255, 255, 255);
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+
+  &.active {
+    border-color: rgb(0, 70, 175);
+    background: rgb(245, 250, 255);
+  }
+
+  .name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    color: rgb(0, 70, 175);
+  }
+
+  .price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 32px;
+    font-weight: 700;
+    color: rgb(50, 50, 50);
+  }
+
+  .price_unit {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(120, 120, 120);
+  }
+
+  .features {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 10px;
+    padding: 16px 0;
+    margin: 0;
+    list-style: none;
+    border-top: 1px solid rgb(230, 230, 230);
+    border-bottom: 1px solid rgb(230, 230, 230);
+
+    .feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 14px;
+      color: rgb(80, 80, 80);
+
+      &::before {
+        content: '✓';
+        font-weight: 700;
+        color: rgb(0, 70, 175);
+      }
+    }
+  }
+}

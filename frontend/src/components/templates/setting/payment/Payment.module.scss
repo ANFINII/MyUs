@@ -1,0 +1,35 @@
+.payment {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 960px;
+  padding: 0 16px;
+  margin: 24px auto;
+
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .current {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 20px;
+    border: 1px solid rgb(220, 220, 220);
+    border-radius: 6px;
+    background: rgb(255, 255, 255);
+  }
+
+  .current_label {
+    font-size: 14px;
+    color: rgb(120, 120, 120);
+  }
+
+  .current_actions {
+    display: flex;
+    gap: 12px;
+  }
+}
