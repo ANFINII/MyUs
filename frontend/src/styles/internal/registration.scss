@@ -1,37 +1,7 @@
-/* registration */
-.article_registration {
-  display: flex;
-  justify-content: center;
-}
-
-.form_account {
-  width: 100%;
-  max-width: 380px;
-  padding: 15px;
-}
-
-.form_account .login_h1 {
-  font-family: 'Libre Caslon Display', serif;
-  font-size: 28px;
-  color: rgb(50, 50, 50);
-  margin: 40px 0;
-}
-
 .myus_h1 {
   font-family: 'Libre Caslon Display', serif;
   font-size: 26px;
   margin: 0 0 24px 0;
-}
-
-.form_account .signup_h1 {
-  font-family: 'Libre Caslon Display', serif;
-  font-size: 28px;
-  color: rgb(50, 50, 50);
-  margin-bottom: 20px;
-}
-
-.form_account .checkbox {
-  font-weight: 400;
 }
 
 .password_reset {
@@ -98,10 +68,6 @@
 .inpput_margin {
   display: block;
   margin: 0 0 16px 0;
-}
-
-.article_registration a {
-  text-decoration: none;
 }
 
 .name_group {

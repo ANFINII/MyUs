@@ -17,6 +17,7 @@ import Radio from 'components/parts/Input/Radio'
 import SelectBox from 'components/parts/Input/SelectBox'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../Account.module.scss'
 
 const initSignup: SignupIn = {
   token: '',
@@ -80,10 +81,9 @@ export default function Signup(): React.JSX.Element {
 
   return (
     <Main metaTitle="アカウント登録" toast={toast}>
-      <article className="article_registration">
-        <form method="POST" action="" className="form_account">
-          <h1 className="signup_h1">アカウント登録</h1>
-
+      <article className={style.account}>
+        <form method="POST" action="" className={style.form}>
+          <h1 className={style.signup_title}>アカウント登録</h1>
           {isVerified && (
             <>
               <VStack gap="8">

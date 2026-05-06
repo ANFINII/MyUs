@@ -14,6 +14,7 @@ import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import Password from 'components/parts/Input/Password'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../../account/Account.module.scss'
 
 export default function WithdrawalConfirm(): React.JSX.Element {
   const router = useRouter()
@@ -44,9 +45,9 @@ export default function WithdrawalConfirm(): React.JSX.Element {
 
   return (
     <Main metaTitle="退会処理" toast={toast}>
-      <article className="article_registration">
-        <form method="POST" action="" className="form_account">
-          <h1 className="login_h1">退会処理</h1>
+      <article className={style.account}>
+        <form method="POST" action="" className={style.form}>
+          <h1 className={style.title}>退会処理</h1>
           <VStack gap="8">
             <Alert type="error">本当に退会しますか？</Alert>
             <Password value={values.password} name="password" placeholder="パスワード" error={error} onChange={handleInput} />

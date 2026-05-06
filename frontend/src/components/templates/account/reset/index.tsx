@@ -11,6 +11,7 @@ import Alert from 'components/parts/Alert'
 import Button from 'components/parts/Button'
 import Input from 'components/parts/Input'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../Account.module.scss'
 
 export default function Reset(): React.JSX.Element {
   const router = useRouter()
@@ -36,9 +37,9 @@ export default function Reset(): React.JSX.Element {
 
   return (
     <Main metaTitle="パスワードリセット" toast={toast}>
-      <article className="article_registration">
-        <form method="POST" action="" className="form_account">
-          <h1 className="login_h1">パスワードリセット</h1>
+      <article className={style.account}>
+        <form method="POST" action="" className={style.form}>
+          <h1 className={style.title}>パスワードリセット</h1>
           <VStack gap="8">
             <Input type="email" name="email" placeholder="メールアドレス" maxLength={255} required error={error} onChange={handleInput} />
             <Alert type="info">メールアドレス宛にパスワード再設定用リンクを送信します。</Alert>

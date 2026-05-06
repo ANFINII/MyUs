@@ -3,6 +3,7 @@ import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import VStack from 'components/parts/Stack/Vertical'
+import style from '../Account.module.scss'
 
 export default function ResetDone(): React.JSX.Element {
   const router = useRouter()
@@ -10,9 +11,9 @@ export default function ResetDone(): React.JSX.Element {
 
   return (
     <Main metaTitle="パスワード再設定">
-      <article className="article_registration">
-        <div className="form_account">
-          <h1 className="login_h1">パスワード再設定</h1>
+      <article className={style.account}>
+        <div className={style.form}>
+          <h1 className={style.title}>パスワード再設定</h1>
           <p className="fs_14">パスワードの再設定が完了しました!</p>
           <VStack gap="12" className="mv_40">
             <Button color="blue" size="l" name="ログイン" onClick={handleBack} />
