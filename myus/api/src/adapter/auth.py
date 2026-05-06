@@ -159,6 +159,19 @@ class AuthAPI:
         return 200, LoginOut(access=access, refresh=refresh)
 
     @staticmethod
+    @router.post("/logout", response={204: None, 500: ErrorOut})
+    def logout(request: HttpRequest, response: HttpResponse):
+        log.info("AuthAPI logout")
+
+        try:
+            response.delete_cookie("access_token")
+            response.delete_cookie("refresh_token")
+            return 204, None
+        except Exception:
+            log.error("Logout error")
+            return 500, ErrorOut(message="ログアウトに失敗しました!")
+
+    @staticmethod
     @router.post("/password/change", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
     def password_change(request: HttpRequest, input: PasswordChangeIn):
         log.info("AuthAPI password_change")
@@ -223,16 +236,3 @@ class AuthAPI:
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
         return 204, ErrorOut(message="退会しました!")
-
-    @staticmethod
-    @router.post("/logout", response={204: None, 500: ErrorOut})
-    def logout(request: HttpRequest, response: HttpResponse):
-        log.info("AuthAPI logout")
-
-        try:
-            response.delete_cookie("access_token")
-            response.delete_cookie("refresh_token")
-            return 204, None
-        except Exception:
-            log.error("Logout error")
-            return 500, ErrorOut(message="ログアウトに失敗しました!")
