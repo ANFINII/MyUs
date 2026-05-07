@@ -42,8 +42,8 @@ export default function PaymentChange(props: Props): React.JSX.Element {
         </div>
 
         <div className={style.actions}>
-          <Button color="green" size="l" name="変更する" disabled={!isChanged} onClick={handleSubmit} />
-          <Button color="blue" size="l" name="キャンセル" onClick={handleBack} />
+          <Button color="green" name="変更する" disabled={!isChanged} onClick={handleSubmit} />
+          <Button color="blue" name="キャンセル" onClick={handleBack} />
         </div>
       </div>
     </Main>
