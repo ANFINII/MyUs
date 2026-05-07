@@ -33,6 +33,9 @@ export const apiSettingProfile = base + '/setting/profile'
 export const apiSettingMypage = base + '/setting/mypage'
 export const apiSettingNotification = base + '/setting/notification'
 
+// Payment
+export const apiPaymentCheckout = base + '/payment/checkout'
+
 // Channel
 export const apiChannelCreate = base + '/channel'
 export const apiChannelUser = base + '/channel/user'
