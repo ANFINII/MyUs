@@ -33,7 +33,7 @@ export default function Payment(props: Props): React.JSX.Element {
 
         {isPaid && (
           <div className={style.actions}>
-            <Button color="green" size="m" name="プランを変更" onClick={handleChange} />
+            <Button color="green" name="プランを変更" onClick={handleChange} />
           </div>
         )}
       </div>
