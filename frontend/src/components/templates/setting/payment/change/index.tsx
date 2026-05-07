@@ -1,38 +1,41 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { MypageOut } from 'types/internal/user'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import style from './Change.module.scss'
+import CurrentBanner from '../CurrentBanner'
 import PlanCard from '../PlanCard'
 import { plans } from '../plans'
 
-const currentPlanName = 'Free'
+interface Props {
+  mypage: MypageOut
+}
 
-export default function PaymentChange(): React.JSX.Element {
+export default function PaymentChange(props: Props): React.JSX.Element {
+  const { mypage } = props
   const router = useRouter()
-  const [activeId, setActiveId] = useState<string>('')
+  const [activeName, setActiveName] = useState<string>('')
   const handleBack = () => router.push('/setting/payment')
   const handleSubmit = () => router.push('/setting/payment')
 
-  const currentStripeId = plans.find((plan) => plan.name === currentPlanName)?.stripeId ?? ''
-  const isChanged = activeId !== '' && activeId !== currentStripeId
+  const currentPlanName = mypage.plan
+  const isChanged = activeName !== '' && activeName !== currentPlanName
 
   return (
     <Main metaTitle="プラン変更">
       <div className={style.change}>
-        <div className={style.current}>
-          <span className={style.current_label}>現在のプラン</span>
-          <span className={style.current_plan}>{currentPlanName}</span>
-        </div>
+        <CurrentBanner planName={currentPlanName} />
 
         <div className={style.plans}>
           {plans.map((plan) => (
             <PlanCard
               key={plan.name}
               plan={plan}
-              active={activeId === plan.stripeId}
-              onClick={() => setActiveId(plan.stripeId)}
+              active={activeName === plan.name}
+              onClick={() => setActiveName(plan.name)}
               current={plan.name === currentPlanName}
+              disabled={plan.name === currentPlanName}
               showPurchase={false}
             />
           ))}

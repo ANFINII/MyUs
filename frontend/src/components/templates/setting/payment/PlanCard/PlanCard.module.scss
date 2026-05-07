@@ -7,11 +7,19 @@
   border-radius: 6px;
   background: rgb(255, 255, 255);
   transition: border-color 0.2s, background 0.2s;
-  cursor: pointer;
+
+  &.clickable {
+    cursor: pointer;
+  }
 
   &.active {
     border-color: rgb(0, 70, 175);
     background: rgb(245, 250, 255);
+  }
+
+  &.disabled {
+    opacity: 0.6;
+    cursor: default;
   }
 
   .name {
@@ -57,6 +65,10 @@
     list-style: none;
     border-top: 1px solid rgb(230, 230, 230);
     border-bottom: 1px solid rgb(230, 230, 230);
+
+    &:last-child {
+      border-bottom: none;
+    }
 
     .feature {
       display: flex;
