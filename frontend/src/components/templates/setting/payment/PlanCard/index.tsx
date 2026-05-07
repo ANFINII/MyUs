@@ -13,15 +13,20 @@ interface Props {
   plan: Plan
   active: boolean
   onClick: () => void
+  current?: boolean
+  showPurchase?: boolean
 }
 
 export default function PlanCard(props: Props): React.JSX.Element {
-  const { plan, active, onClick } = props
+  const { plan, active, onClick, current = false, showPurchase = true } = props
   const { name, price, features, stripeId } = plan
 
   return (
     <div className={cx(style.plan, active && style.active)} onClick={onClick}>
-      <div className={style.name}>{name}</div>
+      <div className={style.name}>
+        {name}
+        {current && <span className={style.current_label}>現在</span>}
+      </div>
       <div className={style.price}>
         <span>¥{price.toLocaleString()}</span>
         <span className={style.price_unit}>/ 月</span>
@@ -33,7 +38,7 @@ export default function PlanCard(props: Props): React.JSX.Element {
           </li>
         ))}
       </ul>
-      <Button color="purple" size="l" name="購入する" value={stripeId} />
+      {showPurchase && <Button color="purple" size="l" name="購入する" value={stripeId} />}
     </div>
   )
 }
