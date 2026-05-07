@@ -78,7 +78,8 @@ export interface MypageOut {
   followingCount: number
   tagManagerId: string
   plan: string
-  planDate: string
+  planStartDate: string | null
+  planEndDate: string | null
   isAdvertise: boolean
   content: string
 }

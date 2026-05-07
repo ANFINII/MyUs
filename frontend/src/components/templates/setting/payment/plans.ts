@@ -2,6 +2,12 @@ import { Plan } from './PlanCard'
 
 export const plans: Plan[] = [
   {
+    name: 'Free',
+    price: 0,
+    features: ['基本機能', '広告あり'],
+    stripeId: '',
+  },
+  {
     name: 'Basic',
     price: 550,
     features: ['個別広告表示 1つ', '全体広告 非表示'],
