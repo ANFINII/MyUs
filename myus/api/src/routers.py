@@ -8,6 +8,7 @@ from api.src.adapter.manage import ManageVideoAPI, ManageMusicAPI, ManageBlogAPI
 from api.src.adapter.media import HomeAPI, RecommendAPI, VideoAPI, MusicAPI, BlogAPI, ComicAPI, PictureAPI, ChatAPI
 from api.src.adapter.message import MessageAPI
 from api.src.adapter.channel import ChannelAPI
+from api.src.adapter.payment import PaymentAPI
 from api.src.adapter.setting import SettingMyPageAPI, SettingNotificationAPI, SettingProfileAPI
 from api.src.adapter.user import UserAPI
 
@@ -20,6 +21,7 @@ api.add_router("/user", UserAPI().router, tags=["user"])
 api.add_router("/setting/profile", SettingProfileAPI().router, tags=["Setting"])
 api.add_router("/setting/mypage", SettingMyPageAPI().router, tags=["Setting"])
 api.add_router("/setting/notification", SettingNotificationAPI().router, tags=["Setting"])
+api.add_router("/payment", PaymentAPI().router, tags=["Payment"])
 
 api.add_router("/manage/media/video", ManageVideoAPI().router, tags=["Manage Video"])
 api.add_router("/manage/media/music", ManageMusicAPI().router, tags=["Manage Music"])
