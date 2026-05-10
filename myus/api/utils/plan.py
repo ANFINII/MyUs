@@ -35,6 +35,12 @@ PLANS: list[PlanDef] = [
         max_advertise=3,
         description="・個別広告表示3つ\n・全体広告OFF\n・楽曲ダウンロード",
     ),
+    PlanDef(
+        name=PlanName.ULTIMATE,
+        price=2000,
+        max_advertise=4,
+        description="・個別広告表示4つ\n・全体広告OFF\n・楽曲ダウンロード",
+    ),
 ]
 
 
