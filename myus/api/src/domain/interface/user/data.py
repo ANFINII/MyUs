@@ -66,18 +66,8 @@ class UserNotificationData:
 
 
 @dataclass(frozen=True, slots=True)
-class PlanData:
-    id: int
-    name: str
-    stripe_api_id: str
-    price: int
-    max_advertise: int
-    description: str
-
-
-@dataclass(frozen=True, slots=True)
 class UserPlanData:
-    plan: PlanData
+    plan: str
     customer_id: str
     subscription: str
     is_paid: bool

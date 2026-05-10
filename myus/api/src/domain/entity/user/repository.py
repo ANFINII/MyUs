@@ -25,7 +25,7 @@ USER_PLAN_FIELDS = ["customer_id", "subscription", "is_paid", "start_date", "end
 
 class UserRepository(UserInterface):
     def queryset(self) -> QuerySet[User]:
-        return User.objects.select_related("profile", "mypage", "notification", "user_plan", "user_plan__plan")
+        return User.objects.select_related("profile", "mypage", "notification", "user_plan")
 
     def get_ids(self, filter: FilterOption, sort: SortOption | None = None) -> list[int]:
         q_list: list[Q] = []

@@ -2,24 +2,6 @@ from django.db import models
 from django_ulid.models import ulid
 
 
-class Plan(models.Model):
-    """Plan"""
-    id            = models.BigAutoField(primary_key=True)
-    name          = models.CharField(max_length=30)
-    stripe_api_id = models.CharField(max_length=30)
-    price         = models.IntegerField()
-    max_advertise = models.IntegerField()
-    description   = models.TextField()
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        db_table = "plan"
-        verbose_name_plural = "001 Plan"
-        indexes = [models.Index(fields=["stripe_api_id"], name="stripe_api_idx")]
-
-
 class Category(models.Model):
     """Category"""
     id      = models.BigAutoField(primary_key=True)

@@ -3,8 +3,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
 from django_ulid.models import ulid
-from api.db.models.master import Plan
-from api.utils.enum.index import GenderType
+from api.utils.enum.index import GenderType, PlanAction, PlanName
 from api.utils.functions.file import avatar_upload
 
 
@@ -128,9 +127,10 @@ class UserNotification(models.Model):
 
 class UserPlan(models.Model):
     """UserPlan"""
+    plans        = [(p, p) for p in PlanName]
     id           = models.BigAutoField(primary_key=True)
     user         = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_plan")
-    plan         = models.ForeignKey(Plan, on_delete=models.CASCADE, default=1)
+    plan         = models.CharField(max_length=30, choices=plans, default=PlanName.FREE)
     customer_id  = models.CharField(max_length=255)
     subscription = models.CharField(max_length=255)
     is_paid      = models.BooleanField(default=False)
@@ -138,8 +138,29 @@ class UserPlan(models.Model):
     end_date     = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return self.plan.name
+        return self.plan
 
     class Meta:
         db_table = "user_plan"
         verbose_name_plural = "001 UserPlan"
+
+
+class UserPlanHistory(models.Model):
+    """UserPlanHistory"""
+    plans        = [(p, p) for p in PlanName]
+    actions      = [(a, a) for a in PlanAction]
+    id           = models.BigAutoField(primary_key=True)
+    user         = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_plan_histories")
+    plan         = models.CharField(max_length=30, choices=plans)
+    price        = models.IntegerField()
+    action       = models.CharField(max_length=20, choices=actions)
+    subscription = models.CharField(max_length=255, blank=True)
+    created      = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user_id}:{self.plan}:{self.action}"
+
+    class Meta:
+        db_table = "user_plan_history"
+        verbose_name_plural = "001 UserPlanHistory"
+        indexes = [models.Index(fields=["user", "-created"], name="user_plan_history_idx")]

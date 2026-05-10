@@ -7,6 +7,21 @@ class GenderType(str, Enum):
     SECRET = "Secret"
 
 
+class PlanName(str, Enum):
+    FREE = "Free"
+    BASIC = "Basic"
+    STANDARD = "Standard"
+    PREMIUM = "Premium"
+    ULTIMATE = "Ultimate"
+
+
+class PlanAction(str, Enum):
+    SUBSCRIBE = "Subscribe"
+    CHANGE = "Change"
+    CANCEL = "Cancel"
+    EXPIRE = "Expire"
+
+
 class MediaType(str, Enum):
     VIDEO = "Video"
     MUSIC = "Music"
