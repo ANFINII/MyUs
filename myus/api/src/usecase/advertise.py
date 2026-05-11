@@ -9,6 +9,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.src.injectors.container import injector
 from api.src.usecase.user import get_user_data
 from api.utils.functions.index import create_url
+from api.utils.plan import get_plan
 
 
 def get_user_advertises(user_ulid: str) -> list[AdvertiseData]:
@@ -17,7 +18,8 @@ def get_user_advertises(user_ulid: str) -> list[AdvertiseData]:
         log.info("User not found", user_ulid=user_ulid)
         return []
 
-    max_count = user.user_plan.plan.max_advertise
+    plan = get_plan(user.user_plan.plan)
+    max_count = plan.max_advertise if plan is not None else 0
     if max_count <= 0:
         return []
 

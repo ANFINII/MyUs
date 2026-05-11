@@ -1,7 +1,8 @@
 from datetime import date, datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import F, Count, Exists, OuterRef
-from api.db.models import Plan, MyPage, SearchTag, UserNotification, Follow, Comment
+from api.db.models import MyPage, SearchTag, UserNotification, Follow, Comment
+from api.utils.plan import PLANS
 from api.db.models import Video, Music, Blog, Comic, Picture, Chat, Advertise
 from api.utils.constant import model_dict, model_media_comment_no_dict
 from app.modules.notification import notification_data
@@ -35,7 +36,7 @@ class ContextData:
             context["mypage_list"] = MyPage.objects.filter(user=user.id)
 
         if class_name == "Payment":
-            context["payment_list"] = Plan.objects.all().order_by("-id")
+            context["payment_list"] = list(reversed(PLANS))
 
         if class_name == "FollowList":
             context["follow_list"] = Follow.objects.filter(follower=user.id).select_related("following__mypage").order_by("created")[:100]
@@ -92,7 +93,7 @@ class ContextData:
 
         context["advertise_auto_list"] = Advertise.objects.filter(publish=True, type=0).order_by("?")[:1]
         advertise = Advertise.objects.filter(publish=True, type=1, author=author).order_by("?")
-        author_plan = author.user_plan.plan.name
+        author_plan = author.user_plan.plan
         if author_plan == "Basic":
             context["advertise_list"] = advertise[:1]
         if author_plan == "Standard":

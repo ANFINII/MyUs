@@ -2,9 +2,8 @@ from typing import assert_never
 from django.contrib.auth.hashers import make_password
 from django_ulid.models import ulid
 from api.db.models.media import Video, Music, Blog, Comic, Picture, Chat
-from api.db.models.master import Plan
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
-from api.src.domain.interface.user.data import MyPageData, PlanData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
+from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.utils.enum.index import MediaType
 
 
@@ -82,20 +81,9 @@ def user_notification_data(user_notification: UserNotification) -> UserNotificat
     )
 
 
-def plan_data(plan: Plan) -> PlanData:
-    return PlanData(
-        id=plan.id,
-        name=plan.name,
-        stripe_api_id=plan.stripe_api_id,
-        price=plan.price,
-        max_advertise=plan.max_advertise,
-        description=plan.description,
-    )
-
-
 def user_plan_data(user_plan: UserPlan) -> UserPlanData:
     return UserPlanData(
-        plan=plan_data(user_plan.plan),
+        plan=user_plan.plan,
         customer_id=user_plan.customer_id,
         subscription=user_plan.subscription,
         is_paid=user_plan.is_paid,
@@ -189,7 +177,7 @@ def marshal_user_plan(user: User, data: UserAllData) -> UserPlan:
     user_plan = data.user_plan
     return UserPlan(
         user=user,
-        plan_id=user_plan.plan.id if user_plan.plan.id != 0 else 1,
+        plan=user_plan.plan,
         customer_id=user_plan.customer_id,
         subscription=user_plan.subscription,
         is_paid=user_plan.is_paid,
