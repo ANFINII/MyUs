@@ -6,7 +6,7 @@ from api.src.domain.entity.hashtag._convert import convert_data, marshal_data, m
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.hashtag.data import HashtagData
 from api.src.domain.interface.hashtag.interface import FilterOption, HashtagInterface, SortOption
-from api.utils.enum.index import MediaType
+from api.utils.enum.media import MediaType
 
 
 class HashtagRepository(HashtagInterface):

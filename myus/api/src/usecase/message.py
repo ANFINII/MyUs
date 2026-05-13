@@ -10,7 +10,7 @@ from api.src.domain.interface.notification.interface import NotificationInterfac
 from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO, MessageReplyDTO
 from api.src.usecase.user import get_author_data
-from api.utils.enum.index import NotificationObjectType, NotificationType, NotificationTypeNo
+from api.utils.enum.notification import NotificationObjectType, NotificationType, NotificationTypeNo
 
 
 def get_message_data(message_ulid: str) -> MessageDomainData | None:

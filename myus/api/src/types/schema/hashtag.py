@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from api.utils.enum.index import MediaType
+from api.utils.enum.media import MediaType
 
 
 class HashtagItemIn(BaseModel):

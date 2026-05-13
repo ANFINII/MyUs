@@ -6,7 +6,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, Pa
 from api.src.domain.interface.ng_word.interface import FilterOption as NgWordFilterOption, NgWordInterface, SortOption as NgWordSortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.hashtag import HashtagDTO
-from api.utils.enum.index import MediaType
+from api.utils.enum.media import MediaType
 from api.utils.functions.media import get_media_repository
 
 

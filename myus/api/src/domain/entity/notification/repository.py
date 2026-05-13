@@ -11,7 +11,7 @@ from api.src.domain.entity.notification._convert import convert_data, marshal_da
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
-from api.utils.enum.index import NotificationObjectType, NotificationTypeNo
+from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
 
 NOTIFICATION_FIELDS = ["user_from_id", "user_to_id", "type_no", "type_name", "object_id", "object_type"]

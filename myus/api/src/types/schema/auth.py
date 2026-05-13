@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from api.utils.enum.index import GenderType
+from api.utils.enum.user import GenderType
 
 
 class LoginIn(BaseModel):

@@ -9,7 +9,7 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 from api.modules.logger import log
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
-from api.utils.enum.index import PlanName
+from api.utils.enum.user import PlanName
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.auth import PasswordChangeIn, PasswordResetIn, SignupIn, WithdrawalIn

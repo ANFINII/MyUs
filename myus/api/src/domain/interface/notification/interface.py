@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
 from api.src.domain.interface.notification.data import NotificationData
-from api.utils.enum.index import NotificationTypeNo
+from api.utils.enum.notification import NotificationTypeNo
 
 
 class SortType(Enum):

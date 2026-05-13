@@ -20,7 +20,8 @@ from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
-from api.utils.enum.index import ImageUpload, MediaType
+from api.utils.enum.media import MediaType
+from api.utils.enum.upload import ImageUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import save_upload
 

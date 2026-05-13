@@ -3,7 +3,7 @@ from django.db.models import Model
 from django_ulid.models import ulid
 from api.db.models.hashtag import HashTag, VideoHashtag, MusicHashtag, BlogHashtag, ComicHashtag, PictureHashtag, ChatHashtag
 from api.src.domain.interface.hashtag.data import HashtagData
-from api.utils.enum.index import MediaType
+from api.utils.enum.media import MediaType
 
 
 def convert_data(obj: HashTag) -> HashtagData:

@@ -8,7 +8,8 @@ from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.injectors.container import injector
-from api.utils.enum.index import MediaType, ImageUpload, MediaUpload
+from api.utils.enum.media import MediaType
+from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.convert.audio_converter import is_conversion, save_converted_mp3
 from api.utils.functions.file import advertise_image_path, advertise_video_path, avatar_path, comic_path, image_path, musics_path, video_path
 

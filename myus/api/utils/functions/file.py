@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Any
-from api.utils.enum.index import ImageUpload, MediaUpload
+from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.convert.audio_converter import is_conversion
 from api.utils.functions.index import new_ulid
 

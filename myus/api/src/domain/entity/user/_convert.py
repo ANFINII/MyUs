@@ -4,7 +4,7 @@ from django_ulid.models import ulid
 from api.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from api.db.models.user import MyPage, Profile, User, UserNotification, UserPlan
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
-from api.utils.enum.index import MediaType
+from api.utils.enum.media import MediaType
 
 
 # Django model -> dataclass
