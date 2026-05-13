@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
 from api.src.domain.interface.comment.data import CommentData
-from api.utils.enum.index import CommentTypeNo
+from api.utils.enum.media import CommentTypeNo
 
 
 class SortType(Enum):

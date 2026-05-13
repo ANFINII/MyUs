@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from api.src.domain.interface.hashtag.data import HashtagData
-from api.utils.enum.index import MediaType
+from api.utils.enum.media import MediaType
 
 
 class SortType(Enum):

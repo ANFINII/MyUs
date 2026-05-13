@@ -10,7 +10,7 @@ from api.src.types.dto.comment import CommentDTO, ReplyDTO
 from api.src.types.dto.user import AuthorDTO
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.user import get_author_data
-from api.utils.enum.index import CommentTypeNo, MediaType
+from api.utils.enum.media import CommentTypeNo, MediaType
 from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository
 

@@ -9,7 +9,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PA
 from api.src.injectors.container import injector
 from api.src.types.schema.advertise import AdvertiseIn, AdvertiseUpdateIn
 from api.src.usecase.user import get_user_data
-from api.utils.enum.index import ImageUpload, MediaUpload
+from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import save_upload
 

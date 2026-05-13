@@ -5,7 +5,7 @@ from api.src.domain.entity.category._convert import convert_data, get_media_mode
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.category.data import CategoryData
 from api.src.domain.interface.category.interface import CategoryInterface, FilterOption, SortOption
-from api.utils.enum.index import MediaType
+from api.utils.enum.media import MediaType
 
 
 class CategoryRepository(CategoryInterface):

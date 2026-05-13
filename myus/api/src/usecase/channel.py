@@ -6,7 +6,7 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption, SortType
 from api.src.injectors.container import injector
 from api.src.types.schema.channel import ChannelIn
-from api.utils.enum.index import ImageUpload
+from api.utils.enum.upload import ImageUpload
 from api.utils.functions.media import save_upload
 
 

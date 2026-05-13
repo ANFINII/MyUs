@@ -11,7 +11,8 @@ from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.types.dto.user import AuthorDTO, LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
-from api.utils.enum.index import ImageUpload, MediaType
+from api.utils.enum.media import MediaType
+from api.utils.enum.upload import ImageUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository, save_upload
 from api.utils.functions.validation import has_alphabet, has_birthday, has_email, has_number, has_phone, has_postal_code, has_username

@@ -3,7 +3,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
 from django_ulid.models import ulid
-from api.utils.enum.index import GenderType, PlanAction, PlanName
+from api.utils.enum.user import GenderType, PlanAction, PlanName
 from api.utils.functions.file import avatar_upload
 
 

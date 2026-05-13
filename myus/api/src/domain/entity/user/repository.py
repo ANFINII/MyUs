@@ -7,7 +7,7 @@ from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.entity.user._convert import convert_data, get_media_model, marshal_mypage, marshal_notification, marshal_profile, marshal_user, marshal_user_plan
 from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import FilterOption, SortOption, UserInterface
-from api.utils.enum.index import MediaType
+from api.utils.enum.media import MediaType
 
 
 USER_FIELDS = ["avatar", "username", "nickname", "email", "password", "is_active"]

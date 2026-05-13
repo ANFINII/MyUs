@@ -24,7 +24,8 @@ from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, 
 from api.src.usecase.channel import get_channel_data
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
-from api.utils.enum.index import CommentType, ImageUpload, MediaType, MediaUpload
+from api.utils.enum.media import CommentType, MediaType
+from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_media_user

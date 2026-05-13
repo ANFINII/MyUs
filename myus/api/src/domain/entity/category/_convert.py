@@ -2,7 +2,7 @@ from typing import assert_never
 from api.db.models.master import Category
 from api.db.models.media import Blog, Chat, Comic, Music, Picture, Video
 from api.src.domain.interface.category.data import CategoryData
-from api.utils.enum.index import MediaType
+from api.utils.enum.media import MediaType
 
 
 def convert_data(obj: Category) -> CategoryData:
