@@ -21,7 +21,12 @@
 ## インポート
 
 - ファイルの先頭で行う（ローカルインポート禁止、`TYPE_CHECKING`禁止）
-- 順序: 標準ライブラリ → サードパーティ → Django → プロジェクト内
+- **`import X` 文は全て先頭にまとめる**（section に関係なく `from` より上）
+  - 例: `import jwt` は `from dataclasses import replace` より上
+- **`from X import Y` 文は section 順**: 標準ライブラリ → サードパーティ → Django → プロジェクト内
+- **`from x import a, b, c` の中身は domain 順序を維持する**（alphabetical にしない）
+  - 例: `from api.db.models.media import Video, Music, Blog, Comic, Picture, Chat` は `MediaType` enum の定義順を保つ
+- **`ruff check --fix` を勝手に実行しない**: ruff の isort 挙動は上記ルールと衝突するため、import 整理が必要なときは手動で対応する
 
 ## 命名規則
 
