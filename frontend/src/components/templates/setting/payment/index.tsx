@@ -19,19 +19,19 @@ export default function Payment(props: Props): React.JSX.Element {
   const { mypage } = props
   const router = useRouter()
   const { toast, handleToast } = useToast()
-  const [loadingId, setLoadingId] = useState<string>('')
+  const [loadingPlan, setLoadingPlan] = useState<string>('')
 
   const currentPlan = mypage.plan
-  const purchasable = plans.filter((plan) => plan.stripeId !== '')
+  const purchasable = plans.filter((plan) => plan.name !== 'Free')
   const isPaid = currentPlan !== 'Free'
 
   const handleChange = () => router.push('/setting/payment/change')
 
-  const handlePurchase = async (stripeId: string) => {
-    setLoadingId(stripeId)
-    const ret = await postPaymentCheckout({ stripeId })
+  const handlePurchase = async (plan: string) => {
+    setLoadingPlan(plan)
+    const ret = await postPaymentCheckout({ plan })
     if (ret.isErr()) {
-      setLoadingId('')
+      setLoadingPlan('')
       handleToast(ret.error.message ?? FetchError.Post, true)
       return
     }
@@ -45,7 +45,7 @@ export default function Payment(props: Props): React.JSX.Element {
 
         <div className={style.plans}>
           {purchasable.map((plan) => (
-            <PlanCard key={plan.name} plan={plan} active={currentPlan === plan.name} purchaseDisabled={isPaid} loading={loadingId === plan.stripeId} onPurchase={handlePurchase} />
+            <PlanCard key={plan.name} plan={plan} active={currentPlan === plan.name} purchaseDisabled={isPaid} loading={loadingPlan === plan.name} onPurchase={handlePurchase} />
           ))}
         </div>
 
