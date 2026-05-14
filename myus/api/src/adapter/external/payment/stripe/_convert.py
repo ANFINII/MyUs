@@ -1,5 +1,15 @@
-from typing import Any, assert_never
+from typing import assert_never
 from django.conf import settings
+from stripe.params.checkout import (
+    SessionCreateParams,
+    SessionCreateParamsLineItem,
+    SessionCreateParamsLineItemPriceData,
+    SessionCreateParamsLineItemPriceDataProductData,
+    SessionCreateParamsPaymentIntentData,
+    SessionCreateParamsPaymentIntentDataTransferData,
+    SessionCreateParamsSubscriptionData,
+    SessionCreateParamsSubscriptionDataTransferData,
+)
 from api.src.domain.interface.payment.data import CheckoutData, CheckoutFailed, Money
 from api.utils.enum.i18n import Locale
 from api.utils.enum.payment import CheckoutError, PaymentType
@@ -46,59 +56,58 @@ def fee_percent(fee: Money, price: Money) -> int:
     return int(fee.amount * 100 / price.amount)
 
 
-def convert_line_items(input: CheckoutData) -> list[dict[str, Any]] | CheckoutFailed:
+def convert_line_items(input: CheckoutData) -> list[SessionCreateParamsLineItem] | CheckoutFailed:
     match input.payment_type:
         case PaymentType.SUBSCRIPTION:
             price_id = stripe_price_id(input.product_code)
             if len(price_id) == 0:
                 return CheckoutFailed(error=CheckoutError.UNKNOWN_PRODUCT, message=f"price_id not configured for product_code={input.product_code}")
-            return [{"price": price_id, "quantity": 1}]
+            return [SessionCreateParamsLineItem(price=price_id, quantity=1)]
         case PaymentType.ONE_TIME:
             if input.price.amount <= 0:
                 return CheckoutFailed(error=CheckoutError.INVALID_AMOUNT, message=f"invalid amount={input.price.amount}")
-            return [{
-                "price_data": {
-                    "currency": input.price.currency.value.lower(),
-                    "unit_amount": input.price.amount,
-                    "product_data": {"name": input.description},
-                },
-                "quantity": 1,
-            }]
+            price_data = SessionCreateParamsLineItemPriceData(
+                currency=input.price.currency.value.lower(),
+                unit_amount=input.price.amount,
+                product_data=SessionCreateParamsLineItemPriceDataProductData(name=input.description),
+            )
+            return [SessionCreateParamsLineItem(price_data=price_data, quantity=1)]
         case _:
             assert_never(input.payment_type)
 
 
-def convert_marketplace_params(input: CheckoutData) -> dict[str, Any]:
+def convert_marketplace_params(input: CheckoutData) -> SessionCreateParams:
     if len(input.marketplace.seller_id) == 0:
-        return {}
-    transfer_data = {"destination": input.marketplace.seller_id}
+        return SessionCreateParams()
     match input.payment_type:
         case PaymentType.SUBSCRIPTION:
-            sub_data: dict[str, Any] = {"transfer_data": transfer_data}
+            sub_transfer = SessionCreateParamsSubscriptionDataTransferData(destination=input.marketplace.seller_id)
+            sub_data = SessionCreateParamsSubscriptionData(transfer_data=sub_transfer)
             pct = fee_percent(input.marketplace.application_fee, input.price)
             if pct > 0:
                 sub_data["application_fee_percent"] = pct
-            return {"subscription_data": sub_data}
+            return SessionCreateParams(subscription_data=sub_data)
         case PaymentType.ONE_TIME:
-            pi_data: dict[str, Any] = {"transfer_data": transfer_data}
+            pi_transfer = SessionCreateParamsPaymentIntentDataTransferData(destination=input.marketplace.seller_id)
+            pi_data = SessionCreateParamsPaymentIntentData(transfer_data=pi_transfer)
             if input.marketplace.application_fee.amount > 0:
                 pi_data["application_fee_amount"] = input.marketplace.application_fee.amount
-            return {"payment_intent_data": pi_data}
+            return SessionCreateParams(payment_intent_data=pi_data)
         case _:
             assert_never(input.payment_type)
 
 
-def convert_stripe_params(input: CheckoutData) -> dict[str, Any] | CheckoutFailed:
+def convert_stripe_params(input: CheckoutData) -> SessionCreateParams | CheckoutFailed:
     line_items = convert_line_items(input)
     if isinstance(line_items, CheckoutFailed):
         return line_items
 
-    return {
-        "mode": stripe_mode(input.payment_type),
-        "line_items": line_items,
-        "success_url": input.redirect.success_url,
-        "cancel_url": input.redirect.cancel_url,
-        "customer_email": input.customer.email,
-        "locale": stripe_locale(input.locale),
+    return SessionCreateParams(
+        mode=stripe_mode(input.payment_type),
+        line_items=line_items,
+        success_url=input.redirect.success_url,
+        cancel_url=input.redirect.cancel_url,
+        customer_email=input.customer.email,
+        locale=stripe_locale(input.locale),
         **convert_marketplace_params(input),
-    }
+    )
