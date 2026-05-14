@@ -45,6 +45,10 @@ class Environment:
     # Stripe
     stripe_secret_key: str
     stripe_public_key: str
+    stripe_price_id_basic: str
+    stripe_price_id_standard: str
+    stripe_price_id_premium: str
+    stripe_price_id_ultimate: str
 
 
 def load_env(env_path: Path) -> None:

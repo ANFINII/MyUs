@@ -13,6 +13,7 @@ from api.src.injectors.index import (
     FollowModule,
     SubscribeModule,
     NgWordModule,
+    PaymentModule,
 )
 
 
@@ -30,6 +31,7 @@ modules: list[Module] = [
     FollowModule(),
     SubscribeModule(),
     NgWordModule(),
+    PaymentModule(),
 ]
 
 injector = Injector(modules)
