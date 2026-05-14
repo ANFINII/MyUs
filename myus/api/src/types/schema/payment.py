@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class PaymentCheckoutIn(BaseModel):
-    stripe_id: str
+    plan: str
 
 
 class PaymentCheckoutOut(BaseModel):

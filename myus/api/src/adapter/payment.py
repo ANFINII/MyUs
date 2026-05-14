@@ -1,12 +1,17 @@
-import stripe
 from django.conf import settings
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
+from api.src.domain.interface.payment.data import CheckoutCreated, CheckoutData, CheckoutFailed, CustomerData, MarketplaceData, Money, RedirectUrls
+from api.src.domain.interface.payment.interface import PaymentInterface
+from api.src.injectors.container import injector
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.payment import PaymentCheckoutIn, PaymentCheckoutOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.user import get_user_data
+from api.utils.enum.i18n import Currency, Locale
+from api.utils.enum.payment import PaymentType
+from api.utils.plan import get_plan
 
 
 class PaymentAPI:
@@ -17,7 +22,7 @@ class PaymentAPI:
     @staticmethod
     @router.post("/checkout", response={200: PaymentCheckoutOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def checkout(request: HttpRequest, input: PaymentCheckoutIn):
-        log.info("PaymentAPI checkout", stripe_id=input.stripe_id)
+        log.info("PaymentAPI checkout", plan=input.plan)
 
         user_id = auth_check(request)
         if user_id is None:
@@ -27,21 +32,30 @@ class PaymentAPI:
         if user_data is None:
             return 404, ErrorOut(message="Not Found")
 
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        try:
-            session = stripe.checkout.Session.create(
-                mode="subscription",
-                line_items=[{"price": input.stripe_id, "quantity": 1}],
+        plan = get_plan(input.plan)
+        if plan is None:
+            log.warning("PaymentAPI unknown plan", plan=input.plan)
+            return 404, ErrorOut(message="Not Found")
+
+        data = CheckoutData(
+            product_code=plan.name,
+            description=plan.description,
+            price=Money(amount=plan.price, currency=Currency.JPY),
+            payment_type=PaymentType.SUBSCRIPTION,
+            customer=CustomerData(email=user_data.user.email),
+            redirect=RedirectUrls(
                 success_url=f"{settings.FRONTEND_URL}/setting/payment/success",
                 cancel_url=f"{settings.FRONTEND_URL}/setting/payment",
-                customer_email=user_data.user.email,
-            )
-        except stripe.StripeError as e:
-            log.error("Stripe checkout error", exc=e)
-            return 500, ErrorOut(message="決済セッションの作成に失敗しました!")
+            ),
+            marketplace=MarketplaceData(seller_id="", application_fee=Money(amount=0, currency=Currency.JPY)),
+            locale=Locale.JA,
+        )
 
-        if session.url is None:
-            log.error("Stripe checkout url is None")
-            return 500, ErrorOut(message="決済セッションの作成に失敗しました!")
-
-        return 200, PaymentCheckoutOut(url=session.url)
+        payment = injector.get(PaymentInterface)
+        result = payment.create_checkout(data)
+        match result:
+            case CheckoutCreated(session=session):
+                return 200, PaymentCheckoutOut(url=session.redirect_url)
+            case CheckoutFailed(error=error, message=message):
+                log.error("Payment checkout failed", error=error.value, message=message)
+                return 500, ErrorOut(message="決済セッションの作成に失敗しました!")
