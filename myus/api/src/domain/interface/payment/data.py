@@ -10,6 +10,12 @@ class Money:
 
 
 @dataclass(frozen=True, slots=True)
+class MarketplaceData:
+    seller_id: str
+    application_fee: Money
+
+
+@dataclass(frozen=True, slots=True)
 class CustomerData:
     email: str
 
@@ -21,18 +27,12 @@ class RedirectUrls:
 
 
 @dataclass(frozen=True, slots=True)
-class MarketplaceData:
-    seller_id: str
-    application_fee: Money
-
-
-@dataclass(frozen=True, slots=True)
 class CheckoutData:
-    payment_type: PaymentType
-    price: Money
-    customer: CustomerData
+    product_code: str
     description: str
-    product_ref: str
+    price: Money
+    payment_type: PaymentType
+    customer: CustomerData
     redirect: RedirectUrls
     marketplace: MarketplaceData
     locale: Locale
