@@ -6,7 +6,6 @@ export interface Plan {
   name: string
   price: number
   features: string[]
-  stripeId: string
 }
 
 interface Props {
@@ -18,15 +17,15 @@ interface Props {
   purchaseDisabled?: boolean
   loading?: boolean
   onClick?: () => void
-  onPurchase?: (stripeId: string) => void
+  onPurchase?: (plan: string) => void
 }
 
 export default function PlanCard(props: Props): React.JSX.Element {
   const { plan, active, onClick, onPurchase, current = false, showPurchase = true, disabled = false, purchaseDisabled = false, loading = false } = props
-  const { name, price, features, stripeId } = plan
+  const { name, price, features } = plan
 
   const handleClick = disabled ? undefined : onClick
-  const handlePurchase = () => onPurchase?.(stripeId)
+  const handlePurchase = () => onPurchase?.(name)
 
   return (
     <div className={cx(style.plan, active && style.active, handleClick && style.clickable, disabled && style.disabled)} onClick={handleClick}>
@@ -45,7 +44,7 @@ export default function PlanCard(props: Props): React.JSX.Element {
           </li>
         ))}
       </ul>
-      {showPurchase && stripeId && <Button color="purple" size="l" name="購入する" disabled={purchaseDisabled} loading={loading} onClick={handlePurchase} />}
+      {showPurchase && name !== 'Free' && <Button color="purple" size="l" name="購入する" disabled={purchaseDisabled} loading={loading} onClick={handlePurchase} />}
     </div>
   )
 }

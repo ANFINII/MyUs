@@ -1,5 +1,5 @@
 export interface PaymentCheckoutIn {
-  stripeId: string
+  plan: string
 }
 
 export interface PaymentCheckoutOut {
