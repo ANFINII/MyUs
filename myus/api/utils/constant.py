@@ -2,6 +2,14 @@ from api.db.models.comment import Comment
 from api.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from api.db.models.message import Message
 from api.db.models.users import Follow
+from api.utils.enum.i18n import Currency
+from api.utils.enum.payment import PaymentProvider, SubscriptionStatus, PaymentStatus
+
+
+CURRENCY_CHOICES = [(c, c) for c in Currency]
+PROVIDER_CHOICES = [(p, p) for p in PaymentProvider]
+SUBSCRIPTION_STATUS_CHOICES = [(s, s) for s in SubscriptionStatus]
+PAYMENT_STATUS_CHOICES = [(s, s) for s in PaymentStatus]
 
 
 type MediaModel = Video | Music | Blog | Comic | Picture | Chat

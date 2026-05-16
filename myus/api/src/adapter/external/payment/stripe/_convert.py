@@ -79,6 +79,7 @@ def convert_line_items(input: CheckoutData) -> list[SessionCreateParamsLineItem]
 def convert_marketplace_params(input: CheckoutData) -> SessionCreateParams:
     if len(input.marketplace.seller_id) == 0:
         return SessionCreateParams()
+
     match input.payment_type:
         case PaymentType.SUBSCRIPTION:
             sub_transfer = SessionCreateParamsSubscriptionDataTransferData(destination=input.marketplace.seller_id)

@@ -15,3 +15,20 @@ class CheckoutError(str, Enum):
     INVALID_AMOUNT = "InvalidAmount"
     PROVIDER_REJECTED = "ProviderRejected"
     NETWORK_ERROR = "NetworkError"
+
+
+class SubscriptionStatus(str, Enum):
+    ACTIVE = "Active"
+    PAST_DUE = "PastDue"
+    CANCELED = "Canceled"
+    EXPIRED = "Expired"
+    INCOMPLETE = "Incomplete"
+
+
+class PaymentStatus(str, Enum):
+    PENDING = "Pending"
+    AUTHORIZED = "Authorized"
+    CAPTURED = "Captured"
+    FAILED = "Failed"
+    REFUNDED = "Refunded"
+    CANCELED = "Canceled"
