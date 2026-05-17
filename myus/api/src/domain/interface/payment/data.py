@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from api.utils.enum.i18n import Currency, Locale
-from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus
+from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookEventType, WebhookVerifyError
 
 
 @dataclass(frozen=True, slots=True)
@@ -85,3 +85,26 @@ class PaymentTransactionData:
     price: Money
     status: PaymentStatus
     paid_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class WebhookEventData:
+    provider: PaymentProvider
+    event_id: str
+    event_type: WebhookEventType
+    related_external_id: str
+    occurred_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class WebhookVerified:
+    event: WebhookEventData
+
+
+@dataclass(frozen=True, slots=True)
+class WebhookVerifyFailed:
+    error: WebhookVerifyError
+    message: str
+
+
+type WebhookVerifyResult = WebhookVerified | WebhookVerifyFailed
