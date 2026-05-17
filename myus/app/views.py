@@ -22,7 +22,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.html import urlize as urlize_impl
 from django.views.generic import CreateView, DetailView, ListView, TemplateView, UpdateView, View
 from api.db.models import Advertise, Blog, Chat, Comic, ComicPage, Comment, Follow, Music, MyPage, Notification, Picture, Profile, SearchTag, UserNotification, Video
-from api.utils.constant import model_comment_dict, model_like_dict
+from api.utils.constants.media import model_comment_dict, model_like_dict
 from api.utils.enum.notification import NotificationObjectType, NotificationType, NotificationTypeNo
 from api.utils.functions.convert.convert_hls import convert_exe
 from api.utils.functions.user import email_user

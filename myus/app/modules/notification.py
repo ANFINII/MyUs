@@ -1,6 +1,6 @@
 from django.db.models import Exists, OuterRef
 from api.db.models import Follow, Notification, UserNotification
-from api.utils.constant import notification_type_no
+from api.utils.constants.notification import notification_type_no
 from api.utils.functions.index import set_attr
 
 

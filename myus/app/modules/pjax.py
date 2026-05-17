@@ -4,7 +4,7 @@ from django.db.models import Count, F
 from django.template.loader import render_to_string
 from api.db.models import Advertise, Follow, MyPage, UserNotification
 from api.utils.plan import PLANS
-from api.utils.constant import model_create_pjax, model_dict, model_pjax
+from api.utils.constants.media import model_create_pjax, model_dict, model_pjax
 from app.modules.search import SearchData
 
 

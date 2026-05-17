@@ -5,7 +5,7 @@ from operator import and_
 from django.contrib.auth import get_user_model
 from django.db.models import Count, F, Q
 from api.db.models import Music, Video
-from api.utils.constant import model_list
+from api.utils.constants.media import model_list
 from api.utils.filter_data import DeferData
 
 

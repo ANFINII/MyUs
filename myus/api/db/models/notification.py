@@ -1,9 +1,7 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django_ulid.models import ulid
 from api.db.models.user import User
-from api.utils.constant import notification_type_model
+from api.utils.constants.notification import notification_type_model
 
 
 class Notification(models.Model):
