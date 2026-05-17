@@ -1,6 +1,7 @@
 from django.db import models
 from django_ulid.models import ulid
 from api.db.models.user import User
+from api.utils.constants.choice import ADVERTISE_TYPE_CHOICES
 from api.utils.functions.file import advertise_image_upload, advertise_video_upload
 
 
@@ -24,7 +25,6 @@ class AccessLog(models.Model):
 
 class Advertise(models.Model):
     """Advertise"""
-    choice  = (("all", "全体"), ("one", "個別"))
     id      = models.BigAutoField(primary_key=True)
     ulid    = models.CharField(max_length=26, unique=True, editable=False, default=ulid.new)
     author  = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -34,7 +34,7 @@ class Advertise(models.Model):
     image   = models.ImageField(upload_to=advertise_image_upload, max_length=255, blank=True)
     video   = models.FileField(upload_to=advertise_video_upload, max_length=255, blank=True)
     read    = models.IntegerField(default=0)
-    type    = models.CharField(choices=choice, max_length=3, default="one")
+    type    = models.CharField(choices=ADVERTISE_TYPE_CHOICES, max_length=3, default="one")
     period  = models.DateField(blank=True, null=True)
     publish = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)

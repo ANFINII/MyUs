@@ -3,7 +3,8 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
 from django_ulid.models import ulid
-from api.utils.enum.user import GenderType, PlanAction, PlanName
+from api.utils.constants.choice import GENDER_CHOICES, PLAN_CHOICES, PLAN_ACTION_CHOICES
+from api.utils.enum.user import PlanName
 from api.utils.functions.file import avatar_upload
 
 
@@ -66,14 +67,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Profile(models.Model):
     """Profile"""
     id           = models.BigAutoField(primary_key=True)
-    gender_type  = ((GenderType.MALE, "男性"), (GenderType.FEMALE, "女性"), (GenderType.SECRET, "秘密"))
     message      = "電話番号は090-1234-5678の形式で入力する必要があります。最大15桁まで入力できます"
     phone_no     = RegexValidator(regex=r"\d{2,4}-?\d{2,4}-?\d{3,4}", message=message)
     user         = models.OneToOneField(User, on_delete=models.CASCADE)
     last_name    = models.CharField(max_length=50)
     first_name   = models.CharField(max_length=50)
     birthday     = models.DateField()
-    gender       = models.CharField(choices=gender_type, max_length=6)
+    gender       = models.CharField(choices=GENDER_CHOICES, max_length=6)
     phone        = models.CharField(validators=[phone_no], max_length=15, blank=True)
     country_code = models.CharField(max_length=255, default="JP")
     postal_code  = models.CharField(max_length=255, blank=True)
@@ -127,10 +127,9 @@ class UserNotification(models.Model):
 
 class UserPlan(models.Model):
     """UserPlan"""
-    plans        = [(p, p) for p in PlanName]
     id           = models.BigAutoField(primary_key=True)
     user         = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_plan")
-    plan         = models.CharField(max_length=30, choices=plans, default=PlanName.FREE)
+    plan         = models.CharField(max_length=30, choices=PLAN_CHOICES, default=PlanName.FREE)
     customer_id  = models.CharField(max_length=255)
     subscription = models.CharField(max_length=255)
     is_paid      = models.BooleanField(default=False)
@@ -147,13 +146,11 @@ class UserPlan(models.Model):
 
 class UserPlanHistory(models.Model):
     """UserPlanHistory"""
-    plans        = [(p, p) for p in PlanName]
-    actions      = [(a, a) for a in PlanAction]
     id           = models.BigAutoField(primary_key=True)
     user         = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_plan_histories")
-    plan         = models.CharField(max_length=30, choices=plans)
+    plan         = models.CharField(max_length=30, choices=PLAN_CHOICES)
     price        = models.IntegerField()
-    action       = models.CharField(max_length=20, choices=actions)
+    action       = models.CharField(max_length=20, choices=PLAN_ACTION_CHOICES)
     subscription = models.CharField(max_length=255, blank=True)
     created      = models.DateTimeField(auto_now_add=True)
 

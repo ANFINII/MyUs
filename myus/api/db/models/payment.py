@@ -1,7 +1,7 @@
 import datetime
 from django.db import models
 from api.db.models.user import User
-from api.utils.constant import CURRENCY_CHOICES, PROVIDER_CHOICES, SUBSCRIPTION_STATUS_CHOICES, PAYMENT_STATUS_CHOICES
+from api.utils.constants.choice import CURRENCY_CHOICES, PROVIDER_CHOICES, PAYMENT_STATUS_CHOICES, SUBSCRIPTION_STATUS_CHOICES
 from api.utils.enum.i18n import Currency
 from api.utils.enum.payment import SubscriptionStatus, PaymentStatus
 

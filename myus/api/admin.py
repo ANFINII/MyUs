@@ -9,7 +9,7 @@ from api.db.models import Notification, AccessLog, Comment, Message, Follow, Adv
 from api.db.models import User, Profile, MyPage, SearchTag, HashTag, NgWord, UserNotification
 from api.db.models import Video, Music, Blog, Comic, Picture, Chat
 from api.db.models.channel import Channel
-from api.utils.constant import model_media_comment_dict
+from api.utils.constants.media import model_media_comment_dict
 
 
 # Admin用の管理画面
