@@ -2,7 +2,7 @@ import stripe
 from django.conf import settings
 from api.modules.logger import log
 from api.src.adapter.external.payment.stripe._convert import convert_stripe_params
-from api.src.domain.interface.payment.data import CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData
+from api.src.domain.interface.payment.data import CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, WebhookVerifyResult
 from api.src.domain.interface.payment.interface import PaymentInterface
 from api.utils.enum.payment import CheckoutError, PaymentProvider
 
@@ -32,3 +32,6 @@ class StripeProvider(PaymentInterface):
             external_id=session.id,
             redirect_url=session.url,
         ))
+
+    def verify_webhook(self, payload: bytes, signature: str) -> WebhookVerifyResult:
+        raise NotImplementedError

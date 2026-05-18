@@ -32,3 +32,18 @@ class PaymentStatus(str, Enum):
     FAILED = "Failed"
     REFUNDED = "Refunded"
     CANCELED = "Canceled"
+
+
+class WebhookEventType(str, Enum):
+    PAYMENT_SUCCEEDED = "PaymentSucceeded"
+    PAYMENT_FAILED = "PaymentFailed"
+    SUBSCRIPTION_CREATED = "SubscriptionCreated"
+    SUBSCRIPTION_UPDATED = "SubscriptionUpdated"
+    SUBSCRIPTION_CANCELED = "SubscriptionCanceled"
+    REFUND_ISSUED = "RefundIssued"
+
+
+class WebhookVerifyError(str, Enum):
+    INVALID_SIGNATURE = "InvalidSignature"
+    MALFORMED_PAYLOAD = "MalformedPayload"
+    UNSUPPORTED_EVENT = "UnsupportedEvent"
