@@ -1,3 +1,5 @@
+import stripe
+from datetime import datetime, timezone
 from typing import assert_never
 from django.conf import settings
 from stripe.params.checkout import (
@@ -10,10 +12,26 @@ from stripe.params.checkout import (
     SessionCreateParamsSubscriptionData,
     SessionCreateParamsSubscriptionDataTransferData,
 )
-from api.src.domain.interface.payment.data import CheckoutData, CheckoutFailed, Money
+from api.src.adapter.external.payment.stripe._type import stripe_event_type
+from api.src.domain.interface.payment.data import CheckoutData, CheckoutFailed, Money, WebhookEventData, WebhookVerifyFailed
 from api.utils.enum.i18n import Locale
-from api.utils.enum.payment import CheckoutError, PaymentType
+from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, WebhookVerifyError
 from api.utils.enum.user import PlanName
+
+
+def convert_stripe_event(event: stripe.Event) -> WebhookEventData | WebhookVerifyFailed:
+    event_type = stripe_event_type(event.type)
+    if event_type is None:
+        return WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=f"unsupported event_type={event.type}")
+
+    related_external_id: str = getattr(event.data.object, "id", "")
+    return WebhookEventData(
+        provider=PaymentProvider.STRIPE,
+        event_id=event.id,
+        event_type=event_type,
+        related_external_id=related_external_id,
+        occurred_at=datetime.fromtimestamp(event.created, tz=timezone.utc),
+    )
 
 
 def stripe_price_id(product_code: str) -> str:
