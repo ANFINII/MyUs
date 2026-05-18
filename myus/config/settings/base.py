@@ -184,6 +184,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240  # フォームフィールドの最大数
 # Stripe API keys
 STRIPE_SECRET_KEY = env.stripe_secret_key
 STRIPE_PUBLIC_KEY = env.stripe_public_key
+STRIPE_WEBHOOK_SECRET = env.stripe_webhook_secret
 STRIPE_PRICE_ID_BASIC = env.stripe_price_id_basic
 STRIPE_PRICE_ID_STANDARD = env.stripe_price_id_standard
 STRIPE_PRICE_ID_PREMIUM = env.stripe_price_id_premium

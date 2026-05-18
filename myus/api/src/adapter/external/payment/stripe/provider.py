@@ -1,10 +1,10 @@
 import stripe
 from django.conf import settings
 from api.modules.logger import log
-from api.src.adapter.external.payment.stripe._convert import convert_stripe_params
-from api.src.domain.interface.payment.data import CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, WebhookVerifyResult
+from api.src.adapter.external.payment.stripe._convert import convert_stripe_event, convert_stripe_params
+from api.src.domain.interface.payment.data import CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
 from api.src.domain.interface.payment.interface import PaymentInterface
-from api.utils.enum.payment import CheckoutError, PaymentProvider
+from api.utils.enum.payment import CheckoutError, PaymentProvider, WebhookVerifyError
 
 
 class StripeProvider(PaymentInterface):
@@ -34,4 +34,16 @@ class StripeProvider(PaymentInterface):
         ))
 
     def verify_webhook(self, payload: bytes, signature: str) -> WebhookVerifyResult:
-        raise NotImplementedError
+        try:
+            event = stripe.Webhook.construct_event(payload, signature, settings.STRIPE_WEBHOOK_SECRET)  # type: ignore[no-untyped-call]
+        except stripe.SignatureVerificationError as e:
+            log.warning("Stripe webhook signature invalid", exc=e)
+            return WebhookVerifyFailed(error=WebhookVerifyError.INVALID_SIGNATURE, message=str(e))
+        except ValueError as e:
+            log.warning("Stripe webhook payload malformed", exc=e)
+            return WebhookVerifyFailed(error=WebhookVerifyError.MALFORMED_PAYLOAD, message=str(e))
+
+        event_data = convert_stripe_event(event)
+        if isinstance(event_data, WebhookVerifyFailed):
+            return event_data
+        return WebhookVerified(event=event_data)
