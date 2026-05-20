@@ -28,3 +28,7 @@ class WebhookEventInterface(ABC):
     @abstractmethod
     def bulk_get(self, ids: list[int]) -> list[WebhookEventData]:
         ...
+
+    @abstractmethod
+    def bulk_save(self, objs: list[WebhookEventData]) -> list[int]:
+        ...

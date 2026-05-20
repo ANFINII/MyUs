@@ -1,5 +1,6 @@
 from injector import Module, provider
 from api.src.adapter.external.payment.stripe.provider import StripeProvider
+from api.src.domain.entity.payment.webhook_event.repository import WebhookEventRepository
 from api.src.domain.entity.user.repository import UserRepository
 from api.src.domain.entity.category.repository import CategoryRepository
 from api.src.domain.entity.channel.repository import ChannelRepository
@@ -37,6 +38,7 @@ from api.src.domain.interface.ng_word.interface import NgWordInterface
 from api.src.domain.interface.search_tag.interface import SearchTagInterface
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.domain.interface.payment.interface import PaymentInterface
+from api.src.domain.interface.payment.webhook_event import WebhookEventInterface
 
 
 class UserModule(Module):
@@ -141,3 +143,7 @@ class PaymentModule(Module):
     @provider
     def provide_payment_provider(self) -> PaymentInterface:
         return StripeProvider()
+
+    @provider
+    def provide_webhook_event_repository(self) -> WebhookEventInterface:
+        return WebhookEventRepository()
