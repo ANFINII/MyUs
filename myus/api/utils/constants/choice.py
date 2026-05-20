@@ -1,5 +1,5 @@
 from api.utils.enum.i18n import Currency
-from api.utils.enum.payment import PaymentProvider, SubscriptionStatus, PaymentStatus
+from api.utils.enum.payment import PaymentProvider, SubscriptionStatus, PaymentStatus, WebhookEventType
 from api.utils.enum.user import GenderType, PlanName, PlanAction
 
 
@@ -12,3 +12,4 @@ CURRENCY_CHOICES = [(c, c) for c in Currency]
 PROVIDER_CHOICES = [(p, p) for p in PaymentProvider]
 PAYMENT_STATUS_CHOICES = [(s, s) for s in PaymentStatus]
 SUBSCRIPTION_STATUS_CHOICES = [(s, s) for s in SubscriptionStatus]
+WEBHOOK_EVENT_TYPE_CHOICES = [(t, t) for t in WebhookEventType]

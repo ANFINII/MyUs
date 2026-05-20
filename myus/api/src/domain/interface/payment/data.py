@@ -89,10 +89,11 @@ class PaymentTransactionData:
 
 @dataclass(frozen=True, slots=True)
 class WebhookEventData:
+    id: int
     provider: PaymentProvider
     event_id: str
     event_type: WebhookEventType
-    related_external_id: str
+    external_id: str
     occurred_at: datetime
 
 
