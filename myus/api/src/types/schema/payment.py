@@ -7,3 +7,7 @@ class PaymentCheckoutIn(BaseModel):
 
 class PaymentCheckoutOut(BaseModel):
     url: str
+
+
+class PaymentWebhookOut(BaseModel):
+    message: str
