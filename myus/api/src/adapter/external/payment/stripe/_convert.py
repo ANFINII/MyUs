@@ -24,12 +24,13 @@ def convert_stripe_event(event: stripe.Event) -> WebhookEventData | WebhookVerif
     if event_type is None:
         return WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=f"unsupported event_type={event.type}")
 
-    related_external_id: str = getattr(event.data.object, "id", "")
+    external_id: str = getattr(event.data.object, "id", "")
     return WebhookEventData(
+        id=0,
         provider=PaymentProvider.STRIPE,
         event_id=event.id,
         event_type=event_type,
-        related_external_id=related_external_id,
+        external_id=external_id,
         occurred_at=datetime.fromtimestamp(event.created, tz=timezone.utc),
     )
 
