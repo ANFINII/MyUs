@@ -30,8 +30,8 @@ class Subscription(models.Model):
         db_table = "subscription"
         verbose_name_plural = "001 Subscription"
         indexes = [
-            models.Index(fields=["customer", "status"], name="subscription_customer_status_idx"),
-            models.Index(fields=["provider", "external_id"], name="subscription_external_idx"),
+            models.Index(fields=["customer", "status"], name="customer_status_idx"),
+            models.Index(fields=["provider", "external_id"], name="provider_external_idx"),
         ]
 
 
@@ -54,8 +54,8 @@ class PaymentTransaction(models.Model):
         db_table = "payment_transaction"
         verbose_name_plural = "001 PaymentTransaction"
         indexes = [
-            models.Index(fields=["customer", "-paid_at"], name="payment_tx_customer_paid_idx"),
-            models.Index(fields=["provider", "external_id"], name="payment_tx_external_idx"),
+            models.Index(fields=["customer", "-paid_at"], name="customer_paid_idx"),
+            models.Index(fields=["provider", "external_id"], name="pt_external_idx"),
         ]
 
 
