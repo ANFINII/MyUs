@@ -67,7 +67,6 @@ class WebhookEvent(models.Model):
     event_type  = models.CharField(max_length=30, choices=WEBHOOK_EVENT_TYPE_CHOICES)
     external_id = models.CharField(max_length=255)
     occurred_at = models.DateTimeField(default=DATETIME_MIN)
-    created     = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.provider}:{self.event_id}:{self.event_type}"
