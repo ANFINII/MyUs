@@ -2,8 +2,9 @@ from django.conf import settings
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
-from api.src.domain.interface.payment.data import CheckoutCreated, CheckoutData, CheckoutFailed, CustomerData, MarketplaceData, Money, RedirectUrls, WebhookVerified, WebhookVerifyFailed
-from api.src.domain.interface.payment.interface import PaymentInterface
+from api.src.domain.interface.payment.data import Money
+from api.src.domain.interface.payment.provider.data import CheckoutCreated, CheckoutData, CheckoutFailed, CustomerData, MarketplaceData, RedirectUrls, WebhookVerified, WebhookVerifyFailed
+from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.webhook_event.interface import FilterOption, SortOption, WebhookEventInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.common import ErrorOut

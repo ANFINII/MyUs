@@ -13,7 +13,8 @@ from stripe.params.checkout import (
     SessionCreateParamsSubscriptionDataTransferData,
 )
 from api.src.adapter.external.payment.stripe._type import stripe_event_type
-from api.src.domain.interface.payment.data import CheckoutData, CheckoutFailed, Money, WebhookVerifyFailed
+from api.src.domain.interface.payment.data import Money
+from api.src.domain.interface.payment.provider.data import CheckoutData, CheckoutFailed, WebhookVerifyFailed
 from api.src.domain.interface.payment.webhook_event.data import WebhookEventData
 from api.utils.enum.i18n import Locale
 from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, WebhookVerifyError

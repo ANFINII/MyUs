@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from api.src.domain.interface.payment.data import CheckoutData, CheckoutResult, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CheckoutData, CheckoutResult, WebhookVerifyResult
 
 
 class PaymentInterface(ABC):
