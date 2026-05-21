@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from api.src.domain.interface.payment.data import WebhookEventData
+from api.src.domain.interface.payment.webhook_event.data import WebhookEventData
 
 
 class SortType(Enum):

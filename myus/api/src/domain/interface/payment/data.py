@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
+from api.src.domain.interface.payment.webhook_event.data import WebhookEventData
 from api.utils.enum.i18n import Currency, Locale
-from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookEventType, WebhookVerifyError
+from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookVerifyError
 
 
 @dataclass(frozen=True, slots=True)
@@ -85,16 +86,6 @@ class PaymentTransactionData:
     price: Money
     status: PaymentStatus
     paid_at: datetime
-
-
-@dataclass(frozen=True, slots=True)
-class WebhookEventData:
-    id: int
-    provider: PaymentProvider
-    event_id: str
-    event_type: WebhookEventType
-    external_id: str
-    occurred_at: datetime
 
 
 @dataclass(frozen=True, slots=True)
