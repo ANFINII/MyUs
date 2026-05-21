@@ -1,10 +1,11 @@
 import stripe
+from datetime import datetime, timezone
 from django.conf import settings
 from api.modules.logger import log
 from api.src.adapter.external.payment.stripe._convert import convert_stripe_event, convert_stripe_params
-from api.src.domain.interface.payment.provider.data import CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.data import CancelFailed, CancelResult, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
-from api.utils.enum.payment import CheckoutError, PaymentProvider, WebhookVerifyError
+from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, WebhookVerifyError
 
 
 class StripeProvider(PaymentInterface):
@@ -47,3 +48,23 @@ class StripeProvider(PaymentInterface):
         if isinstance(event_data, WebhookVerifyFailed):
             return event_data
         return WebhookVerified(event=event_data)
+
+    def cancel_subscription(self, external_id: str) -> CancelResult:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        try:
+            subscription = stripe.Subscription.modify(external_id, cancel_at_period_end=True)
+        except stripe.InvalidRequestError as e:
+            log.warning("Stripe subscription not found for cancel", external_id=external_id, exc=e)
+            return CancelFailed(error=CancelError.NOT_FOUND, message=str(e))
+        except stripe.APIConnectionError as e:
+            log.error("Stripe network error on cancel", exc=e)
+            return CancelFailed(error=CancelError.NETWORK_ERROR, message=str(e))
+        except stripe.StripeError as e:
+            log.error("Stripe cancel error", exc=e)
+            return CancelFailed(error=CancelError.PROVIDER_REJECTED, message=str(e))
+
+        period_end_ts: int = getattr(subscription, "current_period_end", 0)
+        return CancelSuccess(
+            canceled_at=datetime.now(timezone.utc),
+            period_end=datetime.fromtimestamp(period_end_ts, tz=timezone.utc),
+        )

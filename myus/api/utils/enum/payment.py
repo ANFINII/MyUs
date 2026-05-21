@@ -17,6 +17,12 @@ class CheckoutError(str, Enum):
     NETWORK_ERROR = "NetworkError"
 
 
+class CancelError(str, Enum):
+    NOT_FOUND = "NotFound"
+    PROVIDER_REJECTED = "ProviderRejected"
+    NETWORK_ERROR = "NetworkError"
+
+
 class SubscriptionStatus(str, Enum):
     ACTIVE = "Active"
     PAST_DUE = "PastDue"

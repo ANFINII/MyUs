@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from datetime import datetime
 from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.webhook_event.data import WebhookEventData
 from api.utils.enum.i18n import Locale
-from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, WebhookVerifyError
+from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PaymentType, WebhookVerifyError
 
 
 @dataclass(frozen=True, slots=True)
@@ -67,3 +68,18 @@ class WebhookVerifyFailed:
 
 
 type WebhookVerifyResult = WebhookVerified | WebhookVerifyFailed
+
+
+@dataclass(frozen=True, slots=True)
+class CancelSuccess:
+    canceled_at: datetime
+    period_end: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class CancelFailed:
+    error: CancelError
+    message: str
+
+
+type CancelResult = CancelSuccess | CancelFailed

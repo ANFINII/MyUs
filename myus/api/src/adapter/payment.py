@@ -1,19 +1,21 @@
+from dataclasses import replace
 from django.conf import settings
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
 from api.src.domain.interface.payment.data import Money
-from api.src.domain.interface.payment.provider.data import CheckoutCreated, CheckoutData, CheckoutFailed, CustomerData, MarketplaceData, RedirectUrls, WebhookVerified, WebhookVerifyFailed
+from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CustomerData, MarketplaceData, RedirectUrls, WebhookVerified, WebhookVerifyFailed
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
+from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.webhook_event.interface import FilterOption, SortOption, WebhookEventInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.common import ErrorOut
-from api.src.types.schema.payment import PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
+from api.src.types.schema.payment import PaymentCancelOut, PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.payment import handle_webhook_event
 from api.src.usecase.user import get_user_data
 from api.utils.enum.i18n import Currency, Locale
-from api.utils.enum.payment import PaymentType, WebhookVerifyError
+from api.utils.enum.payment import PaymentProvider, PaymentType, SubscriptionStatus, WebhookVerifyError
 from api.utils.plan import get_plan
 
 
@@ -95,3 +97,36 @@ class PaymentAPI:
                 webhook_event_repo.bulk_save([event])
                 handle_webhook_event(event)
                 return 200, PaymentWebhookOut(message="OK")
+
+    @staticmethod
+    @router.post("/cancel", response={200: PaymentCancelOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
+    def cancel(request: HttpRequest):
+        user_id = auth_check(request)
+        if user_id is None:
+            return 401, ErrorOut(message="Unauthorized")
+
+        sub_repo = injector.get(SubscriptionInterface)
+        ids = sub_repo.get_ids(
+            SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value),
+            SubscriptionSortOption(is_asc=False),
+            limit=1,
+        )
+        if len(ids) == 0:
+            return 404, ErrorOut(message="アクティブなサブスクリプションが見つかりません")
+
+        subs = sub_repo.bulk_get(ids)
+        subscription = subs[0]
+        if subscription.status != SubscriptionStatus.ACTIVE:
+            return 404, ErrorOut(message="アクティブなサブスクリプションが見つかりません")
+
+        payment = injector.get(PaymentInterface)
+        result = payment.cancel_subscription(subscription.external_id)
+        match result:
+            case CancelSuccess(canceled_at=canceled_at, period_end=period_end):
+                updated = replace(subscription, canceled_at=canceled_at, current_period_end=period_end)
+                sub_repo.bulk_save([updated])
+                log.info("PaymentAPI cancel succeeded", user_id=user_id, external_id=subscription.external_id)
+                return 200, PaymentCancelOut(canceled_at=canceled_at, period_end=period_end)
+            case CancelFailed(error=error, message=message):
+                log.error("Payment cancel failed", error=error.value, message=message)
+                return 500, ErrorOut(message="解約処理に失敗しました")

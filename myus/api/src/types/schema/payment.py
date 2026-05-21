@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -11,3 +12,8 @@ class PaymentCheckoutOut(BaseModel):
 
 class PaymentWebhookOut(BaseModel):
     message: str
+
+
+class PaymentCancelOut(BaseModel):
+    canceled_at: datetime
+    period_end: datetime
