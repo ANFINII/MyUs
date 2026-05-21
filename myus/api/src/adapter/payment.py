@@ -10,6 +10,7 @@ from api.src.injectors.container import injector
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.payment import PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
 from api.src.usecase.auth import auth_check
+from api.src.usecase.payment import handle_webhook_event
 from api.src.usecase.user import get_user_data
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentType, WebhookVerifyError
@@ -92,4 +93,5 @@ class PaymentAPI:
                     return 200, PaymentWebhookOut(message="Already processed")
 
                 webhook_event_repo.bulk_save([event])
+                handle_webhook_event(event)
                 return 200, PaymentWebhookOut(message="OK")
