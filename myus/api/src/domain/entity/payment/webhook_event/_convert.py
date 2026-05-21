@@ -1,5 +1,5 @@
 from api.db.models.payment import WebhookEvent
-from api.src.domain.interface.payment.data import WebhookEventData
+from api.src.domain.interface.payment.webhook_event.data import WebhookEventData
 from api.utils.enum.payment import PaymentProvider, WebhookEventType
 
 

@@ -38,7 +38,7 @@ from api.src.domain.interface.ng_word.interface import NgWordInterface
 from api.src.domain.interface.search_tag.interface import SearchTagInterface
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.domain.interface.payment.interface import PaymentInterface
-from api.src.domain.interface.payment.webhook_event import WebhookEventInterface
+from api.src.domain.interface.payment.webhook_event.interface import WebhookEventInterface
 
 
 class UserModule(Module):

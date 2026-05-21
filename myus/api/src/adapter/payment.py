@@ -4,7 +4,7 @@ from ninja import Router
 from api.modules.logger import log
 from api.src.domain.interface.payment.data import CheckoutCreated, CheckoutData, CheckoutFailed, CustomerData, MarketplaceData, Money, RedirectUrls, WebhookVerified, WebhookVerifyFailed
 from api.src.domain.interface.payment.interface import PaymentInterface
-from api.src.domain.interface.payment.webhook_event import FilterOption, SortOption, WebhookEventInterface
+from api.src.domain.interface.payment.webhook_event.interface import FilterOption, SortOption, WebhookEventInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.payment import PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
