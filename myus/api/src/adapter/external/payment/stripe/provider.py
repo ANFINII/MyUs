@@ -2,8 +2,8 @@ import stripe
 from django.conf import settings
 from api.modules.logger import log
 from api.src.adapter.external.payment.stripe._convert import convert_stripe_event, convert_stripe_params
-from api.src.domain.interface.payment.data import CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
-from api.src.domain.interface.payment.interface import PaymentInterface
+from api.src.domain.interface.payment.provider.data import CheckoutCreated, CheckoutData, CheckoutFailed, CheckoutResult, CheckoutSessionData, WebhookVerified, WebhookVerifyFailed, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.utils.enum.payment import CheckoutError, PaymentProvider, WebhookVerifyError
 
 
