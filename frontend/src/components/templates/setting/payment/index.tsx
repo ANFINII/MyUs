@@ -21,8 +21,8 @@ export default function Payment(props: Props): React.JSX.Element {
   const router = useRouter()
   const { toast, handleToast } = useToast()
   const [loadingPlan, setLoadingPlan] = useState<string>('')
-  const [cancelOpen, setCancelOpen] = useState<boolean>(false)
-  const [cancelLoading, setCancelLoading] = useState<boolean>(false)
+  const [isCancelOpen, setIsCancelOpen] = useState<boolean>(false)
+  const [isCancelLoading, setIsCancelLoading] = useState<boolean>(false)
 
   const currentPlan = mypage.plan
   const purchasable = plans.filter((plan) => plan.name !== 'Free')
@@ -41,18 +41,18 @@ export default function Payment(props: Props): React.JSX.Element {
     window.location.href = ret.value.url
   }
 
-  const handleCancelOpen = () => setCancelOpen(true)
-  const handleCancelClose = () => setCancelOpen(false)
+  const handleCancelOpen = () => setIsCancelOpen(true)
+  const handleCancelClose = () => setIsCancelOpen(false)
 
   const handleCancelSubmit = async () => {
-    setCancelLoading(true)
+    setIsCancelLoading(true)
     const ret = await postPaymentCancel()
-    setCancelLoading(false)
+    setIsCancelLoading(false)
     if (ret.isErr()) {
       handleToast(ret.error.message ?? FetchError.Post, true)
       return
     }
-    setCancelOpen(false)
+    setIsCancelOpen(false)
     const periodEnd = new Date(ret.value.periodEnd).toLocaleDateString('ja-JP')
     handleToast(`解約予約完了。${periodEnd} まで利用可能です`, false)
     router.reload()
@@ -78,12 +78,12 @@ export default function Payment(props: Props): React.JSX.Element {
       </div>
 
       <Modal
-        open={cancelOpen}
+        open={isCancelOpen}
         onClose={handleCancelClose}
         title="解約の確認"
         actions={[
-          { name: 'キャンセル', color: 'white', onClick: handleCancelClose, disabled: cancelLoading },
-          { name: '解約する', color: 'red', onClick: handleCancelSubmit, loading: cancelLoading },
+          { name: 'キャンセル', color: 'white', onClick: handleCancelClose, disabled: isCancelLoading },
+          { name: '解約する', color: 'red', onClick: handleCancelSubmit, loading: isCancelLoading },
         ]}
       >
         <p>本当に解約しますか？</p>
