@@ -14,21 +14,20 @@ interface Props {
   current?: boolean
   showPurchase?: boolean
   disabled?: boolean
-  purchaseDisabled?: boolean
   loading?: boolean
   onClick?: () => void
   onPurchase?: (plan: string) => void
 }
 
 export default function PlanCard(props: Props): React.JSX.Element {
-  const { plan, active, onClick, onPurchase, current = false, showPurchase = true, disabled = false, purchaseDisabled = false, loading = false } = props
+  const { plan, active, onClick, onPurchase, current = false, showPurchase = true, disabled = false, loading = false } = props
   const { name, price, features } = plan
 
-  const handleClick = disabled ? undefined : onClick
+  const handleClick = current ? undefined : onClick
   const handlePurchase = () => onPurchase?.(name)
 
   return (
-    <div className={cx(style.plan, active && style.active, handleClick && style.clickable, disabled && style.disabled)} onClick={handleClick}>
+    <div className={cx(style.plan, active && style.active, handleClick && style.clickable, current && style.current)} onClick={handleClick}>
       <div className={style.name}>
         {name}
         {current && <span className={style.current_label}>現在</span>}
@@ -44,7 +43,7 @@ export default function PlanCard(props: Props): React.JSX.Element {
           </li>
         ))}
       </ul>
-      {showPurchase && name !== 'Free' && <Button color="purple" size="l" name="購入する" disabled={purchaseDisabled} loading={loading} onClick={handlePurchase} />}
+      {showPurchase && name !== 'Free' && <Button color="purple" size="l" name="購入する" disabled={disabled} loading={loading} onClick={handlePurchase} />}
     </div>
   )
 }

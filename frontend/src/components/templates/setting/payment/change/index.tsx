@@ -35,7 +35,6 @@ export default function PaymentChange(props: Props): React.JSX.Element {
               active={activeName === plan.name}
               onClick={() => setActiveName(plan.name)}
               current={plan.name === currentPlanName}
-              disabled={plan.name === currentPlanName}
               showPurchase={false}
             />
           ))}
