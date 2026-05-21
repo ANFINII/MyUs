@@ -35,6 +35,7 @@ export const apiSettingNotification = base + '/setting/notification'
 
 // Payment
 export const apiPaymentCheckout = base + '/payment/checkout'
+export const apiPaymentCancel = base + '/payment/cancel'
 
 // Channel
 export const apiChannelCreate = base + '/channel'
