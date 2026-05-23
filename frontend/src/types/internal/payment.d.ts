@@ -5,3 +5,8 @@ export interface PaymentCheckoutIn {
 export interface PaymentCheckoutOut {
   url: string
 }
+
+export interface PaymentCancelOut {
+  canceledAt: string
+  periodEnd: string
+}
