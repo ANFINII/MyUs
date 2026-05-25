@@ -7,7 +7,7 @@ from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CustomerData, MarketplaceData, RedirectUrls, WebhookVerified, WebhookVerifyFailed
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
-from api.src.domain.interface.payment.webhook_event.interface import FilterOption, SortOption, WebhookEventInterface
+from api.src.domain.interface.payment.webhook_inbox.interface import FilterOption, SortOption, WebhookInboxInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.payment import PaymentCancelOut, PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
@@ -84,7 +84,7 @@ class PaymentAPI:
             case WebhookVerified(event=event):
                 log.info("PaymentAPI webhook verified", event_id=event.event_id, event_type=event.event_type.value)
 
-                webhook_event_repo = injector.get(WebhookEventInterface)
+                webhook_event_repo = injector.get(WebhookInboxInterface)
                 existing_ids = webhook_event_repo.get_ids(
                     FilterOption(provider=event.provider.value, event_id=event.event_id),
                     SortOption(),

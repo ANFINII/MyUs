@@ -1,10 +1,10 @@
 from api.db.models.payment import WebhookEvent
-from api.src.domain.interface.payment.webhook_event.data import WebhookEventData
+from api.src.domain.interface.payment.webhook_inbox.data import WebhookInboxData
 from api.utils.enum.payment import PaymentProvider, WebhookEventType
 
 
-def convert_data(obj: WebhookEvent) -> WebhookEventData:
-    return WebhookEventData(
+def convert_data(obj: WebhookEvent) -> WebhookInboxData:
+    return WebhookInboxData(
         id=obj.id,
         provider=PaymentProvider(obj.provider),
         event_id=obj.event_id,
@@ -14,7 +14,7 @@ def convert_data(obj: WebhookEvent) -> WebhookEventData:
     )
 
 
-def marshal_data(data: WebhookEventData) -> WebhookEvent:
+def marshal_data(data: WebhookInboxData) -> WebhookEvent:
     return WebhookEvent(
         id=data.id if data.id != 0 else None,
         provider=data.provider,

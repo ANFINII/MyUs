@@ -2,7 +2,7 @@ from injector import Module, provider
 from api.src.adapter.external.payment.stripe.provider import StripeProvider
 from api.src.domain.entity.payment.subscription.repository import SubscriptionRepository
 from api.src.domain.entity.payment.transaction.repository import TransactionRepository
-from api.src.domain.entity.payment.webhook_event.repository import WebhookEventRepository
+from api.src.domain.entity.payment.webhook_inbox.repository import WebhookInboxRepository
 from api.src.domain.entity.user.repository import UserRepository
 from api.src.domain.entity.category.repository import CategoryRepository
 from api.src.domain.entity.channel.repository import ChannelRepository
@@ -42,7 +42,7 @@ from api.src.domain.interface.notification.interface import NotificationInterfac
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.interface import SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
-from api.src.domain.interface.payment.webhook_event.interface import WebhookEventInterface
+from api.src.domain.interface.payment.webhook_inbox.interface import WebhookInboxInterface
 
 
 class UserModule(Module):
@@ -157,5 +157,5 @@ class PaymentModule(Module):
         return TransactionRepository()
 
     @provider
-    def provide_webhook_event_repository(self) -> WebhookEventInterface:
-        return WebhookEventRepository()
+    def provide_webhook_event_repository(self) -> WebhookInboxInterface:
+        return WebhookInboxRepository()

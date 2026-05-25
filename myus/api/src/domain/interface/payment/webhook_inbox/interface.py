@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
-from api.src.domain.interface.payment.webhook_event.data import WebhookEventData
+from api.src.domain.interface.payment.webhook_inbox.data import WebhookInboxData
 
 
 class SortType(Enum):
@@ -20,15 +20,15 @@ class SortOption:
     sort_type: SortType = SortType.OCCURRED_AT
 
 
-class WebhookEventInterface(ABC):
+class WebhookInboxInterface(ABC):
     @abstractmethod
     def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = 20) -> list[int]:
         ...
 
     @abstractmethod
-    def bulk_get(self, ids: list[int]) -> list[WebhookEventData]:
+    def bulk_get(self, ids: list[int]) -> list[WebhookInboxData]:
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[WebhookEventData]) -> list[int]:
+    def bulk_save(self, objs: list[WebhookInboxData]) -> list[int]:
         ...
