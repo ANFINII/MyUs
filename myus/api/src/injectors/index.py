@@ -3,6 +3,7 @@ from api.src.adapter.external.payment.stripe.provider import StripeProvider
 from api.src.domain.entity.payment.subscription.repository import SubscriptionRepository
 from api.src.domain.entity.payment.transaction.repository import TransactionRepository
 from api.src.domain.entity.webhook.inbox.repository import WebhookInboxRepository
+from api.src.domain.entity.webhook.outbox.repository import WebhookOutboxRepository
 from api.src.domain.entity.user.repository import UserRepository
 from api.src.domain.entity.category.repository import CategoryRepository
 from api.src.domain.entity.channel.repository import ChannelRepository
@@ -43,6 +44,7 @@ from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.interface import SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
 from api.src.domain.interface.webhook.inbox.interface import WebhookInboxInterface
+from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 
 
 class UserModule(Module):
@@ -157,5 +159,9 @@ class PaymentModule(Module):
         return TransactionRepository()
 
     @provider
-    def provide_webhook_event_repository(self) -> WebhookInboxInterface:
+    def provide_webhook_inbox_repository(self) -> WebhookInboxInterface:
         return WebhookInboxRepository()
+
+    @provider
+    def provide_webhook_outbox_repository(self) -> WebhookOutboxInterface:
+        return WebhookOutboxRepository()

@@ -1,9 +1,9 @@
 import datetime
 from django.db import models
 from api.db.models.user import User
-from api.utils.constants.choice import CURRENCY_CHOICES, PROVIDER_CHOICES, PAYMENT_STATUS_CHOICES, SUBSCRIPTION_STATUS_CHOICES, WEBHOOK_EVENT_TYPE_CHOICES
+from api.utils.constants.choice import CURRENCY_CHOICES, PROVIDER_CHOICES, PAYMENT_STATUS_CHOICES, SUBSCRIPTION_STATUS_CHOICES, WEBHOOK_EVENT_TYPE_CHOICES, WEBHOOK_DELIVERY_STATUS_CHOICES
 from api.utils.enum.i18n import Currency
-from api.utils.enum.payment import SubscriptionStatus, PaymentStatus
+from api.utils.enum.payment import SubscriptionStatus, PaymentStatus, WebhookDeliveryStatus
 
 DATETIME_MIN = datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
 
@@ -79,4 +79,27 @@ class WebhookEvent(models.Model):
         ]
         indexes = [
             models.Index(fields=["external_id"], name="webhook_event_external_idx"),
+        ]
+
+
+class WebhookOutbox(models.Model):
+    """WebhookOutbox"""
+    id           = models.BigAutoField(primary_key=True)
+    provider     = models.CharField(max_length=20, choices=PROVIDER_CHOICES)
+    event_type   = models.CharField(max_length=30, choices=WEBHOOK_EVENT_TYPE_CHOICES)
+    external_id  = models.CharField(max_length=255)
+    payload      = models.TextField(blank=True)
+    status       = models.CharField(max_length=20, choices=WEBHOOK_DELIVERY_STATUS_CHOICES, default=WebhookDeliveryStatus.PENDING)
+    occurred_at  = models.DateTimeField(default=DATETIME_MIN)
+    delivered_at = models.DateTimeField(default=DATETIME_MIN)
+
+    def __str__(self):
+        return f"{self.provider}:{self.event_type}:{self.status}"
+
+    class Meta:
+        db_table = "webhook_outbox"
+        verbose_name_plural = "001 WebhookOutbox"
+        indexes = [
+            models.Index(fields=["status", "occurred_at"], name="webhook_outbox_status_idx"),
+            models.Index(fields=["external_id"], name="webhook_outbox_external_idx"),
         ]
