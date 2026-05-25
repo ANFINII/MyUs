@@ -15,7 +15,7 @@ from stripe.params.checkout import (
 from api.src.adapter.external.payment.stripe._type import stripe_event_type
 from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.provider.data import CheckoutData, CheckoutFailed, WebhookVerifyFailed
-from api.src.domain.interface.payment.webhook_inbox.data import WebhookInboxData
+from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
 from api.utils.enum.i18n import Locale
 from api.utils.enum.payment import CheckoutError, PaymentProvider, PaymentType, WebhookVerifyError
 from api.utils.enum.user import PlanName
