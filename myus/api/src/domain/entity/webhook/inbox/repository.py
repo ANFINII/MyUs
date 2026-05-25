@@ -1,9 +1,9 @@
 from django.db.models import Q
 from api.db.models.payment import WebhookEvent
 from api.src.domain.entity.index import get_new_ids, sort_ids
-from api.src.domain.entity.payment.webhook_inbox._convert import convert_data, marshal_data
-from api.src.domain.interface.payment.webhook_inbox.data import WebhookInboxData
-from api.src.domain.interface.payment.webhook_inbox.interface import FilterOption, SortOption, WebhookInboxInterface
+from api.src.domain.entity.webhook.inbox._convert import convert_data, marshal_data
+from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
+from api.src.domain.interface.webhook.inbox.interface import FilterOption, SortOption, WebhookInboxInterface
 
 
 WEBHOOK_EVENT_FIELDS = ["provider", "event_id", "event_type", "external_id", "occurred_at"]

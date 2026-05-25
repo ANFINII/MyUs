@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from api.src.domain.interface.payment.data import Money
-from api.src.domain.interface.payment.webhook_inbox.data import WebhookInboxData
+from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
 from api.utils.enum.i18n import Locale
 from api.utils.enum.payment import CancelError, CheckoutError, PaymentProvider, PaymentType, WebhookVerifyError
 

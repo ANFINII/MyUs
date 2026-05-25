@@ -2,7 +2,7 @@ from dataclasses import replace
 from api.modules.logger import log
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
-from api.src.domain.interface.payment.webhook_inbox.data import WebhookInboxData
+from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
 from api.src.injectors.container import injector
 from api.utils.enum.payment import PaymentStatus, SubscriptionStatus, WebhookEventType
 

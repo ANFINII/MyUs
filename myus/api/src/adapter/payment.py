@@ -7,7 +7,7 @@ from api.src.domain.interface.payment.data import Money
 from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CustomerData, MarketplaceData, RedirectUrls, WebhookVerified, WebhookVerifyFailed
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
-from api.src.domain.interface.payment.webhook_inbox.interface import FilterOption, SortOption, WebhookInboxInterface
+from api.src.domain.interface.webhook.inbox.interface import FilterOption, SortOption, WebhookInboxInterface
 from api.src.injectors.container import injector
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.payment import PaymentCancelOut, PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
