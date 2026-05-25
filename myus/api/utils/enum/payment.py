@@ -53,3 +53,9 @@ class WebhookVerifyError(str, Enum):
     INVALID_SIGNATURE = "InvalidSignature"
     MALFORMED_PAYLOAD = "MalformedPayload"
     UNSUPPORTED_EVENT = "UnsupportedEvent"
+
+
+class WebhookDeliveryStatus(str, Enum):
+    PENDING = "Pending"
+    DELIVERED = "Delivered"
+    FAILED = "Failed"
