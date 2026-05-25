@@ -2,12 +2,12 @@ from dataclasses import replace
 from api.modules.logger import log
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
-from api.src.domain.interface.payment.webhook_event.data import WebhookEventData
+from api.src.domain.interface.payment.webhook_inbox.data import WebhookInboxData
 from api.src.injectors.container import injector
 from api.utils.enum.payment import PaymentStatus, SubscriptionStatus, WebhookEventType
 
 
-def handle_webhook_event(event: WebhookEventData) -> None:
+def handle_webhook_event(event: WebhookInboxData) -> None:
     match event.event_type:
         case WebhookEventType.SUBSCRIPTION_CANCELED:
             update_subscription_canceled(event)
@@ -23,7 +23,7 @@ def handle_webhook_event(event: WebhookEventData) -> None:
             log.info("WebhookEvent SUBSCRIPTION_UPDATED noop", external_id=event.external_id)
 
 
-def update_subscription_canceled(event: WebhookEventData) -> None:
+def update_subscription_canceled(event: WebhookInboxData) -> None:
     repo = injector.get(SubscriptionInterface)
     ids = repo.get_ids(
         SubscriptionFilterOption(provider=event.provider.value, external_id=event.external_id),
@@ -40,7 +40,7 @@ def update_subscription_canceled(event: WebhookEventData) -> None:
     log.info("Subscription canceled", external_id=event.external_id)
 
 
-def update_transaction_status(event: WebhookEventData, status: PaymentStatus, update_paid_at: bool) -> None:
+def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, update_paid_at: bool) -> None:
     repo = injector.get(TransactionInterface)
     ids = repo.get_ids(
         TransactionFilterOption(provider=event.provider.value, external_id=event.external_id),

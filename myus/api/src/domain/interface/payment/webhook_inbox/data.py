@@ -4,7 +4,7 @@ from api.utils.enum.payment import PaymentProvider, WebhookEventType
 
 
 @dataclass(frozen=True, slots=True)
-class WebhookEventData:
+class WebhookInboxData:
     id: int
     provider: PaymentProvider
     event_id: str
