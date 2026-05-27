@@ -12,7 +12,7 @@ from api.src.injectors.container import injector
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.payment import PaymentCancelOut, PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
 from api.src.usecase.auth import auth_check
-from api.src.usecase.payment import handle_webhook_event
+from api.src.usecase.payment import dispatch_webhook_inbox, enqueue_webhook_outbox
 from api.src.usecase.user import get_user_data
 from api.utils.enum.i18n import Currency, Locale
 from api.utils.enum.payment import PaymentProvider, PaymentType, SubscriptionStatus, WebhookVerifyError
@@ -84,8 +84,8 @@ class PaymentAPI:
             case WebhookVerified(event=event):
                 log.info("PaymentAPI webhook verified", event_id=event.event_id, event_type=event.event_type.value)
 
-                webhook_event_repo = injector.get(WebhookInboxInterface)
-                existing_ids = webhook_event_repo.get_ids(
+                webhook_inbox_repo = injector.get(WebhookInboxInterface)
+                existing_ids = webhook_inbox_repo.get_ids(
                     FilterOption(provider=event.provider.value, event_id=event.event_id),
                     SortOption(),
                     limit=1,
@@ -94,8 +94,9 @@ class PaymentAPI:
                     log.info("PaymentAPI webhook already processed", event_id=event.event_id)
                     return 200, PaymentWebhookOut(message="Already processed")
 
-                webhook_event_repo.bulk_save([event])
-                handle_webhook_event(event)
+                webhook_inbox_repo.bulk_save([event])
+                dispatch_webhook_inbox(event)
+                enqueue_webhook_outbox(event)
                 return 200, PaymentWebhookOut(message="OK")
 
     @staticmethod
