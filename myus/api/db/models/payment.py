@@ -59,8 +59,8 @@ class PaymentTransaction(models.Model):
         ]
 
 
-class WebhookEvent(models.Model):
-    """WebhookEvent"""
+class WebhookInbox(models.Model):
+    """WebhookInbox"""
     id          = models.BigAutoField(primary_key=True)
     provider    = models.CharField(max_length=20, choices=PROVIDER_CHOICES)
     event_id    = models.CharField(max_length=255)
@@ -72,13 +72,13 @@ class WebhookEvent(models.Model):
         return f"{self.provider}:{self.event_id}:{self.event_type}"
 
     class Meta:
-        db_table = "webhook_event"
-        verbose_name_plural = "001 WebhookEvent"
+        db_table = "webhook_inbox"
+        verbose_name_plural = "001 WebhookInbox"
         constraints = [
-            models.UniqueConstraint(fields=["provider", "event_id"], name="webhook_event_provider_event_id_uniq"),
+            models.UniqueConstraint(fields=["provider", "event_id"], name="webhook_inbox_provider_event_id_uniq"),
         ]
         indexes = [
-            models.Index(fields=["external_id"], name="webhook_event_external_idx"),
+            models.Index(fields=["external_id"], name="webhook_inbox_external_idx"),
         ]
 
 

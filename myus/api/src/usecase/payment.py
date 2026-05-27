@@ -1,13 +1,18 @@
-from dataclasses import replace
+import json
+from dataclasses import asdict, replace
+from datetime import datetime, timezone
 from api.modules.logger import log
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
+from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
+from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.src.injectors.container import injector
-from api.utils.enum.payment import PaymentStatus, SubscriptionStatus, WebhookEventType
+from api.src.types.dto.webhook import WebhookOutboxPayloadDTO
+from api.utils.enum.payment import PaymentStatus, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
 
 
-def handle_webhook_event(event: WebhookInboxData) -> None:
+def dispatch_webhook_inbox(event: WebhookInboxData) -> None:
     match event.event_type:
         case WebhookEventType.SUBSCRIPTION_CANCELED:
             update_subscription_canceled(event)
@@ -18,9 +23,35 @@ def handle_webhook_event(event: WebhookInboxData) -> None:
         case WebhookEventType.REFUND_ISSUED:
             update_transaction_status(event, PaymentStatus.REFUNDED, update_paid_at=False)
         case WebhookEventType.SUBSCRIPTION_CREATED:
-            log.info("WebhookEvent SUBSCRIPTION_CREATED noop", external_id=event.external_id)
+            log.info("WebhookInbox SUBSCRIPTION_CREATED noop", external_id=event.external_id)
         case WebhookEventType.SUBSCRIPTION_UPDATED:
-            log.info("WebhookEvent SUBSCRIPTION_UPDATED noop", external_id=event.external_id)
+            log.info("WebhookInbox SUBSCRIPTION_UPDATED noop", external_id=event.external_id)
+
+
+def enqueue_webhook_outbox(event: WebhookInboxData) -> None:
+    repo = injector.get(WebhookOutboxInterface)
+
+    payload = WebhookOutboxPayloadDTO(
+        provider=event.provider.value,
+        event_id=event.event_id,
+        event_type=event.event_type.value,
+        external_id=event.external_id,
+        occurred_at=event.occurred_at.isoformat(),
+    )
+
+    data = WebhookOutboxData(
+        id=0,
+        provider=event.provider,
+        event_type=event.event_type,
+        external_id=event.external_id,
+        payload=json.dumps(asdict(payload)),
+        status=WebhookDeliveryStatus.PENDING,
+        occurred_at=event.occurred_at,
+        delivered_at=datetime.min.replace(tzinfo=timezone.utc),
+    )
+
+    repo.bulk_save([data])
+    log.info("WebhookOutbox enqueued", event_id=event.event_id, event_type=event.event_type.value)
 
 
 def update_subscription_canceled(event: WebhookInboxData) -> None:
