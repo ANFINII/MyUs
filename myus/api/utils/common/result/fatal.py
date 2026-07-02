@@ -58,8 +58,7 @@ class ResultFatal[T](ResultErrBase[T, FatalError]):
                 try:
                     return func(*args, **kwargs)
                 except Exception as err:
-                    exc: Any = err if loglevel == "error" else repr(err)
-                    emit_log(loglevel, "Unhandled Exception Occurred!", exc=exc)
+                    emit_log(loglevel, "Unhandled Exception Occurred!", exc=err)
                     return ResultFatal._err(err, loglevel=None)
 
             return wrapper

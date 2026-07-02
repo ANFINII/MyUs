@@ -55,8 +55,7 @@ class Result[T, E: AnyError](ResultErrBase[T, E]):
                 try:
                     return cast(Result[R, F | FatalError], func(*args, **kwargs))
                 except Exception as err:
-                    exc: Any = err if loglevel == "error" else repr(err)
-                    emit_log(loglevel, "Unhandled Exception Occurred!", exc=exc)
+                    emit_log(loglevel, "Unhandled Exception Occurred!", exc=err)
                     return cast(
                         Result[R, F | FatalError],
                         Result._err(

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Self
 
@@ -14,9 +13,6 @@ class AnyError:
     @classmethod
     def from_exception(cls, exception: Exception) -> Self:
         return cls(repr(exception))
-
-    def map_error_message(self, f: Callable[[str], str]) -> Self:
-        return type(self)(f(self.error_message))
 
 
 @dataclass(frozen=True)
