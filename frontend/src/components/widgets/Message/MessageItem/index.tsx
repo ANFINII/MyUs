@@ -4,6 +4,7 @@ import { ChatMessage } from 'types/internal/message'
 import { UserMe } from 'types/internal/user'
 import cx from 'utils/functions/cx'
 import { formatDatetime } from 'utils/functions/datetime'
+import { sanitizeHtml } from 'utils/functions/sanitize'
 import ActionButton from 'components/parts/Action/Button'
 import { ActionItem } from 'components/parts/Action/List'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -83,7 +84,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
         {isEdit ? (
           <ChatEditor value={editText} onChange={setEditText} onCancel={handleEditCancel} onSave={handleEditSubmit} />
         ) : (
-          <div className={style.message_text} dangerouslySetInnerHTML={{ __html: message.text }} />
+          <div className={style.message_text} dangerouslySetInnerHTML={{ __html: sanitizeHtml(message.text) }} />
         )}
         {onThread && !isEdit && (
           <div className={style.message_thread_row}>

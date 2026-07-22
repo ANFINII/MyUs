@@ -1,5 +1,6 @@
 import { Author } from 'types/internal/user'
 import { formatDatetime } from 'utils/functions/datetime'
+import { sanitizeHtml } from 'utils/functions/sanitize'
 import Avatar from 'components/parts/Avatar'
 import Modal from 'components/parts/Modal'
 import HStack from 'components/parts/Stack/Horizontal'
@@ -38,7 +39,7 @@ export default function MessageDeleteModal(props: Props): React.JSX.Element {
             <span className="mr_4">{author.nickname}</span>
             <time>{formatDatetime(created)}</time>
           </div>
-          <p className={style.text} dangerouslySetInnerHTML={{ __html: text }} />
+          <p className={style.text} dangerouslySetInnerHTML={{ __html: sanitizeHtml(text) }} />
         </div>
       </HStack>
     </Modal>
