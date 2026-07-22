@@ -30,6 +30,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "crypto-js": "^4.2.0",
     "i": "^0.3.7",
+    "isomorphic-dompurify": "^3.18.0",
     "lodash": "^4.18.1",
     "neverthrow": "^8.2.0",
     "next": "^16.2.4",
