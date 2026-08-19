@@ -36,7 +36,7 @@ class StripeProvider(PaymentInterface):
 
     def verify_webhook(self, payload: bytes, signature: str) -> WebhookVerifyResult:
         try:
-            event = stripe.Webhook.construct_event(payload, signature, settings.STRIPE_WEBHOOK_SECRET)  # type: ignore[no-untyped-call]
+            event = stripe.Webhook.construct_event(payload, signature, settings.STRIPE_WEBHOOK_SECRET)
         except stripe.SignatureVerificationError as e:
             log.warning("Stripe webhook signature invalid", exc=e)
             return WebhookVerifyFailed(error=WebhookVerifyError.INVALID_SIGNATURE, message=str(e))
