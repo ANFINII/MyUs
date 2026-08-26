@@ -1,23 +1,16 @@
-from pprint import pprint
-from urllib.parse import urlparse
-import matplotlib as mpl
+import os
 import matplotlib.pyplot as plt
 import mysql.connector
-import numpy as np
 import pandas as pd
-import pandas.io.sql as psql
-from django.db import connections
-from sklearn import datasets, svm
 
 
 # DB情報の設定
-url = urlparse("mysql://anfinii:A5656gu3y!@127.0.0.1:3306/myus_db")
 con = mysql.connector.connect(
-    host = url.hostname,
-    port = url.port,
-    user = url.username,
-    password = url.password,
-    database = url.path[1:],
+    host = os.environ["MYSQL_HOST"],
+    port = int(os.environ["MYSQL_PORT"]),
+    user = os.environ["MYSQL_USER"],
+    password = os.environ["MYSQL_PASSWORD"],
+    database = os.environ["MYSQL_DATABASE"],
 )
 cur = con.cursor()
 
