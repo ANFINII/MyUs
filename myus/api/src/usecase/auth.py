@@ -26,15 +26,24 @@ def auth_check(request: HttpRequest) -> int | None:
     key = settings.SECRET_KEY
     try:
         payload = jwt.decode(jwt=token, key=key, algorithms=["HS256"])
-        user_id: int | None = payload["user_id"]
-        if user_id is None:
-            return None
-
-        return user_id
     except jwt.ExpiredSignatureError:
         return None
     except jwt.exceptions.DecodeError:
         return None
+
+    if payload.get("type") != "access":
+        log.warning("アクセストークンのタイプが不正です")
+        return None
+
+    user_id = payload.get("user_id")
+    if user_id is None:
+        return None
+
+    if not verify_user(user_id):
+        log.warning("無効なユーザーのトークンです", user_id=user_id)
+        return None
+
+    return user_id
 
 
 def verify_user(user_id: int) -> bool:
