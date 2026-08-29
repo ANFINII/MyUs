@@ -96,30 +96,38 @@ class CommentAPI:
             return 500, ErrorOut(message="コメントの作成に失敗しました")
 
     @staticmethod
-    @router.put("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, comment_ulid: str, input: CommentUpdateIn):
         log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
 
-        if auth_check(request) is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            update_comment(comment_ulid, input.text)
+            result = update_comment(user_id, comment_ulid, input.text)
+            if result is None:
+                return 403, ErrorOut(message="Forbidden")
+
             return 200, ErrorOut(message="コメントを更新しました")
         except Exception as e:
             log.error("CommentAPI put error", exc=e)
             return 500, ErrorOut(message="コメントの更新に失敗しました")
 
     @staticmethod
-    @router.delete("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.delete("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, comment_ulid: str):
         log.info("CommentAPI delete", comment_ulid=comment_ulid)
 
-        if auth_check(request) is None:
+        user_id = auth_check(request)
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            delete_comment(comment_ulid)
+            result = delete_comment(user_id, comment_ulid)
+            if result is None:
+                return 403, ErrorOut(message="Forbidden")
+
             return 200, ErrorOut(message="コメントを削除しました")
         except Exception as e:
             log.error("CommentAPI delete error", exc=e)

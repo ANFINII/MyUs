@@ -149,17 +149,25 @@ def create_comment(user_id: int, input: CommentCreateIn) -> CommentDTO | None:
     return data
 
 
-def update_comment(comment_ulid: str, text: str) -> None:
+def update_comment(user_id: int, comment_ulid: str, text: str) -> bool | None:
     comment = get_comment_data(comment_ulid)
     if comment is None:
-        return
+        return None
 
-    save_comment_data(replace(comment, text=text))
+    if comment.author_id != user_id:
+        log.warning("コメントの編集権限がありません", comment_ulid=comment_ulid, user_id=user_id)
+        return None
+
+    return save_comment_data(replace(comment, text=text))
 
 
-def delete_comment(comment_ulid: str) -> None:
+def delete_comment(user_id: int, comment_ulid: str) -> bool | None:
     comment = get_comment_data(comment_ulid)
     if comment is None:
-        return
+        return None
 
-    save_comment_data(replace(comment, deleted=True))
+    if comment.author_id != user_id:
+        log.warning("コメントの削除権限がありません", comment_ulid=comment_ulid, user_id=user_id)
+        return None
+
+    return save_comment_data(replace(comment, deleted=True))
