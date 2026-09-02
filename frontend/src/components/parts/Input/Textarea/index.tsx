@@ -14,12 +14,12 @@ interface Props {
   height?: number
   required?: boolean
   disabled?: boolean
-  focus?: boolean
+  autoFocus?: boolean
   onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
 }
 
 export default function Textarea(props: Props): React.JSX.Element {
-  const { label, value, error, className, height, required = false, focus, onChange, ...rest } = props
+  const { label, value, error, className, height, required = false, onChange, ...rest } = props
 
   const ref = useRef<HTMLTextAreaElement>(null)
   const [isValue, setIsValue] = useState<boolean>(false)
@@ -34,10 +34,6 @@ export default function Textarea(props: Props): React.JSX.Element {
   }
 
   useEffect(() => adjustHeight(height), [value, height])
-
-  useEffect(() => {
-    if (focus && ref.current) ref.current.focus()
-  }, [focus])
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     adjustHeight()

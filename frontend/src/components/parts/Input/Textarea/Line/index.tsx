@@ -13,13 +13,13 @@ interface Props {
   error?: boolean
   required?: boolean
   disabled?: boolean
-  focus?: boolean
+  autoFocus?: boolean
   onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
   onSubmit?: () => void
 }
 
 export default function TextareaLine(props: Props): React.JSX.Element {
-  const { label, value, className, height, focus, onChange, onSubmit } = props
+  const { label, value, className, height, onChange, onSubmit } = props
 
   const ref = useRef<HTMLTextAreaElement>(null)
 
@@ -31,10 +31,6 @@ export default function TextareaLine(props: Props): React.JSX.Element {
   }
 
   useEffect(() => adjustHeight(height), [value, height])
-
-  useEffect(() => {
-    if (focus && ref.current) ref.current.focus()
-  }, [focus])
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     adjustHeight()

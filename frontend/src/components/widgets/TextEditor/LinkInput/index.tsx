@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import style from './LinkInput.module.scss'
 
 interface Props {
@@ -10,7 +10,6 @@ export default function LinkInput(props: Props): React.JSX.Element {
   const { onSubmit, onCancel } = props
 
   const inputRef = useRef<HTMLInputElement>(null)
-  useEffect(() => inputRef.current?.focus(), [])
 
   const handleSubmit = () => {
     const url = inputRef.current?.value.trim()
@@ -30,7 +29,7 @@ export default function LinkInput(props: Props): React.JSX.Element {
 
   return (
     <div className={style.link}>
-      <input ref={inputRef} type="url" className={style.field} placeholder="URLを入力" onKeyDown={handleKeyDown} />
+      <input ref={inputRef} type="url" className={style.field} placeholder="URLを入力" autoFocus onKeyDown={handleKeyDown} />
       <button type="button" className={style.submit} onClick={handleSubmit}>
         挿入
       </button>

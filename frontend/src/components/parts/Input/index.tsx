@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useState } from 'react'
 import cx from 'utils/functions/cx'
 import { isEmpty } from 'utils/functions/validation'
-import { useAutoFocus } from 'components/hooks/useAutoFocus'
 import style from './Input.module.scss'
 
 interface Props {
@@ -23,9 +22,8 @@ interface Props {
 }
 
 export default function Input(props: Props): React.JSX.Element {
-  const { label, error, className, required = false, disabled = false, autoFocus, onChange, ...rest } = props
+  const { label, error, className, required = false, disabled = false, onChange, ...rest } = props
 
-  const inputFocus = useAutoFocus()
   const [isValue, setIsValue] = useState<boolean>(false)
 
   const isError = !!error || (error === '' && required && !isValue && isEmpty(rest.value))
@@ -49,7 +47,6 @@ export default function Input(props: Props): React.JSX.Element {
         required={required}
         disabled={disabled}
         onChange={handleChange}
-        ref={autoFocus ? inputFocus : undefined}
         className={cx(style.input, isError && style.error, disabled && style.disabled)}
       />
       {error && <p className={style.error_text}>{error}</p>}
