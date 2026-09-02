@@ -30,7 +30,7 @@ def convert_data(obj: Chat) -> ChatData:
             ulid=obj.channel.ulid,
             owner_id=obj.channel.owner_id,
             owner_ulid=obj.channel.owner.ulid,
-            avatar=obj.channel.avatar.name if obj.channel.avatar else "",
+            avatar=obj.channel.avatar.name or "",
             name=obj.channel.name,
             description=obj.channel.description,
             is_default=obj.channel.is_default,

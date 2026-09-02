@@ -27,7 +27,7 @@ def user_data(user: User) -> UserData:
     return UserData(
         id=user.id,
         ulid=user.ulid,
-        avatar=user.avatar.name if user.avatar else "",
+        avatar=user.avatar.name or "",
         password=user.password,
         email=user.email,
         username=user.username,
@@ -56,7 +56,7 @@ def profile_data(profile: Profile) -> ProfileData:
 
 def mypage_data(mypage: MyPage) -> MyPageData:
     return MyPageData(
-        banner=mypage.banner.name if mypage.banner else "",
+        banner=mypage.banner.name or "",
         email=mypage.email,
         content=mypage.content,
         follower_count=mypage.follower_count,
