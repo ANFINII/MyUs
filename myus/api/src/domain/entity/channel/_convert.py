@@ -9,7 +9,7 @@ def convert_data(obj: Channel) -> ChannelData:
         ulid=obj.ulid,
         owner_id=obj.owner_id,
         owner_ulid=obj.owner.ulid,
-        avatar=obj.avatar.name if obj.avatar else "",
+        avatar=obj.avatar.name or "",
         name=obj.name,
         description=obj.description,
         is_default=obj.is_default,

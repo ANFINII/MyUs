@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import TypeVar
+from typing import TypeVar, cast
 from django.db.models import Case, Count, Exists, ExpressionWrapper, F, FloatField, Func, Model, OuterRef, Q, Value, When
 from django.db.models.functions import Now
 from django.db.models.query import QuerySet
@@ -67,7 +67,7 @@ def sort_queryset(qs: QuerySet[T], sort: SortOption, is_recommend: bool = False,
                 score_expr = ExpressionWrapper(base * multiplier, output_field=FloatField())
             else:
                 score_expr = ExpressionWrapper(base, output_field=FloatField())
-        qs = qs.annotate(score=score_expr)
+        qs = cast(QuerySet[T], qs.annotate(score=score_expr))  # django-stubs は TypeVar モデルの annotate を上限の Model 型で返すため
         key = "score"
     else:
         key = sort.sort_type.name.lower()

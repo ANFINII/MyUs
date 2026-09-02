@@ -19,6 +19,7 @@ def get_q_list(search):
 
 
 class SearchData:
+    @staticmethod
     def media_query(model, search):
         """メディア検索用の Q を生成"""
         q_list = get_q_list(search)
@@ -39,6 +40,7 @@ class SearchData:
             Q(content__icontains=q) for q in q_list
         ])
 
+    @staticmethod
     def search_index(search):
         result = [
             model.objects.filter(publish=True).filter(SearchData.media_query(model, search)).distinct()[:8]
@@ -47,6 +49,7 @@ class SearchData:
         queryset_chain = chain(*result)
         return sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
 
+    @staticmethod
     def search_recommend(aggregation_date, search):
         score = F("read") + Count("like")*10 + F("read")*Count("like")/(F("read")+1)*20
         result = [
@@ -58,6 +61,7 @@ class SearchData:
         queryset_chain = chain(*result)
         return sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
 
+    @staticmethod
     def search_userpage(author, search):
         result = [
             model.objects.filter(author=author, publish=True)
@@ -67,6 +71,7 @@ class SearchData:
         queryset_chain = chain(*result)
         return sorted(queryset_chain, key=lambda instance: instance.score(), reverse=True)
 
+    @staticmethod
     def search_follow(model, path, user, search):
         q_list = get_q_list(search)
         if path == "follow":
@@ -83,6 +88,7 @@ class SearchData:
             ])
         return result.filter(query).distinct()
 
+    @staticmethod
     def search_models(model, search):
         result = model.objects.filter(publish=True).order_by("-created")
         q_list = get_q_list(search)
@@ -103,6 +109,7 @@ class SearchData:
             ])
         return result.filter(query).annotate(score=F("read") + Count("like")*10 + F("read")*Count("like")/(F("read")+1)*20).order_by("-score").distinct()
 
+    @staticmethod
     def search_advertise(model, author, search):
         result = model.objects.filter(author=author, publish=True).order_by("created")
         q_list = get_q_list(search)

@@ -39,14 +39,8 @@ def get_media_repository(media_type: MediaType) -> MediaInterfaceType:
 def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
     filename = file.name or "upload"
     match upload_type:
-        case ImageUpload.USER | ImageUpload.CHANNEL:
-            path = avatar_path(upload_type, ulid, filename)
-        case ImageUpload.VIDEO | ImageUpload.BLOG | ImageUpload.COMIC | ImageUpload.PICTURE:
-            path = image_path(upload_type, ulid, filename)
-        case ImageUpload.COMIC_PAGE:
-            path = comic_path(ulid, filename)
-        case ImageUpload.ADVERTISE:
-            path = advertise_image_path(ulid, filename)
+        case ImageUpload():
+            path = _image_upload_path(upload_type, ulid, filename)
         case MediaUpload.VIDEO:
             path = video_path(upload_type, ulid, filename)
         case MediaUpload.ADVERTISE:
@@ -56,5 +50,19 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
             if is_conversion(filename):
                 return save_converted_mp3(file, path)
         case _:
-            assert False, f"未対応のUploadType: {upload_type}"
+            assert_never(upload_type)
     return default_storage.save(path, file)
+
+
+def _image_upload_path(upload_type: ImageUpload, ulid: str, filename: str) -> str:
+    match upload_type:
+        case ImageUpload.USER | ImageUpload.CHANNEL:
+            return avatar_path(upload_type, ulid, filename)
+        case ImageUpload.VIDEO | ImageUpload.BLOG | ImageUpload.COMIC | ImageUpload.PICTURE:
+            return image_path(upload_type, ulid, filename)
+        case ImageUpload.COMIC_PAGE:
+            return comic_path(ulid, filename)
+        case ImageUpload.ADVERTISE:
+            return advertise_image_path(ulid, filename)
+        case _:
+            assert False, f"未対応のUploadType: {upload_type}"
