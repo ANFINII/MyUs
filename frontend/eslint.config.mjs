@@ -1,3 +1,4 @@
+import { fixupConfigRules, fixupPluginRules } from '@eslint/compat'
 import js from '@eslint/js'
 import tsEsLintPlugin from '@typescript-eslint/eslint-plugin'
 import nextPlugin from '@next/eslint-plugin-next'
@@ -12,7 +13,7 @@ import tseslint from 'typescript-eslint'
 export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
+  ...fixupConfigRules(pluginReact.configs.flat.recommended),
   {
     files: ['*.{js,mjs,cjs}'],
     languageOptions: {
@@ -31,10 +32,10 @@ export default [
       },
     },
     plugins: {
-      react: pluginReact,
+      react: fixupPluginRules(pluginReact),
       'react-hooks': reactHooks,
       '@next/next': nextPlugin,
-      'import': importPlugin,
+      'import': fixupPluginRules(importPlugin),
       'unused-imports': unusedPlugin,
       '@typescript-eslint': tsEsLintPlugin,
     },
