@@ -40,7 +40,7 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
     filename = file.name or "upload"
     match upload_type:
         case ImageUpload():
-            path = _image_upload_path(upload_type, ulid, filename)
+            path = image_upload_path(upload_type, ulid, filename)
         case MediaUpload.VIDEO:
             path = video_path(upload_type, ulid, filename)
         case MediaUpload.ADVERTISE:
@@ -54,7 +54,7 @@ def save_upload(file: UploadedFile, upload_type: UploadType, ulid: str) -> str:
     return default_storage.save(path, file)
 
 
-def _image_upload_path(upload_type: ImageUpload, ulid: str, filename: str) -> str:
+def image_upload_path(upload_type: ImageUpload, ulid: str, filename: str) -> str:
     match upload_type:
         case ImageUpload.USER | ImageUpload.CHANNEL:
             return avatar_path(upload_type, ulid, filename)
