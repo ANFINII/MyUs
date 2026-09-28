@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useEffect, useMemo } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Channel, SubscribeIn } from 'types/internal/channel'
 import { Comment, CommnetIn } from 'types/internal/comment'
@@ -61,18 +61,15 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const { media, handleToast } = props
   const { title, content, read, created, channel, mediaUser } = media
 
-  const initFormState: MediaDetailState = useMemo(
-    () => ({
-      isLike: mediaUser.isLike,
-      isSubscribe: mediaUser.isSubscribe,
-      likeCount: media.like,
-      subscribeCount: 0,
-      text: '',
-      comments: media.comments,
-      hashtags: media.hashtags,
-    }),
-    [mediaUser, media.like, media.comments, media.hashtags],
-  )
+  const initFormState: MediaDetailState = {
+    isLike: mediaUser.isLike,
+    isSubscribe: mediaUser.isSubscribe,
+    likeCount: media.like,
+    subscribeCount: 0,
+    text: '',
+    comments: media.comments,
+    hashtags: media.hashtags,
+  }
 
   const router = useRouter()
   const { user } = useUser()
@@ -81,7 +78,6 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const [isContentView, setIsContentView] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)
   const [formState, setFormState] = useState<MediaDetailState>(initFormState)
-  useEffect(() => setFormState(initFormState), [router.query.ulid, initFormState])
 
   const { isLike, isSubscribe, likeCount, subscribeCount, text, comments, hashtags } = formState
   const isOwner = user.isActive && user.ulid === channel.ownerUlid

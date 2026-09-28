@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 
 interface RecognitionItem {
   transcript: string
@@ -38,6 +38,11 @@ interface Props {
   lang?: string
 }
 
+// ブラウザ対応可否は変化しないため購読は不要。SSR 時は未対応として扱う
+const subscribeNoop = (): (() => void) => () => {}
+const getIsSupported = (): boolean => 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window
+const getServerIsSupported = (): boolean => false
+
 export function useRecording(props: Props): OutProps {
   const { onResult, lang = 'ja-JP' } = props
 
@@ -46,11 +51,7 @@ export function useRecording(props: Props): OutProps {
   const speakingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [isRecording, setIsRecording] = useState(false)
   const [isSpeaking, setIsSpeaking] = useState(false)
-  const [isSupported, setIsSupported] = useState(false)
-
-  useEffect(() => {
-    setIsSupported('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)
-  }, [])
+  const isSupported = useSyncExternalStore(subscribeNoop, getIsSupported, getServerIsSupported)
 
   useEffect(() => {
     onResultRef.current = onResult

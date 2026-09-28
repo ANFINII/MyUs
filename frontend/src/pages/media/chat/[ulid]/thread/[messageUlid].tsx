@@ -22,7 +22,7 @@ interface Props {
 export default function ChatThreadPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
-      <ChatDetail data={props.data} threadUlid={props.threadUlid} />
+      <ChatDetail key={props.data?.detail.ulid} data={props.data} threadUlid={props.threadUlid} />
     </ErrorCheck>
   )
 }

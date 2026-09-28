@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { ToastType } from 'types/internal/other'
 
 interface OutProps {
@@ -10,6 +10,7 @@ export const useToast = (): OutProps => {
   const [content, setContent] = useState<string>('')
   const [isError, setIsError] = useState<boolean>(false)
   const [isToast, setIsToast] = useState<boolean>(false)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const toast = { content, isError, isToast, setIsToast }
 
@@ -17,6 +18,8 @@ export const useToast = (): OutProps => {
     setContent(content)
     setIsError(isError)
     setIsToast(true)
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => setIsToast(false), 5000)
   }
 
   return { toast, handleToast }
