@@ -89,12 +89,6 @@ export default function DatePicker(props: Props): React.JSX.Element {
   const cells = useMemo(() => buildMonthGrid(viewYear, viewMonth, min, max), [viewYear, viewMonth, min, max])
 
   useEffect(() => {
-    if (!selected) return
-    setViewYear(selected.getFullYear())
-    setViewMonth(selected.getMonth())
-  }, [selected])
-
-  useEffect(() => {
     if (!isOpen) return
     const handleClickOutside = (e: MouseEvent) => {
       if (boxRef.current && !boxRef.current.contains(e.target as Node)) setIsOpen(false)
@@ -103,7 +97,14 @@ export default function DatePicker(props: Props): React.JSX.Element {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isOpen])
 
-  const handleToggle = () => setIsOpen((prev) => !prev)
+  const handleToggle = () => {
+    if (!isOpen) {
+      const base = selected ?? today
+      setViewYear(base.getFullYear())
+      setViewMonth(base.getMonth())
+    }
+    setIsOpen(!isOpen)
+  }
 
   const handlePrev = () => {
     const d = new Date(viewYear, viewMonth - 1, 1)

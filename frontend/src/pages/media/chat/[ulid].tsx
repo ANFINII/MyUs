@@ -21,7 +21,7 @@ interface Props {
 export default function ChatDetailPage(props: Props): React.JSX.Element {
   return (
     <ErrorCheck status={props.status}>
-      <ChatDetail {...props} />
+      <ChatDetail key={props.data?.detail.ulid} {...props} />
     </ErrorCheck>
   )
 }

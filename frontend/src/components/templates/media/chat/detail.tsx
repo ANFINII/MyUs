@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, useMemo, FormEvent } from 'react'
+import { useState, useRef, useEffect, useCallback, FormEvent } from 'react'
 import { useRouter } from 'next/router'
 import { SubscribeIn } from 'types/internal/channel'
 import { ChatDetailOut } from 'types/internal/media/output'
@@ -45,22 +45,19 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const { data, threadUlid } = props
   const { detail, list } = data
 
-  const initFormState: ChatDetailState = useMemo(
-    () => ({
-      messages: detail.messages,
-      replies: {},
-      message: '',
-      reply: '',
-      selectedMessage: null,
-      joined: detail.joined,
-      thread: detail.thread,
-      likeCount: detail.like,
-      subscribeCount: 0,
-      isLike: detail.mediaUser.isLike,
-      isSubscribe: detail.mediaUser.isSubscribe,
-    }),
-    [detail],
-  )
+  const initFormState: ChatDetailState = {
+    messages: detail.messages,
+    replies: {},
+    message: '',
+    reply: '',
+    selectedMessage: null,
+    joined: detail.joined,
+    thread: detail.thread,
+    likeCount: detail.like,
+    subscribeCount: 0,
+    isLike: detail.mediaUser.isLike,
+    isSubscribe: detail.mediaUser.isSubscribe,
+  }
 
   const router = useRouter()
   const { user } = useUser()
@@ -72,7 +69,6 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const [isContent, setIsContent] = useState<boolean>(false)
   const [isContentExpand, setIsContentExpand] = useState<boolean>(false)
   const [formState, setFormState] = useState<ChatDetailState>(initFormState)
-  useEffect(() => setFormState(initFormState), [router.query.ulid, initFormState])
 
   const { messages, replies, message, reply, selectedMessage, joined, thread, likeCount, subscribeCount, isLike, isSubscribe } = formState
   const isPeriod = new Date(detail.period) < new Date()
