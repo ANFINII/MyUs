@@ -1,3 +1,4 @@
+import cx from 'utils/functions/cx'
 import style from './Tabs.module.scss'
 
 export interface TabItem<T extends string> {
@@ -17,7 +18,7 @@ export default function Tabs<T extends string>(props: Props<T>): React.JSX.Eleme
   return (
     <div className={style.tabs}>
       {items.map((item) => (
-        <a key={item.key} className={selected === item.key ? style.active : ''} onClick={() => onSelect(item.key)}>
+        <a key={item.key} className={cx(selected === item.key && style.active)} onClick={() => onSelect(item.key)}>
           {item.label}
         </a>
       ))}

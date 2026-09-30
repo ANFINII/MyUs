@@ -18,17 +18,15 @@ interface Props {
 }
 
 export default function Button(props: Props): React.JSX.Element {
-  const { name, color = 'white', size = 'm', type = 'button', className = '', disabled = false, loading = false, icon } = props
+  const { name, color = 'white', size = 'm', type = 'button', value, className, disabled = false, loading = false, onClick, icon } = props
 
-  const spinnerColor = (color: string): SpinnerColor => {
-    return color === 'white' ? 'gray' : 'white'
-  }
+  const spinnerColor: SpinnerColor = color === 'white' ? 'gray' : 'white'
 
   return (
-    <button {...props} type={type} disabled={disabled || loading} className={cx(style.button, style[color], style[size], className)}>
+    <button name={name} type={type} value={value} disabled={disabled || loading} onClick={onClick} className={cx(style.button, style[color], style[size], className)}>
       <span className={style.flex}>
         {icon}
-        {loading && <Spinner color={spinnerColor(color)} size="s" className={style.spinner} />}
+        {loading && <Spinner color={spinnerColor} size="s" className={style.spinner} />}
         <span className={loading ? style.invisible : undefined}>{name}</span>
       </span>
     </button>

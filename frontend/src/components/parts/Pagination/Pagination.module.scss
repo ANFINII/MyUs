@@ -4,6 +4,22 @@
   align-items: center;
   gap: 4px;
 
+  &.mv_16 {
+    margin: 16px 0;
+  }
+
+  &.mv_24 {
+    margin: 24px 0;
+  }
+
+  &.mv_32 {
+    margin: 32px 0;
+  }
+
+  &.mv_40 {
+    margin: 40px 0;
+  }
+
   .ellipsis {
     display: flex;
     justify-content: center;

@@ -19,7 +19,7 @@ export default function Avatar(props: Props): React.JSX.Element {
       {src ? (
         <ExImage src={src} title={title} size={size} className={cx(style.avatar, className)} />
       ) : (
-        <IconPerson size={size} type="circle" className={cx(style.avatar, color, className)} />
+        <IconPerson size={size} type="circle" className={cx(style.avatar, style[color], className)} />
       )}
     </>
   )

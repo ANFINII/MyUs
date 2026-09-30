@@ -1,6 +1,6 @@
 import cx from 'utils/functions/cx'
+import IconCross from 'components/parts/Icon/Cross'
 import style from './Toast.module.scss'
-import IconCross from '../Icon/Cross'
 
 export interface Props {
   content?: string
@@ -12,11 +12,11 @@ export interface Props {
 export default function Toast(props: Props): React.JSX.Element {
   const { content, isError, isToast, setIsToast } = props
 
-  const handleClose = () => setIsToast && setIsToast(false)
+  const handleClose = () => setIsToast?.(false)
 
   return (
-    <div className={cx(style.cover, isToast ? style.active : '')}>
-      <div className={cx(style.toast, isError ? style.error : '')}>
+    <div className={cx(style.cover, isToast && style.active)}>
+      <div className={cx(style.toast, isError && style.error)}>
         <span className={style.content}>{content}</span>
         <span className={style.cross} onClick={handleClose}>
           <IconCross size="22" />
