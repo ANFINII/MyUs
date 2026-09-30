@@ -14,11 +14,14 @@ export default function Search(props: Props): React.JSX.Element {
   const { value, className, onChange } = props
 
   const router = useRouter()
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleSearch()
 
   const handleSearch = () => {
-    const query = value ? { search: value } : ''
+    const query = value ? { search: value } : {}
     router.push({ pathname: router.pathname, query })
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') handleSearch()
   }
 
   return (

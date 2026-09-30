@@ -4,13 +4,13 @@ import IconInfo from 'components/parts/Icon/Info'
 import IconWarning from 'components/parts/Icon/Warning'
 import style from './Alert.module.scss'
 
+type AlertType = 'info' | 'warning' | 'error'
+
 const iconMap = {
   info: IconInfo,
   warning: IconWarning,
   error: IconError,
 }
-
-type AlertType = 'info' | 'warning' | 'error'
 
 interface Props {
   type?: AlertType

@@ -13,10 +13,10 @@ interface Props {
 }
 
 export default function Select(props: Props): React.JSX.Element {
-  const { options, placeholder } = props
+  const { options, placeholder, ...rest } = props
 
   return (
-    <select {...props}>
+    <select {...rest}>
       {placeholder && (
         <option value="" hidden>
           {placeholder}

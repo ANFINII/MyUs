@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import cx from 'utils/functions/cx'
 import { isEmpty } from 'utils/functions/validation'
 import style from './Input.module.scss'

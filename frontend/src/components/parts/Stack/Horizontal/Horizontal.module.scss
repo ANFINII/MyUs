@@ -53,4 +53,10 @@
   &.align_stretch {
     align-items: stretch;
   }
+
+  @each $name, $value in ('0': 0, '0_5': 1px, '1': 2px, '2': 4px, '2_5': 5px, '3': 6px, '4': 8px, '5': 10px, '6': 12px, '8': 16px, '10': 20px, '12': 24px) {
+    &.gap_#{$name} {
+      gap: $value;
+    }
+  }
 }

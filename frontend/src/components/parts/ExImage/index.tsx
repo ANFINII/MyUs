@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import cx from 'utils/functions/cx'
+import style from './ExImage.module.scss'
 
 interface Props {
   src?: string
@@ -15,7 +16,7 @@ interface Props {
 }
 
 export default function ExImage(props: Props): React.JSX.Element {
-  const { src, width, height, size, className } = props
+  const { src, width, height, size, className, ...rest } = props
 
   const [errorSrc, setErrorSrc] = useState<string>()
 
@@ -23,5 +24,5 @@ export default function ExImage(props: Props): React.JSX.Element {
 
   if (!src || src === errorSrc) return <img src="/image/no_image.png" width={width || size} height={height || size} className={className} />
 
-  return <img {...props} width={width || size} height={height || size} className={cx('cursor_p', className)} onError={handleError} />
+  return <img {...rest} src={src} width={width || size} height={height || size} className={cx(style.image, className)} onError={handleError} />
 }

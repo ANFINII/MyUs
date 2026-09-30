@@ -1,12 +1,12 @@
 .cover {
   position: fixed;
   display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
   left: 0;
   right: 0;
   bottom: -38px;
-  align-items: center;
-  justify-content: flex-end;
-  flex-direction: column;
   background: rgba(0, 0, 0, 0);
   transition: all 0.2s 0s linear;
 
@@ -17,14 +17,14 @@
 
   .toast {
     display: flex;
+    justify-content: center;
     min-width: 100px;
     height: 38px;
     padding: 8px;
     font-size: 13px;
-    color: white;
+    color: rgb(255, 255, 255);
     border: 1px solid rgb(100, 100, 100);
     border-radius: 5px;
-    justify-content: center;
     background: rgb(25, 25, 25);
 
     &.error {

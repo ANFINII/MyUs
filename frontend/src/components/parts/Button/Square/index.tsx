@@ -1,5 +1,5 @@
 import cx from 'utils/functions/cx'
-import Spinner, { SpinnerColor } from 'components/parts/Spinner'
+import Spinner from 'components/parts/Spinner'
 import style from './Square.module.scss'
 
 type ButtonColor = 'sakura' | 'emerald'
@@ -16,16 +16,12 @@ interface Props {
 }
 
 export default function ButtonSquare(props: Props): React.JSX.Element {
-  const { name, color = 'sakura', type = 'button', className = '', disabled = false, loading = false } = props
-
-  const spinnerColor = (color: string): SpinnerColor => {
-    return color === 'sakura' ? 'white' : 'white'
-  }
+  const { name, color = 'sakura', type = 'button', value, className, disabled = false, loading = false, onClick } = props
 
   return (
-    <button {...props} type={type} disabled={disabled || loading} className={cx(style.button, style[color], className)}>
+    <button name={name} type={type} value={value} disabled={disabled || loading} onClick={onClick} className={cx(style.button, style[color], className)}>
       <span className={style.flex}>
-        {loading && <Spinner color={spinnerColor(color)} size="s" className={style.spinner} />}
+        {loading && <Spinner color="white" size="s" className={style.spinner} />}
         <span className={loading ? style.invisible : undefined}>{name}</span>
       </span>
     </button>

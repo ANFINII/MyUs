@@ -12,8 +12,8 @@ export default function Toggle(props: Props): React.JSX.Element {
   const { isActive, disable = false, onClick } = props
 
   return (
-    <div className={cx(style.toggle, isActive ? style.active : '', disable ? style.disable : '')} onClick={onClick}>
-      {isActive ? <IconToggle size="25" type="on" /> : <IconToggle size="25" type="off" />}
+    <div className={cx(style.toggle, isActive && style.active, disable && style.disable)} onClick={onClick}>
+      <IconToggle size="25" type={isActive ? 'on' : 'off'} />
     </div>
   )
 }

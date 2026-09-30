@@ -8,8 +8,9 @@ interface Props {
 }
 
 export default function LinkActive(props: Props): React.JSX.Element {
-  const router = useRouter()
   const { href, children } = props
+
+  const router = useRouter()
 
   return (
     <Link href={href} className={isActive(router.pathname === href)}>

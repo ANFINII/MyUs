@@ -16,7 +16,7 @@ export default function ToggleCard(props: Props): React.JSX.Element {
     <div className={cx(style.card, isActive && style.active, disable && style.disable)} onClick={onClick}>
       <span className={style.label}>{label}</span>
       <div className={style.toggle}>
-        {isActive ? <IconToggle size="25" type="on" /> : <IconToggle size="25" type="off" />}
+        <IconToggle size="25" type={isActive ? 'on' : 'off'} />
       </div>
     </div>
   )

@@ -13,11 +13,11 @@ interface Props {
 }
 
 export default function CheckBox(props: Props): React.JSX.Element {
-  const { label, id, className = '' } = props
+  const { label, id, className, ...rest } = props
 
   return (
     <div className={cx(style.checkbox, className)}>
-      <input {...props} type="checkbox" id={id || label} className={style.input} />
+      <input {...rest} type="checkbox" id={id || label} className={style.input} />
       <label htmlFor={id || label} className={style.label}>
         {label}
       </label>

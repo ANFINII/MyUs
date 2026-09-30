@@ -17,12 +17,12 @@ const calcPages = (current: number, total: number): (number | '...')[] => {
   return pages
 }
 
-type marginType = 'mv_16' | 'mv_24' | 'mv_32' | 'mv_40'
+type MarginType = 'mv_16' | 'mv_24' | 'mv_32' | 'mv_40'
 
 interface Props {
   currentPage: number
   totalPages: number
-  margin?: marginType
+  margin?: MarginType
   onChange: (page: number) => void
 }
 
@@ -35,7 +35,7 @@ export default function Pagination(props: Props): React.JSX.Element | null {
   const handlePage = (page: number) => () => onChange(page)
 
   return (
-    <nav className={cx(style.pagination, margin)}>
+    <nav className={cx(style.pagination, style[margin])}>
       <ArrowButton type="left" disabled={currentPage === 1} onClick={handlePrev} />
       {pages.map((page, i) =>
         page === '...' ? (

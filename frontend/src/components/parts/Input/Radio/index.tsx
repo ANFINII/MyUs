@@ -13,11 +13,11 @@ interface Props {
 }
 
 export default function Radio(props: Props): React.JSX.Element {
-  const { label, id, value, className = '' } = props
+  const { label, id, value, className, ...rest } = props
 
   return (
     <div className={cx(style.radio, className)}>
-      <input {...props} type="radio" id={id || value} />
+      <input {...rest} type="radio" id={id || value} value={value} />
       <label htmlFor={id || value} className={style.label}>
         {label}
       </label>
