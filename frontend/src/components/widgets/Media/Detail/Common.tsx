@@ -1,7 +1,6 @@
 import { Channel } from 'types/internal/channel'
 import { Comment } from 'types/internal/comment'
-import { MediaUser, Video, Music, Blog, Picture } from 'types/internal/media/output'
-import { Hashtag } from 'types/internal/media/output'
+import { Hashtag, MediaUser, Video, Music, Blog, Picture } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import style from './Common.module.scss'
 import MediaDetailLeft from './Left'

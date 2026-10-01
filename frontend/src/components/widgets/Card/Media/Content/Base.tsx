@@ -11,7 +11,7 @@ interface Props {
   media: Media
 }
 
-export default function CardMediaContentBase(props: Props) {
+export default function CardMediaContentBase(props: Props): React.JSX.Element {
   const { media } = props
   const { title, read, like, created, channel } = media
   const { name } = channel

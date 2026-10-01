@@ -64,10 +64,10 @@ export default function Toolbar(props: Props): React.JSX.Element {
     ...toolbarConfig,
   }
 
-  const [heading, setHeading] = useState('0')
-  const [align, setAlign] = useState('left')
-  const [color, setColor] = useState('rgb(0, 0, 0)')
-  const [isLinkInput, setIsLinkInput] = useState(false)
+  const [heading, setHeading] = useState<string>('0')
+  const [align, setAlign] = useState<string>('left')
+  const [color, setColor] = useState<string>('rgb(0, 0, 0)')
+  const [isLinkInput, setIsLinkInput] = useState<boolean>(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
   const headingOptions: Option[] = [

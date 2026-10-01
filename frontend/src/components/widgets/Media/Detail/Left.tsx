@@ -2,8 +2,7 @@ import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Channel, SubscribeIn } from 'types/internal/channel'
 import { Comment, CommnetIn } from 'types/internal/comment'
-import { MediaUser } from 'types/internal/media/output'
-import { Hashtag } from 'types/internal/media/output'
+import { Hashtag, MediaUser } from 'types/internal/media/output'
 import { LikeMediaIn } from 'types/internal/user'
 import { postSubscribeChannel } from 'api/internal/channel'
 import { postComment } from 'api/internal/comment'
@@ -23,7 +22,7 @@ import Divide from 'components/parts/Divide'
 import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 import CommentContent from 'components/widgets/Comment/Content'
-import CommentInput from 'components/widgets/Comment/Input/Input'
+import CommentInput from 'components/widgets/Comment/Input'
 import Hashtags from 'components/widgets/Media/Hashtags'
 import SubscribeDeleteModal from 'components/widgets/Modal/SubscribeDelete'
 import SubscribeButton from 'components/widgets/SubscribeButton'
@@ -81,7 +80,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
 
   const { isLike, isSubscribe, likeCount, subscribeCount, text, comments, hashtags } = formState
   const isOwner = user.isActive && user.ulid === channel.ownerUlid
-  const isFallowDisable = !user.isActive || user.ulid === channel.ownerUlid
+  const isFollowDisable = !user.isActive || user.ulid === channel.ownerUlid
   const handleModal = () => setIsModal(!isModal)
   const handleContentView = () => setIsContentView(!isContentView)
   const handleCommentView = () => setIsCommentView(!isCommentView)
@@ -156,7 +155,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
             </VStack>
           </HStack>
           <div className={style.content_detail_p2}>
-            <SubscribeButton isSubscribe={isSubscribe} disabled={isFallowDisable} onSubscribe={handleSubscribe} onModal={handleModal} />
+            <SubscribeButton isSubscribe={isSubscribe} disabled={isFollowDisable} onSubscribe={handleSubscribe} onModal={handleModal} />
           </div>
         </HStack>
         <div className={style.content_detail_p1}>
