@@ -15,14 +15,14 @@ interface Props {
   subscribeCount: number
   isContent: boolean
   isContentExpand: boolean
-  isFallowDisable: boolean
+  isFollowDisable: boolean
   onModal: () => void
   onSubscribe: () => void
   onContentExpand: () => void
 }
 
 export default function SectionContent(props: Props): React.JSX.Element {
-  const { detail, subscribeCount, isContent, isContentExpand, isFallowDisable, onModal, onSubscribe, onContentExpand } = props
+  const { detail, subscribeCount, isContent, isContentExpand, isFollowDisable, onModal, onSubscribe, onContentExpand } = props
   const { content, channel, hashtags, mediaUser } = detail
 
   return (
@@ -44,7 +44,7 @@ export default function SectionContent(props: Props): React.JSX.Element {
           </HStack>
         </VStack>
         <div className={style.subscribe}>
-          <SubscribeButton isSubscribe={mediaUser.isSubscribe} disabled={isFallowDisable} onModal={onModal} onSubscribe={onSubscribe} />
+          <SubscribeButton isSubscribe={mediaUser.isSubscribe} disabled={isFollowDisable} onModal={onModal} onSubscribe={onSubscribe} />
         </div>
       </HStack>
       <div className={style.content_detail}>

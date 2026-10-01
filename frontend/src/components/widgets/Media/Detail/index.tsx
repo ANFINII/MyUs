@@ -10,7 +10,7 @@ export default function MediaDetail(props: Props): React.JSX.Element {
 
   return (
     <article>
-      {publish ? <>{children}</> : <h2 className={style.unpublished}>非公開に設定されてます!</h2>}
+      {publish ? children : <h2 className={style.unpublished}>非公開に設定されてます!</h2>}
     </article>
   )
 }

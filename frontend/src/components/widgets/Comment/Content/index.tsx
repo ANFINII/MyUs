@@ -1,12 +1,12 @@
 import { useState, SetStateAction, ChangeEvent, Dispatch } from 'react'
-import router from 'next/router'
-import { capitalize } from 'lodash'
+import { useRouter } from 'next/router'
 import { Reply, Comment, CommnetIn } from 'types/internal/comment'
 import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { postComment, putComment, deleteComment } from 'api/internal/comment'
 import { postLikeComment } from 'api/internal/user'
 import { FetchError } from 'utils/constants/enum'
 import { commentTypeNoMap } from 'utils/constants/map'
+import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
 import { useLoading } from 'components/hooks/useLoading'
@@ -37,6 +37,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const { ulid, author, text } = comment
   const { isActive } = user
 
+  const router = useRouter()
   const { loading, handleLoading } = useLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -137,7 +138,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
             <HStack gap="4" className="fs_12">
               <CountLike isLike={isLike} disable={!isActive} count={likeCount} onClick={handleLike} />
               <View isView={isReplyView} onView={handleReplyView} size="s" color="grey" content="返信" />
-              <View isView={isThreadView} onView={handleThreadView} size="s" color="grey" content={`スレッド ${replys.length || 0} 件`} />
+              <View isView={isThreadView} onView={handleThreadView} size="s" color="grey" content={`スレッド ${replys.length} 件`} />
             </HStack>
             <ReplyInput user={user} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleMediaReply} onCancel={handleReplyCancel} />
           </VStack>

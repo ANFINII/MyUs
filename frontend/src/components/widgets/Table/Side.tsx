@@ -12,7 +12,7 @@ export default function SideTable(props: Props): React.JSX.Element {
   return (
     <Table>
       {rows.map((row) => (
-        <TableRow key={row.label} label={row.label} isIndent={row.isIndent || true}>
+        <TableRow key={row.label} label={row.label} isIndent={row.isIndent ?? true}>
           {row.content}
         </TableRow>
       ))}

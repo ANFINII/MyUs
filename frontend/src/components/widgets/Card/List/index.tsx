@@ -9,7 +9,7 @@ interface Props<T extends ObjectId> {
   Content: React.ComponentType<{ item: T }>
 }
 
-export default function CardList<T extends ObjectId>(props: Props<T>) {
+export default function CardList<T extends ObjectId>(props: Props<T>): React.JSX.Element {
   const { items, Content } = props
 
   return (

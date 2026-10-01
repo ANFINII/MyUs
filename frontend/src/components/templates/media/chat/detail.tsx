@@ -73,7 +73,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const { messages, replies, message, reply, selectedMessage, joined, thread, likeCount, subscribeCount, isLike, isSubscribe } = formState
   const isPeriod = new Date(detail.period) < new Date()
   const isDisabled = isPeriod || !user.isActive
-  const isFallowDisable = !user.isActive || user.ulid === detail.channel.ownerUlid
+  const isFollowDisable = !user.isActive || user.ulid === detail.channel.ownerUlid
   const headerDetail = { ...detail, joined, thread, like: likeCount, mediaUser: { ...detail.mediaUser, isLike, isSubscribe } }
 
   const scrollToBottom = useCallback(() => {
@@ -254,7 +254,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
                 subscribeCount={subscribeCount}
                 isContent={isContent}
                 isContentExpand={isContentExpand}
-                isFallowDisable={isFallowDisable}
+                isFollowDisable={isFollowDisable}
                 onModal={handleModal}
                 onSubscribe={handleSubscribe}
                 onContentExpand={handleContentExpand}

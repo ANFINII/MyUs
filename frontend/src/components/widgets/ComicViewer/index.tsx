@@ -14,8 +14,8 @@ export default function ComicViewer(props: Props): React.JSX.Element {
   const { pages } = props
 
   const viewerRef = useRef<HTMLDivElement>(null)
-  const [page, setPage] = useState(0)
-  const [isFull, setIsFull] = useState(false)
+  const [page, setPage] = useState<number>(0)
+  const [isFull, setIsFull] = useState<boolean>(false)
 
   const handlePrev = useCallback(() => setPage((p) => Math.max(p - 1, 0)), [])
   const handleNext = useCallback(() => setPage((p) => Math.min(p + 1, pages.length - 1)), [pages.length])

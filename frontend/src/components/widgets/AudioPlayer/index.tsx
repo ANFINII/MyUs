@@ -26,12 +26,12 @@ export default function AudioPlayer(props: Props): React.JSX.Element {
   const isDraggingRef = useRef(false)
   const wasPlayingRef = useRef(false)
   const isVolumeDraggingRef = useRef(false)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [loaded, setLoaded] = useState(0)
-  const [volume, setVolume] = useState(0.5)
+  const [isPlaying, setIsPlaying] = useState<boolean>(false)
+  const [isMuted, setIsMuted] = useState<boolean>(false)
+  const [currentTime, setCurrentTime] = useState<number>(0)
+  const [duration, setDuration] = useState<number>(0)
+  const [loaded, setLoaded] = useState<number>(0)
+  const [volume, setVolume] = useState<number>(0.5)
 
   const seekToPosition = useCallback((clientX: number) => {
     const audio = audioRef.current
