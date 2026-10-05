@@ -121,7 +121,7 @@ export default function ChatEditor(props: Props): React.JSX.Element {
         )}
         {onCancel && onSave ? (
           <HStack gap="2" className={style.edit_actions}>
-            <Button name="キャンセル" color="white" size="s" onClick={onSave} />
+            <Button name="キャンセル" color="white" size="s" onClick={onCancel} />
             <Button name="保存" color="blue" size="s" onClick={onSave} disabled={isEmpty} />
           </HStack>
         ) : (

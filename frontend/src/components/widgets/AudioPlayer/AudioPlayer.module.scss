@@ -36,7 +36,7 @@
 
     .icon {
       display: block;
-      filter: drop-shadow(1px 1px 0 #000);
+      filter: drop-shadow(1px 1px 0 rgb(0, 0, 0));
     }
   }
 
@@ -168,7 +168,7 @@
         height: 0.375em;
         background: rgb(255, 255, 255);
         z-index: 1;
-        filter: drop-shadow(1px 1px 0 #000);
+        filter: drop-shadow(1px 1px 0 rgb(0, 0, 0));
 
         &::before {
           position: absolute;
@@ -238,7 +238,7 @@
     left: 0.563em;
     width: 0.313em;
     height: 0.313em;
-    border: 0.25em double #fff;
+    border: 0.25em double rgb(255, 255, 255);
     border-width: 0.25em 0.25em 0 0;
     border-radius: 0 0.938em 0 0;
     transform: rotate(45deg);
