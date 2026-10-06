@@ -19,11 +19,7 @@ export default function ManageVideosPage(): React.JSX.Element {
   const router = useRouter()
   const { search, page, limit, offset } = pageParams(router.query)
 
-  const channelsQuery = useQuery({
-    queryKey: queryKeys.channels,
-    queryFn: () => toQuery(getChannels()),
-    enabled: router.isReady,
-  })
+  const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()), enabled: router.isReady })
 
   const channels = channelsQuery.data ?? []
   const channel = router.query.channel?.toString() || channels[0]?.ulid

@@ -22,11 +22,7 @@ export default function ManageAdvertiseEditPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const query = useQuery({
-    queryKey: queryKeys.manageAdvertiseDetail(ulid),
-    queryFn: () => toQuery(getManageAdvertise(ulid)),
-    enabled: router.isReady,
-  })
+  const query = useQuery({ queryKey: queryKeys.manageAdvertiseDetail(ulid), queryFn: () => toQuery(getManageAdvertise(ulid)), enabled: router.isReady })
   const data = useFreshData({ data: query })
 
   return (
