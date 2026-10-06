@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import cx from 'utils/functions/cx'
 import Avatar from 'components/parts/Avatar'
+import Link from 'components/parts/Link'
 import style from './AvatarLink.module.scss'
 
 interface Props {

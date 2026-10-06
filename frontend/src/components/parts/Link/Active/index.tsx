@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import { isActive } from 'utils/functions/common'
 import { useAppRouter } from 'components/hooks/useAppRouter'
+import Link from 'components/parts/Link'
 
 interface Props {
   href: string

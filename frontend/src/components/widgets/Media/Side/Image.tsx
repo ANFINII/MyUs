@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import { Media } from 'types/internal/media/output'
 import ExImage from 'components/parts/ExImage'
+import Link from 'components/parts/Link'
 import HStack from 'components/parts/Stack/Horizontal'
 import CardMediaContentBase from 'components/widgets/Card/Media/Content/Base'
 import style from './Side.module.scss'
