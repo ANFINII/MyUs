@@ -1,25 +1,21 @@
-import { GetServerSideProps } from 'next'
-import { PictureDetailOut } from 'types/internal/media/output'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getPicture } from 'api/internal/media/detail'
-import ErrorCheck from 'components/widgets/Status/Check'
+import { useAppRouter } from 'components/hooks/useAppRouter'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import PictureDetail from 'components/templates/media/picture/detail'
 
-export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
-  const ret = await getPicture(String(query.ulid), req)
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const data = ret.value
-  return { props: { data } }
-}
+export default function PictureDetailPage(): React.JSX.Element {
+  const router = useAppRouter()
+  const ulid = String(router.query.ulid ?? '')
 
-interface Props {
-  status: number
-  data: PictureDetailOut
-}
+  const data = useQuery({ queryKey: queryKeys.mediaPictureDetail(ulid), queryFn: () => toQuery(getPicture(ulid)), enabled: router.isReady })
+  const queries = { data }
 
-export default function PictureDetailPage(props: Props): React.JSX.Element {
   return (
-    <ErrorCheck status={props.status}>
-      <PictureDetail {...props} />
-    </ErrorCheck>
+    <QueryCheck title="Picture" queries={queries} fresh>
+      {(props) => <PictureDetail {...props} />}
+    </QueryCheck>
   )
 }

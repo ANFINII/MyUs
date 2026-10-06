@@ -1,25 +1,21 @@
-import { GetServerSideProps } from 'next'
-import { MusicDetailOut } from 'types/internal/media/output'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getMusic } from 'api/internal/media/detail'
-import ErrorCheck from 'components/widgets/Status/Check'
+import { useAppRouter } from 'components/hooks/useAppRouter'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import MusicDetail from 'components/templates/media/music/detail'
 
-export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
-  const ret = await getMusic(String(query.ulid), req)
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const data = ret.value
-  return { props: { data } }
-}
+export default function MusicDetailPage(): React.JSX.Element {
+  const router = useAppRouter()
+  const ulid = String(router.query.ulid ?? '')
 
-interface Props {
-  status: number
-  data: MusicDetailOut
-}
+  const data = useQuery({ queryKey: queryKeys.mediaMusicDetail(ulid), queryFn: () => toQuery(getMusic(ulid)), enabled: router.isReady })
+  const queries = { data }
 
-export default function MusicDetailPage(props: Props): React.JSX.Element {
   return (
-    <ErrorCheck status={props.status}>
-      <MusicDetail {...props} />
-    </ErrorCheck>
+    <QueryCheck title="Music" queries={queries} fresh>
+      {(props) => <MusicDetail {...props} />}
+    </QueryCheck>
   )
 }

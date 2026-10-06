@@ -19,7 +19,6 @@ type PlayerWithQuality = Player & {
 }
 
 interface Props {
-  status: number
   data: VideoDetailOut
 }
 
