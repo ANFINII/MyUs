@@ -1,4 +1,5 @@
 import { useState, createContext, useEffect, useCallback } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { UserMe } from 'types/internal/user'
 import { getUser } from 'api/internal/user'
 
@@ -19,9 +20,13 @@ interface Props {
 export function UserProvider(props: Props): React.JSX.Element {
   const { children } = props
 
+  const queryClient = useQueryClient()
   const [user, setUser] = useState<UserMe>(initUser)
 
-  const resetUser = useCallback(() => setUser(initUser), [])
+  const resetUser = useCallback(() => {
+    queryClient.clear()
+    setUser(initUser)
+  }, [queryClient])
 
   const updateUser = useCallback(async () => {
     const ret = await getUser()
