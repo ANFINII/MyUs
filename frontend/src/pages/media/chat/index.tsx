@@ -1,29 +1,23 @@
-import { GetServerSideProps } from 'next'
-import { Chat } from 'types/internal/media/output'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getChats } from 'api/internal/media/list'
 import { pageParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Status/Check'
+import { useAppRouter } from 'components/hooks/useAppRouter'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Chats from 'components/templates/media/chat/list'
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { search, limit, offset, page } = pageParams(query)
-  const ret = await getChats({ search, limit, offset })
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const { datas, total } = ret.value
-  return { props: { datas, total, page } }
-}
+export default function ChatsPage(): React.JSX.Element {
+  const router = useAppRouter()
+  const { search, page, limit, offset } = pageParams(router.query)
+  const params = { search, limit, offset }
 
-interface Props {
-  status: number
-  datas: Chat[]
-  total: number
-  page: number
-}
+  const query = useQuery({ queryKey: queryKeys.mediaChatList(params), queryFn: () => toQuery(getChats(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const queries = { list: query }
 
-export default function ChatsPage(props: Props): React.JSX.Element {
   return (
-    <ErrorCheck status={props.status}>
-      <Chats {...props} />
-    </ErrorCheck>
+    <QueryCheck title="Chat" queries={queries}>
+      {(props) => <Chats {...props} page={page} />}
+    </QueryCheck>
   )
 }

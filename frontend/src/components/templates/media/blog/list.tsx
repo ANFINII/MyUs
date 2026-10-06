@@ -1,4 +1,4 @@
-import { Blog } from 'types/internal/media/output'
+import { BlogList } from 'types/internal/media/output'
 import { usePagination } from 'components/hooks/usePagination'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
@@ -7,13 +7,13 @@ import CardList from 'components/widgets/Card/List'
 import BlogCard from 'components/widgets/Card/Media/Blog'
 
 interface Props {
-  datas: Blog[]
-  total: number
+  list: BlogList
   page: number
 }
 
 export default function Blogs(props: Props): React.JSX.Element {
-  const { datas, total, page } = props
+  const { list, page } = props
+  const { datas, total } = list
 
   const search = useSearch(total)
   const { currentPage, totalPages, handlePage } = usePagination(total, page)

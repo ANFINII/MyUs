@@ -1,4 +1,4 @@
-import { Picture } from 'types/internal/media/output'
+import { PictureList } from 'types/internal/media/output'
 import { usePagination } from 'components/hooks/usePagination'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
@@ -7,13 +7,13 @@ import CardList from 'components/widgets/Card/List'
 import PictureCard from 'components/widgets/Card/Media/Picture'
 
 interface Props {
-  datas: Picture[]
-  total: number
+  list: PictureList
   page: number
 }
 
 export default function Pictures(props: Props): React.JSX.Element {
-  const { datas, total, page } = props
+  const { list, page } = props
+  const { datas, total } = list
 
   const search = useSearch(total)
   const { currentPage, totalPages, handlePage } = usePagination(total, page)

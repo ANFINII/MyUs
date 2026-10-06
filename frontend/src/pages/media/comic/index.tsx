@@ -1,29 +1,23 @@
-import { GetServerSideProps } from 'next'
-import { Comic } from 'types/internal/media/output'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getComics } from 'api/internal/media/list'
 import { pageParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Status/Check'
+import { useAppRouter } from 'components/hooks/useAppRouter'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Comics from 'components/templates/media/comic/list'
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { search, limit, offset, page } = pageParams(query)
-  const ret = await getComics({ search, limit, offset })
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const { datas, total } = ret.value
-  return { props: { datas, total, page } }
-}
+export default function ComicsPage(): React.JSX.Element {
+  const router = useAppRouter()
+  const { search, page, limit, offset } = pageParams(router.query)
+  const params = { search, limit, offset }
 
-interface Props {
-  status: number
-  datas: Comic[]
-  total: number
-  page: number
-}
+  const query = useQuery({ queryKey: queryKeys.mediaComicList(params), queryFn: () => toQuery(getComics(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const queries = { list: query }
 
-export default function ComicsPage(props: Props): React.JSX.Element {
   return (
-    <ErrorCheck status={props.status}>
-      <Comics {...props} />
-    </ErrorCheck>
+    <QueryCheck title="Comic" queries={queries}>
+      {(props) => <Comics {...props} page={page} />}
+    </QueryCheck>
   )
 }
