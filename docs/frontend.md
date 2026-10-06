@@ -81,31 +81,87 @@ const [user, setUser] = useState<User | null>(null)
 
 - API呼び出しは`async/await`で記述する
 - エラーハンドリングは`Result`型（`isErr()`）パターンで行う
-- ローディング状態は`useIsLoading`フックで管理する
+- ローディング状態は`useLoading`フックで管理する
+- ページ表示時のデータ取得は「データ取得（TanStack Query）」に従う
+
+## データ取得（TanStack Query）
+
+ページ表示時のデータ取得は`getServerSideProps`ではなく、TanStack Queryの`useQuery`でクライアント側から行う。
+
+### ページの構成
+
+- `getStaticProps`では翻訳ファイルのみ読み込む（データは取得しない）
+- 動的ルート（`[ulid]`等）は`getStaticPaths`で`{ paths: [], fallback: 'blocking' }`を返す
+- 取得結果は`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
+- `QueryCheck`の`children`は、データを使う場合は関数、使わない場合はJSXで渡す
+
+```typescript
+export default function ManageVideoEditPage(): React.JSX.Element {
+  const router = useRouter()
+  const ulid = String(router.query.ulid ?? '')
+
+  const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
+  const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
+  const query = useQuery({ queryKey: queryKeys.manageVideoDetail(ulid), queryFn: () => toQuery(getManageVideo(ulid)), enabled: router.isReady })
+  const data = useFreshData({ data: query, channels: channelsQuery, categories: categoriesQuery })
+
+  return (
+    <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Video">
+      {(props) => <ManageVideoEdit {...props} />}
+    </QueryCheck>
+  )
+}
+```
+
+### useQuery の書き方
+
+- `queryFn`は`toQuery`（`lib/query/client`）でAPI関数を包む（`Result`型をthrowに変換し、`error`を`ApiError`型として扱うため）
+- `queryKey`は`lib/query/keys.ts`の`queryKeys`に定義する（`invalidateQueries`で前方一致させるため、配列の先頭から粒度が細かくなるようにする）
+- 1行で書く。180文字（`printWidth`）を超えるものはPrettierの折り返しに任せる
+- 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
+- 連続する`useQuery`の間、および直後の`const data`との間に空行を入れない
+- `router.query`を使うクエリは`enabled: router.isReady`で読み込み完了を待つ（静的生成ページは初回描画時に`router.query`が空のため）
+
+### 用途別のルール
+
+| 用途 | ルール |
+|------|------|
+| 取得データを`useState`の初期値に使う（作成・編集フォーム） | `useFreshData`を通す（古いキャッシュでフォームが初期化され、古い値で上書き保存されるのを防ぐ） |
+| ページ送り・検索等で`queryKey`が変わる一覧 | `placeholderData: keepPreviousData`で前の表示を残す（画面全体がスピナーに切り替わるのを防ぐ） |
+| 一覧・表示のみ | `query.data`をそのまま使う |
+
+### キャッシュ
+
+- `staleTime: 0`のため、ページを開くたびに最新を取得する。更新処理のたびに`invalidateQueries`を呼ぶ必要はない
+- ログイン・ログアウト・退会時のキャッシュ削除は`UserProvider`とログイン画面で行っているため、個別のページでは不要
+- 公開ページ（ホーム・おすすめ・メディア一覧/詳細・ユーザーページ）はOGP対応が決まるまで`getServerSideProps`のまま
 
 ## コンポーネント設計
 
 - 1ファイル1コンポーネント（default export）
 - ロジックが複雑になったらカスタムフックに切り出す
-- `pages/`はデータ取得（`getServerSideProps`等）とテンプレート呼び出しのみ
+- `pages/`はデータ取得（`useQuery`）とテンプレート呼び出しのみ
 - `templates/`にページの実装を置く
 
 ## ディレクトリ構成の責務
 
 | ディレクトリ | 責務 |
 |------|------|
-| `pages/` | ルーティング、SSRデータ取得 |
+| `pages/` | ルーティング、データ取得（`useQuery`） |
 | `templates/` | ページの実装、状態管理 |
 | `widgets/` | 複合コンポーネント（Modal, Card等） |
 | `parts/` | 汎用UIコンポーネント（Button, Input等） |
 | `hooks/` | カスタムフック |
 | `api/` | APIクライアント関数 |
+| `lib/query/` | TanStack Queryの設定（`client.ts`）とクエリキー（`keys.ts`） |
 | `types/` | 型定義 |
 | `utils/` | ユーティリティ関数 |
 
 ## 依存方向
 
 `parts/` ← `widgets/` ← `templates/` ← `pages/` の片方向のみ依存する。逆方向や同階層への依存は禁止。
+
+ただし、`widgets/` 内の同じフォルダ（同ファミリ）内の依存は許容する（例: `Status/QueryCheck` が `Status/Check`・`Status/Loading` を使う）。
 
 ### parts は独立性を持つ
 
@@ -177,3 +233,4 @@ return <div className={style.box}>...</div>
 - 2026-04-22: `interface Props`はコンポーネント関数の直前配置ルール追加
 - 2026-04-27: 依存方向ルール追加（`parts/` は他 parts / グローバル CSS に依存せず単体で動作する）
 - 2026-04-27: parts 独立性の例外ケース 4 種を明文化（純粋表示用・同ファミリ派生・同サブツリー・汎用合成 UI）
+- 2026-10-06: データ取得（TanStack Query）のルール追加、`pages/` の責務を `useQuery` に更新、widgets 同フォルダ内の依存を許容、`useIsLoading` → `useLoading` に修正
