@@ -1,27 +1,28 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { UserNotificationOut } from 'types/internal/user'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getSettingNotification } from 'api/internal/setting'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import SettingNotification from 'components/templates/setting/notification'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const ret = await getSettingNotification(req)
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const userNotification = ret.value
-  return { props: { ...translations, userNotification } }
+  return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-  userNotification: UserNotificationOut
-}
+export default function SettingNotificationPage(): React.JSX.Element {
+  const query = useQuery({
+    queryKey: queryKeys.settingNotification,
+    queryFn: () => toQuery(getSettingNotification()),
+  })
 
-export default function SettingNotificationPage(props: Props): React.JSX.Element {
+  const data = query.isFetchedAfterMount && query.data ? { userNotification: query.data } : undefined
+
   return (
-    <ErrorCheck status={props.status}>
-      <SettingNotification {...props} />
-    </ErrorCheck>
+    <QueryCheck queries={[query]} data={data} title="通知設定">
+      {(props) => <SettingNotification {...props} />}
+    </QueryCheck>
   )
 }
