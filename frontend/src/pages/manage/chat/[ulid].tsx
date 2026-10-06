@@ -31,9 +31,7 @@ export default function ManageChatEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManageChat(ulid)),
     enabled: router.isReady,
   })
-  const chat = useFreshData(query)
-
-  const data = chat && channelsQuery.data && categoriesQuery.data && { data: chat, channels: channelsQuery.data, categories: categoriesQuery.data }
+  const data = useFreshData({ data: query, channels: channelsQuery, categories: categoriesQuery })
 
   return (
     <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Chat">

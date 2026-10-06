@@ -31,9 +31,7 @@ export default function ManageBlogEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManageBlog(ulid)),
     enabled: router.isReady,
   })
-  const blog = useFreshData(query)
-
-  const data = blog && channelsQuery.data && categoriesQuery.data && { data: blog, channels: channelsQuery.data, categories: categoriesQuery.data }
+  const data = useFreshData({ data: query, channels: channelsQuery, categories: categoriesQuery })
 
   return (
     <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Blog">

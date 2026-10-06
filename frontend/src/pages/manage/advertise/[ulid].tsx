@@ -27,9 +27,7 @@ export default function ManageAdvertiseEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManageAdvertise(ulid)),
     enabled: router.isReady,
   })
-  const advertise = useFreshData(query)
-
-  const data = advertise && { data: advertise }
+  const data = useFreshData({ data: query })
 
   return (
     <QueryCheck queries={[query]} data={data} title="Advertise">

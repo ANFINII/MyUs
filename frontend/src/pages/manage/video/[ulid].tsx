@@ -31,9 +31,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManageVideo(ulid)),
     enabled: router.isReady,
   })
-  const video = useFreshData(query)
-
-  const data = video && channelsQuery.data && categoriesQuery.data && { data: video, channels: channelsQuery.data, categories: categoriesQuery.data }
+  const data = useFreshData({ data: query, channels: channelsQuery, categories: categoriesQuery })
 
   return (
     <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Video">

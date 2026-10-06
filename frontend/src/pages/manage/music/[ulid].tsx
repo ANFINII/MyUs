@@ -31,9 +31,7 @@ export default function ManageMusicEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManageMusic(ulid)),
     enabled: router.isReady,
   })
-  const music = useFreshData(query)
-
-  const data = music && channelsQuery.data && categoriesQuery.data && { data: music, channels: channelsQuery.data, categories: categoriesQuery.data }
+  const data = useFreshData({ data: query, channels: channelsQuery, categories: categoriesQuery })
 
   return (
     <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Music">

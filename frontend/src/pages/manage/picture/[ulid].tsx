@@ -31,9 +31,7 @@ export default function ManagePictureEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManagePicture(ulid)),
     enabled: router.isReady,
   })
-  const picture = useFreshData(query)
-
-  const data = picture && channelsQuery.data && categoriesQuery.data && { data: picture, channels: channelsQuery.data, categories: categoriesQuery.data }
+  const data = useFreshData({ data: query, channels: channelsQuery, categories: categoriesQuery })
 
   return (
     <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Picture">
