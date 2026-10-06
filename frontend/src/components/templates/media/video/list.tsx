@@ -7,20 +7,20 @@ import CardList from 'components/widgets/Card/List'
 import VideoCard from 'components/widgets/Card/Media/Video'
 
 interface Props {
-  list: VideoList
+  data: VideoList
   page: number
 }
 
 export default function Videos(props: Props): React.JSX.Element {
-  const { list, page } = props
-  const { datas, total } = list
+  const { data, page } = props
+  const { items, total } = data
 
   const search = useSearch(total)
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
 
   return (
     <Main title="Video" search={search}>
-      <CardList items={datas} Content={VideoCard} />
+      <CardList items={items} Content={VideoCard} />
       <Pagination currentPage={currentPage} totalPages={totalPages} margin="mv_40" onChange={handlePage} />
     </Main>
   )

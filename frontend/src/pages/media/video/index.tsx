@@ -12,8 +12,8 @@ export default function VideosPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const list = useQuery({ queryKey: queryKeys.mediaVideoList(params), queryFn: () => toQuery(getVideos(params)), enabled: router.isReady, placeholderData: keepPreviousData })
-  const queries = { list }
+  const data = useQuery({ queryKey: queryKeys.mediaVideoList(params), queryFn: () => toQuery(getVideos(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const queries = { data }
 
   return (
     <QueryCheck title="Video" queries={queries}>

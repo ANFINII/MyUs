@@ -66,7 +66,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     postNotificationConfirmed(ulid)
     setNotifications((prev) => {
       if (prev === undefined) return prev
-      return { ...prev, datas: prev.datas.map((n) => (n.ulid === ulid ? { ...n, isConfirmed: true } : n)) }
+      return { ...prev, items: prev.items.map((n) => (n.ulid === ulid ? { ...n, isConfirmed: true } : n)) }
     })
     if (typeName === NotificationType.Video) handleRouter(`/video/detail/${contentObject.id}`)
     if (typeName === NotificationType.Music) handleRouter(`/music/detail/${contentObject.id}`)
@@ -82,8 +82,8 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     postNotificationDeleted(ulid)
     setNotifications((prev) => {
       if (prev === undefined) return prev
-      const datas = prev.datas.filter((n) => n.ulid !== ulid)
-      return { count: datas.length, datas }
+      const items = prev.items.filter((n) => n.ulid !== ulid)
+      return { count: items.length, items }
     })
   }
 
@@ -91,7 +91,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     <nav className={cx(style.drop_menu, style.drop_menu_notice, open && style.active)}>
       <ul>
         <NavItem label="通知設定" icon={<IconBell size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/notification')} />
-        {notifications?.datas?.map((notification) => {
+        {notifications?.items?.map((notification) => {
           const { ulid, typeName, userFrom, contentObject, isConfirmed } = notification
           const { avatar, nickname } = userFrom
           const { title, text, read } = contentObject

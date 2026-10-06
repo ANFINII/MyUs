@@ -7,20 +7,20 @@ import CardList from 'components/widgets/Card/List'
 import ComicCard from 'components/widgets/Card/Media/Comic'
 
 interface Props {
-  list: ComicList
+  data: ComicList
   page: number
 }
 
 export default function Comics(props: Props): React.JSX.Element {
-  const { list, page } = props
-  const { datas, total } = list
+  const { data, page } = props
+  const { items, total } = data
 
   const search = useSearch(total)
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
 
   return (
     <Main title="Comic" search={search}>
-      <CardList items={datas} Content={ComicCard} />
+      <CardList items={items} Content={ComicCard} />
       <Pagination currentPage={currentPage} totalPages={totalPages} margin="mv_40" onChange={handlePage} />
     </Main>
   )

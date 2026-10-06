@@ -31,4 +31,4 @@ class NotificationItemOut(BaseModel):
 
 class NotificationOut(BaseModel):
     count: int
-    datas: list[NotificationItemOut]
+    items: list[NotificationItemOut]

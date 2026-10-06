@@ -94,32 +94,32 @@ export interface MediaHome {
 }
 
 export interface VideoList {
-  datas: Video[]
+  items: Video[]
   total: number
 }
 
 export interface MusicList {
-  datas: Music[]
+  items: Music[]
   total: number
 }
 
 export interface BlogList {
-  datas: Blog[]
+  items: Blog[]
   total: number
 }
 
 export interface ComicList {
-  datas: Comic[]
+  items: Comic[]
   total: number
 }
 
 export interface PictureList {
-  datas: Picture[]
+  items: Picture[]
   total: number
 }
 
 export interface ChatList {
-  datas: Chat[]
+  items: Chat[]
   total: number
 }
 

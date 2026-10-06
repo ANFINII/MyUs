@@ -12,8 +12,8 @@ export default function MusicsPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const list = useQuery({ queryKey: queryKeys.mediaMusicList(params), queryFn: () => toQuery(getMusics(params)), enabled: router.isReady, placeholderData: keepPreviousData })
-  const queries = { list }
+  const data = useQuery({ queryKey: queryKeys.mediaMusicList(params), queryFn: () => toQuery(getMusics(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const queries = { data }
 
   return (
     <QueryCheck title="Music" queries={queries}>

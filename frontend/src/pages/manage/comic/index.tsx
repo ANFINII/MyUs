@@ -17,13 +17,13 @@ export default function ManageComicsPage(): React.JSX.Element {
   const channel = router.query.channel?.toString() || channels.data?.[0]?.ulid
   const params = { search, channel, limit, offset }
 
-  const list = useQuery({
+  const data = useQuery({
     queryKey: queryKeys.manageComicList(params),
     queryFn: () => toQuery(getManageComics(params)),
     enabled: channels.isSuccess,
     placeholderData: keepPreviousData,
   })
-  const queries = { channels, list }
+  const queries = { channels, data }
 
   return (
     <QueryCheck title="Comic" queries={queries}>

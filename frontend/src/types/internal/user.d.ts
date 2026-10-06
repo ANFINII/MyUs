@@ -155,7 +155,7 @@ export interface Notification {
 
 export interface NotificationOut {
   count: number
-  datas: Notification[]
+  items: Notification[]
 }
 
 export interface UserNotification {

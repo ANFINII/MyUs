@@ -20,14 +20,14 @@ import ManageHeader from '../_container/Header'
 import ManageTable from '../_container/Table'
 
 interface Props {
-  list: MusicList
+  data: MusicList
   page: number
   channels: Channel[]
 }
 
 export default function ManageMusics(props: Props): React.JSX.Element {
-  const { list, page, channels } = props
-  const { datas, total } = list
+  const { data, page, channels } = props
+  const { items, total } = data
 
   const router = useAppRouter()
   const queryClient = useQueryClient()
@@ -150,7 +150,7 @@ export default function ManageMusics(props: Props): React.JSX.Element {
       button={<ManageHeader count={selectedKeys.size} ulid={channelUlid} options={channelOptions} onModal={handleModal} onChange={handleChannel} />}
     >
       <ManageTable
-        table={{ datas, columns, rowKey: (m) => m.ulid }}
+        table={{ datas: items, columns, rowKey: (m) => m.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
         pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
         deletion={{ open: isModal, loading, onClose: handleModal, onAction: handleDeleteSubmit }}

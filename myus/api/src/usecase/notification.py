@@ -62,7 +62,7 @@ def get_notification(user_id: int) -> NotificationDTO:
         )
         items.append(item)
 
-    return NotificationDTO(count=len(items), datas=items)
+    return NotificationDTO(count=len(items), items=items)
 
 
 def notification_confirm(user_id: int, ulid: str) -> None:

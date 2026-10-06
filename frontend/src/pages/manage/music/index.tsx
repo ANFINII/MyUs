@@ -17,13 +17,13 @@ export default function ManageMusicsPage(): React.JSX.Element {
   const channel = router.query.channel?.toString() || channels.data?.[0]?.ulid
   const params = { search, channel, limit, offset }
 
-  const list = useQuery({
+  const data = useQuery({
     queryKey: queryKeys.manageMusicList(params),
     queryFn: () => toQuery(getManageMusics(params)),
     enabled: channels.isSuccess,
     placeholderData: keepPreviousData,
   })
-  const queries = { channels, list }
+  const queries = { channels, data }
 
   return (
     <QueryCheck title="Music" queries={queries}>

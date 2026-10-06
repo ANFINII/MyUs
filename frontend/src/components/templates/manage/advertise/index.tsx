@@ -19,15 +19,15 @@ import style from '../Media.module.scss'
 import ManageTable from '../_container/Table'
 
 interface Props {
-  list: AdvertiseList
+  data: AdvertiseList
   page: number
 }
 
 const ADVERTISE_LIMIT = 5
 
 export default function ManageAdvertises(props: Props): React.JSX.Element {
-  const { list, page } = props
-  const { datas, total } = list
+  const { data, page } = props
+  const { items, total } = data
 
   const router = useAppRouter()
   const queryClient = useQueryClient()
@@ -146,7 +146,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
       }
     >
       <ManageTable
-        table={{ datas, columns, rowKey: (a) => a.ulid }}
+        table={{ datas: items, columns, rowKey: (a) => a.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
         pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
         deletion={{ open: isModal, loading, onClose: handleModal, onAction: handleDeleteSubmit }}
