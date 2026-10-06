@@ -11,8 +11,8 @@ export default function RecommendPage(): React.JSX.Element {
   const router = useAppRouter()
   const params = searchParams(router.query)
 
-  const query = useQuery({ queryKey: queryKeys.recommend(params), queryFn: () => toQuery(getRecommend(params)), enabled: router.isReady, placeholderData: keepPreviousData })
-  const queries = { mediaHome: query }
+  const mediaHome = useQuery({ queryKey: queryKeys.recommend(params), queryFn: () => toQuery(getRecommend(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const queries = { mediaHome }
 
   return (
     <QueryCheck title="Recommend" queries={queries}>

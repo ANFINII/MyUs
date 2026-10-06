@@ -12,8 +12,8 @@ export default function ChatsPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const query = useQuery({ queryKey: queryKeys.mediaChatList(params), queryFn: () => toQuery(getChats(params)), enabled: router.isReady, placeholderData: keepPreviousData })
-  const queries = { list: query }
+  const list = useQuery({ queryKey: queryKeys.mediaChatList(params), queryFn: () => toQuery(getChats(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const queries = { list }
 
   return (
     <QueryCheck title="Chat" queries={queries}>

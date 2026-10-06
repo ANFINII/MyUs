@@ -6,8 +6,8 @@ import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Channels from 'components/templates/menu/channel'
 
 export default function ChannelsPage(): React.JSX.Element {
-  const query = useQuery({ queryKey: queryKeys.subscribeChannels, queryFn: () => toQuery(getSubscribeChannels()) })
-  const queries = { datas: query }
+  const datas = useQuery({ queryKey: queryKeys.subscribeChannels, queryFn: () => toQuery(getSubscribeChannels()) })
+  const queries = { datas }
 
   return (
     <QueryCheck title="Channel" queries={queries}>

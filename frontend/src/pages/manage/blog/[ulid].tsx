@@ -12,10 +12,10 @@ export default function ManageBlogEditPage(): React.JSX.Element {
   const router = useAppRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
-  const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
-  const query = useQuery({ queryKey: queryKeys.manageBlogDetail(ulid), queryFn: () => toQuery(getManageBlog(ulid)), enabled: router.isReady })
-  const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
+  const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
+  const categories = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
+  const data = useQuery({ queryKey: queryKeys.manageBlogDetail(ulid), queryFn: () => toQuery(getManageBlog(ulid)), enabled: router.isReady })
+  const queries = { data, channels, categories }
 
   return (
     <QueryCheck title="Blog" queries={queries} fresh>

@@ -6,8 +6,8 @@ import QueryCheck from 'components/widgets/Status/QueryCheck'
 import PasswordChange from 'components/templates/setting/password/change'
 
 export default function PasswordChangePage(): React.JSX.Element {
-  const query = useQuery({ queryKey: queryKeys.user, queryFn: () => toQuery(getUser()) })
-  const queries = { user: query }
+  const user = useQuery({ queryKey: queryKeys.user, queryFn: () => toQuery(getUser()) })
+  const queries = { user }
 
   return (
     <QueryCheck title="パスワード変更" queries={queries}>

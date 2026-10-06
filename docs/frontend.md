@@ -102,10 +102,10 @@ export default function ManageVideoEditPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
-  const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
-  const query = useQuery({ queryKey: queryKeys.manageVideoDetail(ulid), queryFn: () => toQuery(getManageVideo(ulid)), enabled: router.isReady })
-  const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
+  const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
+  const categories = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
+  const data = useQuery({ queryKey: queryKeys.manageVideoDetail(ulid), queryFn: () => toQuery(getManageVideo(ulid)), enabled: router.isReady })
+  const queries = { data, channels, categories }
 
   return (
     <QueryCheck title="Video" queries={queries} fresh>
@@ -120,6 +120,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 - `queryFn`は`toQuery`（`lib/query/client`）でAPI関数を包む（`Result`型をthrowに変換し、`error`を`ApiError`型として扱うため）
 - `queryKey`は`lib/query/keys.ts`の`queryKeys`に定義する（`invalidateQueries`で前方一致させるため、配列の先頭から粒度が細かくなるようにする）
 - 1行で書く。180文字（`printWidth`）を超えるものはPrettierの折り返しに任せる
+- `useQuery`の結果は`queries`のキー（テンプレートのprops名）と同じ名前の変数に入れ、`const queries = { data, channels }`のように省略記法で書く
 - 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
 - 連続する`useQuery`の間、および直後の`const queries`との間に空行を入れない
 - `router.query`を使うクエリは`enabled: router.isReady`で読み込み完了を待つ（静的生成ページは初回描画時に`router.query`が空のため）
@@ -237,3 +238,4 @@ return <div className={style.box}>...</div>
 - 2026-04-27: parts 独立性の例外ケース 4 種を明文化（純粋表示用・同ファミリ派生・同サブツリー・汎用合成 UI）
 - 2026-10-06: データ取得（TanStack Query）のルール追加、`pages/` の責務を `useQuery` に更新、widgets 同フォルダ内の依存を許容、`useIsLoading` → `useLoading` に修正
 - 2026-10-06: `QueryCheck` がクエリを名前付きオブジェクトで受け取る形に変更（`useFreshData` を廃止し `fresh` に統合）
+- 2026-10-06: `useQuery` の結果を `queries` のキーと同じ名前の変数に入れるルールを追加

@@ -7,9 +7,9 @@ import QueryCheck from 'components/widgets/Status/QueryCheck'
 import MusicCreate from 'components/templates/manage/music/create'
 
 export default function MusicCreatePage(): React.JSX.Element {
-  const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
-  const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
-  const queries = { channels: channelsQuery, categories: categoriesQuery }
+  const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
+  const categories = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
+  const queries = { channels, categories }
 
   return (
     <QueryCheck title="Music" queries={queries} fresh>

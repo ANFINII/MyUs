@@ -7,9 +7,9 @@ import QueryCheck from 'components/widgets/Status/QueryCheck'
 import VideoCreate from 'components/templates/manage/video/create'
 
 export default function VideoCreatePage(): React.JSX.Element {
-  const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
-  const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
-  const queries = { channels: channelsQuery, categories: categoriesQuery }
+  const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
+  const categories = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
+  const queries = { channels, categories }
 
   return (
     <QueryCheck title="Video" queries={queries} fresh>

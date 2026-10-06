@@ -12,19 +12,18 @@ export default function ManageBlogsPage(): React.JSX.Element {
   const router = useAppRouter()
   const { search, page, limit, offset } = pageParams(router.query)
 
-  const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()), enabled: router.isReady })
+  const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()), enabled: router.isReady })
 
-  const channels = channelsQuery.data ?? []
-  const channel = router.query.channel?.toString() || channels[0]?.ulid
+  const channel = router.query.channel?.toString() || channels.data?.[0]?.ulid
   const params = { search, channel, limit, offset }
 
-  const query = useQuery({
+  const list = useQuery({
     queryKey: queryKeys.manageBlogList(params),
     queryFn: () => toQuery(getManageBlogs(params)),
-    enabled: channelsQuery.isSuccess,
+    enabled: channels.isSuccess,
     placeholderData: keepPreviousData,
   })
-  const queries = { channels: channelsQuery, list: query }
+  const queries = { channels, list }
 
   return (
     <QueryCheck title="Blog" queries={queries}>

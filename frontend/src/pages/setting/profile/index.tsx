@@ -6,8 +6,8 @@ import QueryCheck from 'components/widgets/Status/QueryCheck'
 import SettingProfile from 'components/templates/setting/profile'
 
 export default function SettingProfilePage(): React.JSX.Element {
-  const query = useQuery({ queryKey: queryKeys.settingProfile, queryFn: () => toQuery(getSettingProfile()) })
-  const queries = { profile: query }
+  const profile = useQuery({ queryKey: queryKeys.settingProfile, queryFn: () => toQuery(getSettingProfile()) })
+  const queries = { profile }
 
   return (
     <QueryCheck title="アカウント設定" queries={queries}>

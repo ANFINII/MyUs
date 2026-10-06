@@ -12,8 +12,8 @@ export default function ComicsPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const query = useQuery({ queryKey: queryKeys.mediaComicList(params), queryFn: () => toQuery(getComics(params)), enabled: router.isReady, placeholderData: keepPreviousData })
-  const queries = { list: query }
+  const list = useQuery({ queryKey: queryKeys.mediaComicList(params), queryFn: () => toQuery(getComics(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const queries = { list }
 
   return (
     <QueryCheck title="Comic" queries={queries}>
