@@ -6,7 +6,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from django.db.models import Count
 from import_export.admin import ImportExportModelAdmin
 from api.db.models import Notification, AccessLog, Comment, Message, Follow, Advertise, ComicPage
-from api.db.models import User, Profile, MyPage, SearchTag, HashTag, NgWord, UserNotification
+from api.db.models import User, Profile, MyPage, SearchTag, HashTag, Category, NgWord, UserNotification
 from api.db.models import Video, Music, Blog, Comic, Picture, Chat
 from api.db.models.channel import Channel
 from api.utils.constants.media import model_media_comment_dict
@@ -147,6 +147,21 @@ class HashTagAdmin(ImportExportModelAdmin):
     # 詳細画面
     fieldsets = [
         ("編集項目", {"fields": ("name",)}),
+        ("確認項目", {"fields": ("ulid",)}),
+    ]
+
+
+@admin.register(Category)
+class CategoryAdmin(ImportExportModelAdmin):
+    list_display = ("id", "ulid", "jp_name", "en_name")
+    list_editable = ("jp_name", "en_name")
+    search_fields = ("ulid", "jp_name", "en_name")
+    ordering = ("id",)
+    readonly_fields = ("ulid",)
+
+    # 詳細画面
+    fieldsets = [
+        ("編集項目", {"fields": ("jp_name", "en_name")}),
         ("確認項目", {"fields": ("ulid",)}),
     ]
 
