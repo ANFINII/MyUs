@@ -99,7 +99,7 @@ const [user, setUser] = useState<User | null>(null)
 // src/lib/routes.tsx
 page('/manage/video', () => import('pages/manage/video')),
 page('/manage/video/create', () => import('pages/manage/video/create')),
-page('/manage/video/$ulid', () => import('pages/manage/video/[ulid]')),
+page('/manage/video/$ulid', () => import('pages/manage/video/edit')),
 ```
 
 - クエリは名前付きのオブジェクトを`const queries`に入れてから`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
