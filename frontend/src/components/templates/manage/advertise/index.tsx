@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { useQueryClient } from '@tanstack/react-query'
+import { queryKeys } from 'lib/query/keys'
 import { Advertise } from 'types/internal/advertise'
 import { deleteManageAdvertises } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
@@ -28,6 +30,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
   const { datas, total, page } = props
 
   const router = useRouter()
+  const queryClient = useQueryClient()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
@@ -52,7 +55,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
     }
     setSelectedKeys(new Set())
     handleModal()
-    router.replace(router.asPath)
+    await queryClient.invalidateQueries({ queryKey: queryKeys.manageAdvertises })
   }
 
   const isLimitReached = total >= ADVERTISE_LIMIT

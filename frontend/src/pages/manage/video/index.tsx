@@ -1,39 +1,44 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
+import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { Channel } from 'types/internal/channel'
-import { Video } from 'types/internal/media/output'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getChannels } from 'api/internal/channel'
 import { getManageVideos } from 'api/internal/manage/get'
 import { pageParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageVideos from 'components/templates/manage/video'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const { search, page, limit, offset } = pageParams(query)
-  const channelsRet = await getChannels(req)
-  if (channelsRet.isErr()) return { props: { status: channelsRet.error.status } }
-  const channels = channelsRet.value
-
-  const channel = query.channel?.toString() || channels[0]!.ulid
-  const videosRet = await getManageVideos({ search, channel, limit, offset }, req)
-  if (videosRet.isErr()) return { props: { status: videosRet.error.status } }
-  const { datas, total } = videosRet.value
-  return { props: { ...translations, datas, total, page, channels } }
+  return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-  datas: Video[]
-  total: number
-  page: number
-  channels: Channel[]
-}
+export default function ManageVideosPage(): React.JSX.Element {
+  const router = useRouter()
+  const { search, page, limit, offset } = pageParams(router.query)
 
-export default function ManageVideosPage(props: Props): React.JSX.Element {
+  const channelsQuery = useQuery({
+    queryKey: queryKeys.channels,
+    queryFn: () => toQuery(getChannels()),
+    enabled: router.isReady,
+  })
+
+  const channels = channelsQuery.data ?? []
+  const channel = router.query.channel?.toString() || channels[0]?.ulid
+  const params = { search, channel, limit, offset }
+
+  const query = useQuery({
+    queryKey: queryKeys.manageVideoList(params),
+    queryFn: () => toQuery(getManageVideos(params)),
+    enabled: channelsQuery.isSuccess,
+    placeholderData: keepPreviousData,
+  })
+
   return (
-    <ErrorCheck status={props.status}>
-      <ManageVideos {...props} />
-    </ErrorCheck>
+    <QueryCheck queries={[channelsQuery, query]} data={query.data} title="Video">
+      {(data) => <ManageVideos {...data} page={page} channels={channels} />}
+    </QueryCheck>
   )
 }
