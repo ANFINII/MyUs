@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { getUserPage, getUserPageMedia } from 'api/internal/user'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import Userpage from 'components/templates/userpage'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {

@@ -1,6 +1,6 @@
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
-import BackLogin from 'components/widgets/Error/Login'
+import BackLogin from 'components/widgets/Status/Login'
 
 export default function Unauthorized(): React.JSX.Element {
   return (

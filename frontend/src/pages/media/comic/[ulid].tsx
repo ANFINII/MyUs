@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { ComicDetailOut } from 'types/internal/media/output'
 import { getComic } from 'api/internal/media/detail'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import ComicDetail from 'components/templates/media/comic/detail'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {

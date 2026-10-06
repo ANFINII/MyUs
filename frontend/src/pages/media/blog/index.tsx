@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslation
 import { Blog } from 'types/internal/media/output'
 import { getBlogs } from 'api/internal/media/list'
 import { pageParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import Blogs from 'components/templates/media/blog/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {

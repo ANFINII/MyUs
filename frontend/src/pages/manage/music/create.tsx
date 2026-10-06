@@ -4,7 +4,7 @@ import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import MusicCreate from 'components/templates/manage/music/create'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {

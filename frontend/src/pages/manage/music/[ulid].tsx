@@ -6,7 +6,7 @@ import { Music } from 'types/internal/media/output'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManageMusic } from 'api/internal/manage/get'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import ManageMusicEdit from 'components/templates/manage/music/edit'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, params, req }) => {

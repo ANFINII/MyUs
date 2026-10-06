@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import Button from 'components/parts/Button'
-import style from './Error.module.scss'
+import style from './Status.module.scss'
 
 interface Props {
   content: string

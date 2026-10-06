@@ -4,7 +4,7 @@ import { Channel } from 'types/internal/channel'
 import { MypageOut } from 'types/internal/user'
 import { getChannels } from 'api/internal/channel'
 import { getSettingMypage } from 'api/internal/setting'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import SettingMyPage from 'components/templates/setting/mypage'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {

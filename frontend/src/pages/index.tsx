@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslation
 import { MediaHome } from 'types/internal/media/output'
 import { getHome } from 'api/internal/media/list'
 import { searchParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import Homes from 'components/templates/media/home/list'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
