@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
 import { getManageAdvertise } from 'api/internal/manage/get'
+import { useFreshData } from 'components/hooks/useFreshData'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageAdvertiseEdit from 'components/templates/manage/advertise/edit'
 
@@ -26,8 +27,9 @@ export default function ManageAdvertiseEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManageAdvertise(ulid)),
     enabled: router.isReady,
   })
+  const advertise = useFreshData(query)
 
-  const data = query.isFetchedAfterMount && query.data ? { data: query.data } : undefined
+  const data = advertise && { data: advertise }
 
   return (
     <QueryCheck queries={[query]} data={data} title="Advertise">

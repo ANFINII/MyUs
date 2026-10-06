@@ -7,6 +7,7 @@ import { queryKeys } from 'lib/query/keys'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManageComic } from 'api/internal/manage/get'
+import { useFreshData } from 'components/hooks/useFreshData'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageComicEdit from 'components/templates/manage/comic/edit'
 
@@ -30,11 +31,9 @@ export default function ManageComicEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManageComic(ulid)),
     enabled: router.isReady,
   })
+  const comic = useFreshData(query)
 
-  const data =
-    query.isFetchedAfterMount && query.data && channelsQuery.data && categoriesQuery.data
-      ? { data: query.data, channels: channelsQuery.data, categories: categoriesQuery.data }
-      : undefined
+  const data = comic && channelsQuery.data && categoriesQuery.data && { data: comic, channels: channelsQuery.data, categories: categoriesQuery.data }
 
   return (
     <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Comic">

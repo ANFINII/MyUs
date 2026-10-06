@@ -7,6 +7,7 @@ import { queryKeys } from 'lib/query/keys'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManageBlog } from 'api/internal/manage/get'
+import { useFreshData } from 'components/hooks/useFreshData'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageBlogEdit from 'components/templates/manage/blog/edit'
 
@@ -30,11 +31,9 @@ export default function ManageBlogEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManageBlog(ulid)),
     enabled: router.isReady,
   })
+  const blog = useFreshData(query)
 
-  const data =
-    query.isFetchedAfterMount && query.data && channelsQuery.data && categoriesQuery.data
-      ? { data: query.data, channels: channelsQuery.data, categories: categoriesQuery.data }
-      : undefined
+  const data = blog && channelsQuery.data && categoriesQuery.data && { data: blog, channels: channelsQuery.data, categories: categoriesQuery.data }
 
   return (
     <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Blog">

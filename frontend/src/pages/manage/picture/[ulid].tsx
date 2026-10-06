@@ -7,6 +7,7 @@ import { queryKeys } from 'lib/query/keys'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManagePicture } from 'api/internal/manage/get'
+import { useFreshData } from 'components/hooks/useFreshData'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManagePictureEdit from 'components/templates/manage/picture/edit'
 
@@ -30,11 +31,9 @@ export default function ManagePictureEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManagePicture(ulid)),
     enabled: router.isReady,
   })
+  const picture = useFreshData(query)
 
-  const data =
-    query.isFetchedAfterMount && query.data && channelsQuery.data && categoriesQuery.data
-      ? { data: query.data, channels: channelsQuery.data, categories: categoriesQuery.data }
-      : undefined
+  const data = picture && channelsQuery.data && categoriesQuery.data && { data: picture, channels: channelsQuery.data, categories: categoriesQuery.data }
 
   return (
     <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Picture">

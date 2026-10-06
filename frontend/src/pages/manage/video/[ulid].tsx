@@ -7,6 +7,7 @@ import { queryKeys } from 'lib/query/keys'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManageVideo } from 'api/internal/manage/get'
+import { useFreshData } from 'components/hooks/useFreshData'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageVideoEdit from 'components/templates/manage/video/edit'
 
@@ -30,11 +31,9 @@ export default function ManageVideoEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManageVideo(ulid)),
     enabled: router.isReady,
   })
+  const video = useFreshData(query)
 
-  const data =
-    query.isFetchedAfterMount && query.data && channelsQuery.data && categoriesQuery.data
-      ? { data: query.data, channels: channelsQuery.data, categories: categoriesQuery.data }
-      : undefined
+  const data = video && channelsQuery.data && categoriesQuery.data && { data: video, channels: channelsQuery.data, categories: categoriesQuery.data }
 
   return (
     <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Video">

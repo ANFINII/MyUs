@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
 import { getSettingNotification } from 'api/internal/setting'
+import { useFreshData } from 'components/hooks/useFreshData'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import SettingNotification from 'components/templates/setting/notification'
 
@@ -14,8 +15,9 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
 export default function SettingNotificationPage(): React.JSX.Element {
   const query = useQuery({ queryKey: queryKeys.settingNotification, queryFn: () => toQuery(getSettingNotification()) })
+  const userNotification = useFreshData(query)
 
-  const data = query.isFetchedAfterMount && query.data ? { userNotification: query.data } : undefined
+  const data = userNotification && { userNotification }
 
   return (
     <QueryCheck queries={[query]} data={data} title="通知設定">

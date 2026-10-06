@@ -7,6 +7,7 @@ import { queryKeys } from 'lib/query/keys'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManageChat } from 'api/internal/manage/get'
+import { useFreshData } from 'components/hooks/useFreshData'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageChatEdit from 'components/templates/manage/chat/edit'
 
@@ -30,11 +31,9 @@ export default function ManageChatEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getManageChat(ulid)),
     enabled: router.isReady,
   })
+  const chat = useFreshData(query)
 
-  const data =
-    query.isFetchedAfterMount && query.data && channelsQuery.data && categoriesQuery.data
-      ? { data: query.data, channels: channelsQuery.data, categories: categoriesQuery.data }
-      : undefined
+  const data = chat && channelsQuery.data && categoriesQuery.data && { data: chat, channels: channelsQuery.data, categories: categoriesQuery.data }
 
   return (
     <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Chat">
