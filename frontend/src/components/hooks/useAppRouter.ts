@@ -8,7 +8,6 @@ type Url = string | { pathname: string; query?: ParsedUrlQueryInput }
 export interface AppRouter {
   pathname: string
   query: ParsedUrlQuery
-  isReady: boolean
   locale?: string
   push: (url: Url) => Promise<boolean>
   replace: (url: Url) => Promise<boolean>
@@ -61,7 +60,6 @@ export function useAppRouter(): AppRouter {
     return {
       pathname,
       query,
-      isReady: true,
       locale,
       push: (url) => navigate(url, false),
       replace: (url) => navigate(url, true),

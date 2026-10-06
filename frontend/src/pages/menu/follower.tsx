@@ -11,7 +11,7 @@ export default function FollowersPage(): React.JSX.Element {
   const router = useAppRouter()
   const params = searchParams(router.query)
 
-  const datas = useQuery({ queryKey: queryKeys.followers(params), queryFn: () => toQuery(getFollower(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const datas = useQuery({ queryKey: queryKeys.followers(params), queryFn: () => toQuery(getFollower(params)), placeholderData: keepPreviousData })
   const queries = { datas }
 
   return (

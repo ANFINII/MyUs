@@ -10,7 +10,7 @@ export default function PictureDetailPage(): React.JSX.Element {
   const router = useAppRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const data = useQuery({ queryKey: queryKeys.mediaPictureDetail(ulid), queryFn: () => toQuery(getPicture(ulid)), enabled: router.isReady })
+  const data = useQuery({ queryKey: queryKeys.mediaPictureDetail(ulid), queryFn: () => toQuery(getPicture(ulid)) })
   const queries = { data }
 
   return (

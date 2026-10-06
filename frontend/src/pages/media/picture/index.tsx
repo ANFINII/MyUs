@@ -12,7 +12,7 @@ export default function PicturesPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const data = useQuery({ queryKey: queryKeys.mediaPictureList(params), queryFn: () => toQuery(getPictures(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const data = useQuery({ queryKey: queryKeys.mediaPictureList(params), queryFn: () => toQuery(getPictures(params)), placeholderData: keepPreviousData })
   const queries = { data }
 
   return (

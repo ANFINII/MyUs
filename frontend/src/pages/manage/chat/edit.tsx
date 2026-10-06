@@ -14,7 +14,7 @@ export default function ManageChatEditPage(): React.JSX.Element {
 
   const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categories = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
-  const data = useQuery({ queryKey: queryKeys.manageChatDetail(ulid), queryFn: () => toQuery(getManageChat(ulid)), enabled: router.isReady })
+  const data = useQuery({ queryKey: queryKeys.manageChatDetail(ulid), queryFn: () => toQuery(getManageChat(ulid)) })
   const queries = { data, channels, categories }
 
   return (

@@ -10,7 +10,7 @@ export default function MusicDetailPage(): React.JSX.Element {
   const router = useAppRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const data = useQuery({ queryKey: queryKeys.mediaMusicDetail(ulid), queryFn: () => toQuery(getMusic(ulid)), enabled: router.isReady })
+  const data = useQuery({ queryKey: queryKeys.mediaMusicDetail(ulid), queryFn: () => toQuery(getMusic(ulid)) })
   const queries = { data }
 
   return (

@@ -11,7 +11,7 @@ export default function ChatDetailPage(): React.JSX.Element {
   const ulid = String(router.query.ulid ?? '')
   const threadUlid = router.query.messageUlid?.toString()
 
-  const data = useQuery({ queryKey: queryKeys.mediaChatDetail(ulid), queryFn: () => toQuery(getChat(ulid)), enabled: router.isReady })
+  const data = useQuery({ queryKey: queryKeys.mediaChatDetail(ulid), queryFn: () => toQuery(getChat(ulid)) })
   const queries = { data }
 
   return (
