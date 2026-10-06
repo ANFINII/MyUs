@@ -1,7 +1,7 @@
-import Link from 'next/link'
 import { Picture } from 'types/internal/media/output'
 import Card from 'components/parts/Card'
 import ExImage from 'components/parts/ExImage'
+import Link from 'components/parts/Link'
 import style from './Picture.module.scss'
 import CardMediaContent from '../Content'
 

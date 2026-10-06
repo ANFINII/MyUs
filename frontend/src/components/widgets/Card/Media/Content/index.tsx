@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import { Media } from 'types/internal/media/output'
 import AvatarLink from 'components/parts/Avatar/Link'
+import Link from 'components/parts/Link'
 import HStack from 'components/parts/Stack/Horizontal'
 import CardMediaContentBase from './Base'
 import style from './Content.module.scss'

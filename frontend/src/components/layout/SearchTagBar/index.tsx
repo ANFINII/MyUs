@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect, ChangeEvent } from 'react'
-import Link from 'next/link'
 import { SearchTagOut } from 'types/internal/user'
 import { getSearchTag, putSearchTag } from 'api/internal/user'
 import cx from 'utils/functions/cx'
@@ -9,6 +8,7 @@ import IconChevront from 'components/parts/Icon/Chevront'
 import IconCross from 'components/parts/Icon/Cross'
 import IconGrip from 'components/parts/Icon/Grip'
 import Input from 'components/parts/Input'
+import Link from 'components/parts/Link'
 import HStack from 'components/parts/Stack/Horizontal'
 import styles from './SearchTagBar.module.scss'
 
