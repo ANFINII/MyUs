@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
 import { getSettingProfile } from 'api/internal/setting'
+import { useFreshData } from 'components/hooks/useFreshData'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import SettingProfileEdit from 'components/templates/setting/profile/edit'
 
@@ -13,12 +14,8 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 }
 
 export default function SettingProfilePage(): React.JSX.Element {
-  const query = useQuery({
-    queryKey: queryKeys.settingProfile,
-    queryFn: () => toQuery(getSettingProfile()),
-  })
-
-  const data = query.isFetchedAfterMount && query.data ? { profile: query.data } : undefined
+  const query = useQuery({ queryKey: queryKeys.settingProfile, queryFn: () => toQuery(getSettingProfile()) })
+  const data = useFreshData({ profile: query })
 
   return (
     <QueryCheck queries={[query]} data={data} title="アカウント設定">

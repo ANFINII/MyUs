@@ -5,6 +5,7 @@ import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
 import { getChannels } from 'api/internal/channel'
 import { getSettingMypage } from 'api/internal/setting'
+import { useFreshData } from 'components/hooks/useFreshData'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import SettingMyPageEdit from 'components/templates/setting/mypage/edit'
 
@@ -14,22 +15,12 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 }
 
 export default function SettingMypageEditPage(): React.JSX.Element {
-  const mypageQuery = useQuery({
-    queryKey: queryKeys.settingMypage,
-    queryFn: () => toQuery(getSettingMypage()),
-  })
-
-  const channelsQuery = useQuery({
-    queryKey: queryKeys.channels,
-    queryFn: () => toQuery(getChannels()),
-  })
-
-  const channels = channelsQuery.isError ? [] : channelsQuery.data
-  const isFresh = mypageQuery.isFetchedAfterMount && channelsQuery.isFetchedAfterMount
-  const data = isFresh && mypageQuery.data && channels ? { mypage: mypageQuery.data, channels } : undefined
+  const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
+  const mypageQuery = useQuery({ queryKey: queryKeys.settingMypage, queryFn: () => toQuery(getSettingMypage()) })
+  const data = useFreshData({ mypage: mypageQuery, channels: channelsQuery })
 
   return (
-    <QueryCheck queries={[mypageQuery]} data={data} title="マイページ設定">
+    <QueryCheck queries={[channelsQuery, mypageQuery]} data={data} title="マイページ設定">
       {(props) => <SettingMyPageEdit {...props} />}
     </QueryCheck>
   )
