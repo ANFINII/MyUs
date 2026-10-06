@@ -137,7 +137,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 
 - `staleTime: 0`のため、ページを開くたびに最新を取得する。更新処理のたびに`invalidateQueries`を呼ぶ必要はない
 - ログイン・ログアウト・退会時のキャッシュ削除は`UserProvider`とログイン画面で行っているため、個別のページでは不要
-- 公開ページ（ホーム・おすすめ・メディア一覧/詳細・ユーザーページ）はOGP対応が決まるまで`getServerSideProps`のまま
+- 全ページがクライアント側取得（CSR）。投稿ごとのOGPは、ホスティング先が決まってからエッジ関数で差し込む予定
 
 ## コンポーネント設計
 
@@ -239,3 +239,4 @@ return <div className={style.box}>...</div>
 - 2026-10-06: データ取得（TanStack Query）のルール追加、`pages/` の責務を `useQuery` に更新、widgets 同フォルダ内の依存を許容、`useIsLoading` → `useLoading` に修正
 - 2026-10-06: `QueryCheck` がクエリを名前付きオブジェクトで受け取る形に変更（`useFreshData` を廃止し `fresh` に統合）
 - 2026-10-06: `useQuery` の結果を `queries` のキーと同じ名前の変数に入れるルールを追加
+- 2026-10-06: 公開ページの CSR 化完了に伴い、`getServerSideProps` が残っている旨の記述を削除

@@ -45,5 +45,8 @@ export const queryKeys = {
   mediaComicList: (params: SearchParams) => ['media', 'comic', params] as const,
   mediaPictureDetail: (ulid: string) => ['media', 'picture', ulid] as const,
   mediaPictureList: (params: SearchParams) => ['media', 'picture', params] as const,
+  mediaChatDetail: (ulid: string) => ['media', 'chat', ulid] as const,
   mediaChatList: (params: SearchParams) => ['media', 'chat', params] as const,
+  userPage: (ulid: string) => ['userpage', ulid] as const,
+  userPageMedia: (ulid: string, channelUlid: string) => ['userpage', ulid, 'media', channelUlid] as const,
 }

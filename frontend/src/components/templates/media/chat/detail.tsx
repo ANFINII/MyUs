@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback, FormEvent } from 'react'
-import { useRouter } from 'next/router'
 import { SubscribeIn } from 'types/internal/channel'
 import { ChatDetailOut } from 'types/internal/media/output'
 import { ChatMessage, ChatReply, MessageCreateIn, MessageUpdateIn } from 'types/internal/message'
@@ -8,6 +7,7 @@ import { postSubscribeChannel } from 'api/internal/channel'
 import { postMessage, getReplies, putMessage, deleteMessage } from 'api/internal/message'
 import { postLikeMedia } from 'api/internal/user'
 import { FetchError, MediaType } from 'utils/constants/enum'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useChatWebSocket } from 'components/hooks/useChatWebSocket'
 import { useNavResize } from 'components/hooks/useNavResize'
 import { useThreadResize } from 'components/hooks/useThreadResize'
@@ -59,7 +59,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     isSubscribe: detail.mediaUser.isSubscribe,
   }
 
-  const router = useRouter()
+  const router = useAppRouter()
   const { user } = useUser()
   const { toast, handleToast } = useToast()
   const { navRef, handleNav, handleResize } = useNavResize()
@@ -163,7 +163,6 @@ export default function ChatDetail(props: Props): React.JSX.Element {
 
   const handleThread = async (message: ChatMessage | null = null) => {
     const chatUlid = router.query.ulid as string
-    const chatPath = { pathname: '/media/chat/[ulid]', query: { ulid: chatUlid } }
     if (message !== null && message.ulid !== selectedMessage?.ulid) {
       const ret = await getReplies(message.ulid)
       if (ret.isOk()) {
@@ -173,13 +172,13 @@ export default function ChatDetail(props: Props): React.JSX.Element {
           selectedMessage: message,
           replies: { ...prev.replies, [message.ulid]: replyData },
         }))
-        router.replace(chatPath, `/media/chat/${chatUlid}/thread/${message.ulid}`, { shallow: true })
+        router.replace(`/media/chat/${chatUlid}/thread/${message.ulid}`)
         return
       }
     }
     resetThreadWidth()
     setFormState((prev) => ({ ...prev, selectedMessage: message !== null && message.ulid === prev.selectedMessage?.ulid ? null : message }))
-    router.replace(chatPath, `/media/chat/${chatUlid}`, { shallow: true })
+    router.replace(`/media/chat/${chatUlid}`)
   }
 
   const handleEditMessage = async (ulid: string, text: string) => {

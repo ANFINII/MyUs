@@ -1,37 +1,35 @@
-import { GetServerSideProps } from 'next'
-import { UserPage, UserPageMedia } from 'types/internal/userpage'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
+import { UserPageMedia } from 'types/internal/userpage'
 import { getUserPage, getUserPageMedia } from 'api/internal/user'
-import ErrorCheck from 'components/widgets/Status/Check'
+import { useAppRouter } from 'components/hooks/useAppRouter'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Userpage from 'components/templates/userpage'
 
-export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
-  const ulid = String(query.ulid)
-  const ret = await getUserPage(ulid, req)
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const userPage = ret.value
+const initMedia: UserPageMedia = { videos: [], musics: [], blogs: [], comics: [], pictures: [], chats: [] }
 
-  const initMedia: UserPageMedia = { videos: [], musics: [], blogs: [], comics: [], pictures: [], chats: [] }
-  const queryChannel = typeof query.channel === 'string' ? query.channel : undefined
-  const channel = userPage.channels.find((c) => c.ulid === queryChannel) || userPage.channels.find((c) => c.isDefault)
-  const channelUlid = channel!.ulid
-  const mediaRet = await getUserPageMedia(ulid, channelUlid, req)
-  const media = mediaRet.isOk() ? mediaRet.value : initMedia
+export default function UserpagePage(): React.JSX.Element {
+  const router = useAppRouter()
+  const ulid = String(router.query.ulid ?? '')
+  const queryChannel = typeof router.query.channel === 'string' ? router.query.channel : undefined
 
-  return { props: { ulid, channelUlid, userPage, media } }
-}
+  const userPage = useQuery({ queryKey: queryKeys.userPage(ulid), queryFn: () => toQuery(getUserPage(ulid)), enabled: router.isReady })
 
-interface Props {
-  status: number
-  ulid: string
-  channelUlid: string
-  userPage: UserPage
-  media: UserPageMedia
-}
+  const channels = userPage.data?.channels ?? []
+  const channelUlid = (channels.find((c) => c.ulid === queryChannel) ?? channels.find((c) => c.isDefault))?.ulid ?? ''
 
-export default function UserpagePage(props: Props): React.JSX.Element {
+  const media = useQuery({
+    queryKey: queryKeys.userPageMedia(ulid, channelUlid),
+    queryFn: () => toQuery(getUserPageMedia(ulid, channelUlid)),
+    enabled: channelUlid !== '',
+    placeholderData: keepPreviousData,
+  })
+  const queries = { userPage }
+
   return (
-    <ErrorCheck status={props.status}>
-      <Userpage {...props} />
-    </ErrorCheck>
+    <QueryCheck title="ユーザーページ" queries={queries} fresh>
+      {(props) => <Userpage {...props} ulid={ulid} channelUlid={channelUlid} media={media.data ?? initMedia} />}
+    </QueryCheck>
   )
 }
