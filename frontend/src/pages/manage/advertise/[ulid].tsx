@@ -8,7 +8,6 @@ import { getManageAdvertise } from 'api/internal/manage/get'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageAdvertiseEdit from 'components/templates/manage/advertise/edit'
 
-// ビルド時には生成せず、初回アクセス時に外枠（翻訳のみ）を生成する
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [], fallback: 'blocking' }
 }
@@ -28,7 +27,6 @@ export default function ManageAdvertiseEditPage(): React.JSX.Element {
     enabled: router.isReady,
   })
 
-  // フォームの初期値に使うため、キャッシュではなく画面を開いてから取得したデータで表示する
   const data = query.isFetchedAfterMount && query.data ? { data: query.data } : undefined
 
   return (

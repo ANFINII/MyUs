@@ -10,7 +10,6 @@ import { getManagePicture } from 'api/internal/manage/get'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManagePictureEdit from 'components/templates/manage/picture/edit'
 
-// ビルド時には生成せず、初回アクセス時に外枠（翻訳のみ）を生成する
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [], fallback: 'blocking' }
 }
@@ -40,7 +39,6 @@ export default function ManagePictureEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getCategories()),
   })
 
-  // フォームの初期値に使うため、キャッシュではなく画面を開いてから取得したデータで表示する
   const data = query.isFetchedAfterMount && query.data && channelsQuery.data && categoriesQuery.data ? { data: query.data, channels: channelsQuery.data, categories: categoriesQuery.data } : undefined
 
   return (
