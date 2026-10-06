@@ -13,10 +13,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 }
 
 export default function PasswordChangeDonePage(): React.JSX.Element {
-  const query = useQuery({
-    queryKey: queryKeys.user,
-    queryFn: () => toQuery(getUser()),
-  })
+  const query = useQuery({ queryKey: queryKeys.user, queryFn: () => toQuery(getUser()) })
 
   return (
     <QueryCheck queries={[query]} data={query.data} title="パスワード変更">
