@@ -1,5 +1,4 @@
 import { useState, ChangeEvent } from 'react'
-import dynamic from 'next/dynamic'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { BlogIn } from 'types/internal/media/input'
@@ -17,8 +16,7 @@ import SelectBox from 'components/parts/Input/SelectBox'
 import Textarea from 'components/parts/Input/Textarea'
 import ToggleCard from 'components/parts/Input/ToggleCard'
 import VStack from 'components/parts/Stack/Vertical'
-
-const TextEditor = dynamic(() => import('components/widgets/TextEditor'), { ssr: false })
+import TextEditor from 'components/widgets/TextEditor'
 
 interface Props {
   channels: Channel[]
