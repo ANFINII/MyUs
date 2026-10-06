@@ -1,38 +1,49 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
+import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { Category } from 'types/internal/category'
-import { Channel } from 'types/internal/channel'
-import { Chat } from 'types/internal/media/output'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManageChat } from 'api/internal/manage/get'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageChatEdit from 'components/templates/manage/chat/edit'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, params, req }) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  return { paths: [], fallback: 'blocking' }
+}
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const ulid = String(params?.ulid ?? '')
-  const [chatRet, channelsRet, categoriesRet] = await Promise.all([getManageChat(ulid, req), getChannels(req), getCategories(req)])
-  if (chatRet.isErr()) return { props: { status: chatRet.error.status } }
-  if (channelsRet.isErr()) return { props: { status: channelsRet.error.status } }
-  if (categoriesRet.isErr()) return { props: { status: categoriesRet.error.status } }
-  const data = chatRet.value
-  const channels = channelsRet.value
-  const categories = categoriesRet.value
-  return { props: { ...translations, data, channels, categories } }
+  return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-  data: Chat
-  channels: Channel[]
-  categories: Category[]
-}
+export default function ManageChatEditPage(): React.JSX.Element {
+  const router = useRouter()
+  const ulid = String(router.query.ulid ?? '')
 
-export default function ManageChatEditPage(props: Props): React.JSX.Element {
+  const query = useQuery({
+    queryKey: queryKeys.manageChatDetail(ulid),
+    queryFn: () => toQuery(getManageChat(ulid)),
+    enabled: router.isReady,
+  })
+
+  const channelsQuery = useQuery({
+    queryKey: queryKeys.channels,
+    queryFn: () => toQuery(getChannels()),
+  })
+
+  const categoriesQuery = useQuery({
+    queryKey: queryKeys.categories,
+    queryFn: () => toQuery(getCategories()),
+  })
+
+  const data = query.isFetchedAfterMount && query.data && channelsQuery.data && categoriesQuery.data ? { data: query.data, channels: channelsQuery.data, categories: categoriesQuery.data } : undefined
+
   return (
-    <ErrorCheck status={props.status}>
-      <ManageChatEdit {...props} />
-    </ErrorCheck>
+    <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Chat">
+      {(props) => <ManageChatEdit {...props} />}
+    </QueryCheck>
   )
 }

@@ -1,38 +1,49 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
+import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { Category } from 'types/internal/category'
-import { Channel } from 'types/internal/channel'
-import { Comic } from 'types/internal/media/output'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManageComic } from 'api/internal/manage/get'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageComicEdit from 'components/templates/manage/comic/edit'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, params, req }) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  return { paths: [], fallback: 'blocking' }
+}
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const ulid = String(params?.ulid ?? '')
-  const [comicRet, channelsRet, categoriesRet] = await Promise.all([getManageComic(ulid, req), getChannels(req), getCategories(req)])
-  if (comicRet.isErr()) return { props: { status: comicRet.error.status } }
-  if (channelsRet.isErr()) return { props: { status: channelsRet.error.status } }
-  if (categoriesRet.isErr()) return { props: { status: categoriesRet.error.status } }
-  const data = comicRet.value
-  const channels = channelsRet.value
-  const categories = categoriesRet.value
-  return { props: { ...translations, data, channels, categories } }
+  return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-  data: Comic
-  channels: Channel[]
-  categories: Category[]
-}
+export default function ManageComicEditPage(): React.JSX.Element {
+  const router = useRouter()
+  const ulid = String(router.query.ulid ?? '')
 
-export default function ManageComicEditPage(props: Props): React.JSX.Element {
+  const query = useQuery({
+    queryKey: queryKeys.manageComicDetail(ulid),
+    queryFn: () => toQuery(getManageComic(ulid)),
+    enabled: router.isReady,
+  })
+
+  const channelsQuery = useQuery({
+    queryKey: queryKeys.channels,
+    queryFn: () => toQuery(getChannels()),
+  })
+
+  const categoriesQuery = useQuery({
+    queryKey: queryKeys.categories,
+    queryFn: () => toQuery(getCategories()),
+  })
+
+  const data = query.isFetchedAfterMount && query.data && channelsQuery.data && categoriesQuery.data ? { data: query.data, channels: channelsQuery.data, categories: categoriesQuery.data } : undefined
+
   return (
-    <ErrorCheck status={props.status}>
-      <ManageComicEdit {...props} />
-    </ErrorCheck>
+    <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Comic">
+      {(props) => <ManageComicEdit {...props} />}
+    </QueryCheck>
   )
 }
