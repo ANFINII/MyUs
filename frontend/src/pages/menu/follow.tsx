@@ -22,7 +22,7 @@ export default function FollowsPage(): React.JSX.Element {
   const queries = { datas: query }
 
   return (
-    <QueryCheck queries={queries} title="Follow">
+    <QueryCheck title="Follow" queries={queries}>
       {(props) => <Follows {...props} />}
     </QueryCheck>
   )

@@ -29,7 +29,7 @@ export default function ManageMusicEditPage(): React.JSX.Element {
   const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={queries} fresh title="Music">
+    <QueryCheck title="Music" queries={queries} fresh>
       {(props) => <ManageMusicEdit {...props} />}
     </QueryCheck>
   )

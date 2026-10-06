@@ -29,7 +29,7 @@ export default function ManageBlogEditPage(): React.JSX.Element {
   const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={queries} fresh title="Blog">
+    <QueryCheck title="Blog" queries={queries} fresh>
       {(props) => <ManageBlogEdit {...props} />}
     </QueryCheck>
   )

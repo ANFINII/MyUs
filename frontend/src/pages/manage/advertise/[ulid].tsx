@@ -25,7 +25,7 @@ export default function ManageAdvertiseEditPage(): React.JSX.Element {
   const queries = { data: query }
 
   return (
-    <QueryCheck queries={queries} fresh title="Advertise">
+    <QueryCheck title="Advertise" queries={queries} fresh>
       {(props) => <ManageAdvertiseEdit {...props} />}
     </QueryCheck>
   )

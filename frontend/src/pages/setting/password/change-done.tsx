@@ -17,7 +17,7 @@ export default function PasswordChangeDonePage(): React.JSX.Element {
   const queries = { user: query }
 
   return (
-    <QueryCheck queries={queries} title="パスワード変更">
+    <QueryCheck title="パスワード変更" queries={queries}>
       <PasswordChangeDone />
     </QueryCheck>
   )

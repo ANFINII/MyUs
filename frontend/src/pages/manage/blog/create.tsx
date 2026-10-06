@@ -19,7 +19,7 @@ export default function BlogCreatePage(): React.JSX.Element {
   const queries = { channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={queries} fresh title="Blog">
+    <QueryCheck title="Blog" queries={queries} fresh>
       {(props) => <BlogCreate {...props} />}
     </QueryCheck>
   )

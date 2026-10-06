@@ -29,7 +29,7 @@ export default function ManagePictureEditPage(): React.JSX.Element {
   const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={queries} fresh title="Picture">
+    <QueryCheck title="Picture" queries={queries} fresh>
       {(props) => <ManagePictureEdit {...props} />}
     </QueryCheck>
   )

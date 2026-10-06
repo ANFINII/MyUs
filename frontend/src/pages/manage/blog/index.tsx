@@ -34,7 +34,7 @@ export default function ManageBlogsPage(): React.JSX.Element {
   const queries = { channels: channelsQuery, list: query }
 
   return (
-    <QueryCheck queries={queries} title="Blog">
+    <QueryCheck title="Blog" queries={queries}>
       {({ list }) => <ManageBlogs {...list} page={page} channels={channels} />}
     </QueryCheck>
   )

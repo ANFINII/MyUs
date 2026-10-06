@@ -17,7 +17,7 @@ export default function ManagePage(): React.JSX.Element {
   const queries = { user: query }
 
   return (
-    <QueryCheck queries={queries} title="投稿管理">
+    <QueryCheck title="投稿管理" queries={queries}>
       <Manage />
     </QueryCheck>
   )

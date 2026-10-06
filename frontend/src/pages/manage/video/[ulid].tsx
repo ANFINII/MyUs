@@ -29,7 +29,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
   const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={queries} fresh title="Video">
+    <QueryCheck title="Video" queries={queries} fresh>
       {(props) => <ManageVideoEdit {...props} />}
     </QueryCheck>
   )

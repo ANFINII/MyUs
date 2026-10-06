@@ -17,7 +17,7 @@ export default function ChannelsPage(): React.JSX.Element {
   const queries = { datas: query }
 
   return (
-    <QueryCheck queries={queries} title="Channel">
+    <QueryCheck title="Channel" queries={queries}>
       {(props) => <Channels {...props} />}
     </QueryCheck>
   )

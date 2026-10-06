@@ -34,7 +34,7 @@ export default function ManageMusicsPage(): React.JSX.Element {
   const queries = { channels: channelsQuery, list: query }
 
   return (
-    <QueryCheck queries={queries} title="Music">
+    <QueryCheck title="Music" queries={queries}>
       {({ list }) => <ManageMusics {...list} page={page} channels={channels} />}
     </QueryCheck>
   )

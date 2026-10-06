@@ -19,7 +19,7 @@ export default function PictureCreatePage(): React.JSX.Element {
   const queries = { channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={queries} fresh title="Picture">
+    <QueryCheck title="Picture" queries={queries} fresh>
       {(props) => <PictureCreate {...props} />}
     </QueryCheck>
   )

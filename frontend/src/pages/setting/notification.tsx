@@ -17,7 +17,7 @@ export default function SettingNotificationPage(): React.JSX.Element {
   const queries = { userNotification: query }
 
   return (
-    <QueryCheck queries={queries} fresh title="通知設定">
+    <QueryCheck title="通知設定" queries={queries} fresh>
       {(props) => <SettingNotification {...props} />}
     </QueryCheck>
   )

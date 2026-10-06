@@ -34,7 +34,7 @@ export default function ManageComicsPage(): React.JSX.Element {
   const queries = { channels: channelsQuery, list: query }
 
   return (
-    <QueryCheck queries={queries} title="Comic">
+    <QueryCheck title="Comic" queries={queries}>
       {({ list }) => <ManageComics {...list} page={page} channels={channels} />}
     </QueryCheck>
   )

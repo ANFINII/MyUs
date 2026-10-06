@@ -19,7 +19,7 @@ export default function MusicCreatePage(): React.JSX.Element {
   const queries = { channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={queries} fresh title="Music">
+    <QueryCheck title="Music" queries={queries} fresh>
       {(props) => <MusicCreate {...props} />}
     </QueryCheck>
   )

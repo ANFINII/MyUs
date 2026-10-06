@@ -17,7 +17,7 @@ export default function SettingProfilePage(): React.JSX.Element {
   const queries = { profile: query }
 
   return (
-    <QueryCheck queries={queries} fresh title="アカウント設定">
+    <QueryCheck title="アカウント設定" queries={queries} fresh>
       {(props) => <SettingProfileEdit {...props} />}
     </QueryCheck>
   )

@@ -19,7 +19,7 @@ export default function VideoCreatePage(): React.JSX.Element {
   const queries = { channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={queries} fresh title="Video">
+    <QueryCheck title="Video" queries={queries} fresh>
       {(props) => <VideoCreate {...props} />}
     </QueryCheck>
   )

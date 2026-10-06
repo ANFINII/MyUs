@@ -19,7 +19,7 @@ export default function SettingMypagePage(): React.JSX.Element {
   const queries = { mypage: mypageQuery, channels: channelsQuery }
 
   return (
-    <QueryCheck queries={queries} title="マイページ設定">
+    <QueryCheck title="マイページ設定" queries={queries}>
       {(props) => <SettingMyPage {...props} />}
     </QueryCheck>
   )

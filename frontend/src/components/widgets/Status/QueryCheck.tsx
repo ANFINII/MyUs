@@ -7,14 +7,14 @@ type Queries = Record<string, UseQueryResult<unknown>>
 type QueryData<T extends Queries> = { [K in keyof T]: T[K] extends UseQueryResult<infer D> ? D : never }
 
 interface Props<T extends Queries> {
+  title?: string
   queries: T
   fresh?: boolean
-  title?: string
   children: React.ReactNode | ((data: QueryData<T>) => React.ReactNode)
 }
 
 export default function QueryCheck<T extends Queries>(props: Props<T>): React.JSX.Element {
-  const { queries, fresh = false, title, children } = props
+  const { title, queries, fresh = false, children } = props
 
   const results = Object.values(queries)
   const status = results.find((q) => q.error !== null)?.error?.status ?? 200

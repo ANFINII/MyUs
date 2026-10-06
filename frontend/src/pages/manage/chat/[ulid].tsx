@@ -29,7 +29,7 @@ export default function ManageChatEditPage(): React.JSX.Element {
   const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={queries} fresh title="Chat">
+    <QueryCheck title="Chat" queries={queries} fresh>
       {(props) => <ManageChatEdit {...props} />}
     </QueryCheck>
   )

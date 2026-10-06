@@ -17,7 +17,7 @@ export default function PaymentChangePage(): React.JSX.Element {
   const queries = { mypage: query }
 
   return (
-    <QueryCheck queries={queries} title="プラン変更">
+    <QueryCheck title="プラン変更" queries={queries}>
       {(props) => <PaymentChange {...props} />}
     </QueryCheck>
   )

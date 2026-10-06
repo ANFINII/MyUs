@@ -95,6 +95,7 @@ const [user, setUser] = useState<User | null>(null)
 - クエリは名前付きのオブジェクトを`const queries`に入れてから`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
 - `QueryCheck`は、渡した名前のまま取得データをまとめて`children`の関数に渡す。名前をテンプレートのpropsに合わせ、`{...props}`で渡す
 - `QueryCheck`の`children`は、データを使う場合は関数、使わない場合はJSXで渡す
+- `QueryCheck`のpropsは`title` → `queries` → `fresh`の順に書く
 
 ```typescript
 export default function ManageVideoEditPage(): React.JSX.Element {
@@ -107,7 +108,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
   const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={queries} fresh title="Video">
+    <QueryCheck title="Video" queries={queries} fresh>
       {(props) => <ManageVideoEdit {...props} />}
     </QueryCheck>
   )

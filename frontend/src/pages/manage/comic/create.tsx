@@ -19,7 +19,7 @@ export default function ComicCreatePage(): React.JSX.Element {
   const queries = { channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={queries} fresh title="Comic">
+    <QueryCheck title="Comic" queries={queries} fresh>
       {(props) => <ComicCreate {...props} />}
     </QueryCheck>
   )
