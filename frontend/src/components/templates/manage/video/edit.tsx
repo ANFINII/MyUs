@@ -1,5 +1,4 @@
 import { useState, ChangeEvent } from 'react'
-import { useRouter } from 'next/router'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { VideoUpdateIn } from 'types/internal/media/input'
@@ -8,6 +7,7 @@ import { Option } from 'types/internal/other'
 import { putManageVideo } from 'api/internal/manage/update'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -33,7 +33,7 @@ export default function ManageVideoEdit(props: Props): React.JSX.Element {
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: '未選択', value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
-  const router = useRouter()
+  const router = useAppRouter()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()

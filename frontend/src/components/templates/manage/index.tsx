@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import Main from 'components/layout/Main'
 import IconAdvertise from 'components/parts/Icon/Advertise'
 import IconBlog from 'components/parts/Icon/Blog'
@@ -20,7 +20,7 @@ const menus = [
 ]
 
 export default function Manage(): React.JSX.Element {
-  const router = useRouter()
+  const router = useAppRouter()
 
   return (
     <Main title="投稿管理" type="table" isFooter={false}>

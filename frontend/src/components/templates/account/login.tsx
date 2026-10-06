@@ -1,5 +1,4 @@
 import { ChangeEvent, useState } from 'react'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next/pages'
 import { useQueryClient } from '@tanstack/react-query'
 import { LoginIn } from 'types/internal/auth'
@@ -7,6 +6,7 @@ import { postLogin } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
 import { useApiError } from 'components/hooks/useApiError'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -21,7 +21,7 @@ import style from './Account.module.scss'
 
 export default function Login(): React.JSX.Element {
   const { t } = useTranslation('common')
-  const router = useRouter()
+  const router = useAppRouter()
   const queryClient = useQueryClient()
   const { updateUser } = useUser()
   const { loading, handleLoading } = useLoading()

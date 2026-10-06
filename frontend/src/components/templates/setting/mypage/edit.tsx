@@ -1,5 +1,4 @@
 import { ChangeEvent, useState } from 'react'
-import { useRouter } from 'next/router'
 import { ChannelIn, Channel } from 'types/internal/channel'
 import { Option } from 'types/internal/other'
 import { MypageIn, MypageOut } from 'types/internal/user'
@@ -7,6 +6,7 @@ import { putChannel } from 'api/internal/channel'
 import { putSettingMypage } from 'api/internal/setting'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -32,7 +32,7 @@ interface Props {
 export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const { mypage, channels } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })

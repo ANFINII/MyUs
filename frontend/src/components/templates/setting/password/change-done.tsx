@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router'
 import cx from 'utils/functions/cx'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -7,7 +7,7 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from '../Setting.module.scss'
 
 export default function PasswordChangeDone(): React.JSX.Element {
-  const router = useRouter()
+  const router = useAppRouter()
   const handleBack = () => router.push('/setting/profile')
 
   return (

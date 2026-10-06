@@ -1,8 +1,8 @@
 import { useState, ChangeEvent } from 'react'
-import { useRouter } from 'next/router'
 import { AdvertiseIn } from 'types/internal/advertise'
 import { postAdvertiseCreate } from 'api/internal/manage/create'
 import { FetchError } from 'utils/constants/enum'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -17,7 +17,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import VStack from 'components/parts/Stack/Vertical'
 
 export default function AdvertiseCreate(): React.JSX.Element {
-  const router = useRouter()
+  const router = useAppRouter()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 import { MypageOut } from 'types/internal/user'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import style from './Change.module.scss'
@@ -14,7 +14,7 @@ interface Props {
 
 export default function PaymentChange(props: Props): React.JSX.Element {
   const { mypage } = props
-  const router = useRouter()
+  const router = useAppRouter()
   const [activeName, setActiveName] = useState<string>('')
   const handleBack = () => router.push('/setting/payment')
   const handleSubmit = () => router.push('/setting/payment')

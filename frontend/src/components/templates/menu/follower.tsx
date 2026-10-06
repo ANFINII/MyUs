@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router'
 import { Follow } from 'types/internal/user'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -13,7 +13,7 @@ interface Props {
 export default function Followers(props: Props): React.JSX.Element {
   const { datas } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
   const search = useSearch(datas.length)
 
   return (

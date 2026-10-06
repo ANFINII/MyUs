@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 import { ChatMessage } from 'types/internal/message'
 import { UserMe } from 'types/internal/user'
 import cx from 'utils/functions/cx'
 import { formatDatetime } from 'utils/functions/datetime'
 import { sanitizeHtml } from 'utils/functions/sanitize'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import ActionButton from 'components/parts/Action/Button'
 import { ActionItem } from 'components/parts/Action/List'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -28,7 +28,7 @@ interface Props {
 export default function MessageItem(props: Props): React.JSX.Element {
   const { user, message, isDisabled = false, onThread, onEdit, onDelete } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)

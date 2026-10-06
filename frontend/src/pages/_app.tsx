@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app'
-import { useRouter } from 'next/router'
 import { appWithTranslation } from 'next-i18next/pages'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { QueryProvider } from 'components/provider/QueryProvider'
 import { UserProvider } from 'components/provider/UserProvider'
 import Layout from 'components/layout'
@@ -17,7 +17,7 @@ import 'styles/internal/videojs-myus.scss'
 
 function MyApp(props: AppProps) {
   const { Component, pageProps } = props
-  const router = useRouter()
+  const router = useAppRouter()
   return (
     <QueryProvider>
       <UserProvider>

@@ -1,5 +1,4 @@
 import { useState, SetStateAction, ChangeEvent, Dispatch } from 'react'
-import { useRouter } from 'next/router'
 import { Reply, Comment, CommnetIn } from 'types/internal/comment'
 import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { postComment, putComment, deleteComment } from 'api/internal/comment'
@@ -9,6 +8,7 @@ import { commentTypeNoMap } from 'utils/constants/map'
 import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import ActionButton from 'components/parts/Action/Button'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -37,7 +37,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const { ulid, author, text } = comment
   const { isActive } = user
 
-  const router = useRouter()
+  const router = useAppRouter()
   const { loading, handleLoading } = useLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)

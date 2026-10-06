@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
-import { useRouter } from 'next/router'
 import { Option } from 'types/internal/other'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import Button from 'components/parts/Button'
 import SelectBox from 'components/parts/Input/SelectBox'
 import style from './Header.module.scss'
@@ -16,7 +16,7 @@ interface Props {
 export default function ManageHeader(props: Props): React.JSX.Element {
   const { count, ulid, options, onModal, onChange } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
 
   return (
     <div className={style.header}>

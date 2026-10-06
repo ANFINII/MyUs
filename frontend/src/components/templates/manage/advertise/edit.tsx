@@ -1,9 +1,9 @@
 import { useState, ChangeEvent } from 'react'
-import { useRouter } from 'next/router'
 import { Advertise, AdvertiseUpdateIn } from 'types/internal/advertise'
 import { putManageAdvertise } from 'api/internal/manage/update'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -24,7 +24,7 @@ interface Props {
 export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
   const { data } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()

@@ -1,9 +1,9 @@
 import { ChangeEvent, useState } from 'react'
-import { useRouter } from 'next/router'
 import { PasswordChangeIn } from 'types/internal/auth'
 import { postPasswordChange } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -15,7 +15,7 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from '../Setting.module.scss'
 
 export default function PasswordChange(): React.JSX.Element {
-  const router = useRouter()
+  const router = useAppRouter()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()

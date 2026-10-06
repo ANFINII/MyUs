@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Alert from 'components/parts/Alert'
@@ -7,7 +7,7 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from '../Account.module.scss'
 
 export default function Withdrawal(): React.JSX.Element {
-  const router = useRouter()
+  const router = useAppRouter()
   const handleBack = () => router.push('/')
   const handleNext = () => router.push('/account/withdrawal/confirm')
 

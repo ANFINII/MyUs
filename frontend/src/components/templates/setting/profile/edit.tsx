@@ -1,5 +1,4 @@
 import { ChangeEvent, useState } from 'react'
-import { useRouter } from 'next/router'
 import { ProfileOut, ProfileIn } from 'types/internal/user'
 import { getAddress } from 'api/external/address'
 import { putSettingProfile } from 'api/internal/setting'
@@ -9,6 +8,7 @@ import { genderMap } from 'utils/constants/map'
 import { selectDate } from 'utils/functions/datetime'
 import { getAge } from 'utils/functions/user'
 import { useApiError } from 'components/hooks/useApiError'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -34,7 +34,7 @@ interface Props {
 export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const { profile } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
   const { updateUser } = useUser()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
