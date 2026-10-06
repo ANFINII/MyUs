@@ -1,11 +1,4 @@
-import { GetStaticProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import Knowledge from 'components/templates/menu/knowledge'
-
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const translations = await serverSideTranslations(String(locale), ['common'])
-  return { props: { ...translations } }
-}
 
 export default function KnowledgePage(): React.JSX.Element {
   return <Knowledge />

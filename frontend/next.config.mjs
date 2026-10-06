@@ -1,14 +1,12 @@
-import { createRequire } from 'module'
-
-const require = createRequire(import.meta.url)
-const { i18n } = require('./next-i18next.config.js')
-
 export default {
   reactStrictMode: true,
   reactCompiler: true,
   agentRules: false,
   basePath: '',
-  i18n,
+  i18n: {
+    defaultLocale: 'ja',
+    locales: ['ja', 'en'],
+  },
   sassOptions: {
     implementation: 'sass-embedded',
   },

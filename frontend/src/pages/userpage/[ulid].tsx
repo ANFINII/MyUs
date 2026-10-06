@@ -1,12 +1,10 @@
 import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { getUserPage, getUserPageMedia } from 'api/internal/user'
 import ErrorCheck from 'components/widgets/Status/Check'
 import Userpage from 'components/templates/userpage'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
-  const translations = await serverSideTranslations(String(locale), ['common'])
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
   const ulid = String(query.ulid)
   const ret = await getUserPage(ulid, req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
@@ -19,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   const mediaRet = await getUserPageMedia(ulid, channelUlid, req)
   const media = mediaRet.isOk() ? mediaRet.value : initMedia
 
-  return { props: { ...translations, ulid, channelUlid, userPage, media } }
+  return { props: { ulid, channelUlid, userPage, media } }
 }
 
 interface Props {

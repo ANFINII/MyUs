@@ -1,11 +1,4 @@
-import { GetStaticProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import Custom404 from 'components/widgets/Status/Custom404'
-
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const translations = await serverSideTranslations(String(locale), ['common'])
-  return { props: { ...translations } }
-}
 
 export default function Custom404Page(): React.JSX.Element {
   return <Custom404 />
