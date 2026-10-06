@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from 'react'
-import { useTranslation } from 'next-i18next/pages'
+import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'

@@ -1,11 +1,4 @@
-import { GetStaticProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import Custom500 from 'components/widgets/Status/Custom500'
-
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const translations = await serverSideTranslations(String(locale), ['common'])
-  return { props: { ...translations } }
-}
 
 export default function Custom500Page(): React.JSX.Element {
   return <Custom500 />

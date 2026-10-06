@@ -1,18 +1,16 @@
 import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { MediaHome } from 'types/internal/media/output'
 import { getHome } from 'api/internal/media/list'
 import { searchParams } from 'utils/functions/common'
 import ErrorCheck from 'components/widgets/Status/Check'
 import Homes from 'components/templates/media/home/list'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
-  const translations = await serverSideTranslations(String(locale), ['common'])
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const params = searchParams(query)
   const ret = await getHome(params)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const mediaHome = ret.value
-  return { props: { ...translations, mediaHome } }
+  return { props: { mediaHome } }
 }
 
 interface Props {

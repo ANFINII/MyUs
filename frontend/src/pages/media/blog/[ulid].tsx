@@ -1,16 +1,14 @@
 import { GetServerSideProps } from 'next'
-import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { BlogDetailOut } from 'types/internal/media/output'
 import { getBlog } from 'api/internal/media/detail'
 import ErrorCheck from 'components/widgets/Status/Check'
 import BlogDetail from 'components/templates/media/blog/detail'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
-  const translations = await serverSideTranslations(String(locale), ['common'])
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
   const ret = await getBlog(String(query.ulid), req)
   if (ret.isErr()) return { props: { status: ret.error.status } }
   const data = ret.value
-  return { props: { ...translations, data } }
+  return { props: { data } }
 }
 
 interface Props {
