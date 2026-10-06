@@ -1,34 +1,31 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MyUs Frontend
 
-## Getting Started
+React + [TanStack Router](https://tanstack.com/router) + [TanStack Query](https://tanstack.com/query) + [Vite](https://vite.dev/)
 
-First, run the development server:
+## 開発
 
 ```bash
-npm run dev
-# or
-yarn dev
+pnpm install
+cp .env.sample .env.local  # 値を設定する
+pnpm dev                   # http://127.0.0.1:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## コマンド
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+| コマンド | 内容 |
+|------|------|
+| `pnpm dev` | 開発サーバーを起動 |
+| `pnpm build` | lint の後に本番用にビルド（`dist/`） |
+| `pnpm start` | ビルド結果をプレビュー |
+| `pnpm test` | テスト（Vitest） |
+| `pnpm lint` | ESLint |
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## 環境変数
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+`VITE_` で始まる変数だけがブラウザに公開される。読み込むのは `src/lib/config.ts` のみ。
 
-## Learn More
+`vite build`（本番モード）では `.env.production` が `.env.local` より優先される。手元で `.env.local` の値を使ってビルドする場合は `vite build --mode development` を使う。
 
-To learn more about Next.js, take a look at the following resources:
+## ルーティング
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+`src/routes/` のファイル構成からルートが生成される（`src/routeTree.gen.ts` は自動生成）。詳細は `docs/frontend.md` を参照。

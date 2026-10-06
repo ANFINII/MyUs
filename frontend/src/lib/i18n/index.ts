@@ -4,6 +4,7 @@ import en from './locales/en/common.json'
 import ja from './locales/ja/common.json'
 
 export const DEFAULT_LOCALE = 'ja'
+export const LOCALES = ['en']
 
 const common: Record<string, typeof ja> = { ja, en }
 

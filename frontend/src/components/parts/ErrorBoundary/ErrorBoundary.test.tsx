@@ -14,11 +14,11 @@ const Bomb = (): React.JSX.Element => {
 
 describe('ErrorBoundary', (): void => {
   beforeEach((): void => {
-    jest.spyOn(console, 'error').mockImplementation(jest.fn())
+    vi.spyOn(console, 'error').mockImplementation(vi.fn())
   })
 
   afterEach((): void => {
-    jest.restoreAllMocks()
+    vi.restoreAllMocks()
   })
 
   it('子コンポーネントを正常に表示する', (): void => {
