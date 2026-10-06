@@ -14,15 +14,8 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 }
 
 export default function SettingMypageEditPage(): React.JSX.Element {
-  const mypageQuery = useQuery({
-    queryKey: queryKeys.settingMypage,
-    queryFn: () => toQuery(getSettingMypage()),
-  })
-
-  const channelsQuery = useQuery({
-    queryKey: queryKeys.channels,
-    queryFn: () => toQuery(getChannels()),
-  })
+  const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
+  const mypageQuery = useQuery({ queryKey: queryKeys.settingMypage, queryFn: () => toQuery(getSettingMypage()) })
 
   const channels = channelsQuery.isError ? [] : channelsQuery.data
   const isFresh = mypageQuery.isFetchedAfterMount && channelsQuery.isFetchedAfterMount
