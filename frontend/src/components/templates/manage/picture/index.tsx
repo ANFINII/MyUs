@@ -1,5 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
+import { useQueryClient } from '@tanstack/react-query'
+import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Picture } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
@@ -29,6 +31,7 @@ export default function ManagePictures(props: Props): React.JSX.Element {
   const { datas, total, page, channels } = props
 
   const router = useRouter()
+  const queryClient = useQueryClient()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
@@ -56,7 +59,7 @@ export default function ManagePictures(props: Props): React.JSX.Element {
     }
     setSelectedKeys(new Set())
     handleModal()
-    router.replace(router.asPath)
+    await queryClient.invalidateQueries({ queryKey: queryKeys.managePictures })
   }
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))

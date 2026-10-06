@@ -1,31 +1,34 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
+import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { Advertise } from 'types/internal/advertise'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getManageAdvertises } from 'api/internal/manage/get'
 import { pageParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageAdvertises from 'components/templates/manage/advertise'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const { search, page, limit, offset } = pageParams(query)
-  const advertisesRet = await getManageAdvertises({ search, limit, offset }, req)
-  if (advertisesRet.isErr()) return { props: { status: advertisesRet.error.status } }
-  const { datas, total } = advertisesRet.value
-  return { props: { ...translations, datas, total, page } }
+  return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-  datas: Advertise[]
-  total: number
-  page: number
-}
+export default function ManageAdvertisesPage(): React.JSX.Element {
+  const router = useRouter()
+  const { search, page, limit, offset } = pageParams(router.query)
+  const params = { search, limit, offset }
 
-export default function ManageAdvertisesPage(props: Props): React.JSX.Element {
+  const query = useQuery({
+    queryKey: queryKeys.manageAdvertiseList(params),
+    queryFn: () => toQuery(getManageAdvertises(params)),
+    enabled: router.isReady,
+    placeholderData: keepPreviousData,
+  })
+
   return (
-    <ErrorCheck status={props.status}>
-      <ManageAdvertises {...props} />
-    </ErrorCheck>
+    <QueryCheck queries={[query]} data={query.data} title="Advertise">
+      {(data) => <ManageAdvertises {...data} page={page} />}
+    </QueryCheck>
   )
 }
