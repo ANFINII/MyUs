@@ -1,28 +1,39 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
+import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { Advertise } from 'types/internal/advertise'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getManageAdvertise } from 'api/internal/manage/get'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageAdvertiseEdit from 'components/templates/manage/advertise/edit'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, params, req }) => {
+// ビルド時には生成せず、初回アクセス時に外枠（翻訳のみ）を生成する
+export const getStaticPaths: GetStaticPaths = async () => {
+  return { paths: [], fallback: 'blocking' }
+}
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const ulid = String(params?.ulid ?? '')
-  const advertiseRet = await getManageAdvertise(ulid, req)
-  if (advertiseRet.isErr()) return { props: { status: advertiseRet.error.status } }
-  const data = advertiseRet.value
-  return { props: { ...translations, data } }
+  return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-  data: Advertise
-}
+export default function ManageAdvertiseEditPage(): React.JSX.Element {
+  const router = useRouter()
+  const ulid = String(router.query.ulid ?? '')
 
-export default function ManageAdvertiseEditPage(props: Props): React.JSX.Element {
+  const query = useQuery({
+    queryKey: queryKeys.manageAdvertiseDetail(ulid),
+    queryFn: () => toQuery(getManageAdvertise(ulid)),
+    enabled: router.isReady,
+  })
+
+  // フォームの初期値に使うため、キャッシュではなく画面を開いてから取得したデータで表示する
+  const data = query.isFetchedAfterMount && query.data ? { data: query.data } : undefined
+
   return (
-    <ErrorCheck status={props.status}>
-      <ManageAdvertiseEdit {...props} />
-    </ErrorCheck>
+    <QueryCheck queries={[query]} data={data} title="Advertise">
+      {(props) => <ManageAdvertiseEdit {...props} />}
+    </QueryCheck>
   )
 }
