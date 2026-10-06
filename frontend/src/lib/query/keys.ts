@@ -24,6 +24,10 @@ export const queryKeys = {
   userPage: (ulid: string) => ['userpage', ulid] as const,
   userPageMedia: (ulid: string, channelUlid: string) => ['userpage', ulid, 'media', channelUlid] as const,
 
+  settingProfile: ['setting', 'profile'] as const,
+  settingMypage: ['setting', 'mypage'] as const,
+  settingNotification: ['setting', 'notification'] as const,
+
   subscribeChannels: ['channels', 'subscribe'] as const,
   follows: (params: SearchParams) => ['follow', params] as const,
   followers: (params: SearchParams) => ['follower', params] as const,
@@ -49,8 +53,4 @@ export const queryKeys = {
   manageAdvertises: ['manage', 'advertise'] as const,
   manageAdvertiseList: (params: AdvertiseSearchParams) => ['manage', 'advertise', params] as const,
   manageAdvertiseDetail: (ulid: string) => ['manage', 'advertise', ulid] as const,
-
-  settingProfile: ['setting', 'profile'] as const,
-  settingMypage: ['setting', 'mypage'] as const,
-  settingNotification: ['setting', 'notification'] as const,
 }
