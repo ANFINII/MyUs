@@ -1,24 +1,26 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getUser } from 'api/internal/user'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Manage from 'components/templates/manage'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const ret = await getUser(req)
-  if (ret.isErr()) return { props: { status: ret.error.status } }
   return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-}
+export default function ManagePage(): React.JSX.Element {
+  const query = useQuery({
+    queryKey: queryKeys.user,
+    queryFn: () => toQuery(getUser()),
+  })
 
-export default function ManagePage(props: Props): React.JSX.Element {
   return (
-    <ErrorCheck status={props.status}>
+    <QueryCheck queries={[query]} data={query.data} title="投稿管理">
       <Manage />
-    </ErrorCheck>
+    </QueryCheck>
   )
 }
