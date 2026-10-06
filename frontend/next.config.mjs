@@ -6,6 +6,7 @@ const { i18n } = require('./next-i18next.config.js')
 export default {
   reactStrictMode: true,
   reactCompiler: true,
+  agentRules: false,
   basePath: '',
   i18n,
   sassOptions: {
