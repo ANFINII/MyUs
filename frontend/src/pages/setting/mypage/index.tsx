@@ -24,7 +24,6 @@ export default function SettingMypagePage(): React.JSX.Element {
     queryFn: () => toQuery(getChannels()),
   })
 
-  // チャンネル一覧の取得に失敗してもページは表示する（空配列として扱う）
   const channels = channelsQuery.isError ? [] : channelsQuery.data
   const data = mypageQuery.data && channels ? { mypage: mypageQuery.data, channels } : undefined
 

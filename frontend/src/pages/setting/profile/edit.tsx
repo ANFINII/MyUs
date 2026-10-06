@@ -18,7 +18,6 @@ export default function SettingProfilePage(): React.JSX.Element {
     queryFn: () => toQuery(getSettingProfile()),
   })
 
-  // フォームの初期値に使うため、キャッシュではなく画面を開いてから取得したデータで表示する
   const data = query.isFetchedAfterMount && query.data ? { profile: query.data } : undefined
 
   return (

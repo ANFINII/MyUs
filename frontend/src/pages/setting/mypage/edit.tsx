@@ -24,9 +24,7 @@ export default function SettingMypageEditPage(): React.JSX.Element {
     queryFn: () => toQuery(getChannels()),
   })
 
-  // チャンネル一覧の取得に失敗してもページは表示する（空配列として扱う）
   const channels = channelsQuery.isError ? [] : channelsQuery.data
-  // フォームの初期値に使うため、キャッシュではなく画面を開いてから取得したデータで表示する
   const isFresh = mypageQuery.isFetchedAfterMount && channelsQuery.isFetchedAfterMount
   const data = isFresh && mypageQuery.data && channels ? { mypage: mypageQuery.data, channels } : undefined
 

@@ -18,7 +18,6 @@ export default function SettingNotificationPage(): React.JSX.Element {
     queryFn: () => toQuery(getSettingNotification()),
   })
 
-  // フォームの初期値に使うため、キャッシュではなく画面を開いてから取得したデータで表示する
   const data = query.isFetchedAfterMount && query.data ? { userNotification: query.data } : undefined
 
   return (
