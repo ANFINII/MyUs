@@ -33,4 +33,12 @@ export const queryKeys = {
   settingProfile: ['setting', 'profile'] as const,
   settingMypage: ['setting', 'mypage'] as const,
   settingNotification: ['setting', 'notification'] as const,
+  home: (params: SearchParams) => ['home', params] as const,
+  recommend: (params: SearchParams) => ['recommend', params] as const,
+  mediaVideoList: (params: SearchParams) => ['media', 'video', params] as const,
+  mediaMusicList: (params: SearchParams) => ['media', 'music', params] as const,
+  mediaBlogList: (params: SearchParams) => ['media', 'blog', params] as const,
+  mediaComicList: (params: SearchParams) => ['media', 'comic', params] as const,
+  mediaPictureList: (params: SearchParams) => ['media', 'picture', params] as const,
+  mediaChatList: (params: SearchParams) => ['media', 'chat', params] as const,
 }

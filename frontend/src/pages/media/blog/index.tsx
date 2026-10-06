@@ -1,29 +1,23 @@
-import { GetServerSideProps } from 'next'
-import { Blog } from 'types/internal/media/output'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getBlogs } from 'api/internal/media/list'
 import { pageParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Status/Check'
+import { useAppRouter } from 'components/hooks/useAppRouter'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Blogs from 'components/templates/media/blog/list'
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { search, limit, offset, page } = pageParams(query)
-  const ret = await getBlogs({ search, limit, offset })
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const { datas, total } = ret.value
-  return { props: { datas, total, page } }
-}
+export default function BlogsPage(): React.JSX.Element {
+  const router = useAppRouter()
+  const { search, page, limit, offset } = pageParams(router.query)
+  const params = { search, limit, offset }
 
-interface Props {
-  status: number
-  datas: Blog[]
-  total: number
-  page: number
-}
+  const query = useQuery({ queryKey: queryKeys.mediaBlogList(params), queryFn: () => toQuery(getBlogs(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const queries = { list: query }
 
-export default function BlogsPage(props: Props): React.JSX.Element {
   return (
-    <ErrorCheck status={props.status}>
-      <Blogs {...props} />
-    </ErrorCheck>
+    <QueryCheck title="Blog" queries={queries}>
+      {(props) => <Blogs {...props} page={page} />}
+    </QueryCheck>
   )
 }

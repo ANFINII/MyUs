@@ -1,29 +1,23 @@
-import { GetServerSideProps } from 'next'
-import { Music } from 'types/internal/media/output'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getMusics } from 'api/internal/media/list'
 import { pageParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Status/Check'
+import { useAppRouter } from 'components/hooks/useAppRouter'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Musics from 'components/templates/media/music/list'
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { search, limit, offset, page } = pageParams(query)
-  const ret = await getMusics({ search, limit, offset })
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const { datas, total } = ret.value
-  return { props: { datas, total, page } }
-}
+export default function MusicsPage(): React.JSX.Element {
+  const router = useAppRouter()
+  const { search, page, limit, offset } = pageParams(router.query)
+  const params = { search, limit, offset }
 
-interface Props {
-  status: number
-  datas: Music[]
-  total: number
-  page: number
-}
+  const query = useQuery({ queryKey: queryKeys.mediaMusicList(params), queryFn: () => toQuery(getMusics(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const queries = { list: query }
 
-export default function MusicsPage(props: Props): React.JSX.Element {
   return (
-    <ErrorCheck status={props.status}>
-      <Musics {...props} />
-    </ErrorCheck>
+    <QueryCheck title="Music" queries={queries}>
+      {(props) => <Musics {...props} page={page} />}
+    </QueryCheck>
   )
 }
