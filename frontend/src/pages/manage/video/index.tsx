@@ -33,8 +33,8 @@ export default function ManageVideosPage(): React.JSX.Element {
   })
 
   return (
-    <QueryCheck queries={[channelsQuery, query]} data={query.data} title="Video">
-      {(data) => <ManageVideos {...data} page={page} channels={channels} />}
+    <QueryCheck queries={{ channels: channelsQuery, list: query }} title="Video">
+      {({ list }) => <ManageVideos {...list} page={page} channels={channels} />}
     </QueryCheck>
   )
 }

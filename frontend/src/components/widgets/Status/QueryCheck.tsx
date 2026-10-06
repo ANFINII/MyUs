@@ -1,22 +1,30 @@
-import { ApiError } from 'lib/error'
+import { UseQueryResult } from '@tanstack/react-query'
 import ErrorCheck from './Check'
 import PageLoading from './Loading'
 
-type QueryState = { error: ApiError | null }
+type Queries = Record<string, UseQueryResult<unknown>>
 
-interface Props<T> {
-  queries: QueryState[]
-  data: T | undefined
+type QueryData<T extends Queries> = { [K in keyof T]: T[K] extends UseQueryResult<infer D> ? D : never }
+
+interface Props<T extends Queries> {
+  queries: T
+  fresh?: boolean
   title?: string
-  children: React.ReactNode | ((data: T) => React.ReactNode)
+  children: React.ReactNode | ((data: QueryData<T>) => React.ReactNode)
 }
 
-// エラー → 取得中 → 表示の順に判定し、childrenが関数の場合は取得済みのdataのみを渡す
-export default function QueryCheck<T>(props: Props<T>): React.JSX.Element {
-  const { queries, data, title, children } = props
+export default function QueryCheck<T extends Queries>(props: Props<T>): React.JSX.Element {
+  const { queries, fresh = false, title, children } = props
 
-  const status = queries.find((q) => q.error !== null)?.error?.status ?? 200
-  const render = (value: T): React.ReactNode => (typeof children === 'function' ? children(value) : children)
+  const results = Object.values(queries)
+  const status = results.find((q) => q.error !== null)?.error?.status ?? 200
+  const isReady = results.every((q) => q.data !== undefined && (!fresh || q.isFetchedAfterMount))
 
-  return <ErrorCheck status={status}>{data === undefined ? <PageLoading title={title} /> : render(data)}</ErrorCheck>
+  const render = (): React.ReactNode => {
+    if (typeof children !== 'function') return children
+    const data = Object.fromEntries(Object.entries(queries).map(([key, q]) => [key, q.data])) as QueryData<T>
+    return children(data)
+  }
+
+  return <ErrorCheck status={status}>{isReady ? render() : <PageLoading title={title} />}</ErrorCheck>
 }

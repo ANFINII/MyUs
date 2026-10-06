@@ -92,7 +92,8 @@ const [user, setUser] = useState<User | null>(null)
 
 - `getStaticProps`では翻訳ファイルのみ読み込む（データは取得しない）
 - 動的ルート（`[ulid]`等）は`getStaticPaths`で`{ paths: [], fallback: 'blocking' }`を返す
-- 取得結果は`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
+- クエリは`QueryCheck`（`widgets/Status/QueryCheck`）に名前付きのオブジェクトで渡し、エラー → 取得中 → 表示を判定させる
+- `QueryCheck`は、渡した名前のまま取得データをまとめて`children`の関数に渡す。名前をテンプレートのpropsに合わせ、`{...props}`で渡す
 - `QueryCheck`の`children`は、データを使う場合は関数、使わない場合はJSXで渡す
 
 ```typescript
@@ -103,10 +104,9 @@ export default function ManageVideoEditPage(): React.JSX.Element {
   const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
   const query = useQuery({ queryKey: queryKeys.manageVideoDetail(ulid), queryFn: () => toQuery(getManageVideo(ulid)), enabled: router.isReady })
-  const data = useFreshData({ data: query, channels: channelsQuery, categories: categoriesQuery })
 
   return (
-    <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Video">
+    <QueryCheck queries={{ data: query, channels: channelsQuery, categories: categoriesQuery }} fresh title="Video">
       {(props) => <ManageVideoEdit {...props} />}
     </QueryCheck>
   )
@@ -119,16 +119,16 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 - `queryKey`は`lib/query/keys.ts`の`queryKeys`に定義する（`invalidateQueries`で前方一致させるため、配列の先頭から粒度が細かくなるようにする）
 - 1行で書く。180文字（`printWidth`）を超えるものはPrettierの折り返しに任せる
 - 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
-- 連続する`useQuery`の間、および直後の`const data`との間に空行を入れない
+- 連続する`useQuery`の間に空行を入れない
 - `router.query`を使うクエリは`enabled: router.isReady`で読み込み完了を待つ（静的生成ページは初回描画時に`router.query`が空のため）
 
 ### 用途別のルール
 
 | 用途 | ルール |
 |------|------|
-| 取得データを`useState`の初期値に使う（作成・編集フォーム） | `useFreshData`を通す（古いキャッシュでフォームが初期化され、古い値で上書き保存されるのを防ぐ） |
+| 取得データを`useState`の初期値に使う（作成・編集フォーム） | `QueryCheck`に`fresh`を付ける（画面を開いた後の取得完了を待ち、古いキャッシュでフォームが初期化され、古い値で上書き保存されるのを防ぐ） |
 | ページ送り・検索等で`queryKey`が変わる一覧 | `placeholderData: keepPreviousData`で前の表示を残す（画面全体がスピナーに切り替わるのを防ぐ） |
-| 一覧・表示のみ | `query.data`をそのまま使う |
+| 一覧・表示のみ | `fresh`は付けない（キャッシュを即表示し、最新が届いたら置き換わる） |
 
 ### キャッシュ
 
@@ -234,3 +234,4 @@ return <div className={style.box}>...</div>
 - 2026-04-27: 依存方向ルール追加（`parts/` は他 parts / グローバル CSS に依存せず単体で動作する）
 - 2026-04-27: parts 独立性の例外ケース 4 種を明文化（純粋表示用・同ファミリ派生・同サブツリー・汎用合成 UI）
 - 2026-10-06: データ取得（TanStack Query）のルール追加、`pages/` の責務を `useQuery` に更新、widgets 同フォルダ内の依存を許容、`useIsLoading` → `useLoading` に修正
+- 2026-10-06: `QueryCheck` がクエリを名前付きオブジェクトで受け取る形に変更（`useFreshData` を廃止し `fresh` に統合）

@@ -5,7 +5,6 @@ import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
-import { useFreshData } from 'components/hooks/useFreshData'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import PictureCreate from 'components/templates/manage/picture/create'
 
@@ -17,10 +16,9 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 export default function PictureCreatePage(): React.JSX.Element {
   const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
-  const data = useFreshData({ channels: channelsQuery, categories: categoriesQuery })
 
   return (
-    <QueryCheck queries={[channelsQuery, categoriesQuery]} data={data} title="Picture">
+    <QueryCheck queries={{ channels: channelsQuery, categories: categoriesQuery }} fresh title="Picture">
       {(props) => <PictureCreate {...props} />}
     </QueryCheck>
   )

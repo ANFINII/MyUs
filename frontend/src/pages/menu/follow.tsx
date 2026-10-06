@@ -20,10 +20,8 @@ export default function FollowsPage(): React.JSX.Element {
 
   const query = useQuery({ queryKey: queryKeys.follows(params), queryFn: () => toQuery(getFollow(params)), enabled: router.isReady, placeholderData: keepPreviousData })
 
-  const data = query.data && { datas: query.data }
-
   return (
-    <QueryCheck queries={[query]} data={data} title="Follow">
+    <QueryCheck queries={{ datas: query }} title="Follow">
       {(props) => <Follows {...props} />}
     </QueryCheck>
   )

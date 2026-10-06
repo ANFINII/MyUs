@@ -27,8 +27,8 @@ export default function ManageAdvertisesPage(): React.JSX.Element {
   })
 
   return (
-    <QueryCheck queries={[query]} data={query.data} title="Advertise">
-      {(data) => <ManageAdvertises {...data} page={page} />}
+    <QueryCheck queries={{ list: query }} title="Advertise">
+      {({ list }) => <ManageAdvertises {...list} page={page} />}
     </QueryCheck>
   )
 }

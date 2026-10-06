@@ -16,7 +16,7 @@ export default function PasswordChangePage(): React.JSX.Element {
   const query = useQuery({ queryKey: queryKeys.user, queryFn: () => toQuery(getUser()) })
 
   return (
-    <QueryCheck queries={[query]} data={query.data} title="パスワード変更">
+    <QueryCheck queries={{ user: query }} title="パスワード変更">
       <PasswordChange />
     </QueryCheck>
   )

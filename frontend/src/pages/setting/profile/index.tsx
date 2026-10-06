@@ -15,10 +15,8 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 export default function SettingProfilePage(): React.JSX.Element {
   const query = useQuery({ queryKey: queryKeys.settingProfile, queryFn: () => toQuery(getSettingProfile()) })
 
-  const data = query.data && { profile: query.data }
-
   return (
-    <QueryCheck queries={[query]} data={data} title="アカウント設定">
+    <QueryCheck queries={{ profile: query }} title="アカウント設定">
       {(props) => <SettingProfile {...props} />}
     </QueryCheck>
   )
