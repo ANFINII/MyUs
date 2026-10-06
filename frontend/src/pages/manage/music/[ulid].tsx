@@ -7,7 +7,6 @@ import { queryKeys } from 'lib/query/keys'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManageMusic } from 'api/internal/manage/get'
-import { useFreshData } from 'components/hooks/useFreshData'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import ManageMusicEdit from 'components/templates/manage/music/edit'
 
@@ -27,10 +26,10 @@ export default function ManageMusicEditPage(): React.JSX.Element {
   const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
   const query = useQuery({ queryKey: queryKeys.manageMusicDetail(ulid), queryFn: () => toQuery(getManageMusic(ulid)), enabled: router.isReady })
-  const data = useFreshData({ data: query, channels: channelsQuery, categories: categoriesQuery })
+  const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={[query, channelsQuery, categoriesQuery]} data={data} title="Music">
+    <QueryCheck title="Music" queries={queries} fresh>
       {(props) => <ManageMusicEdit {...props} />}
     </QueryCheck>
   )

@@ -31,10 +31,11 @@ export default function ManagePicturesPage(): React.JSX.Element {
     enabled: channelsQuery.isSuccess,
     placeholderData: keepPreviousData,
   })
+  const queries = { channels: channelsQuery, list: query }
 
   return (
-    <QueryCheck queries={[channelsQuery, query]} data={query.data} title="Picture">
-      {(data) => <ManagePictures {...data} page={page} channels={channels} />}
+    <QueryCheck title="Picture" queries={queries}>
+      {({ list }) => <ManagePictures {...list} page={page} channels={channels} />}
     </QueryCheck>
   )
 }

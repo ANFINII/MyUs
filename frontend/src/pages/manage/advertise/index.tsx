@@ -25,10 +25,11 @@ export default function ManageAdvertisesPage(): React.JSX.Element {
     enabled: router.isReady,
     placeholderData: keepPreviousData,
   })
+  const queries = { list: query }
 
   return (
-    <QueryCheck queries={[query]} data={query.data} title="Advertise">
-      {(data) => <ManageAdvertises {...data} page={page} />}
+    <QueryCheck title="Advertise" queries={queries}>
+      {({ list }) => <ManageAdvertises {...list} page={page} />}
     </QueryCheck>
   )
 }

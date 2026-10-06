@@ -31,10 +31,11 @@ export default function ManageChatsPage(): React.JSX.Element {
     enabled: channelsQuery.isSuccess,
     placeholderData: keepPreviousData,
   })
+  const queries = { channels: channelsQuery, list: query }
 
   return (
-    <QueryCheck queries={[channelsQuery, query]} data={query.data} title="Chat">
-      {(data) => <ManageChats {...data} page={page} channels={channels} />}
+    <QueryCheck title="Chat" queries={queries}>
+      {({ list }) => <ManageChats {...list} page={page} channels={channels} />}
     </QueryCheck>
   )
 }

@@ -31,10 +31,11 @@ export default function ManageBlogsPage(): React.JSX.Element {
     enabled: channelsQuery.isSuccess,
     placeholderData: keepPreviousData,
   })
+  const queries = { channels: channelsQuery, list: query }
 
   return (
-    <QueryCheck queries={[channelsQuery, query]} data={query.data} title="Blog">
-      {(data) => <ManageBlogs {...data} page={page} channels={channels} />}
+    <QueryCheck title="Blog" queries={queries}>
+      {({ list }) => <ManageBlogs {...list} page={page} channels={channels} />}
     </QueryCheck>
   )
 }

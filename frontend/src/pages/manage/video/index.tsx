@@ -31,10 +31,11 @@ export default function ManageVideosPage(): React.JSX.Element {
     enabled: channelsQuery.isSuccess,
     placeholderData: keepPreviousData,
   })
+  const queries = { channels: channelsQuery, list: query }
 
   return (
-    <QueryCheck queries={[channelsQuery, query]} data={query.data} title="Video">
-      {(data) => <ManageVideos {...data} page={page} channels={channels} />}
+    <QueryCheck title="Video" queries={queries}>
+      {({ list }) => <ManageVideos {...list} page={page} channels={channels} />}
     </QueryCheck>
   )
 }
