@@ -8,6 +8,9 @@ export default {
   reactCompiler: true,
   basePath: '',
   i18n,
+  sassOptions: {
+    implementation: 'sass-embedded',
+  },
   images: {
     remotePatterns: [
       { protocol: 'http', hostname: '127.0.0.1' },
