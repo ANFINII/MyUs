@@ -1,8 +1,8 @@
 import { createRouter } from '@tanstack/react-router'
+import { routeTree } from 'lib/routes'
 import { AppProvider } from 'components/provider/AppProvider'
 import Custom404 from 'components/widgets/Status/Custom404'
 import Custom500 from 'components/widgets/Status/Custom500'
-import { routeTree } from '../routeTree.gen'
 
 const parseSearch = (search: string): Record<string, string> => Object.fromEntries(new URLSearchParams(search))
 

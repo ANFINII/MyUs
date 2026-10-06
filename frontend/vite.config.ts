@@ -1,13 +1,12 @@
 import { fileURLToPath } from 'node:url'
 import babel from '@rolldown/plugin-babel'
-import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
 const src = (dir: string): string => fileURLToPath(new URL(`./src/${dir}`, import.meta.url))
 
 export default defineConfig({
-  plugins: [tanstackRouter({ target: 'react', autoCodeSplitting: true }), react(), babel({ presets: [reactCompilerPreset()] })],
+  plugins: [react(), babel({ presets: [reactCompilerPreset()] })],
   resolve: {
     alias: {
       api: src('api'),

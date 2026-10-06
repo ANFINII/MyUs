@@ -90,16 +90,16 @@ const [user, setUser] = useState<User | null>(null)
 
 ### ページの構成
 
-- ルートは`src/routes/`にTanStack Routerのファイルベースで置き、`pages/`のコンポーネントを読み込むだけにする（`src/routeTree.gen.ts`はViteのビルド・開発サーバーで自動生成される）
-- 英語版（`/en/...`）を同じルートで受けるため、ルートは`src/routes/{-$locale}/`の下に置く
-- 動的なパスパラメータは`$ulid.tsx`のように`$`で始める
+- URLとページの対応は`src/lib/routes.tsx`の1ファイルにまとめる（TanStack Routerのコードベースのルーティング）。ページを追加するときは、該当する領域に`page()`を1行追加する
+- ルートは`pages/`のコンポーネントを`lazyRouteComponent`で読み込むだけにする（表示するときに読み込まれる）
+- 英語版（`/en/...`）を同じルートで受けるため、各ページは言語のルート（`{-$locale}`）の子にする
+- 動的なパスパラメータは`$ulid`のように`$`で始める
 
 ```typescript
-// src/routes/{-$locale}/manage/video/$ulid.tsx
-import { createFileRoute } from '@tanstack/react-router'
-import ManageVideoEditPage from 'pages/manage/video/[ulid]'
-
-export const Route = createFileRoute('/{-$locale}/manage/video/$ulid')({ component: ManageVideoEditPage })
+// src/lib/routes.tsx
+page('/manage/video', () => import('pages/manage/video')),
+page('/manage/video/create', () => import('pages/manage/video/create')),
+page('/manage/video/$ulid', () => import('pages/manage/video/[ulid]')),
 ```
 
 - クエリは名前付きのオブジェクトを`const queries`に入れてから`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
@@ -160,13 +160,13 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 
 | ディレクトリ | 責務 |
 |------|------|
-| `routes/` | ルーティング（TanStack Router のファイルベース） |
 | `pages/` | データ取得（`useQuery`）とテンプレート呼び出し |
 | `templates/` | ページの実装、状態管理 |
 | `widgets/` | 複合コンポーネント（Modal, Card等） |
 | `parts/` | 汎用UIコンポーネント（Button, Input等） |
 | `hooks/` | カスタムフック |
 | `api/` | APIクライアント関数 |
+| `lib/routes.tsx` | URL とページの対応（TanStack Router のルート定義） |
 | `lib/query/` | TanStack Queryの設定（`client.ts`）とクエリキー（`keys.ts`） |
 | `types/` | 型定義 |
 | `utils/` | ユーティリティ関数 |
@@ -252,3 +252,4 @@ return <div className={style.box}>...</div>
 - 2026-10-06: `useQuery` の結果を `queries` のキーと同じ名前の変数に入れるルールを追加
 - 2026-10-06: 公開ページの CSR 化完了に伴い、`getServerSideProps` が残っている旨の記述を削除
 - 2026-10-07: Next.js から TanStack Router + Vite に移行。`getStaticProps` / `getStaticPaths` の記述を削除し、`routes/` の説明を追加
+- 2026-10-07: ルート定義をファイルベース（`src/routes/`）からコードベース（`src/lib/routes.tsx` の 1 ファイル）に変更

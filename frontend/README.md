@@ -28,4 +28,4 @@ pnpm dev                   # http://127.0.0.1:3000
 
 ## ルーティング
 
-`src/routes/` のファイル構成からルートが生成される（`src/routeTree.gen.ts` は自動生成）。詳細は `docs/frontend.md` を参照。
+URL とページの対応は `src/lib/routes.tsx` にまとめている。詳細は `docs/frontend.md` を参照。
