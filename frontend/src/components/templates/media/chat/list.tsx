@@ -7,20 +7,20 @@ import CardList from 'components/widgets/Card/List'
 import ChatCard from 'components/widgets/Card/Media/Chat'
 
 interface Props {
-  list: ChatList
+  data: ChatList
   page: number
 }
 
 export default function Chats(props: Props): React.JSX.Element {
-  const { list, page } = props
-  const { datas, total } = list
+  const { data, page } = props
+  const { items, total } = data
 
   const search = useSearch(total)
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
 
   return (
     <Main title="Chat" search={search}>
-      <CardList items={datas} Content={ChatCard} />
+      <CardList items={items} Content={ChatCard} />
       <Pagination currentPage={currentPage} totalPages={totalPages} margin="mv_40" onChange={handlePage} />
     </Main>
   )

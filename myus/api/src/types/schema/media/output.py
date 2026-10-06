@@ -74,32 +74,32 @@ class ChatOut(MediaOut):
 
 
 class VideoListOut(BaseModel):
-    datas: list[VideoOut]
+    items: list[VideoOut]
     total: int
 
 
 class MusicListOut(BaseModel):
-    datas: list[MusicOut]
+    items: list[MusicOut]
     total: int
 
 
 class BlogListOut(BaseModel):
-    datas: list[BlogOut]
+    items: list[BlogOut]
     total: int
 
 
 class ComicListOut(BaseModel):
-    datas: list[ComicOut]
+    items: list[ComicOut]
     total: int
 
 
 class PictureListOut(BaseModel):
-    datas: list[PictureOut]
+    items: list[PictureOut]
     total: int
 
 
 class ChatListOut(BaseModel):
-    datas: list[ChatOut]
+    items: list[ChatOut]
     total: int
 
 

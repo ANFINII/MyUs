@@ -188,7 +188,7 @@ class UserAPI:
         notification = get_notification(user_id)
         data = NotificationOut(
             count=notification.count,
-            datas=[
+            items=[
                 NotificationItemOut(
                     ulid=item.ulid,
                     user_from=NotificationUserOut(
@@ -212,7 +212,7 @@ class UserAPI:
                     ),
                     is_confirmed=item.is_confirmed,
                 )
-                for item in notification.datas
+                for item in notification.items
             ],
         )
 

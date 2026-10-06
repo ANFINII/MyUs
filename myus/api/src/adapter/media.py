@@ -106,7 +106,7 @@ class VideoAPI:
         log.info("VideoAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_videos(search, user_id=user_id, limit=limit, offset=offset)
-        data = VideoListOut(datas=convert_videos(objs), total=total)
+        data = VideoListOut(items=convert_videos(objs), total=total)
         return 200, data
 
     @staticmethod
@@ -167,7 +167,7 @@ class MusicAPI:
         log.info("MusicAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_musics(search, user_id=user_id, limit=limit, offset=offset)
-        data = MusicListOut(datas=convert_musics(objs), total=total)
+        data = MusicListOut(items=convert_musics(objs), total=total)
         return 200, data
 
     @staticmethod
@@ -228,7 +228,7 @@ class BlogAPI:
         log.info("BlogAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_blogs(search, user_id=user_id, limit=limit, offset=offset)
-        data = BlogListOut(datas=convert_blogs(objs), total=total)
+        data = BlogListOut(items=convert_blogs(objs), total=total)
         return 200, data
 
     @staticmethod
@@ -288,7 +288,7 @@ class ComicAPI:
         log.info("ComicAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_comics(search, user_id=user_id, limit=limit, offset=offset)
-        data = ComicListOut(datas=convert_comics(objs), total=total)
+        data = ComicListOut(items=convert_comics(objs), total=total)
         return 200, data
 
     @staticmethod
@@ -348,7 +348,7 @@ class PictureAPI:
         log.info("PictureAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_pictures(search, user_id=user_id, limit=limit, offset=offset)
-        data = PictureListOut(datas=convert_pictures(objs), total=total)
+        data = PictureListOut(items=convert_pictures(objs), total=total)
         return 200, data
 
     @staticmethod
@@ -407,7 +407,7 @@ class ChatAPI:
         log.info("ChatAPI list", search=search, limit=limit, offset=offset)
         user_id = auth_check(request)
         objs, total = get_chats(search, user_id=user_id, limit=limit, offset=offset)
-        data = ChatListOut(datas=convert_chats(objs), total=total)
+        data = ChatListOut(items=convert_chats(objs), total=total)
         return 200, data
 
     @staticmethod

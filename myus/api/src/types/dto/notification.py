@@ -23,4 +23,4 @@ class NotificationItemDTO:
 @dataclass(frozen=True, slots=True)
 class NotificationDTO:
     count: int
-    datas: list[NotificationItemDTO]
+    items: list[NotificationItemDTO]

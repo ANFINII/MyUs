@@ -7,20 +7,20 @@ import CardList from 'components/widgets/Card/List'
 import BlogCard from 'components/widgets/Card/Media/Blog'
 
 interface Props {
-  list: BlogList
+  data: BlogList
   page: number
 }
 
 export default function Blogs(props: Props): React.JSX.Element {
-  const { list, page } = props
-  const { datas, total } = list
+  const { data, page } = props
+  const { items, total } = data
 
   const search = useSearch(total)
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
 
   return (
     <Main title="Blog" search={search}>
-      <CardList items={datas} Content={BlogCard} />
+      <CardList items={items} Content={BlogCard} />
       <Pagination currentPage={currentPage} totalPages={totalPages} margin="mv_40" onChange={handlePage} />
     </Main>
   )

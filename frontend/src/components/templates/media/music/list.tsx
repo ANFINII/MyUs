@@ -7,20 +7,20 @@ import CardList from 'components/widgets/Card/List'
 import MusicCard from 'components/widgets/Card/Media/Music'
 
 interface Props {
-  list: MusicList
+  data: MusicList
   page: number
 }
 
 export default function Musics(props: Props): React.JSX.Element {
-  const { list, page } = props
-  const { datas, total } = list
+  const { data, page } = props
+  const { items, total } = data
 
   const search = useSearch(total)
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
 
   return (
     <Main title="Music" search={search}>
-      <CardList items={datas} Content={MusicCard} />
+      <CardList items={items} Content={MusicCard} />
       <Pagination currentPage={currentPage} totalPages={totalPages} margin="mv_40" onChange={handlePage} />
     </Main>
   )

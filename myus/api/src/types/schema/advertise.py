@@ -34,7 +34,7 @@ class AdvertiseOut(BaseModel):
 
 
 class AdvertiseListOut(BaseModel):
-    datas: list[AdvertiseOut]
+    items: list[AdvertiseOut]
     total: int
 
 

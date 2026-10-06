@@ -12,13 +12,13 @@ export default function ManageAdvertisesPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const list = useQuery({
+  const data = useQuery({
     queryKey: queryKeys.manageAdvertiseList(params),
     queryFn: () => toQuery(getManageAdvertises(params)),
     enabled: router.isReady,
     placeholderData: keepPreviousData,
   })
-  const queries = { list }
+  const queries = { data }
 
   return (
     <QueryCheck title="Advertise" queries={queries}>

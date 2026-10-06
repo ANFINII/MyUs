@@ -18,7 +18,7 @@ class AdvertiseAPI:
         log.info("AdvertiseAPI list_by_user", user_ulid=user_ulid)
 
         objs = get_user_advertises(user_ulid)
-        return 200, AdvertiseListOut(datas=convert_advertises(objs), total=len(objs))
+        return 200, AdvertiseListOut(items=convert_advertises(objs), total=len(objs))
 
     @staticmethod
     @router.post("/{ulid}/read", response={200: AdvertiseReadOut, 404: ErrorOut})

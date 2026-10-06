@@ -36,7 +36,7 @@ class ManageVideoAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         objs, total = get_manage_videos(user_id, search, channel, limit, offset)
-        return 200, VideoListOut(datas=convert_videos(objs), total=total)
+        return 200, VideoListOut(items=convert_videos(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: VideoOut, 401: ErrorOut, 404: ErrorOut})
@@ -97,7 +97,7 @@ class ManageMusicAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         objs, total = get_manage_musics(user_id, search, channel, limit, offset)
-        return 200, MusicListOut(datas=convert_musics(objs), total=total)
+        return 200, MusicListOut(items=convert_musics(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: MusicOut, 401: ErrorOut, 404: ErrorOut})
@@ -158,7 +158,7 @@ class ManageBlogAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         objs, total = get_manage_blogs(user_id, search, channel, limit, offset)
-        return 200, BlogListOut(datas=convert_blogs(objs), total=total)
+        return 200, BlogListOut(items=convert_blogs(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: BlogOut, 401: ErrorOut, 404: ErrorOut})
@@ -219,7 +219,7 @@ class ManageComicAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         objs, total = get_manage_comics(user_id, search, channel, limit, offset)
-        return 200, ComicListOut(datas=convert_comics(objs), total=total)
+        return 200, ComicListOut(items=convert_comics(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: ComicOut, 401: ErrorOut, 404: ErrorOut})
@@ -280,7 +280,7 @@ class ManagePictureAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         objs, total = get_manage_pictures(user_id, search, channel, limit, offset)
-        return 200, PictureListOut(datas=convert_pictures(objs), total=total)
+        return 200, PictureListOut(items=convert_pictures(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: PictureOut, 401: ErrorOut, 404: ErrorOut})
@@ -341,7 +341,7 @@ class ManageChatAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         objs, total = get_manage_chats(user_id, search, channel, limit, offset)
-        return 200, ChatListOut(datas=convert_chats(objs), total=total)
+        return 200, ChatListOut(items=convert_chats(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: ChatOut, 401: ErrorOut, 404: ErrorOut})
@@ -402,7 +402,7 @@ class ManageAdvertiseAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         objs, total = get_manage_advertises(user_id, search, limit, offset)
-        return 200, AdvertiseListOut(datas=convert_advertises(objs), total=total)
+        return 200, AdvertiseListOut(items=convert_advertises(objs), total=total)
 
     @staticmethod
     @router.get("/{ulid}", response={200: AdvertiseOut, 401: ErrorOut, 404: ErrorOut})

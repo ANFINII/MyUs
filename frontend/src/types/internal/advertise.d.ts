@@ -34,7 +34,7 @@ export interface Advertise {
 }
 
 export interface AdvertiseList {
-  datas: Advertise[]
+  items: Advertise[]
   total: number
 }
 
