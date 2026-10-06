@@ -99,7 +99,7 @@ const [user, setUser] = useState<User | null>(null)
 
 ```typescript
 export default function ManageVideoEditPage(): React.JSX.Element {
-  const router = useRouter()
+  const router = useAppRouter()
   const ulid = String(router.query.ulid ?? '')
 
   const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
