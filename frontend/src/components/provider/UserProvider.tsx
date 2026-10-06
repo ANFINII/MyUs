@@ -30,9 +30,9 @@ export function UserProvider(props: Props): React.JSX.Element {
 
   const updateUser = useCallback(async () => {
     const ret = await getUser()
-    if (ret.isErr()) return resetUser()
+    if (ret.isErr()) return setUser(initUser)
     setUser(ret.value)
-  }, [resetUser])
+  }, [])
 
   useEffect(() => {
     updateUser()
