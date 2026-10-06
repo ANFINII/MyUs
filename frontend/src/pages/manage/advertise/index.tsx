@@ -22,7 +22,7 @@ export default function ManageAdvertisesPage(): React.JSX.Element {
 
   return (
     <QueryCheck title="Advertise" queries={queries}>
-      {({ list }) => <ManageAdvertises {...list} page={page} />}
+      {(props) => <ManageAdvertises {...props} page={page} />}
     </QueryCheck>
   )
 }

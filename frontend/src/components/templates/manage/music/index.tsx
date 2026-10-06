@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
-import { Music } from 'types/internal/media/output'
+import { Music, MusicList } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { deleteManageMusics } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
@@ -20,14 +20,14 @@ import ManageHeader from '../_container/Header'
 import ManageTable from '../_container/Table'
 
 interface Props {
-  datas: Music[]
-  total: number
+  list: MusicList
   page: number
   channels: Channel[]
 }
 
 export default function ManageMusics(props: Props): React.JSX.Element {
-  const { datas, total, page, channels } = props
+  const { list, page, channels } = props
+  const { datas, total } = list
 
   const router = useAppRouter()
   const queryClient = useQueryClient()

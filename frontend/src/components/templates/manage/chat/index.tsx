@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
-import { Chat } from 'types/internal/media/output'
+import { Chat, ChatList } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { deleteManageChats } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
@@ -20,14 +20,14 @@ import ManageHeader from '../_container/Header'
 import ManageTable from '../_container/Table'
 
 interface Props {
-  datas: Chat[]
-  total: number
+  list: ChatList
   page: number
   channels: Channel[]
 }
 
 export default function ManageChats(props: Props): React.JSX.Element {
-  const { datas, total, page, channels } = props
+  const { list, page, channels } = props
+  const { datas, total } = list
 
   const router = useAppRouter()
   const queryClient = useQueryClient()
