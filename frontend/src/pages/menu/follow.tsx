@@ -1,29 +1,35 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
+import { useRouter } from 'next/router'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { Follow } from 'types/internal/user'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getFollow } from 'api/internal/user'
 import { searchParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Follows from 'components/templates/menu/follow'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const params = searchParams(query)
-  const ret = await getFollow(params, req)
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const datas = ret.value
-  return { props: { ...translations, datas } }
+  return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-  datas: Follow[]
-}
+export default function FollowsPage(): React.JSX.Element {
+  const router = useRouter()
+  const params = searchParams(router.query)
 
-export default function FollowsPage(props: Props): React.JSX.Element {
+  const query = useQuery({
+    queryKey: queryKeys.follows(params),
+    queryFn: () => toQuery(getFollow(params)),
+    enabled: router.isReady,
+    placeholderData: keepPreviousData,
+  })
+
+  const data = query.data && { datas: query.data }
+
   return (
-    <ErrorCheck status={props.status}>
-      <Follows {...props} />
-    </ErrorCheck>
+    <QueryCheck queries={[query]} data={data} title="Follow">
+      {(props) => <Follows {...props} />}
+    </QueryCheck>
   )
 }

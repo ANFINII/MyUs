@@ -1,32 +1,38 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { Channel } from 'types/internal/channel'
-import { MypageOut } from 'types/internal/user'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getChannels } from 'api/internal/channel'
 import { getSettingMypage } from 'api/internal/setting'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import SettingMyPageEdit from 'components/templates/setting/mypage/edit'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const ret = await getSettingMypage(req)
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const mypage = ret.value
-  const channelsRet = await getChannels(req)
-  const channels = channelsRet.isOk() ? channelsRet.value : []
-  return { props: { ...translations, mypage, channels } }
+  return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-  mypage: MypageOut
-  channels: Channel[]
-}
+export default function SettingMypageEditPage(): React.JSX.Element {
+  const mypageQuery = useQuery({
+    queryKey: queryKeys.settingMypage,
+    queryFn: () => toQuery(getSettingMypage()),
+  })
 
-export default function SettingMypageEditPage(props: Props): React.JSX.Element {
+  const channelsQuery = useQuery({
+    queryKey: queryKeys.channels,
+    queryFn: () => toQuery(getChannels()),
+  })
+
+  // チャンネル一覧の取得に失敗してもページは表示する（空配列として扱う）
+  const channels = channelsQuery.isError ? [] : channelsQuery.data
+  // フォームの初期値に使うため、キャッシュではなく画面を開いてから取得したデータで表示する
+  const isFresh = mypageQuery.isFetchedAfterMount && channelsQuery.isFetchedAfterMount
+  const data = isFresh && mypageQuery.data && channels ? { mypage: mypageQuery.data, channels } : undefined
+
   return (
-    <ErrorCheck status={props.status}>
-      <SettingMyPageEdit {...props} />
-    </ErrorCheck>
+    <QueryCheck queries={[mypageQuery]} data={data} title="マイページ設定">
+      {(props) => <SettingMyPageEdit {...props} />}
+    </QueryCheck>
   )
 }

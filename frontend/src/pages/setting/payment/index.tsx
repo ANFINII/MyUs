@@ -1,26 +1,28 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { MypageOut } from 'types/internal/user'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getSettingMypage } from 'api/internal/setting'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Payment from 'components/templates/setting/payment'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const ret = await getSettingMypage(req)
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  return { props: { ...translations, mypage: ret.value } }
+  return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-  mypage: MypageOut
-}
+export default function PaymentPage(): React.JSX.Element {
+  const query = useQuery({
+    queryKey: queryKeys.settingMypage,
+    queryFn: () => toQuery(getSettingMypage()),
+  })
 
-export default function PaymentPage(props: Props): React.JSX.Element {
+  const data = query.data && { mypage: query.data }
+
   return (
-    <ErrorCheck status={props.status}>
-      <Payment {...props} />
-    </ErrorCheck>
+    <QueryCheck queries={[query]} data={data} title="料金プラン">
+      {(props) => <Payment {...props} />}
+    </QueryCheck>
   )
 }
