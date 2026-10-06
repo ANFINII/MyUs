@@ -14,9 +14,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
 export default function PaymentPage(): React.JSX.Element {
   const query = useQuery({ queryKey: queryKeys.settingMypage, queryFn: () => toQuery(getSettingMypage()) })
+  const queries = { mypage: query }
 
   return (
-    <QueryCheck queries={{ mypage: query }} title="料金プラン">
+    <QueryCheck queries={queries} title="料金プラン">
       {(props) => <Payment {...props} />}
     </QueryCheck>
   )

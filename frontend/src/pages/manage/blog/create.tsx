@@ -16,9 +16,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 export default function BlogCreatePage(): React.JSX.Element {
   const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
+  const queries = { channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={{ channels: channelsQuery, categories: categoriesQuery }} fresh title="Blog">
+    <QueryCheck queries={queries} fresh title="Blog">
       {(props) => <BlogCreate {...props} />}
     </QueryCheck>
   )

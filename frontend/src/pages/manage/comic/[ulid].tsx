@@ -26,9 +26,10 @@ export default function ManageComicEditPage(): React.JSX.Element {
   const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
   const query = useQuery({ queryKey: queryKeys.manageComicDetail(ulid), queryFn: () => toQuery(getManageComic(ulid)), enabled: router.isReady })
+  const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={{ data: query, channels: channelsQuery, categories: categoriesQuery }} fresh title="Comic">
+    <QueryCheck queries={queries} fresh title="Comic">
       {(props) => <ManageComicEdit {...props} />}
     </QueryCheck>
   )

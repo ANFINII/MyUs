@@ -16,9 +16,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 export default function SettingMypagePage(): React.JSX.Element {
   const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const mypageQuery = useQuery({ queryKey: queryKeys.settingMypage, queryFn: () => toQuery(getSettingMypage()) })
+  const queries = { mypage: mypageQuery, channels: channelsQuery }
 
   return (
-    <QueryCheck queries={{ mypage: mypageQuery, channels: channelsQuery }} title="マイページ設定">
+    <QueryCheck queries={queries} title="マイページ設定">
       {(props) => <SettingMyPage {...props} />}
     </QueryCheck>
   )

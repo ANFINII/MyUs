@@ -14,9 +14,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
 export default function ManagePage(): React.JSX.Element {
   const query = useQuery({ queryKey: queryKeys.user, queryFn: () => toQuery(getUser()) })
+  const queries = { user: query }
 
   return (
-    <QueryCheck queries={{ user: query }} title="投稿管理">
+    <QueryCheck queries={queries} title="投稿管理">
       <Manage />
     </QueryCheck>
   )

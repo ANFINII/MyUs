@@ -14,9 +14,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
 export default function ChannelsPage(): React.JSX.Element {
   const query = useQuery({ queryKey: queryKeys.subscribeChannels, queryFn: () => toQuery(getSubscribeChannels()) })
+  const queries = { datas: query }
 
   return (
-    <QueryCheck queries={{ datas: query }} title="Channel">
+    <QueryCheck queries={queries} title="Channel">
       {(props) => <Channels {...props} />}
     </QueryCheck>
   )

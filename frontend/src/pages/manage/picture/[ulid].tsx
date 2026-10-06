@@ -26,9 +26,10 @@ export default function ManagePictureEditPage(): React.JSX.Element {
   const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
   const query = useQuery({ queryKey: queryKeys.managePictureDetail(ulid), queryFn: () => toQuery(getManagePicture(ulid)), enabled: router.isReady })
+  const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={{ data: query, channels: channelsQuery, categories: categoriesQuery }} fresh title="Picture">
+    <QueryCheck queries={queries} fresh title="Picture">
       {(props) => <ManagePictureEdit {...props} />}
     </QueryCheck>
   )

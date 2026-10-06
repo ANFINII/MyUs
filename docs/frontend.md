@@ -92,7 +92,7 @@ const [user, setUser] = useState<User | null>(null)
 
 - `getStaticProps`では翻訳ファイルのみ読み込む（データは取得しない）
 - 動的ルート（`[ulid]`等）は`getStaticPaths`で`{ paths: [], fallback: 'blocking' }`を返す
-- クエリは`QueryCheck`（`widgets/Status/QueryCheck`）に名前付きのオブジェクトで渡し、エラー → 取得中 → 表示を判定させる
+- クエリは名前付きのオブジェクトを`const queries`に入れてから`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
 - `QueryCheck`は、渡した名前のまま取得データをまとめて`children`の関数に渡す。名前をテンプレートのpropsに合わせ、`{...props}`で渡す
 - `QueryCheck`の`children`は、データを使う場合は関数、使わない場合はJSXで渡す
 
@@ -104,9 +104,10 @@ export default function ManageVideoEditPage(): React.JSX.Element {
   const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
   const query = useQuery({ queryKey: queryKeys.manageVideoDetail(ulid), queryFn: () => toQuery(getManageVideo(ulid)), enabled: router.isReady })
+  const queries = { data: query, channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={{ data: query, channels: channelsQuery, categories: categoriesQuery }} fresh title="Video">
+    <QueryCheck queries={queries} fresh title="Video">
       {(props) => <ManageVideoEdit {...props} />}
     </QueryCheck>
   )
@@ -119,7 +120,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 - `queryKey`は`lib/query/keys.ts`の`queryKeys`に定義する（`invalidateQueries`で前方一致させるため、配列の先頭から粒度が細かくなるようにする）
 - 1行で書く。180文字（`printWidth`）を超えるものはPrettierの折り返しに任せる
 - 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
-- 連続する`useQuery`の間に空行を入れない
+- 連続する`useQuery`の間、および直後の`const queries`との間に空行を入れない
 - `router.query`を使うクエリは`enabled: router.isReady`で読み込み完了を待つ（静的生成ページは初回描画時に`router.query`が空のため）
 
 ### 用途別のルール

@@ -31,9 +31,10 @@ export default function ManageMusicsPage(): React.JSX.Element {
     enabled: channelsQuery.isSuccess,
     placeholderData: keepPreviousData,
   })
+  const queries = { channels: channelsQuery, list: query }
 
   return (
-    <QueryCheck queries={{ channels: channelsQuery, list: query }} title="Music">
+    <QueryCheck queries={queries} title="Music">
       {({ list }) => <ManageMusics {...list} page={page} channels={channels} />}
     </QueryCheck>
   )

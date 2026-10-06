@@ -16,9 +16,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 export default function VideoCreatePage(): React.JSX.Element {
   const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
+  const queries = { channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={{ channels: channelsQuery, categories: categoriesQuery }} fresh title="Video">
+    <QueryCheck queries={queries} fresh title="Video">
       {(props) => <VideoCreate {...props} />}
     </QueryCheck>
   )

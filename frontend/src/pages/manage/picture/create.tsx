@@ -16,9 +16,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 export default function PictureCreatePage(): React.JSX.Element {
   const channelsQuery = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categoriesQuery = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
+  const queries = { channels: channelsQuery, categories: categoriesQuery }
 
   return (
-    <QueryCheck queries={{ channels: channelsQuery, categories: categoriesQuery }} fresh title="Picture">
+    <QueryCheck queries={queries} fresh title="Picture">
       {(props) => <PictureCreate {...props} />}
     </QueryCheck>
   )

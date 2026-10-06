@@ -31,9 +31,10 @@ export default function ManageComicsPage(): React.JSX.Element {
     enabled: channelsQuery.isSuccess,
     placeholderData: keepPreviousData,
   })
+  const queries = { channels: channelsQuery, list: query }
 
   return (
-    <QueryCheck queries={{ channels: channelsQuery, list: query }} title="Comic">
+    <QueryCheck queries={queries} title="Comic">
       {({ list }) => <ManageComics {...list} page={page} channels={channels} />}
     </QueryCheck>
   )
