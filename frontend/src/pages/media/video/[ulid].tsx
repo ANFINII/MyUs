@@ -1,25 +1,21 @@
-import { GetServerSideProps } from 'next'
-import { VideoDetailOut } from 'types/internal/media/output'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getVideo } from 'api/internal/media/detail'
-import ErrorCheck from 'components/widgets/Status/Check'
+import { useAppRouter } from 'components/hooks/useAppRouter'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import VideoDetail from 'components/templates/media/video/detail'
 
-export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
-  const ret = await getVideo(String(query.ulid), req)
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const data = ret.value
-  return { props: { data } }
-}
+export default function VideoDetailPage(): React.JSX.Element {
+  const router = useAppRouter()
+  const ulid = String(router.query.ulid ?? '')
 
-interface Props {
-  status: number
-  data: VideoDetailOut
-}
+  const data = useQuery({ queryKey: queryKeys.mediaVideoDetail(ulid), queryFn: () => toQuery(getVideo(ulid)), enabled: router.isReady })
+  const queries = { data }
 
-export default function VideDetailPage(props: Props): React.JSX.Element {
   return (
-    <ErrorCheck status={props.status}>
-      <VideoDetail {...props} />
-    </ErrorCheck>
+    <QueryCheck title="Video" queries={queries} fresh>
+      {(props) => <VideoDetail {...props} />}
+    </QueryCheck>
   )
 }
