@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { Channel } from 'types/internal/channel'
 import { getSubscribeChannels } from 'api/internal/channel'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import Channels from 'components/templates/menu/channel'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {

@@ -6,7 +6,7 @@ import { Chat } from 'types/internal/media/output'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManageChat } from 'api/internal/manage/get'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import ManageChatEdit from 'components/templates/manage/chat/edit'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, params, req }) => {

@@ -6,7 +6,7 @@ import { Comic } from 'types/internal/media/output'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManageComic } from 'api/internal/manage/get'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import ManageComicEdit from 'components/templates/manage/comic/edit'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, params, req }) => {

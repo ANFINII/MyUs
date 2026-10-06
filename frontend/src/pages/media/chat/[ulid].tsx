@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { ChatDetailOut } from 'types/internal/media/output'
 import { getChat } from 'api/internal/media/detail'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import ChatDetail from 'components/templates/media/chat/detail'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {

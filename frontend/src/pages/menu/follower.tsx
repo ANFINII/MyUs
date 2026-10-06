@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslation
 import { Follow } from 'types/internal/user'
 import { getFollower } from 'api/internal/user'
 import { searchParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import Followers from 'components/templates/menu/follower'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {

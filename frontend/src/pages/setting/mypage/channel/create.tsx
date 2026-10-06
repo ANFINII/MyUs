@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import ChannelCreate from 'components/templates/setting/mypage/channel/create'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {

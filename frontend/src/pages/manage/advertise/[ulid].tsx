@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 import { Advertise } from 'types/internal/advertise'
 import { getManageAdvertise } from 'api/internal/manage/get'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import ManageAdvertiseEdit from 'components/templates/manage/advertise/edit'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, params, req }) => {

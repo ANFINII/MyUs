@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslation
 import { Advertise } from 'types/internal/advertise'
 import { getManageAdvertises } from 'api/internal/manage/get'
 import { pageParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import ManageAdvertises from 'components/templates/manage/advertise'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {

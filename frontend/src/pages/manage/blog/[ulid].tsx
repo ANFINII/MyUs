@@ -6,7 +6,7 @@ import { Blog } from 'types/internal/media/output'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
 import { getManageBlog } from 'api/internal/manage/get'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import ManageBlogEdit from 'components/templates/manage/blog/edit'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, params, req }) => {

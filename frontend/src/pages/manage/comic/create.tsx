@@ -4,7 +4,7 @@ import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { getCategories } from 'api/internal/category'
 import { getChannels } from 'api/internal/channel'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import ComicCreate from 'components/templates/manage/comic/create'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {

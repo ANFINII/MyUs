@@ -5,7 +5,7 @@ import { Picture } from 'types/internal/media/output'
 import { getChannels } from 'api/internal/channel'
 import { getManagePictures } from 'api/internal/manage/get'
 import { pageParams } from 'utils/functions/common'
-import ErrorCheck from 'components/widgets/Error/Check'
+import ErrorCheck from 'components/widgets/Status/Check'
 import ManagePictures from 'components/templates/manage/picture'
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
