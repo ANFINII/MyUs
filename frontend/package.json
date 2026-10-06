@@ -7,11 +7,11 @@
     "node": "24.x"
   },
   "scripts": {
-    "dev": "next dev --turbopack --hostname 127.0.0.1",
-    "clean": "rm -rf .next",
-    "build": "next build",
-    "start": "next start",
-    "test": "jest",
+    "dev": "vite",
+    "clean": "rm -rf dist",
+    "build": "vite build",
+    "start": "vite preview",
+    "test": "vitest run",
     "prebuild": "pnpm run lint",
     "lint": "eslint src",
     "format": "eslint --fix src"
@@ -19,6 +19,7 @@
   "dependencies": {
     "@noble/ciphers": "^2.4.0",
     "@tanstack/react-query": "^5.104.1",
+    "@tanstack/react-router": "^1.170.41",
     "@tiptap/extension-color": "^3.31.3",
     "@tiptap/extension-highlight": "^3.31.3",
     "@tiptap/extension-image": "^3.31.3",
@@ -39,7 +40,6 @@
     "isomorphic-dompurify": "~3.19.0",
     "lodash": "^4.18.1",
     "neverthrow": "^8.2.0",
-    "next": "^16.3.6",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-i18next": "^17.0.15",
@@ -49,15 +49,15 @@
     "videojs-hls-quality-selector": "^2.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^8.0.6",
     "@eslint/compat": "^2.1.1",
     "@eslint/config-array": "^0.23.5",
     "@eslint/js": "^10.0.1",
     "@eslint/object-schema": "^3.0.5",
-    "@next/eslint-plugin-next": "^16.3.6",
+    "@rolldown/plugin-babel": "^0.2.4",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
-    "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.25",
     "@types/node": "^24.13.3",
     "@types/react": "^19.3.0",
@@ -65,8 +65,8 @@
     "@types/video.js": "^7.3.58",
     "@typescript-eslint/eslint-plugin": "^8.70.1",
     "@typescript-eslint/parser": "^8.70.1",
+    "@vitejs/plugin-react": "^6.1.2",
     "eslint": "^10.11.0",
-    "eslint-config-next": "^16.3.6",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-node": "^0.4.0",
     "eslint-plugin-complexity": "^1.0.2",
@@ -76,12 +76,11 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.12.0",
-    "jest": "^30.5.2",
-    "jest-environment-jsdom": "^30.5.2",
-    "ts-jest": "^29.4.14",
-    "ts-node": "^10.9.2",
+    "jsdom": "^30.1.2",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.1"
+    "typescript-eslint": "^8.70.1",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
   },
   "overrides": {
     "@types/react": "^19.3.0",

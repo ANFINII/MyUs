@@ -1,7 +1,6 @@
 import { fixupConfigRules, fixupPluginRules } from '@eslint/compat'
 import js from '@eslint/js'
 import tsEsLintPlugin from '@typescript-eslint/eslint-plugin'
-import nextPlugin from '@next/eslint-plugin-next'
 import importPlugin from 'eslint-plugin-import'
 import pluginReact from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -34,7 +33,6 @@ export default [
     plugins: {
       react: fixupPluginRules(pluginReact),
       'react-hooks': reactHooks,
-      '@next/next': nextPlugin,
       'import': fixupPluginRules(importPlugin),
       'unused-imports': unusedPlugin,
       '@typescript-eslint': tsEsLintPlugin,
@@ -77,7 +75,6 @@ export default [
           pathGroupsExcludedImportTypes: ['builtin'],
           pathGroups: [
             { pattern: '{react,react/**,react-dom/**,react-**}', group: 'builtin', position: 'before' },
-            { pattern: '{next,next/**,next-i18next,next-i18next/**,next-**}', group: 'builtin', position: 'before' },
             { pattern: 'lib/**', group: 'internal', position: 'before' },
             { pattern: 'types/**', group: 'internal', position: 'before' },
             { pattern: '{api/**,api/external/**,api/internal/**}', group: 'internal', position: 'before' },

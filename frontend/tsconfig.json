@@ -4,7 +4,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["@types/react", "@types/react-dom"],
+    "types": ["@types/react", "@types/react-dom", "vite/client", "vitest/globals"],
     "jsx": "react-jsx",
     "paths": {
       "api/*": ["./src/api/*"],
@@ -44,6 +44,6 @@
     // "noPropertyAccessFromIndexSignature": true,
     // "strictBuiltinIteratorReturn": true,
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "**/*.stories.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
 }

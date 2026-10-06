@@ -1,5 +1,3 @@
-import Head from 'next/head'
-
 interface Props {
   title?: string
   description?: string
@@ -15,7 +13,7 @@ export default function Meta(props: Props): React.JSX.Element {
   const pageTitle = title ? `MyUs | ${title}` : 'MyUs'
 
   return (
-    <Head>
+    <>
       <title>{pageTitle}</title>
       <meta property="og:title" content={pageTitle} />
       <meta property="og:type" content="website" />
@@ -25,6 +23,6 @@ export default function Meta(props: Props): React.JSX.Element {
       {url && <meta property="og:url" content={url} />}
       {locale && <meta property="og:locale" content={locale} />}
       {siteName && <meta property="og:site_name" content={siteName} />}
-    </Head>
+    </>
   )
 }

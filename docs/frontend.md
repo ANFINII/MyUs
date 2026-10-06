@@ -7,7 +7,7 @@
 - `undefined`/`null`の可能性がある値は`?.`や`??`でチェックする
 - console.logは使用しない（エラーはサイレント処理またはUI通知）
 
-## React/Next.js
+## React
 
 - 関数コンポーネントのみ使用
 - コンポーネント名はPascalCase、関数はcamelCase
@@ -90,8 +90,18 @@ const [user, setUser] = useState<User | null>(null)
 
 ### ページの構成
 
-- `getStaticProps`では翻訳ファイルのみ読み込む（データは取得しない）
-- 動的ルート（`[ulid]`等）は`getStaticPaths`で`{ paths: [], fallback: 'blocking' }`を返す
+- URLとページの対応は`src/lib/routes.tsx`の1ファイルにまとめる（TanStack Routerのコードベースのルーティング）。ページを追加するときは、該当する領域に`page()`を1行追加する
+- ルートは`pages/`のコンポーネントを`lazyRouteComponent`で読み込むだけにする（表示するときに読み込まれる）
+- 英語版（`/en/...`）を同じルートで受けるため、各ページは言語のルート（`{-$locale}`）の子にする
+- 動的なパスパラメータは`$ulid`のように`$`で始める
+
+```typescript
+// src/lib/routes.tsx
+page('/manage/video', () => import('pages/manage/video')),
+page('/manage/video/create', () => import('pages/manage/video/create')),
+page('/manage/video/$ulid', () => import('pages/manage/video/[ulid]')),
+```
+
 - クエリは名前付きのオブジェクトを`const queries`に入れてから`QueryCheck`（`widgets/Status/QueryCheck`）に渡し、エラー → 取得中 → 表示を判定させる
 - `QueryCheck`は、渡した名前のまま取得データをまとめて`children`の関数に渡す。名前をテンプレートのpropsに合わせ、`{...props}`で渡す
 - `QueryCheck`の`children`は、データを使う場合は関数、使わない場合はJSXで渡す
@@ -123,7 +133,7 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 - `useQuery`の結果は`queries`のキー（テンプレートのprops名）と同じ名前の変数に入れ、`const queries = { data, channels }`のように省略記法で書く
 - 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
 - 連続する`useQuery`の間、および直後の`const queries`との間に空行を入れない
-- `router.query`を使うクエリは`enabled: router.isReady`で読み込み完了を待つ（静的生成ページは初回描画時に`router.query`が空のため）
+- `router.isReady`はTanStack Routerでは常に`true`（Next.js時代の名残）。既存の`enabled: router.isReady`は害がないため残しているが、新しいコードでは不要
 
 ### 用途別のルール
 
@@ -150,12 +160,13 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 
 | ディレクトリ | 責務 |
 |------|------|
-| `pages/` | ルーティング、データ取得（`useQuery`） |
+| `pages/` | データ取得（`useQuery`）とテンプレート呼び出し |
 | `templates/` | ページの実装、状態管理 |
 | `widgets/` | 複合コンポーネント（Modal, Card等） |
 | `parts/` | 汎用UIコンポーネント（Button, Input等） |
 | `hooks/` | カスタムフック |
 | `api/` | APIクライアント関数 |
+| `lib/routes.tsx` | URL とページの対応（TanStack Router のルート定義） |
 | `lib/query/` | TanStack Queryの設定（`client.ts`）とクエリキー（`keys.ts`） |
 | `types/` | 型定義 |
 | `utils/` | ユーティリティ関数 |
@@ -240,3 +251,5 @@ return <div className={style.box}>...</div>
 - 2026-10-06: `QueryCheck` がクエリを名前付きオブジェクトで受け取る形に変更（`useFreshData` を廃止し `fresh` に統合）
 - 2026-10-06: `useQuery` の結果を `queries` のキーと同じ名前の変数に入れるルールを追加
 - 2026-10-06: 公開ページの CSR 化完了に伴い、`getServerSideProps` が残っている旨の記述を削除
+- 2026-10-07: Next.js から TanStack Router + Vite に移行。`getStaticProps` / `getStaticPaths` の記述を削除し、`routes/` の説明を追加
+- 2026-10-07: ルート定義をファイルベース（`src/routes/`）からコードベース（`src/lib/routes.tsx` の 1 ファイル）に変更

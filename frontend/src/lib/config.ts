@@ -1,9 +1,9 @@
 import { AxiosError } from 'axios'
 
-export const ENV = String(process.env.NEXT_PUBLIC_ENV)
-export const API_URL = String(process.env.NEXT_PUBLIC_API_URL)
-export const ENCRYPT_KEY = String(process.env.NEXT_PUBLIC_ENCRYPT_KEY)
-export const ENCRYPT_IV = String(process.env.NEXT_PUBLIC_ENCRYPT_IV)
+export const ENV = String(import.meta.env.VITE_ENV)
+export const API_URL = String(import.meta.env.VITE_API_URL)
+export const ENCRYPT_KEY = String(import.meta.env.VITE_ENCRYPT_KEY)
+export const ENCRYPT_IV = String(import.meta.env.VITE_ENCRYPT_IV)
 
 export const AxiosErrorLog = (e: AxiosError) => {
   const errResponse = e.response
