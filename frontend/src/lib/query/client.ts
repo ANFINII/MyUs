@@ -15,7 +15,6 @@ export const toQuery = async <T>(apiCall: Promise<ApiOut<T>>): Promise<T> => {
   return ret.value
 }
 
-const STALE_TIME_MS = 30000 // 30秒
 const MAX_RETRY = 1
 
 // 5xxに加え、レスポンスのないネットワークエラー（apiOutでstatus: 500に変換）も一時的な障害としてリトライする
@@ -27,7 +26,8 @@ export const createQueryClient = (): QueryClient => {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: STALE_TIME_MS,
+        // SSRと同じく、ページを開くたびに最新を取得する（キャッシュは取得完了までの表示に使う）
+        staleTime: 0,
         refetchOnWindowFocus: false,
         retry: shouldRetry,
       },

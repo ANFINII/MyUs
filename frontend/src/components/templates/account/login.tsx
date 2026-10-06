@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next/pages'
+import { useQueryClient } from '@tanstack/react-query'
 import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
@@ -21,6 +22,7 @@ import style from './Account.module.scss'
 export default function Login(): React.JSX.Element {
   const { t } = useTranslation('common')
   const router = useRouter()
+  const queryClient = useQueryClient()
   const { updateUser } = useUser()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
@@ -45,6 +47,8 @@ export default function Login(): React.JSX.Element {
       handleError(FetchError.Error, message)
       return
     }
+    // 別ユーザーでログインし直した場合に前のユーザーのデータが表示されないよう、キャッシュを削除する
+    queryClient.clear()
     await updateUser()
     handleProfile()
   }
