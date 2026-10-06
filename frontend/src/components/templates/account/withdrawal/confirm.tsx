@@ -1,9 +1,9 @@
 import { ChangeEvent, useState } from 'react'
-import { useRouter } from 'next/router'
 import { WithdrawalIn } from 'types/internal/auth'
 import { postWithdrawal } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -17,7 +17,7 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from '../Account.module.scss'
 
 export default function WithdrawalConfirm(): React.JSX.Element {
-  const router = useRouter()
+  const router = useAppRouter()
   const { resetUser } = useUser()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()

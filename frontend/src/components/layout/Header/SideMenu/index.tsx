@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router'
 import cx from 'utils/functions/cx'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import ExImage from 'components/parts/ExImage'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconFile from 'components/parts/Icon/File'
@@ -19,7 +19,7 @@ interface Props {
 export default function SideMenu(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
 
   const handleClick = (url: string) => () => {
     router.push(url)

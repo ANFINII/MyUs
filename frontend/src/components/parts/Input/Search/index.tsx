@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
-import { useRouter } from 'next/router'
 import cx from 'utils/functions/cx'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import IconSearch from 'components/parts/Icon/Search'
 import style from './Search.module.scss'
 
@@ -13,7 +13,7 @@ interface Props {
 export default function Search(props: Props): React.JSX.Element {
   const { value, className, onChange } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
 
   const handleSearch = () => {
     const query = value ? { search: value } : {}

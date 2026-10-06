@@ -1,10 +1,10 @@
-import { useRouter } from 'next/router'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import style from './Success.module.scss'
 
 export default function PaymentSuccess(): React.JSX.Element {
-  const router = useRouter()
+  const router = useAppRouter()
   const handleBack = () => router.push('/setting/payment')
 
   return (

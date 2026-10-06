@@ -1,5 +1,4 @@
 import { ChangeEvent, useState } from 'react'
-import { useRouter } from 'next/router'
 import { Channel, SubscribeIn } from 'types/internal/channel'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { Hashtag, MediaUser } from 'types/internal/media/output'
@@ -13,6 +12,7 @@ import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
 import { formatDatetime } from 'utils/functions/datetime'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -70,7 +70,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     hashtags: media.hashtags,
   }
 
-  const router = useRouter()
+  const router = useAppRouter()
   const { user } = useUser()
   const { loading, handleLoading } = useLoading()
   const [isModal, setIsModal] = useState<boolean>(false)

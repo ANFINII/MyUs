@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 import { useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from 'lib/query/keys'
 import { Advertise } from 'types/internal/advertise'
@@ -7,6 +6,7 @@ import { deleteManageAdvertises } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
 import { formatDatetime } from 'utils/functions/datetime'
 import { useApiError } from 'components/hooks/useApiError'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
 import { useToast } from 'components/hooks/useToast'
@@ -29,7 +29,7 @@ const ADVERTISE_LIMIT = 5
 export default function ManageAdvertises(props: Props): React.JSX.Element {
   const { datas, total, page } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
   const queryClient = useQueryClient()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()

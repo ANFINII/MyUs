@@ -1,5 +1,5 @@
-import router from 'next/router'
 import cx from 'utils/functions/cx'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useUser } from 'components/hooks/useUser'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
@@ -19,6 +19,7 @@ interface Props {
 export default function DropMenuCloud(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
+  const router = useAppRouter()
   const { user } = useUser()
 
   const handleManage = () => {

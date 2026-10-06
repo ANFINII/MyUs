@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 import { MypageOut } from 'types/internal/user'
 import { postPaymentCancel, postPaymentCheckout } from 'api/internal/payment'
 import { FetchError } from 'utils/constants/enum'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -19,7 +19,7 @@ interface Props {
 
 export default function Payment(props: Props): React.JSX.Element {
   const { mypage } = props
-  const router = useRouter()
+  const router = useAppRouter()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)

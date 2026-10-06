@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
 import { Notification, NotificationOut } from 'types/internal/user'
 import { getNotification, postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
 import { NotificationType } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
 import IconBell from 'components/parts/Icon/Bell'
@@ -23,7 +23,7 @@ const otherObjs = [NotificationType.Follow, NotificationType.Like, NotificationT
 export default function DropMenuNotice(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
   const { user } = useUser()
   const [notifications, setNotifications] = useState<NotificationOut>()
 

@@ -1,10 +1,10 @@
 import { ChangeEvent, useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
 import { SignupIn } from 'types/internal/auth'
 import { getSignupVerify, postSignup } from 'api/internal/auth'
 import { FetchError, GenderType } from 'utils/constants/enum'
 import { genderMap } from 'utils/constants/map'
 import { nowDate, selectDate } from 'utils/functions/datetime'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -35,7 +35,7 @@ const initSignup: SignupIn = {
 }
 
 export default function Signup(): React.JSX.Element {
-  const router = useRouter()
+  const router = useAppRouter()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()

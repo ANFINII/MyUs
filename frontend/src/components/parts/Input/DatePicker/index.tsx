@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useRouter } from 'next/router'
 import cx from 'utils/functions/cx'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import IconCalendar from 'components/parts/Icon/Calendar'
 import style from './DatePicker.module.scss'
 
@@ -64,7 +64,7 @@ interface Props {
 export default function DatePicker(props: Props): React.JSX.Element {
   const { label, value, placeholder, error, className, required = false, minDate, maxDate, onChange } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
   const locale = router.locale ?? 'ja'
 
   const boxRef = useRef<HTMLDivElement>(null)

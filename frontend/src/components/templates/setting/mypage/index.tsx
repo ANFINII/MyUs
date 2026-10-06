@@ -1,8 +1,8 @@
 import { useState, ChangeEvent } from 'react'
-import { useRouter } from 'next/router'
 import { Channel } from 'types/internal/channel'
 import { Option } from 'types/internal/other'
 import { MypageOut } from 'types/internal/user'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPerson from 'components/parts/Icon/Person'
@@ -23,7 +23,7 @@ interface Props {
 export default function SettingMyPage(props: Props): React.JSX.Element {
   const { mypage, channels } = props
 
-  const router = useRouter()
+  const router = useAppRouter()
   const [channelUlid, setChannelUlid] = useState<string>(channels.find((c) => c.isDefault)!.ulid)
 
   const handleEdit = () => router.push('/setting/mypage/edit')

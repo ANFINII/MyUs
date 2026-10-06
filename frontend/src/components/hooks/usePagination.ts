@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router'
 import { PAGE_SIZE } from 'utils/functions/common'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 
 interface ServerPagination {
   currentPage: number
@@ -8,7 +8,7 @@ interface ServerPagination {
 }
 
 export function usePagination(total: number, page: number): ServerPagination {
-  const router = useRouter()
+  const router = useAppRouter()
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
 
