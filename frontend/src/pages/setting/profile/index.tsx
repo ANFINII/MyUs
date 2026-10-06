@@ -1,27 +1,28 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { ProfileOut } from 'types/internal/user'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getSettingProfile } from 'api/internal/setting'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import SettingProfile from 'components/templates/setting/profile'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const ret = await getSettingProfile(req)
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const profile = ret.value
-  return { props: { ...translations, profile } }
+  return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-  profile: ProfileOut
-}
+export default function SettingProfilePage(): React.JSX.Element {
+  const query = useQuery({
+    queryKey: queryKeys.settingProfile,
+    queryFn: () => toQuery(getSettingProfile()),
+  })
 
-export default function SettingProfilePage(props: Props): React.JSX.Element {
+  const data = query.data && { profile: query.data }
+
   return (
-    <ErrorCheck status={props.status}>
-      <SettingProfile {...props} />
-    </ErrorCheck>
+    <QueryCheck queries={[query]} data={data} title="アカウント設定">
+      {(props) => <SettingProfile {...props} />}
+    </QueryCheck>
   )
 }

@@ -1,27 +1,28 @@
-import { GetServerSideProps } from 'next'
+import { GetStaticProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
-import { Channel } from 'types/internal/channel'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
 import { getSubscribeChannels } from 'api/internal/channel'
-import ErrorCheck from 'components/widgets/Status/Check'
+import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Channels from 'components/templates/menu/channel'
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(String(locale), ['common'])
-  const ret = await getSubscribeChannels(req)
-  if (ret.isErr()) return { props: { status: ret.error.status } }
-  const datas = ret.value
-  return { props: { ...translations, datas } }
+  return { props: { ...translations } }
 }
 
-interface Props {
-  status: number
-  datas: Channel[]
-}
+export default function ChannelsPage(): React.JSX.Element {
+  const query = useQuery({
+    queryKey: queryKeys.subscribeChannels,
+    queryFn: () => toQuery(getSubscribeChannels()),
+  })
 
-export default function ChannelsPage(props: Props): React.JSX.Element {
+  const data = query.data && { datas: query.data }
+
   return (
-    <ErrorCheck status={props.status}>
-      <Channels {...props} />
-    </ErrorCheck>
+    <QueryCheck queries={[query]} data={data} title="Channel">
+      {(props) => <Channels {...props} />}
+    </QueryCheck>
   )
 }
