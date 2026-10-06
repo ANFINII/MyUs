@@ -1,8 +1,9 @@
 import { cbc } from '@noble/ciphers/aes.js'
+import { ENCRYPT_KEY, ENCRYPT_IV } from 'lib/config'
 
 const encoder = new TextEncoder()
-const SECRET_KEY = encoder.encode(String(process.env.NEXT_PUBLIC_ENCRYPT_KEY))
-const IV = encoder.encode(String(process.env.NEXT_PUBLIC_ENCRYPT_IV))
+const SECRET_KEY = encoder.encode(ENCRYPT_KEY)
+const IV = encoder.encode(ENCRYPT_IV)
 
 export const encrypt = (plainText: string): string => {
   if (!plainText) return ''

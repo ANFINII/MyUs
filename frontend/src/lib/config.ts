@@ -1,15 +1,9 @@
 import { AxiosError } from 'axios'
-import { Req, Config } from 'types/global'
 
 export const ENV = String(process.env.NEXT_PUBLIC_ENV)
 export const API_URL = String(process.env.NEXT_PUBLIC_API_URL)
-
-export const cookieHeader = <T>(req?: Req, query?: T): Config => {
-  const cookie = req?.headers.cookie
-  const headers = { cookie }
-  const config = { headers, ...(query && { params: query }) }
-  return config
-}
+export const ENCRYPT_KEY = String(process.env.NEXT_PUBLIC_ENCRYPT_KEY)
+export const ENCRYPT_IV = String(process.env.NEXT_PUBLIC_ENCRYPT_IV)
 
 export const AxiosErrorLog = (e: AxiosError) => {
   const errResponse = e.response
