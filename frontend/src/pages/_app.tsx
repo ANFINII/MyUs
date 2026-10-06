@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { appWithTranslation } from 'next-i18next/pages'
+import { QueryProvider } from 'components/provider/QueryProvider'
 import { UserProvider } from 'components/provider/UserProvider'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
@@ -18,13 +19,15 @@ function MyApp(props: AppProps) {
   const { Component, pageProps } = props
   const router = useRouter()
   return (
-    <UserProvider>
-      <Layout>
-        <ErrorBoundary fallback={<Unexpected />} resetKeys={[router.pathname]}>
-          <Component {...pageProps} />
-        </ErrorBoundary>
-      </Layout>
-    </UserProvider>
+    <QueryProvider>
+      <UserProvider>
+        <Layout>
+          <ErrorBoundary fallback={<Unexpected />} resetKeys={[router.pathname]}>
+            <Component {...pageProps} />
+          </ErrorBoundary>
+        </Layout>
+      </UserProvider>
+    </QueryProvider>
   )
 }
 
