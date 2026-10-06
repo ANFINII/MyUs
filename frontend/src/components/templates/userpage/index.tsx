@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from 'react'
-import { useRouter } from 'next/router'
 import { Option } from 'types/internal/other'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
-import { getUserPageMedia, postFollow } from 'api/internal/user'
+import { postFollow } from 'api/internal/user'
+import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -37,19 +37,17 @@ export default function Userpage(props: Props): React.JSX.Element {
   const { ulid, channelUlid, userPage, media } = props
   const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
 
-  const router = useRouter()
+  const router = useAppRouter()
   const { user } = useUser()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isFollow, setIsFollow] = useState<boolean>(userPage.isFollow)
   const [selectedTab, setSelectedTab] = useState<TabKey>(TabKey.Info)
-  const [selectedUlid, setSelectedUlid] = useState<string>(channelUlid)
   const [followerCount, setFollowerCount] = useState<number>(userPage.followerCount)
-  const [newMedia, setNewMedia] = useState<UserPageMedia>(media)
 
   const isSelf = user.isActive && user.nickname === nickname
   const formattedDate = new Date(dateJoined).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const selectedChannel = channels.find((c) => c.ulid === selectedUlid)
+  const selectedChannel = channels.find((c) => c.ulid === channelUlid)
 
   const tabItems: TabItem<TabKey>[] = [
     { key: TabKey.Info, label: '情報' },
@@ -70,13 +68,8 @@ export default function Userpage(props: Props): React.JSX.Element {
     if (isModal) handleModal()
   }
 
-  const handleChannelSelect = async (e: ChangeEvent<HTMLSelectElement>) => {
-    const channel = e.target.value
-    const ret = await getUserPageMedia(ulid, channel)
-    if (ret.isErr()) return
-    setSelectedUlid(channel)
-    setNewMedia(ret.value)
-    router.replace({ pathname: `/userpage/${ulid}`, query: { channel } }, undefined, { shallow: true })
+  const handleChannelSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+    router.replace({ pathname: `/userpage/${ulid}`, query: { channel: e.target.value } })
   }
 
   return (
@@ -100,7 +93,7 @@ export default function Userpage(props: Props): React.JSX.Element {
               <FollowButton isFollow={isFollow} disabled={isSelf || !user.isActive} onClick={handleFollow} />
             </span>
           </div>
-          <SelectBox label="チャンネル" value={selectedUlid} options={channelOptions} className={style.channel} onChange={handleChannelSelect} />
+          <SelectBox label="チャンネル" value={channelUlid} options={channelOptions} className={style.channel} onChange={handleChannelSelect} />
         </HStack>
 
         <Tabs items={tabItems} selected={selectedTab} onSelect={setSelectedTab} />
@@ -138,42 +131,42 @@ export default function Userpage(props: Props): React.JSX.Element {
       {selectedTab === TabKey.Posts && (
         <>
           <CardIndexList title="Video">
-            {newMedia.videos.map((item) => (
+            {media.videos.map((item) => (
               <VideoCard key={item.ulid} item={item} />
             ))}
           </CardIndexList>
 
           <Divide />
           <CardIndexList title="Music">
-            {newMedia.musics.map((item) => (
+            {media.musics.map((item) => (
               <MusicCard key={item.ulid} item={item} />
             ))}
           </CardIndexList>
 
           <Divide />
           <CardIndexList title="Blog">
-            {newMedia.blogs.map((item) => (
+            {media.blogs.map((item) => (
               <BlogCard key={item.ulid} item={item} />
             ))}
           </CardIndexList>
 
           <Divide />
           <CardIndexList title="Comic">
-            {newMedia.comics.map((item) => (
+            {media.comics.map((item) => (
               <ComicCard key={item.ulid} item={item} />
             ))}
           </CardIndexList>
 
           <Divide />
           <CardIndexList title="Picture">
-            {newMedia.pictures.map((item) => (
+            {media.pictures.map((item) => (
               <PictureCard key={item.ulid} item={item} />
             ))}
           </CardIndexList>
 
           <Divide />
           <CardIndexList title="Chat">
-            {newMedia.chats.map((item) => (
+            {media.chats.map((item) => (
               <ChatCard key={item.ulid} item={item} />
             ))}
           </CardIndexList>
