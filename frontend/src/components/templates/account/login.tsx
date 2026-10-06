@@ -47,7 +47,6 @@ export default function Login(): React.JSX.Element {
       handleError(FetchError.Error, message)
       return
     }
-    // 別ユーザーでログインし直した場合に前のユーザーのデータが表示されないよう、キャッシュを削除する
     queryClient.clear()
     await updateUser()
     handleProfile()

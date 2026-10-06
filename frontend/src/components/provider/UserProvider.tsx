@@ -23,7 +23,6 @@ export function UserProvider(props: Props): React.JSX.Element {
   const queryClient = useQueryClient()
   const [user, setUser] = useState<UserMe>(initUser)
 
-  // ログアウト・退会時に前のユーザーのデータが表示されないよう、キャッシュも削除する
   const resetUser = useCallback(() => {
     queryClient.clear()
     setUser(initUser)

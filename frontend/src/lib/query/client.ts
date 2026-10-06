@@ -26,7 +26,6 @@ export const createQueryClient = (): QueryClient => {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // SSRと同じく、ページを開くたびに最新を取得する（キャッシュは取得完了までの表示に使う）
         staleTime: 0,
         refetchOnWindowFocus: false,
         retry: shouldRetry,
