@@ -13,10 +13,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 }
 
 export default function SettingNotificationPage(): React.JSX.Element {
-  const query = useQuery({
-    queryKey: queryKeys.settingNotification,
-    queryFn: () => toQuery(getSettingNotification()),
-  })
+  const query = useQuery({ queryKey: queryKeys.settingNotification, queryFn: () => toQuery(getSettingNotification()) })
 
   const data = query.isFetchedAfterMount && query.data ? { userNotification: query.data } : undefined
 

@@ -13,10 +13,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 }
 
 export default function PaymentChangePage(): React.JSX.Element {
-  const query = useQuery({
-    queryKey: queryKeys.settingMypage,
-    queryFn: () => toQuery(getSettingMypage()),
-  })
+  const query = useQuery({ queryKey: queryKeys.settingMypage, queryFn: () => toQuery(getSettingMypage()) })
 
   const data = query.data && { mypage: query.data }
 
