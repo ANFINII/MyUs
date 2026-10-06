@@ -12,7 +12,7 @@ export default function BlogsPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const data = useQuery({ queryKey: queryKeys.mediaBlogList(params), queryFn: () => toQuery(getBlogs(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const data = useQuery({ queryKey: queryKeys.mediaBlogList(params), queryFn: () => toQuery(getBlogs(params)), placeholderData: keepPreviousData })
   const queries = { data }
 
   return (

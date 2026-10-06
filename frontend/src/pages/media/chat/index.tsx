@@ -12,7 +12,7 @@ export default function ChatsPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
   const params = { search, limit, offset }
 
-  const data = useQuery({ queryKey: queryKeys.mediaChatList(params), queryFn: () => toQuery(getChats(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const data = useQuery({ queryKey: queryKeys.mediaChatList(params), queryFn: () => toQuery(getChats(params)), placeholderData: keepPreviousData })
   const queries = { data }
 
   return (

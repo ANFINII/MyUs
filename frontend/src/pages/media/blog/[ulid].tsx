@@ -10,7 +10,7 @@ export default function BlogDetailPage(): React.JSX.Element {
   const router = useAppRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const data = useQuery({ queryKey: queryKeys.mediaBlogDetail(ulid), queryFn: () => toQuery(getBlog(ulid)), enabled: router.isReady })
+  const data = useQuery({ queryKey: queryKeys.mediaBlogDetail(ulid), queryFn: () => toQuery(getBlog(ulid)) })
   const queries = { data }
 
   return (

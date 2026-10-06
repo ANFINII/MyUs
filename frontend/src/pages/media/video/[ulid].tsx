@@ -10,7 +10,7 @@ export default function VideoDetailPage(): React.JSX.Element {
   const router = useAppRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const data = useQuery({ queryKey: queryKeys.mediaVideoDetail(ulid), queryFn: () => toQuery(getVideo(ulid)), enabled: router.isReady })
+  const data = useQuery({ queryKey: queryKeys.mediaVideoDetail(ulid), queryFn: () => toQuery(getVideo(ulid)) })
   const queries = { data }
 
   return (

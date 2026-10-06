@@ -133,7 +133,6 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 - `useQuery`の結果は`queries`のキー（テンプレートのprops名）と同じ名前の変数に入れ、`const queries = { data, channels }`のように省略記法で書く
 - 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
 - 連続する`useQuery`の間、および直後の`const queries`との間に空行を入れない
-- `router.isReady`はTanStack Routerでは常に`true`（Next.js時代の名残）。既存の`enabled: router.isReady`は害がないため残しているが、新しいコードでは不要
 
 ### 用途別のルール
 
@@ -253,3 +252,4 @@ return <div className={style.box}>...</div>
 - 2026-10-06: 公開ページの CSR 化完了に伴い、`getServerSideProps` が残っている旨の記述を削除
 - 2026-10-07: Next.js から TanStack Router + Vite に移行。`getStaticProps` / `getStaticPaths` の記述を削除し、`routes/` の説明を追加
 - 2026-10-07: ルート定義をファイルベース（`src/routes/`）からコードベース（`src/lib/routes.tsx` の 1 ファイル）に変更
+- 2026-10-07: 常に `true` だった `router.isReady` を削除

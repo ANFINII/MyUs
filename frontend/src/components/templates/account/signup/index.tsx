@@ -48,7 +48,6 @@ export default function Signup(): React.JSX.Element {
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   useEffect(() => {
-    if (!router.isReady) return
     const token = router.query.token
     if (typeof token !== 'string' || token === '') {
       router.push('/account/login')

@@ -11,7 +11,7 @@ export default function HomesPage(): React.JSX.Element {
   const router = useAppRouter()
   const params = searchParams(router.query)
 
-  const mediaHome = useQuery({ queryKey: queryKeys.home(params), queryFn: () => toQuery(getHome(params)), enabled: router.isReady, placeholderData: keepPreviousData })
+  const mediaHome = useQuery({ queryKey: queryKeys.home(params), queryFn: () => toQuery(getHome(params)), placeholderData: keepPreviousData })
   const queries = { mediaHome }
 
   return (
