@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
-import { Video } from 'types/internal/media/output'
+import { Video, VideoList } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { deleteManageVideos } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
@@ -21,14 +21,14 @@ import ManageHeader from '../_container/Header'
 import ManageTable from '../_container/Table'
 
 interface Props {
-  datas: Video[]
-  total: number
+  list: VideoList
   page: number
   channels: Channel[]
 }
 
 export default function ManageVideos(props: Props): React.JSX.Element {
-  const { datas, total, page, channels } = props
+  const { list, page, channels } = props
+  const { datas, total } = list
 
   const router = useAppRouter()
   const queryClient = useQueryClient()

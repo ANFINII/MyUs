@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from 'lib/query/keys'
-import { Advertise } from 'types/internal/advertise'
+import { Advertise, AdvertiseList } from 'types/internal/advertise'
 import { deleteManageAdvertises } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
 import { formatDatetime } from 'utils/functions/datetime'
@@ -19,15 +19,15 @@ import style from '../Media.module.scss'
 import ManageTable from '../_container/Table'
 
 interface Props {
-  datas: Advertise[]
-  total: number
+  list: AdvertiseList
   page: number
 }
 
 const ADVERTISE_LIMIT = 5
 
 export default function ManageAdvertises(props: Props): React.JSX.Element {
-  const { datas, total, page } = props
+  const { list, page } = props
+  const { datas, total } = list
 
   const router = useAppRouter()
   const queryClient = useQueryClient()
