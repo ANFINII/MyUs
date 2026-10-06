@@ -18,11 +18,12 @@ export const toQuery = async <T>(apiCall: Promise<ApiOut<T>>): Promise<T> => {
 const STALE_TIME_MS = 30000 // 30秒
 const MAX_RETRY = 1
 
+// 5xxに加え、レスポンスのないネットワークエラー（apiOutでstatus: 500に変換）も一時的な障害としてリトライする
 const shouldRetry = (failureCount: number, error: ApiError): boolean => {
   return error.status >= 500 && failureCount < MAX_RETRY
 }
 
-export const queryClient = (): QueryClient => {
+export const createQueryClient = (): QueryClient => {
   return new QueryClient({
     defaultOptions: {
       queries: {
