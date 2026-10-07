@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
@@ -8,25 +9,26 @@ import style from '../Account.module.scss'
 
 export default function Withdrawal(): React.JSX.Element {
   const router = useAppRouter()
+  const { t } = useTranslation()
   const handleBack = () => router.push('/')
   const handleNext = () => router.push('/account/withdrawal/confirm')
 
   return (
-    <Main metaTitle="退会処理">
+    <Main metaTitle={t('account.withdrawal.title')}>
       <article className={style.account}>
         <div className={style.form}>
-          <h1 className={style.title}>退会処理</h1>
+          <h1 className={style.title}>{t('account.withdrawal.title')}</h1>
           <VStack gap="8">
             <Alert type="error">
-              退会するとアカウントが利用できなくなります！
+              {t('account.withdrawal.warning')}
               <br />
-              この操作は取り消しできません。
+              {t('account.withdrawal.irreversible')}
             </Alert>
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="red" size="l" name="退会画面に進む" onClick={handleNext} />
-            <Button color="blue" size="l" name="ホーム" onClick={handleBack} />
+            <Button color="red" size="l" name={t('account.withdrawal.next')} onClick={handleNext} />
+            <Button color="blue" size="l" name={t('sideMenu.home')} onClick={handleBack} />
           </VStack>
         </div>
       </article>

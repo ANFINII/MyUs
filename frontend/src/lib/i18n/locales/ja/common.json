@@ -180,5 +180,149 @@
       "period": "期間",
       "displayPeriod": "表示期限"
     }
+  },
+  "account": {
+    "form": {
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "passwordNew": "パスワード(英数字8~16文字)",
+      "passwordConfirm": "パスワード(確認用)",
+      "passwordMismatch": "新規パスワードが一致しません",
+      "send": "送信",
+      "mailSent": "メールを送信しました!"
+    },
+    "login": {
+      "username": "ユーザー名 or メールアドレス",
+      "reset": "パスワードをリセット",
+      "signup": "アカウント登録"
+    },
+    "signup": {
+      "title": "アカウント登録",
+      "emailNotice": "メールアドレス宛に本登録用リンクを送信します。",
+      "expiry": "リンクの有効期限は12時間です。",
+      "name": "名前",
+      "lastName": "姓",
+      "firstName": "名",
+      "username": "ユーザー名(英数字)",
+      "nickname": "投稿者名",
+      "birthday": "生年月日",
+      "gender": "性別",
+      "submit": "アカウント登録"
+    },
+    "reset": {
+      "title": "パスワードリセット",
+      "emailNotice": "メールアドレス宛にパスワード再設定用リンクを送信します。",
+      "confirmTitle": "パスワード再設定",
+      "submit": "再設定",
+      "done": "パスワードの再設定が完了しました!"
+    },
+    "withdrawal": {
+      "title": "退会処理",
+      "warning": "退会するとアカウントが利用できなくなります！",
+      "irreversible": "この操作は取り消しできません。",
+      "next": "退会画面に進む",
+      "confirm": "本当に退会しますか？",
+      "submit": "退会する"
+    }
+  },
+  "setting": {
+    "button": {
+      "edit": "編集",
+      "register": "登録",
+      "save": "保存",
+      "reset": "リセット",
+      "change": "変更する",
+      "cancel": "キャンセル"
+    },
+    "profile": {
+      "title": "アカウント設定",
+      "passwordChange": "パスワード変更",
+      "avatar": "アバター画像",
+      "email": "メールアドレス",
+      "username": "ユーザー名",
+      "usernamePlaceholder": "英数字",
+      "nickname": "投稿者名",
+      "name": "名前",
+      "lastName": "姓",
+      "firstName": "名",
+      "birthday": "生年月日",
+      "birthdayValue": "{{year}}年{{month}}月{{day}}日",
+      "age": "年齢",
+      "ageValue": "{{count}}歳",
+      "gender": "性別",
+      "phone": "電話番号",
+      "postalCode": "郵便番号",
+      "autoAddress": "住所自動入力",
+      "addressNotFound": "住所が取得できませんでした!",
+      "address": "住所",
+      "city": "市区町村",
+      "street": "町名番地",
+      "introduction": "自己紹介"
+    },
+    "password": {
+      "title": "パスワード変更",
+      "old": "現在パスワード",
+      "new": "パスワード(英数字8~16文字)",
+      "confirm": "パスワード(確認用)",
+      "mismatch": "新規パスワードが一致しません",
+      "done": "パスワードの変更が完了しました!"
+    },
+    "mypage": {
+      "title": "マイページ設定",
+      "userpage": "ユーザページ",
+      "banner": "バナー画像",
+      "nickname": "投稿者名",
+      "email": "メールアドレス",
+      "following": "フォロー数",
+      "followers": "フォロワー数",
+      "plan": "料金プラン",
+      "advertise": "全体広告",
+      "tagId": "タグID",
+      "tagIdPlaceholder": "タグマネージャーID",
+      "content": "内容",
+      "createChannel": "チャンネル作成",
+      "avatar": "アバター",
+      "avatarImage": "アバター画像",
+      "channelName": "チャンネル名",
+      "description": "説明"
+    },
+    "channelCreate": {
+      "title": "チャンネル作成",
+      "avatar": "アバター画像",
+      "name": "チャンネル名",
+      "description": "説明",
+      "submit": "作成"
+    },
+    "notification": {
+      "title": "通知設定",
+      "description": "フォローしているユーザの投稿通知などを設定",
+      "item": "{{name}}通知"
+    },
+    "payment": {
+      "title": "料金プラン",
+      "currentPlan": "現在のプラン",
+      "current": "現在",
+      "perMonth": "/ 月",
+      "purchase": "購入する",
+      "change": "プランを変更",
+      "cancel": "解約する",
+      "cancelTitle": "解約の確認",
+      "cancelConfirm": "本当に解約しますか？",
+      "cancelNotice": "解約後は次回更新日まで現在のプランをご利用いただけます。",
+      "cancelReserved": "解約予約完了。{{periodEnd}} まで利用可能です",
+      "changeTitle": "プラン変更",
+      "successTitle": "決済完了",
+      "successHeading": "決済が完了しました",
+      "thanks": "ご購入ありがとうございます。",
+      "reflect": "反映には数分かかる場合があります。",
+      "backToPlans": "料金プランに戻る",
+      "features": {
+        "individualAds": "個別広告表示 {{count}}つ",
+        "hideGlobalAds": "全体広告 非表示",
+        "musicDownload": "楽曲ダウンロード",
+        "basic": "基本機能",
+        "withAds": "広告あり"
+      }
+    }
   }
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MypageOut } from 'types/internal/user'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import Main from 'components/layout/Main'
@@ -14,7 +15,9 @@ interface Props {
 
 export default function PaymentChange(props: Props): React.JSX.Element {
   const { mypage } = props
+
   const router = useAppRouter()
+  const { t } = useTranslation()
   const [activeName, setActiveName] = useState<string>('')
   const handleBack = () => router.push('/setting/payment')
   const handleSubmit = () => router.push('/setting/payment')
@@ -23,7 +26,7 @@ export default function PaymentChange(props: Props): React.JSX.Element {
   const isChanged = activeName !== '' && activeName !== currentPlanName
 
   return (
-    <Main metaTitle="プラン変更">
+    <Main metaTitle={t('setting.payment.changeTitle')}>
       <div className={style.change}>
         <CurrentBanner planName={currentPlanName} />
 
@@ -41,8 +44,8 @@ export default function PaymentChange(props: Props): React.JSX.Element {
         </div>
 
         <div className={style.actions}>
-          <Button color="green" name="変更する" disabled={!isChanged} onClick={handleSubmit} />
-          <Button color="blue" name="キャンセル" onClick={handleBack} />
+          <Button color="green" name={t('setting.button.change')} disabled={!isChanged} onClick={handleSubmit} />
+          <Button color="blue" name={t('setting.button.cancel')} onClick={handleBack} />
         </div>
       </div>
     </Main>

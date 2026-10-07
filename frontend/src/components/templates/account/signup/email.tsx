@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { postSignupEmail } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { useAppRouter } from 'components/hooks/useAppRouter'
@@ -15,6 +16,7 @@ import style from '../Account.module.scss'
 
 export default function SignupEmail(): React.JSX.Element {
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
@@ -32,26 +34,26 @@ export default function SignupEmail(): React.JSX.Element {
       handleToast(ret.error.message ?? FetchError.Error, true)
       return
     }
-    handleToast('メールを送信しました!', false)
+    handleToast(t('account.form.mailSent'), false)
   }
 
   return (
-    <Main metaTitle="アカウント登録" toast={toast}>
+    <Main metaTitle={t('account.signup.title')} toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form}>
-          <h1 className={style.signup_title}>アカウント登録</h1>
+          <h1 className={style.signup_title}>{t('account.signup.title')}</h1>
           <VStack gap="8">
-            <Input type="email" name="email" placeholder="メールアドレス" maxLength={255} required error={error} onChange={handleInput} />
+            <Input type="email" name="email" placeholder={t('account.form.email')} maxLength={255} required error={error} onChange={handleInput} />
             <Alert type="info">
-              メールアドレス宛に本登録用リンクを送信します。
+              {t('account.signup.emailNotice')}
               <br />
-              リンクの有効期限は12時間です。
+              {t('account.signup.expiry')}
             </Alert>
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="green" size="l" name="送信" type="submit" loading={loading} onClick={handleSubmit} />
-            <Button color="blue" size="l" name="戻る" onClick={handleBack} />
+            <Button color="green" size="l" name={t('account.form.send')} type="submit" loading={loading} onClick={handleSubmit} />
+            <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
           </VStack>
         </form>
       </article>

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import Button from 'components/parts/Button'
 import style from './PlanCard.module.scss'
@@ -5,7 +6,12 @@ import style from './PlanCard.module.scss'
 export interface Plan {
   name: string
   price: number
-  features: string[]
+  features: PlanFeature[]
+}
+
+export interface PlanFeature {
+  key: 'individualAds' | 'hideGlobalAds' | 'musicDownload' | 'basic' | 'withAds'
+  count?: number
 }
 
 interface Props {
@@ -23,6 +29,8 @@ export default function PlanCard(props: Props): React.JSX.Element {
   const { plan, active, onClick, onPurchase, current = false, showPurchase = true, disabled = false, loading = false } = props
   const { name, price, features } = plan
 
+  const { t } = useTranslation()
+
   const handleClick = current ? undefined : onClick
   const handlePurchase = () => onPurchase?.(name)
 
@@ -30,20 +38,20 @@ export default function PlanCard(props: Props): React.JSX.Element {
     <div className={cx(style.plan, active && style.active, handleClick && style.clickable, current && style.current)} onClick={handleClick}>
       <div className={style.name}>
         {name}
-        {current && <span className={style.current_label}>現在</span>}
+        {current && <span className={style.current_label}>{t('setting.payment.current')}</span>}
       </div>
       <div className={style.price}>
         <span>¥{price.toLocaleString()}</span>
-        <span className={style.price_unit}>/ 月</span>
+        <span className={style.price_unit}>{t('setting.payment.perMonth')}</span>
       </div>
       <ul className={style.features}>
         {features.map((feature) => (
-          <li key={feature} className={style.feature}>
-            {feature}
+          <li key={feature.key} className={style.feature}>
+            {t(`setting.payment.features.${feature.key}`, { count: feature.count })}
           </li>
         ))}
       </ul>
-      {showPurchase && name !== 'Free' && <Button color="purple" size="l" name="購入する" disabled={disabled} loading={loading} onClick={handlePurchase} />}
+      {showPurchase && name !== 'Free' && <Button color="purple" size="l" name={t('setting.payment.purchase')} disabled={disabled} loading={loading} onClick={handlePurchase} />}
     </div>
   )
 }
