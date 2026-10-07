@@ -4,9 +4,9 @@ import { queryKeys } from 'lib/query/keys'
 import { Advertise, AdvertiseList } from 'types/internal/advertise'
 import { deleteManageAdvertises } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
-import { formatDatetime } from 'utils/functions/datetime'
 import { useApiError } from 'components/hooks/useApiError'
 import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
 import { useToast } from 'components/hooks/useToast'
@@ -35,6 +35,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
+  const { formatDatetime } = useDatetime()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
 

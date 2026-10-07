@@ -1,5 +1,5 @@
 import { Author } from 'types/internal/user'
-import { formatDatetime } from 'utils/functions/datetime'
+import { useDatetime } from 'components/hooks/useDatetime'
 import style from './Info.module.scss'
 
 export interface Props {
@@ -12,6 +12,9 @@ export interface Props {
 
 export default function CommentInfo(props: Props): React.JSX.Element {
   const { comment } = props
+
+  const { formatDatetime } = useDatetime()
+
   const { author, created, text } = comment
 
   return (

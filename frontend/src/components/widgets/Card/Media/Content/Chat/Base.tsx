@@ -1,6 +1,6 @@
 import { Chat } from 'types/internal/media/output'
 import cx from 'utils/functions/cx'
-import { formatTimeAgo } from 'utils/functions/datetime'
+import { useDatetime } from 'components/hooks/useDatetime'
 import IconCaret from 'components/parts/Icon/Caret'
 import IconChat from 'components/parts/Icon/Chat'
 import IconHand from 'components/parts/Icon/Hand'
@@ -15,6 +15,9 @@ interface Props {
 
 export default function CardChatMediaContentBase(props: Props): React.JSX.Element {
   const { media } = props
+
+  const { formatTimeAgo } = useDatetime()
+
   const { title, read, like, joined, thread, created, channel } = media
   const { name } = channel
 

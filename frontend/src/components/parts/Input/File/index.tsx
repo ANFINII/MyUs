@@ -1,4 +1,5 @@
 import { ChangeEvent, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import style from '../Input.module.scss'
 
@@ -15,6 +16,7 @@ interface Props {
 export default function InputFile(props: Props): React.JSX.Element {
   const { label, accept, error, className, required = false, multiple, onChange } = props
 
+  const { t } = useTranslation()
   const inputEl = useRef<HTMLInputElement>(null)
   const [fileNames, setFileNames] = useState<string[]>([])
 
@@ -41,7 +43,7 @@ export default function InputFile(props: Props): React.JSX.Element {
         </label>
       )}
       <input id={label} ref={inputEl} type="file" accept={accept} onChange={handleChange} multiple={multiple} hidden />
-      <input placeholder="ファイル選択..." value={fileNames.join(', ')} required={required} onClick={handleClick} className={cx(style.input, isError && style.error)} />
+      <input placeholder={t('input.file')} value={fileNames.join(', ')} required={required} onClick={handleClick} className={cx(style.input, isError && style.error)} />
       {error && <p className={style.error_text}>{error}</p>}
     </div>
   )

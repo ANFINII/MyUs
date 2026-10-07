@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Notification, NotificationOut } from 'types/internal/user'
 import { getNotification, postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
 import { NotificationType } from 'utils/constants/enum'
@@ -23,6 +24,7 @@ const otherObjs = [NotificationType.Follow, NotificationType.Like, NotificationT
 export default function DropMenuNotice(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
+  const { t, i18n } = useTranslation()
   const router = useAppRouter()
   const { user } = useUser()
   const [notifications, setNotifications] = useState<NotificationOut>()
@@ -43,21 +45,15 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   }
 
   const readNotification = (read: number, title: string) => {
-    const thresholds = [
-      { limit: 10000, message: '1万回閲覧されました' },
-      { limit: 100000, message: '10万回閲覧されました' },
-      { limit: 1000000, message: '100万回閲覧されました' },
-      { limit: 10000000, message: '1000万回閲覧されました' },
-      { limit: 100000000, message: '1億回閲覧されました' },
-      { limit: 1000000000, message: '10億回閲覧されました' },
-    ]
-    const threshold = thresholds.find((t) => read >= t.limit)
+    const thresholds = [10000, 100000, 1000000, 10000000, 100000000, 1000000000]
+    const threshold = thresholds.find((limit) => read >= limit)
+    if (threshold === undefined) return undefined
+    const count = new Intl.NumberFormat(i18n.language, { notation: 'compact' }).format(threshold)
+    const message = t('noticeMenu.views', { title, count })
     return (
-      threshold && (
-        <div className={style.content} title={`${title}が${threshold.message}`}>
-          {title}が{threshold.message}
-        </div>
-      )
+      <div className={style.content} title={message}>
+        {message}
+      </div>
     )
   }
 
@@ -90,7 +86,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   return (
     <nav className={cx(style.drop_menu, style.drop_menu_notice, open && style.active)}>
       <ul>
-        <NavItem label="通知設定" icon={<IconBell size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/notification')} />
+        <NavItem label={t('noticeMenu.setting')} icon={<IconBell size="1.5em" />} className={style.item} onClick={() => handleRouter('/setting/notification')} />
         {notifications?.items?.map((notification) => {
           const { ulid, typeName, userFrom, contentObject, isConfirmed } = notification
           const { avatar, nickname } = userFrom
@@ -104,28 +100,28 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
                 </div>
                 <div className={style.anker} onClick={handleClick(typeName, notification)}>
                   {otherObjs.includes(typeName) && (
-                    <div className={style.content} title={`${nickname}が${title}を投稿しました`}>
+                    <div className={style.content} title={t('noticeMenu.post', { nickname, title })}>
                       {title}
                     </div>
                   )}
                   {typeName === NotificationType.Follow && (
-                    <div className={style.content} title={`${nickname}にフォローされました`}>
-                      {nickname}にフォローされました
+                    <div className={style.content} title={t('noticeMenu.follow', { nickname })}>
+                      {t('noticeMenu.follow', { nickname })}
                     </div>
                   )}
                   {typeName === NotificationType.Like && (
-                    <div className={style.content} title={`${text}が${nickname}にいいねされました`}>
-                      {text}が{nickname}にいいねされました
+                    <div className={style.content} title={t('noticeMenu.like', { text, nickname })}>
+                      {t('noticeMenu.like', { text, nickname })}
                     </div>
                   )}
                   {typeName === NotificationType.Reply && (
-                    <div className={style.content} title={`${nickname}から返信がありました ${text}`}>
+                    <div className={style.content} title={t('noticeMenu.reply', { nickname, text })}>
                       {text}
                     </div>
                   )}
                   {typeName === NotificationType.Views && <>{readNotification(read, title)}</>}
                 </div>
-                <span title="閉じる" className={style.close} onClick={handleDelete(ulid)}>
+                <span title={t('noticeMenu.close')} className={style.close} onClick={handleDelete(ulid)}>
                   <IconCross size="18" className={style.close_icon} />
                 </span>
               </div>

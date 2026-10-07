@@ -1,8 +1,8 @@
-import ja from 'lib/i18n/locales/ja/common.json'
+import { resources } from 'lib/i18n'
 
 declare module 'i18next' {
   interface CustomTypeOptions {
     defaultNS: 'common'
-    resources: { common: typeof ja }
+    resources: (typeof resources)['ja']
   }
 }

@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import IconSearch from 'components/parts/Icon/Search'
@@ -13,6 +14,7 @@ interface Props {
 export default function Search(props: Props): React.JSX.Element {
   const { value, className, onChange } = props
 
+  const { t } = useTranslation()
   const router = useAppRouter()
 
   const handleSearch = () => {
@@ -26,7 +28,7 @@ export default function Search(props: Props): React.JSX.Element {
 
   return (
     <div className={cx(style.searchbar, className)}>
-      <input type="search" name="search" placeholder="検索..." value={value} onChange={onChange} onKeyDown={handleKeyDown} className={style.input} />
+      <input type="search" name="search" placeholder={t('input.search')} value={value} onChange={onChange} onKeyDown={handleKeyDown} className={style.input} />
       <button onClick={handleSearch} className={style.icon}>
         <IconSearch size="16" />
       </button>

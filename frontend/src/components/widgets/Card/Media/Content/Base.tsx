@@ -1,6 +1,6 @@
 import { Media } from 'types/internal/media/output'
 import cx from 'utils/functions/cx'
-import { formatTimeAgo } from 'utils/functions/datetime'
+import { useDatetime } from 'components/hooks/useDatetime'
 import IconCaret from 'components/parts/Icon/Caret'
 import IconHand from 'components/parts/Icon/Hand'
 import HStack from 'components/parts/Stack/Horizontal'
@@ -13,6 +13,9 @@ interface Props {
 
 export default function CardMediaContentBase(props: Props): React.JSX.Element {
   const { media } = props
+
+  const { formatTimeAgo } = useDatetime()
+
   const { title, read, like, created, channel } = media
   const { name } = channel
 

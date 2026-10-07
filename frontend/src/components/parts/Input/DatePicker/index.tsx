@@ -1,17 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import IconCalendar from 'components/parts/Icon/Calendar'
 import style from './DatePicker.module.scss'
 
 interface DayCell {
   date: Date
   isDisabled: boolean
-}
-
-const PLACEHOLDER_MAP: Record<string, string> = {
-  ja: '日付を選択',
-  en: 'Select a date',
 }
 
 const toIsoDate = (date: Date): string => {
@@ -64,8 +59,8 @@ interface Props {
 export default function DatePicker(props: Props): React.JSX.Element {
   const { label, value, placeholder, error, className, required = false, minDate, maxDate, onChange } = props
 
-  const router = useAppRouter()
-  const locale = router.locale ?? 'ja'
+  const { t, i18n } = useTranslation()
+  const locale = i18n.language
 
   const boxRef = useRef<HTMLDivElement>(null)
   const today = useMemo(() => new Date(), [])
@@ -79,7 +74,7 @@ export default function DatePicker(props: Props): React.JSX.Element {
     const fmt = new Intl.DateTimeFormat(locale, { weekday: 'short' })
     return Array.from({ length: 7 }, (_, i) => fmt.format(new Date(2024, 0, 7 + i)))
   }, [locale])
-  const placeholderText = placeholder ?? PLACEHOLDER_MAP[locale] ?? PLACEHOLDER_MAP.ja
+  const placeholderText = placeholder ?? t('input.date')
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [viewYear, setViewYear] = useState<number>((selected ?? today).getFullYear())

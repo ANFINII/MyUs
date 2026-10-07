@@ -6,9 +6,9 @@ import { Chat } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageChat } from 'api/internal/manage/update'
 import { FetchError } from 'utils/constants/enum'
-import { formatDate } from 'utils/functions/datetime'
 import { useApiError } from 'components/hooks/useApiError'
 import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -39,6 +39,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
+  const { formatDate } = useDatetime()
   const [values, setValues] = useState<ChatUpdateIn>({ ...data, period: formatDate(data.period) })
 
   const handleBack = () => router.push('/manage/chat')

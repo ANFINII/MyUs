@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import Button from 'components/parts/Button'
 import style from './Status.module.scss'
@@ -9,6 +10,7 @@ interface Props {
 export default function BackError(props: Props): React.JSX.Element {
   const { content } = props
 
+  const { t } = useTranslation()
   const router = useAppRouter()
 
   const handleBack = () => {
@@ -23,7 +25,7 @@ export default function BackError(props: Props): React.JSX.Element {
   return (
     <>
       <h2 className={style.error}>{content}</h2>
-      <Button name="戻る" className={style.button} onClick={handleBack} />
+      <Button name={t('status.back')} className={style.button} onClick={handleBack} />
     </>
   )
 }

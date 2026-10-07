@@ -1,10 +1,10 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ProfileOut, ProfileIn } from 'types/internal/user'
 import { getAddress } from 'api/external/address'
 import { putSettingProfile } from 'api/internal/setting'
 import { prefectures } from 'utils/constants/address'
 import { FetchError, GenderType } from 'utils/constants/enum'
-import { genderMap } from 'utils/constants/map'
 import { selectDate } from 'utils/functions/datetime'
 import { getAge } from 'utils/functions/user'
 import { useApiError } from 'components/hooks/useApiError'
@@ -34,6 +34,7 @@ interface Props {
 export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const { profile } = props
 
+  const { t } = useTranslation()
   const router = useAppRouter()
   const { updateUser } = useUser()
   const { loading, handleLoading } = useLoading()
@@ -44,6 +45,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const [values, setValues] = useState<ProfileOut>(profile)
 
   const { years, months, days } = selectDate()
+  const prefectureOptions = prefectures.map((p) => ({ label: t(`prefecture.${p.key}`), value: p.value }))
   const avatarUrl = avatarFile ? URL.createObjectURL(avatarFile) : profile.avatar
   const handleBack = () => router.push('/setting/profile')
   const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatarFile(files)
@@ -144,7 +146,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
         <TableRow label="性別">
           <HStack gap="5" className="pl_4">
             {Object.entries(GenderType).map(([key, value]) => (
-              <Radio key={key} name="gender" label={genderMap[value]} value={value} checked={value === values.gender} onChange={handleInput} />
+              <Radio key={key} name="gender" label={t(`gender.${value}`)} value={value} checked={value === values.gender} onChange={handleInput} />
             ))}
           </HStack>
         </TableRow>
@@ -159,7 +161,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
         </TableRow>
         <TableRow label="住所">
           <HStack gap="1" full>
-            <SelectBox name="prefecture" value={values.prefecture} options={prefectures} placeholder="都道府県" onChange={handleSelect} />
+            <SelectBox name="prefecture" value={values.prefecture} options={prefectureOptions} placeholder={t('input.prefecture')} onChange={handleSelect} />
             <Input name="city" value={values.city} placeholder="市区町村" maxLength={255} onChange={handleInput} />
             <Input name="street" value={values.street} placeholder="町名番地" maxLength={255} onChange={handleInput} />
           </HStack>

@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { SearchTagOut } from 'types/internal/user'
 import { getSearchTag, putSearchTag } from 'api/internal/user'
 import cx from 'utils/functions/cx'
@@ -13,6 +14,7 @@ import HStack from 'components/parts/Stack/Horizontal'
 import styles from './SearchTagBar.module.scss'
 
 export default function SearchTagBar(): React.JSX.Element {
+  const { t } = useTranslation()
   const { user } = useUser()
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isILoading, setILoading] = useState<boolean>(false)
@@ -105,16 +107,16 @@ export default function SearchTagBar(): React.JSX.Element {
       <HStack justify="between">
         <HStack gap="3">
           <HStack gap="0.5">
-            <ButtonSquare color="emerald" name={isSearchtag ? '完了' : 'タグ'} loading={isILoading} onClick={handleSearchtag} />
+            <ButtonSquare color="emerald" name={isSearchtag ? t('searchTag.done') : t('searchTag.tag')} loading={isILoading} onClick={handleSearchtag} />
             <Input
-              placeholder="タグ名"
+              placeholder={t('searchTag.name')}
               maxLength={30}
               value={inputTag}
               disabled={!user.isActive}
               className={cx(styles.input, isSearchtag && styles.active)}
               onChange={handleInput}
             />
-            <ButtonSquare color="sakura" name="追加" className={cx(styles.button, isSearchtag && styles.active)} onClick={handleAdd} />
+            <ButtonSquare color="sakura" name={t('searchTag.add')} className={cx(styles.button, isSearchtag && styles.active)} onClick={handleAdd} />
           </HStack>
           <div ref={scrollRef} className={cx(styles.tags, isSearchtag && styles.active)}>
             <HStack gap="2.5">

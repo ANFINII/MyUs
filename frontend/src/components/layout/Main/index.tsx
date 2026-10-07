@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Search } from 'types/internal/media/output'
 import { ToastType, MetaType } from 'types/internal/other'
 import { useUser } from 'components/hooks/useUser'
@@ -21,6 +22,7 @@ interface Props {
 export default function Main(props: Props): React.JSX.Element {
   const { title, metaTitle, meta, type = 'defalt', search, toast, isFooter = true, button, children } = props
 
+  const { t } = useTranslation()
   const { user } = useUser()
 
   return (
@@ -30,11 +32,7 @@ export default function Main(props: Props): React.JSX.Element {
         <>
           <div>
             {title && <h1 className={style.title}>{title}</h1>}
-            {search?.name && (
-              <section className={style.search_message}>
-                「{search.name}」の検索結果「{search.count}」件
-              </section>
-            )}
+            {search?.name && <section className={style.search_message}>{t('search.result', { name: search.name, count: search.count })}</section>}
           </div>
           {children}
         </>

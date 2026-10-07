@@ -148,6 +148,42 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 - ログイン・ログアウト・退会時のキャッシュ削除は`UserProvider`とログイン画面で行っているため、個別のページでは不要
 - 全ページがクライアント側取得（CSR）。投稿ごとのOGPは、ホスティング先が決まってからエッジ関数で差し込む予定
 
+## 多言語対応（i18n）
+
+画面に表示する固定の文言は、コードに直接書かず、翻訳ファイルに書く。
+
+### 翻訳ファイル
+
+- `src/lib/i18n/locales/{ja,en}/{名前空間}.json` に、日本語と英語を同じキーで書く
+- 名前空間は画面のエリアごとに分ける
+
+| 名前空間 | 対象 |
+| --- | --- |
+| `common` | layout・widgets/Status・parts など複数エリアで使う文言、トースト文言、性別・都道府県・日付表示 |
+| `account` | `templates/account`（ログイン・登録・パスワードリセット・退会） |
+| `setting` | `templates/setting`・`pages/setting` |
+| `manage` | `templates/manage`・`pages/manage` |
+| `menu` | `templates/menu`（利用規約・ナレッジなど） |
+| `media` | `templates/media`・`templates/userpage`・`pages/userpage` と、それらで使う widgets |
+
+- キーは camelCase で、画面ごとにまとめる（例：`setting.json` の `profile.title`）
+- キーの型は日本語の JSON から作られるため、存在しないキーは型エラーになる。英語の JSON にも同じキーを必ず追加する
+- 文中に値を入れるときは `{{name}}` で補間する（文字列連結で組み立てない。語順が言語で変わるため）
+- 英語の数による変化（単数・複数形）は `_one` / `_other` を使う
+
+### 使い方
+
+```tsx
+const { t } = useTranslation('setting')
+<Main title={t('profile.title')}>
+```
+
+- `common` 以外の名前空間の中で `common` の文言を使うときは、`t('common:status.back')` のように名前空間を付ける
+- トースト文言は `Fetch` / `FetchError` をそのまま `handleToast` に渡す（`useToast` の中で翻訳する）
+- 日付の表示は `useDatetime` の `formatDatetime` / `formatDate` / `formatTimeAgo` を使う（表示中の言語で整形する）
+- 性別は ``t(`gender.${gender}`)``、都道府県の選択肢は `prefectures` の `key` から ``t(`prefecture.${key}`)`` で作る（保存する値は日本語のまま）
+- ユーザーが入力した内容や API から返る値（投稿タイトル、カテゴリ名など）は翻訳しない
+
 ## コンポーネント設計
 
 - 1ファイル1コンポーネント（default export）
@@ -253,3 +289,4 @@ return <div className={style.box}>...</div>
 - 2026-10-07: Next.js から TanStack Router + Vite に移行。`getStaticProps` / `getStaticPaths` の記述を削除し、`routes/` の説明を追加
 - 2026-10-07: ルート定義をファイルベース（`src/routes/`）からコードベース（`src/lib/routes.tsx` の 1 ファイル）に変更
 - 2026-10-07: 常に `true` だった `router.isReady` を削除
+- 2026-10-07: 多言語対応（i18n）のルールを追加

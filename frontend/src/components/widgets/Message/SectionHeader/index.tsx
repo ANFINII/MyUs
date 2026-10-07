@@ -1,6 +1,6 @@
 import { ChatDetail } from 'types/internal/media/output'
 import { UserMe } from 'types/internal/user'
-import { formatDatetime } from 'utils/functions/datetime'
+import { useDatetime } from 'components/hooks/useDatetime'
 import CountLike from 'components/parts/Count/Like'
 import IconCaret from 'components/parts/Icon/Caret'
 import IconChat from 'components/parts/Icon/Chat'
@@ -18,6 +18,8 @@ interface Props {
 
 export default function SectionHeader(props: Props): React.JSX.Element {
   const { detail, user, onContent, onLike } = props
+
+  const { formatDatetime } = useDatetime()
 
   return (
     <div className={style.chat_section_header}>
