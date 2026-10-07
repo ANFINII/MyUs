@@ -49,7 +49,7 @@ class ManageVideoAPI:
 
         obj = get_manage_video(user_id, ulid)
         if obj is None:
-            return 404, ErrorOut(message="Video not found")
+            return 404, ErrorOut(message="data not found")
 
         return 200, convert_videos([obj])[0]
 
@@ -110,7 +110,7 @@ class ManageMusicAPI:
 
         obj = get_manage_music(user_id, ulid)
         if obj is None:
-            return 404, ErrorOut(message="Music not found")
+            return 404, ErrorOut(message="data not found")
 
         return 200, convert_musics([obj])[0]
 
@@ -171,7 +171,7 @@ class ManageBlogAPI:
 
         obj = get_manage_blog(user_id, ulid)
         if obj is None:
-            return 404, ErrorOut(message="Blog not found")
+            return 404, ErrorOut(message="data not found")
 
         return 200, convert_blogs([obj])[0]
 
@@ -232,7 +232,7 @@ class ManageComicAPI:
 
         obj = get_manage_comic(user_id, ulid)
         if obj is None:
-            return 404, ErrorOut(message="Comic not found")
+            return 404, ErrorOut(message="data not found")
 
         return 200, convert_comics([obj])[0]
 
@@ -293,7 +293,7 @@ class ManagePictureAPI:
 
         obj = get_manage_picture(user_id, ulid)
         if obj is None:
-            return 404, ErrorOut(message="Picture not found")
+            return 404, ErrorOut(message="data not found")
 
         return 200, convert_pictures([obj])[0]
 
@@ -354,7 +354,7 @@ class ManageChatAPI:
 
         obj = get_manage_chat(user_id, ulid)
         if obj is None:
-            return 404, ErrorOut(message="Chat not found")
+            return 404, ErrorOut(message="data not found")
 
         return 200, convert_chats([obj])[0]
 
@@ -415,7 +415,7 @@ class ManageAdvertiseAPI:
 
         obj = get_manage_advertise(user_id, ulid)
         if obj is None:
-            return 404, ErrorOut(message="Advertise not found")
+            return 404, ErrorOut(message="data not found")
 
         return 200, convert_advertises([obj])[0]
 
