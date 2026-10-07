@@ -27,7 +27,7 @@ class AdvertiseAPI:
 
         new_count = increment_advertise_read(ulid)
         if new_count is None:
-            return 404, ErrorOut(message="Advertise not found")
+            return 404, ErrorOut(message="data not found")
 
         return 200, AdvertiseReadOut(read=new_count)
 

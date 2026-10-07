@@ -43,7 +43,7 @@ def increment_advertise_read(ulid: str) -> int | None:
     repository = injector.get(AdvertiseInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption())
     if len(ids) == 0:
-        log.info("Advertise not found", ulid=ulid)
+        log.info("data not found", ulid=ulid)
         return None
 
     obj = repository.bulk_get(ids)[0]

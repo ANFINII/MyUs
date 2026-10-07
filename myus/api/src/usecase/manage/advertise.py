@@ -37,7 +37,7 @@ def get_manage_advertise(user_id: int, ulid: str) -> AdvertiseData | None:
     repository = injector.get(AdvertiseInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
     if len(ids) == 0:
-        log.info("Advertise not found", ulid=ulid, user_id=user_id)
+        log.info("data not found", ulid=ulid, user_id=user_id)
         return None
 
     obj = repository.bulk_get(ids)[0]
