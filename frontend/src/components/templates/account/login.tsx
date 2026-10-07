@@ -30,7 +30,11 @@ export default function Login(): React.JSX.Element {
   const { message, handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<LoginIn>({ username: '', password: '' })
 
-  const handleProfile = () => router.push('/setting/profile')
+  const handleNext = () => {
+    const { next } = router.query
+    const isInternal = typeof next === 'string' && next.startsWith('/') && !next.startsWith('//') && !next.startsWith('/\\')
+    router.push(isInternal ? next : '/setting/profile')
+  }
   const handleReset = () => router.push('/account/reset')
   const handleSignup = () => router.push('/account/signup/email')
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
@@ -49,7 +53,7 @@ export default function Login(): React.JSX.Element {
     }
     queryClient.clear()
     await updateUser()
-    handleProfile()
+    handleNext()
   }
 
   return (

@@ -12,7 +12,7 @@ export default function BackLogin(props: Props): React.JSX.Element {
   const router = useAppRouter()
 
   const handleLogin = () => {
-    router.push('/account/login')
+    router.push({ pathname: '/account/login', query: { next: router.asPath } })
   }
 
   return (
