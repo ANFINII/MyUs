@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { API_URL } from 'lib/config'
 import cx from 'utils/functions/cx'
 import { useRouter } from 'components/hooks/useRouter'
 import { useUser } from 'components/hooks/useUser'
@@ -25,8 +26,8 @@ export default function DropMenuCloud(props: Props): React.JSX.Element {
   const { user } = useUser()
 
   const handleManage = () => {
-    if (user.isStaff) router.push('http://127.0.0.1:8000/myus-admin')
-    router.push('/manage')
+    if (user.isStaff) router.push(`${API_URL}/myus-admin/`)
+    else router.push('/manage')
     onClose()
   }
 
