@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Option } from 'types/internal/other'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import Button from 'components/parts/Button'
 import SelectBox from 'components/parts/Input/SelectBox'
 import style from './Header.module.scss'
@@ -17,7 +17,7 @@ interface Props {
 export default function ManageHeader(props: Props): React.JSX.Element {
   const { count, ulid, options, onModal, onChange } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
 
   return (

@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback, FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from '@tanstack/react-router'
 import { SubscribeIn } from 'types/internal/channel'
 import { ChatDetailOut } from 'types/internal/media/output'
 import { ChatMessage, ChatReply, MessageCreateIn, MessageUpdateIn } from 'types/internal/message'
@@ -9,9 +8,9 @@ import { postSubscribeChannel } from 'api/internal/channel'
 import { postMessage, getReplies, putMessage, deleteMessage } from 'api/internal/message'
 import { postLikeMedia } from 'api/internal/user'
 import { FetchError, MediaType } from 'utils/constants/enum'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useChatWebSocket } from 'components/hooks/useChatWebSocket'
 import { useNavResize } from 'components/hooks/useNavResize'
+import { useRouter } from 'components/hooks/useRouter'
 import { useThreadResize } from 'components/hooks/useThreadResize'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
@@ -61,9 +60,8 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     isSubscribe: detail.mediaUser.isSubscribe,
   }
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
-  const params = useParams({ from: '/media/chat/$ulid' })
   const { user } = useUser()
   const { toast, handleToast } = useToast()
   const { navRef, handleNav, handleResize } = useNavResize()
@@ -151,7 +149,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }
 
   useChatWebSocket({
-    ulid: params.ulid,
+    ulid: String(router.query.ulid ?? ''),
     onCreateMessage: handleWsCreateMessage,
     onCreateReply: handleWsCreateReply,
     onUpdateMessage: handleWsUpdateMessage,
@@ -166,7 +164,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const handleReply = (value: string) => setFormState((prev) => ({ ...prev, reply: value }))
 
   const handleThread = async (message: ChatMessage | null = null) => {
-    const chatUlid = params.ulid
+    const chatUlid = String(router.query.ulid ?? '')
     if (message !== null && message.ulid !== selectedMessage?.ulid) {
       const ret = await getReplies(message.ulid)
       if (ret.isOk()) {
@@ -216,7 +214,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }
 
   const handleLike = async () => {
-    const ulid = params.ulid
+    const ulid = String(router.query.ulid ?? '')
     const request: LikeMediaIn = { ulid, mediaType: MediaType.Chat }
     const ret = await postLikeMedia(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)

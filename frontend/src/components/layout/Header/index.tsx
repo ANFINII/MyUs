@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import { useUser } from 'components/hooks/useUser'
 import DropMenuCloud from 'components/layout/Header/DropMenu/Cloud'
 import DropMenuNotice from 'components/layout/Header/DropMenu/Notice'
@@ -22,7 +22,7 @@ interface Props {
 export default function Header(props: Props): React.JSX.Element {
   const { loading } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { user } = useUser()
   const [isSideMenu, setIsSideMenu] = useState<boolean>(false)
   const [isCloud, setIsCloud] = useState<boolean>(false)

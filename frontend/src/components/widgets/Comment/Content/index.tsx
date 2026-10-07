@@ -1,6 +1,5 @@
 import { useState, SetStateAction, ChangeEvent, Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from '@tanstack/react-router'
 import { Reply, Comment, CommnetIn } from 'types/internal/comment'
 import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { postComment, putComment, deleteComment } from 'api/internal/comment'
@@ -10,8 +9,8 @@ import { commentTypeNoMap } from 'utils/constants/map'
 import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
+import { useRouter } from 'components/hooks/useRouter'
 import ActionButton from 'components/parts/Action/Button'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
@@ -39,9 +38,8 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const { ulid, author, text } = comment
   const { isActive } = user
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
-  const params = useParams({ strict: false })
   const { loading, handleLoading } = useLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -82,7 +80,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
     const text = replyText
     const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
     const typeNo = commentTypeNoMap[typeName]
-    const objectUlid = params.ulid ?? ''
+    const objectUlid = String(router.query.ulid ?? '')
     const parentUlid = ulid
     const request: CommnetIn = { text, typeName, typeNo, objectUlid, parentUlid }
     const ret = await postComment(request)

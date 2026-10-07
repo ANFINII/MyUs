@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MypageOut } from 'types/internal/user'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import style from './Change.module.scss'
@@ -16,7 +16,7 @@ interface Props {
 export default function PaymentChange(props: Props): React.JSX.Element {
   const { mypage } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
   const [activeName, setActiveName] = useState<string>('')
   const handleBack = () => router.push('/setting/payment')

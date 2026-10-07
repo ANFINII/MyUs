@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { postLogout } from 'api/internal/auth'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import { useUser } from 'components/hooks/useUser'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconCredit from 'components/parts/Icon/Credit'
@@ -17,7 +17,7 @@ interface Props {
 export default function DropMenuProfile(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
   const { resetUser } = useUser()
 

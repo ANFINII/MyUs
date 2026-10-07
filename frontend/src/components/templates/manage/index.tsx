@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import Main from 'components/layout/Main'
 import IconAdvertise from 'components/parts/Icon/Advertise'
 import IconBlog from 'components/parts/Icon/Blog'
@@ -21,7 +21,7 @@ const menus = [
 ]
 
 export default function Manage(): React.JSX.Element {
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
 
   return (

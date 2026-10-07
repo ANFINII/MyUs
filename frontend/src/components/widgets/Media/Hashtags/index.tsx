@@ -4,7 +4,7 @@ import { HashtagOut } from 'types/internal/hashtag'
 import { Hashtag } from 'types/internal/media/output'
 import { getHashtags } from 'api/internal/hashtag'
 import { MediaPath } from 'utils/constants/enum'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import IconEdit from 'components/parts/Icon/Edit'
 import HStack from 'components/parts/Stack/Horizontal'
 import HashtagsEdit from './Edit'
@@ -22,7 +22,7 @@ interface Props {
 export default function Hashtags(props: Props): React.JSX.Element {
   const { hashtags, mediaPath, mediaUlid, isOwner = false, onUpdate, onToast } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isMasterLoading, setIsMasterLoading] = useState<boolean>(false)

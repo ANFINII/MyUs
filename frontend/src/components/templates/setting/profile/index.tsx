@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { ProfileOut } from 'types/internal/user'
 import { getAge, getFullName } from 'utils/functions/user'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPerson from 'components/parts/Icon/Person'
@@ -18,7 +18,7 @@ interface Props {
 export default function SettingProfile(props: Props): React.JSX.Element {
   const { profile } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
   const handleEdit = () => router.push('/setting/profile/edit')
   const handlePassword = () => router.push('/setting/password/change')

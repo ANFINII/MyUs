@@ -2,13 +2,6 @@ export interface ErrorOut {
   message: string
 }
 
-export interface UrlSearch {
-  search?: string
-  page?: string
-  channel?: string
-  token?: string
-}
-
 export interface Option {
   label: string
   value: string

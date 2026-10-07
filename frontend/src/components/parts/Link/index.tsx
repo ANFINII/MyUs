@@ -1,5 +1,5 @@
 import { MouseEvent } from 'react'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 
 interface Props {
   href: string
@@ -10,7 +10,7 @@ interface Props {
 export default function Link(props: Props): React.JSX.Element {
   const { href, className, children } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const fullHref = router.locale && href.startsWith('/') ? `/${router.locale}${href}` : href
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {

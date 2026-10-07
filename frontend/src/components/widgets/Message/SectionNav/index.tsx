@@ -1,6 +1,6 @@
 import { MouseEvent, RefObject } from 'react'
 import { Chat } from 'types/internal/media/output'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import Avatar from 'components/parts/Avatar'
 import IconResize from 'components/parts/Icon/Resize'
 import style from './SectionNav.module.scss'
@@ -15,7 +15,7 @@ interface Props {
 export default function SectionNav(props: Props): React.JSX.Element {
   const { navRef, list, onNav, onResize } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
 
   const handleRouter = (ulid: string) => router.push(`/media/chat/${ulid}`)
 

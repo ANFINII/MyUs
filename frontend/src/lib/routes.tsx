@@ -1,6 +1,5 @@
 import { createRootRoute, createRoute, lazyRouteComponent, Outlet } from '@tanstack/react-router'
-import { UrlSearch } from 'types/internal/other'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
 import Unexpected from 'components/widgets/Status/Unexpected'
@@ -8,7 +7,7 @@ import Unexpected from 'components/widgets/Status/Unexpected'
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
 
 function RootLayout(): React.JSX.Element {
-  const router = useAppRouter()
+  const router = useRouter()
 
   return (
     <Layout>
@@ -19,16 +18,7 @@ function RootLayout(): React.JSX.Element {
   )
 }
 
-const toText = (value: unknown): string | undefined => (typeof value === 'string' && value ? value : undefined)
-
-const validateSearch = (search: Record<string, unknown>): UrlSearch => ({
-  search: toText(search.search),
-  page: toText(search.page),
-  channel: toText(search.channel),
-  token: toText(search.token),
-})
-
-const rootRoute = createRootRoute({ component: RootLayout, validateSearch })
+const rootRoute = createRootRoute({ component: RootLayout })
 
 const page = <TPath extends string>(path: TPath, load: PageImport) => {
   return createRoute({ getParentRoute: () => rootRoute, path, component: lazyRouteComponent(load) })

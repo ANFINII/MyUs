@@ -1,13 +1,12 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearch } from '@tanstack/react-router'
 import { SignupIn } from 'types/internal/auth'
 import { getSignupVerify, postSignup } from 'api/internal/auth'
 import { FetchError, GenderType } from 'utils/constants/enum'
 import { nowDate, selectDate } from 'utils/functions/datetime'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
+import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
@@ -36,9 +35,8 @@ const initSignup: SignupIn = {
 }
 
 export default function Signup(): React.JSX.Element {
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
-  const { token } = useSearch({ strict: false })
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
@@ -51,7 +49,8 @@ export default function Signup(): React.JSX.Element {
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   useEffect(() => {
-    if (!token) {
+    const token = router.query.token
+    if (typeof token !== 'string' || token === '') {
       router.push('/account/login')
       return
     }
@@ -65,7 +64,7 @@ export default function Signup(): React.JSX.Element {
       setIsVerified(true)
     }
     verify()
-  }, [router, token])
+  }, [router])
 
   const handleSubmit = async () => {
     const { email, username, nickname, lastName, firstName, password1, password2 } = values

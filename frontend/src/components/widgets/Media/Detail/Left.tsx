@@ -1,6 +1,5 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from '@tanstack/react-router'
 import { Channel, SubscribeIn } from 'types/internal/channel'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { Hashtag, MediaUser } from 'types/internal/media/output'
@@ -13,9 +12,9 @@ import { commentTypeNoMap, mediaTypeMap } from 'utils/constants/map'
 import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
+import { useRouter } from 'components/hooks/useRouter'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
 import CountLike from 'components/parts/Count/Like'
@@ -72,9 +71,8 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     hashtags: media.hashtags,
   }
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
-  const params = useParams({ strict: false })
   const { user } = useUser()
   const { loading, handleLoading } = useLoading()
   const { formatDatetime } = useDatetime()
@@ -93,7 +91,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setFormState((prev) => ({ ...prev, text: e.target.value }))
 
   const handleLike = async () => {
-    const ulid = params.ulid ?? ''
+    const ulid = String(router.query.ulid ?? '')
     const pathname = capitalize(String(router.pathname.split('/')[2]))
     const mediaType = mediaTypeMap[pathname]
     if (!mediaType) return
@@ -118,7 +116,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     handleLoading(true)
     const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
     const typeNo = commentTypeNoMap[typeName]
-    const objectUlid = params.ulid ?? ''
+    const objectUlid = String(router.query.ulid ?? '')
     const request: CommnetIn = { text, typeName, typeNo, objectUlid }
     const ret = await postComment(request)
     if (ret.isErr()) {

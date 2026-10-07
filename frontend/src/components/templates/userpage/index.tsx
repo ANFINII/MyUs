@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Option } from 'types/internal/other'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { postFollow } from 'api/internal/user'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -38,7 +38,7 @@ export default function Userpage(props: Props): React.JSX.Element {
   const { ulid, channelUlid, userPage, media } = props
   const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t, i18n } = useTranslation()
   const { user } = useUser()
   const [isModal, setIsModal] = useState<boolean>(false)

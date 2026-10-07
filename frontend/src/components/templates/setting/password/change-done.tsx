@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -8,7 +8,7 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from '../Setting.module.scss'
 
 export default function PasswordChangeDone(): React.JSX.Element {
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
   const handleBack = () => router.push('/setting/profile')
 

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Follow } from 'types/internal/user'
-import { useAppRouter } from 'components/hooks/useAppRouter'
-import { useSearchResult } from 'components/hooks/useSearchResult'
+import { useRouter } from 'components/hooks/useRouter'
+import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import FollowCard from 'components/widgets/Card/Follow'
@@ -14,9 +14,9 @@ interface Props {
 export default function Followers(props: Props): React.JSX.Element {
   const { datas } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
-  const search = useSearchResult(datas.length)
+  const search = useSearch(datas.length)
 
   return (
     <Main title="Follower" search={search}>
