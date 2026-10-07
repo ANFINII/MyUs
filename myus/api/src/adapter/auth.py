@@ -85,7 +85,7 @@ class AuthAPI:
             return 500, ErrorOut(message="トークンリフレッシュに失敗しました!")
 
         response.delete_cookie("access_token")
-        response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True)
+        response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
 
         return 200, RefreshOut(access=access)
 
@@ -153,8 +153,8 @@ class AuthAPI:
 
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
-        response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True)
-        response.set_cookie("refresh_token", refresh, max_age=60 * 60 * 24 * 30, httponly=True)
+        response.set_cookie("access_token", access, max_age=60 * 60 * 24, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
+        response.set_cookie("refresh_token", refresh, max_age=60 * 60 * 24 * 30, httponly=True, secure=settings.SESSION_COOKIE_SECURE, samesite=settings.SESSION_COOKIE_SAMESITE)
 
         return 200, LoginOut(access=access, refresh=refresh)
 
