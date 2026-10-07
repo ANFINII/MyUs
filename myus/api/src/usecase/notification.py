@@ -9,9 +9,9 @@ from api.utils.enum.notification import NotificationTypeNo
 from api.utils.functions.index import create_url
 
 
-def get_notification_data(receiver_id: int, type_nos: tuple[NotificationTypeNo, ...]) -> list[NotificationData]:
+def get_notification_data(receiver_id: int, enabled_types: tuple[NotificationTypeNo, ...]) -> list[NotificationData]:
     repository = injector.get(NotificationInterface)
-    ids = repository.get_ids(FilterOption(receiver_id=receiver_id, type_nos=type_nos, exclude_user_id=receiver_id), SortOption())
+    ids = repository.get_ids(FilterOption(receiver_id=receiver_id, enabled_types=enabled_types, exclude_user_id=receiver_id), SortOption())
     if len(ids) == 0:
         return []
 
@@ -34,7 +34,7 @@ def get_notification_user_map(user_ids: list[int]) -> dict[int, NotificationUser
     }
 
 
-def get_enabled_type_nos(setting: UserNotificationData) -> tuple[NotificationTypeNo, ...]:
+def get_enabled_types(setting: UserNotificationData) -> tuple[NotificationTypeNo, ...]:
     enabled = {
         NotificationTypeNo.VIDEO: setting.is_video,
         NotificationTypeNo.MUSIC: setting.is_music,
@@ -52,12 +52,12 @@ def get_enabled_type_nos(setting: UserNotificationData) -> tuple[NotificationTyp
 
 def get_notification(user_id: int) -> NotificationDTO:
     user = get_user_data(user_id=user_id)
-    type_nos = get_enabled_type_nos(user.notification) if user is not None else ()
-    if len(type_nos) == 0:
+    enabled_types = get_enabled_types(user.notification) if user is not None else ()
+    if len(enabled_types) == 0:
         return NotificationDTO(count=0, items=[])
 
     repository = injector.get(NotificationInterface)
-    objs = get_notification_data(user_id, type_nos)
+    objs = get_notification_data(user_id, enabled_types)
     confirmed_ids = set(repository.get_ids(FilterOption(confirmed_user_id=user_id), SortOption()))
 
     user_ids = list({n.user_from_id for n in objs} | {n.user_to_id for n in objs if n.user_to_id != 0})

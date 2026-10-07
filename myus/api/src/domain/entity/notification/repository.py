@@ -34,8 +34,8 @@ class NotificationRepository(NotificationInterface):
         if filter.receiver_id:
             following = Follow.objects.filter(follower_id=filter.receiver_id, following_id=OuterRef("user_from_id"), is_follow=True, created__lt=OuterRef("created"))
             q_list.append(Q(user_to_id=filter.receiver_id) | Q(Exists(following), user_to__isnull=True))
-        if filter.type_nos:
-            q_list.append(Q(type_no__in=filter.type_nos))
+        if filter.enabled_types:
+            q_list.append(Q(type_no__in=filter.enabled_types))
         if filter.confirmed_user_id:
             q_list.append(Q(confirmed=filter.confirmed_user_id))
         if filter.exclude_user_id:
