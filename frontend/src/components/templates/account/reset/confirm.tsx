@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { PasswordResetIn } from 'types/internal/auth'
 import { getPasswordResetVerify, postPasswordReset } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
@@ -17,6 +18,7 @@ import style from '../Account.module.scss'
 
 export default function ResetConfirm(): React.JSX.Element {
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
@@ -50,7 +52,7 @@ export default function ResetConfirm(): React.JSX.Element {
     const { password1, password2 } = values
     if (!validate({ password1, password2 })) return
     if (password1 !== password2) {
-      handleToast('新規パスワードが一致しません', true)
+      handleToast(t('account.form.passwordMismatch'), true)
       return
     }
     handleLoading(true)
@@ -69,21 +71,21 @@ export default function ResetConfirm(): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle="パスワード再設定" toast={toast}>
+    <Main metaTitle={t('account.reset.confirmTitle')} toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form}>
-          <h1 className={style.title}>パスワード再設定</h1>
+          <h1 className={style.title}>{t('account.reset.confirmTitle')}</h1>
           {isVerified && (
             <>
               <VStack gap="8">
                 <Input type="email" name="email" value={email} disabled maxLength={255} />
-                <Password value={values.password1} name="password1" placeholder="パスワード(英数字8~16文字)" error={error} onChange={handleInput} />
-                <Password value={values.password2} name="password2" placeholder="パスワード(確認用)" error={error} onChange={handleInput} />
+                <Password value={values.password1} name="password1" placeholder={t('account.form.passwordNew')} error={error} onChange={handleInput} />
+                <Password value={values.password2} name="password2" placeholder={t('account.form.passwordConfirm')} error={error} onChange={handleInput} />
               </VStack>
 
               <VStack gap="12" className="mv_40">
-                <Button color="green" size="l" name="再設定" type="submit" loading={loading} onClick={handleSubmit} />
-                <Button color="blue" size="l" name="戻る" onClick={handleBack} />
+                <Button color="green" size="l" name={t('account.reset.submit')} type="submit" loading={loading} onClick={handleSubmit} />
+                <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
               </VStack>
             </>
           )}

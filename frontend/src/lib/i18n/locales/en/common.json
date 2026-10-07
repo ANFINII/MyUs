@@ -183,5 +183,151 @@
       "period": "Period",
       "displayPeriod": "Display until"
     }
+  },
+  "account": {
+    "form": {
+      "email": "Email address",
+      "password": "Password",
+      "passwordNew": "Password (8-16 letters and numbers)",
+      "passwordConfirm": "Confirm password",
+      "passwordMismatch": "The new passwords don't match",
+      "send": "Send",
+      "mailSent": "Email sent!"
+    },
+    "login": {
+      "username": "Username or email address",
+      "reset": "Reset password",
+      "signup": "Sign up"
+    },
+    "signup": {
+      "title": "Sign up",
+      "emailNotice": "We'll send a registration link to your email address.",
+      "expiry": "The link expires in 12 hours.",
+      "name": "Name",
+      "lastName": "Last name",
+      "firstName": "First name",
+      "username": "Username (letters and numbers)",
+      "nickname": "Display name",
+      "birthday": "Date of birth",
+      "gender": "Gender",
+      "submit": "Sign up"
+    },
+    "reset": {
+      "title": "Reset password",
+      "emailNotice": "We'll send a password reset link to your email address.",
+      "confirmTitle": "Set new password",
+      "submit": "Set password",
+      "done": "Your password has been reset!"
+    },
+    "withdrawal": {
+      "title": "Delete account",
+      "warning": "Once you delete your account, you can no longer use it!",
+      "irreversible": "This action cannot be undone.",
+      "next": "Continue to delete account",
+      "confirm": "Are you sure you want to delete your account?",
+      "submit": "Delete account"
+    }
+  },
+  "setting": {
+    "button": {
+      "edit": "Edit",
+      "register": "Save",
+      "save": "Save",
+      "reset": "Reset",
+      "change": "Change",
+      "cancel": "Cancel"
+    },
+    "profile": {
+      "title": "Account settings",
+      "passwordChange": "Change password",
+      "avatar": "Avatar",
+      "email": "Email address",
+      "username": "Username",
+      "usernamePlaceholder": "Letters and numbers",
+      "nickname": "Display name",
+      "name": "Name",
+      "lastName": "Last name",
+      "firstName": "First name",
+      "birthday": "Date of birth",
+      "birthdayValue": "{{month}}/{{day}}/{{year}}",
+      "age": "Age",
+      "ageValue_one": "{{count}} year old",
+      "ageValue_other": "{{count}} years old",
+      "gender": "Gender",
+      "phone": "Phone number",
+      "postalCode": "Postal code",
+      "autoAddress": "Fill in address",
+      "addressNotFound": "Couldn't find an address!",
+      "address": "Address",
+      "city": "City",
+      "street": "Street address",
+      "introduction": "Bio"
+    },
+    "password": {
+      "title": "Change password",
+      "old": "Current password",
+      "new": "New password (8-16 letters and numbers)",
+      "confirm": "Confirm new password",
+      "mismatch": "The new passwords don't match",
+      "done": "Your password has been changed!"
+    },
+    "mypage": {
+      "title": "My page settings",
+      "userpage": "User page",
+      "banner": "Banner image",
+      "nickname": "Display name",
+      "email": "Email address",
+      "following": "Following",
+      "followers": "Followers",
+      "plan": "Plan",
+      "advertise": "Site-wide ads",
+      "tagId": "Tag ID",
+      "tagIdPlaceholder": "Tag Manager ID",
+      "content": "About",
+      "createChannel": "Create channel",
+      "avatar": "Avatar",
+      "avatarImage": "Avatar",
+      "channelName": "Channel name",
+      "description": "Description"
+    },
+    "channelCreate": {
+      "title": "Create channel",
+      "avatar": "Avatar",
+      "name": "Channel name",
+      "description": "Description",
+      "submit": "Create"
+    },
+    "notification": {
+      "title": "Notification settings",
+      "description": "Choose notifications, such as new posts from users you follow",
+      "item": "{{name}} notifications"
+    },
+    "payment": {
+      "title": "Plans",
+      "currentPlan": "Current plan",
+      "current": "Current",
+      "perMonth": "/ month",
+      "purchase": "Purchase",
+      "change": "Change plan",
+      "cancel": "Cancel subscription",
+      "cancelTitle": "Cancel subscription",
+      "cancelConfirm": "Are you sure you want to cancel?",
+      "cancelNotice": "You can keep using your current plan until the next renewal date.",
+      "cancelReserved": "Cancellation scheduled. You can use your plan until {{periodEnd}}",
+      "changeTitle": "Change plan",
+      "successTitle": "Payment complete",
+      "successHeading": "Payment complete",
+      "thanks": "Thank you for your purchase.",
+      "reflect": "It may take a few minutes for changes to take effect.",
+      "backToPlans": "Back to plans",
+      "features": {
+        "individualAds_one": "{{count}} custom ad slot",
+        "individualAds_other": "{{count}} custom ad slots",
+        "hideGlobalAds": "No site-wide ads",
+        "musicDownload": "Music downloads",
+        "basic": "Basic features",
+        "withAds": "Includes ads"
+      }
+    }
   }
 }

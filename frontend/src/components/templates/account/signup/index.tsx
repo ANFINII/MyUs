@@ -80,29 +80,29 @@ export default function Signup(): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle="アカウント登録" toast={toast}>
+    <Main metaTitle={t('account.signup.title')} toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form}>
-          <h1 className={style.signup_title}>アカウント登録</h1>
+          <h1 className={style.signup_title}>{t('account.signup.title')}</h1>
           {isVerified && (
             <>
               <VStack gap="8">
                 <VStack gap="4">
-                  <p>名前</p>
+                  <p>{t('account.signup.name')}</p>
                   <div className="name_group">
-                    <Input name="lastName" placeholder="姓" maxLength={30} required error={error} onChange={handleInput} />
-                    <Input name="firstName" placeholder="名" maxLength={30} required error={error} onChange={handleInput} />
+                    <Input name="lastName" placeholder={t('account.signup.lastName')} maxLength={30} required error={error} onChange={handleInput} />
+                    <Input name="firstName" placeholder={t('account.signup.firstName')} maxLength={30} required error={error} onChange={handleInput} />
                   </div>
                 </VStack>
 
-                <Input name="username" placeholder="ユーザー名(英数字)" maxLength={20} required error={error} onChange={handleInput} />
-                <Input name="nickname" placeholder="投稿者名" maxLength={80} required error={error} onChange={handleInput} />
+                <Input name="username" placeholder={t('account.signup.username')} maxLength={20} required error={error} onChange={handleInput} />
+                <Input name="nickname" placeholder={t('account.signup.nickname')} maxLength={80} required error={error} onChange={handleInput} />
                 <Input type="email" name="email" value={values.email} disabled maxLength={255} />
-                <Password name="password1" placeholder="パスワード(英数字8~16文字)" error={error} onChange={handleInput} />
-                <Password name="password2" placeholder="パスワード(確認用)" error={error} onChange={handleInput} />
+                <Password name="password1" placeholder={t('account.form.passwordNew')} error={error} onChange={handleInput} />
+                <Password name="password2" placeholder={t('account.form.passwordConfirm')} error={error} onChange={handleInput} />
 
                 <VStack gap="4">
-                  <p>生年月日</p>
+                  <p>{t('account.signup.birthday')}</p>
                   <HStack gap="2" full>
                     <SelectBox name="year" value={String(values.year)} options={years} onChange={handleSelect} />
                     <SelectBox name="month" value={String(values.month)} options={months} onChange={handleSelect} />
@@ -111,7 +111,7 @@ export default function Signup(): React.JSX.Element {
                 </VStack>
 
                 <VStack gap="4">
-                  <p>性別</p>
+                  <p>{t('account.signup.gender')}</p>
                   <HStack gap="5">
                     {Object.entries(GenderType).map(([key, value]) => (
                       <Radio key={key} name="gender" label={t(`gender.${value}`)} value={value} checked={value === values.gender} onChange={handleInput} />
@@ -121,8 +121,8 @@ export default function Signup(): React.JSX.Element {
               </VStack>
 
               <VStack gap="12" className="mv_40">
-                <Button color="green" size="l" name="アカウント登録" type="submit" loading={loading} onClick={handleSubmit} />
-                <Button color="blue" size="l" name="戻る" onClick={handleBack} />
+                <Button color="green" size="l" name={t('account.signup.submit')} type="submit" loading={loading} onClick={handleSubmit} />
+                <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
               </VStack>
             </>
           )}

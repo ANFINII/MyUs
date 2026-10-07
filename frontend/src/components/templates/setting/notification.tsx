@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { UserNotification, UserNotificationOut } from 'types/internal/user'
 import { getSettingNotification, putSettingNotification } from 'api/internal/setting'
 import { Fetch, FetchError } from 'utils/constants/enum'
@@ -18,6 +19,7 @@ interface Props {
 export default function SettingNotification(props: Props): React.JSX.Element {
   const { userNotification } = props
 
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<UserNotification>(userNotification)
@@ -47,19 +49,19 @@ export default function SettingNotification(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name="保存" loading={loading} onClick={handleSubmit} />
-      <Button color="blue" size="s" name="リセット" onClick={handleReset} />
+      <Button color="green" size="s" name={t('setting.button.save')} loading={loading} onClick={handleSubmit} />
+      <Button color="blue" size="s" name={t('setting.button.reset')} onClick={handleReset} />
     </HStack>
   )
 
   return (
-    <Main title="通知設定" type="table" toast={toast} button={button}>
+    <Main title={t('setting.notification.title')} type="table" toast={toast} button={button}>
       <Table>
-        <TableRow isIndent label="通知設定">
-          フォローしているユーザの投稿通知などを設定
+        <TableRow isIndent label={t('setting.notification.title')}>
+          {t('setting.notification.description')}
         </TableRow>
         {notificationKeys.map((key) => (
-          <TableRow key={key} isIndent label={`${key.slice(2)}通知`}>
+          <TableRow key={key} isIndent label={t('setting.notification.item', { name: key.slice(2) })}>
             <Toggle isActive={values[key]} onClick={() => handleToggle(key)} />
           </TableRow>
         ))}
