@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
+import { useSearch } from '@tanstack/react-router'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Picture, PictureList } from 'types/internal/media/output'
@@ -33,6 +34,7 @@ export default function ManagePictures(props: Props): React.JSX.Element {
 
   const router = useAppRouter()
   const { t } = useTranslation()
+  const query = useSearch({ strict: false })
   const queryClient = useQueryClient()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
@@ -46,7 +48,7 @@ export default function ManagePictures(props: Props): React.JSX.Element {
   const handleEdit = (picture: Picture) => router.push(`/manage/picture/${picture.ulid}`)
 
   const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => {
-    router.push({ pathname: router.pathname, query: { ...router.query, channel: e.target.value, page: 1 } })
+    router.push({ pathname: router.pathname, query: { ...query, channel: e.target.value, page: 1 } })
   }
 
   const handleDeleteSubmit = async () => {
@@ -66,7 +68,7 @@ export default function ManagePictures(props: Props): React.JSX.Element {
   }
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const channelUlid = router.query.channel?.toString() || channels[0]!.ulid
+  const channelUlid = query.channel || channels[0]!.ulid
 
   const columns: Column<Picture>[] = [
     {

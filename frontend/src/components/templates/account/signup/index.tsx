@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearch } from '@tanstack/react-router'
 import { SignupIn } from 'types/internal/auth'
 import { getSignupVerify, postSignup } from 'api/internal/auth'
 import { FetchError, GenderType } from 'utils/constants/enum'
@@ -37,6 +38,7 @@ const initSignup: SignupIn = {
 export default function Signup(): React.JSX.Element {
   const router = useAppRouter()
   const { t } = useTranslation()
+  const { token } = useSearch({ strict: false })
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
@@ -49,8 +51,7 @@ export default function Signup(): React.JSX.Element {
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   useEffect(() => {
-    const token = router.query.token
-    if (typeof token !== 'string' || token === '') {
+    if (!token) {
       router.push('/account/login')
       return
     }
@@ -64,7 +65,7 @@ export default function Signup(): React.JSX.Element {
       setIsVerified(true)
     }
     verify()
-  }, [router])
+  }, [router, token])
 
   const handleSubmit = async () => {
     const { email, username, nickname, lastName, firstName, password1, password2 } = values

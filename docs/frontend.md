@@ -92,6 +92,7 @@ const [user, setUser] = useState<User | null>(null)
 
 - URLとページの対応は`src/lib/routes.tsx`の1ファイルにまとめる（TanStack Routerのコードベースのルーティング）。ページを追加するときは、該当する領域に`page()`を1行追加する
 - ルートは`pages/`のコンポーネントを`lazyRouteComponent`で読み込むだけにする（表示するときに読み込まれる）
+- URL のパラメータ（`$ulid` など）は `useParams`、クエリ文字列（`?search=` など）は `useSearch` で取る。ページは `useParams({ from: '/manage/video/$ulid' })` のようにルートを指定し、複数のルートで使う widgets は `{ strict: false }` にする。クエリ文字列のキーはルートの `validateSearch`（`src/lib/routes.tsx`）と `UrlSearch` 型に追加する
 - 英語版（`/en/...`）は、ルーターの `rewrite`（`src/lib/router.ts`）で URL の先頭の言語を取り除いてからルートに当てる。画面遷移では言語を付けずにパスを書けば、表示中の言語が自動で付く
 - 動的なパスパラメータは`$ulid`のように`$`で始める
 
@@ -109,8 +110,7 @@ page('/manage/video/$ulid', () => import('pages/manage/video/edit')),
 
 ```typescript
 export default function ManageVideoEditPage(): React.JSX.Element {
-  const router = useAppRouter()
-  const ulid = String(router.query.ulid ?? '')
+  const { ulid } = useParams({ from: '/manage/video/$ulid' })
 
   const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categories = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
@@ -280,3 +280,4 @@ return <div className={style.box}>...</div>
 - 2026-10-07: 常に `true` だった `router.isReady` を削除
 - 2026-10-07: 多言語対応（i18n）のルールを追加
 - 2026-10-07: 言語の接頭辞（`/en`）を `{-$locale}` ルートからルーターの `rewrite` に移動
+- 2026-10-07: `router.query` を `useParams` / `useSearch` に置き換え

@@ -1,6 +1,6 @@
 import { VideoList } from 'types/internal/media/output'
 import { usePagination } from 'components/hooks/usePagination'
-import { useSearch } from 'components/hooks/useSearch'
+import { useSearchResult } from 'components/hooks/useSearchResult'
 import Main from 'components/layout/Main'
 import Pagination from 'components/parts/Pagination'
 import CardList from 'components/widgets/Card/List'
@@ -15,7 +15,7 @@ export default function Videos(props: Props): React.JSX.Element {
   const { data, page } = props
   const { items, total } = data
 
-  const search = useSearch(total)
+  const search = useSearchResult(total)
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
 
   return (
