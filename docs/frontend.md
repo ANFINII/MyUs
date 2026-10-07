@@ -154,19 +154,9 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 
 ### 翻訳ファイル
 
-- `src/lib/i18n/locales/{ja,en}/{名前空間}.json` に、日本語と英語を同じキーで書く
-- 名前空間は画面のエリアごとに分ける
-
-| 名前空間 | 対象 |
-| --- | --- |
-| `common` | layout・widgets/Status・parts など複数エリアで使う文言、トースト文言、性別・都道府県・日付表示 |
-| `account` | `templates/account`（ログイン・登録・パスワードリセット・退会） |
-| `setting` | `templates/setting`・`pages/setting` |
-| `manage` | `templates/manage`・`pages/manage` |
-| `menu` | `templates/menu`（利用規約・ナレッジなど） |
-| `media` | `templates/media`・`templates/userpage`・`pages/userpage` と、それらで使う widgets |
-
-- キーは camelCase で、画面ごとにまとめる（例：`setting.json` の `profile.title`）
+- `src/lib/i18n/locales/{ja,en}/common.json` に、日本語と英語を同じキーで書く（ファイルは分けない）
+- 画面ごとの文言は、エリア名のキーの下にまとめる（例：`setting.profile.title`、`manage.form.title`）。複数のエリアで使う文言はトップレベルに置く（例：`status.back`、`fetch.save`）
+- キーは camelCase で書く
 - キーの型は日本語の JSON から作られるため、存在しないキーは型エラーになる。英語の JSON にも同じキーを必ず追加する
 - 文中に値を入れるときは `{{name}}` で補間する（文字列連結で組み立てない。語順が言語で変わるため）
 - 英語の数による変化（単数・複数形）は `_one` / `_other` を使う
@@ -174,11 +164,10 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 ### 使い方
 
 ```tsx
-const { t } = useTranslation('setting')
-<Main title={t('profile.title')}>
+const { t } = useTranslation()
+<Main title={t('setting.profile.title')}>
 ```
 
-- `common` 以外の名前空間の中で `common` の文言も使うときは、`useTranslation(['manage', 'common'])` のように両方を読み込み、`t('common:status.back')` と名前空間を付ける
 - トースト文言は `Fetch` / `FetchError` をそのまま `handleToast` に渡す（`useToast` の中で翻訳する）
 - 日付の表示は `useDatetime` の `formatDatetime` / `formatDate` / `formatTimeAgo` を使う（表示中の言語で整形する）
 - 性別は ``t(`gender.${gender}`)``、都道府県の選択肢は `prefectures` の `key` から ``t(`prefecture.${key}`)`` で作る（保存する値は日本語のまま）
