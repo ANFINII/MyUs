@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Channel } from 'types/internal/channel'
 import AvatarLink from 'components/parts/Avatar/Link'
 import Modal from 'components/parts/Modal'
@@ -16,23 +17,26 @@ interface Props {
 export default function SubscribeDeleteModal(props: Props): React.JSX.Element {
   const { open, onClose, onAction, loading, channel, followerCount } = props
 
+  const { t } = useTranslation()
+
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title="チャンネル登録解除"
+      title={t('modal.subscribeDelete.title')}
       actions={[
-        { name: '解除する', color: 'red', loading, onClick: onAction },
-        { name: 'キャンセル', color: 'white', onClick: onClose },
+        { name: t('modal.subscribeDelete.action'), color: 'red', loading, onClick: onAction },
+        { name: t('action.cancel'), color: 'white', onClick: onClose },
       ]}
     >
-      <div className="mb_8">こちらのチャンネルの登録を解除しますか？</div>
+      <div className="mb_8">{t('modal.subscribeDelete.confirm')}</div>
       <HStack gap="4">
         <AvatarLink size="l" src={channel.avatar} ulid={channel.ownerUlid} title={channel.name} />
         <VStack gap="2">
           <p className="fs_14">{channel.name}</p>
           <p className="fs_14 text_sub">
-            登録者数<span className="ml_8">{followerCount}</span>
+            {t('count.subscribers')}
+            <span className="ml_8">{followerCount}</span>
           </p>
         </VStack>
       </HStack>

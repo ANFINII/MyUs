@@ -21,7 +21,7 @@ import style from './Account.module.scss'
 
 export default function Login(): React.JSX.Element {
   const router = useAppRouter()
-  const { t } = useTranslation('common')
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { updateUser } = useUser()
   const { loading, handleLoading } = useLoading()
@@ -53,7 +53,7 @@ export default function Login(): React.JSX.Element {
   }
 
   return (
-    <Main title="ログイン" toast={toast}>
+    <Main title={t('status.login')} toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form}>
           <h1 className={style.title}>{t('welcome')}</h1>
@@ -64,16 +64,16 @@ export default function Login(): React.JSX.Element {
           )}
 
           <VStack gap="8">
-            <Input type="text" name="username" placeholder="ユーザー名 or メールアドレス" required error={error} onChange={handleInput} />
-            <Password name="password" placeholder="パスワード" error={error} onChange={handleInput} />
+            <Input type="text" name="username" placeholder={t('account.login.username')} required error={error} onChange={handleInput} />
+            <Password name="password" placeholder={t('account.form.password')} error={error} onChange={handleInput} />
             <p className="password_reset" onClick={handleReset}>
-              パスワードをリセット
+              {t('account.login.reset')}
             </p>
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="blue" size="l" name="ログイン" type="submit" loading={loading} onClick={handleSubmit} />
-            <Button color="green" size="l" name="アカウント登録" onClick={handleSignup} />
+            <Button color="blue" size="l" name={t('status.login')} type="submit" loading={loading} onClick={handleSubmit} />
+            <Button color="green" size="l" name={t('account.login.signup')} onClick={handleSignup} />
           </VStack>
         </form>
       </article>

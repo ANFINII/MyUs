@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { WithdrawalIn } from 'types/internal/auth'
 import { postWithdrawal } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
@@ -18,6 +19,7 @@ import style from '../Account.module.scss'
 
 export default function WithdrawalConfirm(): React.JSX.Element {
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { resetUser } = useUser()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
@@ -44,18 +46,18 @@ export default function WithdrawalConfirm(): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle="退会処理" toast={toast}>
+    <Main metaTitle={t('account.withdrawal.title')} toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form}>
-          <h1 className={style.title}>退会処理</h1>
+          <h1 className={style.title}>{t('account.withdrawal.title')}</h1>
           <VStack gap="8">
-            <Alert type="error">本当に退会しますか？</Alert>
-            <Password value={values.password} name="password" placeholder="パスワード" error={error} onChange={handleInput} />
+            <Alert type="error">{t('account.withdrawal.confirm')}</Alert>
+            <Password value={values.password} name="password" placeholder={t('account.form.password')} error={error} onChange={handleInput} />
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="red" size="l" name="退会する" loading={loading} onClick={handleSubmit} />
-            <Button color="blue" size="l" name="戻る" onClick={handleBack} />
+            <Button color="red" size="l" name={t('account.withdrawal.submit')} loading={loading} onClick={handleSubmit} />
+            <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
           </VStack>
         </form>
       </article>

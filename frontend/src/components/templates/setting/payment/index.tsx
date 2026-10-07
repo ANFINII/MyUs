@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MypageOut } from 'types/internal/user'
 import { postPaymentCancel, postPaymentCheckout } from 'api/internal/payment'
 import { FetchError } from 'utils/constants/enum'
@@ -19,7 +20,9 @@ interface Props {
 
 export default function Payment(props: Props): React.JSX.Element {
   const { mypage } = props
+
   const router = useAppRouter()
+  const { t, i18n } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -53,13 +56,13 @@ export default function Payment(props: Props): React.JSX.Element {
       return
     }
     setIsModal(false)
-    const periodEnd = new Date(ret.value.periodEnd).toLocaleDateString('ja-JP')
-    handleToast(`解約予約完了。${periodEnd} まで利用可能です`, false)
+    const periodEnd = new Date(ret.value.periodEnd).toLocaleDateString(i18n.language)
+    handleToast(t('setting.payment.cancelReserved', { periodEnd }), false)
     router.reload()
   }
 
   return (
-    <Main metaTitle="料金プラン" toast={toast}>
+    <Main metaTitle={t('setting.payment.title')} toast={toast}>
       <div className={style.payment}>
         <CurrentBanner planName={currentPlan} />
 
@@ -71,8 +74,8 @@ export default function Payment(props: Props): React.JSX.Element {
 
         {isPaid && (
           <div className={style.actions}>
-            <Button color="green" name="プランを変更" onClick={handleChange} />
-            <Button color="red" name="解約する" onClick={handleModal} />
+            <Button color="green" name={t('setting.payment.change')} onClick={handleChange} />
+            <Button color="red" name={t('setting.payment.cancel')} onClick={handleModal} />
           </div>
         )}
       </div>
@@ -80,14 +83,14 @@ export default function Payment(props: Props): React.JSX.Element {
       <Modal
         open={isModal}
         onClose={handleModal}
-        title="解約の確認"
+        title={t('setting.payment.cancelTitle')}
         actions={[
-          { name: 'キャンセル', color: 'white', onClick: handleModal, disabled: loading },
-          { name: '解約する', color: 'red', onClick: handleCancelSubmit, loading },
+          { name: t('setting.button.cancel'), color: 'white', onClick: handleModal, disabled: loading },
+          { name: t('setting.payment.cancel'), color: 'red', onClick: handleCancelSubmit, loading },
         ]}
       >
-        <p>本当に解約しますか？</p>
-        <p>解約後は次回更新日まで現在のプランをご利用いただけます。</p>
+        <p>{t('setting.payment.cancelConfirm')}</p>
+        <p>{t('setting.payment.cancelNotice')}</p>
       </Modal>
     </Main>
   )

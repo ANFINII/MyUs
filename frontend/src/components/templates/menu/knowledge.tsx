@@ -1,21 +1,14 @@
+import { useTranslation } from 'react-i18next'
 import { Row } from 'types/internal/table'
 import Main from 'components/layout/Main'
 import SideTable from 'components/widgets/Table/Side'
 
+const items = ['myus', 'video', 'music', 'blog', 'comic', 'picture', 'chat', 'mypage', 'follow', 'searchTag', 'manage'] as const
+
 export default function Knowledge(): React.JSX.Element {
-  const rows: Row[] = [
-    { label: 'MyUs', content: 'MyUsは総合SNS投稿サイトです。是非いろいろなアイディアを投稿して楽しみましょう!' },
-    { label: 'Video', content: '動画コンテンツを投稿できる機能です。' },
-    { label: 'Music', content: '音楽、音声、オーディオブックなどを投稿できる機能です。' },
-    { label: 'Blog', content: 'ブログが投稿できる機能です。具体的にはMyUsに投稿したまとめ、漫画、小説を投稿しても面白いかも知れません。' },
-    { label: 'Comic', content: '漫画を投稿できる機能です。' },
-    { label: 'Picture', content: '写真、画像、イラストなどが投稿できる機能です。' },
-    { label: 'Chat', content: '世界中の方とお話できる機能です。掲示板のように使用することもできます。' },
-    { label: 'マイページ', content: '自分のページを充実させてフォロワーを増やしてみましょう。' },
-    { label: 'フォロー', content: 'フォローしている人やフォロワーさんを確認できる機能です。' },
-    { label: '検索タグ', content: '良く検索するワードを20件まで表示できます。投稿管理で表示順序を変更できます。' },
-    { label: '投稿管理', content: '投稿した作品などを編集、非公開、削除ができます。タグ付けもこちらで出来ます。' },
-  ]
+  const { t } = useTranslation()
+
+  const rows: Row[] = items.map((item) => ({ label: t(`menu.knowledge.${item}.label`), content: t(`menu.knowledge.${item}.content`) }))
 
   return (
     <Main title="Knowledge Base" type="table">

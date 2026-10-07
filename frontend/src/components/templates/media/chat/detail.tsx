@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { SubscribeIn } from 'types/internal/channel'
 import { ChatDetailOut } from 'types/internal/media/output'
 import { ChatMessage, ChatReply, MessageCreateIn, MessageUpdateIn } from 'types/internal/message'
@@ -60,6 +61,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { user } = useUser()
   const { toast, handleToast } = useToast()
   const { navRef, handleNav, handleResize } = useNavResize()
@@ -227,14 +229,14 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     const data = ret.value
     setFormState((prev) => ({ ...prev, isSubscribe: data.isSubscribe, subscribeCount: data.count }))
     if (isSubscribe) handleModal()
-    handleToast(isSubscribe ? 'チャンネル登録を解除しました' : 'チャンネルを登録しました', false)
+    handleToast(isSubscribe ? t('subscribe.unsubscribedToast') : t('subscribe.subscribedToast'), false)
   }
 
   if (!detail.publish) {
     return (
       <Main metaTitle="Chat" toast={toast}>
         <article>
-          <h2 className={style.unpublished}>非公開に設定されてます!</h2>
+          <h2 className={style.unpublished}>{t('mediaDetail.unpublished')}</h2>
         </article>
       </Main>
     )

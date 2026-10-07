@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { UserMe } from 'types/internal/user'
 import AvatarLink from 'components/parts/Avatar/Link'
 import Button from 'components/parts/Button'
@@ -18,22 +19,25 @@ interface Props {
 export default function CommentInput(props: Props): React.JSX.Element {
   const { user, count, loading, value, onChange, onClick } = props
 
+  const { t } = useTranslation()
+
   return (
     <form method="POST" action="">
       <VStack gap="4">
         <p>
-          コメント総数<span className="ml_4">{count}</span>
+          {t('comment.total')}
+          <span className="ml_4">{count}</span>
         </p>
         <HStack gap="4">
           <AvatarLink src={user.avatar} ulid={user.ulid} title={user.nickname} />
           {user.isActive ? (
-            <TextareaLine name="text" placeholder="コメント入力" value={value} onChange={onChange} onSubmit={onClick} />
+            <TextareaLine name="text" placeholder={t('comment.placeholder')} value={value} onChange={onChange} onSubmit={onClick} />
           ) : (
-            <TextareaLine name="text" placeholder="コメントするにはログインが必要です!" disabled />
+            <TextareaLine name="text" placeholder={t('comment.loginRequired')} disabled />
           )}
         </HStack>
         <HStack justify="end">
-          <Button color="blue" size="s" name="コメント" disabled={!value?.trim()} loading={loading} onClick={onClick} />
+          <Button color="blue" size="s" name={t('comment.submit')} disabled={!value?.trim()} loading={loading} onClick={onClick} />
         </HStack>
       </VStack>
     </form>

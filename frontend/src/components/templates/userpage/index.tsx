@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Option } from 'types/internal/other'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { postFollow } from 'api/internal/user'
@@ -38,6 +39,7 @@ export default function Userpage(props: Props): React.JSX.Element {
   const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
 
   const router = useAppRouter()
+  const { t, i18n } = useTranslation()
   const { user } = useUser()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isFollow, setIsFollow] = useState<boolean>(userPage.isFollow)
@@ -45,13 +47,13 @@ export default function Userpage(props: Props): React.JSX.Element {
   const [followerCount, setFollowerCount] = useState<number>(userPage.followerCount)
 
   const isSelf = user.isActive && user.nickname === nickname
-  const formattedDate = new Date(dateJoined).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+  const formattedDate = new Date(dateJoined).toLocaleDateString(i18n.language, { year: 'numeric', month: 'long', day: 'numeric' })
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const selectedChannel = channels.find((c) => c.ulid === channelUlid)
 
   const tabItems: TabItem<TabKey>[] = [
-    { key: TabKey.Info, label: '情報' },
-    { key: TabKey.Posts, label: '投稿' },
+    { key: TabKey.Info, label: t('media.userpage.info') },
+    { key: TabKey.Posts, label: t('media.userpage.posts') },
   ]
 
   const handleModal = () => setIsModal(!isModal)
@@ -86,14 +88,14 @@ export default function Userpage(props: Props): React.JSX.Element {
               <span className={style.nickname} title={nickname}>
                 {nickname}
               </span>
-              <span className={style.follower}>フォロワー数 {followerCount}</span>
-              <span className={style.following}>フォロー数 {userPage.followingCount}</span>
+              <span className={style.follower}>{t('media.userpage.follower', { count: followerCount })}</span>
+              <span className={style.following}>{t('media.userpage.following', { count: userPage.followingCount })}</span>
             </div>
             <span className={style.follow_button}>
               <FollowButton isFollow={isFollow} disabled={isSelf || !user.isActive} onClick={handleFollow} />
             </span>
           </div>
-          <SelectBox label="チャンネル" value={channelUlid} options={channelOptions} className={style.channel} onChange={handleChannelSelect} />
+          <SelectBox label={t('media.userpage.channel')} value={channelUlid} options={channelOptions} className={style.channel} onChange={handleChannelSelect} />
         </HStack>
 
         <Tabs items={tabItems} selected={selectedTab} onSelect={setSelectedTab} />
@@ -104,25 +106,25 @@ export default function Userpage(props: Props): React.JSX.Element {
       {selectedTab === TabKey.Info && (
         <div className={style.information}>
           <section className={style.section}>
-            <h2>オーナー情報</h2>
-            <p className={style.info_item}>メール：{email}</p>
-            <p className={style.info_item}>登録日：{formattedDate}</p>
-            <p className={style.info_label}>内容</p>
+            <h2>{t('media.userpage.ownerInfo')}</h2>
+            <p className={style.info_item}>{t('media.userpage.email', { email })}</p>
+            <p className={style.info_item}>{t('media.userpage.joined', { date: formattedDate })}</p>
+            <p className={style.info_label}>{t('media.userpage.content')}</p>
             <p className={style.info_content}>{content}</p>
           </section>
 
           <section className={style.section}>
-            <h2>チャンネル情報</h2>
+            <h2>{t('media.userpage.channelInfo')}</h2>
             {selectedChannel && (
               <div className={style.channel_info}>
                 <ExImage src={selectedChannel.avatar} title={selectedChannel.name} className={style.channel_avatar} />
                 <div className={style.channel_detail}>
                   <span className={style.channel_name}>{selectedChannel.name}</span>
-                  <span className={style.channel_count}>登録者数 {selectedChannel.count}</span>
+                  <span className={style.channel_count}>{t('media.userpage.subscriber', { count: selectedChannel.count })}</span>
                 </div>
               </div>
             )}
-            <p className={style.info_label}>説明</p>
+            <p className={style.info_label}>{t('media.userpage.description')}</p>
             <p className={style.info_content}>{selectedChannel?.description}</p>
           </section>
         </div>

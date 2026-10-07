@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { PasswordChangeIn } from 'types/internal/auth'
 import { postPasswordChange } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
@@ -16,6 +17,7 @@ import style from '../Setting.module.scss'
 
 export default function PasswordChange(): React.JSX.Element {
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
@@ -28,7 +30,7 @@ export default function PasswordChange(): React.JSX.Element {
     const { oldPassword, password1, password2 } = values
     if (!validate({ oldPassword, password1, password2 })) return
     if (password1 !== password2) {
-      handleToast('新規パスワードが一致しません', true)
+      handleToast(t('setting.password.mismatch'), true)
       return
     }
     handleLoading(true)
@@ -47,18 +49,18 @@ export default function PasswordChange(): React.JSX.Element {
   }
 
   return (
-    <Main title="パスワード変更" toast={toast}>
+    <Main title={t('setting.password.title')} toast={toast}>
       <article className={style.article_pass}>
         <form method="POST" action="" className={style.form_account}>
           <VStack gap="8">
-            <Password value={values.oldPassword} name="oldPassword" placeholder="現在パスワード" error={error} onChange={handleInput} />
-            <Password value={values.password1} name="password1" placeholder="パスワード(英数字8~16文字)" error={error} onChange={handleInput} />
-            <Password value={values.password2} name="password2" placeholder="パスワード(確認用)" error={error} onChange={handleInput} />
+            <Password value={values.oldPassword} name="oldPassword" placeholder={t('setting.password.old')} error={error} onChange={handleInput} />
+            <Password value={values.password1} name="password1" placeholder={t('setting.password.new')} error={error} onChange={handleInput} />
+            <Password value={values.password2} name="password2" placeholder={t('setting.password.confirm')} error={error} onChange={handleInput} />
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="green" size="l" name="変更する" loading={loading} onClick={handleSubmit} />
-            <Button color="blue" size="l" name="戻る" onClick={handleBack} />
+            <Button color="green" size="l" name={t('setting.button.change')} loading={loading} onClick={handleSubmit} />
+            <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
           </VStack>
         </form>
       </article>

@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { HashtagOut } from 'types/internal/hashtag'
 import { Hashtag } from 'types/internal/media/output'
 import { putMediaHashtags } from 'api/internal/hashtag'
@@ -42,6 +43,7 @@ interface Props {
 export default function HashtagsEdit(props: Props): React.JSX.Element {
   const { hashtags, master, isMasterLoading, mediaPath, mediaUlid, onSave, onCancel, onToast } = props
 
+  const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [editTags, setEditTags] = useState<Hashtag[]>([...hashtags])
   const [inputTag, setInputTag] = useState<string>('')
@@ -96,16 +98,16 @@ export default function HashtagsEdit(props: Props): React.JSX.Element {
     })
     setIsLoading(false)
     if (ret.isErr()) {
-      onToast?.('ハッシュタグの保存に失敗しました', true)
+      onToast?.(t('hashtag.saveError'), true)
       return
     }
     onSave(editTags)
-    onToast?.('ハッシュタグを保存しました', false)
+    onToast?.(t('hashtag.saved'), false)
   }
 
   return (
     <VStack gap="2" className={style.edit_area}>
-      <Input placeholder="タグ名" maxLength={HASHTAG_MAX_LENGTH} value={inputTag} onChange={handleInput} className={style.input} />
+      <Input placeholder={t('hashtag.placeholder')} maxLength={HASHTAG_MAX_LENGTH} value={inputTag} onChange={handleInput} className={style.input} />
       <VStack gap="1" className={style.master_list}>
         {isMasterLoading ? (
           <HStack justify="center" className={style.loading}>
@@ -116,18 +118,18 @@ export default function HashtagsEdit(props: Props): React.JSX.Element {
             {showNewRow && (
               <HStack gap="2" justify="between" className={style.master_row}>
                 <span className={style.master_name}>
-                  #{normalizedInput} <span className={style.new_label}>(新規)</span>
+                  #{normalizedInput} <span className={style.new_label}>{t('hashtag.new')}</span>
                 </span>
-                <Button size="s" color="blue" name="追加" onClick={handleAddNew} />
+                <Button size="s" color="blue" name={t('action.add')} onClick={handleAddNew} />
               </HStack>
             )}
             {filteredMaster.map((m) => (
               <HStack key={m.ulid} gap="2" justify="between" className={style.master_row}>
                 <span className={style.master_name}>#{m.name}</span>
-                <Button size="s" color="blue" name="追加" onClick={() => handleAddMaster(m)} />
+                <Button size="s" color="blue" name={t('action.add')} onClick={() => handleAddMaster(m)} />
               </HStack>
             ))}
-            {!showNewRow && filteredMaster.length === 0 && <span className={style.empty}>候補なし</span>}
+            {!showNewRow && filteredMaster.length === 0 && <span className={style.empty}>{t('hashtag.empty')}</span>}
           </>
         )}
       </VStack>
@@ -154,8 +156,8 @@ export default function HashtagsEdit(props: Props): React.JSX.Element {
         ))}
       </HStack>
       <HStack gap="2" className={style.edit_actions}>
-        <Button size="s" name="キャンセル" disabled={isLoading} onClick={onCancel} />
-        <Button size="s" color="green" name="保存" loading={isLoading} onClick={handleSave} />
+        <Button size="s" name={t('action.cancel')} disabled={isLoading} onClick={onCancel} />
+        <Button size="s" color="green" name={t('action.save')} loading={isLoading} onClick={handleSave} />
       </HStack>
     </VStack>
   )

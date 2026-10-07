@@ -63,7 +63,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
       setValues({ ...values, prefecture: result.address1, city: result.address2, street: result.address3 })
       setMessage('')
     } else {
-      setMessage('住所が取得できませんでした!')
+      setMessage(t('setting.profile.addressNotFound'))
     }
   }
 
@@ -86,13 +86,13 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name="登録" loading={loading} onClick={handlSubmit} />
-      <Button color="blue" size="s" name="戻る" onClick={handleBack} />
+      <Button color="green" size="s" name={t('setting.button.register')} loading={loading} onClick={handlSubmit} />
+      <Button color="blue" size="s" name={t('status.back')} onClick={handleBack} />
     </HStack>
   )
 
   return (
-    <Main title="アカウント設定" type="table" toast={toast} button={button}>
+    <Main title={t('setting.profile.title')} type="table" toast={toast} button={button}>
       {message && (
         <ul className={style.messages_profile}>
           <li>{message}</li>
@@ -100,7 +100,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
       )}
 
       <Table>
-        <TableRow label="アバター画像">
+        <TableRow label={t('setting.profile.avatar')}>
           <InputImage
             id="avatar"
             className={style.account_image_edit}
@@ -118,55 +118,55 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
             onChange={handleAvatar}
           />
         </TableRow>
-        <TableRow label="メールアドレス">
+        <TableRow label={t('setting.profile.email')}>
           <Input name="email" value={values.email} maxLength={120} required error={error} onChange={handleInput} />
         </TableRow>
-        <TableRow label="ユーザー名">
-          <Input name="username" value={values.username} maxLength={30} placeholder="英数字" required error={error} onChange={handleInput} />
+        <TableRow label={t('setting.profile.username')}>
+          <Input name="username" value={values.username} maxLength={30} placeholder={t('setting.profile.usernamePlaceholder')} required error={error} onChange={handleInput} />
         </TableRow>
-        <TableRow label="投稿者名">
+        <TableRow label={t('setting.profile.nickname')}>
           <Input name="nickname" value={values.nickname} maxLength={60} required error={error} onChange={handleInput} />
         </TableRow>
-        <TableRow label="名前">
+        <TableRow label={t('setting.profile.name')}>
           <HStack gap="1" full>
-            <Input name="lastName" value={values.lastName} placeholder="姓" maxLength={30} required error={error} onChange={handleInput} />
-            <Input name="firstName" value={values.firstName} placeholder="名" maxLength={30} required error={error} onChange={handleInput} />
+            <Input name="lastName" value={values.lastName} placeholder={t('setting.profile.lastName')} maxLength={30} required error={error} onChange={handleInput} />
+            <Input name="firstName" value={values.firstName} placeholder={t('setting.profile.firstName')} maxLength={30} required error={error} onChange={handleInput} />
           </HStack>
         </TableRow>
-        <TableRow label="生年月日">
+        <TableRow label={t('setting.profile.birthday')}>
           <HStack gap="1" full>
             <SelectBox name="year" value={String(values.year)} options={years} onChange={handleNumberSelect} />
             <SelectBox name="month" value={String(values.month)} options={months} onChange={handleNumberSelect} />
             <SelectBox name="day" value={String(values.day)} options={days} onChange={handleNumberSelect} />
           </HStack>
         </TableRow>
-        <TableRow isIndent label="年齢">
-          {getAge(values.year, values.month, values.day)}歳
+        <TableRow isIndent label={t('setting.profile.age')}>
+          {t('setting.profile.ageValue', { count: getAge(values.year, values.month, values.day) })}
         </TableRow>
-        <TableRow label="性別">
+        <TableRow label={t('setting.profile.gender')}>
           <HStack gap="5" className="pl_4">
             {Object.entries(GenderType).map(([key, value]) => (
               <Radio key={key} name="gender" label={t(`gender.${value}`)} value={value} checked={value === values.gender} onChange={handleInput} />
             ))}
           </HStack>
         </TableRow>
-        <TableRow label="電話番号">
+        <TableRow label={t('setting.profile.phone')}>
           <Input type="tel" name="phone" value={values.phone} maxLength={15} required error={error} onChange={handleInput} />
         </TableRow>
-        <TableRow label="郵便番号">
+        <TableRow label={t('setting.profile.postalCode')}>
           <div className="d_flex">
             <Input type="tel" name="postalCode" value={values.postalCode} maxLength={8} className="mr_2" required error={error} onChange={handleInput} />
-            <Button name="住所自動入力" onClick={handleAutoAddress} />
+            <Button name={t('setting.profile.autoAddress')} onClick={handleAutoAddress} />
           </div>
         </TableRow>
-        <TableRow label="住所">
+        <TableRow label={t('setting.profile.address')}>
           <HStack gap="1" full>
             <SelectBox name="prefecture" value={values.prefecture} options={prefectureOptions} placeholder={t('input.prefecture')} onChange={handleSelect} />
-            <Input name="city" value={values.city} placeholder="市区町村" maxLength={255} onChange={handleInput} />
-            <Input name="street" value={values.street} placeholder="町名番地" maxLength={255} onChange={handleInput} />
+            <Input name="city" value={values.city} placeholder={t('setting.profile.city')} maxLength={255} onChange={handleInput} />
+            <Input name="street" value={values.street} placeholder={t('setting.profile.street')} maxLength={255} onChange={handleInput} />
           </HStack>
         </TableRow>
-        <TableRow label="自己紹介">
+        <TableRow label={t('setting.profile.introduction')}>
           <Textarea name="introduction" defaultValue={values.introduction} onChange={handleText} />
         </TableRow>
       </Table>

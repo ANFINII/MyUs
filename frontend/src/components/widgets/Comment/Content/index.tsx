@@ -1,4 +1,5 @@
 import { useState, SetStateAction, ChangeEvent, Dispatch } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Reply, Comment, CommnetIn } from 'types/internal/comment'
 import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { postComment, putComment, deleteComment } from 'api/internal/comment'
@@ -38,6 +39,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
   const { isActive } = user
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -124,8 +126,8 @@ export default function CommentContent(props: Props): React.JSX.Element {
   }
 
   const actionItems = [
-    { icon: <IconEdit size="16" />, label: '編集', onClick: handleEdit },
-    { icon: <IconTrash size="16" />, label: '削除', onClick: handleModal, danger: true },
+    { icon: <IconEdit size="16" />, label: t('action.edit'), onClick: handleEdit },
+    { icon: <IconTrash size="16" />, label: t('action.delete'), onClick: handleModal, danger: true },
   ]
 
   return (
@@ -137,8 +139,8 @@ export default function CommentContent(props: Props): React.JSX.Element {
             {!isEdit ? <CommentInfo comment={comment} /> : <CommentUpdate value={commentText} onChange={handleComment} onSubmit={handleUpdate} onCancel={handleEditToggle} />}
             <HStack gap="4" className="fs_12">
               <CountLike isLike={isLike} disable={!isActive} count={likeCount} onClick={handleLike} />
-              <View isView={isReplyView} onView={handleReplyView} size="s" color="grey" content="返信" />
-              <View isView={isThreadView} onView={handleThreadView} size="s" color="grey" content={`スレッド ${replys.length} 件`} />
+              <View isView={isReplyView} onView={handleReplyView} size="s" color="grey" content={t('action.reply')} />
+              <View isView={isThreadView} onView={handleThreadView} size="s" color="grey" content={t('comment.thread', { count: replys.length })} />
             </HStack>
             <ReplyInput user={user} value={replyText} open={isReplyView} onChange={handleReply} onSubmit={handleMediaReply} onCancel={handleReplyCancel} />
           </VStack>
