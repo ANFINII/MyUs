@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useNavigate } from '@tanstack/react-router'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import style from './Success.module.scss'
 
 export default function PaymentSuccess(): React.JSX.Element {
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
-  const handleBack = () => router.push('/setting/payment')
+  const handleBack = () => navigate({ to: '/setting/payment' })
 
   return (
     <Main metaTitle={t('setting.payment.successTitle')}>

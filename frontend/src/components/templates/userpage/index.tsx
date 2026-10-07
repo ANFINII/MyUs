@@ -1,9 +1,9 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { Option } from 'types/internal/other'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { postFollow } from 'api/internal/user'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -38,7 +38,7 @@ export default function Userpage(props: Props): React.JSX.Element {
   const { ulid, channelUlid, userPage, media } = props
   const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t, i18n } = useTranslation()
   const { user } = useUser()
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -71,7 +71,7 @@ export default function Userpage(props: Props): React.JSX.Element {
   }
 
   const handleChannelSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    router.replace({ pathname: `/userpage/${ulid}`, query: { channel: e.target.value } })
+    navigate({ to: '/userpage/$ulid', params: { ulid }, search: { channel: e.target.value }, replace: true })
   }
 
   return (

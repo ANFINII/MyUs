@@ -93,6 +93,9 @@ const [user, setUser] = useState<User | null>(null)
 - URLとページの対応は`src/lib/routes.tsx`の1ファイルにまとめる（TanStack Routerのコードベースのルーティング）。ページを追加するときは、該当する領域に`page()`を1行追加する
 - ルートは`pages/`のコンポーネントを`lazyRouteComponent`で読み込むだけにする（表示するときに読み込まれる）
 - URL のパラメータ（`$ulid` など）は `useParams`、クエリ文字列（`?search=` など）は `useSearch` で取る。ページは `useParams({ from: '/manage/video/$ulid' })` のようにルートを指定し、複数のルートで使う widgets は `{ strict: false }` にする。クエリ文字列のキーはルートの `validateSearch`（`src/lib/routes.tsx`）と `UrlSearch` 型に追加する
+- 画面遷移は `useNavigate` を使い、`navigate({ to: '/media/video/$ulid', params: { ulid } })` のようにルートのパスとパラメータを分けて書く（存在しないパスは型エラーになる）。クエリ文字列だけ変えるときは `navigate({ to: '.', search: { ...query, page: '2' } })`。外部 URL は `window.location.assign` を使う
+- パラメータのないパスを引数で受け取るときは、`StaticPath` 型（`src/lib/router.ts`）を使う
+- 今のパスは `useLocation({ select: (l) => l.pathname })` で取る（言語の接頭辞は含まない）
 - 英語版（`/en/...`）は、ルーターの `rewrite`（`src/lib/router.ts`）で URL の先頭の言語を取り除いてからルートに当てる。画面遷移では言語を付けずにパスを書けば、表示中の言語が自動で付く
 - 動的なパスパラメータは`$ulid`のように`$`で始める
 
@@ -281,3 +284,4 @@ return <div className={style.box}>...</div>
 - 2026-10-07: 多言語対応（i18n）のルールを追加
 - 2026-10-07: 言語の接頭辞（`/en`）を `{-$locale}` ルートからルーターの `rewrite` に移動
 - 2026-10-07: `router.query` を `useParams` / `useSearch` に置き換え
+- 2026-10-07: `useAppRouter` を削除し、`useNavigate` / `useLocation` に置き換え

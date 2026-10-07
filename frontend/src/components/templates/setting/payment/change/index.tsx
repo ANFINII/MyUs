@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { MypageOut } from 'types/internal/user'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import style from './Change.module.scss'
@@ -16,11 +16,11 @@ interface Props {
 export default function PaymentChange(props: Props): React.JSX.Element {
   const { mypage } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const [activeName, setActiveName] = useState<string>('')
-  const handleBack = () => router.push('/setting/payment')
-  const handleSubmit = () => router.push('/setting/payment')
+  const handleBack = () => navigate({ to: '/setting/payment' })
+  const handleSubmit = () => navigate({ to: '/setting/payment' })
 
   const currentPlanName = mypage.plan
   const isChanged = activeName !== '' && activeName !== currentPlanName

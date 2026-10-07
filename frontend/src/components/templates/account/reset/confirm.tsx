@@ -1,11 +1,10 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearch } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { PasswordResetIn } from 'types/internal/auth'
 import { getPasswordResetVerify, postPasswordReset } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -18,7 +17,7 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from '../Account.module.scss'
 
 export default function ResetConfirm(): React.JSX.Element {
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { token } = useSearch({ strict: false })
   const { loading, handleLoading } = useLoading()
@@ -28,18 +27,18 @@ export default function ResetConfirm(): React.JSX.Element {
   const [isVerified, setIsVerified] = useState<boolean>(false)
   const [values, setValues] = useState<PasswordResetIn>({ token: '', password1: '', password2: '' })
 
-  const handleBack = () => router.push('/account/login')
+  const handleBack = () => navigate({ to: '/account/login' })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   useEffect(() => {
     if (!token) {
-      router.push('/account/login')
+      navigate({ to: '/account/login' })
       return
     }
     const verify = async () => {
       const ret = await getPasswordResetVerify(token)
       if (ret.isErr()) {
-        router.push('/account/login')
+        navigate({ to: '/account/login' })
         return
       }
       setValues((prev) => ({ ...prev, token }))
@@ -47,7 +46,7 @@ export default function ResetConfirm(): React.JSX.Element {
       setIsVerified(true)
     }
     verify()
-  }, [router, token])
+  }, [navigate, token])
 
   const handleSubmit = async () => {
     const { password1, password2 } = values
@@ -68,7 +67,7 @@ export default function ResetConfirm(): React.JSX.Element {
       handleToast(ret.error.message ?? FetchError.Post, true)
       return
     }
-    router.push('/account/reset/done')
+    navigate({ to: '/account/reset/done' })
   }
 
   return (

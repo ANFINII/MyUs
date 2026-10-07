@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { postSignupEmail } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -15,14 +15,14 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from '../Account.module.scss'
 
 export default function SignupEmail(): React.JSX.Element {
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [email, setEmail] = useState<string>('')
 
-  const handleBack = () => router.push('/account/login')
+  const handleBack = () => navigate({ to: '/account/login' })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)
 
   const handleSubmit = async () => {

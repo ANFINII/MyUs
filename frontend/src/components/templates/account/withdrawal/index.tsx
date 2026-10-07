@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useNavigate } from '@tanstack/react-router'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Alert from 'components/parts/Alert'
@@ -8,10 +8,10 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from '../Account.module.scss'
 
 export default function Withdrawal(): React.JSX.Element {
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
-  const handleBack = () => router.push('/')
-  const handleNext = () => router.push('/account/withdrawal/confirm')
+  const handleBack = () => navigate({ to: '/' })
+  const handleNext = () => navigate({ to: '/account/withdrawal/confirm' })
 
   return (
     <Main metaTitle={t('account.withdrawal.title')}>

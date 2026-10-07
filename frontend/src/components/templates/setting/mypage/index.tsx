@@ -1,9 +1,9 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { Channel } from 'types/internal/channel'
 import { Option } from 'types/internal/other'
 import { MypageOut } from 'types/internal/user'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPerson from 'components/parts/Icon/Person'
@@ -24,13 +24,13 @@ interface Props {
 export default function SettingMyPage(props: Props): React.JSX.Element {
   const { mypage, channels } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const [channelUlid, setChannelUlid] = useState<string>(channels.find((c) => c.isDefault)!.ulid)
 
-  const handleEdit = () => router.push('/setting/mypage/edit')
-  const handleUserPage = () => router.push(`/userpage/${mypage.ulid}`)
-  const handleCreateChannel = () => router.push('/setting/mypage/channel/create')
+  const handleEdit = () => navigate({ to: '/setting/mypage/edit' })
+  const handleUserPage = () => navigate({ to: '/userpage/$ulid', params: { ulid: mypage.ulid } })
+  const handleCreateChannel = () => navigate({ to: '/setting/mypage/channel/create' })
   const handleSelectChannel = (e: ChangeEvent<HTMLSelectElement>) => setChannelUlid(e.target.value)
 
   const channel = channels.find((c) => c.ulid === channelUlid)

@@ -1,12 +1,12 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { LoginIn } from 'types/internal/auth'
 import { postLogin } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
 import { useApiError } from 'components/hooks/useApiError'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -20,7 +20,7 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from './Account.module.scss'
 
 export default function Login(): React.JSX.Element {
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { updateUser } = useUser()
@@ -30,9 +30,9 @@ export default function Login(): React.JSX.Element {
   const { message, handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<LoginIn>({ username: '', password: '' })
 
-  const handleProfile = () => router.push('/setting/profile')
-  const handleReset = () => router.push('/account/reset')
-  const handleSignup = () => router.push('/account/signup/email')
+  const handleProfile = () => navigate({ to: '/setting/profile' })
+  const handleReset = () => navigate({ to: '/account/reset' })
+  const handleSignup = () => navigate({ to: '/account/signup/email' })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   const handleSubmit = async () => {

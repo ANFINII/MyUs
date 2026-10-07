@@ -1,7 +1,7 @@
 import { useRef } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import videojs from 'video.js'
 import { Video } from 'types/internal/media/output'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import Card from 'components/parts/Card'
 import VideoJS from 'components/widgets/Video/videojs'
 import style from './Video.module.scss'
@@ -17,10 +17,10 @@ export default function VideoCard(props: Props): React.JSX.Element {
   const { item } = props
   const { ulid, image, convert } = item
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const playerRef = useRef<Player | null>(null)
 
-  const handleClick = () => router.push(`/media/video/${ulid}`)
+  const handleClick = () => navigate({ to: '/media/video/$ulid', params: { ulid } })
 
   const handleMouseEnter = () => {
     const player = playerRef.current

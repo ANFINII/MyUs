@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { queryKeys } from 'lib/query/keys'
 import { Advertise, AdvertiseList } from 'types/internal/advertise'
 import { deleteManageAdvertises } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
@@ -30,7 +30,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
   const { data, page } = props
   const { items, total } = data
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { loading, handleLoading } = useLoading()
@@ -42,8 +42,8 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
 
   const handleModal = () => setIsModal(!isModal)
-  const handleEdit = (advertise: Advertise) => router.push(`/manage/advertise/${advertise.ulid}`)
-  const handleCreate = () => router.push('/manage/advertise/create')
+  const handleEdit = (advertise: Advertise) => navigate({ to: '/manage/advertise/$ulid', params: { ulid: advertise.ulid } })
+  const handleCreate = () => navigate({ to: '/manage/advertise/create' })
 
   const handleDeleteSubmit = async () => {
     const ulids = Array.from(selectedKeys)
@@ -143,7 +143,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
               <Button color="red" size="s" name={t('manage.header.bulkDelete')} onClick={handleModal} />
             </>
           )}
-          <Button color="blue" size="s" name={t('manage.title')} onClick={() => router.push('/manage')} />
+          <Button color="blue" size="s" name={t('manage.title')} onClick={() => navigate({ to: '/manage' })} />
           <Button color="green" size="s" name={t('manage.button.new')} disabled={isLimitReached} onClick={handleCreate} />
         </div>
       }

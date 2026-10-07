@@ -1,10 +1,10 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { Advertise, AdvertiseUpdateIn } from 'types/internal/advertise'
 import { putManageAdvertise } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -25,7 +25,7 @@ interface Props {
 export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
   const { data } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
@@ -33,7 +33,7 @@ export default function ManageAdvertiseEdit(props: Props): React.JSX.Element {
   const { handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<AdvertiseUpdateIn>({ title: data.title, url: data.url, content: data.content, publish: data.publish, period: data.period })
 
-  const handleBack = () => router.push('/manage/advertise')
+  const handleBack = () => navigate({ to: '/manage/advertise' })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })

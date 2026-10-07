@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { StaticPath } from 'lib/router'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useUser } from 'components/hooks/useUser'
 import DropMenuCloud from 'components/layout/Header/DropMenu/Cloud'
 import DropMenuNotice from 'components/layout/Header/DropMenu/Notice'
@@ -22,7 +23,7 @@ interface Props {
 export default function Header(props: Props): React.JSX.Element {
   const { loading } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { user } = useUser()
   const [isSideMenu, setIsSideMenu] = useState<boolean>(false)
   const [isCloud, setIsCloud] = useState<boolean>(false)
@@ -30,7 +31,7 @@ export default function Header(props: Props): React.JSX.Element {
   const [isProfile, setIsProfile] = useState<boolean>(false)
   const [search, setSearch] = useState<string>('')
 
-  const handleRouter = (url: string) => router.push(url)
+  const handleRouter = (url: StaticPath) => navigate({ to: url })
   const handleSideMenu = () => setIsSideMenu(!isSideMenu)
   const handleCloud = () => setIsCloud(!isCloud)
   const handleNotice = () => setIsNotice(!isNotice)

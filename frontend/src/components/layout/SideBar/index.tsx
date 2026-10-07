@@ -1,5 +1,6 @@
+import { useLocation, useNavigate } from '@tanstack/react-router'
+import { StaticPath } from 'lib/router'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
@@ -10,12 +11,13 @@ import style from './SideBar.module.scss'
 import SideBarItem from './SideBarItem'
 
 export default function SideBar(): React.JSX.Element {
-  const router = useAppRouter()
+  const navigate = useNavigate()
+  const pathname = useLocation({ select: (l) => l.pathname })
 
-  const isActive = (path: string) => String(router.pathname) === path
-  const handleRouter = (path: string) => () => router.push(path)
+  const isActive = (path: string) => pathname === path
+  const handleRouter = (path: StaticPath) => () => navigate({ to: path })
 
-  const sideBarItems = [
+  const sideBarItems: { path: StaticPath; label: string; icon: React.ReactNode }[] = [
     { path: '/media/video', label: 'Video', icon: <IconVideo size="25" /> },
     { path: '/media/music', label: 'Music', icon: <IconMusic size="25" /> },
     { path: '/media/blog', label: 'Blog', icon: <IconBlog size="25" /> },

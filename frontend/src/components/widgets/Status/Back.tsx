@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useNavigate, useRouter } from '@tanstack/react-router'
 import Button from 'components/parts/Button'
 import style from './Status.module.scss'
 
@@ -10,16 +10,17 @@ interface Props {
 export default function BackError(props: Props): React.JSX.Element {
   const { content } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
 
   const handleBack = () => {
     if (window.history.length > 1) {
-      router.back()
+      router.history.back()
     } else {
-      router.replace('/')
+      navigate({ to: '/', replace: true })
     }
-    setTimeout(() => router.reload(), 100)
+    setTimeout(() => window.location.reload(), 100)
   }
 
   return (

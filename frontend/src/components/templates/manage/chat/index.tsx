@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
-import { useSearch } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Chat, ChatList } from 'types/internal/media/output'
@@ -9,7 +9,6 @@ import { Option } from 'types/internal/other'
 import { deleteManageChats } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
@@ -31,7 +30,7 @@ export default function ManageChats(props: Props): React.JSX.Element {
   const { data, page, channels } = props
   const { items, total } = data
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const query = useSearch({ strict: false })
   const queryClient = useQueryClient()
@@ -44,10 +43,10 @@ export default function ManageChats(props: Props): React.JSX.Element {
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
 
   const handleModal = () => setIsModal(!isModal)
-  const handleEdit = (chat: Chat) => router.push(`/manage/chat/${chat.ulid}`)
+  const handleEdit = (chat: Chat) => navigate({ to: '/manage/chat/$ulid', params: { ulid: chat.ulid } })
 
   const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => {
-    router.push({ pathname: router.pathname, query: { ...query, channel: e.target.value, page: 1 } })
+    navigate({ to: '.', search: { ...query, channel: e.target.value, page: '1' } })
   }
 
   const handleDeleteSubmit = async () => {

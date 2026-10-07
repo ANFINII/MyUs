@@ -1,5 +1,5 @@
+import { useLocation } from '@tanstack/react-router'
 import { isActive } from 'utils/functions/common'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import Link from 'components/parts/Link'
 
 interface Props {
@@ -10,10 +10,10 @@ interface Props {
 export default function LinkActive(props: Props): React.JSX.Element {
   const { href, children } = props
 
-  const router = useAppRouter()
+  const pathname = useLocation({ select: (l) => l.pathname })
 
   return (
-    <Link href={href} className={isActive(router.pathname === href)}>
+    <Link href={href} className={isActive(pathname === href)}>
       {children}
     </Link>
   )

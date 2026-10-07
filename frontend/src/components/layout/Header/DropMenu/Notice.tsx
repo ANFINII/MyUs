@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
+import { StaticPath } from 'lib/router'
 import { Notification, NotificationOut } from 'types/internal/user'
 import { getNotification, postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
 import { NotificationType } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
 import IconBell from 'components/parts/Icon/Bell'
@@ -24,7 +25,7 @@ const otherObjs = [NotificationType.Follow, NotificationType.Like, NotificationT
 export default function DropMenuNotice(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t, i18n } = useTranslation()
   const { user } = useUser()
   const [notifications, setNotifications] = useState<NotificationOut>()
@@ -39,8 +40,8 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     fetch()
   }, [user.isActive])
 
-  const handleRouter = (url: string) => {
-    router.push(url)
+  const handleRouter = (url: StaticPath) => {
+    navigate({ to: url })
     onClose()
   }
 
@@ -64,13 +65,14 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
       if (prev === undefined) return prev
       return { ...prev, items: prev.items.map((n) => (n.ulid === ulid ? { ...n, isConfirmed: true } : n)) }
     })
-    if (typeName === NotificationType.Video) handleRouter(`/video/detail/${contentObject.id}`)
-    if (typeName === NotificationType.Music) handleRouter(`/music/detail/${contentObject.id}`)
-    if (typeName === NotificationType.Blog) handleRouter(`/blog/detail/${contentObject.id}`)
-    if (typeName === NotificationType.Comic) handleRouter(`/comic/detail/${contentObject.id}`)
-    if (typeName === NotificationType.Picture) handleRouter(`/picture/detail/${contentObject.id}`)
-    if (typeName === NotificationType.Chat) handleRouter(`/chat/detail/${contentObject.id}`)
-    if (mediaObjs.includes(typeName)) handleRouter(`/userpage/${userFrom.ulid}`)
+    if (typeName === NotificationType.Video) navigate({ to: '/media/video/$ulid', params: { ulid: contentObject.ulid } })
+    if (typeName === NotificationType.Music) navigate({ to: '/media/music/$ulid', params: { ulid: contentObject.ulid } })
+    if (typeName === NotificationType.Blog) navigate({ to: '/media/blog/$ulid', params: { ulid: contentObject.ulid } })
+    if (typeName === NotificationType.Comic) navigate({ to: '/media/comic/$ulid', params: { ulid: contentObject.ulid } })
+    if (typeName === NotificationType.Picture) navigate({ to: '/media/picture/$ulid', params: { ulid: contentObject.ulid } })
+    if (typeName === NotificationType.Chat) navigate({ to: '/media/chat/$ulid', params: { ulid: contentObject.ulid } })
+    if (mediaObjs.includes(typeName)) navigate({ to: '/userpage/$ulid', params: { ulid: userFrom.ulid } })
+    onClose()
   }
 
   const handleDelete = (ulid: string) => (e: React.MouseEvent) => {

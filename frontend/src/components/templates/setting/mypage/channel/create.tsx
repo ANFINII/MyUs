@@ -1,10 +1,10 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { ChannelIn } from 'types/internal/channel'
 import { postChannel } from 'api/internal/channel'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -25,7 +25,7 @@ const initChannel: ChannelIn = {
 }
 
 export default function ChannelCreate(): React.JSX.Element {
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
@@ -36,7 +36,7 @@ export default function ChannelCreate(): React.JSX.Element {
 
   const avatarUrl = avatarFile ? URL.createObjectURL(avatarFile) : ''
 
-  const handleBack = () => router.push('/setting/mypage')
+  const handleBack = () => navigate({ to: '/setting/mypage' })
   const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatarFile(files)
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleText = (e: ChangeEvent<HTMLTextAreaElement>) => setValues({ ...values, [e.target.name]: e.target.value })

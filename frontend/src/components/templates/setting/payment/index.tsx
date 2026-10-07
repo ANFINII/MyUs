@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { MypageOut } from 'types/internal/user'
 import { postPaymentCancel, postPaymentCheckout } from 'api/internal/payment'
 import { FetchError } from 'utils/constants/enum'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -21,7 +21,7 @@ interface Props {
 export default function Payment(props: Props): React.JSX.Element {
   const { mypage } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t, i18n } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
@@ -32,7 +32,7 @@ export default function Payment(props: Props): React.JSX.Element {
   const purchasable = plans.filter((plan) => plan.name !== 'Free')
   const isPaid = currentPlan !== 'Free'
 
-  const handleChange = () => router.push('/setting/payment/change')
+  const handleChange = () => navigate({ to: '/setting/payment/change' })
 
   const handlePurchase = async (plan: string) => {
     setSelectedPlan(plan)
@@ -58,7 +58,7 @@ export default function Payment(props: Props): React.JSX.Element {
     setIsModal(false)
     const periodEnd = new Date(ret.value.periodEnd).toLocaleDateString(i18n.language)
     handleToast(t('setting.payment.cancelReserved', { periodEnd }), false)
-    router.reload()
+    window.location.reload()
   }
 
   return (

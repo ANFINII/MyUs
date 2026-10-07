@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
+import { StaticPath } from 'lib/router'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import ExImage from 'components/parts/ExImage'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconFile from 'components/parts/Icon/File'
@@ -20,11 +21,11 @@ interface Props {
 export default function SideMenu(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
 
-  const handleClick = (url: string) => () => {
-    router.push(url)
+  const handleClick = (url: StaticPath) => () => {
+    navigate({ to: url })
     onClose()
   }
 

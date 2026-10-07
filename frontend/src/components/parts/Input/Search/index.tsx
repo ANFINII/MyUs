@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import IconSearch from 'components/parts/Icon/Search'
 import style from './Search.module.scss'
 
@@ -14,12 +14,11 @@ interface Props {
 export default function Search(props: Props): React.JSX.Element {
   const { value, className, onChange } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
 
   const handleSearch = () => {
-    const query = value ? { search: value } : {}
-    router.push({ pathname: router.pathname, query })
+    navigate({ to: '.', search: value ? { search: value } : {} })
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

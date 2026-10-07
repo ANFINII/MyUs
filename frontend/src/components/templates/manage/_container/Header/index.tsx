@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { Option } from 'types/internal/other'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import Button from 'components/parts/Button'
 import SelectBox from 'components/parts/Input/SelectBox'
 import style from './Header.module.scss'
@@ -17,7 +17,7 @@ interface Props {
 export default function ManageHeader(props: Props): React.JSX.Element {
   const { count, ulid, options, onModal, onChange } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
 
   return (
@@ -28,7 +28,7 @@ export default function ManageHeader(props: Props): React.JSX.Element {
           <Button color="red" size="s" name={t('manage.header.bulkDelete')} onClick={onModal} />
         </>
       )}
-      <Button color="blue" size="s" name={t('manage.title')} onClick={() => router.push('/manage')} />
+      <Button color="blue" size="s" name={t('manage.title')} onClick={() => navigate({ to: '/manage' })} />
       <SelectBox value={ulid} options={options} className={style.select_box} onChange={onChange} />
     </div>
   )

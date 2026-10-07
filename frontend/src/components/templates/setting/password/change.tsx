@@ -1,10 +1,10 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { PasswordChangeIn } from 'types/internal/auth'
 import { postPasswordChange } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -16,14 +16,14 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from '../Setting.module.scss'
 
 export default function PasswordChange(): React.JSX.Element {
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<PasswordChangeIn>({ oldPassword: '', password1: '', password2: '' })
 
-  const handleBack = () => router.push('/setting/profile')
+  const handleBack = () => navigate({ to: '/setting/profile' })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   const handleSubmit = async () => {
@@ -45,7 +45,7 @@ export default function PasswordChange(): React.JSX.Element {
       handleToast(FetchError.Post, true)
       return
     }
-    router.push('/setting/password/change-done')
+    navigate({ to: '/setting/password/change-done' })
   }
 
   return (

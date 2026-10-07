@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
+import { StaticPath } from 'lib/router'
 import { postLogout } from 'api/internal/auth'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useUser } from 'components/hooks/useUser'
 import IconArrow from 'components/parts/Icon/Arrow'
 import IconCredit from 'components/parts/Icon/Credit'
@@ -17,12 +18,12 @@ interface Props {
 export default function DropMenuProfile(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { resetUser } = useUser()
 
-  const handleRouter = (url: string) => {
-    router.push(url)
+  const handleRouter = (url: StaticPath) => {
+    navigate({ to: url })
     onClose()
   }
 

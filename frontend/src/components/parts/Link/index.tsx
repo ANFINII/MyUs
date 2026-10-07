@@ -1,5 +1,6 @@
 import { MouseEvent } from 'react'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useLocation, useNavigate } from '@tanstack/react-router'
+import { getLocale } from 'lib/i18n'
 
 interface Props {
   href: string
@@ -10,13 +11,14 @@ interface Props {
 export default function Link(props: Props): React.JSX.Element {
   const { href, className, children } = props
 
-  const router = useAppRouter()
-  const fullHref = router.locale && href.startsWith('/') ? `/${router.locale}${href}` : href
+  const navigate = useNavigate()
+  const locale = useLocation({ select: (l) => getLocale(l.publicHref) })
+  const fullHref = locale && href.startsWith('/') ? `/${locale}${href}` : href
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
     e.preventDefault()
-    router.push(href)
+    navigate({ href })
   }
 
   return (

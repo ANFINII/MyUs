@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
-import { useSearch } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Video, VideoList } from 'types/internal/media/output'
@@ -9,7 +9,6 @@ import { Option } from 'types/internal/other'
 import { deleteManageVideos } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
@@ -32,7 +31,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
   const { data, page, channels } = props
   const { items, total } = data
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const query = useSearch({ strict: false })
   const queryClient = useQueryClient()
@@ -45,10 +44,10 @@ export default function ManageVideos(props: Props): React.JSX.Element {
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
 
   const handleModal = () => setIsModal(!isModal)
-  const handleEdit = (video: Video) => router.push(`/manage/video/${video.ulid}`)
+  const handleEdit = (video: Video) => navigate({ to: '/manage/video/$ulid', params: { ulid: video.ulid } })
 
   const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => {
-    router.push({ pathname: router.pathname, query: { ...query, channel: e.target.value, page: 1 } })
+    navigate({ to: '.', search: { ...query, channel: e.target.value, page: '1' } })
   }
 
   const handleDeleteSubmit = async () => {

@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { HashtagOut } from 'types/internal/hashtag'
 import { Hashtag } from 'types/internal/media/output'
 import { getHashtags } from 'api/internal/hashtag'
 import { MediaPath } from 'utils/constants/enum'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import IconEdit from 'components/parts/Icon/Edit'
 import HStack from 'components/parts/Stack/Horizontal'
 import HashtagsEdit from './Edit'
@@ -22,7 +22,7 @@ interface Props {
 export default function Hashtags(props: Props): React.JSX.Element {
   const { hashtags, mediaPath, mediaUlid, isOwner = false, onUpdate, onToast } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isMasterLoading, setIsMasterLoading] = useState<boolean>(false)
@@ -31,7 +31,7 @@ export default function Hashtags(props: Props): React.JSX.Element {
   const canEdit = isOwner && mediaUlid !== undefined
 
   const handleRouter = (name: string) => {
-    router.push(`/media/${mediaPath}?search=${name}`)
+    navigate({ to: `/media/${mediaPath}` as const, search: { search: name } })
   }
 
   const handleStart = async () => {

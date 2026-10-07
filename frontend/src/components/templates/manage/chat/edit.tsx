@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { ChatUpdateIn } from 'types/internal/media/input'
@@ -8,7 +9,6 @@ import { Option } from 'types/internal/other'
 import { putManageChat } from 'api/internal/manage/update'
 import { Fetch, FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -32,7 +32,7 @@ interface Props {
 export default function ManageChatEdit(props: Props): React.JSX.Element {
   const { data, channels, categories } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
@@ -44,7 +44,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
-  const handleBack = () => router.push('/manage/chat')
+  const handleBack = () => navigate({ to: '/manage/chat' })
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
   const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => setValues({ ...values, [e.target.name]: e.target.value })
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })

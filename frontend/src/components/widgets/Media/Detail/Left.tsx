@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from '@tanstack/react-router'
+import { useLocation, useParams } from '@tanstack/react-router'
 import { Channel, SubscribeIn } from 'types/internal/channel'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { Hashtag, MediaUser } from 'types/internal/media/output'
@@ -13,7 +13,6 @@ import { commentTypeNoMap, mediaTypeMap } from 'utils/constants/map'
 import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useUser } from 'components/hooks/useUser'
@@ -72,7 +71,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     hashtags: media.hashtags,
   }
 
-  const router = useAppRouter()
+  const pathname = useLocation({ select: (l) => l.pathname })
   const { t } = useTranslation()
   const params = useParams({ strict: false })
   const { user } = useUser()
@@ -94,8 +93,8 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
 
   const handleLike = async () => {
     const ulid = params.ulid ?? ''
-    const pathname = capitalize(String(router.pathname.split('/')[2]))
-    const mediaType = mediaTypeMap[pathname]
+    const mediaName = capitalize(String(pathname.split('/')[2]))
+    const mediaType = mediaTypeMap[mediaName]
     if (!mediaType) return
     const request: LikeMediaIn = { ulid, mediaType }
     const ret = await postLikeMedia(request)
@@ -116,7 +115,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
 
   const handleMediaComment = async () => {
     handleLoading(true)
-    const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
+    const typeName = commentTypeNameEnum(capitalize(String(pathname.split('/')[2])))
     const typeNo = commentTypeNoMap[typeName]
     const objectUlid = params.ulid ?? ''
     const request: CommnetIn = { text, typeName, typeNo, objectUlid }

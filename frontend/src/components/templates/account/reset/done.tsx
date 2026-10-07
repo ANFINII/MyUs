@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useNavigate } from '@tanstack/react-router'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -7,9 +7,9 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from '../Account.module.scss'
 
 export default function ResetDone(): React.JSX.Element {
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
-  const handleBack = () => router.push('/account/login')
+  const handleBack = () => navigate({ to: '/account/login' })
 
   return (
     <Main metaTitle={t('account.reset.confirmTitle')}>

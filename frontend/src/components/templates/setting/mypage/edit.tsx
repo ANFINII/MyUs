@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { ChannelIn, Channel } from 'types/internal/channel'
 import { Option } from 'types/internal/other'
 import { MypageIn, MypageOut } from 'types/internal/user'
@@ -7,7 +8,6 @@ import { putChannel } from 'api/internal/channel'
 import { putSettingMypage } from 'api/internal/setting'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
@@ -33,7 +33,7 @@ interface Props {
 export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const { mypage, channels } = props
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
@@ -49,7 +49,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const avatarUrl = avatarFile ? URL.createObjectURL(avatarFile) : channel.avatar
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
 
-  const handleBack = () => router.push('/setting/mypage')
+  const handleBack = () => navigate({ to: '/setting/mypage' })
   const handleBanner = (files: File | File[]) => Array.isArray(files) || setBannerFile(files)
   const handleAvatar = (files: File | File[]) => Array.isArray(files) || setAvatarFile(files)
   const handleToggle = () => setMypageValues({ ...mypageValues, isAdvertise: !mypageValues.isAdvertise })

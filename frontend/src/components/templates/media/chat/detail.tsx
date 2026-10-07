@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback, FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from '@tanstack/react-router'
+import { useNavigate, useParams } from '@tanstack/react-router'
 import { SubscribeIn } from 'types/internal/channel'
 import { ChatDetailOut } from 'types/internal/media/output'
 import { ChatMessage, ChatReply, MessageCreateIn, MessageUpdateIn } from 'types/internal/message'
@@ -9,7 +9,6 @@ import { postSubscribeChannel } from 'api/internal/channel'
 import { postMessage, getReplies, putMessage, deleteMessage } from 'api/internal/message'
 import { postLikeMedia } from 'api/internal/user'
 import { FetchError, MediaType } from 'utils/constants/enum'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useChatWebSocket } from 'components/hooks/useChatWebSocket'
 import { useNavResize } from 'components/hooks/useNavResize'
 import { useThreadResize } from 'components/hooks/useThreadResize'
@@ -61,7 +60,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
     isSubscribe: detail.mediaUser.isSubscribe,
   }
 
-  const router = useAppRouter()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const params = useParams({ from: '/media/chat/$ulid' })
   const { user } = useUser()
@@ -176,13 +175,13 @@ export default function ChatDetail(props: Props): React.JSX.Element {
           selectedMessage: message,
           replies: { ...prev.replies, [message.ulid]: replyData },
         }))
-        router.replace(`/media/chat/${chatUlid}/thread/${message.ulid}`)
+        navigate({ to: '/media/chat/$ulid/thread/$messageUlid', params: { ulid: chatUlid, messageUlid: message.ulid }, replace: true })
         return
       }
     }
     resetThreadWidth()
     setFormState((prev) => ({ ...prev, selectedMessage: message !== null && message.ulid === prev.selectedMessage?.ulid ? null : message }))
-    router.replace(`/media/chat/${chatUlid}`)
+    navigate({ to: '/media/chat/$ulid', params: { ulid: chatUlid }, replace: true })
   }
 
   const handleEditMessage = async (ulid: string, text: string) => {

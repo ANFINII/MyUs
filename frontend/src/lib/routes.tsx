@@ -1,6 +1,5 @@
-import { createRootRoute, createRoute, lazyRouteComponent, Outlet } from '@tanstack/react-router'
+import { createRootRoute, createRoute, lazyRouteComponent, Outlet, useLocation } from '@tanstack/react-router'
 import { UrlSearch } from 'types/internal/other'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
 import Unexpected from 'components/widgets/Status/Unexpected'
@@ -8,11 +7,11 @@ import Unexpected from 'components/widgets/Status/Unexpected'
 type PageImport = () => Promise<{ default: () => React.JSX.Element }>
 
 function RootLayout(): React.JSX.Element {
-  const router = useAppRouter()
+  const pathname = useLocation({ select: (l) => l.pathname })
 
   return (
     <Layout>
-      <ErrorBoundary fallback={<Unexpected />} resetKeys={[router.pathname]}>
+      <ErrorBoundary fallback={<Unexpected />} resetKeys={[pathname]}>
         <Outlet />
       </ErrorBoundary>
     </Layout>

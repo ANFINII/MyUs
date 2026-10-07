@@ -1,4 +1,4 @@
-import { createRouter, LocationRewrite } from '@tanstack/react-router'
+import { createRouter, LocationRewrite, RouteIds } from '@tanstack/react-router'
 import { getLocale } from 'lib/i18n'
 import { routeTree } from 'lib/routes'
 import { AppProvider } from 'components/provider/AppProvider'
@@ -32,6 +32,8 @@ const rewrite: LocationRewrite = {
     return url
   },
 }
+
+export type StaticPath = Exclude<RouteIds<typeof routeTree>, '__root__' | `${string}$${string}`>
 
 export const router = createRouter({
   routeTree,
