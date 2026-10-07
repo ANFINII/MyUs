@@ -360,7 +360,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Vi
     repository = injector.get(VideoInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
-        log.info("Video not found", ulid=ulid)
+        log.info("data not found", ulid=ulid)
         return None
 
     objs = repository.bulk_get(ids=ids)
@@ -396,7 +396,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Mu
     repository = injector.get(MusicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
-        log.info("Music not found", ulid=ulid)
+        log.info("data not found", ulid=ulid)
         return None
 
     objs = repository.bulk_get(ids=ids)
@@ -432,7 +432,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Blo
     repository = injector.get(BlogInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
-        log.info("Blog not found", ulid=ulid)
+        log.info("data not found", ulid=ulid)
         return None
 
     objs = repository.bulk_get(ids=ids)
@@ -467,7 +467,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Co
     repository = injector.get(ComicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
-        log.info("Comic not found", ulid=ulid)
+        log.info("data not found", ulid=ulid)
         return None
 
     objs = repository.bulk_get(ids=ids)
@@ -502,7 +502,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     repository = injector.get(PictureInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
-        log.info("Picture not found", ulid=ulid)
+        log.info("data not found", ulid=ulid)
         return None
 
     objs = repository.bulk_get(ids=ids)
@@ -536,7 +536,7 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Cha
     repository = injector.get(ChatInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
-        log.info("Chat not found", ulid=ulid)
+        log.info("data not found", ulid=ulid)
         return None
 
     objs = repository.bulk_get(ids=ids)
