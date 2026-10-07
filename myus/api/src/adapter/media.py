@@ -117,7 +117,7 @@ class VideoAPI:
         user_id = auth_check(request)
         obj = get_video_detail(user_id=user_id, ulid=ulid, publish=True)
         if obj is None:
-            return 404, ErrorOut(message="Video not found")
+            return 404, ErrorOut(message="data not found")
 
         objs, _ = get_videos(search, obj.id)
 
@@ -181,7 +181,7 @@ class MusicAPI:
         user_id = auth_check(request)
         obj = get_music_detail(user_id=user_id, ulid=ulid, publish=True)
         if obj is None:
-            return 404, ErrorOut(message="Music not found")
+            return 404, ErrorOut(message="data not found")
 
         objs, _ = get_musics(search, obj.id)
 
@@ -245,7 +245,7 @@ class BlogAPI:
         user_id = auth_check(request)
         obj = get_blog_detail(user_id=user_id, ulid=ulid, publish=True)
         if obj is None:
-            return 404, ErrorOut(message="Blog not found")
+            return 404, ErrorOut(message="data not found")
 
         objs, _ = get_blogs(search, obj.id)
 
@@ -308,7 +308,7 @@ class ComicAPI:
         user_id = auth_check(request)
         obj = get_comic_detail(user_id=user_id, ulid=ulid, publish=True)
         if obj is None:
-            return 404, ErrorOut(message="Comic not found")
+            return 404, ErrorOut(message="data not found")
 
         objs, _ = get_comics(search, obj.id)
 
@@ -371,7 +371,7 @@ class PictureAPI:
         user_id = auth_check(request)
         obj = get_picture_detail(user_id=user_id, ulid=ulid, publish=True)
         if obj is None:
-            return 404, ErrorOut(message="Picture not found")
+            return 404, ErrorOut(message="data not found")
 
         objs, _ = get_pictures(search, obj.id)
 
@@ -433,7 +433,7 @@ class ChatAPI:
         user_id = auth_check(request)
         obj = get_chat_detail(user_id=user_id, ulid=ulid, publish=True)
         if obj is None:
-            return 404, ErrorOut(message="Chat not found")
+            return 404, ErrorOut(message="data not found")
 
         objs, _ = get_chats(search, obj.id)
 
