@@ -1,4 +1,5 @@
-import { createRouter } from '@tanstack/react-router'
+import { createRouter, LocationRewrite } from '@tanstack/react-router'
+import { getLocale } from 'lib/i18n'
 import { routeTree } from 'lib/routes'
 import { AppProvider } from 'components/provider/AppProvider'
 import Custom404 from 'components/widgets/Status/Custom404'
@@ -17,10 +18,26 @@ const stringifySearch = (search: Record<string, unknown>): string => {
   return query ? `?${query}` : ''
 }
 
+const rewrite: LocationRewrite = {
+  input: ({ url }) => {
+    const locale = getLocale(url.pathname)
+    if (!locale) return undefined
+    url.pathname = url.pathname.slice(locale.length + 1) || '/'
+    return url
+  },
+  output: ({ url }) => {
+    const locale = getLocale(window.location.pathname)
+    if (!locale) return undefined
+    url.pathname = url.pathname === '/' ? `/${locale}` : `/${locale}${url.pathname}`
+    return url
+  },
+}
+
 export const router = createRouter({
   routeTree,
   parseSearch,
   stringifySearch,
+  rewrite,
   InnerWrap: AppProvider,
   defaultNotFoundComponent: Custom404,
   defaultErrorComponent: Custom500,

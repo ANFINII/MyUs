@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { ParsedUrlQuery, ParsedUrlQueryInput } from 'querystring'
 import { useRouter, useRouterState } from '@tanstack/react-router'
-import { LOCALES } from 'lib/i18n'
+import { getLocale } from 'lib/i18n'
 
 type Url = string | { pathname: string; query?: ParsedUrlQueryInput }
 
@@ -32,20 +32,18 @@ export function useAppRouter(): AppRouter {
   const params = useRouterState({ select: (s) => s.matches.at(-1)?.params })
 
   return useMemo(() => {
-    const first = location.pathname.split('/')[1] ?? ''
-    const locale = LOCALES.includes(first) ? first : undefined
-    const prefix = locale ? `/${locale}` : ''
-    const pathname = location.pathname.slice(prefix.length) || '/'
+    const pathname = location.pathname
+    const locale = getLocale(location.publicHref)
     const pathParams: Record<string, string> = {}
     Object.entries(params ?? {}).forEach(([key, value]) => {
-      if (key !== 'locale' && typeof value === 'string') pathParams[key] = value
+      if (typeof value === 'string') pathParams[key] = value
     })
     const query: ParsedUrlQuery = { ...(location.search as ParsedUrlQuery), ...pathParams }
 
     const toHref = (url: Url): string => {
-      if (typeof url !== 'string') return `${prefix}${url.pathname}${toSearch(url.query ?? {})}`
+      if (typeof url !== 'string') return `${url.pathname}${toSearch(url.query ?? {})}`
       if (url.startsWith('?')) return `${location.pathname}${url}`
-      return `${prefix}${url}`
+      return url
     }
 
     const navigate = async (url: Url, replace: boolean): Promise<boolean> => {
