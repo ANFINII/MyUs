@@ -324,5 +324,212 @@
         "withAds": "広告あり"
       }
     }
+  },
+  "action": {
+    "edit": "編集",
+    "delete": "削除",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "update": "更新",
+    "add": "追加",
+    "copy": "コピー",
+    "reply": "返信"
+  },
+  "view": {
+    "expand": "拡大表示",
+    "collapse": "縮小表示"
+  },
+  "count": {
+    "subscribers": "登録者数",
+    "followers": "フォロワー数：{{count}}",
+    "following": "フォロー数　：{{count}}",
+    "subscriberCount": "登録者数：{{count}}"
+  },
+  "subscribe": {
+    "subscribed": "登録済み",
+    "subscribe": "登録する",
+    "subscribedToast": "チャンネルを登録しました",
+    "unsubscribedToast": "チャンネル登録を解除しました"
+  },
+  "follow": {
+    "following": "フォロー済み",
+    "follow": "フォローする"
+  },
+  "mediaDetail": {
+    "unpublished": "非公開に設定されてます!"
+  },
+  "comment": {
+    "total": "コメント総数",
+    "placeholder": "コメント入力",
+    "loginRequired": "コメントするにはログインが必要です!",
+    "submit": "コメント",
+    "thread": "スレッド {{count}} 件"
+  },
+  "message": {
+    "showThread": "スレッド表示",
+    "replyCount": "返信 {{count}} 件",
+    "thread": "スレッド",
+    "loginRequired": "ログインが必要です",
+    "period": "期間 {{datetime}}"
+  },
+  "modal": {
+    "subscribeDelete": {
+      "title": "チャンネル登録解除",
+      "confirm": "こちらのチャンネルの登録を解除しますか？",
+      "action": "解除する"
+    },
+    "followDelete": {
+      "title": "フォロー解除",
+      "confirm": "こちらのユーザーのフォローを解除しますか？",
+      "action": "解除する",
+      "followers": "登録者数"
+    },
+    "commentDelete": {
+      "title": "コメントの削除",
+      "confirm": "こちらのコメントを削除しますか？"
+    },
+    "messageDelete": {
+      "title": "メッセージの削除",
+      "confirm": "こちらのメッセージを削除しますか？"
+    }
+  },
+  "hashtag": {
+    "placeholder": "タグ名",
+    "new": "(新規)",
+    "empty": "候補なし",
+    "fetchError": "候補の取得に失敗しました",
+    "saveError": "ハッシュタグの保存に失敗しました",
+    "saved": "ハッシュタグを保存しました"
+  },
+  "textEditor": {
+    "bold": "太字",
+    "italic": "斜体",
+    "underline": "下線",
+    "strike": "取り消し線",
+    "color": "文字色",
+    "superscript": "上付き",
+    "subscript": "下付き",
+    "orderedList": "番号付きリスト",
+    "bulletList": "箇条書き",
+    "codeBlock": "コードブロック",
+    "blockquote": "引用",
+    "link": "リンク",
+    "image": "画像",
+    "urlPlaceholder": "URLを入力",
+    "insert": "挿入"
+  },
+  "video": {
+    "speed": "速度",
+    "quality": "画質",
+    "normalSpeed": "標準",
+    "autoQuality": "自動",
+    "back": "戻る",
+    "qualityLoading": "品質オプションを読み込み中..."
+  },
+  "advertise": {
+    "title": "広告表示",
+    "channel": "チャンネル広告"
+  },
+  "menu": {
+    "userpolicy": {
+      "title": "利用規約",
+      "intro": {
+        "p1": "利用規約を読み同意した上で、本サービスを利用するものとする。",
+        "p2": "利用規約に違反している者は本サービンの利用停止、またはユーザー削除を通知なく行うものとします。"
+      },
+      "article1": {
+        "title": "第1条 ユーザー登録",
+        "p1": "本サービスのユーザー登録は利用規約を読んだ上で、自己責任とします。",
+        "p2": "ユーザー登録をした者は、自己責任において、ユーザーIDおよび、メールアドレス、パスワードを適切に管理するものとします。"
+      },
+      "article2": {
+        "title": "第2条 著作権",
+        "p1": "著作者の許可なく本サービスにコンテンツをアップロードすることを禁止いたします。",
+        "p2": "著作者の許可なくAI含む二次創作などを本サービスにアップロードすることを禁止いたします。",
+        "p3": "本サービスにアップロードしたオリジナルコンテンツの著作権は著作者にあります。"
+      },
+      "article3": {
+        "title": "第3条 禁止事項",
+        "p1": "法律に触れる行為を禁止します。",
+        "p2": "18禁コンテンツのアップロードを禁止します。",
+        "p3": "暴力的、残虐的な表現のあるコンテンツのアップロードを禁止します。",
+        "p4": "特定個人や非特定多数の人に対する誹謗中傷することを禁止します。",
+        "p5": "MyUs内のコンテンツのスクレイピングを禁止します。"
+      }
+    },
+    "knowledge": {
+      "myus": {
+        "label": "MyUs",
+        "content": "MyUsは総合SNS投稿サイトです。是非いろいろなアイディアを投稿して楽しみましょう!"
+      },
+      "video": {
+        "label": "Video",
+        "content": "動画コンテンツを投稿できる機能です。"
+      },
+      "music": {
+        "label": "Music",
+        "content": "音楽、音声、オーディオブックなどを投稿できる機能です。"
+      },
+      "blog": {
+        "label": "Blog",
+        "content": "ブログが投稿できる機能です。具体的にはMyUsに投稿したまとめ、漫画、小説を投稿しても面白いかも知れません。"
+      },
+      "comic": {
+        "label": "Comic",
+        "content": "漫画を投稿できる機能です。"
+      },
+      "picture": {
+        "label": "Picture",
+        "content": "写真、画像、イラストなどが投稿できる機能です。"
+      },
+      "chat": {
+        "label": "Chat",
+        "content": "世界中の方とお話できる機能です。掲示板のように使用することもできます。"
+      },
+      "mypage": {
+        "label": "マイページ",
+        "content": "自分のページを充実させてフォロワーを増やしてみましょう。"
+      },
+      "follow": {
+        "label": "フォロー",
+        "content": "フォローしている人やフォロワーさんを確認できる機能です。"
+      },
+      "searchTag": {
+        "label": "検索タグ",
+        "content": "良く検索するワードを20件まで表示できます。投稿管理で表示順序を変更できます。"
+      },
+      "manage": {
+        "label": "投稿管理",
+        "content": "投稿した作品などを編集、非公開、削除ができます。タグ付けもこちらで出来ます。"
+      }
+    },
+    "channel": {
+      "count": "登録チャンネル数：{{count}}"
+    },
+    "follow": {
+      "follower": "フォロワー",
+      "count": "フォロー数：{{count}}"
+    },
+    "follower": {
+      "follow": "フォロー",
+      "count": "フォロワー数：{{count}}"
+    }
+  },
+  "media": {
+    "userpage": {
+      "title": "ユーザーページ",
+      "info": "情報",
+      "posts": "投稿",
+      "follower": "フォロワー数 {{count}}",
+      "following": "フォロー数 {{count}}",
+      "channel": "チャンネル",
+      "ownerInfo": "オーナー情報",
+      "email": "メール：{{email}}",
+      "joined": "登録日：{{date}}",
+      "content": "内容",
+      "channelInfo": "チャンネル情報",
+      "subscriber": "登録者数 {{count}}",
+      "description": "説明"
+    }
   }
 }

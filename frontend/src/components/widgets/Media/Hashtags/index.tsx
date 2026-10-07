@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { HashtagOut } from 'types/internal/hashtag'
 import { Hashtag } from 'types/internal/media/output'
 import { getHashtags } from 'api/internal/hashtag'
@@ -22,6 +23,7 @@ export default function Hashtags(props: Props): React.JSX.Element {
   const { hashtags, mediaPath, mediaUlid, isOwner = false, onUpdate, onToast } = props
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isMasterLoading, setIsMasterLoading] = useState<boolean>(false)
   const [master, setMaster] = useState<HashtagOut[]>([])
@@ -38,7 +40,7 @@ export default function Hashtags(props: Props): React.JSX.Element {
     const ret = await getHashtags()
     setIsMasterLoading(false)
     if (ret.isErr()) {
-      onToast?.('候補の取得に失敗しました', true)
+      onToast?.(t('hashtag.fetchError'), true)
       return
     }
     setMaster(ret.value)

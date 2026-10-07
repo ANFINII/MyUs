@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import Button from 'components/parts/Button'
 
 interface Props {
@@ -9,10 +10,12 @@ interface Props {
 export default function FollowButton(props: Props): React.JSX.Element {
   const { isFollow, disabled, onClick } = props
 
+  const { t } = useTranslation()
+
   return (
     <>
-      {isFollow && <Button color="white" name="フォロー済み" onClick={onClick} />}
-      {!isFollow && <Button color="green" name="フォローする" disabled={disabled} onClick={onClick} />}
+      {isFollow && <Button color="white" name={t('follow.following')} onClick={onClick} />}
+      {!isFollow && <Button color="green" name={t('follow.follow')} disabled={disabled} onClick={onClick} />}
     </>
   )
 }

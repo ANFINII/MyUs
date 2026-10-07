@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Follow } from 'types/internal/user'
 import Card from 'components/parts/Card'
 import ExImage from 'components/parts/ExImage'
@@ -14,6 +15,8 @@ export default function FollowCard(props: Props): React.JSX.Element {
   const { item } = props
   const { avatar, ulid, nickname, introduction, followerCount, followingCount } = item
 
+  const { t } = useTranslation()
+
   return (
     <Card className={style.card}>
       <Link href={`/userpage/${ulid}`} className={style.box}>
@@ -21,10 +24,8 @@ export default function FollowCard(props: Props): React.JSX.Element {
           <ExImage src={avatar} title={nickname} className={style.image} />
           <VStack gap="1" className="fs_12">
             <span title={nickname}>{nickname}</span>
-            <span>フォロワー数：{followerCount}</span>
-            <span>
-              フォロー数<span className="ml_12">：{followingCount}</span>
-            </span>
+            <span>{t('count.followers', { count: followerCount })}</span>
+            <span>{t('count.following', { count: followingCount })}</span>
           </VStack>
         </HStack>
         <div title={introduction} className={style.introduction}>

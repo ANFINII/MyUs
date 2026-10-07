@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChatMessage } from 'types/internal/message'
 import { UserMe } from 'types/internal/user'
 import cx from 'utils/functions/cx'
@@ -29,6 +30,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
   const { user, message, isDisabled = false, onThread, onEdit, onDelete } = props
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { formatDatetime } = useDatetime()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -65,11 +67,11 @@ export default function MessageItem(props: Props): React.JSX.Element {
   }
 
   const actionItems: ActionItem[] = [
-    { icon: <IconLink size="16" />, label: 'コピー', onClick: handleCopyLink },
+    { icon: <IconLink size="16" />, label: t('action.copy'), onClick: handleCopyLink },
     ...(isOwner && !isDisabled
       ? [
-          { icon: <IconEdit size="16" />, label: '編集', onClick: handleEditStart },
-          { icon: <IconTrash size="16" />, label: '削除', onClick: handleModal, danger: true },
+          { icon: <IconEdit size="16" />, label: t('action.edit'), onClick: handleEditStart },
+          { icon: <IconTrash size="16" />, label: t('action.delete'), onClick: handleModal, danger: true },
         ]
       : []),
   ]
@@ -90,12 +92,10 @@ export default function MessageItem(props: Props): React.JSX.Element {
         {onThread && !isEdit && (
           <div className={style.message_thread_row}>
             <span className={style.message_thread_link} onClick={() => onThread(message)}>
-              スレッド表示
+              {t('message.showThread')}
             </span>
             <HStack gap="1" className={style.message_thread_count}>
-              <span>返信</span>
-              <span>{message.replyCount}</span>
-              <span>件</span>
+              <span>{t('message.replyCount', { count: message.replyCount })}</span>
             </HStack>
           </div>
         )}

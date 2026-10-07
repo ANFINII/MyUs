@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Channel, SubscribeIn } from 'types/internal/channel'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { Hashtag, MediaUser } from 'types/internal/media/output'
@@ -71,6 +72,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   }
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { user } = useUser()
   const { loading, handleLoading } = useLoading()
   const { formatDatetime } = useDatetime()
@@ -107,7 +109,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     const data = ret.value
     setFormState((prev) => ({ ...prev, isSubscribe: data.isSubscribe, subscribeCount: data.count }))
     if (isSubscribe) handleModal()
-    handleToast(isSubscribe ? 'チャンネル登録を解除しました' : 'チャンネルを登録しました', false)
+    handleToast(isSubscribe ? t('subscribe.unsubscribedToast') : t('subscribe.subscribedToast'), false)
   }
 
   const handleMediaComment = async () => {
@@ -151,7 +153,8 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
             <VStack gap="2">
               <p className="fs_14">{channel.name}</p>
               <p className="fs_14 text_sub">
-                登録者数<span className="ml_8">{subscribeCount}</span>
+                {t('count.subscribers')}
+                <span className="ml_8">{subscribeCount}</span>
               </p>
             </VStack>
           </HStack>
@@ -161,7 +164,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
         </HStack>
         <div className={style.content_detail_p1}>
           <VStack gap="2">
-            <View isView={isContentView} onView={handleContentView} content={isContentView ? '縮小表示' : '拡大表示'} />
+            <View isView={isContentView} onView={handleContentView} content={isContentView ? t('view.collapse') : t('view.expand')} />
             <div className={cx(style.content_detail_aria, isContentView && style.active)}>
               <p>{content}</p>
             </div>
@@ -172,7 +175,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
 
       <CommentInput user={user} count={comments.length} loading={loading} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <VStack gap="6">
-        <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? '縮小表示' : '拡大表示'} />
+        <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? t('view.collapse') : t('view.expand')} />
         <VStack gap="10" className={cx(style.comment_aria, isCommentView && style.active)}>
           {comments.map((comment) => (
             <CommentContent key={comment.ulid} comment={comment} user={user} setFormState={setFormState} handleToast={handleToast} />

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Follow } from 'types/internal/user'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useSearch } from 'components/hooks/useSearch'
@@ -14,13 +15,14 @@ export default function Followers(props: Props): React.JSX.Element {
   const { datas } = props
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const search = useSearch(datas.length)
 
   return (
     <Main title="Follower" search={search}>
       <div className="mt_16">
-        <Button color="blue" size="s" name="フォロー" onClick={() => router.push('/menu/follow')} />
-        <span className="ml_16">フォロワー数：{datas.length}</span>
+        <Button color="blue" size="s" name={t('menu.follower.follow')} onClick={() => router.push('/menu/follow')} />
+        <span className="ml_16">{t('menu.follower.count', { count: datas.length })}</span>
       </div>
       <CardList items={datas} Content={FollowCard} />
     </Main>

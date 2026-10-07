@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { MusicDetailOut } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
@@ -24,6 +25,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
   const { detail, list } = data
   const { music, lyric, download, publish, ...other } = detail
 
+  const { t } = useTranslation()
   const { toast, handleToast } = useToast()
   const [speed, setSpeed] = useState(1)
   const [isLyricView, setIsLyricView] = useState(false)
@@ -47,7 +49,7 @@ export default function MusicDetail(props: Props): React.JSX.Element {
         </VStack>
         {lyric && (
           <>
-            <View isView={isLyricView} onView={handleLyricView} content={isLyricView ? '縮小表示' : '拡大表示'} />
+            <View isView={isLyricView} onView={handleLyricView} content={isLyricView ? t('view.collapse') : t('view.expand')} />
             <div className={cx(style.lyric, isLyricView && style.active)}>{lyric}</div>
           </>
         )}
