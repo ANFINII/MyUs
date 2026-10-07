@@ -178,7 +178,7 @@ const { t } = useTranslation('setting')
 <Main title={t('profile.title')}>
 ```
 
-- `common` 以外の名前空間の中で `common` の文言を使うときは、`t('common:status.back')` のように名前空間を付ける
+- `common` 以外の名前空間の中で `common` の文言も使うときは、`useTranslation(['manage', 'common'])` のように両方を読み込み、`t('common:status.back')` と名前空間を付ける
 - トースト文言は `Fetch` / `FetchError` をそのまま `handleToast` に渡す（`useToast` の中で翻訳する）
 - 日付の表示は `useDatetime` の `formatDatetime` / `formatDate` / `formatTimeAgo` を使う（表示中の言語で整形する）
 - 性別は ``t(`gender.${gender}`)``、都道府県の選択肢は `prefectures` の `key` から ``t(`prefecture.${key}`)`` で作る（保存する値は日本語のまま）
