@@ -70,7 +70,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     if (typeName === NotificationType.Comic) handleRouter(`/media/comic/${contentObject.ulid}`)
     if (typeName === NotificationType.Picture) handleRouter(`/media/picture/${contentObject.ulid}`)
     if (typeName === NotificationType.Chat) handleRouter(`/media/chat/${contentObject.ulid}`)
-    if (mediaObjs.includes(typeName)) handleRouter(`/userpage/${userFrom.ulid}`)
+    if (otherObjs.includes(typeName)) handleRouter(`/userpage/${userFrom.ulid}`)
   }
 
   const handleDelete = (ulid: string) => (e: React.MouseEvent) => {
@@ -99,7 +99,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
                   <IconCircle size="6" className={isConfirmed ? style.hidden : style.circle} />
                 </div>
                 <div className={style.anker} onClick={handleClick(typeName, notification)}>
-                  {otherObjs.includes(typeName) && (
+                  {mediaObjs.includes(typeName) && (
                     <div className={style.content} title={t('noticeMenu.post', { nickname, title })}>
                       {title}
                     </div>
