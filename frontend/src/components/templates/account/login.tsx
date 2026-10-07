@@ -20,8 +20,8 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from './Account.module.scss'
 
 export default function Login(): React.JSX.Element {
-  const { t } = useTranslation('common')
   const router = useAppRouter()
+  const { t } = useTranslation('common')
   const queryClient = useQueryClient()
   const { updateUser } = useUser()
   const { loading, handleLoading } = useLoading()

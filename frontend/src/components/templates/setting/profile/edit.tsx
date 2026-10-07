@@ -34,8 +34,8 @@ interface Props {
 export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const { profile } = props
 
-  const { t } = useTranslation()
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { updateUser } = useUser()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()

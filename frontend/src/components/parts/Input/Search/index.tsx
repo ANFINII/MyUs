@@ -14,8 +14,8 @@ interface Props {
 export default function Search(props: Props): React.JSX.Element {
   const { value, className, onChange } = props
 
-  const { t } = useTranslation()
   const router = useAppRouter()
+  const { t } = useTranslation()
 
   const handleSearch = () => {
     const query = value ? { search: value } : {}

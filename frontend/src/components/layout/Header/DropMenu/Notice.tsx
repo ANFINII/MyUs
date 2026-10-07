@@ -24,8 +24,8 @@ const otherObjs = [NotificationType.Follow, NotificationType.Like, NotificationT
 export default function DropMenuNotice(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const { t, i18n } = useTranslation()
   const router = useAppRouter()
+  const { t, i18n } = useTranslation()
   const { user } = useUser()
   const [notifications, setNotifications] = useState<NotificationOut>()
 

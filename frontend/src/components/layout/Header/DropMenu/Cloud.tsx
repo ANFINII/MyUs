@@ -20,8 +20,8 @@ interface Props {
 export default function DropMenuCloud(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const { t } = useTranslation()
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { user } = useUser()
 
   const handleManage = () => {

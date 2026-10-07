@@ -10,8 +10,8 @@ interface Props {
 export default function BackLogin(props: Props): React.JSX.Element {
   const { content } = props
 
-  const { t } = useTranslation()
   const router = useAppRouter()
+  const { t } = useTranslation()
 
   const handleLogin = () => {
     router.push('/account/login')

@@ -35,8 +35,8 @@ const initSignup: SignupIn = {
 }
 
 export default function Signup(): React.JSX.Element {
-  const { t } = useTranslation()
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()

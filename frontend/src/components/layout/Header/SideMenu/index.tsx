@@ -20,8 +20,8 @@ interface Props {
 export default function SideMenu(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const { t } = useTranslation()
   const router = useAppRouter()
+  const { t } = useTranslation()
 
   const handleClick = (url: string) => () => {
     router.push(url)

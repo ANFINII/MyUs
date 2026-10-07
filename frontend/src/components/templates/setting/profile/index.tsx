@@ -18,8 +18,8 @@ interface Props {
 export default function SettingProfile(props: Props): React.JSX.Element {
   const { profile } = props
 
-  const { t } = useTranslation()
   const router = useAppRouter()
+  const { t } = useTranslation()
   const handleEdit = () => router.push('/setting/profile/edit')
   const handlePassword = () => router.push('/setting/password/change')
 

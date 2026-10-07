@@ -17,8 +17,8 @@ interface Props {
 export default function DropMenuProfile(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const { t } = useTranslation()
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { resetUser } = useUser()
 
   const handleRouter = (url: string) => {
