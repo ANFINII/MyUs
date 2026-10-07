@@ -356,10 +356,13 @@ def get_chats(search: str, id: int = 0, channel_id: int = 0, user_id: int | None
     return objs, total
 
 
-def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> VideoDetailDTO:
+def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> VideoDetailDTO | None:
     repository = injector.get(VideoInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
-    assert len(ids) == 1, "データが見つかりませんでした"
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid)
+        return None
+
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
@@ -389,10 +392,13 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Vi
     return data
 
 
-def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> MusicDetailDTO:
+def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> MusicDetailDTO | None:
     repository = injector.get(MusicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
-    assert len(ids) == 1, "データが見つかりませんでした"
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid)
+        return None
+
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
@@ -422,10 +428,13 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Mu
     return data
 
 
-def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> BlogDetailDTO:
+def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> BlogDetailDTO | None:
     repository = injector.get(BlogInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
-    assert len(ids) == 1, "データが見つかりませんでした"
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid)
+        return None
+
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
@@ -454,10 +463,13 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Blo
     return data
 
 
-def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> ComicDetailDTO:
+def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> ComicDetailDTO | None:
     repository = injector.get(ComicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
-    assert len(ids) == 1, "データが見つかりませんでした"
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid)
+        return None
+
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
@@ -486,10 +498,13 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Co
     return data
 
 
-def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> PictureDetailDTO:
+def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> PictureDetailDTO | None:
     repository = injector.get(PictureInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
-    assert len(ids) == 1, "データが見つかりませんでした"
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid)
+        return None
+
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
@@ -517,10 +532,13 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     return data
 
 
-def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> ChatDetailDTO:
+def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> ChatDetailDTO | None:
     repository = injector.get(ChatInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
-    assert len(ids) == 1, "データが見つかりませんでした"
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid)
+        return None
+
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
