@@ -1,7 +1,3 @@
-export interface AnyObject {
-  [key: string]: any
-}
-
 export interface ErrorOut {
   message: string
 }
