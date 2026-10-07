@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Author } from 'types/internal/user'
 import { sanitizeHtml } from 'utils/functions/sanitize'
 import { useDatetime } from 'components/hooks/useDatetime'
@@ -21,19 +22,20 @@ export default function MessageDeleteModal(props: Props): React.JSX.Element {
   const { open, onClose, onAction, message } = props
   const { author, created, text } = message
 
+  const { t } = useTranslation()
   const { formatDatetime } = useDatetime()
 
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title="メッセージの削除"
+      title={t('modal.messageDelete.title')}
       actions={[
-        { name: '削除', color: 'red', onClick: onAction },
-        { name: 'キャンセル', color: 'white', onClick: onClose },
+        { name: t('action.delete'), color: 'red', onClick: onAction },
+        { name: t('action.cancel'), color: 'white', onClick: onClose },
       ]}
     >
-      <div className="mb_8">こちらのメッセージを削除しますか？</div>
+      <div className="mb_8">{t('modal.messageDelete.confirm')}</div>
       <HStack gap="4" className={style.message}>
         <Avatar src={author.avatar} title={author.nickname} size="40" color="grey" />
         <div>

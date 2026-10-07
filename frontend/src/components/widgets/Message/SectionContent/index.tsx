@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { ChatDetail } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
@@ -25,6 +26,8 @@ export default function SectionContent(props: Props): React.JSX.Element {
   const { detail, subscribeCount, isContent, isContentExpand, isFollowDisable, onModal, onSubscribe, onContentExpand } = props
   const { content, channel, hashtags, mediaUser } = detail
 
+  const { t } = useTranslation()
+
   return (
     <div className={cx(style.content, isContent && style.active)}>
       {hashtags.length > 0 && (
@@ -39,7 +42,8 @@ export default function SectionContent(props: Props): React.JSX.Element {
           <p className="fs_14">{channel.name}</p>
           <HStack gap="4">
             <p className="fs_14 text_sub">
-              登録者数<span className="ml_8">{subscribeCount}</span>
+              {t('count.subscribers')}
+              <span className="ml_8">{subscribeCount}</span>
             </p>
           </HStack>
         </VStack>
@@ -49,7 +53,7 @@ export default function SectionContent(props: Props): React.JSX.Element {
       </HStack>
       <div className={style.content_detail}>
         <VStack gap="2">
-          <View isView={isContentExpand} onView={onContentExpand} content={isContentExpand ? '縮小表示' : '拡大表示'} />
+          <View isView={isContentExpand} onView={onContentExpand} content={isContentExpand ? t('view.collapse') : t('view.expand')} />
           <div className={cx(style.content_body, isContentExpand && style.active)}>
             <p>{content}</p>
           </div>

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import Placeholder from '@tiptap/extension-placeholder'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -35,6 +36,7 @@ interface Props {
 export default function ChatEditor(props: Props): React.JSX.Element {
   const { value, disabled = false, placeholder, onChange, onCancel, onSave } = props
 
+  const { t } = useTranslation()
   const onChangeRef = useRef(onChange)
   const onSaveRef = useRef(onSave)
   const suppressRef = useRef(false)
@@ -119,8 +121,8 @@ export default function ChatEditor(props: Props): React.JSX.Element {
         )}
         {onCancel && onSave ? (
           <HStack gap="2" className={style.edit_actions}>
-            <Button name="キャンセル" color="white" size="s" onClick={onCancel} />
-            <Button name="保存" color="blue" size="s" onClick={onSave} disabled={isEmpty} />
+            <Button name={t('action.cancel')} color="white" size="s" onClick={onCancel} />
+            <Button name={t('action.save')} color="blue" size="s" onClick={onSave} disabled={isEmpty} />
           </HStack>
         ) : (
           <SendButton disabled={disabled || isEmpty} />

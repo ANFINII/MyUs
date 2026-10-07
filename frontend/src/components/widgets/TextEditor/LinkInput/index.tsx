@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import style from './LinkInput.module.scss'
 
 interface Props {
@@ -8,6 +9,8 @@ interface Props {
 
 export default function LinkInput(props: Props): React.JSX.Element {
   const { onSubmit, onCancel } = props
+
+  const { t } = useTranslation()
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -29,9 +32,9 @@ export default function LinkInput(props: Props): React.JSX.Element {
 
   return (
     <div className={style.link}>
-      <input ref={inputRef} type="url" className={style.field} placeholder="URLを入力" autoFocus onKeyDown={handleKeyDown} />
+      <input ref={inputRef} type="url" className={style.field} placeholder={t('textEditor.urlPlaceholder')} autoFocus onKeyDown={handleKeyDown} />
       <button type="button" className={style.submit} onClick={handleSubmit}>
-        挿入
+        {t('textEditor.insert')}
       </button>
       <button type="button" className={style.cancel} onClick={onCancel}>
         ✕

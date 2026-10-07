@@ -1,4 +1,5 @@
 import { MouseEvent, RefObject } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChatMessage, ChatReply } from 'types/internal/message'
 import { UserMe } from 'types/internal/user'
 import cx from 'utils/functions/cx'
@@ -25,20 +26,23 @@ interface Props {
 
 export default function SectionThread(props: Props): React.JSX.Element {
   const { user, selectedMessage, replies, reply, isDisabled, threadRef, onClose, onResize, onChange, onSubmit, onEdit, onDelete } = props
+
+  const { t } = useTranslation()
+
   const isThread = selectedMessage !== null
 
   return (
     <div ref={threadRef} className={cx(style.chat_section_thread, isThread && style.active)}>
       <div className={style.thread_resize} onMouseDown={onResize} />
       <div className={style.thread_header}>
-        <h2>スレッド</h2>
+        <h2>{t('message.thread')}</h2>
         <IconCross size="27" onClick={onClose} className={style.thread_close} />
       </div>
       <div className={style.thread_area}>
         {selectedMessage && (
           <>
             <MessageItem user={user} message={selectedMessage} isDisabled={isDisabled} onEdit={onEdit} onDelete={onDelete} />
-            <Divide label="返信" position="left" height="thin" marginV="mv_8" marginH="mh_8" />
+            <Divide label={t('action.reply')} position="left" height="thin" marginV="mv_8" marginH="mh_8" />
           </>
         )}
         {replies.map((r) => (
@@ -46,7 +50,7 @@ export default function SectionThread(props: Props): React.JSX.Element {
         ))}
         <footer className={style.thread_footer}>
           <form onSubmit={onSubmit}>
-            <ChatEditor value={reply} onChange={onChange} disabled={isDisabled} placeholder={isDisabled ? 'ログインが必要です' : ''} />
+            <ChatEditor value={reply} onChange={onChange} disabled={isDisabled} placeholder={isDisabled ? t('message.loginRequired') : ''} />
           </form>
         </footer>
       </div>

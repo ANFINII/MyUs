@@ -1,8 +1,18 @@
 import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import videojs from 'video.js'
 import { PLAYBACK_RATES, MENU_DELAY_MS, SPEED_MENU, QUALITY_MENU, STANDARD_SPEED, MENU_UPDATE_DELAY_MS, AUTO_QUALITY } from './constants'
 import { PlayerOptions, Player, ExtendedPlayer, Component } from './type'
 import 'videojs-hls-quality-selector'
+
+interface MenuLabels {
+  speedMenu: string
+  qualityMenu: string
+  standardSpeed: string
+  autoQuality: string
+  back: string
+  qualityLoading: string
+}
 
 interface Props {
   options: PlayerOptions
@@ -12,6 +22,7 @@ interface Props {
 export default function VideoJS(props: Props): React.JSX.Element {
   const { options, onReady } = props
 
+  const { t } = useTranslation()
   const videoRef = useRef<HTMLDivElement>(null)
   const playerRef = useRef<Player | null>(null)
   const settingsMenuCreatedRef = useRef<boolean>(false)
@@ -39,6 +50,15 @@ export default function VideoJS(props: Props): React.JSX.Element {
         }
       }
 
+      const labels: MenuLabels = {
+        speedMenu: t(SPEED_MENU),
+        qualityMenu: t(QUALITY_MENU),
+        standardSpeed: t(STANDARD_SPEED),
+        autoQuality: t(AUTO_QUALITY),
+        back: t('video.back'),
+        qualityLoading: t('video.qualityLoading'),
+      }
+
       const player = (playerRef.current = videojs(videoElement, playerOptions, () => {
         const extendedPlayer = player as unknown as ExtendedPlayer
         const playerWithOptions = player as unknown as { options_: { playbackRates?: number[] } }
@@ -50,7 +70,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
           // 設定メニューの作成
           if (!settingsMenuCreatedRef.current) {
             setTimeout(() => {
-              createSettingsMenu(extendedPlayer)
+              createSettingsMenu(extendedPlayer, labels)
               settingsMenuCreatedRef.current = true
             }, MENU_DELAY_MS)
           }
@@ -63,7 +83,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
           })
         } else if (!settingsMenuCreatedRef.current) {
           setTimeout(() => {
-            createSettingsMenu(extendedPlayer, false)
+            createSettingsMenu(extendedPlayer, labels, false)
             settingsMenuCreatedRef.current = true
           }, MENU_DELAY_MS)
         }
@@ -76,10 +96,11 @@ export default function VideoJS(props: Props): React.JSX.Element {
       if (options.autoplay !== undefined) player.autoplay(options.autoplay)
       if (options.sources) player.src(options.sources)
     }
-  }, [options, onReady])
+  }, [options, onReady, t])
 
   // カスタム設定メニューを作成する関数
-  const createSettingsMenu = (player: ExtendedPlayer, showQuality: boolean = true): void => {
+  const createSettingsMenu = (player: ExtendedPlayer, labels: MenuLabels, showQuality: boolean = true): void => {
+    const { speedMenu, qualityMenu, standardSpeed, autoQuality, back, qualityLoading } = labels
     const controlBar = player.controlBar
     const playerEl = player.el()
 
@@ -139,12 +160,12 @@ export default function VideoJS(props: Props): React.JSX.Element {
       menuContent.className = 'vjs-settings-menu-content'
 
       // 再生速度メニューアイテム
-      const speedItem = createMenuItem(SPEED_MENU, getCurrentSpeedLabel(), () => showSubmenu('speed'))
+      const speedItem = createMenuItem(speedMenu, getCurrentSpeedLabel(), () => showSubmenu('speed'))
       menuContent.appendChild(speedItem)
 
       // 画質メニューアイテム（HLSの場合のみ）
       if (showQuality) {
-        const qualityItem = createMenuItem(QUALITY_MENU, getCurrentQualityLabel(), () => showSubmenu('quality'))
+        const qualityItem = createMenuItem(qualityMenu, getCurrentQualityLabel(), () => showSubmenu('quality'))
         menuContent.appendChild(qualityItem)
       }
       menuEl.appendChild(menuContent)
@@ -160,7 +181,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
       submenuContent.className = 'vjs-settings-menu-content'
       const backItem = document.createElement('div')
       backItem.className = 'vjs-settings-menu-item vjs-back-button'
-      backItem.innerHTML = '<span class="vjs-back-arrow">←</span>戻る'
+      backItem.innerHTML = `<span class="vjs-back-arrow">←</span>${back}`
       backItem.addEventListener('click', () => hideSubmenu(type))
       submenuContent.appendChild(backItem)
 
@@ -169,7 +190,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
         PLAYBACK_RATES.forEach((speed) => {
           const item = document.createElement('div')
           item.className = 'vjs-settings-menu-item'
-          const label = speed === 1 ? STANDARD_SPEED : `${speed}`
+          const label = speed === 1 ? standardSpeed : `${speed}`
           item.innerHTML = `<span class="vjs-menu-label">${label}</span>`
           item.dataset.speed = String(speed)
 
@@ -193,7 +214,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
         if (!qualityLevels || qualityLevels.length === 0) {
           const noQualityItem = document.createElement('div')
           noQualityItem.className = 'vjs-settings-menu-item'
-          noQualityItem.innerHTML = '<span class="vjs-menu-label">品質オプションを読み込み中...</span>'
+          noQualityItem.innerHTML = `<span class="vjs-menu-label">${qualityLoading}</span>`
           submenuContent.appendChild(noQualityItem)
           submenuEl.appendChild(submenuContent)
           return submenuEl
@@ -244,7 +265,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
         // Auto オプションを一番下に追加
         const autoItem = document.createElement('div')
         autoItem.className = 'vjs-settings-menu-item'
-        autoItem.innerHTML = `<span class="vjs-menu-label">${AUTO_QUALITY}</span>`
+        autoItem.innerHTML = `<span class="vjs-menu-label">${autoQuality}</span>`
 
         if (isAuto) {
           autoItem.innerHTML += '<span class="vjs-menu-checkmark">✓</span>'
@@ -278,7 +299,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
     // 現在の速度ラベルを取得
     const getCurrentSpeedLabel = (): string => {
       const speed = player.playbackRate()
-      return speed === 1 ? STANDARD_SPEED : `${speed}`
+      return speed === 1 ? standardSpeed : `${speed}`
     }
 
     // 現在の画質ラベルを取得
@@ -286,7 +307,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
       const qualityLevels = player.qualityLevels()
       // 品質レベルがまだ読み込まれていない場合
       if (!qualityLevels || qualityLevels.length === 0) {
-        return AUTO_QUALITY
+        return autoQuality
       }
       const enabledLevels: number[] = []
       for (let i = 0; i < qualityLevels.length; i++) {
@@ -296,7 +317,7 @@ export default function VideoJS(props: Props): React.JSX.Element {
         }
       }
       if (enabledLevels.length === qualityLevels.length || enabledLevels.length === 0) {
-        return AUTO_QUALITY
+        return autoQuality
       }
       const maxHeight = Math.max(...enabledLevels)
       return `${maxHeight}p`
@@ -374,8 +395,8 @@ export default function VideoJS(props: Props): React.JSX.Element {
           }
         })
       }
-      updateMenuItem(SPEED_MENU, getCurrentSpeedLabel())
-      updateMenuItem(QUALITY_MENU, getCurrentQualityLabel())
+      updateMenuItem(speedMenu, getCurrentSpeedLabel())
+      updateMenuItem(qualityMenu, getCurrentQualityLabel())
     }
 
     // コンポーネントを登録（既に登録されている場合はスキップ）

@@ -1,4 +1,5 @@
 import { ChangeEvent, SetStateAction, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Reply } from 'types/internal/comment'
 import { LikeCommentIn, UserMe } from 'types/internal/user'
 import { putComment, deleteComment } from 'api/internal/comment'
@@ -29,6 +30,7 @@ export default function CommentThread(props: Props): React.JSX.Element {
   const { ulid, author, text } = reply
   const { isActive } = user
 
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -85,8 +87,8 @@ export default function CommentThread(props: Props): React.JSX.Element {
   }
 
   const actionItems = [
-    { icon: <IconEdit size="16" />, label: '編集', onClick: handleEdit },
-    { icon: <IconTrash size="16" />, label: '削除', onClick: handleModal, danger: true },
+    { icon: <IconEdit size="16" />, label: t('action.edit'), onClick: handleEdit },
+    { icon: <IconTrash size="16" />, label: t('action.delete'), onClick: handleModal, danger: true },
   ]
 
   return (

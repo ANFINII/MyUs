@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { ChatDetail } from 'types/internal/media/output'
 import { UserMe } from 'types/internal/user'
 import { useDatetime } from 'components/hooks/useDatetime'
@@ -19,6 +20,7 @@ interface Props {
 export default function SectionHeader(props: Props): React.JSX.Element {
   const { detail, user, onContent, onLike } = props
 
+  const { t } = useTranslation()
   const { formatDatetime } = useDatetime()
 
   return (
@@ -46,7 +48,7 @@ export default function SectionHeader(props: Props): React.JSX.Element {
             <CountLike isLike={detail.mediaUser.isLike} disable={!user.isActive} size="14" count={detail.like} onClick={onLike} />
           </HStack>
           <HStack gap="4" className="rgb100">
-            <time>期間 {formatDatetime(detail.period)}</time>
+            <time>{t('message.period', { datetime: formatDatetime(detail.period) })}</time>
           </HStack>
         </HStack>
       </div>

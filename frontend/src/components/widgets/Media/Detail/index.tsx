@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import style from './Common.module.scss'
 
 interface Props {
@@ -8,9 +9,7 @@ interface Props {
 export default function MediaDetail(props: Props): React.JSX.Element {
   const { publish, children } = props
 
-  return (
-    <article>
-      {publish ? children : <h2 className={style.unpublished}>非公開に設定されてます!</h2>}
-    </article>
-  )
+  const { t } = useTranslation()
+
+  return <article>{publish ? children : <h2 className={style.unpublished}>{t('mediaDetail.unpublished')}</h2>}</article>
 }

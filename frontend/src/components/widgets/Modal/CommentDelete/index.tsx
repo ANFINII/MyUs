@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Author } from 'types/internal/user'
 import { useDatetime } from 'components/hooks/useDatetime'
 import Avatar from 'components/parts/Avatar'
@@ -21,19 +22,20 @@ export default function CommentDeleteModal(props: Props): React.JSX.Element {
   const { open, onClose, onAction, loading, comment } = props
   const { author, created, text } = comment
 
+  const { t } = useTranslation()
   const { formatDatetime } = useDatetime()
 
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title="コメントの削除"
+      title={t('modal.commentDelete.title')}
       actions={[
-        { name: '削除', color: 'red', loading, onClick: onAction },
-        { name: 'キャンセル', color: 'white', onClick: onClose },
+        { name: t('action.delete'), color: 'red', loading, onClick: onAction },
+        { name: t('action.cancel'), color: 'white', onClick: onClose },
       ]}
     >
-      <div className="mb_8">こちらのコメントを削除しますか？</div>
+      <div className="mb_8">{t('modal.commentDelete.confirm')}</div>
       <HStack gap="4" className={style.comment}>
         <Avatar src={author.avatar} title={author.nickname} size="40" color="grey" />
         <div>
