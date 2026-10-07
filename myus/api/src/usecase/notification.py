@@ -1,14 +1,17 @@
 from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
+from api.src.domain.interface.user.data import UserNotificationData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.notification import NotificationContentData, NotificationItemDTO, NotificationDTO, NotificationUserDTO
+from api.src.usecase.user import get_user_data
+from api.utils.enum.notification import NotificationTypeNo
 from api.utils.functions.index import create_url
 
 
-def get_notification_data(ulid: str = "", user_to_id: int = 0, exclude_user_id: int = 0) -> list[NotificationData]:
+def get_notification_data(receiver_id: int, type_nos: tuple[NotificationTypeNo, ...]) -> list[NotificationData]:
     repository = injector.get(NotificationInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, user_to_id=user_to_id, exclude_user_id=exclude_user_id), SortOption())
+    ids = repository.get_ids(FilterOption(receiver_id=receiver_id, type_nos=type_nos, exclude_user_id=receiver_id), SortOption())
     if len(ids) == 0:
         return []
 
@@ -31,9 +34,30 @@ def get_notification_user_map(user_ids: list[int]) -> dict[int, NotificationUser
     }
 
 
+def get_enabled_type_nos(setting: UserNotificationData) -> tuple[NotificationTypeNo, ...]:
+    enabled = {
+        NotificationTypeNo.VIDEO: setting.is_video,
+        NotificationTypeNo.MUSIC: setting.is_music,
+        NotificationTypeNo.BLOG: setting.is_blog,
+        NotificationTypeNo.COMIC: setting.is_comic,
+        NotificationTypeNo.PICTURE: setting.is_picture,
+        NotificationTypeNo.CHAT: setting.is_chat,
+        NotificationTypeNo.FOLLOW: setting.is_follow,
+        NotificationTypeNo.LIKE: setting.is_like,
+        NotificationTypeNo.REPLY: setting.is_reply,
+        NotificationTypeNo.VIEWS: setting.is_views,
+    }
+    return tuple(type_no for type_no, is_enabled in enabled.items() if is_enabled)
+
+
 def get_notification(user_id: int) -> NotificationDTO:
+    user = get_user_data(user_id=user_id)
+    type_nos = get_enabled_type_nos(user.notification) if user is not None else ()
+    if len(type_nos) == 0:
+        return NotificationDTO(count=0, items=[])
+
     repository = injector.get(NotificationInterface)
-    objs = get_notification_data(user_to_id=user_id, exclude_user_id=user_id)
+    objs = get_notification_data(user_id, type_nos)
     confirmed_ids = set(repository.get_ids(FilterOption(confirmed_user_id=user_id), SortOption()))
 
     user_ids = list({n.user_from_id for n in objs} | {n.user_to_id for n in objs if n.user_to_id != 0})
@@ -62,7 +86,7 @@ def get_notification(user_id: int) -> NotificationDTO:
         )
         items.append(item)
 
-    return NotificationDTO(count=len(items), items=items)
+    return NotificationDTO(count=len([item for item in items if not item.is_confirmed]), items=items)
 
 
 def notification_confirm(user_id: int, ulid: str) -> None:

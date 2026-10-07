@@ -15,6 +15,8 @@ class FilterOption:
     type_no: NotificationTypeNo | None = None
     object_id: int = 0
     user_to_id: int = 0
+    receiver_id: int = 0
+    type_nos: tuple[NotificationTypeNo, ...] = ()
     confirmed_user_id: int = 0
     exclude_user_id: int = 0
 
