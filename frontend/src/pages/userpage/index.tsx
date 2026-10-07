@@ -14,7 +14,7 @@ export default function UserpagePage(): React.JSX.Element {
   const router = useRouter()
   const { t } = useTranslation()
   const ulid = String(router.query.ulid ?? '')
-  const queryChannel = typeof router.query.channel === 'string' ? router.query.channel : undefined
+  const queryChannel = router.query.channel?.toString()
 
   const userPage = useQuery({ queryKey: queryKeys.userPage(ulid), queryFn: () => toQuery(getUserPage(ulid)) })
 
