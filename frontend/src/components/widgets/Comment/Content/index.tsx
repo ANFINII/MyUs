@@ -80,7 +80,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
     const text = replyText
     const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
     const typeNo = commentTypeNoMap[typeName]
-    const objectUlid = String(router.query.ulid)
+    const objectUlid = String(router.query.ulid ?? '')
     const parentUlid = ulid
     const request: CommnetIn = { text, typeName, typeNo, objectUlid, parentUlid }
     const ret = await postComment(request)

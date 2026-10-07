@@ -37,7 +37,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
   const [isModal, setIsModal] = useState<boolean>(false)
   const [editText, setEditText] = useState<string>(message.text)
 
-  const chatUlid = String(router.query.ulid)
+  const chatUlid = String(router.query.ulid ?? '')
   const threadPath = `/media/chat/${chatUlid}/thread/${message.ulid}`
   const isOwner = user !== undefined && message.author.ulid === user.ulid
 

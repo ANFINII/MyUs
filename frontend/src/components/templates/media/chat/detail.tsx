@@ -149,7 +149,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }
 
   useChatWebSocket({
-    ulid: router.query.ulid as string | undefined,
+    ulid: String(router.query.ulid ?? ''),
     onCreateMessage: handleWsCreateMessage,
     onCreateReply: handleWsCreateReply,
     onUpdateMessage: handleWsUpdateMessage,
@@ -164,7 +164,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const handleReply = (value: string) => setFormState((prev) => ({ ...prev, reply: value }))
 
   const handleThread = async (message: ChatMessage | null = null) => {
-    const chatUlid = router.query.ulid as string
+    const chatUlid = String(router.query.ulid ?? '')
     if (message !== null && message.ulid !== selectedMessage?.ulid) {
       const ret = await getReplies(message.ulid)
       if (ret.isOk()) {
@@ -214,7 +214,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }
 
   const handleLike = async () => {
-    const ulid = String(router.query.ulid)
+    const ulid = String(router.query.ulid ?? '')
     const request: LikeMediaIn = { ulid, mediaType: MediaType.Chat }
     const ret = await postLikeMedia(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)

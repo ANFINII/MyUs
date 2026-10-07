@@ -91,7 +91,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setFormState((prev) => ({ ...prev, text: e.target.value }))
 
   const handleLike = async () => {
-    const ulid = String(router.query.ulid)
+    const ulid = String(router.query.ulid ?? '')
     const pathname = capitalize(String(router.pathname.split('/')[2]))
     const mediaType = mediaTypeMap[pathname]
     if (!mediaType) return
@@ -116,7 +116,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     handleLoading(true)
     const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
     const typeNo = commentTypeNoMap[typeName]
-    const objectUlid = String(router.query.ulid)
+    const objectUlid = String(router.query.ulid ?? '')
     const request: CommnetIn = { text, typeName, typeNo, objectUlid }
     const ret = await postComment(request)
     if (ret.isErr()) {
