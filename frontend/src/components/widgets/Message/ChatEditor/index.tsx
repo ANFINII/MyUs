@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
-import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
-import Underline from '@tiptap/extension-underline'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import cx from 'utils/functions/cx'
@@ -13,7 +11,7 @@ import Toolbar, { ToolbarConfig } from 'components/widgets/TextEditor/Toolbar'
 import style from './ChatEditor.module.scss'
 import SendButton from '../SendButton'
 
-const baseExtensions = [StarterKit.configure({ heading: false }), Link.configure({ openOnClick: false }), Underline]
+const baseExtensions = [StarterKit.configure({ heading: false, link: { openOnClick: false } })]
 
 const toolbarConfig: ToolbarConfig = {
   heading: false,
