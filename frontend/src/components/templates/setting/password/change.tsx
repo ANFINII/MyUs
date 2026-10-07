@@ -4,9 +4,9 @@ import { PasswordChangeIn } from 'types/internal/auth'
 import { postPasswordChange } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
 import { encrypt } from 'utils/functions/encrypt'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
+import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Footer from 'components/layout/Footer'
 import Main from 'components/layout/Main'
@@ -16,7 +16,7 @@ import VStack from 'components/parts/Stack/Vertical'
 import style from '../Setting.module.scss'
 
 export default function PasswordChange(): React.JSX.Element {
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()

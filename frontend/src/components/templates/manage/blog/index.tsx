@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
-import { useSearch } from '@tanstack/react-router'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
 import { Blog, BlogList } from 'types/internal/media/output'
@@ -9,10 +8,10 @@ import { Option } from 'types/internal/other'
 import { deleteManageBlogs } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
+import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import { Column } from 'components/parts/DataTable'
@@ -32,9 +31,8 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
   const { data, page, channels } = props
   const { items, total } = data
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
-  const query = useSearch({ strict: false })
   const queryClient = useQueryClient()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
@@ -48,7 +46,7 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
   const handleEdit = (blog: Blog) => router.push(`/manage/blog/${blog.ulid}`)
 
   const handleChannel = (e: ChangeEvent<HTMLSelectElement>) => {
-    router.push({ pathname: router.pathname, query: { ...query, channel: e.target.value, page: 1 } })
+    router.push({ pathname: router.pathname, query: { ...router.query, channel: e.target.value, page: 1 } })
   }
 
   const handleDeleteSubmit = async () => {
@@ -68,7 +66,7 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
   }
 
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const channelUlid = query.channel || channels[0]!.ulid
+  const channelUlid = router.query.channel?.toString() || channels[0]!.ulid
 
   const columns: Column<Blog>[] = [
     {

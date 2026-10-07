@@ -1,5 +1,5 @@
 import { MediaHome } from 'types/internal/media/output'
-import { useSearchResult } from 'components/hooks/useSearchResult'
+import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
 import CardIndexList from 'components/widgets/Card/IndexList'
@@ -20,7 +20,7 @@ export default function Homes(props: Props): React.JSX.Element {
   const { videos, musics, blogs, comics, pictures, chats } = mediaHome
 
   const count = videos.length + musics.length + blogs.length + comics.length + pictures.length + chats.length
-  const search = useSearchResult(count)
+  const search = useSearch(count)
 
   return (
     <Main title={title} search={search}>

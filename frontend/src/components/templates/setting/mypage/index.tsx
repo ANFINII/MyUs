@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Channel } from 'types/internal/channel'
 import { Option } from 'types/internal/other'
 import { MypageOut } from 'types/internal/user'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import IconPerson from 'components/parts/Icon/Person'
@@ -24,7 +24,7 @@ interface Props {
 export default function SettingMyPage(props: Props): React.JSX.Element {
   const { mypage, channels } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
   const [channelUlid, setChannelUlid] = useState<string>(channels.find((c) => c.isDefault)!.ulid)
 

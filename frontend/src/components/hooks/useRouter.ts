@@ -1,15 +1,18 @@
 import { useMemo } from 'react'
-import { ParsedUrlQueryInput } from 'querystring'
-import { useRouter, useRouterState } from '@tanstack/react-router'
+import { ParsedUrlQuery, ParsedUrlQueryInput } from 'querystring'
+import { useRouter as useTanstackRouter, useRouterState } from '@tanstack/react-router'
 import { getLocale } from 'lib/i18n'
 
 type Url = string | { pathname: string; query?: ParsedUrlQueryInput }
 
-export interface AppRouter {
+export interface Router {
   pathname: string
+  query: ParsedUrlQuery
   locale?: string
   push: (url: Url) => Promise<boolean>
   replace: (url: Url) => Promise<boolean>
+  buildUrl: (href: string) => string
+  canBack: () => boolean
   back: () => void
   reload: () => void
 }
@@ -25,13 +28,19 @@ const toSearch = (query: ParsedUrlQueryInput): string => {
   return search ? `?${search}` : ''
 }
 
-export function useAppRouter(): AppRouter {
-  const router = useRouter()
+export function useRouter(): Router {
+  const router = useTanstackRouter()
   const location = useRouterState({ select: (s) => s.location })
+  const params = useRouterState({ select: (s) => s.matches.at(-1)?.params })
 
   return useMemo(() => {
     const pathname = location.pathname
     const locale = getLocale(location.publicHref)
+    const pathParams: Record<string, string> = {}
+    Object.entries(params ?? {}).forEach(([key, value]) => {
+      if (typeof value === 'string') pathParams[key] = value
+    })
+    const query: ParsedUrlQuery = { ...(location.search as ParsedUrlQuery), ...pathParams }
 
     const toHref = (url: Url): string => {
       if (typeof url !== 'string') return `${url.pathname}${toSearch(url.query ?? {})}`
@@ -41,7 +50,8 @@ export function useAppRouter(): AppRouter {
 
     const navigate = async (url: Url, replace: boolean): Promise<boolean> => {
       if (typeof url === 'string' && /^https?:\/\//.test(url)) {
-        window.location.assign(url)
+        if (replace) window.location.replace(url)
+        else window.location.assign(url)
         return true
       }
       await router.navigate({ href: toHref(url), replace })
@@ -50,11 +60,14 @@ export function useAppRouter(): AppRouter {
 
     return {
       pathname,
+      query,
       locale,
       push: (url) => navigate(url, false),
       replace: (url) => navigate(url, true),
+      buildUrl: (href) => `${window.location.origin}${locale ? `/${locale}` : ''}${href}`,
+      canBack: () => window.history.length > 1,
       back: () => router.history.back(),
       reload: () => window.location.reload(),
     }
-  }, [router, location])
+  }, [router, location, params])
 }

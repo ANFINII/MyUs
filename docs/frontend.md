@@ -92,7 +92,21 @@ const [user, setUser] = useState<User | null>(null)
 
 - URLとページの対応は`src/lib/routes.tsx`の1ファイルにまとめる（TanStack Routerのコードベースのルーティング）。ページを追加するときは、該当する領域に`page()`を1行追加する
 - ルートは`pages/`のコンポーネントを`lazyRouteComponent`で読み込むだけにする（表示するときに読み込まれる）
-- URL のパラメータ（`$ulid` など）は `useParams`、クエリ文字列（`?search=` など）は `useSearch` で取る。ページは `useParams({ from: '/manage/video/$ulid' })` のようにルートを指定し、複数のルートで使う widgets は `{ strict: false }` にする。クエリ文字列のキーはルートの `validateSearch`（`src/lib/routes.tsx`）と `UrlSearch` 型に追加する
+- ルーターの機能は `useRouter`（`components/hooks/useRouter`）を通して使う。使い方は Next.js の `useRouter` と同じにしている。コンポーネントから `@tanstack/react-router` や `window.location` / `window.history` を直接使わない（ルーターのライブラリを置き換えるときに、`useRouter` とルーターの設定だけを直せばよいようにするため）
+
+| やりたいこと | 書き方 |
+| --- | --- |
+| 画面遷移 | `` router.push(`/media/video/${ulid}`) `` |
+| クエリ文字列付きの画面遷移 | `router.push({ pathname: '/media/video', query: { search: name } })` |
+| 今のページのクエリ文字列だけ変える | `router.push({ pathname: router.pathname, query: { ...router.query, page: 2 } })` |
+| 履歴に残さない画面遷移 | `router.replace('/')` |
+| 外部 URL への遷移 | `router.push('https://...')` |
+| URL のパラメータ・クエリ文字列（`$ulid`、`?search=`） | `router.query.ulid`、`router.query.search` |
+| 今のパス（言語の接頭辞は含まない） / 表示中の言語 | `router.pathname` / `router.locale` |
+| 戻る・再読み込み | `router.back()`・`router.reload()` |
+| 戻れる履歴があるか（Next.js にはない） | `router.canBack()` |
+| 表示中の言語を付けた絶対 URL（Next.js にはない） | `router.buildUrl('/media/chat/...')` |
+
 - 英語版（`/en/...`）は、ルーターの `rewrite`（`src/lib/router.ts`）で URL の先頭の言語を取り除いてからルートに当てる。画面遷移では言語を付けずにパスを書けば、表示中の言語が自動で付く
 - 動的なパスパラメータは`$ulid`のように`$`で始める
 
@@ -110,7 +124,8 @@ page('/manage/video/$ulid', () => import('pages/manage/video/edit')),
 
 ```typescript
 export default function ManageVideoEditPage(): React.JSX.Element {
-  const { ulid } = useParams({ from: '/manage/video/$ulid' })
+  const router = useRouter()
+  const ulid = String(router.query.ulid ?? '')
 
   const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
   const categories = useQuery({ queryKey: queryKeys.categories, queryFn: () => toQuery(getCategories()) })
@@ -280,4 +295,4 @@ return <div className={style.box}>...</div>
 - 2026-10-07: 常に `true` だった `router.isReady` を削除
 - 2026-10-07: 多言語対応（i18n）のルールを追加
 - 2026-10-07: 言語の接頭辞（`/en`）を `{-$locale}` ルートからルーターの `rewrite` に移動
-- 2026-10-07: `router.query` を `useParams` / `useSearch` に置き換え
+- 2026-10-07: `useAppRouter` を `useRouter` に名前を変更し、`window.location` / `window.history` の直接利用をなくす

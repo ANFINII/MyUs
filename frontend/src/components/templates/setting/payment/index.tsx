@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { MypageOut } from 'types/internal/user'
 import { postPaymentCancel, postPaymentCheckout } from 'api/internal/payment'
 import { FetchError } from 'utils/constants/enum'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
+import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -21,7 +21,7 @@ interface Props {
 export default function Payment(props: Props): React.JSX.Element {
   const { mypage } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t, i18n } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
@@ -42,7 +42,7 @@ export default function Payment(props: Props): React.JSX.Element {
       handleToast(ret.error.message ?? FetchError.Post, true)
       return
     }
-    window.location.href = ret.value.url
+    router.push(ret.value.url)
   }
 
   const handleModal = () => setIsModal(!isModal)

@@ -1,13 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from '@tanstack/react-router'
 import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
 import { getVideo } from 'api/internal/media/detail'
+import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import VideoDetail from 'components/templates/media/video/detail'
 
 export default function VideoDetailPage(): React.JSX.Element {
-  const { ulid } = useParams({ from: '/media/video/$ulid' })
+  const router = useRouter()
+  const ulid = String(router.query.ulid ?? '')
 
   const data = useQuery({ queryKey: queryKeys.mediaVideoDetail(ulid), queryFn: () => toQuery(getVideo(ulid)) })
   const queries = { data }

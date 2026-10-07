@@ -1,6 +1,6 @@
 import { ComicList } from 'types/internal/media/output'
 import { usePagination } from 'components/hooks/usePagination'
-import { useSearchResult } from 'components/hooks/useSearchResult'
+import { useSearch } from 'components/hooks/useSearch'
 import Main from 'components/layout/Main'
 import Pagination from 'components/parts/Pagination'
 import CardList from 'components/widgets/Card/List'
@@ -15,7 +15,7 @@ export default function Comics(props: Props): React.JSX.Element {
   const { data, page } = props
   const { items, total } = data
 
-  const search = useSearchResult(total)
+  const search = useSearch(total)
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
 
   return (

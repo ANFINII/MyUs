@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from '@tanstack/react-router'
 import { ChatMessage } from 'types/internal/message'
 import { UserMe } from 'types/internal/user'
 import cx from 'utils/functions/cx'
 import { sanitizeHtml } from 'utils/functions/sanitize'
 import { useDatetime } from 'components/hooks/useDatetime'
+import { useRouter } from 'components/hooks/useRouter'
 import ActionButton from 'components/parts/Action/Button'
 import { ActionItem } from 'components/parts/Action/List'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -29,7 +29,7 @@ interface Props {
 export default function MessageItem(props: Props): React.JSX.Element {
   const { user, message, isDisabled = false, onThread, onEdit, onDelete } = props
 
-  const params = useParams({ strict: false })
+  const router = useRouter()
   const { t } = useTranslation()
   const { formatDatetime } = useDatetime()
   const [isMenu, setIsMenu] = useState<boolean>(false)
@@ -37,7 +37,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
   const [isModal, setIsModal] = useState<boolean>(false)
   const [editText, setEditText] = useState<string>(message.text)
 
-  const chatUlid = params.ulid ?? ''
+  const chatUlid = String(router.query.ulid)
   const threadPath = `/media/chat/${chatUlid}/thread/${message.ulid}`
   const isOwner = user !== undefined && message.author.ulid === user.ulid
 
@@ -63,7 +63,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
   }
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(`${window.location.origin}${threadPath}`)
+    navigator.clipboard.writeText(router.buildUrl(threadPath))
   }
 
   const actionItems: ActionItem[] = [

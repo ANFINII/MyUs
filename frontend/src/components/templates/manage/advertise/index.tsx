@@ -6,10 +6,10 @@ import { Advertise, AdvertiseList } from 'types/internal/advertise'
 import { deleteManageAdvertises } from 'api/internal/manage/delete'
 import { FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { usePagination } from 'components/hooks/usePagination'
+import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
@@ -30,7 +30,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
   const { data, page } = props
   const { items, total } = data
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { loading, handleLoading } = useLoading()

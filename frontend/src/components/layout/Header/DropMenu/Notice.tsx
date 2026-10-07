@@ -4,7 +4,7 @@ import { Notification, NotificationOut } from 'types/internal/user'
 import { getNotification, postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
 import { NotificationType } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
 import IconBell from 'components/parts/Icon/Bell'
@@ -24,7 +24,7 @@ const otherObjs = [NotificationType.Follow, NotificationType.Like, NotificationT
 export default function DropMenuNotice(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t, i18n } = useTranslation()
   const { user } = useUser()
   const [notifications, setNotifications] = useState<NotificationOut>()
@@ -64,12 +64,12 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
       if (prev === undefined) return prev
       return { ...prev, items: prev.items.map((n) => (n.ulid === ulid ? { ...n, isConfirmed: true } : n)) }
     })
-    if (typeName === NotificationType.Video) handleRouter(`/video/detail/${contentObject.id}`)
-    if (typeName === NotificationType.Music) handleRouter(`/music/detail/${contentObject.id}`)
-    if (typeName === NotificationType.Blog) handleRouter(`/blog/detail/${contentObject.id}`)
-    if (typeName === NotificationType.Comic) handleRouter(`/comic/detail/${contentObject.id}`)
-    if (typeName === NotificationType.Picture) handleRouter(`/picture/detail/${contentObject.id}`)
-    if (typeName === NotificationType.Chat) handleRouter(`/chat/detail/${contentObject.id}`)
+    if (typeName === NotificationType.Video) handleRouter(`/media/video/${contentObject.ulid}`)
+    if (typeName === NotificationType.Music) handleRouter(`/media/music/${contentObject.ulid}`)
+    if (typeName === NotificationType.Blog) handleRouter(`/media/blog/${contentObject.ulid}`)
+    if (typeName === NotificationType.Comic) handleRouter(`/media/comic/${contentObject.ulid}`)
+    if (typeName === NotificationType.Picture) handleRouter(`/media/picture/${contentObject.ulid}`)
+    if (typeName === NotificationType.Chat) handleRouter(`/media/chat/${contentObject.ulid}`)
     if (mediaObjs.includes(typeName)) handleRouter(`/userpage/${userFrom.ulid}`)
   }
 

@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import Main from 'components/layout/Main'
 import Button from 'components/parts/Button'
 import style from './Success.module.scss'
 
 export default function PaymentSuccess(): React.JSX.Element {
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
   const handleBack = () => router.push('/setting/payment')
 

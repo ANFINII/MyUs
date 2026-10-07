@@ -1,20 +1,20 @@
 import { useTranslation } from 'react-i18next'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { useParams, useSearch } from '@tanstack/react-router'
 import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
 import { UserPageMedia } from 'types/internal/userpage'
 import { getUserPage, getUserPageMedia } from 'api/internal/user'
+import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
 import Userpage from 'components/templates/userpage'
 
 const initMedia: UserPageMedia = { videos: [], musics: [], blogs: [], comics: [], pictures: [], chats: [] }
 
 export default function UserpagePage(): React.JSX.Element {
-  const { ulid } = useParams({ from: '/userpage/$ulid' })
-  const query = useSearch({ strict: false })
+  const router = useRouter()
   const { t } = useTranslation()
-  const queryChannel = query.channel
+  const ulid = String(router.query.ulid ?? '')
+  const queryChannel = typeof router.query.channel === 'string' ? router.query.channel : undefined
 
   const userPage = useQuery({ queryKey: queryKeys.userPage(ulid), queryFn: () => toQuery(getUserPage(ulid)) })
 

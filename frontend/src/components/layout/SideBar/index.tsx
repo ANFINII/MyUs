@@ -1,5 +1,5 @@
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
 import IconComic from 'components/parts/Icon/Comic'
@@ -10,7 +10,7 @@ import style from './SideBar.module.scss'
 import SideBarItem from './SideBarItem'
 
 export default function SideBar(): React.JSX.Element {
-  const router = useAppRouter()
+  const router = useRouter()
 
   const isActive = (path: string) => String(router.pathname) === path
   const handleRouter = (path: string) => () => router.push(path)

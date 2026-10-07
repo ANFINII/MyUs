@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 import { useUser } from 'components/hooks/useUser'
 import IconBlog from 'components/parts/Icon/Blog'
 import IconChat from 'components/parts/Icon/Chat'
@@ -20,7 +20,7 @@ interface Props {
 export default function DropMenuCloud(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
   const { user } = useUser()
 

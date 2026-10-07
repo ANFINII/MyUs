@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { createI18n, DEFAULT_LOCALE } from 'lib/i18n'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 
 interface Props {
   children: React.ReactNode
@@ -10,7 +10,7 @@ interface Props {
 export function I18nProvider(props: Props): React.JSX.Element {
   const { children } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const locale = router.locale ?? DEFAULT_LOCALE
   const i18n = useMemo(() => createI18n(locale), [locale])
 

@@ -1,6 +1,5 @@
-import { useSearch } from '@tanstack/react-router'
 import { PAGE_SIZE } from 'utils/functions/common'
-import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useRouter } from 'components/hooks/useRouter'
 
 interface ServerPagination {
   currentPage: number
@@ -9,13 +8,12 @@ interface ServerPagination {
 }
 
 export function usePagination(total: number, page: number): ServerPagination {
-  const router = useAppRouter()
-  const query = useSearch({ strict: false })
+  const router = useRouter()
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
 
   const handlePage = (p: number) => {
-    router.push({ pathname: router.pathname, query: { ...query, page: p } })
+    router.push({ pathname: router.pathname, query: { ...router.query, page: p } })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 

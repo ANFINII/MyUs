@@ -8,9 +8,9 @@ import { FetchError, GenderType } from 'utils/constants/enum'
 import { selectDate } from 'utils/functions/datetime'
 import { getAge } from 'utils/functions/user'
 import { useApiError } from 'components/hooks/useApiError'
-import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
+import { useRouter } from 'components/hooks/useRouter'
 import { useToast } from 'components/hooks/useToast'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
@@ -34,7 +34,7 @@ interface Props {
 export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const { profile } = props
 
-  const router = useAppRouter()
+  const router = useRouter()
   const { t } = useTranslation()
   const { updateUser } = useUser()
   const { loading, handleLoading } = useLoading()
