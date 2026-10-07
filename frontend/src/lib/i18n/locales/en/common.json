@@ -128,5 +128,417 @@
     "tag": "Tags",
     "name": "Tag name",
     "add": "Add"
+  },
+  "manage": {
+    "title": "Manage posts",
+    "header": {
+      "selected": "{{count}} selected",
+      "bulkDelete": "Delete selected"
+    },
+    "button": {
+      "new": "New",
+      "create": "Create",
+      "save": "Save"
+    },
+    "deleteModal": {
+      "title": "Delete data",
+      "content_one": "Delete {{count}} item?",
+      "content_other": "Delete {{count}} items?"
+    },
+    "toast": {
+      "creating": "Creating. This may take a while to finish."
+    },
+    "table": {
+      "image": "Image",
+      "thumbnail": "Thumbnail",
+      "title": "Title",
+      "content": "Description",
+      "play": "Plays",
+      "view": "Views",
+      "thread": "Threads",
+      "joined": "Members",
+      "like": "Likes",
+      "publish": "Public",
+      "deadline": "Ends",
+      "displayPeriod": "Display until",
+      "created": "Posted",
+      "createdAt": "Created"
+    },
+    "form": {
+      "publish": "Publish",
+      "channel": "Channel",
+      "category": "Category",
+      "unselected": "Not selected",
+      "title": "Title",
+      "content": "Description",
+      "lyric": "Lyrics",
+      "download": "Allow downloads",
+      "thumbnail": "Thumbnail",
+      "image": "Image",
+      "pages": "Page images",
+      "video": "Video",
+      "music": "Audio",
+      "richtext": "Body",
+      "url": "Link URL",
+      "period": "Period",
+      "displayPeriod": "Display until"
+    }
+  },
+  "account": {
+    "form": {
+      "email": "Email address",
+      "password": "Password",
+      "passwordNew": "Password (8-16 letters and numbers)",
+      "passwordConfirm": "Confirm password",
+      "passwordMismatch": "The new passwords don't match",
+      "send": "Send",
+      "mailSent": "Email sent!"
+    },
+    "login": {
+      "username": "Username or email address",
+      "reset": "Reset password",
+      "signup": "Sign up"
+    },
+    "signup": {
+      "title": "Sign up",
+      "emailNotice": "We'll send a registration link to your email address.",
+      "expiry": "The link expires in 12 hours.",
+      "name": "Name",
+      "lastName": "Last name",
+      "firstName": "First name",
+      "username": "Username (letters and numbers)",
+      "nickname": "Display name",
+      "birthday": "Date of birth",
+      "gender": "Gender",
+      "submit": "Sign up"
+    },
+    "reset": {
+      "title": "Reset password",
+      "emailNotice": "We'll send a password reset link to your email address.",
+      "confirmTitle": "Set new password",
+      "submit": "Set password",
+      "done": "Your password has been reset!"
+    },
+    "withdrawal": {
+      "title": "Delete account",
+      "warning": "Once you delete your account, you can no longer use it!",
+      "irreversible": "This action cannot be undone.",
+      "next": "Continue to delete account",
+      "confirm": "Are you sure you want to delete your account?",
+      "submit": "Delete account"
+    }
+  },
+  "setting": {
+    "button": {
+      "edit": "Edit",
+      "register": "Save",
+      "save": "Save",
+      "reset": "Reset",
+      "change": "Change",
+      "cancel": "Cancel"
+    },
+    "profile": {
+      "title": "Account settings",
+      "passwordChange": "Change password",
+      "avatar": "Avatar",
+      "email": "Email address",
+      "username": "Username",
+      "usernamePlaceholder": "Letters and numbers",
+      "nickname": "Display name",
+      "name": "Name",
+      "lastName": "Last name",
+      "firstName": "First name",
+      "birthday": "Date of birth",
+      "birthdayValue": "{{month}}/{{day}}/{{year}}",
+      "age": "Age",
+      "ageValue_one": "{{count}} year old",
+      "ageValue_other": "{{count}} years old",
+      "gender": "Gender",
+      "phone": "Phone number",
+      "postalCode": "Postal code",
+      "autoAddress": "Fill in address",
+      "addressNotFound": "Couldn't find an address!",
+      "address": "Address",
+      "city": "City",
+      "street": "Street address",
+      "introduction": "Bio"
+    },
+    "password": {
+      "title": "Change password",
+      "old": "Current password",
+      "new": "New password (8-16 letters and numbers)",
+      "confirm": "Confirm new password",
+      "mismatch": "The new passwords don't match",
+      "done": "Your password has been changed!"
+    },
+    "mypage": {
+      "title": "My page settings",
+      "userpage": "User page",
+      "banner": "Banner image",
+      "nickname": "Display name",
+      "email": "Email address",
+      "following": "Following",
+      "followers": "Followers",
+      "plan": "Plan",
+      "advertise": "Site-wide ads",
+      "tagId": "Tag ID",
+      "tagIdPlaceholder": "Tag Manager ID",
+      "content": "About",
+      "createChannel": "Create channel",
+      "avatar": "Avatar",
+      "avatarImage": "Avatar",
+      "channelName": "Channel name",
+      "description": "Description"
+    },
+    "channelCreate": {
+      "title": "Create channel",
+      "avatar": "Avatar",
+      "name": "Channel name",
+      "description": "Description",
+      "submit": "Create"
+    },
+    "notification": {
+      "title": "Notification settings",
+      "description": "Choose notifications, such as new posts from users you follow",
+      "item": "{{name}} notifications"
+    },
+    "payment": {
+      "title": "Plans",
+      "currentPlan": "Current plan",
+      "current": "Current",
+      "perMonth": "/ month",
+      "purchase": "Purchase",
+      "change": "Change plan",
+      "cancel": "Cancel subscription",
+      "cancelTitle": "Cancel subscription",
+      "cancelConfirm": "Are you sure you want to cancel?",
+      "cancelNotice": "You can keep using your current plan until the next renewal date.",
+      "cancelReserved": "Cancellation scheduled. You can use your plan until {{periodEnd}}",
+      "changeTitle": "Change plan",
+      "successTitle": "Payment complete",
+      "successHeading": "Payment complete",
+      "thanks": "Thank you for your purchase.",
+      "reflect": "It may take a few minutes for changes to take effect.",
+      "backToPlans": "Back to plans",
+      "features": {
+        "individualAds_one": "{{count}} custom ad slot",
+        "individualAds_other": "{{count}} custom ad slots",
+        "hideGlobalAds": "No site-wide ads",
+        "musicDownload": "Music downloads",
+        "basic": "Basic features",
+        "withAds": "Includes ads"
+      }
+    }
+  },
+  "action": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "update": "Update",
+    "add": "Add",
+    "copy": "Copy link",
+    "reply": "Reply"
+  },
+  "view": {
+    "expand": "Show more",
+    "collapse": "Show less"
+  },
+  "count": {
+    "subscribers": "Subscribers",
+    "followers": "Followers: {{count}}",
+    "following": "Following: {{count}}",
+    "subscriberCount": "Subscribers: {{count}}"
+  },
+  "subscribe": {
+    "subscribed": "Subscribed",
+    "subscribe": "Subscribe",
+    "subscribedToast": "Subscribed to the channel",
+    "unsubscribedToast": "Unsubscribed from the channel"
+  },
+  "follow": {
+    "following": "Following",
+    "follow": "Follow"
+  },
+  "mediaDetail": {
+    "unpublished": "This content is private."
+  },
+  "comment": {
+    "total": "Comments",
+    "placeholder": "Add a comment",
+    "loginRequired": "Log in to comment",
+    "submit": "Comment",
+    "thread_one": "{{count}} reply",
+    "thread_other": "{{count}} replies"
+  },
+  "message": {
+    "showThread": "View thread",
+    "replyCount_one": "{{count}} reply",
+    "replyCount_other": "{{count}} replies",
+    "thread": "Thread",
+    "loginRequired": "Log in to post",
+    "period": "Ends {{datetime}}"
+  },
+  "modal": {
+    "subscribeDelete": {
+      "title": "Unsubscribe",
+      "confirm": "Unsubscribe from this channel?",
+      "action": "Unsubscribe"
+    },
+    "followDelete": {
+      "title": "Unfollow",
+      "confirm": "Unfollow this user?",
+      "action": "Unfollow",
+      "followers": "Followers"
+    },
+    "commentDelete": {
+      "title": "Delete comment",
+      "confirm": "Delete this comment?"
+    },
+    "messageDelete": {
+      "title": "Delete message",
+      "confirm": "Delete this message?"
+    }
+  },
+  "hashtag": {
+    "placeholder": "Tag name",
+    "new": "(new)",
+    "empty": "No suggestions",
+    "fetchError": "Failed to load suggestions",
+    "saveError": "Failed to save hashtags",
+    "saved": "Hashtags saved"
+  },
+  "textEditor": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "strike": "Strikethrough",
+    "color": "Text color",
+    "superscript": "Superscript",
+    "subscript": "Subscript",
+    "orderedList": "Numbered list",
+    "bulletList": "Bulleted list",
+    "codeBlock": "Code block",
+    "blockquote": "Quote",
+    "link": "Link",
+    "image": "Image",
+    "urlPlaceholder": "Enter a URL",
+    "insert": "Insert"
+  },
+  "video": {
+    "speed": "Speed",
+    "quality": "Quality",
+    "normalSpeed": "Normal",
+    "autoQuality": "Auto",
+    "back": "Back",
+    "qualityLoading": "Loading quality options..."
+  },
+  "advertise": {
+    "title": "Ads",
+    "channel": "Channel ads"
+  },
+  "menu": {
+    "userpolicy": {
+      "title": "Terms of Service",
+      "intro": {
+        "p1": "Users shall use the Service only after reading and agreeing to these Terms of Service.",
+        "p2": "We may, without notice, suspend the use of the Service by, or delete the account of, any user who violates these Terms of Service."
+      },
+      "article1": {
+        "title": "Article 1. User Registration",
+        "p1": "Users register for the Service at their own risk after reading these Terms of Service.",
+        "p2": "Registered users shall, at their own responsibility, properly manage their user ID, email address, and password."
+      },
+      "article2": {
+        "title": "Article 2. Copyright",
+        "p1": "Uploading content to the Service without the permission of the copyright holder is prohibited.",
+        "p2": "Uploading derivative works, including those created with AI, to the Service without the permission of the copyright holder is prohibited.",
+        "p3": "The copyright in original content uploaded to the Service belongs to its author."
+      },
+      "article3": {
+        "title": "Article 3. Prohibited Conduct",
+        "p1": "Any act that violates the law is prohibited.",
+        "p2": "Uploading adult (18+) content is prohibited.",
+        "p3": "Uploading content containing violent or cruel depictions is prohibited.",
+        "p4": "Defaming or slandering specific individuals or the general public is prohibited.",
+        "p5": "Scraping content on MyUs is prohibited."
+      }
+    },
+    "knowledge": {
+      "myus": {
+        "label": "MyUs",
+        "content": "MyUs is an all-in-one social posting site. Share all kinds of ideas and have fun!"
+      },
+      "video": {
+        "label": "Video",
+        "content": "Post video content."
+      },
+      "music": {
+        "label": "Music",
+        "content": "Post music, audio, audiobooks, and more."
+      },
+      "blog": {
+        "label": "Blog",
+        "content": "Post blogs. For example, you could post roundups of what you've shared on MyUs, comics, or novels."
+      },
+      "comic": {
+        "label": "Comic",
+        "content": "Post comics."
+      },
+      "picture": {
+        "label": "Picture",
+        "content": "Post photos, images, illustrations, and more."
+      },
+      "chat": {
+        "label": "Chat",
+        "content": "Talk with people from all over the world. You can also use it like a message board."
+      },
+      "mypage": {
+        "label": "My page",
+        "content": "Build up your own page and grow your followers."
+      },
+      "follow": {
+        "label": "Following",
+        "content": "See the people you follow and your followers."
+      },
+      "searchTag": {
+        "label": "Search tags",
+        "content": "Show up to 20 words you search for often. You can change their order in Manage posts."
+      },
+      "manage": {
+        "label": "Manage posts",
+        "content": "Edit, hide, or delete your posts. You can also add tags here."
+      }
+    },
+    "channel": {
+      "count": "Subscribed channels: {{count}}"
+    },
+    "follow": {
+      "follower": "Followers",
+      "count": "Following: {{count}}"
+    },
+    "follower": {
+      "follow": "Following",
+      "count": "Followers: {{count}}"
+    }
+  },
+  "media": {
+    "userpage": {
+      "title": "User page",
+      "info": "Info",
+      "posts": "Posts",
+      "follower_one": "{{count}} follower",
+      "follower_other": "{{count}} followers",
+      "following": "{{count}} following",
+      "channel": "Channel",
+      "ownerInfo": "Owner info",
+      "email": "Email: {{email}}",
+      "joined": "Joined: {{date}}",
+      "content": "About",
+      "channelInfo": "Channel info",
+      "subscriber_one": "{{count}} subscriber",
+      "subscriber_other": "{{count}} subscribers",
+      "description": "Description"
+    }
   }
 }

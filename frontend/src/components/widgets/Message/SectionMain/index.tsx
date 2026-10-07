@@ -1,4 +1,5 @@
 import { RefObject } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChatMessage } from 'types/internal/message'
 import { UserMe } from 'types/internal/user'
 import style from './SectionMain.module.scss'
@@ -22,6 +23,8 @@ interface Props {
 export default function SectionMain(props: Props): React.JSX.Element {
   const { user, messageAreaRef, messages, message, isDisabled, onThread, onChange, onSubmit, onEdit, onDelete } = props
 
+  const { t } = useTranslation()
+
   return (
     <div ref={messageAreaRef} className={style.chat_section_main}>
       {messages.map((msg, index) => (
@@ -32,7 +35,7 @@ export default function SectionMain(props: Props): React.JSX.Element {
       ))}
       <footer className={style.chat_footer}>
         <form onSubmit={onSubmit}>
-          <ChatEditor value={message} onChange={onChange} disabled={isDisabled} placeholder={isDisabled ? 'ログインが必要です' : ''} />
+          <ChatEditor value={message} onChange={onChange} disabled={isDisabled} placeholder={isDisabled ? t('message.loginRequired') : ''} />
         </form>
       </footer>
     </div>

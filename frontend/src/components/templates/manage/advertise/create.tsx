@@ -1,7 +1,8 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AdvertiseIn } from 'types/internal/advertise'
 import { postAdvertiseCreate } from 'api/internal/manage/create'
-import { FetchError } from 'utils/constants/enum'
+import { Fetch, FetchError } from 'utils/constants/enum'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
@@ -18,6 +19,7 @@ import VStack from 'components/parts/Stack/Vertical'
 
 export default function AdvertiseCreate(): React.JSX.Element {
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
@@ -42,13 +44,13 @@ export default function AdvertiseCreate(): React.JSX.Element {
       return
     }
     setValues({ title: '', url: '', content: '', publish: true, period: null })
-    handleToast('作成しました', false)
+    handleToast(Fetch.Create, false)
   }
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name="作成する" loading={loading} onClick={handleForm} />
-      <Button color="blue" size="s" name="戻る" onClick={handleBack} />
+      <Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />
+      <Button color="blue" size="s" name={t('status.back')} onClick={handleBack} />
     </HStack>
   )
 
@@ -56,13 +58,13 @@ export default function AdvertiseCreate(): React.JSX.Element {
     <Main title="Advertise" type="table" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
-          <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
-          <Input label="タイトル" name="title" required error={error} onChange={handleInput} />
-          <Input label="リンク URL" name="url" type="url" required error={error} onChange={handleInput} />
-          <Textarea label="内容" name="content" required error={error} onChange={handleText} />
-          <InputFile label="画像" accept="image/*" required error={error} onChange={handleImage} />
-          <InputFile label="動画" accept="video/*" onChange={handleVideo} />
-          <DatePicker label="期間" name="period" value={values.period ?? ''} onChange={handlePeriod} />
+          <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
+          <Input label={t('manage.form.title')} name="title" required error={error} onChange={handleInput} />
+          <Input label={t('manage.form.url')} name="url" type="url" required error={error} onChange={handleInput} />
+          <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
+          <InputFile label={t('manage.form.image')} accept="image/*" required error={error} onChange={handleImage} />
+          <InputFile label={t('manage.form.video')} accept="video/*" onChange={handleVideo} />
+          <DatePicker label={t('manage.form.period')} name="period" value={values.period ?? ''} onChange={handlePeriod} />
         </VStack>
       </form>
     </Main>

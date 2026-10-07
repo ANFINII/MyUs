@@ -1,10 +1,11 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { ComicIn } from 'types/internal/media/input'
 import { Option } from 'types/internal/other'
 import { postComicCreate } from 'api/internal/manage/create'
-import { FetchError } from 'utils/constants/enum'
+import { Fetch, FetchError } from 'utils/constants/enum'
 import { useLoading } from 'components/hooks/useLoading'
 import { useRequired } from 'components/hooks/useRequired'
 import { useToast } from 'components/hooks/useToast'
@@ -25,9 +26,11 @@ interface Props {
 export default function ComicCreate(props: Props): React.JSX.Element {
   const { channels, categories } = props
 
+  const { t } = useTranslation()
+
   const channelUlid = channels.find((c) => c.isDefault)!.ulid
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const categoryOptions: Option[] = [{ label: '未選択', value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
+  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
@@ -52,20 +55,26 @@ export default function ComicCreate(props: Props): React.JSX.Element {
       return
     }
     setValues({ channelUlid, categoryUlid: '', publish: true, title: '', content: '' })
-    handleToast('作成しました', false)
+    handleToast(Fetch.Create, false)
   }
 
   return (
-    <Main title="Comic" type="table" toast={toast} isFooter={false} button={<Button color="green" size="s" name="作成する" loading={loading} onClick={handleForm} />}>
+    <Main
+      title="Comic"
+      type="table"
+      toast={toast}
+      isFooter={false}
+      button={<Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />}
+    >
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
-          <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
-          <SelectBox label="チャンネル" name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
-          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
-          <Input label="タイトル" name="title" required error={error} onChange={handleInput} />
-          <Textarea label="内容" name="content" required error={error} onChange={handleText} />
-          <InputFile label="サムネイル" accept="image/*" required error={error} onChange={handleFile} />
-          <InputFile label="ページ画像" accept="image/*" required error={error} multiple onChange={handleMultiFile} />
+          <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
+          <SelectBox label={t('manage.form.channel')} name="channelUlid" value={values.channelUlid} options={channelOptions} onChange={handleSelect} />
+          <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
+          <Input label={t('manage.form.title')} name="title" required error={error} onChange={handleInput} />
+          <Textarea label={t('manage.form.content')} name="content" required error={error} onChange={handleText} />
+          <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
+          <InputFile label={t('manage.form.pages')} accept="image/*" required error={error} multiple onChange={handleMultiFile} />
         </VStack>
       </form>
     </Main>

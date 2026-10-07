@@ -1,11 +1,12 @@
 import { useState, ChangeEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Category } from 'types/internal/category'
 import { Channel } from 'types/internal/channel'
 import { ComicUpdateIn } from 'types/internal/media/input'
 import { Comic } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { putManageComic } from 'api/internal/manage/update'
-import { FetchError } from 'utils/constants/enum'
+import { Fetch, FetchError } from 'utils/constants/enum'
 import { useApiError } from 'components/hooks/useApiError'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
@@ -30,15 +31,16 @@ interface Props {
 export default function ManageComicEdit(props: Props): React.JSX.Element {
   const { data, channels, categories } = props
 
-  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
-  const categoryOptions: Option[] = [{ label: '未選択', value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
-
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
   const [values, setValues] = useState<ComicUpdateIn>({ categoryUlid: data.categoryUlid, title: data.title, content: data.content, publish: data.publish })
+
+  const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
+  const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
   const handleBack = () => router.push('/manage/comic')
   const handlePublish = () => setValues({ ...values, publish: !values.publish })
@@ -57,13 +59,13 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
       handleError(FetchError.Put, ret.error.message)
       return
     }
-    handleToast('保存しました', false)
+    handleToast(Fetch.Save, false)
   }
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name="保存する" loading={loading} onClick={handleForm} />
-      <Button color="blue" size="s" name="戻る" onClick={handleBack} />
+      <Button color="green" size="s" name={t('manage.button.save')} loading={loading} onClick={handleForm} />
+      <Button color="blue" size="s" name={t('status.back')} onClick={handleBack} />
     </HStack>
   )
 
@@ -71,12 +73,12 @@ export default function ManageComicEdit(props: Props): React.JSX.Element {
     <Main title="Comic" type="table" toast={toast} isFooter={false} button={button}>
       <form method="POST" action="" encType="multipart/form-data">
         <VStack gap="8">
-          <ToggleCard label="公開する" isActive={values.publish} onClick={handlePublish} />
-          <SelectBox label="チャンネル" name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
-          <SelectBox label="カテゴリー" name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
-          <Input label="タイトル" name="title" value={values.title} required error={error} onChange={handleInput} />
-          <Textarea label="内容" name="content" value={values.content} required error={error} onChange={handleText} />
-          <InputFile label="サムネイル" accept="image/*" required error={error} onChange={handleFile} />
+          <ToggleCard label={t('manage.form.publish')} isActive={values.publish} onClick={handlePublish} />
+          <SelectBox label={t('manage.form.channel')} name="channelUlid" value={data.channel.ulid} options={channelOptions} disabled />
+          <SelectBox label={t('manage.form.category')} name="categoryUlid" value={values.categoryUlid} options={categoryOptions} required error={error} onChange={handleSelect} />
+          <Input label={t('manage.form.title')} name="title" value={values.title} required error={error} onChange={handleInput} />
+          <Textarea label={t('manage.form.content')} name="content" value={values.content} required error={error} onChange={handleText} />
+          <InputFile label={t('manage.form.thumbnail')} accept="image/*" required error={error} onChange={handleFile} />
         </VStack>
       </form>
     </Main>

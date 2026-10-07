@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
@@ -31,6 +32,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
   const { items, total } = data
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
@@ -69,13 +71,13 @@ export default function ManageVideos(props: Props): React.JSX.Element {
   const columns: Column<Video>[] = [
     {
       key: 'thumbnail',
-      header: 'サムネイル',
+      header: t('manage.table.thumbnail'),
       className: style.thumbnail,
       cell: (v) => v.image && <ExImage src={v.image} width="96" height="54" />,
     },
     {
       key: 'title',
-      header: 'タイトル',
+      header: t('manage.table.title'),
       sortable: true,
       sortValue: (v) => v.title,
       className: style.title,
@@ -87,13 +89,13 @@ export default function ManageVideos(props: Props): React.JSX.Element {
     },
     {
       key: 'content',
-      header: '内容',
+      header: t('manage.table.content'),
       className: style.content,
       cell: (v) => v.content,
     },
     {
       key: 'read',
-      header: '再生',
+      header: t('manage.table.play'),
       align: 'right',
       sortable: true,
       sortValue: (v) => v.read,
@@ -103,7 +105,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
     },
     {
       key: 'like',
-      header: 'いいね',
+      header: t('manage.table.like'),
       align: 'right',
       sortable: true,
       sortValue: (v) => v.like,
@@ -113,7 +115,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
     },
     {
       key: 'publish',
-      header: '公開',
+      header: t('manage.table.publish'),
       align: 'center',
       sortable: true,
       sortValue: (v) => (v.publish ? 1 : 0),
@@ -127,7 +129,7 @@ export default function ManageVideos(props: Props): React.JSX.Element {
     },
     {
       key: 'created',
-      header: '投稿日時',
+      header: t('manage.table.created'),
       sortable: true,
       sortValue: (v) => new Date(v.created).getTime(),
       className: style.datetime,

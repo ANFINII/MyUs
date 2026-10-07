@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Editor } from '@tiptap/react'
 import { Option } from 'types/internal/other'
 import cx from 'utils/functions/cx'
@@ -44,6 +45,8 @@ interface Props {
 
 export default function Toolbar(props: Props): React.JSX.Element {
   const { editor, toolbarConfig } = props
+
+  const { t } = useTranslation()
 
   const config = {
     heading: true,
@@ -167,38 +170,53 @@ export default function Toolbar(props: Props): React.JSX.Element {
         {showFormatting && (
           <div className={style.group}>
             {config.bold && (
-              <button type="button" className={btnClass(editor.isActive('bold'))} title="太字" onClick={() => editor.chain().focus().toggleBold().run()}>
+              <button type="button" className={btnClass(editor.isActive('bold'))} title={t('textEditor.bold')} onClick={() => editor.chain().focus().toggleBold().run()}>
                 <IconBold className={style.icon} />
               </button>
             )}
             {config.italic && (
-              <button type="button" className={btnClass(editor.isActive('italic'))} title="斜体" onClick={() => editor.chain().focus().toggleItalic().run()}>
+              <button type="button" className={btnClass(editor.isActive('italic'))} title={t('textEditor.italic')} onClick={() => editor.chain().focus().toggleItalic().run()}>
                 <IconItalic className={style.icon} />
               </button>
             )}
             {config.underline && (
-              <button type="button" className={btnClass(editor.isActive('underline'))} title="下線" onClick={() => editor.chain().focus().toggleUnderline().run()}>
+              <button
+                type="button"
+                className={btnClass(editor.isActive('underline'))}
+                title={t('textEditor.underline')}
+                onClick={() => editor.chain().focus().toggleUnderline().run()}
+              >
                 <IconUnderline className={style.icon} />
               </button>
             )}
             {config.strike && (
-              <button type="button" className={btnClass(editor.isActive('strike'))} title="取り消し線" onClick={() => editor.chain().focus().toggleStrike().run()}>
+              <button type="button" className={btnClass(editor.isActive('strike'))} title={t('textEditor.strike')} onClick={() => editor.chain().focus().toggleStrike().run()}>
                 <IconStrike className={style.icon} />
               </button>
             )}
             {config.color && (
-              <label className={style.color_label} title="文字色">
+              <label className={style.color_label} title={t('textEditor.color')}>
                 <IconColor className={style.icon} color={color} />
                 <input type="color" className={style.color_input} onChange={handleColor} />
               </label>
             )}
             {config.superscript && (
-              <button type="button" className={btnClass(editor.isActive('superscript'))} title="上付き" onClick={() => editor.chain().focus().toggleSuperscript().run()}>
+              <button
+                type="button"
+                className={btnClass(editor.isActive('superscript'))}
+                title={t('textEditor.superscript')}
+                onClick={() => editor.chain().focus().toggleSuperscript().run()}
+              >
                 <IconSuperscript className={style.icon} />
               </button>
             )}
             {config.subscript && (
-              <button type="button" className={btnClass(editor.isActive('subscript'))} title="下付き" onClick={() => editor.chain().focus().toggleSubscript().run()}>
+              <button
+                type="button"
+                className={btnClass(editor.isActive('subscript'))}
+                title={t('textEditor.subscript')}
+                onClick={() => editor.chain().focus().toggleSubscript().run()}
+              >
                 <IconSubscript className={style.icon} />
               </button>
             )}
@@ -208,12 +226,22 @@ export default function Toolbar(props: Props): React.JSX.Element {
         {showLists && (
           <div className={style.group}>
             {config.orderedList && (
-              <button type="button" className={btnClass(editor.isActive('orderedList'))} title="番号付きリスト" onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+              <button
+                type="button"
+                className={btnClass(editor.isActive('orderedList'))}
+                title={t('textEditor.orderedList')}
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              >
                 <IconOrderedList className={style.icon} />
               </button>
             )}
             {config.bulletList && (
-              <button type="button" className={btnClass(editor.isActive('bulletList'))} title="箇条書き" onClick={() => editor.chain().focus().toggleBulletList().run()}>
+              <button
+                type="button"
+                className={btnClass(editor.isActive('bulletList'))}
+                title={t('textEditor.bulletList')}
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+              >
                 <IconBulletList className={style.icon} />
               </button>
             )}
@@ -223,23 +251,33 @@ export default function Toolbar(props: Props): React.JSX.Element {
         {showBlocks && (
           <div className={style.group}>
             {config.codeBlock && (
-              <button type="button" className={btnClass(editor.isActive('codeBlock'))} title="コードブロック" onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
+              <button
+                type="button"
+                className={btnClass(editor.isActive('codeBlock'))}
+                title={t('textEditor.codeBlock')}
+                onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+              >
                 <IconCodeBlock className={style.icon} />
               </button>
             )}
             {config.blockquote && (
-              <button type="button" className={btnClass(editor.isActive('blockquote'))} title="引用" onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+              <button
+                type="button"
+                className={btnClass(editor.isActive('blockquote'))}
+                title={t('textEditor.blockquote')}
+                onClick={() => editor.chain().focus().toggleBlockquote().run()}
+              >
                 <IconBlockquote className={style.icon} />
               </button>
             )}
             {config.link && (
-              <button type="button" className={btnClass(editor.isActive('link') || isLinkInput)} title="リンク" onClick={handleLink}>
+              <button type="button" className={btnClass(editor.isActive('link') || isLinkInput)} title={t('textEditor.link')} onClick={handleLink}>
                 <IconLink className={style.icon_link} />
               </button>
             )}
             {config.image && (
               <>
-                <button type="button" className={style.button} title="画像" onClick={handleImageClick}>
+                <button type="button" className={style.button} title={t('textEditor.image')} onClick={handleImageClick}>
                   <IconImage className={style.icon_wide} />
                 </button>
                 <input ref={fileRef} type="file" accept="image/*" className={style.file_hidden} onChange={handleFile} />

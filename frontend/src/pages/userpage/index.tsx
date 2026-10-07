@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
@@ -11,6 +12,7 @@ const initMedia: UserPageMedia = { videos: [], musics: [], blogs: [], comics: []
 
 export default function UserpagePage(): React.JSX.Element {
   const router = useAppRouter()
+  const { t } = useTranslation()
   const ulid = String(router.query.ulid ?? '')
   const queryChannel = typeof router.query.channel === 'string' ? router.query.channel : undefined
 
@@ -28,7 +30,7 @@ export default function UserpagePage(): React.JSX.Element {
   const queries = { userPage }
 
   return (
-    <QueryCheck title="ユーザーページ" queries={queries} fresh>
+    <QueryCheck title={t('media.userpage.title')} queries={queries} fresh>
       {(props) => <Userpage {...props} ulid={ulid} channelUlid={channelUlid} media={media.data ?? initMedia} />}
     </QueryCheck>
   )

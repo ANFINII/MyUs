@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChannelIn } from 'types/internal/channel'
 import { postChannel } from 'api/internal/channel'
 import { FetchError } from 'utils/constants/enum'
@@ -25,6 +26,7 @@ const initChannel: ChannelIn = {
 
 export default function ChannelCreate(): React.JSX.Element {
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
@@ -54,10 +56,10 @@ export default function ChannelCreate(): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle="チャンネル作成" toast={toast}>
+    <Main metaTitle={t('setting.channelCreate.title')} toast={toast}>
       <article className={style.account}>
         <form method="POST" action="" className={style.form}>
-          <h1 className={style.signup_title}>チャンネル作成</h1>
+          <h1 className={style.signup_title}>{t('setting.channelCreate.title')}</h1>
           {message && (
             <ul className="messages_signup">
               <li>{message}</li>
@@ -66,7 +68,7 @@ export default function ChannelCreate(): React.JSX.Element {
 
           <VStack gap="8">
             <VStack gap="4" align="center">
-              <p>アバター画像</p>
+              <p>{t('setting.channelCreate.avatar')}</p>
               <InputImage
                 id="avatar"
                 className={style.account_image_edit}
@@ -85,13 +87,13 @@ export default function ChannelCreate(): React.JSX.Element {
               />
             </VStack>
 
-            <Input name="name" placeholder="チャンネル名" maxLength={50} required error={error} onChange={handleInput} />
-            <Textarea name="description" placeholder="説明" onChange={handleText} />
+            <Input name="name" placeholder={t('setting.channelCreate.name')} maxLength={50} required error={error} onChange={handleInput} />
+            <Textarea name="description" placeholder={t('setting.channelCreate.description')} onChange={handleText} />
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="green" size="l" name="作成" type="submit" loading={loading} onClick={handleSubmit} />
-            <Button color="blue" size="l" name="戻る" onClick={handleBack} />
+            <Button color="green" size="l" name={t('setting.channelCreate.submit')} type="submit" loading={loading} onClick={handleSubmit} />
+            <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
           </VStack>
         </form>
       </article>

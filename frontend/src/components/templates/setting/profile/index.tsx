@@ -25,15 +25,15 @@ export default function SettingProfile(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="blue" size="s" name="編集" onClick={handleEdit} />
-      <Button color="blue" size="s" name="パスワード変更" onClick={handlePassword} />
+      <Button color="blue" size="s" name={t('setting.button.edit')} onClick={handleEdit} />
+      <Button color="blue" size="s" name={t('setting.profile.passwordChange')} onClick={handlePassword} />
     </HStack>
   )
 
   return (
-    <Main title="アカウント設定" type="table" button={button}>
+    <Main title={t('setting.profile.title')} type="table" button={button}>
       <Table>
-        <TableRow label="アバター画像">
+        <TableRow label={t('setting.profile.avatar')}>
           {profile.avatar !== '' ? (
             <label className={style.account_image}>
               <LightBox size="56" src={profile.avatar} title={profile.nickname} />
@@ -44,39 +44,39 @@ export default function SettingProfile(props: Props): React.JSX.Element {
             </label>
           )}
         </TableRow>
-        <TableRow isIndent label="メールアドレス">
+        <TableRow isIndent label={t('setting.profile.email')}>
           {profile.email}
         </TableRow>
-        <TableRow isIndent label="ユーザー名">
+        <TableRow isIndent label={t('setting.profile.username')}>
           {profile.username}
         </TableRow>
-        <TableRow isIndent label="投稿者名">
+        <TableRow isIndent label={t('setting.profile.nickname')}>
           {profile.nickname}
         </TableRow>
-        <TableRow isIndent label="名前">
+        <TableRow isIndent label={t('setting.profile.name')}>
           {getFullName(profile.lastName, profile.firstName)}
         </TableRow>
-        <TableRow isIndent label="生年月日">
-          {profile.year}年{profile.month}月{profile.day}日
+        <TableRow isIndent label={t('setting.profile.birthday')}>
+          {t('setting.profile.birthdayValue', { year: profile.year, month: profile.month, day: profile.day })}
         </TableRow>
-        <TableRow isIndent label="年齢">
-          {getAge(profile.year, profile.month, profile.day)}歳
+        <TableRow isIndent label={t('setting.profile.age')}>
+          {t('setting.profile.ageValue', { count: getAge(profile.year, profile.month, profile.day) })}
         </TableRow>
-        <TableRow isIndent label="性別">
+        <TableRow isIndent label={t('setting.profile.gender')}>
           {t(`gender.${profile.gender}`)}
         </TableRow>
-        <TableRow isIndent label="電話番号">
+        <TableRow isIndent label={t('setting.profile.phone')}>
           {profile.phone}
         </TableRow>
-        <TableRow isIndent label="郵便番号">
+        <TableRow isIndent label={t('setting.profile.postalCode')}>
           {profile.postalCode}
         </TableRow>
-        <TableRow isIndent label="住所">
+        <TableRow isIndent label={t('setting.profile.address')}>
           {profile.prefecture}
           {profile.city}
           {profile.street}
         </TableRow>
-        <TableRow isIndent label="自己紹介">
+        <TableRow isIndent label={t('setting.profile.introduction')}>
           <div className="pv_4 ws_wrap">{profile.introduction}</div>
         </TableRow>
       </Table>

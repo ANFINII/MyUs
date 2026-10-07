@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChannelIn, Channel } from 'types/internal/channel'
 import { Option } from 'types/internal/other'
 import { MypageIn, MypageOut } from 'types/internal/user'
@@ -33,6 +34,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
   const { mypage, channels } = props
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })
@@ -92,13 +94,13 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name="登録" loading={loading} onClick={handleSubmit} />
-      <Button color="blue" size="s" name="戻る" onClick={handleBack} />
+      <Button color="green" size="s" name={t('setting.button.register')} loading={loading} onClick={handleSubmit} />
+      <Button color="blue" size="s" name={t('status.back')} onClick={handleBack} />
     </HStack>
   )
 
   return (
-    <Main title="マイページ設定" type="table" toast={toast} button={button}>
+    <Main title={t('setting.mypage.title')} type="table" toast={toast} button={button}>
       {message && (
         <ul className={style.messages_profile}>
           <li>{message}</li>
@@ -106,7 +108,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
       )}
 
       <Table>
-        <TableRow label="バナー画像">
+        <TableRow label={t('setting.mypage.banner')}>
           <InputImage
             id="banner"
             className={style.account_image_edit}
@@ -124,28 +126,28 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
             onChange={handleBanner}
           />
         </TableRow>
-        <TableRow isIndent label="投稿者名">
+        <TableRow isIndent label={t('setting.mypage.nickname')}>
           {mypageValues.nickname}
         </TableRow>
-        <TableRow label="メールアドレス">
+        <TableRow label={t('setting.mypage.email')}>
           <Input name="email" value={mypageValues.email} maxLength={120} onChange={handleMypageInput} />
         </TableRow>
-        <TableRow isIndent label="フォロー数">
+        <TableRow isIndent label={t('setting.mypage.following')}>
           {mypageValues.followingCount}
         </TableRow>
-        <TableRow isIndent label="フォロワー数">
+        <TableRow isIndent label={t('setting.mypage.followers')}>
           {mypageValues.followerCount}
         </TableRow>
-        <TableRow isIndent label="料金プラン">
+        <TableRow isIndent label={t('setting.mypage.plan')}>
           {mypageValues.plan}
         </TableRow>
-        <TableRow isIndent label="全体広告">
+        <TableRow isIndent label={t('setting.mypage.advertise')}>
           {mypageValues.plan === 'Free' ? <Toggle isActive={mypageValues.isAdvertise} disable /> : <Toggle isActive={mypageValues.isAdvertise} onClick={handleToggle} />}
         </TableRow>
-        <TableRow label="タグID">
-          <Input name="tagManagerId" value={mypageValues.tagManagerId} placeholder="タグマネージャーID" maxLength={10} onChange={handleMypageInput} />
+        <TableRow label={t('setting.mypage.tagId')}>
+          <Input name="tagManagerId" value={mypageValues.tagManagerId} placeholder={t('setting.mypage.tagIdPlaceholder')} maxLength={10} onChange={handleMypageInput} />
         </TableRow>
-        <TableRow label="内容">
+        <TableRow label={t('setting.mypage.content')}>
           <Textarea name="content" defaultValue={mypageValues.content} onChange={handleMypageText} />
         </TableRow>
       </Table>
@@ -153,7 +155,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
       <SelectBox value={channelUlid} options={channelOptions} onChange={handleSelectChannel} className={style.channel} />
 
       <Table key={channelUlid}>
-        <TableRow label="アバター画像">
+        <TableRow label={t('setting.mypage.avatarImage')}>
           <InputImage
             id="avatar"
             className={style.account_image_edit}
@@ -171,10 +173,10 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
             onChange={handleAvatar}
           />
         </TableRow>
-        <TableRow label="チャンネル名">
+        <TableRow label={t('setting.mypage.channelName')}>
           <Input name="name" value={channel.name} maxLength={50} onChange={handleChannelInput} />
         </TableRow>
-        <TableRow label="説明">
+        <TableRow label={t('setting.mypage.description')}>
           <Textarea name="description" defaultValue={channel.description} onChange={handleChannelText} />
         </TableRow>
       </Table>

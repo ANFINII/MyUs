@@ -4,21 +4,21 @@ export const plans: Plan[] = [
   {
     name: 'Basic',
     price: 550,
-    features: ['個別広告表示 1つ', '全体広告 非表示'],
+    features: [{ key: 'individualAds', count: 1 }, { key: 'hideGlobalAds' }],
   },
   {
     name: 'Standard',
     price: 880,
-    features: ['個別広告表示 3つ', '全体広告 非表示'],
+    features: [{ key: 'individualAds', count: 3 }, { key: 'hideGlobalAds' }],
   },
   {
     name: 'Premium',
     price: 1200,
-    features: ['個別広告表示 4つ', '全体広告 非表示', '楽曲ダウンロード'],
+    features: [{ key: 'individualAds', count: 4 }, { key: 'hideGlobalAds' }, { key: 'musicDownload' }],
   },
   {
     name: 'Free',
     price: 0,
-    features: ['基本機能', '広告あり'],
+    features: [{ key: 'basic' }, { key: 'withAds' }],
   },
 ]
