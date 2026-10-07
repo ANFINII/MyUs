@@ -1,6 +1,7 @@
 import jwt
 from dataclasses import replace
 from datetime import date, datetime
+from django_ulid.models import ulid
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password, make_password
@@ -8,6 +9,8 @@ from django.core.mail import send_mail
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from api.modules.logger import log
+from api.src.domain.interface.channel.data import ChannelData
+from api.src.domain.interface.channel.interface import ChannelInterface
 from api.src.domain.interface.user.data import MyPageData, ProfileData, UserAllData, UserData, UserNotificationData, UserPlanData
 from api.utils.enum.user import PlanName
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
@@ -189,12 +192,29 @@ def signup_user(input: SignupIn) -> bool:
     )
 
     try:
-        repository = injector.get(UserInterface)
-        repository.bulk_save(objs=[user_data])
-        return True
+        user_repository = injector.get(UserInterface)
+        user_ids = user_repository.bulk_save(objs=[user_data])
     except Exception as e:
         log.error("Signup error", exc=e)
         return False
+
+    try:
+        channel_repository = injector.get(ChannelInterface)
+        channel_repository.bulk_save([ChannelData(
+            id=0,
+            ulid=str(ulid.new()),
+            owner_id=user_ids[0],
+            owner_ulid="",
+            avatar="",
+            name=input.nickname,
+            description="",
+            is_default=True,
+            count=0,
+        )])
+    except Exception as e:
+        log.error("Default channel create error", exc=e, user_id=user_ids[0])
+
+    return True
 
 
 PASSWORD_MIN_LENGTH = 8
