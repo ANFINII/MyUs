@@ -6,7 +6,10 @@ import ja from './locales/ja/common.json'
 export const DEFAULT_LOCALE = 'ja'
 export const LOCALES = ['en']
 
-const common: Record<string, typeof ja> = { ja, en }
+export const resources = {
+  ja: { common: ja },
+  en: { common: en },
+}
 
 export const createI18n = (locale: string): i18n => {
   const instance = createInstance()
@@ -14,7 +17,7 @@ export const createI18n = (locale: string): i18n => {
     lng: locale,
     fallbackLng: DEFAULT_LOCALE,
     defaultNS: 'common',
-    resources: Object.fromEntries(Object.entries(common).map(([lng, resource]) => [lng, { common: resource }])),
+    resources,
     interpolation: { escapeValue: false },
     initAsync: false,
   })

@@ -1,27 +1,21 @@
 export enum Fetch {
-  Save = '保存しました',
-  Create = '作成しました',
-  Delete = '削除しました',
+  Save = 'fetch.save',
+  Create = 'fetch.create',
+  Delete = 'fetch.delete',
 }
 
 export enum FetchError {
-  Error = 'エラーが発生しました',
-  Get = 'データの取得に失敗しました',
-  Post = 'データの登録に失敗しました',
-  Put = 'データの更新に失敗しました',
-  Delete = 'データの削除に失敗しました',
+  Error = 'fetchError.error',
+  Get = 'fetchError.get',
+  Post = 'fetchError.post',
+  Put = 'fetchError.put',
+  Delete = 'fetchError.delete',
 }
 
 export enum GenderType {
   Male = 'Male',
   Female = 'Female',
   Secret = 'Secret',
-}
-
-export enum GenderView {
-  Male = '男性',
-  Female = '女性',
-  Secret = '秘密',
 }
 
 export enum MediaType {

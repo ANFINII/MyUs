@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import style from './DataTable.module.scss'
 
@@ -29,6 +30,7 @@ interface Props<T> {
 export default function DataTable<T>(props: Props<T>): React.JSX.Element {
   const { datas, columns, rowKey, selectable, selectedKeys, onSelection, footer } = props
 
+  const { t } = useTranslation()
   const [sortKey, setSortKey] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
 
@@ -138,7 +140,7 @@ export default function DataTable<T>(props: Props<T>): React.JSX.Element {
           })}
         </tbody>
       </table>
-      {datas.length === 0 && <div className={style.empty}>データがありません</div>}
+      {datas.length === 0 && <div className={style.empty}>{t('table.empty')}</div>}
       {footer}
     </div>
   )

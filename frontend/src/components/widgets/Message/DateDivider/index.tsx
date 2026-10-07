@@ -1,4 +1,4 @@
-import { formatDate } from 'utils/functions/datetime'
+import { useDatetime } from 'components/hooks/useDatetime'
 import Divide from 'components/parts/Divide'
 
 interface Props {
@@ -8,6 +8,8 @@ interface Props {
 
 export default function DateDivider(props: Props): React.JSX.Element {
   const { created, prevCreated } = props
+
+  const { formatDate } = useDatetime()
 
   if (prevCreated === undefined) return <></>
 

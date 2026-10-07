@@ -1,7 +1,132 @@
 {
   "welcome": "Welcome to MyUs",
-  "header": {},
-  "sidebar": {
-    "accounts": {}
+  "fetch": {
+    "save": "Saved",
+    "create": "Created",
+    "delete": "Deleted"
+  },
+  "fetchError": {
+    "error": "An error occurred",
+    "get": "Failed to load data",
+    "post": "Failed to register data",
+    "put": "Failed to update data",
+    "delete": "Failed to delete data"
+  },
+  "gender": {
+    "Male": "Male",
+    "Female": "Female",
+    "Secret": "Prefer not to say"
+  },
+  "prefecture": {
+    "hokkaido": "Hokkaido",
+    "aomori": "Aomori",
+    "iwate": "Iwate",
+    "miyagi": "Miyagi",
+    "akita": "Akita",
+    "yamagata": "Yamagata",
+    "fukushima": "Fukushima",
+    "ibaraki": "Ibaraki",
+    "tochigi": "Tochigi",
+    "gunma": "Gunma",
+    "saitama": "Saitama",
+    "chiba": "Chiba",
+    "tokyo": "Tokyo",
+    "kanagawa": "Kanagawa",
+    "niigata": "Niigata",
+    "toyama": "Toyama",
+    "ishikawa": "Ishikawa",
+    "fukui": "Fukui",
+    "yamanashi": "Yamanashi",
+    "nagano": "Nagano",
+    "gifu": "Gifu",
+    "shizuoka": "Shizuoka",
+    "aichi": "Aichi",
+    "mie": "Mie",
+    "shiga": "Shiga",
+    "kyoto": "Kyoto",
+    "osaka": "Osaka",
+    "hyogo": "Hyogo",
+    "nara": "Nara",
+    "wakayama": "Wakayama",
+    "tottori": "Tottori",
+    "shimane": "Shimane",
+    "okayama": "Okayama",
+    "hiroshima": "Hiroshima",
+    "yamaguchi": "Yamaguchi",
+    "tokushima": "Tokushima",
+    "kagawa": "Kagawa",
+    "ehime": "Ehime",
+    "kochi": "Kochi",
+    "fukuoka": "Fukuoka",
+    "saga": "Saga",
+    "nagasaki": "Nagasaki",
+    "kumamoto": "Kumamoto",
+    "oita": "Oita",
+    "miyazaki": "Miyazaki",
+    "kagoshima": "Kagoshima",
+    "okinawa": "Okinawa"
+  },
+  "datetime": {
+    "today": "Today",
+    "year_one": "{{count}} year",
+    "year_other": "{{count}} years",
+    "month_one": "{{count}} month",
+    "month_other": "{{count}} months",
+    "separator": " ",
+    "ago": "{{time}} ago"
+  },
+  "input": {
+    "search": "Search...",
+    "file": "Choose a file...",
+    "date": "Select a date",
+    "prefecture": "Prefecture"
+  },
+  "table": {
+    "empty": "No data"
+  },
+  "search": {
+    "result": "{{count}} results for \"{{name}}\""
+  },
+  "status": {
+    "back": "Back",
+    "login": "Log in",
+    "unauthorized": "Please log in",
+    "notFound": "Page not found",
+    "serverError": "This page isn't working",
+    "unexpected": "An unexpected error occurred"
+  },
+  "sideMenu": {
+    "home": "Home",
+    "recommend": "Trending",
+    "follow": "Following",
+    "channel": "Channels",
+    "userpolicy": "Terms of Service"
+  },
+  "cloudMenu": {
+    "manage": "Manage posts",
+    "upload": "Upload {{media}}"
+  },
+  "profileMenu": {
+    "account": "Account",
+    "mypage": "My page",
+    "payment": "Plans",
+    "withdrawal": "Delete account",
+    "login": "Log in",
+    "logout": "Log out"
+  },
+  "noticeMenu": {
+    "setting": "Notification settings",
+    "close": "Close",
+    "post": "{{nickname}} posted {{title}}",
+    "follow": "{{nickname}} followed you",
+    "like": "{{nickname}} liked {{text}}",
+    "reply": "{{nickname}} replied: {{text}}",
+    "views": "{{title}} reached {{count}} views"
+  },
+  "searchTag": {
+    "done": "Done",
+    "tag": "Tags",
+    "name": "Tag name",
+    "add": "Add"
   }
 }

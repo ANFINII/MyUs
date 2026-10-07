@@ -1,6 +1,6 @@
 import { Author } from 'types/internal/user'
-import { formatDatetime } from 'utils/functions/datetime'
 import { sanitizeHtml } from 'utils/functions/sanitize'
+import { useDatetime } from 'components/hooks/useDatetime'
 import Avatar from 'components/parts/Avatar'
 import Modal from 'components/parts/Modal'
 import HStack from 'components/parts/Stack/Horizontal'
@@ -20,6 +20,8 @@ interface Props {
 export default function MessageDeleteModal(props: Props): React.JSX.Element {
   const { open, onClose, onAction, message } = props
   const { author, created, text } = message
+
+  const { formatDatetime } = useDatetime()
 
   return (
     <Modal

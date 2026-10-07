@@ -1,8 +1,8 @@
 import { ChangeEvent, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { SignupIn } from 'types/internal/auth'
 import { getSignupVerify, postSignup } from 'api/internal/auth'
 import { FetchError, GenderType } from 'utils/constants/enum'
-import { genderMap } from 'utils/constants/map'
 import { nowDate, selectDate } from 'utils/functions/datetime'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useLoading } from 'components/hooks/useLoading'
@@ -36,6 +36,7 @@ const initSignup: SignupIn = {
 
 export default function Signup(): React.JSX.Element {
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
@@ -113,7 +114,7 @@ export default function Signup(): React.JSX.Element {
                   <p>性別</p>
                   <HStack gap="5">
                     {Object.entries(GenderType).map(([key, value]) => (
-                      <Radio key={key} name="gender" label={genderMap[value]} value={value} checked={value === values.gender} onChange={handleInput} />
+                      <Radio key={key} name="gender" label={t(`gender.${value}`)} value={value} checked={value === values.gender} onChange={handleInput} />
                     ))}
                   </HStack>
                 </VStack>

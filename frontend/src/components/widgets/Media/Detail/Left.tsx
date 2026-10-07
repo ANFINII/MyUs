@@ -11,8 +11,8 @@ import { commentTypeNoMap, mediaTypeMap } from 'utils/constants/map'
 import { capitalize } from 'utils/functions/common'
 import { commentTypeNameEnum } from 'utils/functions/convertEnum'
 import cx from 'utils/functions/cx'
-import { formatDatetime } from 'utils/functions/datetime'
 import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useDatetime } from 'components/hooks/useDatetime'
 import { useLoading } from 'components/hooks/useLoading'
 import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -73,6 +73,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const router = useAppRouter()
   const { user } = useUser()
   const { loading, handleLoading } = useLoading()
+  const { formatDatetime } = useDatetime()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isContentView, setIsContentView] = useState<boolean>(false)
   const [isCommentView, setIsCommentView] = useState<boolean>(false)

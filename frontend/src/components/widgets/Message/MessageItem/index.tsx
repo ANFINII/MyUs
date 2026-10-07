@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { ChatMessage } from 'types/internal/message'
 import { UserMe } from 'types/internal/user'
 import cx from 'utils/functions/cx'
-import { formatDatetime } from 'utils/functions/datetime'
 import { sanitizeHtml } from 'utils/functions/sanitize'
 import { useAppRouter } from 'components/hooks/useAppRouter'
+import { useDatetime } from 'components/hooks/useDatetime'
 import ActionButton from 'components/parts/Action/Button'
 import { ActionItem } from 'components/parts/Action/List'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -29,6 +29,7 @@ export default function MessageItem(props: Props): React.JSX.Element {
   const { user, message, isDisabled = false, onThread, onEdit, onDelete } = props
 
   const router = useAppRouter()
+  const { formatDatetime } = useDatetime()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)

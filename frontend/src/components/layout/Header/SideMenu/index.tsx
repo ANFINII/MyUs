@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import ExImage from 'components/parts/ExImage'
@@ -20,6 +21,7 @@ export default function SideMenu(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
   const router = useAppRouter()
+  const { t } = useTranslation()
 
   const handleClick = (url: string) => () => {
     router.push(url)
@@ -34,14 +36,14 @@ export default function SideMenu(props: Props): React.JSX.Element {
         </NavItem>
 
         <ul>
-          <NavItem label="ホーム" icon={<IconHouse size="1.5em" />} className={style.item} onClick={handleClick('/')} />
-          <NavItem label="急上昇" icon={<IconLightning size="1.5em" type="defalt" />} className={style.item} onClick={handleClick('/recommend')} />
-          <NavItem label="フォロー" icon={<IconPerson size="1.5em" type="check" />} className={style.item} onClick={handleClick('/menu/follow')} />
-          <NavItem label="チャンネル" icon={<IconGrid size="1.5em" />} className={style.item} onClick={handleClick('/menu/channel')} />
+          <NavItem label={t('sideMenu.home')} icon={<IconHouse size="1.5em" />} className={style.item} onClick={handleClick('/')} />
+          <NavItem label={t('sideMenu.recommend')} icon={<IconLightning size="1.5em" type="defalt" />} className={style.item} onClick={handleClick('/recommend')} />
+          <NavItem label={t('sideMenu.follow')} icon={<IconPerson size="1.5em" type="check" />} className={style.item} onClick={handleClick('/menu/follow')} />
+          <NavItem label={t('sideMenu.channel')} icon={<IconGrid size="1.5em" />} className={style.item} onClick={handleClick('/menu/channel')} />
         </ul>
 
         <ul className={style.footer}>
-          <NavItem label="利用規約" icon={<IconFile size="1.5em" type="earmark" />} className={style.item} onClick={handleClick('/menu/userpolicy')} />
+          <NavItem label={t('sideMenu.userpolicy')} icon={<IconFile size="1.5em" type="earmark" />} className={style.item} onClick={handleClick('/menu/userpolicy')} />
           <NavItem label="Knowledge Base" icon={<IconGlobe size="1.5em" />} className={style.item} onClick={handleClick('/menu/knowledge')} />
         </ul>
       </nav>

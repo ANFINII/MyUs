@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import cx from 'utils/functions/cx'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import { useUser } from 'components/hooks/useUser'
@@ -20,6 +21,7 @@ export default function DropMenuCloud(props: Props): React.JSX.Element {
   const { open, onClose } = props
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const { user } = useUser()
 
   const handleManage = () => {
@@ -36,13 +38,13 @@ export default function DropMenuCloud(props: Props): React.JSX.Element {
   return (
     <nav className={cx(style.drop_menu, open && style.active)}>
       <ul>
-        <NavItem label="投稿管理" icon={<IconGrid size="1.5em" />} className={style.item} onClick={() => handleManage()} />
-        <NavItem label="Videoアップロード" icon={<IconVideo size="1.5em" />} className={style.item} onClick={() => handleRouter('video')} />
-        <NavItem label="Musicアップロード" icon={<IconMusic size="1.5em" />} className={style.item} onClick={() => handleRouter('music')} />
-        <NavItem label="Blogアップロード" icon={<IconBlog size="1.5em" />} className={style.item} onClick={() => handleRouter('blog')} />
-        <NavItem label="Comicアップロード" icon={<IconComic size="1.5em" />} className={style.item} onClick={() => handleRouter('comic')} />
-        <NavItem label="Pictureアップロード" icon={<IconPicture size="1.5em" />} className={style.item} onClick={() => handleRouter('picture')} />
-        <NavItem label="Chatアップロード" icon={<IconChat size="1.5em" />} className={style.item} onClick={() => handleRouter('chat')} />
+        <NavItem label={t('cloudMenu.manage')} icon={<IconGrid size="1.5em" />} className={style.item} onClick={() => handleManage()} />
+        <NavItem label={t('cloudMenu.upload', { media: 'Video' })} icon={<IconVideo size="1.5em" />} className={style.item} onClick={() => handleRouter('video')} />
+        <NavItem label={t('cloudMenu.upload', { media: 'Music' })} icon={<IconMusic size="1.5em" />} className={style.item} onClick={() => handleRouter('music')} />
+        <NavItem label={t('cloudMenu.upload', { media: 'Blog' })} icon={<IconBlog size="1.5em" />} className={style.item} onClick={() => handleRouter('blog')} />
+        <NavItem label={t('cloudMenu.upload', { media: 'Comic' })} icon={<IconComic size="1.5em" />} className={style.item} onClick={() => handleRouter('comic')} />
+        <NavItem label={t('cloudMenu.upload', { media: 'Picture' })} icon={<IconPicture size="1.5em" />} className={style.item} onClick={() => handleRouter('picture')} />
+        <NavItem label={t('cloudMenu.upload', { media: 'Chat' })} icon={<IconChat size="1.5em" />} className={style.item} onClick={() => handleRouter('chat')} />
       </ul>
     </nav>
   )

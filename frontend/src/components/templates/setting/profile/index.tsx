@@ -1,5 +1,5 @@
+import { useTranslation } from 'react-i18next'
 import { ProfileOut } from 'types/internal/user'
-import { genderMap } from 'utils/constants/map'
 import { getAge, getFullName } from 'utils/functions/user'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import Main from 'components/layout/Main'
@@ -19,6 +19,7 @@ export default function SettingProfile(props: Props): React.JSX.Element {
   const { profile } = props
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const handleEdit = () => router.push('/setting/profile/edit')
   const handlePassword = () => router.push('/setting/password/change')
 
@@ -62,7 +63,7 @@ export default function SettingProfile(props: Props): React.JSX.Element {
           {getAge(profile.year, profile.month, profile.day)}歳
         </TableRow>
         <TableRow isIndent label="性別">
-          {genderMap[profile.gender]}
+          {t(`gender.${profile.gender}`)}
         </TableRow>
         <TableRow isIndent label="電話番号">
           {profile.phone}

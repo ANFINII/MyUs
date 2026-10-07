@@ -1,7 +1,130 @@
 {
   "welcome": "MyUsへようこそ",
-  "header": {},
-  "sidebar": {
-    "accounts": {}
+  "fetch": {
+    "save": "保存しました",
+    "create": "作成しました",
+    "delete": "削除しました"
+  },
+  "fetchError": {
+    "error": "エラーが発生しました",
+    "get": "データの取得に失敗しました",
+    "post": "データの登録に失敗しました",
+    "put": "データの更新に失敗しました",
+    "delete": "データの削除に失敗しました"
+  },
+  "gender": {
+    "Male": "男性",
+    "Female": "女性",
+    "Secret": "秘密"
+  },
+  "prefecture": {
+    "hokkaido": "北海道",
+    "aomori": "青森県",
+    "iwate": "岩手県",
+    "miyagi": "宮城県",
+    "akita": "秋田県",
+    "yamagata": "山形県",
+    "fukushima": "福島県",
+    "ibaraki": "茨城県",
+    "tochigi": "栃木県",
+    "gunma": "群馬県",
+    "saitama": "埼玉県",
+    "chiba": "千葉県",
+    "tokyo": "東京都",
+    "kanagawa": "神奈川県",
+    "niigata": "新潟県",
+    "toyama": "富山県",
+    "ishikawa": "石川県",
+    "fukui": "福井県",
+    "yamanashi": "山梨県",
+    "nagano": "長野県",
+    "gifu": "岐阜県",
+    "shizuoka": "静岡県",
+    "aichi": "愛知県",
+    "mie": "三重県",
+    "shiga": "滋賀県",
+    "kyoto": "京都府",
+    "osaka": "大阪府",
+    "hyogo": "兵庫県",
+    "nara": "奈良県",
+    "wakayama": "和歌山県",
+    "tottori": "鳥取県",
+    "shimane": "島根県",
+    "okayama": "岡山県",
+    "hiroshima": "広島県",
+    "yamaguchi": "山口県",
+    "tokushima": "徳島県",
+    "kagawa": "香川県",
+    "ehime": "愛媛県",
+    "kochi": "高知県",
+    "fukuoka": "福岡県",
+    "saga": "佐賀県",
+    "nagasaki": "長崎県",
+    "kumamoto": "熊本県",
+    "oita": "大分県",
+    "miyazaki": "宮崎県",
+    "kagoshima": "鹿児島県",
+    "okinawa": "沖縄県"
+  },
+  "datetime": {
+    "today": "今日",
+    "year": "{{count}}年",
+    "month": "{{count}}ヶ月",
+    "separator": "",
+    "ago": "{{time}}前"
+  },
+  "input": {
+    "search": "検索...",
+    "file": "ファイル選択...",
+    "date": "日付を選択",
+    "prefecture": "都道府県"
+  },
+  "table": {
+    "empty": "データがありません"
+  },
+  "search": {
+    "result": "「{{name}}」の検索結果「{{count}}」件"
+  },
+  "status": {
+    "back": "戻る",
+    "login": "ログイン",
+    "unauthorized": "ログインしてください",
+    "notFound": "ページが見つかりませんでした",
+    "serverError": "このページは動作しませんでした",
+    "unexpected": "予期せぬエラーが発生しました"
+  },
+  "sideMenu": {
+    "home": "ホーム",
+    "recommend": "急上昇",
+    "follow": "フォロー",
+    "channel": "チャンネル",
+    "userpolicy": "利用規約"
+  },
+  "cloudMenu": {
+    "manage": "投稿管理",
+    "upload": "{{media}}アップロード"
+  },
+  "profileMenu": {
+    "account": "アカウント",
+    "mypage": "マイページ",
+    "payment": "料金プラン",
+    "withdrawal": "退会処理",
+    "login": "ログイン",
+    "logout": "ログアウト"
+  },
+  "noticeMenu": {
+    "setting": "通知設定",
+    "close": "閉じる",
+    "post": "{{nickname}}が{{title}}を投稿しました",
+    "follow": "{{nickname}}にフォローされました",
+    "like": "{{text}}が{{nickname}}にいいねされました",
+    "reply": "{{nickname}}から返信がありました {{text}}",
+    "views": "{{title}}が{{count}}回閲覧されました"
+  },
+  "searchTag": {
+    "done": "完了",
+    "tag": "タグ",
+    "name": "タグ名",
+    "add": "追加"
   }
 }
