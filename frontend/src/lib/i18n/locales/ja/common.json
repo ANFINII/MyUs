@@ -126,5 +126,59 @@
     "tag": "タグ",
     "name": "タグ名",
     "add": "追加"
+  },
+  "manage": {
+    "title": "投稿管理",
+    "header": {
+      "selected": "{{count}}件選択",
+      "bulkDelete": "一括削除"
+    },
+    "button": {
+      "new": "新規作成",
+      "create": "作成する",
+      "save": "保存する"
+    },
+    "deleteModal": {
+      "title": "データの削除",
+      "content": "{{count}}件のデータを削除しますか？"
+    },
+    "toast": {
+      "creating": "作成中です。完了まで時間がかかる場合があります"
+    },
+    "table": {
+      "image": "画像",
+      "thumbnail": "サムネイル",
+      "title": "タイトル",
+      "content": "内容",
+      "play": "再生",
+      "view": "閲覧",
+      "thread": "スレッド",
+      "joined": "参加",
+      "like": "いいね",
+      "publish": "公開",
+      "deadline": "期限",
+      "displayPeriod": "表示期限",
+      "created": "投稿日時",
+      "createdAt": "作成日時"
+    },
+    "form": {
+      "publish": "公開する",
+      "channel": "チャンネル",
+      "category": "カテゴリー",
+      "unselected": "未選択",
+      "title": "タイトル",
+      "content": "内容",
+      "lyric": "歌詞",
+      "download": "ダウンロード許可",
+      "thumbnail": "サムネイル",
+      "image": "画像",
+      "pages": "ページ画像",
+      "video": "動画",
+      "music": "音楽",
+      "richtext": "本文",
+      "url": "リンク URL",
+      "period": "期間",
+      "displayPeriod": "表示期限"
+    }
   }
 }
