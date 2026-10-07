@@ -6,6 +6,11 @@ import ja from './locales/ja/common.json'
 export const DEFAULT_LOCALE = 'ja'
 export const LOCALES = ['en']
 
+export const getLocale = (path: string): string | undefined => {
+  const first = path.split(/[/?#]/)[1] ?? ''
+  return LOCALES.includes(first) ? first : undefined
+}
+
 export const resources = {
   ja: { common: ja },
   en: { common: en },
