@@ -15,11 +15,10 @@ interface Props {
 
 export default function CardChatMediaContentBase(props: Props): React.JSX.Element {
   const { media } = props
-
-  const { formatTimeAgo } = useDatetime()
-
   const { title, read, like, joined, thread, created, channel } = media
   const { name } = channel
+
+  const { formatTimeAgo } = useDatetime()
 
   return (
     <VStack className={style.content_base}>

@@ -19,10 +19,9 @@ interface Props {
 
 export default function MessageDeleteModal(props: Props): React.JSX.Element {
   const { open, onClose, onAction, message } = props
+  const { author, created, text } = message
 
   const { formatDatetime } = useDatetime()
-
-  const { author, created, text } = message
 
   return (
     <Modal

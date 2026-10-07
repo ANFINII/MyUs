@@ -13,11 +13,10 @@ interface Props {
 
 export default function CardMediaContentBase(props: Props): React.JSX.Element {
   const { media } = props
-
-  const { formatTimeAgo } = useDatetime()
-
   const { title, read, like, created, channel } = media
   const { name } = channel
+
+  const { formatTimeAgo } = useDatetime()
 
   return (
     <VStack className={style.content_base}>

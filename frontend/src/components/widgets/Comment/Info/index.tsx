@@ -12,10 +12,9 @@ export interface Props {
 
 export default function CommentInfo(props: Props): React.JSX.Element {
   const { comment } = props
+  const { author, created, text } = comment
 
   const { formatDatetime } = useDatetime()
-
-  const { author, created, text } = comment
 
   return (
     <div className={style.comment_info}>
