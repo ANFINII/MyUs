@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import DataTable, { Column } from 'components/parts/DataTable'
 import Pagination from 'components/parts/Pagination'
 import DeleteModal from 'components/widgets/Modal/Delete'
@@ -29,6 +30,8 @@ interface Props<T> {
 export default function ManageTable<T>(props: Props<T>): React.JSX.Element {
   const { table, selection, pagination, deletion } = props
 
+  const { t } = useTranslation()
+
   return (
     <>
       <div className={style.manage}>
@@ -44,8 +47,8 @@ export default function ManageTable<T>(props: Props<T>): React.JSX.Element {
       </div>
       <DeleteModal
         open={deletion.open}
-        title="データの削除"
-        content={`${selection.keys.size}件のデータを削除しますか？`}
+        title={t('manage.deleteModal.title')}
+        content={t('manage.deleteModal.content', { count: selection.keys.size })}
         loading={deletion.loading}
         onClose={deletion.onClose}
         onAction={deletion.onAction}

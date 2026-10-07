@@ -128,5 +128,60 @@
     "tag": "Tags",
     "name": "Tag name",
     "add": "Add"
+  },
+  "manage": {
+    "title": "Manage posts",
+    "header": {
+      "selected": "{{count}} selected",
+      "bulkDelete": "Delete selected"
+    },
+    "button": {
+      "new": "New",
+      "create": "Create",
+      "save": "Save"
+    },
+    "deleteModal": {
+      "title": "Delete data",
+      "content_one": "Delete {{count}} item?",
+      "content_other": "Delete {{count}} items?"
+    },
+    "toast": {
+      "creating": "Creating. This may take a while to finish."
+    },
+    "table": {
+      "image": "Image",
+      "thumbnail": "Thumbnail",
+      "title": "Title",
+      "content": "Description",
+      "play": "Plays",
+      "view": "Views",
+      "thread": "Threads",
+      "joined": "Members",
+      "like": "Likes",
+      "publish": "Public",
+      "deadline": "Ends",
+      "displayPeriod": "Display until",
+      "created": "Posted",
+      "createdAt": "Created"
+    },
+    "form": {
+      "publish": "Publish",
+      "channel": "Channel",
+      "category": "Category",
+      "unselected": "Not selected",
+      "title": "Title",
+      "content": "Description",
+      "lyric": "Lyrics",
+      "download": "Allow downloads",
+      "thumbnail": "Thumbnail",
+      "image": "Image",
+      "pages": "Page images",
+      "video": "Video",
+      "music": "Audio",
+      "richtext": "Body",
+      "url": "Link URL",
+      "period": "Period",
+      "displayPeriod": "Display until"
+    }
   }
 }

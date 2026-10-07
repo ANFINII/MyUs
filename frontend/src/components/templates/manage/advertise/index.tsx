@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from 'lib/query/keys'
 import { Advertise, AdvertiseList } from 'types/internal/advertise'
@@ -30,6 +31,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
   const { items, total } = data
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
@@ -64,13 +66,13 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
   const columns: Column<Advertise>[] = [
     {
       key: 'thumbnail',
-      header: '画像',
+      header: t('manage.table.image'),
       className: style.thumbnail,
       cell: (a) => a.image && <ExImage src={a.image} width="96" height="54" />,
     },
     {
       key: 'title',
-      header: 'タイトル',
+      header: t('manage.table.title'),
       sortable: true,
       sortValue: (a) => a.title,
       className: style.title,
@@ -88,7 +90,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
     },
     {
       key: 'read',
-      header: '閲覧',
+      header: t('manage.table.view'),
       align: 'right',
       sortable: true,
       sortValue: (a) => a.read,
@@ -98,14 +100,14 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
     },
     {
       key: 'period',
-      header: '表示期限',
+      header: t('manage.table.displayPeriod'),
       align: 'center',
       className: style.normal,
       cell: (a) => a.period ?? '-',
     },
     {
       key: 'publish',
-      header: '公開',
+      header: t('manage.table.publish'),
       align: 'center',
       sortable: true,
       sortValue: (a) => (a.publish ? 1 : 0),
@@ -119,7 +121,7 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
     },
     {
       key: 'created',
-      header: '作成日時',
+      header: t('manage.table.createdAt'),
       sortable: true,
       sortValue: (a) => new Date(a.created).getTime(),
       className: style.datetime,
@@ -137,12 +139,12 @@ export default function ManageAdvertises(props: Props): React.JSX.Element {
         <div className={style.header_actions}>
           {selectedKeys.size > 0 && (
             <>
-              <span className={style.selected_count}>{selectedKeys.size}件選択</span>
-              <Button color="red" size="s" name="一括削除" onClick={handleModal} />
+              <span className={style.selected_count}>{t('manage.header.selected', { count: selectedKeys.size })}</span>
+              <Button color="red" size="s" name={t('manage.header.bulkDelete')} onClick={handleModal} />
             </>
           )}
-          <Button color="blue" size="s" name="投稿管理" onClick={() => router.push('/manage')} />
-          <Button color="green" size="s" name="新規作成" disabled={isLimitReached} onClick={handleCreate} />
+          <Button color="blue" size="s" name={t('manage.title')} onClick={() => router.push('/manage')} />
+          <Button color="green" size="s" name={t('manage.button.new')} disabled={isLimitReached} onClick={handleCreate} />
         </div>
       }
     >

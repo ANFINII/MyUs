@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from 'lib/query/keys'
 import { Channel } from 'types/internal/channel'
@@ -31,6 +32,7 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
   const { items, total } = data
 
   const router = useAppRouter()
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { loading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
@@ -69,13 +71,13 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
   const columns: Column<Blog>[] = [
     {
       key: 'thumbnail',
-      header: 'サムネイル',
+      header: t('manage.table.thumbnail'),
       className: style.thumbnail,
       cell: (b) => b.image && <ExImage src={b.image} width="96" height="54" />,
     },
     {
       key: 'title',
-      header: 'タイトル',
+      header: t('manage.table.title'),
       sortable: true,
       sortValue: (b) => b.title,
       className: style.title,
@@ -87,13 +89,13 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
     },
     {
       key: 'content',
-      header: '内容',
+      header: t('manage.table.content'),
       className: style.content,
       cell: (b) => b.content,
     },
     {
       key: 'read',
-      header: '閲覧',
+      header: t('manage.table.view'),
       align: 'right',
       sortable: true,
       sortValue: (b) => b.read,
@@ -103,7 +105,7 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
     },
     {
       key: 'like',
-      header: 'いいね',
+      header: t('manage.table.like'),
       align: 'right',
       sortable: true,
       sortValue: (b) => b.like,
@@ -113,7 +115,7 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
     },
     {
       key: 'publish',
-      header: '公開',
+      header: t('manage.table.publish'),
       align: 'center',
       sortable: true,
       sortValue: (b) => (b.publish ? 1 : 0),
@@ -127,7 +129,7 @@ export default function ManageBlogs(props: Props): React.JSX.Element {
     },
     {
       key: 'created',
-      header: '投稿日時',
+      header: t('manage.table.created'),
       sortable: true,
       sortValue: (b) => new Date(b.created).getTime(),
       className: style.datetime,

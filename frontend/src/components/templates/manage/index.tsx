@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import Main from 'components/layout/Main'
 import IconAdvertise from 'components/parts/Icon/Advertise'
@@ -21,9 +22,10 @@ const menus = [
 
 export default function Manage(): React.JSX.Element {
   const router = useAppRouter()
+  const { t } = useTranslation()
 
   return (
-    <Main title="投稿管理" type="table" isFooter={false}>
+    <Main title={t('manage.title')} type="table" isFooter={false}>
       <div className={style.grid}>
         {menus.map((menu) => (
           <button key={menu.label} type="button" className={style.card} onClick={() => router.push(`/manage/${menu.path}`)}>
