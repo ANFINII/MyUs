@@ -2,7 +2,6 @@ import { useRef, useEffect } from 'react'
 import videojs from 'video.js'
 import { PLAYBACK_RATES, MENU_DELAY_MS, SPEED_MENU, QUALITY_MENU, STANDARD_SPEED, MENU_UPDATE_DELAY_MS, AUTO_QUALITY } from './constants'
 import { PlayerOptions, Player, ExtendedPlayer, Component } from './type'
-import 'videojs-contrib-quality-levels'
 import 'videojs-hls-quality-selector'
 
 interface Props {
