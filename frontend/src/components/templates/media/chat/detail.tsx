@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback, FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useParams } from '@tanstack/react-router'
 import { SubscribeIn } from 'types/internal/channel'
 import { ChatDetailOut } from 'types/internal/media/output'
 import { ChatMessage, ChatReply, MessageCreateIn, MessageUpdateIn } from 'types/internal/message'
@@ -62,6 +63,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
 
   const router = useAppRouter()
   const { t } = useTranslation()
+  const params = useParams({ from: '/media/chat/$ulid' })
   const { user } = useUser()
   const { toast, handleToast } = useToast()
   const { navRef, handleNav, handleResize } = useNavResize()
@@ -149,7 +151,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }
 
   useChatWebSocket({
-    ulid: router.query.ulid as string | undefined,
+    ulid: params.ulid,
     onCreateMessage: handleWsCreateMessage,
     onCreateReply: handleWsCreateReply,
     onUpdateMessage: handleWsUpdateMessage,
@@ -164,7 +166,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   const handleReply = (value: string) => setFormState((prev) => ({ ...prev, reply: value }))
 
   const handleThread = async (message: ChatMessage | null = null) => {
-    const chatUlid = router.query.ulid as string
+    const chatUlid = params.ulid
     if (message !== null && message.ulid !== selectedMessage?.ulid) {
       const ret = await getReplies(message.ulid)
       if (ret.isOk()) {
@@ -214,7 +216,7 @@ export default function ChatDetail(props: Props): React.JSX.Element {
   }
 
   const handleLike = async () => {
-    const ulid = String(router.query.ulid)
+    const ulid = params.ulid
     const request: LikeMediaIn = { ulid, mediaType: MediaType.Chat }
     const ret = await postLikeMedia(request)
     if (ret.isErr()) return handleToast(FetchError.Post, true)

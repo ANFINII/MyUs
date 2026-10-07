@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useParams } from '@tanstack/react-router'
 import { Channel, SubscribeIn } from 'types/internal/channel'
 import { Comment, CommnetIn } from 'types/internal/comment'
 import { Hashtag, MediaUser } from 'types/internal/media/output'
@@ -73,6 +74,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
 
   const router = useAppRouter()
   const { t } = useTranslation()
+  const params = useParams({ strict: false })
   const { user } = useUser()
   const { loading, handleLoading } = useLoading()
   const { formatDatetime } = useDatetime()
@@ -91,7 +93,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const handleComment = (e: ChangeEvent<HTMLTextAreaElement>) => setFormState((prev) => ({ ...prev, text: e.target.value }))
 
   const handleLike = async () => {
-    const ulid = String(router.query.ulid)
+    const ulid = params.ulid ?? ''
     const pathname = capitalize(String(router.pathname.split('/')[2]))
     const mediaType = mediaTypeMap[pathname]
     if (!mediaType) return
@@ -116,7 +118,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
     handleLoading(true)
     const typeName = commentTypeNameEnum(capitalize(String(router.pathname.split('/')[2])))
     const typeNo = commentTypeNoMap[typeName]
-    const objectUlid = String(router.query.ulid)
+    const objectUlid = params.ulid ?? ''
     const request: CommnetIn = { text, typeName, typeNo, objectUlid }
     const ret = await postComment(request)
     if (ret.isErr()) {

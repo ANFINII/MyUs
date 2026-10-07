@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearch } from '@tanstack/react-router'
 import { PasswordResetIn } from 'types/internal/auth'
 import { getPasswordResetVerify, postPasswordReset } from 'api/internal/auth'
 import { FetchError } from 'utils/constants/enum'
@@ -19,6 +20,7 @@ import style from '../Account.module.scss'
 export default function ResetConfirm(): React.JSX.Element {
   const router = useAppRouter()
   const { t } = useTranslation()
+  const { token } = useSearch({ strict: false })
   const { loading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
@@ -30,8 +32,7 @@ export default function ResetConfirm(): React.JSX.Element {
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => setValues({ ...values, [e.target.name]: e.target.value })
 
   useEffect(() => {
-    const token = router.query.token
-    if (typeof token !== 'string' || token === '') {
+    if (!token) {
       router.push('/account/login')
       return
     }
@@ -46,7 +47,7 @@ export default function ResetConfirm(): React.JSX.Element {
       setIsVerified(true)
     }
     verify()
-  }, [router])
+  }, [router, token])
 
   const handleSubmit = async () => {
     const { password1, password2 } = values

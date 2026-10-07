@@ -1,4 +1,5 @@
 import { createRootRoute, createRoute, lazyRouteComponent, Outlet } from '@tanstack/react-router'
+import { UrlSearch } from 'types/internal/other'
 import { useAppRouter } from 'components/hooks/useAppRouter'
 import Layout from 'components/layout'
 import { ErrorBoundary } from 'components/parts/ErrorBoundary'
@@ -18,7 +19,16 @@ function RootLayout(): React.JSX.Element {
   )
 }
 
-const rootRoute = createRootRoute({ component: RootLayout })
+const toText = (value: unknown): string | undefined => (typeof value === 'string' && value ? value : undefined)
+
+const validateSearch = (search: Record<string, unknown>): UrlSearch => ({
+  search: toText(search.search),
+  page: toText(search.page),
+  channel: toText(search.channel),
+  token: toText(search.token),
+})
+
+const rootRoute = createRootRoute({ component: RootLayout, validateSearch })
 
 const page = <TPath extends string>(path: TPath, load: PageImport) => {
   return createRoute({ getParentRoute: () => rootRoute, path, component: lazyRouteComponent(load) })
