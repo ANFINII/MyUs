@@ -6,12 +6,15 @@ from api.modules.logger import log
 from api.src.injectors.container import injector
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption as CommentFilterOption, SortOption as CommentSortOption
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
+from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.domain.interface.user.data import ProfileData, UserAllData, UserNotificationData
 from api.src.domain.interface.user.interface import FilterOption, UserInterface
 from api.src.types.dto.user import AuthorDTO, LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
+from api.src.usecase.notification import create_notification
 from api.utils.enum.media import MediaType
+from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository, save_upload
@@ -151,6 +154,13 @@ def like_comment(user_id: int, ulid: str) -> LikeDTO | None:
         return None
 
     is_like, like_count = repository.comment_like(user_id, ids[0])
+    if is_like:
+        comment = comment_repo.bulk_get(ids)[0]
+        create_notification(user_id, comment.author_id, NotificationTypeNo.LIKE, comment.id, NotificationObjectType.COMMENT)
+    else:
+        notification_repo = injector.get(NotificationInterface)
+        notification_repo.delete(NotificationTypeNo.LIKE, ids[0], user_id)
+
     return LikeDTO(is_like=is_like, like_count=like_count)
 
 
