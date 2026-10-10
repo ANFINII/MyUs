@@ -5,12 +5,12 @@ from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from api.src.domain.interface.message.data import MessageData as MessageDomainData
 from api.src.domain.interface.message.interface import FilterOption, MessageInterface, SortOption
-from api.src.domain.interface.notification.data import NotificationContentData, NotificationData
 from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO, MessageReplyDTO
+from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_author_data
-from api.utils.enum.notification import NotificationObjectType, NotificationType, NotificationTypeNo
+from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
 
 def get_message_data(message_ulid: str) -> MessageDomainData | None:
@@ -108,20 +108,8 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
 
     if parent_id is not None:
         parent_messages = message_repo.bulk_get([parent_id])
-        if len(parent_messages) > 0 and parent_messages[0].author_id != user_id:
-            notification_repo = injector.get(NotificationInterface)
-            notification = NotificationData(
-                id=0,
-                ulid="",
-                user_from_id=user_id,
-                user_to_id=parent_messages[0].author_id,
-                type_no=NotificationTypeNo.REPLY,
-                type_name=NotificationType.REPLY,
-                object_id=message.id,
-                object_type=NotificationObjectType.MESSAGE,
-                content=NotificationContentData(id=0, ulid="", title="", text="", read=0),
-            )
-            notification_repo.bulk_save([notification])
+        if len(parent_messages) > 0:
+            create_notification(user_id, parent_messages[0].author_id, NotificationTypeNo.REPLY, message.id, NotificationObjectType.MESSAGE)
 
     data = MessageDTO(
         ulid=message.ulid,

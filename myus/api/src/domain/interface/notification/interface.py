@@ -41,7 +41,7 @@ class NotificationInterface(ABC):
         ...
 
     @abstractmethod
-    def delete(self, type_no: NotificationTypeNo, object_id: int) -> None:
+    def delete(self, type_no: NotificationTypeNo, object_id: int, user_from_id: int = 0) -> None:
         ...
 
     @abstractmethod

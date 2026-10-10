@@ -105,8 +105,11 @@ class NotificationRepository(NotificationInterface):
 
         return new_ids
 
-    def delete(self, type_no: NotificationTypeNo, object_id: int) -> None:
-        Notification.objects.filter(type_no=type_no, object_id=object_id).delete()
+    def delete(self, type_no: NotificationTypeNo, object_id: int, user_from_id: int = 0) -> None:
+        qs = Notification.objects.filter(type_no=type_no, object_id=object_id)
+        if user_from_id:
+            qs = qs.filter(user_from_id=user_from_id)
+        qs.delete()
 
     def confirm(self, ulid: str, user_id: int) -> None:
         notification = Notification.objects.filter(ulid=ulid).first()
