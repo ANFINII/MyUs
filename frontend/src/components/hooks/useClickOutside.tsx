@@ -10,7 +10,6 @@ interface Props {
 export function useClickOutside(props: Props): void {
   const { actionRef, triggerRef, isActive, onClick } = props
 
-  // onClick がレンダーごとに作り直されても、リスナーを付け直さないように ref に入れる
   const onClickRef = useRef<() => void>(onClick)
   onClickRef.current = onClick
 
