@@ -5,7 +5,7 @@ import { getLocale } from 'lib/i18n'
 
 type Url = string | { pathname: string; query?: ParsedUrlQueryInput }
 
-export interface Router {
+export interface OutProps {
   pathname: string
   query: ParsedUrlQuery
   locale?: string
@@ -28,7 +28,7 @@ const toSearch = (query: ParsedUrlQueryInput): string => {
   return search ? `?${search}` : ''
 }
 
-export function useRouter(): Router {
+export function useRouter(): OutProps {
   const router = useTanstackRouter()
   const location = useRouterState({ select: (s) => s.location })
   const params = useRouterState({ select: (s) => s.matches.at(-1)?.params })
