@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+const getRecognitionClass = (): (new () => Recognition) | undefined => {
+  const speechWindow = window as unknown as Record<string, (new () => Recognition) | undefined>
+  return speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition
+}
+
 interface RecognitionItem {
   transcript: string
   isFinal: boolean
@@ -36,11 +41,6 @@ interface OutProps {
 interface Props {
   onResult: (transcript: string) => void
   lang?: string
-}
-
-const getRecognitionClass = (): (new () => Recognition) | undefined => {
-  const speechWindow = window as unknown as Record<string, (new () => Recognition) | undefined>
-  return speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition
 }
 
 export function useRecording(props: Props): OutProps {
