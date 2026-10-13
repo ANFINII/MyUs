@@ -3,7 +3,6 @@ import { API_URL } from 'lib/config'
 import { ChatMessage, ChatReply } from 'types/internal/message'
 import { WsCommand } from 'utils/constants/enum'
 
-// サーバー（usecase/broadcast.py）から届くデータ。キーは snake_case のまま届く
 interface AuthorPayload {
   avatar: string
   ulid: string
