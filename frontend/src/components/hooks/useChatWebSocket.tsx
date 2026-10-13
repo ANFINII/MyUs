@@ -2,37 +2,13 @@ import { useRef, useEffect } from 'react'
 import { API_URL } from 'lib/config'
 import { ChatMessage, ChatReply } from 'types/internal/message'
 import { WsCommand } from 'utils/constants/enum'
-
-interface AuthorPayload {
-  avatar: string
-  ulid: string
-  nickname: string
-  follower_count: number
-}
-
-interface MessagePayload {
-  ulid: string
-  text: string
-  created: Date
-  updated: Date
-  author: AuthorPayload
-}
-
-interface ReplyPayload extends MessagePayload {
-  parent_ulid: string
-}
+import { snakeCamel } from 'utils/functions/convertCase'
 
 type ChatEvent =
-  | { command: WsCommand.CreateMessage; message: MessagePayload }
-  | { command: WsCommand.CreateReplyMessage; message: ReplyPayload }
+  | { command: WsCommand.CreateMessage; message: Omit<ChatMessage, 'replyCount'> }
+  | { command: WsCommand.CreateReplyMessage; message: Omit<ChatReply, 'replyCount'> }
   | { command: WsCommand.UpdateMessage; message: { ulid: string; text: string } }
   | { command: WsCommand.DeleteMessage; message: { ulid: string } }
-
-const toChatMessage = (payload: MessagePayload): ChatMessage => {
-  const { ulid, text, created, updated, author } = payload
-  const { avatar, nickname, follower_count: followerCount } = author
-  return { ulid, text, replyCount: 0, created, updated, author: { avatar, ulid: author.ulid, nickname, followerCount } }
-}
 
 interface Props {
   ulid: string | undefined
@@ -66,16 +42,16 @@ export function useChatWebSocket(props: Props): void {
     const ws = new WebSocket(`${wsScheme}://${apiUrl.host}/ws/chat/detail/${ulid}`)
 
     ws.onmessage = (event: MessageEvent<string>) => {
-      const data: ChatEvent = JSON.parse(event.data)
+      const data = snakeCamel(JSON.parse(event.data)) as ChatEvent
 
       switch (data.command) {
         case WsCommand.CreateMessage: {
-          onCreateMessageRef.current(toChatMessage(data.message))
+          onCreateMessageRef.current({ ...data.message, replyCount: 0 })
           scrollToBottomRef.current()
           break
         }
         case WsCommand.CreateReplyMessage: {
-          onCreateReplyRef.current({ ...toChatMessage(data.message), parentUlid: data.message.parent_ulid })
+          onCreateReplyRef.current({ ...data.message, replyCount: 0 })
           break
         }
         case WsCommand.UpdateMessage: {
