@@ -1,13 +1,13 @@
 import { PAGE_SIZE } from 'utils/functions/common'
 import { useRouter } from 'components/hooks/useRouter'
 
-interface ServerPagination {
+interface OutProps {
   currentPage: number
   totalPages: number
   handlePage: (page: number) => void
 }
 
-export function usePagination(total: number, page: number): ServerPagination {
+export function usePagination(total: number, page: number): OutProps {
   const router = useRouter()
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
