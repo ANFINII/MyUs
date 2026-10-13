@@ -14,6 +14,8 @@ export function useDragResize(): OutProps {
 
   const handleDrag = useCallback((e: MouseEvent, onMove: (clientX: number) => void): void => {
     e.preventDefault()
+    // 前回の mouseup が届かなかった（ウィンドウの外で離した等）ときに、前回のリスナーを残さない
+    cleanupRef.current?.()
     document.body.style.cursor = 'col-resize'
     document.body.style.userSelect = 'none'
 
