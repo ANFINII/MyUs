@@ -10,12 +10,12 @@ interface Props {
   handleToast: (content: string, isError: boolean) => void
 }
 
-export const useApiError = (props: Props): OutProps => {
+export function useApiError(props: Props): OutProps {
   const { handleToast } = props
 
   const [message, setMessage] = useState<string>('')
 
-  const handleError = (content: string, errorMessage?: string) => {
+  const handleError = (content: string, errorMessage?: string): void => {
     if (errorMessage) {
       setMessage(errorMessage)
     } else {

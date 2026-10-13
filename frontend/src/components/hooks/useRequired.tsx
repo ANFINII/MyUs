@@ -6,7 +6,7 @@ interface OutProps {
   validate: (values: Record<string, unknown>) => boolean
 }
 
-export const useRequired = (): OutProps => {
+export function useRequired(): OutProps {
   const [error, setError] = useState<string | undefined>(undefined)
 
   const validate = (values: Record<string, unknown>): boolean => {
