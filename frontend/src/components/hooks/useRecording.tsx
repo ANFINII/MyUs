@@ -60,7 +60,6 @@ export function useRecording(props: Props): OutProps {
     speakingTimerRef.current = null
   }
 
-  // アンマウント時に音声認識と発話中表示のタイマーを止める
   useEffect(() => {
     return () => {
       recognitionRef.current?.stop()
