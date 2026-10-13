@@ -6,7 +6,7 @@ interface OutProps {
   formatTimeAgo: (datetime: Date) => string
 }
 
-export const useDatetime = (): OutProps => {
+export function useDatetime(): OutProps {
   const { t, i18n } = useTranslation()
   const locale = i18n.language
 

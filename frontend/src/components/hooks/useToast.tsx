@@ -12,7 +12,7 @@ interface OutProps {
   handleToast: (content: string, isError: boolean) => void
 }
 
-export const useToast = (): OutProps => {
+export function useToast(): OutProps {
   const { t } = useTranslation()
   const [content, setContent] = useState<string>('')
   const [isError, setIsError] = useState<boolean>(false)
@@ -21,7 +21,7 @@ export const useToast = (): OutProps => {
 
   const toast = { content, isError, isToast, setIsToast }
 
-  const handleToast = (content: string, isError: boolean) => {
+  const handleToast = (content: string, isError: boolean): void => {
     setContent(isFetchKey(content) ? t(content) : content)
     setIsError(isError)
     setIsToast(true)

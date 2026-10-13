@@ -12,8 +12,8 @@ export function usePagination(total: number, page: number): OutProps {
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
 
-  const handlePage = (p: number) => {
-    router.push({ pathname: router.pathname, query: { ...router.query, page: p } })
+  const handlePage = (nextPage: number): void => {
+    router.push({ pathname: router.pathname, query: { ...router.query, page: nextPage } })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
