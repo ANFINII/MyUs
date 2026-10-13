@@ -7,14 +7,12 @@ interface OutProps {
 export function useDragResize(): OutProps {
   const cleanupRef = useRef<(() => void) | null>(null)
 
-  // ドラッグ中にアンマウントされたときに、document のリスナーと body のスタイルを戻す
   useEffect(() => {
     return () => cleanupRef.current?.()
   }, [])
 
   const handleDrag = useCallback((e: MouseEvent, onMove: (clientX: number) => void): void => {
     e.preventDefault()
-    // 前回の mouseup が届かなかった（ウィンドウの外で離した等）ときに、前回のリスナーを残さない
     cleanupRef.current?.()
     document.body.style.cursor = 'col-resize'
     document.body.style.userSelect = 'none'
