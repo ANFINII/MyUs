@@ -3,6 +3,38 @@ import { API_URL } from 'lib/config'
 import { ChatMessage, ChatReply } from 'types/internal/message'
 import { WsCommand } from 'utils/constants/enum'
 
+// サーバー（usecase/broadcast.py）から届くデータ。キーは snake_case のまま届く
+interface AuthorPayload {
+  avatar: string
+  ulid: string
+  nickname: string
+  follower_count: number
+}
+
+interface MessagePayload {
+  ulid: string
+  text: string
+  created: Date
+  updated: Date
+  author: AuthorPayload
+}
+
+interface ReplyPayload extends MessagePayload {
+  parent_ulid: string
+}
+
+type ChatEvent =
+  | { command: WsCommand.CreateMessage; message: MessagePayload }
+  | { command: WsCommand.CreateReplyMessage; message: ReplyPayload }
+  | { command: WsCommand.UpdateMessage; message: { ulid: string; text: string } }
+  | { command: WsCommand.DeleteMessage; message: { ulid: string } }
+
+const toChatMessage = (payload: MessagePayload): ChatMessage => {
+  const { ulid, text, created, updated, author } = payload
+  const { avatar, nickname, follower_count: followerCount } = author
+  return { ulid, text, replyCount: 0, created, updated, author: { avatar, ulid: author.ulid, nickname, followerCount } }
+}
+
 interface Props {
   ulid: string | undefined
   onCreateMessage: (message: ChatMessage) => void
@@ -12,14 +44,14 @@ interface Props {
   scrollToBottom: () => void
 }
 
-export const useChatWebSocket = (props: Props): void => {
+export function useChatWebSocket(props: Props): void {
   const { ulid, onCreateMessage, onCreateReply, onUpdateMessage, onDeleteMessage, scrollToBottom } = props
 
-  const onCreateMessageRef = useRef(onCreateMessage)
-  const onCreateReplyRef = useRef(onCreateReply)
-  const onUpdateMessageRef = useRef(onUpdateMessage)
-  const onDeleteMessageRef = useRef(onDeleteMessage)
-  const scrollToBottomRef = useRef(scrollToBottom)
+  const onCreateMessageRef = useRef<(message: ChatMessage) => void>(onCreateMessage)
+  const onCreateReplyRef = useRef<(reply: ChatReply) => void>(onCreateReply)
+  const onUpdateMessageRef = useRef<(ulid: string, text: string) => void>(onUpdateMessage)
+  const onDeleteMessageRef = useRef<(ulid: string) => void>(onDeleteMessage)
+  const scrollToBottomRef = useRef<() => void>(scrollToBottom)
 
   onCreateMessageRef.current = onCreateMessage
   onCreateReplyRef.current = onCreateReply
@@ -34,28 +66,25 @@ export const useChatWebSocket = (props: Props): void => {
     const wsScheme = apiUrl.protocol === 'https:' ? 'wss' : 'ws'
     const ws = new WebSocket(`${wsScheme}://${apiUrl.host}/ws/chat/detail/${ulid}`)
 
-    ws.onmessage = (event) => {
-      const eventData = JSON.parse(event.data)
-      const data = eventData.message
+    ws.onmessage = (event: MessageEvent<string>) => {
+      const data: ChatEvent = JSON.parse(event.data)
 
-      switch (eventData.command) {
+      switch (data.command) {
         case WsCommand.CreateMessage: {
-          const { ulid, text, created, updated, author } = data
-          onCreateMessageRef.current({ ulid, text, replyCount: 0, created, updated, author })
+          onCreateMessageRef.current(toChatMessage(data.message))
           scrollToBottomRef.current()
           break
         }
         case WsCommand.CreateReplyMessage: {
-          const { ulid, text, created, updated, author, parent_ulid: parentUlid } = data
-          onCreateReplyRef.current({ ulid, text, replyCount: 0, created, updated, author, parentUlid })
+          onCreateReplyRef.current({ ...toChatMessage(data.message), parentUlid: data.message.parent_ulid })
           break
         }
         case WsCommand.UpdateMessage: {
-          onUpdateMessageRef.current(data.ulid, data.text)
+          onUpdateMessageRef.current(data.message.ulid, data.message.text)
           break
         }
         case WsCommand.DeleteMessage: {
-          onDeleteMessageRef.current(data.ulid)
+          onDeleteMessageRef.current(data.message.ulid)
           break
         }
       }
