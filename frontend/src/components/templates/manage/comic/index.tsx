@@ -34,7 +34,7 @@ export default function ManageComics(props: Props): React.JSX.Element {
   const router = useRouter()
   const { t } = useTranslation()
   const queryClient = useQueryClient()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
   const { currentPage, totalPages, handlePage } = usePagination(total, page)
@@ -149,7 +149,7 @@ export default function ManageComics(props: Props): React.JSX.Element {
         table={{ datas: items, columns, rowKey: (c) => c.ulid }}
         selection={{ keys: selectedKeys, onChange: setSelectedKeys }}
         pagination={{ current: currentPage, total: totalPages, onChange: handlePage }}
-        deletion={{ open: isModal, loading, onClose: handleModal, onAction: handleDeleteSubmit }}
+        deletion={{ open: isModal, loading: isLoading, onClose: handleModal, onAction: handleDeleteSubmit }}
       />
     </Main>
   )

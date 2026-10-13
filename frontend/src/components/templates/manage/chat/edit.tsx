@@ -34,7 +34,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { t } = useTranslation()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { handleError } = useApiError({ handleToast })
@@ -66,7 +66,7 @@ export default function ManageChatEdit(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name={t('manage.button.save')} loading={loading} onClick={handleForm} />
+      <Button color="green" size="s" name={t('manage.button.save')} loading={isLoading} onClick={handleForm} />
       <Button color="blue" size="s" name={t('status.back')} onClick={handleBack} />
     </HStack>
   )

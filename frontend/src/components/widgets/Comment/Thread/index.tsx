@@ -31,7 +31,7 @@ export default function CommentThread(props: Props): React.JSX.Element {
   const { isActive } = user
 
   const { t } = useTranslation()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
@@ -101,7 +101,7 @@ export default function CommentThread(props: Props): React.JSX.Element {
         </div>
       </VStack>
       <ActionButton open={isMenu} onMenu={handleMenu} isRound disabled={disabled} actionItems={actionItems} />
-      <CommentDeleteModal open={isModal} onClose={handleModal} onAction={handleDelete} loading={loading} comment={reply} />
+      <CommentDeleteModal open={isModal} onClose={handleModal} onAction={handleDelete} loading={isLoading} comment={reply} />
     </HStack>
   )
 }

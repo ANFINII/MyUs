@@ -40,7 +40,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { t } = useTranslation()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -146,7 +146,7 @@ export default function CommentContent(props: Props): React.JSX.Element {
           </VStack>
         </HStack>
         <ActionButton open={isMenu} onMenu={handleMenu} size="s" isRound disabled={disabled} actionItems={actionItems} />
-        <CommentDeleteModal open={isModal} onClose={handleModal} loading={loading} onAction={handleDelete} comment={comment} />
+        <CommentDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleDelete} comment={comment} />
       </HStack>
 
       {isThreadView && (

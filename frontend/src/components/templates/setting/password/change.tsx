@@ -18,7 +18,7 @@ import style from '../Setting.module.scss'
 export default function PasswordChange(): React.JSX.Element {
   const router = useRouter()
   const { t } = useTranslation()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<PasswordChangeIn>({ oldPassword: '', password1: '', password2: '' })
@@ -59,7 +59,7 @@ export default function PasswordChange(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="green" size="l" name={t('setting.button.change')} loading={loading} onClick={handleSubmit} />
+            <Button color="green" size="l" name={t('setting.button.change')} loading={isLoading} onClick={handleSubmit} />
             <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
           </VStack>
         </form>

@@ -11,11 +11,11 @@ interface Props {
 export default function Layout(props: Props): React.JSX.Element {
   const { children } = props
 
-  const { loading } = usePageLoading()
+  const { isLoading } = usePageLoading()
 
   return (
     <div className={style.layout}>
-      <Header loading={loading} />
+      <Header loading={isLoading} />
       <SideBar />
       <SearchTagBar />
       {children}

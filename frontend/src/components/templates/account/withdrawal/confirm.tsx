@@ -21,7 +21,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
   const router = useRouter()
   const { t } = useTranslation()
   const { resetUser } = useUser()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<WithdrawalIn>({ password: '' })
@@ -56,7 +56,7 @@ export default function WithdrawalConfirm(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="red" size="l" name={t('account.withdrawal.submit')} loading={loading} onClick={handleSubmit} />
+            <Button color="red" size="l" name={t('account.withdrawal.submit')} loading={isLoading} onClick={handleSubmit} />
             <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
           </VStack>
         </form>

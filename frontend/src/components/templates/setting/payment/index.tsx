@@ -23,7 +23,7 @@ export default function Payment(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { t, i18n } = useTranslation()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [selectedPlan, setSelectedPlan] = useState<string>('')
@@ -85,8 +85,8 @@ export default function Payment(props: Props): React.JSX.Element {
         onClose={handleModal}
         title={t('setting.payment.cancelTitle')}
         actions={[
-          { name: t('setting.button.cancel'), color: 'white', onClick: handleModal, disabled: loading },
-          { name: t('setting.payment.cancel'), color: 'red', onClick: handleCancelSubmit, loading },
+          { name: t('setting.button.cancel'), color: 'white', onClick: handleModal, disabled: isLoading },
+          { name: t('setting.payment.cancel'), color: 'red', onClick: handleCancelSubmit, loading: isLoading },
         ]}
       >
         <p>{t('setting.payment.cancelConfirm')}</p>

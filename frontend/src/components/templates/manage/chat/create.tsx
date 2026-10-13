@@ -32,7 +32,7 @@ export default function ChatCreate(props: Props): React.JSX.Element {
   const channelOptions: Option[] = channels.map((c) => ({ label: c.name, value: c.ulid }))
   const categoryOptions: Option[] = [{ label: t('manage.form.unselected'), value: '' }, ...categories.map((c) => ({ label: c.jpName, value: c.ulid }))]
 
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<ChatIn>({ channelUlid, categoryUlid: '', publish: true, title: '', content: '', period: '' })
@@ -63,7 +63,7 @@ export default function ChatCreate(props: Props): React.JSX.Element {
       type="table"
       toast={toast}
       isFooter={false}
-      button={<Button color="green" size="s" name={t('manage.button.create')} loading={loading} onClick={handleForm} />}
+      button={<Button color="green" size="s" name={t('manage.button.create')} loading={isLoading} onClick={handleForm} />}
     >
       <form method="POST" action="">
         <VStack gap="8">

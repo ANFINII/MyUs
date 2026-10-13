@@ -24,7 +24,7 @@ export default function Login(): React.JSX.Element {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { updateUser } = useUser()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })
@@ -72,7 +72,7 @@ export default function Login(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="blue" size="l" name={t('status.login')} type="submit" loading={loading} onClick={handleSubmit} />
+            <Button color="blue" size="l" name={t('status.login')} type="submit" loading={isLoading} onClick={handleSubmit} />
             <Button color="green" size="l" name={t('account.login.signup')} onClick={handleSignup} />
           </VStack>
         </form>

@@ -74,7 +74,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
   const router = useRouter()
   const { t } = useTranslation()
   const { user } = useUser()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { formatDatetime } = useDatetime()
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isContentView, setIsContentView] = useState<boolean>(false)
@@ -173,7 +173,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
       </div>
       <Divide />
 
-      <CommentInput user={user} count={comments.length} loading={loading} value={text} onChange={handleComment} onClick={handleMediaComment} />
+      <CommentInput user={user} count={comments.length} loading={isLoading} value={text} onChange={handleComment} onClick={handleMediaComment} />
       <VStack gap="6">
         <View isView={isCommentView} onView={handleCommentView} content={isCommentView ? t('view.collapse') : t('view.expand')} />
         <VStack gap="10" className={cx(style.comment_aria, isCommentView && style.active)}>
@@ -182,7 +182,7 @@ export default function MediaDetailLeft(props: Props): React.JSX.Element {
           ))}
         </VStack>
       </VStack>
-      <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={loading} onAction={handleSubscribe} channel={channel} followerCount={subscribeCount} />
+      <SubscribeDeleteModal open={isModal} onClose={handleModal} loading={isLoading} onAction={handleSubscribe} channel={channel} followerCount={subscribeCount} />
     </div>
   )
 }

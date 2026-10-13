@@ -35,7 +35,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
 
   const router = useRouter()
   const { t } = useTranslation()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })
   const [bannerFile, setBannerFile] = useState<File>()
@@ -94,7 +94,7 @@ export default function SettingMyPageEdit(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name={t('setting.button.register')} loading={loading} onClick={handleSubmit} />
+      <Button color="green" size="s" name={t('setting.button.register')} loading={isLoading} onClick={handleSubmit} />
       <Button color="blue" size="s" name={t('status.back')} onClick={handleBack} />
     </HStack>
   )

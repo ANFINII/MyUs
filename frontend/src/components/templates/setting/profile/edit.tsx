@@ -37,7 +37,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
   const router = useRouter()
   const { t } = useTranslation()
   const { updateUser } = useUser()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { message, setMessage, handleError } = useApiError({ handleToast })
@@ -86,7 +86,7 @@ export default function SettingProfileEdit(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name={t('setting.button.register')} loading={loading} onClick={handlSubmit} />
+      <Button color="green" size="s" name={t('setting.button.register')} loading={isLoading} onClick={handlSubmit} />
       <Button color="blue" size="s" name={t('status.back')} onClick={handleBack} />
     </HStack>
   )

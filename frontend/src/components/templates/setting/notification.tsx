@@ -20,7 +20,7 @@ export default function SettingNotification(props: Props): React.JSX.Element {
   const { userNotification } = props
 
   const { t } = useTranslation()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { toast, handleToast } = useToast()
   const [values, setValues] = useState<UserNotification>(userNotification)
 
@@ -49,7 +49,7 @@ export default function SettingNotification(props: Props): React.JSX.Element {
 
   const button = (
     <HStack gap="4">
-      <Button color="green" size="s" name={t('setting.button.save')} loading={loading} onClick={handleSubmit} />
+      <Button color="green" size="s" name={t('setting.button.save')} loading={isLoading} onClick={handleSubmit} />
       <Button color="blue" size="s" name={t('setting.button.reset')} onClick={handleReset} />
     </HStack>
   )

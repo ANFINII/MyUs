@@ -27,7 +27,7 @@ const initChannel: ChannelIn = {
 export default function ChannelCreate(): React.JSX.Element {
   const router = useRouter()
   const { t } = useTranslation()
-  const { loading, handleLoading } = useLoading()
+  const { isLoading, handleLoading } = useLoading()
   const { error, validate } = useRequired()
   const { toast, handleToast } = useToast()
   const { message, handleError } = useApiError({ handleToast })
@@ -92,7 +92,7 @@ export default function ChannelCreate(): React.JSX.Element {
           </VStack>
 
           <VStack gap="12" className="mv_40">
-            <Button color="green" size="l" name={t('setting.channelCreate.submit')} type="submit" loading={loading} onClick={handleSubmit} />
+            <Button color="green" size="l" name={t('setting.channelCreate.submit')} type="submit" loading={isLoading} onClick={handleSubmit} />
             <Button color="blue" size="l" name={t('status.back')} onClick={handleBack} />
           </VStack>
         </form>
