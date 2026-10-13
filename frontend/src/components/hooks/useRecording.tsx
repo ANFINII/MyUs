@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface RecognitionItem {
   transcript: string
@@ -38,45 +38,47 @@ interface Props {
   lang?: string
 }
 
-// ブラウザ対応可否は変化しないため購読は不要。SSR 時は未対応として扱う
-const subscribeNoop = (): (() => void) => () => {}
-const getIsSupported = (): boolean => 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window
-const getServerIsSupported = (): boolean => false
+const getRecognitionClass = (): (new () => Recognition) | undefined => {
+  const speechWindow = window as unknown as Record<string, (new () => Recognition) | undefined>
+  return speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition
+}
 
 export function useRecording(props: Props): OutProps {
   const { onResult, lang = 'ja-JP' } = props
 
-  const onResultRef = useRef(onResult)
+  const onResultRef = useRef<(transcript: string) => void>(onResult)
   const recognitionRef = useRef<Recognition | null>(null)
   const speakingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [isRecording, setIsRecording] = useState(false)
-  const [isSpeaking, setIsSpeaking] = useState(false)
-  const isSupported = useSyncExternalStore(subscribeNoop, getIsSupported, getServerIsSupported)
+  const [isRecording, setIsRecording] = useState<boolean>(false)
+  const [isSpeaking, setIsSpeaking] = useState<boolean>(false)
+  const isSupported = getRecognitionClass() !== undefined
 
-  useEffect(() => {
-    onResultRef.current = onResult
-  }, [onResult])
+  onResultRef.current = onResult
 
+  const clearSpeakingTimer = (): void => {
+    if (speakingTimerRef.current) clearTimeout(speakingTimerRef.current)
+    speakingTimerRef.current = null
+  }
+
+  // アンマウント時に音声認識と発話中表示のタイマーを止める
   useEffect(() => {
     return () => {
       recognitionRef.current?.stop()
+      if (speakingTimerRef.current) clearTimeout(speakingTimerRef.current)
     }
   }, [])
 
-  const handleToggle = useCallback(() => {
+  const handleToggle = useCallback((): void => {
     if (isRecording) {
       recognitionRef.current?.stop()
       setIsRecording(false)
       return
     }
 
-    const SpeechRecognitionClass =
-      (window as unknown as Record<string, new () => Recognition>).SpeechRecognition ??
-      (window as unknown as Record<string, new () => Recognition>).webkitSpeechRecognition
+    const RecognitionClass = getRecognitionClass()
+    if (!RecognitionClass) return
 
-    if (!SpeechRecognitionClass) return
-
-    const recognition = new SpeechRecognitionClass()
+    const recognition = new RecognitionClass()
     recognition.continuous = true
     recognition.interimResults = true
     recognition.lang = lang
@@ -85,13 +87,12 @@ export function useRecording(props: Props): OutProps {
       const { results, resultIndex } = event
       for (let i = resultIndex; i < results.length; i++) {
         const result = results.item(i)
+        clearSpeakingTimer()
         if (result.isFinal) {
           onResultRef.current(result.item(0).transcript)
           setIsSpeaking(false)
-          if (speakingTimerRef.current) clearTimeout(speakingTimerRef.current)
         } else {
           setIsSpeaking(true)
-          if (speakingTimerRef.current) clearTimeout(speakingTimerRef.current)
           speakingTimerRef.current = setTimeout(() => setIsSpeaking(false), 500)
         }
       }
