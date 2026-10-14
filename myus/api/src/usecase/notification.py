@@ -1,11 +1,10 @@
-from api.src.domain.interface.notification.data import NotificationData
+from api.src.domain.interface.notification.data import NotificationContentData as NotificationContentDomainData, NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
 from api.src.domain.interface.user.data import UserNotificationData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.notification import NotificationContentData, NotificationItemDTO, NotificationDTO, NotificationUserDTO
-from api.src.usecase.user import get_user_data
-from api.utils.enum.notification import NotificationTypeNo
+from api.utils.enum.notification import NotificationObjectType, NotificationType, NotificationTypeNo
 from api.utils.functions.index import create_url
 
 
@@ -50,9 +49,39 @@ def get_enabled_types(setting: UserNotificationData) -> tuple[NotificationTypeNo
     return tuple(type_no for type_no, is_enabled in enabled.items() if is_enabled)
 
 
+def get_user_enabled_types(user_id: int) -> tuple[NotificationTypeNo, ...]:
+    repository = injector.get(UserInterface)
+    users = repository.bulk_get([user_id])
+    if len(users) == 0:
+        return ()
+
+    return get_enabled_types(users[0].notification)
+
+
+def create_notification(user_from_id: int, user_to_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> None:
+    if user_to_id != 0:
+        if user_to_id == user_from_id:
+            return
+        if type_no not in get_user_enabled_types(user_to_id):
+            return
+
+    repository = injector.get(NotificationInterface)
+    notification = NotificationData(
+        id=0,
+        ulid="",
+        user_from_id=user_from_id,
+        user_to_id=user_to_id,
+        type_no=type_no,
+        type_name=NotificationType[type_no.name],
+        object_id=object_id,
+        object_type=object_type,
+        content=NotificationContentDomainData(id=0, ulid="", title="", text="", read=0),
+    )
+    repository.bulk_save([notification])
+
+
 def get_notification(user_id: int) -> NotificationDTO:
-    user = get_user_data(user_id=user_id)
-    enabled_types = get_enabled_types(user.notification) if user is not None else ()
+    enabled_types = get_user_enabled_types(user_id)
     if len(enabled_types) == 0:
         return NotificationDTO(count=0, items=[])
 

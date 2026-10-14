@@ -9,8 +9,10 @@ from api.src.injectors.container import injector
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
 from api.src.types.dto.user import AuthorDTO
 from api.src.types.schema.comment import CommentCreateIn
+from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_author_data
 from api.utils.enum.media import CommentTypeNo, MediaType
+from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.functions.index import create_url
 from api.utils.functions.media import get_media_repository
 
@@ -107,19 +109,19 @@ def create_comment(user_id: int, input: CommentCreateIn) -> CommentDTO | None:
         log.warning("メディアが見つかりませんでした")
         return None
 
-    parent_id = None
+    parent: CommentData | None = None
     if input.parent_ulid:
         parent_ids = comment_repo.get_ids(FilterOption(ulid=input.parent_ulid, is_parent=True), SortOption())
         if len(parent_ids) == 0:
             return None
-        parent_id = parent_ids[0]
+        parent = comment_repo.bulk_get(parent_ids)[0]
 
     author = get_author_data(user_id)
     new_comment = CommentData(
         id=0,
         ulid="",
         author_id=user_id,
-        parent_id=parent_id,
+        parent_id=parent.id if parent is not None else None,
         type_no=input.type_no,
         type_name=input.type_name,
         object_id=media_ids[0],
@@ -134,6 +136,9 @@ def create_comment(user_id: int, input: CommentCreateIn) -> CommentDTO | None:
     comments = comment_repo.bulk_get(new_ids)
     assert len(comments) > 0, "コメントの作成に失敗しました"
     comment = comments[0]
+
+    if parent is not None:
+        create_notification(user_id, parent.author_id, NotificationTypeNo.REPLY, comment.id, NotificationObjectType.COMMENT)
 
     data = CommentDTO(
         ulid=comment.ulid,

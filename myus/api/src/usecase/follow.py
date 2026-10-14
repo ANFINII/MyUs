@@ -6,7 +6,9 @@ from api.src.domain.interface.user.data import UserAllData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.follow import FollowDTO, FollowUserDTO
+from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_user_data
+from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.functions.index import create_url
 
 
@@ -66,12 +68,14 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> FollowDT
 
     with transaction.atomic():
         if follow is None:
-            follow_repo.bulk_save([FollowData(
+            follow_ids = follow_repo.bulk_save([FollowData(
                 id=0,
                 follower_id=follower_id,
                 following_id=following_id,
                 is_follow=is_follow,
             )])
+            if is_follow:
+                create_notification(follower_id, following_id, NotificationTypeNo.FOLLOW, follow_ids[0], NotificationObjectType.FOLLOW)
         else:
             updated_follow = replace(follow, is_follow=is_follow)
             follow_repo.bulk_save([updated_follow])

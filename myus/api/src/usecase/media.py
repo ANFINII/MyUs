@@ -24,7 +24,9 @@ from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, 
 from api.src.usecase.channel import get_channel_data
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
+from api.src.usecase.notification import create_notification
 from api.utils.enum.media import CommentType, MediaType
+from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.map import comment_type_no_map
@@ -78,6 +80,8 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Me
             return
         updated = replace(videos[0], video=result.video, convert=result.convert, publish=input.publish)
         repository.bulk_save([updated])
+        if input.publish:
+            create_notification(channel.owner_id, 0, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
 
     EncodeWorker.submit(encode_task)
 
@@ -117,6 +121,8 @@ def create_music(input: MusicIn, music: UploadedFile) -> MediaCreateDTO | None:
         category_repo.bulk_save(MediaType.MUSIC, new_ids[0], categories)
 
     obj = repository.bulk_get(new_ids)[0]
+    if input.publish:
+        create_notification(channel.owner_id, 0, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
     return MediaCreateDTO(ulid=obj.ulid)
 
 
@@ -152,6 +158,8 @@ def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
         category_repo.bulk_save(MediaType.BLOG, new_ids[0], categories)
 
     obj = repository.bulk_get(new_ids)[0]
+    if input.publish:
+        create_notification(channel.owner_id, 0, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
     return MediaCreateDTO(ulid=obj.ulid)
 
 
@@ -187,6 +195,8 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
         category_repo.bulk_save(MediaType.COMIC, new_ids[0], categories)
 
     obj = repository.bulk_get(new_ids)[0]
+    if input.publish:
+        create_notification(channel.owner_id, 0, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
     return MediaCreateDTO(ulid=obj.ulid)
 
 
@@ -221,6 +231,8 @@ def create_picture(input: PictureIn, image: UploadedFile) -> MediaCreateDTO | No
         category_repo.bulk_save(MediaType.PICTURE, new_ids[0], categories)
 
     obj = repository.bulk_get(new_ids)[0]
+    if input.publish:
+        create_notification(channel.owner_id, 0, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
     return MediaCreateDTO(ulid=obj.ulid)
 
 
@@ -257,6 +269,8 @@ def create_chat(input: ChatIn) -> MediaCreateDTO | None:
         category_repo.bulk_save(MediaType.CHAT, new_ids[0], categories)
 
     obj = repository.bulk_get(new_ids)[0]
+    if input.publish:
+        create_notification(channel.owner_id, 0, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
     return MediaCreateDTO(ulid=obj.ulid)
 
 

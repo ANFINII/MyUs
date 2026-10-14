@@ -41,7 +41,7 @@ def marshal_data(data: NotificationData) -> Notification:
         id=data.id if data.id != 0 else None,
         ulid=data.ulid if data.ulid else ulid.new(),
         user_from_id=data.user_from_id,
-        user_to_id=data.user_to_id,
+        user_to_id=data.user_to_id if data.user_to_id != 0 else None,
         type_no=data.type_no,
         type_name=data.type_name,
         object_id=data.object_id,
