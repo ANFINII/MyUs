@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from '@tanstack/react-query'
+import { queryKeys } from 'lib/query/keys'
 import { Notification, NotificationOut } from 'types/internal/user'
-import { getNotification, postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
+import { postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
 import { NotificationType } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
 import { useRouter } from 'components/hooks/useRouter'
-import { useUser } from 'components/hooks/useUser'
 import AvatarLink from 'components/parts/Avatar/Link'
 import IconBell from 'components/parts/Icon/Bell'
 import IconCircle from 'components/parts/Icon/Circle'
@@ -15,6 +15,7 @@ import style from './DropMenu.module.scss'
 
 interface Props {
   open: boolean
+  notifications?: NotificationOut
   onClose: () => void
 }
 
@@ -22,22 +23,15 @@ const mediaObjs = [NotificationType.Video, NotificationType.Music, NotificationT
 const otherObjs = [NotificationType.Follow, NotificationType.Like, NotificationType.Reply, NotificationType.Views]
 
 export default function DropMenuNotice(props: Props): React.JSX.Element {
-  const { open, onClose } = props
+  const { open, notifications, onClose } = props
 
   const router = useRouter()
+  const queryClient = useQueryClient()
   const { t, i18n } = useTranslation()
-  const { user } = useUser()
-  const [notifications, setNotifications] = useState<NotificationOut>()
 
-  useEffect(() => {
-    if (!user.isActive) return
-    const fetch = async () => {
-      const ret = await getNotification()
-      if (ret.isErr()) return
-      setNotifications(ret.value)
-    }
-    fetch()
-  }, [user.isActive])
+  const updateNotifications = (update: (prev: NotificationOut) => NotificationOut): void => {
+    queryClient.setQueryData<NotificationOut>(queryKeys.notification, (prev) => prev && update(prev))
+  }
 
   const handleRouter = (url: string) => {
     router.push(url)
@@ -58,12 +52,12 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   }
 
   const handleClick = (typeName: NotificationType, notification: Notification) => () => {
-    const { ulid, contentObject, userFrom } = notification
+    const { ulid, contentObject, userFrom, isConfirmed } = notification
     postNotificationConfirmed(ulid)
-    setNotifications((prev) => {
-      if (prev === undefined) return prev
-      return { ...prev, items: prev.items.map((n) => (n.ulid === ulid ? { ...n, isConfirmed: true } : n)) }
-    })
+    updateNotifications((prev) => ({
+      count: isConfirmed ? prev.count : prev.count - 1,
+      items: prev.items.map((n) => (n.ulid === ulid ? { ...n, isConfirmed: true } : n)),
+    }))
     if (typeName === NotificationType.Video) handleRouter(`/media/video/${contentObject.ulid}`)
     if (typeName === NotificationType.Music) handleRouter(`/media/music/${contentObject.ulid}`)
     if (typeName === NotificationType.Blog) handleRouter(`/media/blog/${contentObject.ulid}`)
@@ -73,14 +67,14 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
     if (otherObjs.includes(typeName)) handleRouter(`/userpage/${userFrom.ulid}`)
   }
 
-  const handleDelete = (ulid: string) => (e: React.MouseEvent) => {
+  const handleDelete = (notification: Notification) => (e: React.MouseEvent) => {
+    const { ulid, isConfirmed } = notification
     e.stopPropagation()
     postNotificationDeleted(ulid)
-    setNotifications((prev) => {
-      if (prev === undefined) return prev
-      const items = prev.items.filter((n) => n.ulid !== ulid)
-      return { count: items.length, items }
-    })
+    updateNotifications((prev) => ({
+      count: isConfirmed ? prev.count : prev.count - 1,
+      items: prev.items.filter((n) => n.ulid !== ulid),
+    }))
   }
 
   return (
@@ -121,7 +115,7 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
                   )}
                   {typeName === NotificationType.Views && <>{readNotification(read, title)}</>}
                 </div>
-                <span title={t('noticeMenu.close')} className={style.close} onClick={handleDelete(ulid)}>
+                <span title={t('noticeMenu.close')} className={style.close} onClick={handleDelete(notification)}>
                   <IconCross size="18" className={style.close_icon} />
                 </span>
               </div>
