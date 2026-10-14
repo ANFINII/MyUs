@@ -4,6 +4,7 @@ import { SearchParams } from 'types/internal/media/output'
 // invalidateQueries で前方一致させるため、配列の先頭から粒度が細かくなるように定義する
 export const queryKeys = {
   user: ['user'] as const,
+  notification: ['notification'] as const,
   channels: ['channels'] as const,
   categories: ['categories'] as const,
 

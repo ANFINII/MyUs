@@ -1,4 +1,8 @@
 import { ChangeEvent, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { toQuery } from 'lib/query/client'
+import { queryKeys } from 'lib/query/keys'
+import { getNotification } from 'api/internal/user'
 import cx from 'utils/functions/cx'
 import { useRouter } from 'components/hooks/useRouter'
 import { useUser } from 'components/hooks/useUser'
@@ -29,11 +33,15 @@ export default function Header(props: Props): React.JSX.Element {
   const [isNotice, setIsNotice] = useState<boolean>(false)
   const [isProfile, setIsProfile] = useState<boolean>(false)
   const [search, setSearch] = useState<string>('')
+  const notificationQuery = useQuery({ queryKey: queryKeys.notification, queryFn: () => toQuery(getNotification()), enabled: user.isActive })
 
   const handleRouter = (url: string) => router.push(url)
   const handleSideMenu = () => setIsSideMenu(!isSideMenu)
   const handleCloud = () => setIsCloud(!isCloud)
-  const handleNotice = () => setIsNotice(!isNotice)
+  const handleNotice = () => {
+    if (!isNotice && user.isActive) notificationQuery.refetch()
+    setIsNotice(!isNotice)
+  }
   const handleProfile = () => setIsProfile(!isProfile)
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)
 
@@ -43,7 +51,8 @@ export default function Header(props: Props): React.JSX.Element {
     setIsProfile(false)
   }
 
-  const notificationCount = 0
+  const notifications = notificationQuery.data
+  const notificationCount = notifications?.count ?? 0
 
   return (
     <header className={cx(style.header, loading && style.loading)}>
@@ -76,7 +85,7 @@ export default function Header(props: Props): React.JSX.Element {
         <div className={cx(style.nav_6, style.color, isNotice && style.active)} onClick={handleNotice}>
           <IconBell size="1.5em" className={cx(style.bell, notificationCount > 0 && style.active)} />
           <IconExclamation size="1.2em" className={cx(style.exclamation, notificationCount > 0 && style.active)} />
-          <DropMenuNotice open={isNotice} onClose={handleNotice} />
+          <DropMenuNotice open={isNotice} notifications={notifications} onClose={handleNotice} />
         </div>
 
         <div className={cx(style.nav_7, style.color, isProfile && style.active)} onClick={handleProfile}>
