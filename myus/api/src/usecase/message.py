@@ -156,7 +156,7 @@ def delete_message(user_id: int, message_ulid: str) -> str | None:
     # 返信の場合はNotificationも削除
     if message.parent_id is not None:
         notification_repo = injector.get(NotificationInterface)
-        notification_repo.delete(NotificationTypeNo.REPLY, message.id)
+        notification_repo.delete(NotificationTypeNo.REPLY, message.id, user_id)
 
     chat_repo = injector.get(ChatInterface)
     chats = chat_repo.bulk_get([message.chat_id])
