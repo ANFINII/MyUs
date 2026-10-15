@@ -60,7 +60,7 @@ def get_user_enabled_types(user_id: int) -> tuple[NotificationTypeNo, ...]:
 
 def create_notification(user_from_id: int, user_to_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> None:
     if user_to_id != 0:
-        if user_to_id == user_from_id:
+        if user_to_id == user_from_id and type_no != NotificationTypeNo.VIEWS:
             return
         if type_no not in get_user_enabled_types(user_to_id):
             return

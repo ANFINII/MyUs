@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Picture
 from api.src.domain.entity.media.picture._convert import convert_data, marshal_data
@@ -56,3 +56,7 @@ class PictureRepository(PictureInterface):
 
     def is_liked(self, media_id: int, user_id: int) -> bool:
         return Picture.objects.filter(id=media_id, like__id=user_id).exists()
+
+    def increment_read(self, media_id: int) -> int:
+        Picture.objects.filter(id=media_id).update(read=F("read") + 1)
+        return Picture.objects.values_list("read", flat=True).get(id=media_id)

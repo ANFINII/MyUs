@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Blog
 from api.src.domain.entity.media.blog._convert import convert_data, marshal_data
@@ -56,3 +56,7 @@ class BlogRepository(BlogInterface):
 
     def is_liked(self, media_id: int, user_id: int) -> bool:
         return Blog.objects.filter(id=media_id, like__id=user_id).exists()
+
+    def increment_read(self, media_id: int) -> int:
+        Blog.objects.filter(id=media_id).update(read=F("read") + 1)
+        return Blog.objects.values_list("read", flat=True).get(id=media_id)
