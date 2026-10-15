@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Music
 from api.src.domain.entity.media.music._convert import convert_data, marshal_data
@@ -56,3 +56,7 @@ class MusicRepository(MusicInterface):
 
     def is_liked(self, media_id: int, user_id: int) -> bool:
         return Music.objects.filter(id=media_id, like__id=user_id).exists()
+
+    def increment_read(self, media_id: int) -> int:
+        Music.objects.filter(id=media_id).update(read=F("read") + 1)
+        return Music.objects.values_list("read", flat=True).get(id=media_id)

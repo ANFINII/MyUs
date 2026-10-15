@@ -10,6 +10,10 @@ class MediaCreateOut(BaseModel):
     ulid: str
 
 
+class MediaReadOut(BaseModel):
+    read: int
+
+
 class MediaOut(BaseModel):
     ulid: str
     title: str

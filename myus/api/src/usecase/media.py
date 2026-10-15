@@ -18,9 +18,11 @@ from api.src.domain.interface.media.comic.interface import ComicInterface
 from api.src.domain.interface.media.picture.interface import PictureInterface
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PAGE_SIZE, PageOption, SortOption, SortType
+from api.src.domain.interface.notification.interface import NotificationInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.media import MediaCreateDTO, HomeDTO, VideoDetailDTO, MusicDetailDTO, BlogDetailDTO, ComicDetailDTO, PictureDetailDTO, ChatDetailDTO
 from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn
+from api.src.usecase.access_log import record_access
 from api.src.usecase.channel import get_channel_data
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
@@ -33,7 +35,10 @@ from api.utils.functions.map import comment_type_no_map
 from api.utils.functions.user import get_media_user
 from api.utils.functions.convert.encode_worker import EncodeWorker
 from api.utils.functions.convert.video_encoding import convert_video
-from api.utils.functions.media import save_upload
+from api.utils.functions.media import get_media_repository, save_upload
+
+
+VIEWS_THRESHOLDS = (10000, 100000, 1000000, 10000000, 100000000, 1000000000)
 
 
 def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> MediaCreateDTO | None:
@@ -579,3 +584,28 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Cha
     )
 
     return data
+
+
+def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> int | None:
+    repository = get_media_repository(media_type)
+    ids = repository.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption(limit=1))
+    if len(ids) == 0:
+        log.info("data not found", ulid=ulid)
+        return None
+
+    obj = repository.bulk_get(ids)[0]
+    with transaction.atomic():
+        if not record_access(ip_address, media_type, obj.id):
+            return obj.read
+
+        read = repository.increment_read(obj.id)
+        if read in VIEWS_THRESHOLDS:
+            create_views_notification(obj.channel.owner_id, NotificationObjectType(media_type.value), obj.id)
+
+    return read
+
+
+def create_views_notification(owner_id: int, object_type: NotificationObjectType, object_id: int) -> None:
+    notification_repo = injector.get(NotificationInterface)
+    notification_repo.delete(NotificationTypeNo.VIEWS, object_type, object_id, owner_id)
+    create_notification(owner_id, owner_id, NotificationTypeNo.VIEWS, object_id, object_type)

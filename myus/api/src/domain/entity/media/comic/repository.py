@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.db.models import Count, Prefetch
+from django.db.models import Count, Prefetch, F
 from django.db.models.query import QuerySet
 from api.db.models.media import Comic, ComicPage
 from api.src.domain.entity.media.comic._convert import convert_data, marshal_data
@@ -66,3 +66,7 @@ class ComicRepository(ComicInterface):
 
     def is_liked(self, media_id: int, user_id: int) -> bool:
         return Comic.objects.filter(id=media_id, like__id=user_id).exists()
+
+    def increment_read(self, media_id: int) -> int:
+        Comic.objects.filter(id=media_id).update(read=F("read") + 1)
+        return Comic.objects.values_list("read", flat=True).get(id=media_id)

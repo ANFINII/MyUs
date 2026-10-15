@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
 from api.src.domain.interface.notification.data import NotificationData
-from api.utils.enum.notification import NotificationTypeNo
+from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
 
 class SortType(Enum):
@@ -41,7 +41,7 @@ class NotificationInterface(ABC):
         ...
 
     @abstractmethod
-    def delete(self, type_no: NotificationTypeNo, object_id: int, user_from_id: int) -> None:
+    def delete(self, type_no: NotificationTypeNo, object_type: NotificationObjectType, object_id: int, user_from_id: int) -> None:
         ...
 
     @abstractmethod
