@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from api.utils.enum.media import MediaType
 
 
 class VideoIn(BaseModel):
@@ -101,3 +102,8 @@ class ChatUpdateIn(BaseModel):
 
 class BulkDeleteIn(BaseModel):
     ulids: list[str]
+
+
+class MediaReadIn(BaseModel):
+    ulid: str
+    media_type: MediaType

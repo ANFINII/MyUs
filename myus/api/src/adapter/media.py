@@ -15,7 +15,7 @@ from api.src.types.dto.message import MessageDTO
 from api.src.types.dto.user import AuthorDTO, MediaUserDTO
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.comment import CommentOut, ReplyOut
-from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn
+from api.src.types.schema.media.input import VideoIn, MusicIn, BlogIn, ComicIn, PictureIn, ChatIn, MediaReadIn
 from api.src.types.schema.media.output import HomeOut, VideoOut, MusicOut, BlogOut, ComicOut, PictureOut, ChatOut, MediaCreateOut, MediaReadOut, HashtagOut
 from api.src.types.schema.media.output import VideoListOut, MusicListOut, BlogListOut, ComicListOut, PictureListOut, ChatListOut
 from api.src.types.schema.media.output import VideoDetailOut, MusicDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut
@@ -29,7 +29,6 @@ from api.src.usecase.media import create_video, create_music, create_blog, creat
 from api.src.usecase.media import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
 from api.src.usecase.media import get_video_detail, get_music_detail, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
 from api.src.usecase.media import increment_media_read
-from api.utils.enum.media import MediaType
 
 
 class HomeAPI:
@@ -146,17 +145,6 @@ class VideoAPI:
 
         return 200, data
 
-    @staticmethod
-    @router.post("/{ulid}/read", response={200: MediaReadOut, 404: ErrorOut})
-    def post_read(request: HttpRequest, ulid: str):
-        log.info("VideoAPI post_read", ulid=ulid)
-
-        read = increment_media_read(MediaType.VIDEO, ulid, get_client_ip(request))
-        if read is None:
-            return 404, ErrorOut(message="data not found")
-
-        return 200, MediaReadOut(read=read)
-
 
 class MusicAPI:
     """MusicAPI"""
@@ -221,17 +209,6 @@ class MusicAPI:
 
         return 200, data
 
-    @staticmethod
-    @router.post("/{ulid}/read", response={200: MediaReadOut, 404: ErrorOut})
-    def post_read(request: HttpRequest, ulid: str):
-        log.info("MusicAPI post_read", ulid=ulid)
-
-        read = increment_media_read(MediaType.MUSIC, ulid, get_client_ip(request))
-        if read is None:
-            return 404, ErrorOut(message="data not found")
-
-        return 200, MediaReadOut(read=read)
-
 
 class BlogAPI:
     """BlogAPI"""
@@ -294,17 +271,6 @@ class BlogAPI:
         )
 
         return 200, data
-
-    @staticmethod
-    @router.post("/{ulid}/read", response={200: MediaReadOut, 404: ErrorOut})
-    def post_read(request: HttpRequest, ulid: str):
-        log.info("BlogAPI post_read", ulid=ulid)
-
-        read = increment_media_read(MediaType.BLOG, ulid, get_client_ip(request))
-        if read is None:
-            return 404, ErrorOut(message="data not found")
-
-        return 200, MediaReadOut(read=read)
 
 
 class ComicAPI:
@@ -369,17 +335,6 @@ class ComicAPI:
 
         return 200, data
 
-    @staticmethod
-    @router.post("/{ulid}/read", response={200: MediaReadOut, 404: ErrorOut})
-    def post_read(request: HttpRequest, ulid: str):
-        log.info("ComicAPI post_read", ulid=ulid)
-
-        read = increment_media_read(MediaType.COMIC, ulid, get_client_ip(request))
-        if read is None:
-            return 404, ErrorOut(message="data not found")
-
-        return 200, MediaReadOut(read=read)
-
 
 class PictureAPI:
     """PictureAPI"""
@@ -441,17 +396,6 @@ class PictureAPI:
         )
 
         return 200, data
-
-    @staticmethod
-    @router.post("/{ulid}/read", response={200: MediaReadOut, 404: ErrorOut})
-    def post_read(request: HttpRequest, ulid: str):
-        log.info("PictureAPI post_read", ulid=ulid)
-
-        read = increment_media_read(MediaType.PICTURE, ulid, get_client_ip(request))
-        if read is None:
-            return 404, ErrorOut(message="data not found")
-
-        return 200, MediaReadOut(read=read)
 
 
 class ChatAPI:
@@ -517,12 +461,18 @@ class ChatAPI:
 
         return 200, data
 
-    @staticmethod
-    @router.post("/{ulid}/read", response={200: MediaReadOut, 404: ErrorOut})
-    def post_read(request: HttpRequest, ulid: str):
-        log.info("ChatAPI post_read", ulid=ulid)
 
-        read = increment_media_read(MediaType.CHAT, ulid, get_client_ip(request))
+class MediaReadAPI:
+    """MediaReadAPI"""
+
+    router = Router()
+
+    @staticmethod
+    @router.post("", response={200: MediaReadOut, 404: ErrorOut})
+    def post(request: HttpRequest, input: MediaReadIn):
+        log.info("MediaReadAPI post", input=input)
+
+        read = increment_media_read(input.media_type, input.ulid, get_client_ip(request))
         if read is None:
             return 404, ErrorOut(message="data not found")
 
