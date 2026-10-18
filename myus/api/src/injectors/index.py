@@ -22,6 +22,7 @@ from api.src.domain.entity.hashtag.repository import HashtagRepository
 from api.src.domain.entity.ng_word.repository import NgWordRepository
 from api.src.domain.entity.search_tag.repository import SearchTagRepository
 from api.src.domain.entity.notification.repository import NotificationRepository
+from api.src.domain.entity.access_log.repository import AccessLogRepository
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.domain.interface.category.interface import CategoryInterface
 from api.src.domain.interface.channel.interface import ChannelInterface
@@ -40,6 +41,7 @@ from api.src.domain.interface.hashtag.interface import HashtagInterface
 from api.src.domain.interface.ng_word.interface import NgWordInterface
 from api.src.domain.interface.search_tag.interface import SearchTagInterface
 from api.src.domain.interface.notification.interface import NotificationInterface
+from api.src.domain.interface.access_log.interface import AccessLogInterface
 from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.interface import SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import TransactionInterface
@@ -125,6 +127,12 @@ class NotificationModule(Module):
     @provider
     def provide_notification_repository(self) -> NotificationInterface:
         return NotificationRepository()
+
+
+class AccessLogModule(Module):
+    @provider
+    def provide_access_log_repository(self) -> AccessLogInterface:
+        return AccessLogRepository()
 
 
 class FollowModule(Module):

@@ -159,7 +159,7 @@ def like_comment(user_id: int, ulid: str) -> LikeDTO | None:
         create_notification(user_id, comment.author_id, NotificationTypeNo.LIKE, comment.id, NotificationObjectType.COMMENT)
     else:
         notification_repo = injector.get(NotificationInterface)
-        notification_repo.delete(NotificationTypeNo.LIKE, ids[0], user_id)
+        notification_repo.delete(NotificationTypeNo.LIKE, NotificationObjectType.COMMENT, ids[0], user_id)
 
     return LikeDTO(is_like=is_like, like_count=like_count)
 
