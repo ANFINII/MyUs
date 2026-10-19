@@ -35,7 +35,7 @@
     "axios": "^1.20.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "i18next": "^26.5.2",
-    "isomorphic-dompurify": "~3.19.0",
+    "isomorphic-dompurify": "^4.6.0",
     "lodash": "^4.18.1",
     "neverthrow": "^8.2.0",
     "react": "^19.3.1",
