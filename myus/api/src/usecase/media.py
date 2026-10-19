@@ -95,7 +95,9 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Re
         updated = replace(videos[0], video=result.video, convert=result.convert, publish=input.publish)
         repository.bulk_save([updated])
         if input.publish:
-            create_notification(channel.owner_id, 0, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
+            notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
+            if notification_ret.is_err:
+                log.error("通知の作成に失敗しました", error=notification_ret.err_value.error_message, video_id=obj.id)
 
     EncodeWorker.submit(encode_task)
 
@@ -144,7 +146,10 @@ def create_music(input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, 
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
-        create_notification(channel.owner_id, 0, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
+        notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
@@ -189,7 +194,10 @@ def create_blog(input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, No
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
-        create_notification(channel.owner_id, 0, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
+        notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
@@ -234,7 +242,10 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
-        create_notification(channel.owner_id, 0, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
+        notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
@@ -278,7 +289,10 @@ def create_picture(input: PictureIn, image: UploadedFile) -> Result[MediaCreateD
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
-        create_notification(channel.owner_id, 0, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
+        notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
@@ -324,7 +338,10 @@ def create_chat(input: ChatIn) -> Result[MediaCreateDTO, NotFoundError | FatalEr
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
-        create_notification(channel.owner_id, 0, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
+        notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
+
     return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
@@ -693,22 +710,33 @@ def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> R
 
     obj = repository.bulk_get(ids)[0]
     with transaction.atomic():
-        ret = record_access(ip_address, media_type, obj.id)
-        if ret.is_err:
+        access_ret = record_access(ip_address, media_type, obj.id)
+        if access_ret.is_err:
             transaction.set_rollback(True)
-            return Result.err(ret.err_value)
+            return Result.err(access_ret.err_value)
 
-        if not ret.ok_value:
+        if not access_ret.ok_value:
             return Result.ok(obj.read)
 
         read = repository.increment_read(obj.id)
         if read in VIEWS_THRESHOLDS:
-            create_views_notification(obj.channel.owner_id, NotificationObjectType(media_type.value), obj.id)
+            notification_ret = create_views_notification(obj.channel.owner_id, NotificationObjectType(media_type.value), obj.id)
+            if notification_ret.is_err:
+                transaction.set_rollback(True)
+                return Result.err(notification_ret.err_value)
 
     return Result.ok(read)
 
 
-def create_views_notification(owner_id: int, object_type: NotificationObjectType, object_id: int) -> None:
+@Result.shield_exception()
+def create_views_notification(owner_id: int, object_type: NotificationObjectType, object_id: int) -> Result[None, FatalError]:
     notification_repo = injector.get(NotificationInterface)
-    notification_repo.delete(NotificationTypeNo.VIEWS, object_type, object_id, owner_id)
-    create_notification(owner_id, owner_id, NotificationTypeNo.VIEWS, object_id, object_type)
+    delete_ret = notification_repo.delete(NotificationTypeNo.VIEWS, object_type, object_id, owner_id)
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    create_ret = create_notification(owner_id, owner_id, NotificationTypeNo.VIEWS, object_id, object_type)
+    if create_ret.is_err:
+        return Result.err(create_ret.err_value)
+
+    return Result.ok(None)

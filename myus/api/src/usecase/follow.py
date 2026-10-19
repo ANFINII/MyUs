@@ -102,7 +102,10 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
                 return Result.err(new_ids_ret.err_value)
 
             if is_follow:
-                create_notification(follower_id, following_id, NotificationTypeNo.FOLLOW, new_ids_ret.ok_value[0], NotificationObjectType.FOLLOW)
+                notification_ret = create_notification(follower_id, following_id, NotificationTypeNo.FOLLOW, new_ids_ret.ok_value[0], NotificationObjectType.FOLLOW)
+                if notification_ret.is_err:
+                    transaction.set_rollback(True)
+                    return Result.err(notification_ret.err_value)
         else:
             updated_follow = replace(follow, is_follow=is_follow)
             save_ret = follow_repo.bulk_save([updated_follow])

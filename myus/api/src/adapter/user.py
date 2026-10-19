@@ -204,7 +204,11 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        notification = get_notification(user_id)
+        ret = get_notification(user_id)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        notification = ret.ok_value
         data = NotificationOut(
             count=notification.count,
             items=[
@@ -242,7 +246,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.post("/notification/confirmed", response={200: ErrorOut, 401: ErrorOut})
+    @router.post("/notification/confirmed", response={200: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def post_notification_confirmed(request: HttpRequest, input: NotificationIn):
         log.info("UserAPI post_notification_confirmed", ulid=input.ulid)
 
@@ -250,11 +254,14 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        notification_confirm(user_id, input.ulid)
+        ret = notification_confirm(user_id, input.ulid)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
         return 200, ErrorOut(message="OK")
 
     @staticmethod
-    @router.post("/notification/deleted", response={200: ErrorOut, 401: ErrorOut})
+    @router.post("/notification/deleted", response={200: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def post_notification_deleted(request: HttpRequest, input: NotificationIn):
         log.info("UserAPI post_notification_deleted", ulid=input.ulid)
 
@@ -262,7 +269,10 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        notification_delete(user_id, input.ulid)
+        ret = notification_delete(user_id, input.ulid)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
         return 200, ErrorOut(message="OK")
 
     @staticmethod

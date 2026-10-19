@@ -4,17 +4,27 @@ from api.src.domain.interface.user.data import UserNotificationData
 from api.src.domain.interface.user.interface import UserInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.notification import NotificationContentData, NotificationItemDTO, NotificationDTO, NotificationUserDTO
+from api.utils.common.result import FatalError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationType, NotificationTypeNo
 from api.utils.functions.index import create_url
 
 
-def get_notification_data(receiver_id: int, enabled_types: tuple[NotificationTypeNo, ...]) -> list[NotificationData]:
+@Result.shield_exception()
+def get_notification_data(receiver_id: int, enabled_types: tuple[NotificationTypeNo, ...]) -> Result[list[NotificationData], FatalError]:
     repository = injector.get(NotificationInterface)
-    ids = repository.get_ids(FilterOption(receiver_id=receiver_id, enabled_types=enabled_types, exclude_user_id=receiver_id), SortOption())
-    if len(ids) == 0:
-        return []
+    ids_ret = repository.get_ids(FilterOption(receiver_id=receiver_id, enabled_types=enabled_types, exclude_user_id=receiver_id), SortOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-    return repository.bulk_get(ids)
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        return Result.ok([])
+
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    return Result.ok(objs_ret.ok_value)
 
 
 def get_notification_user_map(user_ids: list[int]) -> dict[int, NotificationUserDTO]:
@@ -58,14 +68,23 @@ def get_user_enabled_types(user_id: int) -> tuple[NotificationTypeNo, ...]:
     return get_enabled_types(users[0].notification)
 
 
-def get_notification(user_id: int) -> NotificationDTO:
+@Result.shield_exception()
+def get_notification(user_id: int) -> Result[NotificationDTO, FatalError]:
     enabled_types = get_user_enabled_types(user_id)
     if len(enabled_types) == 0:
-        return NotificationDTO(count=0, items=[])
+        return Result.ok(NotificationDTO(count=0, items=[]))
 
     repository = injector.get(NotificationInterface)
-    objs = get_notification_data(user_id, enabled_types)
-    confirmed_ids = set(repository.get_ids(FilterOption(confirmed_user_id=user_id), SortOption()))
+    objs_ret = get_notification_data(user_id, enabled_types)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    confirmed_ids_ret = repository.get_ids(FilterOption(confirmed_user_id=user_id), SortOption())
+    if confirmed_ids_ret.is_err:
+        return Result.err(confirmed_ids_ret.err_value)
+
+    objs = objs_ret.ok_value
+    confirmed_ids = set(confirmed_ids_ret.ok_value)
 
     user_ids = list({n.user_from_id for n in objs} | {n.user_to_id for n in objs if n.user_to_id != 0})
     user_map = get_notification_user_map(user_ids)
@@ -97,15 +116,16 @@ def get_notification(user_id: int) -> NotificationDTO:
         )
         items.append(item)
 
-    return NotificationDTO(count=len([item for item in items if not item.is_confirmed]), items=items)
+    return Result.ok(NotificationDTO(count=len([item for item in items if not item.is_confirmed]), items=items))
 
 
-def create_notification(user_from_id: int, user_to_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> None:
+@Result.shield_exception()
+def create_notification(user_from_id: int, user_to_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> Result[None, FatalError]:
     if user_to_id != 0:
         if user_to_id == user_from_id and type_no != NotificationTypeNo.VIEWS:
-            return
+            return Result.ok(None)
         if type_no not in get_user_enabled_types(user_to_id):
-            return
+            return Result.ok(None)
 
     repository = injector.get(NotificationInterface)
     notification = NotificationData(
@@ -119,32 +139,62 @@ def create_notification(user_from_id: int, user_to_id: int, type_no: Notificatio
         object_type=object_type,
         content=None,
     )
-    repository.bulk_save([notification])
+    ret = repository.bulk_save([notification])
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    return Result.ok(None)
 
 
-def create_publish_notification(owner_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> None:
+@Result.shield_exception()
+def create_publish_notification(owner_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> Result[None, FatalError]:
     repository = injector.get(NotificationInterface)
-    ids = repository.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=[object_id]), SortOption(), limit=1)
-    if len(ids) > 0:
-        return
+    ids_ret = repository.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=[object_id]), SortOption(), limit=1)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
 
-    create_notification(owner_id, 0, type_no, object_id, object_type)
+    if len(ids_ret.ok_value) > 0:
+        return Result.ok(None)
+
+    create_ret = create_notification(owner_id, 0, type_no, object_id, object_type)
+    if create_ret.is_err:
+        return Result.err(create_ret.err_value)
+
+    return Result.ok(None)
 
 
-def delete_object_notifications(object_type: NotificationObjectType, object_ids: list[int]) -> None:
+@Result.shield_exception()
+def delete_object_notifications(object_type: NotificationObjectType, object_ids: list[int]) -> Result[None, FatalError]:
     if len(object_ids) == 0:
-        return
+        return Result.ok(None)
 
     repository = injector.get(NotificationInterface)
-    ids = repository.get_ids(FilterOption(object_type=object_type, object_ids=object_ids), SortOption())
-    repository.bulk_delete(ids)
+    ids_ret = repository.get_ids(FilterOption(object_type=object_type, object_ids=object_ids), SortOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    delete_ret = repository.bulk_delete(ids_ret.ok_value)
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    return Result.ok(None)
 
 
-def notification_delete(user_id: int, ulid: str) -> None:
+@Result.shield_exception()
+def notification_delete(user_id: int, ulid: str) -> Result[None, FatalError]:
     repository = injector.get(NotificationInterface)
-    repository.delete_by_user(ulid, user_id)
+    ret = repository.delete_by_user(ulid, user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    return Result.ok(None)
 
 
-def notification_confirm(user_id: int, ulid: str) -> None:
+@Result.shield_exception()
+def notification_confirm(user_id: int, ulid: str) -> Result[None, FatalError]:
     repository = injector.get(NotificationInterface)
-    repository.confirm(ulid, user_id)
+    ret = repository.confirm(ulid, user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    return Result.ok(None)

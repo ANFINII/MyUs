@@ -18,23 +18,39 @@ class Command(BaseCommand):
         limit = options["limit"]
 
         repo = injector.get(WebhookOutboxInterface)
-        ids = repo.get_ids(
+        ids_ret = repo.get_ids(
             FilterOption(status=WebhookDeliveryStatus.PENDING.value),
             SortOption(),
             limit=limit,
         )
+        if ids_ret.is_err:
+            log.error("WebhookOutbox dispatch get_ids failed", error=ids_ret.err_value.error_message)
+            self.stderr.write(self.style.ERROR("Failed to fetch pending webhook outbox entries"))
+            return
+
+        ids = ids_ret.ok_value
         if len(ids) == 0:
             log.info("WebhookOutbox dispatch no pending entries")
             self.stdout.write(self.style.SUCCESS("No pending webhook outbox entries"))
             return
 
-        entries = repo.bulk_get(ids)
+        entries_ret = repo.bulk_get(ids)
+        if entries_ret.is_err:
+            log.error("WebhookOutbox dispatch bulk_get failed", error=entries_ret.err_value.error_message)
+            self.stderr.write(self.style.ERROR("Failed to fetch pending webhook outbox entries"))
+            return
+
         delivered: list[WebhookOutboxData] = []
-        for entry in entries:
+        for entry in entries_ret.ok_value:
             # 配信スタブ: 外部送信先が未定のためログ出力で代替する
             log.info("WebhookOutbox delivered (stub)", event_type=entry.event_type.value, external_id=entry.external_id, payload=entry.payload)
             delivered.append(replace(entry, status=WebhookDeliveryStatus.DELIVERED, delivered_at=datetime.now(timezone.utc)))
 
-        repo.bulk_save(delivered)
+        save_ret = repo.bulk_save(delivered)
+        if save_ret.is_err:
+            log.error("WebhookOutbox dispatch bulk_save failed", error=save_ret.err_value.error_message)
+            self.stderr.write(self.style.ERROR("Failed to update webhook outbox entries"))
+            return
+
         log.info("WebhookOutbox dispatch completed", count=len(delivered))
         self.stdout.write(self.style.SUCCESS(f"Dispatched {len(delivered)} webhook outbox entries"))

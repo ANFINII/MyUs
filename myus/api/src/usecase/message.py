@@ -146,7 +146,9 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
 
         parent_messages = parent_messages_ret.ok_value
         if len(parent_messages) > 0:
-            create_notification(user_id, parent_messages[0].author_id, NotificationTypeNo.REPLY, message.id, NotificationObjectType.MESSAGE)
+            notification_ret = create_notification(user_id, parent_messages[0].author_id, NotificationTypeNo.REPLY, message.id, NotificationObjectType.MESSAGE)
+            if notification_ret.is_err:
+                return Result.err(notification_ret.err_value)
 
     data = MessageDTO(
         ulid=message.ulid,
@@ -205,7 +207,9 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, NotFoundError
     # 返信の場合はNotificationも削除
     if message.parent_id is not None:
         notification_repo = injector.get(NotificationInterface)
-        notification_repo.delete(NotificationTypeNo.REPLY, NotificationObjectType.MESSAGE, message.id, user_id)
+        notification_ret = notification_repo.delete(NotificationTypeNo.REPLY, NotificationObjectType.MESSAGE, message.id, user_id)
+        if notification_ret.is_err:
+            return Result.err(notification_ret.err_value)
 
     chat_repo = injector.get(ChatInterface)
     chats = chat_repo.bulk_get([message.chat_id])
