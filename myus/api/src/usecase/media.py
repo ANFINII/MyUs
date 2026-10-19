@@ -27,6 +27,7 @@ from api.src.usecase.channel import get_channel_data
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
 from api.src.usecase.notification import create_notification
+from api.src.usecase.user import get_user_data
 from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.media import CommentType, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -37,6 +38,7 @@ from api.utils.functions.user import get_media_user
 from api.utils.functions.convert.encode_worker import EncodeWorker
 from api.utils.functions.convert.video_encoding import convert_video
 from api.utils.functions.media import get_media_repository, save_upload
+from api.utils.plan import get_plan
 
 
 VIEWS_THRESHOLDS = (10000, 100000, 1000000, 10000000, 100000000, 1000000000)
@@ -736,6 +738,16 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         return Result.err(media_user_ret.err_value)
 
     media_user = media_user_ret.ok_value
+    is_music_download = False
+    if user_id is not None:
+        user_ret = get_user_data(user_id=user_id)
+        if user_ret.is_err:
+            return Result.err(user_ret.err_value)
+
+        user = user_ret.ok_value
+        plan = get_plan(user.user_plan.plan) if user is not None else None
+        is_music_download = plan is not None and plan.is_music_download
+
     data =MusicDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
@@ -743,7 +755,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         content=obj.content,
         lyric=obj.lyric,
         music=create_url(obj.music),
-        download=obj.download,
+        download=obj.download and is_music_download,
         comments=comments,
         hashtags=obj.hashtags,
         read=obj.read,
