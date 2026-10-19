@@ -4,23 +4,39 @@ from django.utils import timezone
 from api.src.domain.interface.access_log.data import AccessLogData
 from api.src.domain.interface.access_log.interface import AccessLogInterface, FilterOption, SortOption
 from api.src.injectors.container import injector
+from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import MediaType
 
 
 ACCESS_INTERVAL = timedelta(hours=2)
 
 
-def record_access(ip_address: str, media_type: MediaType, media_id: int) -> bool:
+@Result.shield_exception()
+def record_access(ip_address: str, media_type: MediaType, media_id: int) -> Result[bool, FatalError]:
     repository = injector.get(AccessLogInterface)
     now = timezone.now()
-    ids = repository.get_ids(FilterOption(ip_address=ip_address, type=media_type, type_id=media_id), SortOption(), limit=1)
+    ids_ret = repository.get_ids(FilterOption(ip_address=ip_address, type=media_type, type_id=media_id), SortOption(), limit=1)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
-        repository.bulk_save([AccessLogData(id=0, ip_address=ip_address, type=media_type, type_id=media_id, updated=now)])
-        return True
+        create_ret = repository.bulk_save([AccessLogData(id=0, ip_address=ip_address, type=media_type, type_id=media_id, updated=now)])
+        if create_ret.is_err:
+            return Result.err(create_ret.err_value)
 
-    access_log = repository.bulk_get(ids)[0]
+        return Result.ok(True)
+
+    access_logs_ret = repository.bulk_get(ids)
+    if access_logs_ret.is_err:
+        return Result.err(access_logs_ret.err_value)
+
+    access_log = access_logs_ret.ok_value[0]
     if now - access_log.updated < ACCESS_INTERVAL:
-        return False
+        return Result.ok(False)
 
-    repository.bulk_save([replace(access_log, updated=now)])
-    return True
+    save_ret = repository.bulk_save([replace(access_log, updated=now)])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(True)

@@ -5,6 +5,7 @@ from api.src.domain.entity.access_log._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.access_log.data import AccessLogData
 from api.src.domain.interface.access_log.interface import AccessLogInterface, FilterOption, SortOption
+from api.utils.common.result import FatalError, Result
 
 
 ACCESS_LOG_FIELDS = ["ip_address", "type", "type_id", "updated"]
@@ -14,7 +15,8 @@ class AccessLogRepository(AccessLogInterface):
     def queryset(self) -> QuerySet[AccessLog]:
         return AccessLog.objects.all()
 
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.ip_address:
             q_list.append(Q(ip_address=filter.ip_address))
@@ -30,19 +32,21 @@ class AccessLogRepository(AccessLogInterface):
         if limit is not None:
             qs = qs[:limit]
 
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[AccessLogData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[AccessLogData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+        return Result.ok([convert_data(obj) for obj in sorted_objs])
 
-    def bulk_save(self, objs: list[AccessLogData]) -> list[int]:
+    @Result.shield_exception()
+    def bulk_save(self, objs: list[AccessLogData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
-            return []
+            return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_new_ids(models, AccessLog)
@@ -53,4 +57,4 @@ class AccessLogRepository(AccessLogInterface):
             update_fields=ACCESS_LOG_FIELDS,
         )
 
-        return new_ids
+        return Result.ok(new_ids)
