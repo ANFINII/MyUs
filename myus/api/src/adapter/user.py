@@ -402,8 +402,8 @@ class UserAPI:
 
     @staticmethod
     @router.get("/userpage/{ulid}/media", response={200: UserPageMediaOut, 404: ErrorOut, 500: ErrorOut})
-    def get_userpage_media(request: HttpRequest, ulid: str, channel_ulid: str = ""):
-        log.info("UserAPI get_userpage_media", ulid=ulid, channel_ulid=channel_ulid)
+    def get_userpage_media(request: HttpRequest, ulid: str, channel_ulid: str = "", search: str = ""):
+        log.info("UserAPI get_userpage_media", ulid=ulid, channel_ulid=channel_ulid, search=search)
 
         user_ret = get_user_data(ulid=ulid)
         if user_ret.is_err:
@@ -424,7 +424,7 @@ class UserAPI:
                 return 404, ErrorOut(message="チャンネルが見つかりません")
             channel_id = channel.id
 
-        media_ret = get_userpage_media(8, "", channel_id=channel_id)
+        media_ret = get_userpage_media(8, search, owner_id=user.user.id, channel_id=channel_id)
         if media_ret.is_err:
             return 500, ErrorOut(message="Internal Server Error")
 
