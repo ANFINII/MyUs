@@ -636,19 +636,22 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
-    messages = get_messages(chat_id=obj.id)
+    messages_ret = get_messages(chat_id=obj.id)
+    if messages_ret.is_err:
+        return Result.err(messages_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = ChatDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
-        messages=messages,
+        messages=messages_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -659,7 +662,7 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)

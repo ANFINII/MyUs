@@ -465,7 +465,8 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
     return Result.ok(None)
 
 
-def delete_manage_chat(user_id: int, ulids: list[str]) -> bool:
+@Result.shield_exception()
+def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(ChatInterface)
     delete_ids: list[int] = []
 
@@ -473,20 +474,20 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> bool:
         ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
         if len(ids) == 0:
             log.error("Chat not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return False
+            return Result.err(NotFoundError("削除に失敗しました!"))
         delete_ids.append(ids[0])
 
     message_repo = injector.get(MessageInterface)
     reply_ids: list[int] = []
     for chat_id in delete_ids:
-        reply_ids += message_repo.get_ids(MessageFilterOption(chat_id=chat_id, is_parent=False), MessageSortOption())
+        ret = message_repo.get_ids(MessageFilterOption(chat_id=chat_id, is_parent=False), MessageSortOption())
+        if ret.is_err:
+            return Result.err(ret.err_value)
+        reply_ids += ret.ok_value
 
-    try:
-        with transaction.atomic():
-            repository.bulk_delete(delete_ids)
-            delete_object_notifications(NotificationObjectType.CHAT, delete_ids)
-            delete_object_notifications(NotificationObjectType.MESSAGE, reply_ids)
-        return True
-    except Exception as e:
-        log.error("delete_manage_chat error", exc=e)
-        return False
+    with transaction.atomic():
+        repository.bulk_delete(delete_ids)
+        delete_object_notifications(NotificationObjectType.CHAT, delete_ids)
+        delete_object_notifications(NotificationObjectType.MESSAGE, reply_ids)
+
+    return Result.ok(None)

@@ -392,7 +392,7 @@ class ManageChatAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageChatAPI delete", ulids=input.ulids)
 
@@ -400,8 +400,11 @@ class ManageChatAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not delete_manage_chat(user_id, input.ulids):
-            return 400, ErrorOut(message="削除に失敗しました!")
+        ret = delete_manage_chat(user_id, input.ulids)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
