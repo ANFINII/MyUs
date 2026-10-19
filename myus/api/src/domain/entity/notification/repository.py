@@ -27,8 +27,10 @@ class NotificationRepository(NotificationInterface):
             q_list.append(Q(ulid=filter.ulid))
         if filter.type_no is not None:
             q_list.append(Q(type_no=filter.type_no))
-        if filter.object_id:
-            q_list.append(Q(object_id=filter.object_id))
+        if filter.object_type is not None:
+            q_list.append(Q(object_type=filter.object_type))
+        if filter.object_ids:
+            q_list.append(Q(object_id__in=filter.object_ids))
         if filter.user_to_id:
             q_list.append(Q(user_to_id=filter.user_to_id))
         if filter.receiver_id:
@@ -104,6 +106,11 @@ class NotificationRepository(NotificationInterface):
         )
 
         return new_ids
+
+    def bulk_delete(self, ids: list[int]) -> None:
+        if len(ids) == 0:
+            return
+        Notification.objects.filter(id__in=ids).delete()
 
     def delete(self, type_no: NotificationTypeNo, object_type: NotificationObjectType, object_id: int, user_from_id: int) -> None:
         Notification.objects.filter(type_no=type_no, object_type=object_type, object_id=object_id, user_from_id=user_from_id).delete()

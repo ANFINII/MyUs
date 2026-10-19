@@ -1,5 +1,6 @@
 from dataclasses import replace
 from datetime import datetime
+from django.db import transaction
 from api.modules.logger import log
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
@@ -9,7 +10,7 @@ from api.src.injectors.container import injector
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
 from api.src.types.dto.user import AuthorDTO
 from api.src.types.schema.comment import CommentCreateIn
-from api.src.usecase.notification import create_notification
+from api.src.usecase.notification import create_notification, delete_object_notifications
 from api.src.usecase.user import get_author_data
 from api.utils.enum.media import CommentTypeNo, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -175,4 +176,12 @@ def delete_comment(user_id: int, comment_ulid: str) -> bool | None:
         log.warning("コメントの削除権限がありません", comment_ulid=comment_ulid, user_id=user_id)
         return None
 
-    return save_comment_data(replace(comment, deleted=True))
+    repository = injector.get(CommentInterface)
+    try:
+        with transaction.atomic():
+            repository.bulk_save([replace(comment, deleted=True)])
+            delete_object_notifications(NotificationObjectType.COMMENT, [comment.id])
+        return True
+    except Exception as e:
+        log.error("delete_comment error", exc=e)
+        return False

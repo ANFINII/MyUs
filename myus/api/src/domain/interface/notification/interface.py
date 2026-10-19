@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum, auto
 from api.src.domain.interface.notification.data import NotificationData
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -13,7 +13,8 @@ class SortType(Enum):
 class FilterOption:
     ulid: str = ""
     type_no: NotificationTypeNo | None = None
-    object_id: int = 0
+    object_type: NotificationObjectType | None = None
+    object_ids: list[int] = field(default_factory=list)
     user_to_id: int = 0
     receiver_id: int = 0
     enabled_types: tuple[NotificationTypeNo, ...] = ()
@@ -38,6 +39,10 @@ class NotificationInterface(ABC):
 
     @abstractmethod
     def bulk_save(self, objs: list[NotificationData]) -> list[int]:
+        ...
+
+    @abstractmethod
+    def bulk_delete(self, ids: list[int]) -> None:
         ...
 
     @abstractmethod
