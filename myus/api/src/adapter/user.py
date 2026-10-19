@@ -2,7 +2,9 @@ from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
+from api.src.adapter.advertise import convert_advertises
 from api.src.adapter.media import convert_videos, convert_musics, convert_blogs, convert_comics, convert_pictures, convert_chats
+from api.src.types.schema.advertise import AdvertiseListOut
 from api.src.types.schema.channel import ChannelOut
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.follow import FollowIn, FollowOut, FollowUserOut
@@ -15,7 +17,7 @@ from api.src.usecase.follow import get_followers, get_follows, upsert_follow
 from api.src.usecase.notification import get_notification, notification_confirm, notification_delete
 from api.src.usecase.search_tag import get_search_tag_data, update_search_tags
 from api.src.usecase.user import get_user_data, like_comment, like_media
-from api.src.usecase.userpage import get_userpage_media, is_following
+from api.src.usecase.userpage import get_userpage_advertises, get_userpage_media, is_following
 from api.utils.common.result import FatalError, NotFoundError
 from api.utils.functions.index import create_url
 
@@ -439,3 +441,23 @@ class UserAPI:
         )
 
         return 200, data
+
+    @staticmethod
+    @router.get("/userpage/{ulid}/advertise", response={200: AdvertiseListOut, 404: ErrorOut, 500: ErrorOut})
+    def get_userpage_advertise(request: HttpRequest, ulid: str, search: str = ""):
+        log.info("UserAPI get_userpage_advertise", ulid=ulid, search=search)
+
+        user_ret = get_user_data(ulid=ulid)
+        if user_ret.is_err:
+            return 500, ErrorOut(message="Internal Server Error")
+
+        user = user_ret.ok_value
+        if user is None:
+            return 404, ErrorOut(message="ユーザーが見つかりません")
+
+        advertises_ret = get_userpage_advertises(search, owner_id=user.user.id)
+        if advertises_ret.is_err:
+            return 500, ErrorOut(message="Internal Server Error")
+
+        advertises = advertises_ret.ok_value
+        return 200, AdvertiseListOut(items=convert_advertises(advertises), total=len(advertises))

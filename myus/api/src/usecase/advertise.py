@@ -43,7 +43,7 @@ def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalErro
         return Result.err(objs_ret.err_value)
 
     objs = objs_ret.ok_value
-    today = timezone.now().date()
+    today = timezone.localdate()
     active = [o for o in objs if is_active(o, today)]
     if len(active) == 0:
         return Result.ok([])
