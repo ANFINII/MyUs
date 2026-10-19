@@ -65,7 +65,64 @@
 
 - 素の`except:`や`except Exception:`でのキャッチは禁止（想定する例外型を明示する）
 - やむを得ず広くキャッチする場合は`log.error`でスタックトレースを残す
-- adapter層でのみユーザー向けエラーメッセージを返す（usecase/domain層はbool or 例外で伝搬）
+- adapter層でのみHTTPステータスとエラーレスポンスを返す（usecase/domain層は`Result`で伝搬。次の「エラーハンドリング（Result型）」を参照）
+
+## エラーハンドリング（Result型）
+
+### Repository・usecase
+- Interface・Repository・usecaseは`Result[T, E]`を返す（`from api.utils.common.result import FatalError, NotFoundError, Result`）
+- 公開メソッド・usecase関数には`@Result.shield_exception()`を付け、想定外の例外を`FatalError`に変換する
+- Resultを受けたらその場で`is_err`を確認し、Errならそのまま返す
+- 受け取る変数名: 関数内で受けるResultが1つなら`ret`、複数なら`ids_ret`・`follows_ret`のように`<名前>_ret`
+- `ok_value`は直接使わず、`ids = ids_ret.ok_value`のように1行で変数に取り出してから使う
+- `transaction.atomic()`の中でErrを返すときは、直前に`transaction.set_rollback(True)`を呼ぶ（Errは例外ではないためロールバックされない）
+
+```python
+@Result.shield_exception()
+def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError]:
+    follow_repo = injector.get(FollowInterface)
+    ids_ret = follow_repo.get_ids(FollowFilterOption(follower_id=follower_id, following_id=following_id), FollowSortOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        return Result.ok(False)
+    ...
+```
+
+### エラー型
+- エラー型は`api/utils/common/result/errors.py`の共通型を使う（usecaseごとの`errors.py`は作らない）
+- 条件の意味で型を選ぶ（エンドポイントの種類では決めない）
+- エラー型に`@final`は付けない
+
+| エラー型 | 使う条件 | HTTPステータス | message |
+|---|---|---|---|
+| `NotFoundError` | 対象が存在しない（`is None`・`len(ids) == 0`） | 404 | `error_message` |
+| `ForbiddenError` | 対象はあるが操作する権限がない（持ち主ではない等） | 403 | `error_message` |
+| `ValidationError` | 入力や業務ルールに反する（上限超過等） | 400 | `error_message` |
+| `UnauthorizedError` | 認証されていない | 401 | `"Unauthorized"` |
+| `FatalError` | 想定外のエラー（DB・外部APIの例外等） | 500 | `"Internal Server Error"`固定 |
+
+### adapter
+- `FatalError`以外のエラー型も返すusecaseは、`match` + `assert_never`でエラー型ごとにステータスを決める（`isinstance`で分岐しない）
+- usecaseに新しいエラー型が追加されたとき、adapterの対応漏れを`assert_never`でmypyが検出する
+- `Result[T, FatalError]`だけを返すusecaseは`if ret.is_err: return 500, ...`のままでよい
+- BEにしか表示されないメッセージ（500など）は英語にする
+
+```python
+ret = update_manage_video(user_id, ulid, input)
+if ret.is_err:
+    match ret.err_value:
+        case NotFoundError():
+            return 404, ErrorOut(message=ret.err_value.error_message)
+        case ForbiddenError():
+            return 403, ErrorOut(message=ret.err_value.error_message)
+        case FatalError():
+            return 500, ErrorOut(message="Internal Server Error")
+        case _:
+            assert_never(ret.err_value)
+```
 
 ## 文字列
 
@@ -145,3 +202,4 @@ uv run mypy api/src/path/to/file.py
 - 2026-02-04: Repository層ルール追加
 - 2026-02-22: 全体整備、domain interface初期値禁止ルール追加
 - 2026-04-16: docs/に一元化、構成整理
+- 2026-10-20: エラーハンドリング（Result型・エラー型とHTTPステータスの対応・adapterのmatch + assert_never）を追加
