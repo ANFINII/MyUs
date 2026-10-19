@@ -21,17 +21,16 @@ interface Props {
     mediaPath: MediaPath
   }
   list: Video[] | Music[] | Blog[] | Picture[]
-  isAd?: boolean
   handleToast: (content: string, isError: boolean) => void
 }
 
 export default function MediaDetailCommon(props: Props): React.JSX.Element {
-  const { media, list, isAd, handleToast } = props
+  const { media, list, handleToast } = props
 
   return (
     <div className={style.media_detail}>
       <MediaDetailLeft key={media.ulid} media={media} handleToast={handleToast} />
-      <MediaDetailRight list={list} mediaPath={media.mediaPath} isAd={isAd} />
+      <MediaDetailRight list={list} mediaPath={media.mediaPath} userUlid={media.channel.ownerUlid} />
     </div>
   )
 }

@@ -26,7 +26,7 @@ interface Props {
   onChange: (page: number) => void
 }
 
-export default function Pagination(props: Props): React.JSX.Element | null {
+export default function Pagination(props: Props): React.JSX.Element {
   const { currentPage, totalPages, margin = 'mv_16', onChange } = props
 
   const pages = calcPages(currentPage, totalPages)

@@ -1,6 +1,5 @@
 import { Video, Music, Blog, Comic, Picture } from 'types/internal/media/output'
 import { MediaPath } from 'utils/constants/enum'
-import Divide from 'components/parts/Divide'
 import VStack from 'components/parts/Stack/Vertical'
 import Advertise from 'components/widgets/Advertise'
 import MusicCard from 'components/widgets/Card/Media/Music'
@@ -14,17 +13,15 @@ const isMusicMedia = (media: MediaItem): media is Music => 'music' in media
 interface Props {
   list: Video[] | Music[] | Blog[] | Comic[] | Picture[]
   mediaPath: MediaPath
-  isAd?: boolean
-  isChannelAd?: boolean
+  userUlid: string
 }
 
 export default function MediaDetailRight(props: Props): React.JSX.Element {
-  const { list, mediaPath, isAd = false, isChannelAd = false } = props
+  const { list, mediaPath, userUlid } = props
 
   return (
     <div className={style.media_detail_right}>
-      {isAd && <Advertise isChannelAd={isChannelAd} className={style.advertise} />}
-      {isAd && <Divide />}
+      <Advertise userUlid={userUlid} className={style.advertise} />
       <VStack gap="4">
         {list.map((media) =>
           isMusicMedia(media) ? (
