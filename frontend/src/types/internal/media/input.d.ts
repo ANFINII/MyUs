@@ -1,3 +1,5 @@
+import { MediaType } from 'utils/constants/enum'
+
 export interface MediaIn {
   channelUlid: string
   categoryUlid: string
@@ -66,4 +68,9 @@ export interface PictureUpdateIn extends MediaUpdateIn {
 
 export interface ChatUpdateIn extends MediaUpdateIn {
   period: string
+}
+
+export interface MediaReadIn {
+  ulid: string
+  mediaType: MediaType
 }

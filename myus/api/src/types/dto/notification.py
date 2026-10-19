@@ -16,6 +16,7 @@ class NotificationItemDTO:
     user_to: NotificationUserDTO | None
     type_no: int
     type_name: str
+    object_type: str
     content_object: NotificationContentData
     is_confirmed: bool
 

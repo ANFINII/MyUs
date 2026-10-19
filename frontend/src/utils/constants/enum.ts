@@ -49,6 +49,18 @@ export enum NotificationType {
   Views = 'Views',
 }
 
+export enum NotificationObjectType {
+  Video = 'Video',
+  Music = 'Music',
+  Blog = 'Blog',
+  Comic = 'Comic',
+  Picture = 'Picture',
+  Chat = 'Chat',
+  Follow = 'Follow',
+  Comment = 'Comment',
+  Message = 'Message',
+}
+
 export enum CommentTypeNo {
   Video = 1,
   Music = 2,

@@ -203,6 +203,7 @@ class UserAPI:
                     ),
                     type_no=item.type_no,
                     type_name=item.type_name,
+                    object_type=item.object_type,
                     content_object=NotificationContentOut(
                         id=item.content_object.id,
                         ulid=item.content_object.ulid,
