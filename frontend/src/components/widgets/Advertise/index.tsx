@@ -19,9 +19,7 @@ export default function Advertise(props: Props): React.JSX.Element {
   const { userUlid, className } = props
 
   const { t } = useTranslation()
-
   const advertises = useQuery({ queryKey: queryKeys.userAdvertises(userUlid), queryFn: () => toQuery(getUserAdvertises(userUlid)), enabled: userUlid !== '' })
-
   const items = advertises.data?.items ?? []
 
   const handleRead = (ulid: string) => postAdvertiseRead(ulid)

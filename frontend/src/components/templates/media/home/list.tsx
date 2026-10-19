@@ -12,12 +12,12 @@ import VideoCard from 'components/widgets/Card/Media/Video'
 
 interface Props {
   title: string
-  mediaHome: MediaHome
+  data: MediaHome
 }
 
 export default function Homes(props: Props): React.JSX.Element {
-  const { title, mediaHome } = props
-  const { videos, musics, blogs, comics, pictures, chats } = mediaHome
+  const { title, data } = props
+  const { videos, musics, blogs, comics, pictures, chats } = data
 
   const count = videos.length + musics.length + blogs.length + comics.length + pictures.length + chats.length
   const search = useSearch(count)

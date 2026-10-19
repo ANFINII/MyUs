@@ -10,9 +10,8 @@ import Followers from 'components/templates/menu/follower'
 export default function FollowersPage(): React.JSX.Element {
   const router = useRouter()
   const params = searchParams(router.query)
-
-  const datas = useQuery({ queryKey: queryKeys.followers(params), queryFn: () => toQuery(getFollower(params)), placeholderData: keepPreviousData })
-  const queries = { datas }
+  const data = useQuery({ queryKey: queryKeys.followers(params), queryFn: () => toQuery(getFollower(params)), placeholderData: keepPreviousData })
+  const queries = { data }
 
   return (
     <QueryCheck title="Follower" queries={queries}>

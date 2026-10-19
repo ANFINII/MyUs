@@ -10,9 +10,8 @@ import Follows from 'components/templates/menu/follow'
 export default function FollowsPage(): React.JSX.Element {
   const router = useRouter()
   const params = searchParams(router.query)
-
-  const datas = useQuery({ queryKey: queryKeys.follows(params), queryFn: () => toQuery(getFollow(params)), placeholderData: keepPreviousData })
-  const queries = { datas }
+  const data = useQuery({ queryKey: queryKeys.follows(params), queryFn: () => toQuery(getFollow(params)), placeholderData: keepPreviousData })
+  const queries = { data }
 
   return (
     <QueryCheck title="Follow" queries={queries}>

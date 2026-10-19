@@ -10,9 +10,8 @@ import Homes from 'components/templates/media/home/list'
 export default function HomesPage(): React.JSX.Element {
   const router = useRouter()
   const params = searchParams(router.query)
-
-  const mediaHome = useQuery({ queryKey: queryKeys.home(params), queryFn: () => toQuery(getHome(params)), placeholderData: keepPreviousData })
-  const queries = { mediaHome }
+  const data = useQuery({ queryKey: queryKeys.home(params), queryFn: () => toQuery(getHome(params)), placeholderData: keepPreviousData })
+  const queries = { data }
 
   return (
     <QueryCheck title="Home" queries={queries}>
