@@ -5,20 +5,20 @@ import ChannelCard from 'components/widgets/Card/Channel'
 import CardList from 'components/widgets/Card/List'
 
 interface Props {
-  datas: Channel[]
+  data: Channel[]
 }
 
 export default function Channels(props: Props): React.JSX.Element {
-  const { datas } = props
+  const { data } = props
 
   const { t } = useTranslation()
 
   return (
     <Main title="Channel">
       <div className="mt_16">
-        <span>{t('menu.channel.count', { count: datas.length })}</span>
+        <span>{t('menu.channel.count', { count: data.length })}</span>
       </div>
-      <CardList items={datas} Content={ChannelCard} />
+      <CardList items={data} Content={ChannelCard} />
     </Main>
   )
 }

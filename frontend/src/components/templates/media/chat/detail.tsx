@@ -39,7 +39,7 @@ interface ChatDetailState {
 
 interface Props {
   data: ChatDetailOut
-  threadUlid?: string
+  threadUlid: string
 }
 
 export default function ChatDetail(props: Props): React.JSX.Element {

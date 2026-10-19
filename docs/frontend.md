@@ -146,6 +146,8 @@ export default function ManageVideoEditPage(): React.JSX.Element {
 - `queryKey`は`lib/query/keys.ts`の`queryKeys`に定義する（`invalidateQueries`で前方一致させるため、配列の先頭から粒度が細かくなるようにする）
 - 1行で書く。180文字（`printWidth`）を超えるものはPrettierの折り返しに任せる
 - `useQuery`の結果は`queries`のキー（テンプレートのprops名）と同じ名前の変数に入れ、`const queries = { data, channels }`のように省略記法で書く
+- 一覧・詳細・編集ページの主となるクエリは`data`と名付ける（`datas`・`mediaHome`のような個別の名前にしない）
+- 主となるクエリが無いページ（作成画面）や、複数の種類のデータを並べて扱うページ（設定画面・ユーザーページ等）は、扱うものの名前を付ける（`channels`・`categories`・`mypage`・`profile`・`user`・`userPage`等）
 - 補助的なクエリ（チャンネル一覧・カテゴリ一覧等）を先に、ページの主となるクエリを後に書く
 - 連続する`useQuery`の間、および直後の`const queries`との間に空行を入れない
 
