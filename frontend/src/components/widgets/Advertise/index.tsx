@@ -15,7 +15,7 @@ interface Props {
   className?: string
 }
 
-export default function Advertise(props: Props): React.JSX.Element | null {
+export default function Advertise(props: Props): React.JSX.Element {
   const { userUlid, className } = props
 
   const { t } = useTranslation()
@@ -26,7 +26,7 @@ export default function Advertise(props: Props): React.JSX.Element | null {
 
   const handleRead = (ulid: string) => postAdvertiseRead(ulid)
 
-  if (items.length === 0) return null
+  if (items.length === 0) return <></>
 
   return (
     <div className={cx(style.advertise, className)}>
