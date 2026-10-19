@@ -1,3 +1,4 @@
+from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
@@ -29,7 +30,7 @@ from api.src.usecase.media import create_video, create_music, create_blog, creat
 from api.src.usecase.media import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
 from api.src.usecase.media import get_video_detail, get_music_detail, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
 from api.src.usecase.media import increment_media_read
-from api.utils.common.result import FatalError
+from api.utils.common.result import FatalError, NotFoundError
 
 
 class HomeAPI:
@@ -111,9 +112,13 @@ class VideoAPI:
 
         obj_ret = create_video(input=input, image=image, video=video)
         if obj_ret.is_err:
-            if isinstance(obj_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=obj_ret.err_value.error_message)
+            match obj_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(obj_ret.err_value)
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
@@ -148,9 +153,13 @@ class VideoAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_video_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
-            if isinstance(detail_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=detail_ret.err_value.error_message)
+            match detail_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=detail_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(detail_ret.err_value)
 
         obj = detail_ret.ok_value
 
@@ -204,9 +213,13 @@ class MusicAPI:
 
         obj_ret = create_music(input=input, music=music)
         if obj_ret.is_err:
-            if isinstance(obj_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=obj_ret.err_value.error_message)
+            match obj_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(obj_ret.err_value)
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
@@ -241,9 +254,13 @@ class MusicAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_music_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
-            if isinstance(detail_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=detail_ret.err_value.error_message)
+            match detail_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=detail_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(detail_ret.err_value)
 
         obj = detail_ret.ok_value
 
@@ -297,9 +314,13 @@ class BlogAPI:
 
         obj_ret = create_blog(input=input, image=image)
         if obj_ret.is_err:
-            if isinstance(obj_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=obj_ret.err_value.error_message)
+            match obj_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(obj_ret.err_value)
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
@@ -334,9 +355,13 @@ class BlogAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_blog_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
-            if isinstance(detail_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=detail_ret.err_value.error_message)
+            match detail_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=detail_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(detail_ret.err_value)
 
         obj = detail_ret.ok_value
 
@@ -389,9 +414,13 @@ class ComicAPI:
 
         obj_ret = create_comic(input=input, image=image, pages=pages)
         if obj_ret.is_err:
-            if isinstance(obj_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=obj_ret.err_value.error_message)
+            match obj_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(obj_ret.err_value)
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
@@ -426,9 +455,13 @@ class ComicAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_comic_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
-            if isinstance(detail_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=detail_ret.err_value.error_message)
+            match detail_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=detail_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(detail_ret.err_value)
 
         obj = detail_ret.ok_value
 
@@ -481,9 +514,13 @@ class PictureAPI:
 
         obj_ret = create_picture(input=input, image=image)
         if obj_ret.is_err:
-            if isinstance(obj_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=obj_ret.err_value.error_message)
+            match obj_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(obj_ret.err_value)
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
@@ -518,9 +555,13 @@ class PictureAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_picture_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
-            if isinstance(detail_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=detail_ret.err_value.error_message)
+            match detail_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=detail_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(detail_ret.err_value)
 
         obj = detail_ret.ok_value
 
@@ -572,9 +613,13 @@ class ChatAPI:
 
         obj_ret = create_chat(input=input)
         if obj_ret.is_err:
-            if isinstance(obj_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=obj_ret.err_value.error_message)
+            match obj_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=obj_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(obj_ret.err_value)
 
         obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
@@ -609,9 +654,13 @@ class ChatAPI:
         user_id = user_id_ret.ok_value
         detail_ret = get_chat_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
-            if isinstance(detail_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=detail_ret.err_value.error_message)
+            match detail_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=detail_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(detail_ret.err_value)
 
         obj = detail_ret.ok_value
 
@@ -657,9 +706,13 @@ class MediaReadAPI:
 
         ret = increment_media_read(input.media_type, input.ulid, get_client_ip(request))
         if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=ret.err_value.error_message)
+            match ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(ret.err_value)
 
         read = ret.ok_value
         return 200, MediaReadOut(read=read)
