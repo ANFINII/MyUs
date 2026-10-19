@@ -105,7 +105,8 @@ class VideoAPI:
         if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        if user_id_ret.ok_value is None:
+        user_id = user_id_ret.ok_value
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         obj_ret = create_video(input=input, image=image, video=video)
@@ -197,7 +198,8 @@ class MusicAPI:
         if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        if user_id_ret.ok_value is None:
+        user_id = user_id_ret.ok_value
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         obj_ret = create_music(input=input, music=music)
@@ -289,7 +291,8 @@ class BlogAPI:
         if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        if user_id_ret.ok_value is None:
+        user_id = user_id_ret.ok_value
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         obj_ret = create_blog(input=input, image=image)
@@ -380,7 +383,8 @@ class ComicAPI:
         if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        if user_id_ret.ok_value is None:
+        user_id = user_id_ret.ok_value
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         obj_ret = create_comic(input=input, image=image, pages=pages)
@@ -471,7 +475,8 @@ class PictureAPI:
         if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        if user_id_ret.ok_value is None:
+        user_id = user_id_ret.ok_value
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         obj_ret = create_picture(input=input, image=image)
@@ -561,7 +566,8 @@ class ChatAPI:
         if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        if user_id_ret.ok_value is None:
+        user_id = user_id_ret.ok_value
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         obj_ret = create_chat(input=input)
@@ -655,7 +661,8 @@ class MediaReadAPI:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
             return 404, ErrorOut(message=ret.err_value.error_message)
 
-        return 200, MediaReadOut(read=ret.ok_value)
+        read = ret.ok_value
+        return 200, MediaReadOut(read=read)
 
 
 def convert_videos(objs: list[VideoData]) -> list[VideoOut]:

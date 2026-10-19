@@ -122,7 +122,8 @@ class ChannelAPI:
         if create_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        return 201, ChannelCreateOut(ulid=create_ret.ok_value)
+        ulid = create_ret.ok_value
+        return 201, ChannelCreateOut(ulid=ulid)
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})

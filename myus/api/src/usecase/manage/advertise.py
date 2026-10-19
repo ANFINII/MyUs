@@ -27,20 +27,23 @@ def get_manage_advertises(user_id: int, search: str, limit: int = PAGE_SIZE, off
     if total_ret.is_err:
         return Result.err(total_ret.err_value)
 
+    total = total_ret.ok_value
     ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
+    objs = objs_ret.ok_value
     data = [replace(o,
         image=create_url(o.image),
         video=create_url(o.video),
-    ) for o in objs_ret.ok_value]
+    ) for o in objs]
 
-    return Result.ok((data, total_ret.ok_value))
+    return Result.ok((data, total))
 
 
 @Result.shield_exception()
@@ -59,7 +62,8 @@ def get_manage_advertise(user_id: int, ulid: str) -> Result[AdvertiseData, NotFo
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     return Result.ok(replace(obj,
         image=create_url(obj.image),
         video=create_url(obj.video),
@@ -118,7 +122,8 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    return Result.ok(objs_ret.ok_value[0])
+    objs = objs_ret.ok_value
+    return Result.ok(objs[0])
 
 
 @Result.shield_exception()
@@ -137,7 +142,8 @@ def update_manage_advertise(user_id: int, ulid: str, input: AdvertiseUpdateIn, i
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
 
     user_ret = get_user_data(user_id=user_id)
     if user_ret.is_err:

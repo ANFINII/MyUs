@@ -17,7 +17,8 @@ def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> Resul
         if ids_ret.is_err:
             return Result.err(ids_ret.err_value)
 
-        subscribes_ret = subscribe_repo.bulk_get(ids_ret.ok_value)
+        ids = ids_ret.ok_value
+        subscribes_ret = subscribe_repo.bulk_get(ids)
         if subscribes_ret.is_err:
             return Result.err(subscribes_ret.err_value)
 

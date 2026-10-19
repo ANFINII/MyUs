@@ -93,7 +93,8 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Re
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
 
     def encode_task() -> None:
         result = convert_video(video_path)
@@ -171,7 +172,8 @@ def create_music(input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, 
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     if input.publish:
         notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
         if notification_ret.is_err:
@@ -228,7 +230,8 @@ def create_blog(input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, No
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     if input.publish:
         notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
         if notification_ret.is_err:
@@ -285,7 +288,8 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     if input.publish:
         notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
         if notification_ret.is_err:
@@ -341,7 +345,8 @@ def create_picture(input: PictureIn, image: UploadedFile) -> Result[MediaCreateD
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     if input.publish:
         notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
         if notification_ret.is_err:
@@ -399,7 +404,8 @@ def create_chat(input: ChatIn) -> Result[MediaCreateDTO, NotFoundError | FatalEr
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     if input.publish:
         notification_ret = create_notification(channel.owner_id, 0, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
         if notification_ret.is_err:
@@ -492,7 +498,8 @@ def get_videos(search: str, id: int = 0, channel_id: int = 0, user_id: int | Non
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -521,7 +528,8 @@ def get_musics(search: str, id: int = 0, channel_id: int = 0, user_id: int | Non
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -544,7 +552,8 @@ def get_blogs(search: str, id: int = 0, channel_id: int = 0, user_id: int | None
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -567,7 +576,8 @@ def get_comics(search: str, id: int = 0, channel_id: int = 0, user_id: int | Non
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -595,7 +605,8 @@ def get_pictures(search: str, id: int = 0, channel_id: int = 0, user_id: int | N
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -618,7 +629,8 @@ def get_chats(search: str, id: int = 0, channel_id: int = 0, user_id: int | None
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -642,13 +654,15 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.VIDEO)
     comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
+    comments = comments_ret.ok_value
     is_like = False
     if user_id is not None:
         like_ret = repository.is_liked(obj.id, user_id)
@@ -661,7 +675,8 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
-    data = VideoDetailDTO(
+    media_user = media_user_ret.ok_value
+    data =VideoDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
@@ -669,7 +684,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         image=create_url(obj.image),
         video=create_url(obj.video),
         convert=create_url(obj.convert),
-        comments=comments_ret.ok_value,
+        comments=comments,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -677,7 +692,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=media_user_ret.ok_value,
+        mediaUser=media_user,
     )
 
     return Result.ok(data)
@@ -699,13 +714,15 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.MUSIC)
     comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
+    comments = comments_ret.ok_value
     is_like = False
     if user_id is not None:
         like_ret = repository.is_liked(obj.id, user_id)
@@ -718,7 +735,8 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
-    data = MusicDetailDTO(
+    media_user = media_user_ret.ok_value
+    data =MusicDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
@@ -726,7 +744,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         lyric=obj.lyric,
         music=create_url(obj.music),
         download=obj.download,
-        comments=comments_ret.ok_value,
+        comments=comments,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -734,7 +752,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=media_user_ret.ok_value,
+        mediaUser=media_user,
     )
 
     return Result.ok(data)
@@ -756,13 +774,15 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.BLOG)
     comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
+    comments = comments_ret.ok_value
     is_like = False
     if user_id is not None:
         like_ret = repository.is_liked(obj.id, user_id)
@@ -775,14 +795,15 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
-    data = BlogDetailDTO(
+    media_user = media_user_ret.ok_value
+    data =BlogDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         richtext=obj.richtext,
         image=create_url(obj.image),
-        comments=comments_ret.ok_value,
+        comments=comments,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -790,7 +811,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=media_user_ret.ok_value,
+        mediaUser=media_user,
     )
 
     return Result.ok(data)
@@ -812,13 +833,15 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.COMIC)
     comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
+    comments = comments_ret.ok_value
     is_like = False
     if user_id is not None:
         like_ret = repository.is_liked(obj.id, user_id)
@@ -831,14 +854,15 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
-    data = ComicDetailDTO(
+    media_user = media_user_ret.ok_value
+    data =ComicDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         image=create_url(obj.image),
         pages=[create_url(p) for p in obj.pages],
-        comments=comments_ret.ok_value,
+        comments=comments,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -846,7 +870,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=media_user_ret.ok_value,
+        mediaUser=media_user,
     )
 
     return Result.ok(data)
@@ -868,13 +892,15 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.PICTURE)
     comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=None)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
+    comments = comments_ret.ok_value
     is_like = False
     if user_id is not None:
         like_ret = repository.is_liked(obj.id, user_id)
@@ -887,13 +913,14 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
-    data = PictureDetailDTO(
+    media_user = media_user_ret.ok_value
+    data =PictureDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
         image=create_url(obj.image),
-        comments=comments_ret.ok_value,
+        comments=comments,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -901,7 +928,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=media_user_ret.ok_value,
+        mediaUser=media_user,
     )
 
     return Result.ok(data)
@@ -923,12 +950,14 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
 
     messages_ret = get_messages(chat_id=obj.id)
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 
+    messages = messages_ret.ok_value
     is_like = False
     if user_id is not None:
         like_ret = repository.is_liked(obj.id, user_id)
@@ -941,12 +970,13 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     if media_user_ret.is_err:
         return Result.err(media_user_ret.err_value)
 
-    data = ChatDetailDTO(
+    media_user = media_user_ret.ok_value
+    data =ChatDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
-        messages=messages_ret.ok_value,
+        messages=messages,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -957,7 +987,7 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=media_user_ret.ok_value,
+        mediaUser=media_user,
     )
 
     return Result.ok(data)
@@ -979,14 +1009,16 @@ def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> R
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     with transaction.atomic():
         access_ret = record_access(ip_address, media_type, obj.id)
         if access_ret.is_err:
             transaction.set_rollback(True)
             return Result.err(access_ret.err_value)
 
-        if not access_ret.ok_value:
+        is_accessed = access_ret.ok_value
+        if not is_accessed:
             return Result.ok(obj.read)
 
         read_ret = repository.increment_read(obj.id)

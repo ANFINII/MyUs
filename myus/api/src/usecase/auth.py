@@ -48,7 +48,8 @@ def auth_check(request: HttpRequest) -> Result[int | None, FatalError]:
     if ret.is_err:
         return Result.err(ret.err_value)
 
-    if not ret.ok_value:
+    is_verified = ret.ok_value
+    if not is_verified:
         log.warning("無効なユーザーのトークンです", user_id=user_id)
         return Result.ok(None)
 
@@ -294,7 +295,8 @@ def password_reset_send_email(email: str) -> Result[str, FatalError]:
     if users_ret.is_err:
         return Result.err(users_ret.err_value)
 
-    user_data = users_ret.ok_value[0]
+    users = users_ret.ok_value
+    user_data = users[0]
     if not user_data.user.is_active:
         return Result.ok("")
 

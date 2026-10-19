@@ -30,7 +30,8 @@ def get_message_data(message_ulid: str) -> Result[MessageDomainData | None, Fata
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 
-    return Result.ok(messages_ret.ok_value[0])
+    messages = messages_ret.ok_value
+    return Result.ok(messages[0])
 
 
 @Result.shield_exception()
@@ -50,23 +51,26 @@ def get_messages(chat_id: int) -> Result[list[MessageDTO], FatalError]:
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    messages_ret = message_repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    messages_ret = message_repo.bulk_get(ids)
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 
+    messages = messages_ret.ok_value
     data: list[MessageDTO] = []
-    for m in messages_ret.ok_value:
+    for m in messages:
         author_ret = get_author_data(m.author_id)
         if author_ret.is_err:
             return Result.err(author_ret.err_value)
 
+        author = author_ret.ok_value
         data.append(MessageDTO(
             ulid=m.ulid,
             text=m.text,
             reply_count=m.reply_count,
             created=m.created,
             updated=m.updated,
-            author=author_ret.ok_value,
+            author=author,
         ))
 
     return Result.ok(data)
@@ -79,23 +83,26 @@ def get_replies(message_ulid: str) -> Result[list[MessageReplyDTO], FatalError]:
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    messages_ret = message_repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    messages_ret = message_repo.bulk_get(ids)
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 
+    messages = messages_ret.ok_value
     data: list[MessageReplyDTO] = []
-    for m in messages_ret.ok_value:
+    for m in messages:
         author_ret = get_author_data(m.author_id)
         if author_ret.is_err:
             return Result.err(author_ret.err_value)
 
+        author = author_ret.ok_value
         data.append(MessageReplyDTO(
             ulid=m.ulid,
             parent_id=m.parent_ulid,
             text=m.text,
             created=m.created,
             updated=m.updated,
-            author=author_ret.ok_value,
+            author=author,
         ))
 
     return Result.ok(data)
@@ -149,7 +156,8 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
     if new_ids_ret.is_err:
         return Result.err(new_ids_ret.err_value)
 
-    messages_ret = message_repo.bulk_get(new_ids_ret.ok_value)
+    new_ids = new_ids_ret.ok_value
+    messages_ret = message_repo.bulk_get(new_ids)
     if messages_ret.is_err:
         return Result.err(messages_ret.err_value)
 
@@ -201,13 +209,14 @@ def update_message(user_id: int, message_ulid: str, text: str) -> Result[Message
     if author_ret.is_err:
         return Result.err(author_ret.err_value)
 
+    author = author_ret.ok_value
     data = MessageDTO(
         ulid=message.ulid,
         text=text,
         reply_count=message.reply_count,
         created=message.created,
         updated=message.updated,
-        author=author_ret.ok_value,
+        author=author,
     )
     return Result.ok(data)
 

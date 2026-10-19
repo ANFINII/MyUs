@@ -66,7 +66,8 @@ class ManageVideoAPI:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
             return 404, ErrorOut(message=video_ret.err_value.error_message)
 
-        return 200, convert_videos([video_ret.ok_value])[0]
+        video = video_ret.ok_value
+        return 200, convert_videos([video])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -155,7 +156,8 @@ class ManageMusicAPI:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
             return 404, ErrorOut(message=music_ret.err_value.error_message)
 
-        return 200, convert_musics([music_ret.ok_value])[0]
+        music = music_ret.ok_value
+        return 200, convert_musics([music])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -244,7 +246,8 @@ class ManageBlogAPI:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
             return 404, ErrorOut(message=blog_ret.err_value.error_message)
 
-        return 200, convert_blogs([blog_ret.ok_value])[0]
+        blog = blog_ret.ok_value
+        return 200, convert_blogs([blog])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -333,7 +336,8 @@ class ManageComicAPI:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
             return 404, ErrorOut(message=comic_ret.err_value.error_message)
 
-        return 200, convert_comics([comic_ret.ok_value])[0]
+        comic = comic_ret.ok_value
+        return 200, convert_comics([comic])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -422,7 +426,8 @@ class ManagePictureAPI:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
             return 404, ErrorOut(message=picture_ret.err_value.error_message)
 
-        return 200, convert_pictures([picture_ret.ok_value])[0]
+        picture = picture_ret.ok_value
+        return 200, convert_pictures([picture])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -511,7 +516,8 @@ class ManageChatAPI:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
             return 404, ErrorOut(message=chat_ret.err_value.error_message)
 
-        return 200, convert_chats([chat_ret.ok_value])[0]
+        chat = chat_ret.ok_value
+        return 200, convert_chats([chat])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -600,7 +606,8 @@ class ManageAdvertiseAPI:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
             return 404, ErrorOut(message=advertise_ret.err_value.error_message)
 
-        return 200, convert_advertises([advertise_ret.ok_value])[0]
+        advertise = advertise_ret.ok_value
+        return 200, convert_advertises([advertise])[0]
 
     @staticmethod
     @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -621,7 +628,8 @@ class ManageAdvertiseAPI:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
             return 400, ErrorOut(message=create_ret.err_value.error_message)
 
-        return 201, MediaCreateOut(ulid=create_ret.ok_value.ulid)
+        advertise = create_ret.ok_value
+        return 201, MediaCreateOut(ulid=advertise.ulid)
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})

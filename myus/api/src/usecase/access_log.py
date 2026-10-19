@@ -31,7 +31,8 @@ def record_access(ip_address: str, media_type: MediaType, media_id: int) -> Resu
     if access_logs_ret.is_err:
         return Result.err(access_logs_ret.err_value)
 
-    access_log = access_logs_ret.ok_value[0]
+    access_logs = access_logs_ret.ok_value
+    access_log = access_logs[0]
     if now - access_log.updated < ACCESS_INTERVAL:
         return Result.ok(False)
 

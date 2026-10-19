@@ -21,11 +21,13 @@ def get_follows(user_id: int, search: str, limit: int) -> Result[list[FollowUser
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    follows_ret = follow_repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    follows_ret = follow_repo.bulk_get(ids)
     if follows_ret.is_err:
         return Result.err(follows_ret.err_value)
 
-    following_ids = [f.following_id for f in follows_ret.ok_value]
+    follows = follows_ret.ok_value
+    following_ids = [f.following_id for f in follows]
     users_ret = user_repo.bulk_get(following_ids)
     if users_ret.is_err:
         return Result.err(users_ret.err_value)
@@ -51,11 +53,13 @@ def get_followers(user_id: int, search: str, limit: int) -> Result[list[FollowUs
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    follows_ret = follow_repo.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    follows_ret = follow_repo.bulk_get(ids)
     if follows_ret.is_err:
         return Result.err(follows_ret.err_value)
 
-    follower_ids = [f.follower_id for f in follows_ret.ok_value]
+    follows = follows_ret.ok_value
+    follower_ids = [f.follower_id for f in follows]
     users_ret = user_repo.bulk_get(follower_ids)
     if users_ret.is_err:
         return Result.err(users_ret.err_value)
@@ -92,7 +96,8 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
     if follow_ids_ret.is_err:
         return Result.err(follow_ids_ret.err_value)
 
-    follows_ret = follow_repo.bulk_get(follow_ids_ret.ok_value)
+    follow_ids = follow_ids_ret.ok_value
+    follows_ret = follow_repo.bulk_get(follow_ids)
     if follows_ret.is_err:
         return Result.err(follows_ret.err_value)
 
@@ -111,8 +116,9 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
                 transaction.set_rollback(True)
                 return Result.err(new_ids_ret.err_value)
 
+            new_ids = new_ids_ret.ok_value
             if is_follow:
-                notification_ret = create_notification(follower_id, following_id, NotificationTypeNo.FOLLOW, new_ids_ret.ok_value[0], NotificationObjectType.FOLLOW)
+                notification_ret = create_notification(follower_id, following_id, NotificationTypeNo.FOLLOW, new_ids[0], NotificationObjectType.FOLLOW)
                 if notification_ret.is_err:
                     transaction.set_rollback(True)
                     return Result.err(notification_ret.err_value)

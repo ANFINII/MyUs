@@ -24,7 +24,8 @@ def get_notification_data(receiver_id: int, enabled_types: tuple[NotificationTyp
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    return Result.ok(objs_ret.ok_value)
+    objs = objs_ret.ok_value
+    return Result.ok(objs)
 
 
 @Result.shield_exception()
@@ -93,12 +94,13 @@ def get_notification(user_id: int) -> Result[NotificationDTO, FatalError]:
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
+    objs = objs_ret.ok_value
     confirmed_ids_ret = repository.get_ids(FilterOption(confirmed_user_id=user_id), SortOption())
     if confirmed_ids_ret.is_err:
         return Result.err(confirmed_ids_ret.err_value)
 
-    objs = objs_ret.ok_value
-    confirmed_ids = set(confirmed_ids_ret.ok_value)
+    confirmed_notification_ids = confirmed_ids_ret.ok_value
+    confirmed_ids = set(confirmed_notification_ids)
 
     user_ids = list({n.user_from_id for n in objs} | {n.user_to_id for n in objs if n.user_to_id != 0})
     user_map_ret = get_notification_user_map(user_ids)
@@ -146,7 +148,8 @@ def create_notification(user_from_id: int, user_to_id: int, type_no: Notificatio
         if enabled_types_ret.is_err:
             return Result.err(enabled_types_ret.err_value)
 
-        if type_no not in enabled_types_ret.ok_value:
+        enabled_types = enabled_types_ret.ok_value
+        if type_no not in enabled_types:
             return Result.ok(None)
 
     repository = injector.get(NotificationInterface)
@@ -175,7 +178,8 @@ def create_publish_notification(owner_id: int, type_no: NotificationTypeNo, obje
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    if len(ids_ret.ok_value) > 0:
+    ids = ids_ret.ok_value
+    if len(ids) > 0:
         return Result.ok(None)
 
     create_ret = create_notification(owner_id, 0, type_no, object_id, object_type)
@@ -195,7 +199,8 @@ def delete_object_notifications(object_type: NotificationObjectType, object_ids:
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    delete_ret = repository.bulk_delete(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    delete_ret = repository.bulk_delete(ids)
     if delete_ret.is_err:
         return Result.err(delete_ret.err_value)
 

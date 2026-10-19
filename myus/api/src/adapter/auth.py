@@ -35,7 +35,8 @@ class AuthAPI:
             if ret.is_err:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-            if not ret.ok_value:
+            is_verified = ret.ok_value
+            if not is_verified:
                 return 401, ErrorOut(message="Unauthorized")
 
             return 200, ErrorOut(message="認証済みです!")
@@ -76,7 +77,8 @@ class AuthAPI:
             if ret.is_err:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-            if not ret.ok_value:
+            is_verified = ret.ok_value
+            if not is_verified:
                 log.warning("User verification failed", user_id=user_id)
                 return 401, ErrorOut(message="Unauthorized")
 

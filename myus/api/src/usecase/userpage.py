@@ -47,11 +47,13 @@ def is_following(follower_id: int, following_id: int) -> Result[bool, FatalError
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    if len(ids_ret.ok_value) == 0:
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
         return Result.ok(False)
 
-    follows_ret = follow_repo.bulk_get(ids_ret.ok_value)
+    follows_ret = follow_repo.bulk_get(ids)
     if follows_ret.is_err:
         return Result.err(follows_ret.err_value)
 
-    return Result.ok(follows_ret.ok_value[0].is_follow)
+    follows = follows_ret.ok_value
+    return Result.ok(follows[0].is_follow)

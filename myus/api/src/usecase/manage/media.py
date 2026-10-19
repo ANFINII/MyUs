@@ -43,7 +43,8 @@ def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: 
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -74,7 +75,8 @@ def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, NotFoundError
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     return Result.ok(replace(obj,
         image=create_url(obj.image),
         video=create_url(obj.video),
@@ -98,7 +100,8 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Video owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -172,7 +175,8 @@ def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: 
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -198,7 +202,8 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, NotFoundError
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     return Result.ok(replace(obj, music=create_url(obj.music)))
 
 
@@ -218,7 +223,8 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Music owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -289,7 +295,8 @@ def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: i
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -315,7 +322,8 @@ def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, NotFoundError |
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     return Result.ok(replace(obj, image=create_url(obj.image)))
 
 
@@ -335,7 +343,8 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -409,7 +418,8 @@ def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: 
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -438,7 +448,8 @@ def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, NotFoundError
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     return Result.ok(replace(obj,
         image=create_url(obj.image),
         pages=[create_url(p) for p in obj.pages],
@@ -461,7 +472,8 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Comic owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -535,7 +547,8 @@ def get_manage_pictures(user_id: int, search: str, channel_ulid: str = "", limit
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -561,7 +574,8 @@ def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, NotFoundE
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     return Result.ok(replace(obj, image=create_url(obj.image)))
 
 
@@ -581,7 +595,8 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Picture owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -655,7 +670,8 @@ def get_manage_chats(user_id: int, search: str, channel_ulid: str = "", limit: i
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids=ids)
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
@@ -679,7 +695,8 @@ def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, NotFoundError |
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    return Result.ok(objs_ret.ok_value[0])
+    objs = objs_ret.ok_value
+    return Result.ok(objs[0])
 
 
 @Result.shield_exception()
@@ -698,7 +715,8 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
     if objs_ret.is_err:
         return Result.err(objs_ret.err_value)
 
-    obj = objs_ret.ok_value[0]
+    objs = objs_ret.ok_value
+    obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Chat owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -748,7 +766,9 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, NotFoundE
         reply_ids_ret = message_repo.get_ids(MessageFilterOption(chat_id=chat_id, is_parent=False), MessageSortOption())
         if reply_ids_ret.is_err:
             return Result.err(reply_ids_ret.err_value)
-        reply_ids += reply_ids_ret.ok_value
+
+        chat_reply_ids = reply_ids_ret.ok_value
+        reply_ids += chat_reply_ids
 
     with transaction.atomic():
         delete_ret = repository.bulk_delete(delete_ids)

@@ -36,7 +36,8 @@ def get_user_data(user_id: int = 0, ulid: str = "") -> Result[UserAllData | None
     if users_ret.is_err:
         return Result.err(users_ret.err_value)
 
-    return Result.ok(users_ret.ok_value[0])
+    users = users_ret.ok_value
+    return Result.ok(users[0])
 
 
 @Result.shield_exception()
@@ -214,7 +215,8 @@ def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, NotFoundError | Fat
         if comments_ret.is_err:
             return Result.err(comments_ret.err_value)
 
-        comment = comments_ret.ok_value[0]
+        comments = comments_ret.ok_value
+        comment = comments[0]
         create_ret = create_notification(user_id, comment.author_id, NotificationTypeNo.LIKE, comment.id, NotificationObjectType.COMMENT)
         if create_ret.is_err:
             return Result.err(create_ret.err_value)

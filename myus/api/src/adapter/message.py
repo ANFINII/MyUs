@@ -66,7 +66,8 @@ class MessageAPI:
         if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        if user_id_ret.ok_value is None:
+        user_id = user_id_ret.ok_value
+        if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         replies_ret = get_replies(message_ulid)
@@ -140,7 +141,8 @@ class MessageAPI:
                     return 500, ErrorOut(message="サーバーエラーが発生しました")
                 return 403, ErrorOut(message=delete_ret.err_value.error_message)
 
-            broadcast_delete_message(delete_ret.ok_value, message_ulid)
+            chat_ulid = delete_ret.ok_value
+            broadcast_delete_message(chat_ulid, message_ulid)
 
             return 200, ErrorOut(message="メッセージを削除しました")
         except Exception as e:

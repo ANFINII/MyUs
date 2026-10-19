@@ -10,7 +10,8 @@ def auth_user(func):
         if ret.is_err:
             return ApiResponse.SERVER_ERROR.run()
 
-        if ret.ok_value is None:
+        user_id = ret.ok_value
+        if user_id is None:
             return ApiResponse.UNAUTHORIZED.run()
         return func(self, request, *args, **kwargs)
     return wrapper

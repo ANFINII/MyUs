@@ -35,7 +35,8 @@ def get_comment_data(comment_ulid: str) -> Result[CommentData | None, FatalError
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 
-    return Result.ok(comments_ret.ok_value[0])
+    comments = comments_ret.ok_value
+    return Result.ok(comments[0])
 
 
 @Result.shield_exception()
@@ -104,7 +105,8 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
         if liked_ids_ret.is_err:
             return Result.err(liked_ids_ret.err_value)
 
-        liked_ids = set(liked_ids_ret.ok_value)
+        liked_comment_ids = liked_ids_ret.ok_value
+        liked_ids = set(liked_comment_ids)
 
     data = [
         CommentDTO(
@@ -159,7 +161,8 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, N
         if parents_ret.is_err:
             return Result.err(parents_ret.err_value)
 
-        parent = parents_ret.ok_value[0]
+        parents = parents_ret.ok_value
+        parent = parents[0]
 
     author_ret = get_author_data(user_id)
     if author_ret.is_err:
@@ -185,7 +188,8 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, N
     if new_ids_ret.is_err:
         return Result.err(new_ids_ret.err_value)
 
-    comments_ret = comment_repo.bulk_get(new_ids_ret.ok_value)
+    new_ids = new_ids_ret.ok_value
+    comments_ret = comment_repo.bulk_get(new_ids)
     if comments_ret.is_err:
         return Result.err(comments_ret.err_value)
 

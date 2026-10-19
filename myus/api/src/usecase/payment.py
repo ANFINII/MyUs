@@ -118,7 +118,8 @@ def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, up
     if transactions_ret.is_err:
         return Result.err(transactions_ret.err_value)
 
-    transaction = transactions_ret.ok_value[0]
+    transactions = transactions_ret.ok_value
+    transaction = transactions[0]
     updated = replace(transaction, status=status, paid_at=event.occurred_at) if update_paid_at else replace(transaction, status=status)
     save_ret = repo.bulk_save([updated])
     if save_ret.is_err:

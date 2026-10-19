@@ -13,11 +13,13 @@ def get_search_tag_data(author_id: int) -> Result[list[SearchTagData], FatalErro
     if ids_ret.is_err:
         return Result.err(ids_ret.err_value)
 
-    tags_ret = repository.bulk_get(ids_ret.ok_value)
+    ids = ids_ret.ok_value
+    tags_ret = repository.bulk_get(ids)
     if tags_ret.is_err:
         return Result.err(tags_ret.err_value)
 
-    return Result.ok(tags_ret.ok_value)
+    tags = tags_ret.ok_value
+    return Result.ok(tags)
 
 
 @Result.shield_exception()

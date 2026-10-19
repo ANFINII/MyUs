@@ -36,7 +36,8 @@ class AdvertiseAPI:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
             return 404, ErrorOut(message=ret.err_value.error_message)
 
-        return 200, AdvertiseReadOut(read=ret.ok_value)
+        read = ret.ok_value
+        return 200, AdvertiseReadOut(read=read)
 
 
 def convert_advertises(objs: list[AdvertiseData]) -> list[AdvertiseOut]:

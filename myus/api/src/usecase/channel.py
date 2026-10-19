@@ -27,7 +27,8 @@ def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
     if channels_ret.is_err:
         return Result.err(channels_ret.err_value)
 
-    data = channels_ret.ok_value[0]
+    channels = channels_ret.ok_value
+    data = channels[0]
     return Result.ok(data)
 
 
@@ -57,7 +58,8 @@ def get_user_channels(owner_id: int) -> Result[list[ChannelData], FatalError]:
     if channels_ret.is_err:
         return Result.err(channels_ret.err_value)
 
-    return Result.ok(channels_ret.ok_value)
+    channels = channels_ret.ok_value
+    return Result.ok(channels)
 
 
 @Result.shield_exception()
