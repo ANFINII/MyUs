@@ -58,46 +58,6 @@ def get_user_enabled_types(user_id: int) -> tuple[NotificationTypeNo, ...]:
     return get_enabled_types(users[0].notification)
 
 
-def create_notification(user_from_id: int, user_to_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> None:
-    if user_to_id != 0:
-        if user_to_id == user_from_id and type_no != NotificationTypeNo.VIEWS:
-            return
-        if type_no not in get_user_enabled_types(user_to_id):
-            return
-
-    repository = injector.get(NotificationInterface)
-    notification = NotificationData(
-        id=0,
-        ulid="",
-        user_from_id=user_from_id,
-        user_to_id=user_to_id,
-        type_no=type_no,
-        type_name=NotificationType[type_no.name],
-        object_id=object_id,
-        object_type=object_type,
-        content=None,
-    )
-    repository.bulk_save([notification])
-
-
-def create_publish_notification(owner_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> None:
-    repository = injector.get(NotificationInterface)
-    ids = repository.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=[object_id]), SortOption(), limit=1)
-    if len(ids) > 0:
-        return
-
-    create_notification(owner_id, 0, type_no, object_id, object_type)
-
-
-def delete_object_notifications(object_type: NotificationObjectType, object_ids: list[int]) -> None:
-    if len(object_ids) == 0:
-        return
-
-    repository = injector.get(NotificationInterface)
-    ids = repository.get_ids(FilterOption(object_type=object_type, object_ids=object_ids), SortOption())
-    repository.bulk_delete(ids)
-
-
 def get_notification(user_id: int) -> NotificationDTO:
     enabled_types = get_user_enabled_types(user_id)
     if len(enabled_types) == 0:
@@ -140,11 +100,51 @@ def get_notification(user_id: int) -> NotificationDTO:
     return NotificationDTO(count=len([item for item in items if not item.is_confirmed]), items=items)
 
 
-def notification_confirm(user_id: int, ulid: str) -> None:
+def create_notification(user_from_id: int, user_to_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> None:
+    if user_to_id != 0:
+        if user_to_id == user_from_id and type_no != NotificationTypeNo.VIEWS:
+            return
+        if type_no not in get_user_enabled_types(user_to_id):
+            return
+
     repository = injector.get(NotificationInterface)
-    repository.confirm(ulid, user_id)
+    notification = NotificationData(
+        id=0,
+        ulid="",
+        user_from_id=user_from_id,
+        user_to_id=user_to_id,
+        type_no=type_no,
+        type_name=NotificationType[type_no.name],
+        object_id=object_id,
+        object_type=object_type,
+        content=None,
+    )
+    repository.bulk_save([notification])
+
+
+def create_publish_notification(owner_id: int, type_no: NotificationTypeNo, object_id: int, object_type: NotificationObjectType) -> None:
+    repository = injector.get(NotificationInterface)
+    ids = repository.get_ids(FilterOption(type_no=type_no, object_type=object_type, object_ids=[object_id]), SortOption(), limit=1)
+    if len(ids) > 0:
+        return
+
+    create_notification(owner_id, 0, type_no, object_id, object_type)
+
+
+def delete_object_notifications(object_type: NotificationObjectType, object_ids: list[int]) -> None:
+    if len(object_ids) == 0:
+        return
+
+    repository = injector.get(NotificationInterface)
+    ids = repository.get_ids(FilterOption(object_type=object_type, object_ids=object_ids), SortOption())
+    repository.bulk_delete(ids)
 
 
 def notification_delete(user_id: int, ulid: str) -> None:
     repository = injector.get(NotificationInterface)
     repository.delete_by_user(ulid, user_id)
+
+
+def notification_confirm(user_id: int, ulid: str) -> None:
+    repository = injector.get(NotificationInterface)
+    repository.confirm(ulid, user_id)

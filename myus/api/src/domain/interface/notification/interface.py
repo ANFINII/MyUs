@@ -50,9 +50,9 @@ class NotificationInterface(ABC):
         ...
 
     @abstractmethod
-    def confirm(self, ulid: str, user_id: int) -> None:
+    def delete_by_user(self, ulid: str, user_id: int) -> None:
         ...
 
     @abstractmethod
-    def delete_by_user(self, ulid: str, user_id: int) -> None:
+    def confirm(self, ulid: str, user_id: int) -> None:
         ...
