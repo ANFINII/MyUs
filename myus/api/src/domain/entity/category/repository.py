@@ -5,6 +5,7 @@ from api.src.domain.entity.category._convert import convert_data, get_media_mode
 from api.src.domain.entity.index import sort_ids
 from api.src.domain.interface.category.data import CategoryData
 from api.src.domain.interface.category.interface import CategoryInterface, FilterOption, SortOption
+from api.utils.common.result import FatalError, Result
 from api.utils.enum.media import MediaType
 
 
@@ -12,7 +13,8 @@ class CategoryRepository(CategoryInterface):
     def queryset(self) -> QuerySet[Category]:
         return Category.objects.all()
 
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if len(filter.ulids) > 0:
             q_list.append(Q(ulid__in=filter.ulids))
@@ -24,17 +26,19 @@ class CategoryRepository(CategoryInterface):
         if limit is not None:
             qs = qs[:limit]
 
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[CategoryData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[CategoryData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+        return Result.ok([convert_data(obj) for obj in sorted_objs])
 
-    def bulk_save(self, media_type: MediaType, media_id: int, objs: list[CategoryData]) -> list[int]:
+    @Result.shield_exception()
+    def bulk_save(self, media_type: MediaType, media_id: int, objs: list[CategoryData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
             category_ids: list[int] = []
         else:
@@ -46,4 +50,4 @@ class CategoryRepository(CategoryInterface):
         obj = model_class.objects.get(id=media_id)
         obj.category.set(category_ids)
 
-        return category_ids
+        return Result.ok(category_ids)

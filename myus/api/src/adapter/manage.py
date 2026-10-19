@@ -55,7 +55,7 @@ class ManageVideoAPI:
         return 200, convert_videos([obj])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: VideoUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageVideoAPI put", ulid=ulid, input=input, image=image)
 
@@ -63,8 +63,11 @@ class ManageVideoAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not update_manage_video(user_id, ulid, input, image):
-            return 400, ErrorOut(message="保存に失敗しました!")
+        ret = update_manage_video(user_id, ulid, input, image)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -116,7 +119,7 @@ class ManageMusicAPI:
         return 200, convert_musics([obj])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: MusicUpdateIn):
         log.info("ManageMusicAPI put", ulid=ulid, input=input)
 
@@ -124,8 +127,11 @@ class ManageMusicAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not update_manage_music(user_id, ulid, input):
-            return 400, ErrorOut(message="保存に失敗しました!")
+        ret = update_manage_music(user_id, ulid, input)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -177,7 +183,7 @@ class ManageBlogAPI:
         return 200, convert_blogs([obj])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: BlogUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageBlogAPI put", ulid=ulid, input=input, image=image)
 
@@ -185,8 +191,11 @@ class ManageBlogAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not update_manage_blog(user_id, ulid, input, image):
-            return 400, ErrorOut(message="保存に失敗しました!")
+        ret = update_manage_blog(user_id, ulid, input, image)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -238,7 +247,7 @@ class ManageComicAPI:
         return 200, convert_comics([obj])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ComicUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManageComicAPI put", ulid=ulid, input=input, image=image)
 
@@ -246,8 +255,11 @@ class ManageComicAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not update_manage_comic(user_id, ulid, input, image):
-            return 400, ErrorOut(message="保存に失敗しました!")
+        ret = update_manage_comic(user_id, ulid, input, image)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -299,7 +311,7 @@ class ManagePictureAPI:
         return 200, convert_pictures([obj])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: PictureUpdateIn = Form(...), image: UploadedFile | None = File(None)):
         log.info("ManagePictureAPI put", ulid=ulid, input=input, image=image)
 
@@ -307,8 +319,11 @@ class ManagePictureAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not update_manage_picture(user_id, ulid, input, image):
-            return 400, ErrorOut(message="保存に失敗しました!")
+        ret = update_manage_picture(user_id, ulid, input, image)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -360,7 +375,7 @@ class ManageChatAPI:
         return 200, convert_chats([obj])[0]
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ChatUpdateIn):
         log.info("ManageChatAPI put", ulid=ulid, input=input)
 
@@ -368,8 +383,11 @@ class ManageChatAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not update_manage_chat(user_id, ulid, input):
-            return 400, ErrorOut(message="保存に失敗しました!")
+        ret = update_manage_chat(user_id, ulid, input)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
 
