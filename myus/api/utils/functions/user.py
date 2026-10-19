@@ -1,10 +1,7 @@
-from api.db.models.user import User
 from api.src.domain.interface.subscribe.interface import FilterOption, SortOption, SubscribeInterface
 from api.src.injectors.container import injector
-from api.src.types.dto.notification import NotificationUserDTO
 from api.src.types.dto.user import MediaUserDTO
 from api.utils.common.result import FatalError, Result
-from api.utils.functions.index import create_url
 
 
 @Result.shield_exception()
@@ -30,8 +27,3 @@ def get_media_user(is_like: bool, channel_id: int, user_id: int | None) -> Resul
     )
 
     return Result.ok(data)
-
-
-def get_notification_user(user: User) -> NotificationUserDTO:
-    data = NotificationUserDTO(avatar=create_url(str(user.avatar)), ulid=user.ulid, nickname=user.nickname)
-    return data
