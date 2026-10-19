@@ -1,3 +1,4 @@
+from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
@@ -5,7 +6,7 @@ from api.src.domain.interface.advertise.data import AdvertiseData
 from api.src.types.schema.advertise import AdvertiseListOut, AdvertiseOut, AdvertiseReadOut
 from api.src.types.schema.common import ErrorOut
 from api.src.usecase.advertise import get_user_advertises, increment_advertise_read
-from api.utils.common.result import FatalError
+from api.utils.common.result import FatalError, NotFoundError
 
 
 class AdvertiseAPI:
@@ -32,9 +33,13 @@ class AdvertiseAPI:
 
         ret = increment_advertise_read(ulid)
         if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=ret.err_value.error_message)
+            match ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(ret.err_value)
 
         read = ret.ok_value
         return 200, AdvertiseReadOut(read=read)

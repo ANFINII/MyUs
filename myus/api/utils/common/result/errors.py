@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Self
+from typing import Self, final
 
 
 @dataclass(frozen=True)
@@ -15,16 +15,19 @@ class AnyError:
         return cls(repr(exception))
 
 
+@final
 @dataclass(frozen=True)
 class FatalError(AnyError):
     pass
 
 
+@final
 @dataclass(frozen=True)
 class UnauthorizedError(AnyError):
     pass
 
 
+@final
 @dataclass(frozen=True)
 class NotFoundError(AnyError):
     pass
