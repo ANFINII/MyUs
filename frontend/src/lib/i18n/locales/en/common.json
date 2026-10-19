@@ -320,6 +320,9 @@
       "thanks": "Thank you for your purchase.",
       "reflect": "It may take a few minutes for changes to take effect.",
       "backToPlans": "Back to plans",
+      "checkoutCancelTitle": "Payment canceled",
+      "checkoutCancelHeading": "Payment was canceled",
+      "checkoutCancelMessage": "You have not been charged.",
       "features": {
         "individualAds_one": "{{count}} custom ad slot",
         "individualAds_other": "{{count}} custom ad slots",

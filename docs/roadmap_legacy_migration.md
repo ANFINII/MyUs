@@ -149,8 +149,8 @@ D4 で「使う」と決まった場合のみ。
 
 ### PR 5-2【back】【front】決済キャンセル時にメッセージを出す
 
-- BE：Stripe の cancel_url にキャンセルを示すクエリ（例：`?canceled=1`）を付ける（`adapter/payment.py`）
-- FE：`/setting/payment` でクエリを見てトーストを出す
+- BE：Stripe の cancel_url を `/setting/payment/cancel` にする（`adapter/payment.py`）
+- FE：決済完了画面（`/setting/payment/success`）と対になる決済キャンセル画面を追加する（旧実装の `setting/payment/cancel` と同じ構成。クエリを見てトーストを出す案は、表示時に useEffect が必要になるため採らない）
 
 ---
 
@@ -199,10 +199,10 @@ B1〜B3 は PR 6-1 で対応済み（ブランチ `back_fix_legacy_removal_block
 
 | フェーズ | 状況 |
 |---|---|
-| 決めること（D1〜D5） | 未着手 |
-| Phase 1: 広告の表示 | 未着手 |
-| Phase 2: ユーザーページ | 未着手 |
-| Phase 3: Google Tag Manager | 未着手 |
-| Phase 4: 音楽ダウンロードのプラン制限 | 未着手 |
-| Phase 5: 小さいもの | 未着手 |
+| 決めること（D1〜D5） | D3（併用）・D5（閲覧者のプラン）は決定。D1・D2・D4 は未決定 |
+| Phase 1: 広告の表示 | PR 1-2（詳細画面の個別広告）・1-3（クリック数）完了（#989）。PR 1-1・1-4（全体広告・自動再生）は D1・D2 待ち |
+| Phase 2: ユーザーページ | 完了（#990・#991：投稿内検索、#993・#995：広告タブ） |
+| Phase 3: Google Tag Manager | D4 待ち |
+| Phase 4: 音楽ダウンロードのプラン制限 | 完了（#994。FE は既存の `download` を使うため変更なし） |
+| Phase 5: 小さいもの | 音量の保存・決済キャンセル画面を対応 |
 | Phase 6: 旧実装の撤去 | 完了（PR 6-1：削除の障壁 B1〜B3、PR 6-2：旧実装の削除） |

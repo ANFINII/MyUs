@@ -58,7 +58,7 @@ class PaymentAPI:
             customer=CustomerData(email=user_data.user.email),
             redirect=RedirectUrls(
                 success_url=f"{settings.FRONTEND_URL}/setting/payment/success",
-                cancel_url=f"{settings.FRONTEND_URL}/setting/payment",
+                cancel_url=f"{settings.FRONTEND_URL}/setting/payment/cancel",
             ),
             marketplace=MarketplaceData(seller_id="", application_fee=Money(amount=0, currency=Currency.JPY)),
             locale=Locale.JA,
