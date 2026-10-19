@@ -23,7 +23,7 @@ class ChannelAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -31,7 +31,7 @@ class ChannelAPI:
 
         channels_ret = get_user_channels(user_id)
         if channels_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         channels = channels_ret.ok_value
         data = [
@@ -56,7 +56,7 @@ class ChannelAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -64,7 +64,7 @@ class ChannelAPI:
 
         channels_ret = get_subscribe_channels(user_id)
         if channels_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         channels = channels_ret.ok_value
         data = [
@@ -89,7 +89,7 @@ class ChannelAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -98,7 +98,7 @@ class ChannelAPI:
         subscribe_ret = upsert_subscribe(user_id, input.channel_ulid, input.is_subscribe)
         if subscribe_ret.is_err:
             if isinstance(subscribe_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=subscribe_ret.err_value.error_message)
 
         subscribe = subscribe_ret.ok_value
@@ -112,7 +112,7 @@ class ChannelAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -120,7 +120,7 @@ class ChannelAPI:
 
         create_ret = create_user_channel(user_id, input, avatar_file)
         if create_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         ulid = create_ret.ok_value
         return 201, ChannelCreateOut(ulid=ulid)
@@ -132,7 +132,7 @@ class ChannelAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -141,7 +141,7 @@ class ChannelAPI:
         update_ret = update_user_channel(user_id, ulid, input, avatar_file)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")

@@ -31,7 +31,7 @@ class PaymentAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -39,7 +39,7 @@ class PaymentAPI:
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
@@ -67,7 +67,7 @@ class PaymentAPI:
         payment = injector.get(PaymentInterface)
         create_ret = payment.create_checkout(data)
         if create_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         checkout = create_ret.ok_value
         match checkout:
@@ -86,7 +86,7 @@ class PaymentAPI:
         payment = injector.get(PaymentInterface)
         verify_ret = payment.verify_webhook(payload, signature)
         if verify_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         verification = verify_ret.ok_value
         match verification:
@@ -106,7 +106,7 @@ class PaymentAPI:
                     limit=1,
                 )
                 if existing_ids_ret.is_err:
-                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                    return 500, ErrorOut(message="Internal Server Error")
 
                 existing_ids = existing_ids_ret.ok_value
                 if len(existing_ids) > 0:
@@ -115,15 +115,15 @@ class PaymentAPI:
 
                 save_ret = webhook_inbox_repo.bulk_save([event])
                 if save_ret.is_err:
-                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                    return 500, ErrorOut(message="Internal Server Error")
 
                 dispatch_ret = dispatch_webhook_inbox(event)
                 if dispatch_ret.is_err:
-                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                    return 500, ErrorOut(message="Internal Server Error")
 
                 enqueue_ret = enqueue_webhook_outbox(event)
                 if enqueue_ret.is_err:
-                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                    return 500, ErrorOut(message="Internal Server Error")
 
                 return 200, PaymentWebhookOut(message="OK")
 
@@ -132,7 +132,7 @@ class PaymentAPI:
     def cancel(request: HttpRequest):
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -145,7 +145,7 @@ class PaymentAPI:
             limit=1,
         )
         if ids_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         ids = ids_ret.ok_value
         if len(ids) == 0:
@@ -153,7 +153,7 @@ class PaymentAPI:
 
         subs_ret = sub_repo.bulk_get(ids)
         if subs_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         subs = subs_ret.ok_value
         subscription = subs[0]
@@ -163,7 +163,7 @@ class PaymentAPI:
         payment = injector.get(PaymentInterface)
         cancel_ret = payment.cancel_subscription(subscription.external_id)
         if cancel_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         cancellation = cancel_ret.ok_value
         match cancellation:
@@ -171,7 +171,7 @@ class PaymentAPI:
                 updated = replace(subscription, canceled_at=canceled_at, current_period_end=period_end)
                 save_ret = sub_repo.bulk_save([updated])
                 if save_ret.is_err:
-                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                    return 500, ErrorOut(message="Internal Server Error")
 
                 log.info("PaymentAPI cancel succeeded", user_id=user_id, external_id=subscription.external_id)
                 return 200, PaymentCancelOut(canceled_at=canceled_at, period_end=period_end)

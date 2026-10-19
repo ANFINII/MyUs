@@ -34,7 +34,7 @@ class ManageVideoAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -42,7 +42,7 @@ class ManageVideoAPI:
 
         videos_ret = get_manage_videos(user_id, search, channel, limit, offset)
         if videos_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         objs, total = videos_ret.ok_value
         return 200, VideoListOut(items=convert_videos(objs), total=total)
@@ -54,7 +54,7 @@ class ManageVideoAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -63,7 +63,7 @@ class ManageVideoAPI:
         video_ret = get_manage_video(user_id, ulid)
         if video_ret.is_err:
             if isinstance(video_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 404, ErrorOut(message=video_ret.err_value.error_message)
 
         video = video_ret.ok_value
@@ -76,7 +76,7 @@ class ManageVideoAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -85,7 +85,7 @@ class ManageVideoAPI:
         update_ret = update_manage_video(user_id, ulid, input, image)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
@@ -97,7 +97,7 @@ class ManageVideoAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -106,7 +106,7 @@ class ManageVideoAPI:
         delete_ret = delete_manage_video(user_id, input.ulids)
         if delete_ret.is_err:
             if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
@@ -124,7 +124,7 @@ class ManageMusicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -132,7 +132,7 @@ class ManageMusicAPI:
 
         musics_ret = get_manage_musics(user_id, search, channel, limit, offset)
         if musics_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         objs, total = musics_ret.ok_value
         return 200, MusicListOut(items=convert_musics(objs), total=total)
@@ -144,7 +144,7 @@ class ManageMusicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -153,7 +153,7 @@ class ManageMusicAPI:
         music_ret = get_manage_music(user_id, ulid)
         if music_ret.is_err:
             if isinstance(music_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 404, ErrorOut(message=music_ret.err_value.error_message)
 
         music = music_ret.ok_value
@@ -166,7 +166,7 @@ class ManageMusicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -175,7 +175,7 @@ class ManageMusicAPI:
         update_ret = update_manage_music(user_id, ulid, input)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
@@ -187,7 +187,7 @@ class ManageMusicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -196,7 +196,7 @@ class ManageMusicAPI:
         delete_ret = delete_manage_music(user_id, input.ulids)
         if delete_ret.is_err:
             if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
@@ -214,7 +214,7 @@ class ManageBlogAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -222,7 +222,7 @@ class ManageBlogAPI:
 
         blogs_ret = get_manage_blogs(user_id, search, channel, limit, offset)
         if blogs_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         objs, total = blogs_ret.ok_value
         return 200, BlogListOut(items=convert_blogs(objs), total=total)
@@ -234,7 +234,7 @@ class ManageBlogAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -243,7 +243,7 @@ class ManageBlogAPI:
         blog_ret = get_manage_blog(user_id, ulid)
         if blog_ret.is_err:
             if isinstance(blog_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 404, ErrorOut(message=blog_ret.err_value.error_message)
 
         blog = blog_ret.ok_value
@@ -256,7 +256,7 @@ class ManageBlogAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -265,7 +265,7 @@ class ManageBlogAPI:
         update_ret = update_manage_blog(user_id, ulid, input, image)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
@@ -277,7 +277,7 @@ class ManageBlogAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -286,7 +286,7 @@ class ManageBlogAPI:
         delete_ret = delete_manage_blog(user_id, input.ulids)
         if delete_ret.is_err:
             if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
@@ -304,7 +304,7 @@ class ManageComicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -312,7 +312,7 @@ class ManageComicAPI:
 
         comics_ret = get_manage_comics(user_id, search, channel, limit, offset)
         if comics_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         objs, total = comics_ret.ok_value
         return 200, ComicListOut(items=convert_comics(objs), total=total)
@@ -324,7 +324,7 @@ class ManageComicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -333,7 +333,7 @@ class ManageComicAPI:
         comic_ret = get_manage_comic(user_id, ulid)
         if comic_ret.is_err:
             if isinstance(comic_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 404, ErrorOut(message=comic_ret.err_value.error_message)
 
         comic = comic_ret.ok_value
@@ -346,7 +346,7 @@ class ManageComicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -355,7 +355,7 @@ class ManageComicAPI:
         update_ret = update_manage_comic(user_id, ulid, input, image)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
@@ -367,7 +367,7 @@ class ManageComicAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -376,7 +376,7 @@ class ManageComicAPI:
         delete_ret = delete_manage_comic(user_id, input.ulids)
         if delete_ret.is_err:
             if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
@@ -394,7 +394,7 @@ class ManagePictureAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -402,7 +402,7 @@ class ManagePictureAPI:
 
         pictures_ret = get_manage_pictures(user_id, search, channel, limit, offset)
         if pictures_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         objs, total = pictures_ret.ok_value
         return 200, PictureListOut(items=convert_pictures(objs), total=total)
@@ -414,7 +414,7 @@ class ManagePictureAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -423,7 +423,7 @@ class ManagePictureAPI:
         picture_ret = get_manage_picture(user_id, ulid)
         if picture_ret.is_err:
             if isinstance(picture_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 404, ErrorOut(message=picture_ret.err_value.error_message)
 
         picture = picture_ret.ok_value
@@ -436,7 +436,7 @@ class ManagePictureAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -445,7 +445,7 @@ class ManagePictureAPI:
         update_ret = update_manage_picture(user_id, ulid, input, image)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
@@ -457,7 +457,7 @@ class ManagePictureAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -466,7 +466,7 @@ class ManagePictureAPI:
         delete_ret = delete_manage_picture(user_id, input.ulids)
         if delete_ret.is_err:
             if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
@@ -484,7 +484,7 @@ class ManageChatAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -492,7 +492,7 @@ class ManageChatAPI:
 
         chats_ret = get_manage_chats(user_id, search, channel, limit, offset)
         if chats_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         objs, total = chats_ret.ok_value
         return 200, ChatListOut(items=convert_chats(objs), total=total)
@@ -504,7 +504,7 @@ class ManageChatAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -513,7 +513,7 @@ class ManageChatAPI:
         chat_ret = get_manage_chat(user_id, ulid)
         if chat_ret.is_err:
             if isinstance(chat_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 404, ErrorOut(message=chat_ret.err_value.error_message)
 
         chat = chat_ret.ok_value
@@ -526,7 +526,7 @@ class ManageChatAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -535,7 +535,7 @@ class ManageChatAPI:
         update_ret = update_manage_chat(user_id, ulid, input)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
@@ -547,7 +547,7 @@ class ManageChatAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -556,7 +556,7 @@ class ManageChatAPI:
         delete_ret = delete_manage_chat(user_id, input.ulids)
         if delete_ret.is_err:
             if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
@@ -574,7 +574,7 @@ class ManageAdvertiseAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -582,7 +582,7 @@ class ManageAdvertiseAPI:
 
         advertises_ret = get_manage_advertises(user_id, search, limit, offset)
         if advertises_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         objs, total = advertises_ret.ok_value
         return 200, AdvertiseListOut(items=convert_advertises(objs), total=total)
@@ -594,7 +594,7 @@ class ManageAdvertiseAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -603,7 +603,7 @@ class ManageAdvertiseAPI:
         advertise_ret = get_manage_advertise(user_id, ulid)
         if advertise_ret.is_err:
             if isinstance(advertise_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 404, ErrorOut(message=advertise_ret.err_value.error_message)
 
         advertise = advertise_ret.ok_value
@@ -616,7 +616,7 @@ class ManageAdvertiseAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -625,7 +625,7 @@ class ManageAdvertiseAPI:
         create_ret = create_manage_advertise(user_id, input, image, video)
         if create_ret.is_err:
             if isinstance(create_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=create_ret.err_value.error_message)
 
         advertise = create_ret.ok_value
@@ -638,7 +638,7 @@ class ManageAdvertiseAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -647,7 +647,7 @@ class ManageAdvertiseAPI:
         update_ret = update_manage_advertise(user_id, ulid, input, image, video)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
@@ -659,7 +659,7 @@ class ManageAdvertiseAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -668,7 +668,7 @@ class ManageAdvertiseAPI:
         delete_ret = delete_manage_advertise(user_id, input.ulids)
         if delete_ret.is_err:
             if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=delete_ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")

@@ -22,7 +22,7 @@ class SettingProfileAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -30,7 +30,7 @@ class SettingProfileAPI:
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
@@ -72,7 +72,7 @@ class SettingProfileAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -81,7 +81,7 @@ class SettingProfileAPI:
         update_ret = update_profile(user_id, input, avatar_file)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
@@ -99,7 +99,7 @@ class SettingMyPageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -107,7 +107,7 @@ class SettingMyPageAPI:
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
@@ -140,7 +140,7 @@ class SettingMyPageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -152,7 +152,7 @@ class SettingMyPageAPI:
         update_ret = update_mypage(user_id, input, banner_file)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
@@ -172,7 +172,7 @@ class SettingNotificationAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -180,7 +180,7 @@ class SettingNotificationAPI:
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
@@ -210,7 +210,7 @@ class SettingNotificationAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -219,7 +219,7 @@ class SettingNotificationAPI:
         update_ret = update_notification(user_id, input)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")
