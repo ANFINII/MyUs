@@ -1,16 +1,62 @@
 import json
 from dataclasses import asdict, replace
 from datetime import datetime, timezone
+from django.db import transaction
 from api.modules.logger import log
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
+from api.src.domain.interface.webhook.inbox.interface import FilterOption as WebhookInboxFilterOption, SortOption as WebhookInboxSortOption, WebhookInboxInterface
 from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
 from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.webhook import WebhookOutboxPayloadDTO
 from api.utils.common.result import FatalError, Result
 from api.utils.enum.payment import PaymentStatus, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
+
+
+@Result.shield_exception()
+def receive_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
+    with transaction.atomic():
+        enqueue_inbox_ret = enqueue_webhook_inbox(event)
+        if enqueue_inbox_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(enqueue_inbox_ret.err_value)
+
+        is_enqueued = enqueue_inbox_ret.ok_value
+        if not is_enqueued:
+            return Result.ok(False)
+
+        dispatch_ret = dispatch_webhook_inbox(event)
+        if dispatch_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(dispatch_ret.err_value)
+
+        enqueue_outbox_ret = enqueue_webhook_outbox(event)
+        if enqueue_outbox_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(enqueue_outbox_ret.err_value)
+
+    return Result.ok(True)
+
+
+@Result.shield_exception()
+def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
+    repository = injector.get(WebhookInboxInterface)
+    ids_ret = repository.get_ids(WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id), WebhookInboxSortOption(), limit=1)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) > 0:
+        log.info("WebhookInbox already processed", event_id=event.event_id)
+        return Result.ok(False)
+
+    save_ret = repository.bulk_save([event])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(True)
 
 
 @Result.shield_exception()
@@ -119,8 +165,8 @@ def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, up
         return Result.err(transactions_ret.err_value)
 
     transactions = transactions_ret.ok_value
-    transaction = transactions[0]
-    updated = replace(transaction, status=status, paid_at=event.occurred_at) if update_paid_at else replace(transaction, status=status)
+    payment_transaction = transactions[0]
+    updated = replace(payment_transaction, status=status, paid_at=event.occurred_at) if update_paid_at else replace(payment_transaction, status=status)
     save_ret = repo.bulk_save([updated])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
