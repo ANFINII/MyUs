@@ -5,6 +5,7 @@ from api.src.domain.entity.search_tag._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.search_tag.data import SearchTagData
 from api.src.domain.interface.search_tag.interface import FilterOption, SearchTagInterface, SortOption
+from api.utils.common.result import FatalError, Result
 
 
 SEARCH_TAG_FIELDS = ["author_id", "sequence", "name"]
@@ -14,7 +15,8 @@ class SearchTagRepository(SearchTagInterface):
     def queryset(self) -> QuerySet[SearchTag]:
         return SearchTag.objects.select_related("author")
 
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = 20) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = 20) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.author_id:
             q_list.append(Q(author_id=filter.author_id))
@@ -26,19 +28,21 @@ class SearchTagRepository(SearchTagInterface):
         if limit is not None:
             qs = qs[:limit]
 
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[SearchTagData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[SearchTagData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+        return Result.ok([convert_data(obj) for obj in sorted_objs])
 
-    def bulk_save(self, objs: list[SearchTagData]) -> list[int]:
+    @Result.shield_exception()
+    def bulk_save(self, objs: list[SearchTagData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
-            return []
+            return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_new_ids(models, SearchTag)
@@ -49,9 +53,11 @@ class SearchTagRepository(SearchTagInterface):
             update_fields=SEARCH_TAG_FIELDS,
         )
 
-        return new_ids
+        return Result.ok(new_ids)
 
-    def bulk_delete(self, ids: list[int]) -> None:
+    @Result.shield_exception()
+    def bulk_delete(self, ids: list[int]) -> Result[None, FatalError]:
         if len(ids) == 0:
-            return
+            return Result.ok(None)
         SearchTag.objects.filter(id__in=ids).delete()
+        return Result.ok(None)

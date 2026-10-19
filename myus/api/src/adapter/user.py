@@ -50,7 +50,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/search_tag", response={200: list[SearchTagOut], 401: ErrorOut})
+    @router.get("/search_tag", response={200: list[SearchTagOut], 401: ErrorOut, 500: ErrorOut})
     def get_search_tag(request: HttpRequest):
         log.info("UserAPI search_tag")
 
@@ -58,12 +58,16 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        tags = get_search_tag_data(user_id)
+        ret = get_search_tag_data(user_id)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        tags = ret.ok_value
         data = [SearchTagOut(sequence=x.sequence, name=x.name) for x in tags]
         return 200, data
 
     @staticmethod
-    @router.put("/search_tag", response={200: ErrorOut, 401: ErrorOut})
+    @router.put("/search_tag", response={200: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put_search_tag(request: HttpRequest, input: list[SearchTagIn]):
         log.info("UserAPI put_search_tag")
 
@@ -71,9 +75,9 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        result = update_search_tags(user_id, input)
-        if not result:
-            return 200, ErrorOut(message="更新に失敗しました")
+        ret = update_search_tags(user_id, input)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
 
         return 200, ErrorOut(message="更新しました")
 
