@@ -376,12 +376,13 @@ def get_chats(search: str, id: int = 0, channel_id: int = 0, user_id: int | None
     return objs, total
 
 
-def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> VideoDetailDTO | None:
+@Result.shield_exception()
+def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[VideoDetailDTO, NotFoundError | FatalError]:
     repository = injector.get(VideoInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
         log.info("data not found", ulid=ulid)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
@@ -389,6 +390,10 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Vi
     type_no = comment_type_no_map(CommentType.VIDEO)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
+
+    ret = get_media_user(is_like, obj.channel.id, user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
 
     data = VideoDetailDTO(
         id=obj.id,
@@ -406,18 +411,19 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Vi
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
+        mediaUser=ret.ok_value,
     )
 
-    return data
+    return Result.ok(data)
 
 
-def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> MusicDetailDTO | None:
+@Result.shield_exception()
+def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[MusicDetailDTO, NotFoundError | FatalError]:
     repository = injector.get(MusicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
         log.info("data not found", ulid=ulid)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
@@ -425,6 +431,10 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Mu
     type_no = comment_type_no_map(CommentType.MUSIC)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
+
+    ret = get_media_user(is_like, obj.channel.id, user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
 
     data = MusicDetailDTO(
         id=obj.id,
@@ -442,18 +452,19 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Mu
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
+        mediaUser=ret.ok_value,
     )
 
-    return data
+    return Result.ok(data)
 
 
-def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> BlogDetailDTO | None:
+@Result.shield_exception()
+def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[BlogDetailDTO, NotFoundError | FatalError]:
     repository = injector.get(BlogInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
         log.info("data not found", ulid=ulid)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
@@ -461,6 +472,10 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Blo
     type_no = comment_type_no_map(CommentType.BLOG)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
+
+    ret = get_media_user(is_like, obj.channel.id, user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
 
     data = BlogDetailDTO(
         id=obj.id,
@@ -477,18 +492,19 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Blo
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
+        mediaUser=ret.ok_value,
     )
 
-    return data
+    return Result.ok(data)
 
 
-def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> ComicDetailDTO | None:
+@Result.shield_exception()
+def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[ComicDetailDTO, NotFoundError | FatalError]:
     repository = injector.get(ComicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
         log.info("data not found", ulid=ulid)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
@@ -496,6 +512,10 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Co
     type_no = comment_type_no_map(CommentType.COMIC)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
+
+    ret = get_media_user(is_like, obj.channel.id, user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
 
     data = ComicDetailDTO(
         id=obj.id,
@@ -512,18 +532,19 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Co
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
+        mediaUser=ret.ok_value,
     )
 
-    return data
+    return Result.ok(data)
 
 
-def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> PictureDetailDTO | None:
+@Result.shield_exception()
+def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[PictureDetailDTO, NotFoundError | FatalError]:
     repository = injector.get(PictureInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
         log.info("data not found", ulid=ulid)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
@@ -531,6 +552,10 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     type_no = comment_type_no_map(CommentType.PICTURE)
     comments = get_comments(type_no=type_no, object_id=obj.id, user_id=None)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
+
+    ret = get_media_user(is_like, obj.channel.id, user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
 
     data = PictureDetailDTO(
         id=obj.id,
@@ -546,24 +571,29 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
+        mediaUser=ret.ok_value,
     )
 
-    return data
+    return Result.ok(data)
 
 
-def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> ChatDetailDTO | None:
+@Result.shield_exception()
+def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Result[ChatDetailDTO, NotFoundError | FatalError]:
     repository = injector.get(ChatInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=publish), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
         log.info("data not found", ulid=ulid)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
     messages = get_messages(chat_id=obj.id)
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
+
+    ret = get_media_user(is_like, obj.channel.id, user_id)
+    if ret.is_err:
+        return Result.err(ret.err_value)
 
     data = ChatDetailDTO(
         id=obj.id,
@@ -581,10 +611,10 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Cha
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=get_media_user(is_like, obj.channel.id, user_id),
+        mediaUser=ret.ok_value,
     )
 
-    return data
+    return Result.ok(data)
 
 
 @Result.shield_exception()
