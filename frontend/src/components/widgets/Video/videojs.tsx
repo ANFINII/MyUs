@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import videojs from 'video.js'
+import { getVolume, saveVolume } from 'utils/functions/volume'
 import { PLAYBACK_RATES, MENU_DELAY_MS, SPEED_MENU, QUALITY_MENU, STANDARD_SPEED, MENU_UPDATE_DELAY_MS, AUTO_QUALITY } from './constants'
 import { PlayerOptions, Player, ExtendedPlayer, Component } from './type'
 import 'videojs-hls-quality-selector'
@@ -63,6 +64,8 @@ export default function VideoJS(props: Props): React.JSX.Element {
         const extendedPlayer = player as unknown as ExtendedPlayer
         const playerWithOptions = player as unknown as { options_: { playbackRates?: number[] } }
         playerWithOptions.options_.playbackRates = PLAYBACK_RATES
+        player.volume(getVolume())
+        player.on('volumechange', () => saveVolume(player.volume() ?? getVolume()))
 
         // HLSストリームの品質レベルが読み込まれるのを待つ
         const initializeQualitySelector = (): void => {
