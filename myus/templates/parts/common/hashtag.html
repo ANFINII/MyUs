@@ -1,5 +1,0 @@
-{% for hashtag in object.hashtag.all %}
-  <div class="hashtag_list">
-    <a href="/?search={{ hashtag.jp_name }}" search={{ hashtag.jp_name }} class="pjax_hash_search">#{{ hashtag.jp_name }}</a>
-  </div>
-{% endfor %}

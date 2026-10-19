@@ -91,7 +91,7 @@ SIMPLE_JWT = {
 
 TEMPLATES = [{
     "BACKEND": "django.template.backends.django.DjangoTemplates",
-    "DIRS": [os.path.join(BASE_DIR, "api", "templates"), os.path.join(BASE_DIR, "templates")],
+    "DIRS": [os.path.join(BASE_DIR, "api", "templates")],
     "APP_DIRS": True,
     "OPTIONS": {
         "context_processors": [
@@ -170,10 +170,6 @@ ENCRYPT_IV = env.encrypt_iv
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-LOGIN_URL = "app:login"
-LOGIN_REDIRECT_URL = "app:index"
-LOGOUT_REDIRECT_URL = "app:login"
 
 # File upload size limits
 FILE_UPLOAD_PERMISSIONS = 0o644
