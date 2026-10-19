@@ -3,7 +3,7 @@ name = "myus"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.15"
 dependencies = [
     "channels>=4.3.2",
     "channels-redis>=4.3.0",
@@ -38,7 +38,7 @@ dev = ["django-debug-toolbar>=8.0.0", "django-stubs>=6.1.0", "mypy>=2.3.1", "ruf
 
 [tool.mypy]
 mypy_path = "."                          # ソースルートパスを指定
-python_version = "3.14"                  # Pythonのバージョンを指定
+python_version = "3.15"                  # Pythonのバージョンを指定
 strict = true                            # すべての厳密なチェックを有効化
 strict_optional = true                   # Optional型の厳密なチェックを有効化
 show_error_codes = true                  # エラーコードを表示
