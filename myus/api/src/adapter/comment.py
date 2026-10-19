@@ -19,15 +19,19 @@ class CommentAPI:
     def get(request: HttpRequest, input: CommentListIn):
         log.info("CommentAPI get", type_no=input.type_no, object_id=input.object_id)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_comments(type_no=input.type_no, object_id=input.object_id, user_id=user_id)
-        if ret.is_err:
+        comments_ret = get_comments(type_no=input.type_no, object_id=input.object_id, user_id=user_id)
+        if comments_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        comments = ret.ok_value
+        comments = comments_ret.ok_value
         data = [
             CommentOut(
                 ulid=x.ulid,
@@ -70,18 +74,22 @@ class CommentAPI:
     def post(request: HttpRequest, input: CommentCreateIn):
         log.info("CommentAPI post", input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            ret = create_comment(user_id, input)
-            if ret.is_err:
-                if isinstance(ret.err_value, FatalError):
+            comment_ret = create_comment(user_id, input)
+            if comment_ret.is_err:
+                if isinstance(comment_ret.err_value, FatalError):
                     return 500, ErrorOut(message="サーバーエラーが発生しました")
-                return 400, ErrorOut(message=ret.err_value.error_message)
+                return 400, ErrorOut(message=comment_ret.err_value.error_message)
 
-            comment = ret.ok_value
+            comment = comment_ret.ok_value
             data = CommentOut(
                 ulid=comment.ulid,
                 text=comment.text,
@@ -108,16 +116,20 @@ class CommentAPI:
     def put(request: HttpRequest, comment_ulid: str, input: CommentUpdateIn):
         log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            ret = update_comment(user_id, comment_ulid, input.text)
-            if ret.is_err:
-                if isinstance(ret.err_value, FatalError):
+            update_ret = update_comment(user_id, comment_ulid, input.text)
+            if update_ret.is_err:
+                if isinstance(update_ret.err_value, FatalError):
                     return 500, ErrorOut(message="サーバーエラーが発生しました")
-                return 403, ErrorOut(message=ret.err_value.error_message)
+                return 403, ErrorOut(message=update_ret.err_value.error_message)
 
             return 200, ErrorOut(message="コメントを更新しました")
         except Exception as e:
@@ -129,16 +141,20 @@ class CommentAPI:
     def delete(request: HttpRequest, comment_ulid: str):
         log.info("CommentAPI delete", comment_ulid=comment_ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         try:
-            ret = delete_comment(user_id, comment_ulid)
-            if ret.is_err:
-                if isinstance(ret.err_value, FatalError):
+            delete_ret = delete_comment(user_id, comment_ulid)
+            if delete_ret.is_err:
+                if isinstance(delete_ret.err_value, FatalError):
                     return 500, ErrorOut(message="サーバーエラーが発生しました")
-                return 403, ErrorOut(message=ret.err_value.error_message)
+                return 403, ErrorOut(message=delete_ret.err_value.error_message)
 
             return 200, ErrorOut(message="コメントを削除しました")
         except Exception as e:

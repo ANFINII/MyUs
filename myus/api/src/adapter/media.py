@@ -101,16 +101,20 @@ class VideoAPI:
     ):
         log.info("VideoAPI create", input=input, image=image, video=video)
 
-        if auth_check(request) is None:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        if user_id_ret.ok_value is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = create_video(input=input, image=image, video=video)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        obj_ret = create_video(input=input, image=image, video=video)
+        if obj_ret.is_err:
+            if isinstance(obj_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=obj_ret.err_value.error_message)
 
-        obj = ret.ok_value
+        obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -118,12 +122,16 @@ class VideoAPI:
     @router.get("", response={200: VideoListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("VideoAPI list", search=search, limit=limit, offset=offset)
-        user_id = auth_check(request)
-        ret = get_videos(search, user_id=user_id, limit=limit, offset=offset)
-        if ret.is_err:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        user_id = user_id_ret.ok_value
+        videos_ret = get_videos(search, user_id=user_id, limit=limit, offset=offset)
+        if videos_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = videos_ret.ok_value
         data = VideoListOut(items=convert_videos(objs), total=total)
         return 200, data
 
@@ -132,7 +140,11 @@ class VideoAPI:
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("VideoAPI detail", ulid=ulid, search=search)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         detail_ret = get_video_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
             if isinstance(detail_ret.err_value, FatalError):
@@ -181,16 +193,20 @@ class MusicAPI:
     def create(request: HttpRequest, input: MusicIn = Form(...), music: UploadedFile = File(...)):
         log.info("MusicAPI create", input=input, music=music)
 
-        if auth_check(request) is None:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        if user_id_ret.ok_value is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = create_music(input=input, music=music)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        obj_ret = create_music(input=input, music=music)
+        if obj_ret.is_err:
+            if isinstance(obj_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=obj_ret.err_value.error_message)
 
-        obj = ret.ok_value
+        obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -198,12 +214,16 @@ class MusicAPI:
     @router.get("", response={200: MusicListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("MusicAPI list", search=search, limit=limit, offset=offset)
-        user_id = auth_check(request)
-        ret = get_musics(search, user_id=user_id, limit=limit, offset=offset)
-        if ret.is_err:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        user_id = user_id_ret.ok_value
+        musics_ret = get_musics(search, user_id=user_id, limit=limit, offset=offset)
+        if musics_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = musics_ret.ok_value
         data = MusicListOut(items=convert_musics(objs), total=total)
         return 200, data
 
@@ -212,7 +232,11 @@ class MusicAPI:
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("MusicAPI detail", ulid=ulid, search=search)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         detail_ret = get_music_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
             if isinstance(detail_ret.err_value, FatalError):
@@ -261,16 +285,20 @@ class BlogAPI:
     def create(request: HttpRequest, input: BlogIn = Form(...), image: UploadedFile = File(...)):
         log.info("BlogAPI create", input=input, image=image)
 
-        if auth_check(request) is None:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        if user_id_ret.ok_value is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = create_blog(input=input, image=image)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        obj_ret = create_blog(input=input, image=image)
+        if obj_ret.is_err:
+            if isinstance(obj_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=obj_ret.err_value.error_message)
 
-        obj = ret.ok_value
+        obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -278,12 +306,16 @@ class BlogAPI:
     @router.get("", response={200: BlogListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("BlogAPI list", search=search, limit=limit, offset=offset)
-        user_id = auth_check(request)
-        ret = get_blogs(search, user_id=user_id, limit=limit, offset=offset)
-        if ret.is_err:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        user_id = user_id_ret.ok_value
+        blogs_ret = get_blogs(search, user_id=user_id, limit=limit, offset=offset)
+        if blogs_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = blogs_ret.ok_value
         data = BlogListOut(items=convert_blogs(objs), total=total)
         return 200, data
 
@@ -292,7 +324,11 @@ class BlogAPI:
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("BlogAPI detail", ulid=ulid, search=search)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         detail_ret = get_blog_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
             if isinstance(detail_ret.err_value, FatalError):
@@ -340,16 +376,20 @@ class ComicAPI:
     def create(request: HttpRequest, input: ComicIn = Form(...), image: UploadedFile = File(...), pages: list[UploadedFile] = File(...)):
         log.info("ComicAPI create", input=input, image=image, pages=pages)
 
-        if auth_check(request) is None:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        if user_id_ret.ok_value is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = create_comic(input=input, image=image, pages=pages)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        obj_ret = create_comic(input=input, image=image, pages=pages)
+        if obj_ret.is_err:
+            if isinstance(obj_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=obj_ret.err_value.error_message)
 
-        obj = ret.ok_value
+        obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -357,12 +397,16 @@ class ComicAPI:
     @router.get("", response={200: ComicListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ComicAPI list", search=search, limit=limit, offset=offset)
-        user_id = auth_check(request)
-        ret = get_comics(search, user_id=user_id, limit=limit, offset=offset)
-        if ret.is_err:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        user_id = user_id_ret.ok_value
+        comics_ret = get_comics(search, user_id=user_id, limit=limit, offset=offset)
+        if comics_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = comics_ret.ok_value
         data = ComicListOut(items=convert_comics(objs), total=total)
         return 200, data
 
@@ -371,7 +415,11 @@ class ComicAPI:
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("ComicAPI detail", ulid=ulid, search=search)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         detail_ret = get_comic_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
             if isinstance(detail_ret.err_value, FatalError):
@@ -419,16 +467,20 @@ class PictureAPI:
     def create(request: HttpRequest, input: PictureIn = Form(...), image: UploadedFile = File(...)):
         log.info("PictureAPI create", input=input, image=image)
 
-        if auth_check(request) is None:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        if user_id_ret.ok_value is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = create_picture(input=input, image=image)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        obj_ret = create_picture(input=input, image=image)
+        if obj_ret.is_err:
+            if isinstance(obj_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=obj_ret.err_value.error_message)
 
-        obj = ret.ok_value
+        obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -436,12 +488,16 @@ class PictureAPI:
     @router.get("", response={200: PictureListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("PictureAPI list", search=search, limit=limit, offset=offset)
-        user_id = auth_check(request)
-        ret = get_pictures(search, user_id=user_id, limit=limit, offset=offset)
-        if ret.is_err:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        user_id = user_id_ret.ok_value
+        pictures_ret = get_pictures(search, user_id=user_id, limit=limit, offset=offset)
+        if pictures_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = pictures_ret.ok_value
         data = PictureListOut(items=convert_pictures(objs), total=total)
         return 200, data
 
@@ -450,7 +506,11 @@ class PictureAPI:
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("PictureAPI detail", ulid=ulid, search=search)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         detail_ret = get_picture_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
             if isinstance(detail_ret.err_value, FatalError):
@@ -497,16 +557,20 @@ class ChatAPI:
     def create(request: HttpRequest, input: ChatIn = Form(...)):
         log.info("ChatAPI create", input=input)
 
-        if auth_check(request) is None:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        if user_id_ret.ok_value is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = create_chat(input=input)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        obj_ret = create_chat(input=input)
+        if obj_ret.is_err:
+            if isinstance(obj_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=obj_ret.err_value.error_message)
 
-        obj = ret.ok_value
+        obj = obj_ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -514,12 +578,16 @@ class ChatAPI:
     @router.get("", response={200: ChatListOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ChatAPI list", search=search, limit=limit, offset=offset)
-        user_id = auth_check(request)
-        ret = get_chats(search, user_id=user_id, limit=limit, offset=offset)
-        if ret.is_err:
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        objs, total = ret.ok_value
+        user_id = user_id_ret.ok_value
+        chats_ret = get_chats(search, user_id=user_id, limit=limit, offset=offset)
+        if chats_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = chats_ret.ok_value
         data = ChatListOut(items=convert_chats(objs), total=total)
         return 200, data
 
@@ -528,7 +596,11 @@ class ChatAPI:
     def detail(request: HttpRequest, ulid: str, search: str = ""):
         log.info("ChatAPI detail", ulid=ulid, search=search)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         detail_ret = get_chat_detail(user_id=user_id, ulid=ulid, publish=True)
         if detail_ret.is_err:
             if isinstance(detail_ret.err_value, FatalError):

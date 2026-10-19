@@ -48,12 +48,17 @@ def save_comment_data(data: CommentData) -> Result[None, FatalError]:
     return Result.ok(None)
 
 
-def get_author_data_map(ids: list[int]) -> dict[int, AuthorDTO]:
+@Result.shield_exception()
+def get_author_data_map(ids: list[int]) -> Result[dict[int, AuthorDTO], FatalError]:
     if len(ids) == 0:
-        return {}
+        return Result.ok({})
 
     repository = injector.get(UserInterface)
-    authors = repository.bulk_get(ids)
+    ret = repository.bulk_get(ids)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    authors = ret.ok_value
     author_map: dict[int, AuthorDTO] = {}
     for author in authors:
         author_map[author.user.id] = AuthorDTO(
@@ -63,7 +68,7 @@ def get_author_data_map(ids: list[int]) -> dict[int, AuthorDTO]:
             follower_count=author.mypage.follower_count,
         )
 
-    return author_map
+    return Result.ok(author_map)
 
 
 @Result.shield_exception()
@@ -82,7 +87,11 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
     comments = [c for c in all_comments if c.parent_id is None]
     replies = [c for c in all_comments if c.parent_id is not None]
     author_ids = list({c.author_id for c in comments} | {r.author_id for r in replies})
-    author_map = get_author_data_map(author_ids)
+    author_map_ret = get_author_data_map(author_ids)
+    if author_map_ret.is_err:
+        return Result.err(author_map_ret.err_value)
+
+    author_map = author_map_ret.ok_value
 
     reply_map: dict[int, list[CommentData]] = {}
     for r in replies:
@@ -152,7 +161,11 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, N
 
         parent = parents_ret.ok_value[0]
 
-    author = get_author_data(user_id)
+    author_ret = get_author_data(user_id)
+    if author_ret.is_err:
+        return Result.err(author_ret.err_value)
+
+    author = author_ret.ok_value
     new_comment = CommentData(
         id=0,
         ulid="",

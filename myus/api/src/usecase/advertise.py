@@ -15,7 +15,11 @@ from api.utils.plan import get_plan
 
 @Result.shield_exception()
 def get_user_advertises(user_ulid: str) -> Result[list[AdvertiseData], FatalError]:
-    user = get_user_data(ulid=user_ulid)
+    user_ret = get_user_data(ulid=user_ulid)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
     if user is None:
         log.info("User not found", user_ulid=user_ulid)
         return Result.ok([])

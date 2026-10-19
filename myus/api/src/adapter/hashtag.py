@@ -19,15 +19,19 @@ class MediaHashtagAPI:
     def get(request: HttpRequest):
         log.info("MediaHashtagAPI get")
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_master_hashtags()
-        if ret.is_err:
+        hashtags_ret = get_master_hashtags()
+        if hashtags_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        hashtags = ret.ok_value
+        hashtags = hashtags_ret.ok_value
         return 200, [HashtagOut(ulid=h.ulid, name=h.name) for h in hashtags]
 
     @staticmethod
@@ -35,15 +39,19 @@ class MediaHashtagAPI:
     def put(request: HttpRequest, input: MediaHashtagsUpdateIn):
         log.info("MediaHashtagAPI put", media_type=input.media_type.value, media_ulid=input.media_ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
         hashtags = [HashtagDTO(ulid=h.ulid, name=h.name) for h in input.hashtags]
-        ret = update_media_hashtags(user_id, input.media_type, input.media_ulid, hashtags)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        update_ret = update_media_hashtags(user_id, input.media_type, input.media_ulid, hashtags)
+        if update_ret.is_err:
+            if isinstance(update_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")

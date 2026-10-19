@@ -27,20 +27,25 @@ def get_notification_data(receiver_id: int, enabled_types: tuple[NotificationTyp
     return Result.ok(objs_ret.ok_value)
 
 
-def get_notification_user_map(user_ids: list[int]) -> dict[int, NotificationUserDTO]:
+@Result.shield_exception()
+def get_notification_user_map(user_ids: list[int]) -> Result[dict[int, NotificationUserDTO], FatalError]:
     if len(user_ids) == 0:
-        return {}
+        return Result.ok({})
 
     repository = injector.get(UserInterface)
-    users = repository.bulk_get(user_ids)
-    return {
+    ret = repository.bulk_get(user_ids)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    users = ret.ok_value
+    return Result.ok({
         user.user.id: NotificationUserDTO(
             avatar=create_url(user.user.avatar),
             ulid=user.user.ulid,
             nickname=user.user.nickname,
         )
         for user in users
-    }
+    })
 
 
 def get_enabled_types(setting: UserNotificationData) -> tuple[NotificationTypeNo, ...]:
@@ -59,18 +64,27 @@ def get_enabled_types(setting: UserNotificationData) -> tuple[NotificationTypeNo
     return tuple(type_no for type_no, is_enabled in enabled.items() if is_enabled)
 
 
-def get_user_enabled_types(user_id: int) -> tuple[NotificationTypeNo, ...]:
+@Result.shield_exception()
+def get_user_enabled_types(user_id: int) -> Result[tuple[NotificationTypeNo, ...], FatalError]:
     repository = injector.get(UserInterface)
-    users = repository.bulk_get([user_id])
-    if len(users) == 0:
-        return ()
+    ret = repository.bulk_get([user_id])
+    if ret.is_err:
+        return Result.err(ret.err_value)
 
-    return get_enabled_types(users[0].notification)
+    users = ret.ok_value
+    if len(users) == 0:
+        return Result.ok(())
+
+    return Result.ok(get_enabled_types(users[0].notification))
 
 
 @Result.shield_exception()
 def get_notification(user_id: int) -> Result[NotificationDTO, FatalError]:
-    enabled_types = get_user_enabled_types(user_id)
+    enabled_types_ret = get_user_enabled_types(user_id)
+    if enabled_types_ret.is_err:
+        return Result.err(enabled_types_ret.err_value)
+
+    enabled_types = enabled_types_ret.ok_value
     if len(enabled_types) == 0:
         return Result.ok(NotificationDTO(count=0, items=[]))
 
@@ -87,7 +101,11 @@ def get_notification(user_id: int) -> Result[NotificationDTO, FatalError]:
     confirmed_ids = set(confirmed_ids_ret.ok_value)
 
     user_ids = list({n.user_from_id for n in objs} | {n.user_to_id for n in objs if n.user_to_id != 0})
-    user_map = get_notification_user_map(user_ids)
+    user_map_ret = get_notification_user_map(user_ids)
+    if user_map_ret.is_err:
+        return Result.err(user_map_ret.err_value)
+
+    user_map = user_map_ret.ok_value
 
     items: list[NotificationItemDTO] = []
     for o in objs:
@@ -124,7 +142,11 @@ def create_notification(user_from_id: int, user_to_id: int, type_no: Notificatio
     if user_to_id != 0:
         if user_to_id == user_from_id and type_no != NotificationTypeNo.VIEWS:
             return Result.ok(None)
-        if type_no not in get_user_enabled_types(user_to_id):
+        enabled_types_ret = get_user_enabled_types(user_to_id)
+        if enabled_types_ret.is_err:
+            return Result.err(enabled_types_ret.err_value)
+
+        if type_no not in enabled_types_ret.ok_value:
             return Result.ok(None)
 
     repository = injector.get(NotificationInterface)
@@ -139,9 +161,9 @@ def create_notification(user_from_id: int, user_to_id: int, type_no: Notificatio
         object_type=object_type,
         content=None,
     )
-    ret = repository.bulk_save([notification])
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    save_ret = repository.bulk_save([notification])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
     return Result.ok(None)
 

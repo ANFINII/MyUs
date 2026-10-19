@@ -26,8 +26,11 @@ def get_follows(user_id: int, search: str, limit: int) -> Result[list[FollowUser
         return Result.err(follows_ret.err_value)
 
     following_ids = [f.following_id for f in follows_ret.ok_value]
-    users = user_repo.bulk_get(following_ids)
+    users_ret = user_repo.bulk_get(following_ids)
+    if users_ret.is_err:
+        return Result.err(users_ret.err_value)
 
+    users = users_ret.ok_value
     return Result.ok([
         FollowUserDTO(
             ulid=u.user.ulid,
@@ -53,8 +56,11 @@ def get_followers(user_id: int, search: str, limit: int) -> Result[list[FollowUs
         return Result.err(follows_ret.err_value)
 
     follower_ids = [f.follower_id for f in follows_ret.ok_value]
-    users = user_repo.bulk_get(follower_ids)
+    users_ret = user_repo.bulk_get(follower_ids)
+    if users_ret.is_err:
+        return Result.err(users_ret.err_value)
 
+    users = users_ret.ok_value
     return Result.ok([
         FollowUserDTO(
             ulid=u.user.ulid,
@@ -71,7 +77,11 @@ def get_followers(user_id: int, search: str, limit: int) -> Result[list[FollowUs
 def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[FollowDTO, NotFoundError | FatalError]:
     user_repo = injector.get(UserInterface)
     follow_repo = injector.get(FollowInterface)
-    following = get_user_data(ulid=ulid)
+    following_ret = get_user_data(ulid=ulid)
+    if following_ret.is_err:
+        return Result.err(following_ret.err_value)
+
+    following = following_ret.ok_value
     if following is None:
         return Result.err(NotFoundError("ユーザーが見つかりません!"))
 
@@ -131,6 +141,9 @@ def upsert_follow(follower: UserAllData, ulid: str, is_follow: bool) -> Result[F
 
         updated_follower = replace(follower, mypage=follower_mypage)
         updated_following = replace(following, mypage=following_mypage)
-        user_repo.bulk_save([updated_follower, updated_following])
+        users_save_ret = user_repo.bulk_save([updated_follower, updated_following])
+        if users_save_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(users_save_ret.err_value)
 
     return Result.ok(FollowDTO(is_follow=is_follow, follower_count=follower_count))

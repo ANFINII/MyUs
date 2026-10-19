@@ -29,11 +29,19 @@ class PaymentAPI:
     def checkout(request: HttpRequest, input: PaymentCheckoutIn):
         log.info("PaymentAPI checkout", plan=input.plan)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        user_data = get_user_data(user_id=user_id)
+        user_data_ret = get_user_data(user_id=user_id)
+        if user_data_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_data = user_data_ret.ok_value
         if user_data is None:
             return 404, ErrorOut(message="Not Found")
 
@@ -57,11 +65,11 @@ class PaymentAPI:
         )
 
         payment = injector.get(PaymentInterface)
-        ret = payment.create_checkout(data)
-        if ret.is_err:
+        create_ret = payment.create_checkout(data)
+        if create_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        match ret.ok_value:
+        match create_ret.ok_value:
             case CheckoutCreated(session=session):
                 return 200, PaymentCheckoutOut(url=session.redirect_url)
             case CheckoutFailed(error=error, message=message):
@@ -119,7 +127,11 @@ class PaymentAPI:
     @staticmethod
     @router.post("/cancel", response={200: PaymentCancelOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def cancel(request: HttpRequest):
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 

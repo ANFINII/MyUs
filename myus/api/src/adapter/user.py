@@ -25,15 +25,23 @@ class UserAPI:
     router = Router()
 
     @staticmethod
-    @router.get("/me", response={200: UserOut, 401: ErrorOut, 404: ErrorOut})
+    @router.get("/me", response={200: UserOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def get_user_me(request: HttpRequest):
         log.info("UserAPI get_user_me")
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        user_data = get_user_data(user_id=user_id)
+        user_data_ret = get_user_data(user_id=user_id)
+        if user_data_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_data = user_data_ret.ok_value
         if user_data is None:
             return 404, ErrorOut(message="Not Found")
 
@@ -54,15 +62,19 @@ class UserAPI:
     def get_search_tag(request: HttpRequest):
         log.info("UserAPI search_tag")
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_search_tag_data(user_id)
-        if ret.is_err:
+        tags_ret = get_search_tag_data(user_id)
+        if tags_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        tags = ret.ok_value
+        tags = tags_ret.ok_value
         data = [SearchTagOut(sequence=x.sequence, name=x.name) for x in tags]
         return 200, data
 
@@ -71,12 +83,16 @@ class UserAPI:
     def put_search_tag(request: HttpRequest, input: list[SearchTagIn]):
         log.info("UserAPI put_search_tag")
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = update_search_tags(user_id, input)
-        if ret.is_err:
+        update_ret = update_search_tags(user_id, input)
+        if update_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
         return 200, ErrorOut(message="更新しました")
@@ -86,15 +102,19 @@ class UserAPI:
     def get_followers(request: HttpRequest, search: str = ""):
         log.info("UserAPI get_followers", search=search)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_followers(user_id, search, 100)
-        if ret.is_err:
+        followers_ret = get_followers(user_id, search, 100)
+        if followers_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        followers = ret.ok_value
+        followers = followers_ret.ok_value
         data = [
             FollowUserOut(
                 ulid=x.ulid,
@@ -114,15 +134,19 @@ class UserAPI:
     def get_follows(request: HttpRequest, search: str = ""):
         log.info("UserAPI get_follows", search=search)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_follows(user_id, search, 100)
-        if ret.is_err:
+        follows_ret = get_follows(user_id, search, 100)
+        if follows_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        follows = ret.ok_value
+        follows = follows_ret.ok_value
         data = [
             FollowUserOut(
                 ulid=x.ulid,
@@ -142,21 +166,29 @@ class UserAPI:
     def follow_user(request: HttpRequest, input: FollowIn):
         log.info("UserAPI follow_user", input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        follower = get_user_data(user_id=user_id)
+        follower_ret = get_user_data(user_id=user_id)
+        if follower_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        follower = follower_ret.ok_value
         if follower is None:
             return 400, ErrorOut(message="ユーザーが見つかりません!")
 
-        ret = upsert_follow(follower, input.ulid, input.is_follow)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        follow_ret = upsert_follow(follower, input.ulid, input.is_follow)
+        if follow_ret.is_err:
+            if isinstance(follow_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=follow_ret.err_value.error_message)
 
-        follow = ret.ok_value
+        follow = follow_ret.ok_value
         data = FollowOut(is_follow=follow.is_follow, follower_count=follow.follower_count)
         return 200, data
 
@@ -165,17 +197,21 @@ class UserAPI:
     def post_like_media(request: HttpRequest, input: LikeMediaIn):
         log.info("UserAPI like_media", input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = like_media(user_id, input.media_type, input.ulid)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        like_ret = like_media(user_id, input.media_type, input.ulid)
+        if like_ret.is_err:
+            if isinstance(like_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=like_ret.err_value.error_message)
 
-        like = ret.ok_value
+        like = like_ret.ok_value
         data = LikeOut(is_like=like.is_like, like_count=like.like_count)
         return 200, data
 
@@ -184,17 +220,21 @@ class UserAPI:
     def post_like_comment(request: HttpRequest, input: LikeCommentIn):
         log.info("UserAPI like_comment", input=input)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = like_comment(user_id, input.ulid)
-        if ret.is_err:
-            if isinstance(ret.err_value, FatalError):
+        like_ret = like_comment(user_id, input.ulid)
+        if like_ret.is_err:
+            if isinstance(like_ret.err_value, FatalError):
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
-            return 400, ErrorOut(message=ret.err_value.error_message)
+            return 400, ErrorOut(message=like_ret.err_value.error_message)
 
-        like = ret.ok_value
+        like = like_ret.ok_value
         data = LikeOut(is_like=like.is_like, like_count=like.like_count)
         return 200, data
 
@@ -203,15 +243,19 @@ class UserAPI:
     def get_notifications(request: HttpRequest):
         log.info("UserAPI get_notifications")
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = get_notification(user_id)
-        if ret.is_err:
+        notification_ret = get_notification(user_id)
+        if notification_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        notification = ret.ok_value
+        notification = notification_ret.ok_value
         data = NotificationOut(
             count=notification.count,
             items=[
@@ -253,12 +297,16 @@ class UserAPI:
     def post_notification_confirmed(request: HttpRequest, input: NotificationIn):
         log.info("UserAPI post_notification_confirmed", ulid=input.ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = notification_confirm(user_id, input.ulid)
-        if ret.is_err:
+        confirm_ret = notification_confirm(user_id, input.ulid)
+        if confirm_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
         return 200, ErrorOut(message="OK")
@@ -268,12 +316,16 @@ class UserAPI:
     def post_notification_deleted(request: HttpRequest, input: NotificationIn):
         log.info("UserAPI post_notification_deleted", ulid=input.ulid)
 
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        ret = notification_delete(user_id, input.ulid)
-        if ret.is_err:
+        delete_ret = notification_delete(user_id, input.ulid)
+        if delete_ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
         return 200, ErrorOut(message="OK")
@@ -283,7 +335,11 @@ class UserAPI:
     def get_userpage(request: HttpRequest, ulid: str):
         log.info("UserAPI get_userpage", ulid=ulid)
 
-        user = get_user_data(ulid=ulid)
+        user_ret = get_user_data(ulid=ulid)
+        if user_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user = user_ret.ok_value
         if user is None:
             return 404, ErrorOut(message="ユーザーが見つかりません")
 
@@ -292,7 +348,11 @@ class UserAPI:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
         channels = channels_ret.ok_value
-        user_id = auth_check(request)
+        user_id_ret = auth_check(request)
+        if user_id_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user_id = user_id_ret.ok_value
         is_follow = False
         if user_id is not None:
             follow_ret = is_following(user_id, user.user.id)
@@ -332,7 +392,11 @@ class UserAPI:
     def get_userpage_media(request: HttpRequest, ulid: str, channel_ulid: str = ""):
         log.info("UserAPI get_userpage_media", ulid=ulid, channel_ulid=channel_ulid)
 
-        user = get_user_data(ulid=ulid)
+        user_ret = get_user_data(ulid=ulid)
+        if user_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        user = user_ret.ok_value
         if user is None:
             return 404, ErrorOut(message="ユーザーが見つかりません")
 
