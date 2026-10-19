@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { toQuery } from 'lib/query/client'
 import { queryKeys } from 'lib/query/keys'
 import { getVideo } from 'api/internal/media/detail'
-import { withMediaRead } from 'api/internal/media/read'
+import { postMediaRead } from 'api/internal/media/read'
 import { MediaType } from 'utils/constants/enum'
 import { useRouter } from 'components/hooks/useRouter'
 import QueryCheck from 'components/widgets/Status/QueryCheck'
@@ -12,7 +12,13 @@ export default function VideoDetailPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
 
-  const data = useQuery({ queryKey: queryKeys.mediaVideoDetail(ulid), queryFn: () => toQuery(withMediaRead({ ulid, mediaType: MediaType.Video }, () => getVideo(ulid))) })
+  const data = useQuery({
+    queryKey: queryKeys.mediaVideoDetail(ulid),
+    queryFn: () => {
+      postMediaRead({ ulid, mediaType: MediaType.Video })
+      return toQuery(getVideo(ulid))
+    },
+  })
   const queries = { data }
 
   return (
