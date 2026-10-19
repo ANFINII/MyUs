@@ -210,6 +210,9 @@ class UserAPI:
                         title=item.content_object.title,
                         text=item.content_object.text,
                         read=item.content_object.read,
+                        media_type=item.content_object.media_type,
+                        media_ulid=item.content_object.media_ulid,
+                        thread_ulid=item.content_object.thread_ulid,
                     ),
                     is_confirmed=item.is_confirmed,
                 )

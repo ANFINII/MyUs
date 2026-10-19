@@ -141,6 +141,9 @@ export interface ContentObject {
   title: string
   text: string
   read: number
+  mediaType: MediaType | null
+  mediaUlid: string
+  threadUlid: string
 }
 
 export interface Notification {
