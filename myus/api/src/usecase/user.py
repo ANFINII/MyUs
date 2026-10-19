@@ -13,6 +13,7 @@ from api.src.types.dto.user import AuthorDTO, LikeDTO
 from api.src.types.schema.auth import SignupIn
 from api.src.types.schema.setting import SettingMyPageIn, SettingNotificationIn, SettingProfileIn
 from api.src.usecase.notification import create_notification
+from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
@@ -146,22 +147,31 @@ def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeDTO | None
     return LikeDTO(is_like=is_like, like_count=like_count)
 
 
-def like_comment(user_id: int, ulid: str) -> LikeDTO | None:
+@Result.shield_exception()
+def like_comment(user_id: int, ulid: str) -> Result[LikeDTO, NotFoundError | FatalError]:
     repository = injector.get(UserInterface)
     comment_repo = injector.get(CommentInterface)
-    ids = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
+    ids_ret = comment_repo.get_ids(CommentFilterOption(ulid=ulid), CommentSortOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
-        return None
+        return Result.err(NotFoundError("コメントが見つかりません!"))
 
     is_like, like_count = repository.comment_like(user_id, ids[0])
     if is_like:
-        comment = comment_repo.bulk_get(ids)[0]
+        comments_ret = comment_repo.bulk_get(ids)
+        if comments_ret.is_err:
+            return Result.err(comments_ret.err_value)
+
+        comment = comments_ret.ok_value[0]
         create_notification(user_id, comment.author_id, NotificationTypeNo.LIKE, comment.id, NotificationObjectType.COMMENT)
     else:
         notification_repo = injector.get(NotificationInterface)
         notification_repo.delete(NotificationTypeNo.LIKE, NotificationObjectType.COMMENT, ids[0], user_id)
 
-    return LikeDTO(is_like=is_like, like_count=like_count)
+    return Result.ok(LikeDTO(is_like=is_like, like_count=like_count))
 
 
 def profile_check(data: SettingProfileIn) -> str:

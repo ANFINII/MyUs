@@ -436,12 +436,15 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.VIDEO)
-    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = VideoDetailDTO(
         id=obj.id,
@@ -451,7 +454,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         image=create_url(obj.image),
         video=create_url(obj.video),
         convert=create_url(obj.convert),
-        comments=comments,
+        comments=comments_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -459,7 +462,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)
@@ -477,12 +480,15 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.MUSIC)
-    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = MusicDetailDTO(
         id=obj.id,
@@ -492,7 +498,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         lyric=obj.lyric,
         music=create_url(obj.music),
         download=obj.download,
-        comments=comments,
+        comments=comments_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -500,7 +506,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)
@@ -518,12 +524,15 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.BLOG)
-    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = BlogDetailDTO(
         id=obj.id,
@@ -532,7 +541,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         content=obj.content,
         richtext=obj.richtext,
         image=create_url(obj.image),
-        comments=comments,
+        comments=comments_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -540,7 +549,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)
@@ -558,12 +567,15 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.COMIC)
-    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = ComicDetailDTO(
         id=obj.id,
@@ -572,7 +584,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         content=obj.content,
         image=create_url(obj.image),
         pages=[create_url(p) for p in obj.pages],
-        comments=comments,
+        comments=comments_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -580,7 +592,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)
@@ -598,12 +610,15 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.PICTURE)
-    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=None)
+    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=None)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = PictureDetailDTO(
         id=obj.id,
@@ -611,7 +626,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
         title=obj.title,
         content=obj.content,
         image=create_url(obj.image),
-        comments=comments,
+        comments=comments_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -619,7 +634,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)

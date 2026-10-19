@@ -5,6 +5,7 @@ from api.src.domain.entity.comment._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.comment.data import CommentData
 from api.src.domain.interface.comment.interface import CommentInterface, FilterOption, SortOption
+from api.utils.common.result import FatalError, Result
 
 
 COMMENT_FIELDS = ["author_id", "parent_id", "type_no", "type_name", "object_id", "text", "deleted"]
@@ -14,7 +15,8 @@ class CommentRepository(CommentInterface):
     def queryset(self) -> QuerySet[Comment]:
         return Comment.objects.select_related("author", "parent").annotate(like_count=Count("like"))
 
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.ulid:
             q_list.append(Q(ulid=filter.ulid))
@@ -34,19 +36,21 @@ class CommentRepository(CommentInterface):
         if limit is not None:
             qs = qs[:limit]
 
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[CommentData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[CommentData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+        return Result.ok([convert_data(obj) for obj in sorted_objs])
 
-    def bulk_save(self, objs: list[CommentData]) -> list[int]:
+    @Result.shield_exception()
+    def bulk_save(self, objs: list[CommentData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
-            return []
+            return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_new_ids(models, Comment)
@@ -57,11 +61,12 @@ class CommentRepository(CommentInterface):
             update_fields=COMMENT_FIELDS,
         )
 
-        return new_ids
+        return Result.ok(new_ids)
 
-    def get_liked_ids(self, ids: list[int], user_id: int) -> list[int]:
+    @Result.shield_exception()
+    def get_liked_ids(self, ids: list[int], user_id: int) -> Result[list[int], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         liked_ids = set(Comment.objects.filter(id__in=ids, like__id=user_id).values_list("id", flat=True))
-        return list(liked_ids)
+        return Result.ok(list(liked_ids))
