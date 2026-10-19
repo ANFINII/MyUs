@@ -8,7 +8,7 @@ from api.src.types.schema.subscribe import SubscribeIn, SubscribeOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.channel import create_user_channel, get_user_channels, update_user_channel
 from api.src.usecase.subscribe import get_subscribe_channels, upsert_subscribe
-from api.utils.common.result import FatalError, NotFoundError
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError
 from api.utils.functions.index import create_url
 
 
@@ -84,7 +84,7 @@ class ChannelAPI:
         return 200, data
 
     @staticmethod
-    @router.post("/subscribe", response={200: SubscribeOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("/subscribe", response={200: SubscribeOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def post_subscribe(request: HttpRequest, input: SubscribeIn):
         log.info("ChannelAPI post_subscribe", input=input)
 
@@ -100,7 +100,7 @@ class ChannelAPI:
         if subscribe_ret.is_err:
             match subscribe_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=subscribe_ret.err_value.error_message)
+                    return 404, ErrorOut(message=subscribe_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
@@ -131,7 +131,7 @@ class ChannelAPI:
         return 201, ChannelCreateOut(ulid=ulid)
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ChannelIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("ChannelAPI put", ulid=ulid, input=input)
 
@@ -147,7 +147,9 @@ class ChannelAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ForbiddenError():
+                    return 403, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:

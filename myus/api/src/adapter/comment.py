@@ -7,7 +7,7 @@ from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.comment import create_comment, delete_comment, get_comments, update_comment
-from api.utils.common.result import FatalError, NotFoundError
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError
 
 
 class CommentAPI:
@@ -71,7 +71,7 @@ class CommentAPI:
         return 200, data
 
     @staticmethod
-    @router.post("", response={201: CommentOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.post("", response={201: CommentOut, 400: ErrorOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: CommentCreateIn):
         log.info("CommentAPI post", input=input)
 
@@ -88,7 +88,7 @@ class CommentAPI:
             if comment_ret.is_err:
                 match comment_ret.err_value:
                     case NotFoundError():
-                        return 400, ErrorOut(message=comment_ret.err_value.error_message)
+                        return 404, ErrorOut(message=comment_ret.err_value.error_message)
                     case FatalError():
                         return 500, ErrorOut(message="Internal Server Error")
                     case _:
@@ -117,7 +117,7 @@ class CommentAPI:
             return 500, ErrorOut(message="コメントの作成に失敗しました")
 
     @staticmethod
-    @router.put("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 500: ErrorOut})
+    @router.put("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, comment_ulid: str, input: CommentUpdateIn):
         log.info("CommentAPI put", comment_ulid=comment_ulid, input=input)
 
@@ -134,6 +134,8 @@ class CommentAPI:
             if update_ret.is_err:
                 match update_ret.err_value:
                     case NotFoundError():
+                        return 404, ErrorOut(message=update_ret.err_value.error_message)
+                    case ForbiddenError():
                         return 403, ErrorOut(message=update_ret.err_value.error_message)
                     case FatalError():
                         return 500, ErrorOut(message="Internal Server Error")
@@ -146,7 +148,7 @@ class CommentAPI:
             return 500, ErrorOut(message="コメントの更新に失敗しました")
 
     @staticmethod
-    @router.delete("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 500: ErrorOut})
+    @router.delete("/{comment_ulid}", response={200: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, comment_ulid: str):
         log.info("CommentAPI delete", comment_ulid=comment_ulid)
 
@@ -163,6 +165,8 @@ class CommentAPI:
             if delete_ret.is_err:
                 match delete_ret.err_value:
                     case NotFoundError():
+                        return 404, ErrorOut(message=delete_ret.err_value.error_message)
+                    case ForbiddenError():
                         return 403, ErrorOut(message=delete_ret.err_value.error_message)
                     case FatalError():
                         return 500, ErrorOut(message="Internal Server Error")

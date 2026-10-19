@@ -22,7 +22,7 @@ from api.src.domain.interface.message.interface import FilterOption as MessageFi
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from api.src.usecase.notification import create_publish_notification, delete_object_notifications
-from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
@@ -85,7 +85,7 @@ def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, NotFoundError
 
 
 @Result.shield_exception()
-def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
+def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
     repository = injector.get(VideoInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -104,7 +104,7 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Video owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
     if image is not None:
@@ -208,7 +208,7 @@ def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, NotFoundError
 
 
 @Result.shield_exception()
-def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result[None, NotFoundError | FatalError]:
+def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
     repository = injector.get(MusicInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -227,7 +227,7 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Music owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish)
     category_repo = injector.get(CategoryInterface)
@@ -328,7 +328,7 @@ def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, NotFoundError |
 
 
 @Result.shield_exception()
-def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
+def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
     repository = injector.get(BlogInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -347,7 +347,7 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish)
     if image is not None:
@@ -457,7 +457,7 @@ def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, NotFoundError
 
 
 @Result.shield_exception()
-def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
+def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
     repository = injector.get(ComicInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -476,7 +476,7 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Comic owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
     if image is not None:
@@ -580,7 +580,7 @@ def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, NotFoundE
 
 
 @Result.shield_exception()
-def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
+def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
     repository = injector.get(PictureInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -599,7 +599,7 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Picture owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
     if image is not None:
@@ -700,7 +700,7 @@ def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, NotFoundError |
 
 
 @Result.shield_exception()
-def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[None, NotFoundError | FatalError]:
+def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
     repository = injector.get(ChatInterface)
     ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if ids_ret.is_err:
@@ -719,7 +719,7 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
     obj = objs[0]
     if obj.channel.owner_id != user_id:
         log.error("Chat owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, period=date.fromisoformat(input.period), publish=input.publish)
     category_repo = injector.get(CategoryInterface)

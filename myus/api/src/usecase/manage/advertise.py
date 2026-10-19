@@ -9,7 +9,7 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PA
 from api.src.injectors.container import injector
 from api.src.types.schema.advertise import AdvertiseIn, AdvertiseUpdateIn
 from api.src.usecase.user import get_user_data
-from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.common.result import FatalError, NotFoundError, Result, ValidationError
 from api.utils.enum.upload import ImageUpload, MediaUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import save_upload
@@ -71,7 +71,7 @@ def get_manage_advertise(user_id: int, ulid: str) -> Result[AdvertiseData, NotFo
 
 
 @Result.shield_exception()
-def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFile, video: UploadedFile | None) -> Result[AdvertiseData, NotFoundError | FatalError]:
+def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFile, video: UploadedFile | None) -> Result[AdvertiseData, NotFoundError | ValidationError | FatalError]:
     repository = injector.get(AdvertiseInterface)
 
     count_ret = repository.count(FilterOption(owner_id=user_id))
@@ -81,7 +81,7 @@ def create_manage_advertise(user_id: int, input: AdvertiseIn, image: UploadedFil
     count = count_ret.ok_value
     if count >= ADVERTISE_PERSONAL_LIMIT:
         log.error("Advertise limit exceeded", user_id=user_id, count=count)
-        return Result.err(NotFoundError("作成に失敗しました!"))
+        return Result.err(ValidationError("作成に失敗しました!"))
 
     user_ret = get_user_data(user_id=user_id)
     if user_ret.is_err:

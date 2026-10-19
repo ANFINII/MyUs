@@ -12,7 +12,7 @@ from api.src.types.dto.user import AuthorDTO
 from api.src.types.schema.comment import CommentCreateIn
 from api.src.usecase.notification import create_notification, delete_object_notifications
 from api.src.usecase.user import get_author_data
-from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.media import CommentTypeNo, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.functions.index import create_url
@@ -217,18 +217,18 @@ def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, N
 
 
 @Result.shield_exception()
-def update_comment(user_id: int, comment_ulid: str, text: str) -> Result[None, NotFoundError | FatalError]:
+def update_comment(user_id: int, comment_ulid: str, text: str) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
     comment_ret = get_comment_data(comment_ulid)
     if comment_ret.is_err:
         return Result.err(comment_ret.err_value)
 
     comment = comment_ret.ok_value
     if comment is None:
-        return Result.err(NotFoundError("Forbidden"))
+        return Result.err(NotFoundError("Not Found"))
 
     if comment.author_id != user_id:
         log.warning("コメントの編集権限がありません", comment_ulid=comment_ulid, user_id=user_id)
-        return Result.err(NotFoundError("Forbidden"))
+        return Result.err(ForbiddenError("Forbidden"))
 
     save_ret = save_comment_data(replace(comment, text=text))
     if save_ret.is_err:
@@ -238,18 +238,18 @@ def update_comment(user_id: int, comment_ulid: str, text: str) -> Result[None, N
 
 
 @Result.shield_exception()
-def delete_comment(user_id: int, comment_ulid: str) -> Result[None, NotFoundError | FatalError]:
+def delete_comment(user_id: int, comment_ulid: str) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
     comment_ret = get_comment_data(comment_ulid)
     if comment_ret.is_err:
         return Result.err(comment_ret.err_value)
 
     comment = comment_ret.ok_value
     if comment is None:
-        return Result.err(NotFoundError("Forbidden"))
+        return Result.err(NotFoundError("Not Found"))
 
     if comment.author_id != user_id:
         log.warning("コメントの削除権限がありません", comment_ulid=comment_ulid, user_id=user_id)
-        return Result.err(NotFoundError("Forbidden"))
+        return Result.err(ForbiddenError("Forbidden"))
 
     repository = injector.get(CommentInterface)
     with transaction.atomic():

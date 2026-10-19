@@ -6,7 +6,7 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption, SortType
 from api.src.injectors.container import injector
 from api.src.types.schema.channel import ChannelIn
-from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError, Result
 from api.utils.enum.upload import ImageUpload
 from api.utils.functions.media import save_upload
 
@@ -88,7 +88,7 @@ def create_user_channel(user_id: int, input: ChannelIn, avatar_file: UploadedFil
 
 
 @Result.shield_exception()
-def update_user_channel(user_id: int, ulid: str, input: ChannelIn, avatar_file: UploadedFile) -> Result[None, NotFoundError | FatalError]:
+def update_user_channel(user_id: int, ulid: str, input: ChannelIn, avatar_file: UploadedFile) -> Result[None, NotFoundError | ForbiddenError | FatalError]:
     channel_ret = get_channel_data(ulid)
     if channel_ret.is_err:
         return Result.err(channel_ret.err_value)
@@ -99,7 +99,7 @@ def update_user_channel(user_id: int, ulid: str, input: ChannelIn, avatar_file: 
 
     if channel.owner_id != user_id:
         log.error("Channel owner mismatch", ulid=ulid, user_id=user_id, owner_id=channel.owner_id)
-        return Result.err(NotFoundError("保存に失敗しました!"))
+        return Result.err(ForbiddenError("保存に失敗しました!"))
 
     avatar = save_upload(avatar_file, ImageUpload.CHANNEL, channel.ulid) if avatar_file else channel.avatar
     update_data = replace(channel, avatar=avatar, name=input.name, description=input.description)

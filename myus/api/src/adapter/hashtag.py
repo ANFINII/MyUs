@@ -7,7 +7,7 @@ from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.hashtag import HashtagOut, MediaHashtagsUpdateIn
 from api.src.usecase.auth import auth_check
 from api.src.usecase.hashtag import get_master_hashtags, update_media_hashtags
-from api.utils.common.result import FatalError, NotFoundError
+from api.utils.common.result import FatalError, ForbiddenError, NotFoundError
 
 
 class MediaHashtagAPI:
@@ -36,7 +36,7 @@ class MediaHashtagAPI:
         return 200, [HashtagOut(ulid=h.ulid, name=h.name) for h in hashtags]
 
     @staticmethod
-    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
+    @router.put("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, input: MediaHashtagsUpdateIn):
         log.info("MediaHashtagAPI put", media_type=input.media_type.value, media_ulid=input.media_ulid)
 
@@ -53,7 +53,9 @@ class MediaHashtagAPI:
         if update_ret.is_err:
             match update_ret.err_value:
                 case NotFoundError():
-                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                    return 404, ErrorOut(message=update_ret.err_value.error_message)
+                case ForbiddenError():
+                    return 403, ErrorOut(message=update_ret.err_value.error_message)
                 case FatalError():
                     return 500, ErrorOut(message="Internal Server Error")
                 case _:
