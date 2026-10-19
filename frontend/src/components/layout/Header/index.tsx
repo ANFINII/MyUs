@@ -35,6 +35,7 @@ export default function Header(props: Props): React.JSX.Element {
   const [isNotice, setIsNotice] = useState<boolean>(false)
   const [isProfile, setIsProfile] = useState<boolean>(false)
   const [search, setSearch] = useState<string>('')
+
   const notificationQuery = useQuery({
     queryKey: queryKeys.notification,
     queryFn: () => toQuery(getNotification()),
