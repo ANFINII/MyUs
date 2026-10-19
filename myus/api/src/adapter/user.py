@@ -1,3 +1,4 @@
+from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
@@ -15,7 +16,7 @@ from api.src.usecase.notification import get_notification, notification_confirm,
 from api.src.usecase.search_tag import get_search_tag_data, update_search_tags
 from api.src.usecase.user import get_user_data, like_comment, like_media
 from api.src.usecase.userpage import get_userpage_media, is_following
-from api.utils.common.result import FatalError
+from api.utils.common.result import FatalError, NotFoundError
 from api.utils.functions.index import create_url
 
 
@@ -184,9 +185,13 @@ class UserAPI:
 
         follow_ret = upsert_follow(follower, input.ulid, input.is_follow)
         if follow_ret.is_err:
-            if isinstance(follow_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=follow_ret.err_value.error_message)
+            match follow_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=follow_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(follow_ret.err_value)
 
         follow = follow_ret.ok_value
         data = FollowOut(is_follow=follow.is_follow, follower_count=follow.follower_count)
@@ -207,9 +212,13 @@ class UserAPI:
 
         like_ret = like_media(user_id, input.media_type, input.ulid)
         if like_ret.is_err:
-            if isinstance(like_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=like_ret.err_value.error_message)
+            match like_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=like_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(like_ret.err_value)
 
         like = like_ret.ok_value
         data = LikeOut(is_like=like.is_like, like_count=like.like_count)
@@ -230,9 +239,13 @@ class UserAPI:
 
         like_ret = like_comment(user_id, input.ulid)
         if like_ret.is_err:
-            if isinstance(like_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=like_ret.err_value.error_message)
+            match like_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=like_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(like_ret.err_value)
 
         like = like_ret.ok_value
         data = LikeOut(is_like=like.is_like, like_count=like.like_count)

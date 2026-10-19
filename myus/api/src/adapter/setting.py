@@ -1,3 +1,4 @@
+from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
@@ -5,7 +6,7 @@ from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.setting import SettingMyPageIn, SettingMyPageOut, SettingNotificationIn, SettingNotificationOut, SettingProfileIn, SettingProfileOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.user import get_user_data, profile_check, update_mypage, update_notification, update_profile
-from api.utils.common.result import FatalError
+from api.utils.common.result import FatalError, NotFoundError
 from api.utils.functions.index import create_url
 from api.utils.functions.validation import has_email
 
@@ -80,9 +81,13 @@ class SettingProfileAPI:
 
         update_ret = update_profile(user_id, input, avatar_file)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -151,9 +156,13 @@ class SettingMyPageAPI:
 
         update_ret = update_mypage(user_id, input, banner_file)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -218,8 +227,12 @@ class SettingNotificationAPI:
 
         update_ret = update_notification(user_id, input)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")

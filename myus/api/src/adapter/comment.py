@@ -1,3 +1,4 @@
+from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
@@ -6,7 +7,7 @@ from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.comment import create_comment, delete_comment, get_comments, update_comment
-from api.utils.common.result import FatalError
+from api.utils.common.result import FatalError, NotFoundError
 
 
 class CommentAPI:
@@ -85,9 +86,13 @@ class CommentAPI:
         try:
             comment_ret = create_comment(user_id, input)
             if comment_ret.is_err:
-                if isinstance(comment_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="Internal Server Error")
-                return 400, ErrorOut(message=comment_ret.err_value.error_message)
+                match comment_ret.err_value:
+                    case NotFoundError():
+                        return 400, ErrorOut(message=comment_ret.err_value.error_message)
+                    case FatalError():
+                        return 500, ErrorOut(message="Internal Server Error")
+                    case _:
+                        assert_never(comment_ret.err_value)
 
             comment = comment_ret.ok_value
             data = CommentOut(
@@ -127,9 +132,13 @@ class CommentAPI:
         try:
             update_ret = update_comment(user_id, comment_ulid, input.text)
             if update_ret.is_err:
-                if isinstance(update_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="Internal Server Error")
-                return 403, ErrorOut(message=update_ret.err_value.error_message)
+                match update_ret.err_value:
+                    case NotFoundError():
+                        return 403, ErrorOut(message=update_ret.err_value.error_message)
+                    case FatalError():
+                        return 500, ErrorOut(message="Internal Server Error")
+                    case _:
+                        assert_never(update_ret.err_value)
 
             return 200, ErrorOut(message="コメントを更新しました")
         except Exception as e:
@@ -152,9 +161,13 @@ class CommentAPI:
         try:
             delete_ret = delete_comment(user_id, comment_ulid)
             if delete_ret.is_err:
-                if isinstance(delete_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="Internal Server Error")
-                return 403, ErrorOut(message=delete_ret.err_value.error_message)
+                match delete_ret.err_value:
+                    case NotFoundError():
+                        return 403, ErrorOut(message=delete_ret.err_value.error_message)
+                    case FatalError():
+                        return 500, ErrorOut(message="Internal Server Error")
+                    case _:
+                        assert_never(delete_ret.err_value)
 
             return 200, ErrorOut(message="コメントを削除しました")
         except Exception as e:

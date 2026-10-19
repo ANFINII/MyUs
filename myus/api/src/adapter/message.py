@@ -1,3 +1,4 @@
+from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
@@ -7,7 +8,7 @@ from api.src.types.schema.user import AuthorOut
 from api.src.usecase.auth import auth_check
 from api.src.usecase.broadcast import broadcast_create_message, broadcast_delete_message, broadcast_update_message
 from api.src.usecase.message import create_message, delete_message, get_replies, update_message
-from api.utils.common.result import FatalError
+from api.utils.common.result import FatalError, NotFoundError
 
 
 class MessageAPI:
@@ -31,9 +32,13 @@ class MessageAPI:
         try:
             message_ret = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
             if message_ret.is_err:
-                if isinstance(message_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="Internal Server Error")
-                return 400, ErrorOut(message=message_ret.err_value.error_message)
+                match message_ret.err_value:
+                    case NotFoundError():
+                        return 400, ErrorOut(message=message_ret.err_value.error_message)
+                    case FatalError():
+                        return 500, ErrorOut(message="Internal Server Error")
+                    case _:
+                        assert_never(message_ret.err_value)
 
             message = message_ret.ok_value
             data = MessageOut(
@@ -110,9 +115,13 @@ class MessageAPI:
         try:
             update_ret = update_message(user_id, message_ulid, input.text)
             if update_ret.is_err:
-                if isinstance(update_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="Internal Server Error")
-                return 403, ErrorOut(message=update_ret.err_value.error_message)
+                match update_ret.err_value:
+                    case NotFoundError():
+                        return 403, ErrorOut(message=update_ret.err_value.error_message)
+                    case FatalError():
+                        return 500, ErrorOut(message="Internal Server Error")
+                    case _:
+                        assert_never(update_ret.err_value)
 
             broadcast_update_message(input.chat_ulid, message_ulid, input.text)
 
@@ -137,9 +146,13 @@ class MessageAPI:
         try:
             delete_ret = delete_message(user_id, message_ulid)
             if delete_ret.is_err:
-                if isinstance(delete_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="Internal Server Error")
-                return 403, ErrorOut(message=delete_ret.err_value.error_message)
+                match delete_ret.err_value:
+                    case NotFoundError():
+                        return 403, ErrorOut(message=delete_ret.err_value.error_message)
+                    case FatalError():
+                        return 500, ErrorOut(message="Internal Server Error")
+                    case _:
+                        assert_never(delete_ret.err_value)
 
             chat_ulid = delete_ret.ok_value
             broadcast_delete_message(chat_ulid, message_ulid)
