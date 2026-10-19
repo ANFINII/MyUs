@@ -8,23 +8,23 @@ import FollowCard from 'components/widgets/Card/Follow'
 import CardList from 'components/widgets/Card/List'
 
 interface Props {
-  datas: Follow[]
+  data: Follow[]
 }
 
 export default function Follows(props: Props): React.JSX.Element {
-  const { datas } = props
+  const { data } = props
 
   const router = useRouter()
   const { t } = useTranslation()
-  const search = useSearch(datas.length)
+  const search = useSearch(data.length)
 
   return (
     <Main title="Follow" search={search}>
       <div className="mt_16">
         <Button color="blue" size="s" name={t('menu.follow.follower')} onClick={() => router.push('/menu/follower')} />
-        <span className="ml_16">{t('menu.follow.count', { count: datas.length })}</span>
+        <span className="ml_16">{t('menu.follow.count', { count: data.length })}</span>
       </div>
-      <CardList items={datas} Content={FollowCard} />
+      <CardList items={data} Content={FollowCard} />
     </Main>
   )
 }

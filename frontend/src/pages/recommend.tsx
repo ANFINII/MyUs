@@ -10,9 +10,8 @@ import Homes from 'components/templates/media/home/list'
 export default function RecommendPage(): React.JSX.Element {
   const router = useRouter()
   const params = searchParams(router.query)
-
-  const mediaHome = useQuery({ queryKey: queryKeys.recommend(params), queryFn: () => toQuery(getRecommend(params)), placeholderData: keepPreviousData })
-  const queries = { mediaHome }
+  const data = useQuery({ queryKey: queryKeys.recommend(params), queryFn: () => toQuery(getRecommend(params)), placeholderData: keepPreviousData })
+  const queries = { data }
 
   return (
     <QueryCheck title="Recommend" queries={queries}>

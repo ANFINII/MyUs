@@ -11,7 +11,7 @@ import ChatDetail from 'components/templates/media/chat/detail'
 export default function ChatDetailPage(): React.JSX.Element {
   const router = useRouter()
   const ulid = String(router.query.ulid ?? '')
-  const threadUlid = router.query.messageUlid?.toString()
+  const threadUlid = String(router.query.messageUlid ?? '')
 
   const data = useQuery({
     queryKey: queryKeys.mediaChatDetail(ulid),

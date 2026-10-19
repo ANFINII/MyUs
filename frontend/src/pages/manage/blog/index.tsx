@@ -13,7 +13,6 @@ export default function ManageBlogsPage(): React.JSX.Element {
   const { search, page, limit, offset } = pageParams(router.query)
 
   const channels = useQuery({ queryKey: queryKeys.channels, queryFn: () => toQuery(getChannels()) })
-
   const channel = router.query.channel?.toString() || channels.data?.[0]?.ulid
   const params = { search, channel, limit, offset }
 

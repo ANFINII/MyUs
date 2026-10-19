@@ -12,14 +12,13 @@ import Userpage from 'components/templates/userpage'
 const initMedia: UserPageMedia = { videos: [], musics: [], blogs: [], comics: [], pictures: [], chats: [] }
 
 export default function UserpagePage(): React.JSX.Element {
-  const router = useRouter()
   const { t } = useTranslation()
-  const ulid = String(router.query.ulid ?? '')
-  const queryChannel = router.query.channel?.toString()
+  const router = useRouter()
   const params = searchParams(router.query)
+  const ulid = String(router.query.ulid ?? '')
+  const queryChannel = String(router.query.channel ?? '')
 
   const userPage = useQuery({ queryKey: queryKeys.userPage(ulid), queryFn: () => toQuery(getUserPage(ulid)) })
-
   const channels = userPage.data?.channels ?? []
   const channelUlid = (channels.find((c) => c.ulid === queryChannel) ?? channels.find((c) => c.isDefault))?.ulid ?? ''
 
