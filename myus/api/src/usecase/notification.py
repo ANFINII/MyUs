@@ -104,6 +104,7 @@ def get_notification(user_id: int) -> NotificationDTO:
             user_to=user_map.get(o.user_to_id),
             type_no=o.type_no,
             type_name=o.type_name,
+            object_type=o.object_type,
             content_object=NotificationContentData(
                 id=o.object_id,
                 ulid=o.content.ulid,

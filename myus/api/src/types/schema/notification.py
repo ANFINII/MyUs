@@ -25,6 +25,7 @@ class NotificationItemOut(BaseModel):
     user_to: NotificationUserOut
     type_no: int
     type_name: str
+    object_type: str
     content_object: NotificationContentOut
     is_confirmed: bool
 

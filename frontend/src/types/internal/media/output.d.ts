@@ -191,3 +191,7 @@ export interface ChatDetailOut {
   detail: ChatDetail
   list: Chat[]
 }
+
+export interface MediaReadOut {
+  read: number
+}

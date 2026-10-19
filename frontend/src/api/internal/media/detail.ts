@@ -1,7 +1,9 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
-import { VideoDetailOut, MusicDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut } from 'types/internal/media/output'
-import { apiVideo, apiMusic, apiBlog, apiComic, apiPicture, apiChat } from 'api/uri'
+import { MediaReadIn } from 'types/internal/media/input'
+import { VideoDetailOut, MusicDetailOut, BlogDetailOut, ComicDetailOut, PictureDetailOut, ChatDetailOut, MediaReadOut } from 'types/internal/media/output'
+import { apiVideo, apiMusic, apiBlog, apiComic, apiPicture, apiChat, apiMediaRead } from 'api/uri'
+import { camelSnake } from 'utils/functions/convertCase'
 
 export const getVideo = async (ulid: string): Promise<ApiOut<VideoDetailOut>> => {
   return await apiOut(apiClient('json').get(apiVideo(ulid)))
@@ -25,4 +27,8 @@ export const getPicture = async (ulid: string): Promise<ApiOut<PictureDetailOut>
 
 export const getChat = async (ulid: string): Promise<ApiOut<ChatDetailOut>> => {
   return await apiOut(apiClient('json').get(apiChat(ulid)))
+}
+
+export const postMediaRead = async (request: MediaReadIn): Promise<ApiOut<MediaReadOut>> => {
+  return await apiOut(apiClient('json').post(apiMediaRead, camelSnake(request)))
 }
