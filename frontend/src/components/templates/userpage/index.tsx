@@ -1,5 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Advertise } from 'types/internal/advertise'
+import { Search } from 'types/internal/media/output'
 import { Option } from 'types/internal/other'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { postFollow } from 'api/internal/user'
@@ -11,7 +13,9 @@ import Divide from 'components/parts/Divide'
 import ExImage from 'components/parts/ExImage'
 import SelectBox from 'components/parts/Input/SelectBox'
 import HStack from 'components/parts/Stack/Horizontal'
+import VStack from 'components/parts/Stack/Vertical'
 import Tabs, { TabItem } from 'components/parts/Tabs'
+import AdvertiseCard from 'components/widgets/Card/Advertise'
 import CardIndexList from 'components/widgets/Card/IndexList'
 import BlogCard from 'components/widgets/Card/Media/Blog'
 import ChatCard from 'components/widgets/Card/Media/Chat'
@@ -26,6 +30,7 @@ import style from './UserPage.module.scss'
 const enum TabKey {
   Info = 'info',
   Posts = 'posts',
+  Advertise = 'advertise',
 }
 
 interface Props {
@@ -33,10 +38,11 @@ interface Props {
   channelUlid: string
   userPage: UserPage
   media: UserPageMedia
+  advertises: Advertise[]
 }
 
 export default function Userpage(props: Props): React.JSX.Element {
-  const { ulid, channelUlid, userPage, media } = props
+  const { ulid, channelUlid, userPage, media, advertises } = props
   const { avatar, banner, nickname, email, content, dateJoined, channels } = userPage
 
   const router = useRouter()
@@ -57,7 +63,14 @@ export default function Userpage(props: Props): React.JSX.Element {
   const tabItems: TabItem<TabKey>[] = [
     { key: TabKey.Info, label: t('media.userpage.info') },
     { key: TabKey.Posts, label: t('media.userpage.posts') },
+    { key: TabKey.Advertise, label: t('media.userpage.advertise') },
   ]
+
+  const tabSearch: Record<TabKey, Search | undefined> = {
+    [TabKey.Info]: undefined,
+    [TabKey.Posts]: search,
+    [TabKey.Advertise]: { ...search, count: advertises.length },
+  }
 
   const handleModal = () => setIsModal(!isModal)
 
@@ -78,7 +91,7 @@ export default function Userpage(props: Props): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle={`${nickname} - MyUs`} search={selectedTab === TabKey.Posts ? search : undefined}>
+    <Main metaTitle={`${nickname} - MyUs`} search={tabSearch[selectedTab]}>
       <div className={style.userpage}>
         <figure className={style.banner}>
           <ExImage src={banner} title={nickname} />
@@ -177,6 +190,17 @@ export default function Userpage(props: Props): React.JSX.Element {
           </CardIndexList>
         </>
       )}
+
+      {selectedTab === TabKey.Advertise &&
+        (advertises.length === 0 ? (
+          <p className={style.empty}>{t('media.userpage.advertiseEmpty')}</p>
+        ) : (
+          <VStack gap="4">
+            {advertises.map((item) => (
+              <AdvertiseCard key={item.ulid} item={item} />
+            ))}
+          </VStack>
+        ))}
       <FollowDeleteModal open={isModal} onClose={handleModal} onAction={handleFollow} avatar={avatar} ulid={ulid} nickname={nickname} followerCount={followerCount} />
     </Main>
   )
