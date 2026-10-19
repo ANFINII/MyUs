@@ -80,6 +80,15 @@ def create_notification(user_from_id: int, user_to_id: int, type_no: Notificatio
     repository.bulk_save([notification])
 
 
+def delete_object_notifications(object_type: NotificationObjectType, object_ids: list[int]) -> None:
+    if len(object_ids) == 0:
+        return
+
+    repository = injector.get(NotificationInterface)
+    ids = repository.get_ids(FilterOption(object_type=object_type, object_ids=object_ids), SortOption())
+    repository.bulk_delete(ids)
+
+
 def get_notification(user_id: int) -> NotificationDTO:
     enabled_types = get_user_enabled_types(user_id)
     if len(enabled_types) == 0:

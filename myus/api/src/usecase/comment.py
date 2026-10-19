@@ -9,7 +9,7 @@ from api.src.injectors.container import injector
 from api.src.types.dto.comment import CommentDTO, ReplyDTO
 from api.src.types.dto.user import AuthorDTO
 from api.src.types.schema.comment import CommentCreateIn
-from api.src.usecase.notification import create_notification
+from api.src.usecase.notification import create_notification, delete_object_notifications
 from api.src.usecase.user import get_author_data
 from api.utils.enum.media import CommentTypeNo, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
@@ -175,4 +175,8 @@ def delete_comment(user_id: int, comment_ulid: str) -> bool | None:
         log.warning("コメントの削除権限がありません", comment_ulid=comment_ulid, user_id=user_id)
         return None
 
-    return save_comment_data(replace(comment, deleted=True))
+    if not save_comment_data(replace(comment, deleted=True)):
+        return False
+
+    delete_object_notifications(NotificationObjectType.COMMENT, [comment.id])
+    return True
