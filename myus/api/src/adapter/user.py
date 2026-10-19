@@ -77,7 +77,7 @@ class UserAPI:
         return 200, ErrorOut(message="更新しました")
 
     @staticmethod
-    @router.get("/follower", response={200: list[FollowUserOut], 401: ErrorOut})
+    @router.get("/follower", response={200: list[FollowUserOut], 401: ErrorOut, 500: ErrorOut})
     def get_followers(request: HttpRequest, search: str = ""):
         log.info("UserAPI get_followers", search=search)
 
@@ -85,7 +85,11 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        followers = get_followers(user_id, search, 100)
+        followers_ret = get_followers(user_id, search, 100)
+        if followers_ret.is_err:
+            return 500, ErrorOut(message="Internal Server Error")
+
+        followers = followers_ret.ok_value
         data = [
             FollowUserOut(
                 ulid=x.ulid,
@@ -101,7 +105,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/follow", response={200: list[FollowUserOut], 401: ErrorOut})
+    @router.get("/follow", response={200: list[FollowUserOut], 401: ErrorOut, 500: ErrorOut})
     def get_follows(request: HttpRequest, search: str = ""):
         log.info("UserAPI get_follows", search=search)
 
@@ -109,7 +113,11 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        follows = get_follows(user_id, search, 100)
+        follows_ret = get_follows(user_id, search, 100)
+        if follows_ret.is_err:
+            return 500, ErrorOut(message="Internal Server Error")
+
+        follows = follows_ret.ok_value
         data = [
             FollowUserOut(
                 ulid=x.ulid,
@@ -137,7 +145,11 @@ class UserAPI:
         if follower is None:
             return 400, ErrorOut(message="ユーザーが見つかりません!")
 
-        follow = upsert_follow(follower, input.ulid, input.is_follow)
+        follow_ret = upsert_follow(follower, input.ulid, input.is_follow)
+        if follow_ret.is_err:
+            return 500, ErrorOut(message="Internal Server Error")
+
+        follow = follow_ret.ok_value
         if follow is None:
             return 400, ErrorOut(message="ユーザーが見つかりません!")
 
@@ -247,7 +259,7 @@ class UserAPI:
         return 200, ErrorOut(message="OK")
 
     @staticmethod
-    @router.get("/userpage/{ulid}", response={200: UserPageOut, 404: ErrorOut})
+    @router.get("/userpage/{ulid}", response={200: UserPageOut, 404: ErrorOut, 500: ErrorOut})
     def get_userpage(request: HttpRequest, ulid: str):
         log.info("UserAPI get_userpage", ulid=ulid)
 
@@ -257,7 +269,13 @@ class UserAPI:
 
         channels = get_user_channels(user.user.id)
         user_id = auth_check(request)
-        is_follow = is_following(user_id, user.user.id) if user_id is not None else False
+        is_follow = False
+        if user_id is not None:
+            is_follow_ret = is_following(user_id, user.user.id)
+            if is_follow_ret.is_err:
+                return 500, ErrorOut(message="Internal Server Error")
+
+            is_follow = is_follow_ret.ok_value
 
         data = UserPageOut(
             avatar=create_url(user.user.avatar),

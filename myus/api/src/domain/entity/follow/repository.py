@@ -5,6 +5,7 @@ from api.src.domain.entity.follow._convert import convert_data, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.follow.data import FollowData
 from api.src.domain.interface.follow.interface import FilterOption, FollowInterface, SortOption
+from api.utils.common.result import FatalError, Result
 
 
 FOLLOW_FIELDS = ["follower_id", "following_id", "is_follow"]
@@ -14,7 +15,8 @@ class FollowRepository(FollowInterface):
     def queryset(self) -> QuerySet[Follow]:
         return Follow.objects.select_related("follower", "following")
 
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    @Result.shield_exception()
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         q_list: list[Q] = []
         if filter.follower_id:
             q_list.append(Q(follower_id=filter.follower_id))
@@ -32,19 +34,21 @@ class FollowRepository(FollowInterface):
         if limit is not None:
             qs = qs[:limit]
 
-        return list(qs.values_list("id", flat=True))
+        return Result.ok(list(qs.values_list("id", flat=True)))
 
-    def bulk_get(self, ids: list[int]) -> list[FollowData]:
+    @Result.shield_exception()
+    def bulk_get(self, ids: list[int]) -> Result[list[FollowData], FatalError]:
         if len(ids) == 0:
-            return []
+            return Result.ok([])
 
         objs = list(self.queryset().filter(id__in=ids))
         sorted_objs = sort_ids(objs, ids)
-        return [convert_data(obj) for obj in sorted_objs]
+        return Result.ok([convert_data(obj) for obj in sorted_objs])
 
-    def bulk_save(self, objs: list[FollowData]) -> list[int]:
+    @Result.shield_exception()
+    def bulk_save(self, objs: list[FollowData]) -> Result[list[int], FatalError]:
         if len(objs) == 0:
-            return []
+            return Result.ok([])
 
         models = [marshal_data(o) for o in objs]
         new_ids = get_new_ids(models, Follow)
@@ -55,9 +59,10 @@ class FollowRepository(FollowInterface):
             update_fields=FOLLOW_FIELDS,
         )
 
-        return new_ids
+        return Result.ok(new_ids)
 
-    def count(self, filter: FilterOption) -> int:
+    @Result.shield_exception()
+    def count(self, filter: FilterOption) -> Result[int, FatalError]:
         q_list: list[Q] = []
         if filter.follower_id:
             q_list.append(Q(follower_id=filter.follower_id))
@@ -68,4 +73,4 @@ class FollowRepository(FollowInterface):
         if filter.search:
             q_list.append(Q(following__nickname__icontains=filter.search))
 
-        return Follow.objects.filter(*q_list).count()
+        return Result.ok(Follow.objects.filter(*q_list).count())
