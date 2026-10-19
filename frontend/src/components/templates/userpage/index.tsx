@@ -4,6 +4,7 @@ import { Option } from 'types/internal/other'
 import { UserPage, UserPageMedia } from 'types/internal/userpage'
 import { postFollow } from 'api/internal/user'
 import { useRouter } from 'components/hooks/useRouter'
+import { useSearch } from 'components/hooks/useSearch'
 import { useUser } from 'components/hooks/useUser'
 import Main from 'components/layout/Main'
 import Divide from 'components/parts/Divide'
@@ -41,9 +42,11 @@ export default function Userpage(props: Props): React.JSX.Element {
   const router = useRouter()
   const { t, i18n } = useTranslation()
   const { user } = useUser()
+  const mediaCount = media.videos.length + media.musics.length + media.blogs.length + media.comics.length + media.pictures.length + media.chats.length
+  const search = useSearch(mediaCount)
   const [isModal, setIsModal] = useState<boolean>(false)
   const [isFollow, setIsFollow] = useState<boolean>(userPage.isFollow)
-  const [selectedTab, setSelectedTab] = useState<TabKey>(TabKey.Info)
+  const [selectedTab, setSelectedTab] = useState<TabKey>(search.name ? TabKey.Posts : TabKey.Info)
   const [followerCount, setFollowerCount] = useState<number>(userPage.followerCount)
 
   const isSelf = user.isActive && user.nickname === nickname
@@ -75,7 +78,7 @@ export default function Userpage(props: Props): React.JSX.Element {
   }
 
   return (
-    <Main metaTitle={`${nickname} - MyUs`}>
+    <Main metaTitle={`${nickname} - MyUs`} search={selectedTab === TabKey.Posts ? search : undefined}>
       <div className={style.userpage}>
         <figure className={style.banner}>
           <ExImage src={banner} title={nickname} />
