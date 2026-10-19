@@ -28,3 +28,13 @@ class UnauthorizedError(AnyError):
 @dataclass(frozen=True)
 class NotFoundError(AnyError):
     pass
+
+
+@dataclass(frozen=True)
+class ForbiddenError(AnyError):
+    pass
+
+
+@dataclass(frozen=True)
+class ValidationError(AnyError):
+    pass
