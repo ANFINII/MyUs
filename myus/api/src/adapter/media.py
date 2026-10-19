@@ -29,6 +29,7 @@ from api.src.usecase.media import create_video, create_music, create_blog, creat
 from api.src.usecase.media import get_home, get_recommend, get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
 from api.src.usecase.media import get_video_detail, get_music_detail, get_blog_detail, get_comic_detail, get_picture_detail, get_chat_detail
 from api.src.usecase.media import increment_media_read
+from api.utils.common.result import FatalError
 
 
 class HomeAPI:
@@ -468,15 +469,17 @@ class MediaReadAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={200: MediaReadOut, 404: ErrorOut})
+    @router.post("", response={200: MediaReadOut, 404: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: MediaReadIn):
         log.info("MediaReadAPI post", input=input)
 
-        read = increment_media_read(input.media_type, input.ulid, get_client_ip(request))
-        if read is None:
-            return 404, ErrorOut(message="data not found")
+        ret = increment_media_read(input.media_type, input.ulid, get_client_ip(request))
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
 
-        return 200, MediaReadOut(read=read)
+        return 200, MediaReadOut(read=ret.ok_value)
 
 
 def convert_videos(objs: list[VideoData]) -> list[VideoOut]:

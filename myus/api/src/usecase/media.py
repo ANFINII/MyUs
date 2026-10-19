@@ -27,6 +27,7 @@ from api.src.usecase.channel import get_channel_data
 from api.src.usecase.comment import get_comments
 from api.src.usecase.message import get_messages
 from api.src.usecase.notification import create_notification
+from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.media import CommentType, MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload, MediaUpload
@@ -586,23 +587,29 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Cha
     return data
 
 
-def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> int | None:
+@Result.shield_exception()
+def increment_media_read(media_type: MediaType, ulid: str, ip_address: str) -> Result[int, NotFoundError | FatalError]:
     repository = get_media_repository(media_type)
     ids = repository.get_ids(FilterOption(ulid=ulid, publish=True), ExcludeOption(), SortOption(), PageOption(limit=1))
     if len(ids) == 0:
         log.info("data not found", ulid=ulid)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
     obj = repository.bulk_get(ids)[0]
     with transaction.atomic():
-        if not record_access(ip_address, media_type, obj.id):
-            return obj.read
+        ret = record_access(ip_address, media_type, obj.id)
+        if ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(ret.err_value)
+
+        if not ret.ok_value:
+            return Result.ok(obj.read)
 
         read = repository.increment_read(obj.id)
         if read in VIEWS_THRESHOLDS:
             create_views_notification(obj.channel.owner_id, NotificationObjectType(media_type.value), obj.id)
 
-    return read
+    return Result.ok(read)
 
 
 def create_views_notification(owner_id: int, object_type: NotificationObjectType, object_id: int) -> None:
