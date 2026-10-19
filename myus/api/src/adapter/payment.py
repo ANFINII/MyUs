@@ -1,21 +1,14 @@
-from dataclasses import replace
-from django.conf import settings
+from typing import assert_never
 from django.http import HttpRequest
 from ninja import Router
 from api.modules.logger import log
-from api.src.domain.interface.payment.data import Money
-from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutData, CheckoutFailed, CustomerData, MarketplaceData, RedirectUrls, WebhookVerified, WebhookVerifyFailed
-from api.src.domain.interface.payment.provider.interface import PaymentInterface
-from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
-from api.src.injectors.container import injector
+from api.src.domain.interface.payment.provider.data import CancelFailed, CancelSuccess, CheckoutCreated, CheckoutFailed, WebhookVerified, WebhookVerifyFailed
 from api.src.types.schema.common import ErrorOut
 from api.src.types.schema.payment import PaymentCancelOut, PaymentCheckoutIn, PaymentCheckoutOut, PaymentWebhookOut
 from api.src.usecase.auth import auth_check
-from api.src.usecase.payment import receive_webhook_inbox
-from api.src.usecase.user import get_user_data
-from api.utils.enum.i18n import Currency, Locale
-from api.utils.enum.payment import PaymentProvider, PaymentType, SubscriptionStatus, WebhookVerifyError
-from api.utils.plan import get_plan
+from api.src.usecase.payment import cancel_subscription, create_checkout, receive_webhook_inbox, verify_webhook
+from api.utils.common.result import FatalError, NotFoundError
+from api.utils.enum.payment import WebhookVerifyError
 
 
 class PaymentAPI:
@@ -36,39 +29,17 @@ class PaymentAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        user_data_ret = get_user_data(user_id=user_id)
-        if user_data_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+        checkout_ret = create_checkout(user_id, input.plan)
+        if checkout_ret.is_err:
+            match checkout_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=checkout_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(checkout_ret.err_value)
 
-        user_data = user_data_ret.ok_value
-        if user_data is None:
-            return 404, ErrorOut(message="Not Found")
-
-        plan = get_plan(input.plan)
-        if plan is None:
-            log.warning("PaymentAPI unknown plan", plan=input.plan)
-            return 404, ErrorOut(message="Not Found")
-
-        data = CheckoutData(
-            product_code=plan.name,
-            description=plan.description,
-            price=Money(amount=plan.price, currency=Currency.JPY),
-            payment_type=PaymentType.SUBSCRIPTION,
-            customer=CustomerData(email=user_data.user.email),
-            redirect=RedirectUrls(
-                success_url=f"{settings.FRONTEND_URL}/setting/payment/success",
-                cancel_url=f"{settings.FRONTEND_URL}/setting/payment/cancel",
-            ),
-            marketplace=MarketplaceData(seller_id="", application_fee=Money(amount=0, currency=Currency.JPY)),
-            locale=Locale.JA,
-        )
-
-        payment = injector.get(PaymentInterface)
-        create_ret = payment.create_checkout(data)
-        if create_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
-
-        checkout = create_ret.ok_value
+        checkout = checkout_ret.ok_value
         match checkout:
             case CheckoutCreated(session=session):
                 return 200, PaymentCheckoutOut(url=session.redirect_url)
@@ -82,8 +53,7 @@ class PaymentAPI:
         payload = request.body
         signature = request.META.get("HTTP_STRIPE_SIGNATURE", "")
 
-        payment = injector.get(PaymentInterface)
-        verify_ret = payment.verify_webhook(payload, signature)
+        verify_ret = verify_webhook(payload, signature)
         if verify_ret.is_err:
             return 500, ErrorOut(message="Internal Server Error")
 
@@ -119,42 +89,19 @@ class PaymentAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        sub_repo = injector.get(SubscriptionInterface)
-        ids_ret = sub_repo.get_ids(
-            SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value),
-            SubscriptionSortOption(is_asc=False),
-            limit=1,
-        )
-        if ids_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
-
-        ids = ids_ret.ok_value
-        if len(ids) == 0:
-            return 404, ErrorOut(message="アクティブなサブスクリプションが見つかりません")
-
-        subs_ret = sub_repo.bulk_get(ids)
-        if subs_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
-
-        subs = subs_ret.ok_value
-        subscription = subs[0]
-        if subscription.status != SubscriptionStatus.ACTIVE:
-            return 404, ErrorOut(message="アクティブなサブスクリプションが見つかりません")
-
-        payment = injector.get(PaymentInterface)
-        cancel_ret = payment.cancel_subscription(subscription.external_id)
+        cancel_ret = cancel_subscription(user_id)
         if cancel_ret.is_err:
-            return 500, ErrorOut(message="Internal Server Error")
+            match cancel_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=cancel_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(cancel_ret.err_value)
 
         cancellation = cancel_ret.ok_value
         match cancellation:
             case CancelSuccess(canceled_at=canceled_at, period_end=period_end):
-                updated = replace(subscription, canceled_at=canceled_at, current_period_end=period_end)
-                save_ret = sub_repo.bulk_save([updated])
-                if save_ret.is_err:
-                    return 500, ErrorOut(message="Internal Server Error")
-
-                log.info("PaymentAPI cancel succeeded", user_id=user_id, external_id=subscription.external_id)
                 return 200, PaymentCancelOut(canceled_at=canceled_at, period_end=period_end)
             case CancelFailed(error=error, message=message):
                 log.error("Payment cancel failed", error=error.value, message=message)

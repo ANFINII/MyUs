@@ -1,8 +1,12 @@
 import json
 from dataclasses import asdict, replace
 from datetime import datetime, timezone
+from django.conf import settings
 from django.db import transaction
 from api.modules.logger import log
+from api.src.domain.interface.payment.data import Money
+from api.src.domain.interface.payment.provider.data import CancelResult, CancelSuccess, CheckoutData, CheckoutResult, CustomerData, MarketplaceData, RedirectUrls, WebhookVerifyResult
+from api.src.domain.interface.payment.provider.interface import PaymentInterface
 from api.src.domain.interface.payment.subscription.interface import FilterOption as SubscriptionFilterOption, SortOption as SubscriptionSortOption, SubscriptionInterface
 from api.src.domain.interface.payment.transaction.interface import FilterOption as TransactionFilterOption, SortOption as TransactionSortOption, TransactionInterface
 from api.src.domain.interface.webhook.inbox.data import WebhookInboxData
@@ -11,8 +15,97 @@ from api.src.domain.interface.webhook.outbox.data import WebhookOutboxData
 from api.src.domain.interface.webhook.outbox.interface import WebhookOutboxInterface
 from api.src.injectors.container import injector
 from api.src.types.dto.webhook import WebhookOutboxPayloadDTO
-from api.utils.common.result import FatalError, Result
-from api.utils.enum.payment import PaymentStatus, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
+from api.src.usecase.user import get_user_data
+from api.utils.common.result import FatalError, NotFoundError, Result
+from api.utils.enum.i18n import Currency, Locale
+from api.utils.enum.payment import PaymentProvider, PaymentStatus, PaymentType, SubscriptionStatus, WebhookEventType, WebhookDeliveryStatus
+from api.utils.plan import get_plan
+
+
+@Result.shield_exception()
+def create_checkout(user_id: int, plan_name: str) -> Result[CheckoutResult, NotFoundError | FatalError]:
+    user_ret = get_user_data(user_id=user_id)
+    if user_ret.is_err:
+        return Result.err(user_ret.err_value)
+
+    user = user_ret.ok_value
+    if user is None:
+        return Result.err(NotFoundError("Not Found"))
+
+    plan = get_plan(plan_name)
+    if plan is None:
+        log.warning("Payment unknown plan", plan=plan_name)
+        return Result.err(NotFoundError("Not Found"))
+
+    data = CheckoutData(
+        product_code=plan.name,
+        description=plan.description,
+        price=Money(amount=plan.price, currency=Currency.JPY),
+        payment_type=PaymentType.SUBSCRIPTION,
+        customer=CustomerData(email=user.user.email),
+        redirect=RedirectUrls(
+            success_url=f"{settings.FRONTEND_URL}/setting/payment/success",
+            cancel_url=f"{settings.FRONTEND_URL}/setting/payment/cancel",
+        ),
+        marketplace=MarketplaceData(seller_id="", application_fee=Money(amount=0, currency=Currency.JPY)),
+        locale=Locale.JA,
+    )
+
+    payment = injector.get(PaymentInterface)
+    checkout_ret = payment.create_checkout(data)
+    if checkout_ret.is_err:
+        return Result.err(checkout_ret.err_value)
+
+    checkout = checkout_ret.ok_value
+    return Result.ok(checkout)
+
+
+@Result.shield_exception()
+def verify_webhook(payload: bytes, signature: str) -> Result[WebhookVerifyResult, FatalError]:
+    payment = injector.get(PaymentInterface)
+    ret = payment.verify_webhook(payload, signature)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    verification = ret.ok_value
+    return Result.ok(verification)
+
+
+@Result.shield_exception()
+def cancel_subscription(user_id: int) -> Result[CancelResult, NotFoundError | FatalError]:
+    repository = injector.get(SubscriptionInterface)
+    ids_ret = repository.get_ids(SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value), SubscriptionSortOption(is_asc=False), limit=1)
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    if len(ids) == 0:
+        return Result.err(NotFoundError("アクティブなサブスクリプションが見つかりません"))
+
+    subscriptions_ret = repository.bulk_get(ids)
+    if subscriptions_ret.is_err:
+        return Result.err(subscriptions_ret.err_value)
+
+    subscriptions = subscriptions_ret.ok_value
+    subscription = subscriptions[0]
+    if subscription.status != SubscriptionStatus.ACTIVE:
+        return Result.err(NotFoundError("アクティブなサブスクリプションが見つかりません"))
+
+    payment = injector.get(PaymentInterface)
+    cancel_ret = payment.cancel_subscription(subscription.external_id)
+    if cancel_ret.is_err:
+        return Result.err(cancel_ret.err_value)
+
+    cancellation = cancel_ret.ok_value
+    if isinstance(cancellation, CancelSuccess):
+        updated = replace(subscription, canceled_at=cancellation.canceled_at, current_period_end=cancellation.period_end)
+        save_ret = repository.bulk_save([updated])
+        if save_ret.is_err:
+            return Result.err(save_ret.err_value)
+
+        log.info("Payment cancel succeeded", user_id=user_id, external_id=subscription.external_id)
+
+    return Result.ok(cancellation)
 
 
 @Result.shield_exception()
