@@ -28,7 +28,7 @@ class ManageVideoAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: VideoListOut, 401: ErrorOut})
+    @router.get("", response={200: VideoListOut, 401: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageVideoAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -36,11 +36,15 @@ class ManageVideoAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs, total = get_manage_videos(user_id, search, channel, limit, offset)
+        ret = get_manage_videos(user_id, search, channel, limit, offset)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = ret.ok_value
         return 200, VideoListOut(items=convert_videos(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: VideoOut, 401: ErrorOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: VideoOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageVideoAPI get", ulid=ulid)
 
@@ -48,11 +52,13 @@ class ManageVideoAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = get_manage_video(user_id, ulid)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_manage_video(user_id, ulid)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
 
-        return 200, convert_videos([obj])[0]
+        return 200, convert_videos([ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -72,7 +78,7 @@ class ManageVideoAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageVideoAPI delete", ulids=input.ulids)
 
@@ -80,8 +86,11 @@ class ManageVideoAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not delete_manage_video(user_id, input.ulids):
-            return 400, ErrorOut(message="削除に失敗しました!")
+        ret = delete_manage_video(user_id, input.ulids)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -92,7 +101,7 @@ class ManageMusicAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: MusicListOut, 401: ErrorOut})
+    @router.get("", response={200: MusicListOut, 401: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageMusicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -100,11 +109,15 @@ class ManageMusicAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs, total = get_manage_musics(user_id, search, channel, limit, offset)
+        ret = get_manage_musics(user_id, search, channel, limit, offset)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = ret.ok_value
         return 200, MusicListOut(items=convert_musics(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: MusicOut, 401: ErrorOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: MusicOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageMusicAPI get", ulid=ulid)
 
@@ -112,11 +125,13 @@ class ManageMusicAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = get_manage_music(user_id, ulid)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_manage_music(user_id, ulid)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
 
-        return 200, convert_musics([obj])[0]
+        return 200, convert_musics([ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -136,7 +151,7 @@ class ManageMusicAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageMusicAPI delete", ulids=input.ulids)
 
@@ -144,8 +159,11 @@ class ManageMusicAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not delete_manage_music(user_id, input.ulids):
-            return 400, ErrorOut(message="削除に失敗しました!")
+        ret = delete_manage_music(user_id, input.ulids)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -156,7 +174,7 @@ class ManageBlogAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: BlogListOut, 401: ErrorOut})
+    @router.get("", response={200: BlogListOut, 401: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageBlogAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -164,11 +182,15 @@ class ManageBlogAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs, total = get_manage_blogs(user_id, search, channel, limit, offset)
+        ret = get_manage_blogs(user_id, search, channel, limit, offset)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = ret.ok_value
         return 200, BlogListOut(items=convert_blogs(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: BlogOut, 401: ErrorOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: BlogOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageBlogAPI get", ulid=ulid)
 
@@ -176,11 +198,13 @@ class ManageBlogAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = get_manage_blog(user_id, ulid)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_manage_blog(user_id, ulid)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
 
-        return 200, convert_blogs([obj])[0]
+        return 200, convert_blogs([ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -200,7 +224,7 @@ class ManageBlogAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageBlogAPI delete", ulids=input.ulids)
 
@@ -208,8 +232,11 @@ class ManageBlogAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not delete_manage_blog(user_id, input.ulids):
-            return 400, ErrorOut(message="削除に失敗しました!")
+        ret = delete_manage_blog(user_id, input.ulids)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -220,7 +247,7 @@ class ManageComicAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: ComicListOut, 401: ErrorOut})
+    @router.get("", response={200: ComicListOut, 401: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageComicAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -228,11 +255,15 @@ class ManageComicAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs, total = get_manage_comics(user_id, search, channel, limit, offset)
+        ret = get_manage_comics(user_id, search, channel, limit, offset)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = ret.ok_value
         return 200, ComicListOut(items=convert_comics(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ComicOut, 401: ErrorOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: ComicOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageComicAPI get", ulid=ulid)
 
@@ -240,11 +271,13 @@ class ManageComicAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = get_manage_comic(user_id, ulid)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_manage_comic(user_id, ulid)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
 
-        return 200, convert_comics([obj])[0]
+        return 200, convert_comics([ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -264,7 +297,7 @@ class ManageComicAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManageComicAPI delete", ulids=input.ulids)
 
@@ -272,8 +305,11 @@ class ManageComicAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not delete_manage_comic(user_id, input.ulids):
-            return 400, ErrorOut(message="削除に失敗しました!")
+        ret = delete_manage_comic(user_id, input.ulids)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -284,7 +320,7 @@ class ManagePictureAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: PictureListOut, 401: ErrorOut})
+    @router.get("", response={200: PictureListOut, 401: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManagePictureAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -292,11 +328,15 @@ class ManagePictureAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs, total = get_manage_pictures(user_id, search, channel, limit, offset)
+        ret = get_manage_pictures(user_id, search, channel, limit, offset)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = ret.ok_value
         return 200, PictureListOut(items=convert_pictures(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: PictureOut, 401: ErrorOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: PictureOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManagePictureAPI get", ulid=ulid)
 
@@ -304,11 +344,13 @@ class ManagePictureAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = get_manage_picture(user_id, ulid)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_manage_picture(user_id, ulid)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
 
-        return 200, convert_pictures([obj])[0]
+        return 200, convert_pictures([ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
@@ -328,7 +370,7 @@ class ManagePictureAPI:
         return 204, ErrorOut(message="保存しました!")
 
     @staticmethod
-    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.delete("", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def delete(request: HttpRequest, input: BulkDeleteIn):
         log.info("ManagePictureAPI delete", ulids=input.ulids)
 
@@ -336,8 +378,11 @@ class ManagePictureAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not delete_manage_picture(user_id, input.ulids):
-            return 400, ErrorOut(message="削除に失敗しました!")
+        ret = delete_manage_picture(user_id, input.ulids)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -348,7 +393,7 @@ class ManageChatAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: ChatListOut, 401: ErrorOut})
+    @router.get("", response={200: ChatListOut, 401: ErrorOut, 500: ErrorOut})
     def list(request: HttpRequest, search: str = "", channel: str = "", limit: int = PAGE_SIZE, offset: int = 0):
         log.info("ManageChatAPI list", search=search, channel=channel, limit=limit, offset=offset)
 
@@ -356,11 +401,15 @@ class ManageChatAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        objs, total = get_manage_chats(user_id, search, channel, limit, offset)
+        ret = get_manage_chats(user_id, search, channel, limit, offset)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        objs, total = ret.ok_value
         return 200, ChatListOut(items=convert_chats(objs), total=total)
 
     @staticmethod
-    @router.get("/{ulid}", response={200: ChatOut, 401: ErrorOut, 404: ErrorOut})
+    @router.get("/{ulid}", response={200: ChatOut, 401: ErrorOut, 404: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest, ulid: str):
         log.info("ManageChatAPI get", ulid=ulid)
 
@@ -368,11 +417,13 @@ class ManageChatAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = get_manage_chat(user_id, ulid)
-        if obj is None:
-            return 404, ErrorOut(message="data not found")
+        ret = get_manage_chat(user_id, ulid)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 404, ErrorOut(message=ret.err_value.error_message)
 
-        return 200, convert_chats([obj])[0]
+        return 200, convert_chats([ret.ok_value])[0]
 
     @staticmethod
     @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})

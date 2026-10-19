@@ -169,10 +169,13 @@ class UserAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        like = like_media(user_id, input.media_type, input.ulid)
-        if like is None:
-            return 400, ErrorOut(message="メディアが見つかりません!")
+        ret = like_media(user_id, input.media_type, input.ulid)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
+        like = ret.ok_value
         data = LikeOut(is_like=like.is_like, like_count=like.like_count)
         return 200, data
 
@@ -335,17 +338,20 @@ class UserAPI:
 
         channel_id = 0
         if channel_ulid:
-            ret = get_channel_data(channel_ulid)
-            if ret.is_err:
+            channel_ret = get_channel_data(channel_ulid)
+            if channel_ret.is_err:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-            channel = ret.ok_value
+            channel = channel_ret.ok_value
             if channel is None:
                 return 404, ErrorOut(message="チャンネルが見つかりません")
             channel_id = channel.id
 
-        media = get_userpage_media(8, "", channel_id=channel_id)
+        media_ret = get_userpage_media(8, "", channel_id=channel_id)
+        if media_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
 
+        media = media_ret.ok_value
         data = UserPageMediaOut(
             videos=convert_videos(media.videos),
             musics=convert_musics(media.musics),

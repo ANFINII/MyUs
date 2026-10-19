@@ -30,12 +30,24 @@ from api.utils.functions.index import create_url
 from api.utils.functions.media import save_upload
 
 
-def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[VideoData], int]:
+@Result.shield_exception()
+def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[VideoData], int], FatalError]:
     repository = injector.get(VideoInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    total = repository.count(filter)
-    ids = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
-    objs = repository.bulk_get(ids=ids)
+    count_ret = repository.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
 
     data = [replace(o,
         image=create_url(o.image),
@@ -43,33 +55,50 @@ def get_manage_videos(user_id: int, search: str, channel_ulid: str = "", limit: 
         convert=create_url(o.convert),
     ) for o in objs]
 
-    return data, total
+    return Result.ok((data, total))
 
 
-def get_manage_video(user_id: int, ulid: str) -> VideoData | None:
+@Result.shield_exception()
+def get_manage_video(user_id: int, ulid: str) -> Result[VideoData, NotFoundError | FatalError]:
     repository = injector.get(VideoInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("data not found", ulid=ulid, user_id=user_id)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
-    obj = repository.bulk_get(ids)[0]
-    return replace(obj,
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
+    return Result.ok(replace(obj,
         image=create_url(obj.image),
         video=create_url(obj.video),
         convert=create_url(obj.convert),
-    )
+    ))
 
 
 @Result.shield_exception()
 def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(VideoInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Video not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    obj = repository.bulk_get(ids)[0]
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
     if obj.channel.owner_id != user_id:
         log.error("Video owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -82,7 +111,11 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        repository.bulk_save([update_data])
+        save_ret = repository.bulk_save([update_data])
+        if save_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(save_ret.err_value)
+
         category_ret = category_repo.bulk_save(MediaType.VIDEO, obj.id, categories)
         if category_ret.is_err:
             transaction.set_rollback(True)
@@ -96,62 +129,96 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     return Result.ok(None)
 
 
-def delete_manage_video(user_id: int, ulids: list[str]) -> bool:
+@Result.shield_exception()
+def delete_manage_video(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(VideoInterface)
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        if ids_ret.is_err:
+            return Result.err(ids_ret.err_value)
+
+        ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Video not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return False
+            return Result.err(NotFoundError("削除に失敗しました!"))
         delete_ids.append(ids[0])
 
-    try:
-        with transaction.atomic():
-            repository.bulk_delete(delete_ids)
-            notification_ret = delete_object_notifications(NotificationObjectType.VIDEO, delete_ids)
-            if notification_ret.is_err:
-                transaction.set_rollback(True)
-                log.error("delete_manage_video error", error=notification_ret.err_value.error_message)
-                return False
-        return True
-    except Exception as e:
-        log.error("delete_manage_video error", exc=e)
-        return False
+    with transaction.atomic():
+        delete_ret = repository.bulk_delete(delete_ids)
+        if delete_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(delete_ret.err_value)
+
+        notification_ret = delete_object_notifications(NotificationObjectType.VIDEO, delete_ids)
+        if notification_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
 
 
-def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[MusicData], int]:
+@Result.shield_exception()
+def get_manage_musics(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[MusicData], int], FatalError]:
     repository = injector.get(MusicInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    total = repository.count(filter)
-    ids = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
-    objs = repository.bulk_get(ids=ids)
+    count_ret = repository.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
 
     data = [replace(o, music=create_url(o.music)) for o in objs]
-    return data, total
+    return Result.ok((data, total))
 
 
-def get_manage_music(user_id: int, ulid: str) -> MusicData | None:
+@Result.shield_exception()
+def get_manage_music(user_id: int, ulid: str) -> Result[MusicData, NotFoundError | FatalError]:
     repository = injector.get(MusicInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("data not found", ulid=ulid, user_id=user_id)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
-    obj = repository.bulk_get(ids)[0]
-    return replace(obj, music=create_url(obj.music))
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
+    return Result.ok(replace(obj, music=create_url(obj.music)))
 
 
 @Result.shield_exception()
 def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(MusicInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Music not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    obj = repository.bulk_get(ids)[0]
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
     if obj.channel.owner_id != user_id:
         log.error("Music owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -161,7 +228,11 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        repository.bulk_save([update_data])
+        save_ret = repository.bulk_save([update_data])
+        if save_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(save_ret.err_value)
+
         category_ret = category_repo.bulk_save(MediaType.MUSIC, obj.id, categories)
         if category_ret.is_err:
             transaction.set_rollback(True)
@@ -175,62 +246,96 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result
     return Result.ok(None)
 
 
-def delete_manage_music(user_id: int, ulids: list[str]) -> bool:
+@Result.shield_exception()
+def delete_manage_music(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(MusicInterface)
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        if ids_ret.is_err:
+            return Result.err(ids_ret.err_value)
+
+        ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Music not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return False
+            return Result.err(NotFoundError("削除に失敗しました!"))
         delete_ids.append(ids[0])
 
-    try:
-        with transaction.atomic():
-            repository.bulk_delete(delete_ids)
-            notification_ret = delete_object_notifications(NotificationObjectType.MUSIC, delete_ids)
-            if notification_ret.is_err:
-                transaction.set_rollback(True)
-                log.error("delete_manage_music error", error=notification_ret.err_value.error_message)
-                return False
-        return True
-    except Exception as e:
-        log.error("delete_manage_music error", exc=e)
-        return False
+    with transaction.atomic():
+        delete_ret = repository.bulk_delete(delete_ids)
+        if delete_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(delete_ret.err_value)
+
+        notification_ret = delete_object_notifications(NotificationObjectType.MUSIC, delete_ids)
+        if notification_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
 
 
-def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[BlogData], int]:
+@Result.shield_exception()
+def get_manage_blogs(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[BlogData], int], FatalError]:
     repository = injector.get(BlogInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    total = repository.count(filter)
-    ids = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
-    objs = repository.bulk_get(ids=ids)
+    count_ret = repository.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
 
     data = [replace(o, image=create_url(o.image)) for o in objs]
-    return data, total
+    return Result.ok((data, total))
 
 
-def get_manage_blog(user_id: int, ulid: str) -> BlogData | None:
+@Result.shield_exception()
+def get_manage_blog(user_id: int, ulid: str) -> Result[BlogData, NotFoundError | FatalError]:
     repository = injector.get(BlogInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("data not found", ulid=ulid, user_id=user_id)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
-    obj = repository.bulk_get(ids)[0]
-    return replace(obj, image=create_url(obj.image))
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
+    return Result.ok(replace(obj, image=create_url(obj.image)))
 
 
 @Result.shield_exception()
 def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(BlogInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Blog not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    obj = repository.bulk_get(ids)[0]
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
     if obj.channel.owner_id != user_id:
         log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -243,7 +348,11 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        repository.bulk_save([update_data])
+        save_ret = repository.bulk_save([update_data])
+        if save_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(save_ret.err_value)
+
         category_ret = category_repo.bulk_save(MediaType.BLOG, obj.id, categories)
         if category_ret.is_err:
             transaction.set_rollback(True)
@@ -257,68 +366,102 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     return Result.ok(None)
 
 
-def delete_manage_blog(user_id: int, ulids: list[str]) -> bool:
+@Result.shield_exception()
+def delete_manage_blog(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(BlogInterface)
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        if ids_ret.is_err:
+            return Result.err(ids_ret.err_value)
+
+        ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Blog not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return False
+            return Result.err(NotFoundError("削除に失敗しました!"))
         delete_ids.append(ids[0])
 
-    try:
-        with transaction.atomic():
-            repository.bulk_delete(delete_ids)
-            notification_ret = delete_object_notifications(NotificationObjectType.BLOG, delete_ids)
-            if notification_ret.is_err:
-                transaction.set_rollback(True)
-                log.error("delete_manage_blog error", error=notification_ret.err_value.error_message)
-                return False
-        return True
-    except Exception as e:
-        log.error("delete_manage_blog error", exc=e)
-        return False
+    with transaction.atomic():
+        delete_ret = repository.bulk_delete(delete_ids)
+        if delete_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(delete_ret.err_value)
+
+        notification_ret = delete_object_notifications(NotificationObjectType.BLOG, delete_ids)
+        if notification_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
 
 
-def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[ComicData], int]:
+@Result.shield_exception()
+def get_manage_comics(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ComicData], int], FatalError]:
     repository = injector.get(ComicInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    total = repository.count(filter)
-    ids = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
-    objs = repository.bulk_get(ids=ids)
+    count_ret = repository.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
 
     data = [replace(o,
         image=create_url(o.image),
         pages=[create_url(p) for p in o.pages],
     ) for o in objs]
-    return data, total
+    return Result.ok((data, total))
 
 
-def get_manage_comic(user_id: int, ulid: str) -> ComicData | None:
+@Result.shield_exception()
+def get_manage_comic(user_id: int, ulid: str) -> Result[ComicData, NotFoundError | FatalError]:
     repository = injector.get(ComicInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("data not found", ulid=ulid, user_id=user_id)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
-    obj = repository.bulk_get(ids)[0]
-    return replace(obj,
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
+    return Result.ok(replace(obj,
         image=create_url(obj.image),
         pages=[create_url(p) for p in obj.pages],
-    )
+    ))
 
 
 @Result.shield_exception()
 def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(ComicInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Comic not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    obj = repository.bulk_get(ids)[0]
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
     if obj.channel.owner_id != user_id:
         log.error("Comic owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -331,7 +474,11 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        repository.bulk_save([update_data])
+        save_ret = repository.bulk_save([update_data])
+        if save_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(save_ret.err_value)
+
         category_ret = category_repo.bulk_save(MediaType.COMIC, obj.id, categories)
         if category_ret.is_err:
             transaction.set_rollback(True)
@@ -345,62 +492,96 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     return Result.ok(None)
 
 
-def delete_manage_comic(user_id: int, ulids: list[str]) -> bool:
+@Result.shield_exception()
+def delete_manage_comic(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(ComicInterface)
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        if ids_ret.is_err:
+            return Result.err(ids_ret.err_value)
+
+        ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Comic not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return False
+            return Result.err(NotFoundError("削除に失敗しました!"))
         delete_ids.append(ids[0])
 
-    try:
-        with transaction.atomic():
-            repository.bulk_delete(delete_ids)
-            notification_ret = delete_object_notifications(NotificationObjectType.COMIC, delete_ids)
-            if notification_ret.is_err:
-                transaction.set_rollback(True)
-                log.error("delete_manage_comic error", error=notification_ret.err_value.error_message)
-                return False
-        return True
-    except Exception as e:
-        log.error("delete_manage_comic error", exc=e)
-        return False
+    with transaction.atomic():
+        delete_ret = repository.bulk_delete(delete_ids)
+        if delete_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(delete_ret.err_value)
+
+        notification_ret = delete_object_notifications(NotificationObjectType.COMIC, delete_ids)
+        if notification_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
 
 
-def get_manage_pictures(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[PictureData], int]:
+@Result.shield_exception()
+def get_manage_pictures(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[PictureData], int], FatalError]:
     repository = injector.get(PictureInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    total = repository.count(filter)
-    ids = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
-    objs = repository.bulk_get(ids=ids)
+    count_ret = repository.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
 
     data = [replace(o, image=create_url(o.image)) for o in objs]
-    return data, total
+    return Result.ok((data, total))
 
 
-def get_manage_picture(user_id: int, ulid: str) -> PictureData | None:
+@Result.shield_exception()
+def get_manage_picture(user_id: int, ulid: str) -> Result[PictureData, NotFoundError | FatalError]:
     repository = injector.get(PictureInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("data not found", ulid=ulid, user_id=user_id)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
-    obj = repository.bulk_get(ids)[0]
-    return replace(obj, image=create_url(obj.image))
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
+    return Result.ok(replace(obj, image=create_url(obj.image)))
 
 
 @Result.shield_exception()
 def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(PictureInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Picture not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    obj = repository.bulk_get(ids)[0]
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
     if obj.channel.owner_id != user_id:
         log.error("Picture owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -413,7 +594,11 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        repository.bulk_save([update_data])
+        save_ret = repository.bulk_save([update_data])
+        if save_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(save_ret.err_value)
+
         category_ret = category_repo.bulk_save(MediaType.PICTURE, obj.id, categories)
         if category_ret.is_err:
             transaction.set_rollback(True)
@@ -427,59 +612,93 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     return Result.ok(None)
 
 
-def delete_manage_picture(user_id: int, ulids: list[str]) -> bool:
+@Result.shield_exception()
+def delete_manage_picture(user_id: int, ulids: list[str]) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(PictureInterface)
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        if ids_ret.is_err:
+            return Result.err(ids_ret.err_value)
+
+        ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Picture not found or owner mismatch", ulid=ulid, user_id=user_id)
-            return False
+            return Result.err(NotFoundError("削除に失敗しました!"))
         delete_ids.append(ids[0])
 
-    try:
-        with transaction.atomic():
-            repository.bulk_delete(delete_ids)
-            notification_ret = delete_object_notifications(NotificationObjectType.PICTURE, delete_ids)
-            if notification_ret.is_err:
-                transaction.set_rollback(True)
-                log.error("delete_manage_picture error", error=notification_ret.err_value.error_message)
-                return False
-        return True
-    except Exception as e:
-        log.error("delete_manage_picture error", exc=e)
-        return False
+    with transaction.atomic():
+        delete_ret = repository.bulk_delete(delete_ids)
+        if delete_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(delete_ret.err_value)
+
+        notification_ret = delete_object_notifications(NotificationObjectType.PICTURE, delete_ids)
+        if notification_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(notification_ret.err_value)
+
+    return Result.ok(None)
 
 
-def get_manage_chats(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> tuple[list[ChatData], int]:
+@Result.shield_exception()
+def get_manage_chats(user_id: int, search: str, channel_ulid: str = "", limit: int = PAGE_SIZE, offset: int = 0) -> Result[tuple[list[ChatData], int], FatalError]:
     repository = injector.get(ChatInterface)
     filter = FilterOption(search=search, owner_id=user_id, channel_ulid=channel_ulid)
-    total = repository.count(filter)
-    ids = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
-    objs = repository.bulk_get(ids=ids)
-    return objs, total
+    count_ret = repository.count(filter)
+    if count_ret.is_err:
+        return Result.err(count_ret.err_value)
+
+    total = count_ret.ok_value
+    ids_ret = repository.get_ids(filter, ExcludeOption(), SortOption(), PageOption(limit=limit, offset=offset))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    objs_ret = repository.bulk_get(ids=ids_ret.ok_value)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    return Result.ok((objs, total))
 
 
-def get_manage_chat(user_id: int, ulid: str) -> ChatData | None:
+@Result.shield_exception()
+def get_manage_chat(user_id: int, ulid: str) -> Result[ChatData, NotFoundError | FatalError]:
     repository = injector.get(ChatInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.info("data not found", ulid=ulid, user_id=user_id)
-        return None
+        return Result.err(NotFoundError("data not found"))
 
-    return repository.bulk_get(ids)[0]
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    return Result.ok(objs_ret.ok_value[0])
 
 
 @Result.shield_exception()
 def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(ChatInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Chat not found", ulid=ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    obj = repository.bulk_get(ids)[0]
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    obj = objs_ret.ok_value[0]
     if obj.channel.owner_id != user_id:
         log.error("Chat owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
         return Result.err(NotFoundError("保存に失敗しました!"))
@@ -489,7 +708,11 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[N
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
     with transaction.atomic():
-        repository.bulk_save([update_data])
+        save_ret = repository.bulk_save([update_data])
+        if save_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(save_ret.err_value)
+
         category_ret = category_repo.bulk_save(MediaType.CHAT, obj.id, categories)
         if category_ret.is_err:
             transaction.set_rollback(True)
@@ -509,7 +732,11 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, NotFoundE
     delete_ids: list[int] = []
 
     for ulid in ulids:
-        ids = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        ids_ret = repository.get_ids(FilterOption(ulid=ulid, owner_id=user_id), ExcludeOption(), SortOption(), PageOption())
+        if ids_ret.is_err:
+            return Result.err(ids_ret.err_value)
+
+        ids = ids_ret.ok_value
         if len(ids) == 0:
             log.error("Chat not found or owner mismatch", ulid=ulid, user_id=user_id)
             return Result.err(NotFoundError("削除に失敗しました!"))
@@ -524,7 +751,11 @@ def delete_manage_chat(user_id: int, ulids: list[str]) -> Result[None, NotFoundE
         reply_ids += reply_ids_ret.ok_value
 
     with transaction.atomic():
-        repository.bulk_delete(delete_ids)
+        delete_ret = repository.bulk_delete(delete_ids)
+        if delete_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(delete_ret.err_value)
+
         chat_notification_ret = delete_object_notifications(NotificationObjectType.CHAT, delete_ids)
         if chat_notification_ret.is_err:
             transaction.set_rollback(True)

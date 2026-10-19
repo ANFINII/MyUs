@@ -63,12 +63,20 @@ def get_ng_words() -> Result[list[str], FatalError]:
 def update_media_hashtags(user_id: int, media_type: MediaType, media_ulid: str, hashtags: list[HashtagDTO]) -> Result[None, NotFoundError | FatalError]:
     media_repo = get_media_repository(media_type)
     hashtag_repo = injector.get(HashtagInterface)
-    media_ids = media_repo.get_ids(FilterOption(ulid=media_ulid), ExcludeOption(), SortOption(), PageOption())
+    media_ids_ret = media_repo.get_ids(FilterOption(ulid=media_ulid), ExcludeOption(), SortOption(), PageOption())
+    if media_ids_ret.is_err:
+        return Result.err(media_ids_ret.err_value)
+
+    media_ids = media_ids_ret.ok_value
     if len(media_ids) == 0:
         log.error("Media not found", media_type=media_type.value, media_ulid=media_ulid)
         return Result.err(NotFoundError("保存に失敗しました!"))
 
-    media = media_repo.bulk_get(media_ids)[0]
+    medias_ret = media_repo.bulk_get(media_ids)
+    if medias_ret.is_err:
+        return Result.err(medias_ret.err_value)
+
+    media = medias_ret.ok_value[0]
     if media.channel.owner_id != user_id:
         log.error("Media owner mismatch", media_type=media_type.value, media_ulid=media_ulid, user_id=user_id)
         return Result.err(NotFoundError("保存に失敗しました!"))

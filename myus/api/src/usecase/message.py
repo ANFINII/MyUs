@@ -94,7 +94,11 @@ def get_replies(message_ulid: str) -> Result[list[MessageReplyDTO], FatalError]:
 @Result.shield_exception()
 def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) -> Result[MessageDTO, NotFoundError | FatalError]:
     chat_repo = injector.get(ChatInterface)
-    chat_ids = chat_repo.get_ids(MediaFilterOption(ulid=chat_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    chat_ids_ret = chat_repo.get_ids(MediaFilterOption(ulid=chat_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    if chat_ids_ret.is_err:
+        return Result.err(chat_ids_ret.err_value)
+
+    chat_ids = chat_ids_ret.ok_value
     if len(chat_ids) == 0:
         log.warning("チャットが見つかりませんでした", chat_ulid=chat_ulid)
         return Result.err(NotFoundError("メッセージの作成に失敗しました"))
@@ -212,7 +216,11 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, NotFoundError
             return Result.err(notification_ret.err_value)
 
     chat_repo = injector.get(ChatInterface)
-    chats = chat_repo.bulk_get([message.chat_id])
+    chats_ret = chat_repo.bulk_get([message.chat_id])
+    if chats_ret.is_err:
+        return Result.err(chats_ret.err_value)
+
+    chats = chats_ret.ok_value
     if len(chats) == 0:
         log.warning("チャットが見つかりませんでした", chat_id=message.chat_id)
         return Result.err(NotFoundError("Forbidden"))

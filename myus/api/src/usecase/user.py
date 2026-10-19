@@ -136,15 +136,20 @@ def update_notification(user_id: int, input: SettingNotificationIn) -> bool:
     return save_user_data(save_data)
 
 
-def like_media(user_id: int, media_type: MediaType, ulid: str) -> LikeDTO | None:
+@Result.shield_exception()
+def like_media(user_id: int, media_type: MediaType, ulid: str) -> Result[LikeDTO, NotFoundError | FatalError]:
     repository = injector.get(UserInterface)
     media_repo = get_media_repository(media_type)
-    ids = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    ids_ret = media_repo.get_ids(MediaFilterOption(ulid=ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
-        return None
+        return Result.err(NotFoundError("メディアが見つかりません!"))
 
     is_like, like_count = repository.media_like(user_id, media_type, ids[0])
-    return LikeDTO(is_like=is_like, like_count=like_count)
+    return Result.ok(LikeDTO(is_like=is_like, like_count=like_count))
 
 
 @Result.shield_exception()

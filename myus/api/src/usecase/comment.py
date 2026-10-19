@@ -127,7 +127,11 @@ def get_comments(type_no: CommentTypeNo, object_id: int, user_id: int | None) ->
 def create_comment(user_id: int, input: CommentCreateIn) -> Result[CommentDTO, NotFoundError | FatalError]:
     comment_repo = injector.get(CommentInterface)
     media_repo = get_media_repository(MediaType(input.type_name.value))
-    media_ids = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    media_ids_ret = media_repo.get_ids(MediaFilterOption(ulid=input.object_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
+    if media_ids_ret.is_err:
+        return Result.err(media_ids_ret.err_value)
+
+    media_ids = media_ids_ret.ok_value
     if len(media_ids) == 0:
         log.warning("メディアが見つかりませんでした")
         return Result.err(NotFoundError("コメントの作成に失敗しました"))
