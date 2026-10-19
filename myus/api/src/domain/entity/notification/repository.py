@@ -7,14 +7,33 @@ from api.db.models.media import Video, Music, Blog, Comic, Picture, Chat
 from api.db.models.message import Message
 from api.db.models.notification import Notification
 from api.db.models.users import Follow
-from api.src.domain.entity.notification._convert import convert_data, marshal_data
+from api.src.domain.entity.notification._convert import convert_data, get_media_model, marshal_data
 from api.src.domain.entity.index import get_new_ids, sort_ids
 from api.src.domain.interface.notification.data import NotificationData
 from api.src.domain.interface.notification.interface import FilterOption, NotificationInterface, SortOption
+from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
 
 NOTIFICATION_FIELDS = ["user_from_id", "user_to_id", "type_no", "type_name", "object_id", "object_type"]
+
+
+def get_comment_media_ulids(comments: list[Comment]) -> dict[int, str]:
+    groups: dict[MediaType, list[int]] = {}
+    for c in comments:
+        groups.setdefault(MediaType(c.type_name), []).append(c.object_id)
+
+    media_ulids: dict[str, str] = {}
+    for media_type, media_ids in groups.items():
+        model = get_media_model(media_type)
+        media_ulids.update({f"{media_type.value}:{obj_id}": str(obj_ulid) for obj_id, obj_ulid in model.objects.filter(id__in=media_ids).values_list("id", "ulid")})
+
+    comment_media_ulids: dict[int, str] = {}
+    for c in comments:
+        media_ulid = media_ulids.get(f"{c.type_name}:{c.object_id}")
+        if media_ulid is not None:
+            comment_media_ulids[c.id] = media_ulid
+    return comment_media_ulids
 
 
 class NotificationRepository(NotificationInterface):
@@ -64,6 +83,7 @@ class NotificationRepository(NotificationInterface):
             groups.setdefault(NotificationObjectType(n.object_type), []).append(n.object_id)
 
         content_map: dict[str, Any] = {}
+        comment_media_ulids: dict[int, str] = {}
         for object_type, obj_ids in groups.items():
             match object_type:
                 case NotificationObjectType.VIDEO:
@@ -81,14 +101,16 @@ class NotificationRepository(NotificationInterface):
                 case NotificationObjectType.FOLLOW:
                     content_map.update({f"{object_type.value}:{o.id}": o for o in Follow.objects.filter(id__in=obj_ids)})
                 case NotificationObjectType.COMMENT:
-                    content_map.update({f"{object_type.value}:{o.id}": o for o in Comment.objects.filter(id__in=obj_ids, deleted=False)})
+                    comments = list(Comment.objects.filter(id__in=obj_ids, deleted=False))
+                    comment_media_ulids.update(get_comment_media_ulids(comments))
+                    content_map.update({f"{object_type.value}:{o.id}": o for o in comments if o.id in comment_media_ulids})
                 case NotificationObjectType.MESSAGE:
                     content_map.update({f"{object_type.value}:{o.id}": o for o in Message.objects.filter(id__in=obj_ids)})
                 case _:
                     assert_never(object_type)
 
         return [
-            convert_data(obj, content_map.get(f"{obj.object_type}:{obj.object_id}"))
+            convert_data(obj, content_map.get(f"{obj.object_type}:{obj.object_id}"), comment_media_ulids)
             for obj in sorted_objs
         ]
 

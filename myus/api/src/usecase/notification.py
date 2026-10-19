@@ -120,6 +120,9 @@ def get_notification(user_id: int) -> NotificationDTO:
                 title=o.content.title,
                 text=o.content.text,
                 read=o.content.read,
+                media_type=o.content.media_type,
+                media_ulid=o.content.media_ulid,
+                thread_ulid=o.content.thread_ulid,
             ),
             is_confirmed=o.id in confirmed_ids,
         )

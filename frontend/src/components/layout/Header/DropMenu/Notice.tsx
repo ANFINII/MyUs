@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from 'lib/query/keys'
 import { Notification, NotificationOut } from 'types/internal/user'
 import { postNotificationConfirmed, postNotificationDeleted } from 'api/internal/user'
-import { MediaPath, NotificationObjectType, NotificationType } from 'utils/constants/enum'
+import { MediaPath, MediaType, NotificationType } from 'utils/constants/enum'
 import cx from 'utils/functions/cx'
 import { useRouter } from 'components/hooks/useRouter'
 import AvatarLink from 'components/parts/Avatar/Link'
@@ -20,13 +20,13 @@ interface Props {
 }
 
 const mediaObjs = [NotificationType.Video, NotificationType.Music, NotificationType.Blog, NotificationType.Comic, NotificationType.Picture, NotificationType.Chat]
-const mediaPaths: Partial<Record<NotificationObjectType, MediaPath>> = {
-  [NotificationObjectType.Video]: MediaPath.Video,
-  [NotificationObjectType.Music]: MediaPath.Music,
-  [NotificationObjectType.Blog]: MediaPath.Blog,
-  [NotificationObjectType.Comic]: MediaPath.Comic,
-  [NotificationObjectType.Picture]: MediaPath.Picture,
-  [NotificationObjectType.Chat]: MediaPath.Chat,
+const mediaPaths: Record<MediaType, MediaPath> = {
+  [MediaType.Video]: MediaPath.Video,
+  [MediaType.Music]: MediaPath.Music,
+  [MediaType.Blog]: MediaPath.Blog,
+  [MediaType.Comic]: MediaPath.Comic,
+  [MediaType.Picture]: MediaPath.Picture,
+  [MediaType.Chat]: MediaPath.Chat,
 }
 
 export default function DropMenuNotice(props: Props): React.JSX.Element {
@@ -59,15 +59,16 @@ export default function DropMenuNotice(props: Props): React.JSX.Element {
   }
 
   const handleClick = (notification: Notification) => () => {
-    const { ulid, objectType, contentObject, userFrom, isConfirmed } = notification
+    const { ulid, contentObject, userFrom, isConfirmed } = notification
+    const { mediaType, mediaUlid, threadUlid } = contentObject
     postNotificationConfirmed(ulid)
     updateNotifications((prev) => ({
       count: isConfirmed ? prev.count : prev.count - 1,
       items: prev.items.map((n) => (n.ulid === ulid ? { ...n, isConfirmed: true } : n)),
     }))
-    const mediaPath = mediaPaths[objectType]
-    if (mediaPath) handleRouter(`/media/${mediaPath}/${contentObject.ulid}`)
-    else handleRouter(`/userpage/${userFrom.ulid}`)
+    if (mediaType === null) handleRouter(`/userpage/${userFrom.ulid}`)
+    else if (threadUlid) handleRouter(`/media/${mediaPaths[mediaType]}/${mediaUlid}/thread/${threadUlid}`)
+    else handleRouter(`/media/${mediaPaths[mediaType]}/${mediaUlid}`)
   }
 
   const handleDelete = (notification: Notification) => (e: React.MouseEvent) => {

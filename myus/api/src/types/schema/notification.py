@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from api.utils.enum.media import MediaType
 
 
 class NotificationIn(BaseModel):
@@ -17,6 +18,9 @@ class NotificationContentOut(BaseModel):
     title: str
     text: str
     read: int
+    media_type: MediaType | None
+    media_ulid: str
+    thread_ulid: str
 
 
 class NotificationItemOut(BaseModel):

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from api.utils.enum.media import MediaType
 
 
 @dataclass(frozen=True, slots=True)
@@ -8,6 +9,9 @@ class NotificationContentData:
     title: str
     text: str
     read: int
+    media_type: MediaType | None
+    media_ulid: str
+    thread_ulid: str
 
 
 @dataclass(frozen=True, slots=True)
