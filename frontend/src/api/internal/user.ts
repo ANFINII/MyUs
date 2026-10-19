@@ -28,8 +28,8 @@ export const getUserPage = async (ulid: string): Promise<ApiOut<UserPage>> => {
   return await apiOut(apiClient('json').get(apiUserPage(ulid)))
 }
 
-export const getUserPageMedia = async (ulid: string, channelUlid: string): Promise<ApiOut<UserPageMedia>> => {
-  return await apiOut(apiClient('json').get(apiUserPageMedia(ulid, channelUlid)))
+export const getUserPageMedia = async (ulid: string, channelUlid: string, params: SearchParams): Promise<ApiOut<UserPageMedia>> => {
+  return await apiOut(apiClient('json').get(apiUserPageMedia(ulid, channelUlid), { params }))
 }
 
 export const getSearchTag = async (): Promise<ApiOut<SearchTagOut[]>> => {
