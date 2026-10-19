@@ -19,6 +19,8 @@ import IconList from 'components/parts/Icon/List'
 import Search from 'components/parts/Input/Search'
 import style from './Header.module.scss'
 
+const NOTIFICATION_STALE_MS = 60 * 1000
+
 interface Props {
   loading?: boolean
 }
@@ -33,7 +35,14 @@ export default function Header(props: Props): React.JSX.Element {
   const [isNotice, setIsNotice] = useState<boolean>(false)
   const [isProfile, setIsProfile] = useState<boolean>(false)
   const [search, setSearch] = useState<string>('')
-  const notificationQuery = useQuery({ queryKey: queryKeys.notification, queryFn: () => toQuery(getNotification()), enabled: user.isActive })
+
+  const notificationQuery = useQuery({
+    queryKey: queryKeys.notification,
+    queryFn: () => toQuery(getNotification()),
+    enabled: user.isActive,
+    staleTime: NOTIFICATION_STALE_MS,
+    refetchOnWindowFocus: true,
+  })
 
   const handleRouter = (url: string) => router.push(url)
   const handleSideMenu = () => setIsSideMenu(!isSideMenu)
