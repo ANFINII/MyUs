@@ -57,8 +57,11 @@ class PaymentAPI:
         )
 
         payment = injector.get(PaymentInterface)
-        result = payment.create_checkout(data)
-        match result:
+        ret = payment.create_checkout(data)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        match ret.ok_value:
             case CheckoutCreated(session=session):
                 return 200, PaymentCheckoutOut(url=session.redirect_url)
             case CheckoutFailed(error=error, message=message):
@@ -66,15 +69,17 @@ class PaymentAPI:
                 return 500, ErrorOut(message="決済セッションの作成に失敗しました!")
 
     @staticmethod
-    @router.post("/webhook", response={200: PaymentWebhookOut, 400: ErrorOut})
+    @router.post("/webhook", response={200: PaymentWebhookOut, 400: ErrorOut, 500: ErrorOut})
     def webhook(request: HttpRequest):
         payload = request.body
         signature = request.META.get("HTTP_STRIPE_SIGNATURE", "")
 
         payment = injector.get(PaymentInterface)
-        verify_result = payment.verify_webhook(payload, signature)
+        verify_ret = payment.verify_webhook(payload, signature)
+        if verify_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        match verify_result:
+        match verify_ret.ok_value:
             case WebhookVerifyFailed(error=WebhookVerifyError.UNSUPPORTED_EVENT, message=message):
                 log.info("PaymentAPI webhook unsupported event", message=message)
                 return 200, PaymentWebhookOut(message="Unsupported event type")
@@ -85,18 +90,30 @@ class PaymentAPI:
                 log.info("PaymentAPI webhook verified", event_id=event.event_id, event_type=event.event_type.value)
 
                 webhook_inbox_repo = injector.get(WebhookInboxInterface)
-                existing_ids = webhook_inbox_repo.get_ids(
+                existing_ids_ret = webhook_inbox_repo.get_ids(
                     FilterOption(provider=event.provider.value, event_id=event.event_id),
                     SortOption(),
                     limit=1,
                 )
-                if len(existing_ids) > 0:
+                if existing_ids_ret.is_err:
+                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+                if len(existing_ids_ret.ok_value) > 0:
                     log.info("PaymentAPI webhook already processed", event_id=event.event_id)
                     return 200, PaymentWebhookOut(message="Already processed")
 
-                webhook_inbox_repo.bulk_save([event])
-                dispatch_webhook_inbox(event)
-                enqueue_webhook_outbox(event)
+                save_ret = webhook_inbox_repo.bulk_save([event])
+                if save_ret.is_err:
+                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+                dispatch_ret = dispatch_webhook_inbox(event)
+                if dispatch_ret.is_err:
+                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+                enqueue_ret = enqueue_webhook_outbox(event)
+                if enqueue_ret.is_err:
+                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+
                 return 200, PaymentWebhookOut(message="OK")
 
     @staticmethod
@@ -107,25 +124,38 @@ class PaymentAPI:
             return 401, ErrorOut(message="Unauthorized")
 
         sub_repo = injector.get(SubscriptionInterface)
-        ids = sub_repo.get_ids(
+        ids_ret = sub_repo.get_ids(
             SubscriptionFilterOption(customer_user_id=user_id, provider=PaymentProvider.STRIPE.value),
             SubscriptionSortOption(is_asc=False),
             limit=1,
         )
+        if ids_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        ids = ids_ret.ok_value
         if len(ids) == 0:
             return 404, ErrorOut(message="アクティブなサブスクリプションが見つかりません")
 
-        subs = sub_repo.bulk_get(ids)
-        subscription = subs[0]
+        subs_ret = sub_repo.bulk_get(ids)
+        if subs_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        subscription = subs_ret.ok_value[0]
         if subscription.status != SubscriptionStatus.ACTIVE:
             return 404, ErrorOut(message="アクティブなサブスクリプションが見つかりません")
 
         payment = injector.get(PaymentInterface)
-        result = payment.cancel_subscription(subscription.external_id)
-        match result:
+        cancel_ret = payment.cancel_subscription(subscription.external_id)
+        if cancel_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        match cancel_ret.ok_value:
             case CancelSuccess(canceled_at=canceled_at, period_end=period_end):
                 updated = replace(subscription, canceled_at=canceled_at, current_period_end=period_end)
-                sub_repo.bulk_save([updated])
+                save_ret = sub_repo.bulk_save([updated])
+                if save_ret.is_err:
+                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+
                 log.info("PaymentAPI cancel succeeded", user_id=user_id, external_id=subscription.external_id)
                 return 200, PaymentCancelOut(canceled_at=canceled_at, period_end=period_end)
             case CancelFailed(error=error, message=message):
