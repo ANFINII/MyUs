@@ -42,10 +42,15 @@ from api.utils.functions.media import get_media_repository, save_upload
 VIEWS_THRESHOLDS = (10000, 100000, 1000000, 10000000, 100000000, 1000000000)
 
 
-def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
+
+    channel = channel_ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     video_path = save_upload(video, MediaUpload.VIDEO, channel.ulid)
 
@@ -74,7 +79,10 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Me
     with transaction.atomic():
         new_ids = repository.bulk_save([new_video])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.VIDEO, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.VIDEO, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
 
@@ -91,13 +99,18 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Me
 
     EncodeWorker.submit(encode_task)
 
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
-def create_music(input: MusicIn, music: UploadedFile) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_music(input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
+
+    channel = channel_ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     new_music = MusicData(
         id=0,
@@ -124,18 +137,26 @@ def create_music(input: MusicIn, music: UploadedFile) -> MediaCreateDTO | None:
     with transaction.atomic():
         new_ids = repository.bulk_save([new_music])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.MUSIC, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.MUSIC, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
         create_notification(channel.owner_id, 0, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
-def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_blog(input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
+
+    channel = channel_ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     new_blog = BlogData(
         id=0,
@@ -161,18 +182,26 @@ def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
     with transaction.atomic():
         new_ids = repository.bulk_save([new_blog])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.BLOG, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.BLOG, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
         create_notification(channel.owner_id, 0, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
-def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
+
+    channel = channel_ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     new_comic = ComicData(
         id=0,
@@ -198,18 +227,26 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
     with transaction.atomic():
         new_ids = repository.bulk_save([new_comic])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.COMIC, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.COMIC, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
         create_notification(channel.owner_id, 0, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
-def create_picture(input: PictureIn, image: UploadedFile) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_picture(input: PictureIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
+
+    channel = channel_ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     new_picture = PictureData(
         id=0,
@@ -234,18 +271,26 @@ def create_picture(input: PictureIn, image: UploadedFile) -> MediaCreateDTO | No
     with transaction.atomic():
         new_ids = repository.bulk_save([new_picture])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.PICTURE, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.PICTURE, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
         create_notification(channel.owner_id, 0, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
-def create_chat(input: ChatIn) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_chat(input: ChatIn) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
+
+    channel = channel_ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     new_chat = ChatData(
         id=0,
@@ -272,12 +317,15 @@ def create_chat(input: ChatIn) -> MediaCreateDTO | None:
     with transaction.atomic():
         new_ids = repository.bulk_save([new_chat])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.CHAT, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.CHAT, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
         create_notification(channel.owner_id, 0, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
 def get_home(limit: int, search: str) -> HomeDTO:
@@ -388,12 +436,15 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.VIDEO)
-    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = VideoDetailDTO(
         id=obj.id,
@@ -403,7 +454,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         image=create_url(obj.image),
         video=create_url(obj.video),
         convert=create_url(obj.convert),
-        comments=comments,
+        comments=comments_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -411,7 +462,7 @@ def get_video_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)
@@ -429,12 +480,15 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.MUSIC)
-    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = MusicDetailDTO(
         id=obj.id,
@@ -444,7 +498,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         lyric=obj.lyric,
         music=create_url(obj.music),
         download=obj.download,
-        comments=comments,
+        comments=comments_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -452,7 +506,7 @@ def get_music_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)
@@ -470,12 +524,15 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.BLOG)
-    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = BlogDetailDTO(
         id=obj.id,
@@ -484,7 +541,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         content=obj.content,
         richtext=obj.richtext,
         image=create_url(obj.image),
-        comments=comments,
+        comments=comments_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -492,7 +549,7 @@ def get_blog_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)
@@ -510,12 +567,15 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.COMIC)
-    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=user_id)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = ComicDetailDTO(
         id=obj.id,
@@ -524,7 +584,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         content=obj.content,
         image=create_url(obj.image),
         pages=[create_url(p) for p in obj.pages],
-        comments=comments,
+        comments=comments_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -532,7 +592,7 @@ def get_comic_detail(user_id: int | None, ulid: str, publish: bool = True) -> Re
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)
@@ -550,12 +610,15 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
     obj = objs[0]
 
     type_no = comment_type_no_map(CommentType.PICTURE)
-    comments = get_comments(type_no=type_no, object_id=obj.id, user_id=None)
+    comments_ret = get_comments(type_no=type_no, object_id=obj.id, user_id=None)
+    if comments_ret.is_err:
+        return Result.err(comments_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = PictureDetailDTO(
         id=obj.id,
@@ -563,7 +626,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
         title=obj.title,
         content=obj.content,
         image=create_url(obj.image),
-        comments=comments,
+        comments=comments_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -571,7 +634,7 @@ def get_picture_detail(user_id: int | None, ulid: str, publish: bool = True) -> 
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)
@@ -588,19 +651,22 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
     objs = repository.bulk_get(ids=ids)
     obj = objs[0]
 
-    messages = get_messages(chat_id=obj.id)
+    messages_ret = get_messages(chat_id=obj.id)
+    if messages_ret.is_err:
+        return Result.err(messages_ret.err_value)
+
     is_like = repository.is_liked(obj.id, user_id) if user_id is not None else False
 
-    ret = get_media_user(is_like, obj.channel.id, user_id)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    media_user_ret = get_media_user(is_like, obj.channel.id, user_id)
+    if media_user_ret.is_err:
+        return Result.err(media_user_ret.err_value)
 
     data = ChatDetailDTO(
         id=obj.id,
         ulid=obj.ulid,
         title=obj.title,
         content=obj.content,
-        messages=messages,
+        messages=messages_ret.ok_value,
         hashtags=obj.hashtags,
         read=obj.read,
         like=obj.like,
@@ -611,7 +677,7 @@ def get_chat_detail(user_id: int | None, ulid: str, publish: bool = True) -> Res
         created=obj.created,
         updated=obj.updated,
         channel=obj.channel,
-        mediaUser=ret.ok_value,
+        mediaUser=media_user_ret.ok_value,
     )
 
     return Result.ok(data)

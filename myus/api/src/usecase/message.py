@@ -10,34 +10,49 @@ from api.src.injectors.container import injector
 from api.src.types.dto.message import MessageDTO, MessageReplyDTO
 from api.src.usecase.notification import create_notification
 from api.src.usecase.user import get_author_data
+from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 
 
-def get_message_data(message_ulid: str) -> MessageDomainData | None:
+@Result.shield_exception()
+def get_message_data(message_ulid: str) -> Result[MessageDomainData | None, FatalError]:
     message_repo = injector.get(MessageInterface)
-    ids = message_repo.get_ids(FilterOption(message_ulid=message_ulid, is_parent=None), SortOption())
+    ids_ret = message_repo.get_ids(FilterOption(message_ulid=message_ulid, is_parent=None), SortOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.warning("メッセージが見つかりませんでした", message_ulid=message_ulid)
-        return None
+        return Result.ok(None)
 
-    messages = message_repo.bulk_get(ids)
-    return messages[0]
+    messages_ret = message_repo.bulk_get(ids)
+    if messages_ret.is_err:
+        return Result.err(messages_ret.err_value)
+
+    return Result.ok(messages_ret.ok_value[0])
 
 
-def save_message_data(data: MessageDomainData) -> bool:
+@Result.shield_exception()
+def save_message_data(data: MessageDomainData) -> Result[None, FatalError]:
     message_repo = injector.get(MessageInterface)
-    try:
-        message_repo.bulk_save([data])
-        return True
-    except Exception as e:
-        log.error("save_message_data error", exc=e)
-        return False
+    ret = message_repo.bulk_save([data])
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    return Result.ok(None)
 
 
-def get_messages(chat_id: int) -> list[MessageDTO]:
+@Result.shield_exception()
+def get_messages(chat_id: int) -> Result[list[MessageDTO], FatalError]:
     message_repo = injector.get(MessageInterface)
-    ids = message_repo.get_ids(FilterOption(chat_id=chat_id, is_parent=True), SortOption(is_asc=True))
-    messages = message_repo.bulk_get(ids)
+    ids_ret = message_repo.get_ids(FilterOption(chat_id=chat_id, is_parent=True), SortOption(is_asc=True))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    messages_ret = message_repo.bulk_get(ids_ret.ok_value)
+    if messages_ret.is_err:
+        return Result.err(messages_ret.err_value)
 
     data = [
         MessageDTO(
@@ -47,15 +62,21 @@ def get_messages(chat_id: int) -> list[MessageDTO]:
             created=m.created,
             updated=m.updated,
             author=get_author_data(m.author_id),
-        ) for m in messages
+        ) for m in messages_ret.ok_value
     ]
-    return data
+    return Result.ok(data)
 
 
-def get_replies(message_ulid: str) -> list[MessageReplyDTO]:
+@Result.shield_exception()
+def get_replies(message_ulid: str) -> Result[list[MessageReplyDTO], FatalError]:
     message_repo = injector.get(MessageInterface)
-    ids = message_repo.get_ids(FilterOption(parent_ulid=message_ulid, is_parent=False), SortOption(is_asc=True))
-    messages = message_repo.bulk_get(ids)
+    ids_ret = message_repo.get_ids(FilterOption(parent_ulid=message_ulid, is_parent=False), SortOption(is_asc=True))
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    messages_ret = message_repo.bulk_get(ids_ret.ok_value)
+    if messages_ret.is_err:
+        return Result.err(messages_ret.err_value)
 
     data = [
         MessageReplyDTO(
@@ -65,26 +86,31 @@ def get_replies(message_ulid: str) -> list[MessageReplyDTO]:
             created=m.created,
             updated=m.updated,
             author=get_author_data(m.author_id),
-        ) for m in messages
+        ) for m in messages_ret.ok_value
     ]
-    return data
+    return Result.ok(data)
 
 
-def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) -> MessageDTO | None:
+@Result.shield_exception()
+def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) -> Result[MessageDTO, NotFoundError | FatalError]:
     chat_repo = injector.get(ChatInterface)
     chat_ids = chat_repo.get_ids(MediaFilterOption(ulid=chat_ulid, publish=True), ExcludeOption(), MediaSortOption(), PageOption())
     if len(chat_ids) == 0:
         log.warning("チャットが見つかりませんでした", chat_ulid=chat_ulid)
-        return None
+        return Result.err(NotFoundError("メッセージの作成に失敗しました"))
 
     message_repo = injector.get(MessageInterface)
 
     parent_id: int | None = None
     if parent_ulid:
-        parent_ids = message_repo.get_ids(FilterOption(message_ulid=parent_ulid, is_parent=True), SortOption())
+        parent_ids_ret = message_repo.get_ids(FilterOption(message_ulid=parent_ulid, is_parent=True), SortOption())
+        if parent_ids_ret.is_err:
+            return Result.err(parent_ids_ret.err_value)
+
+        parent_ids = parent_ids_ret.ok_value
         if len(parent_ids) == 0:
             log.warning("親メッセージが見つかりませんでした", parent_ulid=parent_ulid)
-            return None
+            return Result.err(NotFoundError("メッセージの作成に失敗しました"))
         parent_id = parent_ids[0]
 
     author = get_author_data(user_id)
@@ -101,13 +127,24 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         updated=datetime.min,
     )
 
-    new_ids = message_repo.bulk_save([new_message])
-    messages = message_repo.bulk_get(new_ids)
+    new_ids_ret = message_repo.bulk_save([new_message])
+    if new_ids_ret.is_err:
+        return Result.err(new_ids_ret.err_value)
+
+    messages_ret = message_repo.bulk_get(new_ids_ret.ok_value)
+    if messages_ret.is_err:
+        return Result.err(messages_ret.err_value)
+
+    messages = messages_ret.ok_value
     assert len(messages) > 0, "メッセージの作成に失敗しました"
     message = messages[0]
 
     if parent_id is not None:
-        parent_messages = message_repo.bulk_get([parent_id])
+        parent_messages_ret = message_repo.bulk_get([parent_id])
+        if parent_messages_ret.is_err:
+            return Result.err(parent_messages_ret.err_value)
+
+        parent_messages = parent_messages_ret.ok_value
         if len(parent_messages) > 0:
             create_notification(user_id, parent_messages[0].author_id, NotificationTypeNo.REPLY, message.id, NotificationObjectType.MESSAGE)
 
@@ -119,19 +156,26 @@ def create_message(user_id: int, chat_ulid: str, text: str, parent_ulid: str) ->
         updated=message.updated,
         author=author,
     )
-    return data
+    return Result.ok(data)
 
 
-def update_message(user_id: int, message_ulid: str, text: str) -> MessageDTO | None:
-    message = get_message_data(message_ulid)
+@Result.shield_exception()
+def update_message(user_id: int, message_ulid: str, text: str) -> Result[MessageDTO, NotFoundError | FatalError]:
+    message_ret = get_message_data(message_ulid)
+    if message_ret.is_err:
+        return Result.err(message_ret.err_value)
+
+    message = message_ret.ok_value
     if message is None:
-        return None
+        return Result.err(NotFoundError("Forbidden"))
 
     if message.author_id != user_id:
         log.warning("メッセージの編集権限がありません", message_ulid=message_ulid, user_id=user_id)
-        return None
+        return Result.err(NotFoundError("Forbidden"))
 
-    save_message_data(replace(message, text=text))
+    save_ret = save_message_data(replace(message, text=text))
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
     data = MessageDTO(
         ulid=message.ulid,
@@ -141,17 +185,22 @@ def update_message(user_id: int, message_ulid: str, text: str) -> MessageDTO | N
         updated=message.updated,
         author=get_author_data(message.author_id),
     )
-    return data
+    return Result.ok(data)
 
 
-def delete_message(user_id: int, message_ulid: str) -> str | None:
-    message = get_message_data(message_ulid)
+@Result.shield_exception()
+def delete_message(user_id: int, message_ulid: str) -> Result[str, NotFoundError | FatalError]:
+    message_ret = get_message_data(message_ulid)
+    if message_ret.is_err:
+        return Result.err(message_ret.err_value)
+
+    message = message_ret.ok_value
     if message is None:
-        return None
+        return Result.err(NotFoundError("Forbidden"))
 
     if message.author_id != user_id:
         log.warning("メッセージの削除権限がありません", message_ulid=message_ulid, user_id=user_id)
-        return None
+        return Result.err(NotFoundError("Forbidden"))
 
     # 返信の場合はNotificationも削除
     if message.parent_id is not None:
@@ -162,8 +211,11 @@ def delete_message(user_id: int, message_ulid: str) -> str | None:
     chats = chat_repo.bulk_get([message.chat_id])
     if len(chats) == 0:
         log.warning("チャットが見つかりませんでした", chat_id=message.chat_id)
-        return None
+        return Result.err(NotFoundError("Forbidden"))
 
     message_repo = injector.get(MessageInterface)
-    message_repo.delete(message.id)
-    return chats[0].ulid
+    delete_ret = message_repo.delete(message.id)
+    if delete_ret.is_err:
+        return Result.err(delete_ret.err_value)
+
+    return Result.ok(chats[0].ulid)

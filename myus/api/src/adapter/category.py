@@ -13,7 +13,7 @@ class CategoryAPI:
     router = Router()
 
     @staticmethod
-    @router.get("", response={200: list[CategoryOut], 401: ErrorOut})
+    @router.get("", response={200: list[CategoryOut], 401: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
         log.info("CategoryAPI get")
 
@@ -21,5 +21,9 @@ class CategoryAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        categories = get_categories()
+        ret = get_categories()
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        categories = ret.ok_value
         return 200, [CategoryOut(ulid=c.ulid, jp_name=c.jp_name, en_name=c.en_name) for c in categories]

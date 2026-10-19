@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
 from api.src.domain.interface.message.data import MessageData
+from api.utils.common.result import FatalError, Result
 
 
 class SortType(Enum):
@@ -24,17 +25,17 @@ class SortOption:
 
 class MessageInterface(ABC):
     @abstractmethod
-    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> list[int]:
+    def get_ids(self, filter: FilterOption, sort: SortOption, limit: int | None = None) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_get(self, ids: list[int]) -> list[MessageData]:
+    def bulk_get(self, ids: list[int]) -> Result[list[MessageData], FatalError]:
         ...
 
     @abstractmethod
-    def bulk_save(self, objs: list[MessageData]) -> list[int]:
+    def bulk_save(self, objs: list[MessageData]) -> Result[list[int], FatalError]:
         ...
 
     @abstractmethod
-    def delete(self, message_id: int) -> None:
+    def delete(self, message_id: int) -> Result[None, FatalError]:
         ...
