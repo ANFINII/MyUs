@@ -21,9 +21,9 @@ from api.src.domain.interface.media.index import ExcludeOption, FilterOption, PA
 from api.src.domain.interface.message.interface import FilterOption as MessageFilterOption, MessageInterface, SortOption as MessageSortOption
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
-from api.src.usecase.notification import delete_object_notifications
+from api.src.usecase.notification import create_publish_notification, delete_object_notifications
 from api.utils.enum.media import MediaType
-from api.utils.enum.notification import NotificationObjectType
+from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
 from api.utils.functions.index import create_url
 from api.utils.functions.media import save_upload
@@ -83,6 +83,8 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
         with transaction.atomic():
             repository.bulk_save([update_data])
             category_repo.bulk_save(MediaType.VIDEO, obj.id, categories)
+        if not obj.publish and input.publish and obj.convert != "":
+            create_publish_notification(user_id, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
         return True
     except Exception as e:
         log.error("update_manage_video error", exc=e)
@@ -152,6 +154,8 @@ def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> bool:
         with transaction.atomic():
             repository.bulk_save([update_data])
             category_repo.bulk_save(MediaType.MUSIC, obj.id, categories)
+        if not obj.publish and input.publish:
+            create_publish_notification(user_id, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
         return True
     except Exception as e:
         log.error("update_manage_music error", exc=e)
@@ -224,6 +228,8 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
         with transaction.atomic():
             repository.bulk_save([update_data])
             category_repo.bulk_save(MediaType.BLOG, obj.id, categories)
+        if not obj.publish and input.publish:
+            create_publish_notification(user_id, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
         return True
     except Exception as e:
         log.error("update_manage_blog error", exc=e)
@@ -302,6 +308,8 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
         with transaction.atomic():
             repository.bulk_save([update_data])
             category_repo.bulk_save(MediaType.COMIC, obj.id, categories)
+        if not obj.publish and input.publish:
+            create_publish_notification(user_id, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
         return True
     except Exception as e:
         log.error("update_manage_comic error", exc=e)
@@ -374,6 +382,8 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
         with transaction.atomic():
             repository.bulk_save([update_data])
             category_repo.bulk_save(MediaType.PICTURE, obj.id, categories)
+        if not obj.publish and input.publish:
+            create_publish_notification(user_id, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
         return True
     except Exception as e:
         log.error("update_manage_picture error", exc=e)
@@ -440,6 +450,8 @@ def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> bool:
         with transaction.atomic():
             repository.bulk_save([update_data])
             category_repo.bulk_save(MediaType.CHAT, obj.id, categories)
+        if not obj.publish and input.publish:
+            create_publish_notification(user_id, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
         return True
     except Exception as e:
         log.error("update_manage_chat error", exc=e)
