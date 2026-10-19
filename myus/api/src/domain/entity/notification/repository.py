@@ -137,15 +137,15 @@ class NotificationRepository(NotificationInterface):
     def delete(self, type_no: NotificationTypeNo, object_type: NotificationObjectType, object_id: int, user_from_id: int) -> None:
         Notification.objects.filter(type_no=type_no, object_type=object_type, object_id=object_id, user_from_id=user_from_id).delete()
 
-    def confirm(self, ulid: str, user_id: int) -> None:
-        notification = Notification.objects.filter(ulid=ulid).first()
-        if notification is None:
-            return
-        notification.confirmed.add(user_id)
-
     def delete_by_user(self, ulid: str, user_id: int) -> None:
         notification = Notification.objects.filter(ulid=ulid).first()
         if notification is None:
             return
         notification.confirmed.add(user_id)
         notification.deleted.add(user_id)
+
+    def confirm(self, ulid: str, user_id: int) -> None:
+        notification = Notification.objects.filter(ulid=ulid).first()
+        if notification is None:
+            return
+        notification.confirmed.add(user_id)
