@@ -1,8 +1,15 @@
+from dataclasses import replace
+from django.utils import timezone
+from api.src.domain.interface.advertise.data import AdvertiseData
+from api.src.domain.interface.advertise.interface import AdvertiseInterface
 from api.src.domain.interface.follow.interface import FilterOption as FollowFilterOption, FollowInterface, SortOption as FollowSortOption
+from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
 from api.src.injectors.container import injector
 from api.src.types.dto.media import HomeDTO
+from api.src.usecase.advertise import is_active
 from api.src.usecase.media import get_videos, get_musics, get_blogs, get_comics, get_pictures, get_chats
 from api.utils.common.result import FatalError, Result
+from api.utils.functions.index import create_url
 
 
 @Result.shield_exception()
@@ -38,6 +45,23 @@ def get_userpage_media(limit: int, search: str, owner_id: int, channel_id: int =
     pictures, _ = pictures_ret.ok_value
     chats, _ = chats_ret.ok_value
     return Result.ok(HomeDTO(videos=videos, musics=musics, blogs=blogs, comics=comics, pictures=pictures, chats=chats))
+
+
+@Result.shield_exception()
+def get_userpage_advertises(search: str, owner_id: int) -> Result[list[AdvertiseData], FatalError]:
+    repository = injector.get(AdvertiseInterface)
+    ids_ret = repository.get_ids(MediaFilterOption(search=search, publish=True, owner_id=owner_id), ExcludeOption(), MediaSortOption(is_asc=True), PageOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
+    objs_ret = repository.bulk_get(ids)
+    if objs_ret.is_err:
+        return Result.err(objs_ret.err_value)
+
+    objs = objs_ret.ok_value
+    today = timezone.localdate()
+    return Result.ok([replace(o, image=create_url(o.image), video=create_url(o.video)) for o in objs if is_active(o, today)])
 
 
 @Result.shield_exception()
