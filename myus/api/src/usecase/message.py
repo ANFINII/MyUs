@@ -1,5 +1,6 @@
 from dataclasses import replace
 from datetime import datetime
+from django.db import transaction
 from api.modules.logger import log
 from api.src.domain.interface.media.chat.interface import ChatInterface
 from api.src.domain.interface.media.index import ExcludeOption, FilterOption as MediaFilterOption, PageOption, SortOption as MediaSortOption
@@ -235,13 +236,6 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, NotFoundError
         log.warning("メッセージの削除権限がありません", message_ulid=message_ulid, user_id=user_id)
         return Result.err(ForbiddenError("Forbidden"))
 
-    # 返信の場合はNotificationも削除
-    if message.parent_id is not None:
-        notification_repo = injector.get(NotificationInterface)
-        notification_ret = notification_repo.delete(NotificationTypeNo.REPLY, NotificationObjectType.MESSAGE, message.id, user_id)
-        if notification_ret.is_err:
-            return Result.err(notification_ret.err_value)
-
     chat_repo = injector.get(ChatInterface)
     chats_ret = chat_repo.bulk_get([message.chat_id])
     if chats_ret.is_err:
@@ -252,9 +246,19 @@ def delete_message(user_id: int, message_ulid: str) -> Result[str, NotFoundError
         log.warning("チャットが見つかりませんでした", chat_id=message.chat_id)
         return Result.err(NotFoundError("Not Found"))
 
-    message_repo = injector.get(MessageInterface)
-    delete_ret = message_repo.delete(message.id)
-    if delete_ret.is_err:
-        return Result.err(delete_ret.err_value)
+    with transaction.atomic():
+        # 返信の場合はNotificationも削除
+        if message.parent_id is not None:
+            notification_repo = injector.get(NotificationInterface)
+            notification_ret = notification_repo.delete(NotificationTypeNo.REPLY, NotificationObjectType.MESSAGE, message.id, user_id)
+            if notification_ret.is_err:
+                transaction.set_rollback(True)
+                return Result.err(notification_ret.err_value)
+
+        message_repo = injector.get(MessageInterface)
+        delete_ret = message_repo.delete(message.id)
+        if delete_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(delete_ret.err_value)
 
     return Result.ok(chats[0].ulid)
