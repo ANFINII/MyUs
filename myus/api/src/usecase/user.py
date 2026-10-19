@@ -71,6 +71,29 @@ def get_author_data(user_id: int) -> Result[AuthorDTO, FatalError]:
 
 
 @Result.shield_exception()
+def get_author_data_map(ids: list[int]) -> Result[dict[int, AuthorDTO], FatalError]:
+    if len(ids) == 0:
+        return Result.ok({})
+
+    repository = injector.get(UserInterface)
+    ret = repository.bulk_get(ids)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    authors = ret.ok_value
+    author_map: dict[int, AuthorDTO] = {id: AuthorDTO(avatar="", ulid="", nickname="", follower_count=0) for id in ids}
+    for author in authors:
+        author_map[author.user.id] = AuthorDTO(
+            avatar=create_url(author.user.avatar),
+            ulid=author.user.ulid,
+            nickname=author.user.nickname,
+            follower_count=author.mypage.follower_count,
+        )
+
+    return Result.ok(author_map)
+
+
+@Result.shield_exception()
 def update_profile(user_id: int, input: SettingProfileIn, avatar_file: UploadedFile) -> Result[None, NotFoundError | FatalError]:
     data_ret = get_user_data(user_id)
     if data_ret.is_err:
