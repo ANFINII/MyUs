@@ -33,7 +33,7 @@ class AuthAPI:
 
             ret = verify_user(user_id)
             if ret.is_err:
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
 
             is_verified = ret.ok_value
             if not is_verified:
@@ -75,7 +75,7 @@ class AuthAPI:
 
             ret = verify_user(user_id)
             if ret.is_err:
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
 
             is_verified = ret.ok_value
             if not is_verified:
@@ -106,7 +106,7 @@ class AuthAPI:
 
         ret = signup_send_email(input.email)
         if ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         error_message = ret.ok_value
         if len(error_message) > 0:
@@ -193,7 +193,7 @@ class AuthAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -201,7 +201,7 @@ class AuthAPI:
 
         change_ret = change_password(user_id, input)
         if change_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         error_message = change_ret.ok_value
         if len(error_message) > 0:
@@ -216,7 +216,7 @@ class AuthAPI:
 
         ret = password_reset_send_email(input.email)
         if ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         error_message = ret.ok_value
         if len(error_message) > 0:
@@ -243,7 +243,7 @@ class AuthAPI:
 
         ret = reset_password(input)
         if ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         error_message = ret.ok_value
         if len(error_message) > 0:
@@ -258,7 +258,7 @@ class AuthAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -266,7 +266,7 @@ class AuthAPI:
 
         withdraw_ret = withdraw_user(user_id, input)
         if withdraw_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         error_message = withdraw_ret.ok_value
         if len(error_message) > 0:

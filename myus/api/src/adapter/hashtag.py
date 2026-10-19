@@ -21,7 +21,7 @@ class MediaHashtagAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -29,7 +29,7 @@ class MediaHashtagAPI:
 
         hashtags_ret = get_master_hashtags()
         if hashtags_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         hashtags = hashtags_ret.ok_value
         return 200, [HashtagOut(ulid=h.ulid, name=h.name) for h in hashtags]
@@ -41,7 +41,7 @@ class MediaHashtagAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -51,7 +51,7 @@ class MediaHashtagAPI:
         update_ret = update_media_hashtags(user_id, input.media_type, input.media_ulid, hashtags)
         if update_ret.is_err:
             if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=update_ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")

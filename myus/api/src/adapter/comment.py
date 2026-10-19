@@ -21,7 +21,7 @@ class CommentAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -29,7 +29,7 @@ class CommentAPI:
 
         comments_ret = get_comments(type_no=input.type_no, object_id=input.object_id, user_id=user_id)
         if comments_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         comments = comments_ret.ok_value
         data = [
@@ -76,7 +76,7 @@ class CommentAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -86,7 +86,7 @@ class CommentAPI:
             comment_ret = create_comment(user_id, input)
             if comment_ret.is_err:
                 if isinstance(comment_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                    return 500, ErrorOut(message="Internal Server Error")
                 return 400, ErrorOut(message=comment_ret.err_value.error_message)
 
             comment = comment_ret.ok_value
@@ -118,7 +118,7 @@ class CommentAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -128,7 +128,7 @@ class CommentAPI:
             update_ret = update_comment(user_id, comment_ulid, input.text)
             if update_ret.is_err:
                 if isinstance(update_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                    return 500, ErrorOut(message="Internal Server Error")
                 return 403, ErrorOut(message=update_ret.err_value.error_message)
 
             return 200, ErrorOut(message="コメントを更新しました")
@@ -143,7 +143,7 @@ class CommentAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -153,7 +153,7 @@ class CommentAPI:
             delete_ret = delete_comment(user_id, comment_ulid)
             if delete_ret.is_err:
                 if isinstance(delete_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                    return 500, ErrorOut(message="Internal Server Error")
                 return 403, ErrorOut(message=delete_ret.err_value.error_message)
 
             return 200, ErrorOut(message="コメントを削除しました")

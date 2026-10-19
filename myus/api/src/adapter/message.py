@@ -22,7 +22,7 @@ class MessageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -32,7 +32,7 @@ class MessageAPI:
             message_ret = create_message(user_id, input.chat_ulid, input.text, input.parent_ulid)
             if message_ret.is_err:
                 if isinstance(message_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                    return 500, ErrorOut(message="Internal Server Error")
                 return 400, ErrorOut(message=message_ret.err_value.error_message)
 
             message = message_ret.ok_value
@@ -64,7 +64,7 @@ class MessageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -72,7 +72,7 @@ class MessageAPI:
 
         replies_ret = get_replies(message_ulid)
         if replies_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         replies = replies_ret.ok_value
         data = [
@@ -101,7 +101,7 @@ class MessageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -111,7 +111,7 @@ class MessageAPI:
             update_ret = update_message(user_id, message_ulid, input.text)
             if update_ret.is_err:
                 if isinstance(update_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                    return 500, ErrorOut(message="Internal Server Error")
                 return 403, ErrorOut(message=update_ret.err_value.error_message)
 
             broadcast_update_message(input.chat_ulid, message_ulid, input.text)
@@ -128,7 +128,7 @@ class MessageAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -138,7 +138,7 @@ class MessageAPI:
             delete_ret = delete_message(user_id, message_ulid)
             if delete_ret.is_err:
                 if isinstance(delete_ret.err_value, FatalError):
-                    return 500, ErrorOut(message="サーバーエラーが発生しました")
+                    return 500, ErrorOut(message="Internal Server Error")
                 return 403, ErrorOut(message=delete_ret.err_value.error_message)
 
             chat_ulid = delete_ret.ok_value

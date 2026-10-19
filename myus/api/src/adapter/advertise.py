@@ -20,7 +20,7 @@ class AdvertiseAPI:
 
         ret = get_user_advertises(user_ulid)
         if ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         objs = ret.ok_value
         return 200, AdvertiseListOut(items=convert_advertises(objs), total=len(objs))
@@ -33,7 +33,7 @@ class AdvertiseAPI:
         ret = increment_advertise_read(ulid)
         if ret.is_err:
             if isinstance(ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 404, ErrorOut(message=ret.err_value.error_message)
 
         read = ret.ok_value

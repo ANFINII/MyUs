@@ -31,7 +31,7 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -39,7 +39,7 @@ class UserAPI:
 
         user_data_ret = get_user_data(user_id=user_id)
         if user_data_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_data = user_data_ret.ok_value
         if user_data is None:
@@ -64,7 +64,7 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -72,7 +72,7 @@ class UserAPI:
 
         tags_ret = get_search_tag_data(user_id)
         if tags_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         tags = tags_ret.ok_value
         data = [SearchTagOut(sequence=x.sequence, name=x.name) for x in tags]
@@ -85,7 +85,7 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -93,7 +93,7 @@ class UserAPI:
 
         update_ret = update_search_tags(user_id, input)
         if update_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         return 200, ErrorOut(message="更新しました")
 
@@ -104,7 +104,7 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -112,7 +112,7 @@ class UserAPI:
 
         followers_ret = get_followers(user_id, search, 100)
         if followers_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         followers = followers_ret.ok_value
         data = [
@@ -136,7 +136,7 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -144,7 +144,7 @@ class UserAPI:
 
         follows_ret = get_follows(user_id, search, 100)
         if follows_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         follows = follows_ret.ok_value
         data = [
@@ -168,7 +168,7 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -176,7 +176,7 @@ class UserAPI:
 
         follower_ret = get_user_data(user_id=user_id)
         if follower_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         follower = follower_ret.ok_value
         if follower is None:
@@ -185,7 +185,7 @@ class UserAPI:
         follow_ret = upsert_follow(follower, input.ulid, input.is_follow)
         if follow_ret.is_err:
             if isinstance(follow_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=follow_ret.err_value.error_message)
 
         follow = follow_ret.ok_value
@@ -199,7 +199,7 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -208,7 +208,7 @@ class UserAPI:
         like_ret = like_media(user_id, input.media_type, input.ulid)
         if like_ret.is_err:
             if isinstance(like_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=like_ret.err_value.error_message)
 
         like = like_ret.ok_value
@@ -222,7 +222,7 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -231,7 +231,7 @@ class UserAPI:
         like_ret = like_comment(user_id, input.ulid)
         if like_ret.is_err:
             if isinstance(like_ret.err_value, FatalError):
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
             return 400, ErrorOut(message=like_ret.err_value.error_message)
 
         like = like_ret.ok_value
@@ -245,7 +245,7 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -253,7 +253,7 @@ class UserAPI:
 
         notification_ret = get_notification(user_id)
         if notification_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         notification = notification_ret.ok_value
         data = NotificationOut(
@@ -299,7 +299,7 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -307,7 +307,7 @@ class UserAPI:
 
         confirm_ret = notification_confirm(user_id, input.ulid)
         if confirm_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         return 200, ErrorOut(message="OK")
 
@@ -318,7 +318,7 @@ class UserAPI:
 
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         if user_id is None:
@@ -326,7 +326,7 @@ class UserAPI:
 
         delete_ret = notification_delete(user_id, input.ulid)
         if delete_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         return 200, ErrorOut(message="OK")
 
@@ -337,7 +337,7 @@ class UserAPI:
 
         user_ret = get_user_data(ulid=ulid)
         if user_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user = user_ret.ok_value
         if user is None:
@@ -345,19 +345,19 @@ class UserAPI:
 
         channels_ret = get_user_channels(user.user.id)
         if channels_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         channels = channels_ret.ok_value
         user_id_ret = auth_check(request)
         if user_id_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user_id = user_id_ret.ok_value
         is_follow = False
         if user_id is not None:
             follow_ret = is_following(user_id, user.user.id)
             if follow_ret.is_err:
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
 
             is_follow = follow_ret.ok_value
 
@@ -394,7 +394,7 @@ class UserAPI:
 
         user_ret = get_user_data(ulid=ulid)
         if user_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         user = user_ret.ok_value
         if user is None:
@@ -404,7 +404,7 @@ class UserAPI:
         if channel_ulid:
             channel_ret = get_channel_data(channel_ulid)
             if channel_ret.is_err:
-                return 500, ErrorOut(message="サーバーエラーが発生しました")
+                return 500, ErrorOut(message="Internal Server Error")
 
             channel = channel_ret.ok_value
             if channel is None:
@@ -413,7 +413,7 @@ class UserAPI:
 
         media_ret = get_userpage_media(8, "", channel_id=channel_id)
         if media_ret.is_err:
-            return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 500, ErrorOut(message="Internal Server Error")
 
         media = media_ret.ok_value
         data = UserPageMediaOut(
