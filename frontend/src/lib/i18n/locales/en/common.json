@@ -527,6 +527,8 @@
       "title": "User page",
       "info": "Info",
       "posts": "Posts",
+      "advertise": "Ads",
+      "advertiseEmpty": "No ads",
       "follower_one": "{{count}} follower",
       "follower_other": "{{count}} followers",
       "following": "{{count}} following",

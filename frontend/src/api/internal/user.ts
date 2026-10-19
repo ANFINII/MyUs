@@ -1,5 +1,6 @@
 import { apiClient } from 'lib/axios/internal'
 import { ApiOut, apiOut } from 'lib/error'
+import { AdvertiseList } from 'types/internal/advertise'
 import { SearchParams } from 'types/internal/media/output'
 import { ErrorOut } from 'types/internal/other'
 import { Follow, FollowIn, FollowOut, LikeCommentIn, LikeMediaIn, LikeOut, NotificationOut, SearchTagIn, SearchTagOut, UserMe } from 'types/internal/user'
@@ -17,6 +18,7 @@ import {
   apiUser,
   apiUserPage,
   apiUserPageMedia,
+  apiUserPageAdvertise,
 } from 'api/uri'
 import { camelSnake } from 'utils/functions/convertCase'
 
@@ -30,6 +32,10 @@ export const getUserPage = async (ulid: string): Promise<ApiOut<UserPage>> => {
 
 export const getUserPageMedia = async (ulid: string, channelUlid: string, params: SearchParams): Promise<ApiOut<UserPageMedia>> => {
   return await apiOut(apiClient('json').get(apiUserPageMedia(ulid, channelUlid), { params }))
+}
+
+export const getUserPageAdvertises = async (ulid: string, params: SearchParams): Promise<ApiOut<AdvertiseList>> => {
+  return await apiOut(apiClient('json').get(apiUserPageAdvertise(ulid), { params }))
 }
 
 export const getSearchTag = async (): Promise<ApiOut<SearchTagOut[]>> => {

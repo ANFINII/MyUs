@@ -27,6 +27,7 @@ export const apiNotificationConfirmed = base + '/user/notification/confirmed'
 export const apiNotificationDeleted = base + '/user/notification/deleted'
 export const apiUserPage = (ulid: string) => base + `/user/userpage/${ulid}`
 export const apiUserPageMedia = (ulid: string, channelUlid: string) => base + `/user/userpage/${ulid}/media?channel_ulid=${channelUlid}`
+export const apiUserPageAdvertise = (ulid: string) => base + `/user/userpage/${ulid}/advertise`
 
 // Setting
 export const apiSettingProfile = base + '/setting/profile'

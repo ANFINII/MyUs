@@ -520,6 +520,8 @@
       "title": "ユーザーページ",
       "info": "情報",
       "posts": "投稿",
+      "advertise": "広告",
+      "advertiseEmpty": "広告はありません",
       "follower": "フォロワー数 {{count}}",
       "following": "フォロー数 {{count}}",
       "channel": "チャンネル",
