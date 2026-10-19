@@ -17,6 +17,31 @@ from api.utils.enum.payment import PaymentStatus, SubscriptionStatus, WebhookEve
 
 @Result.shield_exception()
 def receive_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
+    with transaction.atomic():
+        enqueue_inbox_ret = enqueue_webhook_inbox(event)
+        if enqueue_inbox_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(enqueue_inbox_ret.err_value)
+
+        is_enqueued = enqueue_inbox_ret.ok_value
+        if not is_enqueued:
+            return Result.ok(False)
+
+        dispatch_ret = dispatch_webhook_inbox(event)
+        if dispatch_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(dispatch_ret.err_value)
+
+        enqueue_outbox_ret = enqueue_webhook_outbox(event)
+        if enqueue_outbox_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(enqueue_outbox_ret.err_value)
+
+    return Result.ok(True)
+
+
+@Result.shield_exception()
+def enqueue_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
     repository = injector.get(WebhookInboxInterface)
     ids_ret = repository.get_ids(WebhookInboxFilterOption(provider=event.provider.value, event_id=event.event_id), WebhookInboxSortOption(), limit=1)
     if ids_ret.is_err:
@@ -27,21 +52,9 @@ def receive_webhook_inbox(event: WebhookInboxData) -> Result[bool, FatalError]:
         log.info("WebhookInbox already processed", event_id=event.event_id)
         return Result.ok(False)
 
-    with transaction.atomic():
-        save_ret = repository.bulk_save([event])
-        if save_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(save_ret.err_value)
-
-        dispatch_ret = dispatch_webhook_inbox(event)
-        if dispatch_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(dispatch_ret.err_value)
-
-        enqueue_ret = enqueue_webhook_outbox(event)
-        if enqueue_ret.is_err:
-            transaction.set_rollback(True)
-            return Result.err(enqueue_ret.err_value)
+    save_ret = repository.bulk_save([event])
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
 
     return Result.ok(True)
 
@@ -152,8 +165,8 @@ def update_transaction_status(event: WebhookInboxData, status: PaymentStatus, up
         return Result.err(transactions_ret.err_value)
 
     transactions = transactions_ret.ok_value
-    transaction = transactions[0]
-    updated = replace(transaction, status=status, paid_at=event.occurred_at) if update_paid_at else replace(transaction, status=status)
+    payment_transaction = transactions[0]
+    updated = replace(payment_transaction, status=status, paid_at=event.occurred_at) if update_paid_at else replace(payment_transaction, status=status)
     save_ret = repo.bulk_save([updated])
     if save_ret.is_err:
         return Result.err(save_ret.err_value)
