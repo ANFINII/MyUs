@@ -17,7 +17,7 @@ class ChannelAPI:
     router = Router()
 
     @staticmethod
-    @router.get("/user", response={200: list[ChannelOut], 401: ErrorOut})
+    @router.get("/user", response={200: list[ChannelOut], 401: ErrorOut, 500: ErrorOut})
     def get(request: HttpRequest):
         log.info("ChannelAPI get")
 
@@ -25,7 +25,11 @@ class ChannelAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        channels = get_user_channels(user_id)
+        ret = get_user_channels(user_id)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        channels = ret.ok_value
         data = [
             ChannelOut(
                 ulid=str(c.ulid),
@@ -90,7 +94,7 @@ class ChannelAPI:
         return 200, data
 
     @staticmethod
-    @router.post("", response={201: ChannelCreateOut, 400: ErrorOut, 401: ErrorOut})
+    @router.post("", response={201: ChannelCreateOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def post(request: HttpRequest, input: ChannelIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("ChannelAPI post", input=input)
 
@@ -98,14 +102,14 @@ class ChannelAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        new_ulid = create_user_channel(user_id, input, avatar_file)
-        if new_ulid is None:
-            return 400, ErrorOut(message="作成に失敗しました!")
+        ret = create_user_channel(user_id, input, avatar_file)
+        if ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-        return 201, ChannelCreateOut(ulid=new_ulid)
+        return 201, ChannelCreateOut(ulid=ret.ok_value)
 
     @staticmethod
-    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut})
+    @router.put("/{ulid}", response={204: ErrorOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def put(request: HttpRequest, ulid: str, input: ChannelIn = Form(...), avatar_file: UploadedFile = File(None)):
         log.info("ChannelAPI put", ulid=ulid, input=input)
 
@@ -113,7 +117,10 @@ class ChannelAPI:
         if user_id is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        if not update_user_channel(user_id, ulid, input, avatar_file):
-            return 400, ErrorOut(message="保存に失敗しました!")
+        ret = update_user_channel(user_id, ulid, input, avatar_file)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
 
         return 204, ErrorOut(message="保存しました!")

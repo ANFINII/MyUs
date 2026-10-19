@@ -84,7 +84,7 @@ class VideoAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def create(
         request: HttpRequest,
         input: VideoIn = Form(...),
@@ -96,9 +96,13 @@ class VideoAPI:
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_video(input=input, image=image, video=video)
-        if obj is None:
-            return 400, ErrorOut(message="チャンネルが見つかりません")
+        ret = create_video(input=input, image=image, video=video)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -157,16 +161,20 @@ class MusicAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: MusicIn = Form(...), music: UploadedFile = File(...)):
         log.info("MusicAPI create", input=input, music=music)
 
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_music(input=input, music=music)
-        if obj is None:
-            return 400, ErrorOut(message="チャンネルが見つかりません")
+        ret = create_music(input=input, music=music)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -225,16 +233,20 @@ class BlogAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: BlogIn = Form(...), image: UploadedFile = File(...)):
         log.info("BlogAPI create", input=input, image=image)
 
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_blog(input=input, image=image)
-        if obj is None:
-            return 400, ErrorOut(message="チャンネルが見つかりません")
+        ret = create_blog(input=input, image=image)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -292,16 +304,20 @@ class ComicAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: ComicIn = Form(...), image: UploadedFile = File(...), pages: list[UploadedFile] = File(...)):
         log.info("ComicAPI create", input=input, image=image, pages=pages)
 
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_comic(input=input, image=image, pages=pages)
-        if obj is None:
-            return 400, ErrorOut(message="チャンネルが見つかりません")
+        ret = create_comic(input=input, image=image, pages=pages)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -359,16 +375,20 @@ class PictureAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: PictureIn = Form(...), image: UploadedFile = File(...)):
         log.info("PictureAPI create", input=input, image=image)
 
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_picture(input=input, image=image)
-        if obj is None:
-            return 400, ErrorOut(message="チャンネルが見つかりません")
+        ret = create_picture(input=input, image=image)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 
@@ -425,16 +445,20 @@ class ChatAPI:
     router = Router()
 
     @staticmethod
-    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut})
+    @router.post("", response={201: MediaCreateOut, 400: ErrorOut, 401: ErrorOut, 500: ErrorOut})
     def create(request: HttpRequest, input: ChatIn = Form(...)):
         log.info("ChatAPI create", input=input)
 
         if auth_check(request) is None:
             return 401, ErrorOut(message="Unauthorized")
 
-        obj = create_chat(input=input)
-        if obj is None:
-            return 400, ErrorOut(message="チャンネルが見つかりません")
+        ret = create_chat(input=input)
+        if ret.is_err:
+            if isinstance(ret.err_value, FatalError):
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+            return 400, ErrorOut(message=ret.err_value.error_message)
+
+        obj = ret.ok_value
         data = MediaCreateOut(ulid=obj.ulid)
         return 201, data
 

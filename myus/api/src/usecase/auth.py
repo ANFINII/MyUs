@@ -198,21 +198,20 @@ def signup_user(input: SignupIn) -> bool:
         log.error("Signup error", exc=e)
         return False
 
-    try:
-        channel_repository = injector.get(ChannelInterface)
-        channel_repository.bulk_save([ChannelData(
-            id=0,
-            ulid=str(ulid.new()),
-            owner_id=user_ids[0],
-            owner_ulid="",
-            avatar="",
-            name=input.nickname,
-            description="",
-            is_default=True,
-            count=0,
-        )])
-    except Exception as e:
-        log.error("Default channel create error", exc=e, user_id=user_ids[0])
+    channel_repository = injector.get(ChannelInterface)
+    channel_ret = channel_repository.bulk_save([ChannelData(
+        id=0,
+        ulid=str(ulid.new()),
+        owner_id=user_ids[0],
+        owner_ulid="",
+        avatar="",
+        name=input.nickname,
+        description="",
+        is_default=True,
+        count=0,
+    )])
+    if channel_ret.is_err:
+        log.error("Default channel create error", error=channel_ret.err_value.error_message, user_id=user_ids[0])
 
     return True
 

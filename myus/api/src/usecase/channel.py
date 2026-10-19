@@ -6,42 +6,62 @@ from api.src.domain.interface.channel.data import ChannelData
 from api.src.domain.interface.channel.interface import ChannelInterface, FilterOption, SortOption, SortType
 from api.src.injectors.container import injector
 from api.src.types.schema.channel import ChannelIn
+from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.upload import ImageUpload
 from api.utils.functions.media import save_upload
 
 
-def get_channel_data(ulid: str) -> ChannelData | None:
+@Result.shield_exception()
+def get_channel_data(ulid: str) -> Result[ChannelData | None, FatalError]:
     repository = injector.get(ChannelInterface)
-    ids = repository.get_ids(FilterOption(ulid=ulid), SortOption())
+    ids_ret = repository.get_ids(FilterOption(ulid=ulid), SortOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.error("Channel not found", ulid=ulid)
-        return None
+        return Result.ok(None)
 
-    data = repository.bulk_get(ids)[0]
-    return data
+    channels_ret = repository.bulk_get(ids)
+    if channels_ret.is_err:
+        return Result.err(channels_ret.err_value)
+
+    data = channels_ret.ok_value[0]
+    return Result.ok(data)
 
 
-def save_channel_data(data: ChannelData) -> bool:
+@Result.shield_exception()
+def save_channel_data(data: ChannelData) -> Result[None, FatalError]:
     repository = injector.get(ChannelInterface)
-    try:
-        repository.bulk_save([data])
-        return True
-    except Exception as e:
-        log.error("save_channel_data error", exc=e)
-        return False
+    ret = repository.bulk_save([data])
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    return Result.ok(None)
 
 
-def get_user_channels(owner_id: int) -> list[ChannelData]:
+@Result.shield_exception()
+def get_user_channels(owner_id: int) -> Result[list[ChannelData], FatalError]:
     repository = injector.get(ChannelInterface)
-    ids = repository.get_ids(FilterOption(owner_id=owner_id), SortOption())
+    ids_ret = repository.get_ids(FilterOption(owner_id=owner_id), SortOption())
+    if ids_ret.is_err:
+        return Result.err(ids_ret.err_value)
+
+    ids = ids_ret.ok_value
     if len(ids) == 0:
         log.warning("Channel not found", owner_id=owner_id)
-        return []
+        return Result.ok([])
 
-    return repository.bulk_get(ids)
+    channels_ret = repository.bulk_get(ids)
+    if channels_ret.is_err:
+        return Result.err(channels_ret.err_value)
+
+    return Result.ok(channels_ret.ok_value)
 
 
-def create_user_channel(user_id: int, input: ChannelIn, avatar_file: UploadedFile) -> str | None:
+@Result.shield_exception()
+def create_user_channel(user_id: int, input: ChannelIn, avatar_file: UploadedFile) -> Result[str, FatalError]:
     repository = injector.get(ChannelInterface)
     new_ulid = str(ulid.new())
     avatar = save_upload(avatar_file, ImageUpload.CHANNEL, new_ulid) if avatar_file else ""
@@ -58,23 +78,31 @@ def create_user_channel(user_id: int, input: ChannelIn, avatar_file: UploadedFil
         count=0,
     )
 
-    try:
-        repository.bulk_save([data])
-        return new_ulid
-    except Exception as e:
-        log.error("create_user_channel error", exc=e)
-        return None
+    ret = repository.bulk_save([data])
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    return Result.ok(new_ulid)
 
 
-def update_user_channel(user_id: int, ulid: str, input: ChannelIn, avatar_file: UploadedFile) -> bool:
-    channel = get_channel_data(ulid)
+@Result.shield_exception()
+def update_user_channel(user_id: int, ulid: str, input: ChannelIn, avatar_file: UploadedFile) -> Result[None, NotFoundError | FatalError]:
+    channel_ret = get_channel_data(ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
+
+    channel = channel_ret.ok_value
     if channel is None:
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     if channel.owner_id != user_id:
         log.error("Channel owner mismatch", ulid=ulid, user_id=user_id, owner_id=channel.owner_id)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     avatar = save_upload(avatar_file, ImageUpload.CHANNEL, channel.ulid) if avatar_file else channel.avatar
     update_data = replace(channel, avatar=avatar, name=input.name, description=input.description)
-    return save_channel_data(update_data)
+    save_ret = save_channel_data(update_data)
+    if save_ret.is_err:
+        return Result.err(save_ret.err_value)
+
+    return Result.ok(None)

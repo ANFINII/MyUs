@@ -271,15 +271,19 @@ class UserAPI:
         if user is None:
             return 404, ErrorOut(message="ユーザーが見つかりません")
 
-        channels = get_user_channels(user.user.id)
+        channels_ret = get_user_channels(user.user.id)
+        if channels_ret.is_err:
+            return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+        channels = channels_ret.ok_value
         user_id = auth_check(request)
         is_follow = False
         if user_id is not None:
-            ret = is_following(user_id, user.user.id)
-            if ret.is_err:
+            follow_ret = is_following(user_id, user.user.id)
+            if follow_ret.is_err:
                 return 500, ErrorOut(message="サーバーエラーが発生しました")
 
-            is_follow = ret.ok_value
+            is_follow = follow_ret.ok_value
 
         data = UserPageOut(
             avatar=create_url(user.user.avatar),
@@ -308,7 +312,7 @@ class UserAPI:
         return 200, data
 
     @staticmethod
-    @router.get("/userpage/{ulid}/media", response={200: UserPageMediaOut, 404: ErrorOut})
+    @router.get("/userpage/{ulid}/media", response={200: UserPageMediaOut, 404: ErrorOut, 500: ErrorOut})
     def get_userpage_media(request: HttpRequest, ulid: str, channel_ulid: str = ""):
         log.info("UserAPI get_userpage_media", ulid=ulid, channel_ulid=channel_ulid)
 
@@ -318,7 +322,11 @@ class UserAPI:
 
         channel_id = 0
         if channel_ulid:
-            channel = get_channel_data(channel_ulid)
+            ret = get_channel_data(channel_ulid)
+            if ret.is_err:
+                return 500, ErrorOut(message="サーバーエラーが発生しました")
+
+            channel = ret.ok_value
             if channel is None:
                 return 404, ErrorOut(message="チャンネルが見つかりません")
             channel_id = channel.id

@@ -42,10 +42,15 @@ from api.utils.functions.media import get_media_repository, save_upload
 VIEWS_THRESHOLDS = (10000, 100000, 1000000, 10000000, 100000000, 1000000000)
 
 
-def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    ret = get_channel_data(input.channel_ulid)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    channel = ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     video_path = save_upload(video, MediaUpload.VIDEO, channel.ulid)
 
@@ -91,13 +96,18 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Me
 
     EncodeWorker.submit(encode_task)
 
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
-def create_music(input: MusicIn, music: UploadedFile) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_music(input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    ret = get_channel_data(input.channel_ulid)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    channel = ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     new_music = MusicData(
         id=0,
@@ -129,13 +139,18 @@ def create_music(input: MusicIn, music: UploadedFile) -> MediaCreateDTO | None:
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
         create_notification(channel.owner_id, 0, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
-def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_blog(input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    ret = get_channel_data(input.channel_ulid)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    channel = ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     new_blog = BlogData(
         id=0,
@@ -166,13 +181,18 @@ def create_blog(input: BlogIn, image: UploadedFile) -> MediaCreateDTO | None:
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
         create_notification(channel.owner_id, 0, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
-def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    ret = get_channel_data(input.channel_ulid)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    channel = ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     new_comic = ComicData(
         id=0,
@@ -203,13 +223,18 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
         create_notification(channel.owner_id, 0, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
-def create_picture(input: PictureIn, image: UploadedFile) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_picture(input: PictureIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    ret = get_channel_data(input.channel_ulid)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    channel = ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     new_picture = PictureData(
         id=0,
@@ -239,13 +264,18 @@ def create_picture(input: PictureIn, image: UploadedFile) -> MediaCreateDTO | No
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
         create_notification(channel.owner_id, 0, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
-def create_chat(input: ChatIn) -> MediaCreateDTO | None:
-    channel = get_channel_data(input.channel_ulid)
+@Result.shield_exception()
+def create_chat(input: ChatIn) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
+    ret = get_channel_data(input.channel_ulid)
+    if ret.is_err:
+        return Result.err(ret.err_value)
+
+    channel = ret.ok_value
     if channel is None:
-        return None
+        return Result.err(NotFoundError("チャンネルが見つかりません"))
 
     new_chat = ChatData(
         id=0,
@@ -277,7 +307,7 @@ def create_chat(input: ChatIn) -> MediaCreateDTO | None:
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
         create_notification(channel.owner_id, 0, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
-    return MediaCreateDTO(ulid=obj.ulid)
+    return Result.ok(MediaCreateDTO(ulid=obj.ulid))
 
 
 def get_home(limit: int, search: str) -> HomeDTO:

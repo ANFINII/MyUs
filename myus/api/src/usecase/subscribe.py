@@ -27,15 +27,22 @@ def get_subscribe_channels(user_id: int) -> Result[list[ChannelData], FatalError
         return Result.err(subscribes_ret.err_value)
 
     channel_ids = [s.channel_id for s in subscribes_ret.ok_value]
-    channels = channel_repo.bulk_get(channel_ids)
-    return Result.ok(channels)
+    channels_ret = channel_repo.bulk_get(channel_ids)
+    if channels_ret.is_err:
+        return Result.err(channels_ret.err_value)
+
+    return Result.ok(channels_ret.ok_value)
 
 
 @Result.shield_exception()
 def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Result[SubscribeDTO, NotFoundError | FatalError]:
     channel_repo = injector.get(ChannelInterface)
     subscribe_repo = injector.get(SubscribeInterface)
-    channel = get_channel_data(channel_ulid)
+    channel_ret = get_channel_data(channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
+
+    channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません!"))
 
@@ -73,6 +80,9 @@ def upsert_subscribe(user_id: int, channel_ulid: str, is_subscribe: bool) -> Res
 
         count = count_ret.ok_value
         updated_channel = replace(channel, count=count)
-        channel_repo.bulk_save([updated_channel])
+        channel_save_ret = channel_repo.bulk_save([updated_channel])
+        if channel_save_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(channel_save_ret.err_value)
 
     return Result.ok(SubscribeDTO(is_subscribe=is_subscribe, count=count))
