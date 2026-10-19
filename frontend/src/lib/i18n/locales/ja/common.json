@@ -316,6 +316,9 @@
       "thanks": "ご購入ありがとうございます。",
       "reflect": "反映には数分かかる場合があります。",
       "backToPlans": "料金プランに戻る",
+      "checkoutCancelTitle": "決済キャンセル",
+      "checkoutCancelHeading": "決済をキャンセルしました",
+      "checkoutCancelMessage": "料金は請求されていません。",
       "features": {
         "individualAds": "個別広告表示 {{count}}つ",
         "hideGlobalAds": "全体広告 非表示",

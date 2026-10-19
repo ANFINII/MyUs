@@ -94,4 +94,5 @@ export const routeTree = rootRoute.addChildren([
   page('/setting/payment', () => import('pages/setting/payment')),
   page('/setting/payment/change', () => import('pages/setting/payment/change')),
   page('/setting/payment/success', () => import('pages/setting/payment/success')),
+  page('/setting/payment/cancel', () => import('pages/setting/payment/cancel')),
 ])
