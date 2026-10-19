@@ -90,6 +90,7 @@ class UserAPI:
         if ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
+        followers = ret.ok_value
         data = [
             FollowUserOut(
                 ulid=x.ulid,
@@ -99,7 +100,7 @@ class UserAPI:
                 follower_count=x.follower_count,
                 following_count=x.following_count,
             )
-            for x in ret.ok_value
+            for x in followers
         ]
 
         return 200, data
@@ -117,6 +118,7 @@ class UserAPI:
         if ret.is_err:
             return 500, ErrorOut(message="サーバーエラーが発生しました")
 
+        follows = ret.ok_value
         data = [
             FollowUserOut(
                 ulid=x.ulid,
@@ -126,7 +128,7 @@ class UserAPI:
                 follower_count=x.follower_count,
                 following_count=x.following_count,
             )
-            for x in ret.ok_value
+            for x in follows
         ]
 
         return 200, data
