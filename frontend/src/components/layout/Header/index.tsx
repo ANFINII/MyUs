@@ -19,7 +19,7 @@ import IconList from 'components/parts/Icon/List'
 import Search from 'components/parts/Input/Search'
 import style from './Header.module.scss'
 
-const NOTIFICATION_INTERVAL_MS = 60 * 1000
+const NOTIFICATION_STALE_MS = 60 * 1000
 
 interface Props {
   loading?: boolean
@@ -39,7 +39,7 @@ export default function Header(props: Props): React.JSX.Element {
     queryKey: queryKeys.notification,
     queryFn: () => toQuery(getNotification()),
     enabled: user.isActive,
-    refetchInterval: NOTIFICATION_INTERVAL_MS,
+    staleTime: NOTIFICATION_STALE_MS,
     refetchOnWindowFocus: true,
   })
 
