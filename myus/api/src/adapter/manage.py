@@ -1,3 +1,4 @@
+from typing import assert_never
 from django.http import HttpRequest
 from ninja import File, Form, Router, UploadedFile
 from api.modules.logger import log
@@ -19,7 +20,7 @@ from api.src.usecase.manage.media import (
     get_manage_pictures, get_manage_picture, update_manage_picture, delete_manage_picture,
     get_manage_chats, get_manage_chat, update_manage_chat, delete_manage_chat,
 )
-from api.utils.common.result import FatalError
+from api.utils.common.result import FatalError, NotFoundError
 
 
 class ManageVideoAPI:
@@ -62,9 +63,13 @@ class ManageVideoAPI:
 
         video_ret = get_manage_video(user_id, ulid)
         if video_ret.is_err:
-            if isinstance(video_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=video_ret.err_value.error_message)
+            match video_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=video_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(video_ret.err_value)
 
         video = video_ret.ok_value
         return 200, convert_videos([video])[0]
@@ -84,9 +89,13 @@ class ManageVideoAPI:
 
         update_ret = update_manage_video(user_id, ulid, input, image)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -105,9 +114,13 @@ class ManageVideoAPI:
 
         delete_ret = delete_manage_video(user_id, input.ulids)
         if delete_ret.is_err:
-            if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=delete_ret.err_value.error_message)
+            match delete_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(delete_ret.err_value)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -152,9 +165,13 @@ class ManageMusicAPI:
 
         music_ret = get_manage_music(user_id, ulid)
         if music_ret.is_err:
-            if isinstance(music_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=music_ret.err_value.error_message)
+            match music_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=music_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(music_ret.err_value)
 
         music = music_ret.ok_value
         return 200, convert_musics([music])[0]
@@ -174,9 +191,13 @@ class ManageMusicAPI:
 
         update_ret = update_manage_music(user_id, ulid, input)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -195,9 +216,13 @@ class ManageMusicAPI:
 
         delete_ret = delete_manage_music(user_id, input.ulids)
         if delete_ret.is_err:
-            if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=delete_ret.err_value.error_message)
+            match delete_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(delete_ret.err_value)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -242,9 +267,13 @@ class ManageBlogAPI:
 
         blog_ret = get_manage_blog(user_id, ulid)
         if blog_ret.is_err:
-            if isinstance(blog_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=blog_ret.err_value.error_message)
+            match blog_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=blog_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(blog_ret.err_value)
 
         blog = blog_ret.ok_value
         return 200, convert_blogs([blog])[0]
@@ -264,9 +293,13 @@ class ManageBlogAPI:
 
         update_ret = update_manage_blog(user_id, ulid, input, image)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -285,9 +318,13 @@ class ManageBlogAPI:
 
         delete_ret = delete_manage_blog(user_id, input.ulids)
         if delete_ret.is_err:
-            if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=delete_ret.err_value.error_message)
+            match delete_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(delete_ret.err_value)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -332,9 +369,13 @@ class ManageComicAPI:
 
         comic_ret = get_manage_comic(user_id, ulid)
         if comic_ret.is_err:
-            if isinstance(comic_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=comic_ret.err_value.error_message)
+            match comic_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=comic_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(comic_ret.err_value)
 
         comic = comic_ret.ok_value
         return 200, convert_comics([comic])[0]
@@ -354,9 +395,13 @@ class ManageComicAPI:
 
         update_ret = update_manage_comic(user_id, ulid, input, image)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -375,9 +420,13 @@ class ManageComicAPI:
 
         delete_ret = delete_manage_comic(user_id, input.ulids)
         if delete_ret.is_err:
-            if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=delete_ret.err_value.error_message)
+            match delete_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(delete_ret.err_value)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -422,9 +471,13 @@ class ManagePictureAPI:
 
         picture_ret = get_manage_picture(user_id, ulid)
         if picture_ret.is_err:
-            if isinstance(picture_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=picture_ret.err_value.error_message)
+            match picture_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=picture_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(picture_ret.err_value)
 
         picture = picture_ret.ok_value
         return 200, convert_pictures([picture])[0]
@@ -444,9 +497,13 @@ class ManagePictureAPI:
 
         update_ret = update_manage_picture(user_id, ulid, input, image)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -465,9 +522,13 @@ class ManagePictureAPI:
 
         delete_ret = delete_manage_picture(user_id, input.ulids)
         if delete_ret.is_err:
-            if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=delete_ret.err_value.error_message)
+            match delete_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(delete_ret.err_value)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -512,9 +573,13 @@ class ManageChatAPI:
 
         chat_ret = get_manage_chat(user_id, ulid)
         if chat_ret.is_err:
-            if isinstance(chat_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=chat_ret.err_value.error_message)
+            match chat_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=chat_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(chat_ret.err_value)
 
         chat = chat_ret.ok_value
         return 200, convert_chats([chat])[0]
@@ -534,9 +599,13 @@ class ManageChatAPI:
 
         update_ret = update_manage_chat(user_id, ulid, input)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -555,9 +624,13 @@ class ManageChatAPI:
 
         delete_ret = delete_manage_chat(user_id, input.ulids)
         if delete_ret.is_err:
-            if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=delete_ret.err_value.error_message)
+            match delete_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(delete_ret.err_value)
 
         return 204, ErrorOut(message="削除しました!")
 
@@ -602,9 +675,13 @@ class ManageAdvertiseAPI:
 
         advertise_ret = get_manage_advertise(user_id, ulid)
         if advertise_ret.is_err:
-            if isinstance(advertise_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 404, ErrorOut(message=advertise_ret.err_value.error_message)
+            match advertise_ret.err_value:
+                case NotFoundError():
+                    return 404, ErrorOut(message=advertise_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(advertise_ret.err_value)
 
         advertise = advertise_ret.ok_value
         return 200, convert_advertises([advertise])[0]
@@ -624,9 +701,13 @@ class ManageAdvertiseAPI:
 
         create_ret = create_manage_advertise(user_id, input, image, video)
         if create_ret.is_err:
-            if isinstance(create_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=create_ret.err_value.error_message)
+            match create_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=create_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(create_ret.err_value)
 
         advertise = create_ret.ok_value
         return 201, MediaCreateOut(ulid=advertise.ulid)
@@ -646,9 +727,13 @@ class ManageAdvertiseAPI:
 
         update_ret = update_manage_advertise(user_id, ulid, input, image, video)
         if update_ret.is_err:
-            if isinstance(update_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=update_ret.err_value.error_message)
+            match update_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=update_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(update_ret.err_value)
 
         return 204, ErrorOut(message="保存しました!")
 
@@ -667,8 +752,12 @@ class ManageAdvertiseAPI:
 
         delete_ret = delete_manage_advertise(user_id, input.ulids)
         if delete_ret.is_err:
-            if isinstance(delete_ret.err_value, FatalError):
-                return 500, ErrorOut(message="Internal Server Error")
-            return 400, ErrorOut(message=delete_ret.err_value.error_message)
+            match delete_ret.err_value:
+                case NotFoundError():
+                    return 400, ErrorOut(message=delete_ret.err_value.error_message)
+                case FatalError():
+                    return 500, ErrorOut(message="Internal Server Error")
+                case _:
+                    assert_never(delete_ret.err_value)
 
         return 204, ErrorOut(message="削除しました!")
