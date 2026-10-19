@@ -44,11 +44,11 @@ VIEWS_THRESHOLDS = (10000, 100000, 1000000, 10000000, 100000000, 1000000000)
 
 @Result.shield_exception()
 def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
-    ret = get_channel_data(input.channel_ulid)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
 
-    channel = ret.ok_value
+    channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
 
@@ -79,7 +79,10 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Re
     with transaction.atomic():
         new_ids = repository.bulk_save([new_video])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.VIDEO, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.VIDEO, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
 
@@ -101,11 +104,11 @@ def create_video(input: VideoIn, image: UploadedFile, video: UploadedFile) -> Re
 
 @Result.shield_exception()
 def create_music(input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
-    ret = get_channel_data(input.channel_ulid)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
 
-    channel = ret.ok_value
+    channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
 
@@ -134,7 +137,10 @@ def create_music(input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, 
     with transaction.atomic():
         new_ids = repository.bulk_save([new_music])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.MUSIC, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.MUSIC, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
@@ -144,11 +150,11 @@ def create_music(input: MusicIn, music: UploadedFile) -> Result[MediaCreateDTO, 
 
 @Result.shield_exception()
 def create_blog(input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
-    ret = get_channel_data(input.channel_ulid)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
 
-    channel = ret.ok_value
+    channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
 
@@ -176,7 +182,10 @@ def create_blog(input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, No
     with transaction.atomic():
         new_ids = repository.bulk_save([new_blog])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.BLOG, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.BLOG, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
@@ -186,11 +195,11 @@ def create_blog(input: BlogIn, image: UploadedFile) -> Result[MediaCreateDTO, No
 
 @Result.shield_exception()
 def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile]) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
-    ret = get_channel_data(input.channel_ulid)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
 
-    channel = ret.ok_value
+    channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
 
@@ -218,7 +227,10 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
     with transaction.atomic():
         new_ids = repository.bulk_save([new_comic])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.COMIC, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.COMIC, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
@@ -228,11 +240,11 @@ def create_comic(input: ComicIn, image: UploadedFile, pages: list[UploadedFile])
 
 @Result.shield_exception()
 def create_picture(input: PictureIn, image: UploadedFile) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
-    ret = get_channel_data(input.channel_ulid)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
 
-    channel = ret.ok_value
+    channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
 
@@ -259,7 +271,10 @@ def create_picture(input: PictureIn, image: UploadedFile) -> Result[MediaCreateD
     with transaction.atomic():
         new_ids = repository.bulk_save([new_picture])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.PICTURE, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.PICTURE, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:
@@ -269,11 +284,11 @@ def create_picture(input: PictureIn, image: UploadedFile) -> Result[MediaCreateD
 
 @Result.shield_exception()
 def create_chat(input: ChatIn) -> Result[MediaCreateDTO, NotFoundError | FatalError]:
-    ret = get_channel_data(input.channel_ulid)
-    if ret.is_err:
-        return Result.err(ret.err_value)
+    channel_ret = get_channel_data(input.channel_ulid)
+    if channel_ret.is_err:
+        return Result.err(channel_ret.err_value)
 
-    channel = ret.ok_value
+    channel = channel_ret.ok_value
     if channel is None:
         return Result.err(NotFoundError("チャンネルが見つかりません"))
 
@@ -302,7 +317,10 @@ def create_chat(input: ChatIn) -> Result[MediaCreateDTO, NotFoundError | FatalEr
     with transaction.atomic():
         new_ids = repository.bulk_save([new_chat])
         assert len(new_ids) == 1, "作成に失敗しました"
-        category_repo.bulk_save(MediaType.CHAT, new_ids[0], categories)
+        category_ret = category_repo.bulk_save(MediaType.CHAT, new_ids[0], categories)
+        if category_ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(category_ret.err_value)
 
     obj = repository.bulk_get(new_ids)[0]
     if input.publish:

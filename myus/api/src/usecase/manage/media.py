@@ -22,6 +22,7 @@ from api.src.domain.interface.message.interface import FilterOption as MessageFi
 from api.src.injectors.container import injector
 from api.src.types.schema.media.input import VideoUpdateIn, MusicUpdateIn, BlogUpdateIn, ComicUpdateIn, PictureUpdateIn, ChatUpdateIn
 from api.src.usecase.notification import create_publish_notification, delete_object_notifications
+from api.utils.common.result import FatalError, NotFoundError, Result
 from api.utils.enum.media import MediaType
 from api.utils.enum.notification import NotificationObjectType, NotificationTypeNo
 from api.utils.enum.upload import ImageUpload
@@ -60,17 +61,18 @@ def get_manage_video(user_id: int, ulid: str) -> VideoData | None:
     )
 
 
-def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> bool:
+@Result.shield_exception()
+def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(VideoInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if len(ids) == 0:
         log.error("Video not found", ulid=ulid)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     obj = repository.bulk_get(ids)[0]
     if obj.channel.owner_id != user_id:
         log.error("Video owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
     if image is not None:
@@ -79,16 +81,16 @@ def update_manage_video(user_id: int, ulid: str, input: VideoUpdateIn, image: Up
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
-    try:
-        with transaction.atomic():
-            repository.bulk_save([update_data])
-            category_repo.bulk_save(MediaType.VIDEO, obj.id, categories)
-        if not obj.publish and input.publish and obj.convert != "":
-            create_publish_notification(user_id, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
-        return True
-    except Exception as e:
-        log.error("update_manage_video error", exc=e)
-        return False
+    with transaction.atomic():
+        repository.bulk_save([update_data])
+        ret = category_repo.bulk_save(MediaType.VIDEO, obj.id, categories)
+        if ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(ret.err_value)
+
+    if not obj.publish and input.publish and obj.convert != "":
+        create_publish_notification(user_id, NotificationTypeNo.VIDEO, obj.id, NotificationObjectType.VIDEO)
+    return Result.ok(None)
 
 
 def delete_manage_video(user_id: int, ulids: list[str]) -> bool:
@@ -134,32 +136,33 @@ def get_manage_music(user_id: int, ulid: str) -> MusicData | None:
     return replace(obj, music=create_url(obj.music))
 
 
-def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> bool:
+@Result.shield_exception()
+def update_manage_music(user_id: int, ulid: str, input: MusicUpdateIn) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(MusicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if len(ids) == 0:
         log.error("Music not found", ulid=ulid)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     obj = repository.bulk_get(ids)[0]
     if obj.channel.owner_id != user_id:
         log.error("Music owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, lyric=input.lyric, download=input.download, publish=input.publish)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
-    try:
-        with transaction.atomic():
-            repository.bulk_save([update_data])
-            category_repo.bulk_save(MediaType.MUSIC, obj.id, categories)
-        if not obj.publish and input.publish:
-            create_publish_notification(user_id, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
-        return True
-    except Exception as e:
-        log.error("update_manage_music error", exc=e)
-        return False
+    with transaction.atomic():
+        repository.bulk_save([update_data])
+        ret = category_repo.bulk_save(MediaType.MUSIC, obj.id, categories)
+        if ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(ret.err_value)
+
+    if not obj.publish and input.publish:
+        create_publish_notification(user_id, NotificationTypeNo.MUSIC, obj.id, NotificationObjectType.MUSIC)
+    return Result.ok(None)
 
 
 def delete_manage_music(user_id: int, ulids: list[str]) -> bool:
@@ -205,17 +208,18 @@ def get_manage_blog(user_id: int, ulid: str) -> BlogData | None:
     return replace(obj, image=create_url(obj.image))
 
 
-def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> bool:
+@Result.shield_exception()
+def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(BlogInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if len(ids) == 0:
         log.error("Blog not found", ulid=ulid)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     obj = repository.bulk_get(ids)[0]
     if obj.channel.owner_id != user_id:
         log.error("Blog owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, richtext=input.richtext, publish=input.publish)
     if image is not None:
@@ -224,16 +228,16 @@ def update_manage_blog(user_id: int, ulid: str, input: BlogUpdateIn, image: Uplo
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
-    try:
-        with transaction.atomic():
-            repository.bulk_save([update_data])
-            category_repo.bulk_save(MediaType.BLOG, obj.id, categories)
-        if not obj.publish and input.publish:
-            create_publish_notification(user_id, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
-        return True
-    except Exception as e:
-        log.error("update_manage_blog error", exc=e)
-        return False
+    with transaction.atomic():
+        repository.bulk_save([update_data])
+        ret = category_repo.bulk_save(MediaType.BLOG, obj.id, categories)
+        if ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(ret.err_value)
+
+    if not obj.publish and input.publish:
+        create_publish_notification(user_id, NotificationTypeNo.BLOG, obj.id, NotificationObjectType.BLOG)
+    return Result.ok(None)
 
 
 def delete_manage_blog(user_id: int, ulids: list[str]) -> bool:
@@ -285,17 +289,18 @@ def get_manage_comic(user_id: int, ulid: str) -> ComicData | None:
     )
 
 
-def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> bool:
+@Result.shield_exception()
+def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(ComicInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if len(ids) == 0:
         log.error("Comic not found", ulid=ulid)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     obj = repository.bulk_get(ids)[0]
     if obj.channel.owner_id != user_id:
         log.error("Comic owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
     if image is not None:
@@ -304,16 +309,16 @@ def update_manage_comic(user_id: int, ulid: str, input: ComicUpdateIn, image: Up
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
-    try:
-        with transaction.atomic():
-            repository.bulk_save([update_data])
-            category_repo.bulk_save(MediaType.COMIC, obj.id, categories)
-        if not obj.publish and input.publish:
-            create_publish_notification(user_id, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
-        return True
-    except Exception as e:
-        log.error("update_manage_comic error", exc=e)
-        return False
+    with transaction.atomic():
+        repository.bulk_save([update_data])
+        ret = category_repo.bulk_save(MediaType.COMIC, obj.id, categories)
+        if ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(ret.err_value)
+
+    if not obj.publish and input.publish:
+        create_publish_notification(user_id, NotificationTypeNo.COMIC, obj.id, NotificationObjectType.COMIC)
+    return Result.ok(None)
 
 
 def delete_manage_comic(user_id: int, ulids: list[str]) -> bool:
@@ -359,17 +364,18 @@ def get_manage_picture(user_id: int, ulid: str) -> PictureData | None:
     return replace(obj, image=create_url(obj.image))
 
 
-def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> bool:
+@Result.shield_exception()
+def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image: UploadedFile | None = None) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(PictureInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if len(ids) == 0:
         log.error("Picture not found", ulid=ulid)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     obj = repository.bulk_get(ids)[0]
     if obj.channel.owner_id != user_id:
         log.error("Picture owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, publish=input.publish)
     if image is not None:
@@ -378,16 +384,16 @@ def update_manage_picture(user_id: int, ulid: str, input: PictureUpdateIn, image
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
-    try:
-        with transaction.atomic():
-            repository.bulk_save([update_data])
-            category_repo.bulk_save(MediaType.PICTURE, obj.id, categories)
-        if not obj.publish and input.publish:
-            create_publish_notification(user_id, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
-        return True
-    except Exception as e:
-        log.error("update_manage_picture error", exc=e)
-        return False
+    with transaction.atomic():
+        repository.bulk_save([update_data])
+        ret = category_repo.bulk_save(MediaType.PICTURE, obj.id, categories)
+        if ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(ret.err_value)
+
+    if not obj.publish and input.publish:
+        create_publish_notification(user_id, NotificationTypeNo.PICTURE, obj.id, NotificationObjectType.PICTURE)
+    return Result.ok(None)
 
 
 def delete_manage_picture(user_id: int, ulids: list[str]) -> bool:
@@ -430,32 +436,33 @@ def get_manage_chat(user_id: int, ulid: str) -> ChatData | None:
     return repository.bulk_get(ids)[0]
 
 
-def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> bool:
+@Result.shield_exception()
+def update_manage_chat(user_id: int, ulid: str, input: ChatUpdateIn) -> Result[None, NotFoundError | FatalError]:
     repository = injector.get(ChatInterface)
     ids = repository.get_ids(FilterOption(ulid=ulid), ExcludeOption(), SortOption(), PageOption())
     if len(ids) == 0:
         log.error("Chat not found", ulid=ulid)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     obj = repository.bulk_get(ids)[0]
     if obj.channel.owner_id != user_id:
         log.error("Chat owner mismatch", ulid=ulid, user_id=user_id, owner_id=obj.channel.owner_id)
-        return False
+        return Result.err(NotFoundError("保存に失敗しました!"))
 
     update_data = replace(obj, title=input.title, content=input.content, period=date.fromisoformat(input.period), publish=input.publish)
     category_repo = injector.get(CategoryInterface)
     categories = [CategoryData(id=0, ulid=input.category_ulid, jp_name="", en_name="")] if input.category_ulid else []
 
-    try:
-        with transaction.atomic():
-            repository.bulk_save([update_data])
-            category_repo.bulk_save(MediaType.CHAT, obj.id, categories)
-        if not obj.publish and input.publish:
-            create_publish_notification(user_id, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
-        return True
-    except Exception as e:
-        log.error("update_manage_chat error", exc=e)
-        return False
+    with transaction.atomic():
+        repository.bulk_save([update_data])
+        ret = category_repo.bulk_save(MediaType.CHAT, obj.id, categories)
+        if ret.is_err:
+            transaction.set_rollback(True)
+            return Result.err(ret.err_value)
+
+    if not obj.publish and input.publish:
+        create_publish_notification(user_id, NotificationTypeNo.CHAT, obj.id, NotificationObjectType.CHAT)
+    return Result.ok(None)
 
 
 def delete_manage_chat(user_id: int, ulids: list[str]) -> bool:
